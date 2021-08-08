@@ -18,7 +18,7 @@ export interface UseAriaTabsParameters extends UseListNavigationParameters {
     selectionMode: "focus" | "activate";
 }
 
-export interface UseTabParameters extends Omit<UseListNavigationChildParameters<UseTabInfo>, "tabId" | "setTabPanelId" | "setSelected"> {
+export interface UseTabParameters extends Omit<UseListNavigationChildParameters<UseTabInfo>, "tabId" | "setTabPanelId" | "setSelected" | "setSelectionMode"> {
 
 }
 
@@ -30,6 +30,7 @@ export interface UseTabInfo extends UseListNavigationChildInfo {
     setSelected(selected: boolean): void;
     tabId: string | undefined;
     setTabPanelId(tabId: string | undefined): void;
+    setSelectionMode(mode: "focus" | "activate"): void;
     //setSelectedTabPanelId(id: string): void;
 }
 
@@ -52,12 +53,17 @@ export function useAriaTabs({ selectionMode, selectedIndex, onSelect: asyncOnSel
     const { useRandomIdProps: useTabLabelIdProps, useReferencedIdProps: useReferencedTabLabelId } = useRandomId({ prefix: "aria-tab-label-" });
 
     const { managedChildren: managedTabs, navigateToIndex, useListNavigationChild, useListNavigationProps } = useListNavigation<Element, UseTabInfo>(args)
-    const { managedChildren: managedPanels, useManagedChild: useManagedTabPanel } = useChildManager<Element, UseTabPanelInfo>()
+    const { managedChildren: managedPanels, useManagedChild: useManagedTabPanel } = useChildManager<UseTabPanelInfo>()
 
     const stableAsyncOnSelect = useStableCallback(asyncOnSelect);
     const childCount = managedTabs.length;
 
     const { useHasFocusProps: useTabListHasFocusProps, focusedInner: tabListFocused } = useHasFocus<Element>();
+
+    useLayoutEffect(() => {
+        for (let child of managedTabs)
+            child.setSelectionMode(selectionMode);
+    }, [selectionMode])
 
 
     useLayoutEffect(([prevChildCount, prevSelectedIndex]) => {
@@ -85,18 +91,20 @@ export function useAriaTabs({ selectionMode, selectedIndex, onSelect: asyncOnSel
 
     const useTab: UseTab = useCallback(function useTab<TabElement extends Element>(info: UseTabParameters) {
         //const [selectedTabId, setSelectedTabId, getSelectedTabId] = useState<string | undefined>(undefined);
+        const [selectionModeL, setSelectionModeL] = useState<"focus" | "activate">(selectionMode);
+        const {element, useRefElementProps} = useRefElement<TabElement>()
         const [tabPanelId, setTabPanelId] = useState<string | undefined>(undefined)
         const { useRandomIdProps: useTabIdProps, id: tabId, getId: getTabId } = useRandomId({ prefix: "aria-tab-" });
         const [selected, setSelected, getSelected] = useState(false);
-        const { tabbable, useListNavigationChildProps, useListNavigationSiblingProps } = useListNavigationChild<TabElement>({ ...info, setSelected, tabId, setTabPanelId });
-        const { onClick: onSelect, ...asyncInfo } = useAsyncHandler<Element>()({ event: "onClick", capture: (e: unknown) => info.index })(stableAsyncOnSelect);
-
+        const { tabbable, useListNavigationChildProps, useListNavigationSiblingProps } = useListNavigationChild<TabElement>({ ...info, setSelected, tabId, setTabPanelId, setSelectionMode: setSelectionModeL });
+        const { getSyncOnClick: getSyncOnSelect, ...asyncInfo } = useAsyncHandler<Element>()({ event: "onClick", capture: (e: unknown) => info.index });
+        const onSelect = getSyncOnSelect(asyncInfo.pending? null : stableAsyncOnSelect);
 
         useEffect(() => {
-            if (tabbable && selectionMode == "focus") {
-                onSelect?.bind(null!)(null!);
+            if (tabbable && selectionModeL == "focus") {
+                onSelect?.bind(null!)({ target: element, currentTarget: element } as Event as h.JSX.TargetedMouseEvent<Element>);
             }
-        }, [tabbable, selectionMode]);
+        }, [tabbable, selectionModeL, element]);
 
         useEffect(() => { managedPanels[info.index]?.setTabId(tabId) }, [tabId, info.index]);
 
@@ -108,8 +116,9 @@ export function useAriaTabs({ selectionMode, selectedIndex, onSelect: asyncOnSel
 
         function useTabProps<P extends h.JSX.HTMLAttributes<TabElement>>({ ...props }: P) {
             const newProps: h.JSX.HTMLAttributes<TabElement> = useButtonLikeEventHandlers<TabElement>((e) => {
+                debugger;
                 navigateToIndex(info.index);
-                onSelect?.bind(null!)(null!);
+                onSelect?.bind(null!)(e);
                 e.preventDefault();
             })(props);
 
@@ -117,7 +126,7 @@ export function useAriaTabs({ selectionMode, selectedIndex, onSelect: asyncOnSel
             newProps["aria-selected"] = selected.toString();
             newProps["aria-controls"] = tabPanelId;
 
-            return useMergedProps<TabElement>()({}, useTabIdProps(useListNavigationChildProps(newProps)));
+            return useMergedProps<TabElement>()({}, useTabIdProps(useListNavigationChildProps(useRefElementProps(newProps))));
         }
 
         return { useTabProps };
@@ -126,10 +135,9 @@ export function useAriaTabs({ selectionMode, selectedIndex, onSelect: asyncOnSel
     const useTabPanel: UseTabPanel = useCallback(function usePanel<TabPanelElement extends Element>(info: UseTabPanelParameters) {
         //const [selectedTabPanelId, setSelectedTabPanelId, getSelectedTabPanelId] = useState<string | undefined>(undefined);
         const [shouldFocus, setShouldFocus] = useState(false);
-        const { element, useRefElementProps } = useRefElement<TabPanelElement>();
         const [tabId, setTabId] = useState<undefined | string>(undefined);
         const { useRandomIdProps: usePanelIdProps, useReferencedIdProps: useReferencedPanelId, id: tabPanelId } = useRandomId({ prefix: "aria-tab-panel-" });
-        useManagedTabPanel({ ...info, tabPanelId, setTabId, focus });
+        const { element, useManagedChildProps } = useManagedTabPanel<TabPanelElement>({ ...info, tabPanelId, setTabId, focus });
 
 
         function focus() {
@@ -151,7 +159,7 @@ export function useAriaTabs({ selectionMode, selectedIndex, onSelect: asyncOnSel
             props["aria-labelledby"] = managedTabs[info.index]?.tabId;
             props.role = "tabpanel";
             props.tabIndex ??= -1;      // Make sure the tab panel is tabbable.
-            return useMergedProps<TabPanelElement>()({}, usePanelIdProps(useRefElementProps(props)));
+            return useMergedProps<TabPanelElement>()({}, usePanelIdProps(useManagedChildProps(props)));
         }
 
         return { useTabPanelProps };

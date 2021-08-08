@@ -11,7 +11,7 @@ export interface UseAriaButtonParameters<E extends EventTarget> extends TagSensi
 
 export interface UseAriaButtonReturnType<E extends EventTarget>  {
     useAriaButtonProps: UseAriaButtonProps<E>;
-    asyncInfo: Omit<UseAsyncHandlerReturnType<E, "onClick", boolean | null | undefined>, "onClick">;
+    asyncInfo: Omit<UseAsyncHandlerReturnType<E, "onClick", boolean | null | undefined>, "getSyncOnClick">;
 }
 
 export type UseAriaButtonProps<E extends EventTarget> = <P extends UseAriaButtonPropsParameters<E>>(props: P) => UseAriaButtonPropsReturnType<E, P>;
@@ -61,8 +61,9 @@ export function useButtonLikeEventHandlers<E extends EventTarget>(onClick: h.JSX
 
 export function useAriaButton<E extends EventTarget>({ tag, pressed, onClick: onClickAsync, debounce }: UseAriaButtonParameters<E>): UseAriaButtonReturnType<E> {
 
-    const { onClick, ...asyncInfo } = useAsyncHandler<E>()({ capture: () => pressed == undefined? pressed : !pressed, event: "onClick", debounce })(onClickAsync);
+    const { getSyncOnClick, ...asyncInfo } = useAsyncHandler<E>()({ capture: () => pressed == undefined? pressed : !pressed, event: "onClick", debounce });
 
+    const onClick = getSyncOnClick(asyncInfo.pending? null : onClickAsync)
 
     function useAriaButtonProps<P extends UseAriaButtonPropsParameters<E>>({ "aria-pressed": ariaPressed, tabIndex, role, ...p }: P): UseAriaButtonPropsReturnType<E, P> {
 
@@ -86,10 +87,10 @@ export function useAriaButton<E extends EventTarget>({ tag, pressed, onClick: on
                 return useMergedProps<E>()(buttonProps, props);
 
             case "a":
-                return useMergedProps<E>()(divProps, props);
+                return useMergedProps<E>()(anchorProps, props);
 
             default:
-                return useMergedProps<E>()(anchorProps, props);
+                return useMergedProps<E>()(divProps, props);
         }
     }
 

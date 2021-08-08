@@ -11,7 +11,7 @@ import { useAriaListboxMulti, useAriaListboxSingle, UseListboxSingleItem, UseLis
 import { useAriaMenu, UseMenuItem } from "../use-menu";
 import { DemoUseInterval } from "./demos/use-interval";
 import { DemoUseTimeout } from "./demos/use-timeout";
-import { useAriaTabs, UseTab, UseTabPanel,  } from "../use-tabs";
+import { useAriaTabs, UseTab, UseTabPanel, } from "../use-tabs";
 import { useAriaTooltip } from "../use-tooltip";
 
 const RandomWords = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.".split(" ");
@@ -111,115 +111,6 @@ const DemoUseFocusTrapChild = memo(({ setActive, active, depth }: { active: bool
             <label>Active: <input type="checkbox" checked={active} onInput={e => { e.preventDefault(); setActive(e.currentTarget.checked); }} /></label>
 
         </>
-    );
-});
-
-const DemoUseAsyncHandler1 = memo(() => {
-
-    const [timeout, setTimeout] = useState(1000);
-    const [debounce, setDebounce] = useState(0);
-    const [shouldThrow, setShouldThrow, getShouldThrow] = useState(false);
-    const [disableConsecutive, setDisableConsecutive] = useState(false);
-
-    const {
-        callCount,
-        settleCount,
-        getCurrentCapture,
-        hasCapture,
-        onClick,
-        currentCapture,
-        pending,
-        error,
-        hasError,
-        rejectCount,
-        resolveCount
-    } = useAsyncHandler<HTMLButtonElement>()({ event: "onClick", capture: () => { }, debounce: debounce == 0 ? undefined : debounce })(async (v, e) => new Promise((resolve, reject) => window.setTimeout(() => getShouldThrow() ? reject() : resolve(), timeout)));
-
-    return (
-        <div className="demo">
-            <button disabled={pending && disableConsecutive} onClick={onClick}>Click me!</button>
-            <hr />
-            <label>Sleep for: <input type="number" value={timeout} onInput={e => setTimeout(e.currentTarget.valueAsNumber)} /></label>
-            <label>Throw an error <input type="checkbox" checked={shouldThrow} onInput={e => setShouldThrow(e.currentTarget.checked)} /></label>
-            <label>Disabled while pending <input type="checkbox" checked={disableConsecutive} onInput={e => setDisableConsecutive(e.currentTarget.checked)} /></label>
-            <label>Debounce: <input type="number" value={debounce} onInput={e => setDebounce(e.currentTarget.valueAsNumber)} /></label>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Field</th>
-                        <th>Value</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td>callCount</td><td>{callCount}</td></tr>
-                    <tr><td>settleCount</td><td>{settleCount}</td></tr>
-                    <tr><td>resolveCount</td><td>{resolveCount}</td></tr>
-                    <tr><td>rejectCount</td><td>{rejectCount}</td></tr>
-                    <tr><td>hasError</td><td>{hasError.toString()}</td></tr>
-                    <tr><td>hasCapture</td><td>{hasCapture.toString()}</td></tr>
-                </tbody>
-            </table>
-        </div>
-    );
-});
-
-const DemoUseAsyncHandler2 = memo(() => {
-
-    const [timeout, setTimeout] = useState(1000);
-    const [debounce, setDebounce] = useState(0);
-    const [shouldThrow, setShouldThrow, getShouldThrow] = useState(false);
-    const [disableConsecutive, setDisableConsecutive] = useState(false);
-
-    const [text, setText] = useState("");
-
-    const {
-        callCount,
-        settleCount,
-        getCurrentCapture,
-        hasCapture,
-        onInput,
-        currentCapture,
-        pending,
-        error,
-        hasError,
-        rejectCount,
-        resolveCount
-    } = useAsyncHandler<HTMLInputElement>()({ event: "onInput", capture: e => { e.preventDefault(); return e.currentTarget.value }, debounce: debounce == 0 ? undefined : debounce })(async (v, e) => new Promise((resolve, reject) => window.setTimeout(() => {
-        if (getShouldThrow()) {
-            reject();
-        }
-        else {
-            setText(v);
-            resolve();
-        }
-    }, timeout)));
-
-    return (
-        <div className="demo">
-            <label>Demo text: <input value={hasCapture ? currentCapture : text} disabled={pending && disableConsecutive} onInput={onInput} /></label>
-            <hr />
-            <label>Sleep for: <input type="number" value={timeout} onInput={e => setTimeout(e.currentTarget.valueAsNumber)} /></label>
-            <label>Throw an error <input type="checkbox" checked={shouldThrow} onInput={e => setShouldThrow(e.currentTarget.checked)} /></label>
-            <label>Disabled while pending <input type="checkbox" checked={disableConsecutive} onInput={e => setDisableConsecutive(e.currentTarget.checked)} /></label>
-            <label>Debounce: <input type="number" value={debounce} onInput={e => setDebounce(e.currentTarget.valueAsNumber)} /></label>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Field</th>
-                        <th>Value</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td>callCount</td><td>{callCount}</td></tr>
-                    <tr><td>settleCount</td><td>{settleCount}</td></tr>
-                    <tr><td>resolveCount</td><td>{resolveCount}</td></tr>
-                    <tr><td>rejectCount</td><td>{rejectCount}</td></tr>
-                    <tr><td>hasError</td><td>{hasError.toString()}</td></tr>
-                    <tr><td>currentCapture</td><td>{currentCapture}</td></tr>
-                    <tr><td>"Saved" input</td><td>{text}</td></tr>
-                </tbody>
-            </table>
-        </div>
     );
 });
 
@@ -467,8 +358,8 @@ const DemoFocus = memo(() => {
 const TabContext = createContext<UseTab>(null!);
 const TabPanelContext = createContext<UseTabPanel>(null!);
 const DemoTabs = memo(() => {
-    const selectionMode = "activate";
     const [selectedIndex, setSelectedIndex] = useState(0);
+    const [selectionMode, setSelectionMode] = useState<"focus" | "activate">("focus");
 
     const { useTabPanel, useTabsLabel, useTab, useTabsList } = useAriaTabs({ onSelect: setSelectedIndex, selectedIndex, selectionMode });
 
@@ -478,6 +369,8 @@ const DemoTabs = memo(() => {
         <TabContext.Provider value={useTab} >
             <TabPanelContext.Provider value={useTabPanel} >
                 <div class="demo">
+                    <label><input type="checkbox" checked={selectionMode == "focus"} onInput={(e) => { e.preventDefault(); setSelectionMode(e.currentTarget.checked ? "focus" : "activate") }} /> Activate on focus?</label>
+
                     <ul {...useTabListProps({})}><DemoTab index={0} /><DemoTab index={1} /><DemoTab index={2} /><DemoTab index={3} /><DemoTab index={4} /></ul>
                     <div><DemoTabPanel index={0} /><DemoTabPanel index={1} /><DemoTabPanel index={2} /><DemoTabPanel index={3} /><DemoTabPanel index={4} /></div>
                 </div>
@@ -496,7 +389,7 @@ const DemoTab = memo(({ index }: { index: number }) => {
 });
 
 const DemoTabPanel = memo(({ index }: { index: number }) => {
-    const [visible, setVisible] = useState(false)
+    const [visible, setVisible] = useState(false);
     const useTabPanel = useContext(TabPanelContext);
     const { useTabPanelProps } = useTabPanel<HTMLParagraphElement>({ index, setVisible, visible })
 
@@ -509,7 +402,7 @@ const DemoTabPanel = memo(({ index }: { index: number }) => {
 });
 
 const DemoTooltip = memo(() => {
-    const { useTooltip, useTooltipTrigger, isOpen } = useAriaTooltip({  });
+    const { useTooltip, useTooltipTrigger, isOpen } = useAriaTooltip({});
     const { useTooltipProps } = useTooltip<HTMLSpanElement>();
     const { useTooltipSourceProps } = useTooltipTrigger<HTMLSpanElement>();
     return (
@@ -536,8 +429,6 @@ const Component = () => {
 
 
         <DemoUseFocusTrap />
-        <DemoUseAsyncHandler1 />
-        <DemoUseAsyncHandler2 />
         <DemoUseDroppable />
         <DemoUseDraggable />
         <DemoUseElementSizeAnimation />

@@ -94,7 +94,7 @@ export function useAriaAccordian<E extends Element>({ expandedIndex, setExpanded
     const [lastFocusedIndex, setLastFocusedIndex, getLastFocusedIndex] = useState(0);
     const stableSetExpandedIndex = useStableCallback(setExpandedIndex ?? (() => {}));
 
-    const { managedChildren: managedAccordianSections, useManagedChild: useManagedChildSection } = useChildManager<Element, UseAriaAccordianSectionInfo>();
+    const { managedChildren: managedAccordianSections, useManagedChild: useManagedChildSection } = useChildManager<UseAriaAccordianSectionInfo>();
     const { useLinearNavigationProps } = useLinearNavigation<E>({ managedChildren: managedAccordianSections, navigationDirection: "block", getIndex: getLastFocusedIndex, setIndex: setLastFocusedIndex });
 
     useLayoutEffect(() => {
@@ -122,7 +122,6 @@ export function useAriaAccordian<E extends Element>({ expandedIndex, setExpanded
 
         const focus = useCallback(() => { headerElement?.focus(); }, [headerElement]);
 
-        const _: void = useManagedChildSection({ ...args, setOpenFromParent, focus });
 
         const { randomId: bodyRandomId, useRandomIdProps: useBodyRandomIdProps, useReferencedIdProps: useReferencedBodyIdProps } = useRandomId({ prefix: "aria-accordian-section-body-" });
         const { randomId: headRandomId, useRandomIdProps: useHeadRandomIdProps, useReferencedIdProps: useReferencedHeadIdProps } = useRandomId({ prefix: "aria-accordian-section-header-" });
@@ -131,8 +130,8 @@ export function useAriaAccordian<E extends Element>({ expandedIndex, setExpanded
 
         function useAriaAccordianSectionHeader<E extends Element>() {
 
+            const { element, useManagedChildProps } = useManagedChildSection<E>({ ...args, setOpenFromParent, focus });
             const { focused, useHasFocusProps } = useHasFocus<E>();
-            const { element, useRefElementProps, getElement } = useRefElement<E>()
 
             useLayoutEffect(() => {
                 setHeaderElement((element as Element as HTMLElement) ?? null);
@@ -148,7 +147,7 @@ export function useAriaAccordian<E extends Element>({ expandedIndex, setExpanded
                     setLastFocusedIndex(args.index);
                 }
 
-                let ret0: UseHasFocusPropsReturnType<E, Omit<P, "aria-expanded" | "aria-disabled">> = useHasFocusProps(useRefElementProps(props));
+                let ret0: UseHasFocusPropsReturnType<E, Omit<P, "aria-expanded" | "aria-disabled">> = useHasFocusProps(useManagedChildProps(props));
                 let ret1: UseReferencedIdPropsReturnType<{ "aria-expanded": string; "aria-disabled": string | undefined; } & (typeof ret0), "aria-controls"> = useReferencedBodyIdProps("aria-controls")({ "aria-expanded": (ariaExpanded ?? open.toString()), "aria-disabled": (ariaDisabled ?? (open ? "true" : undefined)), ...ret0 });
                 let ret2: UseRandomIdPropsReturnType<(typeof ret1)> = useHeadRandomIdProps(ret1);
                 let ret3:

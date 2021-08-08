@@ -16,7 +16,8 @@ interface UseAriaCheckboxParameters {
 
 export function useAriaCheckbox<InputType extends Element, LabelType extends Element>({ labelPosition, checked, onInput: onInputAsync, disabled }: UseAriaCheckboxParameters) {
 
-    const { onInput, ...asyncInfo } = useAsyncHandler<InputType | LabelType>()({ event: "onInput", capture: e => !checked })(onInputAsync);
+    const { getSyncOnInput, ...asyncInfo } = useAsyncHandler<InputType | LabelType>()({ event: "onInput", capture: e => !checked });
+    const onInput = getSyncOnInput(asyncInfo.pending? null : onInputAsync)
 
     const { inputId, labelId, useInputLabelInput: useILInput, useInputLabelLabel: useILLabel } = useInputLabel({ labelPrefix: "aria-checkbox-label-", inputPrefix: "aria-checkbox-input-" });
 

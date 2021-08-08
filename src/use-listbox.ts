@@ -41,25 +41,28 @@ export type UseListboxMultiItem<I extends UseListboxMultiItemInfo = UseListboxMu
     tabbable: boolean;
 }
 
-export function useAriaListboxSingle<E extends Element, I extends UseListboxSingleItemInfo>({ selectedIndex, onSelect, selectionMode, ...args }: UseListboxSingleParameters) {
+export function useAriaListboxSingle<E extends Element, I extends UseListboxSingleItemInfo>({ selectedIndex, onSelect: asyncOnSelect, selectionMode, ...args }: UseListboxSingleParameters) {
 
     const { useGenericLabelInput, useGenericLabelLabel, useReferencedInputIdProps, useReferencedLabelIdProps } = useGenericLabel({ labelPrefix: "aria-listbox-label-", inputPrefix: "aria-listbox-" })
-    const { useListNavigationChild, useListNavigationProps, navigateToIndex, managedChildren } = useListNavigation<E, I>(args);
-    const stableOnSelect = useStableCallback(onSelect);
+    const { useListNavigationChild, useListNavigationProps, navigateToIndex, managedChildren, indicesByElement } = useListNavigation<E, I>(args);
+    const stableAsyncOnSelect = useStableCallback(asyncOnSelect);
     const { useGenericLabelInputProps } = useGenericLabelInput<E>();
 
     useLayoutEffect(([prevSelectedIndex]) => {
         navigateToIndex(selectedIndex);
         managedChildren[prevSelectedIndex]?.setSelected(false);
-        managedChildren[selectedIndex].setSelected(true);
+        managedChildren[selectedIndex]?.setSelected(true);
     }, [selectedIndex, managedChildren.length]);
 
     const childCount = managedChildren.length;
 
+    const { getSyncOnClick: getSyncOnSelect, ...asyncInfo } = useAsyncHandler<E>()({ event: "onClick", capture: (e: Event) => indicesByElement.get(e.target!) ?? -1 });
+    const onSelect = getSyncOnSelect(asyncInfo.pending ? null : asyncOnSelect);
+
     const useListboxSingleItem: UseListboxSingleItem<I> = useCallback(<E extends HTMLElement>(info: Omit<I, "setSelected" | "setTabbable">) => {
         const [selected, setSelected, getSelected] = useState(false);
-        const { onClick: onSelect, ...asyncInfo } = useAsyncHandler<E>()({ event: "onClick", capture: (e: unknown) => info.index })(stableOnSelect);
         const { tabbable, useListNavigationSiblingProps, useListNavigationChildProps } = useListNavigationChild<E>({ setSelected, ...info } as I);
+
 
         useEffect(() => {
             if (tabbable && selectionMode == "focus") {
@@ -122,13 +125,14 @@ export function useAriaListboxMulti<E extends Element, I extends UseListboxMulti
 
 
 
-        const { onClick: onSelect, ...asyncInfo } = useAsyncHandler<E>()({ event: "onClick", capture: e => !selected })(onSelectAsync);
+        const { getSyncOnClick: getSyncOnSelect, ...asyncInfo } = useAsyncHandler<E>()({ event: "onClick", capture: e => !selected });
+        const onSelect = getSyncOnSelect(asyncInfo.pending ? null : onSelectAsync);
         const { tabbable, useListNavigationSiblingProps, useListNavigationChildProps } = useListNavigationChild<E>(info);
 
         useLayoutEffect(() => {
-                if (getShiftHeld()) {
-                    stableOnSelect(true, null);
-                }
+            if (getShiftHeld()) {
+                stableOnSelect(true, null);
+            }
         }, [tabbable])
 
         return { useListboxMultiItemProps, tabbable, asyncInfo };
@@ -136,14 +140,14 @@ export function useAriaListboxMulti<E extends Element, I extends UseListboxMulti
         function useListboxMultiItemProps<P extends h.JSX.HTMLAttributes<E>>(props: P) {
             const newProps: h.JSX.HTMLAttributes<E> = useButtonLikeEventHandlers<E>((e) => {
                 navigateToIndex(info.index);
-                info.onSelect(!selected, e);
+                onSelect?.bind(e.target as never)(e);
                 e.preventDefault();
-            }, { 
+            }, {
                 // TODO: The space key conflicts with typeahead,
                 // but it's the recommended activation method.
                 // It's also keyUp by default, which is sort of awkward.
                 space: "exclude"
-             })({  });
+            })({});
 
             props.role = "option";
             props["aria-setsize"] = (childCount).toString();

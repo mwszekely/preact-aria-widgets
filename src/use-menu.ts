@@ -91,8 +91,10 @@ function r() {
 requestAnimationFrame(r);
 
 export type UseMenuItem = <E extends Element>(args: UseAriaMenuItemDefaultParameters) => {
-    useAriaMenuItemProps: <P extends h.JSX.HTMLAttributes<E>>({ ...props }: P) => MergedProps<E, { onClick: h.JSX.MouseEventHandler<E>; }, UseListNavigationChildPropsReturnType<E, P>>
-    asyncInfo: Omit<UseAsyncHandlerReturnType<E, "onClick", void>, "onClick">;
+    useAriaMenuItemProps: <P extends h.JSX.HTMLAttributes<E>>({ ...props }: P) => MergedProps<E, {
+        onClick: h.JSX.MouseEventHandler<E>;
+    }, UseListNavigationChildPropsReturnType<E, P>>
+    asyncInfo: Omit<UseAsyncHandlerReturnType<E, "onClick", void>, "getSyncOnClick">;
 }
 
 export function useAriaMenu<E extends Element>({ collator, keyNavigation, noTypeahead, noWrap, typeaheadTimeout, ...args }: UseAriaMenuParameters) {
@@ -178,7 +180,8 @@ export function useAriaMenu<E extends Element>({ collator, keyNavigation, noType
     const useMenuItem: UseMenuItem = useCallback(<E extends Element>(args: UseAriaMenuItemDefaultParameters) => {
 
         const { useListNavigationChildProps } = useListNavigationChild<E>(args);
-        const { onClick, ...asyncInfo } = useAsyncHandler<E>()({ capture: _ => void (0), event: "onClick" })(args.onClick);
+        const { getSyncOnClick, ...asyncInfo } = useAsyncHandler<E>()({ capture: _ => void (0), event: "onClick" });
+        const onClick = getSyncOnClick(asyncInfo.pending ? null : args.onClick);
 
         function useAriaMenuItemProps<P extends h.JSX.HTMLAttributes<E>>({ ...props }: P) {
             props.role = "menuitem";
@@ -190,7 +193,8 @@ export function useAriaMenu<E extends Element>({ collator, keyNavigation, noType
 
     const useMenuItemCheckbox = useCallback(<E extends Element>(args: UseAriaMenuItemCheckboxParameters) => {
 
-        const { onClick, ...asyncInfo } = useAsyncHandler<E>()({ capture: _ => !args.checked, event: "onClick" })(args.onChange);
+        const { getSyncOnClick, ...asyncInfo } = useAsyncHandler<E>()({ capture: _ => !args.checked, event: "onClick" });
+        const onClick = getSyncOnClick(asyncInfo.pending ? null : args.onChange);
 
         function useAriaMenuItemProps<P extends h.JSX.HTMLAttributes<E>>({ ...props }: P) {
             props.role = "menuitemcheckbox";
