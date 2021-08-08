@@ -1,0 +1,552 @@
+
+import { createContext, Fragment, h, render } from "preact";
+import { memo } from "preact/compat";
+import { useCallback, useContext, useRef } from "preact/hooks";
+import { useAnimationFrame, useAsyncHandler, useConstant, useDraggable, useDroppable, useElementSize, useFocusTrap, useHasFocus, useListNavigation, UseListNavigationChild, useMergedProps, useState } from "preact-prop-helpers";
+import { DemoUseRovingTabIndex } from "./demos/use-roving-tab-index";
+import { useAriaAccordian, UseAriaAccordianSection } from "../use-accordian";
+import { useAriaDialog } from "../use-dialog";
+import { useAriaCheckbox } from "../use-checkbox";
+import { useAriaListboxMulti, useAriaListboxSingle, UseListboxSingleItem, UseListboxSingleItemInfo, UseListboxMultiItemInfo, UseListboxMultiItem } from "../use-listbox";
+import { useAriaMenu, UseMenuItem } from "../use-menu";
+import { DemoUseInterval } from "./demos/use-interval";
+import { DemoUseTimeout } from "./demos/use-timeout";
+import { useAriaTabs, UseTab, UseTabPanel,  } from "../use-tabs";
+import { useAriaTooltip } from "../use-tooltip";
+
+const RandomWords = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.".split(" ");
+
+type E = (EventTarget & HTMLInputElement);
+type E2 = E["className"]
+
+
+const DemoUseDroppable = () => {
+    const { droppedFiles, droppedStrings, filesForConsideration, stringsForConsideration, useDroppableProps, dropError } = useDroppable<HTMLDivElement>({ effect: "copy" });
+
+    const { ref } = useMergedProps<HTMLInputElement>()({}, { ref: useRef<HTMLInputElement>(null!) })
+
+    const p = useDroppableProps({ className: "demo droppable" });
+
+    const r = p.ref;
+
+    return (
+        <div {...p}>
+
+            {droppedStrings != null && <div>Data dropped: <ul>{(Object.entries(droppedStrings) as [keyof typeof stringsForConsideration, string][]).map(([type, value]) => <li>{type}: {value}</li>)}</ul></div>}
+            {droppedFiles != null && <div>Files dropped: <table>
+                <thead><tr><th>Name</th><th>Size</th><th>Type</th><th>Last modified</th></tr></thead>
+                <tbody>{droppedFiles.map(f => <tr><td>{f.name}</td>{f.data.byteLength}<td>{f.type}</td><td>{new Date(f.lastModified ?? 0)}</td></tr>)}</tbody>
+            </table></div>}
+            <hr />
+
+            {stringsForConsideration != null && <div>Data being considered: <ul>{Array.from(stringsForConsideration).map(type => <li>{type}</li>)}</ul></div>}
+            {filesForConsideration != null && <div>Files being considered: <ul>{filesForConsideration.map(f => <li>{JSON.stringify(f)}</li>)}</ul></div>}
+
+            <hr />
+            {dropError && <div>{dropError instanceof Error ? dropError.message : JSON.stringify(dropError)}</div>}
+        </div>
+    )
+}
+
+const DemoUseDraggable = () => {
+    const { dragging, useDraggableProps, lastDropEffect, getLastDropEffect, getDragging } = useDraggable<HTMLDivElement>({ data: { "text/plain": "This is custom draggable content of type text/plain." } });
+
+
+    return (
+        <div {...useDraggableProps({ className: "demo" })}>
+            Draggable content
+        </div>)
+}
+
+const DemoUseElementSizeAnimation = () => {
+    const [height, setHeight] = useState(0);
+    const [angle, setAngle] = useState(0);
+    useAnimationFrame({
+        callback: (ms) => {
+            setAngle(a => a + 0.01)
+            setHeight((Math.sin(angle) + 1) / 0.5);
+        }
+    });
+
+    const { element, elementSize, useElementSizeProps } = useElementSize<HTMLDivElement>();
+
+    return (
+        <div {...useElementSizeProps({ ref: undefined, className: "demo", style: { height: `${(height * 100) + 100}px` } })}>
+            <pre>{JSON.stringify(elementSize, null, 2)}</pre>
+        </div>
+    );
+}
+
+
+const DemoUseFocusTrap = memo(({ depth }: { depth?: number }) => {
+
+    const [active, setActive] = useState(false);
+
+    const { useFocusTrapProps } = useFocusTrap<HTMLDivElement>({ trapActive: active });
+    //const { useRovingTabIndexChild, useRovingTabIndexProps } = useRovingTabIndex<HTMLUListElement, RovingTabIndexChildInfo>({ tabbableIndex, focusOnChange: false });
+
+    const divProps = useFocusTrapProps({ ref: undefined, className: "focus-trap-demo" });
+    if (depth == 2)
+        return <div />;
+
+    return (
+        <div className="demo">
+            <label>Active: <input type="checkbox" checked={active} onInput={e => { e.preventDefault(); setActive(e.currentTarget.checked); }} /></label>
+            <div {...divProps} >
+                <DemoUseFocusTrapChild active={active} setActive={setActive} depth={depth ?? 0} />
+            </div>
+        </div>
+    );
+});
+
+
+const DemoUseFocusTrapChild = memo(({ setActive, active, depth }: { active: boolean, setActive: (active: boolean) => void, depth: number }) => {
+
+
+    return (
+        <>
+            <button>Button 1</button>
+            <button>Button 2</button>
+            <button>Button 3</button>
+            <label>Active: <input type="checkbox" checked={active} onInput={e => { e.preventDefault(); setActive(e.currentTarget.checked); }} /></label>
+
+        </>
+    );
+});
+
+const DemoUseAsyncHandler1 = memo(() => {
+
+    const [timeout, setTimeout] = useState(1000);
+    const [debounce, setDebounce] = useState(0);
+    const [shouldThrow, setShouldThrow, getShouldThrow] = useState(false);
+    const [disableConsecutive, setDisableConsecutive] = useState(false);
+
+    const {
+        callCount,
+        settleCount,
+        getCurrentCapture,
+        hasCapture,
+        onClick,
+        currentCapture,
+        pending,
+        error,
+        hasError,
+        rejectCount,
+        resolveCount
+    } = useAsyncHandler<HTMLButtonElement>()({ event: "onClick", capture: () => { }, debounce: debounce == 0 ? undefined : debounce })(async (v, e) => new Promise((resolve, reject) => window.setTimeout(() => getShouldThrow() ? reject() : resolve(), timeout)));
+
+    return (
+        <div className="demo">
+            <button disabled={pending && disableConsecutive} onClick={onClick}>Click me!</button>
+            <hr />
+            <label>Sleep for: <input type="number" value={timeout} onInput={e => setTimeout(e.currentTarget.valueAsNumber)} /></label>
+            <label>Throw an error <input type="checkbox" checked={shouldThrow} onInput={e => setShouldThrow(e.currentTarget.checked)} /></label>
+            <label>Disabled while pending <input type="checkbox" checked={disableConsecutive} onInput={e => setDisableConsecutive(e.currentTarget.checked)} /></label>
+            <label>Debounce: <input type="number" value={debounce} onInput={e => setDebounce(e.currentTarget.valueAsNumber)} /></label>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Field</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>callCount</td><td>{callCount}</td></tr>
+                    <tr><td>settleCount</td><td>{settleCount}</td></tr>
+                    <tr><td>resolveCount</td><td>{resolveCount}</td></tr>
+                    <tr><td>rejectCount</td><td>{rejectCount}</td></tr>
+                    <tr><td>hasError</td><td>{hasError.toString()}</td></tr>
+                    <tr><td>hasCapture</td><td>{hasCapture.toString()}</td></tr>
+                </tbody>
+            </table>
+        </div>
+    );
+});
+
+const DemoUseAsyncHandler2 = memo(() => {
+
+    const [timeout, setTimeout] = useState(1000);
+    const [debounce, setDebounce] = useState(0);
+    const [shouldThrow, setShouldThrow, getShouldThrow] = useState(false);
+    const [disableConsecutive, setDisableConsecutive] = useState(false);
+
+    const [text, setText] = useState("");
+
+    const {
+        callCount,
+        settleCount,
+        getCurrentCapture,
+        hasCapture,
+        onInput,
+        currentCapture,
+        pending,
+        error,
+        hasError,
+        rejectCount,
+        resolveCount
+    } = useAsyncHandler<HTMLInputElement>()({ event: "onInput", capture: e => { e.preventDefault(); return e.currentTarget.value }, debounce: debounce == 0 ? undefined : debounce })(async (v, e) => new Promise((resolve, reject) => window.setTimeout(() => {
+        if (getShouldThrow()) {
+            reject();
+        }
+        else {
+            setText(v);
+            resolve();
+        }
+    }, timeout)));
+
+    return (
+        <div className="demo">
+            <label>Demo text: <input value={hasCapture ? currentCapture : text} disabled={pending && disableConsecutive} onInput={onInput} /></label>
+            <hr />
+            <label>Sleep for: <input type="number" value={timeout} onInput={e => setTimeout(e.currentTarget.valueAsNumber)} /></label>
+            <label>Throw an error <input type="checkbox" checked={shouldThrow} onInput={e => setShouldThrow(e.currentTarget.checked)} /></label>
+            <label>Disabled while pending <input type="checkbox" checked={disableConsecutive} onInput={e => setDisableConsecutive(e.currentTarget.checked)} /></label>
+            <label>Debounce: <input type="number" value={debounce} onInput={e => setDebounce(e.currentTarget.valueAsNumber)} /></label>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Field</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>callCount</td><td>{callCount}</td></tr>
+                    <tr><td>settleCount</td><td>{settleCount}</td></tr>
+                    <tr><td>resolveCount</td><td>{resolveCount}</td></tr>
+                    <tr><td>rejectCount</td><td>{rejectCount}</td></tr>
+                    <tr><td>hasError</td><td>{hasError.toString()}</td></tr>
+                    <tr><td>currentCapture</td><td>{currentCapture}</td></tr>
+                    <tr><td>"Saved" input</td><td>{text}</td></tr>
+                </tbody>
+            </table>
+        </div>
+    );
+});
+
+const UseAccordianSectionContext = createContext<UseAriaAccordianSection>(null!);
+const DemoUseAccordian = memo(() => {
+
+    const [expandedIndex, setExpandedIndex] = useState(0);
+
+    const { useAriaAccordianSection, useAriaAccordianProps } = useAriaAccordian<HTMLDivElement>({ expandedIndex, setExpandedIndex })
+
+    return (
+        <UseAccordianSectionContext.Provider value={useAriaAccordianSection}>
+            <div className="demo">
+                <div {...useAriaAccordianProps({})}>
+                    <DemoAccordianSection index={0} />
+                    <DemoAccordianSection index={1} />
+                    <DemoAccordianSection index={2} />
+                </div>
+            </div>
+        </UseAccordianSectionContext.Provider>
+    )
+});
+
+const DemoAccordianSection = memo(({ index }: { index: number }) => {
+
+    const useAccordianSection = useContext(UseAccordianSectionContext);
+    const { openFromParent, useAriaAccordianSectionBody, useAriaAccordianSectionHeader } = useAccordianSection({ index });
+
+    const { useAriaAccordianSectionBodyProps } = useAriaAccordianSectionBody<HTMLDivElement>();
+    const { useAriaAccordianSectionHeaderProps } = useAriaAccordianSectionHeader<HTMLButtonElement>();
+
+    const p = useAriaAccordianSectionBodyProps({ className: "accordian-section-body", hidden: !openFromParent });
+    p.id;
+    return (
+        <div className="accordian-section">
+            <button {...useAriaAccordianSectionHeaderProps({ className: "accordian-section-header" })}>Header #{index + 1}</button>
+            <div {...p}><p>Body content #{index + 1}</p><p>{RandomWords.join(" ")}</p></div>
+        </div>
+    )
+})
+
+const DemoUseCheckbox = memo(() => {
+
+    return (
+        <div className="demo">
+            <Checkbox1 />
+            <Checkbox2 />
+        </div>
+    )
+});
+
+
+
+
+const Checkbox1 = memo(() => {
+
+    const [checked, setChecked] = useState(false);
+
+    const F = (c: Parameters<typeof setChecked>[0], e: Event) => {
+        return new Promise<void>(resolve => { e.preventDefault(); setTimeout(() => { setChecked(c); resolve(); }, 1000); });
+    };
+
+    const setChecked2 = useCallback(F, []);
+
+    const { useCheckboxInputElement, useCheckboxLabelElement, asyncInfo } = useAriaCheckbox<HTMLInputElement, HTMLLabelElement>({ disabled: false, checked, labelPosition: "separate", onInput: setChecked2 });
+    const { useCheckboxInputElementProps } = useCheckboxInputElement({ tag: "input" });
+    const { useCheckboxLabelElementProps } = useCheckboxLabelElement({ tag: "label" });
+
+    return (
+        <>
+            <input {...useCheckboxInputElementProps({ type: "checkbox", })} />
+            <label {...useCheckboxLabelElementProps({})}>Label</label>
+        </>
+    )
+});
+
+const Checkbox2 = memo(() => {
+
+    const [checked, setChecked] = useState(false);
+
+    const F = (c: Parameters<typeof setChecked>[0], e: Event) => {
+        return new Promise<void>(resolve => { e.preventDefault(); setTimeout(() => { setChecked(c); resolve(); }, 1000); });
+    };
+
+    const setChecked2 = useCallback(F, []);
+
+    const { useCheckboxLabelElement, useCheckboxInputElement } = useAriaCheckbox<HTMLInputElement, HTMLLabelElement>({ disabled: false, labelPosition: "wrapping", onInput: setChecked2, checked });
+    const { useCheckboxInputElementProps } = useCheckboxInputElement({ tag: "input" });
+    const { useCheckboxLabelElementProps } = useCheckboxLabelElement({ tag: "label" });
+
+    return (
+        <>
+            <label {...useCheckboxLabelElementProps({})}><input {...useCheckboxInputElementProps({ type: "checkbox" })} /> Label</label>
+        </>
+    )
+});
+
+
+const DemoUseDialog = memo(() => {
+    const onClose = (() => setOpen(false));
+    const [open, setOpen] = useState(false);
+
+    const { useDialogBackdrop, useDialogBody, useDialogProps, useDialogTitle } = useAriaDialog<HTMLDivElement>({ open, onClose });
+    const { useDialogBackdropProps } = useDialogBackdrop<HTMLDivElement>();
+    const { useDialogBodyProps } = useDialogBody({ descriptive: true });
+    const { useDialogTitleProps } = useDialogTitle();
+    return (
+        <div class="demo">
+            <label><input type="checkbox" checked={open} onInput={e => { e.preventDefault(); setOpen(e.currentTarget.checked) }} /></label>
+            <div {...useDialogBackdropProps({ hidden: !open })}>
+                <div {...useDialogProps({})}>
+                    <div {...useDialogTitleProps({})}>Dialog Title</div>
+                    <div {...useDialogBodyProps({})}>
+                        <p tabIndex={-1}>Dialog body content</p>
+                        <p>{RandomWords.join(" ")}</p>
+                        <p>{RandomWords.join(" ")}</p>
+                        <p>{RandomWords.join(" ")}</p>
+                        <p><button onClick={onClose}>Close</button></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+});
+
+const ListBoxSingleItemContext = createContext<UseListboxSingleItem>(null!);
+const DemoUseListboxSingle = memo(() => {
+    const [selectedIndex, setSelectedIndex] = useState(0);
+    const { useListboxSingleItem, useListboxSingleLabel, useListboxSingleProps } = useAriaListboxSingle<HTMLUListElement, UseListboxSingleItemInfo>({ selectedIndex, onSelect: setSelectedIndex, selectionMode: "activate" });
+
+
+    return <div class="demo">
+        <ListBoxSingleItemContext.Provider value={useListboxSingleItem}>
+            <ul {...useListboxSingleProps({})}>
+                {Array.from((function* () {
+                    for (let i = 0; i < 10; ++i) {
+                        yield <DemoListboxSingleOption key={i} index={i} />
+                    }
+                })())}
+            </ul>
+        </ListBoxSingleItemContext.Provider>
+    </div>
+});
+
+const DemoListboxSingleOption = memo(({ index }: { index: number, }) => {
+    const { getSelected, selected, tabbable, useListboxSingleItemProps } = useContext(ListBoxSingleItemContext)<HTMLLIElement>({ index, text: null });
+    return <li {...useListboxSingleItemProps({})}>Number {index + 1} option{selected ? "(selected)" : ""}</li>
+});
+
+
+
+
+
+const ListBoxMultiItemContext = createContext<UseListboxMultiItem>(null!);
+const DemoUseListboxMulti = memo(() => {
+
+    const { useListboxMultiItem, useListboxMultiLabel, useListboxMultiProps } = useAriaListboxMulti<HTMLUListElement, UseListboxMultiItemInfo>({});
+
+    const [selectedValues, setSelectedValues] = useState<Set<number>>(new Set());
+
+
+    return <div class="demo">
+        <ListBoxMultiItemContext.Provider value={useListboxMultiItem}>
+            <ul {...useListboxMultiProps({})}>
+                {Array.from((function* () {
+                    for (let i = 0; i < 10; ++i) {
+                        function setSelected2(selected: boolean) {
+
+                            setSelectedValues(selectedValues => {
+                                let next = new Set(selectedValues);
+
+                                if (selected && !next.has(i)) {
+                                    next.add(i);
+                                    return next;
+                                }
+                                else if (!selected && next.has(i)) {
+                                    next.delete(i);
+                                    return next;
+                                }
+
+                                return selectedValues;
+                            });
+
+                        }
+
+                        yield <DemoListboxMultiOption key={i} index={i} selected={!!selectedValues.has(i)} setSelected={setSelected2} />
+                    }
+                })())}
+            </ul>
+        </ListBoxMultiItemContext.Provider>
+    </div>
+});
+
+const MenuItemContext = createContext<UseMenuItem>(null!);
+const DemoListboxMultiOption = memo(({ index, selected, setSelected }: { index: number, selected: boolean, setSelected(selected: boolean): (void | Promise<void>) }) => {
+    const { tabbable, useListboxMultiItemProps } = useContext(ListBoxMultiItemContext)<HTMLLIElement>({ index, text: null, onSelect: setSelected, selected });
+    return <li {...useListboxMultiItemProps({})}>Number {index + 1} option{selected ? "(selected)" : ""}</li>
+});
+
+const DemoMenu = memo(() => {
+    const [open, setOpen] = useState(false);
+    const onClose = () => setOpen(false);
+    const onOpen = () => setOpen(true);
+
+    const { useAriaMenuButton, useAriaMenuItem, useAriaMenuItemCheckbox, useAriaMenuProps, useAriaMenuSubmenuItem } = useAriaMenu<HTMLUListElement>({ open, onClose, onOpen });
+
+    const { useAriaMenuButtonProps } = useAriaMenuButton<HTMLButtonElement>({ tag: "button" })
+    return (
+        <div class="demo">
+            <MenuItemContext.Provider value={useAriaMenuItem}>
+                <button {...useAriaMenuButtonProps({})}>Open menu</button>
+                <ul {...useAriaMenuProps({})} hidden={!open}>
+                    <DemoMenuItem index={0} />
+                    <DemoMenuItem index={1} />
+                    <DemoMenuItem index={2} />
+                </ul>
+            </MenuItemContext.Provider>
+
+        </div>
+    )
+});
+
+const DemoMenuItem = memo(({ index }: { index: number }) => {
+    const useAriaMenuItem = useContext(MenuItemContext);
+    const { useAriaMenuItemProps: useAriaMenuItemProps0 } = useAriaMenuItem<HTMLLIElement>({ index, text: null });
+    return <li {...useAriaMenuItemProps0({})}>Item {index + 1}</li>
+})
+
+const DemoFocus = memo(() => {
+    const { focused, focusedInner, useHasFocusProps } = useHasFocus<HTMLDivElement>();
+    return (
+        <div class="demo">
+            <h2>useHasFocus</h2>
+            <div {...useHasFocusProps({ style: { border: "1px solid black" }, tabIndex: 0 })} >Outer <div tabIndex={0} style={{ border: "1px solid black" }}>Inner element</div></div>
+            <div>
+                <ul>
+                    <li>Strictly focused: {focused.toString()}</li>
+                    <li>Inner focused: {focusedInner.toString()}</li>
+                </ul>
+            </div>
+        </div>
+    )
+})
+
+const TabContext = createContext<UseTab>(null!);
+const TabPanelContext = createContext<UseTabPanel>(null!);
+const DemoTabs = memo(() => {
+    const selectionMode = "activate";
+    const [selectedIndex, setSelectedIndex] = useState(0);
+
+    const { useTabPanel, useTabsLabel, useTab, useTabsList } = useAriaTabs({ onSelect: setSelectedIndex, selectedIndex, selectionMode });
+
+    const { useTabListProps } = useTabsList<HTMLUListElement>();
+
+    return (
+        <TabContext.Provider value={useTab} >
+            <TabPanelContext.Provider value={useTabPanel} >
+                <div class="demo">
+                    <ul {...useTabListProps({})}><DemoTab index={0} /><DemoTab index={1} /><DemoTab index={2} /><DemoTab index={3} /><DemoTab index={4} /></ul>
+                    <div><DemoTabPanel index={0} /><DemoTabPanel index={1} /><DemoTabPanel index={2} /><DemoTabPanel index={3} /><DemoTabPanel index={4} /></div>
+                </div>
+            </TabPanelContext.Provider>
+        </TabContext.Provider>
+    )
+});
+
+const DemoTab = memo(({ index }: { index: number }) => {
+    const useTab = useContext(TabContext);
+    const { useTabProps } = useTab<HTMLLIElement>({ index, text: null })
+
+    return (<>
+        <li {...useTabProps({})}>Tab #{index + 1}</li>
+    </>)
+});
+
+const DemoTabPanel = memo(({ index }: { index: number }) => {
+    const [visible, setVisible] = useState(false)
+    const useTabPanel = useContext(TabPanelContext);
+    const { useTabPanelProps } = useTabPanel<HTMLParagraphElement>({ index, setVisible, visible })
+
+    return (
+        <div {...useTabPanelProps({ hidden: !visible })}>
+            <p>Tab panel content #{index + 1}.</p>
+            <p>{RandomWords.slice(0, Math.floor(RandomWords.length / (index + 1))).join(" ")}</p>
+        </div>
+    )
+});
+
+const DemoTooltip = memo(() => {
+    const { useTooltip, useTooltipTrigger, isOpen } = useAriaTooltip({  });
+    const { useTooltipProps } = useTooltip<HTMLSpanElement>();
+    const { useTooltipSourceProps } = useTooltipTrigger<HTMLSpanElement>();
+    return (
+        <div class="demo">
+            <p>This is a paragraph with a <span {...useTooltipSourceProps({})}>tooltip right here.</span><span {...useTooltipProps({ hidden: !isOpen })}>This is the tooltip content.</span></p>
+        </div>
+    )
+})
+
+const Component = () => {
+    return <div class="flex" style={{ flexWrap: "wrap" }}>
+        <DemoTooltip />
+        <DemoTabs />
+        <DemoFocus />
+        <DemoUseTimeout />
+        <DemoUseInterval />
+        <DemoMenu />
+        <DemoUseListboxSingle />
+        <DemoUseListboxMulti />
+        <DemoUseCheckbox />
+        <DemoUseAccordian />
+        <DemoUseDialog />
+        <DemoUseRovingTabIndex />
+
+
+        <DemoUseFocusTrap />
+        <DemoUseAsyncHandler1 />
+        <DemoUseAsyncHandler2 />
+        <DemoUseDroppable />
+        <DemoUseDraggable />
+        <DemoUseElementSizeAnimation />
+        {/*<DemoUseFocusTrap />
+        <DemoUseFocusTrap />*/}
+        <input />
+    </div>
+}
+
+requestAnimationFrame(() => {
+    render(<Component />, document.getElementById("root")!);
+})
