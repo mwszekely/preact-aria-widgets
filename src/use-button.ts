@@ -77,8 +77,8 @@ export function useAriaButton<E extends EventTarget>({ tag, pressed, onClick: on
         })(p)
 
 
-        const buttonProps = { tabIndex, "aria-pressed": ariaPressed ?? (pressed === true ? "true" : pressed === false ? "false" : undefined) };
-        const divProps = { role: role ?? "button", ...buttonProps, tabIndex: tabIndex ?? 0 };
+        const buttonProps = { role, tabIndex, "aria-pressed": ariaPressed ?? (pressed === true ? "true" : pressed === false ? "false" : undefined) };
+        const divProps = { ...buttonProps, tabIndex: tabIndex ?? 0, role: role ?? "button" };
         const anchorProps = { ...divProps };
 
 
