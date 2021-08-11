@@ -27,7 +27,14 @@ export function useAriaTooltip({ mouseoverDelay }: { mouseoverDelay?: number }) 
     useEffect(() => { setOpen(mouseoverIsValid || triggerFocused); }, [mouseoverIsValid, triggerFocused])
 
     // Use a timeout to open with a delay if requested
-    useTimeout({ callback: () => { setMouseoverIsValid(tooltipHasMouseover || triggerHasMouseover) }, timeout: mouseoverDelay ?? 0, triggerIndex: `${tooltipHasMouseover || triggerHasMouseover}` })
+    useTimeout({
+        callback: () => {
+            setMouseoverIsValid(tooltipHasMouseover || triggerHasMouseover);
+        },
+        // Force the delay to zero any time the tooltip is already focused
+        timeout: triggerFocused ? 0 : (mouseoverDelay ?? 0),
+        triggerIndex: `${tooltipHasMouseover || triggerHasMouseover}`
+    })
 
     // ...but always close immediately upon request.
     useEffect(() => {
