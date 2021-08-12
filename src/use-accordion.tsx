@@ -9,6 +9,8 @@ import { useHasFocus, UseHasFocusPropsReturnType } from "preact-prop-helpers/use
 import { MergedProps, useMergedProps } from "preact-prop-helpers/use-merged-props";
 import { useStableCallback } from "preact-prop-helpers/use-stable-callback";
 import { useRefElement } from "preact-prop-helpers/use-ref-element";
+import { TagSensitiveProps } from "props";
+import { useButtonLikeEventHandlers } from "use-button";
 
 export type UseAriaAccordion<E extends Element> = (args: UseAriaAccordionParameters) => UseAriaAccordionReturnType<E>;
 export type UseAriaAccordionSection = (args: UseAriaAccordionSectionParameters) => UseAriaAccordionSectionReturnType
@@ -51,7 +53,7 @@ export interface UseAriaAccordionSectionReturnType {
 export type UseAriaAccordionSectionHeaderPropsReturnType<E extends Element, P extends UseAriaAccordionSectionHeaderPropsParameters<E>> = MergedProps<E, UseRandomIdPropsReturnType<UseReferencedIdPropsReturnType<{ "aria-expanded": string; "aria-disabled": string | undefined; } & UseHasFocusPropsReturnType<E, Omit<P, "aria-expanded" | "aria-disabled">>, "aria-controls">>, { onClick: h.JSX.EventHandler<h.JSX.TargetedMouseEvent<E>> }>;
 export type UseAriaAccordionSectionBodyPropsReturnType<E extends Element, P extends UseAriaAccordionSectionBodyPropsParameters<E>> = UseRandomIdPropsReturnType<UseReferencedIdPropsReturnType<{ role: string; } & Omit<P, "role">, "aria-labelledby">>;
 
-export type UseAriaAccordionSectionHeader = <E extends Element>() => UseAriaAccordionSectionHeaderReturnType<E>;
+export type UseAriaAccordionSectionHeader = <E extends Element>({ tag }: TagSensitiveProps<E>) => UseAriaAccordionSectionHeaderReturnType<E>;
 export interface UseAriaAccordionSectionHeaderReturnType<E extends Element> { useAriaAccordionSectionHeaderProps: UseAriaAccordionSectionHeaderProps<E>; }
 export type UseAriaAccordionSectionBody = <E extends Element>() => UseAriaAccordionSectionBodyReturnType<E>;
 export interface UseAriaAccordionSectionBodyReturnType<E extends Element> { useAriaAccordionSectionBodyProps: UseAriaAccordionSectionBodyProps<E>; }
@@ -128,7 +130,7 @@ export function useAriaAccordion<E extends Element>({ expandedIndex, setExpanded
 
         let open = ((openFromParent || args.open) || false);
 
-        function useAriaAccordionSectionHeader<E extends Element>() {
+        function useAriaAccordionSectionHeader<E extends Element>({ tag }: TagSensitiveProps<E>): UseAriaAccordionSectionHeaderReturnType<E> {
 
             const { element, useManagedChildProps } = useManagedChildSection<E>({ ...args, setOpenFromParent, focus });
             const { focused, useHasFocusProps } = useHasFocus<E>();
@@ -138,10 +140,6 @@ export function useAriaAccordion<E extends Element>({ expandedIndex, setExpanded
             }, [element])
 
             function useAriaAccordionSectionHeaderProps<P extends UseAriaAccordionSectionHeaderPropsParameters<E>>({ ["aria-expanded"]: ariaExpanded, ["aria-disabled"]: ariaDisabled, ...props }: P): UseAriaAccordionSectionHeaderPropsReturnType<E, P> {
-
-                const onClick: h.JSX.EventHandler<h.JSX.TargetedMouseEvent<E>> = (e) => {
-                    stableSetExpandedIndex(args.index);
-                }
 
                 const onFocus: h.JSX.FocusEventHandler<E> = (e) => {
                     setLastFocusedIndex(args.index);
@@ -153,9 +151,13 @@ export function useAriaAccordion<E extends Element>({ expandedIndex, setExpanded
                 let ret3:
                     //MergedProps<E, typeof ret2, { onClick: typeof onClick }> 
                     MergedProps<E, UseRandomIdPropsReturnType<UseReferencedIdPropsReturnType<{ "aria-expanded": string; "aria-disabled": string | undefined; } & UseHasFocusPropsReturnType<E, Omit<P, "aria-expanded" | "aria-disabled">>, "aria-controls">>, { onClick: h.JSX.EventHandler<h.JSX.TargetedMouseEvent<E>> }>
-                    = useMergedProps<E>()(ret2, { onClick, onFocus });
+                    = useMergedProps<E>()(ret2, { onFocus });
 
-                return ret3;
+                let ret4 = useButtonLikeEventHandlers<E>((e) => {
+                    stableSetExpandedIndex(args.index);
+                })(ret3);
+
+                return tag === "button"? ret3 : ret4;
             };
 
             return { useAriaAccordionSectionHeaderProps };
