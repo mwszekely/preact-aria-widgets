@@ -21,7 +21,7 @@ export type UseAriaAccordionSectionBodyProps<E extends Element> = <P extends Use
 
 export interface UseAriaAccordionParameters {
     expandedIndex?: number | null;
-    setExpandedIndex?(i: number): void;
+    setExpandedIndex?(i: number | null): void;
 }
 
 export interface UseAriaAccordionReturnType<E extends Element> {
@@ -47,7 +47,7 @@ export interface UseAriaAccordionSectionHeaderPropsParameters<E extends Element>
 export interface UseAriaAccordionSectionBodyPropsParameters<E extends Element> extends h.JSX.HTMLAttributes<E> { }
 
 export interface UseAriaAccordionSectionReturnType {
-    openFromParent: boolean;
+    expanded: boolean;
     useAriaAccordionSectionHeader: UseAriaAccordionSectionHeader;
     useAriaAccordionSectionBody: UseAriaAccordionSectionBody;
 }
@@ -143,17 +143,22 @@ export function useAriaAccordion<E extends Element>({ expandedIndex, setExpanded
             function useAriaAccordionSectionHeaderProps<P extends UseAriaAccordionSectionHeaderPropsParameters<E>>({ ["aria-expanded"]: ariaExpanded, ["aria-disabled"]: ariaDisabled, ...props }: P): UseAriaAccordionSectionHeaderPropsReturnType<E, P> {
 
                 const onFocus = () => { setLastFocusedIndex(args.index); }
-                let onClick = () => { stableSetExpandedIndex(args.index); };
+                let onClick = () => {
+                    if (openFromParent)
+                        stableSetExpandedIndex(null);
+                    else
+                        stableSetExpandedIndex(args.index);
+                };
 
                 let retA = useMergedProps<E>()({ onClick }, props);
                 let retB = useMergedProps<E>()({ tabIndex: 0 }, useButtonLikeEventHandlers<E>(onClick)(props));
 
                 let ret3:
                     MergedProps<E, UseRandomIdPropsReturnType<UseReferencedIdPropsReturnType<{ "aria-expanded": string; "aria-disabled": string | undefined; } & UseHasFocusPropsReturnType<E, Omit<P, "aria-expanded" | "aria-disabled">>, "aria-controls">>, { onClick: h.JSX.EventHandler<h.JSX.TargetedMouseEvent<E>> }>
-                    = useMergedProps<E>()(useHeadRandomIdProps(useReferencedBodyIdProps("aria-controls")({ 
-                        "aria-expanded": (ariaExpanded ?? open.toString()), 
-                        "aria-disabled": (ariaDisabled ?? (open ? "true" : undefined)), 
-                        ...useHasFocusProps(useManagedChildProps(tag === "button" ? retA : retB)) 
+                    = useMergedProps<E>()(useHeadRandomIdProps(useReferencedBodyIdProps("aria-controls")({
+                        "aria-expanded": (ariaExpanded ?? open.toString()),
+                        "aria-disabled": (ariaDisabled ?? (open ? "true" : undefined)),
+                        ...useHasFocusProps(useManagedChildProps(tag === "button" ? retA : retB))
                     })), { onFocus });
 
 
@@ -176,7 +181,7 @@ export function useAriaAccordion<E extends Element>({ expandedIndex, setExpanded
         }
 
         return {
-            openFromParent,
+            expanded: open,
             useAriaAccordionSectionHeader,
             useAriaAccordionSectionBody,
         }
