@@ -11,6 +11,7 @@ import { useStableCallback } from "preact-prop-helpers/use-stable-callback";
 import { useRefElement } from "preact-prop-helpers/use-ref-element";
 import { TagSensitiveProps } from "props";
 import { useButtonLikeEventHandlers } from "./use-button";
+import { useAsyncHandler } from "preact-prop-helpers";
 
 export type UseAriaAccordion<E extends Element> = (args: UseAriaAccordionParameters) => UseAriaAccordionReturnType<E>;
 export type UseAriaAccordionSection = (args: UseAriaAccordionSectionParameters) => UseAriaAccordionSectionReturnType
@@ -94,7 +95,7 @@ export function useAriaAccordion<E extends Element>({ expandedIndex, setExpanded
 
     //const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
     const [lastFocusedIndex, setLastFocusedIndex, getLastFocusedIndex] = useState(0);
-    const stableSetExpandedIndex = useStableCallback(setExpandedIndex ?? (() => {}));
+    const stableSetExpandedIndex = useStableCallback(setExpandedIndex ?? (() => { }));
 
     const { managedChildren: managedAccordionSections, useManagedChild: useManagedChildSection } = useChildManager<UseAriaAccordionSectionInfo>();
     const { useLinearNavigationProps } = useLinearNavigation<E>({ managedChildren: managedAccordionSections, navigationDirection: "block", getIndex: getLastFocusedIndex, setIndex: setLastFocusedIndex });
@@ -141,21 +142,19 @@ export function useAriaAccordion<E extends Element>({ expandedIndex, setExpanded
 
             function useAriaAccordionSectionHeaderProps<P extends UseAriaAccordionSectionHeaderPropsParameters<E>>({ ["aria-expanded"]: ariaExpanded, ["aria-disabled"]: ariaDisabled, ...props }: P): UseAriaAccordionSectionHeaderPropsReturnType<E, P> {
 
-                const onFocus: h.JSX.FocusEventHandler<E> = (e) => {
-                    setLastFocusedIndex(args.index);
-                }
+                const onFocus = () => { setLastFocusedIndex(args.index); }
+                let onClick = () => { stableSetExpandedIndex(args.index); };
 
-                let retA = useMergedProps<E>()({ tabIndex: 0 }, useButtonLikeEventHandlers<E>((e) => {
-                    stableSetExpandedIndex(args.index);
-                })(props));
+                let retA = useMergedProps<E>()({ onClick }, props);
+                let retB = useMergedProps<E>()({ tabIndex: 0 }, useButtonLikeEventHandlers<E>(onClick)(props));
 
-                let ret0: UseHasFocusPropsReturnType<E, Omit<P, "aria-expanded" | "aria-disabled">> = useHasFocusProps(useManagedChildProps(tag === "button"? props : retA));
-                let ret1: UseReferencedIdPropsReturnType<{ "aria-expanded": string; "aria-disabled": string | undefined; } & (typeof ret0), "aria-controls"> = useReferencedBodyIdProps("aria-controls")({ "aria-expanded": (ariaExpanded ?? open.toString()), "aria-disabled": (ariaDisabled ?? (open ? "true" : undefined)), ...ret0 });
-                let ret2: UseRandomIdPropsReturnType<(typeof ret1)> = useHeadRandomIdProps(ret1);
                 let ret3:
-                    //MergedProps<E, typeof ret2, { onClick: typeof onClick }> 
                     MergedProps<E, UseRandomIdPropsReturnType<UseReferencedIdPropsReturnType<{ "aria-expanded": string; "aria-disabled": string | undefined; } & UseHasFocusPropsReturnType<E, Omit<P, "aria-expanded" | "aria-disabled">>, "aria-controls">>, { onClick: h.JSX.EventHandler<h.JSX.TargetedMouseEvent<E>> }>
-                    = useMergedProps<E>()(ret2, { onFocus });
+                    = useMergedProps<E>()(useHeadRandomIdProps(useReferencedBodyIdProps("aria-controls")({ 
+                        "aria-expanded": (ariaExpanded ?? open.toString()), 
+                        "aria-disabled": (ariaDisabled ?? (open ? "true" : undefined)), 
+                        ...useHasFocusProps(useManagedChildProps(tag === "button" ? retA : retB)) 
+                    })), { onFocus });
 
 
                 return ret3;
