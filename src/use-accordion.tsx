@@ -10,7 +10,7 @@ import { MergedProps, useMergedProps } from "preact-prop-helpers/use-merged-prop
 import { useStableCallback } from "preact-prop-helpers/use-stable-callback";
 import { useRefElement } from "preact-prop-helpers/use-ref-element";
 import { TagSensitiveProps } from "props";
-import { useButtonLikeEventHandlers } from "use-button";
+import { useButtonLikeEventHandlers } from "./use-button";
 
 export type UseAriaAccordion<E extends Element> = (args: UseAriaAccordionParameters) => UseAriaAccordionReturnType<E>;
 export type UseAriaAccordionSection = (args: UseAriaAccordionSectionParameters) => UseAriaAccordionSectionReturnType
