@@ -3504,36 +3504,36 @@
 	        v$1("input", { ...useListNavigationSiblingProps({ type: "checkbox" }) })));
 	});
 
-	function useAriaAccordian({ expandedIndex, setExpandedIndex }) {
+	function useAriaAccordion({ expandedIndex, setExpandedIndex }) {
 	    //const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 	    const [lastFocusedIndex, setLastFocusedIndex, getLastFocusedIndex] = useState(0);
 	    const stableSetExpandedIndex = useStableCallback(setExpandedIndex ?? (() => { }));
-	    const { managedChildren: managedAccordianSections, useManagedChild: useManagedChildSection } = useChildManager();
-	    const { useLinearNavigationProps } = useLinearNavigation({ managedChildren: managedAccordianSections, navigationDirection: "block", getIndex: getLastFocusedIndex, setIndex: setLastFocusedIndex });
+	    const { managedChildren: managedAccordionSections, useManagedChild: useManagedChildSection } = useChildManager();
+	    const { useLinearNavigationProps } = useLinearNavigation({ managedChildren: managedAccordionSections, navigationDirection: "block", getIndex: getLastFocusedIndex, setIndex: setLastFocusedIndex });
 	    useLayoutEffect(() => {
 	        if (lastFocusedIndex != null && lastFocusedIndex >= 0)
-	            managedAccordianSections[lastFocusedIndex]?.focus();
+	            managedAccordionSections[lastFocusedIndex]?.focus();
 	    }, [lastFocusedIndex]);
 	    useLayoutEffect(([prevExpandedIndex]) => {
-	        if (prevExpandedIndex != null && prevExpandedIndex <= managedAccordianSections.length)
-	            managedAccordianSections[prevExpandedIndex]?.setOpenFromParent(false);
-	        if (expandedIndex != null && expandedIndex <= managedAccordianSections.length)
-	            managedAccordianSections[expandedIndex]?.setOpenFromParent(true);
-	    }, [expandedIndex, managedAccordianSections.length]);
-	    const useAriaAccordianSection = A$1((args) => {
+	        if (prevExpandedIndex != null && prevExpandedIndex <= managedAccordionSections.length)
+	            managedAccordionSections[prevExpandedIndex]?.setOpenFromParent(false);
+	        if (expandedIndex != null && expandedIndex <= managedAccordionSections.length)
+	            managedAccordionSections[expandedIndex]?.setOpenFromParent(true);
+	    }, [expandedIndex, managedAccordionSections.length]);
+	    const useAriaAccordionSection = A$1((args) => {
 	        const [openFromParent, setOpenFromParent] = useState(false);
 	        const [headerElement, setHeaderElement] = useState(null);
 	        const focus = A$1(() => { headerElement?.focus(); }, [headerElement]);
-	        const { randomId: bodyRandomId, useRandomIdProps: useBodyRandomIdProps, useReferencedIdProps: useReferencedBodyIdProps } = useRandomId({ prefix: "aria-accordian-section-body-" });
-	        const { randomId: headRandomId, useRandomIdProps: useHeadRandomIdProps, useReferencedIdProps: useReferencedHeadIdProps } = useRandomId({ prefix: "aria-accordian-section-header-" });
+	        const { randomId: bodyRandomId, useRandomIdProps: useBodyRandomIdProps, useReferencedIdProps: useReferencedBodyIdProps } = useRandomId({ prefix: "aria-accordion-section-body-" });
+	        const { randomId: headRandomId, useRandomIdProps: useHeadRandomIdProps, useReferencedIdProps: useReferencedHeadIdProps } = useRandomId({ prefix: "aria-accordion-section-header-" });
 	        let open = ((openFromParent || args.open) || false);
-	        function useAriaAccordianSectionHeader() {
+	        function useAriaAccordionSectionHeader() {
 	            const { element, useManagedChildProps } = useManagedChildSection({ ...args, setOpenFromParent, focus });
 	            const { focused, useHasFocusProps } = useHasFocus();
 	            useLayoutEffect(() => {
 	                setHeaderElement(element ?? null);
 	            }, [element]);
-	            function useAriaAccordianSectionHeaderProps({ ["aria-expanded"]: ariaExpanded, ["aria-disabled"]: ariaDisabled, ...props }) {
+	            function useAriaAccordionSectionHeaderProps({ ["aria-expanded"]: ariaExpanded, ["aria-disabled"]: ariaDisabled, ...props }) {
 	                const onClick = (e) => {
 	                    stableSetExpandedIndex(args.index);
 	                };
@@ -3546,30 +3546,30 @@
 	                let ret3 = useMergedProps()(ret2, { onClick, onFocus });
 	                return ret3;
 	            }
-	            return { useAriaAccordianSectionHeaderProps };
+	            return { useAriaAccordionSectionHeaderProps };
 	        }
-	        function useAriaAccordianSectionBody() {
-	            function useAriaAccordianSectionBodyProps({ role, ...props }) {
+	        function useAriaAccordionSectionBody() {
+	            function useAriaAccordionSectionBodyProps({ role, ...props }) {
 	                let ret1 = useReferencedHeadIdProps("aria-labelledby")({ role: role ?? "region", ...props });
 	                let ret2 = useBodyRandomIdProps(ret1);
 	                return ret2;
 	            }
 	            return {
-	                useAriaAccordianSectionBodyProps
+	                useAriaAccordionSectionBodyProps
 	            };
 	        }
 	        return {
 	            openFromParent,
-	            useAriaAccordianSectionHeader,
-	            useAriaAccordianSectionBody,
+	            useAriaAccordionSectionHeader,
+	            useAriaAccordionSectionBody,
 	        };
 	    }, []);
-	    function useAriaAccordianProps(props) {
+	    function useAriaAccordionProps(props) {
 	        return useLinearNavigationProps(props);
 	    }
 	    return {
-	        useAriaAccordianSection,
-	        useAriaAccordianProps
+	        useAriaAccordionSection,
+	        useAriaAccordionProps
 	    };
 	}
 
@@ -4380,26 +4380,26 @@
 	            "Active: ",
 	            v$1("input", { type: "checkbox", checked: active, onInput: e => { e.preventDefault(); setActive(e.currentTarget.checked); } }))));
 	});
-	const UseAccordianSectionContext = D(null);
-	const DemoUseAccordian = g(() => {
+	const UseAccordionSectionContext = D(null);
+	const DemoUseAccordion = g(() => {
 	    const [expandedIndex, setExpandedIndex] = useState(0);
-	    const { useAriaAccordianSection, useAriaAccordianProps } = useAriaAccordian({ expandedIndex, setExpandedIndex });
-	    return (v$1(UseAccordianSectionContext.Provider, { value: useAriaAccordianSection },
+	    const { useAriaAccordionSection, useAriaAccordionProps } = useAriaAccordion({ expandedIndex, setExpandedIndex });
+	    return (v$1(UseAccordionSectionContext.Provider, { value: useAriaAccordionSection },
 	        v$1("div", { className: "demo" },
-	            v$1("div", { ...useAriaAccordianProps({}) },
-	                v$1(DemoAccordianSection, { index: 0 }),
-	                v$1(DemoAccordianSection, { index: 1 }),
-	                v$1(DemoAccordianSection, { index: 2 })))));
+	            v$1("div", { ...useAriaAccordionProps({}) },
+	                v$1(DemoAccordionSection, { index: 0 }),
+	                v$1(DemoAccordionSection, { index: 1 }),
+	                v$1(DemoAccordionSection, { index: 2 })))));
 	});
-	const DemoAccordianSection = g(({ index }) => {
-	    const useAccordianSection = F(UseAccordianSectionContext);
-	    const { openFromParent, useAriaAccordianSectionBody, useAriaAccordianSectionHeader } = useAccordianSection({ index });
-	    const { useAriaAccordianSectionBodyProps } = useAriaAccordianSectionBody();
-	    const { useAriaAccordianSectionHeaderProps } = useAriaAccordianSectionHeader();
-	    const p = useAriaAccordianSectionBodyProps({ className: "accordian-section-body", hidden: !openFromParent });
+	const DemoAccordionSection = g(({ index }) => {
+	    const useAccordionSection = F(UseAccordionSectionContext);
+	    const { openFromParent, useAriaAccordionSectionBody, useAriaAccordionSectionHeader } = useAccordionSection({ index });
+	    const { useAriaAccordionSectionBodyProps } = useAriaAccordionSectionBody();
+	    const { useAriaAccordionSectionHeaderProps } = useAriaAccordionSectionHeader();
+	    const p = useAriaAccordionSectionBodyProps({ className: "accordion-section-body", hidden: !openFromParent });
 	    p.id;
-	    return (v$1("div", { className: "accordian-section" },
-	        v$1("button", { ...useAriaAccordianSectionHeaderProps({ className: "accordian-section-header" }) },
+	    return (v$1("div", { className: "accordion-section" },
+	        v$1("button", { ...useAriaAccordionSectionHeaderProps({ className: "accordion-section-header" }) },
 	            "Header #",
 	            index + 1),
 	        v$1("div", { ...p },
@@ -4619,7 +4619,7 @@
 	        v$1(DemoUseListboxSingle, null),
 	        v$1(DemoUseListboxMulti, null),
 	        v$1(DemoUseCheckbox, null),
-	        v$1(DemoUseAccordian, null),
+	        v$1(DemoUseAccordion, null),
 	        v$1(DemoUseDialog, null),
 	        v$1(DemoUseRovingTabIndex, null),
 	        v$1(DemoUseFocusTrap, null),
