@@ -78,7 +78,6 @@ export function useAriaTabs({ selectionMode, selectedIndex, onSelect: asyncOnSel
 
 
     useLayoutEffect(([prevChildCount, prevSelectedIndex]) => {
-        debugger;
         if (selectedIndex != null && selectionMode == "activate") {
             managedPanels[selectedIndex]?.focus();
         }
@@ -114,7 +113,6 @@ export function useAriaTabs({ selectionMode, selectedIndex, onSelect: asyncOnSel
 
         function useTabProps<P extends h.JSX.HTMLAttributes<TabElement>>({ ...props }: P) {
             const newProps: h.JSX.HTMLAttributes<TabElement> = useButtonLikeEventHandlers<TabElement>((e) => {
-                debugger;
                 navigateToIndex(info.index);
                 onSelect?.bind(null!)(e);
                 e.preventDefault();
