@@ -117,7 +117,7 @@ const DemoUseFocusTrapChild = memo(({ setActive, active, depth }: { active: bool
 const UseAccordionSectionContext = createContext<UseAriaAccordionSection>(null!);
 const DemoUseAccordion = memo(() => {
 
-    const [expandedIndex, setExpandedIndex] = useState(0);
+    const [expandedIndex, setExpandedIndex] = useState<number | null>(0);
 
     const { useAriaAccordionSection, useAriaAccordionProps } = useAriaAccordion<HTMLDivElement>({ expandedIndex, setExpandedIndex })
 
@@ -137,12 +137,12 @@ const DemoUseAccordion = memo(() => {
 const DemoAccordionSection = memo(({ index }: { index: number }) => {
 
     const useAccordionSection = useContext(UseAccordionSectionContext);
-    const { openFromParent, useAriaAccordionSectionBody, useAriaAccordionSectionHeader } = useAccordionSection({ index });
+    const { expanded, useAriaAccordionSectionBody, useAriaAccordionSectionHeader } = useAccordionSection({ index });
 
     const { useAriaAccordionSectionBodyProps } = useAriaAccordionSectionBody<HTMLDivElement>();
-    const { useAriaAccordionSectionHeaderProps } = useAriaAccordionSectionHeader<HTMLButtonElement>();
+    const { useAriaAccordionSectionHeaderProps } = useAriaAccordionSectionHeader<HTMLButtonElement>({tag: "button"});
 
-    const p = useAriaAccordionSectionBodyProps({ className: "accordion-section-body", hidden: !openFromParent });
+    const p = useAriaAccordionSectionBodyProps({ className: "accordion-section-body", hidden: !expanded });
     p.id;
     return (
         <div className="accordion-section">
