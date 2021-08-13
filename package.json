@@ -12,7 +12,7 @@
     "watch:ts": "tsc --watch",
     "build:ts": "tsc",
     "test": "jest",
-    "postinstall": "npx npm-run-all --npm-path npm -pc build",
+    "postinstall": "npm run build || true",
     "clean": "tsc --build --clean"
   },
   "author": "",
@@ -24,6 +24,7 @@
     "@babel/preset-typescript": "^7.14.5",
     "@types/enzyme": "^3.10.9",
     "@types/jest": "^26.0.24",
+    "cash-true": "^0.0.2",
     "commander": "^6.2.1",
     "concurrently": "^5.3.0",
     "cross-env": "^7.0.3",
