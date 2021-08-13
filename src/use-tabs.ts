@@ -22,9 +22,7 @@ export interface UseTabParameters extends Omit<UseListNavigationChildParameters<
 
 }
 
-export interface UseTabPanelParameters extends Omit<UseTabPanelInfo, "tabPanelId" | "setTabId" | "focus"> {
-    visible: boolean;
-}
+export interface UseTabPanelParameters extends Omit<UseTabPanelInfo, "tabPanelId" | "setTabId" | "focus" | "setVisible"> { }
 
 export interface UseTabInfo extends UseListNavigationChildInfo {
     setSelected(selected: boolean): void;
@@ -44,8 +42,8 @@ export interface UseTabPanelInfo extends ManagedChildInfo<number> {
 
 export type UseTabsList = <TabListElement extends Element>() => { useTabListProps: <P extends h.JSX.HTMLAttributes<TabListElement>>(props: P) => UseListNavigationPropsReturnType<TabListElement, P>; }
 export type UseTabsLabel = <E extends Element>() => { useTabsLabelProps: <P extends h.JSX.HTMLAttributes<E>>({ ...props }: P) => UseRandomIdPropsReturnType<P>; }
-export type UseTab = <TabElement extends Element>(info: UseTabParameters) => { useTabProps: <P extends h.JSX.HTMLAttributes<TabElement>>({ ...props }: P) => MergedProps<TabElement, {}, UseReferencedIdPropsReturnType<UseRandomIdPropsReturnType<any>, "aria-controls">>; }
-export type UseTabPanel = <PanelElement extends Element>(info: UseTabPanelParameters) => { useTabPanelProps: <P extends h.JSX.HTMLAttributes<PanelElement>>({ ...props }: P) => MergedProps<PanelElement, {}, UseReferencedIdPropsReturnType<UseRandomIdPropsReturnType<P>, "aria-labelledby">>; }
+export type UseTab = <TabElement extends Element>(info: UseTabParameters) => { selected: boolean; useTabProps: <P extends h.JSX.HTMLAttributes<TabElement>>({ ...props }: P) => MergedProps<TabElement, {}, UseReferencedIdPropsReturnType<UseRandomIdPropsReturnType<any>, "aria-controls">>; }
+export type UseTabPanel = <PanelElement extends Element>(info: UseTabPanelParameters) => { selected: boolean; useTabPanelProps: <P extends h.JSX.HTMLAttributes<PanelElement>>({ ...props }: P) => MergedProps<PanelElement, {}, UseReferencedIdPropsReturnType<UseRandomIdPropsReturnType<P>, "aria-labelledby">>; }
 
 export function useAriaTabs({ selectionMode, selectedIndex, onSelect: asyncOnSelect, ...args }: UseAriaTabsParameters) {
 
@@ -129,15 +127,16 @@ export function useAriaTabs({ selectionMode, selectedIndex, onSelect: asyncOnSel
             return useMergedProps<TabElement>()({}, useTabIdProps(useListNavigationChildProps(useRefElementProps(newProps))));
         }
 
-        return { useTabProps };
+        return { useTabProps, selected };
     }, []);
 
     const useTabPanel: UseTabPanel = useCallback(function usePanel<TabPanelElement extends Element>(info: UseTabPanelParameters) {
         //const [selectedTabPanelId, setSelectedTabPanelId, getSelectedTabPanelId] = useState<string | undefined>(undefined);
         const [shouldFocus, setShouldFocus] = useState(false);
         const [tabId, setTabId] = useState<undefined | string>(undefined);
+        const [selected, setSelected, getSelected] = useState(false);
         const { useRandomIdProps: usePanelIdProps, useReferencedIdProps: useReferencedPanelId, id: tabPanelId } = useRandomId({ prefix: "aria-tab-panel-" });
-        const { element, useManagedChildProps } = useManagedTabPanel<TabPanelElement>({ ...info, tabPanelId, setTabId, focus });
+        const { element, useManagedChildProps } = useManagedTabPanel<TabPanelElement>({ ...info, tabPanelId, setTabId, focus, setVisible: setSelected });
 
 
         function focus() {
@@ -162,7 +161,7 @@ export function useAriaTabs({ selectionMode, selectedIndex, onSelect: asyncOnSel
             return useMergedProps<TabPanelElement>()({}, usePanelIdProps(useManagedChildProps(props)));
         }
 
-        return { useTabPanelProps };
+        return { useTabPanelProps, selected };
     }, []);
 
 

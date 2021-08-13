@@ -389,12 +389,11 @@ const DemoTab = memo(({ index }: { index: number }) => {
 });
 
 const DemoTabPanel = memo(({ index }: { index: number }) => {
-    const [visible, setVisible] = useState(false);
     const useTabPanel = useContext(TabPanelContext);
-    const { useTabPanelProps } = useTabPanel<HTMLParagraphElement>({ index, setVisible, visible })
+    const { useTabPanelProps, selected } = useTabPanel<HTMLParagraphElement>({ index })
 
     return (
-        <div {...useTabPanelProps({ hidden: !visible })}>
+        <div {...useTabPanelProps({ hidden: !selected })}>
             <p>Tab panel content #{index + 1}.</p>
             <p>{RandomWords.slice(0, Math.floor(RandomWords.length / (index + 1))).join(" ")}</p>
         </div>
