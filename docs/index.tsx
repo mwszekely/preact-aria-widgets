@@ -4,7 +4,7 @@ import { memo } from "preact/compat";
 import { useCallback, useContext, useRef } from "preact/hooks";
 import { useAnimationFrame, useAsyncHandler, useConstant, useDraggable, useDroppable, useElementSize, useFocusTrap, useHasFocus, useListNavigation, UseListNavigationChild, useMergedProps, useState } from "preact-prop-helpers";
 import { DemoUseRovingTabIndex } from "./demos/use-roving-tab-index";
-import { useAriaAccordian, UseAriaAccordianSection } from "../use-accordian";
+import { useAriaAccordion, UseAriaAccordionSection } from "../use-accordion";
 import { useAriaDialog } from "../use-dialog";
 import { useAriaCheckbox } from "../use-checkbox";
 import { useAriaListboxMulti, useAriaListboxSingle, UseListboxSingleItem, UseListboxSingleItemInfo, UseListboxMultiItemInfo, UseListboxMultiItem } from "../use-listbox";
@@ -114,39 +114,39 @@ const DemoUseFocusTrapChild = memo(({ setActive, active, depth }: { active: bool
     );
 });
 
-const UseAccordianSectionContext = createContext<UseAriaAccordianSection>(null!);
-const DemoUseAccordian = memo(() => {
+const UseAccordionSectionContext = createContext<UseAriaAccordionSection>(null!);
+const DemoUseAccordion = memo(() => {
 
     const [expandedIndex, setExpandedIndex] = useState(0);
 
-    const { useAriaAccordianSection, useAriaAccordianProps } = useAriaAccordian<HTMLDivElement>({ expandedIndex, setExpandedIndex })
+    const { useAriaAccordionSection, useAriaAccordionProps } = useAriaAccordion<HTMLDivElement>({ expandedIndex, setExpandedIndex })
 
     return (
-        <UseAccordianSectionContext.Provider value={useAriaAccordianSection}>
+        <UseAccordionSectionContext.Provider value={useAriaAccordionSection}>
             <div className="demo">
-                <div {...useAriaAccordianProps({})}>
-                    <DemoAccordianSection index={0} />
-                    <DemoAccordianSection index={1} />
-                    <DemoAccordianSection index={2} />
+                <div {...useAriaAccordionProps({})}>
+                    <DemoAccordionSection index={0} />
+                    <DemoAccordionSection index={1} />
+                    <DemoAccordionSection index={2} />
                 </div>
             </div>
-        </UseAccordianSectionContext.Provider>
+        </UseAccordionSectionContext.Provider>
     )
 });
 
-const DemoAccordianSection = memo(({ index }: { index: number }) => {
+const DemoAccordionSection = memo(({ index }: { index: number }) => {
 
-    const useAccordianSection = useContext(UseAccordianSectionContext);
-    const { openFromParent, useAriaAccordianSectionBody, useAriaAccordianSectionHeader } = useAccordianSection({ index });
+    const useAccordionSection = useContext(UseAccordionSectionContext);
+    const { openFromParent, useAriaAccordionSectionBody, useAriaAccordionSectionHeader } = useAccordionSection({ index });
 
-    const { useAriaAccordianSectionBodyProps } = useAriaAccordianSectionBody<HTMLDivElement>();
-    const { useAriaAccordianSectionHeaderProps } = useAriaAccordianSectionHeader<HTMLButtonElement>();
+    const { useAriaAccordionSectionBodyProps } = useAriaAccordionSectionBody<HTMLDivElement>();
+    const { useAriaAccordionSectionHeaderProps } = useAriaAccordionSectionHeader<HTMLButtonElement>();
 
-    const p = useAriaAccordianSectionBodyProps({ className: "accordian-section-body", hidden: !openFromParent });
+    const p = useAriaAccordionSectionBodyProps({ className: "accordion-section-body", hidden: !openFromParent });
     p.id;
     return (
-        <div className="accordian-section">
-            <button {...useAriaAccordianSectionHeaderProps({ className: "accordian-section-header" })}>Header #{index + 1}</button>
+        <div className="accordion-section">
+            <button {...useAriaAccordionSectionHeaderProps({ className: "accordion-section-header" })}>Header #{index + 1}</button>
             <div {...p}><p>Body content #{index + 1}</p><p>{RandomWords.join(" ")}</p></div>
         </div>
     )
@@ -422,7 +422,7 @@ const Component = () => {
         <DemoUseListboxSingle />
         <DemoUseListboxMulti />
         <DemoUseCheckbox />
-        <DemoUseAccordian />
+        <DemoUseAccordion />
         <DemoUseDialog />
         <DemoUseRovingTabIndex />
 

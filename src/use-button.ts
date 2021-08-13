@@ -9,7 +9,7 @@ export interface UseAriaButtonParameters<E extends EventTarget> extends TagSensi
     onClick?(pressed: boolean): void | Promise<void>;
 }
 
-export interface UseAriaButtonReturnType<E extends EventTarget>  {
+export interface UseAriaButtonReturnType<E extends EventTarget> {
     useAriaButtonProps: UseAriaButtonProps<E>;
     asyncInfo: Omit<UseAsyncHandlerReturnType<E, "onClick", boolean | null | undefined>, "getSyncOnClick">;
 }
@@ -21,11 +21,11 @@ export type UseAriaButtonPropsReturnType<E extends EventTarget, P extends UseAri
     MergedProps<E, { "aria-pressed": string | undefined; role: string; tabIndex: number; onKeyDown: h.JSX.KeyboardEventHandler<E>; onKeyUp: h.JSX.KeyboardEventHandler<E>; }, Omit<P, "aria-pressed" | "tabIndex" | "role">> |
     MergedProps<E, { "aria-pressed": string | undefined; }, Omit<P, "aria-pressed" | "tabIndex" | "role">>;
 
-    function excludes(target: "click" | "space" | "enter", exclude: undefined | "exclude" | { click?: "exclude" | undefined, space?: "exclude" | undefined, enter?: "exclude" | undefined }) {
-        if (exclude == "exclude")
-            return true;
-        return !!exclude?.[target];
-    }
+function excludes(target: "click" | "space" | "enter", exclude: undefined | "exclude" | { click?: "exclude" | undefined, space?: "exclude" | undefined, enter?: "exclude" | undefined }) {
+    if (exclude == "exclude")
+        return true;
+    return !!exclude?.[target];
+}
 
 // Handles keyDown for Enter, keyUp for Space, and click.
 export function useButtonLikeEventHandlers<E extends EventTarget>(onClick: h.JSX.MouseEventHandler<E> | null | undefined, exclude?: "exclude" | { click?: "exclude" | undefined, space?: "exclude" | undefined, enter?: "exclude" | undefined }) {

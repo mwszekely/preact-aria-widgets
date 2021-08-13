@@ -6,7 +6,7 @@ Documentation, testing, production-readiness are all TODO.
 
 Current components:
 
-1. Accordian
+1. Accordion
 2. Button
 3. Checkbox
 4. Dialog (modal)

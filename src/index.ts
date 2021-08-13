@@ -1,4 +1,4 @@
-export { useAriaAccordian } from "./use-accordian";
+export { useAriaAccordion } from "./use-accordion";
 export { useAriaButton } from "./use-button";
 export { useAriaCheckbox } from "./use-checkbox";
 export { useAriaDialog } from "./use-dialog";
