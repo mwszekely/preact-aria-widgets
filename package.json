@@ -4,15 +4,15 @@
   "version": "0.0.1",
   "description": "A small set of Preact hooks related to creating ARIA-compliant widgets",
   "source": "src/index.tsx",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "module": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "build": "npx npm-run-all --npm-path npm -pc build:*",
     "watch": "npx npm-run-all --npm-path npm -pc watch:*",
     "watch:ts": "tsc --watch",
     "build:ts": "tsc",
     "test": "jest",
-    "prepare": "npm run build || true",
+    "prepare": "npm run build || node ./true",
     "clean": "tsc --build --clean"
   },
   "author": "",
