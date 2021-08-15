@@ -119,10 +119,10 @@ export function useAriaMenu<E extends Element>({ collator, keyNavigation, noType
     const [pressedEscape, setPressedEscape] = useState(false);
 
     useLayoutEffect(() => {
-        if (open) {
+        if (open && managedChildren.length > 0) {
             focusMenu();
         }
-    }, [open]);
+    }, [open, managedChildren.length > 0]);
 
     useLayoutEffect(() => {
         if (!open) {
@@ -160,8 +160,8 @@ export function useAriaMenu<E extends Element>({ collator, keyNavigation, noType
     }, [open, onClose, onOpen, useMenuIdReferencingProps]);
 
     const useMenuSubmenuItem = useCallback(<E extends Element>(args: UseAriaMenuSubmenuItemParameters) => {
-        const { useAriaMenuProps, useAriaMenuButton } = useAriaMenu<HTMLElement>(args);
-        const { useAriaMenuButtonProps } = useAriaMenuButton<E>({ tag: "li" as any });
+        const { useMenuProps, useMenuButton } = useAriaMenu<HTMLElement>(args);
+        const { useAriaMenuButtonProps } = useMenuButton<E>({ tag: "li" as any });
 
         const { element, getElement, useRefElementProps } = useRefElement<E>();
         useLayoutEffect(() => { setOpenerElement(element as Element as (Element & HTMLOrSVGElement)); }, [element]);
@@ -169,8 +169,8 @@ export function useAriaMenu<E extends Element>({ collator, keyNavigation, noType
         return {
             element,
             getElement,
-            useAriaMenuProps,
-            useAriaMenuSubmenuItemProps: function <P extends h.JSX.HTMLAttributes<E>>({ ...props }: P) {
+            useMenuProps,
+            useMenuSubmenuItemProps: function <P extends h.JSX.HTMLAttributes<E>>({ ...props }: P) {
                 props.role = "menuitem";
                 return useRefElementProps(useAriaMenuButtonProps(useMenuIdReferencingProps("aria-controls")(props)));
             }
@@ -231,12 +231,12 @@ export function useAriaMenu<E extends Element>({ collator, keyNavigation, noType
 
 
     return {
-        useAriaMenuProps: useMenuProps,
-        useAriaMenuButton: useMenuButton,
+        useMenuProps: useMenuProps,
+        useMenuButton: useMenuButton,
 
-        useAriaMenuItem: useMenuItem,
-        useAriaMenuItemCheckbox: useMenuItemCheckbox,
-        useAriaMenuSubmenuItem: useMenuSubmenuItem,
+        useMenuItem: useMenuItem,
+        useMenuItemCheckbox: useMenuItemCheckbox,
+        useMenuSubmenuItem: useMenuSubmenuItem,
 
     }
 
