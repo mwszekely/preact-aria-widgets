@@ -11,41 +11,41 @@ import { useRefElement, UseRefElementPropsReturnType } from "preact-prop-helpers
 import { TagSensitiveProps } from "./props";
 import { useAriaButton, UseAriaButtonPropsReturnType, useButtonLikeEventHandlers } from "./use-button";
 
-interface UseAriaMenuParameters1 extends UseListNavigationParameters {
+interface UseMenuParameters1 extends UseListNavigationParameters {
     open: boolean;
     onClose(): void;
     onOpen(): (void | Promise<void>);
 }
 
-interface UseAriaMenuParameters2 extends UseListNavigationParameters {
+interface UseMenuParameters2 extends UseListNavigationParameters {
     menubar: true;
 }
 
-export type UseAriaMenuParameters = (UseAriaMenuParameters1 | UseAriaMenuParameters2);
-export type UseAriaMenuSubmenuItemParameters = UseAriaMenuParameters & {}
-export interface UseAriaMenuButtonParameters<E extends Element> extends TagSensitiveProps<E> {
+export type UseAriaMenuParameters = (UseMenuParameters1 | UseMenuParameters2);
+export type UseMenuSubmenuItemParameters = UseAriaMenuParameters & {}
+export interface UseMenuButtonParameters<E extends Element> extends TagSensitiveProps<E> {
 }
 
-export interface UseAriaMenuItemCheckboxInfo extends UseListNavigationChildInfo {
+export interface UseMenuItemCheckboxInfo extends UseListNavigationChildInfo {
     type: "checkbox";
     checked: boolean | "mixed";
     onChange(value: boolean): (void | Promise<void>);
 }
 
-export interface UseAriaMenuItemRadioInfo extends UseListNavigationChildInfo {
+export interface UseMenuItemRadioInfo extends UseListNavigationChildInfo {
     type: "radio";
     checked: boolean;
     onChange(value: boolean): (void | Promise<void>);
 }
 
-export interface UseAriaMenuItemDefaultInfo extends UseListNavigationChildInfo {
+export interface UseMenuItemDefaultInfo extends UseListNavigationChildInfo {
     type?: "default";
     onClick?(): (void | Promise<void>);
 }
 
-export type UseAriaMenuItemCheckboxParameters = UseListNavigationChildParameters<UseAriaMenuItemCheckboxInfo>;
-export type UseAriaMenuItemRadioParameters = UseListNavigationChildParameters<UseAriaMenuItemRadioInfo>;
-export type UseAriaMenuItemDefaultParameters = UseListNavigationChildParameters<UseAriaMenuItemDefaultInfo>;
+export type UseMenuItemCheckboxParameters = UseListNavigationChildParameters<UseMenuItemCheckboxInfo>;
+export type UseMenuItemRadioParameters = UseListNavigationChildParameters<UseMenuItemRadioInfo>;
+export type UseMenuItemDefaultParameters = UseListNavigationChildParameters<UseMenuItemDefaultInfo>;
 /*
 export type UseAriaMenuProps<E extends Element> = <P extends h.JSX.HTMLAttributes<E>>({ ...props }: P) => UseRandomIdPropsReturnType<UseListNavigationPropsReturnType<E, P>>;
 export type UseAriaMenuButton = <E_1 extends Element>({ tag }: UseAriaMenuButtonParameters<E_1>) => {
@@ -90,8 +90,8 @@ function r() {
 }
 requestAnimationFrame(r);
 
-export type UseMenuItem = <E extends Element>(args: UseAriaMenuItemDefaultParameters) => {
-    useAriaMenuItemProps: <P extends h.JSX.HTMLAttributes<E>>({ ...props }: P) => MergedProps<E, {
+export type UseMenuItem = <E extends Element>(args: UseMenuItemDefaultParameters) => {
+    useMenuItemProps: <P extends h.JSX.HTMLAttributes<E>>({ ...props }: P) => MergedProps<E, {
         onClick: h.JSX.MouseEventHandler<E>;
     }, UseListNavigationChildPropsReturnType<E, P>>
     asyncInfo: Omit<UseAsyncHandlerReturnType<E, "onClick", void>, "getSyncOnClick">;
@@ -99,10 +99,10 @@ export type UseMenuItem = <E extends Element>(args: UseAriaMenuItemDefaultParame
 
 export function useAriaMenu<E extends Element>({ collator, keyNavigation, noTypeahead, noWrap, typeaheadTimeout, ...args }: UseAriaMenuParameters) {
 
-    let onClose = (args as Partial<UseAriaMenuParameters1>).onClose;
-    let onOpen = (args as Partial<UseAriaMenuParameters1>).onOpen;
-    let menubar = (args as Partial<UseAriaMenuParameters2>).menubar;
-    let open = (menubar ? true : (args as UseAriaMenuParameters1).open);
+    let onClose = (args as Partial<UseMenuParameters1>).onClose;
+    let onOpen = (args as Partial<UseMenuParameters1>).onOpen;
+    let menubar = (args as Partial<UseMenuParameters2>).menubar;
+    let open = (menubar ? true : (args as UseMenuParameters1).open);
     const stableOnClose = useStableCallback(onClose ?? (() => { }));
 
     const { managedChildren, useListNavigationChild, useListNavigationProps, tabbableIndex, focusSelf: focusMenu } = useListNavigation<E>({ collator, keyNavigation, noTypeahead, noWrap, typeaheadTimeout });
@@ -140,7 +140,7 @@ export function useAriaMenu<E extends Element>({ collator, keyNavigation, noType
         }
     }, [buttonHasFocus, menuHasFocus])
 
-    const useMenuButton = useCallback(<E extends Element>({ tag }: UseAriaMenuButtonParameters<E>) => {
+    const useMenuButton = useCallback(<E extends Element>({ tag }: UseMenuButtonParameters<E>) => {
 
         const { useAriaButtonProps } = useAriaButton<E>({ tag, onClick: () => { return open ? onClose?.() : onOpen?.() } });
 
@@ -159,7 +159,7 @@ export function useAriaMenu<E extends Element>({ collator, keyNavigation, noType
         }
     }, [open, onClose, onOpen, useMenuIdReferencingProps]);
 
-    const useMenuSubmenuItem = useCallback(<E extends Element>(args: UseAriaMenuSubmenuItemParameters) => {
+    const useMenuSubmenuItem = useCallback(<E extends Element>(args: UseMenuSubmenuItemParameters) => {
         const { useMenuProps, useMenuButton } = useAriaMenu<HTMLElement>(args);
         const { useAriaMenuButtonProps } = useMenuButton<E>({ tag: "li" as any });
 
@@ -177,7 +177,7 @@ export function useAriaMenu<E extends Element>({ collator, keyNavigation, noType
         }
     }, []);
 
-    const useMenuItem: UseMenuItem = useCallback(<E extends Element>(args: UseAriaMenuItemDefaultParameters) => {
+    const useMenuItem: UseMenuItem = useCallback(<E extends Element>(args: UseMenuItemDefaultParameters) => {
 
         const { useListNavigationChildProps } = useListNavigationChild<E>(args);
         const { getSyncOnClick, ...asyncInfo } = useAsyncHandler<E>()({ capture: _ => void (0), event: "onClick" });
@@ -191,7 +191,7 @@ export function useAriaMenu<E extends Element>({ collator, keyNavigation, noType
         return { useMenuItemProps, asyncInfo };
     }, []);
 
-    const useMenuItemCheckbox = useCallback(<E extends Element>(args: UseAriaMenuItemCheckboxParameters) => {
+    const useMenuItemCheckbox = useCallback(<E extends Element>(args: UseMenuItemCheckboxParameters) => {
 
         const { getSyncOnClick, ...asyncInfo } = useAsyncHandler<E>()({ capture: _ => !args.checked, event: "onClick" });
         const onClick = getSyncOnClick(asyncInfo.pending ? null : args.onChange);
