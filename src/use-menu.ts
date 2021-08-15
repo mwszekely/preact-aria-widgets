@@ -120,15 +120,23 @@ export function useAriaMenu<E extends Element>({ collator, keyNavigation, noType
 
     useLayoutEffect(() => {
         if (open && managedChildren.length > 0) {
-            focusMenu();
+            requestAnimationFrame(() => {
+                queueMicrotask(() => {
+                    focusMenu();
+                });
+            })
         }
     }, [open, managedChildren.length > 0]);
 
     useLayoutEffect(() => {
         if (!open) {
             if (pressedEscape) {
-                openerElement?.focus();
-                setPressedEscape(false)
+                requestAnimationFrame(() => {
+                    queueMicrotask(() => {
+                        openerElement?.focus();
+                        setPressedEscape(false)
+                    });
+                })
             }
         }
     }, [open, pressedEscape])
