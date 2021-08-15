@@ -76,7 +76,7 @@ export function useAriaListboxSingle<E extends Element, I extends UseListboxSing
         function useListboxSingleItemProps<P extends h.JSX.HTMLAttributes<E>>(props: P) {
             const newProps: h.JSX.HTMLAttributes<E> = useButtonLikeEventHandlers<E>((e) => {
                 navigateToIndex(info.index);
-                onSelect?.bind(null!)(null!);
+                onSelect?.bind(element as never)({ target: element, currentTarget: element } as any);
                 e.preventDefault();
             })({});
 
