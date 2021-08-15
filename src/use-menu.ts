@@ -183,12 +183,12 @@ export function useAriaMenu<E extends Element>({ collator, keyNavigation, noType
         const { getSyncOnClick, ...asyncInfo } = useAsyncHandler<E>()({ capture: _ => void (0), event: "onClick" });
         const onClick = getSyncOnClick(asyncInfo.pending ? null : args.onClick);
 
-        function useAriaMenuItemProps<P extends h.JSX.HTMLAttributes<E>>({ ...props }: P) {
+        function useMenuItemProps<P extends h.JSX.HTMLAttributes<E>>({ ...props }: P) {
             props.role = "menuitem";
             return useMergedProps<E>()({ onClick }, useListNavigationChildProps(props));
         }
 
-        return { useAriaMenuItemProps, asyncInfo };
+        return { useMenuItemProps, asyncInfo };
     }, []);
 
     const useMenuItemCheckbox = useCallback(<E extends Element>(args: UseAriaMenuItemCheckboxParameters) => {
@@ -196,12 +196,12 @@ export function useAriaMenu<E extends Element>({ collator, keyNavigation, noType
         const { getSyncOnClick, ...asyncInfo } = useAsyncHandler<E>()({ capture: _ => !args.checked, event: "onClick" });
         const onClick = getSyncOnClick(asyncInfo.pending ? null : args.onChange);
 
-        function useAriaMenuItemProps<P extends h.JSX.HTMLAttributes<E>>({ ...props }: P) {
+        function useMenuItemProps<P extends h.JSX.HTMLAttributes<E>>({ ...props }: P) {
             props.role = "menuitemcheckbox";
             return useMergedProps<E>()({ onClick }, props);
         }
 
-        return { useAriaMenuItemProps, asyncInfo };
+        return { useMenuItemProps, asyncInfo };
     }, []);
 
 
@@ -231,12 +231,12 @@ export function useAriaMenu<E extends Element>({ collator, keyNavigation, noType
 
 
     return {
-        useMenuProps: useMenuProps,
-        useMenuButton: useMenuButton,
+        useMenuProps,
+        useMenuButton,
 
-        useMenuItem: useMenuItem,
-        useMenuItemCheckbox: useMenuItemCheckbox,
-        useMenuSubmenuItem: useMenuSubmenuItem,
+        useMenuItem,
+        useMenuItemCheckbox,
+        useMenuSubmenuItem,
 
     }
 
