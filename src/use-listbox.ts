@@ -4,7 +4,7 @@ import { useAsyncHandler } from "preact-prop-helpers/use-async-handler";
 import { useLayoutEffect } from "preact-prop-helpers/use-layout-effect";
 import { useListNavigation, UseListNavigationChildInfo, UseListNavigationChildPropsReturnType, UseListNavigationParameters } from "preact-prop-helpers/use-list-navigation";
 import { MergedProps, useMergedProps } from "preact-prop-helpers/use-merged-props";
-import { useRefElement } from "preact-prop-helpers/use-ref-element";
+import { useRefElement, UseRefElementPropsReturnType } from "preact-prop-helpers/use-ref-element";
 import { useStableCallback } from "preact-prop-helpers/use-stable-callback";
 import { useState } from "preact-prop-helpers/use-state";
 import { useButtonLikeEventHandlers } from "./use-button";
@@ -30,7 +30,7 @@ export interface UseListboxMultiItemInfo extends UseListNavigationChildInfo {
 }
 
 export type UseListboxSingleItem<I extends UseListboxSingleItemInfo = UseListboxSingleItemInfo> = <E extends HTMLElement>(info: Omit<I, "setSelected" | "setTabbable">) => {
-    useListboxSingleItemProps: <P extends h.JSX.HTMLAttributes<E>>(props: P) => UseListNavigationChildPropsReturnType<E, MergedProps<E, h.JSX.HTMLAttributes<E>, P>>;
+    useListboxSingleItemProps: <P extends h.JSX.HTMLAttributes<E>>(props: P) => UseListNavigationChildPropsReturnType<E, MergedProps<E, h.JSX.HTMLAttributes<E>, UseRefElementPropsReturnType<E, P>>>;
     tabbable: boolean;
     selected: boolean;
     getSelected: () => boolean;

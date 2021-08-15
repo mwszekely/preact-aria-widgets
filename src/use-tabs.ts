@@ -9,7 +9,7 @@ import { useRandomId, UseRandomIdPropsReturnType, UseReferencedIdPropsReturnType
 import { useStableCallback } from "preact-prop-helpers/use-stable-callback";
 import { useState } from "preact-prop-helpers/use-state";
 import { useButtonLikeEventHandlers } from "./use-button";
-import { useRefElement } from "preact-prop-helpers/use-ref-element";
+import { useRefElement, UseRefElementPropsReturnType } from "preact-prop-helpers/use-ref-element";
 import { useHasFocus, useStableGetter } from "preact-prop-helpers";
 
 export interface UseAriaTabsParameters extends UseListNavigationParameters {
@@ -43,7 +43,7 @@ export interface UseTabPanelInfo extends ManagedChildInfo<number> {
 export type UseTabsList = <TabListElement extends Element>() => { useTabListProps: <P extends h.JSX.HTMLAttributes<TabListElement>>(props: P) => UseListNavigationPropsReturnType<TabListElement, P>; }
 export type UseTabsLabel = <E extends Element>() => { useTabsLabelProps: <P extends h.JSX.HTMLAttributes<E>>({ ...props }: P) => UseRandomIdPropsReturnType<P>; }
 export type UseTab = <TabElement extends Element>(info: UseTabParameters) => { selected: boolean; useTabProps: <P extends h.JSX.HTMLAttributes<TabElement>>({ ...props }: P) => MergedProps<TabElement, {}, UseReferencedIdPropsReturnType<UseRandomIdPropsReturnType<any>, "aria-controls">>; }
-export type UseTabPanel = <PanelElement extends Element>(info: UseTabPanelParameters) => { selected: boolean; useTabPanelProps: <P extends h.JSX.HTMLAttributes<PanelElement>>({ ...props }: P) => MergedProps<PanelElement, {}, UseReferencedIdPropsReturnType<UseRandomIdPropsReturnType<P>, "aria-labelledby">>; }
+export type UseTabPanel = <PanelElement extends Element>(info: UseTabPanelParameters) => { selected: boolean, useTabPanelProps: <P extends h.JSX.HTMLAttributes<PanelElement>>(p: P) => MergedProps<PanelElement, {}, UseRandomIdPropsReturnType<UseRefElementPropsReturnType<PanelElement, P>>> }
 
 export function useAriaTabs({ selectionMode, selectedIndex, onSelect: asyncOnSelect, ...args }: UseAriaTabsParameters) {
 

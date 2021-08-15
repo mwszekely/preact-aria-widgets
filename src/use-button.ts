@@ -84,13 +84,13 @@ export function useAriaButton<E extends EventTarget>({ tag, pressed, onClick: on
 
         switch (tag) {
             case "button":
-                return useMergedProps<E>()(buttonProps, props);
+                return useMergedProps<E>()(buttonProps as any, props as any);
 
             case "a":
-                return useMergedProps<E>()(anchorProps, props);
+                return useMergedProps<E>()(anchorProps as any, props as any);
 
             default:
-                return useMergedProps<E>()(divProps, props);
+                return useMergedProps<E>()(divProps as any, props as any);
         }
     }
 

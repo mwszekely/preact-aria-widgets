@@ -315,14 +315,14 @@ const DemoMenu = memo(() => {
     const onClose = () => setOpen(false);
     const onOpen = () => setOpen(true);
 
-    const { useAriaMenuButton, useAriaMenuItem, useAriaMenuItemCheckbox, useAriaMenuProps, useAriaMenuSubmenuItem } = useAriaMenu<HTMLUListElement>({ open, onClose, onOpen });
+    const { useMenuButton, useMenuItem, useMenuItemCheckbox, useMenuProps, useMenuSubmenuItem } = useAriaMenu<HTMLUListElement>({ open, onClose, onOpen });
 
-    const { useAriaMenuButtonProps } = useAriaMenuButton<HTMLButtonElement>({ tag: "button" })
+    const { useMenuButtonProps } = useMenuButton<HTMLButtonElement>({ tag: "button" })
     return (
         <div class="demo">
-            <MenuItemContext.Provider value={useAriaMenuItem}>
-                <button {...useAriaMenuButtonProps({})}>Open menu</button>
-                <ul {...useAriaMenuProps({})} hidden={!open}>
+            <MenuItemContext.Provider value={useMenuItem}>
+                <button {...useMenuButtonProps({})}>Open menu</button>
+                <ul {...useMenuProps({})} hidden={!open}>
                     <DemoMenuItem index={0} />
                     <DemoMenuItem index={1} />
                     <DemoMenuItem index={2} />
@@ -335,8 +335,8 @@ const DemoMenu = memo(() => {
 
 const DemoMenuItem = memo(({ index }: { index: number }) => {
     const useAriaMenuItem = useContext(MenuItemContext);
-    const { useAriaMenuItemProps: useAriaMenuItemProps0 } = useAriaMenuItem<HTMLLIElement>({ index, text: null });
-    return <li {...useAriaMenuItemProps0({})}>Item {index + 1}</li>
+    const { useMenuItemProps } = useAriaMenuItem<HTMLLIElement>({ index, text: null });
+    return <li {...useMenuItemProps({})}>Item {index + 1}</li>
 })
 
 const DemoFocus = memo(() => {
@@ -431,8 +431,6 @@ const Component = () => {
         <DemoUseDroppable />
         <DemoUseDraggable />
         <DemoUseElementSizeAnimation />
-        {/*<DemoUseFocusTrap />
-        <DemoUseFocusTrap />*/}
         <input />
     </div>
 }

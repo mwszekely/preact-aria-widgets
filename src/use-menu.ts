@@ -1,6 +1,7 @@
 import { h } from "preact";
 import { useCallback, useEffect, useState } from "preact/hooks";
 import { useHasFocus } from "preact-prop-helpers/use-has-focus";
+import { useActiveElement } from "preact-prop-helpers/use-active-element";
 import { useStableCallback } from "preact-prop-helpers/use-stable-callback";
 import { useAsyncHandler, UseAsyncHandlerReturnType } from "preact-prop-helpers/use-async-handler";
 import { useLayoutEffect } from "preact-prop-helpers/use-layout-effect";
@@ -10,6 +11,7 @@ import { useRandomId, UseRandomIdPropsReturnType, UseReferencedIdPropsReturnType
 import { useRefElement, UseRefElementPropsReturnType } from "preact-prop-helpers/use-ref-element";
 import { TagSensitiveProps } from "./props";
 import { useAriaButton, UseAriaButtonPropsReturnType, useButtonLikeEventHandlers } from "./use-button";
+import { useFocusTrap, useTimeout } from "preact-prop-helpers";
 
 interface UseMenuParameters1 extends UseListNavigationParameters {
     open: boolean;
@@ -99,6 +101,8 @@ export type UseMenuItem = <E extends Element>(args: UseMenuItemDefaultParameters
 
 export function useAriaMenu<E extends Element>({ collator, keyNavigation, noTypeahead, noWrap, typeaheadTimeout, ...args }: UseAriaMenuParameters) {
 
+    const [focusTrapActive, setFocusTrapActive] = useState(false);
+
     let onClose = (args as Partial<UseMenuParameters1>).onClose;
     let onOpen = (args as Partial<UseMenuParameters1>).onOpen;
     let menubar = (args as Partial<UseMenuParameters2>).menubar;
@@ -114,39 +118,37 @@ export function useAriaMenu<E extends Element>({ collator, keyNavigation, noType
     // but focus management is super sensitive, and even waiting for a useLayoutEffect to sync state here
     // would be too late, so it would look like there's a moment between menu focus lost and button focus gained
     // where nothing is focused. 
-    const { focusedInner: menuHasFocus, useHasFocusProps: useMenuHasFocusProps } = useHasFocus<E>();
+    const { focusedInner: menuHasFocus, useHasFocusProps: useMenuHasFocusProps,  } = useHasFocus<E>();
     const { focusedInner: buttonHasFocus, useHasFocusProps: useButtonHasFocusProps } = useHasFocus<Element>();
-    const [pressedEscape, setPressedEscape] = useState(false);
-
-    useLayoutEffect(() => {
-        if (open && managedChildren.length > 0) {
-            requestAnimationFrame(() => {
-                queueMicrotask(() => {
-                    focusMenu();
-                });
-            })
-        }
-    }, [open, managedChildren.length > 0]);
-
-    useLayoutEffect(() => {
-        if (!open) {
-            if (pressedEscape) {
-                requestAnimationFrame(() => {
-                    queueMicrotask(() => {
-                        openerElement?.focus();
-                        setPressedEscape(false)
-                    });
-                })
-            }
-        }
-    }, [open, pressedEscape])
+    const { activeElement, lastActiveElement, windowFocused } = useActiveElement();
+    const { useFocusTrapProps } = useFocusTrap<any>({ trapActive: open });
 
     useEffect(() => {
-        if (!menuHasFocus && !buttonHasFocus) {
-            console.log("Closing menu")
-            stableOnClose();
-        }
-    }, [buttonHasFocus, menuHasFocus])
+        setFocusTrapActive(open);
+    }, [open]);
+
+    useEffect(() => {
+        if (focusTrapActive)
+            focusMenu();
+        else
+            openerElement?.focus();
+    }, [focusTrapActive]);
+
+    // Focus management is really finicky, and there's
+    // always going to be an edge case where nothing's 
+    // focused for two consecutive frames on iOS or whatever.
+    // So any time it *looks* like we should close,
+    // wait 100ms and see if it's still true then.
+    console.log(`${focusTrapActive},${windowFocused},${!menuHasFocus},${!buttonHasFocus}`);
+    useTimeout({
+        timeout: 100, 
+        callback: () => {
+            if (focusTrapActive && windowFocused && !menuHasFocus && !buttonHasFocus) {
+                onClose?.();
+            }
+        }, 
+        triggerIndex: `${focusTrapActive},${windowFocused},${!menuHasFocus},${!buttonHasFocus}`
+    });
 
     const useMenuButton = useCallback(<E extends Element>({ tag }: UseMenuButtonParameters<E>) => {
 
@@ -158,7 +160,7 @@ export function useAriaMenu<E extends Element>({ collator, keyNavigation, noType
         useLayoutEffect(() => { setOpenerElement(element as Element as (Element & HTMLOrSVGElement)); }, [element]);
 
         return {
-            useAriaMenuButtonProps: function <P extends h.JSX.HTMLAttributes<E>>(p: P) {
+            useMenuButtonProps: function <P extends h.JSX.HTMLAttributes<E>>(p: P) {
                 let props = useRefElementProps(useAriaButtonProps(useMenuIdReferencingProps("aria-controls")(useButtonHasFocusProps(p as any) as any)));
                 props["aria-haspopup"] = "menu";
                 props["aria-expanded"] = open ? "true" : undefined;
@@ -169,7 +171,7 @@ export function useAriaMenu<E extends Element>({ collator, keyNavigation, noType
 
     const useMenuSubmenuItem = useCallback(<E extends Element>(args: UseMenuSubmenuItemParameters) => {
         const { useMenuProps, useMenuButton } = useAriaMenu<HTMLElement>(args);
-        const { useAriaMenuButtonProps } = useMenuButton<E>({ tag: "li" as any });
+        const { useMenuButtonProps } = useMenuButton<E>({ tag: "li" as any });
 
         const { element, getElement, useRefElementProps } = useRefElement<E>();
         useLayoutEffect(() => { setOpenerElement(element as Element as (Element & HTMLOrSVGElement)); }, [element]);
@@ -180,7 +182,7 @@ export function useAriaMenu<E extends Element>({ collator, keyNavigation, noType
             useMenuProps,
             useMenuSubmenuItemProps: function <P extends h.JSX.HTMLAttributes<E>>({ ...props }: P) {
                 props.role = "menuitem";
-                return useRefElementProps(useAriaMenuButtonProps(useMenuIdReferencingProps("aria-controls")(props)));
+                return useRefElementProps(useMenuButtonProps(useMenuIdReferencingProps("aria-controls")(props)));
             }
         }
     }, []);
@@ -218,15 +220,11 @@ export function useAriaMenu<E extends Element>({ collator, keyNavigation, noType
 
         function onKeyDown(e: KeyboardEvent) {
             if (e.key == "Escape" && onClose) {
-                // TODO: If the user presses escape and the menu doesn't close,
-                // this state variable isn't reset, and tabbing out of the menu
-                // will jump back to the opening button.
-                setPressedEscape(true);
                 onClose();
             }
         }
 
-        return useMenuIdProps(useListNavigationProps(useMenuHasFocusProps(useMergedProps<E>()({ onKeyDown }, props))));
+        return useMenuIdProps(useListNavigationProps(useMenuHasFocusProps(useMergedProps<E>()({ onKeyDown }, useFocusTrapProps(props)))));
     }
 
 
