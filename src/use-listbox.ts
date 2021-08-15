@@ -62,11 +62,12 @@ export function useAriaListboxSingle<E extends Element, I extends UseListboxSing
     const useListboxSingleItem: UseListboxSingleItem<I> = useCallback(<E extends HTMLElement>(info: Omit<I, "setSelected" | "setTabbable">) => {
         const [selected, setSelected, getSelected] = useState(false);
         const { tabbable, useListNavigationSiblingProps, useListNavigationChildProps } = useListNavigationChild<E>({ setSelected, ...info } as I);
+        const { element, useRefElementProps } = useRefElement<E>();
 
 
         useEffect(() => {
             if (tabbable && selectionMode == "focus") {
-                onSelect?.bind(null!)(null!);
+                onSelect?.bind(element as never)({ target: element, currentTarget: element } as any);
             }
         }, [tabbable, selectionMode]);
 
@@ -84,7 +85,7 @@ export function useAriaListboxSingle<E extends Element, I extends UseListboxSing
             props["aria-posinset"] = (info.index + 1).toString();
             props["aria-selected"] = selected.toString();
 
-            return useListNavigationChildProps(useMergedProps<E>()(newProps, props));
+            return useListNavigationChildProps(useMergedProps<E>()(newProps, useRefElementProps(props)));
         }
     }, [useListNavigationChild, selectionMode, childCount]);
 
