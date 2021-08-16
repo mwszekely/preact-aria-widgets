@@ -139,7 +139,6 @@ export function useAriaMenu<E extends Element>({ collator, keyNavigation, noType
     // focused for two consecutive frames on iOS or whatever.
     // So any time it *looks* like we should close,
     // wait 100ms and see if it's still true then.
-    console.log(`${focusTrapActive},${windowFocused},${!menuHasFocus},${!buttonHasFocus}`);
     useTimeout({
         timeout: 100, 
         callback: () => {
@@ -228,14 +227,6 @@ export function useAriaMenu<E extends Element>({ collator, keyNavigation, noType
     }
 
 
-
-
-
-
-
-
-
-
     return {
         useMenuProps,
         useMenuButton,
@@ -247,6 +238,4 @@ export function useAriaMenu<E extends Element>({ collator, keyNavigation, noType
         focusMenu
 
     }
-
-
 }
