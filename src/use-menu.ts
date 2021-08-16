@@ -244,6 +244,8 @@ export function useAriaMenu<E extends Element>({ collator, keyNavigation, noType
         useMenuItemCheckbox,
         useMenuSubmenuItem,
 
+        focusMenu
+
     }
 
 
