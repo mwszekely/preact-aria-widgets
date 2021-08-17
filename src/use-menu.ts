@@ -134,19 +134,20 @@ export function useAriaMenu<E extends Element>({ collator, keyNavigation, noType
             openerElement?.focus();
     }, [focusTrapActive]);
 
-    // Focus management is really finicky, and there's
-    // always going to be an edge case where nothing's 
-    // focused for two consecutive frames on iOS or whatever.
-    // So any time it *looks* like we should close,
-    // wait 100ms and see if it's still true then.
+    // Focus management is really finicky, and there's always going to be 
+    // an edge case where nothing's focused for two consecutive frames 
+    // on iOS or whatever, which would immediately close the menu 
+    // any time it's been opened. So any time it *looks* like we should close,
+    // try waiting 100ms. If it's still true then, then yeah, we should close.
+    let shouldClose = (focusTrapActive && windowFocused && !menuHasFocus && !buttonHasFocus);
     useTimeout({
         timeout: 100, 
         callback: () => {
-            if (focusTrapActive && windowFocused && !menuHasFocus && !buttonHasFocus) {
+            if (shouldClose) {
                 onClose?.();
             }
         }, 
-        triggerIndex: `${focusTrapActive},${windowFocused},${!menuHasFocus},${!buttonHasFocus}`
+        triggerIndex: `${shouldClose}`
     });
 
     const useMenuButton = useCallback(<E extends Element>({ tag }: UseMenuButtonParameters<E>) => {

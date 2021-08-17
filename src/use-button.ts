@@ -1,6 +1,7 @@
 import { ClassAttributes, h, Ref } from "preact";
 import { useAsyncHandler, UseAsyncHandlerParameters, UseAsyncHandlerReturnType } from "preact-prop-helpers/use-async-handler";
 import { MergedProps, useMergedProps } from "preact-prop-helpers/use-merged-props";
+import { useState } from "preact-prop-helpers/use-state";
 import { ElementFromTag, TagSensitiveProps } from "./props";
 
 export interface UseAriaButtonParameters<E extends EventTarget> extends TagSensitiveProps<E>, Pick<UseAsyncHandlerParameters<E, "onClick", boolean | undefined>, "debounce"> {
@@ -27,20 +28,49 @@ function excludes(target: "click" | "space" | "enter", exclude: undefined | "exc
     return !!exclude?.[target];
 }
 
-// Handles keyDown for Enter, keyUp for Space, and click.
+/**
+ * Easy way to "polyfill" button-like interactions onto, e.g., a div.
+ * 
+ * Adds click, space on keyDown, and enter on keyUp.
+ * 
+ * In addition, when the CSS `:active` pseudo-class would apply to a normal button
+ * (i.e. when holding the spacebar or during mousedown), { "data-pseudo-active": "true" }
+ * is added to the props.  You can either let it pass through and style it through new CSS,
+ * or inspect the returned props for it and add e.g. an `.active` class for existing CSS
+ * 
+ * @param onClick 
+ * @param exclude Whether the polyfill should apply (can specify for specific interactions)
+ */
 export function useButtonLikeEventHandlers<E extends EventTarget>(onClick: h.JSX.MouseEventHandler<E> | null | undefined, exclude?: "exclude" | { click?: "exclude" | undefined, space?: "exclude" | undefined, enter?: "exclude" | undefined }) {
+
+    const [active, setActive] = useState(false);
 
     const onKeyUp: h.JSX.KeyboardEventHandler<E> = (e) => {
         if (e.key == " " && onClick && !excludes("space", exclude)) {
             e.preventDefault();
             onClick.bind(e.target as never)(e as h.JSX.TargetedEvent<E> as h.JSX.TargetedMouseEvent<E>);
+            setActive(false);
         }
     }
+
+    const onMouseDown: h.JSX.MouseEventHandler<E> = (e) => {
+        if (e.button === 0)
+            setActive(true);
+    }
+
+    const onBlur: h.JSX.EventHandler<h.JSX.TargetedEvent<E>> = (e) => {
+        setActive(false);
+    }
+
+    const onMouseUp = onBlur;
+
+    const onMouseOut = onBlur;
 
     const onKeyDown: h.JSX.KeyboardEventHandler<E> = (e) => {
         if (e.key == " " && onClick && !excludes("space", exclude)) {
             // We don't actually activate it on a space keydown
             // but we do preventDefault to stop the page from scrolling.
+            setActive(true);
             e.preventDefault();
         }
 
@@ -56,19 +86,15 @@ export function useButtonLikeEventHandlers<E extends EventTarget>(onClick: h.JSX
         }
     }
 
-    return <P extends h.JSX.HTMLAttributes<E>>(props: P) => useMergedProps<E>()({ onKeyDown, onKeyUp, onClick: onClick2 }, props);
+    return <P extends h.JSX.HTMLAttributes<E>>(props: P) => useMergedProps<E>()({ onKeyDown, onKeyUp, onClick: onClick2, onBlur, onMouseDown, onMouseUp, onMouseOut, ...{ "data-pseudo-active": active ? "true" : undefined } as {} }, props);
 }
 
 export function useAriaButton<E extends EventTarget>({ tag, pressed, onClick: onClickAsync, debounce }: UseAriaButtonParameters<E>): UseAriaButtonReturnType<E> {
 
-    const { getSyncOnClick, ...asyncInfo } = useAsyncHandler<E>()({ capture: () => pressed == undefined? pressed : !pressed, event: "onClick", debounce });
+    const { getSyncOnClick, ...asyncInfo } = useAsyncHandler<E>()({ capture: () => pressed == undefined ? pressed : !pressed, event: "onClick", debounce });
+    const onClick = getSyncOnClick(asyncInfo.pending ? null : onClickAsync);
 
-    const onClick = getSyncOnClick(asyncInfo.pending? null : onClickAsync)
-
-    function useAriaButtonProps<P extends UseAriaButtonPropsParameters<E>>({ "aria-pressed": ariaPressed, tabIndex, role, ...p }: P): UseAriaButtonPropsReturnType<E, P> {
-
-
-
+    function useAriaButtonProps<P extends UseAriaButtonPropsParameters<E>>({ "aria-pressed": ariaPressed, "aria-disabled": ariaDisabled, tabIndex, role, ...p }: P): UseAriaButtonPropsReturnType<E, P> {
 
         const props = useButtonLikeEventHandlers<E>(onClick, {
             space: tag == "button" ? "exclude" : undefined,
@@ -77,7 +103,7 @@ export function useAriaButton<E extends EventTarget>({ tag, pressed, onClick: on
         })(p)
 
 
-        const buttonProps = { role, tabIndex, "aria-pressed": ariaPressed ?? (pressed === true ? "true" : pressed === false ? "false" : undefined) };
+        const buttonProps = { role, tabIndex, "aria-disabled": (asyncInfo.pending || ariaDisabled), "aria-pressed": ariaPressed ?? (pressed === true ? "true" : pressed === false ? "false" : undefined) };
         const divProps = { ...buttonProps, tabIndex: tabIndex ?? 0, role: role ?? "button" };
         const anchorProps = { ...divProps };
 

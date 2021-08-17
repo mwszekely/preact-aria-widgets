@@ -17,7 +17,7 @@ interface UseAriaCheckboxParameters {
 export function useAriaCheckbox<InputType extends Element, LabelType extends Element>({ labelPosition, checked, onInput: onInputAsync, disabled }: UseAriaCheckboxParameters) {
 
     const { getSyncOnInput, ...asyncInfo } = useAsyncHandler<InputType | LabelType>()({ event: "onInput", capture: e => !checked });
-    const onInput = getSyncOnInput(asyncInfo.pending? null : onInputAsync)
+    const onInput = getSyncOnInput(asyncInfo.pending ? null : onInputAsync)
 
     const { inputId, labelId, useInputLabelInput: useILInput, useInputLabelLabel: useILLabel } = useInputLabel({ labelPrefix: "aria-checkbox-label-", inputPrefix: "aria-checkbox-input-" });
 
@@ -33,11 +33,21 @@ export function useAriaCheckbox<InputType extends Element, LabelType extends Ele
 
 
 
-
+    // TODO: Making these stable isn't useful, but making
+    // the label hook (when labelPosition == "separate")
+    // stable, or at least providing useInputLabelLabel, is.
     function useCheckboxInputElement({ tag }: TagSensitiveProps<InputType>) {
         const { useInputLabelInputProps: useILInputProps } = useILInput<InputType>();
         const { element, useRefElementProps } = useRefElement<InputType>();
+        const isMixed = (checked == "mixed");
 
+        useLayoutEffect(() => {
+            if (element) {
+                if (tag === "input") {
+                    (element as any).indeterminate = isMixed;
+                }
+            }
+        }, [element, isMixed, tag])
 
 
         return { useCheckboxInputElementProps };
@@ -46,7 +56,7 @@ export function useAriaCheckbox<InputType extends Element, LabelType extends Ele
 
         function useCheckboxInputElementProps<P extends h.JSX.HTMLAttributes<InputType>>({ ...p0 }: P) {
 
-            let newProps: h.JSX.HTMLAttributes<InputType> = useButtonLikeEventHandlers<InputType>(onInput, disabled? "exclude" : tag != "input" || labelPosition == "wrapping"? undefined : "exclude")({});
+            let newProps: h.JSX.HTMLAttributes<InputType> = useButtonLikeEventHandlers<InputType>(onInput, disabled ? "exclude" : tag != "input" || labelPosition == "wrapping" ? undefined : "exclude")({});
 
             if (tag == "input" && labelPosition == "separate") {
                 if (!disabled) {
@@ -54,7 +64,6 @@ export function useAriaCheckbox<InputType extends Element, LabelType extends Ele
                 }
             }
 
-            const isMixed = (checked == "mixed");
 
             const p3 = useRefElementProps(useILInputProps(p0));
             const props = useMergedProps<InputType>()(newProps, p3);
@@ -80,13 +89,6 @@ export function useAriaCheckbox<InputType extends Element, LabelType extends Ele
             }
 
 
-            useLayoutEffect(() => {
-                if (element) {
-                    if (tag === "input") {
-                        (element as any).indeterminate = isMixed;
-                    }
-                }
-            }, [element, isMixed, tag])
 
 
             return useMergedProps<InputType>()(newProps, props);
@@ -94,13 +96,13 @@ export function useAriaCheckbox<InputType extends Element, LabelType extends Ele
     }
 
     function useCheckboxLabelElement({ tag }: TagSensitiveProps<LabelType>) {
+        const { useInputLabelLabelProps: useILLabelProps } = useILLabel<LabelType>({ tag });
 
         function useCheckboxLabelElementProps<P extends h.JSX.HTMLAttributes<LabelType>>({ ...p0 }: P) {
 
-            const { useInputLabelLabelProps: useILLabelProps } = useILLabel<LabelType>({ tag });
             const p3 = (useILLabelProps(p0));
 
-            let newProps: h.JSX.HTMLAttributes<LabelType> = useButtonLikeEventHandlers<LabelType>(onInput, disabled || (labelPosition == "separate" && tag == "label")? "exclude" : undefined)({});
+            let newProps: h.JSX.HTMLAttributes<LabelType> = useButtonLikeEventHandlers<LabelType>(onInput, disabled || (labelPosition == "separate" && tag == "label") ? "exclude" : undefined)({});
 
             if (labelPosition == "wrapping") {
                 newProps.tabIndex = 0;

@@ -97,6 +97,7 @@ export function useAriaListboxSingle<E extends Element, I extends UseListboxSing
         return useListNavigationProps(useGenericLabelInputProps(props));
     }
 
+    // TODO: Make stable
     function useListboxSingleLabel<E extends HTMLElement>() {
         function useListboxSingleLabelProps<P extends h.JSX.HTMLAttributes<E>>(props: P) {
             const { useGenericLabelLabelProps } = useGenericLabelLabel<E>();
@@ -146,7 +147,9 @@ export function useAriaListboxMulti<E extends Element, I extends UseListboxMulti
             }, {
                 // TODO: The space key conflicts with typeahead,
                 // but it's the recommended activation method.
-                // It's also keyUp by default, which is sort of awkward.
+                // It's also keyUp by default, which is sort of awkward
+                // to time when going up/down a list.
+                // Check for defaultPrevented? What if typeahead doesn't come first? I dunno.
                 space: "exclude"
             })({});
 
@@ -170,6 +173,7 @@ export function useAriaListboxMulti<E extends Element, I extends UseListboxMulti
         return useListNavigationProps(useGenericLabelInputProps(useMergedProps<E>()({ onKeyDown, onKeyUp, onBlur }, props)));
     }
 
+    // TODO: Make stable
     function useListboxMultiLabel<E extends HTMLElement>() {
         function useListboxMultiLabelProps<P extends h.JSX.HTMLAttributes<E>>(props: P) {
             const { useGenericLabelLabelProps } = useGenericLabelLabel<E>();

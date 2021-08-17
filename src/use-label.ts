@@ -22,6 +22,7 @@ export function useGenericLabel({ labelPrefix, inputPrefix } = { labelPrefix: "l
     }
 
     function useGenericLabelInput<E extends Element>() {
+        // TODO: Only add this prop when the label mounts
         return {
             useGenericLabelInputProps: <P extends h.JSX.HTMLAttributes<E>>({ "aria-labelledby": ariaLabelledby, ...props }: P) => useInputRandomIdProps(useReferencedLabelIdProps("aria-labelledby")(props))
         }
