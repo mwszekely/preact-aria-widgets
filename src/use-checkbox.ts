@@ -1,29 +1,25 @@
 import { h } from "preact"
 import { useCallback, useLayoutEffect, useRef, useState } from "preact/hooks";
 import { useRefElement } from "preact-prop-helpers/use-ref-element";
-import { useAsyncHandler } from "preact-prop-helpers/use-async-handler";
 import { useMergedProps } from "preact-prop-helpers/use-merged-props";
 import { useInputLabel } from "./use-label";
 import { TagSensitiveProps } from "./props";
 import { useButtonLikeEventHandlers } from "./use-button";
 import { useStableCallback } from "preact-prop-helpers";
 
-interface UseAriaCheckboxParameters {
+interface UseAriaCheckboxParameters<I extends Element, L extends Element> {
     checked: boolean | "mixed";
-    onInput(checked: boolean, e: Event): (Promise<void> | void);
+    onInput(this: never, event: h.JSX.TargetedEvent<I, Event>): void;
+    onInput(this: never, event: h.JSX.TargetedEvent<L, Event>): void;
     labelPosition: "wrapping" | "separate";
     disabled: boolean;
 }
 
-export function useAriaCheckbox<InputType extends Element, LabelType extends Element>({ labelPosition, checked, onInput: onInputAsync, disabled }: UseAriaCheckboxParameters) {
+export function useAriaCheckbox<InputType extends Element, LabelType extends Element>({ labelPosition, checked, onInput, disabled }: UseAriaCheckboxParameters<InputType, LabelType>) {
 
-    const { getSyncHandler, ...asyncInfo } = useAsyncHandler<InputType | LabelType>()({ capture: e => !checked });
-    const onInput = getSyncHandler(asyncInfo.pending ? null : (onInputAsync ?? null));
     const stableOnInput = useStableCallback(onInput);
 
     const { inputId, labelId, useInputLabelInput: useILInput, useInputLabelLabel: useILLabel } = useInputLabel({ labelPrefix: "aria-checkbox-label-", inputPrefix: "aria-checkbox-input-" });
-
-    disabled ||= asyncInfo.pending;
 
     const useCheckboxInputElement = useCallback(function useCheckboxInputElement({ tag }: TagSensitiveProps<InputType>) {
         const { useInputLabelInputProps: useILInputProps } = useILInput<InputType>();
@@ -113,8 +109,7 @@ export function useAriaCheckbox<InputType extends Element, LabelType extends Ele
 
     return {
         useCheckboxInputElement,
-        useCheckboxLabelElement,
-        asyncInfo
+        useCheckboxLabelElement
     };
 
 }

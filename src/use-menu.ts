@@ -3,7 +3,6 @@ import { useCallback, useEffect, useState } from "preact/hooks";
 import { useHasFocus } from "preact-prop-helpers/use-has-focus";
 import { useActiveElement } from "preact-prop-helpers/use-active-element";
 import { useStableCallback } from "preact-prop-helpers/use-stable-callback";
-import { useAsyncHandler, UseAsyncHandlerReturnType } from "preact-prop-helpers/use-async-handler";
 import { useLayoutEffect } from "preact-prop-helpers/use-layout-effect";
 import { useListNavigation, UseListNavigationChildInfo, UseListNavigationChildParameters, UseListNavigationChildPropsReturnType, UseListNavigationParameters, UseListNavigationPropsReturnType } from "preact-prop-helpers/use-list-navigation";
 import { MergedProps, useMergedProps } from "preact-prop-helpers/use-merged-props";
@@ -96,7 +95,7 @@ export type UseMenuItem = <E extends Element>(args: UseMenuItemDefaultParameters
     useMenuItemProps: <P extends h.JSX.HTMLAttributes<E>>({ ...props }: P) => MergedProps<E, {
         onClick: h.JSX.MouseEventHandler<E>;
     }, UseListNavigationChildPropsReturnType<E, P>>
-    asyncInfo: Omit<UseAsyncHandlerReturnType<E, h.JSX.TargetedEvent<E>, void>, "getSyncHandler">;
+    // asyncInfo: Omit<UseAsyncHandlerReturnType<E, h.JSX.TargetedEvent<E>, void>, "getSyncHandler">;
 }
 
 export function useAriaMenu<E extends Element>({ collator, keyNavigation, noTypeahead, noWrap, typeaheadTimeout, ...args }: UseAriaMenuParameters) {
@@ -211,28 +210,32 @@ export function useAriaMenu<E extends Element>({ collator, keyNavigation, noType
     const useMenuItem: UseMenuItem = useCallback(<E extends Element>(args: UseMenuItemDefaultParameters) => {
 
         const { useListNavigationChildProps } = useListNavigationChild<E>(args);
-        const { getSyncHandler, ...asyncInfo } = useAsyncHandler<E>()({ capture: _ => void (0) });
-        const onClick = getSyncHandler(asyncInfo.pending ? null : (args.onClick ?? null));
+        // const { getSyncHandler, ...asyncInfo } = useAsyncHandler<E>()({ capture: _ => void (0) });
+        // const onClick = getSyncHandler(asyncInfo.pending ? null : (args.onClick ?? null));
+        const onClick = args.onClick;
 
         function useMenuItemProps<P extends h.JSX.HTMLAttributes<E>>({ ...props }: P) {
             props.role = "menuitem";
             return useMergedProps<E>()({ onClick }, useListNavigationChildProps(props));
         }
 
-        return { useMenuItemProps, asyncInfo };
+        return { useMenuItemProps };
     }, []);
 
     const useMenuItemCheckbox = useCallback(<E extends Element>(args: UseMenuItemCheckboxParameters) => {
 
-        const { getSyncHandler, ...asyncInfo } = useAsyncHandler<E>()({ capture: _ => !args.checked });
-        const onClick = getSyncHandler(asyncInfo.pending ? null : args.onChange);
+        //const { getSyncHandler, ...asyncInfo } = useAsyncHandler<E>()({ capture: _ => !args.checked });
+        //const onClick = getSyncHandler(asyncInfo.pending ? null : args.onChange);
+
+        // TODO TODO TODO TODO
+        const onClick = args.onChange as any;
 
         function useMenuItemProps<P extends h.JSX.HTMLAttributes<E>>({ ...props }: P) {
             props.role = "menuitemcheckbox";
             return useMergedProps<E>()({ onClick }, props);
         }
 
-        return { useMenuItemProps, asyncInfo };
+        return { useMenuItemProps };
     }, []);
 
 
