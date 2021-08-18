@@ -18,6 +18,7 @@ export function useAriaModal<ModalElement extends HTMLElement>({ open, onClose }
 
 
     const [modalDescribedByBody, setModalDescribedByBody] = useState(false);
+    useHideScroll(open);
 
     const { id: modalId, useRandomIdProps: useModalIdProps, useReferencedIdProps: useModalReferencingIdProps } = useRandomId({ prefix: "aria-modal-" });
     const { id: bodyId, useRandomIdProps: useBodyIdProps, useReferencedIdProps: useBodyReferencingIdProps } = useRandomId({ prefix: "aria-modal-body-" });
