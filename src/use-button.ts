@@ -4,7 +4,7 @@ import { MergedProps, useMergedProps } from "preact-prop-helpers/use-merged-prop
 import { useState } from "preact-prop-helpers/use-state";
 import { ElementFromTag, TagSensitiveProps } from "./props";
 
-export interface UseAriaButtonParameters<E extends EventTarget> extends TagSensitiveProps<E>, Pick<UseAsyncHandlerParameters<E, "onClick", boolean | undefined>, "debounce"> {
+export interface UseAriaButtonParameters<E extends EventTarget> extends TagSensitiveProps<E>, Pick<UseAsyncHandlerParameters<E, h.JSX.TargetedEvent<E, Event>, boolean | undefined>, "debounce"> {
     pressed?: boolean | null | undefined;
     onClick?(): void | Promise<void>;
     onClick?(pressed: boolean): void | Promise<void>;
@@ -12,7 +12,7 @@ export interface UseAriaButtonParameters<E extends EventTarget> extends TagSensi
 
 export interface UseAriaButtonReturnType<E extends EventTarget> {
     useAriaButtonProps: UseAriaButtonProps<E>;
-    asyncInfo: Omit<UseAsyncHandlerReturnType<E, "onClick", boolean | null | undefined>, "getSyncOnClick">;
+    asyncInfo: Omit<UseAsyncHandlerReturnType<E, h.JSX.TargetedEvent<E, Event>, boolean | null | undefined>, "getSyncHandler">;
 }
 
 export type UseAriaButtonProps<E extends EventTarget> = <P extends UseAriaButtonPropsParameters<E>>(props: P) => UseAriaButtonPropsReturnType<E, P>;
@@ -91,8 +91,8 @@ export function useButtonLikeEventHandlers<E extends EventTarget>(onClick: h.JSX
 
 export function useAriaButton<E extends EventTarget>({ tag, pressed, onClick: onClickAsync, debounce }: UseAriaButtonParameters<E>): UseAriaButtonReturnType<E> {
 
-    const { getSyncOnClick, ...asyncInfo } = useAsyncHandler<E>()({ capture: () => pressed == undefined ? pressed : !pressed, event: "onClick", debounce });
-    const onClick = getSyncOnClick(asyncInfo.pending ? null : onClickAsync);
+    const { getSyncHandler, ...asyncInfo } = useAsyncHandler<E>()({ capture: () => pressed == undefined ? pressed : !pressed, debounce });
+    const onClick = getSyncHandler(asyncInfo.pending ? null : (onClickAsync ?? null));
 
     function useAriaButtonProps<P extends UseAriaButtonPropsParameters<E>>({ "aria-pressed": ariaPressed, "aria-disabled": ariaDisabled, tabIndex, role, ...p }: P): UseAriaButtonPropsReturnType<E, P> {
 

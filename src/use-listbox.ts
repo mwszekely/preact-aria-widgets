@@ -56,8 +56,8 @@ export function useAriaListboxSingle<E extends Element, I extends UseListboxSing
 
     const childCount = managedChildren.length;
 
-    const { getSyncOnClick: getSyncOnSelect, ...asyncInfo } = useAsyncHandler<E>()({ event: "onClick", capture: (e: Event) => indicesByElement.get(e.target!) ?? -1 });
-    const onSelect = getSyncOnSelect(asyncInfo.pending ? null : asyncOnSelect);
+    const { getSyncHandler, ...asyncInfo } = useAsyncHandler<E>()({ capture: (e: Event) => indicesByElement.get(e.target!) ?? -1 });
+    const onSelect = getSyncHandler(asyncInfo.pending ? null : asyncOnSelect);
 
     const useListboxSingleItem: UseListboxSingleItem<I> = useCallback(<E extends HTMLElement>(info: Omit<I, "setSelected" | "setTabbable">) => {
         const [selected, setSelected, getSelected] = useState(false);
@@ -89,6 +89,17 @@ export function useAriaListboxSingle<E extends Element, I extends UseListboxSing
         }
     }, [useListNavigationChild, selectionMode, childCount]);
 
+    
+    const useListboxSingleLabel = useCallback(function useListboxSingleLabel<E extends HTMLElement>() {
+        function useListboxSingleLabelProps<P extends h.JSX.HTMLAttributes<E>>(props: P) {
+            const { useGenericLabelLabelProps } = useGenericLabelLabel<E>();
+            useGenericLabelLabelProps(props);
+        }
+
+        return { useListboxSingleLabelProps };
+    }, [useGenericLabelLabel]);
+
+
     return { useListboxSingleItem, useListboxSingleProps, useListboxSingleLabel };
 
 
@@ -97,15 +108,6 @@ export function useAriaListboxSingle<E extends Element, I extends UseListboxSing
         return useListNavigationProps(useGenericLabelInputProps(props));
     }
 
-    // TODO: Make stable
-    function useListboxSingleLabel<E extends HTMLElement>() {
-        function useListboxSingleLabelProps<P extends h.JSX.HTMLAttributes<E>>(props: P) {
-            const { useGenericLabelLabelProps } = useGenericLabelLabel<E>();
-            useGenericLabelLabelProps(props);
-        }
-
-        return { useListboxSingleLabelProps };
-    }
 
 
 }
@@ -127,15 +129,15 @@ export function useAriaListboxMulti<E extends Element, I extends UseListboxMulti
 
 
 
-        const { getSyncOnClick: getSyncOnSelect, ...asyncInfo } = useAsyncHandler<E>()({ event: "onClick", capture: e => !selected });
-        const onSelect = getSyncOnSelect(asyncInfo.pending ? null : onSelectAsync);
+        const { getSyncHandler, ...asyncInfo } = useAsyncHandler<E>()({ capture: e => !selected });
+        const onSelect = getSyncHandler(asyncInfo.pending ? null : (onSelectAsync ?? null));
         const { tabbable, useListNavigationSiblingProps, useListNavigationChildProps } = useListNavigationChild<E>(info);
 
         useLayoutEffect(() => {
             if (getShiftHeld()) {
                 stableOnSelect(true, null);
             }
-        }, [tabbable])
+        }, [tabbable]);
 
         return { useListboxMultiItemProps, tabbable, asyncInfo };
 
@@ -161,8 +163,16 @@ export function useAriaListboxMulti<E extends Element, I extends UseListboxMulti
             return useListNavigationChildProps(useMergedProps<E>()(newProps, props));
         }
 
-
     }, [useListNavigationChild, childCount]);
+
+    const useListboxMultiLabel = useCallback(function useListboxMultiLabel<E extends HTMLElement>() {
+        function useListboxMultiLabelProps<P extends h.JSX.HTMLAttributes<E>>(props: P) {
+            const { useGenericLabelLabelProps } = useGenericLabelLabel<E>();
+            return useGenericLabelLabelProps(props);
+        }
+
+        return { useListboxMultiLabelProps };
+    }, [useGenericLabelLabel]);
 
     return { useListboxMultiItem, useListboxMultiProps, useListboxMultiLabel };
 
@@ -173,15 +183,6 @@ export function useAriaListboxMulti<E extends Element, I extends UseListboxMulti
         return useListNavigationProps(useGenericLabelInputProps(useMergedProps<E>()({ onKeyDown, onKeyUp, onBlur }, props)));
     }
 
-    // TODO: Make stable
-    function useListboxMultiLabel<E extends HTMLElement>() {
-        function useListboxMultiLabelProps<P extends h.JSX.HTMLAttributes<E>>(props: P) {
-            const { useGenericLabelLabelProps } = useGenericLabelLabel<E>();
-            return useGenericLabelLabelProps(props);
-        }
-
-        return { useListboxMultiLabelProps };
-    }
 
 
     function onKeyDown(e: KeyboardEvent) { if (e.key == "Shift") setShiftHeld(true); }

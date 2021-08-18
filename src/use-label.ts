@@ -1,7 +1,14 @@
 import { h } from "preact"
+import { useMergedProps, useRefElement } from "preact-prop-helpers";
 import { useRandomId } from "preact-prop-helpers/use-random-id";
+import { useCallback } from "preact/hooks";
 import { TagSensitiveProps } from "./props";
 
+export interface UseGenericLabelParameters {
+    labelPrefix: string;
+    inputPrefix: string;
+    backupText?: string
+}
 
 /**
  * Adds an ID and "aria-labelledby" for two elements, an "input" element and a "label" element.
@@ -10,23 +17,35 @@ import { TagSensitiveProps } from "./props";
  * 
  * @see useInputLabel
  */
-export function useGenericLabel({ labelPrefix, inputPrefix } = { labelPrefix: "label-", inputPrefix: "input-" }) {
+export function useGenericLabel({ labelPrefix, inputPrefix, backupText }: UseGenericLabelParameters = { labelPrefix: "label-", inputPrefix: "input-" }) {
 
+    const { element: labelElement, getElement: getLabelElement, useRefElementProps: useLabelRefElementProps } = useRefElement<any>();
+    const { element: inputElement, getElement: getInputElement, useRefElementProps: useInputRefElementProps } = useRefElement<any>();
     const { useRandomIdProps: useLabelRandomIdProps, id: labelId, randomId: labelRandomId, useReferencedIdProps: useReferencedLabelIdProps } = useRandomId({ prefix: labelPrefix });
     const { useRandomIdProps: useInputRandomIdProps, id: inputId, randomId: inputRandomId, useReferencedIdProps: useReferencedInputIdProps } = useRandomId({ prefix: inputPrefix });
 
-    function useGenericLabelLabel<E extends Element>() {
-        return {
-            useGenericLabelLabelProps: <P extends h.JSX.HTMLAttributes<E>>(props: P) => { return useLabelRandomIdProps(props); }
-        }
-    }
+    const labelHasMounted = !!(labelElement);
+    const inputHasMounted = !!(inputElement);
 
-    function useGenericLabelInput<E extends Element>() {
-        // TODO: Only add this prop when the label mounts
+    const useGenericLabelLabel = useCallback(function useGenericLabelLabel<E extends Element>() {
         return {
-            useGenericLabelInputProps: <P extends h.JSX.HTMLAttributes<E>>({ "aria-labelledby": ariaLabelledby, ...props }: P) => useInputRandomIdProps(useReferencedLabelIdProps("aria-labelledby")(props))
+            useGenericLabelLabelProps: <P extends h.JSX.HTMLAttributes<E>>(props: P) => { return useLabelRandomIdProps(useLabelRefElementProps(props)); }
         }
-    }
+    }, []);
+
+    const useGenericLabelInput = useCallback(function useGenericLabelInput<E extends Element>() {
+        return {
+            useGenericLabelInputProps: <P extends h.JSX.HTMLAttributes<E>>({ "aria-labelledby": ariaLabelledby, "aria-label": ariaLabel, ...props }: P) => {
+                return (useInputRandomIdProps(
+                    useReferencedLabelIdProps("aria-labelledby")(
+                        useInputRefElementProps(
+                            useMergedProps<E>()({ "aria-label": (!labelHasMounted ? backupText : ariaLabel) ?? ariaLabel }, props)
+                        )
+                    )
+                ));
+            }
+        }
+    }, [labelHasMounted])
 
     return {
         useGenericLabelInput,
@@ -35,6 +54,10 @@ export function useGenericLabel({ labelPrefix, inputPrefix } = { labelPrefix: "l
         useReferencedInputIdProps,
         labelId,
         inputId,
+        labelElement,
+        inputElement,
+        getLabelElement,
+        getInputElement,
     }
 
 }
@@ -48,9 +71,9 @@ export function useGenericLabel({ labelPrefix, inputPrefix } = { labelPrefix: "l
  */
 export function useInputLabel({ labelPrefix, inputPrefix } = { labelPrefix: "label-", inputPrefix: "input-" }) {
 
-    const { useGenericLabelInput, useGenericLabelLabel, useReferencedInputIdProps, useReferencedLabelIdProps, inputId, labelId } = useGenericLabel({ labelPrefix, inputPrefix });
+    const { useGenericLabelInput, useGenericLabelLabel, useReferencedInputIdProps, useReferencedLabelIdProps, inputId, labelId, inputElement, getInputElement, labelElement, getLabelElement } = useGenericLabel({ labelPrefix, inputPrefix });
 
-    function useInputLabelLabel<E extends Element>({ tag }: TagSensitiveProps<E>) {
+    const useInputLabelLabel = useCallback(function useInputLabelLabel<E extends Element>({ tag }: TagSensitiveProps<E>) {
         const { useGenericLabelLabelProps } = useGenericLabelLabel<E>();
 
         return {
@@ -58,12 +81,12 @@ export function useInputLabel({ labelPrefix, inputPrefix } = { labelPrefix: "lab
                 const withFor = useReferencedInputIdProps("for")(props);
                 const withoutFor = props;
 
-                return useGenericLabelLabelProps(tag == "label"? withFor : withoutFor);
+                return useGenericLabelLabelProps(tag == "label" ? withFor : withoutFor);
             }
         }
-    }
+    }, [useGenericLabelInput]);
 
-    function useInputLabelInput<E extends Element>() {
+    const useInputLabelInput = useCallback(function useInputLabelInput<E extends Element>() {
         const { useGenericLabelInputProps } = useGenericLabelInput<E>();
 
         return {
@@ -71,12 +94,16 @@ export function useInputLabel({ labelPrefix, inputPrefix } = { labelPrefix: "lab
                 return useGenericLabelInputProps(props);
             }
         }
-    }
+    }, [useGenericLabelLabel]);
 
     return {
         useInputLabelLabel,
         useInputLabelInput,
         labelId,
         inputId,
+        inputElement,
+        labelElement,
+        getInputElement,
+        getLabelElement
     }
 }

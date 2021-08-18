@@ -94,8 +94,8 @@ export function useAriaTabs({ selectionMode, selectedIndex, onSelect: asyncOnSel
         const { useRandomIdProps: useTabIdProps, id: tabId, getId: getTabId } = useRandomId({ prefix: "aria-tab-" });
         const [selected, setSelected, getSelected] = useState(false);
         const { tabbable, useListNavigationChildProps, useListNavigationSiblingProps } = useListNavigationChild<TabElement>({ ...info, setSelected, tabId, setTabPanelId, setSelectionMode: setSelectionModeL });
-        const { getSyncOnClick: getSyncOnSelect, ...asyncInfo } = useAsyncHandler<Element>()({ event: "onClick", capture: (e: unknown) => info.index });
-        const onSelect = getSyncOnSelect(asyncInfo.pending? null : stableAsyncOnSelect);
+        const { getSyncHandler, ...asyncInfo } = useAsyncHandler<Element>()({ capture: (e: unknown) => info.index });
+        const onSelect = getSyncHandler(asyncInfo.pending? null : (stableAsyncOnSelect ?? null));
 
         useEffect(() => {
             if (tabbable && selectionModeL == "focus") {

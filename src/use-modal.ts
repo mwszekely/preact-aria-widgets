@@ -1,14 +1,16 @@
 
 import { h } from "preact"
-import { useLayoutEffect, useState } from "preact/hooks";
+import { useCallback, useEffect, useLayoutEffect } from "preact/hooks";
 import { useMergedProps } from "preact-prop-helpers/use-merged-props";
 import { useRandomId } from "preact-prop-helpers/use-random-id";
 import { useRefElement } from "preact-prop-helpers/use-ref-element";
 import { useFocusTrap } from "preact-prop-helpers/use-focus-trap";
 import { useGlobalHandler } from "preact-prop-helpers/use-event-handler";
+import { useState } from "preact-prop-helpers/use-state";
 
 /**
- * A generic modal hook, used by both dialogs and offcanvases
+ * A generic modal hook, used by modal dialogs, but can also
+ * be used by anything that's modal with a backdrop.
  * @param param0 
  * @returns 
  */
@@ -36,14 +38,14 @@ export function useAriaModal<ModalElement extends HTMLElement>({ open, onClose }
     }
 
 
-    const useModalBackdrop = function <BackdropElement extends HTMLElement>() {
+    const useModalBackdrop = useCallback(function useModalBackdrop<BackdropElement extends HTMLElement>() {
 
         function useModalBackdropProps<P extends h.JSX.HTMLAttributes<BackdropElement>>(props: P) {
             return useMergedProps<BackdropElement>()({  }, props);
         }
 
         return { useModalBackdropProps }
-    }
+    }, [])
 
     const useModalProps = function <P extends h.JSX.HTMLAttributes<ModalElement>>({ "aria-modal": ariaModal, role, ...p0 }: P) {
         const { useFocusTrapProps } = useFocusTrap<ModalElement>({ trapActive: open });
@@ -53,16 +55,16 @@ export function useAriaModal<ModalElement extends HTMLElement>({ open, onClose }
         return useFocusTrapProps(useMergedProps<ModalElement>()({ role: "dialog", onKeyDown }, modalDescribedByBody ? pFinal : p2));
     }
 
-    function useModalTitle<TitleElement extends Element>() {
+    const useModalTitle = useCallback(function useModalTitle<TitleElement extends Element>() {
 
         const useModalTitleProps = function <P extends h.JSX.HTMLAttributes<TitleElement>>(props: P) {
             return useTitleIdProps(props);
         }
 
         return { useModalTitleProps };
-    }
+    }, [])
 
-    function useModalBody<BodyElement extends Element>({ descriptive }: { descriptive: boolean }) {
+    const useModalBody = useCallback(function useModalBody<BodyElement extends Element>({ descriptive }: { descriptive: boolean }) {
         setModalDescribedByBody(descriptive);
 
         const useModalBodyProps = function <P extends h.JSX.HTMLAttributes<BodyElement>>(props: P) {
@@ -70,7 +72,7 @@ export function useAriaModal<ModalElement extends HTMLElement>({ open, onClose }
         }
 
         return { useModalBodyProps };
-    }
+    }, [])
 
 
 
@@ -81,3 +83,45 @@ export function useAriaModal<ModalElement extends HTMLElement>({ open, onClose }
         useModalBackdrop
     }
 }
+
+
+/**
+ * Allows for hiding the scroll bar of the root HTML element
+ * without shifting the layout of the page more than adding a fow pixels
+ * of padding to the root element if necessary.
+ * @param hideScroll 
+ */
+ export function useHideScroll(hideScroll: boolean) {
+    const [scrollbarWidth, setScrollbarWidth, getScrollbarWidth] = useState<number | null>(null);
+
+    useEffect(() => {
+        if (hideScroll) {
+            let widthWithScrollBar = document.documentElement.scrollWidth;
+            document.documentElement.classList.add("document-scroll-hidden");
+            document.documentElement.dataset["scrollHiders"] = (+(document.documentElement.dataset["scrollHiders"] || "0") + 1).toString();
+            let widthWithoutScrollBar = document.documentElement.scrollWidth;
+
+            let scrollbarWidth = (widthWithoutScrollBar - widthWithScrollBar);
+
+            // Failsafe -- if this measuring trick does something unexpected, just ignore it
+            if (scrollbarWidth > 80)
+                scrollbarWidth = 0;
+
+            document.documentElement.style.setProperty("--scrollbar-width", `${scrollbarWidth}px`);
+
+            setScrollbarWidth(scrollbarWidth);
+
+            return () => {
+                document.documentElement.dataset["scrollHiders"] = (+(document.documentElement.dataset["scrollHiders"] || "0") - 1).toString();
+                if (document.documentElement.dataset["scrollHiders"] == "0") {
+                    document.documentElement.removeAttribute("data-scroll-hiders");
+                    document.documentElement.classList.remove("document-scroll-hidden");
+                }
+            }
+
+        }
+    }, [hideScroll]);
+
+    return { scrollbarWidth, getScrollbarWidth };
+}
+

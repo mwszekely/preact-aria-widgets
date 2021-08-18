@@ -96,7 +96,7 @@ export type UseMenuItem = <E extends Element>(args: UseMenuItemDefaultParameters
     useMenuItemProps: <P extends h.JSX.HTMLAttributes<E>>({ ...props }: P) => MergedProps<E, {
         onClick: h.JSX.MouseEventHandler<E>;
     }, UseListNavigationChildPropsReturnType<E, P>>
-    asyncInfo: Omit<UseAsyncHandlerReturnType<E, "onClick", void>, "getSyncOnClick">;
+    asyncInfo: Omit<UseAsyncHandlerReturnType<E, h.JSX.TargetedEvent<E>, void>, "getSyncHandler">;
 }
 
 export function useAriaMenu<E extends Element>({ collator, keyNavigation, noTypeahead, noWrap, typeaheadTimeout, ...args }: UseAriaMenuParameters) {
@@ -118,7 +118,7 @@ export function useAriaMenu<E extends Element>({ collator, keyNavigation, noType
     // but focus management is super sensitive, and even waiting for a useLayoutEffect to sync state here
     // would be too late, so it would look like there's a moment between menu focus lost and button focus gained
     // where nothing is focused. 
-    const { focusedInner: menuHasFocus, useHasFocusProps: useMenuHasFocusProps,  } = useHasFocus<E>();
+    const { focusedInner: menuHasFocus, useHasFocusProps: useMenuHasFocusProps, } = useHasFocus<E>();
     const { focusedInner: buttonHasFocus, useHasFocusProps: useButtonHasFocusProps } = useHasFocus<Element>();
     const { activeElement, lastActiveElement, windowFocused } = useActiveElement();
     const { useFocusTrapProps } = useFocusTrap<any>({ trapActive: open });
@@ -141,14 +141,35 @@ export function useAriaMenu<E extends Element>({ collator, keyNavigation, noType
     // try waiting 100ms. If it's still true then, then yeah, we should close.
     let shouldClose = (focusTrapActive && windowFocused && !menuHasFocus && !buttonHasFocus);
     useTimeout({
-        timeout: 100, 
+        timeout: 100,
         callback: () => {
             if (shouldClose) {
                 onClose?.();
             }
-        }, 
+        },
         triggerIndex: `${shouldClose}`
     });
+
+    // A menu sentinal is a hidden but focusable element that comes at the start or end of the element
+    // that, when activated or focused over, closes the menu.
+    // (if focused within 100ms of the open prop changing, instead of
+    // closing the menu, focusing the sentinel immediately asks the menu to focus itself).
+    // This exists because while mouse users can click out of a menu
+    // and keyboard users can escape to close the menu,
+    // screen readers and other input methods that don't use those two become stuck.
+    const useMenuSentinel = useCallback(<E extends Element>() => {
+        const [firstSentinelIsActive, setFirstSentinelIsActive] = useState(false);
+        useTimeout({ callback: () => { setFirstSentinelIsActive(open); }, timeout: 100, triggerIndex: `${firstSentinelIsActive}` });
+
+        const onFocus = firstSentinelIsActive ? (() => stableOnClose()) : (() => focusMenu());
+        const onClick = () => stableOnClose();
+
+        return {
+            useMenuSentinelProps: function <P extends h.JSX.HTMLAttributes<E>>(p: P) {
+                return useMergedProps<E>()({ onFocus, onClick }, p);
+            }
+        }
+    }, [open]);
 
     const useMenuButton = useCallback(<E extends Element>({ tag }: UseMenuButtonParameters<E>) => {
 
@@ -190,8 +211,8 @@ export function useAriaMenu<E extends Element>({ collator, keyNavigation, noType
     const useMenuItem: UseMenuItem = useCallback(<E extends Element>(args: UseMenuItemDefaultParameters) => {
 
         const { useListNavigationChildProps } = useListNavigationChild<E>(args);
-        const { getSyncOnClick, ...asyncInfo } = useAsyncHandler<E>()({ capture: _ => void (0), event: "onClick" });
-        const onClick = getSyncOnClick(asyncInfo.pending ? null : args.onClick);
+        const { getSyncHandler, ...asyncInfo } = useAsyncHandler<E>()({ capture: _ => void (0) });
+        const onClick = getSyncHandler(asyncInfo.pending ? null : (args.onClick ?? null));
 
         function useMenuItemProps<P extends h.JSX.HTMLAttributes<E>>({ ...props }: P) {
             props.role = "menuitem";
@@ -203,8 +224,8 @@ export function useAriaMenu<E extends Element>({ collator, keyNavigation, noType
 
     const useMenuItemCheckbox = useCallback(<E extends Element>(args: UseMenuItemCheckboxParameters) => {
 
-        const { getSyncOnClick, ...asyncInfo } = useAsyncHandler<E>()({ capture: _ => !args.checked, event: "onClick" });
-        const onClick = getSyncOnClick(asyncInfo.pending ? null : args.onChange);
+        const { getSyncHandler, ...asyncInfo } = useAsyncHandler<E>()({ capture: _ => !args.checked });
+        const onClick = getSyncHandler(asyncInfo.pending ? null : args.onChange);
 
         function useMenuItemProps<P extends h.JSX.HTMLAttributes<E>>({ ...props }: P) {
             props.role = "menuitemcheckbox";
@@ -233,6 +254,7 @@ export function useAriaMenu<E extends Element>({ collator, keyNavigation, noType
         useMenuButton,
 
         useMenuItem,
+        useMenuSentinel,
         useMenuItemCheckbox,
         useMenuSubmenuItem,
 
