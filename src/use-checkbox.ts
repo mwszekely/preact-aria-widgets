@@ -1,16 +1,18 @@
-import { h } from "preact"
-import { useCallback, useLayoutEffect, useRef, useState } from "preact/hooks";
-import { useRefElement } from "preact-prop-helpers/use-ref-element";
+import { h } from "preact";
+import { useStableCallback, useStableGetter } from "preact-prop-helpers";
 import { useMergedProps } from "preact-prop-helpers/use-merged-props";
-import { useInputLabel } from "./use-label";
-import { TagSensitiveProps } from "./props";
+import { useRefElement } from "preact-prop-helpers/use-ref-element";
+import { useCallback, useLayoutEffect } from "preact/hooks";
+import { enhanceEvent, EventDetail, TagSensitiveProps } from "./props";
 import { useButtonLikeEventHandlers } from "./use-button";
-import { useStableCallback } from "preact-prop-helpers";
+import { useInputLabel } from "./use-label";
+
+export type CheckboxChangedEvent<EventType extends Event> = EventType & { [EventDetail]: { checked: boolean } };
 
 interface UseAriaCheckboxParameters<I extends Element, L extends Element> {
     checked: boolean | "mixed";
-    onInput(this: never, event: h.JSX.TargetedEvent<I, Event>): void;
-    onInput(this: never, event: h.JSX.TargetedEvent<L, Event>): void;
+    onInput(event: CheckboxChangedEvent<h.JSX.TargetedEvent<I>>): void;
+    onInput(event: CheckboxChangedEvent<h.JSX.TargetedEvent<L>>): void;
     labelPosition: "wrapping" | "separate";
     disabled: boolean;
 }
@@ -18,8 +20,9 @@ interface UseAriaCheckboxParameters<I extends Element, L extends Element> {
 export function useAriaCheckbox<InputType extends Element, LabelType extends Element>({ labelPosition, checked, onInput, disabled }: UseAriaCheckboxParameters<InputType, LabelType>) {
 
     const stableOnInput = useStableCallback(onInput);
+    const getChecked = useStableGetter(checked);
 
-    const { inputId, labelId, useInputLabelInput: useILInput, useInputLabelLabel: useILLabel } = useInputLabel({ labelPrefix: "aria-checkbox-label-", inputPrefix: "aria-checkbox-input-" });
+    const { inputId, labelId, useInputLabelInput: useILInput, useInputLabelLabel: useILLabel, getLabelElement, getInputElement } = useInputLabel({ labelPrefix: "aria-checkbox-label-", inputPrefix: "aria-checkbox-input-" });
 
     const useCheckboxInputElement = useCallback(function useCheckboxInputElement({ tag }: TagSensitiveProps<InputType>) {
         const { useInputLabelInputProps: useILInputProps } = useILInput<InputType>();
@@ -41,11 +44,11 @@ export function useAriaCheckbox<InputType extends Element, LabelType extends Ele
 
         function useCheckboxInputElementProps<P extends h.JSX.HTMLAttributes<InputType>>({ ...p0 }: P) {
 
-            let newProps: h.JSX.HTMLAttributes<InputType> = useButtonLikeEventHandlers<InputType>(stableOnInput, disabled ? "exclude" : tag != "input" || labelPosition == "wrapping" ? undefined : "exclude")({});
+            let newProps: h.JSX.HTMLAttributes<InputType> = useButtonLikeEventHandlers<InputType>(e => stableOnInput(enhanceEvent(e,{ checked: !checked })), disabled ? "exclude" : tag != "input" || labelPosition == "wrapping" ? undefined : "exclude")({});
 
             if (tag == "input" && labelPosition == "separate") {
                 if (!disabled) {
-                    newProps.onInput = stableOnInput;
+                    newProps.onInput =  (e: h.JSX.TargetedEvent<InputType, Event>) => stableOnInput(enhanceEvent(e, { checked: !checked }));
                 }
             }
 
@@ -61,6 +64,7 @@ export function useAriaCheckbox<InputType extends Element, LabelType extends Ele
                 // even if it's an input element.
                 props.inert = true;
                 props.tabIndex = -1;
+                props.onFocus = e => getLabelElement().focus();
             }
             else {
                 if (tag != "input" && props.type != "checkbox") {
@@ -70,11 +74,7 @@ export function useAriaCheckbox<InputType extends Element, LabelType extends Ele
                 props["aria-checked"] = checked.toString();
 
                 props.tabIndex = 0;
-
             }
-
-
-
 
             return useMergedProps<InputType>()(newProps, props);
         }
@@ -87,7 +87,7 @@ export function useAriaCheckbox<InputType extends Element, LabelType extends Ele
 
             const p3 = (useILLabelProps(p0));
 
-            let newProps: h.JSX.HTMLAttributes<LabelType> = useButtonLikeEventHandlers<LabelType>(stableOnInput, disabled || (labelPosition == "separate" && tag == "label") ? "exclude" : undefined)({});
+            let newProps: h.JSX.HTMLAttributes<LabelType> = useButtonLikeEventHandlers<LabelType>(e => stableOnInput(enhanceEvent(e, { checked: !getChecked() })), disabled || (labelPosition == "separate" && tag == "label") ? "exclude" : undefined)({});
 
             if (labelPosition == "wrapping") {
                 newProps.tabIndex = 0;

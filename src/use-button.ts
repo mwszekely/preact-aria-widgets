@@ -1,12 +1,14 @@
 import { ClassAttributes, h, Ref } from "preact";
 import { MergedProps, useMergedProps } from "preact-prop-helpers/use-merged-props";
 import { useState } from "preact-prop-helpers/use-state";
-import { ElementFromTag, TagSensitiveProps } from "./props";
+import { ElementFromTag, EventDetail, TagSensitiveProps, enhanceEvent } from "./props";
+
+
+export type ButtonPressedEvent<EventType extends Event> = EventType & { [EventDetail]: { pressed: boolean | null } };
 
 export interface UseAriaButtonParameters<E extends EventTarget> extends TagSensitiveProps<E> {
     pressed?: boolean | null | undefined;
-    onClick?(_: undefined, event: Event): void | Promise<void>;
-    onClick?(pressed: boolean, event: Event): void | Promise<void>;
+    onClick?(event: ButtonPressedEvent<h.JSX.TargetedMouseEvent<E>> | ButtonPressedEvent<h.JSX.TargetedKeyboardEvent<E> | ButtonPressedEvent<h.JSX.TargetedEvent<E>>>): void;
 }
 
 export interface UseAriaButtonReturnType<E extends EventTarget> {
@@ -40,14 +42,17 @@ function excludes(target: "click" | "space" | "enter", exclude: undefined | "exc
  * @param onClick 
  * @param exclude Whether the polyfill should apply (can specify for specific interactions)
  */
-export function useButtonLikeEventHandlers<E extends EventTarget>(onClickSync: h.JSX.MouseEventHandler<E> | null | undefined, exclude?: "exclude" | { click?: "exclude" | undefined, space?: "exclude" | undefined, enter?: "exclude" | undefined }) {
+export function useButtonLikeEventHandlers<E extends EventTarget>(onClickSync: ((e: h.JSX.TargetedEvent<E>) => void) | null | undefined, exclude?: "exclude" | { click?: "exclude" | undefined, space?: "exclude" | undefined, enter?: "exclude" | undefined }) {
+
+    //type E = Ev extends h.JSX.TargetedEvent<infer E, any>? E : EventTarget;
+    
 
     const [active, setActive] = useState(false);
 
     const onKeyUp: h.JSX.KeyboardEventHandler<E> = (e) => {
         if (e.key == " " && onClickSync && !excludes("space", exclude)) {
             e.preventDefault();
-            onClickSync.bind(e.target as never)(e as h.JSX.TargetedEvent<E> as h.JSX.TargetedMouseEvent<E>);
+            onClickSync(e);
             setActive(false);
         }
     }
@@ -75,15 +80,15 @@ export function useButtonLikeEventHandlers<E extends EventTarget>(onClickSync: h
 
         if (e.key == "Enter" && onClickSync && !excludes("enter", exclude)) {
             e.preventDefault();
-            onClickSync.bind(e.target as never)(e as h.JSX.TargetedEvent<E> as h.JSX.TargetedMouseEvent<E>);
+            onClickSync(e);
         }
     }
 
-    const onClick2: typeof onClickSync = e => {
+    const onClick2: h.JSX.EventHandler<h.JSX.TargetedMouseEvent<E>> = (e => {
         if (onClickSync && !excludes("click", exclude)) {
-            onClickSync.bind(e.target as never)(e as h.JSX.TargetedEvent<E> as h.JSX.TargetedMouseEvent<E>);
+            onClickSync(e);
         }
-    }
+    })
 
     return <P extends h.JSX.HTMLAttributes<E>>(props: P) => useMergedProps<E>()({ onKeyDown, onKeyUp, onClick: onClick2, onBlur, onMouseDown, onMouseUp, onMouseOut, ...{ "data-pseudo-active": active ? "true" : undefined } as {} }, props);
 }
@@ -95,7 +100,7 @@ export function useAriaButton<E extends EventTarget>({ tag, pressed, onClick }: 
 
     function useAriaButtonProps<P extends UseAriaButtonPropsParameters<E>>({ "aria-pressed": ariaPressed, tabIndex, role, ...p }: P): UseAriaButtonPropsReturnType<E, P> {
 
-        const props = useButtonLikeEventHandlers<E>(onClick as any as h.JSX.MouseEventHandler<E>, {
+        const props = useButtonLikeEventHandlers<E>((e) => onClick?.(enhanceEvent(e, { pressed: pressed == null? null : !pressed })), {
             space: tag == "button" ? "exclude" : undefined,
             enter: tag == "button" ? "exclude" : undefined,
             click: undefined,

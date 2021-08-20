@@ -10,12 +10,13 @@ import { useState } from "preact-prop-helpers/use-state";
 import { useButtonLikeEventHandlers } from "./use-button";
 import { useRefElement, UseRefElementPropsReturnType } from "preact-prop-helpers/use-ref-element";
 import { useHasFocus, useStableGetter } from "preact-prop-helpers";
+import { enhanceEvent, EventDetail } from "./props";
 
-type AriaTabsEvent<E extends Element> = { selectedIndex: number } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
+type AriaTabsEvent<E extends Element> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 
 export interface UseAriaTabsParameters extends UseListNavigationParameters {
     selectedIndex: number | null;
-    onSelect(event: AriaTabsEvent<Element> | null): void | Promise<void>;
+    onSelect(event: AriaTabsEvent<Element>): void;
     selectionMode: "focus" | "activate";
 }
 
@@ -90,18 +91,18 @@ export function useAriaTabs({ selectionMode, selectedIndex, onSelect, ...args }:
     const useTab: UseTab = useCallback(function useTab<TabElement extends Element>(info: UseTabParameters) {
         //const [selectedTabId, setSelectedTabId, getSelectedTabId] = useState<string | undefined>(undefined);
         const [selectionModeL, setSelectionModeL] = useState<"focus" | "activate">(selectionMode);
-        const {element, useRefElementProps} = useRefElement<TabElement>()
+        const { element, useRefElementProps } = useRefElement<TabElement>()
         const [tabPanelId, setTabPanelId] = useState<string | undefined>(undefined)
         const { useRandomIdProps: useTabIdProps, id: tabId, getId: getTabId } = useRandomId({ prefix: "aria-tab-" });
         const [selected, setSelected, getSelected] = useState(false);
         const { tabbable, useListNavigationChildProps, useListNavigationSiblingProps } = useListNavigationChild<TabElement>({ ...info, setSelected, tabId, setTabPanelId, setSelectionMode: setSelectionModeL });
         const getIndex = useStableGetter(info.index);
-       // const { getSyncHandler, ...asyncInfo } = useAsyncHandler<Element>()({ capture: (e: unknown) => info.index });
-       // const onSelect = getSyncHandler(asyncInfo.pending? null : (stableAsyncOnSelect ?? null));
+        // const { getSyncHandler, ...asyncInfo } = useAsyncHandler<Element>()({ capture: (e: unknown) => info.index });
+        // const onSelect = getSyncHandler(asyncInfo.pending? null : (stableAsyncOnSelect ?? null));
 
         useEffect(() => {
             if (tabbable && selectionModeL == "focus") {
-                onSelect({ target: element, currentTarget: element, selectedIndex: getIndex() } as any as AriaTabsEvent<Element>);
+                onSelect({ target: element, currentTarget: element, [EventDetail]: { selectedIndex: getIndex() } } as AriaTabsEvent<Element>);
             }
         }, [tabbable, selectionModeL, element]);
 
@@ -116,7 +117,7 @@ export function useAriaTabs({ selectionMode, selectedIndex, onSelect, ...args }:
         function useTabProps<P extends h.JSX.HTMLAttributes<TabElement>>({ ...props }: P) {
             const newProps: h.JSX.HTMLAttributes<TabElement> = useButtonLikeEventHandlers<TabElement>((e) => {
                 navigateToIndex(info.index);
-                onSelect?.({...e, selectedIndex: getIndex() });
+                onSelect?.(enhanceEvent(e, { selectedIndex: getIndex() }));
                 e.preventDefault();
             })(props);
 
