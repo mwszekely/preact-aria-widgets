@@ -22,3 +22,11 @@ export interface TagSensitiveProps<E extends EventTarget> {
     tag: ElementToTag<E>;
 }
 
+export const EventDetail = Symbol("event-detail");
+
+export function enhanceEvent<E extends Event, Detail extends object>(e: E, detail: Detail): E & { [EventDetail]: Detail } {
+    let event = e as E & { [EventDetail]: Detail };
+    event[EventDetail] = detail;
+    return event;
+}
+
