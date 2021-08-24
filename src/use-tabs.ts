@@ -51,12 +51,8 @@ export type UseTabPanel = <PanelElement extends Element>(info: UseTabPanelParame
 export function useAriaTabs({ selectionMode, selectedIndex, onSelect, orientation: logicalOrientation, ...args }: UseAriaTabsParameters) {
 
     const { element: listElement, useRefElementProps } = useRefElement<any>();
-    const { getLogicalDirection } = useLogicalDirection(listElement);
-    const logicalDirection = getLogicalDirection();
-
-    const physicalOrientation = logicalDirection?.inlineOrientation == "horizontal" ?
-        (logicalOrientation == "inline" ? "horizontal" : "vertical") :
-        (logicalOrientation == "inline" ? "vertical" : "horizontal");
+    const { getLogicalDirection, convertToPhysicalOrientation } = useLogicalDirection(listElement);
+    const physicalOrientation = convertToPhysicalOrientation(logicalOrientation);
 
     const { useRandomIdProps: useTabListIdProps, useReferencedIdProps: useReferencedTabListId } = useRandomId({ prefix: "aria-tab-list-" });
     const { useRandomIdProps: useTabLabelIdProps, useReferencedIdProps: useReferencedTabLabelId } = useRandomId({ prefix: "aria-tab-label-" });
