@@ -9,7 +9,6 @@ import { MergedProps, useMergedProps } from "preact-prop-helpers/use-merged-prop
 import { useRandomId, UseRandomIdPropsReturnType, UseReferencedIdPropsReturnType } from "preact-prop-helpers/use-random-id";
 import { useRefElement, UseRefElementPropsReturnType } from "preact-prop-helpers/use-ref-element";
 import { TagSensitiveProps, EventDetail, enhanceEvent } from "./props";
-import { useAriaButton, UseAriaButtonPropsReturnType, useButtonLikeEventHandlers } from "./use-button";
 import { useFocusTrap, useTimeout } from "preact-prop-helpers";
 
 interface UseMenuParameters1 extends UseListNavigationParameters {
@@ -171,17 +170,12 @@ export function useAriaMenu<E extends Element>({ collator, keyNavigation, noType
     }, [open]);
 
     const useMenuButton = useCallback(<E extends Element>({ tag }: UseMenuButtonParameters<E>) => {
-
-        const { useAriaButtonProps } = useAriaButton<E>({ tag, onClick: () => { return open ? onClose?.() : onOpen?.() } });
-
-        const { element, getElement, useRefElementProps } = useRefElement<E>()
-
-
+        const { element, getElement, useRefElementProps } = useRefElement<E>();
         useLayoutEffect(() => { setOpenerElement(element as Element as (Element & HTMLOrSVGElement)); }, [element]);
 
         return {
             useMenuButtonProps: function <P extends h.JSX.HTMLAttributes<E>>(p: P) {
-                let props = useRefElementProps(useAriaButtonProps(useMenuIdReferencingProps("aria-controls")(useButtonHasFocusProps(p as any) as any)));
+                let props = useRefElementProps(useMergedProps<E>()({ onClick: () => { return open ? onClose?.() : onOpen?.() } }, useMenuIdReferencingProps("aria-controls")(useButtonHasFocusProps(p as any) as any)));
                 props["aria-haspopup"] = "menu";
                 props["aria-expanded"] = open ? "true" : undefined;
                 return props;
