@@ -11,10 +11,13 @@ import { useGenericLabel } from "./use-label";
 import { useStableGetter } from "preact-prop-helpers";
 import { EventDetail } from "./props";
 
+export type ListboxSingleSelectEvent<E extends EventTarget> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
+export type ListboxMultiSelectEvent<E extends EventTarget> = { [EventDetail]: { selected: boolean } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
+
 export interface UseListboxSingleParameters extends UseListNavigationParameters {
     selectionMode: "focus" | "activate";
     selectedIndex: number;
-    onSelect(event: { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<Element>, "target" | "currentTarget">): void;
+    onSelect(event: ListboxSingleSelectEvent<Element>): void;
 }
 
 export interface UseListboxMultiParameters extends UseListNavigationParameters {
@@ -27,7 +30,7 @@ export interface UseListboxSingleItemInfo extends UseListNavigationChildInfo {
 
 export interface UseListboxMultiItemInfo extends UseListNavigationChildInfo {
     selected: boolean;
-    onSelect(event: ({ [EventDetail]: { selected: boolean } } & Pick<h.JSX.TargetedEvent<Element>, "target" | "currentTarget">)): void;
+    onSelect(event: (ListboxMultiSelectEvent<Element>)): void;
     setTypeaheadInProgress(inProgress: boolean): void;
 }
 

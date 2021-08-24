@@ -4,11 +4,11 @@ import { useState } from "preact-prop-helpers/use-state";
 import { ElementFromTag, EventDetail, TagSensitiveProps, enhanceEvent } from "./props";
 
 
-export type ButtonPressedEvent<EventType extends Event> = EventType & { [EventDetail]: { pressed: boolean | null } };
+export type ButtonPressEvent<EventType extends Event> = EventType & { [EventDetail]: { pressed: boolean | null } };
 
 export interface UseAriaButtonParameters<E extends EventTarget> extends TagSensitiveProps<E> {
     pressed?: boolean | null | undefined;
-    onClick?(event: ButtonPressedEvent<h.JSX.TargetedMouseEvent<E>> | ButtonPressedEvent<h.JSX.TargetedKeyboardEvent<E> | ButtonPressedEvent<h.JSX.TargetedEvent<E>>>): void;
+    onClick?(event: ButtonPressEvent<h.JSX.TargetedMouseEvent<E>> | ButtonPressEvent<h.JSX.TargetedKeyboardEvent<E> | ButtonPressEvent<h.JSX.TargetedEvent<E>>>): void;
 }
 
 export interface UseAriaButtonReturnType<E extends EventTarget> {

@@ -12,11 +12,11 @@ import { useRefElement, UseRefElementPropsReturnType } from "preact-prop-helpers
 import { useHasFocus, useStableGetter } from "preact-prop-helpers";
 import { enhanceEvent, EventDetail } from "./props";
 
-type AriaTabsEvent<E extends Element> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
+export type TabsChangeEvent<E extends Element> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 
 export interface UseAriaTabsParameters extends UseListNavigationParameters {
     selectedIndex: number | null;
-    onSelect(event: AriaTabsEvent<Element>): void;
+    onSelect(event: TabsChangeEvent<Element>): void;
     selectionMode: "focus" | "activate";
 }
 
@@ -102,7 +102,7 @@ export function useAriaTabs({ selectionMode, selectedIndex, onSelect, ...args }:
 
         useEffect(() => {
             if (tabbable && selectionModeL == "focus") {
-                onSelect({ target: element, currentTarget: element, [EventDetail]: { selectedIndex: getIndex() } } as AriaTabsEvent<Element>);
+                onSelect({ target: element, currentTarget: element, [EventDetail]: { selectedIndex: getIndex() } } as TabsChangeEvent<Element>);
             }
         }, [tabbable, selectionModeL, element]);
 

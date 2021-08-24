@@ -7,12 +7,12 @@ import { enhanceEvent, EventDetail, TagSensitiveProps } from "./props";
 import { useButtonLikeEventHandlers } from "./use-button";
 import { useInputLabel } from "./use-label";
 
-export type CheckboxChangedEvent<EventType extends Event> = EventType & { [EventDetail]: { checked: boolean } };
+export type CheckboxChangeEvent<EventType extends Event> = EventType & { [EventDetail]: { checked: boolean } };
 
 interface UseAriaCheckboxParameters<I extends Element, L extends Element> {
     checked: boolean | "mixed";
-    onInput(event: CheckboxChangedEvent<h.JSX.TargetedEvent<I>>): void;
-    onInput(event: CheckboxChangedEvent<h.JSX.TargetedEvent<L>>): void;
+    onInput(event: CheckboxChangeEvent<h.JSX.TargetedEvent<I>>): void;
+    onInput(event: CheckboxChangeEvent<h.JSX.TargetedEvent<L>>): void;
     labelPosition: "wrapping" | "separate";
     disabled: boolean;
 }
