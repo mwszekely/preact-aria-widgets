@@ -33,7 +33,7 @@ export type UseAriaAccordionProps<E extends Element> = <P extends UseAriaAccordi
 export type UseAriaAccordionPropsReturnType<E extends Element, P extends UseAriaAccordionPropsParameters<E>> = UseLinearNavigationPropsReturnType<E, P>;
 
 export interface UseAriaAccordionSectionInfo extends ManagedChildInfo<number> {
-    open?: boolean | undefined;
+    open?: boolean | undefined | null;
     setOpenFromParent(open: boolean): void;
     focus(): void;
 }
@@ -46,7 +46,7 @@ export interface UseAriaAccordionSectionHeaderPropsParameters<E extends Element>
 export interface UseAriaAccordionSectionBodyPropsParameters<E extends Element> extends h.JSX.HTMLAttributes<E> { }
 
 export interface UseAriaAccordionSectionReturnType {
-    expanded: boolean;
+    expanded: boolean | null;
     useAriaAccordionSectionHeader: UseAriaAccordionSectionHeader;
     useAriaAccordionSectionBody: UseAriaAccordionSectionBody;
 }
@@ -90,14 +90,14 @@ export function useAriaAccordion<E extends Element>({ expandedIndex, setExpanded
     const useAriaAccordionSection = useCallback<UseAriaAccordionSection>((args: UseAriaAccordionSectionParameters): UseAriaAccordionSectionReturnType => {
 
 
-        const [openFromParent, setOpenFromParent, getOpenFromParent] = useState(false);
+        const [openFromParent, setOpenFromParent, getOpenFromParent] = useState<boolean | null>(null);
 
 
 
         const { randomId: bodyRandomId, useRandomIdProps: useBodyRandomIdProps, useReferencedIdProps: useReferencedBodyIdProps } = useRandomId({ prefix: "aria-accordion-section-body-" });
         const { randomId: headRandomId, useRandomIdProps: useHeadRandomIdProps, useReferencedIdProps: useReferencedHeadIdProps } = useRandomId({ prefix: "aria-accordion-section-header-" });
 
-        let open = ((openFromParent || args.open) || false);
+        let open = ((openFromParent || args.open)) ?? null;
 
         // TODO: Convert to use useManagedChild so that this hook 
         // is stable without (directly) depending on the open state.
@@ -123,7 +123,7 @@ export function useAriaAccordion<E extends Element>({ expandedIndex, setExpanded
                 let ret3:
                     MergedProps<E, UseRandomIdPropsReturnType<UseReferencedIdPropsReturnType<{ "aria-expanded": string; "aria-disabled": string | undefined; } & UseHasFocusPropsReturnType<E, Omit<P, "aria-expanded" | "aria-disabled">>, "aria-controls">>, { onClick: h.JSX.EventHandler<h.JSX.TargetedMouseEvent<E>> }>
                     = useMergedProps<E>()(useHeadRandomIdProps(useReferencedBodyIdProps("aria-controls")({
-                        "aria-expanded": (ariaExpanded ?? open.toString()),
+                        "aria-expanded": (ariaExpanded ?? (!!open).toString()),
                         "aria-disabled": (ariaDisabled ?? (open ? "true" : undefined)),
                         ...useRefElementProps(useManagedChildProps(tag === "button" ? retA : retB))
                     })), { onFocus });
