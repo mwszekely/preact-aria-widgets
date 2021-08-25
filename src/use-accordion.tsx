@@ -80,17 +80,27 @@ export function useAriaAccordion<E extends Element>({ expandedIndex, setExpanded
     // Any time a new expanded index is given, 
     // collapse the old section and expand the new one.
     const [prevExpandedIndex, setPrevExpandedIndex, getPrevExpandedIndex] = useState<number | null>(null);
+    const [prevChildCount, setPrevChildCount, getPrevChildCount] = useState(managedAccordionSections.length);
     useLayoutEffect(() => {
-        const prevExpandedIndex = getPrevExpandedIndex();
 
+        // Close any new panels that might have mounted (their open prop is null right now if so)
+        for (let i = (getPrevChildCount() ?? 0); i < managedAccordionSections.length; ++i) {
+            managedAccordionSections[i]?.setOpenFromParent(i === expandedIndex);
+        }
+        setPrevChildCount(managedAccordionSections.length);
+
+        // Collapse the currently expanded panel
+        const prevExpandedIndex = getPrevExpandedIndex();
         if (prevExpandedIndex != null && prevExpandedIndex <= managedAccordionSections.length)
             managedAccordionSections[prevExpandedIndex]?.setOpenFromParent(false);
 
+        // Expand the next panel
         if (expandedIndex != null && expandedIndex <= managedAccordionSections.length) {
             managedAccordionSections[expandedIndex]?.setOpenFromParent(true);
             setPrevExpandedIndex(expandedIndex);
         }
-    }, [expandedIndex, managedAccordionSections.length])
+
+    }, [expandedIndex, managedAccordionSections.length]);
 
     const useAriaAccordionSection = useCallback<UseAriaAccordionSection>((args: UseAriaAccordionSectionParameters): UseAriaAccordionSectionReturnType => {
 
