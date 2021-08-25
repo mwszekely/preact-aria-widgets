@@ -97,7 +97,7 @@ export function useAriaAccordion<E extends Element>({ expandedIndex, setExpanded
         const { randomId: bodyRandomId, useRandomIdProps: useBodyRandomIdProps, useReferencedIdProps: useReferencedBodyIdProps } = useRandomId({ prefix: "aria-accordion-section-body-" });
         const { randomId: headRandomId, useRandomIdProps: useHeadRandomIdProps, useReferencedIdProps: useReferencedHeadIdProps } = useRandomId({ prefix: "aria-accordion-section-header-" });
 
-        let open = ((openFromParent || args.open)) ?? null;
+        let open = ((args.open ?? openFromParent) ?? null);
 
         // TODO: Convert to use useManagedChild so that this hook 
         // is stable without (directly) depending on the open state.
