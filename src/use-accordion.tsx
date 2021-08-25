@@ -79,12 +79,17 @@ export function useAriaAccordion<E extends Element>({ expandedIndex, setExpanded
 
     // Any time a new expanded index is given, 
     // collapse the old section and expand the new one.
-    useLayoutEffect(([prevExpandedIndex]) => {
+    const [prevExpandedIndex, setPrevExpandedIndex, getPrevExpandedIndex] = useState<number | null>(null);
+    useLayoutEffect(() => {
+        const prevExpandedIndex = getPrevExpandedIndex();
+
         if (prevExpandedIndex != null && prevExpandedIndex <= managedAccordionSections.length)
             managedAccordionSections[prevExpandedIndex]?.setOpenFromParent(false);
 
-        if (expandedIndex != null && expandedIndex <= managedAccordionSections.length)
+        if (expandedIndex != null && expandedIndex <= managedAccordionSections.length) {
             managedAccordionSections[expandedIndex]?.setOpenFromParent(true);
+            setPrevExpandedIndex(expandedIndex);
+        }
     }, [expandedIndex, managedAccordionSections.length])
 
     const useAriaAccordionSection = useCallback<UseAriaAccordionSection>((args: UseAriaAccordionSectionParameters): UseAriaAccordionSectionReturnType => {
