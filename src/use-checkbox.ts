@@ -5,106 +5,67 @@ import { useRefElement } from "preact-prop-helpers/use-ref-element";
 import { useCallback, useLayoutEffect } from "preact/hooks";
 import { enhanceEvent, EventDetail, TagSensitiveProps } from "./props";
 import { useButtonLikeEventHandlers } from "./use-button";
-import { useInputLabel } from "./use-label";
+import { useCheckboxLike, UseCheckboxLikeParameters } from "./use-label";
+
+
 
 export type CheckboxChangeEvent<EventType extends Event> = EventType & { [EventDetail]: { checked: boolean } };
 
-interface UseAriaCheckboxParameters<I extends Element, L extends Element> {
+interface UseAriaCheckboxParameters<I extends Element, L extends Element> extends Omit<UseCheckboxLikeParameters<I, L>, "onInput" | "role"> {
     checked: boolean | "mixed";
     onInput(event: CheckboxChangeEvent<h.JSX.TargetedEvent<I>>): void;
     onInput(event: CheckboxChangeEvent<h.JSX.TargetedEvent<L>>): void;
-    labelPosition: "wrapping" | "separate";
-    disabled: boolean;
 }
 
 export function useAriaCheckbox<InputType extends Element, LabelType extends Element>({ labelPosition, checked, onInput, disabled }: UseAriaCheckboxParameters<InputType, LabelType>) {
 
-    const stableOnInput = useStableCallback(onInput);
-    const getChecked = useStableGetter(checked);
-
-    const { inputId, labelId, useInputLabelInput: useILInput, useInputLabelLabel: useILLabel, getLabelElement, getInputElement } = useInputLabel({ labelPrefix: "aria-checkbox-label-", inputPrefix: "aria-checkbox-input-" });
+    const onInputEnhanced = (e: h.JSX.TargetedEvent<InputType | LabelType, Event>) => onInput(enhanceEvent(e as h.JSX.TargetedEvent<InputType, Event>, { checked: !checked }));
+    const { getInputElement, getLabelElement, useCheckboxLikeInputElement, useCheckboxLikeLabelElement } = useCheckboxLike<InputType, LabelType>({ labelPosition, role: "checkbox", disabled, onInput: onInputEnhanced });
 
     const useCheckboxInputElement = useCallback(function useCheckboxInputElement({ tag }: TagSensitiveProps<InputType>) {
-        const { useInputLabelInputProps: useILInputProps } = useILInput<InputType>();
-        const { element, useRefElementProps } = useRefElement<InputType>();
+        const { inputElement, useCheckboxLikeInputElementProps } = useCheckboxLikeInputElement({ tag })
         const isMixed = (checked == "mixed");
 
         useLayoutEffect(() => {
-            if (element) {
+            if (inputElement) {
                 if (tag === "input") {
-                    (element as any).indeterminate = isMixed;
+                    (inputElement as any).indeterminate = isMixed;
                 }
             }
-        }, [element, isMixed, tag])
-
+        }, [inputElement, isMixed, tag]);
 
         return { useCheckboxInputElementProps };
 
-
-
         function useCheckboxInputElementProps<P extends h.JSX.HTMLAttributes<InputType>>({ ...p0 }: P) {
 
-            let newProps: h.JSX.HTMLAttributes<InputType> = useButtonLikeEventHandlers<InputType>(e => stableOnInput(enhanceEvent(e,{ checked: !checked })), disabled ? "exclude" : tag != "input" || labelPosition == "wrapping" ? undefined : "exclude")({});
-
-            if (tag == "input" && labelPosition == "separate") {
-                if (!disabled) {
-                    newProps.onInput =  (e: h.JSX.TargetedEvent<InputType, Event>) => stableOnInput(enhanceEvent(e, { checked: !checked }));
-                }
-            }
-
-
-            const p3 = useRefElementProps(useILInputProps(p0));
-            const props = useMergedProps<InputType>()(newProps, p3);
+            let props: h.JSX.HTMLAttributes<InputType> = useCheckboxLikeInputElementProps(p0);
             props.checked ??= !!checked;
 
-
-            if (labelPosition == "wrapping") {
-                // Because the wrapped label handles all interactions,
-                // we need to make sure this element can't be interacted with
-                // even if it's an input element.
-                props.inert = true;
-                props.tabIndex = -1;
-                props.onFocus = e => getLabelElement().focus();
-            }
-            else {
-                if (tag != "input" && props.type != "checkbox") {
-                    props.role = "checkbox";
-                }
-                props["aria-disabled"] = disabled.toString();
+            if (labelPosition == "separate") {
                 props["aria-checked"] = checked.toString();
-
+                if (tag != "input")
                 props.tabIndex = 0;
             }
 
-            return useMergedProps<InputType>()(newProps, props);
+            return props;
         }
-    }, [useILInput, checked, labelPosition, disabled]);
+    }, [checked, labelPosition, disabled]);
 
     const useCheckboxLabelElement = useCallback(function useCheckboxLabelElement({ tag }: TagSensitiveProps<LabelType>) {
-        const { useInputLabelLabelProps: useILLabelProps } = useILLabel<LabelType>({ tag });
+        const { useCheckboxLikeLabelElementProps } = useCheckboxLikeLabelElement({tag});
 
-        function useCheckboxLabelElementProps<P extends h.JSX.HTMLAttributes<LabelType>>({ ...p0 }: P) {
-
-            const p3 = (useILLabelProps(p0));
-
-            let newProps: h.JSX.HTMLAttributes<LabelType> = useButtonLikeEventHandlers<LabelType>(e => stableOnInput(enhanceEvent(e, { checked: !getChecked() })), disabled || (labelPosition == "separate" && tag == "label") ? "exclude" : undefined)({});
+        function useCheckboxLabelElementProps<P extends h.JSX.HTMLAttributes<LabelType>>({ ...props }: P) {
 
             if (labelPosition == "wrapping") {
-                newProps.tabIndex = 0;
-                newProps.role = "checkbox";
-                newProps["aria-disabled"] = disabled.toString();
-                newProps["aria-checked"] = checked.toString();
+                props["aria-checked"] = checked.toString();
+                if (tag != "input")
+                props.tabIndex = 0;
             }
-            else {
-                // The one case where there's almost nothing to do
-                // The most normal case where everything acts according normal HTML mechanics.
-            }
-
-            return useMergedProps<LabelType>()(newProps, p3);
-        }
+            return useCheckboxLikeLabelElementProps(props);
+        };
 
         return { useCheckboxLabelElementProps };
-    }, [useILLabel, disabled, labelPosition]);
+    }, [useCheckboxLikeLabelElement, disabled, labelPosition]);
 
 
     return {
