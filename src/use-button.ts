@@ -48,15 +48,15 @@ export function useButtonLikeEventHandlers<E extends EventTarget>(onClickSync: (
 
     const [active, setActive] = useState(false);
 
-    const onKeyUp: h.JSX.KeyboardEventHandler<E> = (e) => {
-        if (e.key == " " && onClickSync && !excludes("space", exclude)) {
+    const onKeyUp = excludes("space", exclude)? undefined : (e: h.JSX.TargetedKeyboardEvent<E>) => {
+        if (e.key == " " && onClickSync) {
             e.preventDefault();
             onClickSync(e);
             setActive(false);
         }
     }
 
-    const onMouseDown: h.JSX.MouseEventHandler<E> = (e) => {
+    const onMouseDown = excludes("click", exclude)? undefined : (e: h.JSX.TargetedMouseEvent<E>) => {
         if (e.button === 0)
             setActive(true);
     }
@@ -65,11 +65,11 @@ export function useButtonLikeEventHandlers<E extends EventTarget>(onClickSync: (
         setActive(false);
     }
 
-    const onMouseUp = onBlur;
+    const onMouseUp =  excludes("click", exclude)? undefined : onBlur;
 
-    const onMouseOut = onBlur;
+    const onMouseOut =  excludes("click", exclude)? undefined : onBlur;
 
-    const onKeyDown: h.JSX.KeyboardEventHandler<E> = (e) => {
+    const onKeyDown = excludes("space", exclude) && excludes("enter", exclude)? undefined : (e: h.JSX.TargetedKeyboardEvent<E>) => {
         if (e.key == " " && onClickSync && !excludes("space", exclude)) {
             // We don't actually activate it on a space keydown
             // but we do preventDefault to stop the page from scrolling.
@@ -83,7 +83,7 @@ export function useButtonLikeEventHandlers<E extends EventTarget>(onClickSync: (
         }
     }
 
-    const onClick2: h.JSX.EventHandler<h.JSX.TargetedMouseEvent<E>> = (e => {
+    const onClick2  = excludes("click", exclude)? undefined : ((e: h.JSX.TargetedMouseEvent<E>) => {
         if (onClickSync && !excludes("click", exclude)) {
             onClickSync(e);
         }

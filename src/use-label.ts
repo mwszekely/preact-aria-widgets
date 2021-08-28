@@ -163,12 +163,12 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
                 props.onFocus = e => getLabelElement().focus();
             }
             else {
-                if (tag != "input" && props.type != "checkbox") {
+                if (tag != "input") {
                     props.role = role;
+                    props.tabIndex = 0;
                 }
                 props["aria-disabled"] = disabled.toString();
 
-                props.tabIndex = 0;
             }
 
             return useMergedProps<InputType>()(p0, props);
