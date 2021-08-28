@@ -147,7 +147,14 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
 
             if (tag == "input" && labelPosition == "separate") {
                 if (!disabled) {
-                    props.onInput =  stableOnInput;
+                    if (role != "radio")
+                        props.onInput = stableOnInput;
+                    else {
+                        // For some reason, Chrome won't fire onInput events for radio buttons that are tabIndex=-1??
+                        // Needs investigating, but onInput works fine in Firefox
+                        // TODO
+                        props.onClick = stableOnInput;
+                    }
                 }
             }
 
@@ -207,5 +214,5 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
         getInputElement
     };
 
-    
+
 }
