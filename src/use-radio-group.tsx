@@ -24,7 +24,7 @@ export interface UseAriaRadioInfo<V extends string, I extends Element, L extends
 
 
 export type UseAriaRadioParameters<V extends string, I extends Element, L extends Element> = UseListNavigationChildParameters<UseAriaRadioInfo<V, I, L>> & 
-Omit<UseCheckboxLikeParameters<I, L>, "onInput" | "role"> & {
+Omit<UseCheckboxLikeParameters<I, L>, "onInput" | "role" | "setChecked"> & {
     labelPosition: "wrapping" | "separate";
     value: V;
     disabled: boolean;
