@@ -6,7 +6,7 @@ export { useAriaListboxSingle, useAriaListboxMulti, UseListboxSingleItem, UseLis
 export { useAriaMenu, UseMenuButtonParameters, UseAriaMenuParameters } from "./use-menu"
 export { useAriaTabs, UseTabPanel, UseTab } from "./use-tabs";
 export { useAriaTooltip, UseTooltip, UseTooltipTrigger } from "./use-tooltip";
-
+export { useAriaRadioGroup, UseRadio } from "./use-radio-group"
 
 
 declare module 'preact' {

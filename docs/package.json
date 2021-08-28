@@ -23,5 +23,8 @@
         "rollup": "^2.56.2",
         "serve": "^12.0.0",
         "typescript": "^4.4.0-beta"
+    },
+    "dependencies": {
+        "preact-prop-helpers": "github:mwszekely/preact-prop-helpers"
     }
 }

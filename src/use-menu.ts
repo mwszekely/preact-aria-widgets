@@ -90,14 +90,15 @@ function r() {
 }
 requestAnimationFrame(r);
 
-export type UseMenuItem = <E extends Element>(args: UseMenuItemDefaultParameters<E>) => {
+export type UseMenuItem<E extends Element> = (args: UseMenuItemDefaultParameters<E>) => {
     useMenuItemProps: <P extends h.JSX.HTMLAttributes<E>>({ ...props }: P) => MergedProps<E, {
         onClick: h.JSX.MouseEventHandler<E>;
     }, UseListNavigationChildPropsReturnType<E, P>>
     // asyncInfo: Omit<UseAsyncHandlerReturnType<E, h.JSX.TargetedEvent<E>, void>, "getSyncHandler">;
 }
 
-export function useAriaMenu<E extends Element>({ collator, keyNavigation, noTypeahead, noWrap, typeaheadTimeout, ...args }: UseAriaMenuParameters) {
+export function useAriaMenu<ParentElement extends Element, ChildElement extends Element>({ collator, keyNavigation, noTypeahead, noWrap, typeaheadTimeout, ...args }: UseAriaMenuParameters) {
+    type E = ParentElement;
 
     const [focusTrapActive, setFocusTrapActive] = useState(false);
 
@@ -107,7 +108,7 @@ export function useAriaMenu<E extends Element>({ collator, keyNavigation, noType
     let open = (menubar ? true : (args as UseMenuParameters1).open);
     const stableOnClose = useStableCallback(onClose ?? (() => { }));
 
-    const { managedChildren, useListNavigationChild, useListNavigationProps, tabbableIndex, focusSelf: focusMenu } = useListNavigation<E>({ collator, keyNavigation, noTypeahead, noWrap, typeaheadTimeout });
+    const { managedChildren, useListNavigationChild, useListNavigationProps, tabbableIndex, focusSelf: focusMenu } = useListNavigation<E, ChildElement>({ collator, keyNavigation, noTypeahead, noWrap, typeaheadTimeout });
     const { useRandomIdProps: useMenuIdProps, useReferencedIdProps: useMenuIdReferencingProps } = useRandomId({ prefix: "aria-menu-" });
 
     const [openerElement, setOpenerElement] = useState<(Element & HTMLOrSVGElement) | null>(null);
@@ -183,8 +184,8 @@ export function useAriaMenu<E extends Element>({ collator, keyNavigation, noType
         }
     }, [open, onClose, onOpen, useMenuIdReferencingProps]);
 
-    const useMenuSubmenuItem = useCallback(<E extends Element>(args: UseMenuSubmenuItemParameters) => {
-        const { useMenuProps, useMenuButton } = useAriaMenu<HTMLElement>(args);
+    const useMenuSubmenuItem = useCallback((args: UseMenuSubmenuItemParameters) => {
+        const { useMenuProps, useMenuButton } = useAriaMenu<HTMLElement, ChildElement>(args);
         const { useMenuButtonProps } = useMenuButton<E>({ tag: "li" as any });
 
         const { element, getElement, useRefElementProps } = useRefElement<E>();
@@ -201,9 +202,10 @@ export function useAriaMenu<E extends Element>({ collator, keyNavigation, noType
         }
     }, []);
 
-    const useMenuItem: UseMenuItem = useCallback(<E extends Element>(args: UseMenuItemDefaultParameters<E>) => {
+    const useMenuItem: UseMenuItem<ChildElement> = useCallback((args: UseMenuItemDefaultParameters<ChildElement>) => {
+        type E = ChildElement;
 
-        const { useListNavigationChildProps } = useListNavigationChild<E>(args);
+        const { useListNavigationChildProps } = useListNavigationChild(args);
         // const { getSyncHandler, ...asyncInfo } = useAsyncHandler<E>()({ capture: _ => void (0) });
         // const onClick = getSyncHandler(asyncInfo.pending ? null : (args.onClick ?? null));
         const onClick = args.onClick;

@@ -346,15 +346,15 @@ const DemoFocus = memo(() => {
     )
 })
 
-const TabContext = createContext<UseTab>(null!);
-const TabPanelContext = createContext<UseTabPanel>(null!);
+const TabContext = createContext<UseTab<HTMLLIElement>>(null!);
+const TabPanelContext = createContext<UseTabPanel<HTMLDivElement>>(null!);
 const DemoTabs = memo(() => {
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [selectionMode, setSelectionMode] = useState<"focus" | "activate">("focus");
 
-    const { useTabPanel, useTabsLabel, useTab, useTabsList } = useAriaTabs({ onSelect: e => setSelectedIndex(e[EventDetail].selectedIndex), selectedIndex, selectionMode, orientation: "block" });
+    const { useTabPanel, useTabsLabel, useTab, useTabsList } = useAriaTabs<HTMLUListElement, HTMLLIElement, HTMLDivElement>({ onSelect: e => setSelectedIndex(e[EventDetail].selectedIndex), selectedIndex, selectionMode, orientation: "block" });
 
-    const { useTabListProps } = useTabsList<HTMLUListElement>();
+    const { useTabListProps } = useTabsList();
 
     return (
         <TabContext.Provider value={useTab} >
