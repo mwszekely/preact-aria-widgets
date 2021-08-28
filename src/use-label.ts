@@ -143,16 +143,15 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
 
         function useCheckboxLikeInputElementProps<P extends h.JSX.HTMLAttributes<InputType>>({ ...p0 }: P) {
 
-            let newProps: h.JSX.HTMLAttributes<InputType> = useButtonLikeEventHandlers<InputType>(stableOnInput, disabled ? "exclude" : tag != "input" || labelPosition == "wrapping" ? undefined : "exclude")({});
+            let props: h.JSX.HTMLAttributes<InputType> = useButtonLikeEventHandlers<InputType>(stableOnInput, disabled ? "exclude" : tag != "input" || labelPosition == "wrapping" ? undefined : "exclude")({});
 
             if (tag == "input" && labelPosition == "separate") {
                 if (!disabled) {
-                    newProps.onInput =  stableOnInput;
+                    props.onInput =  stableOnInput;
                 }
             }
 
-            const p3 = useRefElementProps(useILInputProps(p0));
-            const props = useMergedProps<InputType>()(newProps, p3);
+            props = useRefElementProps(useILInputProps(props));
 
 
             if (labelPosition == "wrapping") {
@@ -172,7 +171,7 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
                 props.tabIndex = 0;
             }
 
-            return useMergedProps<InputType>()(newProps, props);
+            return props;
         }
     }, [useILInput, role, labelPosition, disabled]);
 
