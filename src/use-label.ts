@@ -171,7 +171,7 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
                 props.tabIndex = 0;
             }
 
-            return props;
+            return useMergedProps<InputType>()(p0, props);
         }
     }, [useILInput, role, labelPosition, disabled]);
 
@@ -179,8 +179,6 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
         const { useInputLabelLabelProps: useILLabelProps } = useILLabel<LabelType>({ tag });
 
         function useCheckboxLikeLabelElementProps<P extends h.JSX.HTMLAttributes<LabelType>>({ ...p0 }: P) {
-
-            const p3 = (useILLabelProps(p0));
 
             let newProps: h.JSX.HTMLAttributes<LabelType> = useButtonLikeEventHandlers<LabelType>(stableOnInput, disabled || (labelPosition == "separate" && tag == "label") ? "exclude" : undefined)({});
 
@@ -194,7 +192,7 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
                 // The most normal case where everything acts according normal HTML mechanics.
             }
 
-            return useMergedProps<LabelType>()(newProps, p3);
+            return useMergedProps<LabelType>()(newProps, useILLabelProps(p0));
         }
 
         return { useCheckboxLikeLabelElementProps };
