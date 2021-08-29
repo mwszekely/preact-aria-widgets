@@ -50,7 +50,7 @@ export interface UseAriaAccordionSectionReturnType<ChildElement extends Element>
     useAriaAccordionSectionHeader: UseAriaAccordionSectionHeader<ChildElement>;
     useAriaAccordionSectionBody: UseAriaAccordionSectionBody;
 }
-export type UseAriaAccordionSectionHeaderPropsReturnType<E extends Element, P extends UseAriaAccordionSectionHeaderPropsParameters<E>> = MergedProps<E, UseRandomIdPropsReturnType<UseReferencedIdPropsReturnType<{ "aria-expanded": string; "aria-disabled": string | undefined; } & UseHasFocusPropsReturnType<E, Omit<P, "aria-expanded" | "aria-disabled">>, "aria-controls">>, { onClick: h.JSX.EventHandler<h.JSX.TargetedMouseEvent<E>> }>;
+export type UseAriaAccordionSectionHeaderPropsReturnType<E extends Element, P extends UseAriaAccordionSectionHeaderPropsParameters<E>> = h.JSX.HTMLAttributes<E>;
 export type UseAriaAccordionSectionBodyPropsReturnType<E extends Element, P extends UseAriaAccordionSectionBodyPropsParameters<E>> = UseRandomIdPropsReturnType<UseReferencedIdPropsReturnType<{ role: string; } & Omit<P, "role">, "aria-labelledby">>;
 
 export type UseAriaAccordionSectionHeader<E extends Element> = ({ tag }: TagSensitiveProps<E>) => UseAriaAccordionSectionHeaderReturnType<E>;
@@ -68,7 +68,7 @@ export function useAriaAccordion<ParentElement extends Element, ChildElement ext
     const stableSetExpandedIndex = useStableCallback(setExpandedIndex ?? (() => { }));
 
     const { managedChildren: managedAccordionSections, useManagedChild: useManagedChildSection } = useChildManager<UseAriaAccordionSectionInfo>();
-    const { useLinearNavigationProps } = useLinearNavigation<ParentElement, ChildElement>({ managedChildren: managedAccordionSections, navigationDirection: "block", getIndex: getLastFocusedIndex, setIndex: setLastFocusedIndex });
+    const { useLinearNavigationProps, useLinearNavigationChild } = useLinearNavigation<ParentElement, ChildElement>({ managedChildren: managedAccordionSections, navigationDirection: "block", getIndex: getLastFocusedIndex, setIndex: setLastFocusedIndex });
 
     // Any time list management changes the focused index, manually focus the child
     // TODO: Can this be cut?
@@ -122,6 +122,8 @@ export function useAriaAccordion<ParentElement extends Element, ChildElement ext
             const focus = useCallback(() => { (element as Element as HTMLElement | undefined)?.focus(); }, [element]);
             const { useManagedChildProps } = useManagedChildSection<ChildElement>({ index: args.index, open: open, setOpenFromParent, focus });
 
+            const { useLinearNavigationChildProps } = useLinearNavigationChild();
+
             function useAriaAccordionSectionHeaderProps<P extends UseAriaAccordionSectionHeaderPropsParameters<ChildElement>>({ ["aria-expanded"]: ariaExpanded, ["aria-disabled"]: ariaDisabled, ...props }: P): UseAriaAccordionSectionHeaderPropsReturnType<ChildElement, P> {
 
                 const onFocus = () => { setLastFocusedIndex(args.index); }
@@ -144,7 +146,7 @@ export function useAriaAccordion<ParentElement extends Element, ChildElement ext
                     })), { onFocus });
 
 
-                return ret3;
+                return useLinearNavigationChildProps(ret3);
             };
 
             return { useAriaAccordionSectionHeaderProps };
@@ -167,7 +169,7 @@ export function useAriaAccordion<ParentElement extends Element, ChildElement ext
             useAriaAccordionSectionHeader,
             useAriaAccordionSectionBody,
         }
-    }, []);
+    }, [useLinearNavigationChild]);
 
 
     function useAriaAccordionProps<P extends UseAriaAccordionPropsParameters<ParentElement>>(props: P) {
