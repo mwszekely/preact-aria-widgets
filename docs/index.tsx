@@ -394,10 +394,10 @@ const DemoTabPanel = memo(({ index }: { index: number }) => {
 const DemoTooltip = memo(() => {
     const { useTooltip, useTooltipTrigger, isOpen } = useAriaTooltip({});
     const { useTooltipProps } = useTooltip<HTMLSpanElement>();
-    const { useTooltipSourceProps } = useTooltipTrigger<HTMLSpanElement>();
+    const { useTooltipTriggerProps } = useTooltipTrigger<HTMLSpanElement>();
     return (
         <div class="demo">
-            <p>This is a paragraph with a <span {...useTooltipSourceProps({})}>tooltip right here.</span><span {...useTooltipProps({ hidden: !isOpen })}>This is the tooltip content.</span></p>
+            <p>This is a paragraph with a <span {...useTooltipTriggerProps({})}>tooltip right here.</span><span {...useTooltipProps({ hidden: !isOpen })}>This is the tooltip content.</span></p>
         </div>
     )
 })
