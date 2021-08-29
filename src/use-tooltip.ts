@@ -25,8 +25,10 @@ export function useAriaTooltip({ mouseoverDelay }: { mouseoverDelay?: number }) 
     const [tooltipHasMouseover, setTooltipHasMouseover] = useState(false);
 
     // Cover edge cases to let the cursor hover the tooltip even between mouse events.
-    let shouldClose = !(mouseoverIsValid || triggerFocused);
-    useTimeout({ timeout: 150, triggerIndex: shouldClose.toString(), callback: () => { if (shouldClose) setOpen(false); }})
+    let shouldOpen = (mouseoverIsValid || triggerFocused);
+    //let shouldClose = !(mouseoverIsValid || triggerFocused);
+    useEffect(() => { if (shouldOpen) setOpen(true); }, [shouldOpen])
+    useTimeout({ timeout: 150, triggerIndex: shouldOpen.toString(), callback: () => { if (!shouldOpen) setOpen(false); }})
 
     // Use a timeout to open with a delay if requested
     useTimeout({
