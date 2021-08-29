@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { useMergedProps, useStableCallback, useState } from "preact-prop-helpers";
+import { useActiveElement, useMergedProps, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
 import { useListNavigation, UseListNavigationChildInfo, UseListNavigationChildParameters } from "preact-prop-helpers/use-list-navigation";
 import { MergedProps } from "preact-prop-helpers/use-merged-props";
 import { useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
@@ -31,17 +31,25 @@ Omit<UseCheckboxLikeParameters<I, L>, "onInput" | "role"> & {
 }
 
 export function useAriaRadioGroup<V extends string, G extends Element, I extends Element, L extends Element>({ name, selectedValue, onInput }: UseAriaRadioGroupParameters<V>) {
-
+    const { element, useRefElementProps } = useRefElement<G>()
     const [selectedIndex, setSelectedIndex, getSelectedIndex] = useState<number | null>(null);
     const byName = useRef(new Map<string, any>());
     const stableOnInput = useStableCallback(onInput);
 
-    const { currentTypeahead, managedChildren, useListNavigationChild, useListNavigationProps } = useListNavigation<G, I, UseAriaRadioInfo<V, I, L>>({});
+    const { currentTypeahead, managedChildren, useListNavigationChild, useListNavigationProps, setTabbableIndex } = useListNavigation<G, I, UseAriaRadioInfo<V, I, L>>({});
 
     const useRadioGroupProps = useCallback(<P extends h.JSX.HTMLAttributes<G>>({ ...props }: P) => {
         props.role = "radiogroup";
-        return useListNavigationProps(props);
+        return useListNavigationProps(useRefElementProps(props));
     }, [useListNavigationProps]);
+
+    const { lastActiveElement } = useActiveElement();
+    let anyRadiosFocused = (!!element?.contains(lastActiveElement));
+    useEffect(() => {
+        if (!anyRadiosFocused && selectedIndex != null)
+            setTabbableIndex(selectedIndex);
+    }, [anyRadiosFocused, selectedIndex, setTabbableIndex]);
+
 
     useEffect(() => {
         let oldIndex = getSelectedIndex();
@@ -59,8 +67,8 @@ export function useAriaRadioGroup<V extends string, G extends Element, I extends
     const useRadio: UseRadio<V, I, L> = useCallback(function useAriaRadio({ value, index, text, disabled, labelPosition }: UseAriaRadioParameters<V, I, L>) {
 
         const onInput = useCallback((e: h.JSX.TargetedEvent<I> | h.JSX.TargetedEvent<L>) => {
-            stableOnInput(enhanceEvent(e as any, { selectedValue: value }))
-        }, [stableOnInput, value]);
+            stableOnInput(enhanceEvent(e as any, { selectedValue: value }));
+        }, [stableOnInput, value, index]);
 
         const { getInputElement, getLabelElement, useCheckboxLikeInputElement, useCheckboxLikeLabelElement } = useCheckboxLike<I, L>({ disabled, labelPosition, onInput, role: "radio" });
 

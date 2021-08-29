@@ -8,7 +8,7 @@ import { useStableCallback } from "preact-prop-helpers/use-stable-callback";
 import { useState } from "preact-prop-helpers/use-state";
 import { useButtonLikeEventHandlers } from "./use-button";
 import { useGenericLabel } from "./use-label";
-import { useStableGetter } from "preact-prop-helpers";
+import { useActiveElement, useStableGetter } from "preact-prop-helpers";
 import { EventDetail } from "./props";
 
 export type ListboxSingleSelectEvent<E extends EventTarget> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
@@ -48,8 +48,8 @@ export type UseListboxMultiItem<E extends Element, I extends UseListboxMultiItem
 
 export function useAriaListboxSingle<ParentElement extends Element, ChildElement extends Element, I extends UseListboxSingleItemInfo>({ selectedIndex, onSelect, selectionMode, ...args }: UseListboxSingleParameters) {
 
-    const { useGenericLabelInput, useGenericLabelLabel, useReferencedInputIdProps, useReferencedLabelIdProps } = useGenericLabel({ labelPrefix: "aria-listbox-label-", inputPrefix: "aria-listbox-" })
-    const { useListNavigationChild, useListNavigationProps, navigateToIndex, managedChildren, ...listRest } = useListNavigation<ParentElement, ChildElement, I>(args);
+    const { useGenericLabelInput, useGenericLabelLabel, useReferencedInputIdProps, useReferencedLabelIdProps, inputElement } = useGenericLabel({ labelPrefix: "aria-listbox-label-", inputPrefix: "aria-listbox-" })
+    const { useListNavigationChild, useListNavigationProps, navigateToIndex, managedChildren, setTabbableIndex, ...listRest } = useListNavigation<ParentElement, ChildElement, I>(args);
     const stableOnSelect = useStableCallback(onSelect);
     const { useGenericLabelInputProps } = useGenericLabelInput<ParentElement>();
 
@@ -60,6 +60,15 @@ export function useAriaListboxSingle<ParentElement extends Element, ChildElement
     }, [selectedIndex, managedChildren.length]);
 
     const childCount = managedChildren.length;
+
+
+
+    const { lastActiveElement } = useActiveElement();
+    let anyRadiosFocused = (!!inputElement?.contains(lastActiveElement));
+    useEffect(() => {
+        if (!anyRadiosFocused)
+            setTabbableIndex(selectedIndex);
+    }, [anyRadiosFocused, selectedIndex, setTabbableIndex]);
 
     //const { getSyncHandler, ...asyncInfo } = useAsyncHandler<E>()({ capture: (e: Event) => indicesByElement.get(e.target!) ?? -1 });
     //const onSelect = getSyncHandler(asyncInfo.pending ? null : asyncOnSelect);
