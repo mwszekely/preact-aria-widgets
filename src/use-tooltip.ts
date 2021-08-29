@@ -16,7 +16,8 @@ export function useAriaTooltip({ mouseoverDelay }: { mouseoverDelay?: number }) 
 
     const [open, setOpen, getOpen] = useState(false);
 
-    const [mouseoverIsValid, setMouseoverIsValid] = useState(false);
+    const [hasAnyMouseover, setHasAnyMouseover] = useState(false);
+    //const [mouseoverIsValid, setMouseoverIsValid] = useState(false);
 
     const { useRandomIdProps: useTooltipIdProps, useReferencedIdProps: useTooltipIdReferencingProps } = useRandomId({ prefix: "aria-tooltip-" });
 
@@ -24,27 +25,28 @@ export function useAriaTooltip({ mouseoverDelay }: { mouseoverDelay?: number }) 
     const [triggerHasMouseover, setTriggerHasMouseover] = useState(false);
     const [tooltipHasMouseover, setTooltipHasMouseover] = useState(false);
 
-    // Cover edge cases to let the cursor hover the tooltip even between mouse events.
-    let shouldOpen = (mouseoverIsValid || triggerFocused);
-    //let shouldClose = !(mouseoverIsValid || triggerFocused);
-    useEffect(() => { if (shouldOpen) setOpen(true); }, [shouldOpen])
-    useTimeout({ timeout: 150, triggerIndex: shouldOpen.toString(), callback: () => { if (!shouldOpen) setOpen(false); }})
-
-    // Use a timeout to open with a delay if requested
+    
     useTimeout({
+        timeout: mouseoverDelay,
+        triggerIndex: (+triggerHasMouseover + +tooltipHasMouseover),
         callback: () => {
-            setMouseoverIsValid(tooltipHasMouseover || triggerHasMouseover);
-        },
-        // Force the delay to zero any time the tooltip is already focused
-        timeout: triggerFocused ? 0 : (mouseoverDelay ?? 0),
-        triggerIndex: `${tooltipHasMouseover || triggerHasMouseover}`
-    })
+            if (triggerHasMouseover || tooltipHasMouseover)
+                setHasAnyMouseover(true);
+        }
+    });
 
-    // ...but always close immediately upon request.
+    useTimeout({
+        timeout: 50,
+        triggerIndex: (+triggerHasMouseover + +tooltipHasMouseover),
+        callback: () => {
+            if (!triggerHasMouseover && !tooltipHasMouseover)
+                setHasAnyMouseover(false)
+        }
+    });
+
     useEffect(() => {
-        if (!triggerHasMouseover && !tooltipHasMouseover)
-            setMouseoverIsValid(false);
-    }, [triggerHasMouseover, tooltipHasMouseover])
+        setOpen(hasAnyMouseover || triggerFocused);
+    }, [hasAnyMouseover, triggerFocused])
 
     const useTooltipTrigger: UseTooltipTrigger = useCallback(function useTooltipTrigger<TriggerType extends Element>() {
 
