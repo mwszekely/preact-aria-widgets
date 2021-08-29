@@ -115,12 +115,12 @@ const DemoUseFocusTrapChild = memo(({ setActive, active, depth }: { active: bool
     );
 });
 
-const UseAccordionSectionContext = createContext<UseAriaAccordionSection>(null!);
+const UseAccordionSectionContext = createContext<UseAriaAccordionSection<HTMLButtonElement>>(null!);
 const DemoUseAccordion = memo(() => {
 
     const [expandedIndex, setExpandedIndex] = useState<number | null>(0);
 
-    const { useAriaAccordionSection, useAriaAccordionProps } = useAriaAccordion<HTMLDivElement>({ expandedIndex, setExpandedIndex })
+    const { useAriaAccordionSection, useAriaAccordionProps } = useAriaAccordion<HTMLDivElement, HTMLButtonElement>({ expandedIndex, setExpandedIndex })
 
     return (
         <UseAccordionSectionContext.Provider value={useAriaAccordionSection}>
@@ -141,7 +141,7 @@ const DemoAccordionSection = memo(({ index }: { index: number }) => {
     const { expanded, useAriaAccordionSectionBody, useAriaAccordionSectionHeader } = useAccordionSection({ index });
 
     const { useAriaAccordionSectionBodyProps } = useAriaAccordionSectionBody<HTMLDivElement>();
-    const { useAriaAccordionSectionHeaderProps } = useAriaAccordionSectionHeader<HTMLButtonElement>({ tag: "button" });
+    const { useAriaAccordionSectionHeaderProps } = useAriaAccordionSectionHeader({ tag: "button" });
 
     const p = useAriaAccordionSectionBodyProps({ className: "accordion-section-body", hidden: !expanded });
     p.id;
@@ -225,10 +225,10 @@ const DemoUseDialog = memo(() => {
     )
 });
 
-const ListBoxSingleItemContext = createContext<UseListboxSingleItem>(null!);
+const ListBoxSingleItemContext = createContext<UseListboxSingleItem<HTMLLIElement>>(null!);
 const DemoUseListboxSingle = memo(() => {
     const [selectedIndex, setSelectedIndex] = useState(0);
-    const { useListboxSingleItem, useListboxSingleLabel, useListboxSingleProps } = useAriaListboxSingle<HTMLUListElement, UseListboxSingleItemInfo>({ selectedIndex, onSelect: e => setSelectedIndex(e[EventDetail].selectedIndex), selectionMode: "activate" });
+    const { useListboxSingleItem, useListboxSingleLabel, useListboxSingleProps } = useAriaListboxSingle<HTMLUListElement, HTMLLIElement, UseListboxSingleItemInfo>({ selectedIndex, onSelect: e => setSelectedIndex(e[EventDetail].selectedIndex), selectionMode: "activate" });
 
 
     return <div class="demo">
@@ -245,7 +245,7 @@ const DemoUseListboxSingle = memo(() => {
 });
 
 const DemoListboxSingleOption = memo(({ index }: { index: number, }) => {
-    const { getSelected, selected, tabbable, useListboxSingleItemProps } = useContext(ListBoxSingleItemContext)<HTMLLIElement>({ index, text: null });
+    const { getSelected, selected, tabbable, useListboxSingleItemProps } = useContext(ListBoxSingleItemContext)({ index, text: null });
     return <li {...useListboxSingleItemProps({})}>Number {index + 1} option{selected ? "(selected)" : ""}</li>
 });
 
@@ -253,10 +253,10 @@ const DemoListboxSingleOption = memo(({ index }: { index: number, }) => {
 
 
 
-const ListBoxMultiItemContext = createContext<UseListboxMultiItem>(null!);
+const ListBoxMultiItemContext = createContext<UseListboxMultiItem<HTMLLIElement>>(null!);
 const DemoUseListboxMulti = memo(() => {
 
-    const { useListboxMultiItem, useListboxMultiLabel, useListboxMultiProps, currentTypeahead } = useAriaListboxMulti<HTMLUListElement, UseListboxMultiItemInfo>({});
+    const { useListboxMultiItem, useListboxMultiLabel, useListboxMultiProps, currentTypeahead } = useAriaListboxMulti<HTMLUListElement, HTMLLIElement, UseListboxMultiItemInfo>({});
 
     const [selectedValues, setSelectedValues] = useState<Set<number>>(new Set());
 
@@ -294,10 +294,10 @@ const DemoUseListboxMulti = memo(() => {
     </div>
 });
 
-const MenuItemContext = createContext<UseMenuItem>(null!);
+const MenuItemContext = createContext<UseMenuItem<HTMLLIElement>>(null!);
 const DemoListboxMultiOption = memo(({ index, selected, setSelected }: { index: number, selected: boolean, setSelected(selected: boolean): void }) => {
     const text = `Number ${index + 1} option${selected ? "(selected)" : ""}`
-    const { tabbable, useListboxMultiItemProps } = useContext(ListBoxMultiItemContext)<HTMLLIElement>({ index, text, onSelect: e => setSelected(e[EventDetail].selected), selected });
+    const { tabbable, useListboxMultiItemProps } = useContext(ListBoxMultiItemContext)({ index, text, onSelect: e => setSelected(e[EventDetail].selected), selected });
     return <li {...useListboxMultiItemProps({})}>{text}</li>
 });
 
@@ -306,7 +306,7 @@ const DemoMenu = memo(() => {
     const onClose = () => setOpen(false);
     const onOpen = () => setOpen(true);
 
-    const { useMenuButton, useMenuItem, useMenuItemCheckbox, useMenuProps, useMenuSubmenuItem } = useAriaMenu<HTMLUListElement>({ open, onClose, onOpen });
+    const { useMenuButton, useMenuItem, useMenuItemCheckbox, useMenuProps, useMenuSubmenuItem } = useAriaMenu<HTMLUListElement, HTMLLIElement>({ open, onClose, onOpen });
 
     const { useMenuButtonProps } = useMenuButton<HTMLButtonElement>({ tag: "button" })
     return (
@@ -326,7 +326,7 @@ const DemoMenu = memo(() => {
 
 const DemoMenuItem = memo(({ index }: { index: number }) => {
     const useAriaMenuItem = useContext(MenuItemContext);
-    const { useMenuItemProps } = useAriaMenuItem<HTMLLIElement>({ index, text: null });
+    const { useMenuItemProps } = useAriaMenuItem({ index, text: null });
     return <li {...useMenuItemProps({})}>Item {index + 1}</li>
 })
 
@@ -347,12 +347,12 @@ const DemoFocus = memo(() => {
 })
 
 const TabContext = createContext<UseTab<HTMLLIElement>>(null!);
-const TabPanelContext = createContext<UseTabPanel<HTMLDivElement>>(null!);
+const TabPanelContext = createContext<UseTabPanel<HTMLParagraphElement>>(null!);
 const DemoTabs = memo(() => {
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [selectionMode, setSelectionMode] = useState<"focus" | "activate">("focus");
 
-    const { useTabPanel, useTabsLabel, useTab, useTabsList } = useAriaTabs<HTMLUListElement, HTMLLIElement, HTMLDivElement>({ onSelect: e => setSelectedIndex(e[EventDetail].selectedIndex), selectedIndex, selectionMode, orientation: "block" });
+    const { useTabPanel, useTabsLabel, useTab, useTabsList } = useAriaTabs<HTMLUListElement, HTMLLIElement, HTMLParagraphElement>({ onSelect: e => setSelectedIndex(e[EventDetail].selectedIndex), selectedIndex, selectionMode, orientation: "block" });
 
     const { useTabListProps } = useTabsList();
 
@@ -372,7 +372,7 @@ const DemoTabs = memo(() => {
 
 const DemoTab = memo(({ index }: { index: number }) => {
     const useTab = useContext(TabContext);
-    const { useTabProps } = useTab<HTMLLIElement>({ index, text: null })
+    const { useTabProps } = useTab({ index, text: null })
 
     return (<>
         <li {...useTabProps({})}>Tab #{index + 1}</li>
@@ -381,7 +381,7 @@ const DemoTab = memo(({ index }: { index: number }) => {
 
 const DemoTabPanel = memo(({ index }: { index: number }) => {
     const useTabPanel = useContext(TabPanelContext);
-    const { useTabPanelProps, selected } = useTabPanel<HTMLParagraphElement>({ index })
+    const { useTabPanelProps, selected } = useTabPanel({ index })
 
     return (
         <div {...useTabPanelProps({ hidden: !selected })}>
