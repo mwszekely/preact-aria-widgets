@@ -23,8 +23,8 @@ export interface UseAriaRadioInfo<V extends string, I extends Element, L extends
 
 
 
-export type UseAriaRadioParameters<V extends string, I extends Element, L extends Element> = UseListNavigationChildParameters<UseAriaRadioInfo<V, I, L>> & 
-Omit<UseCheckboxLikeParameters<I, L>, "onInput" | "role" | "setChecked"> & {
+export type UseAriaRadioParameters<V extends string, I extends Element, L extends Element> = Omit<UseListNavigationChildParameters<UseAriaRadioInfo<V, I, L>>, "setChecked"> & 
+Omit<UseCheckboxLikeParameters<I, L>, "onInput" | "role"> & {
     labelPosition: "wrapping" | "separate";
     value: V;
     disabled: boolean;
@@ -62,7 +62,7 @@ export function useAriaRadioGroup<V extends string, G extends Element, I extends
             stableOnInput(enhanceEvent(e as any, { selectedValue: value }))
         }, [stableOnInput, value]);
 
-        const { getInputElement, getLabelElement, useCheckboxLikeInputElement, useCheckboxLikeLabelElement,  } = useCheckboxLike<I, L>({ disabled, labelPosition, onInput, role: "radio" });
+        const { getInputElement, getLabelElement, useCheckboxLikeInputElement, useCheckboxLikeLabelElement } = useCheckboxLike<I, L>({ disabled, labelPosition, onInput, role: "radio" });
 
         //const {} = useCheckboxLikeInputElement({  })
 
