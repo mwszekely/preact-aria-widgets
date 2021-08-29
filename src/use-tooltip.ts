@@ -60,7 +60,10 @@ export function useAriaTooltip({ mouseoverDelay }: { mouseoverDelay?: number }) 
 
 
         function useTooltipTriggerProps<P extends h.JSX.HTMLAttributes<TriggerType>>({ ...props }: P) {
-            props.tabIndex ??= 0;
+            // Note: Though it's important to make sure that focusing activates a tooltip,
+            // it's perfectly reasonable that a child element will be the one that's focused,
+            // not this one, so we don't set tabIndex=0
+
             return useTooltipIdReferencingProps("aria-describedby")(useMergedProps<TriggerType>()({ onPointerEnter, onPointerLeave }, useHasFocusProps(props as any) as unknown as h.JSX.HTMLAttributes<TriggerType>));
         }
 
