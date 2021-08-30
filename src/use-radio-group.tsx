@@ -3,7 +3,7 @@ import { useActiveElement, useMergedProps, useRefElement, useStableCallback, use
 import { useListNavigation, UseListNavigationChildInfo, UseListNavigationChildParameters } from "preact-prop-helpers/use-list-navigation";
 import { MergedProps } from "preact-prop-helpers/use-merged-props";
 import { useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
-import { enhanceEvent, EventDetail, TagSensitiveProps } from "./props";
+import { enhanceEvent, EventDetail, TagSensitiveProps, useChildFlag } from "./props";
 import { useCheckboxLike, UseCheckboxLikeParameters } from "./use-label";
 
 export type RadioChangeEvent<EventType extends Event> = EventType & { [EventDetail]: { selectedValue: string } };
@@ -43,6 +43,8 @@ export function useAriaRadioGroup<V extends string, G extends Element, I extends
         return useListNavigationProps(useRefElementProps(props));
     }, [useListNavigationProps]);
 
+    useChildFlag(selectedIndex, managedChildren.length, (i, checked) => managedChildren[i]?.setChecked(checked));
+    
     const { lastActiveElement } = useActiveElement();
     let anyRadiosFocused = (!!element?.contains(lastActiveElement));
     useEffect(() => {
@@ -55,14 +57,16 @@ export function useAriaRadioGroup<V extends string, G extends Element, I extends
         let oldIndex = getSelectedIndex();
         let newIndex = byName.current.get(selectedValue);
 
-        if (oldIndex != null && oldIndex >= 0)
+        /*if (oldIndex != null && oldIndex >= 0)
             managedChildren[oldIndex]?.setChecked(false);
 
         if (newIndex != null && newIndex >= 0)
-            managedChildren[newIndex]?.setChecked(true);
+            managedChildren[newIndex]?.setChecked(true);*/
 
         setSelectedIndex(newIndex);
     }, [selectedValue]);
+
+
 
     const useRadio: UseRadio<V, I, L> = useCallback(function useAriaRadio({ value, index, text, disabled, labelPosition }: UseAriaRadioParameters<V, I, L>) {
 

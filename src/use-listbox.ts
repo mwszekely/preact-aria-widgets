@@ -9,7 +9,7 @@ import { useState } from "preact-prop-helpers/use-state";
 import { useButtonLikeEventHandlers } from "./use-button";
 import { useGenericLabel } from "./use-label";
 import { useActiveElement, useStableGetter } from "preact-prop-helpers";
-import { EventDetail } from "./props";
+import { EventDetail, useChildFlag } from "./props";
 
 export type ListboxSingleSelectEvent<E extends EventTarget> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 export type ListboxMultiSelectEvent<E extends EventTarget> = { [EventDetail]: { selected: boolean } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
@@ -53,10 +53,17 @@ export function useAriaListboxSingle<ParentElement extends Element, ChildElement
     const stableOnSelect = useStableCallback(onSelect);
     const { useGenericLabelInputProps } = useGenericLabelInput<ParentElement>();
 
-    useLayoutEffect(([prevSelectedIndex]) => {
+    /*useLayoutEffect(([prevSelectedIndex]) => {
         navigateToIndex(selectedIndex);
         managedChildren[prevSelectedIndex]?.setSelected(false);
         managedChildren[selectedIndex]?.setSelected(true);
+    }, [selectedIndex, managedChildren.length]);*/
+
+
+    useChildFlag(selectedIndex, managedChildren.length, (i, selected) => managedChildren[i]?.setSelected(selected));
+
+    useLayoutEffect(([]) => {
+        navigateToIndex(selectedIndex);
     }, [selectedIndex, managedChildren.length]);
 
     const childCount = managedChildren.length;

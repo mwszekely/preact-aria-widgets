@@ -10,7 +10,7 @@ import { useState } from "preact-prop-helpers/use-state";
 import { useButtonLikeEventHandlers } from "./use-button";
 import { useRefElement, UseRefElementPropsReturnType } from "preact-prop-helpers/use-ref-element";
 import { useHasFocus, useLogicalDirection, useStableGetter } from "preact-prop-helpers";
-import { enhanceEvent, EventDetail } from "./props";
+import { enhanceEvent, EventDetail, useChildFlag } from "./props";
 
 export type TabsChangeEvent<E extends Element> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 
@@ -71,16 +71,8 @@ export function useAriaTabs<ListElement extends Element, TabElement extends Elem
     }, [selectionMode])
 
 
-    useLayoutEffect(([prevChildCount, prevSelectedIndex]) => {
-        if (prevSelectedIndex != null) {
-            managedTabs[prevSelectedIndex]?.setSelected(false);
-            managedPanels[prevSelectedIndex]?.setVisible(false);
-        }
-        if (selectedIndex != null) {
-            managedTabs[selectedIndex]?.setSelected(true);
-            managedPanels[selectedIndex]?.setVisible(true);
-        }
-    }, [childCount, selectedIndex]);
+    useChildFlag(selectedIndex, managedTabs.length, (i, selected) => managedTabs[i]?.setSelected(selected));
+    useChildFlag(selectedIndex, managedPanels.length, (i, visible) => managedPanels[i]?.setVisible(visible));
 
 
 

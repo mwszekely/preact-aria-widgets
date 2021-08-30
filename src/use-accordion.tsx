@@ -9,7 +9,7 @@ import { useRefElement } from "preact-prop-helpers/use-ref-element";
 import { useStableCallback } from "preact-prop-helpers/use-stable-callback";
 import { useState } from "preact-prop-helpers/use-state";
 import { useCallback } from "preact/hooks";
-import { TagSensitiveProps } from "props";
+import { TagSensitiveProps, useChildFlag } from "./props";
 import { useButtonLikeEventHandlers } from "./use-button";
 
 export type UseAriaAccordion<ParentElement extends Element, ChildElement extends Element> = (args: UseAriaAccordionParameters) => UseAriaAccordionReturnType<ParentElement, ChildElement>;
@@ -61,7 +61,6 @@ export interface UseAriaAccordionSectionBodyReturnType<E extends Element> { useA
 
 interface UseAriaAccordionPropsParameters<E extends Element> extends h.JSX.HTMLAttributes<E> { }
 
-
 export function useAriaAccordion<ParentElement extends Element, ChildElement extends Element>({ expandedIndex, setExpandedIndex }: UseAriaAccordionParameters): UseAriaAccordionReturnType<ParentElement, ChildElement> {
 
     const [lastFocusedIndex, setLastFocusedIndex, getLastFocusedIndex] = useState(0);
@@ -75,32 +74,9 @@ export function useAriaAccordion<ParentElement extends Element, ChildElement ext
     useLayoutEffect(() => {
         if (lastFocusedIndex != null && lastFocusedIndex >= 0)
             managedAccordionSections[lastFocusedIndex]?.focus();
-    }, [lastFocusedIndex])
+    }, [lastFocusedIndex]);
 
-    // Any time a new expanded index is given, 
-    // collapse the old section and expand the new one.
-    const [prevExpandedIndex, setPrevExpandedIndex, getPrevExpandedIndex] = useState<number | null>(null);
-    const [prevChildCount, setPrevChildCount, getPrevChildCount] = useState(managedAccordionSections.length);
-    useLayoutEffect(() => {
-
-        // Close any new panels that might have mounted (their open prop is null right now if so)
-        for (let i = (getPrevChildCount() ?? 0); i < managedAccordionSections.length; ++i) {
-            managedAccordionSections[i]?.setOpenFromParent(i === expandedIndex);
-        }
-        setPrevChildCount(managedAccordionSections.length);
-
-        // Collapse the currently expanded panel
-        const prevExpandedIndex = getPrevExpandedIndex();
-        if (prevExpandedIndex != null && prevExpandedIndex <= managedAccordionSections.length)
-            managedAccordionSections[prevExpandedIndex]?.setOpenFromParent(false);
-
-        // Expand the next panel
-        if (expandedIndex != null && expandedIndex <= managedAccordionSections.length) {
-            managedAccordionSections[expandedIndex]?.setOpenFromParent(true);
-            setPrevExpandedIndex(expandedIndex);
-        }
-
-    }, [expandedIndex, managedAccordionSections.length]);
+    useChildFlag(expandedIndex, managedAccordionSections.length, (i, open) => managedAccordionSections[i]?.setOpenFromParent(open));
 
     const useAriaAccordionSection = useCallback<UseAriaAccordionSection<ChildElement>>((args: UseAriaAccordionSectionParameters): UseAriaAccordionSectionReturnType<ChildElement> => {
 
