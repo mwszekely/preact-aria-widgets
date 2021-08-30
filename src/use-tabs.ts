@@ -132,7 +132,7 @@ export function useAriaTabs<ListElement extends Element, TabElement extends Elem
         //const [selectedTabPanelId, setSelectedTabPanelId, getSelectedTabPanelId] = useState<string | undefined>(undefined);
         const [shouldFocus, setShouldFocus] = useState(false);
         const [tabId, setTabId] = useState<undefined | string>(undefined);
-        const [selected, setSelected, getSelected] = useState<boolean | null>(false);
+        const [selected, setSelected, getSelected] = useState<boolean | null>(null);
         const { useRandomIdProps: usePanelIdProps, useReferencedIdProps: useReferencedPanelId, id: tabPanelId } = useRandomId({ prefix: "aria-tab-panel-" });
         const { element, useManagedChildProps } = useManagedTabPanel<TabPanelElement>({ ...info, tabPanelId, setTabId, focus, setVisible: setSelected });
 
