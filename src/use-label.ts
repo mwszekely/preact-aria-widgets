@@ -122,6 +122,22 @@ export interface UseCheckboxLikeParameters<InputType extends Element, LabelType 
     onInput?(event: h.JSX.TargetedEvent<LabelType>): void;
 }
 
+const handlesInput = <E extends Element>(tag: ElementToTag<E>, labelPosition: "wrapping" | "separate", which: "input-element" | "label-element") => {
+    if (labelPosition === "separate") {
+        if (which === "input-element")
+            return true;
+        else if (which === "label-element")
+            return tag != "input";
+    }
+    else if (labelPosition === "wrapping") {
+        if (which === "input-element")
+            return false;
+        if (which == "label-element")
+            return true;
+    }
+};
+
+
 /**
  * Handles label type (wrapping or separate) for checkboxes, radios, switches, etc.
  * @param param0 
@@ -129,9 +145,12 @@ export interface UseCheckboxLikeParameters<InputType extends Element, LabelType 
  */
 export function useCheckboxLike<InputType extends Element, LabelType extends Element>({ disabled, labelPosition, onInput, role }: UseCheckboxLikeParameters<InputType, LabelType>) {
 
-    const stableOnInput = useStableCallback((e: h.JSX.TargetedEvent<InputType> |  h.JSX.TargetedEvent<LabelType>) => { e.preventDefault(); onInput?.(e as h.JSX.TargetedEvent<InputType>); });
+    const stableOnInput = useStableCallback((e: h.JSX.TargetedEvent<InputType> | h.JSX.TargetedEvent<LabelType>) => { e.preventDefault(); onInput?.(e as h.JSX.TargetedEvent<InputType>); });
 
     const { inputId, labelId, useInputLabelInput: useILInput, useInputLabelLabel: useILLabel, getLabelElement, getInputElement } = useInputLabel({ labelPrefix: "aria-checkbox-label-", inputPrefix: "aria-checkbox-input-" });
+
+
+
 
     const useCheckboxLikeInputElement = useCallback(function useCheckboxInputElement({ tag }: TagSensitiveProps<InputType>) {
         const { useInputLabelInputProps: useILInputProps } = useILInput<InputType>();
@@ -143,20 +162,13 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
 
         function useCheckboxLikeInputElementProps<P extends h.JSX.HTMLAttributes<InputType>>({ ...p0 }: P) {
 
-            let props: h.JSX.HTMLAttributes<InputType> = useButtonLikeEventHandlers<InputType>("div" as ElementToTag<InputType>, disabled ? null : tag != "input" || labelPosition == "wrapping" ? stableOnInput : null, undefined)({});
+            // For some reason, Chrome won't fire onInput events for radio buttons that are tabIndex=-1??
+            // Needs investigating, but onInput works fine in Firefox
+            // TODO
+            let props: h.JSX.HTMLAttributes<InputType> = useButtonLikeEventHandlers<InputType>(tag as ElementToTag<InputType>, disabled || !handlesInput(tag, labelPosition, "input-element") ? undefined : stableOnInput, undefined)({});
 
-            if (tag == "input" && labelPosition == "separate") {
-                if (!disabled) {
-                    if (role != "radio")
-                        props.onInput = stableOnInput;
-                    else {
-                        // For some reason, Chrome won't fire onInput events for radio buttons that are tabIndex=-1??
-                        // Needs investigating, but onInput works fine in Firefox
-                        // TODO
-                        props.onClick = stableOnInput;
-                    }
-                }
-            }
+            if (tag == "input")
+                props.onInput = (e: Event) => e.preventDefault();
 
             props = useRefElementProps(useILInputProps(props));
 
@@ -187,7 +199,7 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
 
         function useCheckboxLikeLabelElementProps<P extends h.JSX.HTMLAttributes<LabelType>>({ ...p0 }: P) {
 
-            let newProps: h.JSX.HTMLAttributes<LabelType> = useButtonLikeEventHandlers<LabelType>("div" as ElementToTag<LabelType>, disabled || (labelPosition == "separate" && tag == "label") ? undefined : stableOnInput , undefined)({});
+            let newProps: h.JSX.HTMLAttributes<LabelType> = useButtonLikeEventHandlers<LabelType>("div" as ElementToTag<LabelType>, disabled || !handlesInput(tag, labelPosition, "label-element") ? undefined : stableOnInput, undefined)({});
 
             if (labelPosition == "wrapping") {
                 newProps.tabIndex = 0;
