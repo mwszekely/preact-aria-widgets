@@ -17,7 +17,7 @@ export type ListboxMultiSelectEvent<E extends EventTarget> = { [EventDetail]: { 
 export interface UseListboxSingleParameters extends UseListNavigationParameters {
     selectionMode: "focus" | "activate";
     selectedIndex: number;
-    onSelect(event: ListboxSingleSelectEvent<Element>): void;
+    onSelect?(event: ListboxSingleSelectEvent<Element>): void;
 }
 
 export interface UseListboxMultiParameters extends UseListNavigationParameters {
@@ -30,7 +30,7 @@ export interface UseListboxSingleItemInfo<E extends Element> extends UseListNavi
 
 export interface UseListboxMultiItemInfo<E extends Element> extends UseListNavigationChildInfo, TagSensitiveProps<E> {
     selected: boolean;
-    onSelect(event: (ListboxMultiSelectEvent<Element>)): void;
+    onSelect?(event: (ListboxMultiSelectEvent<Element>)): void;
     setTypeaheadInProgress(inProgress: boolean): void;
 }
 
@@ -50,8 +50,8 @@ export function useAriaListboxSingle<ParentElement extends Element, ChildElement
 
     const { useGenericLabelInput, useGenericLabelLabel, useReferencedInputIdProps, useReferencedLabelIdProps, inputElement } = useGenericLabel({ labelPrefix: "aria-listbox-label-", inputPrefix: "aria-listbox-" })
     const { useListNavigationChild, useListNavigationProps, navigateToIndex, managedChildren, setTabbableIndex, ...listRest } = useListNavigation<ParentElement, ChildElement, I>(args);
-    const stableOnSelect = useStableCallback(onSelect);
     const { useGenericLabelInputProps } = useGenericLabelInput<ParentElement>();
+    const stableOnSelect = useStableCallback(onSelect ?? (() => {}));
 
     /*useLayoutEffect(([prevSelectedIndex]) => {
         navigateToIndex(selectedIndex);
@@ -89,7 +89,7 @@ export function useAriaListboxSingle<ParentElement extends Element, ChildElement
 
         useEffect(() => {
             if (element && tabbable && selectionMode == "focus") {
-                onSelect?.({ target: element, currentTarget: element, [EventDetail]: { selectedIndex: index } });
+                stableOnSelect?.({ target: element, currentTarget: element, [EventDetail]: { selectedIndex: index } });
             }
         }, [element, tabbable, selectionMode, index]);
 
@@ -99,7 +99,7 @@ export function useAriaListboxSingle<ParentElement extends Element, ChildElement
             const newProps: h.JSX.HTMLAttributes<E> = useButtonLikeEventHandlers<E>(info.tag, (e) => {
                 navigateToIndex(info.index);
                 if (element)
-                    onSelect?.({ target: element, currentTarget: element, [EventDetail]: { selectedIndex: index } });
+                stableOnSelect?.({ target: element, currentTarget: element, [EventDetail]: { selectedIndex: index } });
                 e.preventDefault();
             }, undefined)({});
 
@@ -160,8 +160,8 @@ export function useAriaListboxMulti<ParentElement extends Element, ChildElement 
         //const onSelectAsync = info.onSelect;
         const [typeaheadInProgress, setTypeaheadInProgress] = useState(false);
         const getSelected = useStableGetter(selected);
-        const stableOnSelect = useStableCallback(info.onSelect);
-        const { element, useRefElementProps } = useRefElement<E>()
+        const { element, useRefElementProps } = useRefElement<E>();
+        const stableOnSelect = useStableCallback(info.onSelect ?? (() => {}));
 
 
 
@@ -171,7 +171,7 @@ export function useAriaListboxMulti<ParentElement extends Element, ChildElement 
 
         useLayoutEffect(() => {
             if (element && getShiftHeld()) {
-                stableOnSelect({ target: element, currentTarget: element, [EventDetail]: { selected: true } });
+                stableOnSelect?.({ target: element, currentTarget: element, [EventDetail]: { selected: true } });
             }
         }, [element, tabbable]);
 
