@@ -24,13 +24,21 @@ export function useAriaModal<ModalElement extends HTMLElement>({ open, onClose }
     const { id: bodyId, useRandomIdProps: useBodyIdProps, useReferencedIdProps: useBodyReferencingIdProps } = useRandomId({ prefix: "aria-modal-body-" });
     const { id: titleId, useRandomIdProps: useTitleIdProps, useReferencedIdProps: useTitleReferencingIdProps } = useRandomId({ prefix: "aria-modal-title-" });
 
-    // Since everything else is inert, we listen for captured clicks on the window
-    // (we also use pointerdown instead of onClick since that doesn't fire on non-elements)
-    useGlobalHandler(window, "pointerdown", (e) => {
+    function onBackdropClick(e: h.JSX.TargetedEvent<any>) {
+        // Basically, "was this event fired on the root-most element, or at least an element not contained by the modal?"
+        // Either could be how the browser handles these sorts of "interacting with nothing" events.
         if (e.target == document.documentElement || !(modalId && e.target instanceof Element && document.getElementById(modalId)?.contains(e.target))) {
             onClose("backdrop");
         }
-    }, { capture: true })
+    }
+
+    // Since everything else is inert, we listen for captured clicks on the window
+    // (we don't use onClick since that doesn't fire when clicked on empty/inert areas)
+    // Note: We need a *separate* touch event on mobile Safari, because
+    // it doesn't let click events bubble or be captured from traditionally non-interactive elements,
+    // but touch events work as expected.
+    useGlobalHandler(window, "mousedown", !open? null : onBackdropClick, { capture: true });
+    useGlobalHandler(window, "touchstart", !open? null : onBackdropClick, { capture: true });
 
     const onKeyDown: h.JSX.EventHandler<h.JSX.TargetedKeyboardEvent<Element>> = (e) => {
         if (e.key === "Escape") {
