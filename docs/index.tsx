@@ -252,7 +252,7 @@ const DemoUseCheckboxGroup = memo(() => {
 
 
 const DemoUseCheckboxGroupChild = memo(({ index, checked, setChecked }: { index: number, checked: boolean | "mixed", setChecked(selected: boolean | "mixed"): void }) => {
-    const text = `Number ${index + 1} option${checked ? "(selected)" : ""}`;
+    const text = `Number ${index + 1} checkbox ${checked ? "(checked)" : ""}`;
     const { randomId } = useRandomId();
     const useCheckboxGroupChild = useContext(CheckboxGroupContext);
     const { tabbable, useCheckboxGroupChildProps } = useCheckboxGroupChild({ index, text, checked, id: randomId, setChecked });
@@ -367,7 +367,7 @@ const DemoUseListboxMulti = memo(() => {
 
 const MenuItemContext = createContext<UseMenuItem<HTMLLIElement>>(null!);
 const DemoListboxMultiOption = memo(({ index, selected, setSelected }: { index: number, selected: boolean, setSelected(selected: boolean): void }) => {
-    const text = `Number ${index + 1} option${selected ? "(selected)" : ""}`
+    const text = `Number ${index + 1} option ${selected ? "(selected)" : ""}`
     const { tabbable, useListboxMultiItemProps } = useContext(ListBoxMultiItemContext)({ index, text, onSelect: e => setSelected(e[EventDetail].selected), selected });
     return <li {...useListboxMultiItemProps({})}>{text}</li>
 });

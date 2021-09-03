@@ -9,10 +9,12 @@ Current components:
 1. Accordion
 2. Button
 3. Checkbox
-4. Dialog (modal)
-5. Listbox (single & multi)
-6. Menu & menu button
-7. Tabs & tab panels
-8. Tooltip
+4. Checkbox group (w/ tri-state parent)
+5. Dialog (modal)
+6. Listbox (single & multi)
+7. Menu (w/ menu button)
+8. Radio Group
+9. Tabs & tab panels
+10. Tooltip
 
 Other components (e.g. tree views) are TODO
