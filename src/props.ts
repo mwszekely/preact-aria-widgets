@@ -6,7 +6,7 @@ export type RefFromTag<T extends keyof h.JSX.IntrinsicElements> = NonNullable<h.
 export type ElementFromRef<R extends Ref<any>> = R extends Ref<infer E> ? E : EventTarget;
 export type ElementFromTag<T extends keyof h.JSX.IntrinsicElements> = ElementFromRef<RefFromTag<T>>;
 
-type ElementToTag<E extends EventTarget> = keyof SubType<HTMLElementTagNameMap, E>;
+export type ElementToTag<E extends EventTarget> = keyof SubType<HTMLElementTagNameMap, E>;
 type SubType<Base, Condition> = Pick<Base, {
     [Key in keyof Base]: Base[Key] extends Condition ? Key : never
 }[keyof Base]>;

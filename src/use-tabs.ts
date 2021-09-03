@@ -10,7 +10,7 @@ import { useState } from "preact-prop-helpers/use-state";
 import { useButtonLikeEventHandlers } from "./use-button";
 import { useRefElement, UseRefElementPropsReturnType } from "preact-prop-helpers/use-ref-element";
 import { useHasFocus, useLogicalDirection, useStableGetter } from "preact-prop-helpers";
-import { enhanceEvent, EventDetail, useChildFlag } from "./props";
+import { enhanceEvent, EventDetail, TagSensitiveProps, useChildFlag } from "./props";
 
 export type TabsChangeEvent<E extends Element> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 
@@ -21,9 +21,7 @@ export interface UseAriaTabsParameters extends Omit<UseListNavigationParameters,
     orientation: "inline" | "block";
 }
 
-export interface UseTabParameters extends Omit<UseListNavigationChildParameters<UseTabInfo>, "tabId" | "setTabPanelId" | "setSelected" | "setSelectionMode"> {
-
-}
+export interface UseTabParameters<E extends Element> extends Omit<UseListNavigationChildParameters<UseTabInfo>, "tabId" | "setTabPanelId" | "setSelected" | "setSelectionMode">, TagSensitiveProps<E> {}
 
 export interface UseTabPanelParameters extends Omit<UseTabPanelInfo, "tabPanelId" | "setTabId" | "focus" | "setVisible"> { }
 
@@ -45,7 +43,7 @@ export interface UseTabPanelInfo extends ManagedChildInfo<number> {
 
 export type UseTabsList<TabListElement extends Element> = () => { useTabListProps: <P extends h.JSX.HTMLAttributes<TabListElement>>(props: P) => UseListNavigationPropsReturnType<TabListElement, P>; }
 export type UseTabsLabel = <E extends Element>() => { useTabsLabelProps: <P extends h.JSX.HTMLAttributes<E>>({ ...props }: P) => UseRandomIdPropsReturnType<P>; }
-export type UseTab<TabElement extends Element> = (info: UseTabParameters) => { selected: boolean | null; useTabProps: <P extends h.JSX.HTMLAttributes<TabElement>>({ ...props }: P) => MergedProps<TabElement, {}, UseReferencedIdPropsReturnType<UseRandomIdPropsReturnType<any>, "aria-controls">>; }
+export type UseTab<TabElement extends Element> = (info: UseTabParameters<TabElement>) => { selected: boolean | null; useTabProps: <P extends h.JSX.HTMLAttributes<TabElement>>({ ...props }: P) => MergedProps<TabElement, {}, UseReferencedIdPropsReturnType<UseRandomIdPropsReturnType<any>, "aria-controls">>; }
 export type UseTabPanel<PanelElement extends Element> = (info: UseTabPanelParameters) => { selected: boolean | null, useTabPanelProps: <P extends h.JSX.HTMLAttributes<PanelElement>>(p: P) => MergedProps<PanelElement, {}, UseRandomIdPropsReturnType<UseRefElementPropsReturnType<PanelElement, P>>> }
 
 export function useAriaTabs<ListElement extends Element, TabElement extends Element, TabPanelElement extends Element>({ selectionMode, selectedIndex, onSelect, orientation: logicalOrientation, ...args }: UseAriaTabsParameters) {
@@ -85,7 +83,7 @@ export function useAriaTabs<ListElement extends Element, TabElement extends Elem
     const getTabListIsFocused = useStableGetter(tabListFocused);
 
 
-    const useTab: UseTab<TabElement> = useCallback(function useTab(info: UseTabParameters) {
+    const useTab: UseTab<TabElement> = useCallback(function useTab(info: UseTabParameters<TabElement>) {
         //const [selectedTabId, setSelectedTabId, getSelectedTabId] = useState<string | undefined>(undefined);
         const [selectionModeL, setSelectionModeL] = useState<"focus" | "activate">(selectionMode);
         const { element, useRefElementProps } = useRefElement<TabElement>()
@@ -112,11 +110,11 @@ export function useAriaTabs<ListElement extends Element, TabElement extends Elem
 
 
         function useTabProps<P extends h.JSX.HTMLAttributes<TabElement>>({ ...props }: P) {
-            const newProps: h.JSX.HTMLAttributes<TabElement> = useButtonLikeEventHandlers<TabElement>((e) => {
+            const newProps: h.JSX.HTMLAttributes<TabElement> = useButtonLikeEventHandlers<TabElement>(info.tag, (e) => {
                 navigateToIndex(info.index);
                 onSelect?.(enhanceEvent(e, { selectedIndex: getIndex() }));
                 e.preventDefault();
-            })(props);
+            }, undefined)(props);
 
             newProps.role = "tab";
             newProps["aria-selected"] = (selected ?? false).toString();

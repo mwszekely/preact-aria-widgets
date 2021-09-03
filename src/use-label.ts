@@ -3,7 +3,7 @@ import { useMergedProps, useRefElement, useStableCallback } from "preact-prop-he
 import { useRandomId } from "preact-prop-helpers/use-random-id";
 import { useCallback } from "preact/hooks";
 import { useButtonLikeEventHandlers } from "./use-button";
-import { TagSensitiveProps } from "./props";
+import { ElementToTag, TagSensitiveProps } from "./props";
 
 export interface UseGenericLabelParameters {
     labelPrefix: string;
@@ -143,7 +143,7 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
 
         function useCheckboxLikeInputElementProps<P extends h.JSX.HTMLAttributes<InputType>>({ ...p0 }: P) {
 
-            let props: h.JSX.HTMLAttributes<InputType> = useButtonLikeEventHandlers<InputType>(stableOnInput, disabled ? "exclude" : tag != "input" || labelPosition == "wrapping" ? undefined : "exclude")({});
+            let props: h.JSX.HTMLAttributes<InputType> = useButtonLikeEventHandlers<InputType>("div" as ElementToTag<InputType>, disabled ? null : tag != "input" || labelPosition == "wrapping" ? stableOnInput : null, undefined)({});
 
             if (tag == "input" && labelPosition == "separate") {
                 if (!disabled) {
@@ -187,7 +187,7 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
 
         function useCheckboxLikeLabelElementProps<P extends h.JSX.HTMLAttributes<LabelType>>({ ...p0 }: P) {
 
-            let newProps: h.JSX.HTMLAttributes<LabelType> = useButtonLikeEventHandlers<LabelType>(stableOnInput, disabled || (labelPosition == "separate" && tag == "label") ? "exclude" : undefined)({});
+            let newProps: h.JSX.HTMLAttributes<LabelType> = useButtonLikeEventHandlers<LabelType>("div" as ElementToTag<LabelType>, disabled || (labelPosition == "separate" && tag == "label") ? undefined : stableOnInput , undefined)({});
 
             if (labelPosition == "wrapping") {
                 newProps.tabIndex = 0;

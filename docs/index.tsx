@@ -299,7 +299,7 @@ const DemoUseDialog = memo(() => {
 const ListBoxSingleItemContext = createContext<UseListboxSingleItem<HTMLLIElement>>(null!);
 const DemoUseListboxSingle = memo(() => {
     const [selectedIndex, setSelectedIndex] = useState(0);
-    const { useListboxSingleItem, useListboxSingleLabel, useListboxSingleProps } = useAriaListboxSingle<HTMLUListElement, HTMLLIElement, UseListboxSingleItemInfo>({ selectedIndex, onSelect: e => setSelectedIndex(e[EventDetail].selectedIndex), selectionMode: "activate" });
+    const { useListboxSingleItem, useListboxSingleLabel, useListboxSingleProps } = useAriaListboxSingle<HTMLUListElement, HTMLLIElement, UseListboxSingleItemInfo<HTMLLIElement>>({ selectedIndex, onSelect: e => setSelectedIndex(e[EventDetail].selectedIndex), selectionMode: "activate" });
 
 
     return <div class="demo">
@@ -316,7 +316,7 @@ const DemoUseListboxSingle = memo(() => {
 });
 
 const DemoListboxSingleOption = memo(({ index }: { index: number, }) => {
-    const { getSelected, selected, tabbable, useListboxSingleItemProps } = useContext(ListBoxSingleItemContext)({ index, text: null });
+    const { getSelected, selected, tabbable, useListboxSingleItemProps } = useContext(ListBoxSingleItemContext)({ index, text: null, tag: "li" });
     return <li {...useListboxSingleItemProps({})}>Number {index + 1} option{selected ? "(selected)" : ""}</li>
 });
 
@@ -327,7 +327,7 @@ const DemoListboxSingleOption = memo(({ index }: { index: number, }) => {
 const ListBoxMultiItemContext = createContext<UseListboxMultiItem<HTMLLIElement>>(null!);
 const DemoUseListboxMulti = memo(() => {
 
-    const { useListboxMultiItem, useListboxMultiLabel, useListboxMultiProps, currentTypeahead } = useAriaListboxMulti<HTMLUListElement, HTMLLIElement, UseListboxMultiItemInfo>({});
+    const { useListboxMultiItem, useListboxMultiLabel, useListboxMultiProps, currentTypeahead } = useAriaListboxMulti<HTMLUListElement, HTMLLIElement, UseListboxMultiItemInfo<HTMLLIElement>>({});
 
     const [selectedValues, setSelectedValues] = useState<Set<number>>(new Set());
 
@@ -368,7 +368,7 @@ const DemoUseListboxMulti = memo(() => {
 const MenuItemContext = createContext<UseMenuItem<HTMLLIElement>>(null!);
 const DemoListboxMultiOption = memo(({ index, selected, setSelected }: { index: number, selected: boolean, setSelected(selected: boolean): void }) => {
     const text = `Number ${index + 1} option ${selected ? "(selected)" : ""}`
-    const { tabbable, useListboxMultiItemProps } = useContext(ListBoxMultiItemContext)({ index, text, onSelect: e => setSelected(e[EventDetail].selected), selected });
+    const { tabbable, useListboxMultiItemProps } = useContext(ListBoxMultiItemContext)({ tag: "li", index, text, onSelect: e => setSelected(e[EventDetail].selected), selected });
     return <li {...useListboxMultiItemProps({})}>{text}</li>
 });
 
@@ -443,7 +443,7 @@ const DemoTabs = memo(() => {
 
 const DemoTab = memo(({ index }: { index: number }) => {
     const useTab = useContext(TabContext);
-    const { useTabProps } = useTab({ index, text: null })
+    const { useTabProps } = useTab({ index, text: null, tag: "li" })
 
     return (<>
         <li {...useTabProps({})}>Tab #{index + 1}</li>

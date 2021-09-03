@@ -9,7 +9,7 @@ import { useState } from "preact-prop-helpers/use-state";
 import { useButtonLikeEventHandlers } from "./use-button";
 import { useGenericLabel } from "./use-label";
 import { useActiveElement, useStableGetter } from "preact-prop-helpers";
-import { EventDetail, useChildFlag } from "./props";
+import { EventDetail, TagSensitiveProps, useChildFlag } from "./props";
 
 export type ListboxSingleSelectEvent<E extends EventTarget> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 export type ListboxMultiSelectEvent<E extends EventTarget> = { [EventDetail]: { selected: boolean } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
@@ -24,29 +24,29 @@ export interface UseListboxMultiParameters extends UseListNavigationParameters {
 
 }
 
-export interface UseListboxSingleItemInfo extends UseListNavigationChildInfo {
+export interface UseListboxSingleItemInfo<E extends Element> extends UseListNavigationChildInfo, TagSensitiveProps<E> {
     setSelected(selected: boolean): void;
 }
 
-export interface UseListboxMultiItemInfo extends UseListNavigationChildInfo {
+export interface UseListboxMultiItemInfo<E extends Element> extends UseListNavigationChildInfo, TagSensitiveProps<E> {
     selected: boolean;
     onSelect(event: (ListboxMultiSelectEvent<Element>)): void;
     setTypeaheadInProgress(inProgress: boolean): void;
 }
 
-export type UseListboxSingleItem<E extends Element, I extends UseListboxSingleItemInfo = UseListboxSingleItemInfo> = (info: Omit<I, "setSelected" | "setTabbable">) => {
+export type UseListboxSingleItem<E extends Element, I extends UseListboxSingleItemInfo<E> = UseListboxSingleItemInfo<E>> = (info: Omit<I, "setSelected" | "setTabbable">) => {
     useListboxSingleItemProps: <P extends h.JSX.HTMLAttributes<E>>(props: P) => UseListNavigationChildPropsReturnType<E, MergedProps<E, h.JSX.HTMLAttributes<E>, UseRefElementPropsReturnType<E, P>>>;
     tabbable: boolean;
     selected: boolean;
     getSelected: () => boolean;
 }
 
-export type UseListboxMultiItem<E extends Element, I extends UseListboxMultiItemInfo = UseListboxMultiItemInfo> = (info: Omit<I, "setTabbable" | "setTypeaheadInProgress">) => {
+export type UseListboxMultiItem<E extends Element, I extends UseListboxMultiItemInfo<E> = UseListboxMultiItemInfo<E>> = (info: Omit<I, "setTabbable" | "setTypeaheadInProgress">) => {
     useListboxMultiItemProps: <P extends h.JSX.HTMLAttributes<E>>(props: P) => UseRefElementPropsReturnType<E, UseListNavigationChildPropsReturnType<E, MergedProps<E, h.JSX.HTMLAttributes<E>, P>>>;
     tabbable: boolean;
 }
 
-export function useAriaListboxSingle<ParentElement extends Element, ChildElement extends Element, I extends UseListboxSingleItemInfo>({ selectedIndex, onSelect, selectionMode, ...args }: UseListboxSingleParameters) {
+export function useAriaListboxSingle<ParentElement extends Element, ChildElement extends Element, I extends UseListboxSingleItemInfo<ChildElement>>({ selectedIndex, onSelect, selectionMode, ...args }: UseListboxSingleParameters) {
 
     const { useGenericLabelInput, useGenericLabelLabel, useReferencedInputIdProps, useReferencedLabelIdProps, inputElement } = useGenericLabel({ labelPrefix: "aria-listbox-label-", inputPrefix: "aria-listbox-" })
     const { useListNavigationChild, useListNavigationProps, navigateToIndex, managedChildren, setTabbableIndex, ...listRest } = useListNavigation<ParentElement, ChildElement, I>(args);
@@ -96,12 +96,12 @@ export function useAriaListboxSingle<ParentElement extends Element, ChildElement
         return { useListboxSingleItemProps, tabbable, selected, getSelected };
 
         function useListboxSingleItemProps<P extends h.JSX.HTMLAttributes<E>>(props: P) {
-            const newProps: h.JSX.HTMLAttributes<E> = useButtonLikeEventHandlers<E>((e) => {
+            const newProps: h.JSX.HTMLAttributes<E> = useButtonLikeEventHandlers<E>(info.tag, (e) => {
                 navigateToIndex(info.index);
                 if (element)
                     onSelect?.({ target: element, currentTarget: element, [EventDetail]: { selectedIndex: index } });
                 e.preventDefault();
-            })({});
+            }, undefined)({});
 
             props.role = "option";
             props["aria-setsize"] = (childCount).toString();
@@ -135,11 +135,11 @@ export function useAriaListboxSingle<ParentElement extends Element, ChildElement
 
 }
 
-export function useAriaListboxMulti<ParentElement extends Element, ChildElement extends Element, I extends UseListboxMultiItemInfo>({ ...args }: UseListboxMultiParameters) {
+export function useAriaListboxMulti<ParentElement extends Element, ChildElement extends Element, I extends UseListboxMultiItemInfo<ChildElement>>({ ...args }: UseListboxMultiParameters) {
     type E = ParentElement;
 
     const { useGenericLabelInput, useGenericLabelLabel, useReferencedInputIdProps, useReferencedLabelIdProps } = useGenericLabel({ labelPrefix: "aria-listbox-label-", inputPrefix: "aria-listbox-" })
-    const { useListNavigationChild, useListNavigationProps, navigateToIndex, managedChildren, currentTypeahead, ...listRest } = useListNavigation<E, ChildElement, UseListboxMultiItemInfo>(args);
+    const { useListNavigationChild, useListNavigationProps, navigateToIndex, managedChildren, currentTypeahead, ...listRest } = useListNavigation<E, ChildElement, UseListboxMultiItemInfo<ChildElement>>(args);
     const { useGenericLabelInputProps } = useGenericLabelInput<E>();
 
     const childCount = managedChildren.length;
@@ -167,7 +167,7 @@ export function useAriaListboxMulti<ParentElement extends Element, ChildElement 
 
         //const { getSyncHandler, ...asyncInfo } = useAsyncHandler<E>()({ capture: e => !selected });
         //const onSelect = getSyncHandler(asyncInfo.pending ? null : (onSelectAsync ?? null));
-        const { tabbable, useListNavigationSiblingProps, useListNavigationChildProps } = useListNavigationChild({...info, setTypeaheadInProgress });
+        const { tabbable, useListNavigationSiblingProps, useListNavigationChildProps } = useListNavigationChild({ ...info, setTypeaheadInProgress });
 
         useLayoutEffect(() => {
             if (element && getShiftHeld()) {
@@ -178,7 +178,7 @@ export function useAriaListboxMulti<ParentElement extends Element, ChildElement 
         return { useListboxMultiItemProps, tabbable };
 
         function useListboxMultiItemProps<P extends h.JSX.HTMLAttributes<E>>(props: P) {
-            const newProps: h.JSX.HTMLAttributes<E> = useButtonLikeEventHandlers<E>((e) => {
+            const newProps: h.JSX.HTMLAttributes<E> = useButtonLikeEventHandlers<E>(info.tag, (e) => {
                 //const event = e as any as ({ selected: boolean } & Pick<h.JSX.TargetedEvent<Element>, "target" | "currentTarget">);
                 navigateToIndex(info.index);
                 //event.selected = !getSelected();
@@ -188,9 +188,7 @@ export function useAriaListboxMulti<ParentElement extends Element, ChildElement 
                 //stableOnSelect?.(event);
 
                 e.preventDefault();
-            }, {
-                space: typeaheadInProgress? "exclude" : undefined
-            })({});
+            }, { space: typeaheadInProgress ? "exclude" : undefined })({});
 
             props.role = "option";
             props["aria-setsize"] = (childCount).toString();
