@@ -7,7 +7,7 @@ export { useAriaMenu, UseMenuButtonParameters, UseAriaMenuParameters } from "./u
 export { useAriaTabs, UseTabPanel, UseTab } from "./use-tabs";
 export { useAriaTooltip, UseTooltip, UseTooltipTrigger } from "./use-tooltip";
 export { useAriaRadioGroup, UseRadio } from "./use-radio-group"
-
+export { useCheckboxGroup, UseCheckboxGroupChild } from "./use-checkbox-group";
 
 declare module 'preact' {
     namespace h {

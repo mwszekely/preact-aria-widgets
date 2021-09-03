@@ -2,11 +2,12 @@
 import { createContext, Fragment, h, render } from "preact";
 import { memo } from "preact/compat";
 import { useCallback, useContext, useRef } from "preact/hooks";
-import { useAnimationFrame, useConstant, useDraggable, useDroppable, useElementSize, useFocusTrap, useHasFocus, useListNavigation, UseListNavigationChild, useMergedProps, useState } from "preact-prop-helpers";
+import { useAnimationFrame, useConstant, useDraggable, useDroppable, useElementSize, useFocusTrap, useHasFocus, useListNavigation, UseListNavigationChild, useMergedProps, useRandomId, useState } from "preact-prop-helpers";
 import { DemoUseRovingTabIndex } from "./demos/use-roving-tab-index";
 import { useAriaAccordion, UseAriaAccordionSection } from "../use-accordion";
 import { useAriaDialog } from "../use-dialog";
 import { useAriaCheckbox } from "../use-checkbox";
+import { useCheckboxGroup, UseCheckboxGroupChild } from "../use-checkbox-group";
 import { useAriaListboxMulti, useAriaListboxSingle, UseListboxSingleItem, UseListboxSingleItemInfo, UseListboxMultiItemInfo, UseListboxMultiItem } from "../use-listbox";
 import { useAriaMenu, UseMenuItem } from "../use-menu";
 import { DemoUseInterval } from "./demos/use-interval";
@@ -156,10 +157,13 @@ const DemoAccordionSection = memo(({ index }: { index: number }) => {
 const DemoUseCheckbox = memo(() => {
 
     return (
-        <div className="demo">
-            <Checkbox1 />
-            <Checkbox2 />
-        </div>
+        <>
+            <div className="demo">
+                <Checkbox1 />
+                <Checkbox2 />
+            </div>
+            <DemoUseCheckboxGroup />
+        </>
     )
 });
 
@@ -175,10 +179,10 @@ const Checkbox1 = memo(() => {
     const { useCheckboxLabelElementProps } = useCheckboxLabelElement({ tag: "label" });
 
     return (
-        <>
+        <div>
             <input {...useCheckboxInputElementProps({ type: "checkbox", })} />
             <label {...useCheckboxLabelElementProps({})}>Label</label>
-        </>
+        </div>
     )
 });
 
@@ -191,10 +195,77 @@ const Checkbox2 = memo(() => {
     const { useCheckboxLabelElementProps } = useCheckboxLabelElement({ tag: "label" });
 
     return (
-        <>
+        <div>
             <label {...useCheckboxLabelElementProps({})}><input {...useCheckboxInputElementProps({ type: "checkbox" })} /> Label</label>
-        </>
+        </div>
     )
+});
+
+
+const CheckboxGroupContext = createContext<UseCheckboxGroupChild<HTMLInputElement>>(null!);
+const DemoUseCheckboxGroup = memo(() => {
+
+    const { useCheckboxGroupCheckboxProps, useCheckboxChildrenContainerProps, useCheckboxGroupChild, selfIsChecked, percentChecked, onCheckboxGroupInput } = useCheckboxGroup<HTMLInputElement, HTMLDivElement>({});
+    const { useCheckboxInputElement, useCheckboxLabelElement } = useAriaCheckbox<HTMLInputElement, HTMLLabelElement>({ checked: selfIsChecked, disabled: false, labelPosition: "separate", onInput: onCheckboxGroupInput as any });
+
+    const { useCheckboxInputElementProps } = useCheckboxInputElement({ tag: "input" });
+    const { useCheckboxLabelElementProps } = useCheckboxLabelElement({ tag: "label" });
+    const [selectedValues, setSelectedValues] = useState<Set<number>>(new Set());
+
+
+    return <div class="demo">
+        <CheckboxGroupContext.Provider value={useCheckboxGroupChild}>
+            <div>
+                <input {...useCheckboxInputElementProps(useCheckboxGroupCheckboxProps({}))} />
+                <label {...useCheckboxLabelElementProps({})}>All checked?</label>
+            </div>
+            <div {...useCheckboxChildrenContainerProps({ style: { "display": "flex", "flexDirection": "column" } })} >
+
+                {Array.from((function* () {
+                    for (let i = 0; i < 10; ++i) {
+                        function setSelected2(selected: boolean) {
+
+                            setSelectedValues(selectedValues => {
+                                let next = new Set(selectedValues);
+
+                                if (selected && !next.has(i)) {
+                                    next.add(i);
+                                    return next;
+                                }
+                                else if (!selected && next.has(i)) {
+                                    next.delete(i);
+                                    return next;
+                                }
+
+                                return selectedValues;
+                            });
+
+                        }
+
+                        yield <DemoUseCheckboxGroupChild key={i} index={i} checked={!!selectedValues.has(i)} setChecked={setSelected2} />
+                    }
+                })())}
+            </div>
+        </CheckboxGroupContext.Provider>
+    </div>
+});
+
+
+const DemoUseCheckboxGroupChild = memo(({ index, checked, setChecked }: { index: number, checked: boolean | "mixed", setChecked(selected: boolean | "mixed"): void }) => {
+    const text = `Number ${index + 1} option${checked ? "(selected)" : ""}`;
+    const { randomId } = useRandomId();
+    const useCheckboxGroupChild = useContext(CheckboxGroupContext);
+    const { tabbable, useCheckboxGroupChildProps } = useCheckboxGroupChild({ index, text, checked, id: randomId, setChecked });
+    const { useCheckboxInputElement, useCheckboxLabelElement } = useAriaCheckbox<HTMLInputElement, HTMLLabelElement>({ checked, disabled: false, labelPosition: "separate", onInput: e => setChecked(e[EventDetail].checked) });
+
+    const { useCheckboxInputElementProps } = useCheckboxInputElement({ tag: "input" });
+    const { useCheckboxLabelElementProps } = useCheckboxLabelElement({ tag: "label" });
+
+    return (<div>
+        <input {...useCheckboxInputElementProps(useCheckboxGroupChildProps({}))} />
+        <label {...useCheckboxLabelElementProps({})}>{text}</label>
+    </div>
+    );
 });
 
 

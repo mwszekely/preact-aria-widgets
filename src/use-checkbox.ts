@@ -1,10 +1,6 @@
 import { h } from "preact";
-import { useStableCallback, useStableGetter } from "preact-prop-helpers";
-import { useMergedProps } from "preact-prop-helpers/use-merged-props";
-import { useRefElement } from "preact-prop-helpers/use-ref-element";
 import { useCallback, useLayoutEffect } from "preact/hooks";
 import { enhanceEvent, EventDetail, TagSensitiveProps } from "./props";
-import { useButtonLikeEventHandlers } from "./use-button";
 import { useCheckboxLike, UseCheckboxLikeParameters } from "./use-label";
 
 
@@ -44,22 +40,25 @@ export function useAriaCheckbox<InputType extends Element, LabelType extends Ele
             if (labelPosition == "separate") {
                 props["aria-checked"] = checked.toString();
                 if (tag != "input")
-                props.tabIndex = 0;
+                    props.tabIndex = 0;
             }
+
+            if (tag == "input")
+                props.type = "checkbox";
 
             return props;
         }
     }, [checked, labelPosition, disabled]);
 
     const useCheckboxLabelElement = useCallback(function useCheckboxLabelElement({ tag }: TagSensitiveProps<LabelType>) {
-        const { useCheckboxLikeLabelElementProps } = useCheckboxLikeLabelElement({tag});
+        const { useCheckboxLikeLabelElementProps } = useCheckboxLikeLabelElement({ tag });
 
         function useCheckboxLabelElementProps<P extends h.JSX.HTMLAttributes<LabelType>>({ ...props }: P) {
 
             if (labelPosition == "wrapping") {
                 props["aria-checked"] = checked.toString();
                 if (tag != "input")
-                props.tabIndex = 0;
+                    props.tabIndex = 0;
             }
             return useCheckboxLikeLabelElementProps(props);
         };
@@ -74,56 +73,3 @@ export function useAriaCheckbox<InputType extends Element, LabelType extends Ele
     };
 
 }
-
-
-
-/*
-export interface TriStateChildInfo<T extends number | string> extends ManagedChildInfo<T> {
-    notifyParent(checked: boolean | "mixed"): void;
-    setChecked(checked: boolean | "mixed"): void;
-}
-
-export function useTriStateCheckbox<E extends Element, I extends TriStateChildInfo<any>>(args: Omit<UseAriaCheckboxParameters, "checked" | "onInput">) {
-    const [lastState, setLastState] = useState<"none" | "all" | "mixed">("none"); // Reflects what we've last clicked, not what we're displaying due to child changes.
-    const [checkedCount, setCheckedCount] = useState<number>(0);
-    const { managedChildren, useManagedChild } = useChildManager<E, I>();
-    const mixedState = useRef<Map<number, { checked: boolean | "mixed", setChecked(checked: boolean | "mixed"): void }>>(new Map());
-    const checked = checkedCount == 0 ? false : (checkedCount == managedChildren.length ? true : "mixed");
-    const { useAriaCheckboxInput, useAriaCheckboxLabel } = useAriaCheckbox({ ...args, checked, onInput });
-
-
-    function onInput(checked: boolean, e: h.JSX.TargetedEvent<E>) {
-
-    }
-
-
-
-    const useTriStateCheckboxChild = useCallback(function useTriStateCheckboxChild(args: Omit<I, "notifyParent">) {
-
-        function notifyParent(checked: boolean | "mixed") {
-            mixedState.current.set(args.index, { checked, setChecked: args.setChecked });
-            setCheckedCount(c => c += (!!checked ? 1 : -1));
-
-            if (lastState == "none" && !!checked) {
-                setLastState("mixed");
-                mixedState.current.clear();
-            }
-            else if (lastState == "all" && !checked) {
-                setLastState("mixed");
-                for (let managedChild of managedChildren) {
-                    managedChild.setChecked(true);
-                }
-            }
-        }
-
-        const nothing = useManagedChild({ ...args, notifyParent } as I)
-
-
-    }, []);
-
-    return { useTriStateCheckboxProps, useTriStateCheckboxChild };
-
-    function useTriStateCheckboxProps<P extends h.JSX.HTMLAttributes<E>>(props: P) { return useAriaCheckbox }
-
-}
-*/
