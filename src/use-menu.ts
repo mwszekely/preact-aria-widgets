@@ -10,7 +10,7 @@ import { useRandomId, UseRandomIdPropsReturnType, UseReferencedIdPropsReturnType
 import { useRefElement, UseRefElementPropsReturnType } from "preact-prop-helpers/use-ref-element";
 import { TagSensitiveProps, EventDetail, enhanceEvent } from "./props";
 import { useFocusTrap, useTimeout } from "preact-prop-helpers";
-import { useModalSoftDismiss } from "use-modal";
+import { useModalSoftDismiss } from "./use-modal";
 
 interface UseMenuParameters1 extends UseListNavigationParameters {
     open: boolean;
