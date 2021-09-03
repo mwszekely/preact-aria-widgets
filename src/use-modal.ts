@@ -9,6 +9,45 @@ import { useGlobalHandler } from "preact-prop-helpers/use-event-handler";
 import { useState } from "preact-prop-helpers/use-state";
 
 /**
+ * Adds event handlers for a modal-like soft-dismiss interaction.
+ * 
+ * That is, any clicks or taps outside of the given element, 
+ * or any time the Escape key is pressed within the element,
+ * (with various browser oddities regarding clicks on blank or inert areas handled)
+ * the modal will request to close itself.
+ * @param param0 
+ * @returns 
+ */
+export function useModalSoftDismiss<E extends Element>({ onClose }: {onClose(reason: "backdrop" | "escape"): void }) {
+
+    const { element, useRefElementProps } = useRefElement<E>();
+
+    function onBackdropClick(e: h.JSX.TargetedEvent<any>) {
+        // Basically, "was this event fired on the root-most element, or at least an element not contained by the modal?"
+        // Either could be how the browser handles these sorts of "interacting with nothing" events.
+        if (e.target == document.documentElement || !(element && e.target instanceof Element && element instanceof Element && element.contains(e.target))) {
+            onClose("backdrop");
+        }
+    }
+
+    // Since everything else is inert, we listen for captured clicks on the window
+    // (we don't use onClick since that doesn't fire when clicked on empty/inert areas)
+    // Note: We need a *separate* touch event on mobile Safari, because
+    // it doesn't let click events bubble or be captured from traditionally non-interactive elements,
+    // but touch events work as expected.
+    useGlobalHandler(window, "mousedown", !open ? null : onBackdropClick, { capture: true });
+    useGlobalHandler(window, "touchstart", !open ? null : onBackdropClick, { capture: true });
+
+    const onKeyDown: h.JSX.EventHandler<h.JSX.TargetedKeyboardEvent<E>> = (e) => {
+        if (e.key === "Escape") {
+            onClose("escape");
+        }
+    }
+
+    return { useModalSoftDismissProps: <P extends h.JSX.HTMLAttributes<E>>(props: P) => useMergedProps<E>()(useRefElementProps({ onKeyDown }), props) }
+}
+
+/**
  * A generic modal hook, used by modal dialogs, but can also
  * be used by anything that's modal with a backdrop.
  * @param param0 
@@ -24,33 +63,12 @@ export function useAriaModal<ModalElement extends HTMLElement>({ open, onClose }
     const { id: bodyId, useRandomIdProps: useBodyIdProps, useReferencedIdProps: useBodyReferencingIdProps } = useRandomId({ prefix: "aria-modal-body-" });
     const { id: titleId, useRandomIdProps: useTitleIdProps, useReferencedIdProps: useTitleReferencingIdProps } = useRandomId({ prefix: "aria-modal-title-" });
 
-    function onBackdropClick(e: h.JSX.TargetedEvent<any>) {
-        // Basically, "was this event fired on the root-most element, or at least an element not contained by the modal?"
-        // Either could be how the browser handles these sorts of "interacting with nothing" events.
-        if (e.target == document.documentElement || !(modalId && e.target instanceof Element && document.getElementById(modalId)?.contains(e.target))) {
-            onClose("backdrop");
-        }
-    }
-
-    // Since everything else is inert, we listen for captured clicks on the window
-    // (we don't use onClick since that doesn't fire when clicked on empty/inert areas)
-    // Note: We need a *separate* touch event on mobile Safari, because
-    // it doesn't let click events bubble or be captured from traditionally non-interactive elements,
-    // but touch events work as expected.
-    useGlobalHandler(window, "mousedown", !open? null : onBackdropClick, { capture: true });
-    useGlobalHandler(window, "touchstart", !open? null : onBackdropClick, { capture: true });
-
-    const onKeyDown: h.JSX.EventHandler<h.JSX.TargetedKeyboardEvent<Element>> = (e) => {
-        if (e.key === "Escape") {
-            onClose("escape");
-        }
-    }
-
+    const { useModalSoftDismissProps } = useModalSoftDismiss<ModalElement>({ onClose });
 
     const useModalBackdrop = useCallback(function useModalBackdrop<BackdropElement extends HTMLElement>() {
 
         function useModalBackdropProps<P extends h.JSX.HTMLAttributes<BackdropElement>>(props: P) {
-            return useMergedProps<BackdropElement>()({  }, props);
+            return useMergedProps<BackdropElement>()({}, props);
         }
 
         return { useModalBackdropProps }
@@ -61,7 +79,7 @@ export function useAriaModal<ModalElement extends HTMLElement>({ open, onClose }
         const p1 = useTitleReferencingIdProps("aria-labelledby")(p0);
         const p2 = useModalIdProps(p1);
         const pFinal = useBodyReferencingIdProps("aria-describedby")(p2);
-        return useFocusTrapProps(useMergedProps<ModalElement>()({ role: "dialog", onKeyDown }, modalDescribedByBody ? pFinal : p2));
+        return useFocusTrapProps(useMergedProps<ModalElement>()(useModalSoftDismissProps({ role: "dialog" }), modalDescribedByBody ? pFinal : p2));
     }
 
     const useModalTitle = useCallback(function useModalTitle<TitleElement extends Element>() {
@@ -100,7 +118,7 @@ export function useAriaModal<ModalElement extends HTMLElement>({ open, onClose }
  * of padding to the root element if necessary.
  * @param hideScroll 
  */
- export function useHideScroll(hideScroll: boolean) {
+export function useHideScroll(hideScroll: boolean) {
     const [scrollbarWidth, setScrollbarWidth, getScrollbarWidth] = useState<number | null>(null);
 
     useEffect(() => {
