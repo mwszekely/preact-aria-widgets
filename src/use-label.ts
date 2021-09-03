@@ -118,8 +118,8 @@ export interface UseCheckboxLikeParameters<InputType extends Element, LabelType 
     labelPosition: "wrapping" | "separate";
     role: string;
     disabled: boolean;
-    onInput(event: h.JSX.TargetedEvent<InputType>): void;
-    onInput(event: h.JSX.TargetedEvent<LabelType>): void;
+    onInput?(event: h.JSX.TargetedEvent<InputType>): void;
+    onInput?(event: h.JSX.TargetedEvent<LabelType>): void;
 }
 
 /**
@@ -129,7 +129,7 @@ export interface UseCheckboxLikeParameters<InputType extends Element, LabelType 
  */
 export function useCheckboxLike<InputType extends Element, LabelType extends Element>({ disabled, labelPosition, onInput, role }: UseCheckboxLikeParameters<InputType, LabelType>) {
 
-    const stableOnInput = useStableCallback(onInput);
+    const stableOnInput = useStableCallback((e: h.JSX.TargetedEvent<InputType> |  h.JSX.TargetedEvent<LabelType>) => { e.preventDefault(); onInput?.(e as h.JSX.TargetedEvent<InputType>); });
 
     const { inputId, labelId, useInputLabelInput: useILInput, useInputLabelLabel: useILLabel, getLabelElement, getInputElement } = useInputLabel({ labelPrefix: "aria-checkbox-label-", inputPrefix: "aria-checkbox-input-" });
 

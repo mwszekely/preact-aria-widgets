@@ -9,13 +9,13 @@ export type CheckboxChangeEvent<EventType extends Event> = EventType & { [EventD
 
 interface UseAriaCheckboxParameters<I extends Element, L extends Element> extends Omit<UseCheckboxLikeParameters<I, L>, "onInput" | "role"> {
     checked: boolean | "mixed";
-    onInput(event: CheckboxChangeEvent<h.JSX.TargetedEvent<I>>): void;
-    onInput(event: CheckboxChangeEvent<h.JSX.TargetedEvent<L>>): void;
+    onInput?(event: CheckboxChangeEvent<h.JSX.TargetedEvent<I>>): void;
+    onInput?(event: CheckboxChangeEvent<h.JSX.TargetedEvent<L>>): void;
 }
 
 export function useAriaCheckbox<InputType extends Element, LabelType extends Element>({ labelPosition, checked, onInput, disabled }: UseAriaCheckboxParameters<InputType, LabelType>) {
 
-    const onInputEnhanced = (e: h.JSX.TargetedEvent<InputType | LabelType, Event>) => onInput(enhanceEvent(e as h.JSX.TargetedEvent<InputType, Event>, { checked: !checked }));
+    const onInputEnhanced = (e: h.JSX.TargetedEvent<InputType | LabelType, Event>) => onInput?.(enhanceEvent(e as h.JSX.TargetedEvent<InputType, Event>, { checked: !checked }));
     const { getInputElement, getLabelElement, useCheckboxLikeInputElement, useCheckboxLikeLabelElement } = useCheckboxLike<InputType, LabelType>({ labelPosition, role: "checkbox", disabled, onInput: onInputEnhanced });
 
     const useCheckboxInputElement = useCallback(function useCheckboxInputElement({ tag }: TagSensitiveProps<InputType>) {
