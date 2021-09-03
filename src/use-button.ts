@@ -3,6 +3,18 @@ import { MergedProps, useMergedProps } from "preact-prop-helpers/use-merged-prop
 import { useState } from "preact-prop-helpers/use-state";
 import { ElementFromTag, EventDetail, TagSensitiveProps, enhanceEvent } from "./props";
 
+let pulse = ("vibrate" in navigator) ? (() => navigator.vibrate(10)) : (() => { });
+
+/**
+ * This function can be used to enable/disable button vibration pulses on an app-wide scale.
+ * 
+ * 
+ * @param func The function to run when a button is tapped.
+ * (Default is `() => navigator.vibrate(10)` in browsers that support it, a noop otherwise)
+ */
+export function setButtonVibrate(func: () => void) {
+    pulse = func;
+}
 
 export type ButtonPressEvent<EventType extends Event> = EventType & { [EventDetail]: { pressed: boolean | null } };
 
@@ -31,10 +43,12 @@ function excludes(target: "click" | "space" | "enter", exclude: undefined | "exc
 /**
  * Easy way to "polyfill" button-like interactions onto, e.g., a div.
  * 
- * Adds click, space on keyDown, and enter on keyUp.
+ * Adds click, space on keyDown, and enter on keyUp, as well as haptic
+ * feedback via a momentary vibration pulse when there's an onClick handler provided
+ * (this can be disabled app-wide with `setButtonVibrate`).
  * 
  * In addition, when the CSS `:active` pseudo-class would apply to a normal button
- * (i.e. when holding the spacebar or during mousedown), { "data-pseudo-active": "true" }
+ * (i.e. when holding the spacebar or during mousedown), `{ "data-pseudo-active": "true" }`
  * is added to the props.  You can either let it pass through and style it through new CSS,
  * or inspect the returned props for it and add e.g. an `.active` class for existing CSS
  * 
@@ -44,7 +58,7 @@ function excludes(target: "click" | "space" | "enter", exclude: undefined | "exc
 export function useButtonLikeEventHandlers<E extends EventTarget>(onClickSync: ((e: h.JSX.TargetedEvent<E>) => void) | null | undefined, exclude?: "exclude" | { click?: "exclude" | undefined, space?: "exclude" | undefined, enter?: "exclude" | undefined }) {
 
     //type E = Ev extends h.JSX.TargetedEvent<infer E, any>? E : EventTarget;
-    
+
 
     const [active, setActive] = useState(false);
 
@@ -65,9 +79,9 @@ export function useButtonLikeEventHandlers<E extends EventTarget>(onClickSync: (
         setActive(false);
     }
 
-    const onMouseUp =  excludes("click", exclude)? undefined : onBlur;
+    const onMouseUp = excludes("click", exclude)? undefined : onBlur;
 
-    const onMouseOut =  excludes("click", exclude)? undefined : onBlur;
+    const onMouseOut = excludes("click", exclude)? undefined : onBlur;
 
     const onKeyDown = excludes("space", exclude) && excludes("enter", exclude)? undefined : (e: h.JSX.TargetedKeyboardEvent<E>) => {
         if (e.key == " " && onClickSync && !excludes("space", exclude)) {
@@ -83,8 +97,9 @@ export function useButtonLikeEventHandlers<E extends EventTarget>(onClickSync: (
         }
     }
 
-    const onClick2  = excludes("click", exclude)? undefined : ((e: h.JSX.TargetedMouseEvent<E>) => {
+    const onClick2 = excludes("click", exclude) ? undefined : ((e: h.JSX.TargetedMouseEvent<E>) => {
         if (onClickSync && !excludes("click", exclude)) {
+            pulse();
             onClickSync(e);
         }
     })
@@ -96,7 +111,7 @@ export function useAriaButton<E extends EventTarget>({ tag, pressed, onClick }: 
 
     function useAriaButtonProps<P extends UseAriaButtonPropsParameters<E>>({ "aria-pressed": ariaPressed, tabIndex, role, ...p }: P): UseAriaButtonPropsReturnType<E, P> {
 
-        const props = useButtonLikeEventHandlers<E>((e) => onClick?.(enhanceEvent(e, { pressed: pressed == null? null : !pressed })), {
+        const props = useButtonLikeEventHandlers<E>((e) => onClick?.(enhanceEvent(e, { pressed: pressed == null ? null : !pressed })), {
             space: tag == "button" ? "exclude" : undefined,
             enter: tag == "button" ? "exclude" : undefined,
             click: undefined,
