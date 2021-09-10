@@ -100,9 +100,9 @@ export function useCheckboxGroup<InputElement extends Element, ChildContainerEle
         setSelfIsChecked(percentage <= 0 ? false : percentage >= 1 ? true : "mixed")
     }, [setSelfIsChecked, managedChildren.length, checkedCount]);
 
-    function useCheckboxGroupCheckboxProps<P extends h.JSX.HTMLAttributes<InputElement>>(props: P) {
+    const useCheckboxGroupCheckboxProps = useCallback(<P extends h.JSX.HTMLAttributes<InputElement>>(props: P) => {
         return useMergedProps<InputElement>()({ "aria-controls": ariaControls }, props);
-    }
+    }, [ariaControls]);
 
     useEffect(() => {
         setAriaControls(Array.from(allIds.current).join(" "));
@@ -133,7 +133,7 @@ export function useCheckboxGroup<InputElement extends Element, ChildContainerEle
 
         return {
             tabbable,
-            useCheckboxGroupChildProps: <P extends h.JSX.HTMLAttributes<InputElement>>(props: P) => useMergedProps<InputElement>()({ onInput }, useListNavigationChildProps(props))
+            useCheckboxGroupChildProps: useCallback(<P extends h.JSX.HTMLAttributes<InputElement>>(props: P) => useMergedProps<InputElement>()({ onInput }, useListNavigationChildProps(props)), [onInput])
         }
 
 
