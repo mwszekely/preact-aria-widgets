@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { useListNavigation, UseListNavigationParameters, useStableGetter, useState } from "preact-prop-helpers";
+import { useHasFocus, useListNavigation, UseListNavigationParameters, useStableGetter, useState } from "preact-prop-helpers";
 import { useEffect } from "preact-prop-helpers/use-effect";
 import { UseListNavigationChildInfo, UseListNavigationChildParameters, UseListNavigationChildPropsReturnType } from "preact-prop-helpers/use-list-navigation";
 import { MergedProps, useMergedProps } from "preact-prop-helpers/use-merged-props";
@@ -32,8 +32,9 @@ export type UseCheckboxGroupChild<ChildElement extends Element> = (args: UseChec
  * @param param0 
  * @returns 
  */
-export function useCheckboxGroup<InputElement extends Element, ChildContainerElement extends Element>({ collator, keyNavigation }: UseCheckboxGroupParameters) {
-    const { managedChildren, useListNavigationChild, useListNavigationProps } = useListNavigation<ChildContainerElement, InputElement, UseCheckboxGroupChildInfo>({ collator, keyNavigation });
+export function useCheckboxGroup<InputElement extends Element, ChildContainerElement extends Element>({ collator, keyNavigation, shouldFocus }: UseCheckboxGroupParameters) {
+    
+    const { managedChildren, useListNavigationChild } = useListNavigation<ChildContainerElement, InputElement, UseCheckboxGroupChildInfo>({ collator, keyNavigation, shouldFocus });
 
     //const [uncheckedCount, setUnheckedCount] = useState(0);
 
@@ -139,6 +140,6 @@ export function useCheckboxGroup<InputElement extends Element, ChildContainerEle
 
     }, [notifyChecked, useListNavigationChild]);
 
-    return { useCheckboxGroupChild, useCheckboxGroupCheckboxProps, useCheckboxChildrenContainerProps: useListNavigationProps, selfIsChecked, percentChecked: (checkedCount / managedChildren.length), onCheckboxGroupInput };
+    return { useCheckboxGroupChild, useCheckboxGroupCheckboxProps, selfIsChecked, percentChecked: (checkedCount / managedChildren.length), onCheckboxGroupInput };
 }
 

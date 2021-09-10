@@ -4,7 +4,7 @@ import { useHasFocus } from "preact-prop-helpers/use-has-focus";
 import { useActiveElement } from "preact-prop-helpers/use-active-element";
 import { useStableCallback } from "preact-prop-helpers/use-stable-callback";
 import { useLayoutEffect } from "preact-prop-helpers/use-layout-effect";
-import { useListNavigation, UseListNavigationChildInfo, UseListNavigationChildParameters, UseListNavigationChildPropsReturnType, UseListNavigationParameters, UseListNavigationPropsReturnType } from "preact-prop-helpers/use-list-navigation";
+import { useListNavigation, UseListNavigationChildInfo, UseListNavigationChildParameters, UseListNavigationChildPropsReturnType, UseListNavigationParameters } from "preact-prop-helpers/use-list-navigation";
 import { MergedProps, useMergedProps } from "preact-prop-helpers/use-merged-props";
 import { useRandomId, UseRandomIdPropsReturnType, UseReferencedIdPropsReturnType } from "preact-prop-helpers/use-random-id";
 import { useRefElement, UseRefElementPropsReturnType } from "preact-prop-helpers/use-ref-element";
@@ -109,11 +109,6 @@ export function useAriaMenu<ParentElement extends Element, ChildElement extends 
     let open = (menubar ? true : (args as UseMenuParameters1).open);
     const stableOnClose = useStableCallback(onClose ?? (() => { }));
 
-    const { managedChildren, useListNavigationChild, useListNavigationProps, tabbableIndex, focusSelf: focusMenu } = useListNavigation<E, ChildElement>({ collator, keyNavigation, noTypeahead, noWrap, typeaheadTimeout });
-    const { useRandomIdProps: useMenuIdProps, useReferencedIdProps: useMenuIdReferencingProps } = useRandomId({ prefix: "aria-menu-" });
-
-    const [openerElement, setOpenerElement] = useState<(Element & HTMLOrSVGElement) | null>(null);
-
     // TODO: It's awkward that the button focus props are out here where we don't have its type,
     // but focus management is super sensitive, and even waiting for a useLayoutEffect to sync state here
     // would be too late, so it would look like there's a moment between menu focus lost and button focus gained
@@ -121,6 +116,11 @@ export function useAriaMenu<ParentElement extends Element, ChildElement extends 
     const { focusedInner: menuHasFocus, useHasFocusProps: useMenuHasFocusProps, } = useHasFocus<E>();
     const { focusedInner: buttonHasFocus, useHasFocusProps: useButtonHasFocusProps } = useHasFocus<Element>();
     const { activeElement, lastActiveElement, windowFocused } = useActiveElement();
+
+    const { managedChildren, useListNavigationChild, tabbableIndex, focusSelf: focusMenu } = useListNavigation<E, ChildElement>({ collator, keyNavigation, noTypeahead, noWrap, typeaheadTimeout, shouldFocus: (menuHasFocus || buttonHasFocus) });
+    const { useRandomIdProps: useMenuIdProps, useReferencedIdProps: useMenuIdReferencingProps } = useRandomId({ prefix: "aria-menu-" });
+
+    const [openerElement, setOpenerElement] = useState<(Element & HTMLOrSVGElement) | null>(null);
 
     const { useModalSoftDismissProps } = useModalSoftDismiss<E>({ onClose: stableOnClose });
 
@@ -245,7 +245,7 @@ export function useAriaMenu<ParentElement extends Element, ChildElement extends 
             }
         }
 
-        return useMenuIdProps(useListNavigationProps(useMenuHasFocusProps(useMergedProps<E>()({ onKeyDown }, useModalSoftDismissProps(props)))));
+        return useMenuIdProps(useMenuHasFocusProps(useMergedProps<E>()({ onKeyDown }, useModalSoftDismissProps(props))));
     }
 
 

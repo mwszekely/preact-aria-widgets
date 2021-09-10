@@ -2,7 +2,7 @@ import { h } from "preact";
 import { useCallback, useEffect } from "preact/hooks";
 import { ManagedChildInfo, useChildManager } from "preact-prop-helpers/use-child-manager";
 import { useLayoutEffect } from "preact-prop-helpers/use-layout-effect";
-import { useListNavigation, UseListNavigationChildInfo, UseListNavigationChildParameters, UseListNavigationChildProps, UseListNavigationParameters, UseListNavigationPropsReturnType } from "preact-prop-helpers/use-list-navigation";
+import { useListNavigation, UseListNavigationChildInfo, UseListNavigationChildParameters, UseListNavigationChildProps, UseListNavigationParameters } from "preact-prop-helpers/use-list-navigation";
 import { MergedProps, useMergedProps } from "preact-prop-helpers/use-merged-props";
 import { useRandomId, UseRandomIdPropsReturnType, UseReferencedIdPropsReturnType } from "preact-prop-helpers/use-random-id";
 import { useStableCallback } from "preact-prop-helpers/use-stable-callback";
@@ -14,7 +14,7 @@ import { enhanceEvent, EventDetail, TagSensitiveProps, useChildFlag } from "./pr
 
 export type TabsChangeEvent<E extends Element> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 
-export interface UseAriaTabsParameters extends Omit<UseListNavigationParameters, "keyNavigation"> {
+export interface UseAriaTabsParameters extends Omit<UseListNavigationParameters, "keyNavigation" | "shouldFocus"> {
     selectedIndex: number | null;
     onSelect(event: TabsChangeEvent<Element>): void;
     selectionMode: "focus" | "activate";
@@ -41,13 +41,14 @@ export interface UseTabPanelInfo extends ManagedChildInfo<number> {
     //setSelectedTabId(id: string): void;
 }
 
-export type UseTabsList<TabListElement extends Element> = () => { useTabListProps: <P extends h.JSX.HTMLAttributes<TabListElement>>(props: P) => UseListNavigationPropsReturnType<TabListElement, P>; }
+export type UseTabsList<TabListElement extends Element> = () => { useTabListProps: <P extends h.JSX.HTMLAttributes<TabListElement>>(props: P) => MergedProps<TabListElement, { role: string, "aria-orientation": string }, P>; }
 export type UseTabsLabel = <E extends Element>() => { useTabsLabelProps: <P extends h.JSX.HTMLAttributes<E>>({ ...props }: P) => UseRandomIdPropsReturnType<P>; }
 export type UseTab<TabElement extends Element> = (info: UseTabParameters<TabElement>) => { selected: boolean | null; useTabProps: <P extends h.JSX.HTMLAttributes<TabElement>>({ ...props }: P) => MergedProps<TabElement, {}, UseReferencedIdPropsReturnType<UseRandomIdPropsReturnType<any>, "aria-controls">>; }
 export type UseTabPanel<PanelElement extends Element> = (info: UseTabPanelParameters) => { selected: boolean | null, useTabPanelProps: <P extends h.JSX.HTMLAttributes<PanelElement>>(p: P) => MergedProps<PanelElement, {}, UseRandomIdPropsReturnType<UseRefElementPropsReturnType<PanelElement, P>>> }
 
 export function useAriaTabs<ListElement extends Element, TabElement extends Element, TabPanelElement extends Element>({ selectionMode, selectedIndex, onSelect, orientation: logicalOrientation, ...args }: UseAriaTabsParameters) {
 
+    const { useHasFocusProps: useTabListHasFocusProps, focusedInner: tabListFocused } = useHasFocus<ListElement>();
     const { element: listElement, useRefElementProps } = useRefElement<any>();
     const { getLogicalDirection, convertToPhysicalOrientation } = useLogicalDirection(listElement);
     const physicalOrientation = convertToPhysicalOrientation(logicalOrientation);
@@ -55,13 +56,12 @@ export function useAriaTabs<ListElement extends Element, TabElement extends Elem
     const { useRandomIdProps: useTabListIdProps, useReferencedIdProps: useReferencedTabListId } = useRandomId({ prefix: "aria-tab-list-" });
     const { useRandomIdProps: useTabLabelIdProps, useReferencedIdProps: useReferencedTabLabelId } = useRandomId({ prefix: "aria-tab-label-" });
 
-    const { managedChildren: managedTabs, navigateToIndex, useListNavigationChild, useListNavigationProps } = useListNavigation<ListElement, TabElement, UseTabInfo>({...args, keyNavigation: logicalOrientation });
+    const { managedChildren: managedTabs, navigateToIndex, useListNavigationChild } = useListNavigation<ListElement, TabElement, UseTabInfo>({...args, shouldFocus: useTabListHasFocusProps, keyNavigation: logicalOrientation });
     const { managedChildren: managedPanels, useManagedChild: useManagedTabPanel } = useChildManager<UseTabPanelInfo>()
 
     const stableOnSelect = useStableCallback(onSelect);
     const childCount = managedTabs.length;
 
-    const { useHasFocusProps: useTabListHasFocusProps, focusedInner: tabListFocused } = useHasFocus<ListElement>();
 
     useLayoutEffect(() => {
         for (let child of managedTabs)
@@ -166,7 +166,7 @@ export function useAriaTabs<ListElement extends Element, TabElement extends Elem
         function useTabListProps<P extends h.JSX.HTMLAttributes<ListElement>>({ ...props }: P) {
             props.role = "tablist";
             props["aria-orientation"] = physicalOrientation;
-            return useListNavigationProps(useReferencedTabLabelId("aria-labelledby")(useTabListHasFocusProps(useRefElementProps(props as any))) as h.JSX.HTMLAttributes<ListElement>) as unknown as UseListNavigationPropsReturnType<ListElement, P>;
+            return useReferencedTabLabelId("aria-labelledby")(useTabListHasFocusProps(useRefElementProps(props as any))) as h.JSX.HTMLAttributes<ListElement> as unknown as MergedProps<ListElement, {}, P>;
         }
 
         return { useTabListProps };
@@ -183,38 +183,4 @@ export function useAriaTabs<ListElement extends Element, TabElement extends Elem
 
     return { useTab, useTabPanel, useTabsList, useTabsLabel };
 
-    /*const { managedChildren: managedTabs, useListNavigationChild, useListNavigationProps } = useListNavigation<E>(args)
-    const { managedChildren: managedTabPanels, useManagedChild: useManagedTabPanel } = useChildManager();
-
-
-    const useAriaTab = useCallback(<E extends Element>(args: UseAriaTabParameters) => {
-        const { tabbable, useListNavigationChildProps, useListNavigationSiblingProps } = useListNavigationChild<E>(args);
-        function useAriaTabProps<P extends h.JSX.HTMLAttributes<E>>(props: P) {
-            return useListNavigationChildProps(props);
-         }
-
-         return { useAriaTabProps };
-    }, []);
-
-    const useAriaTabPanel = useCallback(<E extends Element>(args: UseAriaTabPanelParameters) => {
-        const never = useManagedTabPanel(args);
-
-        function useAriaTabPanelProps<P extends h.JSX.HTMLAttributes<E>>(props: P) {
-            return useMergedProps<E>()({}, props);
-        }
-
-        return { useAriaTabPanelProps };
-     }, []);
-
-    function useAriaTabsProps<P extends h.JSX.HTMLAttributes<E>>({...props}: P) {
-        props.role = "tablist";
-        return useListNavigationProps(props);
-    }
-
-
-    return {
-        useAriaTabsProps,
-        useAriaTab,
-        useAriaTabPanel
-    }*/
 }

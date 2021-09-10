@@ -121,12 +121,12 @@ const DemoUseAccordion = memo(() => {
 
     const [expandedIndex, setExpandedIndex] = useState<number | null>(0);
 
-    const { useAriaAccordionSection, useAriaAccordionProps } = useAriaAccordion<HTMLDivElement, HTMLButtonElement>({ expandedIndex, setExpandedIndex })
+    const { useAriaAccordionSection } = useAriaAccordion<HTMLDivElement, HTMLButtonElement>({ expandedIndex, setExpandedIndex })
 
     return (
         <UseAccordionSectionContext.Provider value={useAriaAccordionSection}>
             <div className="demo">
-                <div {...useAriaAccordionProps({})}>
+                <div>
                     <DemoAccordionSection index={0} />
                     <DemoAccordionSection index={1} />
                     <DemoAccordionSection index={2} />
@@ -205,7 +205,7 @@ const Checkbox2 = memo(() => {
 const CheckboxGroupContext = createContext<UseCheckboxGroupChild<HTMLInputElement>>(null!);
 const DemoUseCheckboxGroup = memo(() => {
 
-    const { useCheckboxGroupCheckboxProps, useCheckboxChildrenContainerProps, useCheckboxGroupChild, selfIsChecked, percentChecked, onCheckboxGroupInput } = useCheckboxGroup<HTMLInputElement, HTMLDivElement>({});
+    const { useCheckboxGroupCheckboxProps, useCheckboxGroupChild, selfIsChecked, percentChecked, onCheckboxGroupInput } = useCheckboxGroup<HTMLInputElement, HTMLDivElement>({});
     const { useCheckboxInputElement, useCheckboxLabelElement } = useAriaCheckbox<HTMLInputElement, HTMLLabelElement>({ checked: selfIsChecked, disabled: false, labelPosition: "separate", onInput: onCheckboxGroupInput as any });
 
     const { useCheckboxInputElementProps } = useCheckboxInputElement({ tag: "input" });
@@ -219,7 +219,7 @@ const DemoUseCheckboxGroup = memo(() => {
                 <input {...useCheckboxInputElementProps(useCheckboxGroupCheckboxProps({}))} />
                 <label {...useCheckboxLabelElementProps({})}>All checked?</label>
             </div>
-            <div {...useCheckboxChildrenContainerProps({ style: { "display": "flex", "flexDirection": "column" } })} >
+            <div {...({ style: { "display": "flex", "flexDirection": "column" } })} >
 
                 {Array.from((function* () {
                     for (let i = 0; i < 10; ++i) {

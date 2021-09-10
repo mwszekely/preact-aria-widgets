@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { ManagedChildInfo, useChildManager } from "preact-prop-helpers/use-child-manager";
 import { UseHasFocusPropsReturnType } from "preact-prop-helpers/use-has-focus";
-import { useLinearNavigation, UseLinearNavigationPropsReturnType } from "preact-prop-helpers/use-keyboard-navigation";
+import { useLinearNavigation } from "preact-prop-helpers/use-keyboard-navigation";
 import { useLayoutEffect } from "preact-prop-helpers/use-layout-effect";
 import { MergedProps, useMergedProps } from "preact-prop-helpers/use-merged-props";
 import { useRandomId, UseRandomIdPropsReturnType, UseReferencedIdPropsReturnType } from "preact-prop-helpers/use-random-id";
@@ -25,12 +25,7 @@ export interface UseAriaAccordionParameters {
 
 export interface UseAriaAccordionReturnType<ParentElement extends Element, ChildElement extends Element> {
     useAriaAccordionSection: UseAriaAccordionSection<ChildElement>;
-    useAriaAccordionProps: UseAriaAccordionProps<ParentElement>;
 }
-
-export type UseAriaAccordionProps<E extends Element> = <P extends UseAriaAccordionPropsParameters<E>>(props: P) => UseAriaAccordionPropsReturnType<E, P>;
-
-export type UseAriaAccordionPropsReturnType<E extends Element, P extends UseAriaAccordionPropsParameters<E>> = UseLinearNavigationPropsReturnType<E, P>;
 
 export interface UseAriaAccordionSectionInfo extends ManagedChildInfo<number> {
     open?: boolean | undefined | null;
@@ -67,7 +62,7 @@ export function useAriaAccordion<ParentElement extends Element, ChildElement ext
     const stableSetExpandedIndex = useStableCallback(setExpandedIndex ?? (() => { }));
 
     const { managedChildren: managedAccordionSections, useManagedChild: useManagedChildSection } = useChildManager<UseAriaAccordionSectionInfo>();
-    const { useLinearNavigationProps, useLinearNavigationChild } = useLinearNavigation<ParentElement, ChildElement>({ managedChildren: managedAccordionSections, navigationDirection: "block", getIndex: getLastFocusedIndex, setIndex: setLastFocusedIndex });
+    const { useLinearNavigationChild } = useLinearNavigation<ParentElement, ChildElement>({ managedChildren: managedAccordionSections, navigationDirection: "block", getIndex: getLastFocusedIndex, setIndex: setLastFocusedIndex });
 
     // Any time list management changes the focused index, manually focus the child
     // TODO: Can this be cut?
@@ -146,14 +141,8 @@ export function useAriaAccordion<ParentElement extends Element, ChildElement ext
         }
     }, [useLinearNavigationChild]);
 
-
-    function useAriaAccordionProps<P extends UseAriaAccordionPropsParameters<ParentElement>>(props: P) {
-        return useLinearNavigationProps(props);
-    }
-
     return {
-        useAriaAccordionSection,
-        useAriaAccordionProps
+        useAriaAccordionSection
     }
 }
 

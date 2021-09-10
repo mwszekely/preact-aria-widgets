@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { useActiveElement, useMergedProps, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
+import { useActiveElement, useHasFocus, useMergedProps, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
 import { useListNavigation, UseListNavigationChildInfo, UseListNavigationChildParameters } from "preact-prop-helpers/use-list-navigation";
 import { MergedProps } from "preact-prop-helpers/use-merged-props";
 import { useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
@@ -36,12 +36,13 @@ export function useAriaRadioGroup<V extends string, G extends Element, I extends
     const byName = useRef(new Map<string, any>());
     const stableOnInput = useStableCallback(onInput);
 
-    const { currentTypeahead, managedChildren, useListNavigationChild, useListNavigationProps, setTabbableIndex } = useListNavigation<G, I, UseAriaRadioInfo<V, I, L>>({});
+    const { useHasFocusProps, lastFocusedInner } = useHasFocus<G>();
+    const { currentTypeahead, managedChildren, useListNavigationChild, setTabbableIndex } = useListNavigation<G, I, UseAriaRadioInfo<V, I, L>>({ shouldFocus: lastFocusedInner });
 
     const useRadioGroupProps = useCallback(<P extends h.JSX.HTMLAttributes<G>>({ ...props }: P) => {
         props.role = "radiogroup";
-        return useListNavigationProps(useRefElementProps(props));
-    }, [useListNavigationProps]);
+        return useRefElementProps(useHasFocusProps(props));
+    }, [useHasFocusProps, useRefElementProps]);
 
     useChildFlag(selectedIndex, managedChildren.length, (i, checked) => managedChildren[i]?.setChecked(checked));
     

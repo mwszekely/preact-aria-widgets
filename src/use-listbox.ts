@@ -8,19 +8,19 @@ import { useStableCallback } from "preact-prop-helpers/use-stable-callback";
 import { useState } from "preact-prop-helpers/use-state";
 import { useButtonLikeEventHandlers } from "./use-button";
 import { useGenericLabel } from "./use-label";
-import { useActiveElement, useStableGetter } from "preact-prop-helpers";
+import { useActiveElement, useHasFocus, useStableGetter } from "preact-prop-helpers";
 import { EventDetail, TagSensitiveProps, useChildFlag } from "./props";
 
 export type ListboxSingleSelectEvent<E extends EventTarget> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 export type ListboxMultiSelectEvent<E extends EventTarget> = { [EventDetail]: { selected: boolean } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 
-export interface UseListboxSingleParameters extends UseListNavigationParameters {
+export interface UseListboxSingleParameters extends Omit<UseListNavigationParameters, "shouldFocus"> {
     selectionMode: "focus" | "activate";
     selectedIndex: number;
     onSelect?(event: ListboxSingleSelectEvent<Element>): void;
 }
 
-export interface UseListboxMultiParameters extends UseListNavigationParameters {
+export interface UseListboxMultiParameters extends Omit<UseListNavigationParameters, "shouldFocus"> {
 
 }
 
@@ -48,10 +48,12 @@ export type UseListboxMultiItem<E extends Element, I extends UseListboxMultiItem
 
 export function useAriaListboxSingle<ParentElement extends Element, ChildElement extends Element, I extends UseListboxSingleItemInfo<ChildElement>>({ selectedIndex, onSelect, selectionMode, ...args }: UseListboxSingleParameters) {
 
+    const { lastFocusedInner, useHasFocusProps } = useHasFocus<ParentElement>();
+
     const { useGenericLabelInput, useGenericLabelLabel, useReferencedInputIdProps, useReferencedLabelIdProps, inputElement } = useGenericLabel({ labelPrefix: "aria-listbox-label-", inputPrefix: "aria-listbox-" })
-    const { useListNavigationChild, useListNavigationProps, navigateToIndex, managedChildren, setTabbableIndex, ...listRest } = useListNavigation<ParentElement, ChildElement, I>(args);
+    const { useListNavigationChild, navigateToIndex, managedChildren, setTabbableIndex, ...listRest } = useListNavigation<ParentElement, ChildElement, I>({ ...args, shouldFocus: lastFocusedInner });
     const { useGenericLabelInputProps } = useGenericLabelInput<ParentElement>();
-    const stableOnSelect = useStableCallback(onSelect ?? (() => {}));
+    const stableOnSelect = useStableCallback(onSelect ?? (() => { }));
 
     /*useLayoutEffect(([prevSelectedIndex]) => {
         navigateToIndex(selectedIndex);
@@ -99,7 +101,7 @@ export function useAriaListboxSingle<ParentElement extends Element, ChildElement
             const newProps: h.JSX.HTMLAttributes<E> = useButtonLikeEventHandlers<E>(info.tag, (e) => {
                 navigateToIndex(info.index);
                 if (element)
-                stableOnSelect?.({ target: element, currentTarget: element, [EventDetail]: { selectedIndex: index } });
+                    stableOnSelect?.({ target: element, currentTarget: element, [EventDetail]: { selectedIndex: index } });
                 e.preventDefault();
             }, undefined)({});
 
@@ -128,7 +130,7 @@ export function useAriaListboxSingle<ParentElement extends Element, ChildElement
 
     function useListboxSingleProps<P extends h.JSX.HTMLAttributes<ParentElement>>(props: P) {
         props.role = "listbox";
-        return useListNavigationProps(useGenericLabelInputProps(props));
+        return useHasFocusProps(useGenericLabelInputProps(props));
     }
 
 
@@ -137,9 +139,10 @@ export function useAriaListboxSingle<ParentElement extends Element, ChildElement
 
 export function useAriaListboxMulti<ParentElement extends Element, ChildElement extends Element, I extends UseListboxMultiItemInfo<ChildElement>>({ ...args }: UseListboxMultiParameters) {
     type E = ParentElement;
+    const { lastFocusedInner, useHasFocusProps } = useHasFocus<E>();
 
     const { useGenericLabelInput, useGenericLabelLabel, useReferencedInputIdProps, useReferencedLabelIdProps } = useGenericLabel({ labelPrefix: "aria-listbox-label-", inputPrefix: "aria-listbox-" })
-    const { useListNavigationChild, useListNavigationProps, navigateToIndex, managedChildren, currentTypeahead, ...listRest } = useListNavigation<E, ChildElement, UseListboxMultiItemInfo<ChildElement>>(args);
+    const { useListNavigationChild, navigateToIndex, managedChildren, currentTypeahead, ...listRest } = useListNavigation<E, ChildElement, UseListboxMultiItemInfo<ChildElement>>({ ...args, shouldFocus: lastFocusedInner });
     const { useGenericLabelInputProps } = useGenericLabelInput<E>();
 
     const childCount = managedChildren.length;
@@ -161,7 +164,7 @@ export function useAriaListboxMulti<ParentElement extends Element, ChildElement 
         const [typeaheadInProgress, setTypeaheadInProgress] = useState(false);
         const getSelected = useStableGetter(selected);
         const { element, useRefElementProps } = useRefElement<E>();
-        const stableOnSelect = useStableCallback(info.onSelect ?? (() => {}));
+        const stableOnSelect = useStableCallback(info.onSelect ?? (() => { }));
 
 
 
@@ -215,7 +218,7 @@ export function useAriaListboxMulti<ParentElement extends Element, ChildElement 
     function useListboxMultiProps<P extends h.JSX.HTMLAttributes<E>>(props: P) {
         props.role = "listbox";
         props["aria-multiselectable"] = "true";
-        return useListNavigationProps(useGenericLabelInputProps(useMergedProps<E>()({ onKeyDown, onKeyUp, onBlur }, props)));
+        return useHasFocusProps(useGenericLabelInputProps(useMergedProps<E>()({ onKeyDown, onKeyUp, onBlur }, props)));
     }
 
 
