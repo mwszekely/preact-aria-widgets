@@ -7,9 +7,10 @@ import { useRefElement, UseRefElementPropsReturnType } from "preact-prop-helpers
 import { useStableCallback } from "preact-prop-helpers/use-stable-callback";
 import { useState } from "preact-prop-helpers/use-state";
 import { useCallback, useEffect } from "preact/hooks";
-import { EventDetail, TagSensitiveProps, useChildFlag } from "./props";
+import { EventDetail, TagSensitiveProps } from "./props";
 import { useButtonLikeEventHandlers } from "./use-button";
 import { useGenericLabel } from "./use-label";
+import { useChildFlag } from "preact-prop-helpers/use-child-manager";
 
 export type ListboxSingleSelectEvent<E extends EventTarget> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 

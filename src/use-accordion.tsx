@@ -9,8 +9,9 @@ import { useRefElement } from "preact-prop-helpers/use-ref-element";
 import { useStableCallback } from "preact-prop-helpers/use-stable-callback";
 import { useState } from "preact-prop-helpers/use-state";
 import { useCallback } from "preact/hooks";
-import { TagSensitiveProps, useChildFlag } from "./props";
+import { TagSensitiveProps } from "./props";
 import { useButtonLikeEventHandlers } from "./use-button";
+import { useChildFlag } from "preact-prop-helpers/use-child-manager";
 
 export type UseAriaAccordion<ParentElement extends Element, ChildElement extends Element> = (args: UseAriaAccordionParameters) => UseAriaAccordionReturnType<ParentElement, ChildElement>;
 export type UseAriaAccordionSection<E extends Element> = (args: UseAriaAccordionSectionParameters) => UseAriaAccordionSectionReturnType<E>;

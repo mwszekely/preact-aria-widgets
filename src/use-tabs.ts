@@ -10,7 +10,8 @@ import { useState } from "preact-prop-helpers/use-state";
 import { useButtonLikeEventHandlers } from "./use-button";
 import { useRefElement, UseRefElementPropsReturnType } from "preact-prop-helpers/use-ref-element";
 import { useHasFocus, useLogicalDirection, useStableGetter } from "preact-prop-helpers";
-import { enhanceEvent, EventDetail, TagSensitiveProps, useChildFlag } from "./props";
+import { enhanceEvent, EventDetail, TagSensitiveProps } from "./props";
+import { useChildFlag } from "preact-prop-helpers/use-child-manager";
 
 export type TabsChangeEvent<E extends Element> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 
