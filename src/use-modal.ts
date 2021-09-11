@@ -11,14 +11,18 @@ import { useState } from "preact-prop-helpers/use-state";
 /**
  * Adds event handlers for a modal-like soft-dismiss interaction.
  * 
- * That is, any clicks or taps outside of the given element, 
- * or any time the Escape key is pressed within the element,
+ * That is, any clicks or taps outside of the given component, 
+ * or any time the Escape key is pressed within the component,
  * (with various browser oddities regarding clicks on blank or inert areas handled)
- * the modal will request to close itself.
+ * the component will request to close itself.
+ * 
+ * Of course, if you don't do anything in the `onClose` function,
+ * it won't be a soft dismiss anymore.
+ * 
  * @param param0 
  * @returns 
  */
-export function useModalSoftDismiss<E extends Element>({ onClose }: {onClose(reason: "backdrop" | "escape"): void }) {
+export function useSoftDismiss<E extends Element>({ onClose }: {onClose(reason: "backdrop" | "escape"): void }) {
 
     const { element, useRefElementProps } = useRefElement<E>();
 
@@ -44,7 +48,7 @@ export function useModalSoftDismiss<E extends Element>({ onClose }: {onClose(rea
         }
     }
 
-    return { useModalSoftDismissProps: <P extends h.JSX.HTMLAttributes<E>>(props: P) => useMergedProps<E>()(useRefElementProps({ onKeyDown }), props) }
+    return { useSoftDismissProps: <P extends h.JSX.HTMLAttributes<E>>(props: P) => useMergedProps<E>()(useRefElementProps({ onKeyDown }), props) }
 }
 
 /**
@@ -63,7 +67,7 @@ export function useAriaModal<ModalElement extends HTMLElement>({ open, onClose }
     const { id: bodyId, useRandomIdProps: useBodyIdProps, useReferencedIdProps: useBodyReferencingIdProps } = useRandomId({ prefix: "aria-modal-body-" });
     const { id: titleId, useRandomIdProps: useTitleIdProps, useReferencedIdProps: useTitleReferencingIdProps } = useRandomId({ prefix: "aria-modal-title-" });
 
-    const { useModalSoftDismissProps } = useModalSoftDismiss<ModalElement>({ onClose });
+    const { useSoftDismissProps } = useSoftDismiss<ModalElement>({ onClose });
 
     const useModalBackdrop = useCallback(function useModalBackdrop<BackdropElement extends HTMLElement>() {
 
@@ -79,7 +83,7 @@ export function useAriaModal<ModalElement extends HTMLElement>({ open, onClose }
         const p1 = useTitleReferencingIdProps("aria-labelledby")(p0);
         const p2 = useModalIdProps(p1);
         const pFinal = useBodyReferencingIdProps("aria-describedby")(p2);
-        return useFocusTrapProps(useMergedProps<ModalElement>()(useModalSoftDismissProps({ role: "dialog" }), modalDescribedByBody ? pFinal : p2));
+        return useFocusTrapProps(useMergedProps<ModalElement>()(useSoftDismissProps({ role: "dialog" }), modalDescribedByBody ? pFinal : p2));
     }
 
     const useModalTitle = useCallback(function useModalTitle<TitleElement extends Element>() {

@@ -51,7 +51,7 @@ export function useAriaListboxSingle<ParentElement extends Element, ChildElement
     const { lastFocusedInner, useHasFocusProps } = useHasFocus<ParentElement>();
 
     const { useGenericLabelInput, useGenericLabelLabel, useReferencedInputIdProps, useReferencedLabelIdProps, inputElement } = useGenericLabel({ labelPrefix: "aria-listbox-label-", inputPrefix: "aria-listbox-" })
-    const { useListNavigationChild, navigateToIndex, managedChildren, setTabbableIndex, ...listRest } = useListNavigation<ParentElement, ChildElement, I>({ ...args, shouldFocus: lastFocusedInner });
+    const { useListNavigationChild, navigateToIndex, managedChildren, setTabbableIndex, ...listRest } = useListNavigation<ParentElement, ChildElement, I>({ ...args, focusOnChange: lastFocusedInner });
     const { useGenericLabelInputProps } = useGenericLabelInput<ParentElement>();
     const stableOnSelect = useStableCallback(onSelect ?? (() => { }));
 
@@ -142,7 +142,7 @@ export function useAriaListboxMulti<ParentElement extends Element, ChildElement 
     const { lastFocusedInner, useHasFocusProps } = useHasFocus<E>();
 
     const { useGenericLabelInput, useGenericLabelLabel, useReferencedInputIdProps, useReferencedLabelIdProps } = useGenericLabel({ labelPrefix: "aria-listbox-label-", inputPrefix: "aria-listbox-" })
-    const { useListNavigationChild, navigateToIndex, managedChildren, currentTypeahead, ...listRest } = useListNavigation<E, ChildElement, UseListboxMultiItemInfo<ChildElement>>({ ...args, shouldFocus: lastFocusedInner });
+    const { useListNavigationChild, navigateToIndex, managedChildren, currentTypeahead, ...listRest } = useListNavigation<E, ChildElement, UseListboxMultiItemInfo<ChildElement>>({ ...args, focusOnChange: lastFocusedInner });
     const { useGenericLabelInputProps } = useGenericLabelInput<E>();
 
     const childCount = managedChildren.length;

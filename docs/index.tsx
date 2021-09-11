@@ -315,9 +315,11 @@ const DemoUseListboxSingle = memo(() => {
     </div>
 });
 
+
+
 const DemoListboxSingleOption = memo(({ index }: { index: number, }) => {
     const { getSelected, selected, tabbable, useListboxSingleItemProps } = useContext(ListBoxSingleItemContext)({ index, text: null, tag: "li" });
-    return <li {...useListboxSingleItemProps({})}>Number {index + 1} option{selected ? "(selected)" : ""}</li>
+    return <li {...useListboxSingleItemProps({})}>Number {index + 1} option{selected ? " (selected)" : ""}{tabbable ? " (tabbable)" : ""}</li>
 });
 
 
@@ -367,8 +369,9 @@ const DemoUseListboxMulti = memo(() => {
 
 const MenuItemContext = createContext<UseMenuItem<HTMLLIElement>>(null!);
 const DemoListboxMultiOption = memo(({ index, selected, setSelected }: { index: number, selected: boolean, setSelected(selected: boolean): void }) => {
-    const text = `Number ${index + 1} option ${selected ? "(selected)" : ""}`
+    let text = `Number ${index + 1} option${selected ? " (selected)" : ""}`;
     const { tabbable, useListboxMultiItemProps } = useContext(ListBoxMultiItemContext)({ tag: "li", index, text, onSelect: e => setSelected(e[EventDetail].selected), selected });
+    text = `Number ${index + 1} option${selected ? " (selected)" : ""}${tabbable ? " (tabbable)" : ""}`;
     return <li {...useListboxMultiItemProps({})}>{text}</li>
 });
 

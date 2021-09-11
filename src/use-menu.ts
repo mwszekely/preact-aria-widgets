@@ -10,7 +10,7 @@ import { useRandomId, UseRandomIdPropsReturnType, UseReferencedIdPropsReturnType
 import { useRefElement, UseRefElementPropsReturnType } from "preact-prop-helpers/use-ref-element";
 import { TagSensitiveProps, EventDetail, enhanceEvent } from "./props";
 import { useFocusTrap, useTimeout } from "preact-prop-helpers";
-import { useModalSoftDismiss } from "./use-modal";
+import { useSoftDismiss } from "./use-modal";
 
 interface UseMenuParameters1 extends UseListNavigationParameters {
     open: boolean;
@@ -117,12 +117,12 @@ export function useAriaMenu<ParentElement extends Element, ChildElement extends 
     const { focusedInner: buttonHasFocus, useHasFocusProps: useButtonHasFocusProps } = useHasFocus<Element>();
     const { activeElement, lastActiveElement, windowFocused } = useActiveElement();
 
-    const { managedChildren, useListNavigationChild, tabbableIndex, focusSelf: focusMenu } = useListNavigation<E, ChildElement>({ collator, keyNavigation, noTypeahead, noWrap, typeaheadTimeout, shouldFocus: (menuHasFocus || buttonHasFocus) });
+    const { managedChildren, useListNavigationChild, tabbableIndex, focusSelf: focusMenu } = useListNavigation<E, ChildElement>({ collator, keyNavigation, noTypeahead, noWrap, typeaheadTimeout, focusOnChange: (menuHasFocus || buttonHasFocus) });
     const { useRandomIdProps: useMenuIdProps, useReferencedIdProps: useMenuIdReferencingProps } = useRandomId({ prefix: "aria-menu-" });
 
     const [openerElement, setOpenerElement] = useState<(Element & HTMLOrSVGElement) | null>(null);
 
-    const { useModalSoftDismissProps } = useModalSoftDismiss<E>({ onClose: stableOnClose });
+    const { useSoftDismissProps } = useSoftDismiss<E>({ onClose: stableOnClose });
 
     useEffect(() => {
         setFocusTrapActive(open);
@@ -245,7 +245,7 @@ export function useAriaMenu<ParentElement extends Element, ChildElement extends 
             }
         }
 
-        return useMenuIdProps(useMenuHasFocusProps(useMergedProps<E>()({ onKeyDown }, useModalSoftDismissProps(props))));
+        return useMenuIdProps(useMenuHasFocusProps(useMergedProps<E>()({ onKeyDown }, useSoftDismissProps(props))));
     }
 
 
