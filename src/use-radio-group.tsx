@@ -125,7 +125,8 @@ export function useAriaRadioGroup<V extends string, G extends Element, I extends
 
     return {
         useRadio,
-        useRadioGroupProps
+        useRadioGroupProps,
+        managedChildren
     }
 }
 
