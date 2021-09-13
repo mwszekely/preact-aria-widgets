@@ -84,12 +84,6 @@ export interface UseAriaMenuSubmenuItemReturnType<E_4 extends Element> {
     useAriaMenuSubmenuItemProps: <P_5 extends h.JSX.HTMLAttributes<E_4>>({ ...props }: P_5) => UseRefElementPropsReturnType<E_4, UseRefElementPropsReturnType<E_4, UseAriaButtonPropsReturnType<E_4, UseReferencedIdPropsReturnType<UseReferencedIdPropsReturnType<P_5, "aria-controls">, "aria-controls">>>>;
 }*/
 
-let i = 0;
-function r() {
-    ++i;
-    requestAnimationFrame(r);
-}
-requestAnimationFrame(r);
 
 export type UseMenuItem<E extends Element> = (args: UseMenuItemDefaultParameters<E>) => {
     useMenuItemProps: <P extends h.JSX.HTMLAttributes<E>>({ ...props }: P) => MergedProps<E, {
