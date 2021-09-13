@@ -24,12 +24,12 @@ export interface UseAriaRadioInfo extends UseListNavigationChildInfo {
 
 
 
-export type UseAriaRadioParameters<V extends string, I extends Element, L extends Element, Info extends UseAriaRadioInfo> = Omit<UseListNavigationChildParameters<Info>, "setChecked"> & 
-Omit<UseCheckboxLikeParameters<I, L>, "onInput" | "role"> & {
-    labelPosition: "wrapping" | "separate";
-    value: V;
-    disabled: boolean;
-}
+export type UseAriaRadioParameters<V extends string, I extends Element, L extends Element, Info extends UseAriaRadioInfo> = Omit<UseListNavigationChildParameters<Info>, "setChecked"> &
+    Omit<UseCheckboxLikeParameters<I, L>, "onInput" | "role"> & {
+        labelPosition: "wrapping" | "separate";
+        value: V;
+        disabled: boolean;
+    }
 
 export function useAriaRadioGroup<V extends string, G extends Element, I extends Element, L extends Element, Info extends UseAriaRadioInfo>({ name, selectedValue, onInput }: UseAriaRadioGroupParameters<V>) {
     const { element, useRefElementProps } = useRefElement<G>()
@@ -46,7 +46,7 @@ export function useAriaRadioGroup<V extends string, G extends Element, I extends
     }, [useHasFocusProps, useRefElementProps]);
 
     useChildFlag(selectedIndex, managedChildren.length, (i, checked) => managedChildren[i]?.setChecked(checked));
-    
+
     const { lastActiveElement } = useActiveElement();
     let anyRadiosFocused = (!!element?.contains(lastActiveElement));
     useEffect(() => {
@@ -97,7 +97,7 @@ export function useAriaRadioGroup<V extends string, G extends Element, I extends
                 }
 
                 const { useCheckboxLikeInputElementProps } = useCheckboxLikeInputElement({ tag });
-                return (useMergedProps<I>()(useListNavigationChildProps((useCheckboxLikeInputElementProps({  }))), props));
+                return (useMergedProps<I>()(useListNavigationChildProps((useCheckboxLikeInputElementProps({}))), props));
             };
 
             return {
@@ -126,7 +126,8 @@ export function useAriaRadioGroup<V extends string, G extends Element, I extends
     return {
         useRadio,
         useRadioGroupProps,
-        managedChildren
+        managedChildren,
+        getIndex: useCallback((value: string) => { return byName.current.get(value); }, [byName])
     }
 }
 
