@@ -1,0 +1,131 @@
+import { ComponentChildren, createContext, Fragment, h, cloneElement } from "preact";
+import { ManagedChildInfo, useChildManager, useMergedProps, useRandomId, useRefElement, UseRefElementPropsReturnType, useState, useTimeout } from "preact-prop-helpers";
+import { MergedProps } from "preact-prop-helpers/use-merged-props";
+import { generateRandomId } from "preact-prop-helpers/use-random-id";
+import { useCallback, useContext, useEffect, useLayoutEffect, useRef } from "preact/hooks";
+import { useChildFlag } from "preact-prop-helpers/use-child-manager";
+import { findFirstFocusable } from "preact-prop-helpers/use-focus-trap";
+
+
+
+
+export interface UseToastsParameters {
+
+}
+
+export interface UseToastParameters extends Omit<ToastInfo, "dismissed" | "index" | "setStatus" | "focus"> {
+    politeness?: "polite" | "assertive";
+    timeout: number | null;
+}
+
+export interface ToastInfo extends ManagedChildInfo<string> {
+    dismissed: boolean;
+    focus(): void;
+    setStatus(status: "pending" | "active" | "dismissed"): void;
+}
+
+export type UseToast = <ToastType extends Element>(args: UseToastParameters) => { dismiss: () => void; status: "pending" | "active" | "dismissed"; useToastProps: <P extends h.JSX.HTMLAttributes<ToastType>>(props: P) => MergedProps<ToastType, UseRefElementPropsReturnType<ToastType, {}>, P>; };
+
+export function useToasts<ContainerType extends Element>({ }: UseToastsParameters) {
+
+    // "Pointer" to whatever index toast is currently being shown.
+    // E.g. it's 0 when the first toast is shown, then when dismissed, it becomes 1.
+    // When the second toast is shown, it stays at 1 until dismissed, when it then becomes 2, etc.
+    // Because toasts can potentially be dismissed out of order, this represents the "oldest" toast that still hasn't been dismissed,
+    // even if "younger" ones have.
+    const [activeToastIndex, setActiveToastIndex, getActiveToastIndex] = useState(-1);
+
+    const [politeness, setPoliteness] = useState<"polite" | "assertive">("polite");
+
+    const { element, getElement, useRefElementProps } = useRefElement<ContainerType>();
+    const { indicesByElement, managedChildren, mountedChildren: toastQueue, useManagedChild, getMountIndex } = useChildManager<ToastInfo>();
+
+    // Any time a new toast mounts, update our bottommostToastIndex to point to it if necessary
+    // ("necessary" just meaning if it's the first toast ever or all prior toasts have been dismissed)
+    const onAnyToastMounted = useCallback((index: number) => {
+        let bottom = getActiveToastIndex();
+        while (bottom < toastQueue.length && (bottom < 0 || toastQueue[bottom]?.dismissed)) {
+            ++bottom;
+        }
+        setActiveToastIndex(bottom);
+    }, [setActiveToastIndex]);
+
+    // Any time a toast is dismissed, update our bottommostToastIndex to point to the next toast in the queue, if one exists.
+    const onAnyToastDismissed = useCallback((index: number) => {
+        let bottom = getActiveToastIndex();
+        while (bottom < toastQueue.length && (bottom < 0 || bottom === index || toastQueue[bottom]?.dismissed)) {
+            ++bottom;
+        }
+        setActiveToastIndex(bottom);
+
+        if (getElement()?.contains(document.activeElement))
+            toastQueue[bottom]?.focus();
+    }, [setActiveToastIndex]);
+
+    // Any time the index pointing to the currently-showing toast changes,
+    // update the relevant children and let them know that they're now either active or dismissed.
+    useChildFlag(activeToastIndex, toastQueue.length, ((i, set) => {
+        if (set)
+            console.assert(i <= getActiveToastIndex());
+
+        toastQueue[i]?.setStatus(set ? "active" : (i < getActiveToastIndex() ? "dismissed" : "pending"));
+    }));
+
+    const useToast: UseToast = useCallback(<ToastType extends Element>({ politeness, timeout }: UseToastParameters) => {
+        const [status, setStatus, getStatus] = useState<"pending" | "active" | "dismissed">("pending");
+        const dismissed = (status === "dismissed");
+        const dismiss = useCallback(() => { setStatus("dismissed") }, [])
+
+        const { randomId: toastId } = useRandomId({ prefix: "toast-" });
+        //const [toastId, setToastId] = useState(() => generateRandomId("toast-"));
+        useLayoutEffect(() => { setPoliteness(politeness ?? "polite"); }, [politeness]);
+
+
+        const focus = useCallback(() => {
+            const element = getElement();
+            if (element) {
+                const firstFocusable = findFirstFocusable(element);
+                firstFocusable?.focus();
+            }
+        }, []);
+
+        const { element, useManagedChildProps, getElement } = useManagedChild<ToastType>({ dismissed, index: toastId, setStatus, focus });
+
+        const isActive = (status === "active");
+
+        useEffect(() => {
+            onAnyToastMounted(getMountIndex(toastId));
+        }, []);
+
+        useEffect(() => {
+            if (dismissed)
+                onAnyToastDismissed(getMountIndex(toastId))
+        }, [dismissed]);
+
+        useTimeout({
+            timeout,
+            callback: () => {
+                if (isActive)
+                    setStatus("dismissed");
+            },
+            triggerIndex: isActive
+        });
+
+
+        return {
+            status,
+            getStatus,
+            dismiss,
+            useToastProps: function <P extends h.JSX.HTMLAttributes<ToastType>>({ ...props }: P) {
+                return useMergedProps<ToastType>()(useManagedChildProps({}), props);
+            }
+        }
+    }, []);
+
+    function useToastContainerProps<P extends h.JSX.HTMLAttributes<ContainerType>>({ role, "aria-live": ariaLive, "aria-relevant": ariaRelevant, ...props }: P) {
+        return useMergedProps<ContainerType>()(useRefElementProps({ class: "toasts-container", role: "status", "aria-live": politeness ?? ariaLive ?? "polite", "aria-relevant": ariaRelevant ?? "additions" }), props);
+    }
+
+
+    return { useToast, useToastContainerProps };
+}
