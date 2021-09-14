@@ -57,7 +57,7 @@ export function useAriaTabs<ListElement extends Element, TabElement extends Elem
     const { useRandomIdProps: useTabListIdProps, useReferencedIdProps: useReferencedTabListId } = useRandomId({ prefix: "aria-tab-list-" });
     const { useRandomIdProps: useTabLabelIdProps, useReferencedIdProps: useReferencedTabLabelId } = useRandomId({ prefix: "aria-tab-label-" });
 
-    const { managedChildren: managedTabs, navigateToIndex, useListNavigationChild } = useListNavigation<ListElement, TabElement, UseTabInfo>({...args, focusOnChange: useTabListHasFocusProps, keyNavigation: logicalOrientation });
+    const { managedChildren: managedTabs, navigateToIndex, useListNavigationChild, tabbableIndex, invalidTypeahead, currentTypeahead, focusSelf,  } = useListNavigation<ListElement, TabElement, UseTabInfo>({...args, focusOnChange: useTabListHasFocusProps, keyNavigation: logicalOrientation });
     const { managedChildren: managedPanels, useManagedChild: useManagedTabPanel } = useChildManager<UseTabPanelInfo>()
 
     const stableOnSelect = useStableCallback(onSelect);
@@ -182,6 +182,6 @@ export function useAriaTabs<ListElement extends Element, TabElement extends Elem
         return { useTabsLabelProps };
     }, []);
 
-    return { useTab, useTabPanel, useTabsList, useTabsLabel };
+    return { useTab, useTabPanel, useTabsList, useTabsLabel, tabbableIndex, focusTabList: focusSelf, currentTypeahead, invalidTypeahead };
 
 }
