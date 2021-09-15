@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { useActiveElement, useHasFocus } from "preact-prop-helpers";
 import { useLayoutEffect } from "preact-prop-helpers/use-layout-effect";
-import { useListNavigation, UseListNavigationChildInfo, UseListNavigationChildPropsReturnType, UseListNavigationParameters } from "preact-prop-helpers/use-list-navigation";
+import { useListNavigation, UseListNavigationChildInfo, UseListNavigationChildParameters, UseListNavigationChildPropsReturnType, UseListNavigationParameters } from "preact-prop-helpers/use-list-navigation";
 import { MergedProps, useMergedProps } from "preact-prop-helpers/use-merged-props";
 import { useRefElement, UseRefElementPropsReturnType } from "preact-prop-helpers/use-ref-element";
 import { useStableCallback } from "preact-prop-helpers/use-stable-callback";
@@ -14,7 +14,7 @@ import { useChildFlag } from "preact-prop-helpers/use-child-manager";
 
 export type ListboxSingleSelectEvent<E extends EventTarget> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 
-export interface UseListboxSingleParameters extends Omit<UseListNavigationParameters, "shouldFocus"> {
+export interface UseListboxSingleParameters extends Omit<UseListNavigationParameters, "focusOnChange"> {
     selectionMode: "focus" | "activate";
     selectedIndex: number;
     onSelect?(event: ListboxSingleSelectEvent<Element>): void;
@@ -33,7 +33,7 @@ export type UseListboxSingleItem<E extends Element, I extends UseListboxSingleIt
     getSelected: () => boolean;
 }
 
-export type UseListboxSingleItemParameters<E extends Element, I extends UseListboxSingleItemInfo<E>> = Omit<I, "setSelected" | "setTabbable">
+export type UseListboxSingleItemParameters<E extends Element, I extends UseListboxSingleItemInfo<E>> = Omit<UseListNavigationChildParameters<I>, "setSelected">;
 
 export function useAriaListboxSingle<ParentElement extends Element, ChildElement extends Element, I extends UseListboxSingleItemInfo<ChildElement>>({ selectedIndex, onSelect, selectionMode, ...args }: UseListboxSingleParameters) {
 
