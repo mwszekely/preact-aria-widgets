@@ -26,13 +26,14 @@ export interface UseListboxSingleItemInfo<E extends Element> extends UseListNavi
 
 
 
-export type UseListboxSingleItem<E extends Element, I extends UseListboxSingleItemInfo<E> = UseListboxSingleItemInfo<E>> = (info: Omit<I, "setSelected" | "setTabbable">) => {
+export type UseListboxSingleItem<E extends Element, I extends UseListboxSingleItemInfo<E> = UseListboxSingleItemInfo<E>> = (info: UseListboxSingleItemParameters<E, I>) => {
     useListboxSingleItemProps: <P extends h.JSX.HTMLAttributes<E>>(props: P) => UseListNavigationChildPropsReturnType<E, MergedProps<E, h.JSX.HTMLAttributes<E>, UseRefElementPropsReturnType<E, P>>>;
     tabbable: boolean;
     selected: boolean;
     getSelected: () => boolean;
 }
 
+export type UseListboxSingleItemParameters<E extends Element, I extends UseListboxSingleItemInfo<E>> = Omit<I, "setSelected" | "setTabbable">
 
 export function useAriaListboxSingle<ParentElement extends Element, ChildElement extends Element, I extends UseListboxSingleItemInfo<ChildElement>>({ selectedIndex, onSelect, selectionMode, ...args }: UseListboxSingleParameters) {
 
@@ -60,7 +61,7 @@ export function useAriaListboxSingle<ParentElement extends Element, ChildElement
             setTabbableIndex(selectedIndex);
     }, [anyRadiosFocused, selectedIndex, setTabbableIndex]);
 
-    const useListboxSingleItem: UseListboxSingleItem<ChildElement, I> = useCallback((info: Omit<I, "setSelected" | "setTabbable">) => {
+    const useListboxSingleItem: UseListboxSingleItem<ChildElement, I> = useCallback((info: UseListboxSingleItemParameters<ChildElement, I>) => {
         type E = ChildElement;
         const [selected, setSelected, getSelected] = useState(false);
         const { tabbable, useListNavigationSiblingProps, useListNavigationChildProps } = useListNavigationChild({ setSelected, ...info } as I);
