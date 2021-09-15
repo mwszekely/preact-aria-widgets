@@ -7,6 +7,7 @@ import { useRefElement } from "preact-prop-helpers/use-ref-element";
 import { useFocusTrap } from "preact-prop-helpers/use-focus-trap";
 import { useGlobalHandler } from "preact-prop-helpers/use-event-handler";
 import { useState } from "preact-prop-helpers/use-state";
+import { useStableCallback } from "preact-prop-helpers";
 
 /**
  * Adds event handlers for a modal-like soft-dismiss interaction.
@@ -59,6 +60,7 @@ export function useSoftDismiss<E extends Element>({ onClose }: {onClose(reason: 
  */
 export function useAriaModal<ModalElement extends HTMLElement>({ open, onClose }: { open: boolean, onClose: (reason: "escape" | "backdrop") => void }) {
 
+    const stableOnClose = useStableCallback(onClose);
 
     const [modalDescribedByBody, setModalDescribedByBody] = useState(false);
     useHideScroll(open);
@@ -67,12 +69,12 @@ export function useAriaModal<ModalElement extends HTMLElement>({ open, onClose }
     const { id: bodyId, useRandomIdProps: useBodyIdProps, useReferencedIdProps: useBodyReferencingIdProps } = useRandomId({ prefix: "aria-modal-body-" });
     const { id: titleId, useRandomIdProps: useTitleIdProps, useReferencedIdProps: useTitleReferencingIdProps } = useRandomId({ prefix: "aria-modal-title-" });
 
-    const { useSoftDismissProps } = useSoftDismiss<ModalElement>({ onClose });
+    const { useSoftDismissProps } = useSoftDismiss<ModalElement>({ onClose: stableOnClose });
 
     const useModalBackdrop = useCallback(function useModalBackdrop<BackdropElement extends HTMLElement>() {
 
         function useModalBackdropProps<P extends h.JSX.HTMLAttributes<BackdropElement>>(props: P) {
-            return useMergedProps<BackdropElement>()({}, props);
+            return useMergedProps<BackdropElement>()({ onPointerUp: () => stableOnClose("backdrop")}, props);
         }
 
         return { useModalBackdropProps }
