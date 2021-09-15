@@ -2,6 +2,7 @@ export { useAriaAccordion } from "./use-accordion";
 export { useAriaButton } from "./use-button";
 export { useAriaCheckbox } from "./use-checkbox";
 export { useAriaDialog } from "./use-dialog";
+export { useDrawer } from "./use-drawer";
 export { useAriaListboxSingle, UseListboxSingleItem } from "./use-listbox-single";
 export { useAriaListboxMulti, UseListboxMultiItem } from "./use-listbox-multi";
 export { useAriaMenu, UseMenuButtonParameters, UseAriaMenuParameters } from "./use-menu"

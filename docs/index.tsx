@@ -275,16 +275,16 @@ const DemoUseDialog = memo(() => {
     const [open, setOpen] = useState(false);
 
     const { useDialogBackdrop, useDialogBody, useDialogProps, useDialogTitle } = useAriaDialog<HTMLDivElement>({ open, onClose });
-    const { useModalBackdropProps } = useDialogBackdrop<HTMLDivElement>();
-    const { useModalBodyProps } = useDialogBody({ descriptive: true });
-    const { useModalTitleProps } = useDialogTitle();
+    const { useDialogBackdropProps } = useDialogBackdrop<HTMLDivElement>();
+    const { useDialogBodyProps } = useDialogBody({ descriptive: true });
+    const { useDialogTitleProps } = useDialogTitle();
     return (
         <div class="demo">
             <label><input type="checkbox" checked={open} onInput={e => { e.preventDefault(); setOpen(e.currentTarget.checked) }} /></label>
-            <div {...useModalBackdropProps({ hidden: !open })}>
+            <div {...useDialogBackdropProps({ hidden: !open })}>
                 <div {...useDialogProps({})}>
-                    <div {...useModalTitleProps({})}>Dialog Title</div>
-                    <div {...useModalBodyProps({})}>
+                    <div {...useDialogTitleProps({})}>Dialog Title</div>
+                    <div {...useDialogBodyProps({})}>
                         <p tabIndex={-1}>Dialog body content</p>
                         <p>{RandomWords.join(" ")}</p>
                         <p>{RandomWords.join(" ")}</p>

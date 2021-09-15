@@ -11,11 +11,12 @@ Current components:
 3. Checkbox
 4. Checkbox group (w/ tri-state parent)
 5. Dialog (modal)
-6. Listbox (single & multi)
-7. Menu (w/ menu button)
-8. Radio Group
-9. Tabs & tab panels
-10. Toasts (a.k.a. Snackbars)
-11. Tooltip
+6. Drawer (modal)
+7. Listbox (single & multi)
+8. Menu (w/ menu button)
+9. Radio Group
+10. Tabs & tab panels
+11. Toasts (a.k.a. Snackbars)
+12. Tooltip
 
 Other components (e.g. tree views) are TODO
