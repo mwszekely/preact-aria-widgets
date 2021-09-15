@@ -95,7 +95,7 @@ export type UseMenuItem<E extends Element> = (args: UseMenuItemDefaultParameters
 export function useAriaMenu<ParentElement extends Element, ChildElement extends Element>({ collator, keyNavigation, noTypeahead, noWrap, typeaheadTimeout, ...args }: UseAriaMenuParameters) {
     type E = ParentElement;
 
-    const [focusTrapActive, setFocusTrapActive] = useState(false);
+    const [focusTrapActive, setFocusTrapActive] = useState<null | boolean>(null);
 
     let onClose = (args as Partial<UseMenuParameters1>).onClose;
     let onOpen = (args as Partial<UseMenuParameters1>).onOpen;
@@ -122,12 +122,18 @@ export function useAriaMenu<ParentElement extends Element, ChildElement extends 
         setFocusTrapActive(open);
     }, [open]);
 
+    const focusMenuStable = useStableCallback(focusMenu ?? (() => { }));
     useEffect(() => {
-        if (focusTrapActive)
-            focusMenu?.();
-        else
+        if (focusTrapActive) {
+            focusMenuStable?.();
+        }
+        else if (focusTrapActive === false) {
             openerElement?.focus();
-    }, [focusMenu, focusTrapActive]);
+        }
+        else {
+            // null, so we've only just mounted and shouldn't focus ourselves.
+        }
+    }, [focusTrapActive]);
 
     // Focus management is really finicky, and there's always going to be 
     // an edge case where nothing's focused for two consecutive frames 

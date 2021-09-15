@@ -25,7 +25,7 @@ export interface UseListboxMultiItemInfo<E extends Element> extends UseListNavig
     setTypeaheadInProgress(inProgress: boolean): void;
 }
 
-export type UseListboxMultiItemParameters<E extends Element, I extends UseListboxMultiItemInfo<E>> = UseListNavigationChildParameters<I>;
+export type UseListboxMultiItemParameters<E extends Element, I extends UseListboxMultiItemInfo<E>> = Omit<UseListNavigationChildParameters<I>, "setTypeaheadInProgress">;
 
 export type UseListboxMultiItem<E extends Element, I extends UseListboxMultiItemInfo<E> = UseListboxMultiItemInfo<E>> = (info: UseListboxMultiItemParameters<E, I>) => {
     useListboxMultiItemProps: <P extends h.JSX.HTMLAttributes<E>>(props: P) => UseRefElementPropsReturnType<E, UseListNavigationChildPropsReturnType<E, MergedProps<E, h.JSX.HTMLAttributes<E>, P>>>;
