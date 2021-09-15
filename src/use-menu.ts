@@ -111,7 +111,7 @@ export function useAriaMenu<ParentElement extends Element, ChildElement extends 
     const { focusedInner: buttonHasFocus, useHasFocusProps: useButtonHasFocusProps } = useHasFocus<Element>();
     const { activeElement, lastActiveElement, windowFocused } = useActiveElement();
 
-    const { managedChildren, useListNavigationChild, tabbableIndex, focusSelf: focusMenu } = useListNavigation<E, ChildElement>({ collator, keyNavigation, noTypeahead, noWrap, typeaheadTimeout, focusOnChange: (menuHasFocus || buttonHasFocus) });
+    const { managedChildren, useListNavigationChild, tabbableIndex, focusCurrent: focusMenu } = useListNavigation<ChildElement>({ collator, keyNavigation, noTypeahead, noWrap, typeaheadTimeout, focusOnChange: (menuHasFocus || buttonHasFocus) });
     const { useRandomIdProps: useMenuIdProps, useReferencedIdProps: useMenuIdReferencingProps } = useRandomId({ prefix: "aria-menu-" });
 
     const [openerElement, setOpenerElement] = useState<(Element & HTMLOrSVGElement) | null>(null);
@@ -124,10 +124,10 @@ export function useAriaMenu<ParentElement extends Element, ChildElement extends 
 
     useEffect(() => {
         if (focusTrapActive)
-            focusMenu();
+            focusMenu?.();
         else
             openerElement?.focus();
-    }, [focusTrapActive]);
+    }, [focusMenu, focusTrapActive]);
 
     // Focus management is really finicky, and there's always going to be 
     // an edge case where nothing's focused for two consecutive frames 
@@ -156,7 +156,7 @@ export function useAriaMenu<ParentElement extends Element, ChildElement extends 
         const [firstSentinelIsActive, setFirstSentinelIsActive] = useState(false);
         useTimeout({ callback: () => { setFirstSentinelIsActive(open); }, timeout: 100, triggerIndex: `${firstSentinelIsActive}` });
 
-        const onFocus = firstSentinelIsActive ? (() => stableOnClose()) : (() => focusMenu());
+        const onFocus = firstSentinelIsActive ? (() => stableOnClose()) : (() => focusMenu?.());
         const onClick = () => stableOnClose();
 
         return {
@@ -164,7 +164,7 @@ export function useAriaMenu<ParentElement extends Element, ChildElement extends 
                 return useMergedProps<E>()({ onFocus, onClick }, p);
             }
         }
-    }, [open]);
+    }, [focusMenu, open]);
 
     const useMenuButton = useCallback(<E extends Element>({ tag }: UseMenuButtonParameters<E>) => {
         const { element, getElement, useRefElementProps } = useRefElement<E>();

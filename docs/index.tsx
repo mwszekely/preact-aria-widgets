@@ -206,7 +206,7 @@ const Checkbox2 = memo(() => {
 const CheckboxGroupContext = createContext<UseCheckboxGroupChild<HTMLInputElement>>(null!);
 const DemoUseCheckboxGroup = memo(() => {
 
-    const { useCheckboxGroupCheckboxProps, useCheckboxGroupChild, selfIsChecked, percentChecked, onCheckboxGroupInput } = useCheckboxGroup<HTMLInputElement, HTMLDivElement>({});
+    const { useCheckboxGroupCheckboxProps, useCheckboxGroupChild, selfIsChecked, percentChecked, onCheckboxGroupInput } = useCheckboxGroup<HTMLInputElement>({});
     const { useCheckboxInputElement, useCheckboxLabelElement } = useAriaCheckbox<HTMLInputElement, HTMLLabelElement>({ checked: selfIsChecked, disabled: false, labelPosition: "separate", onInput: onCheckboxGroupInput as any });
 
     const { useCheckboxInputElementProps } = useCheckboxInputElement({ tag: "input" });

@@ -38,7 +38,7 @@ export function useAriaRadioGroup<V extends string, G extends Element, I extends
     const stableOnInput = useStableCallback(onInput);
 
     const { useHasFocusProps, lastFocusedInner } = useHasFocus<G>();
-    const { managedChildren, useListNavigationChild, setTabbableIndex, tabbableIndex, focusSelf, currentTypeahead, invalidTypeahead } = useListNavigation<G, I, Info>({ focusOnChange: lastFocusedInner });
+    const { managedChildren, useListNavigationChild, setTabbableIndex, tabbableIndex, focusCurrent, currentTypeahead, invalidTypeahead } = useListNavigation<I, Info>({ focusOnChange: lastFocusedInner });
 
     const useRadioGroupProps = useCallback(<P extends h.JSX.HTMLAttributes<G>>({ ...props }: P) => {
         props.role = "radiogroup";
@@ -129,7 +129,7 @@ export function useAriaRadioGroup<V extends string, G extends Element, I extends
         managedChildren,
         getIndex: useCallback((value: string) => { return byName.current.get(value); }, [byName]),
         tabbableIndex, 
-        focusRadio: focusSelf, 
+        focusRadio: focusCurrent, 
         currentTypeahead,
         invalidTypeahead
     }

@@ -63,7 +63,7 @@ export function useAriaAccordion<ParentElement extends Element, ChildElement ext
     const stableSetExpandedIndex = useStableCallback(setExpandedIndex ?? (() => { }));
 
     const { managedChildren: managedAccordionSections, useManagedChild: useManagedChildSection } = useChildManager<UseAriaAccordionSectionInfo>();
-    const { useLinearNavigationChild } = useLinearNavigation<ParentElement, ChildElement>({ managedChildren: managedAccordionSections, navigationDirection: "block", getIndex: getLastFocusedIndex, setIndex: setLastFocusedIndex });
+    const { useLinearNavigationChild } = useLinearNavigation<ChildElement>({ managedChildren: managedAccordionSections, navigationDirection: "block", getIndex: getLastFocusedIndex, setIndex: setLastFocusedIndex });
 
     // Any time list management changes the focused index, manually focus the child
     // TODO: Can this be cut?
