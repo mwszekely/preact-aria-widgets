@@ -1,6 +1,6 @@
 import { h } from "preact";
 import { useMergedProps, useRandomId, useRefElement, useStableCallback } from "preact-prop-helpers";
-import { useCallback } from "preact/hooks";
+import { useCallback, useEffect } from "preact/hooks";
 import { ElementToTag, TagSensitiveProps } from "./props";
 import { useButtonLikeEventHandlers } from "./use-button";
 
@@ -156,6 +156,15 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
         const { useInputLabelInputProps: useILInputProps } = useILInput<InputType>();
         const { element, useRefElementProps } = useRefElement<InputType>();
 
+        // onClick and onChange are a bit messy, so we need to
+        // *always* make sure that the visible state is correct
+        // after all the event dust settles.
+        // See https://github.com/preactjs/preact/issues/2745
+        useEffect(() => {
+            if (element && tag == "input") {
+                (element as Element as HTMLInputElement).checked = checked
+            }
+        }, [tag, element, checked])
 
         return { inputElement: element, useCheckboxLikeInputElementProps };
 
@@ -221,7 +230,7 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
 
         return { useCheckboxLikeLabelElementProps };
 
-    }, [useILLabel, role, labelPosition]);
+    }, [useILLabel, disabled, checked, role, labelPosition]);
 
 
     return {
