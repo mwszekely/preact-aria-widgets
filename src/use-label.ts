@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { useMergedProps, useRandomId, useRefElement, useStableCallback } from "preact-prop-helpers";
+import { MergedProps, useMergedProps, useRandomId, UseRandomIdPropsReturnType, useRefElement, useStableCallback } from "preact-prop-helpers";
 import { useCallback, useEffect } from "preact/hooks";
 import { ElementToTag, TagSensitiveProps } from "./props";
 import { useButtonLikeEventHandlers } from "./use-button";
@@ -137,6 +137,14 @@ const handlesInput = <E extends Element>(tag: ElementToTag<E>, labelPosition: "w
     }
 };
 
+export type UseCheckboxLikeInputElement<InputType extends Element> = ({ tag }: TagSensitiveProps<InputType>) => {
+    inputElement: InputType | null;
+    useCheckboxLikeInputElementProps: <P extends h.JSX.HTMLAttributes<InputType>>({ ...p0 }: P) => MergedProps<InputType, P, h.JSX.HTMLAttributes<InputType>>;
+}
+
+export type UseCheckboxLikeLabelElement<LabelType extends Element> = ({ tag }: TagSensitiveProps<LabelType>) => {
+    useCheckboxLikeLabelElementProps: <P extends h.JSX.HTMLAttributes<LabelType>>({ ...p0 }: P) => h.JSX.HTMLAttributes<LabelType>;
+}
 
 /**
  * Handles label type (wrapping or separate) for checkboxes, radios, switches, etc.
@@ -152,7 +160,7 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
 
 
 
-    const useCheckboxLikeInputElement = useCallback(function useCheckboxInputElement({ tag }: TagSensitiveProps<InputType>) {
+    const useCheckboxLikeInputElement: UseCheckboxLikeInputElement<InputType> = useCallback(function useCheckboxInputElement({ tag }: TagSensitiveProps<InputType>) {
         const { useInputLabelInputProps: useILInputProps } = useILInput<InputType>();
         const { element, useRefElementProps } = useRefElement<InputType>();
 
