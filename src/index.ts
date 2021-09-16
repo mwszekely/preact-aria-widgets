@@ -1,6 +1,6 @@
 export { useAriaAccordion } from "./use-accordion";
 export { useAriaButton } from "./use-button";
-export { useAriaCheckbox } from "./use-checkbox";
+export { useAriaCheckbox, UseCheckboxInputElement, UseCheckboxLabelElement } from "./use-checkbox";
 export { useAriaDialog } from "./use-dialog";
 export { useDrawer } from "./use-drawer";
 export { useAriaListboxSingle, UseListboxSingleItem } from "./use-listbox-single";
