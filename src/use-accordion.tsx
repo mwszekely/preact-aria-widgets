@@ -1,17 +1,8 @@
 import { h } from "preact";
-import { ManagedChildInfo, useChildManager } from "preact-prop-helpers/use-child-manager";
-import { UseHasFocusPropsReturnType } from "preact-prop-helpers/use-has-focus";
-import { useLinearNavigation } from "preact-prop-helpers/use-keyboard-navigation";
-import { useLayoutEffect } from "preact-prop-helpers/use-layout-effect";
-import { MergedProps, useMergedProps } from "preact-prop-helpers/use-merged-props";
-import { useRandomId, UseRandomIdPropsReturnType, UseReferencedIdPropsReturnType } from "preact-prop-helpers/use-random-id";
-import { useRefElement } from "preact-prop-helpers/use-ref-element";
-import { useStableCallback } from "preact-prop-helpers/use-stable-callback";
-import { useState } from "preact-prop-helpers/use-state";
+import { ManagedChildInfo, MergedProps, useChildFlag, useChildManager, UseHasFocusPropsReturnType, useLayoutEffect, useLinearNavigation, useMergedProps, useRandomId, UseRandomIdPropsReturnType, useRefElement, UseReferencedIdPropsReturnType, useStableCallback, useState } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { TagSensitiveProps } from "./props";
 import { useButtonLikeEventHandlers } from "./use-button";
-import { useChildFlag } from "preact-prop-helpers/use-child-manager";
 
 export type UseAriaAccordion<ParentElement extends Element, ChildElement extends Element> = (args: UseAriaAccordionParameters) => UseAriaAccordionReturnType<ParentElement, ChildElement>;
 export type UseAriaAccordionSection<E extends Element> = (args: UseAriaAccordionSectionParameters) => UseAriaAccordionSectionReturnType<E>;

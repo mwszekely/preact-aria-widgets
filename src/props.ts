@@ -1,6 +1,4 @@
 import { h, Ref } from "preact";
-import { useState } from "preact-prop-helpers/use-state";
-import { useLayoutEffect } from "preact/hooks";
 
 export type RefFromTag<T extends keyof h.JSX.IntrinsicElements> = NonNullable<h.JSX.IntrinsicElements[T]["ref"]>;
 export type ElementFromRef<R extends Ref<any>> = R extends Ref<infer E> ? E : EventTarget;

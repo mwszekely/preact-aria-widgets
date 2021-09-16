@@ -1,9 +1,8 @@
-import { h } from "preact"
-import { useMergedProps, useRefElement, useStableCallback } from "preact-prop-helpers";
-import { useRandomId } from "preact-prop-helpers/use-random-id";
+import { h } from "preact";
+import { useMergedProps, useRandomId, useRefElement, useStableCallback } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
-import { useButtonLikeEventHandlers } from "./use-button";
 import { ElementToTag, TagSensitiveProps } from "./props";
+import { useButtonLikeEventHandlers } from "./use-button";
 
 export interface UseGenericLabelParameters {
     labelPrefix: string;

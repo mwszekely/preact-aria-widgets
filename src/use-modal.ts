@@ -1,13 +1,7 @@
 
-import { h } from "preact"
-import { useCallback, useEffect, useLayoutEffect } from "preact/hooks";
-import { useMergedProps } from "preact-prop-helpers/use-merged-props";
-import { useRandomId } from "preact-prop-helpers/use-random-id";
-import { useRefElement } from "preact-prop-helpers/use-ref-element";
-import { useFocusTrap } from "preact-prop-helpers/use-focus-trap";
-import { useGlobalHandler } from "preact-prop-helpers/use-event-handler";
-import { useState } from "preact-prop-helpers/use-state";
-import { useStableCallback } from "preact-prop-helpers";
+import { h } from "preact";
+import { useFocusTrap, useGlobalHandler, useMergedProps, useRandomId, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
+import { useCallback, useEffect } from "preact/hooks";
 
 /**
  * Adds event handlers for a modal-like soft-dismiss interaction.

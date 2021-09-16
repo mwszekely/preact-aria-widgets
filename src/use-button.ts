@@ -1,7 +1,6 @@
-import { ClassAttributes, h, Ref } from "preact";
-import { MergedProps, useMergedProps } from "preact-prop-helpers/use-merged-props";
-import { useState } from "preact-prop-helpers/use-state";
-import { ElementFromTag, EventDetail, TagSensitiveProps, enhanceEvent, ElementToTag } from "./props";
+import { h } from "preact";
+import { MergedProps, useMergedProps, useState } from "preact-prop-helpers";
+import { ElementToTag, enhanceEvent, EventDetail, TagSensitiveProps } from "./props";
 
 let pulse = ("vibrate" in navigator) ? (() => navigator.vibrate(10)) : (() => { });
 

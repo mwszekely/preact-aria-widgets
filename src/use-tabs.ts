@@ -1,17 +1,8 @@
 import { h } from "preact";
+import { ManagedChildInfo, MergedProps, useChildFlag, useChildManager, useHasFocus, useLayoutEffect, useListNavigation, UseListNavigationChildInfo, UseListNavigationChildParameters, UseListNavigationParameters, useLogicalDirection, useMergedProps, useRandomId, UseRandomIdPropsReturnType, useRefElement, UseRefElementPropsReturnType, UseReferencedIdPropsReturnType, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
 import { useCallback, useEffect } from "preact/hooks";
-import { ManagedChildInfo, useChildManager } from "preact-prop-helpers/use-child-manager";
-import { useLayoutEffect } from "preact-prop-helpers/use-layout-effect";
-import { useListNavigation, UseListNavigationChildInfo, UseListNavigationChildParameters, UseListNavigationChildProps, UseListNavigationParameters } from "preact-prop-helpers/use-list-navigation";
-import { MergedProps, useMergedProps } from "preact-prop-helpers/use-merged-props";
-import { useRandomId, UseRandomIdPropsReturnType, UseReferencedIdPropsReturnType } from "preact-prop-helpers/use-random-id";
-import { useStableCallback } from "preact-prop-helpers/use-stable-callback";
-import { useState } from "preact-prop-helpers/use-state";
-import { useButtonLikeEventHandlers } from "./use-button";
-import { useRefElement, UseRefElementPropsReturnType } from "preact-prop-helpers/use-ref-element";
-import { useHasFocus, useLogicalDirection, useStableGetter } from "preact-prop-helpers";
 import { enhanceEvent, EventDetail, TagSensitiveProps } from "./props";
-import { useChildFlag } from "preact-prop-helpers/use-child-manager";
+import { useButtonLikeEventHandlers } from "./use-button";
 
 export type TabsChangeEvent<E extends Element> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 

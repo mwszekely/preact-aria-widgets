@@ -1,7 +1,7 @@
 import { createContext, h } from "preact";
+import { useMemo } from "preact/hooks";
 import { memo, useContext } from "preact/compat";
-import { useConstant } from "preact-prop-helpers";
-import { useListNavigation, UseListNavigationChild } from "preact-prop-helpers";
+import { useHasFocus, useListNavigation, UseListNavigationChild } from "preact-prop-helpers";
 
 
 const RandomWords = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.".split(" ");
@@ -9,7 +9,8 @@ const RandomWords = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, se
 const RovingChildContext = createContext<UseListNavigationChild<HTMLLIElement>>(null!)
 export const DemoUseRovingTabIndex = memo(() => {
 
-    const { useListNavigationChild, useListNavigationProps, currentTypeahead, setTabbableIndex, tabbableIndex } = useListNavigation<HTMLUListElement, HTMLLIElement>({});
+    const { useHasFocusProps, lastFocusedInner } = useHasFocus<HTMLUListElement>({})
+    const { useListNavigationChild, currentTypeahead, setTabbableIndex, tabbableIndex } = useListNavigation<HTMLLIElement>({ focusOnChange: lastFocusedInner });
     //const { useRovingTabIndexChild, useRovingTabIndexProps } = useRovingTabIndex<HTMLUListElement, RovingTabIndexChildInfo>({ tabbableIndex, focusOnChange: false });
 
     return (
@@ -42,8 +43,8 @@ export const DemoUseRovingTabIndex = memo(() => {
                 If the child element itself has a focusable element, like a button, it can also be wired up to disable itself
                 Feel free to nest them too, as long as you are aware of your <code>Context</code> management (i.e. remember that you need to create a new <code>Context</code> for each use case).
             </p>
-            <label>Tabbable index: <input type="number" value={tabbableIndex} onInput={e => { e.preventDefault(); setTabbableIndex(e.currentTarget.valueAsNumber); }} /></label>
-            <ul {...useListNavigationProps({})}>
+            <label>Tabbable index: <input type="number" value={tabbableIndex ?? undefined} onInput={e => { e.preventDefault(); setTabbableIndex(e.currentTarget.valueAsNumber); }} /></label>
+            <ul {...useHasFocusProps({})}>
                 <RovingChildContext.Provider value={useListNavigationChild}>
                     {Array.from((function* () {
                         for (let i = 0; i < 10; ++i) {
@@ -59,7 +60,7 @@ export const DemoUseRovingTabIndex = memo(() => {
 
 const Prefix = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const DemoUseRovingTabIndexChild = (({ index }: { index: number }) => {
-    const randomWord = useConstant(() => RandomWords[index/*Math.floor(Math.random() * (RandomWords.length - 1))*/]);
+    const randomWord = useMemo(() => RandomWords[index/*Math.floor(Math.random() * (RandomWords.length - 1))*/], []);
     const useRovingTabIndexChild = useContext(RovingChildContext);
     const text = `${randomWord} This is item #${index + 1}`;
     const { useListNavigationChildProps, useListNavigationSiblingProps } = useRovingTabIndexChild({ index, text });

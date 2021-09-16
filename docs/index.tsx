@@ -2,7 +2,7 @@
 import { createContext, Fragment, h, render } from "preact";
 import { memo } from "preact/compat";
 import { useCallback, useContext, useRef } from "preact/hooks";
-import { useAnimationFrame, useConstant, useDraggable, useDroppable, useElementSize, useFocusTrap, useHasFocus, useListNavigation, UseListNavigationChild, useMergedProps, useRandomId, useState } from "preact-prop-helpers";
+import { useAnimationFrame, useDraggable, useDroppable, useElementSize, useFocusTrap, useHasFocus, useListNavigation, UseListNavigationChild, useMergedProps, useRandomId, useState } from "preact-prop-helpers";
 import { DemoUseRovingTabIndex } from "./demos/use-roving-tab-index";
 import { useAriaAccordion, UseAriaAccordionSection } from "../use-accordion";
 import { useAriaDialog } from "../use-dialog";

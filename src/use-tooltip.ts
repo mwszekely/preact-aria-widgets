@@ -1,11 +1,6 @@
 import { h } from "preact";
+import { MergedProps, useHasFocus, useMergedProps, useRandomId, UseRandomIdPropsReturnType, UseReferencedIdPropsReturnType, useState, useTimeout } from "preact-prop-helpers";
 import { useCallback, useEffect } from "preact/hooks";
-import { useHasFocus } from "preact-prop-helpers/use-has-focus";
-import { MergedProps, useMergedProps } from "preact-prop-helpers/use-merged-props";
-import { useRandomId, UseRandomIdPropsReturnType, UseReferencedIdPropsReturnType } from "preact-prop-helpers/use-random-id";
-import { useState } from "preact-prop-helpers/use-state";
-import { useGenericLabel } from "./use-label";
-import { useTimeout } from "preact-prop-helpers";
 
 export type UseTooltipTrigger = <TriggerType extends Element>() => { useTooltipTriggerProps: <P extends h.JSX.HTMLAttributes<TriggerType>>({ ...props }: P) => UseReferencedIdPropsReturnType<MergedProps<TriggerType, { onPointerEnter: (e: MouseEvent) => void; onPointerLeave: (e: MouseEvent) => void; }, h.JSX.HTMLAttributes<TriggerType>>, "aria-describedby">; }
 export type UseTooltip = <TooltipType extends Element>() => { useTooltipProps: <P extends h.JSX.HTMLAttributes<TooltipType>>({ ...props }: P) => UseRandomIdPropsReturnType<MergedProps<TooltipType, { onPointerEnter: (e: MouseEvent) => void; onPointerLeave: (e: MouseEvent) => void; }, P>>; }

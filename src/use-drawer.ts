@@ -1,5 +1,5 @@
-import { useAriaModal } from "./use-modal";
 import { useCallback } from "preact/hooks";
+import { useAriaModal } from "./use-modal";
 
 
 export interface UseDrawerParameters {

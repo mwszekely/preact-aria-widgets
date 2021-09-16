@@ -1,15 +1,7 @@
 import { h } from "preact";
+import { MergedProps, useActiveElement, useHasFocus, useLayoutEffect, useListNavigation, UseListNavigationChildInfo, UseListNavigationChildParameters, UseListNavigationChildPropsReturnType, UseListNavigationParameters, useMergedProps, useRandomId, useRefElement, useStableCallback, useTimeout } from "preact-prop-helpers";
 import { useCallback, useEffect, useState } from "preact/hooks";
-import { useHasFocus } from "preact-prop-helpers/use-has-focus";
-import { useActiveElement } from "preact-prop-helpers/use-active-element";
-import { useStableCallback } from "preact-prop-helpers/use-stable-callback";
-import { useLayoutEffect } from "preact-prop-helpers/use-layout-effect";
-import { useListNavigation, UseListNavigationChildInfo, UseListNavigationChildParameters, UseListNavigationChildPropsReturnType, UseListNavigationParameters } from "preact-prop-helpers/use-list-navigation";
-import { MergedProps, useMergedProps } from "preact-prop-helpers/use-merged-props";
-import { useRandomId, UseRandomIdPropsReturnType, UseReferencedIdPropsReturnType } from "preact-prop-helpers/use-random-id";
-import { useRefElement, UseRefElementPropsReturnType } from "preact-prop-helpers/use-ref-element";
-import { TagSensitiveProps, EventDetail, enhanceEvent } from "./props";
-import { useFocusTrap, useTimeout } from "preact-prop-helpers";
+import { enhanceEvent, EventDetail, TagSensitiveProps } from "./props";
 import { useSoftDismiss } from "./use-modal";
 
 interface UseMenuParameters1 extends UseListNavigationParameters {

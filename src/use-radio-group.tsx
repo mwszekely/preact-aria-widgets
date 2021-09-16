@@ -1,11 +1,8 @@
 import { h } from "preact";
-import { useActiveElement, useHasFocus, useMergedProps, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
-import { useListNavigation, UseListNavigationChildInfo, UseListNavigationChildParameters } from "preact-prop-helpers/use-list-navigation";
-import { MergedProps } from "preact-prop-helpers/use-merged-props";
+import { MergedProps, useActiveElement, useChildFlag, useHasFocus, useListNavigation, UseListNavigationChildInfo, UseListNavigationChildParameters, useMergedProps, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
 import { useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
 import { enhanceEvent, EventDetail, TagSensitiveProps } from "./props";
 import { useCheckboxLike, UseCheckboxLikeParameters } from "./use-label";
-import { useChildFlag } from "preact-prop-helpers/use-child-manager";
 
 export type RadioChangeEvent<EventType extends Event> = EventType & { [EventDetail]: { selectedValue: string } };
 

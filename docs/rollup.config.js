@@ -11,5 +11,10 @@ export default {
         name: "bundle",
         sourcemap: "inline"
     },
-    plugins: [typescript(), commonjs(), resolve({ dedupe: ['preact', "preact/compat", "preact/hooks"] })],
+    plugins: [
+        typescript(),
+        commonjs(),
+        resolve({ dedupe: ['preact', "preact/compat", "preact/hooks", "preact-prop-helpers"] })
+    ],
 }
+

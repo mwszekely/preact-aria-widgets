@@ -1,11 +1,5 @@
 import { h } from "preact";
-import { useHasFocus, useStableGetter } from "preact-prop-helpers";
-import { useLayoutEffect } from "preact-prop-helpers/use-layout-effect";
-import { useListNavigation, UseListNavigationChildInfo, UseListNavigationChildParameters, UseListNavigationChildPropsReturnType, UseListNavigationParameters } from "preact-prop-helpers/use-list-navigation";
-import { MergedProps, useMergedProps } from "preact-prop-helpers/use-merged-props";
-import { useRefElement, UseRefElementPropsReturnType } from "preact-prop-helpers/use-ref-element";
-import { useStableCallback } from "preact-prop-helpers/use-stable-callback";
-import { useState } from "preact-prop-helpers/use-state";
+import { MergedProps, useHasFocus, useLayoutEffect, useListNavigation, UseListNavigationChildInfo, UseListNavigationChildParameters, UseListNavigationChildPropsReturnType, UseListNavigationParameters, useMergedProps, useRefElement, UseRefElementPropsReturnType, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
 import { useCallback, useEffect } from "preact/hooks";
 import { EventDetail, TagSensitiveProps } from "./props";
 import { useButtonLikeEventHandlers } from "./use-button";
