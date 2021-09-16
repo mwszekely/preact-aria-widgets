@@ -1,6 +1,6 @@
 import { h } from "preact";
 import { useMergedProps, useRandomId, useRefElement, useStableCallback } from "preact-prop-helpers";
-import { useCallback } from "preact/hooks";
+import { useCallback, useEffect } from "preact/hooks";
 import { ElementToTag, TagSensitiveProps } from "./props";
 import { useButtonLikeEventHandlers } from "./use-button";
 
@@ -117,6 +117,7 @@ export interface UseCheckboxLikeParameters<InputType extends Element, LabelType 
     labelPosition: "wrapping" | "separate";
     role: string;
     disabled: boolean;
+    checked: boolean;
     onInput?(event: h.JSX.TargetedEvent<InputType>): void;
     onInput?(event: h.JSX.TargetedEvent<LabelType>): void;
 }
@@ -142,7 +143,7 @@ const handlesInput = <E extends Element>(tag: ElementToTag<E>, labelPosition: "w
  * @param param0 
  * @returns 
  */
-export function useCheckboxLike<InputType extends Element, LabelType extends Element>({ disabled, labelPosition, onInput, role }: UseCheckboxLikeParameters<InputType, LabelType>) {
+export function useCheckboxLike<InputType extends Element, LabelType extends Element>({ checked, disabled, labelPosition, onInput, role }: UseCheckboxLikeParameters<InputType, LabelType>) {
 
     const stableOnInput = useStableCallback((e: h.JSX.TargetedEvent<InputType> | h.JSX.TargetedEvent<LabelType>) => { e.preventDefault(); onInput?.(e as h.JSX.TargetedEvent<InputType>); });
 
@@ -155,6 +156,16 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
         const { useInputLabelInputProps: useILInputProps } = useILInput<InputType>();
         const { element, useRefElementProps } = useRefElement<InputType>();
 
+        // onClick and onChange are a bit messy, so we need to
+        // *always* make sure that the visible state is correct
+        // after all the event dust settles.
+        // See https://github.com/preactjs/preact/issues/2745,
+        // and https://github.com/preactjs/preact/issues/1899#issuecomment-525690194
+        useEffect(() => {
+            if (element && tag == "input") {
+                (element as Element as HTMLInputElement).checked = checked
+            }
+        }, [tag, element, checked])
 
         return { inputElement: element, useCheckboxLikeInputElementProps };
 
@@ -181,9 +192,13 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
                 props.onFocus = e => getLabelElement().focus();
             }
             else {
-                if (tag != "input") {
+                if (tag === "input") {
+                    props.checked = checked;
+                }
+                else {
                     props.role = role;
                     props.tabIndex = 0;
+                    props["aria-checked"] = checked ? "true" : undefined;
                 }
                 props["aria-disabled"] = disabled.toString();
 
@@ -191,7 +206,7 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
 
             return useMergedProps<InputType>()(p0, props);
         }
-    }, [useILInput, role, labelPosition, disabled]);
+    }, [useILInput, role, labelPosition, disabled, checked]);
 
     const useCheckboxLikeLabelElement = useCallback(function useCheckboxLabelElement({ tag }: TagSensitiveProps<LabelType>) {
         const { useInputLabelLabelProps: useILLabelProps } = useILLabel<LabelType>({ tag });
@@ -204,6 +219,7 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
                 newProps.tabIndex = 0;
                 newProps.role = role;
                 newProps["aria-disabled"] = disabled.toString();
+                newProps["aria-checked"] = checked.toString();
             }
             else {
                 // The one case where there's almost nothing to do
@@ -215,7 +231,7 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
 
         return { useCheckboxLikeLabelElementProps };
 
-    }, [useILLabel, role, labelPosition]);
+    }, [useILLabel, disabled, checked, role, labelPosition]);
 
 
     return {
