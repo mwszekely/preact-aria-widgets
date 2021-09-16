@@ -22,7 +22,7 @@ export interface UseAriaRadioInfo extends UseListNavigationChildInfo {
 
 
 export type UseAriaRadioParameters<V extends string, I extends Element, L extends Element, Info extends UseAriaRadioInfo> = Omit<UseListNavigationChildParameters<Info>, "setChecked"> &
-    Omit<UseCheckboxLikeParameters<I, L>, "onInput" | "role"> & {
+    Omit<UseCheckboxLikeParameters<I, L>, "onInput" | "role" | "checked"> & {
         labelPosition: "wrapping" | "separate";
         value: V;
         disabled: boolean;
@@ -63,16 +63,17 @@ export function useAriaRadioGroup<V extends string, G extends Element, I extends
 
     const useRadio: UseRadio<V, I, L, Info> = useCallback(function useAriaRadio({ value, index, text, disabled, labelPosition, ...rest }: UseAriaRadioParameters<V, I, L, Info>) {
 
+        const [checked, setChecked] = useState(false);
+        
         const onInput = useCallback((e: h.JSX.TargetedEvent<I> | h.JSX.TargetedEvent<L>) => {
             stableOnInput(enhanceEvent(e as any, { selectedValue: value }));
         }, [stableOnInput, value, index]);
 
-        const { getInputElement, getLabelElement, useCheckboxLikeInputElement, useCheckboxLikeLabelElement } = useCheckboxLike<I, L>({ disabled, labelPosition, onInput, role: "radio" });
+        const { getInputElement, getLabelElement, useCheckboxLikeInputElement, useCheckboxLikeLabelElement } = useCheckboxLike<I, L>({ checked, disabled, labelPosition, onInput, role: "radio" });
 
         //const {} = useCheckboxLikeInputElement({  })
 
         const byName2 = byName.current;
-        const [checked, setChecked] = useState(false);
 
 
         useLayoutEffect(() => {

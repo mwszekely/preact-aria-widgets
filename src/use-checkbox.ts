@@ -7,7 +7,7 @@ import { useCheckboxLike, UseCheckboxLikeParameters } from "./use-label";
 
 export type CheckboxChangeEvent<EventType extends Event> = EventType & { [EventDetail]: { checked: boolean } };
 
-interface UseAriaCheckboxParameters<I extends Element, L extends Element> extends Omit<UseCheckboxLikeParameters<I, L>, "onInput" | "role"> {
+interface UseAriaCheckboxParameters<I extends Element, L extends Element> extends Omit<UseCheckboxLikeParameters<I, L>, "onInput" | "role" | "checked"> {
     checked: boolean | "mixed";
     onInput?(event: CheckboxChangeEvent<h.JSX.TargetedEvent<I>>): void;
     onInput?(event: CheckboxChangeEvent<h.JSX.TargetedEvent<L>>): void;
@@ -16,7 +16,7 @@ interface UseAriaCheckboxParameters<I extends Element, L extends Element> extend
 export function useAriaCheckbox<InputType extends Element, LabelType extends Element>({ labelPosition, checked, onInput, disabled }: UseAriaCheckboxParameters<InputType, LabelType>) {
 
     const onInputEnhanced = (e: h.JSX.TargetedEvent<InputType | LabelType, Event>) => onInput?.(enhanceEvent(e as h.JSX.TargetedEvent<InputType, Event>, { checked: !checked }));
-    const { getInputElement, getLabelElement, useCheckboxLikeInputElement, useCheckboxLikeLabelElement } = useCheckboxLike<InputType, LabelType>({ labelPosition, role: "checkbox", disabled, onInput: onInputEnhanced });
+    const { getInputElement, getLabelElement, useCheckboxLikeInputElement, useCheckboxLikeLabelElement } = useCheckboxLike<InputType, LabelType>({ checked: !!checked, labelPosition, role: "checkbox", disabled, onInput: onInputEnhanced });
 
     const useCheckboxInputElement = useCallback(function useCheckboxInputElement({ tag }: TagSensitiveProps<InputType>) {
         const { inputElement, useCheckboxLikeInputElementProps } = useCheckboxLikeInputElement({ tag })
@@ -37,12 +37,6 @@ export function useAriaCheckbox<InputType extends Element, LabelType extends Ele
             let props: h.JSX.HTMLAttributes<InputType> = useCheckboxLikeInputElementProps(p0);
             props.checked ??= !!checked;
 
-            if (labelPosition == "separate") {
-                props["aria-checked"] = checked.toString();
-                if (tag != "input")
-                    props.tabIndex = 0;
-            }
-
             if (tag == "input")
                 props.type = "checkbox";
 
@@ -54,12 +48,6 @@ export function useAriaCheckbox<InputType extends Element, LabelType extends Ele
         const { useCheckboxLikeLabelElementProps } = useCheckboxLikeLabelElement({ tag });
 
         function useCheckboxLabelElementProps<P extends h.JSX.HTMLAttributes<LabelType>>({ ...props }: P) {
-
-            if (labelPosition == "wrapping") {
-                props["aria-checked"] = checked.toString();
-                if (tag != "input")
-                    props.tabIndex = 0;
-            }
             return useCheckboxLikeLabelElementProps(props);
         };
 

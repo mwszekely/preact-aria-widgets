@@ -4,7 +4,7 @@
     "description": "A small set of hooks and other functions related to modifying Preact props.",
     "main": "index.tsx",
     "scripts": {
-        "watch": "rollup --config rollup.config.js --watch",
+        "watch": "rollup --config rollup.config.js --watch --no-watch.clearScreen",
         "build": "rollup --config rollup.config.js",
         "test": "echo \"Error: no test specified\" && exit 1",
         "install": "npm run build"
