@@ -159,7 +159,8 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
         // onClick and onChange are a bit messy, so we need to
         // *always* make sure that the visible state is correct
         // after all the event dust settles.
-        // See https://github.com/preactjs/preact/issues/2745
+        // See https://github.com/preactjs/preact/issues/2745,
+        // and https://github.com/preactjs/preact/issues/1899#issuecomment-525690194
         useEffect(() => {
             if (element && tag == "input") {
                 (element as Element as HTMLInputElement).checked = checked
