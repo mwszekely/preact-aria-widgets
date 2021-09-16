@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { useCallback, useLayoutEffect } from "preact/hooks";
+import { useCallback, useEffect } from "preact/hooks";
 import { enhanceEvent, EventDetail, TagSensitiveProps } from "./props";
 import { useCheckboxLike, UseCheckboxLikeParameters } from "./use-label";
 
@@ -22,11 +22,9 @@ export function useAriaCheckbox<InputType extends Element, LabelType extends Ele
         const { inputElement, useCheckboxLikeInputElementProps } = useCheckboxLikeInputElement({ tag })
         const isMixed = (checked == "mixed");
 
-        useLayoutEffect(() => {
-            if (inputElement) {
-                if (tag === "input") {
-                    (inputElement as any).indeterminate = isMixed;
-                }
+        useEffect(() => {
+            if (inputElement && tag === "input") {
+                (inputElement as any).indeterminate = isMixed;
             }
         }, [inputElement, isMixed, tag]);
 
