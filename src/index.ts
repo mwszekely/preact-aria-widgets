@@ -3,6 +3,7 @@ export { useAriaButton } from "./use-button";
 export { useAriaCheckbox, UseCheckboxInputElement, UseCheckboxLabelElement } from "./use-checkbox";
 export { useAriaDialog } from "./use-dialog";
 export { useDrawer } from "./use-drawer";
+export { useGenericLabel, useInputLabel, UseCheckboxLikeInputElement, UseInputLabelLabel, UseInputLabelInput } from "./use-label";
 export { useAriaListboxSingle, UseListboxSingleItem } from "./use-listbox-single";
 export { useAriaListboxMulti, UseListboxMultiItem } from "./use-listbox-multi";
 export { useAriaMenu, UseMenuButtonParameters, UseAriaMenuParameters } from "./use-menu"

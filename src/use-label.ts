@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { MergedProps, useMergedProps, useRandomId, UseRandomIdPropsReturnType, useRefElement, useStableCallback } from "preact-prop-helpers";
+import { MergedProps, useMergedProps, useRandomId, UseRandomIdPropsReturnType, useRefElement, UseRefElementPropsReturnType, UseReferencedIdPropsReturnType, useStableCallback } from "preact-prop-helpers";
 import { useCallback, useEffect } from "preact/hooks";
 import { ElementToTag, TagSensitiveProps } from "./props";
 import { useButtonLikeEventHandlers } from "./use-button";
@@ -62,6 +62,16 @@ export function useGenericLabel({ labelPrefix, inputPrefix, backupText }: UseGen
 
 }
 
+export type UseInputLabelLabel = <E extends Element>({ tag }: TagSensitiveProps<E>) => {
+    useInputLabelLabelProps<P extends h.JSX.HTMLAttributes<E>>(props: P): UseRandomIdPropsReturnType<UseRefElementPropsReturnType<any, P | UseReferencedIdPropsReturnType<P, "for">>>;
+};
+
+export type UseInputLabelInput = <E extends Element>() => {
+    useInputLabelInputProps<P extends h.JSX.HTMLAttributes<E>>(props: P): UseRandomIdPropsReturnType<UseReferencedIdPropsReturnType<UseRefElementPropsReturnType<any, MergedProps<E, {
+        "aria-label": string | undefined;
+    }, Omit<P, "aria-labelledby" | "aria-label">>>, "aria-labelledby">>;
+}
+
 /**
  * Handles the attributes `id`, `for`, and `aria-labelledby` for to related elements.
  * 
@@ -73,7 +83,7 @@ export function useInputLabel({ labelPrefix, inputPrefix } = { labelPrefix: "lab
 
     const { useGenericLabelInput, useGenericLabelLabel, useReferencedInputIdProps, useReferencedLabelIdProps, inputId, labelId, inputElement, getInputElement, labelElement, getLabelElement } = useGenericLabel({ labelPrefix, inputPrefix });
 
-    const useInputLabelLabel = useCallback(function useInputLabelLabel<E extends Element>({ tag }: TagSensitiveProps<E>) {
+    const useInputLabelLabel: UseInputLabelLabel = useCallback(function useInputLabelLabel<E extends Element>({ tag }: TagSensitiveProps<E>) {
         const { useGenericLabelLabelProps } = useGenericLabelLabel<E>();
 
         return {
@@ -86,7 +96,7 @@ export function useInputLabel({ labelPrefix, inputPrefix } = { labelPrefix: "lab
         }
     }, [useGenericLabelInput]);
 
-    const useInputLabelInput = useCallback(function useInputLabelInput<E extends Element>() {
+    const useInputLabelInput: UseInputLabelInput = useCallback(function useInputLabelInput<E extends Element>() {
         const { useGenericLabelInputProps } = useGenericLabelInput<E>();
 
         return {
