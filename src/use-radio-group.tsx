@@ -6,7 +6,7 @@ import { useCheckboxLike, UseCheckboxLikeParameters } from "./use-label";
 
 export type RadioChangeEvent<EventType extends Event> = EventType & { [EventDetail]: { selectedValue: string } };
 
-export interface UseAriaRadioGroupParameters<V extends string> {
+export interface UseAriaRadioGroupParameters<V extends string | number> {
     name: string;
 
     selectedValue: V;
@@ -21,7 +21,7 @@ export interface UseAriaRadioInfo extends UseListNavigationChildInfo {
 
 
 
-export type UseAriaRadioParameters<V extends string, I extends Element, L extends Element, Info extends UseAriaRadioInfo> = Omit<UseListNavigationChildParameters<Info>, "setChecked"> &
+export type UseAriaRadioParameters<V extends string | number, I extends Element, L extends Element, Info extends UseAriaRadioInfo> = Omit<UseListNavigationChildParameters<Info>, "setChecked"> &
     Omit<UseCheckboxLikeParameters<I, L>, "onInput" | "role" | "checked"> & {
         labelPosition: "wrapping" | "separate";
         value: V;
@@ -64,7 +64,7 @@ export function useAriaRadioGroup<V extends string, G extends Element, I extends
     const useRadio: UseRadio<V, I, L, Info> = useCallback(function useAriaRadio({ value, index, text, disabled, labelPosition, ...rest }: UseAriaRadioParameters<V, I, L, Info>) {
 
         const [checked, setChecked] = useState(false);
-        
+
         const onInput = useCallback((e: h.JSX.TargetedEvent<I> | h.JSX.TargetedEvent<L>) => {
             stableOnInput(enhanceEvent(e as any, { selectedValue: value }));
         }, [stableOnInput, value, index]);
