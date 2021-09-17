@@ -28,10 +28,10 @@ export type UseAriaRadioParameters<V extends string | number, I extends Element,
         disabled: boolean;
     }
 
-export function useAriaRadioGroup<V extends string, G extends Element, I extends Element, L extends Element, Info extends UseAriaRadioInfo>({ name, selectedValue, onInput }: UseAriaRadioGroupParameters<V>) {
+export function useAriaRadioGroup<V extends string | number, G extends Element, I extends Element, L extends Element, Info extends UseAriaRadioInfo>({ name, selectedValue, onInput }: UseAriaRadioGroupParameters<V>) {
     const { element, useRefElementProps } = useRefElement<G>()
     const [selectedIndex, setSelectedIndex, getSelectedIndex] = useState<number | null>(null);
-    const byName = useRef(new Map<string, any>());
+    const byName = useRef(new Map<V, any>());
     const stableOnInput = useStableCallback(onInput);
 
     const { useHasFocusProps, lastFocusedInner } = useHasFocus<G>();
@@ -125,7 +125,7 @@ export function useAriaRadioGroup<V extends string, G extends Element, I extends
         useRadio,
         useRadioGroupProps, 
         managedChildren,
-        getIndex: useCallback((value: string) => { return byName.current.get(value); }, [byName]),
+        getIndex: useCallback((value: V) => { return byName.current.get(value); }, [byName]),
         tabbableIndex, 
         focusRadio: focusCurrent, 
         currentTypeahead,
@@ -141,4 +141,4 @@ export interface UseRadioReturnType<I extends Element, L extends Element> {
 type UseRadioInput<I extends Element> = ({ tag }: TagSensitiveProps<I>) => { useRadioInputProps: <P extends h.JSX.HTMLAttributes<I>>(props: P) => MergedProps<I, h.JSX.HTMLAttributes<I>, h.JSX.HTMLAttributes<I>>; }
 type UseRadioLabel<L extends Element> = ({ tag }: TagSensitiveProps<L>) => { useRadioLabelProps: <P extends h.JSX.HTMLAttributes<L>>(props: P) => MergedProps<L, h.JSX.HTMLAttributes<L>, h.JSX.HTMLAttributes<L>>; }
 
-export type UseRadio<V extends string, I extends Element, L extends Element, Info extends UseAriaRadioInfo> = ({ value, index, text, disabled, labelPosition }: UseAriaRadioParameters<V, I, L, Info>) => UseRadioReturnType<I, L>
+export type UseRadio<V extends string | number, I extends Element, L extends Element, Info extends UseAriaRadioInfo> = ({ value, index, text, disabled, labelPosition }: UseAriaRadioParameters<V, I, L, Info>) => UseRadioReturnType<I, L>
