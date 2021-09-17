@@ -212,6 +212,9 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
 
             }
 
+            // Make sure that label clicks can't affect the checkbox while it's disabled
+            props.onClick = disabled? ((e) => { e.preventDefault()}) :  props.onClick;
+
             return useMergedProps<InputType>()(p0, props);
         }
     }, [useILInput, role, labelPosition, disabled, checked]);
@@ -232,7 +235,11 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
             else {
                 // The one case where there's almost nothing to do
                 // The most normal case where everything acts according normal HTML mechanics.
+
             }
+
+            // Just make sure that label clicks can't affect the checkbox while it's disabled
+            newProps.onClick = disabled? ((e) => { e.preventDefault()}) : newProps.onClick;
 
             return useMergedProps<LabelType>()(newProps, useILLabelProps(p0));
         }
