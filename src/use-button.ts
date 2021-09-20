@@ -61,9 +61,6 @@ function excludes<E extends EventTarget>(tag: ElementToTag<E>, target: "click" |
  */
 export function useButtonLikeEventHandlers<E extends EventTarget>(tag: ElementToTag<E>, onClickSync: ((e: h.JSX.TargetedEvent<E>) => void) | null | undefined, exclude: undefined | { click?: "exclude" | undefined, space?: "exclude" | undefined, enter?: "exclude" | undefined }) {
 
-    //type E = Ev extends h.JSX.TargetedEvent<infer E, any>? E : EventTarget;
-
-
     const [active, setActive] = useState(false);
 
     const onKeyUp = excludes(tag, "space", exclude)? undefined : (e: h.JSX.TargetedKeyboardEvent<E>) => {
@@ -78,12 +75,23 @@ export function useButtonLikeEventHandlers<E extends EventTarget>(tag: ElementTo
         if (e.button === 0)
             setActive(true);
     }
+    const onMouseUp = excludes(tag, "click", exclude) ? undefined : (e: h.JSX.TargetedMouseEvent<E>) => {
+        if (active) {
+            if (e.button === 0) {
+                setActive(false);
+                if (onClickSync) {
+                    pulse();
+                    onClickSync(e);
+                }
+            }
+            onBlur(e as any);
+        }
+    };
 
-    const onBlur: h.JSX.EventHandler<h.JSX.TargetedEvent<E>> = (e) => {
+    const onBlur = (e: h.JSX.TargetedEvent<E>) => {
         setActive(false);
     }
 
-    const onMouseUp = excludes(tag, "click", exclude)? undefined : onBlur;
 
     const onMouseOut = excludes(tag, "click", exclude)? undefined : onBlur;
 
@@ -101,14 +109,7 @@ export function useButtonLikeEventHandlers<E extends EventTarget>(tag: ElementTo
         }
     }
 
-    const onClick2 = excludes(tag, "click", exclude) ? undefined : ((e: h.JSX.TargetedMouseEvent<E>) => {
-        if (onClickSync && !excludes(tag, "click", exclude)) {
-            pulse();
-            onClickSync(e);
-        }
-    })
-
-    return <P extends h.JSX.HTMLAttributes<E>>(props: P) => useMergedProps<E>()({ onKeyDown, onKeyUp, onClick: onClick2, onBlur, onMouseDown, onMouseUp, onMouseOut, ...{ "data-pseudo-active": active ? "true" : undefined } as {} }, props);
+    return <P extends h.JSX.HTMLAttributes<E>>(props: P) => useMergedProps<E>()({ onKeyDown, onKeyUp, onBlur, onMouseDown, onMouseUp, onMouseOut, ...{ "data-pseudo-active": active ? "true" : undefined } as {} }, props);
 }
 
 export function useAriaButton<E extends EventTarget>({ tag, pressed, onClick }: UseAriaButtonParameters<E>): UseAriaButtonReturnType<E> {
