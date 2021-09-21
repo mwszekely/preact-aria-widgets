@@ -45,7 +45,7 @@ export function useAriaCheckbox<InputType extends Element, LabelType extends Ele
 
             return props;
         }
-    }, [checked, labelPosition, disabled]);
+    }, [useCheckboxLikeInputElement, checked, labelPosition, disabled]);
 
     const useCheckboxLabelElement = useCallback(function useCheckboxLabelElement({ tag }: TagSensitiveProps<LabelType>) {
         const { useCheckboxLikeLabelElementProps } = useCheckboxLikeLabelElement({ tag });
