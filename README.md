@@ -16,7 +16,8 @@ Current components:
 8. Menu (w/ menu button)
 9. Radio Group
 10. Tabs & tab panels
-11. Toasts (a.k.a. Snackbars)
-12. Tooltip
+11. Table
+12. Toasts (a.k.a. Snackbars)
+13. Tooltip
 
 Other components (e.g. tree views) are TODO
