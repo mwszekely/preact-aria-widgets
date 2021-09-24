@@ -1,6 +1,6 @@
 import { h } from "preact";
 import { findFirstFocusable, ManagedChildInfo, MergedProps, useChildFlag, useChildManager, useMergedProps, useRandomId, useRefElement, UseRefElementPropsReturnType, useState, useTimeout } from "preact-prop-helpers";
-import { useCallback, useEffect, useLayoutEffect } from "preact/hooks";
+import { StateUpdater, useCallback, useEffect, useLayoutEffect } from "preact/hooks";
 
 
 
@@ -17,7 +17,7 @@ export interface UseToastParameters extends Omit<ToastInfo, "dismissed" | "index
 export interface ToastInfo extends ManagedChildInfo<string> {
     dismissed: boolean;
     focus(): void;
-    setStatus(status: "pending" | "active" | "dismissed"): void;
+    setStatus: StateUpdater<"pending" | "active" | "dismissed">;
 }
 
 export type UseToast = <ToastType extends Element>(args: UseToastParameters) => { dismiss: () => void; status: "pending" | "active" | "dismissed"; useToastProps: <P extends h.JSX.HTMLAttributes<ToastType>>(props: P) => MergedProps<ToastType, UseRefElementPropsReturnType<ToastType, {}>, P>; };
@@ -64,7 +64,7 @@ export function useToasts<ContainerType extends Element>({ }: UseToastsParameter
         if (set)
             console.assert(i <= getActiveToastIndex());
 
-        toastQueue[i]?.setStatus(set ? "active" : (i < getActiveToastIndex() ? "dismissed" : "pending"));
+        toastQueue[i]?.setStatus(prev => prev === "dismissed"? "dismissed" : set ? "active" : (i < getActiveToastIndex() ? "dismissed" : "pending"));
     }));
 
     const useToast: UseToast = useCallback(<ToastType extends Element>({ politeness, timeout }: UseToastParameters) => {
