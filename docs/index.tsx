@@ -476,7 +476,8 @@ const DemoTooltip = memo(() => {
             <p>This is a paragraph with a <span {...useTooltipTriggerProps({})}>tooltip right here.</span><span {...useTooltipProps({ hidden: !isOpen })}>This is the tooltip content.</span></p>
         </div>
     )
-})
+});
+
 const DemoTable = memo(() => {
 
     const { useTableBody, useTableFoot, useTableHead, useTableProps, useTableRow } = useTable<
@@ -487,7 +488,7 @@ const DemoTable = memo(() => {
 
     const rows: VNode<any>[] = Array.from(function* () {
         for (let i = 0; i < 10; ++i) {
-            yield <TableRow index={i + 1} />;
+            yield <TableRow rowIndex={i + 1} />;
         }
     }());
 
@@ -495,7 +496,7 @@ const DemoTable = memo(() => {
     return (
         <TableRowContext.Provider value={useTableRow}>
             <table {...useTableProps({})}>
-                <thead {...useTableHeadProps({ children: [<TableHeaderRow index={0} />] })} />
+                <thead {...useTableHeadProps({ children: [<TableHeaderRow rowIndex={0} />] })} />
                 <tbody {...useTableBodyProps({ children: rows })} />
             </table>
         </TableRowContext.Provider>
@@ -506,39 +507,39 @@ const DemoTable = memo(() => {
 const TableRowContext = createContext<UseTableRow<HTMLTableRowElement, HTMLTableCellElement, HTMLTableCellElement>>(null!);
 
 
-function TableRow({ index }: { index: number }) {
-    const i = index - 1;
+const TableRow = memo(function TableRow({ rowIndex }: { rowIndex: number }) {
+    const i = rowIndex - 1;
     const useTableRow = useContext(TableRowContext);
-    const { rowIndexAsSorted, rowIndexAsUnsorted, useTableCell, useTableRowProps } = useTableRow({ rowIndex: index, location: "body" });
+    const { rowIndexAsSorted, rowIndexAsUnsorted, useTableCell, useTableRowProps } = useTableRow({ rowIndex, location: "body" });
     const date = new Date(new Date().getFullYear(), new Date().getMonth(), (i * 7) ** 2);
 
     const { useTableCellProps: useTableCellProps1, useTableCellDelegateProps: useTableCellDelegateProps1 } = useTableCell({ columnIndex: 0, value: i });
     const { useTableCellProps: useTableCellProps2, useTableCellDelegateProps: useTableCellDelegateProps2 } = useTableCell({ columnIndex: 1, value: RandomWords[i] });
     const { useTableCellProps: useTableCellProps3, useTableCellDelegateProps: useTableCellDelegateProps3 } = useTableCell({ columnIndex: 2, value: date });
     return (
-        <tr {...useTableRowProps({})}>
+        <tr {...useTableRowProps({ "data-index": rowIndex } as {})}>
             <td {...useTableCellProps1(useTableCellDelegateProps1({}))}>{i}</td>
             <td {...useTableCellProps2(useTableCellDelegateProps2({}))}>{RandomWords[i]}</td>
             <td {...useTableCellProps3(useTableCellDelegateProps3({}))}>{date.toLocaleDateString()}</td>
         </tr>
     )
-}
+})
 
 
-function TableHeaderRow({ index }: { index: number }) {
+const TableHeaderRow = memo(function TableHeaderRow({ rowIndex }: { rowIndex: number }) {
     const useTableRow = useContext(TableRowContext);
-    const { useTableHeadCell, useTableRowProps: useTableHeadRowProps } = useTableRow({ rowIndex: index, location: "head" });
-    const { useTableHeadCellProps: useTableHeadCellProps1, useTableHeadCellDelegateProps: useTableHeadCellDelegateProps1 } = useTableHeadCell({ tag: "th", index: 0 });
-    const { useTableHeadCellProps: useTableHeadCellProps2, useTableHeadCellDelegateProps: useTableHeadCellDelegateProps2 } = useTableHeadCell({ tag: "th", index: 1 });
-    const { useTableHeadCellProps: useTableHeadCellProps3, useTableHeadCellDelegateProps: useTableHeadCellDelegateProps3 } = useTableHeadCell({ tag: "th", index: 2 });
+    const { useTableHeadCell, useTableRowProps: useTableHeadRowProps } = useTableRow({ rowIndex, location: "head" });
+    const { useTableHeadCellProps: useTableHeadCellProps1, useTableHeadCellDelegateProps: useTableHeadCellDelegateProps1, sortDirection: sortDirection1 } = useTableHeadCell({ tag: "th", columnIndex: 0 });
+    const { useTableHeadCellProps: useTableHeadCellProps2, useTableHeadCellDelegateProps: useTableHeadCellDelegateProps2, sortDirection: sortDirection2 } = useTableHeadCell({ tag: "th", columnIndex: 1 });
+    const { useTableHeadCellProps: useTableHeadCellProps3, useTableHeadCellDelegateProps: useTableHeadCellDelegateProps3, sortDirection: sortDirection3 } = useTableHeadCell({ tag: "th", columnIndex: 2 });
 
 
-    return (<tr {...useTableHeadRowProps({})}>
-        <th {...useTableHeadCellProps1(useTableHeadCellDelegateProps1({}))}>Number</th>
-        <th {...useTableHeadCellProps2(useTableHeadCellDelegateProps2({}))}>String</th>
-        <th {...useTableHeadCellProps3(useTableHeadCellDelegateProps3({}))}>Date</th>
+    return (<tr {...useTableHeadRowProps({ "data-index": rowIndex } as {})}>
+        <th {...useTableHeadCellProps1(useTableHeadCellDelegateProps1({}))}>Number {sortDirection1}</th>
+        <th {...useTableHeadCellProps2(useTableHeadCellDelegateProps2({}))}>String {sortDirection2}</th>
+        <th {...useTableHeadCellProps3(useTableHeadCellDelegateProps3({}))}>Date {sortDirection3}</th>
     </tr>)
-}
+})
 
 const Component = () => {
     return <div class="flex" style={{ flexWrap: "wrap" }}>

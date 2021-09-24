@@ -87,6 +87,48 @@ export type SortableTypes = number | string | Date | null | undefined | boolean;
 
 const LocationPriority = { "head": 0, "body": 1, "foot": 2 };
 
+export interface UseTableRowProps { 
+    /**
+     * When passed by you, this is the row index that this table
+     * row represents. In a table with one header row, the header
+     * row gets a rowIndex of 0, the first body cell a rowIndex of
+     * 1, etc.
+     * 
+     * When your component renders itself, *this prop will possibly
+     * have been changed*!! When sorted, the component will be
+     * re-created with a specific key and a new rowIndex that
+     * corresponds to the sorted table's ordering.
+     * 
+     * If you're not sure what to use, use `rowIndex` for things
+     * related to visuals and UI (like for answering the question
+     * "where do I go when pressing the DOWN arrow key?"). Use
+     * `unsortedRowIndex` for things like data, though keep in mind
+     * that it's relative to the number of rows in the header!
+     */
+    rowIndex: number;
+
+    /**
+     * See rowIndex.
+     * 
+     * If your TableRow component absolutely *needs* to know
+     * the original row it was rendering as before the shuffle,
+     * use this instead of `rowIndex`. Otherwise, prefer that
+     * in basically all cases
+     */
+    unsortedRowIndex: number;
+ }
+
+// TODO: Sorting really needs to be extracted into its own hook
+// so it can be used with, like, lists and junk too
+// but just getting to this point in the first place was *exhausting*.
+//
+// Please be aware of the special conditions between
+// thead, tbody, tfoot and their respective child rows
+// (namely each row MUST be a DIRECT descendant of its
+// corresponding table section, or at the very least,
+// must have a child that takes a rowIndex prop that
+// corresponds to its row amongst ALL children, even those
+// in a different table section)
 export function useTable<T extends Element, H extends Element, B extends Element, F extends Element, R extends Element, HC extends Element, BC extends Element>({ }: UseTableParameters) {
 
     // This is the index of the currently sorted column('s header cell that was clicked to sort it).
@@ -176,28 +218,27 @@ export function useTable<T extends Element, H extends Element, B extends Element
     // element identity between sort operations.
     // So we create the element again with the same props but a new key
     // and it work just as well.
-    const recreateChildWithSortedKey = useCallback(function ensortenChild(child: VNode<{ index: number }>) {
-        //childIndex += (location === "body" ? headerRowCount : location === "foot" ? (bodyRowCount + headerRowCount) : 0);
-        const { index: childIndex, ...props } = (child.props);
+    const recreateChildWithSortedKey = useCallback(function ensortenChild(child: VNode<{ rowIndex: number }>) {
+        const { rowIndex: childIndex, ...props } = (child.props);
         const sortedIndex = managedRows[childIndex]?.getRowIndexAsSorted() ?? childIndex;
-        const C = child.type as FunctionComponent<{ index: number }>;
-        let ret = h(C, { key: sortedIndex, index: sortedIndex, ...props });
+        const C = child.type as FunctionComponent<UseTableRowProps>;
+        let ret = h(C, { key: sortedIndex, rowIndex: sortedIndex, unsortedRowIndex: childIndex, ...props });
         return ret;
     }, [])
 
 
-    // Tables need a role of "group" in order to be considered 
+    // Tables need a role of "grid" in order to be considered 
     // "interactive content" like a text box that passes through
-    // keyboard inputs
-    function useTableProps<P extends h.JSX.HTMLAttributes<T>>({ role, ...props }: P) { return useHasFocusProps(useMergedProps<T>()({ role: "group", "aria-roledescription": "table" }, props)); }
+    // keyboard inputs.
+    function useTableProps<P extends h.JSX.HTMLAttributes<T>>({ role, ...props }: P) { return useHasFocusProps(useMergedProps<T>()({ role: "grid" }, props)); }
 
 
     /**
      * 
      * IMPORTANT NOTE ABOUT COMPONENTS USING THIS HOOK!!
      * 
-     * The index prop that you pass to your custom TableRow component
-     * *must* be named "index" and *must* be, e.g., 0 for the header
+     * The rowIndex prop that you pass to your custom TableRow component
+     * *must* be named "rowIndex" and *must* be, e.g., 0 for the header
      * row, 1 for the first body row, etc.
      * 
      * Your custom TableRow component must also be the *direct*
@@ -213,15 +254,14 @@ export function useTable<T extends Element, H extends Element, B extends Element
         const [rowIndexAsSorted, setRowIndexAsSorted, getRowIndexAsSorted] = useState(rowIndexAsUnsorted);
         const getManagedCells = useStableCallback(() => managedCells);
 
-        const { useGridNavigationCell, useGridNavigationRowProps, cellCount, isTabbableRow, managedCells, tabbableCell } = useGridNavigationRow({ index: rowIndexAsUnsorted, getManagedCells, getRowIndexAsSorted, setRowIndexAsSorted, location });
+        const { useGridNavigationCell, useGridNavigationRowProps, cellCount, isTabbableRow, managedCells } = useGridNavigationRow({ index: rowIndexAsUnsorted, getManagedCells, ...{ rowIndexAsSorted: getRowIndexAsSorted() } as {}, getRowIndexAsSorted, setRowIndexAsSorted, location });
 
-        console.log(`${rowIndexAsUnsorted}: ${isTabbableRow}, ${tabbableCell}`);
 
         // Not public -- just the shared code between header cells and body cells
-        const useTableCellShared = useCallback(<C extends Element>({ index: columnIndex, value }: { index: number, value: SortableTypes }) => {
-            const { tabbable, useGridNavigationCellProps, } = useGridNavigationCell({ index: columnIndex, value, text: null });
+        const useTableCellShared = useCallback(<C extends Element>({ columnIndex, value }: { columnIndex: number, value: SortableTypes }) => {
+            const { useGridNavigationCellProps, } = useGridNavigationCell({ index: columnIndex, value, text: null });
             function useTableCellProps<P extends h.JSX.HTMLAttributes<C>>({ role, ...props }: P) {
-                return (useMergedProps<any>()({ role: "gridcell", "aria-roledescription": "table cell" }, props));
+                return (useMergedProps<any>()({ role: "gridcell" }, props));
             }
 
             function useTableCellDelegateProps<P extends h.JSX.HTMLAttributes<any>>({ role, ...props }: P) {
@@ -234,7 +274,7 @@ export function useTable<T extends Element, H extends Element, B extends Element
 
         const useTableHeadCell: UseTableHeadCell<HC> = useCallback(({ columnIndex, unsortable, tag }: UseTableHeadCellParameters<HC>) => {
 
-            const { useTableCellDelegateProps, useTableCellProps } = useTableCellShared<HC>({ index: columnIndex, value: "" });
+            const { useTableCellDelegateProps, useTableCellProps } = useTableCellShared<HC>({ columnIndex, value: "" });
 
             // This is mostly all just in regards to
             // handling the "sort-on-click" interaction.
@@ -273,7 +313,7 @@ export function useTable<T extends Element, H extends Element, B extends Element
         }, [])
 
         const useTableCell: UseTableCell<BC> = useCallback(({ columnIndex, value }: UseTableCellParameters) => {
-            const { useTableCellDelegateProps, useTableCellProps } = useTableCellShared<BC>({ index: columnIndex, value });
+            const { useTableCellDelegateProps, useTableCellProps } = useTableCellShared<BC>({ columnIndex, value });
 
             return { useTableCellProps, useTableCellDelegateProps };
         }, [])
