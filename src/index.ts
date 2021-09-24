@@ -11,7 +11,8 @@ export { useAriaTabs, UseTabPanel, UseTab } from "./use-tabs";
 export { useAriaTooltip, UseTooltip, UseTooltipTrigger } from "./use-tooltip";
 export { useAriaRadioGroup, UseRadio } from "./use-radio-group"
 export { useCheckboxGroup, UseCheckboxGroupChild } from "./use-checkbox-group";
-export { useToasts, UseToast, UseToastParameters } from "./use-toasts"
+export { useToasts, UseToast, UseToastParameters } from "./use-toasts";
+export { useTable, UseTableBody, UseTableHead, UseTableFoot, UseTableRow, UseTableCell, UseTableHeadCell } from "./use-table";
 
 declare module 'preact' {
     namespace h {

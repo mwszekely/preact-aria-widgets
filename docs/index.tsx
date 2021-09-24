@@ -1,21 +1,22 @@
 
-import { createContext, Fragment, h, render } from "preact";
-import { memo } from "preact/compat";
+import { createContext, Fragment, h, render, VNode } from "preact";
+import { useAnimationFrame, useDraggable, useDroppable, useElementSize, useFocusTrap, useHasFocus, useMergedProps, useRandomId, useState } from "preact-prop-helpers";
+import { forwardRef, memo } from "preact/compat";
 import { useCallback, useContext, useRef } from "preact/hooks";
-import { useAnimationFrame, useDraggable, useDroppable, useElementSize, useFocusTrap, useHasFocus, useListNavigation, UseListNavigationChild, useMergedProps, useRandomId, useState } from "preact-prop-helpers";
-import { DemoUseRovingTabIndex } from "./demos/use-roving-tab-index";
+import { EventDetail } from "../props";
 import { useAriaAccordion, UseAriaAccordionSection } from "../use-accordion";
-import { useAriaDialog } from "../use-dialog";
 import { useAriaCheckbox } from "../use-checkbox";
 import { useCheckboxGroup, UseCheckboxGroupChild } from "../use-checkbox-group";
+import { useAriaDialog } from "../use-dialog";
+import { useAriaListboxMulti, UseListboxMultiItem, UseListboxMultiItemInfo } from "../use-listbox-multi";
 import { useAriaListboxSingle, UseListboxSingleItem, UseListboxSingleItemInfo } from "../use-listbox-single";
-import { useAriaListboxMulti, UseListboxMultiItemInfo, UseListboxMultiItem } from "../use-listbox-multi";
 import { useAriaMenu, UseMenuItem } from "../use-menu";
-import { DemoUseInterval } from "./demos/use-interval";
-import { DemoUseTimeout } from "./demos/use-timeout";
-import { useAriaTabs, UseTab, UseTabPanel, } from "../use-tabs";
+import { useTable, UseTableRow } from "../use-table";
+import { useAriaTabs, UseTab, UseTabPanel } from "../use-tabs";
 import { useAriaTooltip } from "../use-tooltip";
-import { EventDetail } from "../props"
+import { DemoUseInterval } from "./demos/use-interval";
+import { DemoUseRovingTabIndex } from "./demos/use-roving-tab-index";
+import { DemoUseTimeout } from "./demos/use-timeout";
 
 const RandomWords = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.".split(" ");
 
@@ -476,10 +477,73 @@ const DemoTooltip = memo(() => {
         </div>
     )
 })
+const DemoTable = memo(() => {
+
+    const { useTableBody, useTableFoot, useTableHead, useTableProps, useTableRow } = useTable<
+        HTMLTableElement, HTMLTableSectionElement, HTMLTableSectionElement, HTMLTableSectionElement, HTMLTableRowElement, HTMLTableCellElement, HTMLTableCellElement>({});
+
+    const { useTableHeadProps } = useTableHead({});
+    const { useTableBodyProps } = useTableBody({});
+
+    const rows: VNode<any>[] = Array.from(function* () {
+        for (let i = 0; i < 10; ++i) {
+            yield <TableRow index={i + 1} />;
+        }
+    }());
+
+
+    return (
+        <TableRowContext.Provider value={useTableRow}>
+            <table {...useTableProps({})}>
+                <thead {...useTableHeadProps({ children: [<TableHeaderRow index={0} />] })} />
+                <tbody {...useTableBodyProps({ children: rows })} />
+            </table>
+        </TableRowContext.Provider>
+    )
+
+});
+
+const TableRowContext = createContext<UseTableRow<HTMLTableRowElement, HTMLTableCellElement, HTMLTableCellElement>>(null!);
+
+
+function TableRow({ index }: { index: number }) {
+    const i = index - 1;
+    const useTableRow = useContext(TableRowContext);
+    const { rowIndexAsSorted, rowIndexAsUnsorted, useTableCell, useTableRowProps } = useTableRow({ rowIndex: index, location: "body" });
+    const date = new Date(new Date().getFullYear(), new Date().getMonth(), (i * 7) ** 2);
+
+    const { useTableCellProps: useTableCellProps1, useTableCellDelegateProps: useTableCellDelegateProps1 } = useTableCell({ columnIndex: 0, value: i });
+    const { useTableCellProps: useTableCellProps2, useTableCellDelegateProps: useTableCellDelegateProps2 } = useTableCell({ columnIndex: 1, value: RandomWords[i] });
+    const { useTableCellProps: useTableCellProps3, useTableCellDelegateProps: useTableCellDelegateProps3 } = useTableCell({ columnIndex: 2, value: date });
+    return (
+        <tr {...useTableRowProps({})}>
+            <td {...useTableCellProps1(useTableCellDelegateProps1({}))}>{i}</td>
+            <td {...useTableCellProps2(useTableCellDelegateProps2({}))}>{RandomWords[i]}</td>
+            <td {...useTableCellProps3(useTableCellDelegateProps3({}))}>{date.toLocaleDateString()}</td>
+        </tr>
+    )
+}
+
+
+function TableHeaderRow({ index }: { index: number }) {
+    const useTableRow = useContext(TableRowContext);
+    const { useTableHeadCell, useTableRowProps: useTableHeadRowProps } = useTableRow({ rowIndex: index, location: "head" });
+    const { useTableHeadCellProps: useTableHeadCellProps1, useTableHeadCellDelegateProps: useTableHeadCellDelegateProps1 } = useTableHeadCell({ tag: "th", index: 0 });
+    const { useTableHeadCellProps: useTableHeadCellProps2, useTableHeadCellDelegateProps: useTableHeadCellDelegateProps2 } = useTableHeadCell({ tag: "th", index: 1 });
+    const { useTableHeadCellProps: useTableHeadCellProps3, useTableHeadCellDelegateProps: useTableHeadCellDelegateProps3 } = useTableHeadCell({ tag: "th", index: 2 });
+
+
+    return (<tr {...useTableHeadRowProps({})}>
+        <th {...useTableHeadCellProps1(useTableHeadCellDelegateProps1({}))}>Number</th>
+        <th {...useTableHeadCellProps2(useTableHeadCellDelegateProps2({}))}>String</th>
+        <th {...useTableHeadCellProps3(useTableHeadCellDelegateProps3({}))}>Date</th>
+    </tr>)
+}
 
 const Component = () => {
     return <div class="flex" style={{ flexWrap: "wrap" }}>
         <DemoTooltip />
+        <DemoTable />
         <DemoTabs />
         <DemoFocus />
         <DemoUseTimeout />
