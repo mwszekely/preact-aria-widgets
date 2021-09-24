@@ -46,7 +46,7 @@ export type UseAriaAccordionSectionBody = <E extends Element>() => UseAriaAccord
 export interface UseAriaAccordionSectionBodyReturnType<E extends Element> { useAriaAccordionSectionBodyProps: UseAriaAccordionSectionBodyProps<E>; }
 
 
-interface UseAriaAccordionPropsParameters<E extends Element> extends h.JSX.HTMLAttributes<E> { }
+export interface UseAriaAccordionPropsParameters<E extends Element> extends h.JSX.HTMLAttributes<E> { }
 
 export function useAriaAccordion<ParentElement extends Element, ChildElement extends Element>({ expandedIndex, setExpandedIndex }: UseAriaAccordionParameters): UseAriaAccordionReturnType<ParentElement, ChildElement> {
 
@@ -54,7 +54,12 @@ export function useAriaAccordion<ParentElement extends Element, ChildElement ext
     const stableSetExpandedIndex = useStableCallback(setExpandedIndex ?? (() => { }));
 
     const { managedChildren: managedAccordionSections, useManagedChild: useManagedChildSection } = useChildManager<UseAriaAccordionSectionInfo>();
-    const { useLinearNavigationChild } = useLinearNavigation<ChildElement>({ managedChildren: managedAccordionSections, navigationDirection: "block", getIndex: getLastFocusedIndex, setIndex: setLastFocusedIndex });
+
+    const navigateToFirst = useCallback(() => { setLastFocusedIndex((0)); }, []);
+    const navigateToLast = useCallback(() => { setLastFocusedIndex((managedAccordionSections.length - 1)); }, []);
+    const navigateToPrev = useCallback(() => { setLastFocusedIndex(i => ((i ?? 0) - 1)) }, []);
+    const navigateToNext = useCallback(() => { setLastFocusedIndex(i => ((i ?? 0) + 1)) }, []);
+    const { useLinearNavigationChild } = useLinearNavigation<ChildElement>({ managedChildren: managedAccordionSections, navigationDirection: "block", index: getLastFocusedIndex(), navigateToFirst, navigateToLast, navigateToPrev, navigateToNext });
 
     // Any time list management changes the focused index, manually focus the child
     // TODO: Can this be cut?
