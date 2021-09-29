@@ -103,7 +103,7 @@ export function useAriaMenu<ParentElement extends Element, ChildElement extends 
     const { focusedInner: buttonHasFocus, useHasFocusProps: useButtonHasFocusProps } = useHasFocus<Element>();
     const { activeElement, lastActiveElement, windowFocused } = useActiveElement();
 
-    const { managedChildren, useListNavigationChild, tabbableIndex, focusCurrent: focusMenu } = useListNavigation<ChildElement>({ collator, keyNavigation, noTypeahead, noWrap, typeaheadTimeout, focusOnChange: (menuHasFocus || buttonHasFocus) });
+    const { managedChildren, useListNavigationChild, tabbableIndex, focusCurrent: focusMenu } = useListNavigation<ChildElement>({ collator, keyNavigation, noTypeahead, noWrap, typeaheadTimeout, shouldFocusOnChange: () => (menuHasFocus || buttonHasFocus) });
     const { useRandomIdProps: useMenuIdProps, useReferencedIdProps: useMenuIdReferencingProps } = useRandomId({ prefix: "aria-menu-" });
 
     const [openerElement, setOpenerElement] = useState<(Element & HTMLOrSVGElement) | null>(null);

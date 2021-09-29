@@ -27,9 +27,9 @@ export type UseCheckboxGroupChild<ChildElement extends Element> = (args: UseChec
  * @param param0 
  * @returns 
  */
-export function useCheckboxGroup<InputElement extends Element>({ collator, keyNavigation, shouldFocus }: UseCheckboxGroupParameters) {
+export function useCheckboxGroup<InputElement extends Element>({ collator, keyNavigation, shouldFocusOnChange }: UseCheckboxGroupParameters) {
     
-    const { managedChildren, useListNavigationChild, tabbableIndex, focusCurrent, currentTypeahead, invalidTypeahead } = useListNavigation<InputElement, UseCheckboxGroupChildInfo>({ collator, keyNavigation, shouldFocus });
+    const { managedChildren, useListNavigationChild, tabbableIndex, focusCurrent, currentTypeahead, invalidTypeahead } = useListNavigation<InputElement, UseCheckboxGroupChildInfo>({ collator, keyNavigation, shouldFocusOnChange });
 
     //const [uncheckedCount, setUnheckedCount] = useState(0);
 

@@ -141,6 +141,10 @@ export function useTable<T extends Element, S extends Element, R extends Element
     const { useManagedChild: useManagedTableSection, managedChildren: managedTableSections } = useChildManager<{ index: "head" | "body" | "foot", forceUpdate(): void }>();
 
 
+    // Used for navigation to determine when focus should follow the selected cell
+    const { focusedInner, useHasFocusProps } = useHasFocus<T>();
+    const stableGetFocusedInner = useStableGetter(focusedInner);
+
     // These are used to keep track of a mapping between unsorted index <---> sorted index.
     // These are needed for navigation with the arrow keys.
     const mangleMap = useRef(new Map<number, number>());
@@ -195,18 +199,15 @@ export function useTable<T extends Element, S extends Element, R extends Element
 
     const useTableSection: UseTableSection<S, R, C> = useCallback(({ location }: { location: "head" | "body" | "foot" }) => {
 
-        // Used for navigation to determine when focus should follow the selected cell
-        const { focusedInner, useHasFocusProps } = useHasFocus<S>();
-
 
         const { element, useManagedChildProps } = useManagedTableSection<S>({ index: location, forceUpdate: useForceUpdate() });
         const useTableSectionProps = useCallback(<P extends Omit<h.JSX.HTMLAttributes<S>, "children"> & { children: VNode<any>[] }>({ children, ...props }: P) => {
-            return useManagedChildProps(useHasFocusProps(useMergedProps<S>()({
+            return useManagedChildProps(useMergedProps<S>()({
                 role: "rowgroup",
                 children: location === "body" ? (children as VNode<any>[]).map((tableRow, i) => {
                     return recreateChildWithSortedKey(children, i);
                 }) : children
-            }, props)))
+            }, props))
         }, [useManagedChildProps]);
 
 
@@ -231,7 +232,7 @@ export function useTable<T extends Element, S extends Element, R extends Element
 
         // Actually implement grid navigation
         const { cellIndex, rowIndex, rowCount, useGridNavigationRow, managedRows } = useGridNavigation<R, C, TableRowInfo, TableBodyCellInfo>({
-            focusOnChange: focusedInner,
+            shouldFocusOnChange: stableGetFocusedInner,
             indexMangler,
             indexDemangler
         });
@@ -353,7 +354,7 @@ export function useTable<T extends Element, S extends Element, R extends Element
     // Tables need a role of "grid" in order to be considered 
     // "interactive content" like a text box that passes through
     // keyboard inputs.
-    function useTableProps<P extends h.JSX.HTMLAttributes<T>>({ role, ...props }: P) { return useMergedProps<T>()({ role: "grid" }, props); }
+    function useTableProps<P extends h.JSX.HTMLAttributes<T>>({ role, ...props }: P) { return useHasFocusProps(useMergedProps<T>()({ role: "grid" }, props)); }
 
 
 
