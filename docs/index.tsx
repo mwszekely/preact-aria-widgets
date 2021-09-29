@@ -478,6 +478,7 @@ const DemoTooltip = memo(() => {
     )
 });
 
+/*
 const DemoTable = memo(() => {
 
     const { useTableBody, useTableFoot, useTableHead, useTableProps, useTableRow } = useTable<
@@ -539,12 +540,12 @@ const TableHeaderRow = memo(function TableHeaderRow({ rowIndex }: { rowIndex: nu
         <th {...useTableHeadCellProps2(useTableHeadCellDelegateProps2({}))}>String {sortDirection2}</th>
         <th {...useTableHeadCellProps3(useTableHeadCellDelegateProps3({}))}>Date {sortDirection3}</th>
     </tr>)
-})
+})*/
 
 const Component = () => {
     return <div class="flex" style={{ flexWrap: "wrap" }}>
         <DemoTooltip />
-        <DemoTable />
+        {/*<DemoTable />*/}
         <DemoTabs />
         <DemoFocus />
         <DemoUseTimeout />
