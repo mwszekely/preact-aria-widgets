@@ -30,10 +30,18 @@ export type UseListboxSingleItemParameters<E extends Element, I extends UseListb
 
 export function useAriaListboxSingle<ParentElement extends Element, ChildElement extends Element, I extends UseListboxSingleItemInfo<ChildElement>>({ selectedIndex, onSelect, selectionMode, ...args }: UseListboxSingleParameters) {
 
-    const { lastFocusedInner, useHasFocusProps } = useHasFocus<ParentElement>();
+    const [focusedInner, setFocusedInner, getFocusedInner] = useState(false);
+    const { useHasFocusProps } = useHasFocus<ParentElement>({
+        setFocusedInner: useCallback((focused: boolean) => {
+            if (!focused) {
+                setTabbableIndex(selectedIndex);
+            }
+            setFocusedInner(focused);
+        }, [selectedIndex])
+    });
 
     const { useGenericLabelInput, useGenericLabelLabel, useReferencedInputIdProps, useReferencedLabelIdProps, inputElement } = useGenericLabel({ labelPrefix: "aria-listbox-label-", inputPrefix: "aria-listbox-" })
-    const { useListNavigationChild, navigateToIndex, managedChildren, setTabbableIndex, tabbableIndex, focusCurrent, currentTypeahead, invalidTypeahead } = useListNavigation<ChildElement, I>({ ...args, shouldFocusOnChange: () => lastFocusedInner });
+    const { useListNavigationChild, navigateToIndex, managedChildren, setTabbableIndex, tabbableIndex, focusCurrent, currentTypeahead, invalidTypeahead } = useListNavigation<ChildElement, I>({ ...args, shouldFocusOnChange: getFocusedInner });
     const { useGenericLabelInputProps } = useGenericLabelInput<ParentElement>();
     const stableOnSelect = useStableCallback(onSelect ?? (() => { }));
 
@@ -44,15 +52,6 @@ export function useAriaListboxSingle<ParentElement extends Element, ChildElement
     }, [selectedIndex, managedChildren.length]);
 
     const childCount = managedChildren.length;
-
-
-
-    const { lastActiveElement } = useActiveElement();
-    let anyRadiosFocused = (!!inputElement?.contains(lastActiveElement));
-    useEffect(() => {
-        if (!anyRadiosFocused)
-            setTabbableIndex(selectedIndex);
-    }, [anyRadiosFocused, selectedIndex, setTabbableIndex]);
 
     const useListboxSingleItem: UseListboxSingleItem<ChildElement, I> = useCallback((info: UseListboxSingleItemParameters<ChildElement, I>) => {
         type E = ChildElement;
@@ -70,7 +69,7 @@ export function useAriaListboxSingle<ParentElement extends Element, ChildElement
         return { useListboxSingleItemProps, tabbable, selected, getSelected };
 
         function useListboxSingleItemProps<P extends h.JSX.HTMLAttributes<E>>(props: P) {
-            const newProps: h.JSX.HTMLAttributes<E> = useButtonLikeEventHandlers<E>(info.tag, (e) => {
+            const newProps: h.JSX.HTMLAttributes<E> = useButtonLikeEventHandlers<E>((e) => {
                 navigateToIndex(info.index);
                 if (element)
                     stableOnSelect?.({ target: element, currentTarget: element, [EventDetail]: { selectedIndex: index } });

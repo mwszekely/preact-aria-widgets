@@ -142,7 +142,8 @@ export function useTable<T extends Element, S extends Element, R extends Element
 
 
     // Used for navigation to determine when focus should follow the selected cell
-    const { focusedInner, useHasFocusProps } = useHasFocus<T>();
+    const [focusedInner, setFocusedInner, getFocusedInner] = useState(false);
+    const { useHasFocusProps } = useHasFocus<T>({ setFocusedInner });
     const stableGetFocusedInner = useStableGetter(focusedInner);
 
     // These are used to keep track of a mapping between unsorted index <---> sorted index.
@@ -311,7 +312,7 @@ export function useTable<T extends Element, S extends Element, R extends Element
                 }, []);
 
                 const useTableHeadCellProps: UseTableHeadCellProps<C> = <P extends h.JSX.HTMLAttributes<C>>(props: P) => {
-                    const m = useTableCellProps(useButtonLikeEventHandlers<C>(tag, unsortable ? null : onSortClick, undefined)(
+                    const m = useTableCellProps(useButtonLikeEventHandlers<C>(unsortable ? null : onSortClick, undefined)(
                         (useMergedProps<C>()({
                             role: "columnheader",
                         }, props))));

@@ -34,8 +34,17 @@ export function useAriaRadioGroup<V extends string | number, G extends Element, 
     const byName = useRef(new Map<V, any>());
     const stableOnInput = useStableCallback(onInput);
 
-    const { useHasFocusProps, lastFocusedInner } = useHasFocus<G>();
-    const { managedChildren, useListNavigationChild, setTabbableIndex, tabbableIndex, focusCurrent, currentTypeahead, invalidTypeahead } = useListNavigation<I, Info>({ shouldFocusOnChange: () => lastFocusedInner });
+    const [focusedInner, setFocusedInner, getFocusedInner] = useState(false);
+    const { useHasFocusProps } = useHasFocus<G>({
+        setFocusedInner: useCallback((focused: boolean) => {
+            if (!focused) {
+                setTabbableIndex(selectedIndex);
+            }
+            setFocusedInner(focused);
+        }, [selectedIndex])
+    });
+
+    const { managedChildren, useListNavigationChild, setTabbableIndex, tabbableIndex, focusCurrent, currentTypeahead, invalidTypeahead } = useListNavigation<I, Info>({ shouldFocusOnChange: getFocusedInner });
 
     const useRadioGroupProps = useCallback(<P extends h.JSX.HTMLAttributes<G>>({ ...props }: P) => {
         props.role = "radiogroup";
@@ -43,13 +52,6 @@ export function useAriaRadioGroup<V extends string | number, G extends Element, 
     }, [useHasFocusProps, useRefElementProps]);
 
     useChildFlag(selectedIndex, managedChildren.length, (i, checked) => managedChildren[i]?.setChecked(checked));
-
-    const { lastActiveElement } = useActiveElement();
-    let anyRadiosFocused = (!!element?.contains(lastActiveElement));
-    useEffect(() => {
-        if (!anyRadiosFocused && selectedIndex != null)
-            setTabbableIndex(selectedIndex);
-    }, [anyRadiosFocused, selectedIndex, setTabbableIndex]);
 
 
     useEffect(() => {

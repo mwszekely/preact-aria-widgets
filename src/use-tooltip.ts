@@ -16,11 +16,12 @@ export function useAriaTooltip({ mouseoverDelay }: { mouseoverDelay?: number }) 
 
     const { useRandomIdProps: useTooltipIdProps, useReferencedIdProps: useTooltipIdReferencingProps } = useRandomId({ prefix: "aria-tooltip-" });
 
-    const { focusedInner: triggerFocused, useHasFocusProps } = useHasFocus<Element>();
+    const [triggerFocusedInner, setTriggerFocusedInner, getTriggerFocusedInner] = useState(false);
+    const { useHasFocusProps } = useHasFocus<Element>({ setFocusedInner: setTriggerFocusedInner });
     const [triggerHasMouseover, setTriggerHasMouseover] = useState(false);
     const [tooltipHasMouseover, setTooltipHasMouseover] = useState(false);
 
-    
+
     useTimeout({
         timeout: mouseoverDelay,
         triggerIndex: (+triggerHasMouseover + +tooltipHasMouseover),
@@ -40,8 +41,8 @@ export function useAriaTooltip({ mouseoverDelay }: { mouseoverDelay?: number }) 
     });
 
     useEffect(() => {
-        setOpen(hasAnyMouseover || triggerFocused);
-    }, [hasAnyMouseover, triggerFocused])
+        setOpen(hasAnyMouseover || triggerFocusedInner);
+    }, [hasAnyMouseover, triggerFocusedInner])
 
     const useTooltipTrigger: UseTooltipTrigger = useCallback(function useTooltipTrigger<TriggerType extends Element>() {
 

@@ -102,7 +102,7 @@ export function useAriaAccordion<ParentElement extends Element, ChildElement ext
                         stableSetExpandedIndex(args.index);
                 };
 
-                let retB = useMergedProps<ChildElement>()({ tabIndex: 0 }, useButtonLikeEventHandlers<ChildElement>(tag, onClick, undefined)(props));
+                let retB = useMergedProps<ChildElement>()({ tabIndex: 0 }, useButtonLikeEventHandlers<ChildElement>(onClick, undefined)(props));
 
                 let ret3:
                     MergedProps<ChildElement, UseRandomIdPropsReturnType<UseReferencedIdPropsReturnType<{ "aria-expanded": string; "aria-disabled": string | undefined; } & UseHasFocusPropsReturnType<ChildElement, Omit<P, "aria-expanded" | "aria-disabled">>, "aria-controls">>, { onClick: h.JSX.EventHandler<h.JSX.TargetedMouseEvent<ChildElement>> }>

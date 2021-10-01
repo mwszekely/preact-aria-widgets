@@ -207,7 +207,9 @@ const Checkbox2 = memo(() => {
 const CheckboxGroupContext = createContext<UseCheckboxGroupChild<HTMLInputElement>>(null!);
 const DemoUseCheckboxGroup = memo(() => {
 
-    const { useCheckboxGroupCheckboxProps, useCheckboxGroupChild, selfIsChecked, percentChecked, onCheckboxGroupInput } = useCheckboxGroup<HTMLInputElement>({});
+    const [focusedInner, setFocusedInner, getFocusedInner] = useState(false);
+    const { useHasFocusProps } = useHasFocus<HTMLDivElement>({ setFocusedInner })
+    const { useCheckboxGroupCheckboxProps, useCheckboxGroupChild, selfIsChecked, percentChecked, onCheckboxGroupInput } = useCheckboxGroup<HTMLInputElement>({ shouldFocusOnChange: getFocusedInner });
     const { useCheckboxInputElement, useCheckboxLabelElement } = useAriaCheckbox<HTMLInputElement, HTMLLabelElement>({ checked: selfIsChecked, disabled: false, labelPosition: "separate", onInput: onCheckboxGroupInput as any });
 
     const { useCheckboxInputElementProps } = useCheckboxInputElement({ tag: "input" });
@@ -221,7 +223,7 @@ const DemoUseCheckboxGroup = memo(() => {
                 <input {...useCheckboxInputElementProps(useCheckboxGroupCheckboxProps({}))} />
                 <label {...useCheckboxLabelElementProps({})}>All checked?</label>
             </div>
-            <div {...({ style: { "display": "flex", "flexDirection": "column" } })} >
+            <div {...useHasFocusProps({ style: { "display": "flex", "flexDirection": "column" } })} >
 
                 {Array.from((function* () {
                     for (let i = 0; i < 10; ++i) {
@@ -406,22 +408,6 @@ const DemoMenuItem = memo(({ index }: { index: number }) => {
     return <li {...useMenuItemProps({})}>Item {index + 1}</li>
 })
 
-const DemoFocus = memo(() => {
-    const { focused, focusedInner, useHasFocusProps } = useHasFocus<HTMLDivElement>();
-    return (
-        <div class="demo">
-            <h2>useHasFocus</h2>
-            <div {...useHasFocusProps({ style: { border: "1px solid black" }, tabIndex: 0 })} >Outer <div tabIndex={0} style={{ border: "1px solid black" }}>Inner element</div></div>
-            <div>
-                <ul>
-                    <li>Strictly focused: {focused.toString()}</li>
-                    <li>Inner focused: {focusedInner.toString()}</li>
-                </ul>
-            </div>
-        </div>
-    )
-})
-
 const TabContext = createContext<UseTab<HTMLLIElement>>(null!);
 const TabPanelContext = createContext<UseTabPanel<HTMLParagraphElement>>(null!);
 const DemoTabs = memo(() => {
@@ -547,7 +533,6 @@ const Component = () => {
         <DemoTooltip />
         {/*<DemoTable />*/}
         <DemoTabs />
-        <DemoFocus />
         <DemoUseTimeout />
         <DemoUseInterval />
         <DemoMenu />

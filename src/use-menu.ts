@@ -1,6 +1,6 @@
 import { h } from "preact";
-import { MergedProps, useActiveElement, useHasFocus, useLayoutEffect, useListNavigation, UseListNavigationChildInfo, UseListNavigationChildParameters, UseListNavigationChildPropsReturnType, UseListNavigationParameters, useMergedProps, useRandomId, useRefElement, useStableCallback, useTimeout } from "preact-prop-helpers";
-import { useCallback, useEffect, useState } from "preact/hooks";
+import { MergedProps, useActiveElement, useHasFocus, useLayoutEffect, useListNavigation, UseListNavigationChildInfo, UseListNavigationChildParameters, UseListNavigationChildPropsReturnType, UseListNavigationParameters, useMergedProps, useRandomId, useRefElement, useStableCallback, useState, useTimeout } from "preact-prop-helpers";
+import { useCallback, useEffect } from "preact/hooks";
 import { enhanceEvent, EventDetail, TagSensitiveProps } from "./props";
 import { useSoftDismiss } from "./use-modal";
 
@@ -95,15 +95,16 @@ export function useAriaMenu<ParentElement extends Element, ChildElement extends 
     let open = (menubar ? true : (args as UseMenuParameters1).open);
     const stableOnClose = useStableCallback(onClose ?? (() => { }));
 
+    const [menuLastFocusedInner, setMenuLastFocusedInner, getMenuLastFocusedInner] = useState(false);
+    const [buttonLastFocusedInner, setButtonLastFocusedInner, getButtonLastFocusedInner] = useState(false);
     // TODO: It's awkward that the button focus props are out here where we don't have its type,
     // but focus management is super sensitive, and even waiting for a useLayoutEffect to sync state here
     // would be too late, so it would look like there's a moment between menu focus lost and button focus gained
     // where nothing is focused. 
-    const { focusedInner: menuHasFocus, useHasFocusProps: useMenuHasFocusProps, } = useHasFocus<E>();
-    const { focusedInner: buttonHasFocus, useHasFocusProps: useButtonHasFocusProps } = useHasFocus<Element>();
-    const { activeElement, lastActiveElement, windowFocused } = useActiveElement();
+    const { useHasFocusProps: useMenuHasFocusProps, } = useHasFocus<E>({ setLastFocusedInner: setMenuLastFocusedInner });
+    const { useHasFocusProps: useButtonHasFocusProps } = useHasFocus<Element>({ setLastFocusedInner: setButtonLastFocusedInner });
 
-    const { managedChildren, useListNavigationChild, tabbableIndex, focusCurrent: focusMenu } = useListNavigation<ChildElement>({ collator, keyNavigation, noTypeahead, noWrap, typeaheadTimeout, shouldFocusOnChange: () => (menuHasFocus || buttonHasFocus) });
+    const { managedChildren, useListNavigationChild, tabbableIndex, focusCurrent: focusMenu } = useListNavigation<ChildElement>({ collator, keyNavigation, noTypeahead, noWrap, typeaheadTimeout, shouldFocusOnChange: useCallback(() => getMenuLastFocusedInner() || getButtonLastFocusedInner(), []) });
     const { useRandomIdProps: useMenuIdProps, useReferencedIdProps: useMenuIdReferencingProps } = useRandomId({ prefix: "aria-menu-" });
 
     const [openerElement, setOpenerElement] = useState<(Element & HTMLOrSVGElement) | null>(null);
@@ -120,7 +121,8 @@ export function useAriaMenu<ParentElement extends Element, ChildElement extends 
             focusMenuStable?.();
         }
         else if (focusTrapActive === false) {
-            openerElement?.focus();
+            if (getMenuLastFocusedInner())
+                openerElement?.focus();
         }
         else {
             // null, so we've only just mounted and shouldn't focus ourselves.
@@ -132,7 +134,7 @@ export function useAriaMenu<ParentElement extends Element, ChildElement extends 
     // on iOS or whatever, which would immediately close the menu 
     // any time it's been opened. So any time it *looks* like we should close,
     // try waiting 100ms. If it's still true then, then yeah, we should close.
-    let shouldClose = (focusTrapActive && windowFocused && !menuHasFocus && !buttonHasFocus);
+    let shouldClose = (focusTrapActive && !menuLastFocusedInner && !buttonLastFocusedInner);
     useTimeout({
         timeout: 100,
         callback: () => {

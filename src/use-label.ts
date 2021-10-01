@@ -193,7 +193,7 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
             // For some reason, Chrome won't fire onInput events for radio buttons that are tabIndex=-1??
             // Needs investigating, but onInput works fine in Firefox
             // TODO
-            let props: h.JSX.HTMLAttributes<InputType> = useButtonLikeEventHandlers<InputType>(tag as ElementToTag<InputType>, disabled || !handlesInput(tag, labelPosition, "input-element") ? undefined : stableOnInput, undefined)({});
+            let props: h.JSX.HTMLAttributes<InputType> = useButtonLikeEventHandlers<InputType>(disabled || !handlesInput(tag, labelPosition, "input-element") ? undefined : stableOnInput, undefined)({});
 
             if (tag == "input")
                 props.onInput = (e: Event) => e.preventDefault();
@@ -234,7 +234,7 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
 
         function useCheckboxLikeLabelElementProps<P extends h.JSX.HTMLAttributes<LabelType>>({ ...p0 }: P) {
 
-            let newProps: h.JSX.HTMLAttributes<LabelType> = useButtonLikeEventHandlers<LabelType>("div" as ElementToTag<LabelType>, disabled || !handlesInput(tag, labelPosition, "label-element") ? undefined : stableOnInput, undefined)({});
+            let newProps: h.JSX.HTMLAttributes<LabelType> = useButtonLikeEventHandlers<LabelType>(disabled || !handlesInput(tag, labelPosition, "label-element") ? undefined : stableOnInput, undefined)({ });
 
             if (labelPosition == "wrapping") {
                 newProps.tabIndex = 0;

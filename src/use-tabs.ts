@@ -13,7 +13,7 @@ export interface UseAriaTabsParameters extends Omit<UseListNavigationParameters,
     orientation: "inline" | "block";
 }
 
-export interface UseTabParameters<E extends Element> extends Omit<UseListNavigationChildParameters<UseTabInfo>, "tabId" | "setTabPanelId" | "setSelected" | "setSelectionMode">, TagSensitiveProps<E> {}
+export interface UseTabParameters<E extends Element> extends Omit<UseListNavigationChildParameters<UseTabInfo>, "tabId" | "setTabPanelId" | "setSelected" | "setSelectionMode">, TagSensitiveProps<E> { }
 
 export interface UseTabPanelParameters extends Omit<UseTabPanelInfo, "tabPanelId" | "setTabId" | "focus" | "setVisible"> { }
 
@@ -40,7 +40,8 @@ export type UseTabPanel<PanelElement extends Element> = (info: UseTabPanelParame
 
 export function useAriaTabs<ListElement extends Element, TabElement extends Element, TabPanelElement extends Element>({ selectionMode, selectedIndex, onSelect, orientation: logicalOrientation, ...args }: UseAriaTabsParameters) {
 
-    const { useHasFocusProps: useTabListHasFocusProps, focusedInner: tabListFocused } = useHasFocus<ListElement>();
+    const [tabListFocusedInner, setTabListFocusedInner, getTabListFocusedInner] = useState(false);
+    const { useHasFocusProps: useTabListHasFocusProps } = useHasFocus<ListElement>({ setFocusedInner: setTabListFocusedInner });
     const { element: listElement, useRefElementProps } = useRefElement<any>();
     const { getLogicalDirection, convertToPhysicalOrientation } = useLogicalDirection(listElement);
     const physicalOrientation = convertToPhysicalOrientation(logicalOrientation);
@@ -48,7 +49,7 @@ export function useAriaTabs<ListElement extends Element, TabElement extends Elem
     const { useRandomIdProps: useTabListIdProps, useReferencedIdProps: useReferencedTabListId } = useRandomId({ prefix: "aria-tab-list-" });
     const { useRandomIdProps: useTabLabelIdProps, useReferencedIdProps: useReferencedTabLabelId } = useRandomId({ prefix: "aria-tab-label-" });
 
-    const { managedChildren: managedTabs, navigateToIndex, useListNavigationChild, tabbableIndex, invalidTypeahead, currentTypeahead, focusCurrent } = useListNavigation<TabElement, UseTabInfo>({...args, shouldFocusOnChange: () => tabListFocused, keyNavigation: logicalOrientation });
+    const { managedChildren: managedTabs, navigateToIndex, useListNavigationChild, tabbableIndex, invalidTypeahead, currentTypeahead, focusCurrent } = useListNavigation<TabElement, UseTabInfo>({ ...args, shouldFocusOnChange: useCallback(() => { return selectionMode === "focus" && getTabListFocusedInner() }, [selectionMode]), keyNavigation: logicalOrientation });
     const { managedChildren: managedPanels, useManagedChild: useManagedTabPanel } = useChildManager<UseTabPanelInfo>()
 
     const stableOnSelect = useStableCallback(onSelect);
@@ -71,8 +72,6 @@ export function useAriaTabs<ListElement extends Element, TabElement extends Elem
             managedPanels[selectedIndex]?.focus();
         }
     }, [childCount, selectedIndex, selectionMode]);
-
-    const getTabListIsFocused = useStableGetter(tabListFocused);
 
 
     const useTab: UseTab<TabElement> = useCallback(function useTab(info: UseTabParameters<TabElement>) {
@@ -102,7 +101,7 @@ export function useAriaTabs<ListElement extends Element, TabElement extends Elem
 
 
         function useTabProps<P extends h.JSX.HTMLAttributes<TabElement>>({ ...props }: P) {
-            const newProps: h.JSX.HTMLAttributes<TabElement> = useButtonLikeEventHandlers<TabElement>(info.tag, (e) => {
+            const newProps: h.JSX.HTMLAttributes<TabElement> = useButtonLikeEventHandlers<TabElement>((e) => {
                 navigateToIndex(info.index);
                 onSelect?.(enhanceEvent(e, { selectedIndex: getIndex() }));
                 e.preventDefault();
@@ -128,7 +127,7 @@ export function useAriaTabs<ListElement extends Element, TabElement extends Elem
 
 
         function focus() {
-            if (getTabListIsFocused()) {
+            if (getTabListFocusedInner()) {
                 setShouldFocus(true);
             }
         }

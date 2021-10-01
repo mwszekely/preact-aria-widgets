@@ -34,12 +34,9 @@ export type UseAriaButtonPropsReturnType<E extends EventTarget, P extends UseAri
     MergedProps<E, { "aria-pressed": string | undefined; }, Omit<P, "aria-pressed" | "tabIndex" | "role">>;
 
 
-function excludes<E extends EventTarget>(tag: ElementToTag<E>, target: "click" | "space" | "enter", exclude: undefined | { click?: "exclude" | undefined, space?: "exclude" | undefined, enter?: "exclude" | undefined }) {
+function excludes<E extends EventTarget>(target: "click" | "space" | "enter", exclude: undefined | { click?: "exclude" | undefined, space?: "exclude" | undefined, enter?: "exclude" | undefined }) {
     if (exclude?.[target])
         return true;
-
-    if (target === "space" || target === "enter")
-        return tag == "button";
 
     return false;
 }
@@ -59,11 +56,11 @@ function excludes<E extends EventTarget>(tag: ElementToTag<E>, target: "click" |
  * @param onClick 
  * @param exclude Whether the polyfill should apply (can specify for specific interactions)
  */
-export function useButtonLikeEventHandlers<E extends EventTarget>(tag: ElementToTag<E>, onClickSync: ((e: h.JSX.TargetedEvent<E>) => void) | null | undefined, exclude: undefined | { click?: "exclude" | undefined, space?: "exclude" | undefined, enter?: "exclude" | undefined }) {
+export function useButtonLikeEventHandlers<E extends EventTarget>(onClickSync: ((e: h.JSX.TargetedEvent<E>) => void) | null | undefined, exclude: undefined | { click?: "exclude" | undefined, space?: "exclude" | undefined, enter?: "exclude" | undefined }) {
 
     const [active, setActive] = useState(false);
 
-    const onKeyUp = excludes(tag, "space", exclude)? undefined : (e: h.JSX.TargetedKeyboardEvent<E>) => {
+    const onKeyUp = excludes("space", exclude)? undefined : (e: h.JSX.TargetedKeyboardEvent<E>) => {
         if (e.key == " " && onClickSync) {
             e.preventDefault();
             onClickSync(e);
@@ -71,11 +68,11 @@ export function useButtonLikeEventHandlers<E extends EventTarget>(tag: ElementTo
         }
     }
 
-    const onMouseDown = excludes(tag, "click", exclude)? undefined : (e: h.JSX.TargetedMouseEvent<E>) => {
+    const onMouseDown = excludes("click", exclude)? undefined : (e: h.JSX.TargetedMouseEvent<E>) => {
         if (e.button === 0)
             setActive(true);
     }
-    const onMouseUp = excludes(tag, "click", exclude) ? undefined : (e: h.JSX.TargetedMouseEvent<E>) => {
+    const onMouseUp = excludes("click", exclude) ? undefined : (e: h.JSX.TargetedMouseEvent<E>) => {
         if (active) {
             if (e.button === 0) {
                 setActive(false);
@@ -93,17 +90,17 @@ export function useButtonLikeEventHandlers<E extends EventTarget>(tag: ElementTo
     }
 
 
-    const onMouseOut = excludes(tag, "click", exclude)? undefined : onBlur;
+    const onMouseOut = excludes("click", exclude)? undefined : onBlur;
 
-    const onKeyDown = excludes(tag, "space", exclude) && excludes(tag, "enter", exclude)? undefined : (e: h.JSX.TargetedKeyboardEvent<E>) => {
-        if (e.key == " " && onClickSync && !excludes(tag, "space", exclude)) {
+    const onKeyDown = excludes("space", exclude) && excludes("enter", exclude)? undefined : (e: h.JSX.TargetedKeyboardEvent<E>) => {
+        if (e.key == " " && onClickSync && !excludes("space", exclude)) {
             // We don't actually activate it on a space keydown
             // but we do preventDefault to stop the page from scrolling.
             setActive(true);
             e.preventDefault();
         }
 
-        if (e.key == "Enter" && onClickSync && !excludes(tag, "enter", exclude)) {
+        if (e.key == "Enter" && onClickSync && !excludes("enter", exclude)) {
             e.preventDefault();
             onClickSync(e);
         }
@@ -116,7 +113,7 @@ export function useAriaButton<E extends EventTarget>({ tag, pressed, onClick }: 
 
     function useAriaButtonProps<P extends UseAriaButtonPropsParameters<E>>({ "aria-pressed": ariaPressed, tabIndex, role, ...p }: P): UseAriaButtonPropsReturnType<E, P> {
 
-        const props = useButtonLikeEventHandlers<E>(tag, (e) => onClick?.(enhanceEvent(e, { pressed: pressed == null ? null : !pressed })), undefined)(p);
+        const props = useButtonLikeEventHandlers<E>((e) => onClick?.(enhanceEvent(e, { pressed: pressed == null ? null : !pressed })), undefined)(p);
 
         const buttonProps = { role, tabIndex, "aria-pressed": ariaPressed ?? (pressed === true ? "true" : pressed === false ? "false" : undefined) };
         const divProps = { ...buttonProps, tabIndex: tabIndex ?? 0, role: role ?? "button" };
