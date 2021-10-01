@@ -49,7 +49,7 @@ export function useAriaTabs<ListElement extends Element, TabElement extends Elem
     const { useRandomIdProps: useTabListIdProps, useReferencedIdProps: useReferencedTabListId } = useRandomId({ prefix: "aria-tab-list-" });
     const { useRandomIdProps: useTabLabelIdProps, useReferencedIdProps: useReferencedTabLabelId } = useRandomId({ prefix: "aria-tab-label-" });
 
-    const { managedChildren: managedTabs, navigateToIndex, useListNavigationChild, tabbableIndex, invalidTypeahead, currentTypeahead, focusCurrent } = useListNavigation<TabElement, UseTabInfo>({ ...args, shouldFocusOnChange: useCallback(() => { return selectionMode === "focus" && getTabListFocusedInner() }, [selectionMode]), keyNavigation: logicalOrientation });
+    const { managedChildren: managedTabs, navigateToIndex, useListNavigationChild, tabbableIndex, invalidTypeahead, currentTypeahead, focusCurrent } = useListNavigation<TabElement, UseTabInfo>({ ...args, shouldFocusOnChange: getTabListFocusedInner, keyNavigation: logicalOrientation });
     const { managedChildren: managedPanels, useManagedChild: useManagedTabPanel } = useChildManager<UseTabPanelInfo>()
 
     const stableOnSelect = useStableCallback(onSelect);

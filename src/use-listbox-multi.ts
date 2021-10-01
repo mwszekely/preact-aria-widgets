@@ -32,11 +32,11 @@ export type UseListboxMultiItem<E extends Element, I extends UseListboxMultiItem
 export function useAriaListboxMulti<ParentElement extends Element, ChildElement extends Element, I extends UseListboxMultiItemInfo<ChildElement>>({ ...args }: UseListboxMultiParameters) {
     type E = ParentElement;
 
-    const [lastFocused, setLastFocused, getLastFocused] = useState(false);
-    const { useHasFocusProps } = useHasFocus<E>({ setLastFocused });
+    const [focusedInner, setFocusedInner, getFocusedInner] = useState(false);
+    const { useHasFocusProps } = useHasFocus<E>({ setFocusedInner });
 
     const { useGenericLabelInput, useGenericLabelLabel, useReferencedInputIdProps, useReferencedLabelIdProps } = useGenericLabel({ labelPrefix: "aria-listbox-label-", inputPrefix: "aria-listbox-" })
-    const { useListNavigationChild, navigateToIndex, managedChildren, currentTypeahead, focusCurrent, tabbableIndex, invalidTypeahead } = useListNavigation<ChildElement, UseListboxMultiItemInfo<ChildElement>>({ ...args, shouldFocusOnChange: getLastFocused });
+    const { useListNavigationChild, navigateToIndex, managedChildren, currentTypeahead, focusCurrent, tabbableIndex, invalidTypeahead } = useListNavigation<ChildElement, UseListboxMultiItemInfo<ChildElement>>({ ...args, shouldFocusOnChange: getFocusedInner });
     const { useGenericLabelInputProps } = useGenericLabelInput<E>();
 
     const childCount = managedChildren.length;
@@ -101,13 +101,13 @@ export function useAriaListboxMulti<ParentElement extends Element, ChildElement 
     function useListboxMultiProps<P extends h.JSX.HTMLAttributes<E>>(props: P) {
         props.role = "listbox";
         props["aria-multiselectable"] = "true";
-        return useHasFocusProps(useGenericLabelInputProps(useMergedProps<E>()({ onKeyDown, onKeyUp, onBlur }, props)));
+        return useHasFocusProps(useGenericLabelInputProps(useMergedProps<E>()({ onKeyDown, onKeyUp, onFocusOut }, props)));
     }
 
 
 
     function onKeyDown(e: KeyboardEvent) { if (e.key == "Shift") setShiftHeld(true); }
     function onKeyUp(e: KeyboardEvent) { if (e.key == "Shift") setShiftHeld(false); }
-    function onBlur(e: FocusEvent) { setShiftHeld(false); }
+    function onFocusOut(e: FocusEvent) { setShiftHeld(false); }
 
 }

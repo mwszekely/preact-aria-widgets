@@ -1,6 +1,7 @@
 import { h } from "preact";
-import { MergedProps, useMergedProps, useState } from "preact-prop-helpers";
-import { ElementToTag, enhanceEvent, EventDetail, TagSensitiveProps } from "./props";
+import { MergedProps, useMergedProps, useStableCallback, useState } from "preact-prop-helpers";
+import { useRef } from "preact/hooks";
+import { enhanceEvent, EventDetail, TagSensitiveProps } from "./props";
 
 let pulse = ("vibrate" in navigator) ? (() => navigator.vibrate(10)) : (() => { });
 
@@ -41,6 +42,8 @@ function excludes<E extends EventTarget>(target: "click" | "space" | "enter", ex
     return false;
 }
 
+const NavigationKeys = new Set(["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight", "Tab"]);
+
 /**
  * Easy way to "polyfill" button-like interactions onto, e.g., a div.
  * 
@@ -58,30 +61,32 @@ function excludes<E extends EventTarget>(target: "click" | "space" | "enter", ex
  */
 export function useButtonLikeEventHandlers<E extends EventTarget>(onClickSync: ((e: h.JSX.TargetedEvent<E>) => void) | null | undefined, exclude: undefined | { click?: "exclude" | undefined, space?: "exclude" | undefined, enter?: "exclude" | undefined }) {
 
-    const [active, setActive] = useState(false);
+    const [active, setActive, getActive] = useState(false);
 
-    const onKeyUp = excludes("space", exclude)? undefined : (e: h.JSX.TargetedKeyboardEvent<E>) => {
-        if (e.key == " " && onClickSync) {
+    const handlePress = useStableCallback<NonNullable<typeof onClickSync>>((e) => {
+        if (onClickSync) {
             e.preventDefault();
-            onClickSync(e);
+            pulse();
             setActive(false);
+            onClickSync(e);
+        }
+    });
+
+    const onKeyUp = excludes("space", exclude) ? undefined : (e: h.JSX.TargetedKeyboardEvent<E>) => {
+        if (e.key == " " && onClickSync) {
+            handlePress(e);
         }
     }
 
-    const onMouseDown = excludes("click", exclude)? undefined : (e: h.JSX.TargetedMouseEvent<E>) => {
+    const onMouseDown = excludes("click", exclude) ? undefined : (e: h.JSX.TargetedMouseEvent<E>) => {
         if (e.button === 0)
             setActive(true);
     }
     const onMouseUp = excludes("click", exclude) ? undefined : (e: h.JSX.TargetedMouseEvent<E>) => {
         if (active) {
             if (e.button === 0) {
-                setActive(false);
-                if (onClickSync) {
-                    pulse();
-                    onClickSync(e);
-                }
+                handlePress(e);
             }
-            onBlur(e as any);
         }
     };
 
@@ -90,9 +95,9 @@ export function useButtonLikeEventHandlers<E extends EventTarget>(onClickSync: (
     }
 
 
-    const onMouseOut = excludes("click", exclude)? undefined : onBlur;
+    const onMouseOut = excludes("click", exclude) ? undefined : onBlur;
 
-    const onKeyDown = excludes("space", exclude) && excludes("enter", exclude)? undefined : (e: h.JSX.TargetedKeyboardEvent<E>) => {
+    const onKeyDown = excludes("space", exclude) && excludes("enter", exclude) ? undefined : (e: h.JSX.TargetedKeyboardEvent<E>) => {
         if (e.key == " " && onClickSync && !excludes("space", exclude)) {
             // We don't actually activate it on a space keydown
             // but we do preventDefault to stop the page from scrolling.
