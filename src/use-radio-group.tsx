@@ -29,28 +29,22 @@ export type UseAriaRadioParameters<V extends string | number, I extends Element,
     }
 
 export function useAriaRadioGroup<V extends string | number, G extends Element, I extends Element, L extends Element, Info extends UseAriaRadioInfo>({ name, selectedValue, onInput }: UseAriaRadioGroupParameters<V>) {
-    const { element, useRefElementProps } = useRefElement<G>()
-    const [selectedIndex, setSelectedIndex, getSelectedIndex] = useState<number | null>(null);
+    const { element, useRefElementProps } = useRefElement<G>();
+    
+    const getSelectedIndex = useCallback((selectedValue: V) => { return byName.current.get(selectedValue) ?? 0 }, [])
     const byName = useRef(new Map<V, any>());
     const stableOnInput = useStableCallback(onInput);
-
-    useEffect(() => {
-        let oldIndex = getSelectedIndex();
-        let newIndex = byName.current.get(selectedValue);
-
-        console.assert(newIndex != null);
-        setSelectedIndex(newIndex);
-    }, [selectedValue]);
 
     const [focusedInner, setFocusedInner, getFocusedInner] = useState(false);
     const { useHasFocusProps } = useHasFocus<G>({
         setFocusedInner: useCallback((focused: boolean) => {
+            const selectedIndex = getSelectedIndex(selectedValue);
             console.assert(selectedIndex != null);
             if (!focused) {
                 setTabbableIndex(selectedIndex);
             }
             setFocusedInner(focused);
-        }, [selectedIndex])
+        }, [selectedValue])
     });
 
     const { managedChildren, useListNavigationChild, setTabbableIndex, tabbableIndex, focusCurrent, currentTypeahead, invalidTypeahead } = useListNavigation<I, Info>({ shouldFocusOnChange: getFocusedInner });
@@ -60,7 +54,7 @@ export function useAriaRadioGroup<V extends string | number, G extends Element, 
         return useRefElementProps(useHasFocusProps(props));
     }, [useHasFocusProps, useRefElementProps]);
 
-    useChildFlag(selectedIndex, managedChildren.length, (i, checked) => managedChildren[i]?.setChecked(checked));
+    useChildFlag(getSelectedIndex(selectedValue), managedChildren.length, (i, checked) => managedChildren[i]?.setChecked(checked));
 
 
 
