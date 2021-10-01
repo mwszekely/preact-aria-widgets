@@ -73,7 +73,7 @@ export function useButtonLikeEventHandlers<E extends EventTarget>(onClickSync: (
     });
 
     const onKeyUp = excludes("space", exclude) ? undefined : (e: h.JSX.TargetedKeyboardEvent<E>) => {
-        if (e.key == " " && onClickSync) {
+        if (active && e.key == " " && onClickSync) {
             handlePress(e);
         }
     }
