@@ -19,7 +19,7 @@ export type ButtonPressEvent<EventType extends Event> = EventType & { [EventDeta
 
 export interface UseAriaButtonParameters<E extends EventTarget> extends TagSensitiveProps<E> {
     pressed?: boolean | null | undefined;
-    onClick?(event: ButtonPressEvent<h.JSX.TargetedMouseEvent<E>> | ButtonPressEvent<h.JSX.TargetedKeyboardEvent<E> | ButtonPressEvent<h.JSX.TargetedEvent<E>>>): void;
+    onPress?(event: ButtonPressEvent<h.JSX.TargetedMouseEvent<E>> | ButtonPressEvent<h.JSX.TargetedKeyboardEvent<E> | ButtonPressEvent<h.JSX.TargetedEvent<E>>>): void;
 }
 
 export interface UseAriaButtonReturnType<E extends EventTarget> {
@@ -109,11 +109,11 @@ export function useButtonLikeEventHandlers<E extends EventTarget>(onClickSync: (
     return <P extends h.JSX.HTMLAttributes<E>>(props: P) => useMergedProps<E>()({ onKeyDown, onKeyUp, onBlur, onMouseDown, onMouseUp, onMouseOut, ...{ "data-pseudo-active": active ? "true" : undefined } as {} }, props);
 }
 
-export function useAriaButton<E extends EventTarget>({ tag, pressed, onClick }: UseAriaButtonParameters<E>): UseAriaButtonReturnType<E> {
+export function useAriaButton<E extends EventTarget>({ tag, pressed, onPress }: UseAriaButtonParameters<E>): UseAriaButtonReturnType<E> {
 
     function useAriaButtonProps<P extends UseAriaButtonPropsParameters<E>>({ "aria-pressed": ariaPressed, tabIndex, role, ...p }: P): UseAriaButtonPropsReturnType<E, P> {
 
-        const props = useButtonLikeEventHandlers<E>((e) => onClick?.(enhanceEvent(e, { pressed: pressed == null ? null : !pressed })), undefined)(p);
+        const props = useButtonLikeEventHandlers<E>((e) => onPress?.(enhanceEvent(e, { pressed: pressed == null ? null : !pressed })), undefined)(p);
 
         const buttonProps = { role, tabIndex, "aria-pressed": ariaPressed ?? (pressed === true ? "true" : pressed === false ? "false" : undefined) };
         const divProps = { ...buttonProps, tabIndex: tabIndex ?? 0, role: role ?? "button" };

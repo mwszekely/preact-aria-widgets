@@ -34,9 +34,18 @@ export function useAriaRadioGroup<V extends string | number, G extends Element, 
     const byName = useRef(new Map<V, any>());
     const stableOnInput = useStableCallback(onInput);
 
+    useEffect(() => {
+        let oldIndex = getSelectedIndex();
+        let newIndex = byName.current.get(selectedValue);
+
+        console.assert(newIndex != null);
+        setSelectedIndex(newIndex);
+    }, [selectedValue]);
+
     const [focusedInner, setFocusedInner, getFocusedInner] = useState(false);
     const { useHasFocusProps } = useHasFocus<G>({
         setFocusedInner: useCallback((focused: boolean) => {
+            console.assert(selectedIndex != null);
             if (!focused) {
                 setTabbableIndex(selectedIndex);
             }
@@ -53,13 +62,6 @@ export function useAriaRadioGroup<V extends string | number, G extends Element, 
 
     useChildFlag(selectedIndex, managedChildren.length, (i, checked) => managedChildren[i]?.setChecked(checked));
 
-
-    useEffect(() => {
-        let oldIndex = getSelectedIndex();
-        let newIndex = byName.current.get(selectedValue);
-
-        setSelectedIndex(newIndex);
-    }, [selectedValue]);
 
 
 
