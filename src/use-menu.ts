@@ -172,7 +172,7 @@ export function useAriaMenu<ParentElement extends Element, ChildElement extends 
 
         return {
             useMenuButtonProps: function <P extends h.JSX.HTMLAttributes<E>>(p: P) {
-                let props = useRefElementProps(useMergedProps<E>()({ onClick: () => { return open ? onClose?.() : onOpen?.() } }, useMenuIdReferencingProps("aria-controls")(useButtonHasFocusProps(p as any) as any)));
+                let props = useRefElementProps(useMergedProps<E>()({}, useMenuIdReferencingProps("aria-controls")(useButtonHasFocusProps(p as any) as any)));
                 props["aria-haspopup"] = "menu";
                 props["aria-expanded"] = open ? "true" : undefined;
                 return props;

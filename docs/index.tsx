@@ -371,7 +371,7 @@ const DemoMenu = memo(() => {
     return (
         <div class="demo">
             <MenuItemContext.Provider value={useMenuItem}>
-                <button {...useMenuButtonProps({})}>Open menu</button>
+                <button {...useMenuButtonProps({ onClick: e => setOpen(open => !open) })}>Open menu</button>
                 <ul {...useMenuProps({})} hidden={!open}>
                     <DemoMenuItem index={0} />
                     <DemoMenuItem index={1} />
