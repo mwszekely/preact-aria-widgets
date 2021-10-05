@@ -7,7 +7,7 @@ import { useGenericLabel } from "./use-label";
 
 export type ListboxSingleSelectEvent<E extends EventTarget> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 
-export interface UseListboxSingleParameters extends Omit<UseListNavigationParameters, "focusOnChange"> {
+export interface UseListboxSingleParameters extends Omit<UseListNavigationParameters, "shouldFocusOnChange"> {
     selectionMode: "focus" | "activate";
     selectedIndex: number;
     onSelect?(event: ListboxSingleSelectEvent<Element>): void;
@@ -21,7 +21,7 @@ export interface UseListboxSingleItemInfo<E extends Element> extends UseListNavi
 
 export type UseListboxSingleItem<E extends Element, I extends UseListboxSingleItemInfo<E> = UseListboxSingleItemInfo<E>> = (info: UseListboxSingleItemParameters<E, I>) => {
     useListboxSingleItemProps: <P extends h.JSX.HTMLAttributes<E>>(props: P) => UseListNavigationChildPropsReturnType<E, MergedProps<E, h.JSX.HTMLAttributes<E>, UseRefElementPropsReturnType<E, P>>>;
-    tabbable: boolean;
+    tabbable: boolean | null;
     selected: boolean;
     getSelected: () => boolean;
 }
@@ -30,20 +30,20 @@ export type UseListboxSingleItemParameters<E extends Element, I extends UseListb
 
 export function useAriaListboxSingle<ParentElement extends Element, ChildElement extends Element, I extends UseListboxSingleItemInfo<ChildElement>>({ selectedIndex, onSelect, selectionMode, ...args }: UseListboxSingleParameters) {
 
-    const [focusedInner, setFocusedInner, getFocusedInner] = useState(false);
-    const { useHasFocusProps } = useHasFocus<ParentElement>({
-        setFocusedInner: useCallback((focused: boolean) => {
-            if (!focused) {
-                setTabbableIndex(selectedIndex);
-            }
-            setFocusedInner(focused);
-        }, [selectedIndex])
-    });
+    const [anyItemsFocused, setAnyItemsFocused, getAnyItemsFocused] = useState(false);
 
     const { useGenericLabelInput, useGenericLabelLabel, useReferencedInputIdProps, useReferencedLabelIdProps, inputElement } = useGenericLabel({ labelPrefix: "aria-listbox-label-", inputPrefix: "aria-listbox-" })
-    const { useListNavigationChild, navigateToIndex, managedChildren, setTabbableIndex, tabbableIndex, focusCurrent, currentTypeahead, invalidTypeahead } = useListNavigation<ChildElement, I>({ ...args, shouldFocusOnChange: getFocusedInner });
+    const { useListNavigationChild, navigateToIndex, managedChildren, setTabbableIndex, tabbableIndex, focusCurrent, currentTypeahead, invalidTypeahead } = useListNavigation<ChildElement, I>({ ...args, shouldFocusOnChange: getAnyItemsFocused });
     const { useGenericLabelInputProps } = useGenericLabelInput<ParentElement>();
     const stableOnSelect = useStableCallback(onSelect ?? (() => { }));
+
+    // Track whether the currently focused element is a child of the list box parent element.
+    // When it's not, we reset the tabbable index back to the currently selected element.
+    useActiveElement({ setActiveElement: activeElement => setAnyItemsFocused(!!(inputElement?.contains(activeElement))) });
+    useEffect(() => {
+        if (!anyItemsFocused)
+            setTabbableIndex(selectedIndex);
+    }, [anyItemsFocused, selectedIndex, setTabbableIndex]);
 
     useChildFlag(selectedIndex, managedChildren.length, (i, selected) => managedChildren[i]?.setSelected(selected));
 
@@ -101,6 +101,6 @@ export function useAriaListboxSingle<ParentElement extends Element, ChildElement
 
     function useListboxSingleProps<P extends h.JSX.HTMLAttributes<ParentElement>>(props: P) {
         props.role = "listbox";
-        return useHasFocusProps(useGenericLabelInputProps(props));
+        return useGenericLabelInputProps(props);
     }
 }

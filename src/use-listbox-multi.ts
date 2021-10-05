@@ -7,7 +7,7 @@ import { useGenericLabel } from "./use-label";
 
 export type ListboxMultiSelectEvent<E extends EventTarget> = { [EventDetail]: { selected: boolean } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 
-export interface UseListboxMultiParameters extends Omit<UseListNavigationParameters, "focusOnChange"> {  }
+export interface UseListboxMultiParameters extends Omit<UseListNavigationParameters, "shouldFocusOnChange"> {  }
 
 
 
@@ -23,7 +23,7 @@ export type UseListboxMultiItemParameters<E extends Element, I extends UseListbo
 
 export type UseListboxMultiItem<E extends Element, I extends UseListboxMultiItemInfo<E> = UseListboxMultiItemInfo<E>> = (info: UseListboxMultiItemParameters<E, I>) => {
     useListboxMultiItemProps: <P extends h.JSX.HTMLAttributes<E>>(props: P) => UseRefElementPropsReturnType<E, UseListNavigationChildPropsReturnType<E, MergedProps<E, h.JSX.HTMLAttributes<E>, P>>>;
-    tabbable: boolean;
+    tabbable: boolean | null;
 }
 
 
@@ -79,7 +79,7 @@ export function useAriaListboxMulti<ParentElement extends Element, ChildElement 
             props.role = "option";
             props["aria-setsize"] = (childCount).toString();
             props["aria-posinset"] = (info.index + 1).toString();
-            props["aria-selected"] = tabbable.toString();
+            props["aria-selected"] = (tabbable ?? false).toString();
 
             return useRefElementProps(useListNavigationChildProps(useMergedProps<E>()(newProps, props)));
         }

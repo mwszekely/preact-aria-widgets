@@ -13,7 +13,7 @@ export interface UseCheckboxGroupChildInfo extends UseListNavigationChildInfo {
 
 export type UseCheckboxGroupChildParameters = Omit<UseListNavigationChildParameters<UseCheckboxGroupChildInfo>, "getChecked"> & { checked: boolean | "mixed" };
 export type UseCheckboxGroupChild<ChildElement extends Element> = (args: UseCheckboxGroupChildParameters) => {
-    tabbable: boolean;
+    tabbable: boolean | null;
     useCheckboxGroupChildProps: <P extends h.JSX.HTMLAttributes<ChildElement>>({ tabIndex, ...props }: P) => MergedProps<ChildElement, { onInput: () => void; }, UseListNavigationChildPropsReturnType<ChildElement, P>>;
 }
 
@@ -41,6 +41,8 @@ export function useCheckboxGroup<InputElement extends Element>({ collator, keyNa
     // Otherwise, it's null when the last input was from a child checkbox. 
     const savedCheckedValues = useRef<Map<number, boolean | "mixed"> | null>(null);
     const onCheckboxGroupInput = useCallback((e: h.JSX.TargetedEvent<InputElement>) => {
+
+        e.preventDefault();
 
         // The first time we start interacting with the parent checkbox,
         // save the current child states
@@ -129,7 +131,7 @@ export function useCheckboxGroup<InputElement extends Element>({ collator, keyNa
 
         return {
             tabbable,
-            useCheckboxGroupChildProps: useCallback(<P extends h.JSX.HTMLAttributes<InputElement>>(props: P) => useMergedProps<InputElement>()({ onInput }, useListNavigationChildProps(props)), [onInput])
+            useCheckboxGroupChildProps: useCallback(<P extends h.JSX.HTMLAttributes<InputElement>>(props: P) => useMergedProps<InputElement>()({ onInput }, useListNavigationChildProps(props)), [useListNavigationChildProps, onInput])
         }
 
 

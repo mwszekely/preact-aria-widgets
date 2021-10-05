@@ -29,30 +29,29 @@ export type UseAriaRadioParameters<V extends string | number, I extends Element,
     }
 
 export function useAriaRadioGroup<V extends string | number, G extends Element, I extends Element, L extends Element, Info extends UseAriaRadioInfo>({ name, selectedValue, onInput }: UseAriaRadioGroupParameters<V>) {
-    const { element, useRefElementProps } = useRefElement<G>();
+    const { element: radioGroupParentElement, useRefElementProps } = useRefElement<G>();
     
     const getSelectedIndex = useCallback((selectedValue: V) => { return byName.current.get(selectedValue) ?? 0 }, [])
     const byName = useRef(new Map<V, any>());
     const stableOnInput = useStableCallback(onInput);
+    
+    const [anyRadiosFocused, setAnyRadiosFocused, getAnyRadiosFocused] = useState(false);
 
-    const [focusedInner, setFocusedInner, getFocusedInner] = useState(false);
-    const { useHasFocusProps } = useHasFocus<G>({
-        setFocusedInner: useCallback((focused: boolean) => {
-            const selectedIndex = getSelectedIndex(selectedValue);
-            console.assert(selectedIndex != null);
-            if (!focused) {
-                setTabbableIndex(selectedIndex);
-            }
-            setFocusedInner(focused);
-        }, [selectedValue])
-    });
+    const { managedChildren, useListNavigationChild, setTabbableIndex, tabbableIndex, focusCurrent, currentTypeahead, invalidTypeahead } = useListNavigation<I, Info>({ shouldFocusOnChange: getAnyRadiosFocused });
 
-    const { managedChildren, useListNavigationChild, setTabbableIndex, tabbableIndex, focusCurrent, currentTypeahead, invalidTypeahead } = useListNavigation<I, Info>({ shouldFocusOnChange: getFocusedInner });
+    // Track whether the currently focused element is a child of the radio group parent element.
+    // When it's not, we reset the tabbable index back to the currently selected element.
+    useActiveElement({ setActiveElement: activeElement => setAnyRadiosFocused(!!(radioGroupParentElement?.contains(activeElement))) });
+    useEffect(() => {
+        if (!anyRadiosFocused)
+            setTabbableIndex(getSelectedIndex(selectedValue));
+    }, [anyRadiosFocused, getSelectedIndex(selectedValue), setTabbableIndex]);
+
 
     const useRadioGroupProps = useCallback(<P extends h.JSX.HTMLAttributes<G>>({ ...props }: P) => {
         props.role = "radiogroup";
-        return useRefElementProps(useHasFocusProps(props));
-    }, [useHasFocusProps, useRefElementProps]);
+        return useRefElementProps(props);
+    }, [useRefElementProps]);
 
     useChildFlag(getSelectedIndex(selectedValue), managedChildren.length, (i, checked) => managedChildren[i]?.setChecked(checked));
 

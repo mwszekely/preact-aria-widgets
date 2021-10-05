@@ -62,32 +62,12 @@ const DemoUseDraggable = () => {
         </div>)
 }
 
-const DemoUseElementSizeAnimation = () => {
-    const [height, setHeight] = useState(0);
-    const [angle, setAngle] = useState(0);
-    useAnimationFrame({
-        callback: (ms) => {
-            setAngle(a => a + 0.01)
-            setHeight((Math.sin(angle) + 1) / 0.5);
-        }
-    });
-
-    const { element, elementSize, useElementSizeProps } = useElementSize<HTMLDivElement>();
-
-    return (
-        <div {...useElementSizeProps({ ref: undefined, className: "demo", style: { height: `${(height * 100) + 100}px` } })}>
-            <pre>{JSON.stringify(elementSize, null, 2)}</pre>
-        </div>
-    );
-}
-
 
 const DemoUseFocusTrap = memo(({ depth }: { depth?: number }) => {
 
     const [active, setActive] = useState(false);
 
     const { useFocusTrapProps } = useFocusTrap<HTMLDivElement>({ trapActive: active });
-    //const { useRovingTabIndexChild, useRovingTabIndexProps } = useRovingTabIndex<HTMLUListElement, RovingTabIndexChildInfo>({ tabbableIndex, focusOnChange: false });
 
     const divProps = useFocusTrapProps({ ref: undefined, className: "focus-trap-demo" });
     if (depth == 2)
@@ -256,10 +236,11 @@ const DemoUseCheckboxGroup = memo(() => {
 
 
 const DemoUseCheckboxGroupChild = memo(({ index, checked, setChecked }: { index: number, checked: boolean | "mixed", setChecked(selected: boolean | "mixed"): void }) => {
-    const text = `Number ${index + 1} checkbox ${checked ? "(checked)" : ""}`;
     const { randomId } = useRandomId();
     const useCheckboxGroupChild = useContext(CheckboxGroupContext);
+    let text = `Number ${index + 1} checkbox ${checked ? "(checked)" : ""}`;
     const { tabbable, useCheckboxGroupChildProps } = useCheckboxGroupChild({ index, text, checked, id: randomId, setChecked });
+    text = `Number ${index + 1} checkbox ${checked ? "(checked)" : ""} ${tabbable ? "(tabbble)" : ""}`;
     const { useCheckboxInputElement, useCheckboxLabelElement } = useAriaCheckbox<HTMLInputElement, HTMLLabelElement>({ checked, disabled: false, labelPosition: "separate", onInput: e => setChecked(e[EventDetail].checked) });
 
     const { useCheckboxInputElementProps } = useCheckboxInputElement({ tag: "input" });
@@ -547,7 +528,6 @@ const Component = () => {
         <DemoUseFocusTrap />
         <DemoUseDroppable />
         <DemoUseDraggable />
-        <DemoUseElementSizeAnimation />
         <input />
     </div>
 }
