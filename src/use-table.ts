@@ -2,7 +2,7 @@ import { FunctionComponent, h, VNode } from "preact";
 import { useChildManager, useForceUpdate, useGridNavigation, UseGridNavigationCellInfo, UseGridNavigationCellParameters, UseGridNavigationRowInfo, UseGridNavigationRowParameters, useHasFocus, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
 import { useMergedProps } from "preact-prop-helpers/use-merged-props";
 import { generateRandomId } from "preact-prop-helpers/use-random-id";
-import { useCallback, useEffect, useRef } from "preact/hooks";
+import { useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
 import { TagSensitiveProps } from "props";
 import { useButtonLikeEventHandlers } from "./use-button";
 
@@ -224,10 +224,17 @@ export function useTable<T extends Element, S extends Element, R extends Element
         const recreateChildWithSortedKey = useCallback(function ensortenChild(originalChildren: VNode<UseTableRowProps>[], unsortedIndex: number) {
             const sortedIndex = indexMangler(unsortedIndex);
 
+            // TODO: A bit of cheating here ensures that when a row unmounts while we're still
+            // "borrowing" its data to show as our own, we'll instead just default to showing
+            // ourselves (imagine a table sorted in reverse order, then row #100 unmounts while
+            // row #0 is still displaying it).  This should probably be handled a bit more robustly.
             let unsortedChild = originalChildren[unsortedIndex];
             let sortedChild = originalChildren[sortedIndex];
 
-            return h(sortedChild.type as any, { ...sortedChild.props, key: sortedIndex });
+            let childToImitate = (sortedChild ?? unsortedChild);
+            let key = sortedChild? sortedIndex : unsortedIndex;
+
+            return h(childToImitate.type as any, { ...childToImitate.props, key });
         }, [])
 
 
@@ -266,7 +273,6 @@ export function useTable<T extends Element, S extends Element, R extends Element
             const getManagedCells = useStableCallback(() => managedCells);
 
             const { useGridNavigationCell, useGridNavigationRowProps, cellCount, isTabbableRow, managedCells } = useGridNavigationRow({ index: rowIndexAsUnsorted, getManagedCells, hidden, ...{ rowIndexAsSorted: getRowIndexAsSorted() } as {}, getRowIndexAsSorted, setRowIndexAsSorted, location });
-
 
             // Not public -- just the shared code between header cells and body cells
             const useTableCellShared = useCallback(<C extends Element>({ columnIndex, value }: { columnIndex: number, value: SortableTypes }) => {

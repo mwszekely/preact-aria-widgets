@@ -6,7 +6,7 @@ import { useButtonLikeEventHandlers } from "./use-button";
 
 export type TabsChangeEvent<E extends Element> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 
-export interface UseAriaTabsParameters extends Omit<UseListNavigationParameters, "keyNavigation" | "shouldFocus"> {
+export interface UseAriaTabsParameters extends Omit<UseListNavigationParameters, "keyNavigation" | "shouldFocusOnChange"> {
     selectedIndex: number | null;
     onSelect(event: TabsChangeEvent<Element>): void;
     selectionMode: "focus" | "activate";

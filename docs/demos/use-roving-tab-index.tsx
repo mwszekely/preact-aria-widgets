@@ -12,7 +12,6 @@ export const DemoUseRovingTabIndex = memo(() => {
     const [lastFocusedInner, setLastFocusedInner, getLastFocusedInner] = useState(false);
     const { useHasFocusProps } = useHasFocus<HTMLUListElement>({})
     const { useListNavigationChild, currentTypeahead, setTabbableIndex, tabbableIndex } = useListNavigation<HTMLLIElement>({ shouldFocusOnChange: getLastFocusedInner });
-    //const { useRovingTabIndexChild, useRovingTabIndexProps } = useRovingTabIndex<HTMLUListElement, RovingTabIndexChildInfo>({ tabbableIndex, focusOnChange: false });
 
     return (
         <div className="demo">
