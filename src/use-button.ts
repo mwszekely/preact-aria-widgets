@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { MergedProps, useMergedProps, useStableCallback, useState } from "preact-prop-helpers";
+import { MergedProps, useMergedProps, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
 import { useRef } from "preact/hooks";
 import { enhanceEvent, EventDetail, TagSensitiveProps } from "./props";
 
@@ -61,37 +61,59 @@ const NavigationKeys = new Set(["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight
  */
 export function useButtonLikeEventHandlers<E extends EventTarget>(onClickSync: ((e: h.JSX.TargetedEvent<E>) => void) | null | undefined, exclude: undefined | { click?: "exclude" | undefined, space?: "exclude" | undefined, enter?: "exclude" | undefined }) {
 
-    const [active, setActive, getActive] = useState(false);
+    const { element, useRefElementProps } = useRefElement<E>()
+    const [active, setActive, getActive] = useState(0);
+
+    const onActiveStart = useStableCallback<NonNullable<typeof onClickSync>>((e) => {
+        setActive(a => ++a);
+    });
+
+    const onActiveStop = useStableCallback<NonNullable<typeof onClickSync>>((e) => {
+        setActive(a => Math.max(0, --a));
+        if (getActive() <= 0) {
+            handlePress(e);
+        }
+    });
 
     const handlePress = useStableCallback<NonNullable<typeof onClickSync>>((e) => {
         if (onClickSync) {
+
+            // Note: The element is focused here because of iOS Safari.
+            //
+            // It's always iOS Safari.
+            //
+            // iOS Safari (tested on 12) downright refuses to allow 
+            // elements to be manually focused UNLESS it happens within
+            // an event handler like this.  It also doesn't focus
+            // buttons by default when clicked, tapped, etc.
+            //
+            // If it becomes problematic that button-likes explicitly become
+            // focused when they are pressed, then an alternative solution for
+            // the question of "how do menu buttons keep their menus open"
+            // and other focus-related nonsense needs to be figured out.
+            //
+            // For iOS Safari.
+            //
+            if (element && "focus" in (element as EventTarget as HTMLElement))
+                (element as EventTarget as HTMLElement | null)?.focus();
+
             e.preventDefault();
             pulse();
-            setActive(false);
             onClickSync(e);
         }
     });
 
-    const onKeyUp = excludes("space", exclude) ? undefined : (e: h.JSX.TargetedKeyboardEvent<E>) => {
-        if (active && e.key == " " && onClickSync) {
-            handlePress(e);
-        }
-    }
-
     const onMouseDown = excludes("click", exclude) ? undefined : (e: h.JSX.TargetedMouseEvent<E>) => {
         if (e.button === 0)
-            setActive(true);
+            onActiveStart(e);
     }
     const onMouseUp = excludes("click", exclude) ? undefined : (e: h.JSX.TargetedMouseEvent<E>) => {
-        if (active) {
-            if (e.button === 0) {
-                handlePress(e);
-            }
-        }
+        if (e.button === 0)
+            onActiveStop(e);
     };
 
     const onBlur = (e: h.JSX.TargetedEvent<E>) => {
-        setActive(false);
+        setActive(0);
     }
 
 
@@ -101,17 +123,23 @@ export function useButtonLikeEventHandlers<E extends EventTarget>(onClickSync: (
         if (e.key == " " && onClickSync && !excludes("space", exclude)) {
             // We don't actually activate it on a space keydown
             // but we do preventDefault to stop the page from scrolling.
-            setActive(true);
+            onActiveStart(e);
             e.preventDefault();
         }
 
-        if (e.key == "Enter" && onClickSync && !excludes("enter", exclude)) {
+        if (e.key == "Enter" && !excludes("enter", exclude)) {
             e.preventDefault();
-            onClickSync(e);
+            onActiveStart(e);
+            requestAnimationFrame(() => { onActiveStop(e); });
         }
     }
 
-    return <P extends h.JSX.HTMLAttributes<E>>(props: P) => useMergedProps<E>()({ onKeyDown, onKeyUp, onBlur, onMouseDown, onMouseUp, onMouseOut, ...{ "data-pseudo-active": active ? "true" : undefined } as {} }, props);
+    const onKeyUp = excludes("space", exclude) ? undefined : (e: h.JSX.TargetedKeyboardEvent<E>) => {
+        if (e.key == " " && !excludes("space", exclude))
+            onActiveStop(e);
+    }
+
+    return <P extends h.JSX.HTMLAttributes<E>>(props: P) => useRefElementProps(useMergedProps<E>()({ onKeyDown, onKeyUp, onBlur, onMouseDown, onMouseUp, onMouseOut, ...{ "data-pseudo-active": active ? "true" : undefined } as {} }, props));
 }
 
 export function useAriaButton<E extends EventTarget>({ tag, pressed, onPress }: UseAriaButtonParameters<E>): UseAriaButtonReturnType<E> {
