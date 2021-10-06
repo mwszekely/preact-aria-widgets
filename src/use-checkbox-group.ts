@@ -1,73 +1,114 @@
 import { h } from "preact";
-import { MergedProps, useEffect, useListNavigation, UseListNavigationChildInfo, UseListNavigationChildParameters, UseListNavigationChildPropsReturnType, UseListNavigationParameters, useMergedProps, useStableGetter, useState } from "preact-prop-helpers";
+import { MergedProps, useEffect, useListNavigation, UseListNavigationChildInfo, UseListNavigationChildParameters, UseListNavigationChildPropsReturnType, UseListNavigationParameters, useMergedProps, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
 import { useCallback, useRef } from "preact/hooks";
+import { EventDetail, enhanceEvent } from "./props";
 
 
-export interface UseCheckboxGroupParameters extends UseListNavigationParameters {}
+export type CheckboxGroupChangeEvent<EventType extends Event> = EventType & { [EventDetail]: { childrenChecked: boolean | Map<number, boolean | "mixed"> } };
+
+export interface UseCheckboxGroupParameters<E extends Element> extends UseListNavigationParameters {
+    /**
+     * This is called whenever the parent checkbox is changed and an update of
+     * all the children needs to occur.
+     * 
+     * `event[EventDetail].childrenChecked` will be 
+     * * true when all children need to become checked
+     * * false when all children need to become unchecked
+     * * A `Map<index,checked>` of each child's status when reverting to "mixed".
+     * 
+     * Because we're dealing with controlled components here, and the data for
+     * what checkboxes are checked live *outside* of any of these hooks,
+     * it's you who's responsible for listening for this event, modifying the
+     * data, and re-rendering appropriately.
+     * 
+     * Highly recommended to, for example, add each child's `onInput` event handler
+     * available in the child info the parent gets so it can call the handler
+     * remotely from `managedCheckboxes`.
+     * @param event 
+     */
+    onUpdateChildren(event: CheckboxGroupChangeEvent<h.JSX.TargetedEvent<E>>): void;
+}
 
 export interface UseCheckboxGroupChildInfo extends UseListNavigationChildInfo {
+    /**
+     * The id attribute used for the child.
+     */
     id: string;
-    setChecked(checked: boolean | "mixed"): void;
+
+    /**
+     * The current checked state of this child.
+     * 
+     * This is used by the parent whenever it's interacted with 
+     * and about to force every one to be something different -- 
+     * it will save the state of all child checkboxes for later
+     * by asking each one what its current state is individually
+     * at that moment.
+     * 
+     * All the checkbox's states are captured when the parent
+     * is in the "mixed" state and is clicked. It keeps them
+     * that way until the same conditions arise again.
+     */
     getChecked(): boolean | "mixed";
 }
 
-export type UseCheckboxGroupChildParameters = Omit<UseListNavigationChildParameters<UseCheckboxGroupChildInfo>, "getChecked"> & { checked: boolean | "mixed" };
-export type UseCheckboxGroupChild<ChildElement extends Element> = (args: UseCheckboxGroupChildParameters) => {
+export type UseCheckboxGroupParentProps<InputElement extends Element> = <P extends h.JSX.HTMLAttributes<InputElement>>(props: P) => MergedProps<InputElement, { "aria-controls": string; }, P>;
+
+
+
+export type UseCheckboxGroupChildParameters<I extends UseCheckboxGroupChildInfo> = UseListNavigationChildParameters<Omit<I, "getChecked">> & { checked: boolean | "mixed" };
+
+export type UseCheckboxGroupChild<ChildElement extends Element, I extends UseCheckboxGroupChildInfo> = (args: UseCheckboxGroupChildParameters<I>) => {
     tabbable: boolean | null;
     useCheckboxGroupChildProps: <P extends h.JSX.HTMLAttributes<ChildElement>>({ tabIndex, ...props }: P) => MergedProps<ChildElement, { onInput: () => void; }, UseListNavigationChildPropsReturnType<ChildElement, P>>;
 }
 
+
+
+
 /**
- * Refers to three different types of elements:
  * 
- * 1. The parent checkbox, that represents the state of all the child checkboxes.
- * 2. The child container, that is probably a <div> element that contains all the child checkboxes.
- * 3. The child checkboxes.
  * 
  * @param param0 
  * @returns 
  */
-export function useCheckboxGroup<InputElement extends Element>({ collator, keyNavigation, shouldFocusOnChange }: UseCheckboxGroupParameters) {
-    
-    const { managedChildren, useListNavigationChild, tabbableIndex, focusCurrent, currentTypeahead, invalidTypeahead } = useListNavigation<InputElement, UseCheckboxGroupChildInfo>({ collator, keyNavigation, shouldFocusOnChange });
+ export function useCheckboxGroup<InputElement extends Element, I extends UseCheckboxGroupChildInfo>({ collator, keyNavigation, shouldFocusOnChange, onUpdateChildren: onUpdateChildrenUnstable }: UseCheckboxGroupParameters<InputElement>) {
+
+    const onUpdateChildren = useStableCallback(onUpdateChildrenUnstable);
+    const { managedChildren, useListNavigationChild, tabbableIndex, focusCurrent, currentTypeahead, invalidTypeahead } = useListNavigation<InputElement, I>({ collator, keyNavigation, shouldFocusOnChange });
 
     //const [uncheckedCount, setUnheckedCount] = useState(0);
 
     const [checkedCount, setCheckedCount] = useState(0);
     const checkedIndices = useRef(new Set<number>());
-    const [selfIsChecked, setSelfIsChecked, getSelfIsChecked] = useState<boolean | "mixed">(false);
+    //const [selfIsChecked, setSelfIsChecked, getSelfIsChecked] = useState<boolean | "mixed">(false);
+
+    const getSelfIsChecked = useStableCallback(() => { 
+        let percentage = checkedCount / managedChildren.length;
+        return percentage <= 0 ? false : percentage >= 1 ? true : "mixed";
+     })
 
     // If the user has changed the parent checkbox's value, then this ref holds a memory of what values were held before.
     // Otherwise, it's null when the last input was from a child checkbox. 
     const savedCheckedValues = useRef<Map<number, boolean | "mixed"> | null>(null);
-    const onCheckboxGroupInput = useCallback((e: h.JSX.TargetedEvent<InputElement>) => {
+    const onCheckboxGroupParentInput = useCallback((e: h.JSX.TargetedEvent<InputElement>) => {
 
         e.preventDefault();
 
-        // The first time we start interacting with the parent checkbox,
-        // save the current child states
-        if (savedCheckedValues.current == null) {
+        const selfIsChecked = getSelfIsChecked();
+        if (selfIsChecked === true || (selfIsChecked === false && savedCheckedValues.current == null)) {
+            return onUpdateChildren(enhanceEvent(e, { childrenChecked: false }));
+        }
+        else if (selfIsChecked === "mixed") {
+
             savedCheckedValues.current = new Map();
             for (let child of managedChildren) {
                 savedCheckedValues.current.set(child.index, child.getChecked());
             }
-        }
 
-        const selfIsChecked = getSelfIsChecked();
-        if (selfIsChecked === true) {
-            for (let child of managedChildren) {
-                child.setChecked(false);
-            }
-        }
-        else if (selfIsChecked === "mixed") {
-            for (let child of managedChildren) {
-                child.setChecked(true)
-            }
+            return onUpdateChildren(enhanceEvent(e, { childrenChecked: true }));
         }
         else {
-            for (let child of managedChildren) {
-                child.setChecked(savedCheckedValues.current.get(child.index) ?? false);
-            }
+            return onUpdateChildren(enhanceEvent(e, { childrenChecked: savedCheckedValues.current ?? true }));
         }
     }, [])
 
@@ -93,12 +134,12 @@ export function useCheckboxGroup<InputElement extends Element>({ collator, keyNa
         }
     }, [setCheckedCount, checkedIndices]);
 
-    useEffect(() => {
+    /*useEffect(() => {
         let percentage = checkedCount / managedChildren.length;
         setSelfIsChecked(percentage <= 0 ? false : percentage >= 1 ? true : "mixed")
-    }, [setSelfIsChecked, managedChildren.length, checkedCount]);
+    }, [setSelfIsChecked, managedChildren.length, checkedCount]);*/
 
-    const useCheckboxGroupCheckboxProps = useCallback(<P extends h.JSX.HTMLAttributes<InputElement>>(props: P) => {
+    const useCheckboxGroupParentProps: UseCheckboxGroupParentProps<InputElement> = useCallback(<P extends h.JSX.HTMLAttributes<InputElement>>(props: P) => {
         return useMergedProps<InputElement>()({ "aria-controls": ariaControls }, props);
     }, [ariaControls]);
 
@@ -106,7 +147,7 @@ export function useCheckboxGroup<InputElement extends Element>({ collator, keyNa
         setAriaControls(Array.from(allIds.current).join(" "));
     }, [updateIndex])
 
-    const useCheckboxGroupChild: UseCheckboxGroupChild<InputElement> = useCallback(function ({ index, text, checked, id, setChecked }: UseCheckboxGroupChildParameters) {
+    const useCheckboxGroupChild: UseCheckboxGroupChild<InputElement, I> = useCallback(function ({ index, text, checked, id, ...rest }: UseCheckboxGroupChildParameters<I>) {
 
         const getChecked = useStableGetter(checked);
 
@@ -125,18 +166,26 @@ export function useCheckboxGroup<InputElement extends Element>({ collator, keyNa
             notifyChecked(index, checked);
         }, [index, checked]);
 
-        const { tabbable, useListNavigationChildProps, useListNavigationSiblingProps } = useListNavigationChild({ index, text, id, getChecked, setChecked });
-
-        const onInput = useCallback(() => { savedCheckedValues.current = null; }, [savedCheckedValues])
+        const { tabbable, useListNavigationChildProps, useListNavigationSiblingProps } = useListNavigationChild({ index, text, id, getChecked, ...rest } as unknown as UseListNavigationChildParameters<I>);
 
         return {
             tabbable,
-            useCheckboxGroupChildProps: useCallback(<P extends h.JSX.HTMLAttributes<InputElement>>(props: P) => useMergedProps<InputElement>()({ onInput }, useListNavigationChildProps(props)), [useListNavigationChildProps, onInput])
+            useCheckboxGroupChildProps: useCallback(<P extends h.JSX.HTMLAttributes<InputElement>>(props: P) => useMergedProps<InputElement>()({}, useListNavigationChildProps(props)), [useListNavigationChildProps])
         }
 
 
     }, [notifyChecked, useListNavigationChild]);
 
-    return { useCheckboxGroupChild, useCheckboxGroupCheckboxProps, selfIsChecked, percentChecked: (checkedCount / managedChildren.length), onCheckboxGroupInput, tabbableIndex, focus: focusCurrent, currentTypeahead, invalidTypeahead };
+    return {
+        managedCheckboxes: managedChildren,
+        useCheckboxGroupChild,
+        useCheckboxGroupParentProps,
+        getParentIsChecked: getSelfIsChecked,
+        parentPercentChecked: (checkedCount / managedChildren.length),
+        onCheckboxGroupParentInput,
+        tabbableIndex,
+        focus: focusCurrent,
+        currentTypeahead,
+        invalidTypeahead
+    };
 }
-
