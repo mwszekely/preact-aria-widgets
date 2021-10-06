@@ -16,8 +16,7 @@ interface UseMenuParameters2 extends UseListNavigationParameters {
 
 export type UseAriaMenuParameters = (UseMenuParameters1 | UseMenuParameters2);
 export type UseMenuSubmenuItemParameters = UseAriaMenuParameters & {}
-export interface UseMenuButtonParameters<E extends Element> extends TagSensitiveProps<E> {
-}
+export interface UseMenuButtonParameters { }
 
 export interface UseMenuItemCheckboxInfo<E extends EventTarget> extends UseListNavigationChildInfo {
     type: "checkbox";
@@ -39,49 +38,12 @@ export interface UseMenuItemDefaultInfo<E extends EventTarget> extends UseListNa
 export type UseMenuItemCheckboxParameters<E extends EventTarget> = UseListNavigationChildParameters<UseMenuItemCheckboxInfo<E>>;
 export type UseMenuItemRadioParameters<E extends EventTarget> = UseListNavigationChildParameters<UseMenuItemRadioInfo<E>>;
 export type UseMenuItemDefaultParameters<E extends EventTarget> = UseListNavigationChildParameters<UseMenuItemDefaultInfo<E>>;
-/*
-export type UseAriaMenuProps<E extends Element> = <P extends h.JSX.HTMLAttributes<E>>({ ...props }: P) => UseRandomIdPropsReturnType<UseListNavigationPropsReturnType<E, P>>;
-export type UseAriaMenuButton = <E_1 extends Element>({ tag }: UseAriaMenuButtonParameters<E_1>) => {
-    useAriaMenuButtonProps: <P_1 extends h.JSX.HTMLAttributes<E_1>>(p: P_1) => UseRefElementPropsReturnType<E_1, UseAriaButtonPropsReturnType<E_1, UseReferencedIdPropsReturnType<P_1, "aria-controls">>>;
-};
-export type UseAriaMenu<E extends Element> = ({ collator, keyNavigation, noTypeahead, noWrap, typeaheadTimeout, ...args }: UseAriaMenuParameters) => UseAriaMenuReturnType<E>;
-
-export interface UseAriaMenuReturnType<E extends Element> {
-    useAriaMenuProps: UseAriaMenuProps<E>;
-    useAriaMenuButton: UseAriaMenuButton;
-    useAriaMenuItem: UseAriaMenuItem;
-    useAriaMenuItemCheckbox: UseAriaMenuItemCheckbox;
-    useAriaMenuSubmenuItem: UseAriaMenuSubmenuItem;
-}
-
-export type UseAriaMenuItem = <E_2 extends Element>(args: UseAriaMenuItemDefaultParameters) => {
-    useAriaMenuItemProps: <P_2 extends h.JSX.HTMLAttributes<E_2>>({ ...props }: P_2) => MergedProps<E_2, {
-        onClick: h.JSX.MouseEventHandler<E_2>;
-    }, UseListNavigationChildPropsReturnType<E_2, P_2>>;
-    asyncInfo: Omit<UseAsyncHandlerReturnType<E_2, "onClick", void>, "onClick">
-}
-
-export type UseAriaMenuItemCheckbox = <E_3 extends Element>(args: UseAriaMenuItemCheckboxParameters) => {
-    useAriaMenuItemProps: <P_3 extends h.JSX.HTMLAttributes<E_3>>({ ...props }: P_3) => MergedProps<E_3, {
-        onClick: h.JSX.MouseEventHandler<E_3>;
-    }, P_3>;
-};
-
-export type UseAriaMenuSubmenuItem = <E_4 extends Element>(args: UseAriaMenuSubmenuItemParameters) => UseAriaMenuSubmenuItemReturnType<E_4>;
-
-export interface UseAriaMenuSubmenuItemReturnType<E_4 extends Element> {
-    element: E_4 | null;
-    getElement: () => E_4 | null;
-    useAriaMenuProps: <P_4 extends h.JSX.HTMLAttributes<HTMLElement>>({ ...props }: P_4) => UseRandomIdPropsReturnType<P_4>;
-    useAriaMenuSubmenuItemProps: <P_5 extends h.JSX.HTMLAttributes<E_4>>({ ...props }: P_5) => UseRefElementPropsReturnType<E_4, UseRefElementPropsReturnType<E_4, UseAriaButtonPropsReturnType<E_4, UseReferencedIdPropsReturnType<UseReferencedIdPropsReturnType<P_5, "aria-controls">, "aria-controls">>>>;
-}*/
 
 
 export type UseMenuItem<E extends Element> = (args: UseMenuItemDefaultParameters<E>) => {
     useMenuItemProps: <P extends h.JSX.HTMLAttributes<E>>({ ...props }: P) => MergedProps<E, {
         onClick: h.JSX.MouseEventHandler<E>;
     }, UseListNavigationChildPropsReturnType<E, P>>
-    // asyncInfo: Omit<UseAsyncHandlerReturnType<E, h.JSX.TargetedEvent<E>, void>, "getSyncHandler">;
 }
 
 export function useAriaMenu<ParentElement extends Element, ChildElement extends Element>({ collator, keyNavigation, noTypeahead, noWrap, typeaheadTimeout, ...args }: UseAriaMenuParameters) {
@@ -107,7 +69,7 @@ export function useAriaMenu<ParentElement extends Element, ChildElement extends 
     const { managedChildren, useListNavigationChild, tabbableIndex, focusCurrent: focusMenu } = useListNavigation<ChildElement>({ collator, keyNavigation, noTypeahead, noWrap, typeaheadTimeout, shouldFocusOnChange: useCallback(() => getMenuLastFocusedInner() || getButtonLastFocusedInner(), []) });
     const { useRandomIdProps: useMenuIdProps, useReferencedIdProps: useMenuIdReferencingProps } = useRandomId({ prefix: "aria-menu-" });
 
-    const [openerElement, setOpenerElement] = useState<(Element & HTMLOrSVGElement) | null>(null);
+    const [openerElement, setOpenerElement, getOpenerElement] = useState<(Element & HTMLOrSVGElement) | null>(null);
 
     const { useSoftDismissProps } = useSoftDismiss<E>({ onClose: stableOnClose });
 
@@ -122,7 +84,7 @@ export function useAriaMenu<ParentElement extends Element, ChildElement extends 
         }
         else if (focusTrapActive === false) {
             if (getMenuLastFocusedInner())
-                openerElement?.focus();
+                getOpenerElement()?.focus();
         }
         else {
             // null, so we've only just mounted and shouldn't focus ourselves.
@@ -166,7 +128,7 @@ export function useAriaMenu<ParentElement extends Element, ChildElement extends 
         }
     }, [focusMenu, open]);
 
-    const useMenuButton = useCallback(<E extends Element>({ tag }: UseMenuButtonParameters<E>) => {
+    const useMenuButton = useCallback(<E extends Element>({ }: UseMenuButtonParameters) => {
         const { element, getElement, useRefElementProps } = useRefElement<E>();
         useLayoutEffect(() => { setOpenerElement(element as Element as (Element & HTMLOrSVGElement)); }, [element]);
 
@@ -202,8 +164,6 @@ export function useAriaMenu<ParentElement extends Element, ChildElement extends 
         type E = ChildElement;
 
         const { useListNavigationChildProps } = useListNavigationChild(args);
-        // const { getSyncHandler, ...asyncInfo } = useAsyncHandler<E>()({ capture: _ => void (0) });
-        // const onClick = getSyncHandler(asyncInfo.pending ? null : (args.onClick ?? null));
         const onClick = args.onClick;
 
         function useMenuItemProps<P extends h.JSX.HTMLAttributes<E>>({ ...props }: P) {
@@ -215,9 +175,6 @@ export function useAriaMenu<ParentElement extends Element, ChildElement extends 
     }, []);
 
     const useMenuItemCheckbox = useCallback(<E extends Element>(args: UseMenuItemCheckboxParameters<E>) => {
-
-        //const { getSyncHandler, ...asyncInfo } = useAsyncHandler<E>()({ capture: _ => !args.checked });
-        //const onClick = getSyncHandler(asyncInfo.pending ? null : args.onChange);
 
         const onClick = (e: h.JSX.TargetedEvent<E>) => args.onChange(enhanceEvent(e, { checked: !args.checked }));
 
