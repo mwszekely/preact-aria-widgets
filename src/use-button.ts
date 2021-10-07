@@ -130,7 +130,7 @@ export function useButtonLikeEventHandlers<E extends EventTarget>(onClickSync: (
         if (e.key == "Enter" && !excludes("enter", exclude)) {
             e.preventDefault();
             onActiveStart(e);
-            requestAnimationFrame(() => { onActiveStop(e); });
+            onActiveStop(e);
         }
     }
 
