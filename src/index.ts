@@ -12,7 +12,7 @@ export { useAriaTooltip, UseTooltip, UseTooltipTrigger } from "./use-tooltip";
 export { useAriaRadioGroup, UseRadio, RadioChangeEvent } from "./use-radio-group"
 export { useCheckboxGroup, UseCheckboxGroupChild, CheckboxGroupChangeEvent, UseCheckboxGroupChildInfo, UseCheckboxGroupChildParameters, UseCheckboxGroupParameters, UseCheckboxGroupParentProps } from "./use-checkbox-group";
 export { useToasts, UseToast, UseToastParameters } from "./use-toasts";
-export { useTable, UseTableSection, UseTableRow, UseTableCell, UseTableHeadCell } from "./use-table";
+export { useTable, UseTableSection, UseTableRow, UseTableCell, UseTableHeadCell, TableRowInfo, UseTableCellParameters, UseTableHeadCellParameters, UseTableRowParameters } from "./use-table";
 
 declare module 'preact' {
     namespace h {
