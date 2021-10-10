@@ -99,7 +99,7 @@ export function useToasts<ContainerType extends Element>({ }: UseToastsParameter
         }, [dismissed]);
 
         useTimeout({
-            timeout,
+            timeout: timeout == null? null : isFinite(timeout)? timeout : timeout > 0? null : 0,
             callback: () => {
                 if (isActive)
                     setStatus("dismissed");
