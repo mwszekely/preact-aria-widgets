@@ -29,9 +29,9 @@ export interface TableRowInfo extends UseGridNavigationRowInfo {
      * 
      * @param index 
      */
-    setRowIndexAsSorted(index: number): void;
+    setRowIndexAsSorted(index: number | null): void;
 
-    getRowIndexAsSorted(): number;
+    getRowIndexAsSorted(): number | null;
 }
 
 export interface TableBodyCellInfo<T extends number | string | Date | null | undefined | boolean = number | string | Date | null | undefined | boolean> extends UseGridNavigationCellInfo {
@@ -79,44 +79,13 @@ export type UseTableRow<R extends Element, C extends Element> = (parameters: Use
     useTableCell: UseTableCell<C>;
     useTableRowProps: <P extends h.JSX.HTMLAttributes<R>>(props: P) => h.JSX.HTMLAttributes<R>
     useTableHeadCell: UseTableHeadCell<C>;
-    rowIndexAsSorted: number;
+    rowIndexAsSorted: number | null;
     rowIndexAsUnsorted: number;
 }
 
 export type SortableTypes = number | string | Date | null | undefined | boolean;
 
 const LocationPriority = { "head": 0, "body": 1, "foot": 2 };
-
-export interface UseTableRowProps {
-    /**
-     * When passed by you, this is the row index that this table
-     * row represents. In a table with one header row, the header
-     * row gets a rowIndex of 0, the first body cell a rowIndex of
-     * 1, etc.
-     * 
-     * When your component renders itself, *this prop will possibly
-     * have been changed*!! When sorted, the component will be
-     * re-created with a specific key and a new rowIndex that
-     * corresponds to the sorted table's ordering.
-     * 
-     * If you're not sure what to use, use `rowIndex` for things
-     * related to visuals and UI (like for answering the question
-     * "where do I go when pressing the DOWN arrow key?"). Use
-     * `unsortedRowIndex` for things like data, though keep in mind
-     * that it's relative to the number of rows in the header!
-     */
-    rowIndex: number;
-
-    /**
-     * See rowIndex.
-     * 
-     * If your TableRow component absolutely *needs* to know
-     * the original row it was rendering as before the shuffle,
-     * use this instead of `rowIndex`. Otherwise, prefer that
-     * in basically all cases
-     */
-    unsortedRowIndex: number;
-}
 
 // TODO: Sorting really needs to be extracted into its own hook
 // so it can be used with, like, lists and junk too
@@ -133,7 +102,8 @@ export function useTable<T extends Element, S extends Element, R extends Element
 
     // This is the index of the currently sorted column('s header cell that was clicked to sort it).
     // This is used by all the header cells to know when to reset their "sort mode" back to its initial state.
-    const [sortedColumn, setSortedColumn] = useState<null | number>(null);
+    const [sortedColumn, setSortedColumn, getSortedColumn] = useState<null | number>(null);
+    const [sortedDirection, setSortedDirection, getSortedDirection] = useState<"ascending" | "descending" | null>(null);
     const { useManagedChild: useManagedHeaderCellChild, managedChildren: managedHeaderCells } = useChildManager<{ index: string; setSortedColumn(column: number): void; }>();
 
     // When we sort the table, we need to manually update each table component
@@ -162,35 +132,26 @@ export function useTable<T extends Element, S extends Element, R extends Element
     const sort = useCallback((column: number, direction: "ascending" | "descending"): Promise<void> | void => {
         const managedRows = getBodyRowsGetter()();
         let sortedRows = managedRows.slice().sort((lhsRow, rhsRow) => {
-            if (lhsRow.location != rhsRow.location) {
-                return (LocationPriority[lhsRow.location] ?? -1) - (LocationPriority[rhsRow.location] ?? -1);
-            }
-            else if (lhsRow.location === "head" || lhsRow.location === "foot") {
-                // Rows in the header and footer are never sorted -- they always remain in their position.
-                console.assert(rhsRow.location === "head" || rhsRow.location === "foot");
-                return lhsRow.index - rhsRow.index;
-            }
-            else if (lhsRow.location === "body") {
-                console.assert(rhsRow.location === "body");
-                let result = compare(lhsRow.getManagedCells()?.[column]?.value, rhsRow.getManagedCells()?.[column]?.value);
-                if (direction[0] == "d")
-                    return -result;
-                return result;
-            }
+            console.assert((lhsRow.location === rhsRow.location) && (lhsRow.location === "body"));
 
-            console.assert(false);
-            return 0;
+            let result = compare(lhsRow.getManagedCells()?.[column]?.value, rhsRow.getManagedCells()?.[column]?.value);
+            if (direction[0] == "d")
+                return -result;
+            return result;
+
         });
 
         // Update our sorted <--> unsorted indices map 
         // and rerender the whole table, basically
-        for (let literalIndex = 0; literalIndex < sortedRows.length; ++literalIndex) {
-            const overriddenIndex = sortedRows[literalIndex].index;
+        for (let indexAsSorted = 0; indexAsSorted < sortedRows.length; ++indexAsSorted) {
+            const indexAsUnsorted = sortedRows[indexAsSorted].index;
+            managedRows[indexAsSorted].setRowIndexAsSorted(indexAsUnsorted);
 
-            mangleMap.current.set(literalIndex, overriddenIndex);
-            demangleMap.current.set(overriddenIndex, literalIndex);
+            mangleMap.current.set(indexAsSorted, indexAsUnsorted);
+            demangleMap.current.set(indexAsUnsorted, indexAsSorted);
         }
         setSortedColumn(column);
+        setSortedDirection(direction);
 
         managedTableSections["head"]?.forceUpdate();
         managedTableSections["body"]?.forceUpdate();
@@ -200,42 +161,37 @@ export function useTable<T extends Element, S extends Element, R extends Element
 
     const useTableSection: UseTableSection<S, R, C> = useCallback(({ location }: { location: "head" | "body" | "foot" }) => {
 
+        // Used to track if we tried to render any rows before they've been
+        // given their "true" index to display (their sorted index).
+        // This is true for all rows initially on mount, but especially true
+        // when the table has been pre-sorted and then a new row is
+        // added on top of that afterwards. 
+        const [hasUnsortedRows, setHasUnsortedRows] = useState(false);
 
         const { element, useManagedChildProps } = useManagedTableSection<S>({ index: location, forceUpdate: useForceUpdate() });
         const useTableSectionProps = useCallback(<P extends Omit<h.JSX.HTMLAttributes<S>, "children"> & { children: VNode<any>[] }>({ children, ...props }: P) => {
             return useManagedChildProps(useMergedProps<S>()({
                 role: "rowgroup",
-                children: location === "body" ? (children as VNode<any>[]).map((tableRow, i) => {
-                    return recreateChildWithSortedKey(children, i);
-                }) : children
+                children: location !== "body" ? children :
+
+                    // For rows in the body, sort them by the criteria we set
+                    // the last the the sort function ran and set our mangle maps.
+                    (children as VNode<{ rowIndex: number }>[]).slice().sort((lhs, rhs) => {
+
+                        return (
+                            (demangleMap.current.get(lhs.props.rowIndex) ?? lhs.props.rowIndex) -
+                            (demangleMap.current.get(rhs.props.rowIndex) ?? rhs.props.rowIndex)
+                        )
+                    }).map(child => h(child.type as any, { ...child.props, key: child.props.rowIndex }))
             }, props))
         }, [useManagedChildProps]);
 
-
-
-
-
-        // This function is sort of like cloneElement for each children,
-        // except the "key" prop is super duper extra special
-        // and cloneElement won't work in the expected way to keep
-        // element identity between sort operations.
-        // So we create the element again with the same props but a new key
-        // and it work just as well.
-        const recreateChildWithSortedKey = useCallback(function ensortenChild(originalChildren: VNode<UseTableRowProps>[], unsortedIndex: number) {
-            const sortedIndex = indexMangler(unsortedIndex);
-
-            // TODO: A bit of cheating here ensures that when a row unmounts while we're still
-            // "borrowing" its data to show as our own, we'll instead just default to showing
-            // ourselves (imagine a table sorted in reverse order, then row #100 unmounts while
-            // row #0 is still displaying it).  This should probably be handled a bit more robustly.
-            let unsortedChild = originalChildren[unsortedIndex];
-            let sortedChild = originalChildren[sortedIndex];
-
-            let childToImitate = (sortedChild ?? unsortedChild);
-            let key = sortedChild? sortedIndex : unsortedIndex;
-
-            return h(childToImitate.type as any, { ...childToImitate.props, key });
-        }, [])
+        useEffect(() => {
+            if (hasUnsortedRows) {
+                sort(getSortedColumn() ?? 0, getSortedDirection() ?? "ascending");
+                setHasUnsortedRows(false);
+            }
+        }, [hasUnsortedRows]);
 
 
         // Actually implement grid navigation
@@ -263,13 +219,10 @@ export function useTable<T extends Element, S extends Element, R extends Element
          * child of whatever implements your TableHead, TableBody, and 
          * TableFoot components.
          * 
-         * The reason is the children elements are re-created using
-         * their type and props but with specific keys that make
-         * sorting work properly.
          */
         const useTableRow: UseTableRow<R, C> = useCallback(({ rowIndex: rowIndexAsUnsorted, location, hidden }: UseTableRowParameters) => {
             // This is used by the sort function to update this row when everything's shuffled.
-            const [rowIndexAsSorted, setRowIndexAsSorted, getRowIndexAsSorted] = useState(rowIndexAsUnsorted);
+            const [rowIndexAsSorted, setRowIndexAsSorted, getRowIndexAsSorted] = useState<number | null>(null);
             const getManagedCells = useStableCallback(() => managedCells);
 
             const { useGridNavigationCell, useGridNavigationRowProps, cellCount, isTabbableRow, managedCells } = useGridNavigationRow({ index: rowIndexAsUnsorted, getManagedCells, hidden, ...{ rowIndexAsSorted: getRowIndexAsSorted() } as {}, getRowIndexAsSorted, setRowIndexAsSorted, location });

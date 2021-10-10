@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { MergedProps, useActiveElement, useChildFlag, useHasFocus, useListNavigation, UseListNavigationChildInfo, UseListNavigationChildParameters, useMergedProps, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
+import { MergedProps, useActiveElement, useChildFlag, useHasFocus, useListNavigation, UseListNavigationChildInfo, UseListNavigationChildParameters, useMergedProps, useRefElement, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
 import { useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
 import { enhanceEvent, EventDetail, TagSensitiveProps } from "./props";
 import { useCheckboxLike, UseCheckboxLikeParameters } from "./use-label";
@@ -30,11 +30,15 @@ export type UseAriaRadioParameters<V extends string | number, I extends Element,
 
 export function useAriaRadioGroup<V extends string | number, G extends Element, I extends Element, L extends Element, Info extends UseAriaRadioInfo>({ name, selectedValue, onInput }: UseAriaRadioGroupParameters<V>) {
     const { element: radioGroupParentElement, useRefElementProps } = useRefElement<G>();
-    
-    const getSelectedIndex = useCallback((selectedValue: V) => { return byName.current.get(selectedValue) ?? 0 }, [])
+
+    const getName = useStableGetter(name);
+
+    //const getSelectedIndex = useCallback((selectedValue: V) => { return byName.current.get(selectedValue) ?? 0 }, [])
+
+    const [selectedIndex, setSelectedIndex] = useState<number | null>(0);
     const byName = useRef(new Map<V, any>());
     const stableOnInput = useStableCallback(onInput);
-    
+
     const [anyRadiosFocused, setAnyRadiosFocused, getAnyRadiosFocused] = useState(false);
 
     const { managedChildren, useListNavigationChild, setTabbableIndex, tabbableIndex, focusCurrent, currentTypeahead, invalidTypeahead } = useListNavigation<I, Info>({ shouldFocusOnChange: getAnyRadiosFocused });
@@ -44,8 +48,8 @@ export function useAriaRadioGroup<V extends string | number, G extends Element, 
     useActiveElement({ setActiveElement: activeElement => setAnyRadiosFocused(!!(radioGroupParentElement?.contains(activeElement))) });
     useEffect(() => {
         if (!anyRadiosFocused)
-            setTabbableIndex(getSelectedIndex(selectedValue));
-    }, [anyRadiosFocused, getSelectedIndex(selectedValue), setTabbableIndex]);
+            setTabbableIndex(selectedIndex ?? 0);
+    }, [anyRadiosFocused, selectedIndex, setTabbableIndex]);
 
 
     const useRadioGroupProps = useCallback(<P extends h.JSX.HTMLAttributes<G>>({ ...props }: P) => {
@@ -53,8 +57,13 @@ export function useAriaRadioGroup<V extends string | number, G extends Element, 
         return useRefElementProps(props);
     }, [useRefElementProps]);
 
-    useChildFlag(getSelectedIndex(selectedValue), managedChildren.length, (i, checked) => managedChildren[i]?.setChecked(checked));
+    let correctedIndex = (selectedIndex == null || selectedIndex < 0 || selectedIndex >= managedChildren.length) ? null : selectedIndex;
+    useChildFlag(correctedIndex, managedChildren.length, (i, checked) => { return managedChildren[i]?.setChecked(checked) });
 
+    useEffect(() => {
+        let selectedIndex = byName.current.get(selectedValue);
+        setSelectedIndex(selectedIndex ?? null);
+    }, [byName, selectedValue]);
 
 
 
@@ -62,22 +71,19 @@ export function useAriaRadioGroup<V extends string | number, G extends Element, 
 
         const [checked, setChecked] = useState(false);
 
+       
+
         const onInput = useCallback((e: h.JSX.TargetedEvent<I> | h.JSX.TargetedEvent<L>) => {
             stableOnInput(enhanceEvent(e as any, { selectedValue: value }));
         }, [stableOnInput, value, index]);
 
         const { getInputElement, getLabelElement, useCheckboxLikeInputElement, useCheckboxLikeLabelElement } = useCheckboxLike<I, L>({ checked, disabled, labelPosition, onInput, role: "radio" });
 
-        //const {} = useCheckboxLikeInputElement({  })
-
-        const byName2 = byName.current;
-
 
         useLayoutEffect(() => {
-            console.assert(!byName2.has(value));
-            byName2.set(value, index);
-            return () => { byName2.delete(value); }
-        }, [value, index]);
+            byName.current.set(value, index);
+            return () => { byName.current.delete(value); }
+        }, [byName, value, index]);
 
         const { tabbable, useListNavigationChildProps, useListNavigationSiblingProps } = useListNavigationChild({ index, setChecked, text, ...rest } as any as Info);
 
@@ -120,11 +126,11 @@ export function useAriaRadioGroup<V extends string | number, G extends Element, 
 
     return {
         useRadio,
-        useRadioGroupProps, 
+        useRadioGroupProps,
         managedChildren,
-        getIndex: useCallback((value: V) => { return byName.current.get(value); }, [byName]),
-        tabbableIndex, 
-        focusRadio: focusCurrent, 
+        selectedIndex,
+        tabbableIndex,
+        focusRadio: focusCurrent,
         currentTypeahead,
         invalidTypeahead
     }

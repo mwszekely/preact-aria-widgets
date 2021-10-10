@@ -6,7 +6,7 @@ import { useCallback, useContext, useRef } from "preact/hooks";
 import { EventDetail } from "../props";
 import { useAriaAccordion, UseAriaAccordionSection } from "../use-accordion";
 import { useAriaCheckbox } from "../use-checkbox";
-import { useCheckboxGroup, UseCheckboxGroupChild } from "../use-checkbox-group";
+import { CheckboxGroupChangeEvent, useCheckboxGroup, UseCheckboxGroupChild, UseCheckboxGroupChildInfo } from "../use-checkbox-group";
 import { useAriaDialog } from "../use-dialog";
 import { useAriaListboxMulti, UseListboxMultiItem, UseListboxMultiItemInfo } from "../use-listbox-multi";
 import { useAriaListboxSingle, UseListboxSingleItem, UseListboxSingleItemInfo } from "../use-listbox-single";
@@ -184,13 +184,30 @@ const Checkbox2 = memo(() => {
 });
 
 
-const CheckboxGroupContext = createContext<UseCheckboxGroupChild<HTMLInputElement>>(null!);
+const CheckboxGroupContext = createContext<UseCheckboxGroupChild<HTMLInputElement, UseCheckboxGroupChildInfo>>(null!);
+
 const DemoUseCheckboxGroup = memo(() => {
+
+    const onUpdateChildren = (event: CheckboxGroupChangeEvent<h.JSX.TargetedEvent<HTMLInputElement>>): void => {
+        const value = event[EventDetail].childrenChecked;
+        let selectedValues = new Set<number>();
+        for (let i = 0; i < 10; ++i) {
+            if (value === false) { /* Do nothing */ }
+            else if (value === true)
+                selectedValues.add(i);
+            else if (value.get(i) === true)
+                selectedValues.add(i);
+
+        }
+
+        setSelectedValues(selectedValues);
+    };
+
 
     const [focusedInner, setFocusedInner, getFocusedInner] = useState(false);
     const { useHasFocusProps } = useHasFocus<HTMLDivElement>({ setFocusedInner })
-    const { useCheckboxGroupCheckboxProps, useCheckboxGroupChild, selfIsChecked, percentChecked, onCheckboxGroupInput } = useCheckboxGroup<HTMLInputElement>({ shouldFocusOnChange: getFocusedInner });
-    const { useCheckboxInputElement, useCheckboxLabelElement } = useAriaCheckbox<HTMLInputElement, HTMLLabelElement>({ checked: selfIsChecked, disabled: false, labelPosition: "separate", onInput: onCheckboxGroupInput as any });
+    const { useCheckboxGroupParentProps: useCheckboxGroupCheckboxProps, useCheckboxGroupChild, getParentIsChecked: getSelfIsChecked, parentPercentChecked: percentChecked, onCheckboxGroupParentInput: onCheckboxGroupInput } = useCheckboxGroup<HTMLInputElement, UseCheckboxGroupChildInfo>({ shouldFocusOnChange: getFocusedInner, onUpdateChildren });
+    const { useCheckboxInputElement, useCheckboxLabelElement } = useAriaCheckbox<HTMLInputElement, HTMLLabelElement>({ checked: getSelfIsChecked(), disabled: false, labelPosition: "separate", onInput: onCheckboxGroupInput as any });
 
     const { useCheckboxInputElementProps } = useCheckboxInputElement({ tag: "input" });
     const { useCheckboxLabelElementProps } = useCheckboxLabelElement({ tag: "label" });
@@ -239,9 +256,9 @@ const DemoUseCheckboxGroupChild = memo(({ index, checked, setChecked }: { index:
     const { randomId } = useRandomId();
     const useCheckboxGroupChild = useContext(CheckboxGroupContext);
     let text = `Number ${index + 1} checkbox ${checked ? "(checked)" : ""}`;
-    const { tabbable, useCheckboxGroupChildProps } = useCheckboxGroupChild({ index, text, checked, id: randomId, setChecked });
+    const { tabbable, useCheckboxGroupChildProps } = useCheckboxGroupChild({ index, text, checked, id: randomId });
     text = `Number ${index + 1} checkbox ${checked ? "(checked)" : ""} ${tabbable ? "(tabbble)" : ""}`;
-    const { useCheckboxInputElement, useCheckboxLabelElement } = useAriaCheckbox<HTMLInputElement, HTMLLabelElement>({ checked, disabled: false, labelPosition: "separate", onInput: e => setChecked(e[EventDetail].checked) });
+    const { useCheckboxInputElement, useCheckboxLabelElement } = useAriaCheckbox<HTMLInputElement, HTMLLabelElement>({ checked, disabled: false, labelPosition: "separate", onInput: e => {setChecked(e[EventDetail].checked); } });
 
     const { useCheckboxInputElementProps } = useCheckboxInputElement({ tag: "input" });
     const { useCheckboxLabelElementProps } = useCheckboxLabelElement({ tag: "label" });
