@@ -3,7 +3,7 @@ import { useChildManager, useForceUpdate, useGridNavigation, UseGridNavigationCe
 import { useMergedProps } from "preact-prop-helpers/use-merged-props";
 import { generateRandomId } from "preact-prop-helpers/use-random-id";
 import { useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
-import { TagSensitiveProps } from "props";
+import type { TagSensitiveProps } from "./props";
 import { useButtonLikeEventHandlers } from "./use-button";
 
 export interface TableRowInfo extends UseGridNavigationRowInfo {
