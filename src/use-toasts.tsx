@@ -18,6 +18,7 @@ export interface ToastInfo extends ManagedChildInfo<string> {
     dismissed: boolean;
     focus(): void;
     setStatus: StateUpdater<"pending" | "active" | "dismissed">;
+    getStatus(): null | "pending" | "active" | "dismissed";
 }
 
 export type UseToast = <ToastType extends Element>(args: UseToastParameters) => { dismiss: () => void; status: "pending" | "active" | "dismissed"; useToastProps: <P extends h.JSX.HTMLAttributes<ToastType>>(props: P) => MergedProps<ToastType, UseRefElementPropsReturnType<ToastType, {}>, P>; };
@@ -60,12 +61,17 @@ export function useToasts<ContainerType extends Element>({ }: UseToastsParameter
 
     // Any time the index pointing to the currently-showing toast changes,
     // update the relevant children and let them know that they're now either active or dismissed.
-    useChildFlag(activeToastIndex, toastQueue.length, ((i, set) => {
+    useChildFlag<number, any>({
+        activatedIndex: activeToastIndex, 
+        managedChildren: toastQueue,
+        setChildFlag: ((i, set) => {
         if (set)
             console.assert(i <= getActiveToastIndex());
 
         toastQueue[i]?.setStatus(prev => prev === "dismissed"? "dismissed" : set ? "active" : (i < getActiveToastIndex() ? "dismissed" : "pending"));
-    }));
+    }),
+    getChildFlag: i => toastQueue[i]?.getStatus() === "active"
+});
 
     const useToast: UseToast = useCallback(<ToastType extends Element>({ politeness, timeout }: UseToastParameters) => {
         const [status, setStatus, getStatus] = useState<"pending" | "active" | "dismissed">("pending");
@@ -85,7 +91,7 @@ export function useToasts<ContainerType extends Element>({ }: UseToastsParameter
             }
         }, []);
 
-        const { element, useManagedChildProps, getElement } = useManagedChild<ToastType>({ dismissed, index: toastId, setStatus, focus });
+        const { element, useManagedChildProps, getElement } = useManagedChild<ToastType>({ dismissed, index: toastId, setStatus, getStatus, focus });
 
         const isActive = (status === "active");
 

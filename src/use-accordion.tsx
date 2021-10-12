@@ -22,10 +22,11 @@ export interface UseAriaAccordionReturnType<ParentElement extends Element, Child
 export interface UseAriaAccordionSectionInfo extends ManagedChildInfo<number> {
     open?: boolean | undefined | null;
     setOpenFromParent(open: boolean): void;
+    getOpenFromParent(): boolean | null;
     focus(): void;
 }
 
-export interface UseAriaAccordionSectionParameters extends Omit<UseAriaAccordionSectionInfo, "setOpenFromParent" | "focus"> {
+export interface UseAriaAccordionSectionParameters extends Omit<UseAriaAccordionSectionInfo, "setOpenFromParent" | "getOpenFromParent" | "focus"> {
     open?: boolean | undefined;
 }
 
@@ -68,7 +69,12 @@ export function useAriaAccordion<ParentElement extends Element, ChildElement ext
             managedAccordionSections[lastFocusedIndex]?.focus();
     }, [lastFocusedIndex]);
 
-    useChildFlag(expandedIndex, managedAccordionSections.length, (i, open) => managedAccordionSections[i]?.setOpenFromParent(open));
+    useChildFlag({
+        activatedIndex: expandedIndex, 
+        managedChildren: managedAccordionSections, 
+        setChildFlag: (i, open) => managedAccordionSections[i]?.setOpenFromParent(open),
+        getChildFlag: (i) => (managedAccordionSections[i]?.getOpenFromParent() ?? null)
+    });
 
     const useAriaAccordionSection = useCallback<UseAriaAccordionSection<ChildElement>>((args: UseAriaAccordionSectionParameters): UseAriaAccordionSectionReturnType<ChildElement> => {
 
@@ -88,7 +94,7 @@ export function useAriaAccordion<ParentElement extends Element, ChildElement ext
 
             const { useRefElementProps, element } = useRefElement<ChildElement>();
             const focus = useCallback(() => { (element as Element as HTMLElement | undefined)?.focus(); }, [element]);
-            const { useManagedChildProps } = useManagedChildSection<ChildElement>({ index: args.index, open: open, setOpenFromParent, focus });
+            const { useManagedChildProps } = useManagedChildSection<ChildElement>({ index: args.index, open: open, setOpenFromParent, getOpenFromParent, focus });
 
             const { useLinearNavigationChildProps } = useLinearNavigationChild();
 

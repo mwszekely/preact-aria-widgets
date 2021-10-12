@@ -15,18 +15,21 @@ export interface UseListboxSingleParameters extends Omit<UseListNavigationParame
 
 export interface UseListboxSingleItemInfo<E extends Element> extends UseListNavigationChildInfo, TagSensitiveProps<E> {
     setSelected(selected: boolean): void;
+    getSelected(): boolean | null;
 }
 
 
 
-export type UseListboxSingleItem<E extends Element, I extends UseListboxSingleItemInfo<E> = UseListboxSingleItemInfo<E>> = (info: UseListboxSingleItemParameters<E, I>) => {
+export type UseListboxSingleItem<E extends Element, I extends UseListboxSingleItemInfo<E> = UseListboxSingleItemInfo<E>> = (info: UseListboxSingleItemParameters<E, I>) => UseListboxSingleItemReturnType<E>;
+
+export interface UseListboxSingleItemReturnType<E extends Element> {
     useListboxSingleItemProps: <P extends h.JSX.HTMLAttributes<E>>(props: P) => UseListNavigationChildPropsReturnType<E, MergedProps<E, h.JSX.HTMLAttributes<E>, UseRefElementPropsReturnType<E, P>>>;
     tabbable: boolean | null;
-    selected: boolean;
-    getSelected: () => boolean;
+    selected: boolean | null;
+    getSelected: () => boolean | null;
 }
 
-export type UseListboxSingleItemParameters<E extends Element, I extends UseListboxSingleItemInfo<E>> = Omit<UseListNavigationChildParameters<I>, "setSelected">;
+export type UseListboxSingleItemParameters<E extends Element, I extends UseListboxSingleItemInfo<E>> = Omit<UseListNavigationChildParameters<I>, "setSelected" | "getSelected">;
 
 export function useAriaListboxSingle<ParentElement extends Element, ChildElement extends Element, I extends UseListboxSingleItemInfo<ChildElement>>({ selectedIndex, onSelect, selectionMode, ...args }: UseListboxSingleParameters) {
 
@@ -45,19 +48,24 @@ export function useAriaListboxSingle<ParentElement extends Element, ChildElement
             setTabbableIndex(selectedIndex);
     }, [anyItemsFocused, selectedIndex, setTabbableIndex]);
 
-    useChildFlag(selectedIndex, managedChildren.length, (i, selected) => managedChildren[i]?.setSelected(selected));
+    useChildFlag({
+        activatedIndex: selectedIndex, 
+        managedChildren, 
+        setChildFlag: (i, selected) => managedChildren[i]?.setSelected(selected),
+        getChildFlag: (i) => (managedChildren[i]?.getSelected() ?? null)
+    });
 
-    useLayoutEffect(([]) => {
+    useLayoutEffect(() => {
         navigateToIndex(selectedIndex);
     }, [selectedIndex, managedChildren.length]);
 
     const childCount = managedChildren.length;
 
-    const useListboxSingleItem: UseListboxSingleItem<ChildElement, I> = useCallback((info: UseListboxSingleItemParameters<ChildElement, I>) => {
+    const useListboxSingleItem: UseListboxSingleItem<ChildElement, I> = useCallback((info: UseListboxSingleItemParameters<ChildElement, I>): UseListboxSingleItemReturnType<ChildElement> => {
         type E = ChildElement;
-        const [selected, setSelected, getSelected] = useState(false);
-        const { tabbable, useListNavigationSiblingProps, useListNavigationChildProps } = useListNavigationChild({ setSelected, ...info } as I);
-        const { element, useRefElementProps } = useRefElement<E>();
+        const [selected, setSelected, getSelected] = useState<boolean | null>(null);
+        const { tabbable, useListNavigationSiblingProps, useListNavigationChildProps } = useListNavigationChild({ setSelected, getSelected, ...info } as I);
+        const { element, useRefElementProps } = useRefElement<ChildElement>();
         const index = info.index;
 
         useEffect(() => {
@@ -79,9 +87,9 @@ export function useAriaListboxSingle<ParentElement extends Element, ChildElement
             props.role = "option";
             props["aria-setsize"] = (childCount).toString();
             props["aria-posinset"] = (info.index + 1).toString();
-            props["aria-selected"] = selected.toString();
+            props["aria-selected"] = (selected ?? false).toString();
 
-            return useListNavigationChildProps(useMergedProps<E>()(newProps, useRefElementProps(props)));
+            return useListNavigationChildProps(useMergedProps<ChildElement>()(newProps, useRefElementProps(props)));
         }
     }, [useListNavigationChild, selectionMode, childCount]);
 

@@ -16,12 +16,13 @@ export interface UseAriaRadioGroupParameters<V extends string | number> {
 
 export interface UseAriaRadioInfo extends UseListNavigationChildInfo {
     setChecked(checked: boolean): void;
+    getChecked(): boolean | null;
 }
 
 
 
 
-export type UseAriaRadioParameters<V extends string | number, I extends Element, L extends Element, Info extends UseAriaRadioInfo> = Omit<UseListNavigationChildParameters<Info>, "setChecked"> &
+export type UseAriaRadioParameters<V extends string | number, I extends Element, L extends Element, Info extends UseAriaRadioInfo> = Omit<UseListNavigationChildParameters<Info>, "setChecked" | "getChecked"> &
     Omit<UseCheckboxLikeParameters<I, L>, "onInput" | "role" | "checked"> & {
         labelPosition: "wrapping" | "separate";
         value: V;
@@ -58,7 +59,12 @@ export function useAriaRadioGroup<V extends string | number, G extends Element, 
     }, [useRefElementProps]);
 
     let correctedIndex = (selectedIndex == null || selectedIndex < 0 || selectedIndex >= managedChildren.length) ? null : selectedIndex;
-    useChildFlag(correctedIndex, managedChildren.length, (i, checked) => { return managedChildren[i]?.setChecked(checked) });
+    useChildFlag({
+        activatedIndex: correctedIndex, 
+        managedChildren, 
+        setChildFlag: (i, checked) => managedChildren[i]?.setChecked(checked),
+        getChildFlag: ((i) => managedChildren[i]?.getChecked() ?? false)
+    });
 
     useEffect(() => {
         let selectedIndex = byName.current.get(selectedValue);
@@ -69,15 +75,13 @@ export function useAriaRadioGroup<V extends string | number, G extends Element, 
 
     const useRadio: UseRadio<V, I, L, Info> = useCallback(function useAriaRadio({ value, index, text, disabled, labelPosition, ...rest }: UseAriaRadioParameters<V, I, L, Info>) {
 
-        const [checked, setChecked] = useState(false);
-
-       
+        const [checked, setChecked, getChecked] = useState<boolean | null>(null);
 
         const onInput = useCallback((e: h.JSX.TargetedEvent<I> | h.JSX.TargetedEvent<L>) => {
             stableOnInput(enhanceEvent(e as any, { selectedValue: value }));
         }, [stableOnInput, value, index]);
 
-        const { getInputElement, getLabelElement, useCheckboxLikeInputElement, useCheckboxLikeLabelElement } = useCheckboxLike<I, L>({ checked, disabled, labelPosition, onInput, role: "radio" });
+        const { getInputElement, getLabelElement, useCheckboxLikeInputElement, useCheckboxLikeLabelElement } = useCheckboxLike<I, L>({ checked: (checked ?? false), disabled, labelPosition, onInput, role: "radio" });
 
 
         useLayoutEffect(() => {
@@ -85,16 +89,16 @@ export function useAriaRadioGroup<V extends string | number, G extends Element, 
             return () => { byName.current.delete(value); }
         }, [byName, value, index]);
 
-        const { tabbable, useListNavigationChildProps, useListNavigationSiblingProps } = useListNavigationChild({ index, setChecked, text, ...rest } as any as Info);
+        const { tabbable, useListNavigationChildProps, useListNavigationSiblingProps } = useListNavigationChild({ index, setChecked, getChecked, text, ...rest } as any as Info);
 
         const useRadioInput: UseRadioInput<I> = ({ tag }: TagSensitiveProps<I>) => {
             const useRadioInputProps = <P extends h.JSX.HTMLAttributes<I>>(props: P) => {
                 if (tag == "input") {
                     props.name = name;
-                    props.checked = checked;
+                    props.checked = (checked ?? false);
                 }
                 else {
-                    props["aria-checked"] = checked.toString();
+                    props["aria-checked"] = (checked ?? false).toString();
                 }
 
                 const { useCheckboxLikeInputElementProps } = useCheckboxLikeInputElement({ tag });

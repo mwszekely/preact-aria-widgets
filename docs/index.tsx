@@ -8,7 +8,7 @@ import { useAriaAccordion, UseAriaAccordionSection } from "../use-accordion";
 import { useAriaCheckbox } from "../use-checkbox";
 import { CheckboxGroupChangeEvent, useCheckboxGroup, UseCheckboxGroupChild, UseCheckboxGroupChildInfo } from "../use-checkbox-group";
 import { useAriaDialog } from "../use-dialog";
-import { useAriaListboxMulti, UseListboxMultiItem, UseListboxMultiItemInfo } from "../use-listbox-multi";
+import { useAriaListboxMulti, UseListboxMultiItem, UseListboxMultiItemInfo, UseListboxMultiItemParameters } from "../use-listbox-multi";
 import { useAriaListboxSingle, UseListboxSingleItem, UseListboxSingleItemInfo } from "../use-listbox-single";
 import { useAriaMenu, UseMenuItem } from "../use-menu";
 import { useTable, UseTableRow } from "../use-table";
@@ -328,7 +328,7 @@ const DemoListboxSingleOption = memo(({ index }: { index: number, }) => {
 
 
 
-const ListBoxMultiItemContext = createContext<UseListboxMultiItem<HTMLLIElement>>(null!);
+const ListBoxMultiItemContext = createContext<UseListboxMultiItem<HTMLLIElement, UseListboxMultiItemInfo<HTMLLIElement>>>(null!);
 const DemoUseListboxMulti = memo(() => {
 
     const { useListboxMultiItem, useListboxMultiLabel, useListboxMultiProps, currentTypeahead } = useAriaListboxMulti<HTMLUListElement, HTMLLIElement, UseListboxMultiItemInfo<HTMLLIElement>>({});
@@ -372,7 +372,8 @@ const DemoUseListboxMulti = memo(() => {
 const MenuItemContext = createContext<UseMenuItem<HTMLLIElement>>(null!);
 const DemoListboxMultiOption = memo(({ index, selected, setSelected }: { index: number, selected: boolean, setSelected(selected: boolean): void }) => {
     let text = `Number ${index + 1} option${selected ? " (selected)" : ""}`;
-    const { tabbable, useListboxMultiItemProps } = useContext(ListBoxMultiItemContext)({ tag: "li", index, text, onSelect: e => setSelected(e[EventDetail].selected), selected });
+    const p: UseListboxMultiItemInfo<HTMLLIElement> = { tag: "li", index, text, onSelect: e => setSelected(e[EventDetail].selected), selected }
+    const { tabbable, useListboxMultiItemProps } = useContext(ListBoxMultiItemContext)(p);
     text = `Number ${index + 1} option${selected ? " (selected)" : ""}${tabbable ? " (tabbable)" : ""}`;
     return <li {...useListboxMultiItemProps({})}>{text}</li>
 });
