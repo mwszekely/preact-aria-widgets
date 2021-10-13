@@ -1,7 +1,7 @@
 import { createContext, h } from "preact";
 import { useMemo } from "preact/hooks";
 import { memo, useContext } from "preact/compat";
-import { useHasFocus, useListNavigation, UseListNavigationChild, useState } from "preact-prop-helpers";
+import { useHasFocus, useListNavigation, UseListNavigationChild, UseListNavigationChildInfo, useState } from "preact-prop-helpers";
 
 
 const RandomWords = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.".split(" ");
@@ -11,7 +11,7 @@ export const DemoUseRovingTabIndex = memo(() => {
 
     const [lastFocusedInner, setLastFocusedInner, getLastFocusedInner] = useState(false);
     const { useHasFocusProps } = useHasFocus<HTMLUListElement>({})
-    const { useListNavigationChild, currentTypeahead, setTabbableIndex, tabbableIndex } = useListNavigation<HTMLLIElement>({ shouldFocusOnChange: getLastFocusedInner });
+    const { useListNavigationChild, currentTypeahead, setTabbableIndex, tabbableIndex } = useListNavigation<HTMLLIElement, UseListNavigationChildInfo>({ shouldFocusOnChange: getLastFocusedInner });
 
     return (
         <div className="demo">

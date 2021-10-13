@@ -10,9 +10,9 @@ import { CheckboxGroupChangeEvent, useCheckboxGroup, UseCheckboxGroupChild, UseC
 import { useAriaDialog } from "../use-dialog";
 import { useAriaListboxMulti, UseListboxMultiItem, UseListboxMultiItemInfo, UseListboxMultiItemParameters } from "../use-listbox-multi";
 import { useAriaListboxSingle, UseListboxSingleItem, UseListboxSingleItemInfo } from "../use-listbox-single";
-import { useAriaMenu, UseMenuItem } from "../use-menu";
+import { useAriaMenu, UseMenuChildInfo, UseMenuItem } from "../use-menu";
 import { useTable, UseTableRow } from "../use-table";
-import { useAriaTabs, UseTab, UseTabPanel } from "../use-tabs";
+import { useAriaTabs, UseTab, UseTabInfo, UseTabPanel } from "../use-tabs";
 import { useAriaTooltip } from "../use-tooltip";
 import { DemoUseInterval } from "./demos/use-interval";
 import { DemoUseRovingTabIndex } from "./demos/use-roving-tab-index";
@@ -206,8 +206,8 @@ const DemoUseCheckboxGroup = memo(() => {
 
     const [focusedInner, setFocusedInner, getFocusedInner] = useState(false);
     const { useHasFocusProps } = useHasFocus<HTMLDivElement>({ setFocusedInner })
-    const { useCheckboxGroupParentProps: useCheckboxGroupCheckboxProps, useCheckboxGroupChild, getParentIsChecked: getSelfIsChecked, parentPercentChecked: percentChecked, onCheckboxGroupParentInput: onCheckboxGroupInput } = useCheckboxGroup<HTMLInputElement, UseCheckboxGroupChildInfo>({ shouldFocusOnChange: getFocusedInner, onUpdateChildren });
-    const { useCheckboxInputElement, useCheckboxLabelElement } = useAriaCheckbox<HTMLInputElement, HTMLLabelElement>({ checked: getSelfIsChecked(), disabled: false, labelPosition: "separate", onInput: onCheckboxGroupInput as any });
+    const { useCheckboxGroupParentProps: useCheckboxGroupCheckboxProps, useCheckboxGroupChild, parentIsChecked: selfIsChecked, parentPercentChecked: percentChecked, onCheckboxGroupParentInput: onCheckboxGroupInput } = useCheckboxGroup<HTMLInputElement, UseCheckboxGroupChildInfo>({ shouldFocusOnChange: getFocusedInner, onUpdateChildren });
+    const { useCheckboxInputElement, useCheckboxLabelElement } = useAriaCheckbox<HTMLInputElement, HTMLLabelElement>({ checked: selfIsChecked, disabled: false, labelPosition: "separate", onInput: onCheckboxGroupInput as any });
 
     const { useCheckboxInputElementProps } = useCheckboxInputElement({ tag: "input" });
     const { useCheckboxLabelElementProps } = useCheckboxLabelElement({ tag: "label" });
@@ -298,7 +298,8 @@ const DemoUseDialog = memo(() => {
     )
 });
 
-const ListBoxSingleItemContext = createContext<UseListboxSingleItem<HTMLLIElement>>(null!);
+
+const ListBoxSingleItemContext = createContext<UseListboxSingleItem<HTMLLIElement, UseListboxSingleItemInfo<HTMLLIElement>>>(null!);
 const DemoUseListboxSingle = memo(() => {
     const [selectedIndex, setSelectedIndex] = useState(0);
     const { useListboxSingleItem, useListboxSingleLabel, useListboxSingleProps } = useAriaListboxSingle<HTMLUListElement, HTMLLIElement, UseListboxSingleItemInfo<HTMLLIElement>>({ selectedIndex, onSelect: e => setSelectedIndex(e[EventDetail].selectedIndex), selectionMode: "activate" });
@@ -369,11 +370,10 @@ const DemoUseListboxMulti = memo(() => {
     </div>
 });
 
-const MenuItemContext = createContext<UseMenuItem<HTMLLIElement>>(null!);
+const MenuItemContext = createContext<UseMenuItem<HTMLLIElement, UseMenuChildInfo>>(null!);
 const DemoListboxMultiOption = memo(({ index, selected, setSelected }: { index: number, selected: boolean, setSelected(selected: boolean): void }) => {
     let text = `Number ${index + 1} option${selected ? " (selected)" : ""}`;
-    const p: UseListboxMultiItemInfo<HTMLLIElement> = { tag: "li", index, text, onSelect: e => setSelected(e[EventDetail].selected), selected }
-    const { tabbable, useListboxMultiItemProps } = useContext(ListBoxMultiItemContext)(p);
+    const { tabbable, useListboxMultiItemProps } = useContext(ListBoxMultiItemContext)({ tag: "li", index, text, onSelect: e => setSelected(e[EventDetail].selected), selected });
     text = `Number ${index + 1} option${selected ? " (selected)" : ""}${tabbable ? " (tabbable)" : ""}`;
     return <li {...useListboxMultiItemProps({})}>{text}</li>
 });
@@ -382,15 +382,17 @@ const DemoMenu = memo(() => {
     const [open, setOpen] = useState(false);
     const onClose = () => setOpen(false);
     const onOpen = () => setOpen(true);
+    const [menuFocusedInner, setMenuFocusedInner, getMenuFocusedInner] = useState(false);
+    const { useHasFocusProps } = useHasFocus<HTMLUListElement>({ setFocusedInner: setMenuFocusedInner})
 
-    const { useMenuButton, useMenuItem, useMenuItemCheckbox, useMenuProps, useMenuSubmenuItem } = useAriaMenu<HTMLUListElement, HTMLLIElement>({ open, onClose, onOpen });
+    const { useMenuButton, useMenuItem, useMenuProps, useMenuSubmenuItem } = useAriaMenu<HTMLUListElement, HTMLLIElement, UseMenuChildInfo>({ open, onClose, onOpen, shouldFocusOnChange: getMenuFocusedInner });
 
     const { useMenuButtonProps } = useMenuButton<HTMLButtonElement>({ tag: "button" })
     return (
         <div class="demo">
             <MenuItemContext.Provider value={useMenuItem}>
                 <button {...useMenuButtonProps({ onClick: e => setOpen(open => !open) })}>Open menu</button>
-                <ul {...useMenuProps({})} hidden={!open}>
+                <ul {...useMenuProps(useHasFocusProps({}))} hidden={!open}>
                     <DemoMenuItem index={0} />
                     <DemoMenuItem index={1} />
                     <DemoMenuItem index={2} />
@@ -407,7 +409,7 @@ const DemoMenuItem = memo(({ index }: { index: number }) => {
     return <li {...useMenuItemProps({})}>Item {index + 1}</li>
 })
 
-const TabContext = createContext<UseTab<HTMLLIElement>>(null!);
+const TabContext = createContext<UseTab<HTMLLIElement, UseTabInfo>>(null!);
 const TabPanelContext = createContext<UseTabPanel<HTMLParagraphElement>>(null!);
 const DemoTabs = memo(() => {
     const [selectedIndex, setSelectedIndex] = useState(0);

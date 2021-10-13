@@ -13,7 +13,8 @@ export interface UseAriaTabsParameters extends Omit<UseListNavigationParameters,
     orientation: "inline" | "block";
 }
 
-export interface UseTabParameters<E extends Element> extends Omit<UseListNavigationChildParameters<UseTabInfo>, "tabId" | "setTabPanelId" | "setSelected" | "getSelected" | "setSelectionMode">, TagSensitiveProps<E> { }
+type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+export type UseTabParameters<E extends Element, I extends UseTabInfo> = UseListNavigationChildParameters<Omit<I, "tabId" | "setTabPanelId" | "setSelected" | "getSelected" | "setSelectionMode">> & TagSensitiveProps<E>;
 
 export interface UseTabPanelParameters extends Omit<UseTabPanelInfo, "tabPanelId" | "setTabId" | "focus" | "setVisible" | "getVisible"> { }
 
@@ -38,7 +39,7 @@ export interface UseTabPanelInfo extends ManagedChildInfo<number> {
 
 export type UseTabsList<TabListElement extends Element> = () => { useTabListProps: <P extends h.JSX.HTMLAttributes<TabListElement>>(props: P) => MergedProps<TabListElement, { role: string, "aria-orientation": string }, P>; }
 export type UseTabsLabel = <E extends Element>() => { useTabsLabelProps: <P extends h.JSX.HTMLAttributes<E>>({ ...props }: P) => UseRandomIdPropsReturnType<P>; }
-export type UseTab<TabElement extends Element> = (info: UseTabParameters<TabElement>) => { selected: boolean | null; useTabProps: <P extends h.JSX.HTMLAttributes<TabElement>>({ ...props }: P) => MergedProps<TabElement, {}, UseReferencedIdPropsReturnType<UseRandomIdPropsReturnType<any>, "aria-controls">>; }
+export type UseTab<TabElement extends Element, I extends UseTabInfo> = (info: UseTabParameters<TabElement, I>) => { selected: boolean | null; useTabProps: <P extends h.JSX.HTMLAttributes<TabElement>>({ ...props }: P) => MergedProps<TabElement, {}, UseReferencedIdPropsReturnType<UseRandomIdPropsReturnType<any>, "aria-controls">>; }
 export type UseTabPanel<PanelElement extends Element> = (info: UseTabPanelParameters) => { selected: boolean | null, useTabPanelProps: <P extends h.JSX.HTMLAttributes<PanelElement>>(p: P) => MergedProps<PanelElement, {}, UseRandomIdPropsReturnType<UseRefElementPropsReturnType<PanelElement, P>>> }
 
 export function useAriaTabs<ListElement extends Element, TabElement extends Element, TabPanelElement extends Element>({ selectionMode, selectedIndex, onSelect, orientation: logicalOrientation, ...args }: UseAriaTabsParameters) {
@@ -77,14 +78,14 @@ export function useAriaTabs<ListElement extends Element, TabElement extends Elem
     }, [childCount, selectedIndex, selectionMode]);
 
 
-    const useTab: UseTab<TabElement> = useCallback(function useTab(info: UseTabParameters<TabElement>) {
+    const useTab: UseTab<TabElement, UseTabInfo> = useCallback(function useTab(info: UseTabParameters<TabElement, UseTabInfo>) {
         //const [selectedTabId, setSelectedTabId, getSelectedTabId] = useState<string | undefined>(undefined);
         const [selectionModeL, setSelectionModeL] = useState<"focus" | "activate">(selectionMode);
         const { element, useRefElementProps } = useRefElement<TabElement>()
         const [tabPanelId, setTabPanelId] = useState<string | undefined>(undefined)
         const { useRandomIdProps: useTabIdProps, id: tabId, getId: getTabId } = useRandomId({ prefix: "aria-tab-" });
         const [selected, setSelected, getSelected] = useState<boolean | null>(null);
-        const { tabbable, useListNavigationChildProps, useListNavigationSiblingProps } = useListNavigationChild({ ...info, setSelected, getSelected, tabId, setTabPanelId, setSelectionMode: setSelectionModeL });
+        const { tabbable, useListNavigationChildProps, useListNavigationSiblingProps } = useListNavigationChild({ setSelected, getSelected, tabId, setTabPanelId, setSelectionMode: setSelectionModeL,  ...info });
         const getIndex = useStableGetter(info.index);
         // const { getSyncHandler, ...asyncInfo } = useAsyncHandler<Element>()({ capture: (e: unknown) => info.index });
         // const onSelect = getSyncHandler(asyncInfo.pending? null : (stableAsyncOnSelect ?? null));

@@ -71,7 +71,7 @@ export type UseCheckboxGroupChild<ChildElement extends Element, I extends UseChe
  * @param param0 
  * @returns 
  */
- export function useCheckboxGroup<InputElement extends Element, I extends UseCheckboxGroupChildInfo>({ collator, keyNavigation, shouldFocusOnChange, onUpdateChildren: onUpdateChildrenUnstable }: UseCheckboxGroupParameters<InputElement>) {
+export function useCheckboxGroup<InputElement extends Element, I extends UseCheckboxGroupChildInfo>({ collator, keyNavigation, shouldFocusOnChange, onUpdateChildren: onUpdateChildrenUnstable }: UseCheckboxGroupParameters<InputElement>) {
 
     const onUpdateChildren = useStableCallback(onUpdateChildrenUnstable);
     const { managedChildren, useListNavigationChild, tabbableIndex, focusCurrent, currentTypeahead, invalidTypeahead } = useListNavigation<InputElement, I>({ collator, keyNavigation, shouldFocusOnChange });
@@ -82,10 +82,12 @@ export type UseCheckboxGroupChild<ChildElement extends Element, I extends UseChe
     const checkedIndices = useRef(new Set<number>());
     //const [selfIsChecked, setSelfIsChecked, getSelfIsChecked] = useState<boolean | "mixed">(false);
 
-    const getSelfIsChecked = useStableCallback(() => { 
+    const getSelfIsCheckedUnstable = useCallback(() => {
         let percentage = checkedCount / managedChildren.length;
         return percentage <= 0 ? false : percentage >= 1 ? true : "mixed";
-     })
+    }, [checkedCount, managedChildren.length]);
+
+    const getSelfIsCheckedStable = useStableCallback(getSelfIsCheckedUnstable);
 
     // If the user has changed the parent checkbox's value, then this ref holds a memory of what values were held before.
     // Otherwise, it's null when the last input was from a child checkbox. 
@@ -94,7 +96,7 @@ export type UseCheckboxGroupChild<ChildElement extends Element, I extends UseChe
 
         e.preventDefault();
 
-        const selfIsChecked = getSelfIsChecked();
+        const selfIsChecked = getSelfIsCheckedStable();
         if (selfIsChecked === true || (selfIsChecked === false && savedCheckedValues.current == null)) {
             return onUpdateChildren(enhanceEvent(e, { childrenChecked: false }));
         }
@@ -180,7 +182,7 @@ export type UseCheckboxGroupChild<ChildElement extends Element, I extends UseChe
         managedCheckboxes: managedChildren,
         useCheckboxGroupChild,
         useCheckboxGroupParentProps,
-        getParentIsChecked: getSelfIsChecked,
+        parentIsChecked: getSelfIsCheckedUnstable() as boolean | "mixed",
         parentPercentChecked: (checkedCount / managedChildren.length),
         onCheckboxGroupParentInput,
         tabbableIndex,

@@ -14,13 +14,13 @@ export interface UseListboxMultiParameters extends Omit<UseListNavigationParamet
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
 
-export interface UseListboxMultiItemInfo<E extends Element> extends TagSensitiveProps<E>, UseListNavigationChildInfo {
+export interface UseListboxMultiItemInfo<E extends Element> extends UseListNavigationChildInfo, TagSensitiveProps<E> {
     selected: boolean;
     onSelect?(event: (ListboxMultiSelectEvent<Element>)): void;
     setTypeaheadInProgress(inProgress: boolean): void;
 }
 
-export type UseListboxMultiItemParameters<E extends Element, I extends UseListboxMultiItemInfo<E>> = UseListNavigationChildParameters<Omit<UseListboxMultiItemInfo<E>, "setTypeaheadInProgress">>;
+export type UseListboxMultiItemParameters<E extends Element, I extends UseListboxMultiItemInfo<E>> = Omit<I, "setTypeaheadInProgress" | "getTabbable" | "setTabbable" | "rerenderAndFocus">;
 
 export type UseListboxMultiItem<E extends Element, I extends UseListboxMultiItemInfo<E>> = (info: UseListboxMultiItemParameters<E, I>) => {
     useListboxMultiItemProps: <P extends h.JSX.HTMLAttributes<E>>(props: P) => UseRefElementPropsReturnType<E, UseListNavigationChildPropsReturnType<E, MergedProps<E, h.JSX.HTMLAttributes<E>, P>>>;

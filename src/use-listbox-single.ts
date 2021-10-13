@@ -5,6 +5,7 @@ import { EventDetail, TagSensitiveProps } from "./props";
 import { useButtonLikeEventHandlers } from "./use-button";
 import { useGenericLabel } from "./use-label";
 
+type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type ListboxSingleSelectEvent<E extends EventTarget> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 
 export interface UseListboxSingleParameters extends Omit<UseListNavigationParameters, "shouldFocusOnChange"> {
@@ -20,7 +21,7 @@ export interface UseListboxSingleItemInfo<E extends Element> extends UseListNavi
 
 
 
-export type UseListboxSingleItem<E extends Element, I extends UseListboxSingleItemInfo<E> = UseListboxSingleItemInfo<E>> = (info: UseListboxSingleItemParameters<E, I>) => UseListboxSingleItemReturnType<E>;
+export type UseListboxSingleItem<E extends Element, I extends UseListboxSingleItemInfo<E>> = (info: UseListboxSingleItemParameters<E, I>) => UseListboxSingleItemReturnType<E>;
 
 export interface UseListboxSingleItemReturnType<E extends Element> {
     useListboxSingleItemProps: <P extends h.JSX.HTMLAttributes<E>>(props: P) => UseListNavigationChildPropsReturnType<E, MergedProps<E, h.JSX.HTMLAttributes<E>, UseRefElementPropsReturnType<E, P>>>;
@@ -29,7 +30,8 @@ export interface UseListboxSingleItemReturnType<E extends Element> {
     getSelected: () => boolean | null;
 }
 
-export type UseListboxSingleItemParameters<E extends Element, I extends UseListboxSingleItemInfo<E>> = Omit<UseListNavigationChildParameters<I>, "setSelected" | "getSelected">;
+
+export type UseListboxSingleItemParameters<E extends Element, I extends UseListboxSingleItemInfo<E>> = Omit<I, "getTabbable" | "setTabbable" | "rerenderAndFocus" | "getSelected" | "setSelected">;
 
 export function useAriaListboxSingle<ParentElement extends Element, ChildElement extends Element, I extends UseListboxSingleItemInfo<ChildElement>>({ selectedIndex, onSelect, selectionMode, ...args }: UseListboxSingleParameters) {
 
@@ -49,8 +51,8 @@ export function useAriaListboxSingle<ParentElement extends Element, ChildElement
     }, [anyItemsFocused, selectedIndex, setTabbableIndex]);
 
     useChildFlag({
-        activatedIndex: selectedIndex, 
-        managedChildren, 
+        activatedIndex: selectedIndex,
+        managedChildren,
         setChildFlag: (i, selected) => managedChildren[i]?.setSelected(selected),
         getChildFlag: (i) => (managedChildren[i]?.getSelected() ?? null)
     });

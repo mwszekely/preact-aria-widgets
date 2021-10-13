@@ -78,6 +78,7 @@ export function useAriaAccordion<ParentElement extends Element, ChildElement ext
 
     const useAriaAccordionSection = useCallback<UseAriaAccordionSection<ChildElement>>((args: UseAriaAccordionSectionParameters): UseAriaAccordionSectionReturnType<ChildElement> => {
 
+        const index = args.index;
 
         const [openFromParent, setOpenFromParent, getOpenFromParent] = useState<boolean | null>(null);
 
@@ -94,9 +95,9 @@ export function useAriaAccordion<ParentElement extends Element, ChildElement ext
 
             const { useRefElementProps, element } = useRefElement<ChildElement>();
             const focus = useCallback(() => { (element as Element as HTMLElement | undefined)?.focus(); }, [element]);
-            const { useManagedChildProps } = useManagedChildSection<ChildElement>({ index: args.index, open: open, setOpenFromParent, getOpenFromParent, focus });
+            const { useManagedChildProps } = useManagedChildSection<ChildElement>({ index, open, setOpenFromParent, getOpenFromParent, focus });
 
-            const { useLinearNavigationChildProps } = useLinearNavigationChild();
+            const { useLinearNavigationChildProps } = useLinearNavigationChild({ index });
 
             function useAriaAccordionSectionHeaderProps<P extends UseAriaAccordionSectionHeaderPropsParameters<ChildElement>>({ ["aria-expanded"]: ariaExpanded, ["aria-disabled"]: ariaDisabled, ...props }: P): UseAriaAccordionSectionHeaderPropsReturnType<ChildElement, P> {
 
@@ -123,7 +124,7 @@ export function useAriaAccordion<ParentElement extends Element, ChildElement ext
             };
 
             return { useAriaAccordionSectionHeaderProps };
-        }, [open]);
+        }, [index, open]);
 
 
         const useAriaAccordionSectionBody = useCallback(function useAriaAccordionSectionBody<E extends Element>() {
