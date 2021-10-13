@@ -9,7 +9,7 @@ export interface UseToastsParameters {
 
 }
 
-export interface UseToastParameters extends Omit<ToastInfo, "dismissed" | "index" | "setStatus" | "focus"> {
+export interface UseToastParameters extends Omit<ToastInfo, "dismissed" | "index" | "getStatus" | "setStatus" | "focus"> {
     politeness?: "polite" | "assertive";
     timeout: number | null;
 }
