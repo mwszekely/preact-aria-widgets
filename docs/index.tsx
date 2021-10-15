@@ -435,20 +435,20 @@ const DemoTabs = memo(() => {
 
 const DemoTab = memo(({ index }: { index: number }) => {
     const useTab = useContext(TabContext);
-    const { useTabProps } = useTab({ index, text: null, tag: "li" })
+    const { useTabProps, selected } = useTab({ index, text: null, tag: "li" })
 
     return (<>
-        <li {...useTabProps({})}>Tab #{index + 1}</li>
+        <li {...useTabProps({})}>Tab #{index + 1} ({`Selected: ${selected}`})</li>
     </>)
 });
 
 const DemoTabPanel = memo(({ index }: { index: number }) => {
     const useTabPanel = useContext(TabPanelContext);
-    const { useTabPanelProps, selected } = useTabPanel({ index })
+    const { useTabPanelProps, visible } = useTabPanel({ index })
 
     return (
-        <div {...useTabPanelProps({ hidden: !selected })}>
-            <p>Tab panel content #{index + 1}.</p>
+        <div {...useTabPanelProps({ hidden: !visible })}>
+            <p>Tab panel content #{index + 1} ({`Selected: ${visible}`}).</p>
             <p>{RandomWords.slice(0, Math.floor(RandomWords.length / (index + 1))).join(" ")}</p>
         </div>
     )
