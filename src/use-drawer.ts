@@ -1,5 +1,5 @@
 import { useCallback } from "preact/hooks";
-import { useAriaModal } from "./use-modal";
+import { useModal } from "./use-modal";
 
 
 export interface UseDrawerParameters {
@@ -11,7 +11,7 @@ export function useDrawer<DrawerElement extends HTMLElement>({ open, onClose }: 
 
     // TODO: Drawers are not always modal.
 
-    const { useModalBackdrop, useModalBody, useModalProps, useModalTitle } = useAriaModal<DrawerElement>({ open, onClose });
+    const { useModalBackdrop, useModalBody, useModalProps, useModalTitle } = useModal<DrawerElement>({ open, onClose });
 
     const useDrawerBackdrop = useCallback(<E extends HTMLElement>() => {
         const { useModalBackdropProps } = useModalBackdrop<E>();

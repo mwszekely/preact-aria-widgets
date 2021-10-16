@@ -17,15 +17,30 @@ import { useCallback, useEffect } from "preact/hooks";
  * @param param0 
  * @returns 
  */
-export function useSoftDismiss<E extends Element>({ onClose }: {onClose(reason: "backdrop" | "escape"): void }) {
-
-    const { element, useRefElementProps } = useRefElement<E>();
+export function useSoftDismiss({ onClose, elements }: { elements: Element | Element[] | null, onClose(reason: "backdrop" | "escape"): void }) {
 
     function onBackdropClick(e: h.JSX.TargetedEvent<any>) {
         // Basically, "was this event fired on the root-most element, or at least an element not contained by the modal?"
         // Either could be how the browser handles these sorts of "interacting with nothing" events.
-        if (e.target == document.documentElement || !(element && e.target instanceof Element && element instanceof Element && element.contains(e.target))) {
+        if (e.target == document.documentElement) {
             onClose("backdrop");
+        }
+
+        if (elements && e.target instanceof Element) {
+            if (!Array.isArray(elements))
+                elements = [elements];
+
+            let foundInsideClick = false;
+
+            for (let element of elements) {
+                if (element.contains(e.target)) {
+                    foundInsideClick = true;
+                    break;
+                }
+            }
+
+            if (!foundInsideClick)
+                onClose("backdrop");
         }
     }
 
@@ -36,14 +51,7 @@ export function useSoftDismiss<E extends Element>({ onClose }: {onClose(reason: 
     // but touch events work as expected.
     useGlobalHandler(window, "mousedown", !open ? null : onBackdropClick, { capture: true });
     useGlobalHandler(window, "touchstart", !open ? null : onBackdropClick, { capture: true });
-
-    const onKeyDown: h.JSX.EventHandler<h.JSX.TargetedKeyboardEvent<E>> = (e) => {
-        if (e.key === "Escape") {
-            onClose("escape");
-        }
-    }
-
-    return { useSoftDismissProps: <P extends h.JSX.HTMLAttributes<E>>(props: P) => useMergedProps<E>()(useRefElementProps({ onKeyDown }), props) }
+    useGlobalHandler(document, "keydown", (e: KeyboardEvent) => { if (e.key === "Escape") { onClose("escape"); } });
 }
 
 /**
@@ -52,7 +60,7 @@ export function useSoftDismiss<E extends Element>({ onClose }: {onClose(reason: 
  * @param param0 
  * @returns 
  */
-export function useAriaModal<ModalElement extends HTMLElement>({ open, onClose }: { open: boolean, onClose: (reason: "escape" | "backdrop") => void }) {
+export function useModal<ModalElement extends HTMLElement>({ open, onClose }: { open: boolean, onClose: (reason: "escape" | "backdrop") => void }) {
 
     const stableOnClose = useStableCallback(onClose);
 
@@ -63,12 +71,13 @@ export function useAriaModal<ModalElement extends HTMLElement>({ open, onClose }
     const { id: bodyId, useRandomIdProps: useBodyIdProps, useReferencedIdProps: useBodyReferencingIdProps } = useRandomId({ prefix: "aria-modal-body-" });
     const { id: titleId, useRandomIdProps: useTitleIdProps, useReferencedIdProps: useTitleReferencingIdProps } = useRandomId({ prefix: "aria-modal-title-" });
 
-    const { useSoftDismissProps } = useSoftDismiss<ModalElement>({ onClose: stableOnClose });
+    const { useRefElementProps: useModalRefElement, element: modalElement } = useRefElement<ModalElement>()
+    useSoftDismiss({ onClose: stableOnClose, elements: modalElement });
 
     const useModalBackdrop = useCallback(function useModalBackdrop<BackdropElement extends HTMLElement>() {
 
         function useModalBackdropProps<P extends h.JSX.HTMLAttributes<BackdropElement>>(props: P) {
-            return useMergedProps<BackdropElement>()({ onPointerUp: () => stableOnClose("backdrop")}, props);
+            return useMergedProps<BackdropElement>()({ onPointerUp: () => stableOnClose("backdrop") }, props);
         }
 
         return { useModalBackdropProps }
@@ -79,7 +88,7 @@ export function useAriaModal<ModalElement extends HTMLElement>({ open, onClose }
         const p1 = useTitleReferencingIdProps("aria-labelledby")(p0);
         const p2 = useModalIdProps(p1);
         const pFinal = useBodyReferencingIdProps("aria-describedby")(p2);
-        return useFocusTrapProps(useMergedProps<ModalElement>()(useSoftDismissProps({ role: "dialog" }), modalDescribedByBody ? pFinal : p2));
+        return useFocusTrapProps(useMergedProps<ModalElement>()(useModalRefElement({ role: "dialog" }), modalDescribedByBody ? pFinal : p2));
     }
 
     const useModalTitle = useCallback(function useModalTitle<TitleElement extends Element>() {

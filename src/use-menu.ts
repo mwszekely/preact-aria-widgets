@@ -76,7 +76,9 @@ export function useAriaMenu<ParentElement extends Element, ChildElement extends 
 
     const [openerElement, setOpenerElement, getOpenerElement] = useState<(Element & HTMLOrSVGElement) | null>(null);
 
-    const { useSoftDismissProps } = useSoftDismiss<E>({ onClose: stableOnClose });
+    const { element: buttonElement, useRefElementProps: useButtonRefElementProps } = useRefElement<any>();
+    const { element: menuElement, useRefElementProps: useMenuRefElementProps } = useRefElement<any>();
+    useSoftDismiss({ onClose: stableOnClose, elements: [buttonElement, menuElement] });
 
     useEffect(() => {
         setFocusTrapActive(open);
@@ -134,18 +136,17 @@ export function useAriaMenu<ParentElement extends Element, ChildElement extends 
     }, [focusMenu, open]);
 
     const useMenuButton = useCallback(<E extends Element>({ }: UseMenuButtonParameters) => {
-        const { element, getElement, useRefElementProps } = useRefElement<E>();
-        useLayoutEffect(() => { setOpenerElement(element as Element as (Element & HTMLOrSVGElement)); }, [element]);
+        useLayoutEffect(() => { setOpenerElement(buttonElement as Element as (Element & HTMLOrSVGElement)); }, [buttonElement]);
 
         return {
             useMenuButtonProps: function <P extends h.JSX.HTMLAttributes<E>>(p: P) {
-                let props = useRefElementProps(useMergedProps<E>()({}, useMenuIdReferencingProps("aria-controls")(useButtonHasFocusProps(p as any) as any)));
+                let props = useButtonRefElementProps(useMergedProps<E>()({}, useMenuIdReferencingProps("aria-controls")(useButtonHasFocusProps(p as any) as any)));
                 props["aria-haspopup"] = "menu";
                 props["aria-expanded"] = open ? "true" : undefined;
                 return props;
             }
         }
-    }, [open, onClose, onOpen, useMenuIdReferencingProps]);
+    }, [buttonElement, open, onClose, onOpen, useMenuIdReferencingProps]);
 
     const useMenuSubmenuItem = useCallback((args: UseMenuSubmenuItemParameters) => {
         const { useMenuProps, useMenuButton } = useAriaMenu<HTMLElement, ChildElement, I>(args);
@@ -188,7 +189,7 @@ export function useAriaMenu<ParentElement extends Element, ChildElement extends 
             }
         }
 
-        return useMenuIdProps(useMenuHasFocusProps(useMergedProps<E>()({ onKeyDown }, useSoftDismissProps(props))));
+        return useMenuIdProps(useMenuHasFocusProps(useMergedProps<E>()({ onKeyDown }, useMenuRefElementProps(props))));
     }
 
 

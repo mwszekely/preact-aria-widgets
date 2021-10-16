@@ -1,11 +1,11 @@
 
 import { useCallback } from "preact/hooks";
-import { useAriaModal } from "./use-modal";
+import { useModal } from "./use-modal";
 
 export function useAriaDialog<DialogElement extends HTMLElement>({ open, onClose }: { open: boolean, onClose: (reason: "escape" | "backdrop") => void }) {
     // TODO: Differences between dialog and modal go here, presumably.
     // Non-modal dialogs need to be able to be repositioned, etc.
-    const { useModalBackdrop, useModalBody, useModalProps, useModalTitle } = useAriaModal<DialogElement>({ open, onClose });
+    const { useModalBackdrop, useModalBody, useModalProps, useModalTitle } = useModal<DialogElement>({ open, onClose });
 
     const useDialogBackdrop = useCallback(<E extends HTMLElement>() => {
         const { useModalBackdropProps } = useModalBackdrop<E>();
