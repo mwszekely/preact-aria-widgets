@@ -8,7 +8,7 @@ export { useGenericLabel, useInputLabel, UseCheckboxLikeInputElement, UseInputLa
 export { useAriaListboxSingle, UseListboxSingleItem, ListboxSingleSelectEvent, UseListboxSingleParameters, UseListboxSingleItemInfo, UseListboxSingleItemParameters } from "./use-listbox-single";
 export { useAriaListboxMulti, UseListboxMultiItem, ListboxMultiSelectEvent, UseListboxMultiParameters } from "./use-listbox-multi";
 export { useAriaMenu, UseMenuButtonParameters, UseAriaMenuParameters, UseMenuItem } from "./use-menu"
-export { useAriaTabs, UseTabPanel, UseTab, TabsChangeEvent, UseTabPanelParameters, UseTabParameters, UseAriaTabsParameters } from "./use-tabs";
+export { useAriaTabs, UseTabPanel, UseTab, TabsChangeEvent, UseTabPanelParameters, UseTabParameters, UseAriaTabsParameters, UseTabInfo, UseTabPanelInfo, UseTabsLabel, UseTabsList } from "./use-tabs";
 export { useAriaTooltip, UseTooltip, UseTooltipTrigger } from "./use-tooltip";
 export { useAriaRadioGroup, UseRadio, RadioChangeEvent, UseAriaRadioGroupParameters, UseAriaRadioInfo, UseAriaRadioParameters } from "./use-radio-group"
 export { useToasts, UseToast, UseToastParameters } from "./use-toasts";

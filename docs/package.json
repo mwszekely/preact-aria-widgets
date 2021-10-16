@@ -23,7 +23,6 @@
         "typescript": "^4.4.2"
     },
     "dependencies": {
-        "preact": "^10.5.14",
-        "preact-prop-helpers": "github:mwszekely/preact-prop-helpers"
+        "preact": "^10.5.14"
     }
 }

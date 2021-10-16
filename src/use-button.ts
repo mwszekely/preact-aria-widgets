@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { MergedProps, useMergedProps, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
+import { MergedProps, useEffect, useGlobalHandler, useMergedProps, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
 import { useRef } from "preact/hooks";
 import { enhanceEvent, EventDetail, TagSensitiveProps } from "./props";
 
@@ -42,7 +42,23 @@ function excludes<E extends EventTarget>(target: "click" | "space" | "enter", ex
     return false;
 }
 
-const NavigationKeys = new Set(["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight", "Tab"]);
+/**
+ * selection.containsNode doesn't account for selection.isCollapsed,
+ * so here's a workaround for that.
+ * 
+ * @param element 
+ * @returns 
+ */
+function nodeHasSelectedText(element: EventTarget | null) {
+    if (element && element instanceof Node) {
+        const selection = window.getSelection();
+        if (selection?.containsNode(element, true) && !selection.isCollapsed) {
+            return true;
+        }
+    }
+
+    return false;
+}
 
 /**
  * Easy way to "polyfill" button-like interactions onto, e.g., a div.
@@ -61,8 +77,38 @@ const NavigationKeys = new Set(["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight
  */
 export function useButtonLikeEventHandlers<E extends EventTarget>(onClickSync: ((e: h.JSX.TargetedEvent<E>) => void) | null | undefined, exclude: undefined | { click?: "exclude" | undefined, space?: "exclude" | undefined, enter?: "exclude" | undefined }) {
 
-    const { element, useRefElementProps } = useRefElement<E>()
+    const { element, useRefElementProps } = useRefElement<E>();
+
+    // A button can be activated in multiple ways, so on the off chance
+    // that multiple are triggered at once, we only *actually* register
+    // a press once all of our "on" signals have turned back to "off".
+    // We approximate this by just incrementing when active, and
+    // decrementing when deactivated.
+    //
+    // As an emergency failsafe, when the element looses focus,
+    // this is reset back to 0.
     const [active, setActive, getActive] = useState(0);
+
+    // If we the current text selection changes to include this element
+    // DURING e.g. a mousedown, then we don't want the mouseup to "count", as it were,
+    // because its only purpose was selecting text, not clicking buttons.
+    //
+    // To catch this, any time the text selection includes us while in the middle
+    // of a click, this flag is set, which cancels the activation of a press.
+    // The flag is reset any time the selection is empty or the button is
+    // no longer active.
+    const [textSelectedDuringActivation, setTextSelectedDuringActivation] = useState(false);
+
+    useGlobalHandler(document, "selectionchange", e => {
+        setTextSelectedDuringActivation(active == 0 ? false : nodeHasSelectedText(element));
+    });
+
+    useEffect(() => {
+        if (active == 0)
+            setTextSelectedDuringActivation(false);
+    }, [active == 0]);
+
+    console.assert(element == null || element instanceof Node, `The component that's using useButtonLikeEventHandlers isn't properly forwarding its ref to its child HTMLElement.`);
 
     const onActiveStart = useStableCallback<NonNullable<typeof onClickSync>>((e) => {
         setActive(a => ++a);
@@ -70,6 +116,13 @@ export function useButtonLikeEventHandlers<E extends EventTarget>(onClickSync: (
 
     const onActiveStop = useStableCallback<NonNullable<typeof onClickSync>>((e) => {
         setActive(a => Math.max(0, --a));
+
+
+        if (textSelectedDuringActivation) {
+            e.preventDefault();
+            return;
+        }
+
         if (getActive() <= 0) {
             handlePress(e);
         }
@@ -104,11 +157,18 @@ export function useButtonLikeEventHandlers<E extends EventTarget>(onClickSync: (
     });
 
     const onMouseDown = excludes("click", exclude) ? undefined : (e: h.JSX.TargetedMouseEvent<E>) => {
+        // Stop double clicks from selecting text in an component that's *supposed* to be acting like a button,
+        // but also don't prevent the user from selecting that text manually if they really want to
+        // (which user-select: none would do, but cancelling a double click on mouseDown doesn't)
+        if (e.detail > 1)
+            e.preventDefault();
+        
+
         if (e.button === 0)
             onActiveStart(e);
     }
     const onMouseUp = excludes("click", exclude) ? undefined : (e: h.JSX.TargetedMouseEvent<E>) => {
-        if (e.button === 0)
+        if (e.button === 0 && active > 0)
             onActiveStop(e);
     };
 
@@ -139,7 +199,15 @@ export function useButtonLikeEventHandlers<E extends EventTarget>(onClickSync: (
             onActiveStop(e);
     }
 
-    return <P extends h.JSX.HTMLAttributes<E>>(props: P) => useRefElementProps(useMergedProps<E>()({ onKeyDown, onKeyUp, onBlur, onMouseDown, onMouseUp, onMouseOut, ...{ "data-pseudo-active": active ? "true" : undefined } as {} }, props));
+    const onClick = (e: h.JSX.TargetedMouseEvent<E>) => {
+        e.preventDefault();
+        if (e.detail > 1) {
+            e.stopImmediatePropagation();
+            e.stopPropagation();
+        }
+    }
+
+    return <P extends h.JSX.HTMLAttributes<E>>(props: P) => useRefElementProps(useMergedProps<E>()({ onKeyDown, onKeyUp, onBlur, onMouseDown, onMouseUp, onMouseOut, onClick, ...{ "data-pseudo-active": active ? "true" : undefined } as {} }, props));
 }
 
 export function useAriaButton<E extends EventTarget>({ tag, pressed, onPress }: UseAriaButtonParameters<E>): UseAriaButtonReturnType<E> {
