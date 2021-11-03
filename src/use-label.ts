@@ -1,6 +1,6 @@
 import { h } from "preact";
 import { MergedProps, useMergedProps, useRandomId, UseRandomIdPropsReturnType, useRefElement, UseRefElementPropsReturnType, UseReferencedIdPropsReturnType, useStableCallback } from "preact-prop-helpers";
-import { useCallback, useEffect } from "preact/hooks";
+import { useCallback, useEffect, useState } from "preact/hooks";
 import { ElementToTag, TagSensitiveProps } from "./props";
 import { useButtonLikeEventHandlers } from "./use-button";
 
@@ -19,8 +19,10 @@ export interface UseGenericLabelParameters {
  */
 export function useGenericLabel({ labelPrefix, inputPrefix, backupText }: UseGenericLabelParameters = { labelPrefix: "label-", inputPrefix: "input-" }) {
 
-    const { element: labelElement, getElement: getLabelElement, useRefElementProps: useLabelRefElementProps } = useRefElement<any>();
-    const { element: inputElement, getElement: getInputElement, useRefElementProps: useInputRefElementProps } = useRefElement<any>();
+    const [labelElement, setLabelElement] = useState<any>(null);
+    const [inputElement, setInputElement] = useState<any>(null);
+    const { getElement: getLabelElement, useRefElementProps: useLabelRefElementProps } = useRefElement<any>({ onElementChange: setLabelElement });
+    const { getElement: getInputElement, useRefElementProps: useInputRefElementProps } = useRefElement<any>({ onElementChange: setInputElement });
     const { useRandomIdProps: useLabelRandomIdProps, id: labelId, randomId: labelRandomId, useReferencedIdProps: useReferencedLabelIdProps } = useRandomId({ prefix: labelPrefix });
     const { useRandomIdProps: useInputRandomIdProps, id: inputId, randomId: inputRandomId, useReferencedIdProps: useReferencedInputIdProps } = useRandomId({ prefix: inputPrefix });
 
@@ -148,7 +150,7 @@ const handlesInput = <E extends Element>(tag: ElementToTag<E>, labelPosition: "w
 };
 
 export type UseCheckboxLikeInputElement<InputType extends Element> = ({ tag }: TagSensitiveProps<InputType>) => {
-    inputElement: InputType | null;
+    getInputElement: () => InputType | null;
     useCheckboxLikeInputElementProps: <P extends h.JSX.HTMLAttributes<InputType>>({ ...p0 }: P) => MergedProps<InputType, P, h.JSX.HTMLAttributes<InputType>>;
 }
 
@@ -172,7 +174,7 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
 
     const useCheckboxLikeInputElement: UseCheckboxLikeInputElement<InputType> = useCallback(function useCheckboxInputElement({ tag }: TagSensitiveProps<InputType>) {
         const { useInputLabelInputProps: useILInputProps } = useILInput<InputType>();
-        const { element, useRefElementProps } = useRefElement<InputType>();
+        const { useRefElementProps, getElement } = useRefElement<InputType>({});
 
         // onClick and onChange are a bit messy, so we need to
         // *always* make sure that the visible state is correct
@@ -180,12 +182,13 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
         // See https://github.com/preactjs/preact/issues/2745,
         // and https://github.com/preactjs/preact/issues/1899#issuecomment-525690194
         useEffect(() => {
+            const element = getElement();
             if (element && tag == "input") {
                 (element as Element as HTMLInputElement).checked = checked
             }
-        }, [tag, element, checked])
+        }, [tag, checked])
 
-        return { inputElement: element, useCheckboxLikeInputElementProps };
+        return { getInputElement: getElement, useCheckboxLikeInputElementProps };
 
 
         function useCheckboxLikeInputElementProps<P extends h.JSX.HTMLAttributes<InputType>>({ ...p0 }: P) {

@@ -77,7 +77,7 @@ function nodeHasSelectedText(element: EventTarget | null) {
  */
 export function useButtonLikeEventHandlers<E extends EventTarget>(onClickSync: ((e: h.JSX.TargetedEvent<E>) => void) | null | undefined, exclude: undefined | { click?: "exclude" | undefined, space?: "exclude" | undefined, enter?: "exclude" | undefined }) {
 
-    const { element, useRefElementProps } = useRefElement<E>();
+    const { useRefElementProps, getElement } = useRefElement<E>({});
 
     // A button can be activated in multiple ways, so on the off chance
     // that multiple are triggered at once, we only *actually* register
@@ -100,15 +100,13 @@ export function useButtonLikeEventHandlers<E extends EventTarget>(onClickSync: (
     const [textSelectedDuringActivation, setTextSelectedDuringActivation] = useState(false);
 
     useGlobalHandler(document, "selectionchange", e => {
-        setTextSelectedDuringActivation(active == 0 ? false : nodeHasSelectedText(element));
+        setTextSelectedDuringActivation(active == 0 ? false : nodeHasSelectedText(getElement()));
     });
 
     useEffect(() => {
         if (active == 0)
             setTextSelectedDuringActivation(false);
     }, [active == 0]);
-
-    console.assert(element == null || element instanceof Node, `The component that's using useButtonLikeEventHandlers isn't properly forwarding its ref to its child HTMLElement.`);
 
     const onActiveStart = useStableCallback<NonNullable<typeof onClickSync>>((e) => {
         setActive(a => ++a);
@@ -147,6 +145,7 @@ export function useButtonLikeEventHandlers<E extends EventTarget>(onClickSync: (
             //
             // For iOS Safari.
             //
+            const element = getElement();
             if (element && "focus" in (element as EventTarget as HTMLElement))
                 (element as EventTarget as HTMLElement | null)?.focus();
 

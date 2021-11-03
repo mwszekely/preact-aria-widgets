@@ -93,8 +93,8 @@ export function useAriaAccordion<ParentElement extends Element, ChildElement ext
         // is stable without (directly) depending on the open state.
         const useAriaAccordionSectionHeader = useCallback(function useAriaAccordionSectionHeader({ tag }: TagSensitiveProps<ChildElement>): UseAriaAccordionSectionHeaderReturnType<ChildElement> {
 
-            const { useRefElementProps, element } = useRefElement<ChildElement>();
-            const focus = useCallback(() => { (element as Element as HTMLElement | undefined)?.focus(); }, [element]);
+            const { useRefElementProps, getElement } = useRefElement<ChildElement>({ });
+            const focus = useCallback(() => { (getElement() as Element as HTMLElement | undefined)?.focus(); }, []);
             const { useManagedChildProps } = useManagedChildSection<ChildElement>({ index, open, setOpenFromParent, getOpenFromParent, focus });
 
             const { useLinearNavigationChildProps } = useLinearNavigationChild({ index });

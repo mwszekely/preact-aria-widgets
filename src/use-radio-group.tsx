@@ -30,7 +30,7 @@ export type UseAriaRadioParameters<V extends string | number, I extends Element,
     }
 
 export function useAriaRadioGroup<V extends string | number, G extends Element, I extends Element, L extends Element, Info extends UseAriaRadioInfo>({ name, selectedValue, onInput }: UseAriaRadioGroupParameters<V>) {
-    const { element: radioGroupParentElement, useRefElementProps } = useRefElement<G>();
+    const { getElement: getRadioGroupParentElement, useRefElementProps } = useRefElement<G>({});
 
     const getName = useStableGetter(name);
 
@@ -46,7 +46,7 @@ export function useAriaRadioGroup<V extends string | number, G extends Element, 
 
     // Track whether the currently focused element is a child of the radio group parent element.
     // When it's not, we reset the tabbable index back to the currently selected element.
-    useActiveElement({ setActiveElement: activeElement => setAnyRadiosFocused(!!(radioGroupParentElement?.contains(activeElement))) });
+    useActiveElement({ onActiveElementChange: activeElement => setAnyRadiosFocused(!!(getRadioGroupParentElement()?.contains(activeElement))) });
     useEffect(() => {
         if (!anyRadiosFocused)
             setTabbableIndex(selectedIndex ?? 0);
@@ -60,8 +60,8 @@ export function useAriaRadioGroup<V extends string | number, G extends Element, 
 
     let correctedIndex = (selectedIndex == null || selectedIndex < 0 || selectedIndex >= managedChildren.length) ? null : selectedIndex;
     useChildFlag({
-        activatedIndex: correctedIndex, 
-        managedChildren, 
+        activatedIndex: correctedIndex,
+        managedChildren,
         setChildFlag: (i, checked) => managedChildren[i]?.setChecked(checked),
         getChildFlag: ((i) => managedChildren[i]?.getChecked() ?? false)
     });

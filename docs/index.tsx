@@ -205,7 +205,7 @@ const DemoUseCheckboxGroup = memo(() => {
 
 
     const [focusedInner, setFocusedInner, getFocusedInner] = useState(false);
-    const { useHasFocusProps } = useHasFocus<HTMLDivElement>({ setFocusedInner })
+    const { useHasFocusProps } = useHasFocus<HTMLDivElement>({ onFocusedInnerChanged: setFocusedInner })
     const { useCheckboxGroupParentProps: useCheckboxGroupCheckboxProps, useCheckboxGroupChild, parentIsChecked: selfIsChecked, parentPercentChecked: percentChecked, onCheckboxGroupParentInput: onCheckboxGroupInput } = useCheckboxGroup<HTMLInputElement, UseCheckboxGroupChildInfo>({ shouldFocusOnChange: getFocusedInner, onUpdateChildren });
     const { useCheckboxInputElement, useCheckboxLabelElement } = useAriaCheckbox<HTMLInputElement, HTMLLabelElement>({ checked: selfIsChecked, disabled: false, labelPosition: "separate", onInput: onCheckboxGroupInput as any });
 
@@ -383,7 +383,7 @@ const DemoMenu = memo(() => {
     const onClose = () => setOpen(false);
     const onOpen = () => setOpen(true);
     const [menuFocusedInner, setMenuFocusedInner, getMenuFocusedInner] = useState(false);
-    const { useHasFocusProps } = useHasFocus<HTMLUListElement>({ setFocusedInner: setMenuFocusedInner})
+    const { useHasFocusProps } = useHasFocus<HTMLUListElement>({ onFocusedInnerChanged: setMenuFocusedInner})
 
     const { useMenuButton, useMenuItem, useMenuProps, useMenuSubmenuItem } = useAriaMenu<HTMLUListElement, HTMLLIElement, UseMenuChildInfo>({ open, onClose, onOpen, shouldFocusOnChange: getMenuFocusedInner });
 

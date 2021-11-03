@@ -113,7 +113,7 @@ export function useTable<T extends Element, S extends Element, R extends Element
 
     // Used for navigation to determine when focus should follow the selected cell
     const [focusedInner, setFocusedInner, getFocusedInner] = useState(false);
-    const { useHasFocusProps } = useHasFocus<T>({ setFocusedInner });
+    const { useHasFocusProps } = useHasFocus<T>({ onFocusedInnerChanged: setFocusedInner });
     const stableGetFocusedInner = useStableGetter(focusedInner);
 
     // These are used to keep track of a mapping between unsorted index <---> sorted index.

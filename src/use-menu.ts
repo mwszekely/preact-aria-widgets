@@ -1,5 +1,6 @@
 import { h } from "preact";
 import { MergedProps, useActiveElement, useHasFocus, useLayoutEffect, useListNavigation, UseListNavigationChildInfo, UseListNavigationChildParameters, UseListNavigationChildPropsReturnType, UseListNavigationParameters, useMergedProps, useRandomId, useRefElement, useStableCallback, useState, useTimeout } from "preact-prop-helpers";
+import type { OnPassiveStateChange } from "preact-prop-helpers/use-passive-state";
 import { useCallback, useEffect } from "preact/hooks";
 import { enhanceEvent, EventDetail, TagSensitiveProps } from "./props";
 import { useSoftDismiss } from "./use-modal";
@@ -68,17 +69,17 @@ export function useAriaMenu<ParentElement extends Element, ChildElement extends 
     // but focus management is super sensitive, and even waiting for a useLayoutEffect to sync state here
     // would be too late, so it would look like there's a moment between menu focus lost and button focus gained
     // where nothing is focused. 
-    const { useHasFocusProps: useMenuHasFocusProps, } = useHasFocus<E>({ setLastFocusedInner: setMenuLastFocusedInner });
-    const { useHasFocusProps: useButtonHasFocusProps } = useHasFocus<Element>({ setLastFocusedInner: setButtonLastFocusedInner });
+    const { useHasFocusProps: useMenuHasFocusProps, } = useHasFocus<E>({ onLastFocusedInnerChanged: setMenuLastFocusedInner });
+    const { useHasFocusProps: useButtonHasFocusProps } = useHasFocus<Element>({ onLastFocusedInnerChanged: setButtonLastFocusedInner });
 
     const { managedChildren, useListNavigationChild, tabbableIndex, focusCurrent: focusMenu } = useListNavigation<ChildElement, I>({ collator, keyNavigation, noTypeahead, noWrap, typeaheadTimeout, shouldFocusOnChange: useCallback(() => getMenuLastFocusedInner() || getButtonLastFocusedInner(), []) });
     const { useRandomIdProps: useMenuIdProps, useReferencedIdProps: useMenuIdReferencingProps } = useRandomId({ prefix: "aria-menu-" });
 
     const [openerElement, setOpenerElement, getOpenerElement] = useState<(Element & HTMLOrSVGElement) | null>(null);
 
-    const { element: buttonElement, useRefElementProps: useButtonRefElementProps } = useRefElement<any>();
-    const { element: menuElement, useRefElementProps: useMenuRefElementProps } = useRefElement<any>();
-    useSoftDismiss({ onClose: stableOnClose, elements: [buttonElement, menuElement] });
+    const { getElement: getButtonElement, useRefElementProps: useButtonRefElementProps } = useRefElement<any>({ onElementChange: setOpenerElement });
+    const { getElement: getMenuElement, useRefElementProps: useMenuRefElementProps } = useRefElement<any>({});
+    useSoftDismiss({ onClose: stableOnClose, getElements: () => ([getButtonElement(), getMenuElement()]) });
 
     useEffect(() => {
         setFocusTrapActive(open);
@@ -136,7 +137,6 @@ export function useAriaMenu<ParentElement extends Element, ChildElement extends 
     }, [focusMenu, open]);
 
     const useMenuButton = useCallback(<E extends Element>({ }: UseMenuButtonParameters) => {
-        useLayoutEffect(() => { setOpenerElement(buttonElement as Element as (Element & HTMLOrSVGElement)); }, [buttonElement]);
 
         return {
             useMenuButtonProps: function <P extends h.JSX.HTMLAttributes<E>>(p: P) {
@@ -146,17 +146,15 @@ export function useAriaMenu<ParentElement extends Element, ChildElement extends 
                 return props;
             }
         }
-    }, [buttonElement, open, onClose, onOpen, useMenuIdReferencingProps]);
+    }, [open, onClose, onOpen, useMenuIdReferencingProps]);
 
     const useMenuSubmenuItem = useCallback((args: UseMenuSubmenuItemParameters) => {
         const { useMenuProps, useMenuButton } = useAriaMenu<HTMLElement, ChildElement, I>(args);
         const { useMenuButtonProps } = useMenuButton<E>({ tag: "li" as any });
 
-        const { element, getElement, useRefElementProps } = useRefElement<E>();
-        useLayoutEffect(() => { setOpenerElement(element as Element as (Element & HTMLOrSVGElement)); }, [element]);
+        const { getElement, useRefElementProps } = useRefElement<E>({ onElementChange: setOpenerElement as OnPassiveStateChange<any> });
 
         return {
-            element,
             getElement,
             useMenuProps,
             useMenuSubmenuItemProps: function <P extends h.JSX.HTMLAttributes<E>>({ ...props }: P) {

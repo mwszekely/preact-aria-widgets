@@ -24,14 +24,15 @@ export function useAriaCheckbox<InputType extends Element, LabelType extends Ele
     const { getInputElement, getLabelElement, useCheckboxLikeInputElement, useCheckboxLikeLabelElement } = useCheckboxLike<InputType, LabelType>({ checked: !!checked, labelPosition, role: "checkbox", disabled, onInput: onInputEnhanced });
 
     const useCheckboxInputElement: UseCheckboxInputElement<InputType> = useCallback(function useCheckboxInputElement({ tag }: TagSensitiveProps<InputType>) {
-        const { inputElement, useCheckboxLikeInputElementProps } = useCheckboxLikeInputElement({ tag })
+        const { getInputElement, useCheckboxLikeInputElementProps } = useCheckboxLikeInputElement({ tag })
         const isMixed = (checked == "mixed");
 
         useEffect(() => {
+            const inputElement = getInputElement();
             if (inputElement && tag === "input") {
                 (inputElement as any).indeterminate = isMixed;
             }
-        }, [inputElement, isMixed, tag]);
+        }, [isMixed, tag]);
 
         return { useCheckboxInputElementProps };
 

@@ -17,7 +17,7 @@ import { useCallback, useEffect } from "preact/hooks";
  * @param param0 
  * @returns 
  */
-export function useSoftDismiss({ onClose, elements }: { elements: Element | Element[] | null, onClose(reason: "backdrop" | "escape"): void }) {
+export function useSoftDismiss({ onClose, getElements }: { getElements: () => Element | Element[] | null, onClose(reason: "backdrop" | "escape"): void }) {
 
     function onBackdropClick(e: h.JSX.TargetedEvent<any>) {
         // Basically, "was this event fired on the root-most element, or at least an element not contained by the modal?"
@@ -25,6 +25,8 @@ export function useSoftDismiss({ onClose, elements }: { elements: Element | Elem
         if (e.target == document.documentElement) {
             onClose("backdrop");
         }
+
+        let elements = getElements();
 
         if (elements && e.target instanceof Element) {
             if (!Array.isArray(elements))
@@ -71,8 +73,8 @@ export function useModal<ModalElement extends HTMLElement>({ open, onClose }: { 
     const { id: bodyId, useRandomIdProps: useBodyIdProps, useReferencedIdProps: useBodyReferencingIdProps } = useRandomId({ prefix: "aria-modal-body-" });
     const { id: titleId, useRandomIdProps: useTitleIdProps, useReferencedIdProps: useTitleReferencingIdProps } = useRandomId({ prefix: "aria-modal-title-" });
 
-    const { useRefElementProps: useModalRefElement, element: modalElement } = useRefElement<ModalElement>()
-    useSoftDismiss({ onClose: stableOnClose, elements: modalElement });
+    const { useRefElementProps: useModalRefElement, getElement: getModalElement } = useRefElement<ModalElement>({})
+    useSoftDismiss({ onClose: stableOnClose, getElements: getModalElement });
 
     const useModalBackdrop = useCallback(function useModalBackdrop<BackdropElement extends HTMLElement>() {
 

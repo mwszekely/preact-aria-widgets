@@ -17,7 +17,6 @@ export function useAriaTooltip({ mouseoverDelay }: { mouseoverDelay?: number }) 
     const { useRandomIdProps: useTooltipIdProps, useReferencedIdProps: useTooltipIdReferencingProps } = useRandomId({ prefix: "aria-tooltip-" });
 
     const [triggerFocusedInner, setTriggerFocusedInner, getTriggerFocusedInner] = useState(false);
-    const { useHasFocusProps } = useHasFocus<Element>({ setFocusedInner: setTriggerFocusedInner });
     const [triggerHasMouseover, setTriggerHasMouseover] = useState(false);
     const [tooltipHasMouseover, setTooltipHasMouseover] = useState(false);
 
@@ -60,7 +59,7 @@ export function useAriaTooltip({ mouseoverDelay }: { mouseoverDelay?: number }) 
             // it's perfectly reasonable that a child element will be the one that's focused,
             // not this one, so we don't set tabIndex=0
 
-            return useTooltipIdReferencingProps("aria-describedby")(useMergedProps<TriggerType>()({ onPointerEnter, onPointerLeave }, useHasFocusProps(props as any) as unknown as h.JSX.HTMLAttributes<TriggerType>));
+            return useTooltipIdReferencingProps("aria-describedby")(useMergedProps<TriggerType>()({ onPointerEnter, onPointerLeave }, (props as any) as unknown as h.JSX.HTMLAttributes<TriggerType>));
         }
 
         return { useTooltipTriggerProps };

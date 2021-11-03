@@ -34,7 +34,7 @@ export function useAriaListboxMulti<ParentElement extends Element, ChildElement 
     type E = ParentElement;
 
     const [focusedInner, setFocusedInner, getFocusedInner] = useState(false);
-    const { useHasFocusProps } = useHasFocus<E>({ setFocusedInner });
+    const { useHasFocusProps } = useHasFocus<E>({ onFocusedInnerChanged: setFocusedInner });
 
     const { useGenericLabelInput, useGenericLabelLabel, useReferencedInputIdProps, useReferencedLabelIdProps } = useGenericLabel({ labelPrefix: "aria-listbox-label-", inputPrefix: "aria-listbox-" })
     const { useListNavigationChild, navigateToIndex, managedChildren, currentTypeahead, focusCurrent, tabbableIndex, invalidTypeahead } = useListNavigation<ChildElement, UseListboxMultiItemInfo<ChildElement>>({ ...args, shouldFocusOnChange: getFocusedInner });
@@ -57,16 +57,17 @@ export function useAriaListboxMulti<ParentElement extends Element, ChildElement 
         const selected = info.selected;
         const [typeaheadInProgress, setTypeaheadInProgress] = useState(false);
         const getSelected = useStableGetter(selected);
-        const { element, useRefElementProps } = useRefElement<E>();
+        const { useRefElementProps, getElement } = useRefElement<E>({});
         const stableOnSelect = useStableCallback(info.onSelect ?? (() => { }));
 
         const { tabbable, useListNavigationSiblingProps, useListNavigationChildProps } = useListNavigationChild({ ...info, setTypeaheadInProgress });
 
         useLayoutEffect(() => {
+            const element = getElement();
             if (element && getShiftHeld()) {
                 stableOnSelect?.({ target: element, currentTarget: element, [EventDetail]: { selected: true } });
             }
-        }, [element, tabbable]);
+        }, [tabbable]);
 
         return { useListboxMultiItemProps, tabbable };
 

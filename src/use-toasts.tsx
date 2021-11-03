@@ -34,7 +34,7 @@ export function useToasts<ContainerType extends Element>({ }: UseToastsParameter
 
     const [politeness, setPoliteness] = useState<"polite" | "assertive">("polite");
 
-    const { element, getElement, useRefElementProps } = useRefElement<ContainerType>();
+    const { getElement, useRefElementProps } = useRefElement<ContainerType>({});
     const { indicesByElement, managedChildren, mountedChildren: toastQueue, useManagedChild, getMountIndex } = useChildManager<ToastInfo>();
 
     // Any time a new toast mounts, update our bottommostToastIndex to point to it if necessary

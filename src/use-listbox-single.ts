@@ -44,7 +44,7 @@ export function useAriaListboxSingle<ParentElement extends Element, ChildElement
 
     // Track whether the currently focused element is a child of the list box parent element.
     // When it's not, we reset the tabbable index back to the currently selected element.
-    useActiveElement({ setActiveElement: activeElement => setAnyItemsFocused(!!(inputElement?.contains(activeElement))) });
+    useActiveElement({ onActiveElementChange: activeElement => setAnyItemsFocused(!!(inputElement?.contains(activeElement))) });
     useEffect(() => {
         if (!anyItemsFocused)
             setTabbableIndex(selectedIndex);
@@ -67,20 +67,22 @@ export function useAriaListboxSingle<ParentElement extends Element, ChildElement
         type E = ChildElement;
         const [selected, setSelected, getSelected] = useState<boolean | null>(null);
         const { tabbable, useListNavigationSiblingProps, useListNavigationChildProps } = useListNavigationChild({ setSelected, getSelected, ...info } as I);
-        const { element, useRefElementProps } = useRefElement<ChildElement>();
+        const { getElement, useRefElementProps } = useRefElement<ChildElement>({});
         const index = info.index;
 
         useEffect(() => {
+            const element = getElement();
             if (element && tabbable && selectionMode == "focus") {
                 stableOnSelect?.({ target: element, currentTarget: element, [EventDetail]: { selectedIndex: index } });
             }
-        }, [element, tabbable, selectionMode, index]);
+        }, [tabbable, selectionMode, index]);
 
         return { useListboxSingleItemProps, tabbable, selected, getSelected };
 
         function useListboxSingleItemProps<P extends h.JSX.HTMLAttributes<E>>(props: P) {
             const newProps: h.JSX.HTMLAttributes<E> = useButtonLikeEventHandlers<E>((e) => {
                 navigateToIndex(info.index);
+                const element = getElement();
                 if (element)
                     stableOnSelect?.({ target: element, currentTarget: element, [EventDetail]: { selectedIndex: index } });
                 e.preventDefault();
