@@ -63,14 +63,12 @@ export function useAriaMenu<ParentElement extends Element, ChildElement extends 
     let open = (menubar ? true : (args as UseMenuParameters1).open);
     const stableOnClose = useStableCallback(onClose ?? (() => { }));
 
-    const [menuLastFocusedInner, setMenuLastFocusedInner, getMenuLastFocusedInner] = useState(false);
-    const [buttonLastFocusedInner, setButtonLastFocusedInner, getButtonLastFocusedInner] = useState(false);
     // TODO: It's awkward that the button focus props are out here where we don't have its type,
     // but focus management is super sensitive, and even waiting for a useLayoutEffect to sync state here
     // would be too late, so it would look like there's a moment between menu focus lost and button focus gained
     // where nothing is focused. 
-    const { useHasFocusProps: useMenuHasFocusProps, } = useHasFocus<E>({ onLastFocusedInnerChanged: setMenuLastFocusedInner });
-    const { useHasFocusProps: useButtonHasFocusProps } = useHasFocus<Element>({ onLastFocusedInnerChanged: setButtonLastFocusedInner });
+    const { useHasFocusProps: useMenuHasFocusProps, getLastFocusedInner: getMenuLastFocusedInner } = useHasFocus<E>({ onLastFocusedInnerChanged: onMenuOrButtonLostLastFocus });
+    const { useHasFocusProps: useButtonHasFocusProps, getLastFocusedInner: getButtonLastFocusedInner } = useHasFocus<Element>({ onLastFocusedInnerChanged: onMenuOrButtonLostLastFocus });
 
     const { managedChildren, useListNavigationChild, tabbableIndex, focusCurrent: focusMenu } = useListNavigation<ChildElement, I>({ collator, keyNavigation, noTypeahead, noWrap, typeaheadTimeout, shouldFocusOnChange: useCallback(() => getMenuLastFocusedInner() || getButtonLastFocusedInner(), []) });
     const { useRandomIdProps: useMenuIdProps, useReferencedIdProps: useMenuIdReferencingProps } = useRandomId({ prefix: "aria-menu-" });
@@ -92,28 +90,26 @@ export function useAriaMenu<ParentElement extends Element, ChildElement extends 
         }
         else if (focusTrapActive === false) {
             if (getMenuLastFocusedInner())
-                getOpenerElement()?.focus();
+                getOpenerElement()?.focus({ preventScroll: true });
         }
         else {
             // null, so we've only just mounted and shouldn't focus ourselves.
         }
     }, [focusTrapActive]);
 
+
     // Focus management is really finicky, and there's always going to be 
     // an edge case where nothing's focused for two consecutive frames 
     // on iOS or whatever, which would immediately close the menu 
     // any time it's been opened. So any time it *looks* like we should close,
     // try waiting 100ms. If it's still true then, then yeah, we should close.
-    let shouldClose = (focusTrapActive && !menuLastFocusedInner && !buttonLastFocusedInner);
-    useTimeout({
-        timeout: 100,
-        callback: () => {
-            if (shouldClose) {
+    function onMenuOrButtonLostLastFocus() {
+        setTimeout(() => {
+            if (!getMenuLastFocusedInner() && !getButtonLastFocusedInner()) {
                 onClose?.();
             }
-        },
-        triggerIndex: `${shouldClose}`
-    });
+        }, 100);
+    }
 
     // A menu sentinal is a hidden but focusable element that comes at the start or end of the element
     // that, when activated or focused over, closes the menu.

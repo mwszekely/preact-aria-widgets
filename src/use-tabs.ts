@@ -42,10 +42,9 @@ export type UseTabPanel<PanelElement extends Element> = (info: UseTabPanelParame
 
 export function useAriaTabs<ListElement extends Element, TabElement extends Element, TabPanelElement extends Element>({ selectionMode, selectedIndex, onSelect, orientation: logicalOrientation, ...args }: UseAriaTabsParameters) {
 
-    const [tabListFocusedInner, setTabListFocusedInner, getTabListFocusedInner] = useState(false);
-    const { useHasFocusProps: useTabListHasFocusProps } = useHasFocus<ListElement>({ onFocusedInnerChanged: setTabListFocusedInner });
-    const { getLogicalDirection, convertToPhysicalOrientation, useLogicalDirectionProps } = useLogicalDirection();
-    const physicalOrientation = convertToPhysicalOrientation(logicalOrientation);
+    const { useHasFocusProps: useTabListHasFocusProps, getFocusedInner: getTabListFocusedInner } = useHasFocus<ListElement>({});
+    const [physicalOrientation, setPhysicalOrientation] = useState<"horizontal" | "vertical">("horizontal");
+    const { getLogicalDirectionInfo, convertToPhysicalOrientation, useLogicalDirectionProps } = useLogicalDirection({ onLogicalDirectionChange: logicalDirectionInfo => setPhysicalOrientation(convertToPhysicalOrientation(logicalOrientation, logicalDirectionInfo)) });
 
     const { useRandomIdProps: useTabListIdProps, useReferencedIdProps: useReferencedTabListId } = useRandomId({ prefix: "aria-tab-list-" });
     const { useRandomIdProps: useTabLabelIdProps, useReferencedIdProps: useReferencedTabLabelId } = useRandomId({ prefix: "aria-tab-label-" });
@@ -63,8 +62,8 @@ export function useAriaTabs<ListElement extends Element, TabElement extends Elem
     }, [selectionMode])
 
 
-    useChildFlag({ activatedIndex: selectedIndex, managedChildren: managedTabs, setChildFlag:  (i, selected) => managedTabs[i]?.setSelected(selected), getChildFlag: i => (managedTabs[i]?.getSelected())});
-    useChildFlag({ activatedIndex: selectedIndex, managedChildren: managedPanels, setChildFlag: (i, visible) => managedPanels[i]?.setVisible(visible), getChildFlag: i => (managedPanels[i]?.getVisible())});
+    useChildFlag({ activatedIndex: selectedIndex, managedChildren: managedTabs, setChildFlag: (i, selected) => managedTabs[i]?.setSelected(selected), getChildFlag: i => (managedTabs[i]?.getSelected()) });
+    useChildFlag({ activatedIndex: selectedIndex, managedChildren: managedPanels, setChildFlag: (i, visible) => managedPanels[i]?.setVisible(visible), getChildFlag: i => (managedPanels[i]?.getVisible()) });
 
 
 
@@ -81,7 +80,7 @@ export function useAriaTabs<ListElement extends Element, TabElement extends Elem
         const [tabPanelId, setTabPanelId] = useState<string | undefined>(undefined)
         const { useRandomIdProps: useTabIdProps, id: tabId, getId: getTabId } = useRandomId({ prefix: "aria-tab-" });
         const [selected, setSelected, getSelected] = useState<boolean | null>(null);
-        const { tabbable, useListNavigationChildProps, useListNavigationSiblingProps } = useListNavigationChild({ setSelected, getSelected, tabId, setTabPanelId, setSelectionMode: setSelectionModeL,  ...info });
+        const { tabbable, useListNavigationChildProps, useListNavigationSiblingProps } = useListNavigationChild({ setSelected, getSelected, tabId, setTabPanelId, setSelectionMode: setSelectionModeL, ...info });
         const getIndex = useStableGetter(info.index);
 
         useEffect(() => {
@@ -127,7 +126,7 @@ export function useAriaTabs<ListElement extends Element, TabElement extends Elem
 
         useEffect(() => {
             if (shouldFocus) {
-                (element as HTMLOrSVGElement | null)?.focus();
+                (element as HTMLOrSVGElement | null)?.focus({ preventScroll: true });
                 setShouldFocus(false);
             }
         }, [element, shouldFocus])

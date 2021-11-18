@@ -9,9 +9,8 @@ const RandomWords = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, se
 const RovingChildContext = createContext<UseListNavigationChild<HTMLLIElement, UseListNavigationChildInfo>>(null!)
 export const DemoUseRovingTabIndex = memo(() => {
 
-    const [lastFocusedInner, setLastFocusedInner, getLastFocusedInner] = useState(false);
-    const { useHasFocusProps } = useHasFocus<HTMLUListElement>({})
-    const { useListNavigationChild, currentTypeahead, setTabbableIndex, tabbableIndex } = useListNavigation<HTMLLIElement, UseListNavigationChildInfo>({ shouldFocusOnChange: getLastFocusedInner });
+    const { useHasFocusProps, getFocusedInner } = useHasFocus<HTMLUListElement>({})
+    const { useListNavigationChild, currentTypeahead, setTabbableIndex, tabbableIndex } = useListNavigation<HTMLLIElement, UseListNavigationChildInfo>({ shouldFocusOnChange: getFocusedInner });
 
     return (
         <div className="demo">

@@ -33,8 +33,7 @@ export type UseListboxMultiItem<E extends Element, I extends UseListboxMultiItem
 export function useAriaListboxMulti<ParentElement extends Element, ChildElement extends Element, I extends UseListboxMultiItemInfo<ChildElement>>({ ...args }: UseListboxMultiParameters) {
     type E = ParentElement;
 
-    const [focusedInner, setFocusedInner, getFocusedInner] = useState(false);
-    const { useHasFocusProps } = useHasFocus<E>({ onFocusedInnerChanged: setFocusedInner });
+    const { useHasFocusProps, getFocusedInner } = useHasFocus<E>({  });
 
     const { useGenericLabelInput, useGenericLabelLabel, useReferencedInputIdProps, useReferencedLabelIdProps } = useGenericLabel({ labelPrefix: "aria-listbox-label-", inputPrefix: "aria-listbox-" })
     const { useListNavigationChild, navigateToIndex, managedChildren, currentTypeahead, focusCurrent, tabbableIndex, invalidTypeahead } = useListNavigation<ChildElement, UseListboxMultiItemInfo<ChildElement>>({ ...args, shouldFocusOnChange: getFocusedInner });

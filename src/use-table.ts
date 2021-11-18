@@ -112,9 +112,7 @@ export function useTable<T extends Element, S extends Element, R extends Element
 
 
     // Used for navigation to determine when focus should follow the selected cell
-    const [focusedInner, setFocusedInner, getFocusedInner] = useState(false);
-    const { useHasFocusProps } = useHasFocus<T>({ onFocusedInnerChanged: setFocusedInner });
-    const stableGetFocusedInner = useStableGetter(focusedInner);
+    const { useHasFocusProps, getFocusedInner } = useHasFocus<T>({  });
 
     // These are used to keep track of a mapping between unsorted index <---> sorted index.
     // These are needed for navigation with the arrow keys.
@@ -196,7 +194,7 @@ export function useTable<T extends Element, S extends Element, R extends Element
 
         // Actually implement grid navigation
         const { cellIndex, rowIndex, rowCount, useGridNavigationRow, managedRows } = useGridNavigation<R, C, TableRowInfo, TableBodyCellInfo>({
-            shouldFocusOnChange: stableGetFocusedInner,
+            shouldFocusOnChange: getFocusedInner,
             indexMangler,
             indexDemangler
         });
