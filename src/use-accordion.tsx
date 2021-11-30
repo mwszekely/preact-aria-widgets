@@ -62,13 +62,6 @@ export function useAriaAccordion<ParentElement extends Element, ChildElement ext
     const navigateToNext = useCallback(() => { setLastFocusedIndex(i => ((i ?? 0) + 1)) }, []);
     const { useLinearNavigationChild } = useLinearNavigation<ChildElement>({ managedChildren: managedAccordionSections, navigationDirection: "block", index: getLastFocusedIndex(), navigateToFirst, navigateToLast, navigateToPrev, navigateToNext });
 
-    // Any time list management changes the focused index, manually focus the child
-    // TODO: Can this be cut?
-    useLayoutEffect(() => {
-        if (lastFocusedIndex != null && lastFocusedIndex >= 0)
-            managedAccordionSections[lastFocusedIndex]?.focus();
-    }, [lastFocusedIndex]);
-
     useChildFlag({
         activatedIndex: expandedIndex, 
         managedChildren: managedAccordionSections, 
