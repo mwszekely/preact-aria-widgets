@@ -4,7 +4,7 @@ import { useMergedProps } from "preact-prop-helpers/use-merged-props";
 import { generateRandomId } from "preact-prop-helpers/use-random-id";
 import { useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
 import type { TagSensitiveProps } from "./props";
-import { useButtonLikeEventHandlers } from "./use-button";
+import { usePressEventHandlers } from "./use-button";
 
 export interface TableRowInfo extends UseGridNavigationRowInfo {
     getManagedCells: () => TableBodyCellInfo[];
@@ -269,7 +269,7 @@ export function useTable<T extends Element, S extends Element, R extends Element
                 }, []);
 
                 const useTableHeadCellProps: UseTableHeadCellProps<C> = <P extends h.JSX.HTMLAttributes<C>>(props: P) => {
-                    const m = useTableCellProps(useButtonLikeEventHandlers<C>(unsortable ? null : onSortClick, undefined)(
+                    const m = useTableCellProps(usePressEventHandlers<C>(unsortable ? null : onSortClick, undefined)(
                         (useMergedProps<C>()({
                             role: "columnheader",
                         }, props))));

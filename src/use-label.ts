@@ -2,7 +2,7 @@ import { h } from "preact";
 import { MergedProps, useMergedProps, useRandomId, UseRandomIdPropsReturnType, useRefElement, UseRefElementPropsReturnType, UseReferencedIdPropsReturnType, useStableCallback } from "preact-prop-helpers";
 import { useCallback, useEffect, useState } from "preact/hooks";
 import { ElementToTag, TagSensitiveProps } from "./props";
-import { useButtonLikeEventHandlers } from "./use-button";
+import { usePressEventHandlers } from "./use-button";
 
 export interface UseGenericLabelParameters {
     labelPrefix: string;
@@ -196,7 +196,7 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
             // For some reason, Chrome won't fire onInput events for radio buttons that are tabIndex=-1??
             // Needs investigating, but onInput works fine in Firefox
             // TODO
-            let props: h.JSX.HTMLAttributes<InputType> = useButtonLikeEventHandlers<InputType>(disabled || !handlesInput(tag, labelPosition, "input-element") ? undefined : stableOnInput, undefined)({});
+            let props: h.JSX.HTMLAttributes<InputType> = usePressEventHandlers<InputType>(disabled || !handlesInput(tag, labelPosition, "input-element") ? undefined : stableOnInput, undefined)({});
 
             if (tag == "input")
                 props.onInput = (e: Event) => e.preventDefault();
@@ -237,7 +237,7 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
 
         function useCheckboxLikeLabelElementProps<P extends h.JSX.HTMLAttributes<LabelType>>({ ...p0 }: P) {
 
-            let newProps: h.JSX.HTMLAttributes<LabelType> = useButtonLikeEventHandlers<LabelType>(disabled || !handlesInput(tag, labelPosition, "label-element") ? undefined : stableOnInput, undefined)({ });
+            let newProps: h.JSX.HTMLAttributes<LabelType> = usePressEventHandlers<LabelType>(disabled || !handlesInput(tag, labelPosition, "label-element") ? undefined : stableOnInput, undefined)({ });
 
             if (labelPosition == "wrapping") {
                 newProps.tabIndex = 0;

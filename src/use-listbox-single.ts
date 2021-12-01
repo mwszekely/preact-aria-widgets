@@ -2,7 +2,7 @@ import { h } from "preact";
 import { MergedProps, useActiveElement, useChildFlag, useHasFocus, useLayoutEffect, useListNavigation, UseListNavigationChildInfo, UseListNavigationChildParameters, UseListNavigationChildPropsReturnType, UseListNavigationParameters, useMergedProps, useRefElement, UseRefElementPropsReturnType, useStableCallback, useState } from "preact-prop-helpers";
 import { useCallback, useEffect } from "preact/hooks";
 import { EventDetail, TagSensitiveProps } from "./props";
-import { useButtonLikeEventHandlers } from "./use-button";
+import { usePressEventHandlers } from "./use-button";
 import { useGenericLabel } from "./use-label";
 
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
@@ -80,7 +80,7 @@ export function useAriaListboxSingle<ParentElement extends Element, ChildElement
         return { useListboxSingleItemProps, tabbable, selected, getSelected };
 
         function useListboxSingleItemProps<P extends h.JSX.HTMLAttributes<E>>(props: P) {
-            const newProps: h.JSX.HTMLAttributes<E> = useButtonLikeEventHandlers<E>((e) => {
+            const newProps: h.JSX.HTMLAttributes<E> = usePressEventHandlers<E>((e) => {
                 navigateToIndex(info.index);
                 const element = getElement();
                 if (element)

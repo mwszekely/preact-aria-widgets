@@ -1,6 +1,7 @@
 import { h } from "preact";
 import { MergedProps, useHasFocus, useMergedProps, useRandomId, UseRandomIdPropsReturnType, useRefElement, UseReferencedIdPropsReturnType, useState, useTimeout } from "preact-prop-helpers";
 import { useCallback, useEffect } from "preact/hooks";
+import { usePressEventHandlers } from "./use-button";
 
 export type UseTooltipTrigger = <TriggerType extends Element>() => { useTooltipTriggerProps: <P extends h.JSX.HTMLAttributes<TriggerType>>({ ...props }: P) => UseReferencedIdPropsReturnType<MergedProps<TriggerType, { onPointerEnter: (e: MouseEvent) => void; onPointerLeave: (e: MouseEvent) => void; }, h.JSX.HTMLAttributes<TriggerType>>, "aria-describedby">; }
 export type UseTooltip = <TooltipType extends Element>() => { useTooltipProps: <P extends h.JSX.HTMLAttributes<TooltipType>>({ ...props }: P) => UseRandomIdPropsReturnType<MergedProps<TooltipType, { onPointerEnter: (e: MouseEvent) => void; onPointerLeave: (e: MouseEvent) => void; }, P>>; }
@@ -43,9 +44,6 @@ export function useAriaTooltip({ mouseoverDelay }: { mouseoverDelay?: number }) 
         function onPointerLeave(e: MouseEvent) {
             setTriggerHasMouseover(false);
         }
-        function onClick(e: Event) { 
-            (e.target as HTMLElement).focus(); 
-        };
 
         const { useHasFocusProps } = useHasFocus<TriggerType>({ onFocusedInnerChanged: setTooltipHasFocus })
 
@@ -55,7 +53,13 @@ export function useAriaTooltip({ mouseoverDelay }: { mouseoverDelay?: number }) 
             // it's perfectly reasonable that a child element will be the one that's focused,
             // not this one, so we don't set tabIndex=0
             props.tabIndex ??= -1;
-            return useTooltipIdReferencingProps("aria-describedby")(useHasFocusProps(useMergedProps<TriggerType>()({ onPointerEnter, onPointerLeave, onClick }, (props as any) as unknown as h.JSX.HTMLAttributes<TriggerType>)));
+            return useTooltipIdReferencingProps("aria-describedby")(
+                useHasFocusProps(
+                    usePressEventHandlers<TriggerType>((e) => { (e as any).target.focus(); }, undefined)(
+                        useMergedProps<TriggerType>()({ onPointerEnter, onPointerLeave }, (props as any) as unknown as h.JSX.HTMLAttributes<TriggerType>)
+                    )
+                )
+            );
         }
 
         return { useTooltipTriggerProps };

@@ -61,21 +61,25 @@ function nodeHasSelectedText(element: EventTarget | null) {
 }
 
 /**
- * Easy way to "polyfill" button-like interactions onto, e.g., a div.
+ * Adds the necessary event handlers to create a "press"-like event for
+ * buttons and anything else that's "click/tap/press/touch"-able.
  * 
- * Adds click, space on keyDown, and enter on keyUp, as well as haptic
- * feedback via a momentary vibration pulse when there's an onClick handler provided
- * (this can be disabled app-wide with `setButtonVibrate`).
+ * Notably, the following cases are covered:
+ * * The target element is properly focused, even on iOS Safari (*especially* on iOS Safari)
+ * * Double-clicks won't select text. 
+ * * Conversely, manually selecting text won't invoke a press.
+ * * Keyboard events &mdash; `enter` immediately invokes the handler, while `space` invokes it on keyup.
+ * * Haptic feedback (on, like, the one browser combination that supports it &mdash; this can be disabled app-wide with `setButtonVibrate`)
  * 
  * In addition, when the CSS `:active` pseudo-class would apply to a normal button
  * (i.e. when holding the spacebar or during mousedown), `{ "data-pseudo-active": "true" }`
  * is added to the props.  You can either let it pass through and style it through new CSS,
  * or inspect the returned props for it and add e.g. an `.active` class for existing CSS
  * 
- * @param onClick 
- * @param exclude Whether the polyfill should apply (can specify for specific interactions)
+ * @param onClickSync 
+ * @param exclude Whether the polyfill shouldn't apply (can specify for specific interactions)
  */
-export function useButtonLikeEventHandlers<E extends EventTarget>(onClickSync: ((e: h.JSX.TargetedEvent<E>) => void) | null | undefined, exclude: undefined | { click?: "exclude" | undefined, space?: "exclude" | undefined, enter?: "exclude" | undefined }) {
+export function usePressEventHandlers<E extends EventTarget>(onClickSync: ((e: h.JSX.TargetedEvent<E>) => void) | null | undefined, exclude: undefined | { click?: "exclude" | undefined, space?: "exclude" | undefined, enter?: "exclude" | undefined }) {
 
     const { useRefElementProps, getElement } = useRefElement<E>({});
 
@@ -149,8 +153,20 @@ export function useButtonLikeEventHandlers<E extends EventTarget>(onClickSync: (
             if (element && "focus" in (element as EventTarget as HTMLElement))
                 (element as EventTarget as HTMLElement | null)?.focus();
 
+            // Whatever the browser was going to do with this event,
+            // forget it. We're turning it into a "press" event.
             e.preventDefault();
+
+            // Also stop anyone else from listening to this event,
+            // since we're explicitly handling it.
+            // (Notably, this allows labels to wrap inputs, with them
+            // both having press event handlers, without double-firing)
+            e.stopPropagation();
+
+            // Haptic feedback for this press event
             pulse();
+
+            // Actually call our handler.
             onClickSync(e);
         }
     });
@@ -161,7 +177,7 @@ export function useButtonLikeEventHandlers<E extends EventTarget>(onClickSync: (
         // (which user-select: none would do, but cancelling a double click on mouseDown doesn't)
         if (e.detail > 1)
             e.preventDefault();
-        
+
 
         if (e.button === 0)
             onActiveStart(e);
@@ -213,7 +229,7 @@ export function useAriaButton<E extends EventTarget>({ tag, pressed, onPress }: 
 
     function useAriaButtonProps<P extends UseAriaButtonPropsParameters<E>>({ "aria-pressed": ariaPressed, tabIndex, role, ...p }: P): UseAriaButtonPropsReturnType<E, P> {
 
-        const props = useButtonLikeEventHandlers<E>((e) => onPress?.(enhanceEvent(e, { pressed: pressed == null ? null : !pressed })), undefined)(p);
+        const props = usePressEventHandlers<E>((e) => onPress?.(enhanceEvent(e, { pressed: pressed == null ? null : !pressed })), undefined)(p);
 
         const buttonProps = { role, tabIndex, "aria-pressed": ariaPressed ?? (pressed === true ? "true" : pressed === false ? "false" : undefined) };
         const divProps = { ...buttonProps, tabIndex: tabIndex ?? 0, role: role ?? "button" };

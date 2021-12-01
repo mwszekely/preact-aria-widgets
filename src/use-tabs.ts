@@ -2,7 +2,7 @@ import { h } from "preact";
 import { ManagedChildInfo, MergedProps, useChildFlag, useChildManager, useHasFocus, useLayoutEffect, useListNavigation, UseListNavigationChildInfo, UseListNavigationChildParameters, UseListNavigationParameters, useLogicalDirection, useMergedProps, useRandomId, UseRandomIdPropsReturnType, useRefElement, UseRefElementPropsReturnType, UseReferencedIdPropsReturnType, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
 import { useCallback, useEffect } from "preact/hooks";
 import { enhanceEvent, EventDetail, TagSensitiveProps } from "./props";
-import { useButtonLikeEventHandlers } from "./use-button";
+import { usePressEventHandlers } from "./use-button";
 
 export type TabsChangeEvent<E extends Element> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 
@@ -94,7 +94,7 @@ export function useAriaTabs<ListElement extends Element, TabElement extends Elem
 
 
         function useTabProps<P extends h.JSX.HTMLAttributes<TabElement>>({ ...props }: P) {
-            const newProps: h.JSX.HTMLAttributes<TabElement> = useButtonLikeEventHandlers<TabElement>((e) => {
+            const newProps: h.JSX.HTMLAttributes<TabElement> = usePressEventHandlers<TabElement>((e) => {
                 navigateToIndex(info.index);
                 onSelect?.(enhanceEvent(e, { selectedIndex: getIndex() }));
                 e.preventDefault();

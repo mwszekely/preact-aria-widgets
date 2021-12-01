@@ -1,5 +1,5 @@
 export { useAriaAccordion, UseAriaAccordionParameters, UseAriaAccordionSection, UseAriaAccordionSectionBody, UseAriaAccordionSectionHeader, UseAriaAccordionSectionParameters, UseAriaAccordion } from "./use-accordion";
-export { useAriaButton, UseAriaButtonParameters, ButtonPressEvent, setButtonVibrate, useButtonLikeEventHandlers, UseAriaButtonProps, UseAriaButtonPropsParameters, UseAriaButtonPropsReturnType, UseAriaButtonReturnType } from "./use-button";
+export { useAriaButton, UseAriaButtonParameters, ButtonPressEvent, setButtonVibrate, usePressEventHandlers, UseAriaButtonProps, UseAriaButtonPropsParameters, UseAriaButtonPropsReturnType, UseAriaButtonReturnType } from "./use-button";
 export { useAriaCheckbox, UseCheckboxInputElement, UseCheckboxLabelElement, CheckboxChangeEvent } from "./use-checkbox";
 export { useCheckboxGroup, UseCheckboxGroupChild, CheckboxGroupChangeEvent, UseCheckboxGroupChildInfo, UseCheckboxGroupChildParameters, UseCheckboxGroupParameters, UseCheckboxGroupParentProps } from "./use-checkbox-group";
 export { useAriaDialog } from "./use-dialog";

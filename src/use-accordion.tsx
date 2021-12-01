@@ -2,7 +2,7 @@ import { h } from "preact";
 import { ManagedChildInfo, MergedProps, useChildFlag, useChildManager, UseHasFocusPropsReturnType, useLayoutEffect, useLinearNavigation, useMergedProps, useRandomId, UseRandomIdPropsReturnType, useRefElement, UseReferencedIdPropsReturnType, useStableCallback, useState } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { TagSensitiveProps } from "./props";
-import { useButtonLikeEventHandlers } from "./use-button";
+import { usePressEventHandlers } from "./use-button";
 
 export type UseAriaAccordion<ParentElement extends Element, ChildElement extends Element> = (args: UseAriaAccordionParameters) => UseAriaAccordionReturnType<ParentElement, ChildElement>;
 export type UseAriaAccordionSection<E extends Element> = (args: UseAriaAccordionSectionParameters) => UseAriaAccordionSectionReturnType<E>;
@@ -102,7 +102,7 @@ export function useAriaAccordion<ParentElement extends Element, ChildElement ext
                         stableSetExpandedIndex(args.index);
                 };
 
-                let retB = useMergedProps<ChildElement>()({ tabIndex: 0 }, useButtonLikeEventHandlers<ChildElement>(onClick, undefined)(props));
+                let retB = useMergedProps<ChildElement>()({ tabIndex: 0 }, usePressEventHandlers<ChildElement>(onClick, undefined)(props));
 
                 let ret3:
                     MergedProps<ChildElement, UseRandomIdPropsReturnType<UseReferencedIdPropsReturnType<{ "aria-expanded": string; "aria-disabled": string | undefined; } & UseHasFocusPropsReturnType<ChildElement, Omit<P, "aria-expanded" | "aria-disabled">>, "aria-controls">>, { onClick: h.JSX.EventHandler<h.JSX.TargetedMouseEvent<ChildElement>> }>

@@ -2,7 +2,7 @@ import { h } from "preact";
 import { MergedProps, useHasFocus, useLayoutEffect, useListNavigation, UseListNavigationChildInfo, UseListNavigationChildParameters, UseListNavigationChildPropsReturnType, UseListNavigationParameters, useMergedProps, useRefElement, UseRefElementPropsReturnType, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
 import { useCallback, useEffect } from "preact/hooks";
 import { EventDetail, TagSensitiveProps } from "./props";
-import { useButtonLikeEventHandlers } from "./use-button";
+import { usePressEventHandlers } from "./use-button";
 import { useGenericLabel } from "./use-label";
 
 export type ListboxMultiSelectEvent<E extends EventTarget> = { [EventDetail]: { selected: boolean } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
@@ -71,7 +71,7 @@ export function useAriaListboxMulti<ParentElement extends Element, ChildElement 
         return { useListboxMultiItemProps, tabbable };
 
         function useListboxMultiItemProps<P extends h.JSX.HTMLAttributes<E>>(props: P) {
-            const newProps: h.JSX.HTMLAttributes<E> = useButtonLikeEventHandlers<E>((e) => {
+            const newProps: h.JSX.HTMLAttributes<E> = usePressEventHandlers<E>((e) => {
                 navigateToIndex(info.index);
                 stableOnSelect?.({ ...e, [EventDetail]: { selected: !getSelected() } });
                 e.preventDefault();
