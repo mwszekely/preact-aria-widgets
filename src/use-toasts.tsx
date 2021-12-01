@@ -91,7 +91,7 @@ export function useToasts<ContainerType extends Element>({ }: UseToastsParameter
             }
         }, []);
 
-        const { element, useManagedChildProps, getElement } = useManagedChild<ToastType>({ dismissed, index: toastId, setStatus, getStatus, focus });
+        const { useManagedChildProps, getElement } = useManagedChild<ToastType>({ dismissed, index: toastId, setStatus, getStatus, focus });
 
         const isActive = (status === "active");
 

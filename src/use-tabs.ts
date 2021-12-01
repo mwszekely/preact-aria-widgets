@@ -115,7 +115,7 @@ export function useAriaTabs<ListElement extends Element, TabElement extends Elem
         const [tabId, setTabId] = useState<undefined | string>(undefined);
         const [visible, setVisible, getVisible] = useState<boolean | null>(null);
         const { useRandomIdProps: usePanelIdProps, useReferencedIdProps: useReferencedPanelId, id: tabPanelId } = useRandomId({ prefix: "aria-tab-panel-" });
-        const { element, useManagedChildProps } = useManagedTabPanel<TabPanelElement>({ ...info, tabPanelId, setTabId, focus, setVisible: setVisible, getVisible: getVisible });
+        const { useManagedChildProps, getElement } = useManagedTabPanel<TabPanelElement>({ ...info, tabPanelId, setTabId, focus, setVisible: setVisible, getVisible: getVisible });
 
 
         function focus() {
@@ -125,11 +125,12 @@ export function useAriaTabs<ListElement extends Element, TabElement extends Elem
         }
 
         useEffect(() => {
-            if (shouldFocus) {
-                (element as HTMLOrSVGElement | null)?.focus({ preventScroll: true });
+            const element = getElement();
+            if (element && shouldFocus) {
+                (element as Element | null as HTMLOrSVGElement | null)?.focus({ preventScroll: true });
                 setShouldFocus(false);
             }
-        }, [element, shouldFocus])
+        }, [shouldFocus])
 
         useEffect(() => { managedTabs[info.index]?.setTabPanelId(tabPanelId) }, [tabPanelId, info.index]);
 

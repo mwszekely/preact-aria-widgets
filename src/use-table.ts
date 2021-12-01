@@ -166,7 +166,7 @@ export function useTable<T extends Element, S extends Element, R extends Element
         // added on top of that afterwards. 
         const [hasUnsortedRows, setHasUnsortedRows] = useState(false);
 
-        const { element, useManagedChildProps } = useManagedTableSection<S>({ index: location, forceUpdate: useForceUpdate() });
+        const { useManagedChildProps } = useManagedTableSection<S>({ index: location, forceUpdate: useForceUpdate() });
         const useTableSectionProps = useCallback(<P extends Omit<h.JSX.HTMLAttributes<S>, "children"> & { children: VNode<any>[] }>({ children, ...props }: P) => {
             return useManagedChildProps(useMergedProps<S>()({
                 role: "rowgroup",
@@ -249,7 +249,7 @@ export function useTable<T extends Element, S extends Element, R extends Element
                 const [sortDirection, setSortDirection, getSortDirection] = useState<null | "ascending" | "descending">(null);
                 const [isTheSortedColumn, setIsTheSortedColumn] = useState(false);
                 const random = useRef(generateRandomId());
-                const { element, getElement, useManagedChildProps } = useManagedHeaderCellChild<C>({ index: random.current, setSortedColumn: useCallback((c) => { setIsTheSortedColumn(c === columnIndex) }, [columnIndex]) })
+                const { getElement, useManagedChildProps } = useManagedHeaderCellChild<C>({ index: random.current, setSortedColumn: useCallback((c) => { setIsTheSortedColumn(c === columnIndex) }, [columnIndex]) })
 
                 useEffect(() => {
                     if (!isTheSortedColumn)
