@@ -134,10 +134,10 @@ export function useHideScroll(hideScroll: boolean) {
 
     useEffect(() => {
         if (hideScroll) {
-            let widthWithScrollBar = document.documentElement.scrollWidth;
-            document.documentElement.classList.add("document-scroll-hidden");
-            document.documentElement.dataset["scrollHiders"] = (+(document.documentElement.dataset["scrollHiders"] || "0") + 1).toString();
-            let widthWithoutScrollBar = document.documentElement.scrollWidth;
+            let widthWithScrollBar = document.body.scrollWidth;
+            document.body.classList.add("document-scroll-hidden");
+            document.body.dataset["scrollHiders"] = (+(document.body.dataset["scrollHiders"] || "0") + 1).toString();
+            let widthWithoutScrollBar = document.body.scrollWidth;
 
             let scrollbarWidth = (widthWithoutScrollBar - widthWithScrollBar);
 
@@ -145,15 +145,15 @@ export function useHideScroll(hideScroll: boolean) {
             if (scrollbarWidth > 80)
                 scrollbarWidth = 0;
 
-            document.documentElement.style.setProperty("--scrollbar-width", `${scrollbarWidth}px`);
+            document.body.style.setProperty("--scrollbar-width", `${scrollbarWidth}px`);
 
             setScrollbarWidth(scrollbarWidth);
 
             return () => {
-                document.documentElement.dataset["scrollHiders"] = (+(document.documentElement.dataset["scrollHiders"] || "0") - 1).toString();
-                if (document.documentElement.dataset["scrollHiders"] == "0") {
-                    document.documentElement.removeAttribute("data-scroll-hiders");
-                    document.documentElement.classList.remove("document-scroll-hidden");
+                document.body.dataset["scrollHiders"] = (+(document.body.dataset["scrollHiders"] || "0") - 1).toString();
+                if (document.body.dataset["scrollHiders"] == "0") {
+                    document.body.removeAttribute("data-scroll-hiders");
+                    document.body.classList.remove("document-scroll-hidden");
                 }
             }
 
