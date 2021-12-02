@@ -166,10 +166,10 @@ export function useHideScroll(hideScroll: boolean) {
                 scrollbarHeight = 0;
 
             // Make our measurements available as CSS properties for general use
-            document.documentElement.style.setProperty("--scrollbar-width", `${scrollbarWidth}px`);
-            document.documentElement.style.setProperty("--scrollbar-height", `${scrollbarHeight}px`);
-            document.documentElement.style.setProperty("--scrollstop-top", `${originalScrollTop}px`);
-            document.documentElement.style.setProperty("--scrollstop-left", `${originalScrollLeft}px`);
+            document.documentElement.style.setProperty("--root-scrollbar-width", `${scrollbarWidth}px`);
+            document.documentElement.style.setProperty("--root-scrollbar-height", `${scrollbarHeight}px`);
+            document.documentElement.style.setProperty("--root-scrollstop-top", `${originalScrollTop}px`);
+            document.documentElement.style.setProperty("--root-scrollstop-left", `${originalScrollLeft}px`);
 
             setScrollbarWidth(scrollbarWidth);
             setScrollbarHeight(scrollbarHeight);
