@@ -1,6 +1,6 @@
 # Preact Aria Widgets
 
-Preact props that implement ARIA-compliant widgets in the style of `preact-prop-helpers` (i.e. hooks that return hooks).  **No CSS is provided** &ndash; this library is intended for wiring up event handlers, `aria` attributes, labels, and so on, but each hook gives you the information you need to create appropriate e.g. `class` values to style your own components.
+Preact props that implement ARIA-compliant widgets in the style of `preact-prop-helpers` (i.e. hooks that return hooks).  **No CSS is provided*** &ndash; this library is intended for wiring up event handlers, `aria` attributes, labels, and so on, but each hook gives you the information you need to create appropriate e.g. `class` values to style your own components.
 
 Documentation, testing, production-readiness are all TODO.
 
@@ -21,6 +21,9 @@ Current components:
 13. Tooltip
 
 Other components (e.g. tree views) are TODO
+
+
+\* One tiny file containing CSS is provided for the scroll-locking that modals use for convenience (not that it's impossible to remove it altogether, but it's better than directly setting `style` values on the root). Using it is optional, but recommended. You don't need to do anything else other than simply `@import`ing it.
 
 ## Methods
 
