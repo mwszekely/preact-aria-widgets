@@ -4572,26 +4572,41 @@
         return { useTab, useTabPanel, useTabsList, useTabsLabel, tabbableIndex, focusTabList: focusCurrent, currentTypeahead, invalidTypeahead };
     }
 
-    function useAriaTooltip({ mouseoverDelay }) {
+    function useAriaTooltip({ mouseoverDelay, mouseoutDelay }) {
         mouseoverDelay ??= 400;
+        mouseoutDelay ??= 40;
         const [open, setOpen, getOpen] = useState(false);
-        const [hasAnyMouseover, setHasAnyMouseover] = useState(false);
-        //const [mouseoverIsValid, setMouseoverIsValid] = useState(false);
+        // Used to keep track of if we're hoving over the trigger when correcting for the given delays.
+        const [hasDelayCorrectedMouseover, setHasDelayCorrectedMouseover] = useState(false);
         const { useRandomIdProps: useTooltipIdProps, useReferencedIdProps: useTooltipIdReferencingProps } = useRandomId({ prefix: "aria-tooltip-" });
         const [triggerFocusedInner, setTriggerFocusedInner, getTriggerFocusedInner] = useState(false);
         const [triggerHasMouseover, setTriggerHasMouseover] = useState(false);
         const [tooltipHasMouseover, setTooltipHasMouseover] = useState(false);
         const [tooltipHasFocus, setTooltipHasFocus] = useState(false);
+        const triggerIndex = !!(+triggerHasMouseover + +tooltipHasMouseover + +tooltipHasFocus);
+        const tooltipShouldBeShown = (triggerHasMouseover || tooltipHasMouseover || tooltipHasFocus);
+        // Activate on the usual delay for mouseover
         useTimeout({
             timeout: mouseoverDelay,
-            triggerIndex: !!(+triggerHasMouseover + +tooltipHasMouseover + +tooltipHasFocus),
+            triggerIndex,
             callback: () => {
-                setHasAnyMouseover(triggerHasMouseover || tooltipHasMouseover || tooltipHasFocus);
+                setHasDelayCorrectedMouseover(tooltipShouldBeShown);
             }
         });
+        // Forcibly deactivate almost immediately on mouseout
+        useTimeout({
+            timeout: mouseoutDelay,
+            triggerIndex,
+            callback: () => {
+                if (!tooltipShouldBeShown)
+                    setHasDelayCorrectedMouseover(tooltipShouldBeShown);
+            }
+        });
+        // If we have a (delay-corrected) mouseover or we're focused,
+        // show the tooltip.
         y(() => {
-            setOpen(hasAnyMouseover || triggerFocusedInner);
-        }, [hasAnyMouseover, triggerFocusedInner]);
+            setOpen(hasDelayCorrectedMouseover || triggerFocusedInner);
+        }, [hasDelayCorrectedMouseover, triggerFocusedInner]);
         const useTooltipTrigger = F(function useTooltipTrigger() {
             function onPointerEnter(e) {
                 setTriggerHasMouseover(true);
@@ -4599,7 +4614,7 @@
             function onPointerLeave(e) {
                 setTriggerHasMouseover(false);
             }
-            const { useHasFocusProps } = useHasFocus({ onFocusedInnerChanged: setTooltipHasFocus });
+            const { useHasFocusProps } = useHasFocus({ onFocusedInnerChanged: setTriggerFocusedInner });
             function useTooltipTriggerProps({ ...props }) {
                 // Note: Though it's important to make sure that focusing activates a tooltip,
                 // it's perfectly reasonable that a child element will be the one that's focused,
@@ -4617,7 +4632,8 @@
                 setTooltipHasMouseover(false);
             }
             function useTooltipProps({ ...props }) {
-                return useTooltipIdProps(useMergedProps()({ onPointerEnter, onPointerLeave }, props));
+                const { useHasFocusProps } = useHasFocus({ onFocusedInnerChanged: setTooltipHasFocus });
+                return useTooltipIdProps(useHasFocusProps(useMergedProps()({ onPointerEnter, onPointerLeave }, props)));
             }
             return { useTooltipProps };
         }, [useTooltipIdProps]);

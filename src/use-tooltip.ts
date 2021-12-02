@@ -1,19 +1,20 @@
 import { h } from "preact";
-import { MergedProps, useHasFocus, useMergedProps, useRandomId, UseRandomIdPropsReturnType, useRefElement, UseReferencedIdPropsReturnType, useState, useTimeout } from "preact-prop-helpers";
+import { MergedProps, useHasFocus, UseHasFocusPropsReturnType, useMergedProps, useRandomId, UseRandomIdPropsReturnType, useRefElement, UseReferencedIdPropsReturnType, useState, useTimeout } from "preact-prop-helpers";
 import { useCallback, useEffect } from "preact/hooks";
 import { usePressEventHandlers } from "./use-button";
 
 export type UseTooltipTrigger = <TriggerType extends Element>() => { useTooltipTriggerProps: <P extends h.JSX.HTMLAttributes<TriggerType>>({ ...props }: P) => UseReferencedIdPropsReturnType<MergedProps<TriggerType, { onPointerEnter: (e: MouseEvent) => void; onPointerLeave: (e: MouseEvent) => void; }, h.JSX.HTMLAttributes<TriggerType>>, "aria-describedby">; }
-export type UseTooltip = <TooltipType extends Element>() => { useTooltipProps: <P extends h.JSX.HTMLAttributes<TooltipType>>({ ...props }: P) => UseRandomIdPropsReturnType<MergedProps<TooltipType, { onPointerEnter: (e: MouseEvent) => void; onPointerLeave: (e: MouseEvent) => void; }, P>>; }
+export type UseTooltip = <TooltipType extends Element>() => { useTooltipProps: <P extends h.JSX.HTMLAttributes<TooltipType>>({ ...props }: P) => UseRandomIdPropsReturnType<UseHasFocusPropsReturnType<TooltipType, MergedProps<TooltipType, { onPointerEnter: (e: MouseEvent) => void; onPointerLeave: (e: MouseEvent) => void; }, P>>>; }
 
-export function useAriaTooltip({ mouseoverDelay }: { mouseoverDelay?: number }) {
+export function useAriaTooltip({ mouseoverDelay, mouseoutDelay }: { mouseoverDelay?: number, mouseoutDelay?: number }) {
 
     mouseoverDelay ??= 400;
+    mouseoutDelay ??= 40;
 
     const [open, setOpen, getOpen] = useState(false);
 
-    const [hasAnyMouseover, setHasAnyMouseover] = useState(false);
-    //const [mouseoverIsValid, setMouseoverIsValid] = useState(false);
+    // Used to keep track of if we're hoving over the trigger when correcting for the given delays.
+    const [hasDelayCorrectedMouseover, setHasDelayCorrectedMouseover] = useState(false);
 
     const { useRandomIdProps: useTooltipIdProps, useReferencedIdProps: useTooltipIdReferencingProps } = useRandomId({ prefix: "aria-tooltip-" });
 
@@ -22,18 +23,33 @@ export function useAriaTooltip({ mouseoverDelay }: { mouseoverDelay?: number }) 
     const [tooltipHasMouseover, setTooltipHasMouseover] = useState(false);
     const [tooltipHasFocus, setTooltipHasFocus] = useState(false);
 
+    const triggerIndex = !!(+triggerHasMouseover + +tooltipHasMouseover + +tooltipHasFocus);
+    const tooltipShouldBeShown = (triggerHasMouseover || tooltipHasMouseover || tooltipHasFocus);
 
+    // Activate on the usual delay for mouseover
     useTimeout({
         timeout: mouseoverDelay,
-        triggerIndex: !!(+triggerHasMouseover + +tooltipHasMouseover + +tooltipHasFocus),
+        triggerIndex,
         callback: () => {
-            setHasAnyMouseover(triggerHasMouseover || tooltipHasMouseover || tooltipHasFocus);
+            setHasDelayCorrectedMouseover(tooltipShouldBeShown);
         }
     });
 
+    // Forcibly deactivate almost immediately on mouseout
+    useTimeout({
+        timeout: mouseoutDelay,
+        triggerIndex,
+        callback: () => {
+            if (!tooltipShouldBeShown)
+                setHasDelayCorrectedMouseover(tooltipShouldBeShown);
+        }
+    });
+
+    // If we have a (delay-corrected) mouseover or we're focused,
+    // show the tooltip.
     useEffect(() => {
-        setOpen(hasAnyMouseover || triggerFocusedInner);
-    }, [hasAnyMouseover, triggerFocusedInner])
+        setOpen(hasDelayCorrectedMouseover || triggerFocusedInner);
+    }, [hasDelayCorrectedMouseover, triggerFocusedInner])
 
     const useTooltipTrigger: UseTooltipTrigger = useCallback(function useTooltipTrigger<TriggerType extends Element>() {
 
@@ -45,7 +61,7 @@ export function useAriaTooltip({ mouseoverDelay }: { mouseoverDelay?: number }) 
             setTriggerHasMouseover(false);
         }
 
-        const { useHasFocusProps } = useHasFocus<TriggerType>({ onFocusedInnerChanged: setTooltipHasFocus })
+        const { useHasFocusProps } = useHasFocus<TriggerType>({ onFocusedInnerChanged: setTriggerFocusedInner })
 
 
         function useTooltipTriggerProps<P extends h.JSX.HTMLAttributes<TriggerType>>({ ...props }: P) {
@@ -66,7 +82,7 @@ export function useAriaTooltip({ mouseoverDelay }: { mouseoverDelay?: number }) 
 
     }, [useTooltipIdReferencingProps]);
 
-    const useTooltip: UseTooltip = useCallback(function useTooltip<TooltipType extends Element>() {
+    const useTooltip = useCallback(function useTooltip<TooltipType extends Element>() {
 
         function onPointerEnter(e: MouseEvent) {
             setTooltipHasMouseover(true);
@@ -77,7 +93,8 @@ export function useAriaTooltip({ mouseoverDelay }: { mouseoverDelay?: number }) 
         }
 
         function useTooltipProps<P extends h.JSX.HTMLAttributes<TooltipType>>({ ...props }: P) {
-            return useTooltipIdProps(useMergedProps<TooltipType>()({ onPointerEnter, onPointerLeave }, props));
+            const { useHasFocusProps } = useHasFocus<TooltipType>({ onFocusedInnerChanged: setTooltipHasFocus })
+            return useTooltipIdProps(useHasFocusProps(useMergedProps<TooltipType>()({ onPointerEnter, onPointerLeave }, props)));
         }
 
         return { useTooltipProps };
