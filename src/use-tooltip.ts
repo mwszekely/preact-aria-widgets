@@ -1,7 +1,6 @@
 import { h } from "preact";
 import { MergedProps, useHasFocus, UseHasFocusPropsReturnType, useMergedProps, useRandomId, UseRandomIdPropsReturnType, useRefElement, UseReferencedIdPropsReturnType, useState, useTimeout } from "preact-prop-helpers";
 import { useCallback, useEffect } from "preact/hooks";
-import { usePressEventHandlers } from "./use-button";
 
 export type UseTooltipTrigger = <TriggerType extends Element>() => { useTooltipTriggerProps: <P extends h.JSX.HTMLAttributes<TriggerType>>({ ...props }: P) => UseReferencedIdPropsReturnType<MergedProps<TriggerType, { onPointerEnter: (e: MouseEvent) => void; onPointerLeave: (e: MouseEvent) => void; }, h.JSX.HTMLAttributes<TriggerType>>, "aria-describedby">; }
 export type UseTooltip = <TooltipType extends Element>() => { useTooltipProps: <P extends h.JSX.HTMLAttributes<TooltipType>>({ ...props }: P) => UseRandomIdPropsReturnType<UseHasFocusPropsReturnType<TooltipType, MergedProps<TooltipType, { onPointerEnter: (e: MouseEvent) => void; onPointerLeave: (e: MouseEvent) => void; }, P>>>; }
@@ -61,6 +60,10 @@ export function useAriaTooltip({ mouseoverDelay, mouseoutDelay }: { mouseoverDel
             setTriggerHasMouseover(false);
         }
 
+        function onTouchEnd(e: TouchEvent) {
+            (e.target as any).focus();
+        }
+
         const { useHasFocusProps } = useHasFocus<TriggerType>({ onFocusedInnerChanged: setTriggerFocusedInner })
 
 
@@ -71,9 +74,7 @@ export function useAriaTooltip({ mouseoverDelay, mouseoutDelay }: { mouseoverDel
             props.tabIndex ??= -1;
             return useTooltipIdReferencingProps("aria-describedby")(
                 useHasFocusProps(
-                    usePressEventHandlers<TriggerType>((e) => { (e as any).target.focus(); }, undefined)(
-                        useMergedProps<TriggerType>()({ onPointerEnter, onPointerLeave }, (props as any) as unknown as h.JSX.HTMLAttributes<TriggerType>)
-                    )
+                        useMergedProps<TriggerType>()({ onPointerEnter, onPointerLeave, onTouchEnd }, (props as any) as unknown as h.JSX.HTMLAttributes<TriggerType>)
                 )
             );
         }
