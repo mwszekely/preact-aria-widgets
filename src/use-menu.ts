@@ -120,7 +120,7 @@ export function useAriaMenu<ParentElement extends Element, ChildElement extends 
     // screen readers and other input methods that don't use those two become stuck.
     const useMenuSentinel = useCallback(<E extends Element>() => {
         const [firstSentinelIsActive, setFirstSentinelIsActive] = useState(false);
-        useTimeout({ callback: () => { setFirstSentinelIsActive(open); }, timeout: 100, triggerIndex: `${firstSentinelIsActive}` });
+        useTimeout({ callback: () => { setFirstSentinelIsActive(open); }, timeout: 100, triggerIndex: `${open}-${firstSentinelIsActive}` });
 
         const onFocus = firstSentinelIsActive ? (() => stableOnClose()) : (() => focusMenu?.());
         const onClick = () => stableOnClose();
