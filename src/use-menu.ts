@@ -70,7 +70,7 @@ export function useAriaMenu<ParentElement extends Element, ChildElement extends 
     const { useHasFocusProps: useMenuHasFocusProps, getLastFocusedInner: getMenuLastFocusedInner } = useHasFocus<E>({ onLastFocusedInnerChanged: onMenuOrButtonLostLastFocus });
     const { useHasFocusProps: useButtonHasFocusProps, getLastFocusedInner: getButtonLastFocusedInner } = useHasFocus<Element>({ onLastFocusedInnerChanged: onMenuOrButtonLostLastFocus });
 
-    const { managedChildren, useListNavigationChild, tabbableIndex, focusCurrent: focusMenu } = useListNavigation<ChildElement, I>({ collator, keyNavigation, noTypeahead, noWrap, typeaheadTimeout, shouldFocusOnChange: useCallback(() => getMenuLastFocusedInner() || getButtonLastFocusedInner(), []) });
+    const { managedChildren, useListNavigationChild, tabbableIndex, focusCurrent: focusMenu, currentTypeahead, invalidTypeahead } = useListNavigation<ChildElement, I>({ collator, keyNavigation, noTypeahead, noWrap, typeaheadTimeout, shouldFocusOnChange: useCallback(() => getMenuLastFocusedInner() || getButtonLastFocusedInner(), []) });
     const { useRandomIdProps: useMenuIdProps, useReferencedIdProps: useMenuIdReferencingProps } = useRandomId({ prefix: "aria-menu-" });
 
     const [openerElement, setOpenerElement, getOpenerElement] = useState<(Element & HTMLOrSVGElement) | null>(null);
@@ -195,7 +195,10 @@ export function useAriaMenu<ParentElement extends Element, ChildElement extends 
         useMenuSentinel,
         useMenuSubmenuItem,
 
-        focusMenu
+        focusMenu,
+
+        currentTypeahead, 
+        invalidTypeahead
 
     }
 }
