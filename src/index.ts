@@ -12,7 +12,7 @@ export { useAriaTabs, UseTabPanel, UseTab, TabsChangeEvent, UseTabPanelParameter
 export { useAriaTooltip, UseTooltip, UseTooltipTrigger } from "./use-tooltip";
 export { useAriaRadioGroup, UseRadio, RadioChangeEvent, UseAriaRadioGroupParameters, UseAriaRadioInfo, UseAriaRadioParameters } from "./use-radio-group"
 export { useToasts, UseToast, UseToastParameters } from "./use-toasts";
-export { useTable, UseTableSection, UseTableRow, UseTableCell, UseTableHeadCell, TableRowInfo, UseTableCellParameters, UseTableHeadCellParameters, UseTableRowParameters } from "./use-table";
+export { useTable, UseTableHead, UseTableBody, UseTableFoot, UseTableRow, UseTableCell, UseTableHeadCell, TableRowInfo, UseTableCellParameters, UseTableHeadCellParameters, UseTableRowParameters } from "./use-table";
 
 export { EventDetail } from "./props";
 export type { TagSensitiveProps } from "./props";
