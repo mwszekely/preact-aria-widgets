@@ -1,6 +1,6 @@
 
 import { h } from "preact";
-import { useFocusTrap, useGlobalHandler, useMergedProps, usePassiveState, useRandomId, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
+import { useActiveElement, useFocusTrap, useGlobalHandler, useMergedProps, usePassiveState, useRandomId, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
 import { useCallback, useEffect } from "preact/hooks";
 
 /**
@@ -17,7 +17,7 @@ import { useCallback, useEffect } from "preact/hooks";
  * @param param0 
  * @returns 
  */
-export function useSoftDismiss({ onClose, getElements }: { getElements: () => Element | Element[] | null, onClose(reason: "backdrop" | "escape"): void }) {
+export function useSoftDismiss({ onClose, getElements }: { getElements: () => Element | Element[] | null, onClose(reason: "backdrop" | "escape" | "lost-focus"): void }) {
 
     function onBackdropClick(e: h.JSX.TargetedEvent<any>) {
         // Basically, "was this event fired on the root-most element, or at least an element not contained by the modal?"
@@ -45,6 +45,24 @@ export function useSoftDismiss({ onClose, getElements }: { getElements: () => El
                 onClose("backdrop");
         }
     }
+
+    useActiveElement({
+        onLastActiveElementChange: newElement => {
+            let validFocusableElements = getElements();
+
+            if (validFocusableElements) {
+                if (!Array.isArray(validFocusableElements))
+                    validFocusableElements = [validFocusableElements];
+
+                for (let focusable of validFocusableElements) {
+                    if (focusable.contains(newElement))
+                        return;
+                }
+            }
+
+            onClose("lost-focus");
+        }
+    })
 
     // Since everything else is inert, we listen for captured clicks on the window
     // (we don't use onClick since that doesn't fire when clicked on empty/inert areas)

@@ -51,7 +51,7 @@ export interface UseCheckboxGroupChildInfo extends UseListNavigationChildInfo {
     getChecked(): boolean | "mixed";
 }
 
-export type UseCheckboxGroupParentProps<InputElement extends Element> = <P extends h.JSX.HTMLAttributes<InputElement>>(props: P) => MergedProps<InputElement, { "aria-controls": string; }, P>;
+export type UseCheckboxGroupParentProps<InputElement extends Element> = <P extends h.JSX.HTMLAttributes<InputElement>>(props: P) => h.JSX.HTMLAttributes<InputElement>
 
 
 
@@ -59,7 +59,7 @@ export type UseCheckboxGroupChildParameters<I extends UseCheckboxGroupChildInfo>
 
 export type UseCheckboxGroupChild<ChildElement extends Element, I extends UseCheckboxGroupChildInfo> = (args: UseCheckboxGroupChildParameters<I>) => {
     tabbable: boolean | null;
-    useCheckboxGroupChildProps: <P extends h.JSX.HTMLAttributes<ChildElement>>({ tabIndex, ...props }: P) => MergedProps<ChildElement, { onInput: () => void; }, UseListNavigationChildPropsReturnType<ChildElement, P>>;
+    useCheckboxGroupChildProps: <P extends h.JSX.HTMLAttributes<ChildElement>>({ tabIndex, ...props }: P) => h.JSX.HTMLAttributes<ChildElement>;
 }
 
 
@@ -74,7 +74,7 @@ export type UseCheckboxGroupChild<ChildElement extends Element, I extends UseChe
 export function useCheckboxGroup<InputElement extends Element, I extends UseCheckboxGroupChildInfo>({ collator, keyNavigation, shouldFocusOnChange, onUpdateChildren: onUpdateChildrenUnstable }: UseCheckboxGroupParameters<InputElement>) {
 
     const onUpdateChildren = useStableCallback(onUpdateChildrenUnstable);
-    const { managedChildren, useListNavigationChild, tabbableIndex, focusCurrent, currentTypeahead, invalidTypeahead } = useListNavigation<InputElement, I>({ collator, keyNavigation, shouldFocusOnChange });
+    const { managedChildren, useListNavigationChild, useListNavigationProps, tabbableIndex, focusCurrent, currentTypeahead, invalidTypeahead } = useListNavigation<InputElement, I>({ collator, keyNavigation, shouldFocusOnChange });
 
     //const [uncheckedCount, setUnheckedCount] = useState(0);
 
@@ -172,11 +172,11 @@ export function useCheckboxGroup<InputElement extends Element, I extends UseChec
 
         return {
             tabbable,
-            useCheckboxGroupChildProps: useCallback(<P extends h.JSX.HTMLAttributes<InputElement>>(props: P) => useMergedProps<InputElement>()({}, useListNavigationChildProps(props)), [useListNavigationChildProps])
+            useCheckboxGroupChildProps: useCallback(<P extends h.JSX.HTMLAttributes<InputElement>>(props: P) => useMergedProps<InputElement>()({}, useListNavigationChildProps(useListNavigationProps(props))), [useListNavigationProps, useListNavigationChildProps])
         }
 
 
-    }, [notifyChecked, useListNavigationChild]);
+    }, [useListNavigationProps, notifyChecked, useListNavigationChild]);
 
     return {
         managedCheckboxes: managedChildren,

@@ -1,6 +1,8 @@
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from "@rollup/plugin-commonjs";
 import typescript from '@rollup/plugin-typescript';
+import { babel } from "@rollup/plugin-babel";
+import path from "path";
 
 
 export default {
@@ -14,7 +16,12 @@ export default {
     plugins: [
         typescript(),
         commonjs(),
-        resolve({ dedupe: ['preact', "preact/compat", "preact/hooks", "preact-prop-helpers"] })
+        resolve({ dedupe: ['preact', "preact/compat", "preact/hooks", "preact-prop-helpers"] }),
+        babel({
+            configFile: path.resolve(__dirname, ".babelrc"),
+            babelHelpers: "bundled",
+            sourceMaps: true
+        }),
     ],
 }
 

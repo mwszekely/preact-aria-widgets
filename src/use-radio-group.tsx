@@ -42,7 +42,7 @@ export function useAriaRadioGroup<V extends string | number, G extends Element, 
 
     const [anyRadiosFocused, setAnyRadiosFocused, getAnyRadiosFocused] = useState(false);
 
-    const { managedChildren, useListNavigationChild, setTabbableIndex, tabbableIndex, focusCurrent, currentTypeahead, invalidTypeahead } = useListNavigation<I, Info>({ shouldFocusOnChange: getAnyRadiosFocused });
+    const { managedChildren, useListNavigationChild, useListNavigationProps, setTabbableIndex, tabbableIndex, focusCurrent, currentTypeahead, invalidTypeahead } = useListNavigation<I, Info>({ shouldFocusOnChange: getAnyRadiosFocused });
 
     // Track whether the currently focused element is a child of the radio group parent element.
     // When it's not, we reset the tabbable index back to the currently selected element.
@@ -55,7 +55,7 @@ export function useAriaRadioGroup<V extends string | number, G extends Element, 
 
     const useRadioGroupProps = useCallback(<P extends h.JSX.HTMLAttributes<G>>({ ...props }: P) => {
         props.role = "radiogroup";
-        return useRefElementProps(props);
+        return useListNavigationProps(useRefElementProps(props));
     }, [useRefElementProps]);
 
     let correctedIndex = (selectedIndex == null || selectedIndex < 0 || selectedIndex >= managedChildren.length) ? null : selectedIndex;

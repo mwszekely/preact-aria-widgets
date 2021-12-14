@@ -67,10 +67,10 @@ export function useAriaMenu<ParentElement extends Element, ChildElement extends 
     // but focus management is super sensitive, and even waiting for a useLayoutEffect to sync state here
     // would be too late, so it would look like there's a moment between menu focus lost and button focus gained
     // where nothing is focused. 
-    const { useHasFocusProps: useMenuHasFocusProps, getLastFocusedInner: getMenuLastFocusedInner } = useHasFocus<E>({ onLastFocusedInnerChanged: onMenuOrButtonLostLastFocus });
-    const { useHasFocusProps: useButtonHasFocusProps, getLastFocusedInner: getButtonLastFocusedInner } = useHasFocus<Element>({ onLastFocusedInnerChanged: onMenuOrButtonLostLastFocus });
+    const { useHasFocusProps: useMenuHasFocusProps, getLastFocusedInner: getMenuLastFocusedInner } = useHasFocus<E>({ /*onLastFocusedInnerChanged: onMenuOrButtonLostLastFocus*/ });
+    const { useHasFocusProps: useButtonHasFocusProps, getLastFocusedInner: getButtonLastFocusedInner } = useHasFocus<Element>({ /*onLastFocusedInnerChanged: onMenuOrButtonLostLastFocus*/ });
 
-    const { managedChildren, useListNavigationChild, tabbableIndex, focusCurrent: focusMenu, currentTypeahead, invalidTypeahead } = useListNavigation<ChildElement, I>({ collator, keyNavigation, noTypeahead, noWrap, typeaheadTimeout, shouldFocusOnChange: useCallback(() => getMenuLastFocusedInner() || getButtonLastFocusedInner(), []) });
+    const { managedChildren, useListNavigationChild, useListNavigationProps, tabbableIndex, focusCurrent: focusMenu, currentTypeahead, invalidTypeahead } = useListNavigation<ChildElement, I>({ collator, keyNavigation, noTypeahead, noWrap, typeaheadTimeout, shouldFocusOnChange: useCallback(() => getMenuLastFocusedInner() || getButtonLastFocusedInner(), []) });
     const { useRandomIdProps: useMenuIdProps, useReferencedIdProps: useMenuIdReferencingProps } = useRandomId({ prefix: "aria-menu-" });
 
     const [openerElement, setOpenerElement, getOpenerElement] = useState<(Element & HTMLOrSVGElement) | null>(null);
@@ -103,13 +103,13 @@ export function useAriaMenu<ParentElement extends Element, ChildElement extends 
     // on iOS or whatever, which would immediately close the menu 
     // any time it's been opened. So any time it *looks* like we should close,
     // try waiting 100ms. If it's still true then, then yeah, we should close.
-    function onMenuOrButtonLostLastFocus() {
+    /*function onMenuOrButtonLostLastFocus() {
         setTimeout(() => {
             if (!getMenuLastFocusedInner() && !getButtonLastFocusedInner()) {
                 onClose?.();
             }
         }, 100);
-    }
+    }*/
 
     // A menu sentinal is a hidden but focusable element that comes at the start or end of the element
     // that, when activated or focused over, closes the menu.
@@ -182,8 +182,7 @@ export function useAriaMenu<ParentElement extends Element, ChildElement extends 
                 onClose();
             }
         }
-
-        return useMenuIdProps(useMenuHasFocusProps(useMergedProps<E>()({ onKeyDown }, useMenuRefElementProps(props))));
+        return  useListNavigationProps(useMenuIdProps(useMenuHasFocusProps(useMergedProps<E>()({ onKeyDown }, useMenuRefElementProps(props)))));
     }
 
 

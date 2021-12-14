@@ -141,18 +141,16 @@ export function useTable<T extends Element, S extends Element, R extends Element
     const useTableSection: UseTableSection<S, R, C> = useCallback(({ location }: { location: "head" | "body" | "foot" }) => {
 
         const { useManagedChildProps } = useManagedTableSection<S>({ index: location, forceUpdate: useForceUpdate() });
-        const useTableSectionProps = useCallback(<P extends h.JSX.HTMLAttributes<S>>(props: P) => {
-            return useManagedChildProps(useMergedProps<S>()({ role: "rowgroup" }, props))
-        }, [useManagedChildProps]);
 
-
-        // Actually implement grid navigation
-        const { cellIndex, rowIndex, rowCount, useGridNavigationRow, managedRows } = useGridNavigation<R, C, TableRowInfo, TableBodyCellInfo>({
+        const { cellIndex, rowIndex, rowCount, useGridNavigationRow, useGridNavigationProps, managedRows } = useGridNavigation<R, C, TableRowInfo, TableBodyCellInfo>({
             shouldFocusOnChange: getFocusedInner,
             indexMangler,
             indexDemangler
         });
 
+        const useTableSectionProps = useCallback(<P extends h.JSX.HTMLAttributes<S>>(props: P) => {
+            return useGridNavigationProps(useManagedChildProps(useMergedProps<S>()({ role: "rowgroup" }, props)))
+        }, [useGridNavigationProps, useManagedChildProps]);
 
         /**
          * 

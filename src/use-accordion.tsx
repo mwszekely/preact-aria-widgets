@@ -33,7 +33,7 @@ export interface UseAriaAccordionSectionParameters extends Omit<UseAriaAccordion
 export interface UseAriaAccordionSectionHeaderPropsParameters<E extends Element> extends h.JSX.HTMLAttributes<E> { }
 export interface UseAriaAccordionSectionBodyPropsParameters<E extends Element> extends h.JSX.HTMLAttributes<E> { }
 
-export interface UseAriaAccordionSectionReturnType<ChildElement extends Element>  {
+export interface UseAriaAccordionSectionReturnType<ChildElement extends Element> {
     expanded: boolean | null;
     useAriaAccordionSectionHeader: UseAriaAccordionSectionHeader<ChildElement>;
     useAriaAccordionSectionBody: UseAriaAccordionSectionBody;
@@ -60,14 +60,21 @@ export function useAriaAccordion<ParentElement extends Element, ChildElement ext
     const navigateToLast = useCallback(() => { setLastFocusedIndex((managedAccordionSections.length - 1)); }, []);
     const navigateToPrev = useCallback(() => { setLastFocusedIndex(i => ((i ?? 0) - 1)) }, []);
     const navigateToNext = useCallback(() => { setLastFocusedIndex(i => ((i ?? 0) + 1)) }, []);
-    const { useLinearNavigationChild } = useLinearNavigation<ChildElement>({ managedChildren: managedAccordionSections, navigationDirection: "block", index: getLastFocusedIndex(), navigateToFirst, navigateToLast, navigateToPrev, navigateToNext });
+    const { useLinearNavigationProps } = useLinearNavigation<ChildElement>({ managedChildren: managedAccordionSections, navigationDirection: "block", index: lastFocusedIndex, navigateToFirst, navigateToLast, navigateToPrev, navigateToNext });
 
     useChildFlag({
-        activatedIndex: expandedIndex, 
-        managedChildren: managedAccordionSections, 
+        activatedIndex: expandedIndex,
+        managedChildren: managedAccordionSections,
         setChildFlag: (i, open) => managedAccordionSections[i]?.setOpenFromParent(open),
         getChildFlag: (i) => (managedAccordionSections[i]?.getOpenFromParent() ?? null)
     });
+
+    useChildFlag({
+        activatedIndex: lastFocusedIndex,
+        managedChildren: managedAccordionSections,
+        setChildFlag: (i, open) => open && managedAccordionSections[i].focus(),
+        getChildFlag: (i) => false
+    })
 
     const useAriaAccordionSection = useCallback<UseAriaAccordionSection<ChildElement>>((args: UseAriaAccordionSectionParameters): UseAriaAccordionSectionReturnType<ChildElement> => {
 
@@ -86,11 +93,9 @@ export function useAriaAccordion<ParentElement extends Element, ChildElement ext
         // is stable without (directly) depending on the open state.
         const useAriaAccordionSectionHeader = useCallback(function useAriaAccordionSectionHeader({ tag }: TagSensitiveProps<ChildElement>): UseAriaAccordionSectionHeaderReturnType<ChildElement> {
 
-            const { useRefElementProps, getElement } = useRefElement<ChildElement>({ });
+            const { useRefElementProps, getElement } = useRefElement<ChildElement>({});
             const focus = useCallback(() => { (getElement() as Element as HTMLElement | undefined)?.focus(); }, []);
             const { useManagedChildProps } = useManagedChildSection<ChildElement>({ index, open, setOpenFromParent, getOpenFromParent, focus });
-
-            const { useLinearNavigationChildProps } = useLinearNavigationChild({ index });
 
             function useAriaAccordionSectionHeaderProps<P extends UseAriaAccordionSectionHeaderPropsParameters<ChildElement>>({ ["aria-expanded"]: ariaExpanded, ["aria-disabled"]: ariaDisabled, ...props }: P): UseAriaAccordionSectionHeaderPropsReturnType<ChildElement, P> {
 
@@ -104,8 +109,7 @@ export function useAriaAccordion<ParentElement extends Element, ChildElement ext
 
                 let retB = useMergedProps<ChildElement>()({ tabIndex: 0 }, usePressEventHandlers<ChildElement>(onClick, undefined)(props));
 
-                let ret3:
-                    MergedProps<ChildElement, UseRandomIdPropsReturnType<UseReferencedIdPropsReturnType<{ "aria-expanded": string; "aria-disabled": string | undefined; } & UseHasFocusPropsReturnType<ChildElement, Omit<P, "aria-expanded" | "aria-disabled">>, "aria-controls">>, { onClick: h.JSX.EventHandler<h.JSX.TargetedMouseEvent<ChildElement>> }>
+                let ret3: h.JSX.HTMLAttributes<ChildElement>
                     = useMergedProps<ChildElement>()(useHeadRandomIdProps(useReferencedBodyIdProps("aria-controls")({
                         "aria-expanded": (ariaExpanded ?? (!!open).toString()),
                         "aria-disabled": (ariaDisabled ?? (open ? "true" : undefined)),
@@ -113,11 +117,11 @@ export function useAriaAccordion<ParentElement extends Element, ChildElement ext
                     })), { onFocus });
 
 
-                return useLinearNavigationChildProps(ret3);
+                return useLinearNavigationProps(ret3);
             };
 
             return { useAriaAccordionSectionHeaderProps };
-        }, [index, open]);
+        }, [useLinearNavigationProps, index, open]);
 
 
         const useAriaAccordionSectionBody = useCallback(function useAriaAccordionSectionBody<E extends Element>() {
@@ -136,7 +140,7 @@ export function useAriaAccordion<ParentElement extends Element, ChildElement ext
             useAriaAccordionSectionHeader,
             useAriaAccordionSectionBody,
         }
-    }, [useLinearNavigationChild]);
+    }, [useLinearNavigationProps]);
 
     return {
         useAriaAccordionSection

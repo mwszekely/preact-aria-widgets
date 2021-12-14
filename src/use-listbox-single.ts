@@ -38,7 +38,7 @@ export function useAriaListboxSingle<ParentElement extends Element, ChildElement
     const [anyItemsFocused, setAnyItemsFocused, getAnyItemsFocused] = useState(false);
 
     const { useGenericLabelInput, useGenericLabelLabel, useReferencedInputIdProps, useReferencedLabelIdProps, inputElement } = useGenericLabel({ labelPrefix: "aria-listbox-label-", inputPrefix: "aria-listbox-" })
-    const { useListNavigationChild, navigateToIndex, managedChildren, setTabbableIndex, tabbableIndex, focusCurrent, currentTypeahead, invalidTypeahead } = useListNavigation<ChildElement, I>({ ...args, shouldFocusOnChange: getAnyItemsFocused });
+    const { useListNavigationChild, useListNavigationProps, navigateToIndex, managedChildren, setTabbableIndex, tabbableIndex, focusCurrent, currentTypeahead, invalidTypeahead } = useListNavigation<ChildElement, I>({ ...args, shouldFocusOnChange: getAnyItemsFocused });
     const { useGenericLabelInputProps } = useGenericLabelInput<ParentElement>();
     const stableOnSelect = useStableCallback(onSelect ?? (() => { }));
 
@@ -113,6 +113,6 @@ export function useAriaListboxSingle<ParentElement extends Element, ChildElement
 
     function useListboxSingleProps<P extends h.JSX.HTMLAttributes<ParentElement>>(props: P) {
         props.role = "listbox";
-        return useGenericLabelInputProps(props);
+        return useListNavigationProps(useGenericLabelInputProps(props));
     }
 }
