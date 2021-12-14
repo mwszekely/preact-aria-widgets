@@ -55,7 +55,7 @@ export function useSoftDismiss({ onClose, getElements }: { getElements: () => El
                     validFocusableElements = [validFocusableElements];
 
                 for (let focusable of validFocusableElements) {
-                    if (focusable.contains(newElement))
+                    if (focusable?.contains(newElement))
                         return;
                 }
             }
