@@ -10,7 +10,7 @@ export type ListboxSingleSelectEvent<E extends EventTarget> = { [EventDetail]: {
 
 export interface UseListboxSingleParameters extends Omit<UseListNavigationParameters, "shouldFocusOnChange"> {
     selectionMode: "focus" | "activate";
-    selectedIndex: number;
+    selectedIndex: number | null;
     onSelect?(event: ListboxSingleSelectEvent<Element>): void;
 }
 
