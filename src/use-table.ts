@@ -1,5 +1,5 @@
 import { FunctionComponent, h, VNode } from "preact";
-import { useChildManager, useSortableChildren, useForceUpdate, useGridNavigation, UseGridNavigationCellInfo, UseGridNavigationCellParameters, UseGridNavigationRowInfo, UseGridNavigationRowParameters, useHasFocus, usePassiveState, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
+import { useChildManager, useSortableChildren, useForceUpdate, useGridNavigation, UseGridNavigationCellInfo, UseGridNavigationCellParameters, UseGridNavigationRowInfo, UseGridNavigationRowParameters, useHasFocus, usePassiveState, useStableCallback, useStableGetter, useState, useRefElement } from "preact-prop-helpers";
 import { useMergedProps } from "preact-prop-helpers";
 import { generateRandomId } from "preact-prop-helpers";
 import { useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
@@ -87,11 +87,11 @@ const LocationPriority = { "head": 0, "body": 1, "foot": 2 };
 export type UseTableHeadReturnType<S extends Element, R extends Element, C extends Element> = { useTableHeadRow: UseTableRow<R, C>; useTableHeadProps: <P extends h.JSX.HTMLAttributes<S>>(props: P) => h.JSX.HTMLAttributes<S>; };
 export type UseTableBodyReturnType<S extends Element, R extends Element, C extends Element> = { useTableBodyRow: UseTableRow<R, C>; useTableBodyProps: <P extends h.JSX.HTMLAttributes<S>>(props: P) => h.JSX.HTMLAttributes<S>; };
 export type UseTableFootReturnType<S extends Element, R extends Element, C extends Element> = { useTableFootRow: UseTableRow<R, C>; useTableFootProps: <P extends h.JSX.HTMLAttributes<S>>(props: P) => h.JSX.HTMLAttributes<S>; };
-    type UseTableSectionReturnType<S extends Element, R extends Element, C extends Element> = { useTableSectionRow: UseTableRow<R, C>; useTableSectionProps: <P extends h.JSX.HTMLAttributes<S>>(props: P) => h.JSX.HTMLAttributes<S>; managedRows: TableRowInfo[]; }
+type UseTableSectionReturnType<S extends Element, R extends Element, C extends Element> = { useTableSectionRow: UseTableRow<R, C>; useTableSectionProps: <P extends h.JSX.HTMLAttributes<S>>(props: P) => h.JSX.HTMLAttributes<S>; managedRows: TableRowInfo[]; }
 export type UseTableHead<S extends Element, R extends Element, C extends Element> = () => UseTableHeadReturnType<S, R, C>;
 export type UseTableBody<S extends Element, R extends Element, C extends Element> = () => UseTableBodyReturnType<S, R, C>;
 export type UseTableFoot<S extends Element, R extends Element, C extends Element> = () => UseTableFootReturnType<S, R, C>;
-    type UseTableSection<S extends Element, R extends Element, C extends Element> = (parameters: UseTableSectionParameters) => UseTableSectionReturnType<S, R, C>;
+type UseTableSection<S extends Element, R extends Element, C extends Element> = (parameters: UseTableSectionParameters) => UseTableSectionReturnType<S, R, C>;
 
 const identity = <T>(t: T) => t;
 
@@ -175,12 +175,39 @@ export function useTable<T extends Element, S extends Element, R extends Element
             // Not public -- just the shared code between header cells and body cells
             const useTableCellShared = useCallback(<C extends Element>({ index, value }: { index: number, value: SortableTypes }) => {
                 const { useGridNavigationCellProps, } = useGridNavigationCell({ index, value });
+                const { getElement: getCellElement, useRefElementProps: useCellRefElementProps } = useRefElement<C>({});
+
                 function useTableCellProps<P extends h.JSX.HTMLAttributes<C>>({ role, ...props }: P) {
-                    return (useMergedProps<any>()({ role: "gridcell" }, props));
+                    return useCellRefElementProps(useMergedProps<any>()({ role: "gridcell" }, props));
                 }
 
                 function useTableCellDelegateProps<P extends h.JSX.HTMLAttributes<any>>({ role, ...props }: P) {
-                    return useGridNavigationCellProps(props);
+
+                    // Escape hatch for table cells with editable controls, like a text box:
+                    // Any time we're in a table cell's control and we press ESC or F2,
+                    // we eject focus back out to the actual table cell itself, which will
+                    // allow navigation of the grid again.
+
+                    function onKeyDown(e: h.JSX.TargetedKeyboardEvent<any>) {
+                        if (e.key == "Escape" || e.key == "F2") {
+                            const cell = getCellElement();
+                            if (document.activeElement != cell) {
+                                e.stopPropagation();
+                                e.preventDefault();
+                                if (cell && "focus" in cell) {
+
+                                    // Make absolutely sure this cell is focusable
+                                    // (tabIndex can't be null, apparently, so what else would it be other than -1?
+                                    // How is "not tabbable" represented in the DOM?)
+                                    if ((cell as Element as HTMLElement).tabIndex !== 0)
+                                        (cell as Element as HTMLElement).tabIndex = -1;
+
+                                    (cell as Element as HTMLElement).focus();
+                                }
+                            }
+                        }
+                    }
+                    return useGridNavigationCellProps(useMergedProps<any>()({ onKeyDown }, props));
                 }
 
                 return { useTableCellProps, useTableCellDelegateProps };
