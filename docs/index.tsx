@@ -383,7 +383,7 @@ const DemoMenu = memo(() => {
     const onOpen = () => setOpen(true);
     const { useHasFocusProps, getFocusedInner: getMenuFocusedInner } = useHasFocus<HTMLUListElement>({})
 
-    const { useMenuButton, useMenuItem, useMenuProps, useMenuSubmenuItem } = useAriaMenu<HTMLUListElement, HTMLLIElement, UseMenuChildInfo>({ open, onClose, onOpen, shouldFocusOnChange: getMenuFocusedInner });
+    const { useMenuButton, useMenuItem, useMenuProps } = useAriaMenu<HTMLUListElement, HTMLLIElement, UseMenuChildInfo>({ open, onClose, onOpen, shouldFocusOnChange: getMenuFocusedInner });
 
     const { useMenuButtonProps } = useMenuButton<HTMLButtonElement>({ tag: "button" })
     return (
