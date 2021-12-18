@@ -44,7 +44,7 @@ export function useAriaListboxSingle<ParentElement extends Element, ChildElement
 
     // Track whether the currently focused element is a child of the list box parent element.
     // When it's not, we reset the tabbable index back to the currently selected element.
-    useActiveElement({ onActiveElementChange: activeElement => setAnyItemsFocused(!!(inputElement?.contains(activeElement))) });
+    const { useActiveElementProps } = useActiveElement({ onActiveElementChange: activeElement => setAnyItemsFocused(!!(inputElement?.contains(activeElement))) });
     useEffect(() => {
         if (!anyItemsFocused)
             setTabbableIndex(selectedIndex);
@@ -113,6 +113,6 @@ export function useAriaListboxSingle<ParentElement extends Element, ChildElement
 
     function useListboxSingleProps<P extends h.JSX.HTMLAttributes<ParentElement>>(props: P) {
         props.role = "listbox";
-        return useListNavigationProps(useGenericLabelInputProps(props));
+        return useListNavigationProps(useGenericLabelInputProps(useActiveElementProps(props)));
     }
 }

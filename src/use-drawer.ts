@@ -4,7 +4,7 @@ import { useModal } from "./use-modal";
 
 export interface UseDrawerParameters {
     open: boolean;
-    onClose(reason: "backdrop" | "escape" | undefined): void;
+    onClose(reason: "backdrop" | "escape" | "lost-focus" | undefined): void;
 }
 
 export function useDrawer<DrawerElement extends HTMLElement>({ open, onClose }: UseDrawerParameters) {

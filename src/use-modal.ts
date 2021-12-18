@@ -1,7 +1,26 @@
 
 import { h } from "preact";
-import { useActiveElement, useFocusTrap, useGlobalHandler, useMergedProps, usePassiveState, useRandomId, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
+import { useActiveElement, useFocusTrap, useGlobalHandler, useMergedProps, usePassiveState, useRandomId, useRefElement, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
 import { useCallback, useEffect } from "preact/hooks";
+
+export interface UseSoftDismissParameters<T extends EventTarget> {
+
+    /**
+     * Must be a function that returns all elements that count as "within" this component.
+     * 
+     * Usually just a single element, but e.g. a Menu + MenuButton could have two.
+     */
+    getElements: () => Element | Element[] | null;
+
+    /**
+     * Called when the component is dismissed
+     */
+    onClose(reason: "backdrop" | "escape" | "lost-focus"): void;
+}
+
+export interface UseModalParameters<T extends EventTarget> extends Omit<UseSoftDismissParameters<T>, "getElements"> {
+    open: boolean;
+}
 
 /**
  * Adds event handlers for a modal-like soft-dismiss interaction.
@@ -17,16 +36,23 @@ import { useCallback, useEffect } from "preact/hooks";
  * @param param0 
  * @returns 
  */
-export function useSoftDismiss({ onClose, getElements }: { getElements: () => Element | Element[] | null, onClose(reason: "backdrop" | "escape" | "lost-focus"): void }) {
+export function useSoftDismiss<T extends Node>({ onClose, getElements }: UseSoftDismissParameters<T>) {
 
-    function onBackdropClick(e: h.JSX.TargetedEvent<any>) {
+    const stableOnClose = useStableCallback(onClose);
+    const stableGetElements = useStableCallback(getElements);
+    const getOpen = useStableGetter(open);
+
+    const onBackdropClick = useCallback(function onBackdropClick(e: h.JSX.TargetedEvent<any>) {
+        const document = getElement()?.ownerDocument;
+        const window = document?.defaultView;
+
         // Basically, "was this event fired on the root-most element, or at least an element not contained by the modal?"
         // Either could be how the browser handles these sorts of "interacting with nothing" events.
-        if (e.target == document.documentElement) {
-            onClose("backdrop");
+        if (e.target == document?.documentElement) {
+            stableOnClose("backdrop");
         }
 
-        let elements = getElements();
+        let elements = stableGetElements();
 
         if (elements && e.target instanceof Element) {
             if (!Array.isArray(elements))
@@ -44,11 +70,11 @@ export function useSoftDismiss({ onClose, getElements }: { getElements: () => El
             if (!foundInsideClick)
                 onClose("backdrop");
         }
-    }
+    }, [])
 
-    useActiveElement({
+    const { useActiveElementProps, getElement } = useActiveElement({
         onLastActiveElementChange: newElement => {
-            let validFocusableElements = getElements();
+            let validFocusableElements = stableGetElements();
 
             if (validFocusableElements) {
                 if (!Array.isArray(validFocusableElements))
@@ -62,16 +88,36 @@ export function useSoftDismiss({ onClose, getElements }: { getElements: () => El
 
             onClose("lost-focus");
         }
-    })
+    });
 
-    // Since everything else is inert, we listen for captured clicks on the window
-    // (we don't use onClick since that doesn't fire when clicked on empty/inert areas)
-    // Note: We need a *separate* touch event on mobile Safari, because
-    // it doesn't let click events bubble or be captured from traditionally non-interactive elements,
-    // but touch events work as expected.
-    useGlobalHandler(window, "mousedown", !open ? null : onBackdropClick, { capture: true });
-    useGlobalHandler(window, "touchstart", !open ? null : onBackdropClick, { capture: true });
-    useGlobalHandler(document, "keydown", (e: KeyboardEvent) => { if (e.key === "Escape") { onClose("escape"); } });
+
+    const { useRefElementProps } = useRefElement<T>({
+        onElementChange: useCallback((e: T | null) => {
+            const document = e?.ownerDocument;
+            const window = document?.defaultView;
+
+            // Since everything else is inert, we listen for captured clicks on the window
+            // (we don't use onClick since that doesn't fire when clicked on empty/inert areas)
+            // Note: We need a *separate* touch event on mobile Safari, because
+            // it doesn't let click events bubble or be captured from traditionally non-interactive elements,
+            // but touch events work as expected.
+            const mouseDown = (e: MouseEvent) => { if (getOpen()) onBackdropClick(e); };
+            const touchStart = (e: TouchEvent) => { if (getOpen()) onBackdropClick(e); };
+            const keyDown = (e: KeyboardEvent) => { if (e.key === "Escape") { stableOnClose("escape"); } };
+
+            window?.addEventListener("mousedown", mouseDown, { capture: true });
+            window?.addEventListener("touchstart", touchStart, { capture: true });
+            window?.addEventListener("keydown", keyDown);
+
+            return () => {
+                window?.removeEventListener("mousedown", mouseDown);
+                window?.removeEventListener("touchstart", touchStart);
+                window?.removeEventListener("keydown", keyDown);
+            }
+        }, [])
+    });
+
+    return { useSoftDismissProps: useCallback<typeof useActiveElementProps>(props => useActiveElementProps(useRefElementProps(props)), [useActiveElementProps, useRefElementProps]) }
 }
 
 /**
@@ -80,7 +126,7 @@ export function useSoftDismiss({ onClose, getElements }: { getElements: () => El
  * @param param0 
  * @returns 
  */
-export function useModal<ModalElement extends HTMLElement>({ open, onClose }: { open: boolean, onClose: (reason: "escape" | "backdrop") => void }) {
+export function useModal<ModalElement extends HTMLElement>({ open, onClose }: UseModalParameters<ModalElement>) {
 
     const stableOnClose = useStableCallback(onClose);
 

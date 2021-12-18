@@ -1,8 +1,7 @@
 import { h } from "preact";
-import { MergedProps, useActiveElement, useHasFocus, useLayoutEffect, useListNavigation, UseListNavigationChildInfo, UseListNavigationChildParameters, UseListNavigationChildPropsReturnType, UseListNavigationParameters, useMergedProps, useRandomId, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
-import type { OnPassiveStateChange } from "preact-prop-helpers/use-passive-state";
+import { MergedProps, useHasFocus, useListNavigation, UseListNavigationChildInfo, UseListNavigationChildParameters, UseListNavigationChildPropsReturnType, UseListNavigationParameters, useMergedProps, useRandomId, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
 import { useCallback, useEffect } from "preact/hooks";
-import { enhanceEvent, EventDetail, TagSensitiveProps } from "./props";
+import { EventDetail } from "./props";
 import { useSoftDismiss } from "./use-modal";
 
 interface UseMenuBaseParameters1 {
@@ -95,8 +94,9 @@ export function useMenuBase<ParentElement extends Element>({ sendFocusWithinMenu
     const { useRandomIdProps: useMenuBaseIdProps, useReferencedIdProps: useMenuBaseIdReferencingProps } = useRandomId({ prefix: "aria-menu-" });
 
     const { getElement: getButtonElement, useRefElementProps: useButtonRefElementProps } = useRefElement<any>({ onElementChange: setOpenerElement });
+
     const { getElement: getMenuElement, useRefElementProps: useMenuBaseRefElementProps } = useRefElement<any>({});
-    useSoftDismiss({ onClose: stableOnClose, getElements: () => ([getButtonElement(), getMenuElement()]) });
+    const { useSoftDismissProps } = useSoftDismiss<any>({ onClose: stableOnClose, getElements: () => ([getButtonElement(), getMenuElement()]) });
 
     useEffect(() => {
         setFocusTrapActive(open);
@@ -136,8 +136,8 @@ export function useMenuBase<ParentElement extends Element>({ sendFocusWithinMenu
             }
         }
         
-        return useMenuBaseHasFocusProps(useMenuBaseRefElementProps(useMenuBaseIdProps(useMergedProps<ParentElement>()({ onKeyDown }, (props)))));
-    }, [useMenuBaseHasFocusProps, useMenuBaseRefElementProps, useMenuBaseIdProps]);
+        return useSoftDismissProps(useMenuBaseHasFocusProps(useMenuBaseRefElementProps(useMenuBaseIdProps(useMergedProps<ParentElement>()({ onKeyDown }, (props))))));
+    }, [useSoftDismissProps, useMenuBaseHasFocusProps, useMenuBaseRefElementProps, useMenuBaseIdProps]);
 
     const useMenuBaseButtonProps = useCallback(<P extends h.JSX.HTMLAttributes<any>>(props: P) => {
         return useButtonRefElementProps(useButtonHasFocusProps(useMenuBaseIdReferencingProps("aria-controls")(props)));
