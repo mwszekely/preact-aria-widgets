@@ -46,7 +46,7 @@ export function useAriaRadioGroup<V extends string | number, G extends Element, 
 
     // Track whether the currently focused element is a child of the radio group parent element.
     // When it's not, we reset the tabbable index back to the currently selected element.
-    useActiveElement({ onActiveElementChange: activeElement => setAnyRadiosFocused(!!(getRadioGroupParentElement()?.contains(activeElement))) });
+    useActiveElement({ onActiveElementChange: useCallback((activeElement: Node | null) => setAnyRadiosFocused(!!(getRadioGroupParentElement()?.contains(activeElement))),[]) });
     useEffect(() => {
         if (!anyRadiosFocused)
             setTabbableIndex(selectedIndex ?? 0);

@@ -72,8 +72,8 @@ export function useSoftDismiss<T extends Node>({ onClose, getElements }: UseSoft
         }
     }, [])
 
-    const { useActiveElementProps, getElement } = useActiveElement({
-        onLastActiveElementChange: newElement => {
+    const { useActiveElementProps, getElement } = useActiveElement<T>({
+        onLastActiveElementChange: useCallback((newElement: T | null) => {
             let validFocusableElements = stableGetElements();
 
             if (validFocusableElements) {
@@ -87,7 +87,7 @@ export function useSoftDismiss<T extends Node>({ onClose, getElements }: UseSoft
             }
 
             onClose("lost-focus");
-        }
+        }, [])
     });
 
 

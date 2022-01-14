@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { ManagedChildInfo, MergedProps, useChildFlag, useChildManager, useHasFocus, useLayoutEffect, useListNavigation, UseListNavigationChildInfo, UseListNavigationChildParameters, UseListNavigationParameters, useLogicalDirection, useMergedProps, useRandomId, UseRandomIdPropsReturnType, useRefElement, UseRefElementPropsReturnType, UseReferencedIdPropsReturnType, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
+import { LogicalDirectionInfo, ManagedChildInfo, MergedProps, useChildFlag, useChildManager, useHasFocus, useLayoutEffect, useListNavigation, UseListNavigationChildInfo, UseListNavigationChildParameters, UseListNavigationParameters, useLogicalDirection, useMergedProps, useRandomId, UseRandomIdPropsReturnType, useRefElement, UseRefElementPropsReturnType, UseReferencedIdPropsReturnType, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
 import { useCallback, useEffect } from "preact/hooks";
 import { enhanceEvent, EventDetail, TagSensitiveProps } from "./props";
 import { usePressEventHandlers } from "./use-button";
@@ -44,7 +44,7 @@ export function useAriaTabs<ListElement extends Element, TabElement extends Elem
 
     const { useHasFocusProps: useTabListHasFocusProps, getFocusedInner: getTabListFocusedInner } = useHasFocus<ListElement>({});
     const [physicalOrientation, setPhysicalOrientation] = useState<"horizontal" | "vertical">("horizontal");
-    const { getLogicalDirectionInfo, convertToPhysicalOrientation, useLogicalDirectionProps } = useLogicalDirection<ListElement>({ onLogicalDirectionChange: logicalDirectionInfo => setPhysicalOrientation(convertToPhysicalOrientation(logicalOrientation, logicalDirectionInfo)) });
+    const { getLogicalDirectionInfo, convertToPhysicalOrientation, useLogicalDirectionProps } = useLogicalDirection<ListElement>({ onLogicalDirectionChange: useCallback((logicalDirectionInfo: LogicalDirectionInfo | null) => setPhysicalOrientation(convertToPhysicalOrientation(logicalOrientation, logicalDirectionInfo)), []) });
 
     const { useRandomIdProps: useTabListIdProps, useReferencedIdProps: useReferencedTabListId } = useRandomId({ prefix: "aria-tab-list-" });
     const { useRandomIdProps: useTabLabelIdProps, useReferencedIdProps: useReferencedTabLabelId } = useRandomId({ prefix: "aria-tab-label-" });

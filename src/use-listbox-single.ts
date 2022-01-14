@@ -37,14 +37,14 @@ export function useAriaListboxSingle<ParentElement extends Element, ChildElement
 
     const [anyItemsFocused, setAnyItemsFocused, getAnyItemsFocused] = useState(false);
 
-    const { useGenericLabelInput, useGenericLabelLabel, useReferencedInputIdProps, useReferencedLabelIdProps, inputElement } = useGenericLabel({ labelPrefix: "aria-listbox-label-", inputPrefix: "aria-listbox-" })
+    const { useGenericLabelInput, useGenericLabelLabel, useReferencedInputIdProps, useReferencedLabelIdProps, getInputElement } = useGenericLabel({ labelPrefix: "aria-listbox-label-", inputPrefix: "aria-listbox-" })
     const { useListNavigationChild, useListNavigationProps, navigateToIndex, managedChildren, setTabbableIndex, tabbableIndex, focusCurrent, currentTypeahead, invalidTypeahead } = useListNavigation<ChildElement, I>({ ...args, shouldFocusOnChange: getAnyItemsFocused });
     const { useGenericLabelInputProps } = useGenericLabelInput<ParentElement>();
     const stableOnSelect = useStableCallback(onSelect ?? (() => { }));
 
     // Track whether the currently focused element is a child of the list box parent element.
     // When it's not, we reset the tabbable index back to the currently selected element.
-    const { useActiveElementProps } = useActiveElement({ onActiveElementChange: activeElement => setAnyItemsFocused(!!(inputElement?.contains(activeElement))) });
+    const { useActiveElementProps } = useActiveElement({ onActiveElementChange: useCallback((activeElement: Node | null) => setAnyItemsFocused(!!(getInputElement()?.contains(activeElement))), []) });
     useEffect(() => {
         if (!anyItemsFocused)
             setTabbableIndex(selectedIndex);

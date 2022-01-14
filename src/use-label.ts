@@ -19,8 +19,8 @@ export interface UseGenericLabelParameters {
  */
 export function useGenericLabel({ labelPrefix, inputPrefix, backupText }: UseGenericLabelParameters = { labelPrefix: "label-", inputPrefix: "input-" }) {
 
-    const [labelElement, setLabelElement] = useState<any>(null);
-    const [inputElement, setInputElement] = useState<any>(null);
+    const [labelElement, setLabelElement] = useState<Element | null>(null);
+    const [inputElement, setInputElement] = useState<Element | null>(null);
     const { getElement: getLabelElement, useRefElementProps: useLabelRefElementProps } = useRefElement<any>({ onElementChange: setLabelElement });
     const { getElement: getInputElement, useRefElementProps: useInputRefElementProps } = useRefElement<any>({ onElementChange: setInputElement });
     const { useRandomIdProps: useLabelRandomIdProps, id: labelId, randomId: labelRandomId, useReferencedIdProps: useReferencedLabelIdProps } = useRandomId({ prefix: labelPrefix });
