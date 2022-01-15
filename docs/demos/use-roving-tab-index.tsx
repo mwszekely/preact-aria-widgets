@@ -9,8 +9,10 @@ const RandomWords = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, se
 const RovingChildContext = createContext<UseListNavigationChild<HTMLLIElement, UseListNavigationChildInfo>>(null!)
 export const DemoUseRovingTabIndex = memo(() => {
 
-    const { useHasFocusProps, getFocusedInner } = useHasFocus<HTMLUListElement>({})
-    const { useListNavigationChild, currentTypeahead, setTabbableIndex, tabbableIndex, useListNavigationProps } = useListNavigation<HTMLLIElement, UseListNavigationChildInfo>({ shouldFocusOnChange: getFocusedInner });
+    const [lastFocusedInner, setLastFocusedInner, getLastFocusedInner] = useState(false)
+    const { useHasFocusProps } = useHasFocus<HTMLUListElement>({ onLastFocusedInnerChanged: setLastFocusedInner });
+    const { useListNavigationChild, currentTypeahead, tabbableIndex, useListNavigationProps, navigateToIndex } = useListNavigation<HTMLLIElement, UseListNavigationChildInfo>({ shouldFocusOnChange: getLastFocusedInner });
+    //const { useRovingTabIndexChild, useRovingTabIndexProps } = useRovingTabIndex<HTMLUListElement, RovingTabIndexChildInfo>({ tabbableIndex, focusOnChange: false });
 
     return (
         <div className="demo">
@@ -27,8 +29,7 @@ export const DemoUseRovingTabIndex = memo(() => {
                 at least natively, is that tabbing into the component is one action, and tabbing out is another.  Navigating <em>within</em> the component is done with the arrow keys or other methods.
             </p>
             <p>
-                This is important both for accessability, but also just for general usability.  When tabbing back and forth, the ability to skip a long list without needing to trudge through <code>every one</code> of its child elements is extremely important.
-                This is important both for accessability, but also just for general usability.  When tabbing back and forth, the ability to skip a long list without needing to trudge through <code>every one</code> of its child elements is extremely important.
+                This is important both for accessability, but also just for general usability.  When tabbing back and forth, the ability to skip a long list without needing to trudge through <em>every one</em> of its child elements is extremely important.
             </p>
 
             <p>
@@ -42,7 +43,7 @@ export const DemoUseRovingTabIndex = memo(() => {
                 If the child element itself has a focusable element, like a button, it can also be wired up to disable itself
                 Feel free to nest them too, as long as you are aware of your <code>Context</code> management (i.e. remember that you need to create a new <code>Context</code> for each use case).
             </p>
-            <label>Tabbable index: <input type="number" value={tabbableIndex ?? undefined} onInput={e => { e.preventDefault(); setTabbableIndex(e.currentTarget.valueAsNumber); }} /></label>
+            <label>Tabbable index: <input type="number" value={tabbableIndex ?? undefined} onInput={e => { e.preventDefault(); navigateToIndex(e.currentTarget.valueAsNumber); }} /></label>
             <ul {...useHasFocusProps(useListNavigationProps({}))}>
                 <RovingChildContext.Provider value={useListNavigationChild}>
                     {Array.from((function* () {
@@ -58,14 +59,14 @@ export const DemoUseRovingTabIndex = memo(() => {
 })
 
 const Prefix = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-const DemoUseRovingTabIndexChild = (({ index }: { index: number }) => {
-    const randomWord = useMemo(() => RandomWords[index/*Math.floor(Math.random() * (RandomWords.length - 1))*/], []);
+const DemoUseRovingTabIndexChild = memo((({ index }: { index: number }) => {
+    const [randomWord] = useState(() => RandomWords[index/*Math.floor(Math.random() * (RandomWords.length - 1))*/]);
     const useRovingTabIndexChild = useContext(RovingChildContext);
     const text = `${randomWord} This is item #${index + 1}`;
-    const { useListNavigationChildProps, useListNavigationSiblingProps } = useRovingTabIndexChild({ index, text });
+    const { useListNavigationChildProps, useListNavigationSiblingProps, tabbable } = useRovingTabIndexChild({ index, text, hidden: (index == 5) });
     
     const props = useListNavigationChildProps({});
     return (
-        <li {...props}>{text} ({props.tabIndex})<input {...useListNavigationSiblingProps({ type: "checkbox" })} /></li>
+        <li {...props}>{text} ({tabbable? "Tabbable" : "Not tabbable"})<input {...useListNavigationSiblingProps({ type: "checkbox" })} /></li>
     )
-});
+}));

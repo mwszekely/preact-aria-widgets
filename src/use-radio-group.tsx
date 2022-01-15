@@ -42,15 +42,15 @@ export function useAriaRadioGroup<V extends string | number, G extends Element, 
 
     const [anyRadiosFocused, setAnyRadiosFocused, getAnyRadiosFocused] = useState(false);
 
-    const { managedChildren, useListNavigationChild, useListNavigationProps, setTabbableIndex, tabbableIndex, focusCurrent, currentTypeahead, invalidTypeahead } = useListNavigation<I, Info>({ shouldFocusOnChange: getAnyRadiosFocused });
+    const { managedChildren, useListNavigationChild, useListNavigationProps, navigateToIndex, tabbableIndex, focusCurrent, currentTypeahead, invalidTypeahead } = useListNavigation<I, Info>({ shouldFocusOnChange: getAnyRadiosFocused });
 
     // Track whether the currently focused element is a child of the radio group parent element.
     // When it's not, we reset the tabbable index back to the currently selected element.
-    useActiveElement({ onActiveElementChange: useCallback((activeElement: Node | null) => setAnyRadiosFocused(!!(getRadioGroupParentElement()?.contains(activeElement))),[]) });
+    useActiveElement({ onActiveElementChange: useCallback((activeElement: Node | null) => setAnyRadiosFocused(!!(getRadioGroupParentElement()?.contains(activeElement))), []) });
     useEffect(() => {
         if (!anyRadiosFocused)
-            setTabbableIndex(selectedIndex ?? 0);
-    }, [anyRadiosFocused, selectedIndex, setTabbableIndex]);
+            navigateToIndex(selectedIndex ?? 0);
+    }, [anyRadiosFocused, selectedIndex, navigateToIndex]);
 
 
     const useRadioGroupProps = useCallback(<P extends h.JSX.HTMLAttributes<G>>({ ...props }: P) => {

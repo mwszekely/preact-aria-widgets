@@ -38,7 +38,7 @@ export function useAriaListboxSingle<ParentElement extends Element, ChildElement
     const [anyItemsFocused, setAnyItemsFocused, getAnyItemsFocused] = useState(false);
 
     const { useGenericLabelInput, useGenericLabelLabel, useReferencedInputIdProps, useReferencedLabelIdProps, getInputElement } = useGenericLabel({ labelPrefix: "aria-listbox-label-", inputPrefix: "aria-listbox-" })
-    const { useListNavigationChild, useListNavigationProps, navigateToIndex, managedChildren, setTabbableIndex, tabbableIndex, focusCurrent, currentTypeahead, invalidTypeahead } = useListNavigation<ChildElement, I>({ ...args, shouldFocusOnChange: getAnyItemsFocused });
+    const { useListNavigationChild, useListNavigationProps, navigateToIndex, managedChildren, tabbableIndex, focusCurrent, currentTypeahead, invalidTypeahead } = useListNavigation<ChildElement, I>({ ...args, shouldFocusOnChange: getAnyItemsFocused });
     const { useGenericLabelInputProps } = useGenericLabelInput<ParentElement>();
     const stableOnSelect = useStableCallback(onSelect ?? (() => { }));
 
@@ -47,8 +47,8 @@ export function useAriaListboxSingle<ParentElement extends Element, ChildElement
     const { useActiveElementProps } = useActiveElement({ onActiveElementChange: useCallback((activeElement: Node | null) => setAnyItemsFocused(!!(getInputElement()?.contains(activeElement))), []) });
     useEffect(() => {
         if (!anyItemsFocused)
-            setTabbableIndex(selectedIndex);
-    }, [anyItemsFocused, selectedIndex, setTabbableIndex]);
+            navigateToIndex(selectedIndex);
+    }, [anyItemsFocused, selectedIndex, navigateToIndex]);
 
     useChildFlag({
         activatedIndex: selectedIndex,
