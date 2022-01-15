@@ -138,7 +138,7 @@ export function useModal<ModalElement extends HTMLElement>({ open, onClose }: Us
     const { id: titleId, useRandomIdProps: useTitleIdProps, useReferencedIdProps: useTitleReferencingIdProps } = useRandomId({ prefix: "aria-modal-title-" });
 
     const { useRefElementProps: useModalRefElement, getElement: getModalElement } = useRefElement<ModalElement>({})
-    useSoftDismiss({ onClose: stableOnClose, getElements: getModalElement });
+    const { useSoftDismissProps } = useSoftDismiss({ onClose: stableOnClose, getElements: getModalElement });
 
     const useModalBackdrop = useCallback(function useModalBackdrop<BackdropElement extends HTMLElement>() {
 
@@ -154,7 +154,7 @@ export function useModal<ModalElement extends HTMLElement>({ open, onClose }: Us
         const p1 = useTitleReferencingIdProps("aria-labelledby")(p0);
         const p2 = useModalIdProps(p1);
         const pFinal = useBodyReferencingIdProps("aria-describedby")(p2);
-        return useFocusTrapProps(useMergedProps<ModalElement>()(useModalRefElement({ role: "dialog" }), modalDescribedByBody ? pFinal : p2));
+        return useFocusTrapProps(useSoftDismissProps(useMergedProps<ModalElement>()(useModalRefElement({ role: "dialog" }), modalDescribedByBody ? pFinal : p2)));
     }
 
     const useModalTitle = useCallback(function useModalTitle<TitleElement extends Element>() {
