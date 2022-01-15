@@ -96,7 +96,7 @@ export function useAriaListboxMulti<ParentElement extends Element, ChildElement 
         return { useListboxMultiLabelProps };
     }, [useGenericLabelLabel]);
 
-    return { useListboxMultiItem, useListboxMultiProps, useListboxMultiLabel, tabbableIndex, currentTypeahead, invalidTypeahead, focus: focusCurrent };
+    return { useListboxMultiItem, useListboxMultiProps, useListboxMultiLabel, tabbableIndex, currentTypeahead, invalidTypeahead, focus: focusCurrent, managedChildren };
 
 
     function useListboxMultiProps<P extends h.JSX.HTMLAttributes<E>>(props: P) {

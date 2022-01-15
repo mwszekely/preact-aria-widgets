@@ -108,7 +108,7 @@ export function useAriaListboxSingle<ParentElement extends Element, ChildElement
     }, [useGenericLabelLabel]);
 
 
-    return { useListboxSingleItem, useListboxSingleProps, useListboxSingleLabel, tabbableIndex, focus: focusCurrent, currentTypeahead, invalidTypeahead };
+    return { useListboxSingleItem, useListboxSingleProps, useListboxSingleLabel, tabbableIndex, focus: focusCurrent, currentTypeahead, invalidTypeahead, managedChildren };
 
 
     function useListboxSingleProps<P extends h.JSX.HTMLAttributes<ParentElement>>(props: P) {

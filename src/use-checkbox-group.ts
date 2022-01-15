@@ -188,6 +188,7 @@ export function useCheckboxGroup<InputElement extends Element, I extends UseChec
         tabbableIndex,
         focus: focusCurrent,
         currentTypeahead,
-        invalidTypeahead
+        invalidTypeahead,
+        managedChildren
     };
 }

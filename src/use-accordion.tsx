@@ -17,6 +17,7 @@ export interface UseAriaAccordionParameters {
 
 export interface UseAriaAccordionReturnType<ParentElement extends Element, ChildElement extends Element> {
     useAriaAccordionSection: UseAriaAccordionSection<ChildElement>;
+    managedChildren: UseAriaAccordionSectionInfo[];
 }
 
 export interface UseAriaAccordionSectionInfo extends ManagedChildInfo<number> {
@@ -155,7 +156,8 @@ export function useAriaAccordion<ParentElement extends Element, ChildElement ext
     }, [useLinearNavigationProps]);
 
     return {
-        useAriaAccordionSection
+        useAriaAccordionSection,
+        managedChildren: managedAccordionSections
     }
 }
 

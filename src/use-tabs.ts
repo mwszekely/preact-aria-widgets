@@ -162,6 +162,6 @@ export function useAriaTabs<ListElement extends Element, TabElement extends Elem
         return { useTabsLabelProps };
     }, []);
 
-    return { useTab, useTabPanel, useTabsList, useTabsLabel, tabbableIndex, focusTabList: focusCurrent, currentTypeahead, invalidTypeahead };
+    return { useTab, useTabPanel, useTabsList, useTabsLabel, tabbableIndex, focusTabList: focusCurrent, currentTypeahead, invalidTypeahead, managedPanels, managedTabs };
 
 }

@@ -258,7 +258,9 @@ export function useAriaMenu<ParentElement extends Element, ChildElement extends 
         focusMenu,
 
         currentTypeahead,
-        invalidTypeahead
+        invalidTypeahead,
+
+        managedChildren
 
     }
 }
