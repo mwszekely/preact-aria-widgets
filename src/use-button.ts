@@ -222,7 +222,7 @@ export function usePressEventHandlers<E extends EventTarget>(onClickSync: ((e: h
         }
     }
 
-    return <P extends h.JSX.HTMLAttributes<E>>(props: P) => useRefElementProps(useMergedProps<E>()({ onKeyDown, onKeyUp, onBlur, onMouseDown, onMouseUp, onMouseOut, onClick, ...{ "data-pseudo-active": active ? "true" : undefined } as {} }, props));
+    return <P extends h.JSX.HTMLAttributes<E>>(props: P) => useRefElementProps(useMergedProps<E>()({ onKeyDown, onKeyUp, onBlur, onMouseDown, onMouseUp, onMouseOut, onClick, ...{ "data-pseudo-active": active && !textSelectedDuringActivation ? "true" : undefined } as {} }, props));
 }
 
 export function useAriaButton<E extends EventTarget>({ tag, pressed, onPress }: UseAriaButtonParameters<E>): UseAriaButtonReturnType<E> {
