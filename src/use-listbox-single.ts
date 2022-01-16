@@ -31,7 +31,9 @@ export interface UseListboxSingleItemReturnType<E extends Element> {
 }
 
 
-export type UseListboxSingleItemParameters<E extends Element, I extends UseListboxSingleItemInfo<E>> = Omit<I, "getTabbable" | "setTabbable" | "rerenderAndFocus" | "getSelected" | "setSelected">;
+export type UseListboxSingleItemParameters<E extends Element, I extends UseListboxSingleItemInfo<E>> = Omit<I, "getTabbable" | "setTabbable" | "rerenderAndFocus" | "getSelected" | "setSelected"> & {
+    disabled?: boolean;
+};
 
 export function useAriaListboxSingle<ParentElement extends Element, ChildElement extends Element, I extends UseListboxSingleItemInfo<ChildElement>>({ selectedIndex, onSelect, selectionMode, ...args }: UseListboxSingleParameters) {
 
@@ -80,7 +82,7 @@ export function useAriaListboxSingle<ParentElement extends Element, ChildElement
         return { useListboxSingleItemProps, tabbable, selected, getSelected };
 
         function useListboxSingleItemProps<P extends h.JSX.HTMLAttributes<E>>(props: P) {
-            const newProps: h.JSX.HTMLAttributes<E> = usePressEventHandlers<E>((e) => {
+            const newProps: h.JSX.HTMLAttributes<E> = usePressEventHandlers<E>(info.disabled? null : (e) => {
                 navigateToIndex(info.index);
                 const element = getElement();
                 if (element)
@@ -92,6 +94,8 @@ export function useAriaListboxSingle<ParentElement extends Element, ChildElement
             props["aria-setsize"] = (childCount).toString();
             props["aria-posinset"] = (info.index + 1).toString();
             props["aria-selected"] = (selected ?? false).toString();
+            if (info.disabled)
+                props["aria-disabled"] = "true"
 
             return useListNavigationChildProps(useMergedProps<ChildElement>()(newProps, useRefElementProps(props)));
         }
