@@ -103,28 +103,6 @@ export function useMenuBase<ParentElement extends Element>({ sendFocusWithinMenu
     }, [open]);
 
 
-    // A menu sentinal is a hidden but focusable element that comes at the start or end of the element
-    // that, when activated or focused over, closes the menu.
-    // (if focused within 100ms of the open prop changing, instead of
-    // closing the menu, focusing the sentinel immediately asks the menu to focus itself).
-    // This exists because while mouse users can click out of a menu
-    // and keyboard users can escape to close the menu,
-    // screen readers and other input methods that don't use those two become stuck.
-    const useMenuSentinel = useCallback(<E extends Element>() => {
-        const [firstSentinelIsActive, setFirstSentinelIsActive] = useState(false);
-        useTimeout({ callback: () => { setFirstSentinelIsActive(open); }, timeout: 100, triggerIndex: `${open}-${firstSentinelIsActive}` });
-
-
-        const onFocus = firstSentinelIsActive ? (() => stableOnClose()) : (() => getSendFocusWithinMenu()?.());
-        const onClick = () => stableOnClose();
-
-        return {
-            useMenuSentinelProps: function <P extends h.JSX.HTMLAttributes<E>>(p: P) {
-                return useMergedProps<E>()({ onFocus, onClick }, p);
-            }
-        }
-    }, [open]);
-
 
     const useMenuBaseProps = useCallback(<P extends h.JSX.HTMLAttributes<ParentElement>>(props: P) => {
         function onKeyDown(e: KeyboardEvent) {
@@ -135,7 +113,7 @@ export function useMenuBase<ParentElement extends Element>({ sendFocusWithinMenu
                 e.preventDefault();
             }
         }
-        
+
         return useSoftDismissProps(useMenuBaseHasFocusProps(useMenuBaseRefElementProps(useMenuBaseIdProps(useMergedProps<ParentElement>()({ onKeyDown }, (props))))));
     }, [useSoftDismissProps, useMenuBaseHasFocusProps, useMenuBaseRefElementProps, useMenuBaseIdProps]);
 
@@ -160,7 +138,10 @@ export function useMenuBase<ParentElement extends Element>({ sendFocusWithinMenu
     }, [focusTrapActive]);
 
     return {
-        useMenuSentinel,
+        useMenuSentinel: useCallback(<E extends Element>() => {
+            const { useSentinelProps: useMenuSentinelProps, ...rest } = useFocusSentinel<E>({ open, onClose: (onClose ?? (() => { })), sendFocusWithinMenu });
+            return { useMenuSentinelProps, ...rest };
+        }, [open, onClose, sendFocusWithinMenu]),
         focusTrapActive,
         useMenuBaseProps,
         useMenuBaseButtonProps,
@@ -169,6 +150,34 @@ export function useMenuBase<ParentElement extends Element>({ sendFocusWithinMenu
         open,
         onOpen,
         onClose
+    }
+}
+
+
+// A focus sentinal is a hidden but focusable element that comes at the start or end 
+// of the out-of-place-focusable component that, when activated or focused over, closes the component
+// (if focused within 100ms of the open prop changing, instead of
+// closing, focusing the sentinel immediately asks it to focus itself).
+// This exists for things like menus which can have focus but also need a way to return
+// to whatever out-of-place parent they came from when naturally tabbed out of (as opposed
+// to dialogs which loop back around when tabbed out of). While mouse users can click out of a menu
+// and keyboard users can escape to close a menu, screen readers and other input methods 
+// that don't use those two would become stuck.
+export function useFocusSentinel<E extends Element>({ open, onClose, sendFocusWithinMenu }: { open: boolean, onClose: () => void; sendFocusWithinMenu: () => void; }) {
+    const getSendFocusWithinMenu = useStableGetter(sendFocusWithinMenu);
+    const stableOnClose = useStableCallback(onClose);
+
+    const [firstSentinelIsActive, setFirstSentinelIsActive] = useState(false);
+    useTimeout({ callback: () => { setFirstSentinelIsActive(open); }, timeout: 100, triggerIndex: `${open}-${firstSentinelIsActive}` });
+
+
+    const onFocus = firstSentinelIsActive ? (() => stableOnClose()) : (() => getSendFocusWithinMenu()?.());
+    const onClick = () => stableOnClose();
+
+    return {
+        useSentinelProps: function <P extends h.JSX.HTMLAttributes<E>>(p: P) {
+            return useMergedProps<E>()({ onFocus, onClick }, p);
+        }
     }
 }
 
