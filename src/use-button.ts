@@ -192,7 +192,7 @@ export function usePressEventHandlers<E extends EventTarget>(onClickSync: ((e: h
     }
 
 
-    const onMouseOut = excludes("click", exclude) ? undefined : onBlur;
+    const onMouseLeave = excludes("click", exclude) ? undefined : onBlur;
 
     const onKeyDown = excludes("space", exclude) && excludes("enter", exclude) ? undefined : (e: h.JSX.TargetedKeyboardEvent<E>) => {
         if (e.key == " " && onClickSync && !excludes("space", exclude)) {
@@ -222,7 +222,7 @@ export function usePressEventHandlers<E extends EventTarget>(onClickSync: ((e: h
         }
     }
 
-    return <P extends h.JSX.HTMLAttributes<E>>(props: P) => useRefElementProps(useMergedProps<E>()({ onKeyDown, onKeyUp, onBlur, onMouseDown, onMouseUp, onMouseOut, onClick, ...{ "data-pseudo-active": active && !textSelectedDuringActivation ? "true" : undefined } as {} }, props));
+    return <P extends h.JSX.HTMLAttributes<E>>(props: P) => useRefElementProps(useMergedProps<E>()({ onKeyDown, onKeyUp, onBlur, onMouseDown, onMouseUp, onMouseLeave, onClick, ...{ "data-pseudo-active": active && !textSelectedDuringActivation ? "true" : undefined } as {} }, props));
 }
 
 export function useAriaButton<E extends EventTarget>({ tag, pressed, onPress }: UseAriaButtonParameters<E>): UseAriaButtonReturnType<E> {
