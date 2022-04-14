@@ -74,11 +74,11 @@ export function useAriaTooltip({ mouseoverDelay, mouseoutDelay, focusDelay }: { 
 
     const useTooltipTrigger: UseTooltipTrigger = useCallback(function useTooltipTrigger<TriggerType extends Element>() {
 
-        function onPointerEnter(e: MouseEvent) {
+        function onPointerOver(e: MouseEvent) {
             setTriggerHover(true);
         }
 
-        function onPointerLeave(e: MouseEvent) {
+        function onPointerOut(e: MouseEvent) {
             setTriggerHover(false);
         }
 
@@ -96,7 +96,7 @@ export function useAriaTooltip({ mouseoverDelay, mouseoutDelay, focusDelay }: { 
             props.tabIndex ??= -1;
             return useTooltipIdReferencingProps("aria-describedby")(
                 useHasFocusProps(
-                    useMergedProps<TriggerType>()({ onPointerEnter, onPointerLeave, onTouchEnd }, (props as any) as unknown as h.JSX.HTMLAttributes<TriggerType>)
+                    useMergedProps<TriggerType>()({ onPointerOver, onPointerOut, onTouchEnd }, (props as any) as unknown as h.JSX.HTMLAttributes<TriggerType>)
                 )
             );
         }
