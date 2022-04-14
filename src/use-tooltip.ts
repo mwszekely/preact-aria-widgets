@@ -74,19 +74,16 @@ export function useAriaTooltip({ mouseoverDelay, mouseoutDelay, focusDelay }: { 
 
     const useTooltipTrigger: UseTooltipTrigger = useCallback(function useTooltipTrigger<TriggerType extends Element>() {
 
-        function onPointerOver(e: MouseEvent) {
-            setTriggerHover(true);
-        }
-
-        function onPointerOut(e: MouseEvent) {
-            setTriggerHover(false);
-        }
+        useGlobalHandler(document, "pointermove", e => {
+            let target = (e.target as HTMLElement);
+            setTooltipHover(target == getElement() as Node || target.contains(getElement()));
+        }, { capture: true });
 
         function onTouchEnd(e: TouchEvent) {
             (e.target as any).focus();
         }
 
-        const { useHasFocusProps } = useHasFocus<TriggerType>({ onFocusedInnerChanged: setTriggerFocused })
+        const { useHasFocusProps, getElement } = useHasFocus<TriggerType>({ onFocusedInnerChanged: setTriggerFocused })
 
 
         function useTooltipTriggerProps<P extends h.JSX.HTMLAttributes<TriggerType>>({ ...props }: P) {
@@ -96,7 +93,7 @@ export function useAriaTooltip({ mouseoverDelay, mouseoutDelay, focusDelay }: { 
             props.tabIndex ??= -1;
             return useTooltipIdReferencingProps("aria-describedby")(
                 useHasFocusProps(
-                    useMergedProps<TriggerType>()({ onPointerOver, onPointerOut, onTouchEnd }, (props as any) as unknown as h.JSX.HTMLAttributes<TriggerType>)
+                    useMergedProps<TriggerType>()({ onTouchEnd }, (props as any) as unknown as h.JSX.HTMLAttributes<TriggerType>)
                 )
             );
         }
@@ -106,7 +103,6 @@ export function useAriaTooltip({ mouseoverDelay, mouseoutDelay, focusDelay }: { 
     }, [useTooltipIdReferencingProps]);
 
     const useTooltip = useCallback(function useTooltip<TooltipType extends Element>() {
-        //const [mouseOver, setMouseOver] = useState(false);
         const { useHasFocusProps, getElement } = useHasFocus<TooltipType>({ onFocusedInnerChanged: setTooltipFocused })
 
         useGlobalHandler(document, "pointermove", e => {
