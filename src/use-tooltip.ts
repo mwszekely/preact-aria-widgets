@@ -106,18 +106,16 @@ export function useAriaTooltip({ mouseoverDelay, mouseoutDelay, focusDelay }: { 
     }, [useTooltipIdReferencingProps]);
 
     const useTooltip = useCallback(function useTooltip<TooltipType extends Element>() {
+        //const [mouseOver, setMouseOver] = useState(false);
+        const { useHasFocusProps, getElement } = useHasFocus<TooltipType>({ onFocusedInnerChanged: setTooltipFocused })
 
-        function onPointerEnter(e: MouseEvent) {
-            setTooltipHover(true);
-        }
-
-        function onPointerLeave(e: MouseEvent) {
-            setTooltipHover(false);
-        }
+        useGlobalHandler(document, "pointermove", e => {
+            let target = (e.target as HTMLElement);
+            setTooltipHover(target == getElement() as Node || target.contains(getElement()));
+        }, { capture: true });
 
         function useTooltipProps<P extends h.JSX.HTMLAttributes<TooltipType>>({ ...props }: P) {
-            const { useHasFocusProps } = useHasFocus<TooltipType>({ onFocusedInnerChanged: setTooltipFocused })
-            return useTooltipIdProps(useHasFocusProps(useMergedProps<TooltipType>()({ onPointerEnter, onPointerLeave }, props)));
+            return useTooltipIdProps(useHasFocusProps(useMergedProps<TooltipType>()({ }, props)));
         }
 
         return { useTooltipProps };

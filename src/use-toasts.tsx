@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { findFirstFocusable, ManagedChildInfo, MergedProps, useChildFlag, useChildManager, useMergedProps, useRandomId, useRefElement, UseRefElementPropsReturnType, useState, useTimeout } from "preact-prop-helpers";
+import { findFirstFocusable, ManagedChildInfo, MergedProps, useChildFlag, useChildManager, useGlobalHandler, useMergedProps, useRandomId, useRefElement, UseRefElementPropsReturnType, useState, useTimeout } from "preact-prop-helpers";
 import { StateUpdater, useCallback, useEffect, useLayoutEffect } from "preact/hooks";
 
 
@@ -85,9 +85,9 @@ export function useToasts<ContainerType extends Element>({ }: UseToastsParameter
 
         const [mouseOver, setMouseOver] = useState(false);
 
-
-        function onMouseOut(e: MouseEvent) { setMouseOver(false); }
-        function onMouseOver(e: MouseEvent) { setMouseOver(true); }
+        useGlobalHandler(document, "pointermove", e => {
+            setMouseOver((e.target as HTMLElement).contains(getElement()));
+        });
 
         const { randomId: toastId } = useRandomId({ prefix: "toast-" });
         //const [toastId, setToastId] = useState(() => generateRandomId("toast-"));
@@ -136,7 +136,7 @@ export function useToasts<ContainerType extends Element>({ }: UseToastsParameter
             dismiss,
             resetDismissTimer,
             useToastProps: function <P extends h.JSX.HTMLAttributes<ToastType>>({ ...props }: P) {
-                return useMergedProps<ToastType>()(useManagedChildProps({ onMouseOut }), props);
+                return useMergedProps<ToastType>()(useManagedChildProps({ }), props);
             }
         }
     }, []);
