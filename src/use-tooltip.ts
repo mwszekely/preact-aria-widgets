@@ -63,20 +63,20 @@ export function useAriaTooltip({ mouseoverDelay, mouseoutDelay, focusDelay }: { 
             return () => clearTimeout(handle);
         }
     }), returnFalse);
-    const [getTriggerFocusedDelayCorrected, setTriggerFocusedDelayCorrected] = useState(false);
-    const [getTriggerHoverDelayCorrected, setTriggerHoverDelayCorrected] = useState(false);
-    const [getTooltipFocusedDelayCorrected, setTooltipFocusedDelayCorrected] = useState(false);
-    const [getTooltipHoverDelayCorrected, setTooltipHoverDelayCorrected] = useState(false);
+    const [triggerFocusedDelayCorrected, setTriggerFocusedDelayCorrected] = useState(false);
+    const [triggerHoverDelayCorrected, setTriggerHoverDelayCorrected] = useState(false);
+    const [tooltipFocusedDelayCorrected, setTooltipFocusedDelayCorrected] = useState(false);
+    const [tooltipHoverDelayCorrected, setTooltipHoverDelayCorrected] = useState(false);
 
     useEffect(() => {
-        setOpen(getTriggerFocusedDelayCorrected || getTriggerHoverDelayCorrected);
-    }, [getTriggerFocusedDelayCorrected || getTriggerHoverDelayCorrected])
+        setOpen(triggerFocusedDelayCorrected || triggerHoverDelayCorrected || tooltipFocusedDelayCorrected || tooltipHoverDelayCorrected);
+    }, [triggerFocusedDelayCorrected || triggerHoverDelayCorrected || tooltipFocusedDelayCorrected || tooltipHoverDelayCorrected])
 
     const useTooltipTrigger: UseTooltipTrigger = useCallback(function useTooltipTrigger<TriggerType extends Element>() {
 
         useGlobalHandler(document, "pointermove", e => {
             let target = (e.target as HTMLElement);
-            setTooltipHover(target == getElement() as Node || !!getElement()?.contains(target));
+            setTriggerHover(target == getElement() as Node || !!getElement()?.contains(target));
         }, { capture: true });
 
         function onTouchEnd(e: TouchEvent) {

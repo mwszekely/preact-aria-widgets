@@ -66,7 +66,7 @@ export function useAriaSlider({ max: maxParent, min: minParent }: UseAriaSliderA
             );
             newProps = { ...newProps, "aria-valuetext": valueText, style: { "--range-value": `${value}`, "--range-value-text": `${valueText}` } };
             if (tag == "input") {
-                newProps.onChange = e => {
+                newProps.onInput = e => {
                     onValueChange?.({ currentTarget: e.currentTarget, target: e.target, [EventDetail]: { value: (e.currentTarget as HTMLElement as HTMLInputElement).valueAsNumber } })
                 }
             }
