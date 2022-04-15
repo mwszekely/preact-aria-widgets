@@ -76,7 +76,7 @@ export function useAriaTooltip({ mouseoverDelay, mouseoutDelay, focusDelay }: { 
 
         useGlobalHandler(document, "pointermove", e => {
             let target = (e.target as HTMLElement);
-            setTooltipHover(target == getElement() as Node || target.contains(getElement()));
+            setTooltipHover(target == getElement() as Node || !!getElement()?.contains(target));
         }, { capture: true });
 
         function onTouchEnd(e: TouchEvent) {
@@ -107,7 +107,7 @@ export function useAriaTooltip({ mouseoverDelay, mouseoutDelay, focusDelay }: { 
 
         useGlobalHandler(document, "pointermove", e => {
             let target = (e.target as HTMLElement);
-            setTooltipHover(target == getElement() as Node || target.contains(getElement()));
+            setTooltipHover(target == getElement() as Node || !!getElement()?.contains(target));
         }, { capture: true });
 
         function useTooltipProps<P extends h.JSX.HTMLAttributes<TooltipType>>({ ...props }: P) {
