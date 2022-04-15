@@ -34,6 +34,8 @@ export interface UseAriaSliderArguments {
 export interface UseAriaSliderThumbReturnType<E extends HTMLElement> {
     getElement: () => E | null;
     useAriaSliderThumbProps: <P extends UseAriaSliderThumbProps<E>>(props: P) => MergedProps<E, P, P>;
+    min: number;
+    max: number;
 }
 
 export type UseAriaSliderThumb = <E extends HTMLElement>(props: UseAriaSliderThumbArguments<E>) => UseAriaSliderThumbReturnType<E>;
@@ -51,7 +53,9 @@ export function useAriaSlider({ max: maxParent, min: minParent }: UseAriaSliderA
 
         return {
             getElement,
-            useAriaSliderThumbProps
+            useAriaSliderThumbProps,
+            min, 
+            max
         }
 
         function useAriaSliderThumbProps<P extends UseAriaSliderThumbProps<E>>(props: P) {
