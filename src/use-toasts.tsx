@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { findFirstFocusable, ManagedChildInfo, MergedProps, useChildFlag, useChildManager, useMergedProps, useRandomId, useRefElement, UseRefElementPropsReturnType, useState, useTimeout } from "preact-prop-helpers";
+import { findFirstFocusable, ManagedChildInfo, MergedProps, useChildFlag, useChildManager, useGlobalHandler, useMergedProps, useRandomId, useRefElement, UseRefElementPropsReturnType, useState, useTimeout } from "preact-prop-helpers";
 import { StateUpdater, useCallback, useEffect, useLayoutEffect } from "preact/hooks";
 
 
@@ -21,7 +21,12 @@ export interface ToastInfo extends ManagedChildInfo<string> {
     getStatus(): null | "pending" | "active" | "dismissed";
 }
 
-export type UseToast = <ToastType extends Element>(args: UseToastParameters) => { dismiss: () => void; status: "pending" | "active" | "dismissed"; useToastProps: <P extends h.JSX.HTMLAttributes<ToastType>>(props: P) => MergedProps<ToastType, UseRefElementPropsReturnType<ToastType, {}>, P>; };
+export type UseToast = <ToastType extends Element>(args: UseToastParameters) => { 
+    dismiss: () => void; 
+    status: "pending" | "active" | "dismissed"; 
+    resetDismissTimer: () => void;
+    useToastProps: <P extends h.JSX.HTMLAttributes<ToastType>>(props: P) => MergedProps<ToastType, UseRefElementPropsReturnType<ToastType, {}>, P>; 
+};
 
 export function useToasts<ContainerType extends Element>({ }: UseToastsParameters) {
 
@@ -62,21 +67,27 @@ export function useToasts<ContainerType extends Element>({ }: UseToastsParameter
     // Any time the index pointing to the currently-showing toast changes,
     // update the relevant children and let them know that they're now either active or dismissed.
     useChildFlag<number, any>({
-        activatedIndex: activeToastIndex, 
+        activatedIndex: activeToastIndex,
         managedChildren: toastQueue,
         setChildFlag: ((i, set) => {
-        if (set)
-            console.assert(i <= getActiveToastIndex());
+            if (set)
+                console.assert(i <= getActiveToastIndex());
 
-        toastQueue[i]?.setStatus(prev => prev === "dismissed"? "dismissed" : set ? "active" : (i < getActiveToastIndex() ? "dismissed" : "pending"));
-    }),
-    getChildFlag: i => toastQueue[i]?.getStatus() === "active"
-});
+            toastQueue[i]?.setStatus(prev => prev === "dismissed" ? "dismissed" : set ? "active" : (i < getActiveToastIndex() ? "dismissed" : "pending"));
+        }),
+        getChildFlag: i => toastQueue[i]?.getStatus() === "active"
+    });
 
     const useToast: UseToast = useCallback(<ToastType extends Element>({ politeness, timeout }: UseToastParameters) => {
         const [status, setStatus, getStatus] = useState<"pending" | "active" | "dismissed">("pending");
         const dismissed = (status === "dismissed");
-        const dismiss = useCallback(() => { setStatus("dismissed") }, [])
+        const dismiss = useCallback(() => { setStatus("dismissed") }, []);
+
+        const [mouseOver, setMouseOver] = useState(false);
+
+        useGlobalHandler(document, "pointermove", e => {
+            setMouseOver((e.target as HTMLElement).contains(getElement()));
+        });
 
         const { randomId: toastId } = useRandomId({ prefix: "toast-" });
         //const [toastId, setToastId] = useState(() => generateRandomId("toast-"));
@@ -94,6 +105,11 @@ export function useToasts<ContainerType extends Element>({ }: UseToastsParameter
         const { useManagedChildProps, getElement } = useManagedChild<ToastType>({ dismissed, index: toastId, setStatus, getStatus, focus });
 
         const isActive = (status === "active");
+        const [triggerIndex, setTriggerIndex] = useState(1);
+
+        const resetDismissTimer = useCallback(() => {
+            setTriggerIndex(i => ++i);
+        }, [])
 
         useEffect(() => {
             onAnyToastMounted(getMountIndex(toastId));
@@ -105,12 +121,12 @@ export function useToasts<ContainerType extends Element>({ }: UseToastsParameter
         }, [dismissed]);
 
         useTimeout({
-            timeout: timeout == null? null : isFinite(timeout)? timeout : timeout > 0? null : 0,
+            timeout: timeout == null || mouseOver ? null : isFinite(timeout) ? timeout : timeout > 0 ? null : 0,
             callback: () => {
                 if (isActive)
                     setStatus("dismissed");
             },
-            triggerIndex: isActive
+            triggerIndex: isActive? triggerIndex : false
         });
 
 
@@ -118,8 +134,9 @@ export function useToasts<ContainerType extends Element>({ }: UseToastsParameter
             status,
             getStatus,
             dismiss,
+            resetDismissTimer,
             useToastProps: function <P extends h.JSX.HTMLAttributes<ToastType>>({ ...props }: P) {
-                return useMergedProps<ToastType>()(useManagedChildProps({}), props);
+                return useMergedProps<ToastType>()(useManagedChildProps({ }), props);
             }
         }
     }, []);

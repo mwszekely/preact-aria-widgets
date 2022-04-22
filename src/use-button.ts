@@ -46,18 +46,25 @@ function excludes<E extends EventTarget>(target: "click" | "space" | "enter", ex
  * selection.containsNode doesn't account for selection.isCollapsed,
  * so here's a workaround for that.
  * 
+ * We also only look for the selection end to only catch the 
+ * essense of a non-existant "selectionstop" event.
+ * 
  * @param element 
  * @returns 
  */
-function nodeHasSelectedText(element: EventTarget | null) {
+function nodeSelectedTextLength(element: EventTarget | null | undefined) {
     if (element && element instanceof Node) {
         const selection = window.getSelection();
-        if (selection?.containsNode(element, true) && !selection.isCollapsed) {
-            return true;
+       
+        for (let i = 0; i < (selection?.rangeCount ?? 0); ++i) {
+            let range = selection!.getRangeAt(i)!;
+            if (element.contains(range.endContainer) && !selection?.isCollapsed) {
+                return selection!.toString().length;
+            }
         }
     }
 
-    return false;
+    return 0;
 }
 
 /**
@@ -101,15 +108,15 @@ export function usePressEventHandlers<E extends EventTarget>(onClickSync: ((e: h
     // of a click, this flag is set, which cancels the activation of a press.
     // The flag is reset any time the selection is empty or the button is
     // no longer active.
-    const [textSelectedDuringActivation, setTextSelectedDuringActivation] = useState(false);
+    const [textSelectedDuringActivationStartTime, setTextSelectedDuringActivationStartTime] = useState<Date | null>(null);
 
     useGlobalHandler(document, "selectionchange", e => {
-        setTextSelectedDuringActivation(active == 0 ? false : nodeHasSelectedText(getElement()));
+        setTextSelectedDuringActivationStartTime(prev => nodeSelectedTextLength(getElement()) == 0? null : prev != null? prev : new Date());
     });
 
     useEffect(() => {
         if (active == 0)
-            setTextSelectedDuringActivation(false);
+            setTextSelectedDuringActivationStartTime(null);
     }, [active == 0]);
 
     const onActiveStart = useStableCallback<NonNullable<typeof onClickSync>>((e) => {
@@ -119,8 +126,13 @@ export function usePressEventHandlers<E extends EventTarget>(onClickSync: ((e: h
     const onActiveStop = useStableCallback<NonNullable<typeof onClickSync>>((e) => {
         setActive(a => Math.max(0, --a));
 
+        let currentTime = new Date();
+        let timeDifference = (textSelectedDuringActivationStartTime == null? null : +currentTime - +textSelectedDuringActivationStartTime);
 
-        if (textSelectedDuringActivation) {
+        // If we're selecting text (heuristically determined by selecting for longer than 1/4 a second, or more than 2 characters)
+        // then this isn't a press event.
+        // TODO: This should measure glyphs instead of characters.
+        if ((timeDifference && timeDifference > 250) || nodeSelectedTextLength(getElement()) >= 2) {
             e.preventDefault();
             return;
         }
@@ -222,7 +234,7 @@ export function usePressEventHandlers<E extends EventTarget>(onClickSync: ((e: h
         }
     }
 
-    return <P extends h.JSX.HTMLAttributes<E>>(props: P) => useRefElementProps(useMergedProps<E>()({ onKeyDown, onKeyUp, onBlur, onMouseDown, onMouseUp, onMouseLeave, onClick, style: textSelectedDuringActivation? { cursor: "text" } : undefined, ...{ "data-pseudo-active": active && !textSelectedDuringActivation ? "true" : undefined } as {} }, props));
+    return <P extends h.JSX.HTMLAttributes<E>>(props: P) => useRefElementProps(useMergedProps<E>()({ onKeyDown, onKeyUp, onBlur, onMouseDown, onMouseUp, onMouseLeave, onClick, style: (textSelectedDuringActivationStartTime != null) ? { cursor: "text" } : undefined, ...{ "data-pseudo-active": active && (textSelectedDuringActivationStartTime == null) ? "true" : undefined } as {} }, props));
 }
 
 export function useAriaButton<E extends EventTarget>({ tag, pressed, onPress }: UseAriaButtonParameters<E>): UseAriaButtonReturnType<E> {
