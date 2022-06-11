@@ -14,6 +14,7 @@ import { useAriaMenu, UseMenuChildInfo, UseMenuItem } from "../use-menu";
 import { useTable, UseTableRow } from "../use-table";
 import { useAriaTabs, UseTab, UseTabInfo, UseTabPanel } from "../use-tabs";
 import { useAriaTooltip } from "../use-tooltip";
+import { useAriaRadioGroup, UseAriaRadioInfo, UseRadio } from "../use-radio-group"
 import { DemoUseInterval } from "./demos/use-interval";
 import { DemoUseRovingTabIndex } from "./demos/use-roving-tab-index";
 import { DemoUseTimeout } from "./demos/use-timeout";
@@ -297,6 +298,48 @@ const DemoUseDialog = memo(() => {
     )
 });
 
+const RadioWrapContext = createContext(false);
+const RadioContext = createContext<UseRadio<number, HTMLInputElement, HTMLLabelElement, UseAriaRadioInfo>>(null!);
+const DemoUseRadioGroup = memo(() => {
+    const [selectedIndex, setSelectedIndex] = useState(0);
+    const [wrap, setWrap] = useState(useContext(RadioWrapContext));
+    const { useRadio, useRadioGroupProps, anyRadiosFocused } = useAriaRadioGroup<number, HTMLDivElement, HTMLInputElement, HTMLLabelElement, UseAriaRadioInfo>({
+        name: "radio-demo-1",
+        onInput: (e) => setSelectedIndex(+e[EventDetail].selectedValue),
+        selectedValue: selectedIndex
+    });
+
+
+    return <div class="demo">
+        <label><input type="checkbox" checked={wrap} onInput={e => setWrap(w => !w)} /> Wrapper label</label>
+        <RadioWrapContext.Provider key={wrap} value={wrap}>
+            {anyRadiosFocused.toString()}
+            <RadioContext.Provider value={useRadio}>
+                <div {...useRadioGroupProps({})}>
+                    {Array.from((function* () {
+                        for (let i = 0; i < 10; ++i) {
+                            yield <DemoRadio key={i} index={i} />
+                        }
+                    })())}
+                </div>
+            </RadioContext.Provider>
+        </RadioWrapContext.Provider>
+    </div>
+});
+
+
+
+const DemoRadio = memo(({ index }: { index: number }) => {
+    const wrap = useContext(RadioWrapContext);
+    const { useRadioInput, useRadioLabel, checked, tabbable } = useContext(RadioContext)({ index, text: null, value: index, disabled: false, labelPosition: wrap ? "wrapping" : "separate" });
+    const { useRadioInputProps } = useRadioInput({ tag: "input" });
+    const { useRadioLabelProps } = useRadioLabel({ tag: "label" });
+    if (wrap)
+        return <label {...useRadioLabelProps({})}><input {...useRadioInputProps({})} />Number {index + 1} radio{checked ? " (checked)" : ""}{tabbable ? " (tabbable)" : ""}</label>;
+    else
+        return <div><input {...useRadioInputProps({})} />Number {index + 1} radio{checked ? " (checked)" : ""}{tabbable ? " (tabbable)" : ""}<label {...useRadioLabelProps({})}></label></div>;
+});
+
 
 const ListBoxSingleItemContext = createContext<UseListboxSingleItem<HTMLLIElement, UseListboxSingleItemInfo<HTMLLIElement>>>(null!);
 const DemoUseListboxSingle = memo(() => {
@@ -538,6 +581,7 @@ const Component = () => {
         <DemoUseListboxSingle />
         <DemoUseListboxMulti />
         <DemoUseCheckbox />
+        <DemoUseRadioGroup />
         <DemoUseAccordion />
         <DemoUseDialog />
         <DemoUseRovingTabIndex />

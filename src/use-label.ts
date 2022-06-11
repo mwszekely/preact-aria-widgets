@@ -226,7 +226,7 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
             }
 
             // Make sure that label clicks can't affect the checkbox while it's disabled
-            props.onClick = disabled? ((e) => { e.preventDefault()}) :  props.onClick;
+            props.onClick = disabled ? ((e) => { e.preventDefault() }) : props.onClick;
 
             return useMergedProps<InputType>()(p0, props);
         }
@@ -237,11 +237,13 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
 
         function useCheckboxLikeLabelElementProps<P extends h.JSX.HTMLAttributes<LabelType>>({ ...p0 }: P) {
 
-            let newProps: h.JSX.HTMLAttributes<LabelType> = usePressEventHandlers<LabelType>(disabled || !handlesInput(tag, labelPosition, "label-element") ? undefined : stableOnInput, undefined)({ });
+            let newProps: h.JSX.HTMLAttributes<LabelType> = usePressEventHandlers<LabelType>(disabled || !handlesInput(tag, labelPosition, "label-element") ? undefined : stableOnInput, undefined)({});
 
             if (labelPosition == "wrapping") {
-                newProps.tabIndex = 0;
-                newProps.role = role;
+                if (p0.tabIndex == null)
+                    newProps.tabIndex = 0;
+                if (p0.role == null)
+                    newProps.role = role;
                 newProps["aria-disabled"] = disabled.toString();
                 newProps["aria-checked"] = checked.toString();
             }
@@ -252,7 +254,7 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
             }
 
             // Just make sure that label clicks can't affect the checkbox while it's disabled
-            newProps.onClick = disabled? ((e) => { e.preventDefault()}) : newProps.onClick;
+            newProps.onClick = disabled ? ((e) => { e.preventDefault() }) : newProps.onClick;
 
             return useMergedProps<LabelType>()(newProps, useILLabelProps(p0));
         }

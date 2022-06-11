@@ -46,7 +46,7 @@ export function useAriaRadioGroup<V extends string | number, G extends Element, 
 
     // Track whether the currently focused element is a child of the radio group parent element.
     // When it's not, we reset the tabbable index back to the currently selected element.
-    useActiveElement({ onActiveElementChange: useCallback((activeElement: Node | null) => setAnyRadiosFocused(!!(getRadioGroupParentElement()?.contains(activeElement))), []) });
+    const { useActiveElementProps } = useActiveElement({ onActiveElementChange: useCallback((activeElement: Node | null) => setAnyRadiosFocused(!!(getRadioGroupParentElement()?.contains(activeElement))), []) });
     useEffect(() => {
         if (!anyRadiosFocused)
             navigateToIndex(selectedIndex ?? 0);
@@ -55,8 +55,8 @@ export function useAriaRadioGroup<V extends string | number, G extends Element, 
 
     const useRadioGroupProps = useCallback(<P extends h.JSX.HTMLAttributes<G>>({ ...props }: P) => {
         props.role = "radiogroup";
-        return useListNavigationProps(useRefElementProps(props));
-    }, [useRefElementProps]);
+        return useListNavigationProps(useRefElementProps(useActiveElementProps(props)));
+    }, [useRefElementProps, useActiveElementProps]);
 
     let correctedIndex = (selectedIndex == null || selectedIndex < 0 || selectedIndex >= managedChildren.length) ? null : selectedIndex;
     useChildFlag({
@@ -96,13 +96,16 @@ export function useAriaRadioGroup<V extends string | number, G extends Element, 
                 if (tag == "input") {
                     props.name = name;
                     props.checked = (checked ?? false);
+                    props.type = "radio";
                 }
                 else {
                     props["aria-checked"] = (checked ?? false).toString();
                 }
 
+                let propsIfInputHandlesFocus = useListNavigationChildProps(props);
+
                 const { useCheckboxLikeInputElementProps } = useCheckboxLikeInputElement({ tag });
-                return (useMergedProps<I>()(useListNavigationChildProps((useCheckboxLikeInputElementProps({}))), props));
+                return (useMergedProps<I>()((useCheckboxLikeInputElementProps({})), labelPosition == "separate"? propsIfInputHandlesFocus : props));
             };
 
             return {
@@ -113,7 +116,8 @@ export function useAriaRadioGroup<V extends string | number, G extends Element, 
         const useRadioLabel: UseRadioLabel<L> = useCallback(({ tag }: TagSensitiveProps<L>) => {
             const useRadioLabelProps = <P extends h.JSX.HTMLAttributes<L>>(props: P) => {
                 const { useCheckboxLikeLabelElementProps } = useCheckboxLikeLabelElement({ tag });
-                return useCheckboxLikeLabelElementProps(useMergedProps<L>()({} as any, props))
+                let propsIfLabelHandlesFocus = useListNavigationChildProps(props as any);
+                return useCheckboxLikeLabelElementProps(useMergedProps<L>()({} as any, labelPosition == "wrapping"? propsIfLabelHandlesFocus as any : props as any))
             };
 
             return {
@@ -124,6 +128,8 @@ export function useAriaRadioGroup<V extends string | number, G extends Element, 
         return {
             useRadioInput,
             useRadioLabel,
+            checked: checked ?? false,
+            tabbable: tabbable ?? false
         }
 
     }, [byName, useListNavigationChild]);
@@ -136,13 +142,16 @@ export function useAriaRadioGroup<V extends string | number, G extends Element, 
         tabbableIndex,
         focusRadio: focusCurrent,
         currentTypeahead,
-        invalidTypeahead
+        invalidTypeahead,
+        anyRadiosFocused
     }
 }
 
 export interface UseRadioReturnType<I extends Element, L extends Element> {
     useRadioInput: UseRadioInput<I>;
     useRadioLabel: UseRadioLabel<L>;
+    checked: boolean;
+    tabbable: boolean;
 }
 
 type UseRadioInput<I extends Element> = ({ tag }: TagSensitiveProps<I>) => { useRadioInputProps: <P extends h.JSX.HTMLAttributes<I>>(props: P) => MergedProps<I, h.JSX.HTMLAttributes<I>, h.JSX.HTMLAttributes<I>>; }
