@@ -172,15 +172,11 @@ export function useTable<T extends Element, S extends Element, R extends Element
                 const { useGridNavigationCellProps, } = useGridNavigationCell({ index, value });
                 const { getElement: getCellElement, useRefElementProps: useCellRefElementProps } = useRefElement<C>({});
 
-                function useTableCellProps<P extends h.JSX.HTMLAttributes<C>>({ role, ...props }: P) {
-                    console.assert(!role);
-                    
-                    return useCellRefElementProps(useMergedProps<any>()({ role: "gridcell" }, props));
+                function useTableCellProps<P extends h.JSX.HTMLAttributes<C>>({ role, ...props }: P) {                    
+                    return useCellRefElementProps(useMergedProps<any>()({ role: role || "gridcell" }, props));
                 }
 
-                function useTableCellDelegateProps<P extends h.JSX.HTMLAttributes<any>>({ role, ...props }: P) {
-                    console.assert(!role);
-
+                function useTableCellDelegateProps<P extends h.JSX.HTMLAttributes<any>>(props: P) {
                     // Escape hatch for table cells with editable controls, like a text box:
                     // Any time we're in a table cell's control and we press ESC or F2,
                     // we eject focus back out to the actual table cell itself, which will
@@ -259,8 +255,7 @@ export function useTable<T extends Element, S extends Element, R extends Element
             }, [])
 
             function useTableRowProps<P extends h.JSX.HTMLAttributes<R>>({ role, ...props }: P) {
-                console.assert(!role);
-                return useGridNavigationRowProps(useMergedProps<R>()({ role: "row" }, props))
+                return useGridNavigationRowProps(useMergedProps<R>()({ role: role || "row" }, props))
             }
 
             return { useTableCell, useTableRowProps, useTableHeadCell, rowIndexAsSorted, rowIndexAsUnsorted };
@@ -327,9 +322,8 @@ export function useTable<T extends Element, S extends Element, R extends Element
     // Tables need a role of "grid" in order to be considered 
     // "interactive content" like a text box that passes through
     // keyboard inputs.
-    function useTableProps<P extends h.JSX.HTMLAttributes<T>>({ role, ...props }: P) { 
-        console.assert(!role);
-        return useHasFocusProps(useMergedProps<T>()({ role: "grid" }, props)); 
+    function useTableProps<P extends h.JSX.HTMLAttributes<T>>({ role, ...props }: P) {
+        return useHasFocusProps(useMergedProps<T>()({ role: role || "grid" }, props)); 
     }
 
 

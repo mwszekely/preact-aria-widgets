@@ -150,12 +150,11 @@ export function useModal<ModalElement extends HTMLElement>({ open, onClose }: Us
 
     const useModalProps = function <P extends h.JSX.HTMLAttributes<ModalElement>>({ "aria-modal": ariaModal, role, ...p0 }: P) {
         console.assert(!ariaModal);
-        console.assert(!role);
         const { useFocusTrapProps } = useFocusTrap<ModalElement>({ trapActive: open });
         const p1 = useTitleReferencingIdProps("aria-labelledby")(p0);
         const p2 = useModalIdProps(p1);
         const pFinal = useBodyReferencingIdProps("aria-describedby")(p2);
-        return useFocusTrapProps(useSoftDismissProps(useMergedProps<ModalElement>()(useModalRefElement({ role: "dialog" }), modalDescribedByBody ? pFinal : p2)));
+        return useFocusTrapProps(useSoftDismissProps(useMergedProps<ModalElement>()(useModalRefElement({ role: role || "dialog" }), modalDescribedByBody ? pFinal : p2)));
     }
 
     const useModalTitle = useCallback(function useModalTitle<TitleElement extends Element>() {

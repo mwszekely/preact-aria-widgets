@@ -139,9 +139,7 @@ export function useToasts<ContainerType extends Element>({ ..._ }: UseToastsPara
     }, []);
 
     function useToastContainerProps<P extends h.JSX.HTMLAttributes<ContainerType>>({ role, "aria-live": ariaLive, "aria-relevant": ariaRelevant, ...props }: P) {
-        console.assert(!role);
-
-        return useMergedProps<ContainerType>()(useRefElementProps({ class: "toasts-container", role: "status", "aria-live": politeness ?? ariaLive ?? "polite", "aria-relevant": ariaRelevant ?? "additions" }), props);
+        return useMergedProps<ContainerType>()(useRefElementProps({ class: "toasts-container", role: role || "status", "aria-live": politeness ?? ariaLive ?? "polite", "aria-relevant": ariaRelevant ?? "additions" }), props);
     }
 
 
