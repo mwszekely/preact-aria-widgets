@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { MergedProps, useActiveElement, useChildFlag, useHasFocus, useListNavigation, UseListNavigationChildInfo, UseListNavigationChildParameters, useMergedProps, useRefElement, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
+import { MergedProps, useActiveElement, useChildFlag, useListNavigation, UseListNavigationChildInfo, UseListNavigationChildParameters, useMergedProps, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
 import { useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
 import { enhanceEvent, EventDetail, TagSensitiveProps } from "./props";
 import { useCheckboxLike, UseCheckboxLikeParameters } from "./use-label";
@@ -32,8 +32,6 @@ export type UseAriaRadioParameters<V extends string | number, I extends Element,
 export function useAriaRadioGroup<V extends string | number, G extends Element, I extends Element, L extends Element, Info extends UseAriaRadioInfo>({ name, selectedValue, onInput }: UseAriaRadioGroupParameters<V>) {
     const { getElement: getRadioGroupParentElement, useRefElementProps } = useRefElement<G>({});
 
-    const getName = useStableGetter(name);
-
     //const getSelectedIndex = useCallback((selectedValue: V) => { return byName.current.get(selectedValue) ?? 0 }, [])
 
     const [selectedIndex, setSelectedIndex] = useState<number | null>(0);
@@ -58,7 +56,7 @@ export function useAriaRadioGroup<V extends string | number, G extends Element, 
         return useListNavigationProps(useRefElementProps(useActiveElementProps(props)));
     }, [useRefElementProps, useActiveElementProps]);
 
-    let correctedIndex = (selectedIndex == null || selectedIndex < 0 || selectedIndex >= managedChildren.length) ? null : selectedIndex;
+    const correctedIndex = (selectedIndex == null || selectedIndex < 0 || selectedIndex >= managedChildren.length) ? null : selectedIndex;
     useChildFlag({
         activatedIndex: correctedIndex,
         managedChildren,
@@ -67,7 +65,7 @@ export function useAriaRadioGroup<V extends string | number, G extends Element, 
     });
 
     useEffect(() => {
-        let selectedIndex = byName.current.get(selectedValue);
+        const selectedIndex = byName.current.get(selectedValue);
         setSelectedIndex(selectedIndex ?? null);
     }, [byName, selectedValue]);
 
@@ -81,7 +79,7 @@ export function useAriaRadioGroup<V extends string | number, G extends Element, 
             stableOnInput(enhanceEvent(e as any, { selectedValue: value }));
         }, [stableOnInput, value, index]);
 
-        const { getInputElement, getLabelElement, useCheckboxLikeInputElement, useCheckboxLikeLabelElement } = useCheckboxLike<I, L>({ checked: (checked ?? false), disabled, labelPosition, onInput, role: "radio" });
+        const { useCheckboxLikeInputElement, useCheckboxLikeLabelElement } = useCheckboxLike<I, L>({ checked: (checked ?? false), disabled, labelPosition, onInput, role: "radio" });
 
 
         useLayoutEffect(() => {
@@ -89,7 +87,7 @@ export function useAriaRadioGroup<V extends string | number, G extends Element, 
             return () => { byName.current.delete(value); }
         }, [byName, value, index]);
 
-        const { tabbable, useListNavigationChildProps, useListNavigationSiblingProps } = useListNavigationChild({ index, setChecked, getChecked, text, ...rest } as any as Info);
+        const { tabbable, useListNavigationChildProps } = useListNavigationChild({ index, setChecked, getChecked, text, ...rest } as any as Info);
 
         const useRadioInput: UseRadioInput<I> = ({ tag }: TagSensitiveProps<I>) => {
             const useRadioInputProps = <P extends h.JSX.HTMLAttributes<I>>(props: P) => {
@@ -102,7 +100,7 @@ export function useAriaRadioGroup<V extends string | number, G extends Element, 
                     props["aria-checked"] = (checked ?? false).toString();
                 }
 
-                let propsIfInputHandlesFocus = useListNavigationChildProps(props);
+                const propsIfInputHandlesFocus = useListNavigationChildProps(props);
 
                 const { useCheckboxLikeInputElementProps } = useCheckboxLikeInputElement({ tag });
                 return (useMergedProps<I>()((useCheckboxLikeInputElementProps({})), labelPosition == "separate"? propsIfInputHandlesFocus : props));
@@ -116,7 +114,7 @@ export function useAriaRadioGroup<V extends string | number, G extends Element, 
         const useRadioLabel: UseRadioLabel<L> = useCallback(({ tag }: TagSensitiveProps<L>) => {
             const useRadioLabelProps = <P extends h.JSX.HTMLAttributes<L>>(props: P) => {
                 const { useCheckboxLikeLabelElementProps } = useCheckboxLikeLabelElement({ tag });
-                let propsIfLabelHandlesFocus = useListNavigationChildProps(props as any);
+                const propsIfLabelHandlesFocus = useListNavigationChildProps(props as any);
                 return useCheckboxLikeLabelElementProps(useMergedProps<L>()({} as any, labelPosition == "wrapping"? propsIfLabelHandlesFocus as any : props as any))
             };
 

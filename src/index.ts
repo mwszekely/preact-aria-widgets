@@ -19,8 +19,11 @@ export { EventDetail } from "./props";
 export type { TagSensitiveProps } from "./props";
 
 declare module 'preact' {
+    /* eslint-disable @typescript-eslint/no-namespace */
     namespace h {
+        /* eslint-disable @typescript-eslint/no-namespace */
         namespace JSX {
+            /* eslint-disable @typescript-eslint/no-unused-vars */
             interface HTMLAttributes<RefType extends EventTarget = EventTarget> {
 
                 /**   

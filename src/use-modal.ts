@@ -1,9 +1,9 @@
 
 import { h } from "preact";
-import { useActiveElement, useFocusTrap, useGlobalHandler, useMergedProps, usePassiveState, useRandomId, useRefElement, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
+import { useActiveElement, useFocusTrap, useMergedProps, usePassiveState, useRandomId, useRefElement, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
 import { useCallback, useEffect } from "preact/hooks";
 
-export interface UseSoftDismissParameters<T extends EventTarget> {
+export interface UseSoftDismissParameters {
 
     /**
      * Must be a function that returns all elements that count as "within" this component.
@@ -18,7 +18,7 @@ export interface UseSoftDismissParameters<T extends EventTarget> {
     onClose(reason: "backdrop" | "escape" | "lost-focus"): void;
 }
 
-export interface UseModalParameters<T extends EventTarget> extends Omit<UseSoftDismissParameters<T>, "getElements"> {
+export interface UseModalParameters extends Omit<UseSoftDismissParameters, "getElements"> {
     open: boolean;
 }
 
@@ -36,7 +36,7 @@ export interface UseModalParameters<T extends EventTarget> extends Omit<UseSoftD
  * @param param0 
  * @returns 
  */
-export function useSoftDismiss<T extends Node>({ onClose, getElements }: UseSoftDismissParameters<T>) {
+export function useSoftDismiss<T extends Node>({ onClose, getElements }: UseSoftDismissParameters) {
 
     const stableOnClose = useStableCallback(onClose);
     const stableGetElements = useStableCallback(getElements);
@@ -44,7 +44,6 @@ export function useSoftDismiss<T extends Node>({ onClose, getElements }: UseSoft
 
     const onBackdropClick = useCallback(function onBackdropClick(e: h.JSX.TargetedEvent<any>) {
         const document = getElement()?.ownerDocument;
-        const window = document?.defaultView;
 
         // Basically, "was this event fired on the root-most element, or at least an element not contained by the modal?"
         // Either could be how the browser handles these sorts of "interacting with nothing" events.
@@ -60,7 +59,7 @@ export function useSoftDismiss<T extends Node>({ onClose, getElements }: UseSoft
 
             let foundInsideClick = false;
 
-            for (let element of elements) {
+            for (const element of elements) {
                 if (element.contains(e.target)) {
                     foundInsideClick = true;
                     break;
@@ -80,7 +79,7 @@ export function useSoftDismiss<T extends Node>({ onClose, getElements }: UseSoft
                 if (!Array.isArray(validFocusableElements))
                     validFocusableElements = [validFocusableElements];
 
-                for (let focusable of validFocusableElements) {
+                for (const focusable of validFocusableElements) {
                     if (focusable?.contains(newElement))
                         return;
                 }
@@ -117,7 +116,7 @@ export function useSoftDismiss<T extends Node>({ onClose, getElements }: UseSoft
         }, [])
     });
 
-    return { useSoftDismissProps: useCallback<typeof useActiveElementProps>(props => useActiveElementProps(useRefElementProps(props)), [useActiveElementProps, useRefElementProps]) }
+    return { useSoftDismissProps: useCallback(<P extends h.JSX.HTMLAttributes<T>>(props: P) => useActiveElementProps(useRefElementProps(props)), [useActiveElementProps, useRefElementProps]) }
 }
 
 /**
@@ -126,19 +125,19 @@ export function useSoftDismiss<T extends Node>({ onClose, getElements }: UseSoft
  * @param param0 
  * @returns 
  */
-export function useModal<ModalElement extends HTMLElement>({ open, onClose }: UseModalParameters<ModalElement>) {
+export function useModal<ModalElement extends HTMLElement>({ open, onClose }: UseModalParameters) {
 
     const stableOnClose = useStableCallback(onClose);
 
     const [modalDescribedByBody, setModalDescribedByBody] = useState(false);
     useHideScroll(open);
 
-    const { id: modalId, useRandomIdProps: useModalIdProps, useReferencedIdProps: useModalReferencingIdProps } = useRandomId({ prefix: "aria-modal-" });
-    const { id: bodyId, useRandomIdProps: useBodyIdProps, useReferencedIdProps: useBodyReferencingIdProps } = useRandomId({ prefix: "aria-modal-body-" });
-    const { id: titleId, useRandomIdProps: useTitleIdProps, useReferencedIdProps: useTitleReferencingIdProps } = useRandomId({ prefix: "aria-modal-title-" });
+    const { useRandomIdProps: useModalIdProps } = useRandomId({ prefix: "aria-modal-" });
+    const { useRandomIdProps: useBodyIdProps, useReferencedIdProps: useBodyReferencingIdProps } = useRandomId({ prefix: "aria-modal-body-" });
+    const { useRandomIdProps: useTitleIdProps, useReferencedIdProps: useTitleReferencingIdProps } = useRandomId({ prefix: "aria-modal-title-" });
 
     const { useRefElementProps: useModalRefElement, getElement: getModalElement } = useRefElement<ModalElement>({})
-    const { useSoftDismissProps } = useSoftDismiss({ onClose: stableOnClose, getElements: getModalElement });
+    const { useSoftDismissProps } = useSoftDismiss<ModalElement>({ onClose: stableOnClose, getElements: getModalElement });
 
     const useModalBackdrop = useCallback(function useModalBackdrop<BackdropElement extends HTMLElement>() {
 
@@ -150,6 +149,8 @@ export function useModal<ModalElement extends HTMLElement>({ open, onClose }: Us
     }, [])
 
     const useModalProps = function <P extends h.JSX.HTMLAttributes<ModalElement>>({ "aria-modal": ariaModal, role, ...p0 }: P) {
+        console.assert(!ariaModal);
+        console.assert(!role);
         const { useFocusTrapProps } = useFocusTrap<ModalElement>({ trapActive: open });
         const p1 = useTitleReferencingIdProps("aria-labelledby")(p0);
         const p2 = useModalIdProps(p1);
@@ -206,8 +207,8 @@ export function useHideScroll(hideScroll: boolean) {
             const originalScrollLeft = document.documentElement.scrollLeft;
 
             // Measure the width of the page (minus the scrollbar)
-            let widthWithScrollBar = document.documentElement.scrollWidth;
-            let heightWithScrollBar = document.documentElement.scrollHeight;
+            const widthWithScrollBar = document.documentElement.scrollWidth;
+            const heightWithScrollBar = document.documentElement.scrollHeight;
 
             // Apply a class that hides the scrollbar.
             document.documentElement.classList.add("document-scroll-hidden");
@@ -218,8 +219,8 @@ export function useHideScroll(hideScroll: boolean) {
 
             // Measure the new width without a scrollbar 
             // so we can take the difference as the scrollbar width.
-            let widthWithoutScrollBar = document.documentElement.scrollWidth;
-            let heightWithoutScrollBar = document.documentElement.scrollHeight;
+            const widthWithoutScrollBar = document.documentElement.scrollWidth;
+            const heightWithoutScrollBar = document.documentElement.scrollHeight;
             let scrollbarWidth = (widthWithoutScrollBar - widthWithScrollBar);
             let scrollbarHeight = (heightWithoutScrollBar - heightWithScrollBar);
 

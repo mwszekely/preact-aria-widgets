@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { MergedProps, useGlobalHandler, useHasFocus, UseHasFocusPropsReturnType, useMergedProps, usePassiveState, useRandomId, UseRandomIdPropsReturnType, useRefElement, UseReferencedIdPropsReturnType, useStableCallback, useState, useTimeout } from "preact-prop-helpers";
+import { MergedProps, useGlobalHandler, useHasFocus, UseHasFocusPropsReturnType, useMergedProps, usePassiveState, useRandomId, UseRandomIdPropsReturnType, UseReferencedIdPropsReturnType, useStableCallback, useState } from "preact-prop-helpers";
 import { useCallback, useEffect } from "preact/hooks";
 
 export type UseTooltipTrigger = <TriggerType extends Element>() => { useTooltipTriggerProps: <P extends h.JSX.HTMLAttributes<TriggerType>>({ ...props }: P) => UseReferencedIdPropsReturnType<MergedProps<TriggerType, { onPointerEnter: (e: MouseEvent) => void; onPointerLeave: (e: MouseEvent) => void; }, h.JSX.HTMLAttributes<TriggerType>>, "aria-describedby">; }
@@ -35,31 +35,31 @@ export function useAriaTooltip({ mouseoverDelay, mouseoutDelay, focusDelay }: { 
 
     const { useRandomIdProps: useTooltipIdProps, useReferencedIdProps: useTooltipIdReferencingProps } = useRandomId({ prefix: "aria-tooltip-" });
 
-    const [getTriggerFocused, setTriggerFocused] = usePassiveState(useStableCallback((focused: boolean) => {
+    const [, setTriggerFocused] = usePassiveState(useStableCallback((focused: boolean) => {
         const delay = focused ? focusDelay : 1;
         if (delay != null && isFinite(delay)) {
-            let handle = setTimeout(() => setTriggerFocusedDelayCorrected(focused), focused ? focusDelay : 1);
+            const handle = setTimeout(() => setTriggerFocusedDelayCorrected(focused), focused ? focusDelay : 1);
             return () => clearTimeout(handle);
         }
     }), returnFalse);
-    const [getTooltipFocused, setTooltipFocused] = usePassiveState(useStableCallback((focused: boolean) => {
+    const [, setTooltipFocused] = usePassiveState(useStableCallback((focused: boolean) => {
         const delay = focused ? focusDelay : 1;
         if (delay != null && isFinite(delay)) {
-            let handle = setTimeout(() => setTooltipFocusedDelayCorrected(focused), delay);
+            const handle = setTimeout(() => setTooltipFocusedDelayCorrected(focused), delay);
             return () => clearTimeout(handle);
         }
     }), returnFalse);
-    const [getTriggerHover, setTriggerHover] = usePassiveState(useStableCallback((hovering: boolean) => {
+    const [, setTriggerHover] = usePassiveState(useStableCallback((hovering: boolean) => {
         const delay = hovering ? mouseoverDelay : mouseoutDelay;
         if (delay != null && isFinite(delay)) {
-            let handle = setTimeout(() => setTriggerHoverDelayCorrected(hovering), delay);
+            const handle = setTimeout(() => setTriggerHoverDelayCorrected(hovering), delay);
             return () => clearTimeout(handle);
         }
     }), returnFalse);
-    const [getTooltipHover, setTooltipHover] = usePassiveState(useStableCallback((hovering: boolean) => {
+    const [, setTooltipHover] = usePassiveState(useStableCallback((hovering: boolean) => {
         const delay = hovering ? mouseoverDelay : mouseoutDelay;
         if (delay != null && isFinite(delay)) {
-            let handle = setTimeout(() => setTooltipHoverDelayCorrected(hovering), delay);
+            const handle = setTimeout(() => setTooltipHoverDelayCorrected(hovering), delay);
             return () => clearTimeout(handle);
         }
     }), returnFalse);
@@ -75,7 +75,7 @@ export function useAriaTooltip({ mouseoverDelay, mouseoutDelay, focusDelay }: { 
     const useTooltipTrigger: UseTooltipTrigger = useCallback(function useTooltipTrigger<TriggerType extends Element>() {
 
         useGlobalHandler(document, "pointermove", e => {
-            let target = (e.target as HTMLElement);
+            const target = (e.target as HTMLElement);
             setTriggerHover(target == getElement() as Node || !!getElement()?.contains(target));
         }, { capture: true });
 
@@ -106,7 +106,7 @@ export function useAriaTooltip({ mouseoverDelay, mouseoutDelay, focusDelay }: { 
         const { useHasFocusProps, getElement } = useHasFocus<TooltipType>({ onFocusedInnerChanged: setTooltipFocused })
 
         useGlobalHandler(document, "pointermove", e => {
-            let target = (e.target as HTMLElement);
+            const target = (e.target as HTMLElement);
             setTooltipHover(target == getElement() as Node || !!getElement()?.contains(target));
         }, { capture: true });
 

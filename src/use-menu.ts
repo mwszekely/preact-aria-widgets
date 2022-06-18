@@ -23,6 +23,8 @@ interface UseMenuParameters2 extends UseMenuBaseParameters2, UseListNavigationPa
 export type UseMenuBaseParameters = (UseMenuBaseParameters1 | UseMenuBaseParameters2) & { sendFocusWithinMenu(): void; };
 export type UseAriaMenuParameters = (UseMenuParameters1 | UseMenuParameters2);
 export type UseMenuSubmenuItemParameters = UseAriaMenuParameters & {}
+
+/* eslint-disable @typescript-eslint/no-empty-interface */
 export interface UseMenuButtonParameters { }
 
 export interface UseMenuItemCheckboxInfo<E extends EventTarget> extends UseListNavigationChildInfo {
@@ -75,10 +77,10 @@ export function useMenuBase<ParentElement extends Element>({ sendFocusWithinMenu
     const getSendFocusWithinMenu = useStableGetter(sendFocusWithinMenu);
     const [focusTrapActive, setFocusTrapActive] = useState<null | boolean>(null);
 
-    let onClose = (args as Partial<UseMenuParameters1>).onClose;
-    let onOpen = (args as Partial<UseMenuParameters1>).onOpen;
-    let menubar = (args as Partial<UseMenuParameters2>).menubar;
-    let open = (menubar ? true : (args as UseMenuParameters1).open);
+    const onClose = (args as Partial<UseMenuParameters1>).onClose;
+    const onOpen = (args as Partial<UseMenuParameters1>).onOpen;
+    const menubar = (args as Partial<UseMenuParameters2>).menubar;
+    const open = (menubar ? true : (args as UseMenuParameters1).open);
     const stableOnClose = useStableCallback(onClose ?? (() => { }));
     const getOpen = useStableGetter(open);
 
@@ -89,7 +91,7 @@ export function useMenuBase<ParentElement extends Element>({ sendFocusWithinMenu
     const { useHasFocusProps: useMenuBaseHasFocusProps, getLastFocusedInner: getMenuBaseLastFocusedInner } = useHasFocus<E>({ /*onLastFocusedInnerChanged: onMenuOrButtonLostLastFocus*/ });
     const { useHasFocusProps: useButtonHasFocusProps, getLastFocusedInner: getMenuBaseButtonLastFocusedInner } = useHasFocus<any>({ /*onLastFocusedInnerChanged: onMenuOrButtonLostLastFocus*/ });
 
-    const [openerElement, setOpenerElement, getOpenerElement] = useState<(Element & HTMLOrSVGElement) | null>(null);
+    const [, setOpenerElement, getOpenerElement] = useState<(Element & HTMLOrSVGElement) | null>(null);
 
     const { useRandomIdProps: useMenuBaseIdProps, useReferencedIdProps: useMenuBaseIdReferencingProps } = useRandomId({ prefix: "aria-menu-" });
 
@@ -193,12 +195,18 @@ export function useAriaMenu<ParentElement extends Element, ChildElement extends 
         focusCurrent: focusMenu,
         currentTypeahead,
         invalidTypeahead
-    } = useListNavigation<ChildElement, I>({ collator, keyNavigation, noTypeahead, noWrap, typeaheadTimeout, shouldFocusOnChange: useCallback((): boolean => getMenuBaseLastFocusedInner() || getMenuBaseButtonLastFocusedInner(), []) });
+    } = useListNavigation<ChildElement, I>({ 
+        collator, 
+        keyNavigation, 
+        noTypeahead, 
+        noWrap, 
+        typeaheadTimeout, 
+        shouldFocusOnChange: useCallback((): boolean => getMenuBaseLastFocusedInner() || getMenuBaseButtonLastFocusedInner(), []) 
+    });
 
 
     const {
         useMenuSentinel,
-        focusTrapActive,
         useMenuBaseButtonProps,
         useMenuBaseProps,
         getMenuBaseButtonLastFocusedInner,
@@ -206,35 +214,22 @@ export function useAriaMenu<ParentElement extends Element, ChildElement extends 
         open,
         onOpen,
         onClose
-    } = useMenuBase<ParentElement>({ ...args, sendFocusWithinMenu: focusMenu ?? (() => { }) });
+    } = useMenuBase<ParentElement>({ 
+        ...args, 
+        sendFocusWithinMenu: focusMenu ?? (() => { }) 
+    });
 
-    const useMenuButton = useCallback(<E extends Element>({ }: UseMenuButtonParameters) => {
+    const useMenuButton = useCallback(<E extends Element>({ ..._ }: UseMenuButtonParameters) => {
 
         return {
             useMenuButtonProps: function <P extends h.JSX.HTMLAttributes<E>>(p: P) {
-                let props = useMenuBaseButtonProps(p);
+                const props = useMenuBaseButtonProps(p);
                 props["aria-haspopup"] = "menu";
                 props["aria-expanded"] = open ? "true" : undefined;
                 return props;
             }
         }
     }, [open, onClose, onOpen, useMenuBaseButtonProps]);
-
-    /*const useMenuSubmenuItem = useCallback((args: UseMenuSubmenuItemParameters) => {
-        const { useMenuProps, useMenuButton } = useAriaMenu<HTMLElement, ChildElement, I>(args);
-        const { useMenuButtonProps } = useMenuButton<E>({ tag: "li" as any });
-
-        const { getElement, useRefElementProps } = useRefElement<any>({ onElementChange: setOpenerElement as OnPassiveStateChange<any> });
-
-        return {
-            getElement,
-            useMenuProps,
-            useMenuSubmenuItemProps: function <P extends h.JSX.HTMLAttributes<E>>({ ...props }: P) {
-                props.role = "menuitem";
-                return useRefElementProps(useMenuButtonProps(useMenuIdReferencingProps("aria-controls")(props)));
-            }
-        }
-    }, []);*/
 
     const useMenuItem: UseMenuItem<ChildElement, I> = useCallback((args: UseMenuItemDefaultParameters<I>) => {
         type E = ChildElement;
@@ -268,6 +263,8 @@ export function useAriaMenu<ParentElement extends Element, ChildElement extends 
 
         currentTypeahead,
         invalidTypeahead,
+
+        tabbableIndex,
 
         managedChildren
 

@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { MergedProps, useActiveElement, useChildFlag, useHasFocus, useLayoutEffect, useListNavigation, UseListNavigationChildInfo, UseListNavigationChildParameters, UseListNavigationChildPropsReturnType, UseListNavigationParameters, useMergedProps, useRefElement, UseRefElementPropsReturnType, useStableCallback, useState } from "preact-prop-helpers";
+import { MergedProps, useActiveElement, useChildFlag, useLayoutEffect, useListNavigation, UseListNavigationChildInfo, UseListNavigationChildPropsReturnType, UseListNavigationParameters, useMergedProps, useRefElement, UseRefElementPropsReturnType, useStableCallback, useState } from "preact-prop-helpers";
 import { useCallback, useEffect } from "preact/hooks";
 import { EventDetail, TagSensitiveProps } from "./props";
 import { usePressEventHandlers } from "./use-button";
@@ -39,14 +39,14 @@ export function useAriaListboxSingle<ParentElement extends Element, ChildElement
 
     const [anyItemsFocused, setAnyItemsFocused, getAnyItemsFocused] = useState(false);
 
-    const { useGenericLabelInput, useGenericLabelLabel, useReferencedInputIdProps, useReferencedLabelIdProps, getInputElement } = useGenericLabel({ labelPrefix: "aria-listbox-label-", inputPrefix: "aria-listbox-" })
+    const { useGenericLabelInput, useGenericLabelLabel, getInputElement } = useGenericLabel({ labelPrefix: "aria-listbox-label-", inputPrefix: "aria-listbox-" })
     const { useListNavigationChild, useListNavigationProps, navigateToIndex, managedChildren, tabbableIndex, focusCurrent, currentTypeahead, invalidTypeahead } = useListNavigation<ChildElement, I>({ ...args, shouldFocusOnChange: getAnyItemsFocused });
     const { useGenericLabelInputProps } = useGenericLabelInput<ParentElement>();
     const stableOnSelect = useStableCallback(onSelect ?? (() => { }));
 
     // Track whether the currently focused element is a child of the list box parent element.
     // When it's not, we reset the tabbable index back to the currently selected element.
-    const { useActiveElementProps } = useActiveElement({ onActiveElementChange: useCallback((activeElement: Node | null) => setAnyItemsFocused(!!(getInputElement()?.contains(activeElement))), []) });
+    const { useActiveElementProps } = useActiveElement<ParentElement>({ onActiveElementChange: useCallback((activeElement: Node | null) => setAnyItemsFocused(!!(getInputElement()?.contains(activeElement))), []) });
     useEffect(() => {
         if (!anyItemsFocused)
             navigateToIndex(selectedIndex);
@@ -68,7 +68,7 @@ export function useAriaListboxSingle<ParentElement extends Element, ChildElement
     const useListboxSingleItem: UseListboxSingleItem<ChildElement, I> = useCallback((info: UseListboxSingleItemParameters<ChildElement, I>): UseListboxSingleItemReturnType<ChildElement> => {
         type E = ChildElement;
         const [selected, setSelected, getSelected] = useState<boolean | null>(null);
-        const { tabbable, useListNavigationSiblingProps, useListNavigationChildProps } = useListNavigationChild({ setSelected, getSelected, ...info } as I);
+        const { tabbable, useListNavigationChildProps } = useListNavigationChild({ setSelected, getSelected, ...info } as I);
         const { getElement, useRefElementProps } = useRefElement<ChildElement>({});
         const index = info.index;
 

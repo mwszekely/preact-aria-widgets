@@ -1,7 +1,7 @@
 import { h } from "preact";
-import { MergedProps, useEffect, useListNavigation, UseListNavigationChildInfo, UseListNavigationChildParameters, UseListNavigationChildPropsReturnType, UseListNavigationParameters, useMergedProps, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
+import { useEffect, useListNavigation, UseListNavigationChildInfo, UseListNavigationChildParameters, UseListNavigationParameters, useMergedProps, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
 import { useCallback, useRef } from "preact/hooks";
-import { EventDetail, enhanceEvent } from "./props";
+import { enhanceEvent, EventDetail } from "./props";
 
 
 export type CheckboxGroupChangeEvent<EventType extends Event> = EventType & { [EventDetail]: { childrenChecked: boolean | Map<number, boolean | "mixed"> } };
@@ -83,7 +83,7 @@ export function useCheckboxGroup<InputElement extends Element, I extends UseChec
     //const [selfIsChecked, setSelfIsChecked, getSelfIsChecked] = useState<boolean | "mixed">(false);
 
     const getSelfIsCheckedUnstable = useCallback(() => {
-        let percentage = checkedCount / managedChildren.length;
+        const percentage = checkedCount / managedChildren.length;
         return percentage <= 0 ? false : percentage >= 1 ? true : "mixed";
     }, [checkedCount, managedChildren.length]);
 
@@ -103,7 +103,7 @@ export function useCheckboxGroup<InputElement extends Element, I extends UseChec
         else if (selfIsChecked === "mixed") {
 
             savedCheckedValues.current = new Map();
-            for (let child of managedChildren) {
+            for (const child of managedChildren) {
                 savedCheckedValues.current.set(child.index, child.getChecked());
             }
 
@@ -168,7 +168,7 @@ export function useCheckboxGroup<InputElement extends Element, I extends UseChec
             notifyChecked(index, checked);
         }, [index, checked]);
 
-        const { tabbable, useListNavigationChildProps, useListNavigationSiblingProps } = useListNavigationChild({ index, text, id, getChecked, ...rest } as unknown as UseListNavigationChildParameters<I>);
+        const { tabbable, useListNavigationChildProps } = useListNavigationChild({ index, text, id, getChecked, ...rest } as unknown as UseListNavigationChildParameters<I>);
 
         return {
             tabbable,

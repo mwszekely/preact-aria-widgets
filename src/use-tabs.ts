@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { LogicalDirectionInfo, ManagedChildInfo, MergedProps, useChildFlag, useChildManager, useHasFocus, useLayoutEffect, useListNavigation, UseListNavigationChildInfo, UseListNavigationChildParameters, UseListNavigationParameters, useLogicalDirection, useMergedProps, useRandomId, UseRandomIdPropsReturnType, useRefElement, UseRefElementPropsReturnType, UseReferencedIdPropsReturnType, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
+import { LogicalDirectionInfo, ManagedChildInfo, MergedProps, useChildFlag, useChildManager, useHasFocus, useLayoutEffect, useListNavigation, UseListNavigationChildInfo, UseListNavigationChildParameters, UseListNavigationParameters, useLogicalDirection, useMergedProps, useRandomId, UseRandomIdPropsReturnType, useRefElement, UseRefElementPropsReturnType, UseReferencedIdPropsReturnType, useStableGetter, useState } from "preact-prop-helpers";
 import { useCallback, useEffect } from "preact/hooks";
 import { enhanceEvent, EventDetail, TagSensitiveProps } from "./props";
 import { usePressEventHandlers } from "./use-button";
@@ -44,20 +44,19 @@ export function useAriaTabs<ListElement extends Element, TabElement extends Elem
 
     const { useHasFocusProps: useTabListHasFocusProps, getFocusedInner: getTabListFocusedInner } = useHasFocus<ListElement>({});
     const [physicalOrientation, setPhysicalOrientation] = useState<"horizontal" | "vertical">("horizontal");
-    const { getLogicalDirectionInfo, convertToPhysicalOrientation, useLogicalDirectionProps } = useLogicalDirection<ListElement>({ onLogicalDirectionChange: useCallback((logicalDirectionInfo: LogicalDirectionInfo | null) => setPhysicalOrientation(convertToPhysicalOrientation(logicalOrientation, logicalDirectionInfo)), []) });
+    const { convertToPhysicalOrientation, useLogicalDirectionProps } = useLogicalDirection<ListElement>({ onLogicalDirectionChange: useCallback((logicalDirectionInfo: LogicalDirectionInfo | null) => setPhysicalOrientation(convertToPhysicalOrientation(logicalOrientation, logicalDirectionInfo)), []) });
 
-    const { useRandomIdProps: useTabListIdProps, useReferencedIdProps: useReferencedTabListId } = useRandomId({ prefix: "aria-tab-list-" });
+    //const { useRandomIdProps: useTabListIdProps, useReferencedIdProps: useReferencedTabListId } = useRandomId({ prefix: "aria-tab-list-" });
     const { useRandomIdProps: useTabLabelIdProps, useReferencedIdProps: useReferencedTabLabelId } = useRandomId({ prefix: "aria-tab-label-" });
 
     const { managedChildren: managedTabs, navigateToIndex, useListNavigationChild, useListNavigationProps, tabbableIndex, invalidTypeahead, currentTypeahead, focusCurrent } = useListNavigation<TabElement, UseTabInfo>({ ...args, shouldFocusOnChange: getTabListFocusedInner, keyNavigation: logicalOrientation });
     const { managedChildren: managedPanels, useManagedChild: useManagedTabPanel } = useChildManager<UseTabPanelInfo>()
 
-    const stableOnSelect = useStableCallback(onSelect);
     const childCount = managedTabs.length;
 
 
     useLayoutEffect(() => {
-        for (let child of managedTabs)
+        for (const child of managedTabs)
             child.setSelectionMode(selectionMode);
     }, [selectionMode])
 
@@ -65,7 +64,7 @@ export function useAriaTabs<ListElement extends Element, TabElement extends Elem
     useChildFlag({ activatedIndex: selectedIndex, managedChildren: managedTabs, setChildFlag: (i, selected) => managedTabs[i]?.setSelected(selected), getChildFlag: i => (managedTabs[i]?.getSelected()) });
     useChildFlag({ activatedIndex: selectedIndex, managedChildren: managedPanels, setChildFlag: (i, visible) => managedPanels[i]?.setVisible(visible), getChildFlag: i => (managedPanels[i]?.getVisible()) });
 
-    useLayoutEffect((prev) => {
+    useLayoutEffect((_prev) => {
         if (selectedIndex != null && selectionMode == "activate") {
             // TODO: We need to wait a moment so that the tab panel we want to focus
             // is actually visible (i.e. we need to wait for the child to re-render itself).
@@ -83,9 +82,9 @@ export function useAriaTabs<ListElement extends Element, TabElement extends Elem
         const [selectionModeL, setSelectionModeL] = useState<"focus" | "activate">(selectionMode);
         const { useRefElementProps, getElement } = useRefElement<TabElement>({})
         const [tabPanelId, setTabPanelId] = useState<string | undefined>(undefined)
-        const { useRandomIdProps: useTabIdProps, id: tabId, getId: getTabId } = useRandomId({ prefix: "aria-tab-" });
+        const { useRandomIdProps: useTabIdProps, id: tabId } = useRandomId({ prefix: "aria-tab-" });
         const [selected, setSelected, getSelected] = useState<boolean | null>(null);
-        const { tabbable, useListNavigationChildProps, useListNavigationSiblingProps } = useListNavigationChild({ setSelected, getSelected, tabId, setTabPanelId, setSelectionMode: setSelectionModeL, ...info });
+        const { tabbable, useListNavigationChildProps } = useListNavigationChild({ setSelected, getSelected, tabId, setTabPanelId, setSelectionMode: setSelectionModeL, ...info });
         const getIndex = useStableGetter(info.index);
 
         useEffect(() => {
@@ -117,9 +116,9 @@ export function useAriaTabs<ListElement extends Element, TabElement extends Elem
 
     const useTabPanel: UseTabPanel<TabPanelElement> = useCallback(function usePanel(info: UseTabPanelParameters) {
         //const [shouldFocus, setShouldFocus] = useState(false);
-        const [tabId, setTabId] = useState<undefined | string>(undefined);
+        const [, setTabId] = useState<undefined | string>(undefined);
         const [visible, setVisible, getVisible] = useState<boolean | null>(null);
-        const { useRandomIdProps: usePanelIdProps, useReferencedIdProps: useReferencedPanelId, id: tabPanelId } = useRandomId({ prefix: "aria-tab-panel-" });
+        const { useRandomIdProps: usePanelIdProps, id: tabPanelId } = useRandomId({ prefix: "aria-tab-panel-" });
         const { useManagedChildProps, getElement } = useManagedTabPanel<TabPanelElement>({ ...info, tabPanelId, setTabId, focus, setVisible: setVisible, getVisible: getVisible });
 
         function focus() {

@@ -21,7 +21,7 @@ interface UseAriaCheckboxParameters<I extends Element, L extends Element> extend
 export function useAriaCheckbox<InputType extends Element, LabelType extends Element>({ labelPosition, checked, onInput, disabled }: UseAriaCheckboxParameters<InputType, LabelType>) {
 
     const onInputEnhanced = (e: h.JSX.TargetedEvent<InputType | LabelType, Event>) => onInput?.(enhanceEvent(e as h.JSX.TargetedEvent<InputType, Event>, { checked: !checked }));
-    const { getInputElement, getLabelElement, useCheckboxLikeInputElement, useCheckboxLikeLabelElement } = useCheckboxLike<InputType, LabelType>({ checked: !!checked, labelPosition, role: "checkbox", disabled, onInput: onInputEnhanced });
+    const { useCheckboxLikeInputElement, useCheckboxLikeLabelElement } = useCheckboxLike<InputType, LabelType>({ checked: !!checked, labelPosition, role: "checkbox", disabled, onInput: onInputEnhanced });
 
     const useCheckboxInputElement: UseCheckboxInputElement<InputType> = useCallback(function useCheckboxInputElement({ tag }: TagSensitiveProps<InputType>) {
         const { getInputElement, useCheckboxLikeInputElementProps } = useCheckboxLikeInputElement({ tag })
@@ -38,7 +38,7 @@ export function useAriaCheckbox<InputType extends Element, LabelType extends Ele
 
         function useCheckboxInputElementProps<P extends h.JSX.HTMLAttributes<InputType>>({ ...p0 }: P) {
 
-            let props: h.JSX.HTMLAttributes<InputType> = useCheckboxLikeInputElementProps(p0);
+            const props: h.JSX.HTMLAttributes<InputType> = useCheckboxLikeInputElementProps(p0);
             props.checked ??= !!checked;
 
             if (tag == "input")
@@ -53,7 +53,7 @@ export function useAriaCheckbox<InputType extends Element, LabelType extends Ele
 
         function useCheckboxLabelElementProps<P extends h.JSX.HTMLAttributes<LabelType>>({ ...props }: P) {
             return useCheckboxLikeLabelElementProps(props);
-        };
+        }
 
         return { useCheckboxLabelElementProps };
     }, [useCheckboxLikeLabelElement, disabled, labelPosition]);

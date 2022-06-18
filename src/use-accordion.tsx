@@ -1,13 +1,13 @@
 import { h } from "preact";
-import { ManagedChildInfo, MergedProps, useChildFlag, useChildManager, useHasFocus, UseHasFocusPropsReturnType, useLayoutEffect, useLinearNavigation, useMergedProps, useRandomId, UseRandomIdPropsReturnType, useRefElement, UseReferencedIdPropsReturnType, useStableCallback, useState } from "preact-prop-helpers";
+import { ManagedChildInfo, useChildFlag, useChildManager, useHasFocus, useLinearNavigation, useMergedProps, useRandomId, UseRandomIdPropsReturnType, UseRefElementPropsReturnType, UseReferencedIdPropsReturnType, useStableCallback, useState } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { TagSensitiveProps } from "./props";
 import { usePressEventHandlers } from "./use-button";
 
 export type UseAriaAccordion<ParentElement extends Element, ChildElement extends Element> = (args: UseAriaAccordionParameters) => UseAriaAccordionReturnType<ParentElement, ChildElement>;
 export type UseAriaAccordionSection<E extends Element> = (args: UseAriaAccordionSectionParameters) => UseAriaAccordionSectionReturnType<E>;
-export type UseAriaAccordionSectionHeaderProps<E extends Element> = <P extends UseAriaAccordionSectionHeaderPropsParameters<E>>(props: P) => UseAriaAccordionSectionHeaderPropsReturnType<E, P>;
-export type UseAriaAccordionSectionBodyProps<E extends Element> = <P extends UseAriaAccordionSectionBodyPropsParameters<E>>(props: P) => UseAriaAccordionSectionBodyPropsReturnType<E, P>;
+export type UseAriaAccordionSectionHeaderProps<E extends Element> = <P extends h.JSX.HTMLAttributes<E>>(props: P) => UseAriaAccordionSectionHeaderPropsReturnType<E, P>;
+export type UseAriaAccordionSectionBodyProps<E extends Element> = <P extends h.JSX.HTMLAttributes<E>>(props: P) => UseAriaAccordionSectionBodyPropsReturnType<E, P>;
 
 
 export interface UseAriaAccordionParameters {
@@ -15,7 +15,7 @@ export interface UseAriaAccordionParameters {
     setExpandedIndex?(i: number | null): void;
 }
 
-export interface UseAriaAccordionReturnType<ParentElement extends Element, ChildElement extends Element> {
+export interface UseAriaAccordionReturnType<_ParentElement extends Element, ChildElement extends Element> {
     useAriaAccordionSection: UseAriaAccordionSection<ChildElement>;
     managedChildren: UseAriaAccordionSectionInfo[];
 }
@@ -31,16 +31,14 @@ export interface UseAriaAccordionSectionParameters extends Omit<UseAriaAccordion
     open?: boolean | undefined;
 }
 
-export interface UseAriaAccordionSectionHeaderPropsParameters<E extends Element> extends h.JSX.HTMLAttributes<E> { }
-export interface UseAriaAccordionSectionBodyPropsParameters<E extends Element> extends h.JSX.HTMLAttributes<E> { }
-
 export interface UseAriaAccordionSectionReturnType<ChildElement extends Element> {
     expanded: boolean | null;
     useAriaAccordionSectionHeader: UseAriaAccordionSectionHeader<ChildElement>;
     useAriaAccordionSectionBody: UseAriaAccordionSectionBody;
 }
-export type UseAriaAccordionSectionHeaderPropsReturnType<E extends Element, P extends UseAriaAccordionSectionHeaderPropsParameters<E>> = h.JSX.HTMLAttributes<E>;
-export type UseAriaAccordionSectionBodyPropsReturnType<E extends Element, P extends UseAriaAccordionSectionBodyPropsParameters<E>> = UseRandomIdPropsReturnType<UseReferencedIdPropsReturnType<{ role: string; } & Omit<P, "role">, "aria-labelledby">>;
+
+export type UseAriaAccordionSectionHeaderPropsReturnType<E extends Element, P extends h.JSX.HTMLAttributes<E>> = UseRefElementPropsReturnType<E, P>;
+export type UseAriaAccordionSectionBodyPropsReturnType<E extends Element, P extends h.JSX.HTMLAttributes<E>> = UseRandomIdPropsReturnType<UseReferencedIdPropsReturnType<{ role: string; } & Omit<P, "role">, "aria-labelledby">>;
 
 export type UseAriaAccordionSectionHeader<E extends Element> = ({ tag }: TagSensitiveProps<E>) => UseAriaAccordionSectionHeaderReturnType<E>;
 export interface UseAriaAccordionSectionHeaderReturnType<E extends Element> { useAriaAccordionSectionHeaderProps: UseAriaAccordionSectionHeaderProps<E>; }
@@ -52,8 +50,8 @@ export interface UseAriaAccordionPropsParameters<E extends Element> extends h.JS
 
 export function useAriaAccordion<ParentElement extends Element, ChildElement extends Element>({ expandedIndex, setExpandedIndex }: UseAriaAccordionParameters): UseAriaAccordionReturnType<ParentElement, ChildElement> {
 
-    const [lastFocusedIndex, setLastFocusedIndex, getLastFocusedIndex] = useState<number | null>(null);
-    const [currentFocusedIndex, setCurrentFocusedIndex, getCurrentFocusedIndex] = useState<number | null>(null);
+    const [lastFocusedIndex, setLastFocusedIndex, _getLastFocusedIndex] = useState<number | null>(null);
+    const [_currentFocusedIndex, setCurrentFocusedIndex, getCurrentFocusedIndex] = useState<number | null>(null);
     const stableSetExpandedIndex = useStableCallback(setExpandedIndex ?? (() => { }));
 
     const { managedChildren: managedAccordionSections, useManagedChild: useManagedChildSection } = useChildManager<UseAriaAccordionSectionInfo>();
@@ -75,7 +73,7 @@ export function useAriaAccordion<ParentElement extends Element, ChildElement ext
         activatedIndex: lastFocusedIndex,
         managedChildren: managedAccordionSections,
         setChildFlag: (i, open) => open && managedAccordionSections[i].focus(),
-        getChildFlag: (i) => false
+        getChildFlag: (_) => false
     })
 
     const useAriaAccordionSection = useCallback<UseAriaAccordionSection<ChildElement>>((args: UseAriaAccordionSectionParameters): UseAriaAccordionSectionReturnType<ChildElement> => {
@@ -86,16 +84,16 @@ export function useAriaAccordion<ParentElement extends Element, ChildElement ext
 
 
 
-        const { randomId: bodyRandomId, useRandomIdProps: useBodyRandomIdProps, useReferencedIdProps: useReferencedBodyIdProps } = useRandomId({ prefix: "aria-accordion-section-body-" });
-        const { randomId: headRandomId, useRandomIdProps: useHeadRandomIdProps, useReferencedIdProps: useReferencedHeadIdProps } = useRandomId({ prefix: "aria-accordion-section-header-" });
+        const { useRandomIdProps: useBodyRandomIdProps, useReferencedIdProps: useReferencedBodyIdProps } = useRandomId({ prefix: "aria-accordion-section-body-" });
+        const { useRandomIdProps: useHeadRandomIdProps, useReferencedIdProps: useReferencedHeadIdProps } = useRandomId({ prefix: "aria-accordion-section-header-" });
 
-        let open = ((args.open ?? openFromParent) ?? null);
+        const open = ((args.open ?? openFromParent) ?? null);
 
         // TODO: Convert to use useManagedChild so that this hook 
         // is stable without (directly) depending on the open state.
-        const useAriaAccordionSectionHeader = useCallback(function useAriaAccordionSectionHeader({ tag }: TagSensitiveProps<ChildElement>): UseAriaAccordionSectionHeaderReturnType<ChildElement> {
+        const useAriaAccordionSectionHeader = useCallback<UseAriaAccordionSectionHeader<ChildElement>>(function useAriaAccordionSectionHeader({ ..._ }) {
 
-            const { getElement, useHasFocusProps, getFocusedInner } = useHasFocus<ChildElement>({
+            const { getElement, useHasFocusProps } = useHasFocus<ChildElement>({
                 onFocusedChanged: useCallback((focused: boolean) => {
                     if (focused)
                         setCurrentFocusedIndex(index);
@@ -110,39 +108,39 @@ export function useAriaAccordion<ParentElement extends Element, ChildElement ext
             }, []);
             const { useManagedChildProps } = useManagedChildSection<ChildElement>({ index, open, setOpenFromParent, getOpenFromParent, focus });
 
-            function useAriaAccordionSectionHeaderProps<P extends UseAriaAccordionSectionHeaderPropsParameters<ChildElement>>({ ["aria-expanded"]: ariaExpanded, ["aria-disabled"]: ariaDisabled, ...props }: P): UseAriaAccordionSectionHeaderPropsReturnType<ChildElement, P> {
+            function useAriaAccordionSectionHeaderProps<P extends h.JSX.HTMLAttributes<ChildElement>>({ ["aria-expanded"]: ariaExpanded, ["aria-disabled"]: ariaDisabled, ...props }: P): UseAriaAccordionSectionHeaderPropsReturnType<ChildElement, P> {
 
                 const onFocus = () => { setLastFocusedIndex(args.index); }
-                let onClick = () => {
+                const onClick = () => {
                     if (getOpenFromParent())
                         stableSetExpandedIndex(null);
                     else
                         stableSetExpandedIndex(args.index);
                 };
 
-                let retB = useMergedProps<ChildElement>()({ tabIndex: 0 }, usePressEventHandlers<ChildElement>(onClick, undefined)(props));
+                const retB = useMergedProps<ChildElement>()({ tabIndex: 0 }, usePressEventHandlers<ChildElement>(onClick, undefined)(props));
 
-                let ret3: h.JSX.HTMLAttributes<ChildElement>
+                const ret3: h.JSX.HTMLAttributes<ChildElement>
                     = useMergedProps<ChildElement>()(useHeadRandomIdProps(useReferencedBodyIdProps("aria-controls")({
                         "aria-expanded": (ariaExpanded ?? (!!open).toString()),
                         "aria-disabled": (ariaDisabled ?? (open ? "true" : undefined)),
                         ...useHasFocusProps(useManagedChildProps(retB))
-                    })), { onFocus });
+                    } as h.JSX.HTMLAttributes<ChildElement>)), { onFocus });
 
 
-                return useLinearNavigationProps(ret3);
-            };
+                return useLinearNavigationProps(ret3) as UseAriaAccordionSectionHeaderPropsReturnType<ChildElement, P>;
+            }
 
             return { useAriaAccordionSectionHeaderProps };
         }, [useLinearNavigationProps, index, open]);
 
 
         const useAriaAccordionSectionBody = useCallback(function useAriaAccordionSectionBody<E extends Element>() {
-            function useAriaAccordionSectionBodyProps<P extends UseAriaAccordionSectionBodyPropsParameters<E>>({ role, ...props }: P): UseAriaAccordionSectionBodyPropsReturnType<E, P> {
-                let ret1 = useReferencedHeadIdProps("aria-labelledby")({ role: role ?? "region", ...props });
-                let ret2 = useBodyRandomIdProps(ret1);
+            function useAriaAccordionSectionBodyProps<P extends h.JSX.HTMLAttributes<E>>({ role, ...props }: P): UseAriaAccordionSectionBodyPropsReturnType<E, P> {
+                const ret1 = useReferencedHeadIdProps("aria-labelledby")({ role: role ?? "region", ...props });
+                const ret2 = useBodyRandomIdProps(ret1);
                 return ret2;
-            };
+            }
             return {
                 useAriaAccordionSectionBodyProps
             }

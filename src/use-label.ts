@@ -23,11 +23,10 @@ export function useGenericLabel({ labelPrefix, inputPrefix, backupText }: UseGen
     const [inputElement, setInputElement] = useState<Element | null>(null);
     const { getElement: getLabelElement, useRefElementProps: useLabelRefElementProps } = useRefElement<any>({ onElementChange: setLabelElement });
     const { getElement: getInputElement, useRefElementProps: useInputRefElementProps } = useRefElement<any>({ onElementChange: setInputElement });
-    const { useRandomIdProps: useLabelRandomIdProps, id: labelId, randomId: labelRandomId, useReferencedIdProps: useReferencedLabelIdProps } = useRandomId({ prefix: labelPrefix });
-    const { useRandomIdProps: useInputRandomIdProps, id: inputId, randomId: inputRandomId, useReferencedIdProps: useReferencedInputIdProps } = useRandomId({ prefix: inputPrefix });
+    const { useRandomIdProps: useLabelRandomIdProps, id: labelId, useReferencedIdProps: useReferencedLabelIdProps } = useRandomId({ prefix: labelPrefix });
+    const { useRandomIdProps: useInputRandomIdProps, id: inputId, useReferencedIdProps: useReferencedInputIdProps } = useRandomId({ prefix: inputPrefix });
 
     const labelHasMounted = !!(labelElement);
-    const inputHasMounted = !!(inputElement);
 
     const useGenericLabelLabel = useCallback(function useGenericLabelLabel<E extends Element>() {
         return {
@@ -38,6 +37,8 @@ export function useGenericLabel({ labelPrefix, inputPrefix, backupText }: UseGen
     const useGenericLabelInput = useCallback(function useGenericLabelInput<E extends Element>() {
         return {
             useGenericLabelInputProps: <P extends h.JSX.HTMLAttributes<E>>({ "aria-labelledby": ariaLabelledby, "aria-label": ariaLabel, ...props }: P) => {
+                console.assert(!ariaLabelledby);
+
                 return (useInputRandomIdProps(
                     useReferencedLabelIdProps("aria-labelledby")(
                         useInputRefElementProps(
@@ -83,7 +84,7 @@ export type UseInputLabelInput = <E extends Element>() => {
  */
 export function useInputLabel({ labelPrefix, inputPrefix } = { labelPrefix: "label-", inputPrefix: "input-" }) {
 
-    const { useGenericLabelInput, useGenericLabelLabel, useReferencedInputIdProps, useReferencedLabelIdProps, inputId, labelId, inputElement, getInputElement, labelElement, getLabelElement } = useGenericLabel({ labelPrefix, inputPrefix });
+    const { useGenericLabelInput, useGenericLabelLabel, useReferencedInputIdProps, inputId, labelId, inputElement, getInputElement, labelElement, getLabelElement } = useGenericLabel({ labelPrefix, inputPrefix });
 
     const useInputLabelLabel: UseInputLabelLabel = useCallback(function useInputLabelLabel<E extends Element>({ tag }: TagSensitiveProps<E>) {
         const { useGenericLabelLabelProps } = useGenericLabelLabel<E>();
@@ -167,7 +168,7 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
 
     const stableOnInput = useStableCallback((e: h.JSX.TargetedEvent<InputType> | h.JSX.TargetedEvent<LabelType>) => { e.preventDefault(); onInput?.(e as h.JSX.TargetedEvent<InputType>); });
 
-    const { inputId, labelId, useInputLabelInput: useILInput, useInputLabelLabel: useILLabel, getLabelElement, getInputElement } = useInputLabel({ labelPrefix: "aria-checkbox-label-", inputPrefix: "aria-checkbox-input-" });
+    const { useInputLabelInput: useILInput, useInputLabelLabel: useILLabel, getLabelElement, getInputElement } = useInputLabel({ labelPrefix: "aria-checkbox-label-", inputPrefix: "aria-checkbox-input-" });
 
 
 
@@ -210,7 +211,7 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
                 // even if it's an input element.
                 props.inert = true;
                 props.tabIndex = -1;
-                props.onFocus = e => getLabelElement().focus();
+                props.onFocus = _ => getLabelElement().focus();
             }
             else {
                 if (tag === "input") {
@@ -237,7 +238,7 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
 
         function useCheckboxLikeLabelElementProps<P extends h.JSX.HTMLAttributes<LabelType>>({ ...p0 }: P) {
 
-            let newProps: h.JSX.HTMLAttributes<LabelType> = usePressEventHandlers<LabelType>(disabled || !handlesInput(tag, labelPosition, "label-element") ? undefined : stableOnInput, undefined)({});
+            const newProps: h.JSX.HTMLAttributes<LabelType> = usePressEventHandlers<LabelType>(disabled || !handlesInput(tag, labelPosition, "label-element") ? undefined : stableOnInput, undefined)({});
 
             if (labelPosition == "wrapping") {
                 if (p0.tabIndex == null)

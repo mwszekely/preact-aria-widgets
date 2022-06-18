@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { MergedProps, useHasFocus, useLayoutEffect, useListNavigation, UseListNavigationChildInfo, UseListNavigationChildParameters, UseListNavigationChildPropsReturnType, UseListNavigationParameters, useMergedProps, useRefElement, UseRefElementPropsReturnType, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
+import { MergedProps, useHasFocus, useLayoutEffect, useListNavigation, UseListNavigationChildInfo, UseListNavigationChildPropsReturnType, UseListNavigationParameters, useMergedProps, useRefElement, UseRefElementPropsReturnType, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
 import { useCallback, useEffect } from "preact/hooks";
 import { EventDetail, TagSensitiveProps } from "./props";
 import { usePressEventHandlers } from "./use-button";
@@ -37,13 +37,13 @@ export function useAriaListboxMulti<ParentElement extends Element, ChildElement 
 
     const { useHasFocusProps, getFocusedInner } = useHasFocus<E>({});
 
-    const { useGenericLabelInput, useGenericLabelLabel, useReferencedInputIdProps, useReferencedLabelIdProps } = useGenericLabel({ labelPrefix: "aria-listbox-label-", inputPrefix: "aria-listbox-" })
+    const { useGenericLabelInput, useGenericLabelLabel } = useGenericLabel({ labelPrefix: "aria-listbox-label-", inputPrefix: "aria-listbox-" })
     const { useListNavigationChild, useListNavigationProps, navigateToIndex, managedChildren, currentTypeahead, focusCurrent, tabbableIndex, invalidTypeahead } = useListNavigation<ChildElement, UseListboxMultiItemInfo<ChildElement>>({ ...args, shouldFocusOnChange: getFocusedInner });
     const { useGenericLabelInputProps } = useGenericLabelInput<E>();
 
     const childCount = managedChildren.length;
 
-    const [shiftHeld, setShiftHeld, getShiftHeld] = useState(false);
+    const [, setShiftHeld, getShiftHeld] = useState(false);
 
     const typeaheadInProgress = (!!currentTypeahead);
 
@@ -61,7 +61,7 @@ export function useAriaListboxMulti<ParentElement extends Element, ChildElement 
         const { useRefElementProps, getElement } = useRefElement<E>({});
         const stableOnSelect = useStableCallback(info.onSelect ?? (() => { }));
 
-        const { tabbable, useListNavigationSiblingProps, useListNavigationChildProps } = useListNavigationChild({ ...info, setTypeaheadInProgress });
+        const { tabbable, useListNavigationChildProps } = useListNavigationChild({ ...info, setTypeaheadInProgress });
 
         useLayoutEffect(() => {
             const element = getElement();
@@ -113,6 +113,6 @@ export function useAriaListboxMulti<ParentElement extends Element, ChildElement 
 
     function onKeyDown(e: KeyboardEvent) { if (e.key == "Shift") setShiftHeld(true); }
     function onKeyUp(e: KeyboardEvent) { if (e.key == "Shift") setShiftHeld(false); }
-    function onFocusOut(e: FocusEvent) { setShiftHeld(false); }
+    function onFocusOut(_: FocusEvent) { setShiftHeld(false); }
 
 }

@@ -1,8 +1,7 @@
-import { ComponentChildren, createContext, h, Ref } from "preact";
+import { h } from "preact";
+import { ManagedChildInfo, MergedProps, useChildManager, useMergedProps, UseRefElementPropsReturnType } from "preact-prop-helpers";
+import { StateUpdater, useCallback, useState } from "preact/hooks";
 import { EventDetail, TagSensitiveProps } from "./props";
-import { ManagedChildInfo, MergedProps, useAsyncHandler, useChildManager, useMergedProps } from "preact-prop-helpers";
-import { memo } from "preact/compat";
-import { StateUpdater, useCallback, useContext, useMemo, useState } from "preact/hooks";
 
 
 
@@ -33,7 +32,7 @@ export interface UseAriaSliderArguments {
 
 export interface UseAriaSliderThumbReturnType<E extends HTMLElement> {
     getElement: () => E | null;
-    useAriaSliderThumbProps: <P extends UseAriaSliderThumbProps<E>>(props: P) => MergedProps<E, P, P>;
+    useAriaSliderThumbProps: <P extends UseAriaSliderThumbProps<E>>(props: P) => UseRefElementPropsReturnType<E, MergedProps<E, h.JSX.HTMLAttributes<E>, P>>;
     min: number;
     max: number;
 }
@@ -41,15 +40,15 @@ export interface UseAriaSliderThumbReturnType<E extends HTMLElement> {
 export type UseAriaSliderThumb = <E extends HTMLElement>(props: UseAriaSliderThumbArguments<E>) => UseAriaSliderThumbReturnType<E>;
 
 export function useAriaSlider({ max: maxParent, min: minParent }: UseAriaSliderArguments) {
-    const { useManagedChild, childCount, deletedIndices, getMountIndex, indicesByElement, managedChildren, mountedChildren, totalChildrenMounted, totalChildrenUnounted } = useChildManager<AriaSliderThumbInfo>();
+    const { useManagedChild } = useChildManager<AriaSliderThumbInfo>();
 
-    const useAriaSliderThumb = useCallback(function useAriaSliderThumb<E extends HTMLElement>({ index, onValueChange, value, valueText, tag, min: minOverride, max: maxOverride, ...rest }: UseAriaSliderThumbArguments<E>): UseAriaSliderThumbReturnType<E> {
+    const useAriaSliderThumb = useCallback(function useAriaSliderThumb<E extends HTMLElement>({ index, onValueChange, value, valueText, tag, min: minOverride, max: maxOverride, ..._ }: UseAriaSliderThumbArguments<E>): UseAriaSliderThumbReturnType<E> {
         const [minParentCopy, setMinParentCopy] = useState(minParent);
         const [maxParentCopy, setMaxParentCopy] = useState(maxParent);
         const { getElement, useManagedChildProps } = useManagedChild<E>({ index, setMin: setMinParentCopy, setMax: setMaxParentCopy });
 
-        let min = (minOverride ?? minParentCopy);
-        let max = (maxOverride ?? maxParentCopy);
+        const min = (minOverride ?? minParentCopy);
+        const max = (maxOverride ?? maxParentCopy);
 
         return {
             getElement,

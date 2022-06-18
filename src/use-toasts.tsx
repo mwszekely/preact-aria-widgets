@@ -4,10 +4,8 @@ import { StateUpdater, useCallback, useEffect, useLayoutEffect } from "preact/ho
 
 
 
-
-export interface UseToastsParameters {
-
-}
+/* eslint-disable @typescript-eslint/no-empty-interface */
+export interface UseToastsParameters { }
 
 export interface UseToastParameters extends Omit<ToastInfo, "dismissed" | "index" | "getStatus" | "setStatus" | "focus"> {
     politeness?: "polite" | "assertive";
@@ -28,7 +26,7 @@ export type UseToast = <ToastType extends Element>(args: UseToastParameters) => 
     useToastProps: <P extends h.JSX.HTMLAttributes<ToastType>>(props: P) => MergedProps<ToastType, UseRefElementPropsReturnType<ToastType, {}>, P>; 
 };
 
-export function useToasts<ContainerType extends Element>({ }: UseToastsParameters) {
+export function useToasts<ContainerType extends Element>({ ..._ }: UseToastsParameters) {
 
     // "Pointer" to whatever index toast is currently being shown.
     // E.g. it's 0 when the first toast is shown, then when dismissed, it becomes 1.
@@ -40,11 +38,11 @@ export function useToasts<ContainerType extends Element>({ }: UseToastsParameter
     const [politeness, setPoliteness] = useState<"polite" | "assertive">("polite");
 
     const { getElement, useRefElementProps } = useRefElement<ContainerType>({});
-    const { indicesByElement, managedChildren, mountedChildren: toastQueue, useManagedChild, getMountIndex } = useChildManager<ToastInfo>();
+    const { mountedChildren: toastQueue, useManagedChild, getMountIndex } = useChildManager<ToastInfo>();
 
     // Any time a new toast mounts, update our bottommostToastIndex to point to it if necessary
     // ("necessary" just meaning if it's the first toast ever or all prior toasts have been dismissed)
-    const onAnyToastMounted = useCallback((index: number) => {
+    const onAnyToastMounted = useCallback((_index: number) => {
         let bottom = getActiveToastIndex();
         while (bottom < toastQueue.length && (bottom < 0 || toastQueue[bottom]?.dismissed)) {
             ++bottom;
@@ -90,7 +88,6 @@ export function useToasts<ContainerType extends Element>({ }: UseToastsParameter
         });
 
         const { randomId: toastId } = useRandomId({ prefix: "toast-" });
-        //const [toastId, setToastId] = useState(() => generateRandomId("toast-"));
         useLayoutEffect(() => { setPoliteness(politeness ?? "polite"); }, [politeness]);
 
 
@@ -142,6 +139,8 @@ export function useToasts<ContainerType extends Element>({ }: UseToastsParameter
     }, []);
 
     function useToastContainerProps<P extends h.JSX.HTMLAttributes<ContainerType>>({ role, "aria-live": ariaLive, "aria-relevant": ariaRelevant, ...props }: P) {
+        console.assert(!role);
+
         return useMergedProps<ContainerType>()(useRefElementProps({ class: "toasts-container", role: "status", "aria-live": politeness ?? ariaLive ?? "polite", "aria-relevant": ariaRelevant ?? "additions" }), props);
     }
 

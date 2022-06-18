@@ -1,6 +1,5 @@
 import { h } from "preact";
 import { MergedProps, useEffect, useGlobalHandler, useMergedProps, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
-import { useRef } from "preact/hooks";
 import { enhanceEvent, EventDetail, TagSensitiveProps } from "./props";
 
 let pulse = ("vibrate" in navigator) ? (() => navigator.vibrate(10)) : (() => { });
@@ -35,7 +34,7 @@ export type UseAriaButtonPropsReturnType<E extends EventTarget, P extends UseAri
     MergedProps<E, { "aria-pressed": string | undefined; }, Omit<P, "aria-pressed" | "tabIndex" | "role">>;
 
 
-function excludes<E extends EventTarget>(target: "click" | "space" | "enter", exclude: undefined | { click?: "exclude" | undefined, space?: "exclude" | undefined, enter?: "exclude" | undefined }) {
+function excludes(target: "click" | "space" | "enter", exclude: undefined | { click?: "exclude" | undefined, space?: "exclude" | undefined, enter?: "exclude" | undefined }) {
     if (exclude?.[target])
         return true;
 
@@ -57,7 +56,7 @@ function nodeSelectedTextLength(element: EventTarget | null | undefined) {
         const selection = window.getSelection();
        
         for (let i = 0; i < (selection?.rangeCount ?? 0); ++i) {
-            let range = selection!.getRangeAt(i)!;
+            const range = selection!.getRangeAt(i)!;
             if (element.contains(range.endContainer) && !selection?.isCollapsed) {
                 return selection!.toString().length;
             }
@@ -110,7 +109,7 @@ export function usePressEventHandlers<E extends EventTarget>(onClickSync: ((e: h
     // no longer active.
     const [textSelectedDuringActivationStartTime, setTextSelectedDuringActivationStartTime] = useState<Date | null>(null);
 
-    useGlobalHandler(document, "selectionchange", e => {
+    useGlobalHandler(document, "selectionchange", _ => {
         setTextSelectedDuringActivationStartTime(prev => nodeSelectedTextLength(getElement()) == 0? null : prev != null? prev : new Date());
     });
 
@@ -119,15 +118,15 @@ export function usePressEventHandlers<E extends EventTarget>(onClickSync: ((e: h
             setTextSelectedDuringActivationStartTime(null);
     }, [active == 0]);
 
-    const onActiveStart = useStableCallback<NonNullable<typeof onClickSync>>((e) => {
+    const onActiveStart = useStableCallback<NonNullable<typeof onClickSync>>((_) => {
         setActive(a => ++a);
     });
 
     const onActiveStop = useStableCallback<NonNullable<typeof onClickSync>>((e) => {
         setActive(a => Math.max(0, --a));
 
-        let currentTime = new Date();
-        let timeDifference = (textSelectedDuringActivationStartTime == null? null : +currentTime - +textSelectedDuringActivationStartTime);
+        const currentTime = new Date();
+        const timeDifference = (textSelectedDuringActivationStartTime == null? null : +currentTime - +textSelectedDuringActivationStartTime);
 
         // If we're selecting text (heuristically determined by selecting for longer than 1/4 a second, or more than 2 characters)
         // then this isn't a press event.
@@ -199,7 +198,7 @@ export function usePressEventHandlers<E extends EventTarget>(onClickSync: ((e: h
             onActiveStop(e);
     };
 
-    const onBlur = (e: h.JSX.TargetedEvent<E>) => {
+    const onBlur = (_: h.JSX.TargetedEvent<E>) => {
         setActive(0);
     }
 
