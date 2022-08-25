@@ -3,11 +3,20 @@ import { useGlobalHandler, useHasFocus, useMergedProps, usePassiveState, useRand
 import { useCallback, useEffect } from "preact/hooks";
 
 export type UseTooltipTrigger<TriggerType extends Element> = () => { useTooltipTriggerProps: ({ ...props }: h.JSX.HTMLAttributes<TriggerType>) => h.JSX.HTMLAttributes<TriggerType> };
-export type UseTooltip<TooltipType extends Element> = () => { useTooltipProps: ({ ...props }: h.JSX.HTMLAttributes<TooltipType>) => h.JSX.HTMLAttributes<TooltipType> };
+export interface UseTooltipParameters { mouseoverDelay?: number, mouseoutDelay?: number, focusDelay?: number };
+export type UseTooltip<TriggerType extends HTMLElement | SVGElement, TooltipType extends Element> = (args: UseTooltipParameters) => UseTooltipReturnType<TriggerType, TooltipType>;
+export interface UseTooltipReturnType<TriggerType extends HTMLElement | SVGElement, TooltipType extends Element> {
+    useTooltip: () => {
+        useTooltipProps: ({ ...props }: h.JSX.HTMLAttributes<TooltipType>) => h.JSX.HTMLAttributes<TooltipType>;
+    };
+    useTooltipTrigger: UseTooltipTrigger<TriggerType>;
+    isOpen: boolean;
+    getIsOpen: () => boolean;
+}
 
 function returnFalse() { return false; }
 
-export function useAriaTooltip<TriggerType extends HTMLElement | SVGElement, TooltipType extends HTMLElement | SVGElement>({ mouseoverDelay, mouseoutDelay, focusDelay }: { mouseoverDelay?: number, mouseoutDelay?: number, focusDelay?: number }) {
+export function useAriaTooltip<TriggerType extends HTMLElement | SVGElement, TooltipType extends HTMLElement | SVGElement>({ mouseoverDelay, mouseoutDelay, focusDelay }: UseTooltipParameters): UseTooltipReturnType<TriggerType, TooltipType> {
 
     mouseoverDelay ??= 400;
     mouseoutDelay ??= 40;

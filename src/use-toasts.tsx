@@ -9,7 +9,7 @@ import { StateUpdater, useCallback, useEffect, useLayoutEffect } from "preact/ho
 export interface UseToastsParameters { }
 
 export type UseToastParameters = {
-    info: Omit<ToastInfoBase, "dismissed" | "getStatus" | "setStatus" | "focus">;
+    info: Omit<ToastInfoBase, "dismissed" | "getStatus" | "setStatus" | "focus" | "flags">;
     politeness?: "polite" | "assertive";
     timeout: number | null;
 }
@@ -84,7 +84,7 @@ export function useToasts<ContainerType extends Element>({ ..._ }: UseToastsPara
         changeIndex(activeToastIndex);
     }, [activeToastIndex])
 
-    const useToast: UseToast = useCallback(({ politeness, timeout, info: { flags, index } }: UseToastParameters): UseToastReturnType => {
+    const useToast: UseToast = useCallback(({ politeness, timeout, info: { index } }: UseToastParameters): UseToastReturnType => {
         const [status, setStatus, getStatus] = useState<"pending" | "active" | "dismissed">("pending");
         const dismissed = (status === "dismissed");
         const dismiss = useCallback(() => { setStatus("dismissed") }, []);
@@ -107,7 +107,7 @@ export function useToasts<ContainerType extends Element>({ ..._ }: UseToastsPara
             }
         }, []);
 
-        const __: void = useManagedChild({ info: { dismissed, index, setStatus, getStatus, focus, flags } });
+        const __: void = useManagedChild({ info: { dismissed, index, setStatus, getStatus, focus, flags: {} } });
 
         const isActive = (status === "active");
         const [triggerIndex, setTriggerIndex] = useState(1);
