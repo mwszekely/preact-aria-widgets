@@ -1,23 +1,20 @@
 
-import { createContext, Fragment, h, render, VNode } from "preact";
-import { useAnimationFrame, useDraggable, useDroppable, useElementSize, useFocusTrap, useHasFocus, useMergedProps, useRandomId, useState } from "preact-prop-helpers";
-import { forwardRef, memo } from "preact/compat";
-import { useCallback, useContext, useRef } from "preact/hooks";
+import { createContext, render } from "preact/compat";
+import { h } from "preact";
+import { generateRandomId, useDraggable, useDroppable, useFocusTrap, useHasFocus, useMergedProps, useState } from "preact-prop-helpers";
+import { memo } from "preact/compat";
+import { useContext, useRef } from "preact/compat";
 import { EventDetail } from "../props";
 import { useAriaAccordion, UseAriaAccordionSection } from "../use-accordion";
 import { useAriaCheckbox } from "../use-checkbox";
-import { CheckboxGroupChangeEvent, useCheckboxGroup, UseCheckboxGroupChild, UseCheckboxGroupChildInfo } from "../use-checkbox-group";
+import { CheckboxGroupChangeEvent, useCheckboxGroup, UseCheckboxGroupChild, UseCheckboxGroupChildInfoBase } from "../use-checkbox-group";
 import { useAriaDialog } from "../use-dialog";
-import { useAriaListboxMulti, UseListboxMultiItem, UseListboxMultiItemInfo, UseListboxMultiItemParameters } from "../use-listbox-multi";
+import { useAriaListboxMulti, UseListboxMultiItem } from "../use-listbox-multi";
 import { useAriaListboxSingle, UseListboxSingleItem, UseListboxSingleItemInfo } from "../use-listbox-single";
 import { useAriaMenu, UseMenuChildInfo, UseMenuItem } from "../use-menu";
-import { useTable, UseTableRow } from "../use-table";
+import { useAriaRadioGroup, UseAriaRadioInfoBase, UseRadio } from "../use-radio-group";
 import { useAriaTabs, UseTab, UseTabInfo, UseTabPanel } from "../use-tabs";
 import { useAriaTooltip } from "../use-tooltip";
-import { useAriaRadioGroup, UseAriaRadioInfo, UseRadio } from "../use-radio-group"
-import { DemoUseInterval } from "./demos/use-interval";
-import { DemoUseRovingTabIndex } from "./demos/use-roving-tab-index";
-import { DemoUseTimeout } from "./demos/use-timeout";
 
 const RandomWords = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.".split(" ");
 
@@ -28,7 +25,7 @@ type E2 = E["className"]
 const DemoUseDroppable = () => {
     const { droppedFiles, droppedStrings, filesForConsideration, stringsForConsideration, useDroppableProps, dropError } = useDroppable<HTMLDivElement>({ effect: "copy" });
 
-    const { ref } = useMergedProps<HTMLInputElement>()({}, { ref: useRef<HTMLInputElement>(null!) })
+    const { ref } = useMergedProps<HTMLInputElement>({}, { ref: useRef<HTMLInputElement>(null!) })
 
     const p = useDroppableProps({ className: "demo droppable" });
 
@@ -99,12 +96,10 @@ const DemoUseFocusTrapChild = memo(({ setActive, active, depth }: { active: bool
     );
 });
 
-const UseAccordionSectionContext = createContext<UseAriaAccordionSection<HTMLButtonElement>>(null!);
+const UseAccordionSectionContext = createContext<UseAriaAccordionSection<HTMLButtonElement, HTMLDivElement>>(null!);
 const DemoUseAccordion = memo(() => {
 
-    const [expandedIndex, setExpandedIndex] = useState<number | null>(0);
-
-    const { useAriaAccordionSection } = useAriaAccordion<HTMLDivElement, HTMLButtonElement>({ expandedIndex, setExpandedIndex })
+    const { useAriaAccordionSection } = useAriaAccordion<HTMLButtonElement, HTMLDivElement>({ initialIndex: 0 })
 
     return (
         <UseAccordionSectionContext.Provider value={useAriaAccordionSection}>
@@ -122,10 +117,7 @@ const DemoUseAccordion = memo(() => {
 const DemoAccordionSection = memo(({ index }: { index: number }) => {
 
     const useAccordionSection = useContext(UseAccordionSectionContext);
-    const { expanded, useAriaAccordionSectionBody, useAriaAccordionSectionHeader } = useAccordionSection({ index });
-
-    const { useAriaAccordionSectionBodyProps } = useAriaAccordionSectionBody<HTMLDivElement>();
-    const { useAriaAccordionSectionHeaderProps } = useAriaAccordionSectionHeader({ tag: "button" });
+    const { expanded, useAriaAccordionSectionBodyProps, useAriaAccordionSectionHeaderProps } = useAccordionSection({ info: { index, flags: {} } });
 
     const p = useAriaAccordionSectionBodyProps({ className: "accordion-section-body", hidden: !expanded });
     p.id;
@@ -157,9 +149,9 @@ const Checkbox1 = memo(() => {
 
     const [checked, setChecked] = useState(false);
 
-    const { useCheckboxInputElement, useCheckboxLabelElement } = useAriaCheckbox<HTMLInputElement, HTMLLabelElement>({ disabled: false, checked, labelPosition: "separate", onInput: e => setChecked(e[EventDetail].checked) });
-    const { useCheckboxInputElementProps } = useCheckboxInputElement({ tag: "input" });
-    const { useCheckboxLabelElementProps } = useCheckboxLabelElement({ tag: "label" });
+    const { useCheckboxInputElement, useCheckboxLabelElement } = useAriaCheckbox<HTMLInputElement, HTMLLabelElement>({ disabled: false, checked, labelPosition: "separate", onInput: e => setChecked(e[EventDetail].checked), inputTag: "input", labelTag: "label" });
+    const { useCheckboxInputElementProps } = useCheckboxInputElement();
+    const { useCheckboxLabelElementProps } = useCheckboxLabelElement();
 
     return (
         <div>
@@ -173,9 +165,9 @@ const Checkbox2 = memo(() => {
 
     const [checked, setChecked] = useState(false);
 
-    const { useCheckboxLabelElement, useCheckboxInputElement } = useAriaCheckbox<HTMLInputElement, HTMLLabelElement>({ disabled: false, labelPosition: "wrapping", onInput: e => setChecked(e[EventDetail].checked), checked });
-    const { useCheckboxInputElementProps } = useCheckboxInputElement({ tag: "input" });
-    const { useCheckboxLabelElementProps } = useCheckboxLabelElement({ tag: "label" });
+    const { useCheckboxLabelElement, useCheckboxInputElement } = useAriaCheckbox<HTMLInputElement, HTMLLabelElement>({ disabled: false, labelPosition: "wrapping", onInput: e => setChecked(e[EventDetail].checked), checked, inputTag: "input", labelTag: "label" });
+    const { useCheckboxInputElementProps } = useCheckboxInputElement();
+    const { useCheckboxLabelElementProps } = useCheckboxLabelElement();
 
     return (
         <div>
@@ -185,65 +177,29 @@ const Checkbox2 = memo(() => {
 });
 
 
-const CheckboxGroupContext = createContext<UseCheckboxGroupChild<HTMLInputElement, UseCheckboxGroupChildInfo>>(null!);
+const CheckboxGroupContext = createContext<UseCheckboxGroupChild<HTMLInputElement, HTMLLabelElement, string, UseCheckboxGroupChildInfoBase<string>>>(null!);
 
 const DemoUseCheckboxGroup = memo(() => {
 
-    const onUpdateChildren = (event: CheckboxGroupChangeEvent<h.JSX.TargetedEvent<HTMLInputElement>>): void => {
-        const value = event[EventDetail].childrenChecked;
-        let selectedValues = new Set<number>();
-        for (let i = 0; i < 10; ++i) {
-            if (value === false) { /* Do nothing */ }
-            else if (value === true)
-                selectedValues.add(i);
-            else if (value.get(i) === true)
-                selectedValues.add(i);
-
-        }
-
-        setSelectedValues(selectedValues);
-    };
-
 
     const { useHasFocusProps, getFocusedInner } = useHasFocus<HTMLDivElement>({})
-    const { useCheckboxGroupParentProps: useCheckboxGroupCheckboxProps, useCheckboxGroupChild, parentIsChecked: selfIsChecked, parentPercentChecked: percentChecked, onCheckboxGroupParentInput: onCheckboxGroupInput } = useCheckboxGroup<HTMLInputElement, UseCheckboxGroupChildInfo>({ shouldFocusOnChange: getFocusedInner, onUpdateChildren });
-    const { useCheckboxInputElement, useCheckboxLabelElement } = useAriaCheckbox<HTMLInputElement, HTMLLabelElement>({ checked: selfIsChecked, disabled: false, labelPosition: "separate", onInput: onCheckboxGroupInput as any });
+    const { useCheckboxGroupChild, parentIsChecked: selfIsChecked, parentPercentChecked: percentChecked, checkboxes, currentTypeahead, invalidTypeahead, useCheckboxGroupParentInput } = useCheckboxGroup<HTMLInputElement, HTMLLabelElement, string, UseCheckboxGroupChildInfo>({ initialIndex: 0 });
+    //const { useCheckboxInputElement, useCheckboxLabelElement } = useAriaCheckbox<HTMLInputElement, HTMLLabelElement>({ checked: selfIsChecked, disabled: false, labelPosition: "separate", onInput: onCheckboxGroupInput as any, inputTag: "input", labelTag: "label" });
 
-    const { useCheckboxInputElementProps } = useCheckboxInputElement({ tag: "input" });
-    const { useCheckboxLabelElementProps } = useCheckboxLabelElement({ tag: "label" });
-    const [selectedValues, setSelectedValues] = useState<Set<number>>(new Set());
-
+    const { useCheckboxGroupParentInputProps, useCheckboxGroupParentLabelProps } = useCheckboxGroupParentInput({ inputTag: "input", labelTag: "label", disabled: false, labelPosition: "separate" })
 
     return <div class="demo">
         <CheckboxGroupContext.Provider value={useCheckboxGroupChild}>
             <div>
-                <input {...useCheckboxInputElementProps(useCheckboxGroupCheckboxProps({}))} />
-                <label {...useCheckboxLabelElementProps({})}>All checked?</label>
+                <input {...useCheckboxGroupParentInputProps({})} />
+                <label {...useCheckboxGroupParentLabelProps({})}>All checked?</label>
             </div>
             <div {...useHasFocusProps({ style: { "display": "flex", "flexDirection": "column" } })} >
 
                 {Array.from((function* () {
                     for (let i = 0; i < 10; ++i) {
-                        function setSelected2(selected: boolean) {
 
-                            setSelectedValues(selectedValues => {
-                                let next = new Set(selectedValues);
-
-                                if (selected && !next.has(i)) {
-                                    next.add(i);
-                                    return next;
-                                }
-                                else if (!selected && next.has(i)) {
-                                    next.delete(i);
-                                    return next;
-                                }
-
-                                return selectedValues;
-                            });
-
-                        }
-
-                        yield <DemoUseCheckboxGroupChild key={i} index={i} checked={!!selectedValues.has(i)} setChecked={setSelected2} />
+                        yield <DemoUseCheckboxGroupChild key={i} index={i} />
                     }
                 })())}
             </div>
@@ -252,20 +208,34 @@ const DemoUseCheckboxGroup = memo(() => {
 });
 
 
-const DemoUseCheckboxGroupChild = memo(({ index, checked, setChecked }: { index: number, checked: boolean | "mixed", setChecked(selected: boolean | "mixed"): void }) => {
-    const { randomId } = useRandomId();
+const DemoUseCheckboxGroupChild = memo(({ index }: { index: number }) => {
+    const [checked, setChecked, getChecked] = useState(false);
     const useCheckboxGroupChild = useContext(CheckboxGroupContext);
     let text = `Number ${index + 1} checkbox ${checked ? "(checked)" : ""}`;
-    const { tabbable, useCheckboxGroupChildProps } = useCheckboxGroupChild({ index, text, checked, id: randomId });
-    text = `Number ${index + 1} checkbox ${checked ? "(checked)" : ""} ${tabbable ? "(tabbble)" : ""}`;
-    const { useCheckboxInputElement, useCheckboxLabelElement } = useAriaCheckbox<HTMLInputElement, HTMLLabelElement>({ checked, disabled: false, labelPosition: "separate", onInput: e => { setChecked(e[EventDetail].checked); } });
 
-    const { useCheckboxInputElementProps } = useCheckboxInputElement({ tag: "input" });
-    const { useCheckboxLabelElementProps } = useCheckboxLabelElement({ tag: "label" });
+    const { 
+        tabbable, 
+        useCheckboxGroupChildInputProps, 
+        useCheckboxGroupChildLabelProps 
+    } = useCheckboxGroupChild({ 
+        onInput: e => setChecked(e[EventDetail].checked), 
+        info: {
+            index, 
+            text,
+            flags: {}, 
+        }, 
+        checked, 
+        disabled: false, 
+        inputTag: "input", 
+        labelTag: "label", 
+        labelPosition: "separate" 
+    });
+    text = `Number ${index + 1} checkbox ${checked ? "(checked)" : ""} ${tabbable ? "(tabbble)" : ""}`;
+    //const { useCheckboxInputElement, useCheckboxLabelElement } = useAriaCheckbox<HTMLInputElement, HTMLLabelElement>({ checked, disabled: false, labelPosition: "separate", onInput: e => { setChecked(e[EventDetail].checked); }, inputTag: "input", labelTag: "label" });
 
     return (<div>
-        <input {...useCheckboxInputElementProps(useCheckboxGroupChildProps({}))} />
-        <label {...useCheckboxLabelElementProps({})}>{text}</label>
+        <input {...useCheckboxGroupChildInputProps({})} />
+        <label {...useCheckboxGroupChildLabelProps({})}>{text}</label>
     </div>
     );
 });
@@ -275,8 +245,8 @@ const DemoUseDialog = memo(() => {
     const onClose = (() => setOpen(false));
     const [open, setOpen] = useState(false);
 
-    const { useDialogBackdrop, useDialogBody, useDialogProps, useDialogTitle } = useAriaDialog<HTMLDivElement>({ open, onClose });
-    const { useDialogBackdropProps } = useDialogBackdrop<HTMLDivElement>();
+    const { useDialogBackdrop, useDialogBody, useDialogProps, useDialogTitle } = useAriaDialog<HTMLDivElement, HTMLDivElement, HTMLDivElement>({ open, onClose: () => { onClose(); } });
+    const { useDialogBackdropProps } = useDialogBackdrop();
     const { useDialogBodyProps } = useDialogBody({ descriptive: true });
     const { useDialogTitleProps } = useDialogTitle();
     return (
@@ -299,21 +269,23 @@ const DemoUseDialog = memo(() => {
 });
 
 const RadioWrapContext = createContext(false);
-const RadioContext = createContext<UseRadio<number, HTMLInputElement, HTMLLabelElement, UseAriaRadioInfo>>(null!);
+const RadioContext = createContext<UseRadio<number, HTMLInputElement, HTMLLabelElement, UseAriaRadioInfoBase>>(null!);
 const DemoUseRadioGroup = memo(() => {
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [wrap, setWrap] = useState(useContext(RadioWrapContext));
-    const { useRadio, useRadioGroupProps, anyRadiosFocused } = useAriaRadioGroup<number, HTMLDivElement, HTMLInputElement, HTMLLabelElement, UseAriaRadioInfo>({
+    const { useRadio, useRadioGroupProps } = useAriaRadioGroup<number, HTMLDivElement, HTMLLabelElement, HTMLInputElement, HTMLLabelElement, UseAriaRadioInfoBase>({
         name: "radio-demo-1",
         onInput: (e) => setSelectedIndex(+e[EventDetail].selectedValue),
-        selectedValue: selectedIndex
+        selectedValue: selectedIndex,
+        groupLabelTag: "label",
+        groupTag: "div",
+        
     });
 
 
     return <div class="demo">
         <label><input type="checkbox" checked={wrap} onInput={e => setWrap(w => !w)} /> Wrapper label</label>
         <RadioWrapContext.Provider key={wrap} value={wrap}>
-            {anyRadiosFocused.toString()}
             <RadioContext.Provider value={useRadio}>
                 <div {...useRadioGroupProps({})}>
                     {Array.from((function* () {
@@ -331,7 +303,7 @@ const DemoUseRadioGroup = memo(() => {
 
 const DemoRadio = memo(({ index }: { index: number }) => {
     const wrap = useContext(RadioWrapContext);
-    const { useRadioInput, useRadioLabel, checked, tabbable } = useContext(RadioContext)({ index, text: null, value: index, disabled: false, labelPosition: wrap ? "wrapping" : "separate" });
+    const { useRadioInput, useRadioLabel, checked, tabbable } = useContext(RadioContext)({ info: { index, text: "", flags: {} }, value: index, disabled: false, labelPosition: wrap ? "wrapping" : "separate", inputTag: "input", labelTag: "label" });
     const { useRadioInputProps } = useRadioInput({ tag: "input" });
     const { useRadioLabelProps } = useRadioLabel({ tag: "label" });
     if (wrap)
@@ -341,10 +313,17 @@ const DemoRadio = memo(({ index }: { index: number }) => {
 });
 
 
-const ListBoxSingleItemContext = createContext<UseListboxSingleItem<HTMLLIElement, UseListboxSingleItemInfo<HTMLLIElement>>>(null!);
+const ListBoxSingleItemContext = createContext<UseListboxSingleItem<HTMLLIElement, string, UseListboxSingleItemInfo<HTMLLIElement, string>>>(null!);
 const DemoUseListboxSingle = memo(() => {
     const [selectedIndex, setSelectedIndex] = useState(0);
-    const { useListboxSingleItem, useListboxSingleLabel, useListboxSingleProps } = useAriaListboxSingle<HTMLUListElement, HTMLLIElement, UseListboxSingleItemInfo<HTMLLIElement>>({ selectedIndex, onSelect: e => setSelectedIndex(e[EventDetail].selectedIndex), selectionMode: "activate" });
+    const {
+        useListboxSingleItem,
+        useListboxSingleLabel,
+        useListboxSingleProps
+    } = useAriaListboxSingle<HTMLLabelElement, HTMLUListElement, HTMLLIElement, string, UseListboxSingleItemInfo<HTMLLIElement, string>>({
+        selectedIndex,
+        onSelect: e => setSelectedIndex(e[EventDetail].selectedIndex), selectionMode: "activate", labelTag: "label", listTag: "ul"
+    });
 
 
     return <div class="demo">
@@ -363,7 +342,7 @@ const DemoUseListboxSingle = memo(() => {
 
 
 const DemoListboxSingleOption = memo(({ index }: { index: number, }) => {
-    const { getSelected, selected, tabbable, useListboxSingleItemProps } = useContext(ListBoxSingleItemContext)({ index, text: null, tag: "li" });
+    const { getSelected, selected, tabbable, useListboxSingleItemProps } = useContext(ListBoxSingleItemContext)({ index, text: `Number ${index + 1} option`, flags: {} });
     return <li {...useListboxSingleItemProps({})}>Number {index + 1} option{selected ? " (selected)" : ""}{tabbable ? " (tabbable)" : ""}</li>
 });
 
@@ -374,9 +353,7 @@ const DemoListboxSingleOption = memo(({ index }: { index: number, }) => {
 const ListBoxMultiItemContext = createContext<UseListboxMultiItem<HTMLLIElement, UseListboxMultiItemInfo<HTMLLIElement>>>(null!);
 const DemoUseListboxMulti = memo(() => {
 
-    const { useListboxMultiItem, useListboxMultiLabel, useListboxMultiProps, currentTypeahead } = useAriaListboxMulti<HTMLUListElement, HTMLLIElement, UseListboxMultiItemInfo<HTMLLIElement>>({});
-
-    const [selectedValues, setSelectedValues] = useState<Set<number>>(new Set());
+    const { useListboxMultiItem, useListboxMultiLabel, useListboxMultiProps, currentTypeahead } = useAriaListboxMulti<HTMLLabelElement, HTMLUListElement, HTMLLIElement, string, UseListboxMultiItemInfo<HTMLLIElement>>({ initialIndex: 0, labelTag: "label", listTag: "ul" });
 
 
     return <div class="demo">
@@ -384,26 +361,8 @@ const DemoUseListboxMulti = memo(() => {
             <ul {...useListboxMultiProps({})}>
                 {Array.from((function* () {
                     for (let i = 0; i < 10; ++i) {
-                        function setSelected2(selected: boolean) {
 
-                            setSelectedValues(selectedValues => {
-                                let next = new Set(selectedValues);
-
-                                if (selected && !next.has(i)) {
-                                    next.add(i);
-                                    return next;
-                                }
-                                else if (!selected && next.has(i)) {
-                                    next.delete(i);
-                                    return next;
-                                }
-
-                                return selectedValues;
-                            });
-
-                        }
-
-                        yield <DemoListboxMultiOption key={i} index={i} selected={!!selectedValues.has(i)} setSelected={setSelected2} />
+                        yield <DemoListboxMultiOption key={i} index={i} />
                     }
                 })())}
             </ul>
@@ -413,9 +372,10 @@ const DemoUseListboxMulti = memo(() => {
 });
 
 const MenuItemContext = createContext<UseMenuItem<HTMLLIElement, UseMenuChildInfo>>(null!);
-const DemoListboxMultiOption = memo(({ index, selected, setSelected }: { index: number, selected: boolean, setSelected(selected: boolean): void }) => {
+const DemoListboxMultiOption = memo(({ index }: { index: number }) => {
+    const [selected, setSelected] = useState(false);
     let text = `Number ${index + 1} option${selected ? " (selected)" : ""}`;
-    const { tabbable, useListboxMultiItemProps } = useContext(ListBoxMultiItemContext)({ tag: "li", index, text, onSelect: e => setSelected(e[EventDetail].selected), selected });
+    const { tabbable, useListboxMultiItemProps } = useContext(ListBoxMultiItemContext)({ tag: "li", index, text, onSelect: e => setSelected(e[EventDetail].selected), selected, flags: {} });
     text = `Number ${index + 1} option${selected ? " (selected)" : ""}${tabbable ? " (tabbable)" : ""}`;
     return <li {...useListboxMultiItemProps({})}>{text}</li>
 });
@@ -426,7 +386,7 @@ const DemoMenu = memo(() => {
     const onOpen = () => setOpen(true);
     const { useHasFocusProps, getFocusedInner: getMenuFocusedInner } = useHasFocus<HTMLUListElement>({})
 
-    const { useMenuButton, useMenuItem, useMenuProps } = useAriaMenu<HTMLUListElement, HTMLLIElement, UseMenuChildInfo>({ open, onClose, onOpen, shouldFocusOnChange: getMenuFocusedInner });
+    const { useMenuButton, useMenuItem, useMenuProps } = useAriaMenu<HTMLUListElement, HTMLLIElement, string, UseMenuChildInfo>({ open, onClose, onOpen, initialIndex: 0 });
 
     const { useMenuButtonProps } = useMenuButton<HTMLButtonElement>({ tag: "button" })
     return (
@@ -446,27 +406,37 @@ const DemoMenu = memo(() => {
 
 const DemoMenuItem = memo(({ index }: { index: number }) => {
     const useAriaMenuItem = useContext(MenuItemContext);
-    const { useMenuItemProps } = useAriaMenuItem({ index, text: null });
+    const { useMenuItemProps } = useAriaMenuItem({ index, text: `Item ${index + 1}`, flags: {} });
     return <li {...useMenuItemProps({})}>Item {index + 1}</li>
 })
 
-const TabContext = createContext<UseTab<HTMLLIElement, UseTabInfo>>(null!);
+const TabContext = createContext<UseTab<HTMLLIElement>>(null!);
 const TabPanelContext = createContext<UseTabPanel<HTMLParagraphElement>>(null!);
 const DemoTabs = memo(() => {
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [selectionMode, setSelectionMode] = useState<"focus" | "activate">("focus");
 
-    const { useTabPanel, useTabsLabel, useTab, useTabsList } = useAriaTabs<HTMLUListElement, HTMLLIElement, HTMLParagraphElement>({ onSelect: e => setSelectedIndex(e[EventDetail].selectedIndex), selectedIndex, selectionMode, orientation: "block" });
+    const {
+        useTab,
+        useTabPanel,
+        useTabsLabelProps,
+        useTabsListProps
+    } = useAriaTabs<HTMLUListElement, HTMLLIElement, HTMLParagraphElement, HTMLLabelElement, string, UseTabInfo<HTMLUListElement, string>>({
+        onSelect: e => setSelectedIndex(e[EventDetail].selectedIndex),
+        selectedIndex,
+        selectionMode,
+        orientation: "block",
+        initialIndex: 0
+    });
 
-    const { useTabListProps } = useTabsList();
 
     return (
         <TabContext.Provider value={useTab} >
             <TabPanelContext.Provider value={useTabPanel} >
                 <div class="demo">
                     <label><input type="checkbox" checked={selectionMode == "focus"} onInput={(e) => { e.preventDefault(); setSelectionMode(e.currentTarget.checked ? "focus" : "activate") }} /> Activate on focus?</label>
-
-                    <ul {...useTabListProps({})}><DemoTab index={0} /><DemoTab index={1} /><DemoTab index={2} /><DemoTab index={3} /><DemoTab index={4} /></ul>
+                    <label {...useTabsLabelProps({})}>Tabs</label>
+                    <ul {...useTabsListProps({})}><DemoTab index={0} /><DemoTab index={1} /><DemoTab index={2} /><DemoTab index={3} /><DemoTab index={4} /></ul>
                     <div><DemoTabPanel index={0} /><DemoTabPanel index={1} /><DemoTabPanel index={2} /><DemoTabPanel index={3} /><DemoTabPanel index={4} /></div>
                 </div>
             </TabPanelContext.Provider>
@@ -475,8 +445,8 @@ const DemoTabs = memo(() => {
 });
 
 const DemoTab = memo(({ index }: { index: number }) => {
-    const useTab = useContext(TabContext);
-    const { useTabProps, selected } = useTab({ index, text: null, tag: "li" })
+    const useTabSet = useContext(TabContext);
+    const { useTabProps, selected, getSelected, tabbable, getElement } = useTabSet({ index, text: "", flags: {} })
 
     return (<>
         <li {...useTabProps({})}>Tab #{index + 1} ({`Selected: ${selected}`})</li>
@@ -496,9 +466,9 @@ const DemoTabPanel = memo(({ index }: { index: number }) => {
 });
 
 const DemoTooltip = memo(() => {
-    const { useTooltip, useTooltipTrigger, isOpen } = useAriaTooltip({});
-    const { useTooltipProps } = useTooltip<HTMLSpanElement>();
-    const { useTooltipTriggerProps } = useTooltipTrigger<HTMLSpanElement>();
+    const { useTooltip, useTooltipTrigger, isOpen } = useAriaTooltip<HTMLSpanElement, HTMLSpanElement>({});
+    const { useTooltipProps } = useTooltip();
+    const { useTooltipTriggerProps } = useTooltipTrigger();
     return (
         <div class="demo">
             <p>This is a paragraph with a <span {...useTooltipTriggerProps({})}>tooltip right here.</span><span {...useTooltipProps({ hidden: !isOpen })}>This is the tooltip content.</span></p>
@@ -572,25 +542,23 @@ const TableHeaderRow = memo(function TableHeaderRow({ rowIndex }: { rowIndex: nu
 
 const Component = () => {
     return <div class="flex" style={{ flexWrap: "wrap" }}>
-        <DemoTooltip />
-        {/*<DemoTable />*/}
-        <DemoTabs />
-        <DemoUseTimeout />
-        <DemoUseInterval />
-        <DemoMenu />
+        <DemoUseAccordion />
         <DemoUseListboxSingle />
-        <DemoUseListboxMulti />
+        <DemoUseListboxMulti /><DemoTooltip />
+        <DemoTabs />
         <DemoUseCheckbox />
         <DemoUseRadioGroup />
-        <DemoUseAccordion />
         <DemoUseDialog />
-        <DemoUseRovingTabIndex />
+        <DemoMenu />
+        {/*
+       
+        <DemoTable />
 
 
         <DemoUseFocusTrap />
         <DemoUseDroppable />
         <DemoUseDraggable />
-        <input />
+        <input />*/}
     </div>
 }
 

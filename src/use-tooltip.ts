@@ -1,13 +1,13 @@
 import { h } from "preact";
-import { MergedProps, useGlobalHandler, useHasFocus, UseHasFocusPropsReturnType, useMergedProps, usePassiveState, useRandomId, UseRandomIdPropsReturnType, UseReferencedIdPropsReturnType, useStableCallback, useState } from "preact-prop-helpers";
+import { useGlobalHandler, useHasFocus, useMergedProps, usePassiveState, useRandomId, UseRandomIdPropsReturnType, UseReferencedIdPropsReturnType, useStableCallback, useState } from "preact-prop-helpers";
 import { useCallback, useEffect } from "preact/hooks";
 
-export type UseTooltipTrigger = <TriggerType extends Element>() => { useTooltipTriggerProps: <P extends h.JSX.HTMLAttributes<TriggerType>>({ ...props }: P) => UseReferencedIdPropsReturnType<MergedProps<TriggerType, { onPointerEnter: (e: MouseEvent) => void; onPointerLeave: (e: MouseEvent) => void; }, h.JSX.HTMLAttributes<TriggerType>>, "aria-describedby">; }
-export type UseTooltip = <TooltipType extends Element>() => { useTooltipProps: <P extends h.JSX.HTMLAttributes<TooltipType>>({ ...props }: P) => UseRandomIdPropsReturnType<UseHasFocusPropsReturnType<TooltipType, MergedProps<TooltipType, { onPointerEnter: (e: MouseEvent) => void; onPointerLeave: (e: MouseEvent) => void; }, P>>>; }
+export type UseTooltipTrigger<TriggerType extends Element> = () => { useTooltipTriggerProps: ({ ...props }: h.JSX.HTMLAttributes<TriggerType>) => h.JSX.HTMLAttributes<TriggerType> };
+export type UseTooltip<TooltipType extends Element> = () => { useTooltipProps: ({ ...props }: h.JSX.HTMLAttributes<TooltipType>) => h.JSX.HTMLAttributes<TooltipType> };
 
 function returnFalse() { return false; }
 
-export function useAriaTooltip({ mouseoverDelay, mouseoutDelay, focusDelay }: { mouseoverDelay?: number, mouseoutDelay?: number, focusDelay?: number }) {
+export function useAriaTooltip<TriggerType extends HTMLElement | SVGElement, TooltipType extends HTMLElement | SVGElement>({ mouseoverDelay, mouseoutDelay, focusDelay }: { mouseoverDelay?: number, mouseoutDelay?: number, focusDelay?: number }) {
 
     mouseoverDelay ??= 400;
     mouseoutDelay ??= 40;
@@ -33,7 +33,10 @@ export function useAriaTooltip({ mouseoverDelay, mouseoutDelay, focusDelay }: { 
 
     const [open, setOpen, getOpen] = useState(false);
 
-    const { useRandomIdProps: useTooltipIdProps, useReferencedIdProps: useTooltipIdReferencingProps } = useRandomId({ prefix: "aria-tooltip-" });
+    const {
+        useRandomIdSourceElement,//: useTooltipIdProps, 
+        useRandomIdReferencerElement,//: useTooltipIdReferencingProps 
+    } = useRandomId<TooltipType>({ prefix: "aria-tooltip-", onAfterChildLayoutEffect: null, onChildrenMountChange: null });
 
     const [, setTriggerFocused] = usePassiveState(useStableCallback((focused: boolean) => {
         const delay = focused ? focusDelay : 1;
@@ -72,7 +75,7 @@ export function useAriaTooltip({ mouseoverDelay, mouseoutDelay, focusDelay }: { 
         setOpen(triggerFocusedDelayCorrected || triggerHoverDelayCorrected || tooltipFocusedDelayCorrected || tooltipHoverDelayCorrected);
     }, [triggerFocusedDelayCorrected || triggerHoverDelayCorrected || tooltipFocusedDelayCorrected || tooltipHoverDelayCorrected])
 
-    const useTooltipTrigger: UseTooltipTrigger = useCallback(function useTooltipTrigger<TriggerType extends Element>() {
+    const useTooltipTrigger: UseTooltipTrigger<TriggerType> = useCallback(function useTooltipTrigger() {
 
         useGlobalHandler(document, "pointermove", e => {
             const target = (e.target as HTMLElement);
@@ -86,23 +89,25 @@ export function useAriaTooltip({ mouseoverDelay, mouseoutDelay, focusDelay }: { 
         const { useHasFocusProps, getElement } = useHasFocus<TriggerType>({ onFocusedInnerChanged: setTriggerFocused })
 
 
-        function useTooltipTriggerProps<P extends h.JSX.HTMLAttributes<TriggerType>>({ ...props }: P) {
+        function useTooltipTriggerProps({ ...props }: h.JSX.HTMLAttributes<TriggerType>): h.JSX.HTMLAttributes<TriggerType> {
+            const { useRandomIdReferencerElementProps } = useRandomIdReferencerElement<TriggerType>("aria-describedby" as never);
             // Note: Though it's important to make sure that focusing activates a tooltip,
             // it's perfectly reasonable that a child element will be the one that's focused,
             // not this one, so we don't set tabIndex=0
             props.tabIndex ??= -1;
-            return useTooltipIdReferencingProps("aria-describedby")(
+            return useRandomIdReferencerElementProps(
                 useHasFocusProps(
-                    useMergedProps<TriggerType>()({ onTouchEnd }, (props as any) as unknown as h.JSX.HTMLAttributes<TriggerType>)
+                    useMergedProps<TriggerType>({ onTouchEnd }, (props as any) as unknown as h.JSX.HTMLAttributes<TriggerType>)
                 )
             );
         }
 
         return { useTooltipTriggerProps };
 
-    }, [useTooltipIdReferencingProps]);
+    }, []);
 
-    const useTooltip = useCallback(function useTooltip<TooltipType extends Element>() {
+    const useTooltip = useCallback(function useTooltip() {
+        const { useRandomIdSourceElementProps } = useRandomIdSourceElement();
         const { useHasFocusProps, getElement } = useHasFocus<TooltipType>({ onFocusedInnerChanged: setTooltipFocused })
 
         useGlobalHandler(document, "pointermove", e => {
@@ -110,12 +115,12 @@ export function useAriaTooltip({ mouseoverDelay, mouseoutDelay, focusDelay }: { 
             setTooltipHover(target == getElement() as Node || !!getElement()?.contains(target));
         }, { capture: true });
 
-        function useTooltipProps<P extends h.JSX.HTMLAttributes<TooltipType>>({ ...props }: P) {
-            return useTooltipIdProps(useHasFocusProps(useMergedProps<TooltipType>()({ }, props)));
+        function useTooltipProps({ ...props }: h.JSX.HTMLAttributes<TooltipType>): h.JSX.HTMLAttributes<TooltipType> {
+            return useRandomIdSourceElementProps(useHasFocusProps(useMergedProps<TooltipType>({}, props)));
         }
 
         return { useTooltipProps };
-    }, [useTooltipIdProps]);
+    }, []);
 
     return {
         useTooltip,

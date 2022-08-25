@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { MergedProps, useEffect, useGlobalHandler, useMergedProps, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
+import { useEffect, useGlobalHandler, useMergedProps, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
 import { enhanceEvent, EventDetail, TagSensitiveProps } from "./props";
 
 let pulse = ("vibrate" in navigator) ? (() => navigator.vibrate(10)) : (() => { });
@@ -23,15 +23,8 @@ export interface UseAriaButtonParameters<E extends EventTarget> extends TagSensi
 }
 
 export interface UseAriaButtonReturnType<E extends EventTarget> {
-    useAriaButtonProps: UseAriaButtonProps<E>;
+    useAriaButtonProps: (props: h.JSX.HTMLAttributes<E>) => h.JSX.HTMLAttributes<E>;
 }
-
-export type UseAriaButtonProps<E extends EventTarget> = <P extends UseAriaButtonPropsParameters<E>>(props: P) => UseAriaButtonPropsReturnType<E, P>;
-
-export interface UseAriaButtonPropsParameters<E extends EventTarget> extends h.JSX.HTMLAttributes<E> { }
-export type UseAriaButtonPropsReturnType<E extends EventTarget, P extends UseAriaButtonPropsParameters<E>> =
-    MergedProps<E, { "aria-pressed": string | undefined; role: string; tabIndex: number; onKeyDown: h.JSX.KeyboardEventHandler<E>; onKeyUp: h.JSX.KeyboardEventHandler<E>; }, Omit<P, "aria-pressed" | "tabIndex" | "role">> |
-    MergedProps<E, { "aria-pressed": string | undefined; }, Omit<P, "aria-pressed" | "tabIndex" | "role">>;
 
 
 function excludes(target: "click" | "space" | "enter", exclude: undefined | { click?: "exclude" | undefined, space?: "exclude" | undefined, enter?: "exclude" | undefined }) {
@@ -54,7 +47,7 @@ function excludes(target: "click" | "space" | "enter", exclude: undefined | { cl
 function nodeSelectedTextLength(element: EventTarget | null | undefined) {
     if (element && element instanceof Node) {
         const selection = window.getSelection();
-       
+
         for (let i = 0; i < (selection?.rangeCount ?? 0); ++i) {
             const range = selection!.getRangeAt(i)!;
             if (element.contains(range.endContainer) && !selection?.isCollapsed) {
@@ -85,7 +78,7 @@ function nodeSelectedTextLength(element: EventTarget | null | undefined) {
  * @param onClickSync 
  * @param exclude Whether the polyfill shouldn't apply (can specify for specific interactions)
  */
-export function usePressEventHandlers<E extends EventTarget>(onClickSync: ((e: h.JSX.TargetedEvent<E>) => void) | null | undefined, exclude: undefined | { click?: "exclude" | undefined, space?: "exclude" | undefined, enter?: "exclude" | undefined }) {
+export function usePressEventHandlers<E extends EventTarget>(onClickSync: ((e: h.JSX.TargetedEvent<E>) => void) | null | undefined, exclude: undefined | { click?: "exclude" | undefined, space?: "exclude" | undefined, enter?: "exclude" | undefined }): h.JSX.HTMLAttributes<E> {
 
     const { useRefElementProps, getElement } = useRefElement<E>({});
 
@@ -110,7 +103,7 @@ export function usePressEventHandlers<E extends EventTarget>(onClickSync: ((e: h
     const [textSelectedDuringActivationStartTime, setTextSelectedDuringActivationStartTime] = useState<Date | null>(null);
 
     useGlobalHandler(document, "selectionchange", _ => {
-        setTextSelectedDuringActivationStartTime(prev => nodeSelectedTextLength(getElement()) == 0? null : prev != null? prev : new Date());
+        setTextSelectedDuringActivationStartTime(prev => nodeSelectedTextLength(getElement()) == 0 ? null : prev != null ? prev : new Date());
     });
 
     useEffect(() => {
@@ -126,7 +119,7 @@ export function usePressEventHandlers<E extends EventTarget>(onClickSync: ((e: h
         setActive(a => Math.max(0, --a));
 
         const currentTime = new Date();
-        const timeDifference = (textSelectedDuringActivationStartTime == null? null : +currentTime - +textSelectedDuringActivationStartTime);
+        const timeDifference = (textSelectedDuringActivationStartTime == null ? null : +currentTime - +textSelectedDuringActivationStartTime);
 
         // If we're selecting text (heuristically determined by selecting for longer than 1/4 a second, or more than 2 characters)
         // then this isn't a press event.
@@ -233,14 +226,14 @@ export function usePressEventHandlers<E extends EventTarget>(onClickSync: ((e: h
         }
     }
 
-    return <P extends h.JSX.HTMLAttributes<E>>(props: P) => useRefElementProps(useMergedProps<E>()({ onKeyDown, onKeyUp, onBlur, onMouseDown, onMouseUp, onMouseLeave, onClick, style: (textSelectedDuringActivationStartTime != null) ? { cursor: "text" } : undefined, ...{ "data-pseudo-active": active && (textSelectedDuringActivationStartTime == null) ? "true" : undefined } as {} }, props));
+    return useRefElementProps(({ onKeyDown, onKeyUp, onBlur, onMouseDown, onMouseUp, onMouseLeave, onClick, style: (textSelectedDuringActivationStartTime != null) ? { cursor: "text" } : undefined, ...{ "data-pseudo-active": active && (textSelectedDuringActivationStartTime == null) ? "true" : undefined } as {} }));
 }
 
 export function useAriaButton<E extends EventTarget>({ tag, pressed, onPress }: UseAriaButtonParameters<E>): UseAriaButtonReturnType<E> {
 
-    function useAriaButtonProps<P extends UseAriaButtonPropsParameters<E>>({ "aria-pressed": ariaPressed, tabIndex, role, ...p }: P): UseAriaButtonPropsReturnType<E, P> {
+    function useAriaButtonProps({ "aria-pressed": ariaPressed, tabIndex, role, ...p }: h.JSX.HTMLAttributes<E>): h.JSX.HTMLAttributes<E> {
 
-        const props = usePressEventHandlers<E>((e) => onPress?.(enhanceEvent(e, { pressed: pressed == null ? null : !pressed })), undefined)(p);
+        const props = useMergedProps<E>(usePressEventHandlers<E>((e) => onPress?.(enhanceEvent(e, { pressed: pressed == null ? null : !pressed })), undefined), p);
 
         const buttonProps = { role, tabIndex, "aria-pressed": ariaPressed ?? (pressed === true ? "true" : pressed === false ? "false" : undefined) };
         const divProps = { ...buttonProps, tabIndex: tabIndex ?? 0, role: role ?? "button" };
@@ -248,13 +241,13 @@ export function useAriaButton<E extends EventTarget>({ tag, pressed, onPress }: 
 
         switch (tag) {
             case "button":
-                return useMergedProps<E>()(buttonProps as any, props as any);
+                return useMergedProps<E>(buttonProps, props);
 
             case "a":
-                return useMergedProps<E>()(anchorProps as any, props as any);
+                return useMergedProps<E>(anchorProps, props);
 
             default:
-                return useMergedProps<E>()(divProps as any, props as any);
+                return useMergedProps<E>(divProps, props);
         }
     }
 

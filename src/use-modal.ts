@@ -16,10 +16,23 @@ export interface UseSoftDismissParameters {
      * Called when the component is dismissed
      */
     onClose(reason: "backdrop" | "escape" | "lost-focus"): void;
+
+    open: boolean;
 }
 
 export interface UseModalParameters extends Omit<UseSoftDismissParameters, "getElements"> {
     open: boolean;
+
+    /**
+     * When true, the body element provided contains purely semantic content
+     * that can be read out by a screen reader in one long, uninterrupted stretch.
+     * 
+     * This should be false if the modal contains, for example, a list or other
+     * interactive widgets, and true if it's mostly short-form text content.
+     * 
+     * The default is false to be on the safe side, but this should be true whenever reasonable.
+     */
+    bodyIsOnlySemantic?: boolean;
 }
 
 /**
@@ -36,13 +49,16 @@ export interface UseModalParameters extends Omit<UseSoftDismissParameters, "getE
  * @param param0 
  * @returns 
  */
-export function useSoftDismiss<T extends Node>({ onClose, getElements }: UseSoftDismissParameters) {
+export function useSoftDismiss<T extends Node>({ onClose, getElements, open }: UseSoftDismissParameters) {
 
     const stableOnClose = useStableCallback(onClose);
     const stableGetElements = useStableCallback(getElements);
     const getOpen = useStableGetter(open);
 
     const onBackdropClick = useCallback(function onBackdropClick(e: h.JSX.TargetedEvent<any>) {
+        if (!getOpen())
+            return;
+
         const document = getElement()?.ownerDocument;
 
         // Basically, "was this event fired on the root-most element, or at least an element not contained by the modal?"
@@ -66,8 +82,9 @@ export function useSoftDismiss<T extends Node>({ onClose, getElements }: UseSoft
                 }
             }
 
-            if (!foundInsideClick)
+            if (!foundInsideClick) {
                 onClose("backdrop");
+            }
         }
     }, [])
 
@@ -116,8 +133,26 @@ export function useSoftDismiss<T extends Node>({ onClose, getElements }: UseSoft
         }, [])
     });
 
-    return { useSoftDismissProps: useCallback(<P extends h.JSX.HTMLAttributes<T>>(props: P) => useActiveElementProps(useRefElementProps(props)), [useActiveElementProps, useRefElementProps]) }
+    return {
+        onBackdropClick,
+        useSoftDismissProps: useCallback(<P extends h.JSX.HTMLAttributes<T>>(props: P): h.JSX.HTMLAttributes<T> => useActiveElementProps(useRefElementProps(props)), [useActiveElementProps, useRefElementProps])
+    }
 }
+
+export interface UseModalReturnType<ModalElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement> {
+    useModalProps: (props: h.JSX.HTMLAttributes<ModalElement>) => h.JSX.HTMLAttributes<ModalElement>;
+    useModalTitle: () => {
+        useModalTitleProps: (props: h.JSX.HTMLAttributes<TitleElement>) => h.JSX.HTMLAttributes<TitleElement>;
+    };
+    useModalBody: ({ descriptive }: {
+        descriptive: boolean;
+    }) => {
+        useModalBodyProps: (props: h.JSX.HTMLAttributes<BodyElement>) => h.JSX.HTMLAttributes<BodyElement>;
+    };
+    useModalBackdrop: () => {
+        useModalBackdropProps: (props: h.JSX.HTMLAttributes<BackdropElement>) => h.JSX.HTMLAttributes<BackdropElement>;
+    };
+};
 
 /**
  * A generic modal hook, used by modal dialogs, but can also
@@ -125,52 +160,57 @@ export function useSoftDismiss<T extends Node>({ onClose, getElements }: UseSoft
  * @param param0 
  * @returns 
  */
-export function useModal<ModalElement extends HTMLElement>({ open, onClose }: UseModalParameters) {
+export function useModal<ModalElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement>({ open, onClose }: UseModalParameters): UseModalReturnType<ModalElement, TitleElement, BodyElement, BackdropElement> {
 
     const stableOnClose = useStableCallback(onClose);
 
     const [modalDescribedByBody, setModalDescribedByBody] = useState(false);
     useHideScroll(open);
 
-    const { useRandomIdProps: useModalIdProps } = useRandomId({ prefix: "aria-modal-" });
-    const { useRandomIdProps: useBodyIdProps, useReferencedIdProps: useBodyReferencingIdProps } = useRandomId({ prefix: "aria-modal-body-" });
-    const { useRandomIdProps: useTitleIdProps, useReferencedIdProps: useTitleReferencingIdProps } = useRandomId({ prefix: "aria-modal-title-" });
+    const { useRandomIdSourceElement: useModalIdAsSource, useRandomIdReferencerElement: useModalIdAsReferencerElement } = useRandomId<ModalElement>({ prefix: "aria-modal-", onAfterChildLayoutEffect: null, onChildrenMountChange: null });
+    const { useRandomIdSourceElement: useBodyIdAsSource, useRandomIdReferencerElement: useBodyIdReferencerElement } = useRandomId<BodyElement>({ prefix: "aria-modal-body-", onAfterChildLayoutEffect: null, onChildrenMountChange: null });
+    const { useRandomIdSourceElement: useTitleIdAsSource, useRandomIdReferencerElement: useTitleIdReferencerElement } = useRandomId<TitleElement>({ prefix: "aria-modal-title-", onAfterChildLayoutEffect: null, onChildrenMountChange: null });
+    const { useRandomIdSourceElementProps: useModalIdAsSourceProps } = useModalIdAsSource();
+    const { useRandomIdSourceElementProps: useBodyIdAsSourceProps } = useBodyIdAsSource();
+    const { useRandomIdSourceElementProps: useTitleIdAsSourceProps } = useTitleIdAsSource();
+    const { useRandomIdReferencerElementProps: useModalIdAsReferencerElementProps } = useModalIdAsReferencerElement<BodyElement>("data-modal-id" as never)
+    const { useRandomIdReferencerElementProps: useBodyIdReferencerElementProps } = useBodyIdReferencerElement<ModalElement>("aria-describedby" as never);
+    const { useRandomIdReferencerElementProps: useTitleIdReferencerElementProps } = useTitleIdReferencerElement<ModalElement>("aria-labelledby" as never);
 
     const { useRefElementProps: useModalRefElement, getElement: getModalElement } = useRefElement<ModalElement>({})
-    const { useSoftDismissProps } = useSoftDismiss<ModalElement>({ onClose: stableOnClose, getElements: getModalElement });
+    const { useSoftDismissProps, onBackdropClick } = useSoftDismiss<ModalElement>({ onClose: stableOnClose, getElements: getModalElement, open: !!open });
 
-    const useModalBackdrop = useCallback(function useModalBackdrop<BackdropElement extends HTMLElement>() {
-
-        function useModalBackdropProps<P extends h.JSX.HTMLAttributes<BackdropElement>>(props: P) {
-            return useMergedProps<BackdropElement>()({ onPointerUp: () => stableOnClose("backdrop") }, props);
+    const useModalBackdrop = useCallback(function useModalBackdrop() {
+        function useModalBackdropProps(props: h.JSX.HTMLAttributes<BackdropElement>): h.JSX.HTMLAttributes<BackdropElement> {
+            return useMergedProps<BackdropElement>({ onPointerUp: onBackdropClick }, props);
         }
 
         return { useModalBackdropProps }
     }, [])
 
-    const useModalProps = function <P extends h.JSX.HTMLAttributes<ModalElement>>({ "aria-modal": ariaModal, role, ...p0 }: P) {
+    const useModalProps = function ({ "aria-modal": ariaModal, role, ...p0 }: h.JSX.HTMLAttributes<ModalElement>): h.JSX.HTMLAttributes<ModalElement> {
         console.assert(!ariaModal);
         const { useFocusTrapProps } = useFocusTrap<ModalElement>({ trapActive: open });
-        const p1 = useTitleReferencingIdProps("aria-labelledby")(p0);
-        const p2 = useModalIdProps(p1);
-        const pFinal = useBodyReferencingIdProps("aria-describedby")(p2);
-        return useFocusTrapProps(useSoftDismissProps(useMergedProps<ModalElement>()(useModalRefElement({ role: role || "dialog" }), modalDescribedByBody ? pFinal : p2)));
+        const p1 = useBodyIdReferencerElementProps(p0);
+        const p2 = useModalIdAsSourceProps(p1);
+        const pFinal = useTitleIdReferencerElementProps(p2);
+        return useFocusTrapProps(useSoftDismissProps(useMergedProps<ModalElement>(useModalRefElement({ role: role || "dialog" }), modalDescribedByBody ? pFinal : p2)));
     }
 
-    const useModalTitle = useCallback(function useModalTitle<TitleElement extends Element>() {
+    const useModalTitle = useCallback(function useModalTitle() {
 
-        const useModalTitleProps = function <P extends h.JSX.HTMLAttributes<TitleElement>>(props: P) {
-            return useTitleIdProps(props);
+        const useModalTitleProps = function (props: h.JSX.HTMLAttributes<TitleElement>): h.JSX.HTMLAttributes<TitleElement> {
+            return useTitleIdAsSourceProps(props);
         }
 
         return { useModalTitleProps };
     }, [])
 
-    const useModalBody = useCallback(function useModalBody<BodyElement extends Element>({ descriptive }: { descriptive: boolean }) {
+    const useModalBody = useCallback(function useModalBody({ descriptive }: { descriptive: boolean }) {
         setModalDescribedByBody(descriptive);
 
-        const useModalBodyProps = function <P extends h.JSX.HTMLAttributes<BodyElement>>(props: P) {
-            return useBodyIdProps(props);
+        const useModalBodyProps = function (props: h.JSX.HTMLAttributes<BodyElement>): h.JSX.HTMLAttributes<BodyElement> {
+            return useBodyIdAsSourceProps(useModalIdAsReferencerElementProps(props));
         }
 
         return { useModalBodyProps };
@@ -183,7 +223,7 @@ export function useModal<ModalElement extends HTMLElement>({ open, onClose }: Us
         useModalTitle,
         useModalBody,
         useModalBackdrop
-    }
+    };
 }
 
 

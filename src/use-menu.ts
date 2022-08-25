@@ -1,64 +1,55 @@
 import { h } from "preact";
-import { MergedProps, useHasFocus, useListNavigation, UseListNavigationChildInfo, UseListNavigationChildParameters, UseListNavigationChildPropsReturnType, UseListNavigationParameters, useMergedProps, useRandomId, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
+import { useHasFocus, useListNavigation, ListNavigationChildInfoBase, UseListNavigationParameters, useMergedProps, useRandomId, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
+import { UseListNavigationChildInfoNeeded } from "preact-prop-helpers/use-list-navigation";
 import { useCallback, useEffect } from "preact/hooks";
 import { EventDetail } from "./props";
 import { useSoftDismiss } from "./use-modal";
 
-interface UseMenuBaseParameters1 {
-    open: boolean;
+export interface UseMenuBaseParameters {
+    open: boolean | "menubar";
     onClose(): void;
     onOpen(): void;
+    sendFocusWithinMenu(): void;
 }
 
-interface UseMenuBaseParameters2 {
-    menubar: true;
+export interface UseAriaMenuParameters<E extends Element, K extends string, I extends UseMenuItemDefaultInfo<E>> extends Omit<UseMenuBaseParameters, "sendFocusWithinMenu">, UseListNavigationParameters<K, I> {
 }
 
-interface UseMenuParameters1 extends UseMenuBaseParameters1, UseListNavigationParameters {
-}
-
-interface UseMenuParameters2 extends UseMenuBaseParameters2, UseListNavigationParameters {
-}
-
-export type UseMenuBaseParameters = (UseMenuBaseParameters1 | UseMenuBaseParameters2) & { sendFocusWithinMenu(): void; };
-export type UseAriaMenuParameters = (UseMenuParameters1 | UseMenuParameters2);
-export type UseMenuSubmenuItemParameters = UseAriaMenuParameters & {}
+export type UseMenuSubmenuItemParameters<E extends Element, K extends string, I extends UseMenuItemDefaultInfo<E>> = UseAriaMenuParameters<E, K, I> & {}
 
 /* eslint-disable @typescript-eslint/no-empty-interface */
 export interface UseMenuButtonParameters { }
 
-export interface UseMenuItemCheckboxInfo<E extends EventTarget> extends UseListNavigationChildInfo {
+export interface UseMenuItemCheckboxInfo<E extends EventTarget> extends ListNavigationChildInfoBase<string> {
     type: "checkbox";
     checked: boolean | "mixed";
     onChange(e: { [EventDetail]: { checked: boolean } } & h.JSX.TargetedEvent<E, Event>): void;
 }
 
-export interface UseMenuItemRadioInfo<E extends EventTarget> extends UseListNavigationChildInfo {
+export interface UseMenuItemRadioInfo<E extends EventTarget> extends ListNavigationChildInfoBase<string> {
     type: "radio";
     checked: boolean;
     onChange(e: { [EventDetail]: { checked: boolean } } & h.JSX.TargetedEvent<E, Event>): void;
 }
 
-export interface UseMenuItemDefaultInfo<E extends EventTarget> extends UseListNavigationChildInfo {
+export interface UseMenuItemDefaultInfo<E extends EventTarget> extends ListNavigationChildInfoBase<string> {
     type?: "default";
     onClick?(e: h.JSX.TargetedEvent<E>): void;
 }
 
-export type UseMenuItemCheckboxParameters<I extends UseMenuChildInfo> = UseListNavigationChildParameters<I>;
-export type UseMenuItemRadioParameters<I extends UseMenuChildInfo> = UseListNavigationChildParameters<I>;
-export type UseMenuItemDefaultParameters<I extends UseMenuChildInfo> = UseListNavigationChildParameters<I>;
+//export type UseMenuItemCheckboxParameters<I extends UseMenuChildInfo> = UseListNavigationChildParameters<I>;
+//export type UseMenuItemRadioParameters<I extends UseMenuChildInfo> = UseListNavigationChildParameters<I>;
+export type UseMenuItemDefaultParameters<I extends UseMenuChildInfo> = { info: UseListNavigationChildInfoNeeded<string, I> };
 
 
 export type UseMenuItem<E extends Element, I extends UseMenuChildInfo> = (args: UseMenuItemDefaultParameters<I>) => {
-    useMenuItemProps: <P extends h.JSX.HTMLAttributes<E>>({ ...props }: P) => MergedProps<E, {
-        onClick: h.JSX.MouseEventHandler<E>;
-    }, UseListNavigationChildPropsReturnType<E, P>>
+    useMenuItemProps: ({ ...props }: h.JSX.HTMLAttributes<E>) => h.JSX.HTMLAttributes<E>;
 }
 
-export interface UseMenuChildInfo extends UseListNavigationChildInfo {
+export interface UseMenuChildInfo extends ListNavigationChildInfoBase<string> {
 
 }
-export type UseMenuChildParameters<I extends UseMenuChildInfo> = UseListNavigationChildParameters<I>;
+//export type UseMenuChildParameters<I extends UseMenuChildInfo> = I;
 
 /**
  * A menu is a popup control that contains a list of menu items, and that's it.
@@ -71,16 +62,16 @@ export type UseMenuChildParameters<I extends UseMenuChildInfo> = UseListNavigati
  * menu item, but with custom content you'll need to provide this).
  * 
  */
-export function useMenuBase<ParentElement extends Element>({ sendFocusWithinMenu, ...args }: UseMenuBaseParameters) {
+export function useMenuBase<ParentElement extends Element, K extends string, I extends UseMenuItemDefaultInfo<ParentElement>>({ sendFocusWithinMenu, ...args }: UseMenuBaseParameters) {
     type E = ParentElement;
 
     const getSendFocusWithinMenu = useStableGetter(sendFocusWithinMenu);
     const [focusTrapActive, setFocusTrapActive] = useState<null | boolean>(null);
 
-    const onClose = (args as Partial<UseMenuParameters1>).onClose;
-    const onOpen = (args as Partial<UseMenuParameters1>).onOpen;
-    const menubar = (args as Partial<UseMenuParameters2>).menubar;
-    const open = (menubar ? true : (args as UseMenuParameters1).open);
+    const onClose = (args as Partial<UseAriaMenuParameters<E, K, I>>).onClose;
+    const onOpen = (args as Partial<UseAriaMenuParameters<E, K, I>>).onOpen;
+    //const menubar = (args as Partial<UseMenuParameters2<E, K, I>>).menubar;
+    const open = (args as UseAriaMenuParameters<E, K, I>).open;
     const stableOnClose = useStableCallback(onClose ?? (() => { }));
     const getOpen = useStableGetter(open);
 
@@ -93,20 +84,22 @@ export function useMenuBase<ParentElement extends Element>({ sendFocusWithinMenu
 
     const [, setOpenerElement, getOpenerElement] = useState<(Element & HTMLOrSVGElement) | null>(null);
 
-    const { useRandomIdProps: useMenuBaseIdProps, useReferencedIdProps: useMenuBaseIdReferencingProps } = useRandomId({ prefix: "aria-menu-" });
+    const { useRandomIdSourceElement, useRandomIdReferencerElement } = useRandomId<ParentElement>({ prefix: "aria-menu-" });
+    const { useRandomIdSourceElementProps } = useRandomIdSourceElement();
+    const { useRandomIdReferencerElementProps } = useRandomIdReferencerElement("aria-controls" as never);
 
     const { getElement: getButtonElement, useRefElementProps: useButtonRefElementProps } = useRefElement<any>({ onElementChange: setOpenerElement });
 
     const { getElement: getMenuElement, useRefElementProps: useMenuBaseRefElementProps } = useRefElement<any>({});
-    const { useSoftDismissProps } = useSoftDismiss<any>({ onClose: stableOnClose, getElements: () => ([getButtonElement(), getMenuElement()]) });
+    const { useSoftDismissProps } = useSoftDismiss<any>({ onClose: stableOnClose, getElements: () => ([getButtonElement(), getMenuElement()]), open: !!open });
 
     useEffect(() => {
-        setFocusTrapActive(open);
+        setFocusTrapActive(open === true);
     }, [open]);
 
 
 
-    const useMenuBaseProps = useCallback(<P extends h.JSX.HTMLAttributes<ParentElement>>(props: P) => {
+    const useMenuBaseProps = useCallback((props: h.JSX.HTMLAttributes<ParentElement>): h.JSX.HTMLAttributes<ParentElement> => {
         function onKeyDown(e: KeyboardEvent) {
             if (e.key == "Escape" && getOpen()) {
                 stableOnClose();
@@ -116,12 +109,12 @@ export function useMenuBase<ParentElement extends Element>({ sendFocusWithinMenu
             }
         }
 
-        return useSoftDismissProps(useMenuBaseHasFocusProps(useMenuBaseRefElementProps(useMenuBaseIdProps(useMergedProps<ParentElement>()({ onKeyDown }, (props))))));
-    }, [useSoftDismissProps, useMenuBaseHasFocusProps, useMenuBaseRefElementProps, useMenuBaseIdProps]);
+        return useSoftDismissProps(useMenuBaseHasFocusProps(useMenuBaseRefElementProps(useRandomIdSourceElementProps(useMergedProps<ParentElement>({ onKeyDown }, (props))))));
+    }, [useSoftDismissProps, useMenuBaseHasFocusProps, useMenuBaseRefElementProps, useRandomIdSourceElementProps]);
 
-    const useMenuBaseButtonProps = useCallback(<P extends h.JSX.HTMLAttributes<any>>(props: P) => {
-        return useButtonRefElementProps(useButtonHasFocusProps(useMenuBaseIdReferencingProps("aria-controls")(props)));
-    }, [useButtonHasFocusProps, useButtonRefElementProps, useMenuBaseIdReferencingProps]);
+    const useMenuBaseButtonProps = useCallback((props: h.JSX.HTMLAttributes<any>): h.JSX.HTMLAttributes<any> => {
+        return useButtonRefElementProps(useButtonHasFocusProps(useRandomIdReferencerElementProps(props)));
+    }, [useButtonHasFocusProps, useButtonRefElementProps, useRandomIdReferencerElementProps]);
 
 
     useEffect(() => {
@@ -141,7 +134,7 @@ export function useMenuBase<ParentElement extends Element>({ sendFocusWithinMenu
 
     return {
         useMenuSentinel: useCallback(<E extends Element>() => {
-            const { useSentinelProps: useMenuSentinelProps, ...rest } = useFocusSentinel<E>({ open, onClose: (onClose ?? (() => { })), sendFocusWithinMenu });
+            const { useSentinelProps: useMenuSentinelProps, ...rest } = useFocusSentinel<E>({ open: open === true, onClose: (onClose ?? (() => { })), sendFocusWithinMenu });
             return { useMenuSentinelProps, ...rest };
         }, [open, onClose, sendFocusWithinMenu]),
         focusTrapActive,
@@ -177,31 +170,35 @@ export function useFocusSentinel<E extends Element>({ open, onClose, sendFocusWi
     const onClick = () => stableOnClose();
 
     return {
-        useSentinelProps: function <P extends h.JSX.HTMLAttributes<E>>(p: P) {
-            return useMergedProps<E>()({ onFocus, onClick }, p);
+        useSentinelProps: function (p: h.JSX.HTMLAttributes<E>): h.JSX.HTMLAttributes<E> {
+            return useMergedProps<E>({ onFocus, onClick }, p);
         }
     }
 }
 
-export function useAriaMenu<ParentElement extends Element, ChildElement extends Element, I extends UseMenuChildInfo>({ collator, keyNavigation, noTypeahead, noWrap, typeaheadTimeout, ...args }: UseAriaMenuParameters) {
+export function useAriaMenu<ParentElement extends HTMLElement | SVGElement, ChildElement extends HTMLElement | SVGElement, K extends string, I extends UseMenuChildInfo>({ collator, noTypeahead, typeaheadTimeout, disableArrowKeys, disableHomeEndKeys, indexDemangler, indexMangler, initialIndex, navigationDirection, onChildrenMountChange, onTabbableIndexChange, ...args }: UseAriaMenuParameters<ParentElement, K, I>) {
 
 
 
     const {
-        managedChildren,
+        children: managedChildren,
         useListNavigationChild,
         useListNavigationProps,
-        tabbableIndex,
-        focusCurrent: focusMenu,
         currentTypeahead,
-        invalidTypeahead
-    } = useListNavigation<ChildElement, I>({ 
-        collator, 
-        keyNavigation, 
-        noTypeahead, 
-        noWrap, 
-        typeaheadTimeout, 
-        shouldFocusOnChange: useCallback((): boolean => getMenuBaseLastFocusedInner() || getMenuBaseButtonLastFocusedInner(), []) 
+        invalidTypeahead,
+        focusSelf: focusMenu
+    } = useListNavigation<ParentElement, ChildElement, string, I>({
+        collator,
+        noTypeahead,
+        typeaheadTimeout,
+        disableArrowKeys,
+        disableHomeEndKeys,
+        indexDemangler,
+        indexMangler,
+        initialIndex,
+        navigationDirection,
+        onChildrenMountChange,
+        onTabbableIndexChange
     });
 
 
@@ -214,22 +211,17 @@ export function useAriaMenu<ParentElement extends Element, ChildElement extends 
         open,
         onOpen,
         onClose
-    } = useMenuBase<ParentElement>({ 
-        ...args, 
-        sendFocusWithinMenu: focusMenu ?? (() => { }) 
+    } = useMenuBase<ParentElement, K, I>({
+        ...args,
+        sendFocusWithinMenu: focusMenu ?? (() => { })
     });
 
-    const useMenuButton = useCallback(<E extends Element>({ ..._ }: UseMenuButtonParameters) => {
-
-        return {
-            useMenuButtonProps: function <P extends h.JSX.HTMLAttributes<E>>(p: P) {
-                const props = useMenuBaseButtonProps(p);
-                props["aria-haspopup"] = "menu";
-                props["aria-expanded"] = open ? "true" : undefined;
-                return props;
-            }
-        }
-    }, [open, onClose, onOpen, useMenuBaseButtonProps]);
+    const useMenuButtonProps = (<E extends Element>(p: h.JSX.HTMLAttributes<E>) => {
+        const props = useMenuBaseButtonProps(p);
+        props["aria-haspopup"] = "menu";
+        props["aria-expanded"] = open ? "true" : undefined;
+        return props;
+    });
 
     const useMenuItem: UseMenuItem<ChildElement, I> = useCallback((args: UseMenuItemDefaultParameters<I>) => {
         type E = ChildElement;
@@ -238,7 +230,7 @@ export function useAriaMenu<ParentElement extends Element, ChildElement extends 
 
         function useMenuItemProps<P extends h.JSX.HTMLAttributes<E>>({ ...props }: P) {
             props.role = "menuitem";
-            return useMergedProps<E>()({}, useListNavigationChildProps(props));
+            return useMergedProps<E>({}, useListNavigationChildProps(props));
         }
 
         return { useMenuItemProps };
@@ -253,7 +245,7 @@ export function useAriaMenu<ParentElement extends Element, ChildElement extends 
 
     return {
         useMenuProps,
-        useMenuButton,
+        useMenuButtonProps,
 
         useMenuItem,
         useMenuSentinel,
@@ -263,8 +255,6 @@ export function useAriaMenu<ParentElement extends Element, ChildElement extends 
 
         currentTypeahead,
         invalidTypeahead,
-
-        tabbableIndex,
 
         managedChildren
 
