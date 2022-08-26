@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { returnTrue, useChildrenFlag, useEffect, useHasFocus, useLinearNavigation, useManagedChildren, useMergedProps, useRandomId, useRefElement, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
+import { returnTrue, useChildrenFlag, useLinearNavigation, useManagedChildren, useMergedProps, useRandomId, useRefElement, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
 import { FlaggableChildInfoBase, ManagedChildren } from "preact-prop-helpers/use-child-manager";
 import { useCallback, useRef } from "preact/hooks";
 import { TagSensitiveProps } from "./props";
@@ -13,8 +13,11 @@ export interface UseAriaAccordionParameters {
 }
 
 export interface UseAriaAccordionReturnType<HeaderElement extends Element, BodyElement extends Element> {
+    /** **STABLE** */
     useAriaAccordionSection: UseAriaAccordionSection<HeaderElement, BodyElement>;
+    /** **STABLE** */
     accordionSections: ManagedChildren<UseAriaAccordionSectionInfoBase>;
+    /** **STABLE** */
     changeExpandedIndex: (arg: number | ((prevState: number | null) => number | null) | null) => number | null;
 }
 
@@ -32,7 +35,9 @@ export interface UseAriaAccordionSectionParameters {
 
 export interface UseAriaAccordionSectionReturnType<HeaderElement extends Element, BodyElement extends Element> {
     expanded: boolean;
+    /** *Unstable* */
     useAriaAccordionSectionHeaderProps: (props: h.JSX.HTMLAttributes<HeaderElement>) => h.JSX.HTMLAttributes<HeaderElement>;
+    /** *Unstable* */
     useAriaAccordionSectionBodyProps: (props: h.JSX.HTMLAttributes<BodyElement>) => h.JSX.HTMLAttributes<BodyElement>;
 }
 
@@ -56,14 +61,14 @@ export function useAriaAccordion<HeaderElement extends HTMLElement, BodyElement 
     const { useLinearNavigationProps } = useLinearNavigation<HeaderElement>({ navigationDirection: "block", navigateToFirst, navigateToLast, navigateToPrev, navigateToNext });
 
 
-    const { changeIndex: changeExpandedIndex, getCurrentIndex: getCurrentExpandedIndex, onChildrenMountChange: ocmc1 } = useChildrenFlag({
+    const { changeIndex: changeExpandedIndex, getCurrentIndex: _getCurrentExpandedIndex, onChildrenMountChange: ocmc1 } = useChildrenFlag({
         initialIndex,
         children,
         key: "open",
         closestFit: false
     });
 
-    const { changeIndex: changeTabbedIndex, getCurrentIndex: getTabbedIndex, onChildrenMountChange: ocmc2 } = useChildrenFlag({
+    const { changeIndex: changeTabbedIndex, getCurrentIndex: _getTabbedIndex, onChildrenMountChange: ocmc2 } = useChildrenFlag({
         initialIndex,
         children,
         key: "tabbed",
@@ -169,7 +174,7 @@ export function useAriaAccordion<HeaderElement extends HTMLElement, BodyElement 
             useAriaAccordionSectionHeaderProps,
             useAriaAccordionSectionBodyProps,
         }
-    }, [useLinearNavigationProps]);
+    }, []);
 
     return {
         changeExpandedIndex,

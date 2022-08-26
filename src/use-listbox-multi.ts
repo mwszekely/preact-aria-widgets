@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { ListNavigationChildInfoBase, useHasFocus, useLayoutEffect, useListNavigation, UseListNavigationParameters, useMergedProps, useRefElement, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
+import { ListNavigationChildInfoBase, useLayoutEffect, useListNavigation, UseListNavigationParameters, useMergedProps, useRefElement, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
 import { useCallback, useEffect } from "preact/hooks";
 import { ElementToTag, EventDetail, TagSensitiveProps } from "./props";
 import { usePressEventHandlers } from "./use-button";
@@ -17,18 +17,18 @@ export interface UseListboxMultiParameters<LabelElement extends Element, ListEle
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
 
-export interface UseListboxMultiItemInfoBase<E extends Element, K extends string> extends ListNavigationChildInfoBase<K>, TagSensitiveProps<E> {
+export interface UseListboxMultiItemInfoBase<E extends Element, K extends string = string> extends ListNavigationChildInfoBase<K>, TagSensitiveProps<E> {
     selected: boolean;
     onSelect?(event: (ListboxMultiSelectEvent<Element>)): void;
     setTypeaheadInProgress(inProgress: boolean): void;
 }
 
-export type UseListboxMultiItemParameters<E extends Element, K extends string, I extends UseListboxMultiItemInfoBase<E, K>> = {
+export type UseListboxMultiItemParameters<E extends Element, K extends string = string, I extends UseListboxMultiItemInfoBase<E, K> = UseListboxMultiItemInfoBase<E, K>> = {
     info:  Omit<I, "setTypeaheadInProgress" | "getElement" | "flags" | "blurSelf" | "focusSelf">;
     disabled?: boolean;
 };
 
-export type UseListboxMultiItem<E extends Element, K extends string, I extends UseListboxMultiItemInfoBase<E, K>> = (info: UseListboxMultiItemParameters<E, K, I>) => {
+export type UseListboxMultiItem<E extends Element, K extends string = string, I extends UseListboxMultiItemInfoBase<E, K> = UseListboxMultiItemInfoBase<E, K>> = (info: UseListboxMultiItemParameters<E, K, I>) => {
     useListboxMultiItemProps: (props: h.JSX.HTMLAttributes<E>) => h.JSX.HTMLAttributes<E>;
     tabbable: boolean;
 }
@@ -36,7 +36,7 @@ export type UseListboxMultiItem<E extends Element, K extends string, I extends U
 
 
 
-export function useAriaListboxMulti<LabelElement extends Element, ListElement extends HTMLElement | SVGElement, ListItemElement extends HTMLElement | SVGElement, K extends string, I extends UseListboxMultiItemInfoBase<ListItemElement, K>>({ tagLabel, tagList, ...args }: UseListboxMultiParameters<LabelElement, ListElement, ListItemElement, K, I>) {
+export function useAriaListboxMulti<LabelElement extends Element, ListElement extends HTMLElement | SVGElement, ListItemElement extends HTMLElement | SVGElement, K extends string = string, I extends UseListboxMultiItemInfoBase<ListItemElement, K> = UseListboxMultiItemInfoBase<ListItemElement, K>>({ tagLabel, tagList, ...args }: UseListboxMultiParameters<LabelElement, ListElement, ListItemElement, K, I>) {
 
 
     //const { useHasFocusProps, getFocusedInner } = useHasFocus<ListElement>({});

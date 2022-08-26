@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { useCallback, useEffect } from "preact/hooks";
-import { ElementToTag, enhanceEvent, EventDetail, TagSensitiveProps } from "./props";
-import { useCheckboxLike, UseCheckboxLikeParameters } from "./use-label";
+import { ElementToTag, enhanceEvent, EventDetail } from "./props";
+import { useCheckboxLike, UseCheckboxLikeParameters, UseCheckboxLikeReturnType } from "./use-label";
 
 
 
@@ -19,11 +19,19 @@ export interface UseAriaCheckboxParameters<I extends Element, L extends Element>
     tagLabel: ElementToTag<L>;
 }
 
+export interface UseAriaCheckboxReturnType<InputType extends Element, LabelType extends HTMLElement | SVGElement> extends Omit<UseCheckboxLikeReturnType<InputType, LabelType>, "useCheckboxLikeInputElement" | "useCheckboxLikeLabelElement"> {
+    /** **Notably unstable** */
+    useCheckboxInputElement: UseCheckboxInputElement<InputType>;
+    /** **Notably unstable** */
+    useCheckboxLabelElement: UseCheckboxLabelElement<LabelType>;
+    inputId: string | undefined;
+    labelId: string | undefined;
+}
 
-export function useAriaCheckbox<InputType extends Element, LabelType extends HTMLElement | SVGElement>({ labelPosition, checked, onInput, disabled, tagInput, tagLabel }: UseAriaCheckboxParameters<InputType, LabelType>) {
+export function useAriaCheckbox<InputType extends Element, LabelType extends HTMLElement | SVGElement>({ labelPosition, checked, onInput, disabled, tagInput, tagLabel }: UseAriaCheckboxParameters<InputType, LabelType>): UseAriaCheckboxReturnType<InputType, LabelType> {
 
     const onInputEnhanced = (e: h.JSX.TargetedEvent<InputType | LabelType, Event>) => onInput?.(enhanceEvent(e as h.JSX.TargetedEvent<InputType, Event>, { checked: !checked }));
-    const { useCheckboxLikeInputElement, useCheckboxLikeLabelElement, inputId, labelId } = useCheckboxLike<InputType, LabelType>({ checked: !!checked, labelPosition, role: "checkbox", disabled, onInput: onInputEnhanced, tagInput: tagInput as never, tagLabel: tagLabel as never });
+    const { useCheckboxLikeInputElement, useCheckboxLikeLabelElement, ...checkboxLikeRest } = useCheckboxLike<InputType, LabelType>({ checked: !!checked, labelPosition, role: "checkbox", disabled, onInput: onInputEnhanced, tagInput: tagInput as never, tagLabel: tagLabel as never });
 
     const useCheckboxInputElement: UseCheckboxInputElement<InputType> = useCallback(function useCheckboxInputElement() {
         const tag = tagInput;
@@ -52,7 +60,6 @@ export function useAriaCheckbox<InputType extends Element, LabelType extends HTM
     }, [useCheckboxLikeInputElement, checked, labelPosition, disabled, tagInput]);
 
     const useCheckboxLabelElement = useCallback(function useCheckboxLabelElement() {
-        const tag = tagLabel;
         const { useCheckboxLikeLabelElementProps } = useCheckboxLikeLabelElement();
 
         function useCheckboxLabelElementProps({ ...props }: h.JSX.HTMLAttributes<LabelType>) {
@@ -66,8 +73,7 @@ export function useAriaCheckbox<InputType extends Element, LabelType extends HTM
     return {
         useCheckboxInputElement,
         useCheckboxLabelElement,
-        inputId,
-        labelId
+        ...checkboxLikeRest
     };
 
 }

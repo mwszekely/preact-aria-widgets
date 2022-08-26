@@ -1,7 +1,7 @@
 export { useAriaAccordion, UseAriaAccordionParameters, UseAriaAccordionSection, UseAriaAccordionSectionBody, UseAriaAccordionSectionHeader, UseAriaAccordionSectionParameters, UseAriaAccordion } from "./use-accordion";
 export { useAriaButton, UseAriaButtonParameters, ButtonPressEvent, setButtonVibrate, usePressEventHandlers, UseAriaButtonReturnType } from "./use-button";
 export { useAriaCheckbox, UseCheckboxInputElement, UseCheckboxLabelElement, CheckboxChangeEvent } from "./use-checkbox";
-export { useCheckboxGroup, UseCheckboxGroupChild, CheckboxGroupChangeEvent, UseCheckboxGroupChildInfo, UseCheckboxGroupChildParameters, UseCheckboxGroupParameters } from "./use-checkbox-group";
+export { useCheckboxGroup, UseCheckboxGroupChild, CheckboxGroupChangeEvent, UseCheckboxGroupChildParameters, UseCheckboxGroupParameters } from "./use-checkbox-group";
 export { useAriaDialog } from "./use-dialog";
 export { useDrawer, UseDrawerParameters } from "./use-drawer";
 export { useLabel, useCheckboxLike, UseCheckboxLikeInputElement, UseCheckboxLikeLabelElement, UseCheckboxLikeParameters, UseLabelParameters } from "./use-label";
@@ -10,10 +10,10 @@ export { useAriaListboxMulti, UseListboxMultiItem, ListboxMultiSelectEvent, UseL
 export { useAriaMenu, useMenuBase, UseMenuBaseParameters, UseMenuButtonParameters, UseAriaMenuParameters, UseMenuItem } from "./use-menu"
 export { useAriaTabs, TabsChangeEvent, UseAriaTabsParameters } from "./use-tabs";
 export { useAriaTooltip, UseTooltip, UseTooltipTrigger } from "./use-tooltip";
-export { useAriaRadioGroup, UseRadio, RadioChangeEvent, UseAriaRadioGroupParameters, UseAriaRadioInfo, UseAriaRadioParameters } from "./use-radio-group"
+export { useAriaRadioGroup, UseRadio, RadioChangeEvent, UseAriaRadioGroupParameters, UseAriaRadioParameters } from "./use-radio-group"
 export { useAriaSlider, AriaSliderThumbInfo, RangeChangeEvent, UseAriaSliderArguments, UseAriaSliderThumb, UseAriaSliderThumbArguments, UseAriaSliderThumbProps, UseAriaSliderThumbReturnType } from "./use-slider";
 export { useToasts, UseToast, UseToastParameters } from "./use-toasts";
-export { useTable, UseTableHead, UseTableBody, UseTableFoot, UseTableRow, UseTableCell, UseTableHeadCell, TableRowInfo, UseTableCellParameters, UseTableHeadCellParameters, UseTableRowParameters } from "./use-table";
+export { useTable, UseTableHead, UseTableBody, UseTableFoot, UseTableRow, UseTableCell, UseTableHeadCell, UseTableCellParameters, UseTableHeadCellParameters, UseTableRowParameters } from "./use-table";
 
 export { EventDetail } from "./props";
 export type { TagSensitiveProps } from "./props";

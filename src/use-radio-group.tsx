@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { ListNavigationChildInfoBase, useActiveElement, useChildrenFlag, useListNavigation, UseListNavigationParameters, useListNavigationSingleSelection, useMergedProps, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
+import { ListNavigationChildInfoBase, UseListNavigationParameters, useListNavigationSingleSelection, useMergedProps, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
 import { useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
 import { ElementToTag, enhanceEvent, EventDetail, TagSensitiveProps } from "./props";
 import { useCheckboxLike, UseCheckboxLikeParameters, useLabel } from "./use-label";
@@ -35,7 +35,7 @@ export type UseAriaRadioParameters<V extends string | number, I extends Element,
     }
 
 export function useAriaRadioGroup<V extends string | number, G extends HTMLElement | SVGElement, GL extends Element, I extends HTMLElement | SVGElement, IL extends HTMLElement, Info extends UseAriaRadioInfoBase>({ name, selectedValue, onInput, tagGroup, tagGroupLabel, initialIndex, onAfterChildLayoutEffect, onChildrenMountChange: ocmc, collator, disableArrowKeys, disableHomeEndKeys, indexDemangler, indexMangler, navigationDirection, noTypeahead, onTabbableIndexChange, onTabbableRender, onTabbedInTo, onTabbedOutOf, typeaheadTimeout }: UseAriaRadioGroupParameters<V, G, GL, I, IL, string, Info>) {
-    const { getElement: getRadioGroupParentElement, useRefElementProps } = useRefElement<G>({});
+    const { getElement: _getRadioGroupParentElement, useRefElementProps } = useRefElement<G>({});
 
     //const getSelectedIndex = useCallback((selectedValue: V) => { return byName.current.get(selectedValue) ?? 0 }, [])
 
@@ -54,9 +54,6 @@ export function useAriaRadioGroup<V extends string | number, G extends HTMLEleme
         useListNavigationSingleSelectionProps,
         currentTypeahead,
         invalidTypeahead,
-        children,
-        getTabbableIndex,
-        setTabbableIndex
     } = useListNavigationSingleSelection<G, I, string, Info>({
         selectedIndex,
         onAfterChildLayoutEffect,

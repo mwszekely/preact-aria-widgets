@@ -23,6 +23,7 @@ export interface UseAriaButtonParameters<E extends EventTarget> extends TagSensi
 }
 
 export interface UseAriaButtonReturnType<E extends EventTarget> {
+    /** *Unstable* */
     useAriaButtonProps: (props: h.JSX.HTMLAttributes<E>) => h.JSX.HTMLAttributes<E>;
 }
 

@@ -1,10 +1,9 @@
 import { h } from "preact";
-import { ListNavigationChildInfoBase, returnFalse, useEffect, useListNavigation, UseListNavigationParameters, useMergedProps, usePassiveState, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
+import { ListNavigationChildInfoBase, returnFalse, useEffect, useListNavigation, UseListNavigationParameters, useMergedProps, usePassiveState, useStableCallback, useState } from "preact-prop-helpers";
 import { ManagedChildren } from "preact-prop-helpers/use-child-manager";
 import { UseListNavigationChildInfoNeeded } from "preact-prop-helpers/use-list-navigation";
 import { StateUpdater, useCallback, useRef } from "preact/hooks";
-import { enhanceEvent, EventDetail, TagSensitiveProps } from "./props";
-import { usePressEventHandlers } from "./use-button";
+import { enhanceEvent, EventDetail } from "./props";
 import { CheckboxChangeEvent, useAriaCheckbox, UseAriaCheckboxParameters } from "./use-checkbox";
 
 
@@ -83,8 +82,6 @@ export function useCheckboxGroup<InputElement extends HTMLElement | SVGElement, 
         useListNavigationProps,
         currentTypeahead,
         invalidTypeahead,
-        getTabbableIndex,
-        setTabbableIndex
     } = useListNavigation<InputElement, InputElement | LabelElement, string, I>({
         collator,
         disableArrowKeys,
@@ -142,11 +139,11 @@ export function useCheckboxGroup<InputElement extends HTMLElement | SVGElement, 
         const { useCheckboxLabelElementProps } = useCheckboxLabelElement();
         return {
             useCheckboxGroupParentInputProps: function useCheckboxGroupParentInputProps(props: h.JSX.HTMLAttributes<InputElement>): h.JSX.HTMLAttributes<InputElement> {
-                let ret = (useMergedProps<InputElement>(useMergedProps<InputElement>({}, { "aria-controls": ariaControls, onInput: tagInput == "input" ? (e => e.preventDefault()) : undefined } as h.JSX.HTMLAttributes<InputElement>), props));
+                const ret = (useMergedProps<InputElement>(useMergedProps<InputElement>({}, { "aria-controls": ariaControls, onInput: tagInput == "input" ? (e => e.preventDefault()) : undefined } as h.JSX.HTMLAttributes<InputElement>), props));
                 return useCheckboxInputElementProps(labelPosition == "separate" ? ret : props);
             },
             useCheckboxGroupParentLabelProps: function useCheckboxGroupParentLabelProps(props: h.JSX.HTMLAttributes<LabelElement>): h.JSX.HTMLAttributes<LabelElement> {
-                let ret = (useMergedProps<LabelElement>(useMergedProps<LabelElement>({}, { "aria-controls": ariaControls } as any) as any, props));
+                const ret = (useMergedProps<LabelElement>(useMergedProps<LabelElement>({}, { "aria-controls": ariaControls } as any) as any, props));
                 return useCheckboxLabelElementProps(labelPosition == "wrapping" ? ret : props)
             }
         }
@@ -155,10 +152,9 @@ export function useCheckboxGroup<InputElement extends HTMLElement | SVGElement, 
     const onCheckboxGroupParentInput2 = useCallback((e: CheckboxChangeEvent<h.JSX.TargetedEvent<InputElement, Event>>) => {
 
         e.preventDefault();
-        debugger;
 
         const selfIsChecked = getSelfIsCheckedStable();
-        let nextChecked = (selfIsChecked === false ? "mixed" : selfIsChecked === "mixed" ? true : false);
+        const nextChecked = (selfIsChecked === false ? "mixed" : selfIsChecked === "mixed" ? true : false);
         children.forEach(child => {
             child.onInput?.(enhanceEvent(e, { checked: nextChecked == "mixed" ? child.getLastUserChecked() : nextChecked }));
         });
@@ -207,13 +203,13 @@ export function useCheckboxGroup<InputElement extends HTMLElement | SVGElement, 
         setAriaControls(Array.from(allIds.current).join(" "));
     }, [updateIndex])
 
-    const useCheckboxGroupChild = useCallback<UseCheckboxGroupChild<InputElement, LabelElement, K, I>>(function ({ info: { index, text, blurSelf, flags, focusSelf, hidden, ...restInfo }, checked, labelPosition, tagLabel, onInput, disabled, tagInput, ...restArgs }: UseCheckboxGroupChildParameters<InputElement, LabelElement, K, I>) {
+    const useCheckboxGroupChild = useCallback<UseCheckboxGroupChild<InputElement, LabelElement, K, I>>(function ({ info: { index, text, blurSelf, flags, focusSelf, hidden, ...restInfo }, checked, labelPosition, tagLabel, onInput, disabled, tagInput, ..._restArgs }: UseCheckboxGroupChildParameters<InputElement, LabelElement, K, I>) {
         labelPosition ??= "separate";
         const [getLastUserChecked, setLastUserChecked] = usePassiveState<boolean | "mixed">(null, returnFalse);
         const { useCheckboxInputElement, useCheckboxLabelElement, inputId, labelId } = useAriaCheckbox<InputElement, LabelElement>({ labelPosition, checked, onInput: useStableCallback<NonNullable<typeof onInput>>(e => { setLastUserChecked(e[EventDetail].checked); onInput?.(e as any); }), disabled, tagInput, tagLabel });
-        const getChecked = useStableGetter(checked);
+        //const getChecked = useStableGetter(checked);
 
-        let controlsId = (labelPosition == "separate" ? inputId : labelId)!;
+        const controlsId = (labelPosition == "separate" ? inputId : labelId)!;
 
         useEffect(() => {
             allIds.current.add(controlsId);
@@ -236,14 +232,14 @@ export function useCheckboxGroup<InputElement extends HTMLElement | SVGElement, 
             tabbable,
             useCheckboxGroupChildInputProps: (props: h.JSX.HTMLAttributes<InputElement>): h.JSX.HTMLAttributes<InputElement> => {
                 const { useCheckboxInputElementProps } = useCheckboxInputElement();
-                let ret = useCheckboxInputElementProps(props);
-                let ret2 = useListNavigationChildProps(useListNavigationProps(ret) as h.JSX.HTMLAttributes<InputElement | LabelElement>);
+                const ret = useCheckboxInputElementProps(props);
+                const ret2 = useListNavigationChildProps(useListNavigationProps(ret) as h.JSX.HTMLAttributes<InputElement | LabelElement>);
                 return (labelPosition == "separate" ? ret2 : ret) as h.JSX.HTMLAttributes<InputElement>;
             },
             useCheckboxGroupChildLabelProps: (props: h.JSX.HTMLAttributes<LabelElement>): h.JSX.HTMLAttributes<LabelElement> => {
                 const { useCheckboxLabelElementProps } = useCheckboxLabelElement();
-                let ret = useCheckboxLabelElementProps(props);
-                let ret2 = useListNavigationChildProps(useListNavigationProps(ret as {} as h.JSX.HTMLAttributes<InputElement>) as h.JSX.HTMLAttributes<InputElement | LabelElement>);
+                const ret = useCheckboxLabelElementProps(props);
+                const ret2 = useListNavigationChildProps(useListNavigationProps(ret as {} as h.JSX.HTMLAttributes<InputElement>) as h.JSX.HTMLAttributes<InputElement | LabelElement>);
                 return (labelPosition == "wrapping" ? ret2 : ret) as h.JSX.HTMLAttributes<LabelElement>;
             }
         }
@@ -263,6 +259,7 @@ export function useCheckboxGroup<InputElement extends HTMLElement | SVGElement, 
 }
 
 export interface UseCheckboxGroupReturnType<InputElement extends HTMLElement | SVGElement, LabelElement extends HTMLElement | SVGElement, K extends string, I extends UseCheckboxGroupChildInfoBase<K>> {
+    /** **STABLE ** */
     checkboxes: ManagedChildren<I>;
     /**
      * Each child checkbox must call this hook, *in addition to* `useAriaCheckbox`
@@ -272,6 +269,8 @@ export interface UseCheckboxGroupReturnType<InputElement extends HTMLElement | S
     parentPercentChecked: number;
     /**
      * The parent checkbox must use this hook
+     * 
+     * **Notably unstable!** because it relies on `ariaControls`, populated by all child checkboxes
      */
     useCheckboxGroupParentInput: UseCheckboxGroupParent<InputElement, LabelElement>;
     currentTypeahead: string | null;

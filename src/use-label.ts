@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { useMergedProps, useRandomId, useRefElement, useStableCallback } from "preact-prop-helpers";
-import { useCallback, useEffect, useState } from "preact/hooks";
-import { ElementToTag, TagSensitiveProps } from "./props";
+import { useCallback, useEffect } from "preact/hooks";
+import { ElementToTag } from "./props";
 import { usePressEventHandlers } from "./use-button";
 
 export interface UseLabelParameters<InputElement extends Element, LabelElement extends Element> {
@@ -11,6 +11,19 @@ export interface UseLabelParameters<InputElement extends Element, LabelElement e
     tagLabel: ElementToTag<LabelElement>;
 }
 
+export interface UseLabelReturnType<InputElement extends Element, LabelElement extends Element> {
+    /** *Notably unstable* */
+    useLabelInput: () => { useLabelInputProps: (props: h.JSX.HTMLAttributes<InputElement>) => h.JSX.HTMLAttributes<InputElement>; };
+    /** *Notably unstable* */
+    useLabelLabel: () => { useLabelLabelProps: (props: h.JSX.HTMLAttributes<LabelElement>) => h.JSX.HTMLAttributes<LabelElement>; };
+    labelId: string | undefined;
+    inputId: string | undefined;
+    /** **Stable** */
+    getLabelId: () => string | undefined;
+    /** **Stable** */
+    getInputId: () => string | undefined;
+}
+
 /**
  * Adds an ID and "aria-labelledby" for two elements, an "input" element and a "label" element.
  * 
@@ -18,22 +31,22 @@ export interface UseLabelParameters<InputElement extends Element, LabelElement e
  * 
  * @see useInputLabel
  */
-export function useLabel<InputElement extends Element, LabelElement extends Element>({ labelPrefix, inputPrefix, tagInput, tagLabel }: UseLabelParameters<InputElement, LabelElement> = { labelPrefix: "label-", inputPrefix: "input-", tagInput: "input" as never, tagLabel: "label" as never }) {
+export function useLabel<InputElement extends Element, LabelElement extends Element>({ labelPrefix, inputPrefix, tagInput, tagLabel }: UseLabelParameters<InputElement, LabelElement> = { labelPrefix: "label-", inputPrefix: "input-", tagInput: "input" as never, tagLabel: "label" as never }): UseLabelReturnType<InputElement, LabelElement> {
 
-    const { useRandomIdSourceElement: useLabelAsSourceId, useRandomIdReferencerElement: useLabelAsReferencerId, usedId: labelId } = useRandomId<LabelElement>({ prefix: labelPrefix, onAfterChildLayoutEffect: null, onChildrenMountChange: null });
-    const { useRandomIdSourceElement: useInputAsSourceId, useRandomIdReferencerElement: useInputAsReferencerId, usedId: inputId } = useRandomId<InputElement>({ prefix: inputPrefix, onAfterChildLayoutEffect: null, onChildrenMountChange: null });
+    const { useRandomIdSourceElement: useLabelAsSourceId, useRandomIdReferencerElement: useLabelAsReferencerId, usedId: labelId, getUsedId: getLabelId } = useRandomId<LabelElement>({ prefix: labelPrefix, onAfterChildLayoutEffect: null, onChildrenMountChange: null });
+    const { useRandomIdSourceElement: useInputAsSourceId, useRandomIdReferencerElement: useInputAsReferencerId, usedId: inputId, getUsedId: getInputId } = useRandomId<InputElement>({ prefix: inputPrefix, onAfterChildLayoutEffect: null, onChildrenMountChange: null });
     const { useRandomIdSourceElementProps: useLabelAsSourceIdProps } = useLabelAsSourceId();
     const { useRandomIdSourceElementProps: useInputAsSourceIdProps } = useInputAsSourceId();
     const { useRandomIdReferencerElementProps: useLabelAsReferencerIdProps } = useLabelAsReferencerId<InputElement>("aria-labelledby" as never);
     const { useRandomIdReferencerElementProps: useInputAsReferencerIdProps } = useInputAsReferencerId<LabelElement>("for");
 
-    let isSyntheticLabel = (tagInput != "input" || tagLabel != "label");
+    const isSyntheticLabel = (tagInput != "input" || tagLabel != "label");
 
-    const useLabelLabel: (() => {useLabelLabelProps: (props: h.JSX.HTMLAttributes<LabelElement>) => h.JSX.HTMLAttributes<LabelElement>;}) = useCallback(function useLabelLabel() {
+    const useLabelLabel: (() => { useLabelLabelProps: (props: h.JSX.HTMLAttributes<LabelElement>) => h.JSX.HTMLAttributes<LabelElement>; }) = useCallback(function useLabelLabel() {
         return {
             useLabelLabelProps: (props: h.JSX.HTMLAttributes<LabelElement>): h.JSX.HTMLAttributes<LabelElement> => {
-                let propsWithoutFor = useLabelAsSourceIdProps(props);
-                let propsWithFor = useInputAsReferencerIdProps(propsWithoutFor);
+                const propsWithoutFor = useLabelAsSourceIdProps(props);
+                const propsWithFor = useInputAsReferencerIdProps(propsWithoutFor);
                 if (tagLabel == "label" && tagInput == "input")
                     return propsWithFor;
                 else
@@ -56,13 +69,15 @@ export function useLabel<InputElement extends Element, LabelElement extends Elem
 
             }
         }
-    }, [])
+    }, [isSyntheticLabel])
 
     return {
         useLabelInput,
         useLabelLabel,
         labelId,
-        inputId
+        inputId,
+        getLabelId,
+        getInputId
     }
 
 }
@@ -100,19 +115,36 @@ const handlesInput = <E extends Element>(tag: ElementToTag<E>, labelPosition: "w
 
 export type UseCheckboxLikeInputElement<InputType extends Element> = () => {
     getInputElement: () => InputType | null;
+    /** *Unstable* */
     useCheckboxLikeInputElementProps: ({ ...p0 }: h.JSX.HTMLAttributes<InputType>) => h.JSX.HTMLAttributes<InputType>;
 }
 
 export type UseCheckboxLikeLabelElement<LabelType extends Element> = () => {
+    /** *Unstable* */
     useCheckboxLikeLabelElementProps: ({ ...p0 }: h.JSX.HTMLAttributes<LabelType>) => h.JSX.HTMLAttributes<LabelType>;
+}
+
+export interface UseCheckboxLikeReturnType<InputType extends Element, LabelType extends HTMLElement | SVGElement> {
+    /** *Notably unstable* */
+    useCheckboxLikeInputElement: UseCheckboxLikeInputElement<InputType>;
+    /** *Notably unstable* */
+    useCheckboxLikeLabelElement: () => { useCheckboxLikeLabelElementProps: ({ ...p0 }: h.JSX.HTMLAttributes<LabelType>) => h.JSX.HTMLAttributes<LabelType>; };
+    /** **STABLE** */
+    getLabelElement: () => LabelType | null;
+    /** **STABLE** */
+    getInputElement: () => InputType | null;
+    inputId: string | undefined;
+    labelId: string | undefined;
 }
 
 /**
  * Handles label type (wrapping or separate) for checkboxes, radios, switches, etc.
+ * 
+ * If it's a toggleable click-thing with a label (that can also be clicked), then it's a checkbox-like.
  * @param param0 
  * @returns 
  */
-export function useCheckboxLike<InputType extends Element, LabelType extends HTMLElement | SVGElement>({ checked, disabled, labelPosition, onInput, role, tagInput, tagLabel }: UseCheckboxLikeParameters<InputType, LabelType>) {
+export function useCheckboxLike<InputType extends Element, LabelType extends HTMLElement | SVGElement>({ checked, disabled, labelPosition, onInput, role, tagInput, tagLabel }: UseCheckboxLikeParameters<InputType, LabelType>): UseCheckboxLikeReturnType<InputType, LabelType> {
 
     const stableOnInput = useStableCallback((e: h.JSX.TargetedEvent<InputType> | h.JSX.TargetedEvent<LabelType>) => { e.preventDefault(); onInput?.(e as h.JSX.TargetedEvent<InputType>); });
 

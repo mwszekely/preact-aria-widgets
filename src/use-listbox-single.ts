@@ -1,8 +1,7 @@
 import { h } from "preact";
-import { useMergedProps, useRefElement, useStableCallback } from "preact-prop-helpers";
+import { useMergedProps, useStableCallback } from "preact-prop-helpers";
 import { ManagedChildren } from "preact-prop-helpers/use-child-manager";
 import { ListNavigationChildInfoBase, useListNavigationSingleSelection, UseListNavigationSingleSelectionParameters } from "preact-prop-helpers/use-list-navigation";
-import { RovingTabIndexChildInfoBase } from "preact-prop-helpers/use-roving-tabindex";
 import { useCallback, useEffect } from "preact/hooks";
 import { ElementToTag, EventDetail } from "./props";
 import { usePressEventHandlers } from "./use-button";
@@ -11,7 +10,7 @@ import { useLabel } from "./use-label";
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type ListboxSingleSelectEvent<E extends EventTarget> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 
-export interface UseListboxSingleParameters<LabelElement extends Element, ListElement extends Element, ListItemElement extends Element, K extends string, I extends UseListboxSingleItemInfo<ListItemElement, K>> extends UseListNavigationSingleSelectionParameters<K, I> {
+export interface UseListboxSingleParameters<LabelElement extends Element, ListElement extends Element, ListItemElement extends Element, K extends string, I extends UseListboxSingleItemInfoBase<ListItemElement, K>> extends UseListNavigationSingleSelectionParameters<K, I> {
     selectionMode: "focus" | "activate";
     selectedIndex: number | null;
     onSelect?(event: ListboxSingleSelectEvent<Element>): void;
@@ -21,7 +20,7 @@ export interface UseListboxSingleParameters<LabelElement extends Element, ListEl
 
 
 
-export type UseListboxSingleItem<E extends Element, K extends string, I extends UseListboxSingleItemInfo<E, K>> = (info: UseListboxSingleItemParameters<E, K, I>) => UseListboxSingleItemReturnType<E>;
+export type UseListboxSingleItem<E extends Element, K extends string = string, I extends UseListboxSingleItemInfoBase<E, K> = UseListboxSingleItemInfoBase<E, K>> = (info: UseListboxSingleItemParameters<E, K, I>) => UseListboxSingleItemReturnType<E>;
 
 export interface UseListboxSingleItemReturnType<E extends Element> {
     useListboxSingleItemProps: (props: h.JSX.HTMLAttributes<E>) => h.JSX.HTMLAttributes<E>;
@@ -30,44 +29,42 @@ export interface UseListboxSingleItemReturnType<E extends Element> {
     getSelected: () => boolean | null;
 }
 
-export interface UseListboxSingleReturnType<LabelElement extends Element, ListElement extends HTMLElement | SVGElement, ListItemElement extends HTMLElement | SVGElement, K extends string, I extends UseListboxSingleItemInfo<ListItemElement, K>> {
+export interface UseListboxSingleReturnType<LabelElement extends Element, ListElement extends HTMLElement | SVGElement, ListItemElement extends HTMLElement | SVGElement, K extends string, I extends UseListboxSingleItemInfoBase<ListItemElement, K>> {
     useListboxSingleItem: UseListboxSingleItem<ListItemElement, K, I>;
     useListboxSingleProps: (props: h.JSX.HTMLAttributes<ListElement>) => h.JSX.HTMLAttributes<ListElement>;
-    useListboxSingleLabel: () => { useListboxSingleLabelProps: (props: h.JSX.HTMLAttributes<LabelElement>) => void; }
+    useListboxSingleLabel: () => { useListboxSingleLabelProps: (props: h.JSX.HTMLAttributes<LabelElement>) => h.JSX.HTMLAttributes<LabelElement>; }
     currentTypeahead: string | null;
     invalidTypeahead: boolean | null;
     children: ManagedChildren<I>;
 }
 
 
-export type UseListboxSingleItemParameters<E extends Element, K extends string, I extends UseListboxSingleItemInfo<E, K>> = {
-    info: Omit<I, "getElement">;
+export type UseListboxSingleItemParameters<E extends Element, K extends string, I extends UseListboxSingleItemInfoBase<E, K>> = {
+    info: Omit<I, "getElement" | "flags">;
     disabled?: boolean;
 };
 
-export interface UseListboxSingleItemInfo<E extends Element, K extends string> extends ListNavigationChildInfoBase<K> {
+export interface UseListboxSingleItemInfoBase<E extends Element, K extends string> extends ListNavigationChildInfoBase<K> {
     getElement(): E;
 }
 
-export function useAriaListboxSingle<LabelElement extends Element, ListElement extends HTMLElement | SVGElement, ListItemElement extends HTMLElement | SVGElement, K extends string, I extends UseListboxSingleItemInfo<ListItemElement, K>>({ selectedIndex, onSelect, onTabbableIndexChange: otic, selectionMode, tagList, tagLabel, ...args }: UseListboxSingleParameters<LabelElement, ListElement, ListItemElement, K, I>): UseListboxSingleReturnType<LabelElement, ListElement, ListItemElement, K, I> {
+export function useAriaListboxSingle<LabelElement extends Element, ListElement extends HTMLElement | SVGElement, ListItemElement extends HTMLElement | SVGElement, K extends string = string, I extends UseListboxSingleItemInfoBase<ListItemElement, K> =  UseListboxSingleItemInfoBase<ListItemElement, K>>({ selectedIndex, onSelect, onTabbableIndexChange: otic, selectionMode, tagList, tagLabel, ...args }: UseListboxSingleParameters<LabelElement, ListElement, ListItemElement, K, I>): UseListboxSingleReturnType<LabelElement, ListElement, ListItemElement, K, I> {
 
-    console.log(`Rendering listbox with selectedIndex==${selectedIndex}`);
     const { useLabelInput, useLabelLabel } = useLabel<ListElement, LabelElement>({ labelPrefix: "aria-listbox-label-", inputPrefix: "aria-listbox-", tagInput: tagList as never, tagLabel: tagLabel as never })
     const {
         useListNavigationSingleSelectionChild,
         useListNavigationSingleSelectionProps,
         currentTypeahead,
         invalidTypeahead,
-        children,
-        getTabbableIndex,
-        setTabbableIndex
+        children
     } = useListNavigationSingleSelection<ListElement, ListItemElement, "tabbable" | "selected", I>({
         selectedIndex,
         onTabbableIndexChange: useStableCallback<NonNullable<typeof otic>>((i) => {
             otic?.(i);
             if (selectionMode == "focus") {
-                const target = children.getAt(i!)?.getElement()!;
-                onSelect?.({ target, currentTarget: target, [EventDetail]: { selectedIndex: i! } });
+                const target = (children.getAt(i!)?.getElement());
+                if (target)
+                    onSelect?.({ target, currentTarget: target, [EventDetail]: { selectedIndex: i! } });
             }
         }),
         ...args
@@ -77,9 +74,8 @@ export function useAriaListboxSingle<LabelElement extends Element, ListElement e
 
 
     const useListboxSingleItem = useCallback<UseListboxSingleItem<ListItemElement, K, I>>(({ info: { ...info }, disabled }): UseListboxSingleItemReturnType<ListItemElement> => {
-        const { tabbable, selected, getSelected, useListNavigationChildProps, getElement } = useListNavigationSingleSelectionChild({ info: { ...info, getElement: useStableCallback(() => getElement()) } as I });
+        const { tabbable, selected, getSelected, useListNavigationChildProps, getElement } = useListNavigationSingleSelectionChild({ info: { ...info, getElement: useStableCallback(() => getElement()), flags: {} } as I });
         const index = info.index;
-        console.log(`Rendering listboxitem #${info.index} with selected==${selected.toString()}`);
 
         useEffect(() => {
             const element = getElement();
@@ -113,7 +109,7 @@ export function useAriaListboxSingle<LabelElement extends Element, ListElement e
     const useListboxSingleLabel = useCallback(function useListboxSingleLabel() {
         function useListboxSingleLabelProps(props: h.JSX.HTMLAttributes<LabelElement>) {
             const { useLabelLabelProps } = useLabelLabel();
-            useLabelLabelProps(props);
+            return useLabelLabelProps(props);
         }
 
         return { useListboxSingleLabelProps };
