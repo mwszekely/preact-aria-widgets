@@ -1,40 +1,54 @@
 import { h } from "preact";
-import { ListNavigationChildInfoBase, UseListNavigationParameters, useListNavigationSingleSelection, useMergedProps, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
+import { UseListNavigationChildParameters, UseListNavigationParameters, useListNavigationSingleSelection, useMergedProps, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
 import { useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
 import { ElementToTag, enhanceEvent, EventDetail, TagSensitiveProps } from "./props";
-import { useCheckboxLike, UseCheckboxLikeParameters, useLabel } from "./use-label";
+import { useCheckboxLike, useLabel } from "./use-label";
 
+type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RadioChangeEvent<EventType extends Event> = EventType & { [EventDetail]: { selectedValue: string } };
 
-export interface UseAriaRadioGroupParameters<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, InputElement extends Element, LabelElement extends Element, K extends string, I extends ListNavigationChildInfoBase<K>> extends UseListNavigationParameters<K, I> {
-    name: string;
+export interface UseAriaRadioGroupParameters<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, InputElement extends Element, LabelElement extends Element> extends UseListNavigationParameters {
+    radioGroup: {
+        name: string;
 
-    selectedValue: V;
-    onInput(event: RadioChangeEvent<h.JSX.TargetedEvent<InputElement>>): void;
-    onInput(event: RadioChangeEvent<h.JSX.TargetedEvent<LabelElement>>): void;
-    tagGroup: ElementToTag<GroupElement>;
-    tagGroupLabel: ElementToTag<GroupLabelElement>;
+        selectedValue: V;
+        onInput(event: RadioChangeEvent<h.JSX.TargetedEvent<InputElement>>): void;
+        onInput(event: RadioChangeEvent<h.JSX.TargetedEvent<LabelElement>>): void;
+        tagGroup: ElementToTag<GroupElement>;
+        tagGroupLabel: ElementToTag<GroupLabelElement>;
+    }
 }
 
-export interface UseAriaRadioInfoBase extends ListNavigationChildInfoBase<"tabbable" | "selected"> {
+/*export interface UseAriaRadioInfoBase extends ListNavigationChildInfoBase<"tabbable" | "selected"> {
     setChecked(checked: boolean): void;
     getChecked(): boolean | null;
-}
+}*/
 
 
 
 
-export type UseAriaRadioParameters<V extends string | number, I extends Element, IL extends Element, Info extends UseAriaRadioInfoBase> =
-    Omit<UseCheckboxLikeParameters<I, IL>, "onInput" | "role" | "checked" > & {
-        info: Omit<Info, "setChecked" | "getChecked"| "blurSelf" | "getElement" | "focusSelf">;
+export interface UseAriaRadioParameters<V extends string | number, I extends Element, IL extends Element> extends UseListNavigationChildParameters<{}, never> {
+    radio: {
         labelPosition: "wrapping" | "separate";
         value: V;
         disabled: boolean;
         tagInput: ElementToTag<I>;
         tagLabel: ElementToTag<IL>;
     }
+    /*Omit<UseCheckboxLikeParameters<I, IL>, "onInput" | "role" | "checked"> & {
+        info: Omit<Info, "setChecked" | "getChecked" | "blurSelf" | "getElement" | "focusSelf">;
+        
+    }*/
+}
 
-export function useAriaRadioGroup<V extends string | number, G extends HTMLElement | SVGElement, GL extends Element, I extends HTMLElement | SVGElement, IL extends HTMLElement, Info extends UseAriaRadioInfoBase>({ name, selectedValue, onInput, tagGroup, tagGroupLabel, initialIndex, onAfterChildLayoutEffect, onChildrenMountChange: ocmc, collator, disableArrowKeys, disableHomeEndKeys, indexDemangler, indexMangler, navigationDirection, noTypeahead, onTabbableIndexChange, onTabbableRender, onTabbedInTo, onTabbedOutOf, typeaheadTimeout }: UseAriaRadioGroupParameters<V, G, GL, I, IL, string, Info>) {
+export function useAriaRadioGroup<V extends string | number, G extends HTMLElement | SVGElement, GL extends Element, I extends HTMLElement | SVGElement, IL extends HTMLElement>({
+    linearNavigation,
+    listNavigation,
+    managedChildren,
+    radioGroup: { name, onInput, selectedValue, tagGroup, tagGroupLabel },
+    rovingTabIndex,
+    typeaheadNavigation
+}: UseAriaRadioGroupParameters<V, G, GL, I, IL>) {
     const { getElement: _getRadioGroupParentElement, useRefElementProps } = useRefElement<G>({});
 
     //const getSelectedIndex = useCallback((selectedValue: V) => { return byName.current.get(selectedValue) ?? 0 }, [])
@@ -52,24 +66,18 @@ export function useAriaRadioGroup<V extends string | number, G extends HTMLEleme
     const {
         useListNavigationSingleSelectionChild,
         useListNavigationSingleSelectionProps,
-        currentTypeahead,
-        invalidTypeahead,
-    } = useListNavigationSingleSelection<G, I, string, Info>({
-        selectedIndex,
-        onAfterChildLayoutEffect,
-        onChildrenMountChange: useStableCallback<NonNullable<typeof ocmc>>((m, u) => { ocmc?.(m, u); }),
-        collator,
-        disableArrowKeys,
-        disableHomeEndKeys,
-        indexDemangler,
-        indexMangler,
-        navigationDirection,
-        noTypeahead,
-        onTabbableIndexChange,
-        onTabbableRender,
-        onTabbedInTo,
-        onTabbedOutOf,
-        typeaheadTimeout
+        children: children,
+        linearNavigation: ln_ret,
+        listNavigation: ls_ret,
+        rovingTabIndex: rti_ret,
+        typeaheadNavigation: tn_ret
+    } = useListNavigationSingleSelection<G, I, {}, never>({
+        linearNavigation,
+        listNavigation,
+        managedChildren,
+        rovingTabIndex,
+        singleSelection: { selectedIndex },
+        typeaheadNavigation
     });
 
     // Track whether the currently focused element is a child of the radio group parent element.
@@ -104,8 +112,13 @@ export function useAriaRadioGroup<V extends string | number, G extends HTMLEleme
 
 
 
-    const useRadio: UseRadio<V, I, IL, Info> = useCallback(function useAriaRadio({ info: { index, text }, disabled, labelPosition, value, tagInput, tagLabel, ...rest }: UseAriaRadioParameters<V, I, IL, Info>) {
-
+    const useRadio = useCallback<UseRadio<V, I, IL>>(function useAriaRadio({
+        ls,
+        managedChild,
+        rti,
+        radio: { disabled, labelPosition, tagInput, tagLabel, value }
+    }) {
+        const index = managedChild.index;
         const [checked, setChecked, getChecked] = useState<boolean | null>(null);
 
         const onInput = useCallback((e: h.JSX.TargetedEvent<I> | h.JSX.TargetedEvent<IL>) => {
@@ -120,7 +133,11 @@ export function useAriaRadioGroup<V extends string | number, G extends HTMLEleme
             return () => { byName.current.delete(value); }
         }, [byName, value, index]);
 
-        const { tabbable, useListNavigationChildProps } = useListNavigationSingleSelectionChild({ info: { index, setChecked, getChecked, text, ...rest } as any as Info });
+        const { tabbable, useListNavigationChildProps } = useListNavigationSingleSelectionChild({
+            ls,
+            rti,
+            managedChild
+        });
 
         const useRadioInput: UseRadioInput<I> = () => {
             const tag = tagInput;
@@ -171,9 +188,11 @@ export function useAriaRadioGroup<V extends string | number, G extends HTMLEleme
         useRadio,
         useRadioGroupProps,
         useRadioGroupLabelProps,
-        selectedIndex,
-        currentTypeahead,
-        invalidTypeahead,
+        children,
+        linearNavigation: ln_ret,
+        listNavigation: ls_ret,
+        rovingTabIndex: rti_ret,
+        typeaheadNavigation: tn_ret
     }
 }
 
@@ -187,4 +206,4 @@ export interface UseRadioReturnType<I extends Element, L extends Element> {
 type UseRadioInput<I extends Element> = ({ tag }: TagSensitiveProps<I>) => { useRadioInputProps: (props: h.JSX.HTMLAttributes<I>) => h.JSX.HTMLAttributes<I>; }
 type UseRadioLabel<L extends Element> = ({ tag }: TagSensitiveProps<L>) => { useRadioLabelProps: (props: h.JSX.HTMLAttributes<L>) => h.JSX.HTMLAttributes<L>; }
 
-export type UseRadio<V extends string | number, I extends Element, L extends Element, Info extends UseAriaRadioInfoBase> = (a: UseAriaRadioParameters<V, I, L, Info>) => UseRadioReturnType<I, L>
+export type UseRadio<V extends string | number, I extends Element, L extends Element> = (a: UseAriaRadioParameters<V, I, L>) => UseRadioReturnType<I, L>

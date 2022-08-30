@@ -1,7 +1,6 @@
 import { h } from "preact";
-import { ListNavigationChildInfoBase, returnFalse, useEffect, useListNavigation, UseListNavigationParameters, useMergedProps, usePassiveState, useStableCallback, useState } from "preact-prop-helpers";
+import { returnFalse, useEffect, useListNavigation, UseListNavigationParameters, useMergedProps, usePassiveState, useStableCallback, useState } from "preact-prop-helpers";
 import { ManagedChildren } from "preact-prop-helpers/use-child-manager";
-import { UseListNavigationChildInfoNeeded } from "preact-prop-helpers/use-list-navigation";
 import { StateUpdater, useCallback, useRef } from "preact/hooks";
 import { enhanceEvent, EventDetail } from "./props";
 import { CheckboxChangeEvent, useAriaCheckbox, UseAriaCheckboxParameters } from "./use-checkbox";
@@ -9,7 +8,7 @@ import { CheckboxChangeEvent, useAriaCheckbox, UseAriaCheckboxParameters } from 
 
 export type CheckboxGroupChangeEvent<EventType extends Event> = EventType & { [EventDetail]: { childrenChecked: boolean | Map<number, boolean | "mixed"> } };
 
-export interface UseCheckboxGroupParameters<K extends string, I extends UseCheckboxGroupChildInfoBase<K>> extends UseListNavigationParameters<K, I> {
+export interface UseCheckboxGroupParameters extends UseListNavigationParameters {
     /**
      * This is called whenever the parent checkbox is changed and an update of
      * all the children needs to occur.
