@@ -5,7 +5,7 @@ import { useAriaListboxSingle, UseListboxSingleItem, UseListboxSingleItemParamet
 
 type Get<T, K extends keyof T> = T[K];
 
-export interface ListboxSingleProps<LabelElement extends Element, ListElement extends HTMLElement | SVGElement, ListItemElement extends HTMLElement | SVGElement> extends
+export interface ListboxSingleProps<LabelElement extends Element, ListElement extends Element, ListItemElement extends Element> extends
     Get<UseListboxSingleParameters<LabelElement, ListElement>, "singleSelection">,
     Get<UseListboxSingleParameters<LabelElement, ListElement>, "linearNavigation">,
     Get<UseListboxSingleParameters<LabelElement, ListElement>, "listNavigation">,
@@ -23,16 +23,16 @@ export interface ListboxSingleProps<LabelElement extends Element, ListElement ex
 
 
 
-export interface ListboxSingleItemProps<ListboxItemElement extends Element> extends
-    Get<UseListboxSingleItemParameters, "ls">,
-    Get<UseListboxSingleItemParameters, "rti">,
+export interface ListboxSingleItemProps<ListElement extends Element, ListboxItemElement extends Element> extends
     Get<UseListboxSingleItemParameters, "managedChild">,
+    Omit<Get<UseListboxSingleItemParameters, "listNavigation">, "subInfo">,
+    Get<UseListboxSingleItemParameters, "rovingTabIndex">,
     Get<UseListboxSingleItemParameters, "lbs"> {
     tagListItem: ElementToTag<ListboxItemElement>;
-    render?(info: Omit<UseListboxSingleItemReturnType<ListboxItemElement>, `use${string}`>, listItem: VNode<any>): VNode<any>;
+    render?(info: Omit<UseListboxSingleItemReturnType<ListElement, ListboxItemElement>, `use${string}`>, listItem: VNode<any>): VNode<any>;
 }
 
-const ListboxSingleContext = createContext<UseListboxSingleItem<any>>(null!);
+const ListboxSingleContext = createContext<UseListboxSingleItem<any, any>>(null!);
 
 export function ListboxSingle<LabelElement extends Element, ListElement extends HTMLElement, ListItemElement extends HTMLElement>({
     render,
@@ -96,7 +96,7 @@ function defaultListRender(...[info, label, list]: Parameters<NonNullable<Listbo
     )
 }
 
-function defaultListItemRender(...[info, listItem]: Parameters<NonNullable<ListboxSingleItemProps<any>["render"]>>): VNode<any> {
+function defaultListItemRender(...[info, listItem]: Parameters<NonNullable<ListboxSingleItemProps<any, any>["render"]>>): VNode<any> {
     return (
         <>{listItem}</>
     )
@@ -108,18 +108,18 @@ export interface AriaListboxSinglePropsDerivedFrom {
     tabbable: boolean;
 }
 
-export function ListboxSingleItem<ListItemElement extends Element>({ index, tagListItem, blurSelf, disabled, flags, focusSelf, render, text, hidden }: ListboxSingleItemProps<ListItemElement>) {
-    const { getSelected, selected, tabbable, useListboxSingleItemProps } = useContext(ListboxSingleContext)({ managedChild: { index, flags }, rti: { blurSelf, focusSelf }, ls: { subInfo: {}, text, hidden }, lbs: { disabled } });
+export function ListboxSingleItem<ListElement extends Element, ListItemElement extends Element>({ index, tagListItem, blurSelf, disabled, flags, focusSelf, render, text, hidden }: ListboxSingleItemProps<ListElement, ListItemElement>) {
+    const { useListboxSingleItemProps, rovingTabIndex, singleSelection } = useContext(ListboxSingleContext)({ managedChild: { index, flags }, rovingTabIndex: { blurSelf, focusSelf, hidden }, listNavigation: { subInfo: {}, text }, lbs: { disabled } });
     const listItem = createElement(tagListItem, useListboxSingleItemProps({}) as any);
     return (
-        <>{(render ?? defaultListItemRender)({ getSelected, selected, tabbable }, listItem)}</>
+        <>{(render ?? defaultListItemRender)({ rovingTabIndex, singleSelection }, listItem)}</>
     )
 }
 
 function foo() {
     return (
         <ListboxSingle selectedIndex={9} selectionMode="activate" tagLabel="label" tagList="ul" >
-            <ListboxSingleItem index={0} text="" subInfo={{}} tagListItem="li"></ListboxSingleItem>
+            <ListboxSingleItem index={0} text="" tagListItem="li"></ListboxSingleItem>
         </ListboxSingle>
     )
 }

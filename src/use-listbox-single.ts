@@ -1,6 +1,6 @@
 import { h } from "preact";
 import { OnTabbableIndexChange, useMergedProps, useStableCallback } from "preact-prop-helpers";
-import { useListNavigationSingleSelection, UseListNavigationSingleSelectionChildParameters, UseListNavigationSingleSelectionParameters, UseListNavigationSingleSelectionReturnType } from "preact-prop-helpers/use-list-navigation";
+import { useListNavigationSingleSelection, UseListNavigationSingleSelectionChildParameters, UseListNavigationSingleSelectionChildReturnType, UseListNavigationSingleSelectionParameters, UseListNavigationSingleSelectionReturnType } from "preact-prop-helpers/use-list-navigation";
 import { useCallback, useEffect } from "preact/hooks";
 import { ElementToTag, EventDetail } from "./props";
 import { usePressEventHandlers } from "./use-button";
@@ -24,22 +24,19 @@ export interface UseListboxSingleItemParameters extends UseListNavigationSingleS
 
 
 
-export type UseListboxSingleItem<E extends Element> = (info: UseListboxSingleItemParameters) => UseListboxSingleItemReturnType<E>;
+export type UseListboxSingleItem<ListElement extends Element, ListItemElement extends Element> = (info: UseListboxSingleItemParameters) => UseListboxSingleItemReturnType<ListElement, ListItemElement>;
 
-export interface UseListboxSingleItemReturnType<E extends Element> {
-    useListboxSingleItemProps: (props: h.JSX.HTMLAttributes<E>) => h.JSX.HTMLAttributes<E>;
-    tabbable: boolean;
-    selected: boolean;
-    getSelected: () => boolean | null;
+export interface UseListboxSingleItemReturnType<ListElement extends Element, ListItemElement extends Element> extends UseListNavigationSingleSelectionChildReturnType<ListItemElement> {
+    useListboxSingleItemProps: (props: h.JSX.HTMLAttributes<ListItemElement>) => h.JSX.HTMLAttributes<ListItemElement>;
+    //tabbable: boolean;
+    //selected: boolean;
+    //getSelected: () => boolean | null;
 }
 
-export interface UseListboxSingleReturnType<LabelElement extends Element, ListElement extends HTMLElement | SVGElement, ListItemElement extends HTMLElement | SVGElement> extends Omit<UseListNavigationSingleSelectionReturnType<ListElement, ListItemElement, {}, never>, "useListNavigationSingleSelectionChild" | "useListNavigationSingleSelectionProps"> {
-    useListboxSingleItem: UseListboxSingleItem<ListItemElement>;
+export interface UseListboxSingleReturnType<LabelElement extends Element, ListElement extends Element, ListItemElement extends Element> extends Omit<UseListNavigationSingleSelectionReturnType<ListElement, ListItemElement, {}, never>, "useListNavigationSingleSelectionChild" | "useListNavigationSingleSelectionProps"> {
+    useListboxSingleItem: UseListboxSingleItem<ListElement, ListItemElement>;
     useListboxSingleProps: (props: h.JSX.HTMLAttributes<ListElement>) => h.JSX.HTMLAttributes<ListElement>;
     useListboxSingleLabel: () => { useListboxSingleLabelProps: (props: h.JSX.HTMLAttributes<LabelElement>) => h.JSX.HTMLAttributes<LabelElement>; }
-    //currentTypeahead: string | null;
-    //invalidTypeahead: boolean | null;
-    //children: ManagedChildren<number, {}, never>;
 }
 
 
@@ -47,7 +44,7 @@ export interface UseListboxSingleReturnType<LabelElement extends Element, ListEl
     getElement(): E;
 }*/
 
-export function useAriaListboxSingle<LabelElement extends Element, ListElement extends HTMLElement | SVGElement, ListItemElement extends HTMLElement | SVGElement>({
+export function useAriaListboxSingle<LabelElement extends Element, ListElement extends Element, ListItemElement extends Element>({
     listboxSingle: { selectionMode, tagLabel, tagList, onSelect, ...lbs },
     singleSelection: { selectedIndex, ...ss },
     linearNavigation: { disableArrowKeys, disableHomeEndKeys, navigationDirection, ...ln },
@@ -60,8 +57,8 @@ export function useAriaListboxSingle<LabelElement extends Element, ListElement e
     const { useLabelInput, useLabelLabel } = useLabel<ListElement, LabelElement>({
         labelPrefix: "aria-listbox-label-",
         inputPrefix: "aria-listbox-",
-        tagInput: tagList as never,
-        tagLabel: tagLabel as never
+        tagInput: tagList,
+        tagLabel: tagLabel
     });
 
     const {
@@ -95,26 +92,32 @@ export function useAriaListboxSingle<LabelElement extends Element, ListElement e
     const stableOnSelect = useStableCallback(onSelect ?? (() => { }));
 
 
-    const useListboxSingleItem = useCallback<UseListboxSingleItem<ListItemElement>>(({ ls, lbs: { disabled }, managedChild, rti }) => {
-        const { tabbable, selected, getSelected, useListNavigationChildProps, getElement } = useListNavigationSingleSelectionChild({
+    const useListboxSingleItem = useCallback<UseListboxSingleItem<ListElement, ListItemElement>>(({ lbs, listNavigation, managedChild, rovingTabIndex }) => {
+        const { rovingTabIndex: rti_ret, singleSelection: ss_ret, useListNavigationChildProps } = useListNavigationSingleSelectionChild({
             managedChild,
-            ls,
-            rti
+            listNavigation,
+            rovingTabIndex
         });
         const index = managedChild.index;
 
         useEffect(() => {
-            const element = getElement();
-            if (element && tabbable && selectionMode == "focus") {
+            const element = rti_ret.getElement();
+            if (element && rti_ret.tabbable && selectionMode == "focus") {
                 stableOnSelect?.({ target: element, currentTarget: element, [EventDetail]: { selectedIndex: index } });
             }
-        }, [tabbable, selectionMode, index]);
+        }, [rti_ret.tabbable, selectionMode, index]);
 
-        return { useListboxSingleItemProps, tabbable, selected, getSelected };
+        return {
+            useListboxSingleItemProps,
+            rovingTabIndex: rti_ret,
+            singleSelection: ss_ret,
+
+            useListNavigationChildProps
+        };
 
         function useListboxSingleItemProps<P extends h.JSX.HTMLAttributes<ListItemElement>>(props: P) {
-            const newProps: h.JSX.HTMLAttributes<ListItemElement> = usePressEventHandlers<ListItemElement>(disabled ? null : (e) => {
-                const element = getElement();
+            const newProps: h.JSX.HTMLAttributes<ListItemElement> = usePressEventHandlers<ListItemElement>(lbs.disabled ? null : (e) => {
+                const element = rti_ret.getElement();
                 if (element)
                     stableOnSelect?.({ target: element, currentTarget: element, [EventDetail]: { selectedIndex: index } });
                 e.preventDefault();
@@ -123,8 +126,8 @@ export function useAriaListboxSingle<LabelElement extends Element, ListElement e
             props.role = "option";
             //props["aria-setsize"] = (children.getHighestIndex() + 1).toString();
             //props["aria-posinset"] = (info.index + 1).toString();
-            props["aria-selected"] = (selected ?? false).toString();
-            if (disabled)
+            props["aria-selected"] = (ss_ret.selected ?? false).toString();
+            if (lbs.disabled)
                 props["aria-disabled"] = "true";
 
             return useListNavigationChildProps(useMergedProps<ListItemElement>(newProps, props));
