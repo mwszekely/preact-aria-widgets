@@ -1,7 +1,7 @@
 import { h } from "preact";
-import { OnTabbableIndexChange, useLayoutEffect, useListNavigation, UseListNavigationChildParameters, UseListNavigationChildReturnType, UseListNavigationParameters, UseListNavigationReturnType, useMergedProps, useRefElement, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
-import { useCallback, useEffect } from "preact/hooks";
-import { ElementToTag, EventDetail, TagSensitiveProps } from "./props";
+import { OnTabbableIndexChange, returnFalse, useLayoutEffect, useListNavigation, UseListNavigationChildParameters, UseListNavigationChildReturnType, UseListNavigationParameters, UseListNavigationReturnType, useMergedProps, usePassiveState, useRefElement, useStableCallback, useStableGetter } from "preact-prop-helpers";
+import { useCallback } from "preact/hooks";
+import { ElementToTag, EventDetail } from "./props";
 import { usePressEventHandlers } from "./use-button";
 import { useLabel } from "./use-label";
 
@@ -18,7 +18,7 @@ export interface UseListboxMultiParameters<LabelElement extends Element, ListEle
 
 export interface UseListboxMultiItemParameters extends UseListNavigationChildParameters<Info, never> {
     lbm: { disabled?: boolean; } & Info;
-};
+}
 
 
 
@@ -72,11 +72,11 @@ export interface UseListboxMultiReturnType<LabelElement extends Element, ListEle
 
 export function useAriaListboxMulti<LabelElement extends Element, ListElement extends Element, ListItemElement extends Element>({
     listboxMulti: { tagLabel, tagList },
-    linearNavigation: { disableArrowKeys, disableHomeEndKeys, navigationDirection, ...ln },
-    listNavigation: { indexDemangler, indexMangler, ...ls },
-    managedChildren: { onAfterChildLayoutEffect, onChildrenMountChange, ...mc },
-    rovingTabIndex: { initialIndex, onTabbableIndexChange, onTabbableRender, onTabbedInTo, onTabbedOutOf, ...rti },
-    typeaheadNavigation: { collator, noTypeahead, typeaheadTimeout, ...tn }
+    linearNavigation: { ...ln },
+    listNavigation: { ...ls },
+    managedChildren: { ...mc },
+    rovingTabIndex: { onTabbableIndexChange, ...rti },
+    typeaheadNavigation: { ...tn }
 }: UseListboxMultiParameters<LabelElement, ListElement>): UseListboxMultiReturnType<LabelElement, ListElement, ListItemElement> {
 
 
@@ -89,19 +89,11 @@ export function useAriaListboxMulti<LabelElement extends Element, ListElement ex
         tagInput: tagList
     });
 
-    const {
-        useListNavigationChild,
-        useListNavigationProps,
-        linearNavigation: ln_ret,
-        listNavigation: ls_ret,
-        rovingTabIndex: rti_ret,
-        typeaheadNavigation: tn_ret,
-        children
-    } = useListNavigation<ListElement, ListItemElement, Info, never>({
+    const listReturnType = useListNavigation<ListElement, ListItemElement, Info, never>({
 
-        linearNavigation: { disableArrowKeys, disableHomeEndKeys, navigationDirection, ...ln },
-        listNavigation: { indexDemangler, indexMangler, ...ls },
-        managedChildren: { onChildrenMountChange, onAfterChildLayoutEffect, ...mc },
+        linearNavigation: { ...ln },
+        listNavigation: { ...ls },
+        managedChildren: { ...mc },
         rovingTabIndex: {
             ...rti,
             onTabbableIndexChange: useStableCallback<OnTabbableIndexChange>((i) => {
@@ -116,9 +108,15 @@ export function useAriaListboxMulti<LabelElement extends Element, ListElement ex
         typeaheadNavigation: tn
     });
 
+    const { 
+        useListNavigationChild, 
+        useListNavigationProps,
+        rovingTabIndex: { setTabbableIndex }
+     } = listReturnType
+
     const { useLabelInputProps } = useLabelInput();
 
-    const [, setShiftHeld, getShiftHeld] = useState(false);
+    const [getShiftHeld, setShiftHeld] = usePassiveState(null, returnFalse);
 
     const useListboxMultiItem = useCallback<UseListboxMultiItem<ListItemElement>>(({ lbm, managedChild, listNavigation: ls, rovingTabIndex: rti }) => {
         type E = ListItemElement;
@@ -140,7 +138,7 @@ export function useAriaListboxMulti<LabelElement extends Element, ListElement ex
         function useListboxMultiItemProps(props: h.JSX.HTMLAttributes<E>): h.JSX.HTMLAttributes<E> {
             const newProps: h.JSX.HTMLAttributes<E> = usePressEventHandlers<E>(lbm.disabled ? null : (e) => {
                 console.log(`Multi ${managedChild.index} is ${getSelected().toString()} and changing to ${(!getSelected()).toString()}`)
-                rti_ret.setTabbableIndex(managedChild.index, false);
+                setTabbableIndex(managedChild.index, false);
                 stableOnSelect?.({ ...e, [EventDetail]: { selected: !getSelected() } });
                 e.preventDefault();
             }, {  });
@@ -170,11 +168,11 @@ export function useAriaListboxMulti<LabelElement extends Element, ListElement ex
         useListboxMultiItem,
         useListboxMultiProps,
         useListboxMultiLabel,
-        children,
-        linearNavigation: ln_ret,
-        listNavigation: ls_ret,
-        rovingTabIndex: rti_ret,
-        typeaheadNavigation: tn_ret,
+        linearNavigation: listReturnType.linearNavigation,
+        listNavigation: listReturnType.listNavigation,
+        rovingTabIndex: listReturnType.rovingTabIndex,
+        typeaheadNavigation: listReturnType.typeaheadNavigation,
+        managedChildren: listReturnType.managedChildren
     };
 
 

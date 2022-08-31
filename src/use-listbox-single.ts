@@ -20,21 +20,18 @@ export interface UseListboxSingleParameters<LabelElement extends Element, ListEl
 
 export interface UseListboxSingleItemParameters extends UseListNavigationSingleSelectionChildParameters<{}, never> {
     lbs: { disabled?: boolean; }
-};
+}
 
 
 
-export type UseListboxSingleItem<ListElement extends Element, ListItemElement extends Element> = (info: UseListboxSingleItemParameters) => UseListboxSingleItemReturnType<ListElement, ListItemElement>;
+export type UseListboxSingleItem<ListItemElement extends Element> = (info: UseListboxSingleItemParameters) => UseListboxSingleItemReturnType<ListItemElement>;
 
-export interface UseListboxSingleItemReturnType<ListElement extends Element, ListItemElement extends Element> extends UseListNavigationSingleSelectionChildReturnType<ListItemElement> {
+export interface UseListboxSingleItemReturnType<ListItemElement extends Element> extends UseListNavigationSingleSelectionChildReturnType<ListItemElement> {
     useListboxSingleItemProps: (props: h.JSX.HTMLAttributes<ListItemElement>) => h.JSX.HTMLAttributes<ListItemElement>;
-    //tabbable: boolean;
-    //selected: boolean;
-    //getSelected: () => boolean | null;
 }
 
 export interface UseListboxSingleReturnType<LabelElement extends Element, ListElement extends Element, ListItemElement extends Element> extends Omit<UseListNavigationSingleSelectionReturnType<ListElement, ListItemElement, {}, never>, "useListNavigationSingleSelectionChild" | "useListNavigationSingleSelectionProps"> {
-    useListboxSingleItem: UseListboxSingleItem<ListElement, ListItemElement>;
+    useListboxSingleItem: UseListboxSingleItem<ListItemElement>;
     useListboxSingleProps: (props: h.JSX.HTMLAttributes<ListElement>) => h.JSX.HTMLAttributes<ListElement>;
     useListboxSingleLabel: () => { useListboxSingleLabelProps: (props: h.JSX.HTMLAttributes<LabelElement>) => h.JSX.HTMLAttributes<LabelElement>; }
 }
@@ -45,13 +42,13 @@ export interface UseListboxSingleReturnType<LabelElement extends Element, ListEl
 }*/
 
 export function useAriaListboxSingle<LabelElement extends Element, ListElement extends Element, ListItemElement extends Element>({
-    listboxSingle: { selectionMode, tagLabel, tagList, onSelect, ...lbs },
+    listboxSingle: { selectionMode, tagLabel, tagList, onSelect, ..._lbs },
     singleSelection: { selectedIndex, ...ss },
-    linearNavigation: { disableArrowKeys, disableHomeEndKeys, navigationDirection, ...ln },
-    listNavigation: { indexDemangler, indexMangler, ...ls },
-    managedChildren: { onAfterChildLayoutEffect, onChildrenMountChange, ...mc },
-    rovingTabIndex: { initialIndex, onTabbableIndexChange, onTabbableRender, onTabbedInTo, onTabbedOutOf, ...rti },
-    typeaheadNavigation: { collator, noTypeahead, typeaheadTimeout, ...tn }
+    linearNavigation: { ...ln },
+    listNavigation: { ...ls },
+    managedChildren: { ...mc },
+    rovingTabIndex: { onTabbableIndexChange, ...rti },
+    typeaheadNavigation: { ...tn }
 }: UseListboxSingleParameters<LabelElement, ListElement>): UseListboxSingleReturnType<LabelElement, ListElement, ListItemElement> {
 
     const { useLabelInput, useLabelLabel } = useLabel<ListElement, LabelElement>({
@@ -61,19 +58,11 @@ export function useAriaListboxSingle<LabelElement extends Element, ListElement e
         tagLabel: tagLabel
     });
 
-    const {
-        useListNavigationSingleSelectionChild,
-        useListNavigationSingleSelectionProps,
-        linearNavigation: ln_ret,
-        listNavigation: ls_ret,
-        rovingTabIndex: rti_ret,
-        typeaheadNavigation: tn_ret,
-        children
-    } = useListNavigationSingleSelection<ListElement, ListItemElement, {}, never>({
+    const parentReturnType = useListNavigationSingleSelection<ListElement, ListItemElement, {}, never>({
 
-        linearNavigation: { disableArrowKeys, disableHomeEndKeys, navigationDirection, ...ln },
-        listNavigation: { indexDemangler, indexMangler, ...ls },
-        managedChildren: { onChildrenMountChange, onAfterChildLayoutEffect, ...mc },
+        linearNavigation: { ...ln },
+        listNavigation: { ...ls },
+        managedChildren: { ...mc },
         rovingTabIndex: {
             ...rti,
             onTabbableIndexChange: useStableCallback<OnTabbableIndexChange>((i) => {
@@ -88,11 +77,12 @@ export function useAriaListboxSingle<LabelElement extends Element, ListElement e
         singleSelection: { ...ss, selectedIndex },
         typeaheadNavigation: tn
     });
+    const { useListNavigationSingleSelectionChild, useListNavigationSingleSelectionProps, managedChildren: { children } } = parentReturnType;
     const { useLabelInputProps } = useLabelInput();
     const stableOnSelect = useStableCallback(onSelect ?? (() => { }));
 
 
-    const useListboxSingleItem = useCallback<UseListboxSingleItem<ListElement, ListItemElement>>(({ lbs, listNavigation, managedChild, rovingTabIndex }) => {
+    const useListboxSingleItem = useCallback<UseListboxSingleItem<ListItemElement>>(({ lbs, listNavigation, managedChild, rovingTabIndex }) => {
         const { rovingTabIndex: rti_ret, singleSelection: ss_ret, useListNavigationChildProps } = useListNavigationSingleSelectionChild({
             managedChild,
             listNavigation,
@@ -149,11 +139,11 @@ export function useAriaListboxSingle<LabelElement extends Element, ListElement e
         useListboxSingleItem,
         useListboxSingleProps,
         useListboxSingleLabel,
-        children,
-        linearNavigation: ln_ret,
-        listNavigation: ls_ret,
-        rovingTabIndex: rti_ret,
-        typeaheadNavigation: tn_ret
+        linearNavigation: parentReturnType.linearNavigation,
+        listNavigation: parentReturnType.listNavigation,
+        managedChildren: parentReturnType.managedChildren,
+        rovingTabIndex: parentReturnType.rovingTabIndex,
+        typeaheadNavigation: parentReturnType.typeaheadNavigation
     };
 
 

@@ -1,4 +1,4 @@
-import { ComponentChildren, createContext, createElement, h, render, VNode } from "preact";
+import { ComponentChildren, createContext, createElement, VNode } from "preact";
 import { useContext } from "preact/hooks";
 import { ElementToTag } from "props";
 import { useAriaListboxMulti, UseListboxMultiItem, UseListboxMultiItemParameters, UseListboxMultiItemReturnType, UseListboxMultiParameters, UseListboxMultiReturnType } from "../use-listbox-multi";
@@ -24,7 +24,7 @@ export interface ListboxMultiProps<LabelElement extends Element, ListElement ext
 
 
 
-export interface ListboxMultiItemProps<ListElement extends Element, ListboxItemElement extends Element> extends
+export interface ListboxMultiItemProps<ListboxItemElement extends Element> extends
     Get<UseListboxMultiItemParameters, "managedChild">,
     Omit<Get<UseListboxMultiItemParameters, "listNavigation">, "subInfo">,
     Get<UseListboxMultiItemParameters, "rovingTabIndex">,
@@ -57,14 +57,10 @@ export function ListboxMulti<LabelElement extends Element, ListElement extends H
     children: vnodeChildren
 }: ListboxMultiProps<LabelElement, ListElement, ListItemElement>) {
     const {
-        children: managedChildren,
-        linearNavigation,
-        listNavigation,
-        rovingTabIndex,
-        typeaheadNavigation,
         useListboxMultiItem,
         useListboxMultiLabel,
         useListboxMultiProps,
+        ...listboxReturnType
     } = useAriaListboxMulti<LabelElement, ListElement, ListItemElement>({
         linearNavigation: { disableArrowKeys, disableHomeEndKeys, navigationDirection },
         listboxMulti: { tagLabel, tagList },
@@ -81,18 +77,18 @@ export function ListboxMulti<LabelElement extends Element, ListElement extends H
 
     return (
         <ListboxMultiContext.Provider value={useListboxMultiItem}>
-            {(render ?? defaultListRender)({ children: managedChildren, linearNavigation, listNavigation, rovingTabIndex, typeaheadNavigation }, label, list)}
+            {(render ?? defaultListRender)({ ...listboxReturnType }, label, list)}
         </ListboxMultiContext.Provider>
     )
 }
 
-function defaultListRender(...[info, label, list]: Parameters<NonNullable<ListboxMultiProps<any, any, any>["render"]>>): VNode<any> {
+function defaultListRender(...[_info, label, list]: Parameters<NonNullable<ListboxMultiProps<any, any, any>["render"]>>): VNode<any> {
     return (
         <>{label}{list}</>
     )
 }
 
-function defaultListItemRender(...[info, listItem]: Parameters<NonNullable<ListboxMultiItemProps<any, any>["render"]>>): VNode<any> {
+function defaultListItemRender(...[_info, listItem]: Parameters<NonNullable<ListboxMultiItemProps<any>["render"]>>): VNode<any> {
     return (
         <>{listItem}</>
     )
@@ -104,7 +100,7 @@ export interface AriaListboxMultiPropsDerivedFrom {
     tabbable: boolean;
 }
 
-export function ListboxMultiItem<ListElement extends Element, ListItemElement extends Element>({ index, tagListItem, blurSelf, disabled, flags, focusSelf, render, text, hidden, selected, onSelect }: ListboxMultiItemProps<ListElement, ListItemElement>) {
+export function ListboxMultiItem<ListItemElement extends Element>({ index, tagListItem, blurSelf, disabled, flags, focusSelf, render, text, hidden, selected, onSelect }: ListboxMultiItemProps<ListItemElement>) {
     const { useListboxMultiItemProps, rovingTabIndex, lbm } = useContext(ListboxMultiContext)({ managedChild: { index, flags }, rovingTabIndex: { blurSelf, focusSelf, hidden }, listNavigation: { subInfo: { selected, onSelect }, text }, lbm: { disabled, selected, onSelect} });
     const listItem = createElement(tagListItem, useListboxMultiItemProps({}) as any);
     return (
@@ -112,7 +108,7 @@ export function ListboxMultiItem<ListElement extends Element, ListItemElement ex
     )
 }
 
-function foo() {
+function _foo() {
     return (
         <ListboxMulti tagLabel="label" tagList="ul" >
             <ListboxMultiItem index={0} text="" selected={false} tagListItem="li"></ListboxMultiItem>

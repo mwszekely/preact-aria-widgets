@@ -89,7 +89,7 @@ export function usePressEventHandlers<E extends EventTarget>(onClickSync: ((e: h
     // We approximate this by just incrementing when active, and
     // decrementing when deactivated.
     //
-    // As an emergency failsafe, when the element looses focus,
+    // As an emergency failsafe, when the element loses focus,
     // this is reset back to 0.
     const [active, setActive, getActive] = useState(0);
 
@@ -121,11 +121,12 @@ export function usePressEventHandlers<E extends EventTarget>(onClickSync: ((e: h
 
         const currentTime = new Date();
         const timeDifference = (textSelectedDuringActivationStartTime == null ? null : +currentTime - +textSelectedDuringActivationStartTime);
+        const charactersSelected = nodeSelectedTextLength(getElement())
 
         // If we're selecting text (heuristically determined by selecting for longer than 1/4 a second, or more than 2 characters)
         // then this isn't a press event.
         // TODO: This should measure glyphs instead of characters.
-        if ((timeDifference && timeDifference > 250) || nodeSelectedTextLength(getElement()) >= 2) {
+        if (charactersSelected > 1 || ((timeDifference ?? 0) > 250 && charactersSelected >= 1)) {
             e.preventDefault();
             return;
         }

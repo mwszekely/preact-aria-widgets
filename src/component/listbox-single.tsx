@@ -23,16 +23,16 @@ export interface ListboxSingleProps<LabelElement extends Element, ListElement ex
 
 
 
-export interface ListboxSingleItemProps<ListElement extends Element, ListboxItemElement extends Element> extends
+export interface ListboxSingleItemProps<ListboxItemElement extends Element> extends
     Get<UseListboxSingleItemParameters, "managedChild">,
     Omit<Get<UseListboxSingleItemParameters, "listNavigation">, "subInfo">,
     Get<UseListboxSingleItemParameters, "rovingTabIndex">,
     Get<UseListboxSingleItemParameters, "lbs"> {
     tagListItem: ElementToTag<ListboxItemElement>;
-    render?(info: Omit<UseListboxSingleItemReturnType<ListElement, ListboxItemElement>, `use${string}`>, listItem: VNode<any>): VNode<any>;
+    render?(info: Omit<UseListboxSingleItemReturnType<ListboxItemElement>, `use${string}`>, listItem: VNode<any>): VNode<any>;
 }
 
-const ListboxSingleContext = createContext<UseListboxSingleItem<any, any>>(null!);
+const ListboxSingleContext = createContext<UseListboxSingleItem<any>>(null!);
 
 export function ListboxSingle<LabelElement extends Element, ListElement extends HTMLElement, ListItemElement extends HTMLElement>({
     render,
@@ -60,14 +60,10 @@ export function ListboxSingle<LabelElement extends Element, ListElement extends 
     children: vnodeChildren
 }: ListboxSingleProps<LabelElement, ListElement, ListItemElement>) {
     const {
-        children: managedChildren,
-        linearNavigation,
-        listNavigation,
-        rovingTabIndex,
-        typeaheadNavigation,
         useListboxSingleItem,
         useListboxSingleLabel,
-        useListboxSingleProps
+        useListboxSingleProps,
+        ...listboxReturnType
     } = useAriaListboxSingle<LabelElement, ListElement, ListItemElement>({
         linearNavigation: { disableArrowKeys, disableHomeEndKeys, navigationDirection },
         listboxSingle: { selectionMode, tagLabel, tagList, onSelect },
@@ -85,30 +81,26 @@ export function ListboxSingle<LabelElement extends Element, ListElement extends 
 
     return (
         <ListboxSingleContext.Provider value={useListboxSingleItem}>
-            {(render ?? defaultListRender)({ children: managedChildren, linearNavigation, listNavigation, rovingTabIndex, typeaheadNavigation }, label, list)}
+            {(render ?? defaultListRender)({ ...listboxReturnType }, label, list)}
         </ListboxSingleContext.Provider>
     )
 }
 
-function defaultListRender(...[info, label, list]: Parameters<NonNullable<ListboxSingleProps<any, any, any>["render"]>>): VNode<any> {
+function defaultListRender(...[_info, label, list]: Parameters<NonNullable<ListboxSingleProps<any, any, any>["render"]>>): VNode<any> {
     return (
         <>{label}{list}</>
     )
 }
 
-function defaultListItemRender(...[info, listItem]: Parameters<NonNullable<ListboxSingleItemProps<any, any>["render"]>>): VNode<any> {
+function defaultListItemRender(...[_info, listItem]: Parameters<NonNullable<ListboxSingleItemProps<any>["render"]>>): VNode<any> {
     return (
         <>{listItem}</>
     )
 }
 
 
-export interface AriaListboxSinglePropsDerivedFrom {
-    selected: boolean;
-    tabbable: boolean;
-}
 
-export function ListboxSingleItem<ListElement extends Element, ListItemElement extends Element>({ index, tagListItem, blurSelf, disabled, flags, focusSelf, render, text, hidden }: ListboxSingleItemProps<ListElement, ListItemElement>) {
+export function ListboxSingleItem<ListItemElement extends Element>({ index, tagListItem, blurSelf, disabled, flags, focusSelf, render, text, hidden }: ListboxSingleItemProps<ListItemElement>) {
     const { useListboxSingleItemProps, rovingTabIndex, singleSelection } = useContext(ListboxSingleContext)({ managedChild: { index, flags }, rovingTabIndex: { blurSelf, focusSelf, hidden }, listNavigation: { subInfo: {}, text }, lbs: { disabled } });
     const listItem = createElement(tagListItem, useListboxSingleItemProps({}) as any);
     return (
@@ -116,7 +108,7 @@ export function ListboxSingleItem<ListElement extends Element, ListItemElement e
     )
 }
 
-function foo() {
+function _foo() {
     return (
         <ListboxSingle selectedIndex={9} selectionMode="activate" tagLabel="label" tagList="ul" >
             <ListboxSingleItem index={0} text="" tagListItem="li"></ListboxSingleItem>

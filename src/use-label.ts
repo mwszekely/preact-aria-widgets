@@ -33,8 +33,8 @@ export interface UseLabelReturnType<InputElement extends Element, LabelElement e
  */
 export function useLabel<InputElement extends Element, LabelElement extends Element>({ labelPrefix, inputPrefix, tagInput, tagLabel }: UseLabelParameters<InputElement, LabelElement> = { labelPrefix: "label-", inputPrefix: "input-", tagInput: "input" as never, tagLabel: "label" as never }): UseLabelReturnType<InputElement, LabelElement> {
 
-    const { useRandomIdSourceElement: useLabelAsSourceId, useRandomIdReferencerElement: useLabelAsReferencerId, usedId: labelId, getUsedId: getLabelId } = useRandomId<LabelElement>({ prefix: labelPrefix, onAfterChildLayoutEffect: null, onChildrenMountChange: null });
-    const { useRandomIdSourceElement: useInputAsSourceId, useRandomIdReferencerElement: useInputAsReferencerId, usedId: inputId, getUsedId: getInputId } = useRandomId<InputElement>({ prefix: inputPrefix, onAfterChildLayoutEffect: null, onChildrenMountChange: null });
+    const { useRandomIdSourceElement: useLabelAsSourceId, useRandomIdReferencerElement: useLabelAsReferencerId, usedId: labelId, getUsedId: getLabelId } = useRandomId<LabelElement>({ prefix: labelPrefix, managedChildren: { onAfterChildLayoutEffect: null, onChildrenMountChange: null } });
+    const { useRandomIdSourceElement: useInputAsSourceId, useRandomIdReferencerElement: useInputAsReferencerId, usedId: inputId, getUsedId: getInputId } = useRandomId<InputElement>({ prefix: inputPrefix, managedChildren: { onAfterChildLayoutEffect: null, onChildrenMountChange: null } });
     const { useRandomIdSourceElementProps: useLabelAsSourceIdProps } = useLabelAsSourceId();
     const { useRandomIdSourceElementProps: useInputAsSourceIdProps } = useInputAsSourceId();
     const { useRandomIdReferencerElementProps: useLabelAsReferencerIdProps } = useLabelAsReferencerId<InputElement>("aria-labelledby" as never);
