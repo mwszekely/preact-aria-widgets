@@ -1,13 +1,12 @@
 import { h, VNode } from "preact";
 import { generateRandomId, useForceUpdate, useGridNavigation, useHasFocus, useManagedChildren, useMergedProps, useRefElement, useSortableChildren, useStableCallback, useState } from "preact-prop-helpers";
 import { ManagedChildren } from "preact-prop-helpers/use-child-manager";
-import { UseGridNavigationCell, UseGridNavigationCellInfoBase, UseGridNavigationCellInfoNeeded, UseGridNavigationParameters, UseGridNavigationRowInfoBase, UseGridNavigationRowInfoNeeded, UseGridNavigationRowParameters } from "preact-prop-helpers/use-grid-navigation";
+import { UseGridNavigationCell, UseGridNavigationParameters, UseGridNavigationRowParameters } from "preact-prop-helpers/use-grid-navigation";
 import { useCallback, useEffect, useRef } from "preact/hooks";
 import type { TagSensitiveProps } from "./props";
 import { usePressEventHandlers } from "./use-button";
 
-export interface TableRowInfoBase<T extends TableValueType, K extends string> extends UseGridNavigationRowInfoBase<K> {
-    getManagedCells: () => ManagedChildren<TableCellInfoBase<T, K>>;
+export interface TRI {
 
     location: "head" | "body" | "foot";
 
@@ -36,7 +35,7 @@ export interface TableRowInfoBase<T extends TableValueType, K extends string> ex
 
 type TableValueType = number | string | Date | null | undefined | boolean;
 
-export interface TableCellInfoBase<T extends TableValueType, K extends string> extends UseGridNavigationRowInfoBase<K> {
+export interface TCI<T extends TableValueType> {
 
     /**
      * This is the value that, originally passed to the cell,
@@ -45,15 +44,18 @@ export interface TableCellInfoBase<T extends TableValueType, K extends string> e
     value: T;
 }
 
-export type TableRowInfoNeeded<K extends string, I extends UseGridNavigationRowInfoBase<K>> = Omit<UseGridNavigationRowInfoNeeded<K, I>, "getManagedCells" | "getRowIndexAsSorted" | "setRowIndexAsSorted">;
-export type TableCellInfoNeeded<K extends string, I extends UseGridNavigationCellInfoBase<K>> = Omit<UseGridNavigationCellInfoNeeded<K, I>, "getManagedCells" | "getRowIndexAsSorted" | "setRowIndexAsSorted">;
+//export type TableRowInfoNeeded<K extends string, I extends UseGridNavigationRowInfoBase<K>> = Omit<UseGridNavigationRowInfoNeeded<K, I>, "getManagedCells" | "getRowIndexAsSorted" | "setRowIndexAsSorted">;
+//export type TableCellInfoNeeded<K extends string, I extends UseGridNavigationCellInfoBase<K>> = Omit<UseGridNavigationCellInfoNeeded<K, I>, "getManagedCells" | "getRowIndexAsSorted" | "setRowIndexAsSorted">;
 
 //export interface TableRowInfo extends UseGridNavigationRowInfoBase { }
 //export interface TableCellInfo extends UseGridNavigationRowInfoBase { }
 
 /* eslint-disable @typescript-eslint/no-empty-interface */
 export interface UseTableParameters { }
-interface UseTableSectionParameters<K extends string, IR extends UseGridNavigationRowInfoBase<K>> extends UseGridNavigationParameters<K, IR> { location: "head" | "body" | "foot" }
+interface UseTableSectionParameters<K extends string, IR extends UseGridNavigationRowInfoBase<K>> extends UseGridNavigationParameters<K, IR> { 
+    gridNavigation: UseGridNavigationRowParameters[""];
+    location: "head" | "body" | "foot";
+}
 
 export type UseTableRowParameters<T extends TableValueType, K extends string, I extends UseGridNavigationRowInfoBase<K>> = { info: TableRowInfoNeeded<K, I> } & Omit<UseGridNavigationRowParameters<string, string, TableRowInfoBase<T, K>, TableCellInfoBase<T, K>>, "info" | "getManagedCells" | "getRowIndexAsSorted" | "setRowIndexAsSorted">;
 export type UseTableCellParameters<T extends TableValueType, K extends string, I extends UseGridNavigationCellInfoBase<K>> = { info: TableCellInfoNeeded<K, I> };

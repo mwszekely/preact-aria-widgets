@@ -1,24 +1,25 @@
 
 import { useCallback } from "preact/hooks";
-import { useModal, UseModalReturnType } from "./use-modal";
+import { useModal, UseModalParameters, UseModalReturnType } from "./use-modal";
 
 export interface UseAriaDialogReturnType<DialogElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement> {
     useDialogProps: UseModalReturnType<DialogElement, TitleElement, BodyElement, BackdropElement>["useModalProps"];
     useDialogTitle: () => { useDialogTitleProps: ReturnType<UseModalReturnType<DialogElement, TitleElement, BodyElement, BackdropElement>["useModalTitle"]>["useModalTitleProps"] };
     useDialogBody: (a: { descriptive: boolean }) => { useDialogBodyProps: ReturnType<UseModalReturnType<DialogElement, TitleElement, BodyElement, BackdropElement>["useModalBody"]>["useModalBodyProps"] };
     useDialogBackdrop: () => { useDialogBackdropProps: ReturnType<UseModalReturnType<DialogElement, TitleElement, BodyElement, BackdropElement>["useModalBackdrop"]>["useModalBackdropProps"] };
+    softDismiss: Omit<UseModalReturnType<DialogElement, any, any, any>["softDismiss"], "onClose">;
 }
 
-export type UseAriaDialogParameters = { 
-    open: boolean; 
-    onClose: (reason: "escape" | "backdrop") => void; 
-    descriptive: boolean; 
+export interface UseAriaDialogParameters {
+    softDismiss: UseModalParameters["softDismiss"];
+    modal: UseModalParameters["modal"];
+    dialog: { onClose: (reason: "escape" | "backdrop") => void; }
 };
 
-export function useAriaDialog<DialogElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement>({ open, onClose, descriptive }: UseAriaDialogParameters): UseAriaDialogReturnType<DialogElement, TitleElement, BodyElement, BackdropElement> {
+export function useAriaDialog<DialogElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement>({ softDismiss: { open }, modal: { bodyIsOnlySemantic }, dialog: { onClose } }: UseAriaDialogParameters): UseAriaDialogReturnType<DialogElement, TitleElement, BodyElement, BackdropElement> {
     // TODO: Differences between dialog and modal go here, presumably.
     // Non-modal dialogs need to be able to be repositioned, etc.
-    const { useModalBackdrop, useModalBody, useModalProps, useModalTitle } = useModal<DialogElement, TitleElement, BodyElement, BackdropElement>({ open, onClose, descriptive });
+    const { useModalBackdrop, useModalBody, useModalProps, useModalTitle, softDismiss: { onBackdropClick } } = useModal<DialogElement, TitleElement, BodyElement, BackdropElement>({ modal: { bodyIsOnlySemantic }, softDismiss: { onClose, open } });
     type R = UseAriaDialogReturnType<DialogElement, TitleElement, BodyElement, BackdropElement>;
     const useDialogBackdrop = useCallback<R["useDialogBackdrop"]>(() => {
         const { useModalBackdropProps } = useModalBackdrop();
@@ -40,6 +41,7 @@ export function useAriaDialog<DialogElement extends HTMLElement, TitleElement ex
         useDialogProps,
         useDialogTitle,
         useDialogBody,
-        useDialogBackdrop
+        useDialogBackdrop,
+        softDismiss: { onBackdropClick },
     }
 }
