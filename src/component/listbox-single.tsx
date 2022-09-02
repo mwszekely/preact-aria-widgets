@@ -1,4 +1,5 @@
-import { ComponentChildren, createContext, createElement, VNode } from "preact";
+import { ComponentChildren, createContext, createElement, Ref, VNode } from "preact";
+import { forwardRef } from "preact/compat";
 import { useContext } from "preact/hooks";
 import { ElementToTag } from "props";
 import { useAriaListboxSingle, UseListboxSingleItem, UseListboxSingleItemParameters, UseListboxSingleItemReturnType, UseListboxSingleParameters, UseListboxSingleReturnType } from "../use-listbox-single";
@@ -34,7 +35,7 @@ export interface ListboxSingleItemProps<ListboxItemElement extends Element> exte
 
 const ListboxSingleContext = createContext<UseListboxSingleItem<any>>(null!);
 
-export function ListboxSingle<LabelElement extends Element, ListElement extends HTMLElement, ListItemElement extends HTMLElement>({
+function ListboxSingleU<LabelElement extends Element, ListElement extends HTMLElement, ListItemElement extends HTMLElement>({
     render,
 
     selectedIndex,
@@ -58,7 +59,7 @@ export function ListboxSingle<LabelElement extends Element, ListElement extends 
     tagList,
     onSelect,
     children: vnodeChildren
-}: ListboxSingleProps<LabelElement, ListElement, ListItemElement>) {
+}: ListboxSingleProps<LabelElement, ListElement, ListItemElement>, ref: Ref<ListElement>) {
     const {
         useListboxSingleItem,
         useListboxSingleLabel,
@@ -76,7 +77,7 @@ export function ListboxSingle<LabelElement extends Element, ListElement extends 
 
     const { useListboxSingleLabelProps } = useListboxSingleLabel();
     const label = createElement(tagLabel, useListboxSingleLabelProps({}) as any);
-    const list = createElement(tagList, useListboxSingleProps({ children: vnodeChildren }) as any);
+    const list = createElement(tagList, useListboxSingleProps({ children: vnodeChildren, ref }) as any);
 
 
     return (
@@ -100,9 +101,9 @@ function defaultListItemRender(...[_info, listItem]: Parameters<NonNullable<List
 
 
 
-export function ListboxSingleItem<ListItemElement extends Element>({ index, tagListItem, blurSelf, disabled, flags, focusSelf, render, text, hidden }: ListboxSingleItemProps<ListItemElement>) {
+function ListboxSingleItemU<ListItemElement extends Element>({ index, tagListItem, blurSelf, disabled, flags, focusSelf, render, text, hidden }: ListboxSingleItemProps<ListItemElement>, ref: Ref<ListItemElement>) {
     const { useListboxSingleItemProps, rovingTabIndex, singleSelection } = useContext(ListboxSingleContext)({ managedChild: { index, flags }, rovingTabIndex: { blurSelf, focusSelf, hidden }, listNavigation: { subInfo: {}, text }, lbs: { disabled } });
-    const listItem = createElement(tagListItem, useListboxSingleItemProps({}) as any);
+    const listItem = createElement(tagListItem, useListboxSingleItemProps({ ref }) as any);
     return (
         <>{(render ?? defaultListItemRender)({ rovingTabIndex, singleSelection }, listItem)}</>
     )
@@ -115,3 +116,6 @@ function _foo() {
         </ListboxSingle>
     )
 }
+
+export const ListboxSingle = forwardRef(ListboxSingleU);
+export const ListboxSingleItem = forwardRef(ListboxSingleItemU);

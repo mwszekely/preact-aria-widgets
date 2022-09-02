@@ -28,8 +28,6 @@ export interface UseListboxMultiItemReturnType<E extends Element> extends Omit<U
     useListboxMultiItemProps: (props: h.JSX.HTMLAttributes<E>) => h.JSX.HTMLAttributes<E>;
     lbm: {
         tabbable: boolean;
-        //selected: boolean;
-        //getSelected: () => boolean | null;
     }
 }
 
@@ -43,26 +41,9 @@ export interface UseListboxMultiReturnType<LabelElement extends Element, ListEle
 interface Info {
     selected: boolean;
     onSelect?(event: (ListboxMultiSelectEvent<Element>)): void;
-    //setTypeaheadInProgress(inProgress: boolean): void;
 }
 
-/*
-export interface UseListboxMultiItemInfoBase<E extends Element, K extends string = string> extends ListNavigationChildInfoBase<K>, TagSensitiveProps<E> {
-    selected: boolean;
-    onSelect?(event: (ListboxMultiSelectEvent<Element>)): void;
-    setTypeaheadInProgress(inProgress: boolean): void;
-}
 
-export type UseListboxMultiItemParameters<E extends Element, K extends string = string, I extends UseListboxMultiItemInfoBase<E, K> = UseListboxMultiItemInfoBase<E, K>> = {
-    info: Omit<I, "setTypeaheadInProgress" | "getElement" | "flags" | "blurSelf" | "focusSelf">;
-    disabled?: boolean;
-};
-
-export type UseListboxMultiItem<E extends Element, K extends string = string, I extends UseListboxMultiItemInfoBase<E, K> = UseListboxMultiItemInfoBase<E, K>> = (info: UseListboxMultiItemParameters<E, K, I>) => {
-    useListboxMultiItemProps: (props: h.JSX.HTMLAttributes<E>) => h.JSX.HTMLAttributes<E>;
-    tabbable: boolean;
-}
-*/
 export interface UseListboxMultiReturnType<LabelElement extends Element, ListElement extends Element, ListItemElement extends Element> extends Omit<UseListNavigationReturnType<ListElement, ListItemElement, {}, never>, "useListNavigationChild" | "useListNavigationProps"> {
     useListboxMultiItem: UseListboxMultiItem<ListItemElement>;
     useListboxMultiProps: (props: h.JSX.HTMLAttributes<ListElement>) => h.JSX.HTMLAttributes<ListElement>;
@@ -83,10 +64,12 @@ export function useAriaListboxMulti<LabelElement extends Element, ListElement ex
     //const { useHasFocusProps, getFocusedInner } = useHasFocus<ListElement>({});
 
     const { useLabelInput, useLabelLabel } = useLabel<ListElement, LabelElement>({
-        labelPrefix: "aria-listbox-label-",
-        inputPrefix: "aria-listbox-",
-        tagLabel: tagLabel,
-        tagInput: tagList
+        label: {
+            prefixLabel: "aria-listbox-label-",
+            prefixInput: "aria-listbox-",
+            tagLabel: tagLabel,
+            tagInput: tagList
+        }
     });
 
     const listReturnType = useListNavigation<ListElement, ListItemElement, Info, never>({
@@ -108,11 +91,11 @@ export function useAriaListboxMulti<LabelElement extends Element, ListElement ex
         typeaheadNavigation: tn
     });
 
-    const { 
-        useListNavigationChild, 
+    const {
+        useListNavigationChild,
         useListNavigationProps,
         rovingTabIndex: { setTabbableIndex }
-     } = listReturnType
+    } = listReturnType
 
     const { useLabelInputProps } = useLabelInput();
 
@@ -141,7 +124,7 @@ export function useAriaListboxMulti<LabelElement extends Element, ListElement ex
                 setTabbableIndex(managedChild.index, false);
                 stableOnSelect?.({ ...e, [EventDetail]: { selected: !getSelected() } });
                 e.preventDefault();
-            }, {  });
+            }, {});
 
             props.role = "option";
             //props["aria-setsize"] = (childCount).toString();

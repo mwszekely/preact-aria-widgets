@@ -1,7 +1,7 @@
 import { h, VNode } from "preact";
 import { generateRandomId, useForceUpdate, useGridNavigation, useHasFocus, useManagedChildren, useMergedProps, useRefElement, useSortableChildren, useStableCallback, useState } from "preact-prop-helpers";
 import { ManagedChildren } from "preact-prop-helpers/use-child-manager";
-import { UseGridNavigationCell, UseGridNavigationParameters, UseGridNavigationRowParameters } from "preact-prop-helpers/use-grid-navigation";
+import { UseGridNavigationCell, UseGridNavigationCellParameters, UseGridNavigationParameters, UseGridNavigationReturnType, UseGridNavigationRowParameters, UseGridNavigationRowReturnType } from "preact-prop-helpers/use-grid-navigation";
 import { useCallback, useEffect, useRef } from "preact/hooks";
 import type { TagSensitiveProps } from "./props";
 import { usePressEventHandlers } from "./use-button";
@@ -52,19 +52,29 @@ export interface TCI<T extends TableValueType> {
 
 /* eslint-disable @typescript-eslint/no-empty-interface */
 export interface UseTableParameters { }
-interface UseTableSectionParameters<K extends string, IR extends UseGridNavigationRowInfoBase<K>> extends UseGridNavigationParameters<K, IR> { 
-    gridNavigation: UseGridNavigationRowParameters[""];
-    location: "head" | "body" | "foot";
+interface UseTableSectionParameters {
+    //asChildRow: UseGridNavigationRowParameters<{}, never>["asChildRow"];
+    //asParentOfCells: UseGridNavigationRowParameters<{}, never>["asParentOfCells"];
+    tableSection: { location: "head" | "body" | "foot"; }
 }
 
-export type UseTableRowParameters<T extends TableValueType, K extends string, I extends UseGridNavigationRowInfoBase<K>> = { info: TableRowInfoNeeded<K, I> } & Omit<UseGridNavigationRowParameters<string, string, TableRowInfoBase<T, K>, TableCellInfoBase<T, K>>, "info" | "getManagedCells" | "getRowIndexAsSorted" | "setRowIndexAsSorted">;
-export type UseTableCellParameters<T extends TableValueType, K extends string, I extends UseGridNavigationCellInfoBase<K>> = { info: TableCellInfoNeeded<K, I> };
-export type UseTableHeadCellParameters<T extends TableValueType, K extends string, I extends UseGridNavigationCellInfoBase<K>> = { info: TableCellInfoNeeded<K, I> } & { unsortable?: boolean };
+export interface UseTableRowParameters<T extends TableValueType> {
+    asChildRow: UseGridNavigationRowParameters<TRI, never>["asChildRow"];
+    asParentOfCells: UseGridNavigationRowParameters<TCI<T>, never>["asParentOfCells"];
+}
+
+export interface UseTableCellParameters<T extends TableValueType> {
+    tableCell: UseGridNavigationCellParameters<TCI<T>, never>;
+}
+
+export interface UseTableHeadCellParameters<T extends TableValueType> extends UseTableCellParameters<T> { 
+    unsortable?: boolean 
+};
 
 
 
 
-export type UseTableCell<BC extends Element, T extends TableValueType, K extends string, I extends UseGridNavigationCellInfoBase<K>> = (a: UseTableCellParameters<T, K, I>) => {
+export type UseTableCell<BC extends Element, T extends TableValueType> = (a: UseTableCellParameters<T>) => {
     useTableCellProps: <P extends h.JSX.HTMLAttributes<BC>>({ role, ...props }: P) => h.JSX.HTMLAttributes<BC>
     useTableCellDelegateProps: <P extends h.JSX.HTMLAttributes<any>>(props: P) => h.JSX.HTMLAttributes<any>
 }
@@ -73,17 +83,17 @@ export type UseTableHeadCellProps<HC extends Element> = <P extends h.JSX.HTMLAtt
 
 
 
-export type UseTableHeadCell<HC extends Element, T extends TableValueType, K extends string, I extends UseGridNavigationCellInfoBase<K>> = (p: UseTableHeadCellParameters<T, K, I>) => {
+export type UseTableHeadCell<HC extends Element, T extends TableValueType> = (p: UseTableHeadCellParameters<T>) => {
     useTableHeadCellProps: UseTableHeadCellProps<HC>;
     useTableHeadCellDelegateProps: <P extends h.JSX.HTMLAttributes<any>>(props: P) => h.JSX.HTMLAttributes<any>;
     sortDirection: "ascending" | "descending" | null;
 }
 
-export type UseTableRow<R extends Element, C extends Element, T extends TableValueType, KR extends string, KC extends string, IR extends UseGridNavigationRowInfoBase<KR>, IC extends UseGridNavigationCellInfoBase<KC>> = (parameters: UseTableRowParameters<T, KR, IR>) => {
-    managedCells: ManagedChildren<IC>;
-    useTableCell: UseTableCell<C, T, KC, IC>;
+export type UseTableRow<R extends Element, C extends Element, T extends TableValueType> = (parameters: UseTableRowParameters<T>) => {
+    managedCells: UseGridNavigationRowReturnType<R, C, TCI<T>, never>;
+    useTableCell: UseTableCell<C, T>;
     useTableRowProps: <P extends h.JSX.HTMLAttributes<R>>(props: P) => h.JSX.HTMLAttributes<R>
-    useTableHeadCell: UseTableHeadCell<C, T, KC, IC>;
+    useTableHeadCell: UseTableHeadCell<C, T>;
     rowIndexAsSorted: number | null;
     rowIndexAsUnsorted: number;
 }
@@ -91,14 +101,14 @@ export type UseTableRow<R extends Element, C extends Element, T extends TableVal
 export type SortableTypes = number | string | Date | null | undefined | boolean;
 
 
-export type UseTableHeadReturnType<S extends Element, R extends Element, C extends Element, T extends TableValueType = TableValueType, KR extends string = string, KC extends string = string, IR extends UseGridNavigationRowInfoBase<KR> = UseGridNavigationRowInfoBase<KR>, IC extends UseGridNavigationCellInfoBase<KC> = UseGridNavigationCellInfoBase<KC>> = { managedRows: ManagedChildren<IR>; useTableHeadRow: UseTableRow<R, C, T, KR, KC, IR, IC>; useTableHeadProps: (props: h.JSX.HTMLAttributes<S>) => h.JSX.HTMLAttributes<S>; };
-export type UseTableBodyReturnType<S extends Element, R extends Element, C extends Element, T extends TableValueType = TableValueType, KR extends string = string, KC extends string = string, IR extends UseGridNavigationRowInfoBase<KR> = UseGridNavigationRowInfoBase<KR>, IC extends UseGridNavigationCellInfoBase<KC> = UseGridNavigationCellInfoBase<KC>> = { managedRows: ManagedChildren<IR>; useTableBodyRow: UseTableRow<R, C, T, KR, KC, IR, IC>; useTableBodyProps: (props: h.JSX.HTMLAttributes<S>) => h.JSX.HTMLAttributes<S>; };
-export type UseTableFootReturnType<S extends Element, R extends Element, C extends Element, T extends TableValueType = TableValueType, KR extends string = string, KC extends string = string, IR extends UseGridNavigationRowInfoBase<KR> = UseGridNavigationRowInfoBase<KR>, IC extends UseGridNavigationCellInfoBase<KC> = UseGridNavigationCellInfoBase<KC>> = { managedRows: ManagedChildren<IR>; useTableFootRow: UseTableRow<R, C, T, KR, KC, IR, IC>; useTableFootProps: (props: h.JSX.HTMLAttributes<S>) => h.JSX.HTMLAttributes<S>; };
-type UseTableSectionReturnType<S extends Element, R extends Element, C extends Element, T extends TableValueType = TableValueType, KR extends string = string, KC extends string = string, IR extends UseGridNavigationRowInfoBase<KR> = UseGridNavigationRowInfoBase<KR>, IC extends UseGridNavigationCellInfoBase<KC> = UseGridNavigationCellInfoBase<KC>> = { useTableSectionRow: UseTableRow<R, C, T, KR, KC, IR, IC>; useTableSectionProps: (props: h.JSX.HTMLAttributes<S>) => h.JSX.HTMLAttributes<S>; managedRows: ManagedChildren<TableRowInfoBase<T, KR>>; }
-export type UseTableHead<S extends Element, R extends Element, C extends Element, T extends TableValueType = TableValueType, KR extends string = string, KC extends string = string, IR extends UseGridNavigationRowInfoBase<KR> = UseGridNavigationRowInfoBase<KR>, IC extends UseGridNavigationCellInfoBase<KC> = UseGridNavigationCellInfoBase<KC>> = () => UseTableHeadReturnType<S, R, C, T, KR, KC, IR, IC>;
-export type UseTableBody<S extends Element, R extends Element, C extends Element, T extends TableValueType = TableValueType, KR extends string = string, KC extends string = string, IR extends UseGridNavigationRowInfoBase<KR> = UseGridNavigationRowInfoBase<KR>, IC extends UseGridNavigationCellInfoBase<KC> = UseGridNavigationCellInfoBase<KC>> = () => UseTableBodyReturnType<S, R, C, T, KR, KC, IR, IC>;
-export type UseTableFoot<S extends Element, R extends Element, C extends Element, T extends TableValueType = TableValueType, KR extends string = string, KC extends string = string, IR extends UseGridNavigationRowInfoBase<KR> = UseGridNavigationRowInfoBase<KR>, IC extends UseGridNavigationCellInfoBase<KC> = UseGridNavigationCellInfoBase<KC>> = () => UseTableFootReturnType<S, R, C, T, KR, KC, IR, IC>;
-type UseTableSection<S extends Element, R extends Element, C extends Element, T extends TableValueType = TableValueType, KR extends string = string, KC extends string = string, IR extends UseGridNavigationRowInfoBase<KR> = UseGridNavigationRowInfoBase<KR>, IC extends UseGridNavigationCellInfoBase<KC> = UseGridNavigationCellInfoBase<KC>> = (parameters: Omit<UseTableSectionParameters<KR, IR>, "indexMangler" | "indexDemangler">) => UseTableSectionReturnType<S, R, C, T, KR, KC, IR, IC>;
+export interface UseTableHeadReturnType<S extends Element, R extends Element, C extends Element, T extends TableValueType> extends UseGridNavigationRowParameters<TCI<T>, never> {  useTableHeadRow: UseTableRow<R, C, T>; useTableHeadProps: (props: h.JSX.HTMLAttributes<S>) => h.JSX.HTMLAttributes<S>; };
+export interface UseTableBodyReturnType<S extends Element, R extends Element, C extends Element, T extends TableValueType> extends UseGridNavigationRowParameters<TCI<T>, never> {  useTableBodyRow: UseTableRow<R, C, T>; useTableBodyProps: (props: h.JSX.HTMLAttributes<S>) => h.JSX.HTMLAttributes<S>; };
+export interface UseTableFootReturnType<S extends Element, R extends Element, C extends Element, T extends TableValueType> extends UseGridNavigationRowParameters<TCI<T>, never> {  useTableFootRow: UseTableRow<R, C, T>; useTableFootProps: (props: h.JSX.HTMLAttributes<S>) => h.JSX.HTMLAttributes<S>; };
+interface UseTableSectionReturnType<S extends Element, R extends Element, C extends Element, T extends TableValueType = TableValueType> { useTableSectionRow: UseTableRow<R, C, T>; useTableSectionProps: (props: h.JSX.HTMLAttributes<S>) => h.JSX.HTMLAttributes<S>; managedRows: ManagedChildren<TableRowInfoBase<T, KR>>; }
+export type UseTableHead<S extends Element, R extends Element, C extends Element, T extends TableValueType = TableValueType> = () => UseTableHeadReturnType<S, R, C, T>;
+export type UseTableBody<S extends Element, R extends Element, C extends Element, T extends TableValueType = TableValueType> = () => UseTableBodyReturnType<S, R, C, T>;
+export type UseTableFoot<S extends Element, R extends Element, C extends Element, T extends TableValueType = TableValueType> = () => UseTableFootReturnType<S, R, C, T>;
+type UseTableSection<S extends Element, R extends Element, C extends Element, T extends TableValueType = TableValueType> = (parameters: Omit<UseTableSectionParameters, "indexMangler" | "indexDemangler">) => UseTableSectionReturnType<S, R, C, T>;
 
 // TODO: Sorting really needs to be extracted into its own hook
 // so it can be used with, like, lists and junk too
@@ -108,7 +118,7 @@ type UseTableSection<S extends Element, R extends Element, C extends Element, T 
 export function useTable<T extends HTMLElement, S extends HTMLElement, R extends HTMLElement, C extends HTMLElement>({ ..._ }: UseTableParameters) {
 
     // Only used by the sorting function, nothing else
-    const [, setBodyRows, getBodyRows] = useState<ManagedChildren<TableRowInfoBase<TableValueType, string>> | null>(null);
+    const [, setBodyRows, getBodyRows] = useState<ManagedChildren<number, TCI<TableValueType>, never> | null>(null);
     const { indexDemangler, indexMangler, sort: originalSort, useSortableProps } = useSortableChildren<TableRowInfoBase<TableValueType, string>, [number], S>({
         getValue: useCallback((row: TableRowInfoBase<TableValueType, string>, column: number) => {
             return row.getManagedCells()?.getAt(column)?.value;

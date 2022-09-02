@@ -28,8 +28,8 @@ export function useDrawer<DrawerElement extends HTMLElement, TitleElement extend
         return { useDrawerBackdropProps: useModalBackdropProps };
     }, [useModalBackdrop]);
 
-    const useDrawerBody = useCallback(({ descriptive }: { descriptive: boolean }) => {
-        const { useModalBodyProps } = useModalBody({ descriptive });
+    const useDrawerBody = useCallback(() => {
+        const { useModalBodyProps } = useModalBody();
         return { useDrawerBodyProps: useModalBodyProps };
     }, [useModalBackdrop]);
     const useDrawerProps = useModalProps;

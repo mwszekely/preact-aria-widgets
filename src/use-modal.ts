@@ -155,9 +155,7 @@ export interface UseModalReturnType<ModalElement extends Element, TitleElement e
     useModalTitle: () => {
         useModalTitleProps: (props: h.JSX.HTMLAttributes<TitleElement>) => h.JSX.HTMLAttributes<TitleElement>;
     };
-    useModalBody: ({ descriptive }: {
-        descriptive: boolean;
-    }) => {
+    useModalBody: () => {
         useModalBodyProps: (props: h.JSX.HTMLAttributes<BodyElement>) => h.JSX.HTMLAttributes<BodyElement>;
     };
     useModalBackdrop: () => {
@@ -187,7 +185,7 @@ export function useModal<ModalElement extends HTMLElement, TitleElement extends 
     const { useRefElementProps: useModalRefElement, getElement: getModalElement } = useRefElement<ModalElement>({})
     const { softDismiss: { useSoftDismissProps, onBackdropClick } } = useSoftDismiss<ModalElement>({ softDismiss: { onClose: stableOnClose, getElements: getModalElement, open: !!open } });
 
-    const useModalBackdrop = useCallback(function useModalBackdrop() {
+    const useModalBackdrop = useCallback<UseModalReturnType<ModalElement, TitleElement, BodyElement, BackdropElement>["useModalBackdrop"]>(function useModalBackdrop() {
         function useModalBackdropProps(props: h.JSX.HTMLAttributes<BackdropElement>): h.JSX.HTMLAttributes<BackdropElement> {
             return useMergedProps<BackdropElement>({ onPointerUp: onBackdropClick }, props);
         }
@@ -207,7 +205,7 @@ export function useModal<ModalElement extends HTMLElement, TitleElement extends 
         return useFocusTrapProps(useSoftDismissProps(useMergedProps<ModalElement>(useModalRefElement({ role: role || "dialog" }), descriptive ? pFinal : p2)));
     }
 
-    const useModalTitle = useCallback(function useModalTitle() {
+    const useModalTitle = useCallback<UseModalReturnType<ModalElement, TitleElement, BodyElement, BackdropElement>["useModalTitle"]>(function useModalTitle() {
 
         const { useRandomIdSourceElementProps: useTitleIdAsSourceProps } = useTitleIdAsSource();
         const useModalTitleProps = function (props: h.JSX.HTMLAttributes<TitleElement>): h.JSX.HTMLAttributes<TitleElement> {
@@ -217,7 +215,7 @@ export function useModal<ModalElement extends HTMLElement, TitleElement extends 
         return { useModalTitleProps };
     }, [])
 
-    const useModalBody = useCallback(function useModalBody() {
+    const useModalBody = useCallback<UseModalReturnType<ModalElement, TitleElement, BodyElement, BackdropElement>["useModalBody"]>(function useModalBody() {
         const { useRandomIdSourceElementProps: useBodyIdAsSourceProps } = useBodyIdAsSource();
         const { useRandomIdReferencerElementProps: useModalIdAsReferencerElementProps } = useModalIdAsReferencerElement<BodyElement>("data-modal-id" as never);
 

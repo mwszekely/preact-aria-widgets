@@ -1,4 +1,5 @@
-import { ComponentChildren, createContext, createElement, VNode } from "preact";
+import { ComponentChildren, createContext, createElement, Ref, VNode } from "preact";
+import { forwardRef } from "preact/compat";
 import { useContext } from "preact/hooks";
 import { ElementToTag } from "props";
 import { useAriaListboxMulti, UseListboxMultiItem, UseListboxMultiItemParameters, UseListboxMultiItemReturnType, UseListboxMultiParameters, UseListboxMultiReturnType } from "../use-listbox-multi";
@@ -35,7 +36,7 @@ export interface ListboxMultiItemProps<ListboxItemElement extends Element> exten
 
 const ListboxMultiContext = createContext<UseListboxMultiItem<any>>(null!);
 
-export function ListboxMulti<LabelElement extends Element, ListElement extends HTMLElement, ListItemElement extends HTMLElement>({
+function ListboxMultiU<LabelElement extends Element, ListElement extends HTMLElement, ListItemElement extends HTMLElement>({
     render,
     tagLabel,
     collator,
@@ -55,7 +56,7 @@ export function ListboxMulti<LabelElement extends Element, ListElement extends H
     typeaheadTimeout,
     tagList,
     children: vnodeChildren
-}: ListboxMultiProps<LabelElement, ListElement, ListItemElement>) {
+}: ListboxMultiProps<LabelElement, ListElement, ListItemElement>, ref: Ref<ListElement>) {
     const {
         useListboxMultiItem,
         useListboxMultiLabel,
@@ -72,7 +73,7 @@ export function ListboxMulti<LabelElement extends Element, ListElement extends H
 
     const { useListboxMultiLabelProps } = useListboxMultiLabel();
     const label = createElement(tagLabel, useListboxMultiLabelProps({}) as any);
-    const list = createElement(tagList, useListboxMultiProps({ children: vnodeChildren }) as any);
+    const list = createElement(tagList, useListboxMultiProps({ children: vnodeChildren, ref }) as any);
 
 
     return (
@@ -100,9 +101,9 @@ export interface AriaListboxMultiPropsDerivedFrom {
     tabbable: boolean;
 }
 
-export function ListboxMultiItem<ListItemElement extends Element>({ index, tagListItem, blurSelf, disabled, flags, focusSelf, render, text, hidden, selected, onSelect }: ListboxMultiItemProps<ListItemElement>) {
+function ListboxMultiItemU<ListItemElement extends Element>({ index, tagListItem, blurSelf, disabled, flags, focusSelf, render, text, hidden, selected, onSelect }: ListboxMultiItemProps<ListItemElement>, ref: Ref<ListItemElement>) {
     const { useListboxMultiItemProps, rovingTabIndex, lbm } = useContext(ListboxMultiContext)({ managedChild: { index, flags }, rovingTabIndex: { blurSelf, focusSelf, hidden }, listNavigation: { subInfo: { selected, onSelect }, text }, lbm: { disabled, selected, onSelect} });
-    const listItem = createElement(tagListItem, useListboxMultiItemProps({}) as any);
+    const listItem = createElement(tagListItem, useListboxMultiItemProps({ ref }) as any);
     return (
         <>{(render ?? defaultListItemRender)({ rovingTabIndex, lbm }, listItem)}</>
     )
@@ -115,3 +116,6 @@ function _foo() {
         </ListboxMulti>
     )
 }
+
+const ListboxMulti = forwardRef(ListboxMultiU) as typeof ListboxMultiU;
+const ListboxMultiItem = forwardRef(ListboxMultiItemU) as typeof ListboxMultiItemU;

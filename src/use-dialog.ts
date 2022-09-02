@@ -5,13 +5,13 @@ import { useModal, UseModalParameters, UseModalReturnType } from "./use-modal";
 export interface UseAriaDialogReturnType<DialogElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement> {
     useDialogProps: UseModalReturnType<DialogElement, TitleElement, BodyElement, BackdropElement>["useModalProps"];
     useDialogTitle: () => { useDialogTitleProps: ReturnType<UseModalReturnType<DialogElement, TitleElement, BodyElement, BackdropElement>["useModalTitle"]>["useModalTitleProps"] };
-    useDialogBody: (a: { descriptive: boolean }) => { useDialogBodyProps: ReturnType<UseModalReturnType<DialogElement, TitleElement, BodyElement, BackdropElement>["useModalBody"]>["useModalBodyProps"] };
+    useDialogBody: () => { useDialogBodyProps: ReturnType<UseModalReturnType<DialogElement, TitleElement, BodyElement, BackdropElement>["useModalBody"]>["useModalBodyProps"] };
     useDialogBackdrop: () => { useDialogBackdropProps: ReturnType<UseModalReturnType<DialogElement, TitleElement, BodyElement, BackdropElement>["useModalBackdrop"]>["useModalBackdropProps"] };
     softDismiss: Omit<UseModalReturnType<DialogElement, any, any, any>["softDismiss"], "onClose">;
 }
 
 export interface UseAriaDialogParameters {
-    softDismiss: UseModalParameters["softDismiss"];
+    softDismiss: Omit<UseModalParameters["softDismiss"], "onClose">;
     modal: UseModalParameters["modal"];
     dialog: { onClose: (reason: "escape" | "backdrop") => void; }
 };
@@ -26,8 +26,8 @@ export function useAriaDialog<DialogElement extends HTMLElement, TitleElement ex
         return { useDialogBackdropProps: useModalBackdropProps };
     }, [useModalBackdrop]);
 
-    const useDialogBody = useCallback<R["useDialogBody"]>(({ descriptive }: { descriptive: boolean }) => {
-        const { useModalBodyProps } = useModalBody({ descriptive });
+    const useDialogBody = useCallback<R["useDialogBody"]>(() => {
+        const { useModalBodyProps } = useModalBody();
         return { useDialogBodyProps: useModalBodyProps };
     }, [useModalBackdrop]);
     const useDialogProps = useModalProps;

@@ -91,16 +91,16 @@ export function useLabel<InputElement extends Element, LabelElement extends Elem
 
 
 
-
+export type CheckboxCheckedType = boolean | "mixed";
 
 export interface UseCheckboxLikeParameters<InputType extends Element, LabelType extends Element> {
-    label: Omit<UseLabelParameters<InputType, LabelType>["label"], "prefixInput" | "prefixInput">;
+    label: Omit<UseLabelParameters<InputType, LabelType>["label"], "prefixLabel" | "prefixInput">;
     checkboxLike: {
         labelPosition: "wrapping" | "separate";
         /** The role attribute to use, when applicable */
         role: string;
         disabled: boolean;
-        checked: boolean | "mixed";
+        checked: CheckboxCheckedType;
         onInput?(event: h.JSX.TargetedEvent<InputType>): void;
         onInput?(event: h.JSX.TargetedEvent<LabelType>): void;
     }
@@ -132,7 +132,7 @@ export type UseCheckboxLikeLabelElement<LabelType extends Element> = () => {
     useCheckboxLikeLabelElementProps: ({ ...p0 }: h.JSX.HTMLAttributes<LabelType>) => h.JSX.HTMLAttributes<LabelType>;
 }
 
-export interface UseCheckboxLikeReturnType<InputType extends Element, LabelType extends HTMLElement | SVGElement> {
+export interface UseCheckboxLikeReturnType<InputType extends Element, LabelType extends Element> {
     /** *Notably unstable* */
     useCheckboxLikeInputElement: UseCheckboxLikeInputElement<InputType>;
     /** *Notably unstable* */
@@ -153,7 +153,7 @@ export interface UseCheckboxLikeReturnType<InputType extends Element, LabelType 
  * @param param0 
  * @returns 
  */
-export function useCheckboxLike<InputType extends Element, LabelType extends HTMLElement | SVGElement>({ checkboxLike: { checked, disabled, labelPosition, role, onInput }, label: { tagInput, tagLabel } }: UseCheckboxLikeParameters<InputType, LabelType>): UseCheckboxLikeReturnType<InputType, LabelType> {
+export function useCheckboxLike<InputType extends Element, LabelType extends Element>({ checkboxLike: { checked, disabled, labelPosition, role, onInput }, label: { tagInput, tagLabel } }: UseCheckboxLikeParameters<InputType, LabelType>): UseCheckboxLikeReturnType<InputType, LabelType> {
 
     const stableOnInput = useStableCallback((e: h.JSX.TargetedEvent<InputType> | h.JSX.TargetedEvent<LabelType>) => { e.preventDefault(); onInput?.(e as h.JSX.TargetedEvent<InputType>); });
 
@@ -203,7 +203,7 @@ export function useCheckboxLike<InputType extends Element, LabelType extends HTM
                 // even if it's an input element.
                 props.inert = true;
                 props.tabIndex = -1;
-                props.onFocus = _ => getLabelElement()?.focus();
+                props.onFocus = _ => (getLabelElement() as HTMLElement | null)?.focus();
             }
             else {
                 if (tag === "input") {

@@ -2,7 +2,9 @@ import { createElement, h, VNode } from "preact";
 import { ElementToTag } from "props";
 import { useAriaDialog, UseAriaDialogParameters } from "../use-dialog";
 
-export interface DialogProps<DialogElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement> extends UseAriaDialogParameters {
+type Get<T, K extends keyof T> = T[K];
+
+export interface DialogProps<DialogElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement> extends Get<UseAriaDialogParameters, "softDismiss">, Get<UseAriaDialogParameters, "modal">, Get<UseAriaDialogParameters, "dialog"> {
     tagDialog: ElementToTag<DialogElement>;
     tagTitle: ElementToTag<TitleElement>;
     tagBody: ElementToTag<BodyElement>;
@@ -13,7 +15,7 @@ export interface DialogProps<DialogElement extends HTMLElement, TitleElement ext
     propsBody: () => h.JSX.HTMLAttributes<BodyElement>;
     propsBackdrop: () => h.JSX.HTMLAttributes<BackdropElement>;
 
-    descriptive: boolean;
+    //descriptive: boolean;
 
     render?(dialog: VNode<any>, title: VNode<any>, body: VNode<any>, backdrop: VNode<any>): VNode<any>;
 }
@@ -28,16 +30,16 @@ function defaultRender(dialog: VNode<any>, title: VNode<any>, body: VNode<any>, 
     );
 }
 
-export function Dialog<DialogElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement>({ onClose, open, descriptive, render, tagBackdrop, tagBody, tagDialog, tagTitle, propsBackdrop, propsBody, propsDialog, propsTitle, }: DialogProps<DialogElement, TitleElement, BodyElement, BackdropElement>) {
+export function Dialog<DialogElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement>({ onClose, open, render, tagBackdrop, tagBody, tagDialog, tagTitle, bodyIsOnlySemantic, propsBackdrop, propsBody, propsDialog, propsTitle, }: DialogProps<DialogElement, TitleElement, BodyElement, BackdropElement>) {
     const {
         useDialogBackdrop,
         useDialogBody,
         useDialogProps,
         useDialogTitle
-    } = useAriaDialog<DialogElement, TitleElement, BodyElement, BackdropElement>({ onClose, open });
+    } = useAriaDialog<DialogElement, TitleElement, BodyElement, BackdropElement>({ dialog: { onClose }, modal: { bodyIsOnlySemantic, }, softDismiss: { open } });
 
     const { useDialogTitleProps } = useDialogTitle();
-    const { useDialogBodyProps } = useDialogBody({ descriptive });
+    const { useDialogBodyProps } = useDialogBody();
     const { useDialogBackdropProps } = useDialogBackdrop();
 
     const dialog = createElement(tagDialog, useDialogProps(propsDialog()) as any);
