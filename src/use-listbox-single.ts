@@ -51,14 +51,16 @@ export function useAriaListboxSingle<LabelElement extends Element, ListElement e
     typeaheadNavigation: { ...tn }
 }: UseListboxSingleParameters<LabelElement, ListElement>): UseListboxSingleReturnType<LabelElement, ListElement, ListItemElement> {
 
-    const { useLabelInput, useLabelLabel } = useLabel<ListElement, LabelElement>({
-        labelPrefix: "aria-listbox-label-",
-        inputPrefix: "aria-listbox-",
-        tagInput: tagList,
-        tagLabel: tagLabel
+    const { useLabelInput, useLabelLabel, ...labelReturnType } = useLabel<ListElement, LabelElement>({
+        label: {
+            prefixLabel: "aria-listbox-label-",
+            prefixInput: "aria-listbox-",
+            tagInput: tagList,
+            tagLabel: tagLabel
+        }
     });
 
-    const parentReturnType = useListNavigationSingleSelection<ListElement, ListItemElement, {}, never>({
+    const listReturnType = useListNavigationSingleSelection<ListElement, ListItemElement, {}, never>({
 
         linearNavigation: { ...ln },
         listNavigation: { ...ls },
@@ -77,7 +79,7 @@ export function useAriaListboxSingle<LabelElement extends Element, ListElement e
         singleSelection: { ...ss, selectedIndex },
         typeaheadNavigation: tn
     });
-    const { useListNavigationSingleSelectionChild, useListNavigationSingleSelectionProps, managedChildren: { children } } = parentReturnType;
+    const { useListNavigationSingleSelectionChild, useListNavigationSingleSelectionProps, managedChildren: { children } } = listReturnType;
     const { useLabelInputProps } = useLabelInput();
     const stableOnSelect = useStableCallback(onSelect ?? (() => { }));
 
@@ -139,11 +141,12 @@ export function useAriaListboxSingle<LabelElement extends Element, ListElement e
         useListboxSingleItem,
         useListboxSingleProps,
         useListboxSingleLabel,
-        linearNavigation: parentReturnType.linearNavigation,
-        listNavigation: parentReturnType.listNavigation,
-        managedChildren: parentReturnType.managedChildren,
-        rovingTabIndex: parentReturnType.rovingTabIndex,
-        typeaheadNavigation: parentReturnType.typeaheadNavigation
+        label: labelReturnType.label,
+        linearNavigation: listReturnType.linearNavigation,
+        listNavigation: listReturnType.listNavigation,
+        managedChildren: listReturnType.managedChildren,
+        rovingTabIndex: listReturnType.rovingTabIndex,
+        typeaheadNavigation: listReturnType.typeaheadNavigation
     };
 
 

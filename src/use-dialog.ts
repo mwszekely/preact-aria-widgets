@@ -14,7 +14,7 @@ export interface UseAriaDialogParameters {
     softDismiss: Omit<UseModalParameters["softDismiss"], "onClose">;
     modal: UseModalParameters["modal"];
     dialog: { onClose: (reason: "escape" | "backdrop") => void; }
-};
+}
 
 export function useAriaDialog<DialogElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement>({ softDismiss: { open }, modal: { bodyIsOnlySemantic }, dialog: { onClose } }: UseAriaDialogParameters): UseAriaDialogReturnType<DialogElement, TitleElement, BodyElement, BackdropElement> {
     // TODO: Differences between dialog and modal go here, presumably.

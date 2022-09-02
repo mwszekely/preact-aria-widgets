@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { returnTrue, useLinearNavigation, useMergedProps, useRandomId, useRefElement, useStableCallback, useStableGetter, useState, useManagedChildren, OnChildrenMountChange, useChildrenFlag, UseLinearNavigationParameters, UseManagedChildrenParameters, UseManagedChildrenReturnType } from "preact-prop-helpers";
+import { returnTrue, useLinearNavigation, useMergedProps, useRandomId, useRefElement, useStableCallback, useStableGetter, useState, useManagedChildren, OnChildrenMountChange, useChildrenFlag, UseLinearNavigationParameters, UseManagedChildrenParameters, UseManagedChildrenReturnType, UseManagedChildParameters } from "preact-prop-helpers";
 import { useCallback, useRef } from "preact/hooks";
 import { TagSensitiveProps } from "./props";
 import { usePressEventHandlers } from "./use-button";
@@ -29,13 +29,18 @@ export interface UseAriaAccordionSectionInfoBase {
 }
 
 export interface UseAriaAccordionSectionParameters {
-    index: number;
-    //info: Omit<UseAriaAccordionSectionInfoBase, "setOpenFromParent" | "getOpenFromParent" | "focus" | "flags">;
-    open?: boolean | undefined;
+    managedChildren: UseManagedChildParameters<number, UseAriaAccordionSectionInfoBase, "tabbed" | "open">["managedChild"];
+    accordionSection: {open?: boolean | undefined;}
 }
 
 export interface UseAriaAccordionSectionReturnType<HeaderElement extends Element, BodyElement extends Element> {
-    expanded: boolean;
+    accordionSection: {
+        expanded: boolean;
+        headerId: string | undefined;
+        bodyId: string | undefined;
+        getHeaderId(): string | undefined;
+        getBodyId(): string | undefined;
+    }
     /** *Unstable* */
     useAriaAccordionSectionHeaderProps: (props: h.JSX.HTMLAttributes<HeaderElement>) => h.JSX.HTMLAttributes<HeaderElement>;
     /** *Unstable* */
@@ -99,16 +104,15 @@ export function useAriaAccordion<HeaderElement extends HTMLElement, BodyElement 
         }, [])
     })
 
-    const useAriaAccordionSection: UseAriaAccordionSection<HeaderElement, BodyElement> = useCallback<UseAriaAccordionSection<HeaderElement, BodyElement>>(({ open: openFromUser, ...args }: UseAriaAccordionSectionParameters) => {
+    const useAriaAccordionSection: UseAriaAccordionSection<HeaderElement, BodyElement> = useCallback<UseAriaAccordionSection<HeaderElement, BodyElement>>(({ accordionSection: { open: openFromUser }, managedChildren: { index } }: UseAriaAccordionSectionParameters) => {
 
-        const index = args.index;
 
         const [openFromParent, setOpenFromParent, getOpenFromParent] = useState<boolean | null>(null);
 
 
 
-        const { useRandomIdSourceElement: useBodyAsSourceId, useRandomIdReferencerElement: useHeaderAsReferencerId } = useRandomId<BodyElement>({ prefix: "aria-accordion-section-body-", managedChildren: { onAfterChildLayoutEffect: null, onChildrenMountChange: null } });
-        const { useRandomIdSourceElement: useHeaderAsSourceId, useRandomIdReferencerElement: useBodyAsReferencerId } = useRandomId<HeaderElement>({ prefix: "aria-accordion-section-header-", managedChildren: { onAfterChildLayoutEffect: null, onChildrenMountChange: null } });
+        const { useRandomIdSourceElement: useBodyAsSourceId, useRandomIdReferencerElement: useHeaderAsReferencerId, usedId: bodyId, getUsedId: getBodyId } = useRandomId<BodyElement>({ prefix: "aria-accordion-section-body-", managedChildren: { onAfterChildLayoutEffect: null, onChildrenMountChange: null } });
+        const { useRandomIdSourceElement: useHeaderAsSourceId, useRandomIdReferencerElement: useBodyAsReferencerId, usedId: headerId, getUsedId: getHeaderId } = useRandomId<HeaderElement>({ prefix: "aria-accordion-section-header-", managedChildren: { onAfterChildLayoutEffect: null, onChildrenMountChange: null } });
         const { useRandomIdSourceElementProps: useBodyAsSourceIdProps } = useBodyAsSourceId();
         const { useRandomIdReferencerElementProps: useBodyAsReferencerIdProps } = useBodyAsReferencerId<BodyElement>("aria-labelledby" as never);
         const { useRandomIdSourceElementProps: useHeaderAsSourceIdProps } = useHeaderAsSourceId();
@@ -149,7 +153,7 @@ export function useAriaAccordion<HeaderElement extends HTMLElement, BodyElement 
         });
         const __: void = useManagedChild({
             managedChild: {
-                index: args.index,
+                index: index,
                 flags: {
                     open: openRef.current,
                     tabbed: tabbedRef.current
@@ -165,12 +169,12 @@ export function useAriaAccordion<HeaderElement extends HTMLElement, BodyElement 
 
         function useAriaAccordionSectionHeaderProps({ ["aria-expanded"]: ariaExpanded, ["aria-disabled"]: ariaDisabled, ...props }: h.JSX.HTMLAttributes<HeaderElement>): h.JSX.HTMLAttributes<HeaderElement> {
 
-            const onFocus = () => { changeTabbedIndex(args.index); }
+            const onFocus = () => { changeTabbedIndex(index); }
             const onClick = () => {
                 if (getOpenFromParent())
                     changeExpandedIndex(null);
                 else
-                    changeExpandedIndex(args.index);
+                    changeExpandedIndex(index);
             };
 
             props.tabIndex = 0;
@@ -200,7 +204,13 @@ export function useAriaAccordion<HeaderElement extends HTMLElement, BodyElement 
         }
 
         return {
-            expanded: open,
+             accordionSection: {
+                expanded: open,
+                bodyId,
+                headerId,
+                getBodyId,
+                getHeaderId
+            },
             useAriaAccordionSectionHeaderProps,
             useAriaAccordionSectionBodyProps,
         }

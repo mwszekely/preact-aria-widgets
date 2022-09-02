@@ -12,12 +12,12 @@ export interface UseAriaDrawerReturnType<DrawerElement extends Element, TitleEle
 
 export interface UseDrawerParameters {
     softDismiss: UseModalParameters["softDismiss"];
-    modal: Omit<UseModalParameters["modal"], "bodyIsOnlySemantic">;
+   // modal: Omit<UseModalParameters["modal"], "bodyIsOnlySemantic">;
     open: boolean;
     drawer: { onClose(reason: "backdrop" | "escape" | "lost-focus" | undefined): void; }
 }
 
-export function useDrawer<DrawerElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement>({ drawer: { onClose }, modal: {  }, softDismiss: { open } }: UseDrawerParameters): UseAriaDrawerReturnType<DrawerElement, TitleElement, BodyElement, BackdropElement> {
+export function useDrawer<DrawerElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement>({ drawer: { onClose }, softDismiss: { open } }: UseDrawerParameters): UseAriaDrawerReturnType<DrawerElement, TitleElement, BodyElement, BackdropElement> {
 
     // TODO: Drawers are not always modal.
 
