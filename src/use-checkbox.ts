@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { useCallback } from "preact/hooks";
 import { enhanceEvent, EventDetail } from "./props";
-import { useCheckboxLike, UseCheckboxLikeParameters, UseCheckboxLikeReturnType } from "./use-label";
+import { useCheckboxLike, UseCheckboxLikeParameters, UseCheckboxLikeReturnTypeInfo } from "./use-label";
 
 
 
@@ -20,16 +20,19 @@ export interface UseAriaCheckboxParameters<I extends Element, L extends Element>
     }
 }
 
-export interface UseAriaCheckboxReturnType<InputType extends Element, LabelType extends Element> extends Omit<UseCheckboxLikeReturnType<InputType, LabelType>, "useCheckboxLikeInputElement" | "useCheckboxLikeLabelElement"> {
+export interface UseAriaCheckboxReturnTypeInfo<InputType extends Element, LabelType extends Element> extends UseCheckboxLikeReturnTypeInfo<InputType, LabelType> {
+    //checkboxLike: UseCheckboxLikeReturnType<InputType, LabelType>["checkboxLike"];
+    //label: UseCheckboxLikeReturnType<InputType, LabelType>["label"];
+}
+
+export interface UseAriaCheckboxReturnTypeWithHooks<InputType extends Element, LabelType extends Element> extends UseAriaCheckboxReturnTypeInfo<InputType, LabelType> {
     /** **Notably unstable** */
     useCheckboxInputElement: UseCheckboxInputElement<InputType>;
     /** **Notably unstable** */
     useCheckboxLabelElement: UseCheckboxLabelElement<LabelType>;
-    checkboxLike: UseCheckboxLikeReturnType<InputType, LabelType>["checkboxLike"];
-    label: UseCheckboxLikeReturnType<InputType, LabelType>["label"];
 }
 
-export function useAriaCheckbox<InputType extends Element, LabelType extends Element>({ checkboxLike, label, checkbox }: UseAriaCheckboxParameters<InputType, LabelType>): UseAriaCheckboxReturnType<InputType, LabelType> {
+export function useAriaCheckbox<InputType extends Element, LabelType extends Element>({ checkboxLike, label, checkbox }: UseAriaCheckboxParameters<InputType, LabelType>): UseAriaCheckboxReturnTypeWithHooks<InputType, LabelType> {
 
     const { disabled, labelPosition, checked } = checkboxLike;
     const { tagInput, tagLabel } = label;

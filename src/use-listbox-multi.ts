@@ -1,37 +1,41 @@
 import { h } from "preact";
-import { OnTabbableIndexChange, returnFalse, useLayoutEffect, useListNavigation, UseListNavigationChildParameters, UseListNavigationChildReturnType, UseListNavigationParameters, UseListNavigationReturnType, useMergedProps, usePassiveState, useRefElement, useStableCallback, useStableGetter } from "preact-prop-helpers";
+import { OnTabbableIndexChange, returnFalse, useLayoutEffect, useListNavigation, UseListNavigationChildParameters, UseListNavigationChildReturnTypeInfo, UseListNavigationParameters, UseListNavigationReturnTypeInfo, useMergedProps, usePassiveState, useRefElement, useStableCallback, useStableGetter } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { ElementToTag, EventDetail } from "./props";
 import { usePressEventHandlers } from "./use-button";
 import { useLabel } from "./use-label";
 
-type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
-
 export type ListboxMultiSelectEvent<E extends EventTarget> = { [EventDetail]: { selected: boolean } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 
-export interface UseListboxMultiParameters<LabelElement extends Element, ListElement extends Element> extends UseListNavigationParameters {
+export interface UseListboxMultiParameters<LabelElement extends Element, ListElement extends Element> extends UseListNavigationParameters<never, never, never, never, never> {
     listboxMulti: {
         tagLabel: ElementToTag<LabelElement>;
         tagList: ElementToTag<ListElement>
     }
 }
 
-export interface UseListboxMultiItemParameters extends UseListNavigationChildParameters<Info, never> {
-    lbm: { disabled?: boolean; } & Info;
+export interface UseListboxMultiItemParameters extends UseListNavigationChildParameters<Info, never, never, never, never> {
+    listboxMulti: { disabled?: boolean; } & Info;
 }
 
 
 
-export type UseListboxMultiItem<E extends Element> = (info: UseListboxMultiItemParameters) => UseListboxMultiItemReturnType<E>;
+export type UseListboxMultiItem<E extends Element> = (info: UseListboxMultiItemParameters) => UseListboxMultiItemReturnTypeWithHooks<E>;
 
-export interface UseListboxMultiItemReturnType<E extends Element> extends Omit<UseListNavigationChildReturnType<E>, "useListNavigationChildProps"> {
-    useListboxMultiItemProps: (props: h.JSX.HTMLAttributes<E>) => h.JSX.HTMLAttributes<E>;
+export interface UseListboxMultiItemReturnTypeInfo<E extends Element> extends UseListNavigationChildReturnTypeInfo<E> {
     lbm: {
         tabbable: boolean;
     }
 }
+export interface UseListboxMultiItemReturnTypeWithHooks<E extends Element> extends UseListNavigationChildReturnTypeInfo<E> {
+    useListboxMultiItemProps: (props: h.JSX.HTMLAttributes<E>) => h.JSX.HTMLAttributes<E>;
+}
 
-export interface UseListboxMultiReturnType<LabelElement extends Element, ListElement extends Element, ListItemElement extends Element> extends Omit<UseListNavigationReturnType<ListElement, ListItemElement, {}, never>, "useListNavigationChild" | "useListNavigationProps"> {
+export interface UseListboxMultiReturnTypeInfo<ListItemElement extends Element> extends UseListNavigationReturnTypeInfo<ListItemElement, Info, never> {
+    
+}
+
+export interface UseListboxMultiReturnTypeWithHooks<LabelElement extends Element, ListElement extends Element, ListItemElement extends Element> extends UseListboxMultiReturnTypeInfo<ListItemElement> {
     useListboxMultiItem: UseListboxMultiItem<ListItemElement>;
     useListboxMultiProps: (props: h.JSX.HTMLAttributes<ListElement>) => h.JSX.HTMLAttributes<ListElement>;
     useListboxMultiLabel: () => { useListboxMultiLabelProps: (props: h.JSX.HTMLAttributes<LabelElement>) => h.JSX.HTMLAttributes<LabelElement>; }
@@ -44,11 +48,11 @@ interface Info {
 }
 
 
-export interface UseListboxMultiReturnType<LabelElement extends Element, ListElement extends Element, ListItemElement extends Element> extends Omit<UseListNavigationReturnType<ListElement, ListItemElement, {}, never>, "useListNavigationChild" | "useListNavigationProps"> {
+/*export interface UseListboxMultiReturnType<LabelElement extends Element, ListElement extends Element, ListItemElement extends Element> extends Omit<UseListNavigationReturnType<ListElement, ListItemElement, {}, never>, "useListNavigationChild" | "useListNavigationProps"> {
     useListboxMultiItem: UseListboxMultiItem<ListItemElement>;
     useListboxMultiProps: (props: h.JSX.HTMLAttributes<ListElement>) => h.JSX.HTMLAttributes<ListElement>;
     useListboxMultiLabel: () => { useListboxMultiLabelProps: (props: h.JSX.HTMLAttributes<LabelElement>) => h.JSX.HTMLAttributes<LabelElement>; }
-}
+}*/
 
 
 export function useAriaListboxMulti<LabelElement extends Element, ListElement extends Element, ListItemElement extends Element>({
@@ -58,7 +62,7 @@ export function useAriaListboxMulti<LabelElement extends Element, ListElement ex
     managedChildren: { ...mc },
     rovingTabIndex: { onTabbableIndexChange, ...rti },
     typeaheadNavigation: { ...tn }
-}: UseListboxMultiParameters<LabelElement, ListElement>): UseListboxMultiReturnType<LabelElement, ListElement, ListItemElement> {
+}: UseListboxMultiParameters<LabelElement, ListElement>): UseListboxMultiReturnTypeWithHooks<LabelElement, ListElement, ListItemElement> {
 
 
     //const { useHasFocusProps, getFocusedInner } = useHasFocus<ListElement>({});
@@ -101,13 +105,13 @@ export function useAriaListboxMulti<LabelElement extends Element, ListElement ex
 
     const [getShiftHeld, setShiftHeld] = usePassiveState(null, returnFalse);
 
-    const useListboxMultiItem = useCallback<UseListboxMultiItem<ListItemElement>>(({ lbm, managedChild, listNavigation: ls, rovingTabIndex: rti }) => {
+    const useListboxMultiItem = useCallback<UseListboxMultiItem<ListItemElement>>(({ listboxMulti: { selected, disabled, onSelect }, managedChild, listNavigation: ls, rovingTabIndex: rti }) => {
         type E = ListItemElement;
-        const getSelected = useStableGetter(lbm.selected);
+        const getSelected = useStableGetter(selected);
         const { useRefElementProps, getElement } = useRefElement<E>({});
-        const stableOnSelect = useStableCallback(lbm.onSelect ?? (() => { }));
+        const stableOnSelect = useStableCallback(onSelect ?? (() => { }));
 
-        const { useListNavigationChildProps, rovingTabIndex: rti2_ret } = useListNavigationChild({ listNavigation: ls, managedChild, rovingTabIndex: rti });
+        const { useListNavigationChildProps, rovingTabIndex: rti2_ret } = useListNavigationChild({ listNavigation: ls, managedChild, rovingTabIndex: rti, subInfo: { selected, onSelect } });
 
         useLayoutEffect(() => {
             const element = getElement();
@@ -119,7 +123,7 @@ export function useAriaListboxMulti<LabelElement extends Element, ListElement ex
         return { useListboxMultiItemProps, lbm: { getSelected, tabbable: rti2_ret.tabbable }, rovingTabIndex: rti2_ret };
 
         function useListboxMultiItemProps(props: h.JSX.HTMLAttributes<E>): h.JSX.HTMLAttributes<E> {
-            const newProps: h.JSX.HTMLAttributes<E> = usePressEventHandlers<E>(lbm.disabled ? null : (e) => {
+            const newProps: h.JSX.HTMLAttributes<E> = usePressEventHandlers<E>(disabled ? null : (e) => {
                 console.log(`Multi ${managedChild.index} is ${getSelected().toString()} and changing to ${(!getSelected()).toString()}`)
                 setTabbableIndex(managedChild.index, false);
                 stableOnSelect?.({ ...e, [EventDetail]: { selected: !getSelected() } });
@@ -130,7 +134,7 @@ export function useAriaListboxMulti<LabelElement extends Element, ListElement ex
             //props["aria-setsize"] = (childCount).toString();
             //props["aria-posinset"] = (info.index + 1).toString();
             props["aria-selected"] = (rti2_ret.tabbable ?? false).toString();
-            if (lbm.disabled)
+            if (disabled)
                 props["aria-disabled"] = "true";
 
             return useRefElementProps(useListNavigationChildProps(useMergedProps<E>(newProps, props)));

@@ -1,18 +1,32 @@
 
+import { h } from "preact";
 import { useCallback } from "preact/hooks";
-import { useModal, UseModalParameters, UseModalReturnType } from "./use-modal";
+import { useModal, UseModalParameters, UseSoftDismissReturnTypeInfo, UseModalReturnTypeWithHooks, UseModalReturnTypeInfo } from "./use-modal";
 
-export interface UseAriaDialogReturnType<DialogElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement> {
-    useDialogProps: UseModalReturnType<DialogElement, TitleElement, BodyElement, BackdropElement>["useModalProps"];
-    useDialogTitle: () => { useDialogTitleProps: ReturnType<UseModalReturnType<DialogElement, TitleElement, BodyElement, BackdropElement>["useModalTitle"]>["useModalTitleProps"] };
-    useDialogBody: () => { useDialogBodyProps: ReturnType<UseModalReturnType<DialogElement, TitleElement, BodyElement, BackdropElement>["useModalBody"]>["useModalBodyProps"] };
-    useDialogBackdrop: () => { useDialogBackdropProps: ReturnType<UseModalReturnType<DialogElement, TitleElement, BodyElement, BackdropElement>["useModalBackdrop"]>["useModalBackdropProps"] };
-    softDismiss: Omit<UseModalReturnType<DialogElement, any, any, any>["softDismiss"], "onClose">;
+export interface UseDialogReturnTypeInfo extends UseSoftDismissReturnTypeInfo {
+
 }
 
-export interface UseAriaDialogParameters {
-    softDismiss: Omit<UseModalParameters["softDismiss"], "onClose">;
-    modal: UseModalParameters["modal"];
+export interface UseDialogReturnTypeWithHooks<ModalElement extends Element, TitleElement extends Element, BodyElement extends Element, BackdropElement extends Element> extends UseDialogReturnTypeInfo {
+    useDialogProps: (props: h.JSX.HTMLAttributes<ModalElement>) => h.JSX.HTMLAttributes<ModalElement>;
+    useDialogTitle: UseDialogTitle<TitleElement>;
+    useDialogBody: UseDialogBody<BodyElement>
+    useDialogBackdrop: UseDialogBackdrop<BackdropElement>;
+}
+
+export type UseDialogTitle<TitleElement extends Element> = () => { useDialogTitleProps: (props: h.JSX.HTMLAttributes<TitleElement>) => h.JSX.HTMLAttributes<TitleElement>; };
+export type UseDialogBody<BodyElement extends Element> = () => { useDialogBodyProps: (props: h.JSX.HTMLAttributes<BodyElement>) => h.JSX.HTMLAttributes<BodyElement>; };
+export type UseDialogBackdrop<BackdropElement extends Element> = () => { useDialogBackdropProps: (props: h.JSX.HTMLAttributes<BackdropElement>) => h.JSX.HTMLAttributes<BackdropElement>; };
+
+
+export interface UseAriaDialogReturnType<DialogElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement> extends UseModalReturnTypeInfo {
+    useDialogProps: UseModalReturnTypeWithHooks<DialogElement, TitleElement, BodyElement, BackdropElement>["useModalProps"];
+    useDialogTitle: UseDialogTitle<TitleElement>;
+    useDialogBody: UseDialogBody<BodyElement>;
+    useDialogBackdrop: UseDialogBackdrop<BackdropElement>;
+}
+
+export interface UseAriaDialogParameters extends UseModalParameters<never, "onClose"> {
     dialog: { onClose: (reason: "escape" | "backdrop") => void; }
 }
 
