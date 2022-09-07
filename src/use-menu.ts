@@ -262,8 +262,6 @@ export function useFocusSentinel<E extends Element>({ focusSentinel: { open, onC
 
 export function useAriaMenu<MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element>({ linearNavigation, listNavigation, managedChildren, menuSurface, rovingTabIndex, softDismiss, typeaheadNavigation, menu }: UseAriaMenuParameters<never>): UseAriaMenuReturnTypeWithHooks<MenuParentElement, MenuItemElement, MenuButtonElement> {
 
-
-    const { open } = softDismiss;
     const { onOpen } = menu;
 
     const {
