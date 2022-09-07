@@ -8,6 +8,13 @@ import { useSoftDismiss, UseSoftDismissParameters, UseSoftDismissReturnTypeInfo 
 
 interface MSP {
     /**
+     * What role the surface fulfills.
+     * 
+     * General menus should use "menu". "dialog" can be used for generic pop-up things.
+     */
+    role: "dialog" | "menu" | "tree" | "grid" | "listbox";
+
+    /**
      * When this menu surface is opened, at least one element in it must be focused.
      * 
      * This controls what is focused (e.g. the first menu item, the whole surface itself, etc.)
@@ -20,7 +27,14 @@ export type MenuSurfaceOmits = keyof MSP;
 export interface UseAriaMenuSurfaceParameters<MSO extends MenuSurfaceOmits> extends UseSoftDismissParameters<"getElements"> {
     menuSurface: Omit<MSP, MSO>
 }
-export interface UseAriaMenuParameters extends UseAriaMenuSurfaceParameters<never>, UseListNavigationParameters<never, never, never, never, never> { }
+export interface UseAriaMenuParameters<MSO extends MenuSurfaceOmits> extends UseAriaMenuSurfaceParameters<MSO | "role">, UseListNavigationParameters<never, never, never, never, never> {
+    menu: { 
+        onOpen(): void; 
+
+        // Corresponds to what arrow key can open this menu
+        openDirection: "down" | "up" | "left" | "right" | null;
+    }
+}
 export interface UseAriaMenuButtonParameters extends UseListNavigationChildParameters<never, never, never, never, never> { }
 export interface UseAriaMenuItemParameters extends UseListNavigationChildParameters<{}, never, never, never, never> { }
 
@@ -49,7 +63,12 @@ export interface UseAriaMenuSurfaceReturnTypeWithHooks<MenuParentElement extends
     useMenuSurfaceButtonProps: (props: h.JSX.HTMLAttributes<MenuButtonElement>) => h.JSX.HTMLAttributes<any>;
 
 }
-export interface UseAriaMenuReturnTypeWithHooks<MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element> extends UseAriaMenuReturnTypeInfo<MenuParentElement, MenuItemElement, MenuButtonElement> { }
+export interface UseAriaMenuReturnTypeWithHooks<MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element> extends UseAriaMenuReturnTypeInfo<MenuParentElement, MenuItemElement, MenuButtonElement> {
+    useMenuSentinel: <E extends Element>() => { useMenuSentinelProps: (p: h.JSX.HTMLAttributes<E>) => h.JSX.HTMLAttributes<E>; };
+    useMenuProps: (props: h.JSX.HTMLAttributes<MenuParentElement>) => h.JSX.HTMLAttributes<MenuParentElement>;
+    useMenuButtonProps: (props: h.JSX.HTMLAttributes<MenuButtonElement>) => h.JSX.HTMLAttributes<MenuButtonElement>;
+    useMenuItem: UseMenuItem<MenuItemElement>;
+}
 export interface UseAriaMenuButtonReturnTypeWithHooks extends UseAriaMenuButtonReturnTypeInfo { }
 export interface UseAriaMenuItemReturnTypeWithHooks<MenuItemElement extends Element> extends UseAriaMenuItemReturnTypeInfo<MenuItemElement> { }
 
@@ -78,13 +97,13 @@ export type UseMenuItem<MenuItemElement extends Element> = (args: UseAriaMenuIte
  * menu item, but with custom content you'll need to provide this).
  * 
  */
-export function useMenuSurface<MenuParentElement extends Element, MenuButtonElement extends Element>({ softDismiss, menuSurface: { sendFocusToMenu } }: UseAriaMenuSurfaceParameters<never>): UseAriaMenuSurfaceReturnTypeWithHooks<MenuParentElement, MenuButtonElement> {
+export function useMenuSurface<MenuParentElement extends Element, MenuButtonElement extends Element>({ softDismiss, menuSurface: { sendFocusToMenu, role } }: UseAriaMenuSurfaceParameters<never>): UseAriaMenuSurfaceReturnTypeWithHooks<MenuParentElement, MenuButtonElement> {
     //const sendFocusWithinMenu = useStableCallback(sendFocusToMenu);
     //const [focusTrapActive, setFocusTrapActive] = useState<null | boolean>(null);
     const { open, onClose } = softDismiss;
-    useEnsureStability("useMenuSurface", onClose, sendFocusToMenu);
+    useEnsureStability("useMenuSurface", onClose, role, sendFocusToMenu);
     const getIsOpen = useStableGetter(open);
-    const stableOnClose = useStableCallback(softDismiss.onClose);
+    //const stableOnClose = useStableCallback(softDismiss.onClose);
 
     //const onClose = (args as Partial<UseAriaMenuParameters<MenuParentElement, MenuButtonElement, K, I>>).onClose;
     //const onOpen = (args as Partial<UseAriaMenuParameters<MenuParentElement, MenuButtonElement, K, I>>).onOpen;
@@ -127,17 +146,21 @@ export function useMenuSurface<MenuParentElement extends Element, MenuButtonElem
         function onKeyDown(e: KeyboardEvent) {
             const open = getIsOpen();
             if (e.key == "Escape" && open) {
-                stableOnClose("escape");
+                onClose("escape");
                 e.stopPropagation();
                 e.stopImmediatePropagation();
                 e.preventDefault();
             }
         }
 
+        props.role = role;
+
         return useSoftDismissProps(useMenuBaseHasFocusProps(useMenuBaseRefElementProps(useRandomIdSourceElementProps(useMergedProps<MenuParentElement>({ onKeyDown }, (props))))));
     };
 
     const useMenuSurfaceButtonProps = (props: h.JSX.HTMLAttributes<MenuButtonElement>): h.JSX.HTMLAttributes<MenuButtonElement> => {
+        props["aria-haspopup"] = role;
+        props["aria-expanded"] = open ? "true" : undefined;
         return useButtonRefElementProps(useButtonHasFocusProps(useRandomIdReferencerElementProps(props)));
     };
 
@@ -206,7 +229,7 @@ interface FSP extends MSP {
 export type FocusSentinelOmits = keyof FSP;
 
 export interface UseFocusSentinelParameters {
-    focusSentinel: MSP & { open: boolean; onClose(): void; };
+    focusSentinel: { sendFocusToMenu: MSP["sendFocusToMenu"]; open: boolean; onClose(): void; };
 }
 
 
@@ -237,16 +260,16 @@ export function useFocusSentinel<E extends Element>({ focusSentinel: { open, onC
     }
 }
 
-export function useAriaMenu<MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element>({ linearNavigation, listNavigation, managedChildren, menuSurface, rovingTabIndex, softDismiss, typeaheadNavigation }: UseAriaMenuParameters): UseAriaMenuReturnTypeWithHooks {
+export function useAriaMenu<MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element>({ linearNavigation, listNavigation, managedChildren, menuSurface, rovingTabIndex, softDismiss, typeaheadNavigation, menu }: UseAriaMenuParameters<never>): UseAriaMenuReturnTypeWithHooks<MenuParentElement, MenuItemElement, MenuButtonElement> {
 
 
-    const { onClose, open } = softDismiss;
-    const {  } = menuSurface;
+    const { open } = softDismiss;
+    const { onOpen } = menu;
 
     const {
-        useListNavigationChild, 
+        useListNavigationChild,
         useListNavigationProps,
-        ...useListNavReturn    
+        ...useListNavReturn
     } = useListNavigation<MenuParentElement, MenuItemElement, {}, string>({
         linearNavigation,
         listNavigation,
@@ -268,7 +291,7 @@ export function useAriaMenu<MenuParentElement extends Element, MenuItemElement e
         useMenuSurfaceSentinel,
         ...menuRest
     } = useMenuSurface<MenuParentElement, MenuButtonElement>({
-        menuSurface,
+        menuSurface: { ...menuSurface, role: "menu" },
         softDismiss
         //sendFocusWithinMenu: focusMenu ?? (() => { })
     });
@@ -276,8 +299,6 @@ export function useAriaMenu<MenuParentElement extends Element, MenuItemElement e
     const useMenuButtonProps = ((p: h.JSX.HTMLAttributes<MenuButtonElement>) => {
         const pressProps = usePressEventHandlers<MenuButtonElement>(() => onOpen?.(), {});
         const props = useMenuSurfaceButtonProps(p);
-        props["aria-haspopup"] = "menu";
-        props["aria-expanded"] = open ? "true" : undefined;
         return useMergedProps<MenuButtonElement>(pressProps, props);
     });
 
@@ -295,14 +316,14 @@ export function useAriaMenu<MenuParentElement extends Element, MenuItemElement e
     }, []);
 
 
-    function useMenuProps<P extends h.JSX.HTMLAttributes<MenuParentElement>>({ ...props }: P) {
-        props.role = "menu";
+    function useMenuProps(props: h.JSX.HTMLAttributes<MenuParentElement>) {
         return useMenuSurfaceProps(useListNavigationProps(props));
     }
 
 
     return {
         useMenuProps,
+
         useMenuButtonProps,
 
         useMenuItem,

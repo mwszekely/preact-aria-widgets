@@ -108,7 +108,7 @@ export function useSoftDismiss<T extends Node>({ softDismiss: { onClose, getElem
     }, [])
 
     const { useActiveElementProps, getElement } = useActiveElement<T>({
-        onLastActiveElementChange: useCallback((newElement: T | null) => {
+        onLastActiveElementChange: useCallback((newElement: Element | null) => {
             let validFocusableElements = stableGetElements();
 
             if (validFocusableElements) {

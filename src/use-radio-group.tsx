@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { UseListNavigationChildParameters, UseListNavigationParameters, useListNavigationSingleSelection, useMergedProps, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
+import { UseListNavigationChildParameters, UseListNavigationChildReturnTypeInfo, UseListNavigationParameters, useListNavigationSingleSelection, UseListNavigationSingleSelectionChildReturnTypeInfo, useMergedProps, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
 import { useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
 import { ElementToTag, enhanceEvent, EventDetail, TagSensitiveProps } from "./props";
 import { useCheckboxLike, useLabel } from "./use-label";
@@ -7,7 +7,7 @@ import { useCheckboxLike, useLabel } from "./use-label";
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RadioChangeEvent<EventType extends Event> = EventType & { [EventDetail]: { selectedValue: string } };
 
-export interface UseAriaRadioGroupParameters<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, InputElement extends Element, LabelElement extends Element> extends UseListNavigationParameters {
+export interface UseAriaRadioGroupParameters<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, InputElement extends Element, LabelElement extends Element> extends UseListNavigationParameters<never, never, never, never, never> {
     radioGroup: {
         name: string;
 
@@ -27,7 +27,7 @@ export interface UseAriaRadioGroupParameters<V extends string | number, GroupEle
 
 
 
-export interface UseAriaRadioParameters<V extends string | number, I extends Element, IL extends Element> extends UseListNavigationChildParameters<{}, never> {
+export interface UseAriaRadioParameters<V extends string | number, I extends Element, IL extends Element> extends UseListNavigationChildParameters<{}, never, never, never, never> {
     radio: {
         labelPosition: "wrapping" | "separate";
         value: V;
@@ -59,18 +59,14 @@ export function useAriaRadioGroup<V extends string | number, G extends HTMLEleme
 
     //const [anyRadiosFocused, setAnyRadiosFocused, getAnyRadiosFocused] = useState(false);
 
-    const { useLabelInput: useGroupLabelInput, useLabelLabel: useGroupLabelLabel } = useLabel<G, GL>({ labelPrefix: "aria-radio-group-label-", tagInput: tagGroup as never, tagLabel: tagGroupLabel as never, inputPrefix: "aria-radio-group-" })
+    const { useLabelInput: useGroupLabelInput, useLabelLabel: useGroupLabelLabel } = useLabel<G, GL>({ label: { prefixLabel: "aria-radio-group-label-", tagInput: tagGroup as never, tagLabel: tagGroupLabel as never, prefixInput: "aria-radio-group-" } })
     const { useLabelInputProps: useGroupLabelInputProps } = useGroupLabelInput();
     const { useLabelLabelProps: useGroupLabelLabelProps } = useGroupLabelLabel();
 
     const {
         useListNavigationSingleSelectionChild,
         useListNavigationSingleSelectionProps,
-        children: children,
-        linearNavigation: ln_ret,
-        listNavigation: ls_ret,
-        rovingTabIndex: rti_ret,
-        typeaheadNavigation: tn_ret
+        ...listNavRet
     } = useListNavigationSingleSelection<G, I, {}, never>({
         linearNavigation,
         listNavigation,
@@ -113,9 +109,9 @@ export function useAriaRadioGroup<V extends string | number, G extends HTMLEleme
 
 
     const useRadio = useCallback<UseRadio<V, I, IL>>(function useAriaRadio({
-        ls,
+        listNavigation,
         managedChild,
-        rti,
+        rovingTabIndex,
         radio: { disabled, labelPosition, tagInput, tagLabel, value }
     }) {
         const index = managedChild.index;
@@ -125,7 +121,19 @@ export function useAriaRadioGroup<V extends string | number, G extends HTMLEleme
             stableOnInput(enhanceEvent(e as any, { selectedValue: value }));
         }, [stableOnInput, value, index]);
 
-        const { useCheckboxLikeInputElement, useCheckboxLikeLabelElement } = useCheckboxLike<I, IL>({ checked: (checked ?? false), disabled, labelPosition, onInput, role: "radio", tagInput: tagInput as never, tagLabel: tagLabel as never });
+        const { useCheckboxLikeInputElement, useCheckboxLikeLabelElement } = useCheckboxLike<I, IL>({
+            checkboxLike: {
+                checked: (checked ?? false),
+                labelPosition,
+                disabled,
+                onInput,
+                role: "radio"
+            },
+            label: {
+                tagInput: tagInput as never,
+                tagLabel: tagLabel as never
+            }
+        });
 
 
         useLayoutEffect(() => {
@@ -133,10 +141,11 @@ export function useAriaRadioGroup<V extends string | number, G extends HTMLEleme
             return () => { byName.current.delete(value); }
         }, [byName, value, index]);
 
-        const { tabbable, useListNavigationChildProps } = useListNavigationSingleSelectionChild({
-            ls,
-            rti,
-            managedChild
+        const { useListNavigationSingleSelectionChildProps, ...listNavRet } = useListNavigationSingleSelectionChild({
+            listNavigation,
+            rovingTabIndex,
+            managedChild,
+            subInfo: {}
         });
 
         const useRadioInput: UseRadioInput<I> = () => {
@@ -151,7 +160,7 @@ export function useAriaRadioGroup<V extends string | number, G extends HTMLEleme
                     props["aria-checked"] = (checked ?? false).toString();
                 }
 
-                const propsIfInputHandlesFocus = useListNavigationChildProps(props);
+                const propsIfInputHandlesFocus = useListNavigationSingleSelectionChildProps(props);
 
                 const { useCheckboxLikeInputElementProps } = useCheckboxLikeInputElement();
                 return (useMergedProps<I>((useCheckboxLikeInputElementProps({})), labelPosition == "separate" ? propsIfInputHandlesFocus : props));
@@ -166,7 +175,7 @@ export function useAriaRadioGroup<V extends string | number, G extends HTMLEleme
             const tag = tagLabel;
             const useRadioLabelProps = (props: h.JSX.HTMLAttributes<IL>): h.JSX.HTMLAttributes<IL> => {
                 const { useCheckboxLikeLabelElementProps } = useCheckboxLikeLabelElement();
-                const propsIfLabelHandlesFocus = useListNavigationChildProps(props as any);
+                const propsIfLabelHandlesFocus = useListNavigationSingleSelectionChildProps(props as any);
                 return useCheckboxLikeLabelElementProps(useMergedProps<IL>({} as any, labelPosition == "wrapping" ? propsIfLabelHandlesFocus as any : props as any))
             };
 
@@ -178,8 +187,9 @@ export function useAriaRadioGroup<V extends string | number, G extends HTMLEleme
         return {
             useRadioInput,
             useRadioLabel,
-            checked: checked ?? false,
-            tabbable: tabbable ?? false
+            ...listNavRet
+            //checked: checked ?? false,
+            //tabbable: tabbable ?? false
         }
 
     }, [byName, useListNavigationSingleSelectionChild]);
@@ -188,22 +198,18 @@ export function useAriaRadioGroup<V extends string | number, G extends HTMLEleme
         useRadio,
         useRadioGroupProps,
         useRadioGroupLabelProps,
-        children,
-        linearNavigation: ln_ret,
-        listNavigation: ls_ret,
-        rovingTabIndex: rti_ret,
-        typeaheadNavigation: tn_ret
+        ...listNavRet
     }
 }
 
-export interface UseRadioReturnType<I extends Element, L extends Element> {
+export interface UseRadioReturnTypeInfo<I extends Element, L extends Element> extends UseListNavigationSingleSelectionChildReturnTypeInfo<I> { }
+
+export interface UseRadioReturnTypeWithHooks<I extends Element, L extends Element> extends UseRadioReturnTypeInfo<I, L> {
     useRadioInput: UseRadioInput<I>;
     useRadioLabel: UseRadioLabel<L>;
-    checked: boolean;
-    tabbable: boolean;
 }
 
 type UseRadioInput<I extends Element> = ({ tag }: TagSensitiveProps<I>) => { useRadioInputProps: (props: h.JSX.HTMLAttributes<I>) => h.JSX.HTMLAttributes<I>; }
 type UseRadioLabel<L extends Element> = ({ tag }: TagSensitiveProps<L>) => { useRadioLabelProps: (props: h.JSX.HTMLAttributes<L>) => h.JSX.HTMLAttributes<L>; }
 
-export type UseRadio<V extends string | number, I extends Element, L extends Element> = (a: UseAriaRadioParameters<V, I, L>) => UseRadioReturnType<I, L>
+export type UseRadio<V extends string | number, I extends Element, L extends Element> = (a: UseAriaRadioParameters<V, I, L>) => UseRadioReturnTypeWithHooks<I, L>
