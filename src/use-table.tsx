@@ -45,8 +45,6 @@ export type UseAriaTableCell<CellElement extends Element> = (p: UseAriaTableCell
 export type UseAriaTableRow<RowElement extends Element, CellElement extends Element> = (p: UseAriaTableRowParameters<CellElement>) => UseAriaTableRowReturnTypeWithHooks<RowElement, CellElement>;
 export type UseAriaTableBody<BodySectionElement extends Element, RowElement extends Element, CellElement extends Element> = (p: UseAriaTableBodyParameters) => UseAriaTableBodyReturnTypeWithHooks<BodySectionElement, RowElement, CellElement>;
 
-// (props: JSXInternal.HTMLAttributes<CellElement>) => JSXInternal.HTMLAttributes<CellElement>
-
 export function useAriaTable<
     TableElement extends Element,
     BodySectionElement extends Element,

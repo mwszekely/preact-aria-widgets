@@ -63,9 +63,9 @@ export interface CBG {
 export interface UseCheckboxGroupChildParameters<InputElement extends Element, LabelElement extends Element> {
     asCheckbox: UseAriaCheckboxParameters<InputElement, LabelElement>;
     asCheckboxGroupChild: {
-        managedChild: UseListNavigationChildParameters<CBG, never, never, never, never>["managedChild"];
-        listNavigation: Omit<UseListNavigationChildParameters<CBG, never, never, never, never>["listNavigation"], "subInfo">;
-        rovingTabIndex: UseListNavigationChildParameters<CBG, never, never, never, never>["rovingTabIndex"];
+        managedChild: UseListNavigationChildParameters<CBG, never, never, never, never, never>["managedChild"];
+        listNavigation: Omit<UseListNavigationChildParameters<CBG, never, never, never, never, never>["listNavigation"], "subInfo">;
+        rovingTabIndex: UseListNavigationChildParameters<CBG, never, never, never, never, never>["rovingTabIndex"];
     };
 }
 

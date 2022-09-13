@@ -11,7 +11,7 @@ export { useAriaMenu, useMenuBase, UseMenuBaseParameters, UseMenuButtonParameter
 export { useAriaTabs, TabsChangeEvent, UseAriaTabsParameters } from "./use-tabs";
 export { useAriaTooltip, UseTooltip, UseTooltipTrigger } from "./use-tooltip";
 export { useAriaRadioGroup, UseRadio, RadioChangeEvent, UseAriaRadioGroupParameters, UseAriaRadioParameters } from "./use-radio-group"
-export { useAriaSlider, AriaSliderThumbInfo, RangeChangeEvent, UseAriaSliderArguments, UseAriaSliderThumb, UseAriaSliderThumbArguments, UseAriaSliderThumbProps, UseAriaSliderThumbReturnType } from "./use-slider";
+export { useAriaSlider, AriaSliderThumbInfo, RangeChangeEvent, UseAriaSliderParameters as UseAriaSliderArguments, UseAriaSliderThumb, UseAriaSliderThumbArguments, UseAriaSliderThumbProps, UseAriaSliderThumbReturnType } from "./use-slider";
 export { useToasts, UseToast, UseToastParameters } from "./use-toasts";
 export { useTable, UseTableHead, UseTableBody, UseTableFoot, UseTableRow, UseTableCell, UseTableHeadCell, UseTableCellParameters, UseTableHeadCellParameters, UseTableRowParameters } from "./use-table";
 

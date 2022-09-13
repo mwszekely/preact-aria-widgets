@@ -14,7 +14,7 @@ export interface UseListboxMultiParameters<LabelElement extends Element, ListEle
     }
 }
 
-export interface UseListboxMultiItemParameters extends UseListNavigationChildParameters<Info, never, never, never, never> {
+export interface UseListboxMultiItemParameters extends UseListNavigationChildParameters<Info, never, never, never, never, never> {
     listboxMulti: { disabled?: boolean; } & Info;
 }
 

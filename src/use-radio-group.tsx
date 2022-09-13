@@ -27,7 +27,7 @@ export interface UseAriaRadioGroupParameters<V extends string | number, GroupEle
 
 
 
-export interface UseAriaRadioParameters<V extends string | number, I extends Element, IL extends Element> extends UseListNavigationChildParameters<{}, never, never, never, never> {
+export interface UseAriaRadioParameters<V extends string | number, I extends Element, IL extends Element> extends UseListNavigationChildParameters<{}, never, never, never, never, never> {
     radio: {
         labelPosition: "wrapping" | "separate";
         value: V;

@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { generateRandomId, useLayoutEffect, UseListNavigationParameters, useListNavigationSingleSelection, useManagedChildren, useMergedProps, useRandomId, useStableCallback, useState } from "preact-prop-helpers";
-import { ManagedChildInfoBase } from "preact-prop-helpers/use-child-manager";
-import { UseListNavigationSingleSelectionInfoBase } from "preact-prop-helpers/use-list-navigation";
+import { } from "preact-prop-helpers/use-child-manager";
+import { } from "preact-prop-helpers/use-list-navigation";
 import { useCallback } from "preact/hooks";
 import { EventDetail } from "./props";
 import { usePressEventHandlers } from "./use-button";
@@ -9,11 +9,13 @@ import { usePressEventHandlers } from "./use-button";
 
 export type TabsChangeEvent<E extends Element> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 
-export interface UseAriaTabsParameters<K extends string = string, I extends UseTabInfo<K> = UseTabInfo<K>> extends UseListNavigationParameters<K, I> {
-    selectedIndex: number | null;
-    onSelect(event: TabsChangeEvent<Element>): void;
-    selectionMode: "focus" | "activate";
-    orientation: "inline" | "block";
+export interface UseAriaTabsParameters extends UseListNavigationParameters<never, never, never, never, never> {
+    tabs: {
+        selectedIndex: number | null;
+        onSelect(event: TabsChangeEvent<Element>): void;
+        selectionMode: "focus" | "activate";
+        orientation: "inline" | "block";
+    }
 }
 
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
@@ -30,38 +32,27 @@ type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 //setSelectionMode(mode: "focus" | "activate"): void;
 //}
 
-interface UseTabPanelInfo2 extends ManagedChildInfoBase<number> {
-    setVisible(visible: boolean): void;
-    getVisible(): boolean | null;
+interface UseTabPanelInfo2 {
+    //setVisible(visible: boolean): void;
+    //getVisible(): boolean | null;
     //tabPanelId: string | undefined;
     //setTabId(tabId: string | undefined): void;
-    focus(): void;
+    //focus(): void;
 }
 
-export interface UseTabInfo<K extends string = string> extends UseListNavigationSingleSelectionInfoBase<K> {
+export interface UseTabInfo<K extends string = string> {
     disabled?: boolean;
     setCorrespondingPanelId(panelId: string): void;
     //getElement(): E;
 }
 
-export interface UseTabPanelInfo extends ManagedChildInfoBase<number> {
+export interface UseTabPanelInfo {
     setCorrespondingTabId(tagId: string): void;
     setVisible(visible: boolean): void;
 }
 
-/*
-export type UseTabSet<TabElement extends HTMLElement | SVGElement, TabPanelElement extends Element, I extends UseTabSetItemInfo<TabElement>> = (info: I) => {
-    useTabProps: (props: h.JSX.HTMLAttributes<TabElement>) => h.JSX.HTMLAttributes<TabElement>;
-    usePanelProps: (props: h.JSX.HTMLAttributes<TabPanelElement>) => h.JSX.HTMLAttributes<TabPanelElement>;
-    selected: boolean;
-    tabbable: boolean;
-    getSelected: () => boolean;
-}*/
 
-//export type UseTabsList2<TabListElement extends Element> = () => { useTabListProps: (props: h.JSX.HTMLAttributes<TabListElement>) => h.JSX.HTMLAttributes<TabListElement>; }
-//export type UseTabsLabel2 = <E extends Element>() => { useTabsLabelProps: <P extends h.JSX.HTMLAttributes<E>>({ ...props }: P) => UseRandomIdPropsReturnType<P>; }
-//export type UseTab2<TabElement extends Element, I extends UseTabInfo> = (info: UseTabParameters<TabElement, I>) => { selected: boolean | null; useTabProps: ({ ...props }: h.JSX.HTMLAttributes<TabElement>) => h.JSX.HTMLAttributes<TabElement>; }
-//export type UseTabPanel2<PanelElement extends Element> = (info: UseTabPanelParameters2) => { visible: boolean | null, useTabPanelProps: (p: h.JSX.HTMLAttributes<PanelElement>) => h.JSX.HTMLAttributes<PanelElement> }
+
 export type UseTab<TabElement extends HTMLElement | SVGElement> = ({ ...info }: Omit<UseTabInfo, "setCorrespondingPanelId">) => {
     getElement: () => TabElement | null;
     getSelected: () => boolean;
@@ -75,7 +66,11 @@ export type UseTabPanel<TabPanelElement extends Element> = ({ ...info }: Omit<Us
     useTabPanelProps: (props: h.JSX.HTMLAttributes<TabPanelElement>) => h.JSX.HTMLAttributes<TabPanelElement>;
 }
 
-export function useAriaTabs<ListElement extends HTMLElement, TabElement extends HTMLElement | SVGElement, TabPanelElement extends Element, LabelElement extends Element, K extends string = string, I extends UseTabInfo<K> = UseTabInfo<K>>({ selectionMode, selectedIndex, onSelect, orientation: logicalOrientation, collator, disableArrowKeys, disableHomeEndKeys, indexDemangler, indexMangler, initialIndex, navigationDirection, noTypeahead, onChildrenMountChange, onTabbableIndexChange: otic, typeaheadTimeout, ...args }: UseAriaTabsParameters<K, I>) {
+export function useAriaTabs<
+ListElement extends Element, 
+TabElement extends Element, 
+TabPanelElement extends Element, 
+LabelElement extends Element>({ linearNavigation, listNavigation, managedChildren, rovingTabIndex, tabs, typeaheadNavigation }: UseAriaTabsParameters<K, I>) {
     selectionMode ??= "focus";
 
     const {

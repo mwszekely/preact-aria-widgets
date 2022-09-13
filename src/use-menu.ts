@@ -35,8 +35,8 @@ export interface UseAriaMenuParameters<MSO extends MenuSurfaceOmits> extends Use
         openDirection: "down" | "up" | "left" | "right" | null;
     }
 }
-export interface UseAriaMenuButtonParameters extends UseListNavigationChildParameters<never, never, never, never, never> { }
-export interface UseAriaMenuItemParameters extends UseListNavigationChildParameters<{}, never, never, never, never> { }
+export interface UseAriaMenuButtonParameters extends UseListNavigationChildParameters<never, never, never, never, never, never> { }
+export interface UseAriaMenuItemParameters extends UseListNavigationChildParameters<{}, never, never, never, never, never> { }
 
 export interface UseAriaMenuSurfaceReturnTypeInfo<MenuParentElement extends Element, MenuButtonElement extends Element> extends UseSoftDismissReturnTypeInfo {
     getButtonFocused(): boolean;
