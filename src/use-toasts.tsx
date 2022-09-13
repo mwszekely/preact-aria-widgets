@@ -1,36 +1,37 @@
 import { h } from "preact";
-import { findFirstFocusable, generateRandomId, useChildrenFlag, useGlobalHandler, useManagedChildren, useMergedProps, useRandomId, useRefElement, useStableCallback, useState, useTimeout } from "preact-prop-helpers";
-import { FlaggableChildInfoBase } from "preact-prop-helpers/use-child-manager";
-import { StateUpdater, useCallback, useEffect, useLayoutEffect } from "preact/hooks";
+import { findFirstFocusable, returnTrue, useChildrenFlag, useGlobalHandler, useManagedChildren, useMergedProps, useRefElement, useStableCallback, useState, useTimeout } from "preact-prop-helpers";
+import { ChildFlagOperations, OnChildrenMountChange, UseManagedChildParameters, UseManagedChildrenParameters } from "preact-prop-helpers/use-child-manager";
+import { useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
 
 
 
 /* eslint-disable @typescript-eslint/no-empty-interface */
-export interface UseToastsParameters { }
+export interface UseToastsParameters extends UseManagedChildrenParameters<number, never> { }
 
-export type UseToastParameters = {
-    info: Omit<ToastInfoBase, "dismissed" | "getStatus" | "setStatus" | "focus" | "flags">;
+export interface UseToastParameters extends UseManagedChildParameters<number, ToastInfo, "showing", never> {
+    //info: Omit<ToastInfoBase, "dismissed" | "getStatus" | "setStatus" | "focus" | "flags">;
     politeness?: "polite" | "assertive";
     timeout: number | null;
 }
 
-export interface ToastInfoBase extends FlaggableChildInfoBase<"showing"> {
-    dismissed: boolean;
+export interface ToastInfo {
+    //dismissed: boolean;
     focus(): void;
-    setStatus: StateUpdater<"pending" | "active" | "dismissed">;
-    getStatus(): null | "pending" | "active" | "dismissed";
+    //setStatus: StateUpdater<"pending" | "active" | "dismissed">;
+    //getStatus(): null | "pending" | "active" | "dismissed";
 }
 
 export type UseToast = (args: UseToastParameters) => UseToastReturnType;
 
 export interface UseToastReturnType {
     dismiss: () => void;
-    status: "pending" | "active" | "dismissed";
-    getStatus(): "pending" | "active" | "dismissed";
+    showing: boolean;
+    //status: "pending" | "active" | "dismissed";
+    //getStatus(): "pending" | "active" | "dismissed";
     resetDismissTimer: () => void;
 }
 
-export function useToasts<ContainerType extends Element>({ ..._ }: UseToastsParameters) {
+export function useToasts<ContainerType extends Element>({ managedChildren: { onChildrenMountChange: ocmu, onAfterChildLayoutEffect }  }: UseToastsParameters) {
 
     // "Pointer" to whatever index toast is currently being shown.
     // E.g. it's 0 when the first toast is shown, then when dismissed, it becomes 1.
@@ -42,13 +43,13 @@ export function useToasts<ContainerType extends Element>({ ..._ }: UseToastsPara
     const [politeness, setPoliteness] = useState<"polite" | "assertive">("polite");
 
     const { getElement, useRefElementProps } = useRefElement<ContainerType>({});
-    const { children: toastQueue, useManagedChild } = useManagedChildren<ToastInfoBase>({ onChildrenMountChange: useStableCallback((m, u) => onChildrenMountChange(m, u)), onAfterChildLayoutEffect: null });
+    const { useManagedChild, managedChildren: { children: toastQueue } } = useManagedChildren<number, ToastInfo, "showing">({ managedChildren: { onAfterChildLayoutEffect, onChildrenMountChange: useStableCallback<OnChildrenMountChange<number>>((m, u) => {reevaluateClosestFit(); ocmu?.(m, u)}) } });
 
     // Any time a new toast mounts, update our bottommostToastIndex to point to it if necessary
     // ("necessary" just meaning if it's the first toast ever or all prior toasts have been dismissed)
     const onAnyToastMounted = useCallback((_index: number) => {
         let bottom = getActiveToastIndex();
-        while (bottom <= toastQueue.getHighestIndex() && (bottom < 0 || toastQueue.getAt(bottom)?.dismissed)) {
+        while (bottom <= toastQueue.getHighestIndex() && (bottom < 0 || toastQueue.getAt(bottom)?.flags?.showing)) {
             ++bottom;
         }
         setActiveToastIndex(bottom);
@@ -57,21 +58,22 @@ export function useToasts<ContainerType extends Element>({ ..._ }: UseToastsPara
     // Any time a toast is dismissed, update our bottommostToastIndex to point to the next toast in the queue, if one exists.
     const onAnyToastDismissed = useCallback((index: number) => {
         let bottom = getActiveToastIndex();
-        while (bottom <= toastQueue.getHighestIndex() && (bottom < 0 || bottom === index || toastQueue.getAt(bottom)?.dismissed)) {
+        while (bottom <= toastQueue.getHighestIndex() && (bottom < 0 || bottom === index || toastQueue.getAt(bottom)?.flags)) {
             ++bottom;
         }
         setActiveToastIndex(bottom);
 
         if (getElement()?.contains(document.activeElement))
-            toastQueue.getAt(bottom)?.focus();
+            toastQueue.getAt(bottom)?.subInfo.focus();
     }, [setActiveToastIndex]);
 
     // Any time the index pointing to the currently-showing toast changes,
     // update the relevant children and let them know that they're now either active or dismissed.
-    const { changeIndex, getCurrentIndex, onChildrenMountChange } = useChildrenFlag<"showing", ToastInfoBase>({
+    const { changeIndex, reevaluateClosestFit } = useChildrenFlag<ToastInfo, "showing">({
         initialIndex: activeToastIndex,
         children: toastQueue,
-        key: "showing"
+        key: "showing",
+        closestFit: false,
         /* setChildFlag: ((i, set) => {
              if (set)
                  console.assert(i <= getActiveToastIndex());
@@ -82,12 +84,12 @@ export function useToasts<ContainerType extends Element>({ ..._ }: UseToastsPara
     });
     useEffect(() => {
         changeIndex(activeToastIndex);
-    }, [activeToastIndex])
+    }, [activeToastIndex]);
 
-    const useToast: UseToast = useCallback(({ politeness, timeout, info: { index } }: UseToastParameters): UseToastReturnType => {
-        const [status, setStatus, getStatus] = useState<"pending" | "active" | "dismissed">("pending");
-        const dismissed = (status === "dismissed");
-        const dismiss = useCallback(() => { setStatus("dismissed") }, []);
+    const useToast: UseToast = useCallback(({ politeness, timeout, managedChild: { index } }: UseToastParameters): UseToastReturnType => {
+        //const [status, setStatus, getStatus] = useState<"pending" | "active" | "dismissed">("pending");
+        //const dismissed = (status === "dismissed");
+        const dismiss = useCallback(() => { setShowing(false); }, []);
 
         const [mouseOver, setMouseOver] = useState(false);
 
@@ -107,9 +109,12 @@ export function useToasts<ContainerType extends Element>({ ..._ }: UseToastsPara
             }
         }, []);
 
-        const __: void = useManagedChild({ info: { dismissed, index, setStatus, getStatus, focus, flags: {} } });
+        const [showing, setShowing, getShowing] = useState(false);
+        const showingRef = useRef<ChildFlagOperations>({ get: getShowing, set: setShowing, isValid: returnTrue });
 
-        const isActive = (status === "active");
+        const __: void = useManagedChild({ managedChild: { index, flags: { showing: showingRef.current }, subInfo: { focus } } });
+
+        //const isActive = (status === "active");
         const [triggerIndex, setTriggerIndex] = useState(1);
 
         const resetDismissTimer = useCallback(() => {
@@ -121,23 +126,22 @@ export function useToasts<ContainerType extends Element>({ ..._ }: UseToastsPara
         }, []);
 
         useEffect(() => {
-            if (dismissed)
+            if (showing)
                 onAnyToastDismissed(index)
-        }, [dismissed]);
+        }, [showing]);
 
         useTimeout({
             timeout: timeout == null || mouseOver ? null : isFinite(timeout) ? timeout : timeout > 0 ? null : 0,
             callback: () => {
-                if (isActive)
-                    setStatus("dismissed");
+                if (showing)
+                    setShowing(false);
             },
-            triggerIndex: isActive ? triggerIndex : false
+            triggerIndex: showing ? triggerIndex : false
         });
 
 
         return {
-            status,
-            getStatus,
+            showing,
             dismiss,
             resetDismissTimer
         }

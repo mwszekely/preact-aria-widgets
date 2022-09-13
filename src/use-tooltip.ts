@@ -1,9 +1,9 @@
 import { h } from "preact";
-import { useGlobalHandler, useHasFocus, useMergedProps, usePassiveState, useRandomId, UseRandomIdPropsReturnType, UseReferencedIdPropsReturnType, useStableCallback, useState } from "preact-prop-helpers";
+import { useGlobalHandler, useHasFocus, useMergedProps, usePassiveState, useRandomId, useStableCallback, useState } from "preact-prop-helpers";
 import { useCallback, useEffect } from "preact/hooks";
 
 export type UseTooltipTrigger<TriggerType extends Element> = () => { useTooltipTriggerProps: ({ ...props }: h.JSX.HTMLAttributes<TriggerType>) => h.JSX.HTMLAttributes<TriggerType> };
-export interface UseTooltipParameters { mouseoverDelay?: number, mouseoutDelay?: number, focusDelay?: number };
+export interface UseTooltipParameters { mouseoverDelay?: number, mouseoutDelay?: number, focusDelay?: number }
 export type UseTooltip<TriggerType extends HTMLElement | SVGElement, TooltipType extends Element> = (args: UseTooltipParameters) => UseTooltipReturnType<TriggerType, TooltipType>;
 export interface UseTooltipReturnType<TriggerType extends HTMLElement | SVGElement, TooltipType extends Element> {
     useTooltip: () => {
@@ -45,7 +45,7 @@ export function useAriaTooltip<TriggerType extends HTMLElement | SVGElement, Too
     const {
         useRandomIdSourceElement,//: useTooltipIdProps, 
         useRandomIdReferencerElement,//: useTooltipIdReferencingProps 
-    } = useRandomId<TooltipType>({ prefix: "aria-tooltip-", onAfterChildLayoutEffect: null, onChildrenMountChange: null });
+    } = useRandomId<TooltipType>({ randomId: { prefix: "aria-tooltip-" }, managedChildren: { onAfterChildLayoutEffect: null, onChildrenMountChange: null } });
 
     const [, setTriggerFocused] = usePassiveState(useStableCallback((focused: boolean) => {
         const delay = focused ? focusDelay : 1;
