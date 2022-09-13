@@ -17,8 +17,8 @@ export interface UseListboxSingleParameters<LabelElement extends Element, ListEl
     }
 }
 
-export interface UseListboxSingleItemParameters extends UseListNavigationSingleSelectionChildParameters<{}, never, never, never, never> {
-    listboxSingle: { disabled?: boolean; }
+export interface UseListboxSingleItemParameters extends Omit<UseListNavigationSingleSelectionChildParameters<{}, never, never, never, never, never>, "subInfo"> {
+    listboxSingleItem: { disabled?: boolean; }
 }
 
 
@@ -85,7 +85,7 @@ export function useAriaListboxSingle<LabelElement extends Element, ListElement e
     const stableOnSelect = useStableCallback(onSelect ?? (() => { }));
 
 
-    const useListboxSingleItem = useCallback<UseListboxSingleItem<ListItemElement>>(({ listboxSingle: { disabled }, listNavigation, managedChild, rovingTabIndex }) => {
+    const useListboxSingleItem = useCallback<UseListboxSingleItem<ListItemElement>>(({ listboxSingleItem: { disabled }, listNavigation, managedChild, rovingTabIndex }) => {
         const { rovingTabIndex: rti_ret, singleSelection: ss_ret, useListNavigationSingleSelectionChildProps } = useListNavigationSingleSelectionChild({
             managedChild,
             listNavigation,

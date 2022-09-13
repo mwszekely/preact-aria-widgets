@@ -96,7 +96,7 @@ export interface UseCheckboxGroupReturnTypeInfo<InputElement extends Element, _L
     };
 }
 
-export interface UseCheckboxGroupReturnType<InputElement extends Element, LabelElement extends Element> extends UseCheckboxGroupReturnTypeInfo<InputElement, LabelElement> {
+export interface UseCheckboxGroupReturnTypeWithHooks<InputElement extends Element, LabelElement extends Element> extends UseCheckboxGroupReturnTypeInfo<InputElement, LabelElement> {
     /** **STABLE ** */
     //checkboxes: ManagedChildren<I>;
     /**
@@ -129,7 +129,7 @@ export type UseCheckboxGroupParent<InputElement extends Element, LabelElement ex
  * @param param0 
  * @returns 
  */
-export function useCheckboxGroup<InputElement extends Element, LabelElement extends Element>({ linearNavigation, listNavigation, managedChildren, rovingTabIndex, typeaheadNavigation }: UseCheckboxGroupParameters): UseCheckboxGroupReturnType<InputElement, LabelElement> {
+export function useCheckboxGroup<InputElement extends Element, LabelElement extends Element>({ linearNavigation, listNavigation, managedChildren, rovingTabIndex, typeaheadNavigation }: UseCheckboxGroupParameters): UseCheckboxGroupReturnTypeWithHooks<InputElement, LabelElement> {
 
     //const onUpdateChildren = useStableCallback(onUpdateChildrenUnstable ?? (() => {}));
     const {
@@ -253,7 +253,7 @@ export function useCheckboxGroup<InputElement extends Element, LabelElement exte
         setAriaControls(Array.from(allIds.current).join(" "));
     }, [updateIndex])
 
-    const useCheckboxGroupChild = useCallback<UseCheckboxGroupChild<InputElement, LabelElement>>(function ({ asCheckbox, asCheckboxGroupChild }) {
+    const useCheckboxGroupChild: UseCheckboxGroupChild<InputElement, LabelElement> = useCallback<UseCheckboxGroupChild<InputElement, LabelElement>>(function ({ asCheckbox, asCheckboxGroupChild }) {
         const { checkbox: { onInput }, checkboxLike: { checked, disabled, labelPosition }, label: { tagInput, tagLabel } } = asCheckbox;
         const { managedChild: { index } } = asCheckboxGroupChild;
         //labelPosition ??= "separate";

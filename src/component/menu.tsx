@@ -1,29 +1,44 @@
-import { createContext, createElement, h, VNode } from "preact";
+import { createContext, h, VNode } from "preact";
 import { useContext } from "preact/hooks";
-import { useAriaMenu, UseAriaMenuParameters, UseMenuChildInfo, UseMenuItem, UseMenuItemDefaultInfo, UseMenuItemDefaultParameters } from "../use-menu";
+import { useAriaMenu, UseAriaMenuItemParameters, UseAriaMenuItemReturnTypeInfo, UseAriaMenuParameters, UseAriaMenuReturnTypeInfo, UseMenuItem } from "../use-menu";
 
-export type MenuProps<E extends Element, K extends string, I extends UseMenuItemDefaultInfo<E>> = Omit<UseAriaMenuParameters<E, K, I>, "indexMangler" | "indexDemangler" | "onAfterChildLayoutEffect" | "onChildrenMountChange" | "onTabbableIndexChange" | "onTabbableRender" | "onTabbedInTo" | "onTabbedOutOf"> & {
-    propsMenuButton: () => h.JSX.HTMLAttributes<any>;
-    propsMenuSentinel: (which: "top" | "bottom") => h.JSX.HTMLAttributes<any>;
-    propsMenu: () => h.JSX.HTMLAttributes<any>;
+type Get<T, K extends keyof T> = T[K];
 
-    tagMenuButton: any;
-    tagMenu: any;
-    tagSentinel: any;
+export interface MenuProps<MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element> extends //Omit<UseAriaMenuParameters<E, K, I>, "indexMangler" | "indexDemangler" | "onAfterChildLayoutEffect" | "onChildrenMountChange" | "onTabbableIndexChange" | "onTabbableRender" | "onTabbedInTo" | "onTabbedOutOf"> & {
+    Get<UseAriaMenuParameters<never>, "menu">,
+    Get<UseAriaMenuParameters<never>, "menuSurface">,
+    Get<UseAriaMenuParameters<never>, "softDismiss">,
+    Get<UseAriaMenuParameters<never>, "linearNavigation">,
+    Get<UseAriaMenuParameters<never>, "listNavigation">,
+    Get<UseAriaMenuParameters<never>, "rovingTabIndex">,
+    Get<UseAriaMenuParameters<never>, "typeaheadNavigation">,
+    Get<UseAriaMenuParameters<never>, "managedChildren">
+
+{
+    //propsMenuButton: () => h.JSX.HTMLAttributes<any>;
+    //propsMenuSentinel: (which: "top" | "bottom") => h.JSX.HTMLAttributes<any>;
+    //propsMenu: () => h.JSX.HTMLAttributes<any>;
+
+    //tagMenuButton: any;
+    //tagMenu: any;
+    //tagSentinel: any;
 
 
-    render?(menuButton: VNode, menu: VNode, firstSentinel: VNode, lastSentinel: VNode): VNode;
+    render?(menuInfo: UseAriaMenuReturnTypeInfo<MenuParentElement, MenuItemElement, MenuButtonElement>, menuButtonProps: h.JSX.HTMLAttributes<MenuButtonElement>, menu: h.JSX.HTMLAttributes<MenuParentElement>, firstSentinel: h.JSX.HTMLAttributes<any>, lastSentinel: h.JSX.HTMLAttributes<any>): VNode;
 }
 
-export type MenuItemProps = Omit<UseMenuItemDefaultParameters<UseMenuChildInfo>, "info"> & Pick<UseMenuItemDefaultParameters<UseMenuChildInfo>["info"], "index" | "text" | "hidden"> & {
-    render?(listItem: VNode): VNode;
-    tagMenuItem: any;
-    propsMenuItem: () => h.JSX.HTMLAttributes<any>
+export interface MenuItemProps<MenuItemElement extends Element> extends 
+Get<UseAriaMenuItemParameters, "managedChild">,
+Get<UseAriaMenuItemParameters, "listNavigation">,
+Get<UseAriaMenuItemParameters, "rovingTabIndex"> {
+    render?(info: UseAriaMenuItemReturnTypeInfo<MenuItemElement>, listItem: h.JSX.HTMLAttributes<any>): VNode;
+    //tagMenuItem: any;
+    //propsMenuItem: () => h.JSX.HTMLAttributes<any>
 }
 
-const MenuItemContext = createContext<UseMenuItem<any, UseMenuChildInfo>>(null!);
+const MenuItemContext = createContext<UseMenuItem<any>>(null!);
 
-export function Menu<ParentElement extends HTMLElement | SVGElement, ChildElement extends HTMLElement | SVGElement>({
+export function Menu<ParentElement extends Element, ChildElement extends Element, ButtonElement extends Element>({
     initialIndex,
     collator,
     disableArrowKeys,
@@ -31,71 +46,75 @@ export function Menu<ParentElement extends HTMLElement | SVGElement, ChildElemen
     navigationDirection,
     noTypeahead,
     typeaheadTimeout,
-    open,
-    onClose,
     onOpen,
+    onClose,
+    open,
 
-    propsMenuButton,
-    propsMenuSentinel,
-    propsMenu,
+    openDirection,
+    sendFocusToMenu,
+    indexDemangler,
+    indexMangler,
+    onAfterChildLayoutEffect,
+    onChildrenMountChange,
+    onTabbableIndexChange,
+    onTabbableRender,
+    onTabbedInTo,
+    onTabbedOutOf,
 
-    tagMenuButton,
-    tagMenu,
-    tagSentinel,
     render
 
-}: MenuProps<ChildElement, string, UseMenuChildInfo>) {
+}: MenuProps<ParentElement, ChildElement, ButtonElement>) {
     const {
-        currentTypeahead,
-        focusMenu,
-        invalidTypeahead,
-        managedChildren,
         useMenuButtonProps,
         useMenuItem,
         useMenuProps,
-        useMenuSentinel
-    } = useAriaMenu<ParentElement, ChildElement, string, UseMenuChildInfo>({
-        initialIndex,
-        onClose,
-        onOpen,
-        open,
-        collator,
-        disableArrowKeys,
-        disableHomeEndKeys,
-        navigationDirection,
-        noTypeahead,
-        typeaheadTimeout
+        useMenuSentinel,
+        ...menuReturn
+    } = useAriaMenu<ParentElement, ChildElement, ButtonElement>({
+        linearNavigation: { disableArrowKeys, disableHomeEndKeys, navigationDirection },
+        listNavigation: { indexDemangler, indexMangler },
+        managedChildren: { onAfterChildLayoutEffect, onChildrenMountChange },
+        menu: { onOpen, openDirection },
+        menuSurface: { sendFocusToMenu, },
+        rovingTabIndex: { initialIndex, onTabbableIndexChange, onTabbableRender, onTabbedInTo, onTabbedOutOf },
+        softDismiss: { onClose, open },
+        typeaheadNavigation: { collator, noTypeahead, typeaheadTimeout },
     });
 
-    const menuButton = createElement(tagMenuButton, useMenuButtonProps(propsMenuButton()));
-    const menu = createElement(tagMenu, useMenuProps(propsMenu()));
+    const menuButtonProps = useMenuButtonProps({});
+    const menuProps = useMenuProps({});
     const { useMenuSentinelProps: useFirstSentinelProps } = useMenuSentinel();
     const { useMenuSentinelProps: useLastSentinelProps } = useMenuSentinel();
-    const firstSentinel = createElement(tagSentinel, useFirstSentinelProps(propsMenuSentinel("top")));
-    const lastSentinel = createElement(tagSentinel, useLastSentinelProps(propsMenuSentinel("bottom")));
+    const firstSentinelProps = useFirstSentinelProps({});
+    const lastSentinelProps = useLastSentinelProps({});
     return (
         <MenuItemContext.Provider value={useMenuItem}>
-            {(render ?? defaultMenuRender)(menuButton, menu, firstSentinel, lastSentinel)}
+            {(render ?? defaultMenuRender)(menuReturn, menuButtonProps, menuProps, firstSentinelProps, lastSentinelProps)}
         </MenuItemContext.Provider>
     )
 
 }
 
-export function MenuItem({ tagMenuItem, propsMenuItem, render, index, text, hidden }: MenuItemProps) {
-    const { useMenuItemProps } = useContext(MenuItemContext)({
-        info: { index, text, hidden, flags: {} }
+export function MenuItem<MenuItemElement extends Element>({ render, index, text, hidden, blurSelf, flags, focusSelf }: MenuItemProps<MenuItemElement>) {
+    const { useMenuItemProps, ...rest } = useContext(MenuItemContext)({
+        listNavigation: { text },
+        managedChild: { index, flags },
+        rovingTabIndex: { blurSelf, focusSelf, hidden }
     });
-    const menuItem = createElement(tagMenuItem, useMenuItemProps(propsMenuItem()));
-    return (render ?? defaultMenuItemRender)(menuItem);
+    return (render ?? defaultMenuItemRender)(rest, useMenuItemProps({}));
 }
 
-function defaultMenuRender(menuButton: VNode, menu: VNode, firstSentinel: VNode, lastSentinel: VNode) {
-    menu.props.children = <>{firstSentinel}{menu.props.children}{lastSentinel}</>
+function defaultMenuRender(menuInfo: UseAriaMenuReturnTypeInfo<any, any, any>, menuButtonProps: h.JSX.HTMLAttributes<any>, menuProps: h.JSX.HTMLAttributes<any>, firstSentinelProps: h.JSX.HTMLAttributes<any>, lastSentinelProps: h.JSX.HTMLAttributes<any>) {
+    const firstSentinel = <div {...firstSentinelProps} />;
+    const lastSentinel = <div {...lastSentinelProps} />;
+    const menu = <>{firstSentinel}{menuProps.children}{lastSentinel}</>;
+    const menuButton = <div {...menuButtonProps} />
+    //menu.props.children = <>{firstSentinel}{menu.props.children}{lastSentinel}</>
     return (
         <>{menuButton}{menu}</>
     )
 }
 
-function defaultMenuItemRender(menuItem:VNode) {
-    return (menuItem);
+function defaultMenuItemRender<MenuItemElement extends Element>(info: UseAriaMenuItemReturnTypeInfo<MenuItemElement>, menuItemProps: h.JSX.HTMLAttributes<any>) {
+    return (<div {...menuItemProps} />);
 }

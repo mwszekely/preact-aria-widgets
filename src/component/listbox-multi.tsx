@@ -1,8 +1,7 @@
-import { ComponentChildren, createContext, createElement, Ref, VNode } from "preact";
+import { ComponentChildren, createContext, h, Ref, VNode } from "preact";
 import { forwardRef } from "preact/compat";
 import { useContext } from "preact/hooks";
-import { ElementToTag } from "props";
-import { useAriaListboxMulti, UseListboxMultiItem, UseListboxMultiItemParameters, UseListboxMultiItemReturnType, UseListboxMultiParameters, UseListboxMultiReturnType } from "../use-listbox-multi";
+import { useAriaListboxMulti, UseListboxMultiItem, UseListboxMultiItemParameters, UseListboxMultiItemReturnTypeInfo, UseListboxMultiParameters, UseListboxMultiReturnTypeInfo } from "../use-listbox-multi";
 
 
 
@@ -15,8 +14,8 @@ export interface ListboxMultiProps<LabelElement extends Element, ListElement ext
     Get<UseListboxMultiParameters<LabelElement, ListElement>, "typeaheadNavigation">,
     Get<UseListboxMultiParameters<LabelElement, ListElement>, "managedChildren">,
     Get<UseListboxMultiParameters<LabelElement, ListElement>, "listboxMulti"> {
-    tagLabel: ElementToTag<LabelElement>;
-    render?(info: Omit<UseListboxMultiReturnType<LabelElement, ListElement, ListItemElement>, `use${string}`>, label: VNode<any>, list: VNode<any>): VNode<any>;
+    //tagLabel: ElementToTag<LabelElement>;
+    render?(info: UseListboxMultiReturnTypeInfo<ListItemElement>, label: h.JSX.HTMLAttributes<LabelElement>, list: h.JSX.HTMLAttributes<ListElement>): VNode<any>;
     children: ComponentChildren;
 }
 
@@ -29,9 +28,8 @@ export interface ListboxMultiItemProps<ListboxItemElement extends Element> exten
     Get<UseListboxMultiItemParameters, "managedChild">,
     Omit<Get<UseListboxMultiItemParameters, "listNavigation">, "subInfo">,
     Get<UseListboxMultiItemParameters, "rovingTabIndex">,
-    Get<UseListboxMultiItemParameters, "lbm"> {
-    tagListItem: ElementToTag<ListboxItemElement>;
-    render?(info: Omit<UseListboxMultiItemReturnType<ListboxItemElement>, `use${string}`>, listItem: VNode<any>): VNode<any>;
+    Get<UseListboxMultiItemParameters, "listboxMultiItem"> {
+    render?(info: UseListboxMultiItemReturnTypeInfo<ListboxItemElement>, listItemProps: h.JSX.HTMLAttributes<ListboxItemElement>): VNode<any>;
 }
 
 const ListboxMultiContext = createContext<UseListboxMultiItem<any>>(null!);
@@ -72,24 +70,26 @@ function ListboxMultiU<LabelElement extends Element, ListElement extends HTMLEle
     });
 
     const { useListboxMultiLabelProps } = useListboxMultiLabel();
-    const label = createElement(tagLabel, useListboxMultiLabelProps({}) as any);
-    const list = createElement(tagList, useListboxMultiProps({ children: vnodeChildren, ref }) as any);
 
-
+    const p1 =  useListboxMultiLabelProps({});
+    const p2 = useListboxMultiProps({ children: vnodeChildren, ref });
     return (
         <ListboxMultiContext.Provider value={useListboxMultiItem}>
-            {(render ?? defaultListRender)({ ...listboxReturnType }, label, list)}
+            {(render ?? defaultListRender)(listboxReturnType, p1, p2)}
         </ListboxMultiContext.Provider>
     )
 }
 
-function defaultListRender(...[_info, label, list]: Parameters<NonNullable<ListboxMultiProps<any, any, any>["render"]>>): VNode<any> {
+function defaultListRender(info: UseListboxMultiReturnTypeInfo<any>, labelProps: h.JSX.HTMLAttributes<any>, listProps: h.JSX.HTMLAttributes<any>): VNode<any> {
+    const label = <div {...labelProps} />;
+    const list = <ul {...listProps} />;
     return (
         <>{label}{list}</>
     )
 }
 
-function defaultListItemRender(...[_info, listItem]: Parameters<NonNullable<ListboxMultiItemProps<any>["render"]>>): VNode<any> {
+function defaultListItemRender(info: UseListboxMultiItemReturnTypeInfo<any>, listItemProps: h.JSX.HTMLAttributes<any>): VNode<any> {
+    const listItem = <li {...listItemProps} />;
     return (
         <>{listItem}</>
     )
@@ -101,18 +101,23 @@ export interface AriaListboxMultiPropsDerivedFrom {
     tabbable: boolean;
 }
 
-function ListboxMultiItemU<ListItemElement extends Element>({ index, tagListItem, blurSelf, disabled, flags, focusSelf, render, text, hidden, selected, onSelect }: ListboxMultiItemProps<ListItemElement>, ref: Ref<ListItemElement>) {
-    const { useListboxMultiItemProps, rovingTabIndex, lbm } = useContext(ListboxMultiContext)({ managedChild: { index, flags }, rovingTabIndex: { blurSelf, focusSelf, hidden }, listNavigation: { subInfo: { selected, onSelect }, text }, lbm: { disabled, selected, onSelect} });
-    const listItem = createElement(tagListItem, useListboxMultiItemProps({ ref }) as any);
+function ListboxMultiItemU<ListItemElement extends Element>({ index, blurSelf, disabled, flags, focusSelf, render, text, hidden, selected, onSelect }: ListboxMultiItemProps<ListItemElement>, ref: Ref<ListItemElement>) {
+    const { useListboxMultiItemProps, ...itemReturn } = useContext(ListboxMultiContext)({ 
+        managedChild: { index, flags }, 
+        rovingTabIndex: { blurSelf, focusSelf, hidden }, 
+        listNavigation: { text }, 
+        listboxMultiItem: { disabled, selected, onSelect}
+    });
+    //const listItem = createElement(tagListItem, useListboxMultiItemProps({ ref }) as any);
     return (
-        <>{(render ?? defaultListItemRender)({ rovingTabIndex, lbm }, listItem)}</>
+        <>{(render ?? defaultListItemRender)(itemReturn, useListboxMultiItemProps({ ref }))}</>
     )
 }
 
 function _foo() {
     return (
         <ListboxMulti tagLabel="label" tagList="ul" >
-            <ListboxMultiItem index={0} text="" selected={false} tagListItem="li"></ListboxMultiItem>
+            <ListboxMultiItem index={0} text="" selected={false}></ListboxMultiItem>
         </ListboxMulti>
     )
 }

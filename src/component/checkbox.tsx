@@ -1,41 +1,56 @@
 import { createElement, h, VNode } from "preact";
-import { useAriaCheckbox, UseAriaCheckboxParameters } from "use-checkbox";
+import { useAriaCheckbox, UseAriaCheckboxParameters, UseAriaCheckboxReturnTypeInfo } from "use-checkbox";
 
-export interface AriaCheckboxProps<I extends HTMLElement, L extends HTMLElement> extends UseAriaCheckboxParameters<I, L> {
-    propsInput(): h.JSX.HTMLAttributes<I>;
-    propsLabel(): h.JSX.HTMLAttributes<L>;
-    render?(input: VNode<any>, label: VNode<any>): VNode<any>;
+type Get<T, K extends keyof T> = T[K];
+
+export interface AriaCheckboxProps<I extends HTMLElement, L extends HTMLElement> extends
+    Get<UseAriaCheckboxParameters<I, L>, "checkboxLike">,
+    Get<UseAriaCheckboxParameters<I, L>, "checkbox">,
+    Get<UseAriaCheckboxParameters<I, L>, "label"> {
+    //propsInput(): h.JSX.HTMLAttributes<I>;
+   // propsLabel(): h.JSX.HTMLAttributes<L>;
+    render?(info: UseAriaCheckboxReturnTypeInfo<I, L>, input: h.JSX.HTMLAttributes<I>, label: h.JSX.HTMLAttributes<L>): VNode<any>;
 }
 
-function defaultRenderSeparate(input: VNode<any>, label: VNode<any>): VNode<any> {
-    return (
-        <>
-            {input}
-            {label}
-        </>
-    )
+export function defaultRenderSeparate(inputTag: string, inputLabel: string) {
+    return function (info: unknown, inputProps: h.JSX.HTMLAttributes<any>, labelProps: h.JSX.HTMLAttributes<any>): VNode<any> {
+        const input = createElement(inputTag, inputProps);
+        const label = createElement(inputLabel, labelProps);
+
+        return (
+            <>
+                {input}
+                {label}
+            </>
+        )
+    }
 }
 
-function defaultRenderCombined(input: VNode<any>, label: VNode<any>): VNode<any> {
-    label.props.children = <>{input}{label.props.children}</>
-    return (
-        <>
-            {label}
-        </>
-    )
+export function defaultRenderCombined(inputTag: string, inputLabel: string) {
+    return function (info: unknown, inputProps: h.JSX.HTMLAttributes<any>, {children, ...labelProps}: h.JSX.HTMLAttributes<any>): VNode<any> {
+        const input = createElement(inputTag, inputProps);
+        const label = createElement(inputLabel, { ...labelProps, children: <>{input}{children}</> });
+        label.props.children = <>{input}{label.props.children}</>;
+
+        return (
+            <>
+                {label}
+            </>
+        )
+    }
 }
 
-export function AriaCheckbox<I extends HTMLElement, L extends HTMLElement>({ checked, disabled, tagLabel, labelPosition, tagInput, onInput, propsInput, propsLabel, render }: AriaCheckboxProps<I, L>) {
-    const { inputId, labelId, useCheckboxInputElement, useCheckboxLabelElement } = useAriaCheckbox({ checked, disabled, tagInput, labelPosition, tagLabel, onInput });
+export function AriaCheckbox<I extends HTMLElement, L extends HTMLElement>({ checked, disabled, tagLabel, labelPosition, tagInput, onInput, render }: AriaCheckboxProps<I, L>) {
+    const { useCheckboxInputElement, useCheckboxLabelElement, ...checkboxInfo } = useAriaCheckbox({ checkbox: { onInput }, checkboxLike: { checked, disabled, labelPosition }, label: { tagInput, tagLabel } });
     const { useCheckboxInputElementProps } = useCheckboxInputElement();
     const { useCheckboxLabelElementProps } = useCheckboxLabelElement();
 
-    const input = createElement(tagInput, useCheckboxInputElementProps(propsInput()) as any);
-    const label = createElement(tagLabel, useCheckboxLabelElementProps(propsLabel()) as any);
+    const input = useCheckboxInputElementProps({});
+    const label = useCheckboxLabelElementProps({});
     if (labelPosition == "separate") {
-        return (render ?? defaultRenderSeparate)(input, label);
+        return (render ?? defaultRenderSeparate(tagInput, tagLabel))(checkboxInfo, input, label);
     }
     else {
-        return (render ?? defaultRenderCombined)(input, label);
+        return (render ?? defaultRenderCombined(tagInput, tagLabel))(checkboxInfo, input, label);
     }
 }

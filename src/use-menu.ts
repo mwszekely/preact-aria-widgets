@@ -28,15 +28,15 @@ export interface UseAriaMenuSurfaceParameters<MSO extends MenuSurfaceOmits> exte
     menuSurface: Omit<MSP, MSO>
 }
 export interface UseAriaMenuParameters<MSO extends MenuSurfaceOmits> extends UseAriaMenuSurfaceParameters<MSO | "role">, UseListNavigationParameters<never, never, never, never, never> {
-    menu: { 
-        onOpen(): void; 
+    menu: {
+        onOpen(): void;
 
         // Corresponds to what arrow key can open this menu
         openDirection: "down" | "up" | "left" | "right" | null;
     }
 }
 export interface UseAriaMenuButtonParameters extends UseListNavigationChildParameters<never, never, never, never, never, never> { }
-export interface UseAriaMenuItemParameters extends UseListNavigationChildParameters<{}, never, never, never, never, never> { }
+export interface UseAriaMenuItemParameters extends Omit<UseListNavigationChildParameters<{}, never, never, never, never, never>, "subInfo"> { }
 
 export interface UseAriaMenuSurfaceReturnTypeInfo<MenuParentElement extends Element, MenuButtonElement extends Element> extends UseSoftDismissReturnTypeInfo {
     getButtonFocused(): boolean;
@@ -300,10 +300,10 @@ export function useAriaMenu<MenuParentElement extends Element, MenuItemElement e
         return useMergedProps<MenuButtonElement>(pressProps, props);
     });
 
-    const useMenuItem = useCallback<UseMenuItem<MenuItemElement>>(({ listNavigation, managedChild, rovingTabIndex, subInfo }) => {
+    const useMenuItem = useCallback<UseMenuItem<MenuItemElement>>(({ listNavigation, managedChild, rovingTabIndex }) => {
         type E = MenuItemElement;
 
-        const { useListNavigationChildProps, ...listNavRet } = useListNavigationChild({ listNavigation, managedChild, rovingTabIndex, subInfo });
+        const { useListNavigationChildProps, ...listNavRet } = useListNavigationChild({ listNavigation, managedChild, rovingTabIndex, subInfo: {} });
 
         function useMenuItemProps<P extends h.JSX.HTMLAttributes<E>>({ ...props }: P) {
             props.role = "menuitem";

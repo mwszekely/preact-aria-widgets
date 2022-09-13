@@ -30,3 +30,20 @@ export function enhanceEvent<E extends Event, Detail extends object>(e: E, detai
     event[EventDetail] = detail;
     return event;
 }
+
+
+const alreadyWarned = new Set<string>();
+
+type WOO = string | number | null | boolean | undefined;
+
+export function warnOnOverwrite<T extends WOO>(componentName: string, propName: string, propValue: WOO, newValue: T): T {
+    const key = `${componentName};${propName}`;
+    if (propValue != null) {
+        if (!alreadyWarned.has(key)) {
+            alreadyWarned.add(key);
+            console.warn(`The ${propName} attribute on ${componentName} was given a value of ${propValue} but is being overwritten to ${newValue} for conformance. Consider removing it before passing those props to ${componentName}.`);
+        }
+    }
+
+    return newValue;
+}

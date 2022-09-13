@@ -1,10 +1,10 @@
 import { h } from "preact";
-import { UseListNavigationChildParameters, UseListNavigationChildReturnTypeInfo, UseListNavigationParameters, useListNavigationSingleSelection, UseListNavigationSingleSelectionChildReturnTypeInfo, useMergedProps, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
+import { UseListNavigationChildParameters, UseListNavigationParameters, useListNavigationSingleSelection, UseListNavigationSingleSelectionChildReturnTypeInfo, UseListNavigationSingleSelectionReturnTypeInfo, useMergedProps, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
 import { useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
 import { ElementToTag, enhanceEvent, EventDetail, TagSensitiveProps } from "./props";
 import { useCheckboxLike, useLabel } from "./use-label";
 
-type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+//type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RadioChangeEvent<EventType extends Event> = EventType & { [EventDetail]: { selectedValue: string } };
 
 export interface UseAriaRadioGroupParameters<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, InputElement extends Element, LabelElement extends Element> extends UseListNavigationParameters<never, never, never, never, never> {
@@ -27,7 +27,7 @@ export interface UseAriaRadioGroupParameters<V extends string | number, GroupEle
 
 
 
-export interface UseAriaRadioParameters<V extends string | number, I extends Element, IL extends Element> extends UseListNavigationChildParameters<{}, never, never, never, never, never> {
+export interface UseAriaRadioParameters<V extends string | number, I extends Element, IL extends Element> extends Omit<UseListNavigationChildParameters<{}, never, never, never, never, never>, "subInfo"> {
     radio: {
         labelPosition: "wrapping" | "separate";
         value: V;
@@ -41,14 +41,24 @@ export interface UseAriaRadioParameters<V extends string | number, I extends Ele
     }*/
 }
 
-export function useAriaRadioGroup<V extends string | number, G extends HTMLElement | SVGElement, GL extends Element, I extends HTMLElement | SVGElement, IL extends HTMLElement>({
+export interface UseAriaRadioGroupReturnTypeInfo<I extends Element> extends UseListNavigationSingleSelectionReturnTypeInfo<I, {}, never> {
+    
+}
+
+export interface UseAriaRadioGroupReturnTypeWithHooks<V extends string | number, G extends Element, GL extends Element, I extends Element, IL extends HTMLElement> extends UseAriaRadioGroupReturnTypeInfo<I> {
+    useRadioGroupLabelProps: (props: h.JSX.HTMLAttributes<GL>) => h.JSX.HTMLAttributes<GL>;
+    useRadioGroupProps: (props: h.JSX.HTMLAttributes<G>) => h.JSX.HTMLAttributes<G>;
+    useRadio: UseRadio<V, I, IL>;
+}
+
+export function useAriaRadioGroup<V extends string | number, G extends Element, GL extends Element, I extends Element, IL extends HTMLElement>({
     linearNavigation,
     listNavigation,
     managedChildren,
     radioGroup: { name, onInput, selectedValue, tagGroup, tagGroupLabel },
     rovingTabIndex,
     typeaheadNavigation
-}: UseAriaRadioGroupParameters<V, G, GL, I, IL>) {
+}: UseAriaRadioGroupParameters<V, G, GL, I, IL>): UseAriaRadioGroupReturnTypeWithHooks<V, G, GL, I, IL> {
     const { getElement: _getRadioGroupParentElement, useRefElementProps } = useRefElement<G>({});
 
     //const getSelectedIndex = useCallback((selectedValue: V) => { return byName.current.get(selectedValue) ?? 0 }, [])
@@ -115,11 +125,21 @@ export function useAriaRadioGroup<V extends string | number, G extends HTMLEleme
         radio: { disabled, labelPosition, tagInput, tagLabel, value }
     }) {
         const index = managedChild.index;
-        const [checked, setChecked, getChecked] = useState<boolean | null>(null);
+        //const [checked, setChecked, getChecked] = useState<boolean | null>(null);
 
         const onInput = useCallback((e: h.JSX.TargetedEvent<I> | h.JSX.TargetedEvent<IL>) => {
             stableOnInput(enhanceEvent(e as any, { selectedValue: value }));
         }, [stableOnInput, value, index]);
+
+
+        const { useListNavigationSingleSelectionChildProps, ...listNavRet } = useListNavigationSingleSelectionChild({
+            listNavigation,
+            rovingTabIndex,
+            managedChild,
+            subInfo: {}
+        });
+
+        const { singleSelection: { selected: checked } } = listNavRet;
 
         const { useCheckboxLikeInputElement, useCheckboxLikeLabelElement } = useCheckboxLike<I, IL>({
             checkboxLike: {
@@ -140,13 +160,6 @@ export function useAriaRadioGroup<V extends string | number, G extends HTMLEleme
             byName.current.set(value, index);
             return () => { byName.current.delete(value); }
         }, [byName, value, index]);
-
-        const { useListNavigationSingleSelectionChildProps, ...listNavRet } = useListNavigationSingleSelectionChild({
-            listNavigation,
-            rovingTabIndex,
-            managedChild,
-            subInfo: {}
-        });
 
         const useRadioInput: UseRadioInput<I> = () => {
             const tag = tagInput;
@@ -172,7 +185,7 @@ export function useAriaRadioGroup<V extends string | number, G extends HTMLEleme
         };
 
         const useRadioLabel: UseRadioLabel<IL> = useCallback(() => {
-            const tag = tagLabel;
+            //const tag = tagLabel;
             const useRadioLabelProps = (props: h.JSX.HTMLAttributes<IL>): h.JSX.HTMLAttributes<IL> => {
                 const { useCheckboxLikeLabelElementProps } = useCheckboxLikeLabelElement();
                 const propsIfLabelHandlesFocus = useListNavigationSingleSelectionChildProps(props as any);
@@ -202,9 +215,9 @@ export function useAriaRadioGroup<V extends string | number, G extends HTMLEleme
     }
 }
 
-export interface UseRadioReturnTypeInfo<I extends Element, L extends Element> extends UseListNavigationSingleSelectionChildReturnTypeInfo<I> { }
+export interface UseRadioReturnTypeInfo<I extends Element> extends UseListNavigationSingleSelectionChildReturnTypeInfo<I> { }
 
-export interface UseRadioReturnTypeWithHooks<I extends Element, L extends Element> extends UseRadioReturnTypeInfo<I, L> {
+export interface UseRadioReturnTypeWithHooks<I extends Element, L extends Element> extends UseRadioReturnTypeInfo<I> {
     useRadioInput: UseRadioInput<I>;
     useRadioLabel: UseRadioLabel<L>;
 }

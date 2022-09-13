@@ -73,7 +73,7 @@ export function useLabel<InputElement extends Element, LabelElement extends Elem
 
                 const propsWithoutAriaLabelledBy = useInputAsSourceIdProps(props);
                 const propsWithAriaLabelledBy = useLabelAsReferencerIdProps(propsWithoutAriaLabelledBy);
-                if (isSyntheticLabel)
+                if (isSyntheticLabel && !props["aria-label"])
                     return propsWithAriaLabelledBy;
                 else
                     return propsWithoutAriaLabelledBy;

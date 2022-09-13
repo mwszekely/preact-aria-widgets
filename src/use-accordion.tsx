@@ -7,7 +7,7 @@ import { usePressEventHandlers } from "./use-button";
 export type UseAriaAccordion<HeaderElement extends Element, BodyElement extends Element> = (args: UseAriaAccordionParameters) => UseAriaAccordionReturnTypeWithHooks<HeaderElement, BodyElement>;
 export type UseAriaAccordionSection<HeaderElement extends Element, BodyElement extends Element> = (args: UseAriaAccordionSectionParameters) => UseAriaAccordionSectionReturnTypeWithHooks<HeaderElement, BodyElement>;
 
-export interface UseAriaAccordionParameters extends UseLinearNavigationParameters<never>, UseManagedChildrenParameters<number, never> {
+export interface UseAriaAccordionParameters extends UseLinearNavigationParameters<"navigateToFirst" | "navigateToLast" | "navigateToNext" | "navigateToPrev">, UseManagedChildrenParameters<number, never> {
     accordion: { initialIndex?: number | null; }
 }
 
@@ -28,7 +28,7 @@ export interface UseAriaAccordionSectionInfoBase {
 }
 
 export interface UseAriaAccordionSectionParameters {
-    managedChildren: UseManagedChildParameters<number, UseAriaAccordionSectionInfoBase, "tabbed" | "open", never>["managedChild"];
+    managedChildren: UseManagedChildParameters<number, UseAriaAccordionSectionInfoBase, "tabbed" | "open", "subInfo" | "flags">["managedChild"];
     accordionSection: { open?: boolean | undefined; }
 }
 

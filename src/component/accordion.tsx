@@ -1,55 +1,68 @@
-import { createContext, createElement, h, RenderableProps, VNode } from "preact";
-import { forwardRef } from "preact/compat";
-import { ManagedChildren } from "preact-prop-helpers/use-child-manager";
-import { useContext, useMemo } from "preact/hooks";
-import { ElementToTag } from "props";
-import { useAriaAccordion, UseAriaAccordionParameters, UseAriaAccordionSection, UseAriaAccordionSectionInfoBase, UseAriaAccordionSectionParameters } from "../use-accordion";
+import { ComponentChildren, createContext, h, VNode } from "preact";
 import { useEffect } from "preact-prop-helpers";
+import { forwardRef } from "preact/compat";
+import { useContext } from "preact/hooks";
+import { useAriaAccordion, UseAriaAccordionParameters, UseAriaAccordionReturnTypeInfo, UseAriaAccordionSection, UseAriaAccordionSectionParameters, UseAriaAccordionSectionReturnTypeInfo } from "../use-accordion";
 
-export interface AriaAccordionProps extends RenderableProps<UseAriaAccordionParameters> {
+type Get<T, K extends keyof T> = T[K];
+
+export interface AriaAccordionProps extends
+    Get<UseAriaAccordionParameters, "accordion">,
+    Get<UseAriaAccordionParameters, "linearNavigation">,
+    Get<UseAriaAccordionParameters, "managedChildren"> {
     expandedIndex?: number | undefined | null;
+    children: ComponentChildren;
+    render?(info: UseAriaAccordionReturnTypeInfo, children: ComponentChildren): VNode<any>;
 }
 
-export interface AriaAccordionSectionProps<HeaderElement extends EventTarget, BodyElement extends EventTarget> extends Omit<UseAriaAccordionSectionParameters["info"], never>, Omit<UseAriaAccordionSectionParameters, "info"> {
-    tagHeader: ElementToTag<HeaderElement>;
-    tagBody: ElementToTag<BodyElement>;
-    propsHeader(args: AriaAccordionSectionPropsDerivedFrom): h.JSX.HTMLAttributes<HeaderElement>;
-    propsBody(args: AriaAccordionSectionPropsDerivedFrom): h.JSX.HTMLAttributes<BodyElement>;
-    render?(header: VNode<any>, body: VNode<any>): VNode<any>;
+export interface AriaAccordionSectionProps<HeaderElement extends EventTarget, BodyElement extends EventTarget> extends
+    Get<UseAriaAccordionSectionParameters, "accordionSection">,
+    Get<UseAriaAccordionSectionParameters, "managedChildren"> {
+    //tagHeader: ElementToTag<HeaderElement>;
+    //tagBody: ElementToTag<BodyElement>;
+    //propsHeader(): h.JSX.HTMLAttributes<HeaderElement>;
+    //propsBody(): h.JSX.HTMLAttributes<BodyElement>;
+    render?(info: UseAriaAccordionSectionReturnTypeInfo, headerProps: h.JSX.HTMLAttributes<HeaderElement>, bodyProps: h.JSX.HTMLAttributes<BodyElement>): VNode<any>;
 }
 
-export interface AriaAccordionSectionPropsDerivedFrom {
+/*export interface AriaAccordionSectionPropsDerivedFrom {
     expanded: boolean;
     accordionSections: ManagedChildren<UseAriaAccordionSectionInfoBase>;
-}
+}*/
 
-const AccordionSectionContext = createContext<{ useAriaAccordionSection: UseAriaAccordionSection<any, any>, accordionSections: ManagedChildren<UseAriaAccordionSectionInfoBase> }>(null!);
-function AriaAccordionU({ initialIndex, children, expandedIndex }: AriaAccordionProps) {
-    const { accordionSections, useAriaAccordionSection, changeExpandedIndex } = useAriaAccordion({ initialIndex: (initialIndex ?? expandedIndex) });
-    const provider = useMemo(() => ({ useAriaAccordionSection, accordionSections }), [useAriaAccordionSection, accordionSections]);
-    useEffect(() => { changeExpandedIndex(expandedIndex! ?? null); }, [expandedIndex]);
+const AccordionSectionContext = createContext<UseAriaAccordionSection<any, any>>(null!);
+function AriaAccordionU({ disableArrowKeys, disableHomeEndKeys, expandedIndex, initialIndex, navigationDirection, onAfterChildLayoutEffect, onChildrenMountChange, render, children }: AriaAccordionProps) {
+    const { useAriaAccordionSection, ...provider } = useAriaAccordion({
+        accordion: { initialIndex },
+        linearNavigation: { disableArrowKeys, disableHomeEndKeys, navigationDirection },
+        managedChildren: { onAfterChildLayoutEffect, onChildrenMountChange }
+    });
+
+    useEffect(() => { provider.accordion.changeExpandedIndex(expandedIndex! ?? null); }, [expandedIndex]);
 
     return (
-        <AccordionSectionContext.Provider value={provider}>{children}</AccordionSectionContext.Provider>
+        <AccordionSectionContext.Provider value={useAriaAccordionSection}>{(render ?? defaultRenderAccordion)(provider, children)}</AccordionSectionContext.Provider>
     )
 }
 
-function defaultRender(header: VNode<any>, body: VNode<any>): VNode<any> {
+function defaultRenderAccordion(info: UseAriaAccordionReturnTypeInfo, children: ComponentChildren): VNode<any> {
+    return (<>{children}</>)
+}
+
+function defaultRenderSection(info: UseAriaAccordionSectionReturnTypeInfo, headerProps: h.JSX.HTMLAttributes<any>, bodyProps: h.JSX.HTMLAttributes<any>): VNode<any> {
     return (
         <>
-            {header}
-            {body}
+            <div {...headerProps} />
+            <div {...bodyProps} />
         </>
     )
 }
 
-export function AriaAccordionSectionU<HeaderElement extends Element, BodyElement extends Element>({ open, tagBody, tagHeader, propsBody, propsHeader, index, render }: AriaAccordionSectionProps<HeaderElement, BodyElement>) {
-    const { accordionSections, useAriaAccordionSection } = useContext(AccordionSectionContext);
-    const { expanded, useAriaAccordionSectionBodyProps, useAriaAccordionSectionHeaderProps } = useAriaAccordionSection({ open, info: { index } });
+export function AriaAccordionSectionU<HeaderElement extends Element, BodyElement extends Element>({ open, index, render }: AriaAccordionSectionProps<HeaderElement, BodyElement>) {
+    const useAriaAccordionSection = useContext(AccordionSectionContext);
+    const { useAriaAccordionSectionBodyProps, useAriaAccordionSectionHeaderProps, ...sectionInfo } = useAriaAccordionSection({ accordionSection: { open }, managedChildren: { index } });
 
-    const header = createElement(tagHeader, useAriaAccordionSectionHeaderProps(propsHeader({ accordionSections, expanded })));
-    const body = createElement(tagBody, useAriaAccordionSectionBodyProps(propsBody({ accordionSections, expanded })));
-    return (render ?? defaultRender)(header, body);
+    return (render ?? defaultRenderSection)(sectionInfo, useAriaAccordionSectionHeaderProps({}), useAriaAccordionSectionBodyProps({}));
 }
 
 export const AriaAccordion = forwardRef(AriaAccordionU) as typeof AriaAccordionU;

@@ -1,25 +1,20 @@
-import { createElement, h, VNode } from "preact";
-import { ElementToTag } from "props";
-import { UseAriaDrawerReturnType, UseDrawerParameters, useDrawer } from "../use-drawer";
+import { h, VNode } from "preact";
+import { UseAriaDrawerReturnTypeInfo, useDrawer, UseDrawerParameters } from "../use-drawer";
 
-export interface DrawerProps<DrawerElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement> extends UseDrawerParameters {
-    tagDrawer: ElementToTag<DrawerElement>;
-    tagTitle: ElementToTag<TitleElement>;
-    tagBody: ElementToTag<BodyElement>;
-    tagBackdrop: ElementToTag<BackdropElement>;
+type Get<T, K extends keyof T> = T[K];
 
-    propsDrawer: () => h.JSX.HTMLAttributes<DrawerElement>;
-    propsTitle: () => h.JSX.HTMLAttributes<TitleElement>;
-    propsBody: () => h.JSX.HTMLAttributes<BodyElement>;
-    propsBackdrop: () => h.JSX.HTMLAttributes<BackdropElement>;
-
-    descriptive: boolean;
-
-    render?(drawer: VNode<any>, title: VNode<any>, body: VNode<any>, backdrop: VNode<any>): VNode<any>;
+export interface DrawerProps<DrawerElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement> extends 
+Get<UseDrawerParameters, "softDismiss">, 
+Get<UseDrawerParameters, "modal"> {
+    render?(drawerInfo: UseAriaDrawerReturnTypeInfo, drawerProps: h.JSX.HTMLAttributes<DrawerElement>, titleProps: h.JSX.HTMLAttributes<TitleElement>, bodyProps: h.JSX.HTMLAttributes<BodyElement>, backdropProps: h.JSX.HTMLAttributes<BackdropElement>): VNode<any>;
 }
 
-function defaultRender(drawer: VNode<any>, title: VNode<any>, body: VNode<any>, backdrop: VNode<any>): VNode<any> {
-    drawer.props.children = <>{title}{body}</>
+function defaultRender(drawerInfo: UseAriaDrawerReturnTypeInfo, drawerProps: h.JSX.HTMLAttributes<any>, titleProps: h.JSX.HTMLAttributes<any>, bodyProps: h.JSX.HTMLAttributes<any>, backdropProps: h.JSX.HTMLAttributes<any>): VNode<any> {
+    const title = <div {...titleProps} />;
+    const body = <div {...bodyProps} />;
+    const drawer = <div {...drawerProps} />;
+    const backdrop = <div {...backdropProps} />;
+    drawerProps.children = <>{title}{body}</>;
     return (
         <>
             {drawer}
@@ -28,23 +23,19 @@ function defaultRender(drawer: VNode<any>, title: VNode<any>, body: VNode<any>, 
     );
 }
 
-export function Drawer<DrawerElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement>({ onClose, open, descriptive, render, tagBackdrop, tagBody, tagDrawer, tagTitle, propsBackdrop, propsBody, propsDrawer, propsTitle, }: DrawerProps<DrawerElement, TitleElement, BodyElement, BackdropElement>) {
+export function Drawer<DrawerElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement>({ render, onClose, open, bodyIsOnlySemantic }: DrawerProps<DrawerElement, TitleElement, BodyElement, BackdropElement>) {
     const {
         useDrawerBackdrop,
         useDrawerBody,
         useDrawerProps,
-        useDrawerTitle
-    } = useDrawer<DrawerElement, TitleElement, BodyElement, BackdropElement>({ onClose, open });
+        useDrawerTitle,
+        ...drawerInfo
+    } = useDrawer<DrawerElement, TitleElement, BodyElement, BackdropElement>({ modal: { bodyIsOnlySemantic }, softDismiss: { onClose, open } });
 
     const { useDrawerTitleProps } = useDrawerTitle();
-    const { useDrawerBodyProps } = useDrawerBody({ descriptive });
+    const { useDrawerBodyProps } = useDrawerBody();
     const { useDrawerBackdropProps } = useDrawerBackdrop();
 
-    const drawer = createElement(tagDrawer, useDrawerProps(propsDrawer()) as any);
-    const title = createElement(tagTitle, useDrawerTitleProps(propsTitle()) as any);
-    const body = createElement(tagBody, useDrawerBodyProps(propsBody()) as any);
-    const backdrop = createElement(tagBackdrop, useDrawerBackdropProps(propsBackdrop()) as any);
-
-    return (render ?? defaultRender)(drawer, title, body, backdrop);
+    return (render ?? defaultRender)(drawerInfo, useDrawerProps({}), useDrawerTitleProps({}), useDrawerBodyProps({}), useDrawerBackdropProps({}));
 
 }
