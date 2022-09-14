@@ -3,7 +3,7 @@ import { useHasFocus, useListNavigation, UseListNavigationParameters, useMergedP
 import { UseListNavigationChildParameters, UseListNavigationChildReturnTypeInfo, UseListNavigationReturnTypeInfo } from "preact-prop-helpers/use-list-navigation";
 import { useEnsureStability } from "preact-prop-helpers/use-passive-state";
 import { useCallback, useEffect } from "preact/hooks";
-import { usePressEventHandlers } from "use-button";
+import { usePressEventHandlers } from "./use-button";
 import { useSoftDismiss, UseSoftDismissParameters, UseSoftDismissReturnTypeInfo } from "./use-modal";
 
 interface MSP {

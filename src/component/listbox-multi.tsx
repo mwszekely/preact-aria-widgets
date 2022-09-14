@@ -95,12 +95,6 @@ function defaultListItemRender(info: UseListboxMultiItemReturnTypeInfo<any>, lis
     )
 }
 
-
-export interface AriaListboxMultiPropsDerivedFrom {
-    selected: boolean;
-    tabbable: boolean;
-}
-
 function ListboxMultiItemU<ListItemElement extends Element>({ index, blurSelf, disabled, flags, focusSelf, render, text, hidden, selected, onSelect }: ListboxMultiItemProps<ListItemElement>, ref: Ref<ListItemElement>) {
     const { useListboxMultiItemProps, ...itemReturn } = useContext(ListboxMultiContext)({ 
         managedChild: { index, flags }, 
@@ -114,13 +108,5 @@ function ListboxMultiItemU<ListItemElement extends Element>({ index, blurSelf, d
     )
 }
 
-function _foo() {
-    return (
-        <ListboxMulti tagLabel="label" tagList="ul" >
-            <ListboxMultiItem index={0} text="" selected={false}></ListboxMultiItem>
-        </ListboxMulti>
-    )
-}
-
-const ListboxMulti = forwardRef(ListboxMultiU) as typeof ListboxMultiU;
-const ListboxMultiItem = forwardRef(ListboxMultiItemU) as typeof ListboxMultiItemU;
+export const ListboxMulti = forwardRef(ListboxMultiU) as typeof ListboxMultiU;
+export const ListboxMultiItem = forwardRef(ListboxMultiItemU) as typeof ListboxMultiItemU;

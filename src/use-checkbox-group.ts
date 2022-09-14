@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { returnFalse, useEffect, useListNavigation, UseListNavigationChildParameters, UseListNavigationParameters, UseListNavigationReturnTypeInfo, useMergedProps, usePassiveState, UseRovingTabIndexChildReturnTypeInfo, useStableCallback, useState } from "preact-prop-helpers";
 import { StateUpdater, useCallback, useRef } from "preact/hooks";
-import { CheckboxCheckedType } from "use-label";
+import { CheckboxCheckedType } from "./use-label";
 import { enhanceEvent, EventDetail } from "./props";
 import { CheckboxChangeEvent, useAriaCheckbox, UseAriaCheckboxParameters, UseAriaCheckboxReturnTypeInfo } from "./use-checkbox";
 

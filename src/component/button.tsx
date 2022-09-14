@@ -1,5 +1,5 @@
 import { createElement, h, VNode } from "preact";
-import { useAriaButton, UseAriaButtonParameters } from "use-button";
+import { useAriaButton, UseAriaButtonParameters } from "../use-button";
 
 export interface AriaButtonProps<E extends EventTarget> extends UseAriaButtonParameters<E> {
     propsButton: () => h.JSX.HTMLAttributes<E>;

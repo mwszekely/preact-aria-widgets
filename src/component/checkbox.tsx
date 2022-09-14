@@ -1,5 +1,5 @@
 import { createElement, h, VNode } from "preact";
-import { useAriaCheckbox, UseAriaCheckboxParameters, UseAriaCheckboxReturnTypeInfo } from "use-checkbox";
+import { useAriaCheckbox, UseAriaCheckboxParameters, UseAriaCheckboxReturnTypeInfo } from "../use-checkbox";
 
 type Get<T, K extends keyof T> = T[K];
 

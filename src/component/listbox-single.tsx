@@ -114,13 +114,5 @@ function ListboxSingleItemU<ListItemElement extends Element>({ index, tagListIte
     )
 }
 
-function _foo() {
-    return (
-        <ListboxSingle selectedIndex={9} selectionMode="activate" tagLabel="label" tagList="ul" >
-            <ListboxSingleItem index={0} text="" tagListItem="li"></ListboxSingleItem>
-        </ListboxSingle>
-    )
-}
-
-export const ListboxSingle = forwardRef(ListboxSingleU);
-export const ListboxSingleItem = forwardRef(ListboxSingleItemU);
+export const ListboxSingle = forwardRef(ListboxSingleU) as typeof ListboxSingleU;
+export const ListboxSingleItem = forwardRef(ListboxSingleItemU) as typeof ListboxSingleItemU;

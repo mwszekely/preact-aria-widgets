@@ -18,6 +18,7 @@ export function setButtonVibrate(func: () => void) {
 export type ButtonPressEvent<EventType extends Event> = EventType & { [EventDetail]: { pressed: boolean | null } };
 
 export interface UseAriaButtonParameters<E extends EventTarget> extends TagSensitiveProps<E> {
+    disabled?: boolean | "soft" | "hard";
     pressed?: boolean | null | undefined;
     onPress?(event: ButtonPressEvent<h.JSX.TargetedMouseEvent<E>> | ButtonPressEvent<h.JSX.TargetedKeyboardEvent<E> | ButtonPressEvent<h.JSX.TargetedEvent<E>>>): void;
 }
@@ -231,14 +232,15 @@ export function usePressEventHandlers<E extends EventTarget>(onClickSync: ((e: h
     return useRefElementProps(({ onKeyDown, onKeyUp, onBlur, onMouseDown, onMouseUp, onMouseLeave, onClick, style: (textSelectedDuringActivationStartTime != null) ? { cursor: "text" } : undefined, ...{ "data-pseudo-active": active && (textSelectedDuringActivationStartTime == null) ? "true" : undefined } as {} }));
 }
 
-export function useAriaButton<E extends EventTarget>({ tag, pressed, onPress }: UseAriaButtonParameters<E>): UseAriaButtonReturnType<E> {
+export function useAriaButton<E extends EventTarget>({ tag, pressed, onPress, disabled }: UseAriaButtonParameters<E>): UseAriaButtonReturnType<E> {
 
     function useAriaButtonProps({ "aria-pressed": ariaPressed, tabIndex, role, ...p }: h.JSX.HTMLAttributes<E>): h.JSX.HTMLAttributes<E> {
 
-        const props = useMergedProps<E>(usePressEventHandlers<E>((e) => onPress?.(enhanceEvent(e, { pressed: pressed == null ? null : !pressed })), undefined), p);
+        const props = useMergedProps<E>(usePressEventHandlers<E>((e) => (disabled? null : onPress)?.(enhanceEvent(e, { pressed: pressed == null ? null : !pressed })), undefined), p);
 
-        const buttonProps = { role, tabIndex, "aria-pressed": ariaPressed ?? (pressed === true ? "true" : pressed === false ? "false" : undefined) };
-        const divProps = { ...buttonProps, tabIndex: tabIndex ?? 0, role: role ?? "button" };
+        const baseProps = { role, tabIndex, "aria-pressed": ariaPressed ?? (pressed === true ? "true" : pressed === false ? "false" : undefined) };
+        const buttonProps = { ...baseProps, disabled: (disabled && disabled != "soft")? true : false, "aria-disabled": (disabled === 'soft'? 'true' : undefined) };
+        const divProps = { ...baseProps, tabIndex: tabIndex ?? 0, role: role ?? "button", "aria-disabled": disabled? "true" : undefined };
         const anchorProps = { ...divProps };
 
         switch (tag) {

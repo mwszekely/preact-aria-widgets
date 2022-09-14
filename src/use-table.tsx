@@ -8,7 +8,7 @@ export type TableValueType = string | number | null | boolean | Date;
 
 export interface UseAriaTableParameters extends UseGridNavigationParameters<never, never, never, never, never> { }
 export interface UseAriaTableBodyParameters { }
-export interface UseAriaTableRowParameters<CellElement extends Element> extends UseGridNavigationRowParameters<UseAriaTableRowSubInfo<CellElement>, never, never, "subInfo", "subInfo", "subInfo", "subInfo", "subInfo", "subInfo", "subInfo", never> {
+export interface UseAriaTableRowParameters<CellElement extends Element> extends Omit<UseGridNavigationRowParameters<UseAriaTableRowSubInfo<CellElement>, never, never, "subInfo", "subInfo", "subInfo", "subInfo", "subInfo", "subInfo", "subInfo", {}>, "subInfo"> {
     tableRow: Pick<UseAriaTableRowSubInfo<CellElement>, "location">;
 }
 export interface UseAriaTableCellParameters extends UseGridNavigationCellParameters<UseAriaTableCellSubInfo, never, "subInfo", "subInfo", "subInfo", UseAriaTableCellSubInfo> { }

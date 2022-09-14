@@ -3,18 +3,19 @@ import { generateRandomId, returnTrue, useEffect, useListNavigationSingleSelecti
 import { ChildFlagOperations, OnChildrenMountChange, useChildrenFlag, UseManagedChildParameters, UseManagedChildrenParameters, UseManagedChildrenReturnTypeInfo } from "preact-prop-helpers/use-child-manager";
 import { UseListNavigationReturnTypeInfo, UseListNavigationSingleSelectionChildParameters, UseListNavigationSingleSelectionChildReturnTypeInfo, UseListNavigationSingleSelectionParameters } from "preact-prop-helpers/use-list-navigation";
 import { useCallback, useRef } from "preact/hooks";
-import { useLabel } from "use-label";
+import { useLabel } from "./use-label";
 import { EventDetail, warnOnOverwrite } from "./props";
 
 
 export type TabsChangeEvent<E extends Element> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 
 export interface UseAriaTabsParameters { tabList: UseListNavigationSingleSelectionParameters<never, never, never, never, never, never>; tabPanels: UseManagedChildrenParameters<number, never> }
-export interface UseAriaTabParameters extends UseListNavigationSingleSelectionChildParameters<never, never, never, never, never, never> { }
+export interface UseAriaTabParameters extends Omit<UseListNavigationSingleSelectionChildParameters<never, never, never, never, never, never>, "subInfo"> { }
 export interface UseAriaTabPanelParameters extends UseManagedChildParameters<number, {}, "visible", never> { }
 
-export interface UseAriaTabReturnType<TabElement extends Element> extends UseListNavigationSingleSelectionChildReturnTypeInfo<TabElement> {
-
+export interface UseAriaTabReturnTypeInfo<TabElement extends Element> extends UseListNavigationSingleSelectionChildReturnTypeInfo<TabElement> {}
+export interface UseAriaTabReturnTypeWithHooks<TabElement extends Element> extends UseAriaTabReturnTypeInfo<TabElement> {
+    useAriaTabProps(props: h.JSX.HTMLAttributes<TabElement>): h.JSX.HTMLAttributes<TabElement>;
 }
 
 export interface UseAriaTabLabelParameters { }
@@ -24,7 +25,7 @@ export interface UseAriaTabListReturnTypeInfo<TabElement extends Element> {
 }
 export interface UseAriaTabListReturnTypeWithHooks<TabContainerElement extends Element, TabElement extends Element> extends UseAriaTabListReturnTypeInfo<TabElement> {
     useAriaTabListProps: (props: h.JSX.HTMLAttributes<TabContainerElement>) => h.JSX.HTMLAttributes<TabContainerElement>;
-    useAriaTab: ({ listNavigation, managedChild, rovingTabIndex, subInfo }: UseAriaTabParameters) => UseAriaTabReturnType<TabElement>
+    useAriaTab: ({ listNavigation, managedChild, rovingTabIndex }: UseAriaTabParameters) => UseAriaTabReturnTypeWithHooks<TabElement>
 }
 
 
@@ -41,18 +42,23 @@ export interface UseAriaTabLabelReturnTypeWithHooks<LabelElement extends Element
     useAriaTabListLabelProps: (props: h.JSX.HTMLAttributes<LabelElement>) => h.JSX.HTMLAttributes<LabelElement>;
 }
 
-export interface UseAriaTabsReturnType<TabContainerElement extends Element, TabElement extends Element, PanelElement extends Element, LabelElement extends Element> {
+export interface UseAriaTabsReturnTypeInfo {
+    tabPanels: UseManagedChildrenReturnTypeInfo<number, TabPanelInfo, never>;
+}
+
+export interface UseAriaTabsReturnTypeWithHooks<TabContainerElement extends Element, TabElement extends Element, PanelElement extends Element, LabelElement extends Element> extends UseAriaTabsReturnTypeInfo {
     useAriaTabList: UseAriaTabList<TabContainerElement, TabElement>;
     useAriaTabPanel: UseAriaTabPanel<PanelElement>;
     useAriaTabListLabel: UseAriaTabListLabel<LabelElement>;
     tabPanels: UseManagedChildrenReturnTypeInfo<number, TabPanelInfo, never>;
 }
 
+export type UseAriaTab<TabElement extends Element> = (args: UseAriaTabParameters) => UseAriaTabReturnTypeWithHooks<TabElement>;
 export type UseAriaTabList<TabContainerElement extends Element, TabElement extends Element> = (args: UseAriaTabListParameters) => UseAriaTabListReturnTypeWithHooks<TabContainerElement, TabElement>;
 export type UseAriaTabPanel<PanelElement extends Element> = (args: UseAriaTabPanelParameters) => UseAriaTabPanelReturnTypeWithHooks<PanelElement>;
 export type UseAriaTabListLabel<LabelElement extends Element> = (args: UseAriaTabLabelParameters) => UseAriaTabLabelReturnTypeWithHooks<LabelElement>;
 
-export function useAriaTabs<TabListElement extends Element, TabElement extends Element, PanelElement extends Element, LabelElement extends Element>({ tabList: { linearNavigation, listNavigation, managedChildren: tabListManagedChildren, rovingTabIndex, singleSelection, typeaheadNavigation }, tabPanels: { managedChildren: { onChildrenMountChange: ocmc, ...tabPanelsManagedChildren } } }: UseAriaTabsParameters): UseAriaTabsReturnType<TabListElement, TabElement, PanelElement, LabelElement> {
+export function useAriaTabs<TabListElement extends Element, TabElement extends Element, PanelElement extends Element, LabelElement extends Element>({ tabList: { linearNavigation, listNavigation, managedChildren: tabListManagedChildren, rovingTabIndex, singleSelection, typeaheadNavigation }, tabPanels: { managedChildren: { onChildrenMountChange: ocmc, ...tabPanelsManagedChildren } } }: UseAriaTabsParameters): UseAriaTabsReturnTypeWithHooks<TabListElement, TabElement, PanelElement, LabelElement> {
 
 
     const baseId = generateRandomId("aria-tabs-");
@@ -95,8 +101,8 @@ export function useAriaTabs<TabListElement extends Element, TabElement extends E
 
         const { useLabelInputProps } = useLabelInput()
 
-        const useAriaTab = useCallback(({ listNavigation, managedChild, rovingTabIndex, subInfo }: UseAriaTabParameters) => {
-            const { useListNavigationSingleSelectionChildProps, ...listNavRet2 } = useListNavigationSingleSelectionChild({ listNavigation, managedChild, rovingTabIndex, subInfo });
+        const useAriaTab = useCallback<UseAriaTab<TabElement>>(({ listNavigation, managedChild, rovingTabIndex }: UseAriaTabParameters) => {
+            const { useListNavigationSingleSelectionChildProps, ...listNavRet2 } = useListNavigationSingleSelectionChild({ listNavigation, managedChild, rovingTabIndex, subInfo: {} });
             const { singleSelection: { selected }, rovingTabIndex: { tabbable } } = listNavRet2;
 
             const useAriaTabProps = useCallback(({ role, "aria-controls": ariaControls, "aria-selected": ariaSelected, ...props }: h.JSX.HTMLAttributes<TabElement>) => {

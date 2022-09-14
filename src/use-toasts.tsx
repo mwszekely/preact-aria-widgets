@@ -1,6 +1,6 @@
 import { h } from "preact";
 import { findFirstFocusable, returnTrue, useChildrenFlag, useGlobalHandler, useManagedChildren, useMergedProps, useRefElement, useStableCallback, useState, useTimeout } from "preact-prop-helpers";
-import { ChildFlagOperations, OnChildrenMountChange, UseManagedChildParameters, UseManagedChildrenParameters } from "preact-prop-helpers/use-child-manager";
+import { ChildFlagOperations, OnChildrenMountChange, UseManagedChildParameters, UseManagedChildrenParameters, UseManagedChildrenReturnTypeInfo } from "preact-prop-helpers/use-child-manager";
 import { useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
 
 
@@ -10,8 +10,10 @@ export interface UseToastsParameters extends UseManagedChildrenParameters<number
 
 export interface UseToastParameters extends UseManagedChildParameters<number, ToastInfo, "showing", never> {
     //info: Omit<ToastInfoBase, "dismissed" | "getStatus" | "setStatus" | "focus" | "flags">;
-    politeness?: "polite" | "assertive";
-    timeout: number | null;
+    toast: {
+        politeness?: "polite" | "assertive";
+        timeout: number | null;
+    }
 }
 
 export interface ToastInfo {
@@ -21,17 +23,28 @@ export interface ToastInfo {
     //getStatus(): null | "pending" | "active" | "dismissed";
 }
 
-export type UseToast = (args: UseToastParameters) => UseToastReturnType;
+export type UseToast = (args: UseToastParameters) => UseToastReturnTypeInfo;
 
-export interface UseToastReturnType {
-    dismiss: () => void;
-    showing: boolean;
-    //status: "pending" | "active" | "dismissed";
-    //getStatus(): "pending" | "active" | "dismissed";
-    resetDismissTimer: () => void;
+export interface UseToastReturnTypeInfo {
+    toast: {
+        dismiss: () => void;
+        showing: boolean;
+        resetDismissTimer: () => void;
+    }
 }
 
-export function useToasts<ContainerType extends Element>({ managedChildren: { onChildrenMountChange: ocmu, onAfterChildLayoutEffect }  }: UseToastsParameters) {
+export interface UseToastsReturnTypeInfo extends UseManagedChildrenReturnTypeInfo<number, ToastInfo, "showing"> {
+
+}
+
+export interface UseToastReturnTypeWithHooks extends UseToastReturnTypeInfo {}
+
+export interface UseToastsReturnTypeWithHooks<ContainerType extends Element> extends UseToastsReturnTypeInfo {
+    useToast: UseToast;
+    useToastContainerProps(props: h.JSX.HTMLAttributes<ContainerType>): h.JSX.HTMLAttributes<ContainerType>;
+}
+
+export function useToasts<ContainerType extends Element>({ managedChildren: { onChildrenMountChange: ocmu, onAfterChildLayoutEffect } }: UseToastsParameters): UseToastsReturnTypeWithHooks<ContainerType> {
 
     // "Pointer" to whatever index toast is currently being shown.
     // E.g. it's 0 when the first toast is shown, then when dismissed, it becomes 1.
@@ -43,7 +56,9 @@ export function useToasts<ContainerType extends Element>({ managedChildren: { on
     const [politeness, setPoliteness] = useState<"polite" | "assertive">("polite");
 
     const { getElement, useRefElementProps } = useRefElement<ContainerType>({});
-    const { useManagedChild, managedChildren: { children: toastQueue } } = useManagedChildren<number, ToastInfo, "showing">({ managedChildren: { onAfterChildLayoutEffect, onChildrenMountChange: useStableCallback<OnChildrenMountChange<number>>((m, u) => {reevaluateClosestFit(); ocmu?.(m, u)}) } });
+    const { useManagedChild, ...childInfo } = useManagedChildren<number, ToastInfo, "showing">({ managedChildren: { onAfterChildLayoutEffect, onChildrenMountChange: useStableCallback<OnChildrenMountChange<number>>((m, u) => { reevaluateClosestFit(); ocmu?.(m, u) }) } });
+
+    const { managedChildren: { children: toastQueue } } = childInfo;
 
     // Any time a new toast mounts, update our bottommostToastIndex to point to it if necessary
     // ("necessary" just meaning if it's the first toast ever or all prior toasts have been dismissed)
@@ -86,7 +101,7 @@ export function useToasts<ContainerType extends Element>({ managedChildren: { on
         changeIndex(activeToastIndex);
     }, [activeToastIndex]);
 
-    const useToast: UseToast = useCallback(({ politeness, timeout, managedChild: { index } }: UseToastParameters): UseToastReturnType => {
+    const useToast: UseToast = useCallback(({ toast: { politeness, timeout }, managedChild: { index } }: UseToastParameters): UseToastReturnTypeWithHooks => {
         //const [status, setStatus, getStatus] = useState<"pending" | "active" | "dismissed">("pending");
         //const dismissed = (status === "dismissed");
         const dismiss = useCallback(() => { setShowing(false); }, []);
@@ -141,9 +156,11 @@ export function useToasts<ContainerType extends Element>({ managedChildren: { on
 
 
         return {
-            showing,
-            dismiss,
-            resetDismissTimer
+            toast: {
+                showing,
+                dismiss,
+                resetDismissTimer
+            }
         }
     }, []);
 
@@ -152,5 +169,9 @@ export function useToasts<ContainerType extends Element>({ managedChildren: { on
     }
 
 
-    return { useToast, useToastContainerProps };
+    return { 
+        useToast, 
+        useToastContainerProps, 
+        ...childInfo 
+    };
 }

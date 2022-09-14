@@ -1,32 +1,27 @@
+import { h, VNode } from "preact";
 import { forwardRef } from "preact/compat";
-import { useAriaTooltip, UseTooltipParameters } from "use-tooltip";
-import { h, Fragment, createContext, VNode, cloneElement, createElement } from "preact";
-import { ElementToTag } from "props";
+import { useAriaTooltip, UseTooltipParameters, UseTooltipReturnTypeInfo } from "../use-tooltip";
 
-
-export interface TooltipProps<TT extends HTMLElement, TTT extends HTMLElement> extends UseTooltipParameters {
-    children: VNode<any>;
-    render?: (trigger: VNode<any>, tooltip: VNode<any>) => VNode;
-    tagTooltip: ElementToTag<TT>;
-    tagTrigger: ElementToTag<TTT>;
+export interface TooltipProps<TT extends Element, TTT extends Element> extends UseTooltipParameters {
+    render?: (info: UseTooltipReturnTypeInfo, triggerProps: h.JSX.HTMLAttributes<TT>, tooltipProps: h.JSX.HTMLAttributes<TTT>) => VNode;
 }
 
-function defaultRender(trigger: VNode<any>, tooltip: VNode<any>): VNode {
+function defaultRender(info: UseTooltipReturnTypeInfo, triggerProps: h.JSX.HTMLAttributes<any>, tooltipProps: h.JSX.HTMLAttributes<any>) {
     return (
         <>
-            {trigger}
-            {tooltip}
+            <div {...triggerProps} />
+            <div {...tooltipProps} />
         </>
     )
 }
 
-function TooltipU<TT extends HTMLElement, TTT extends HTMLElement>({ focusDelay, mouseoutDelay, mouseoverDelay, children, render, tagTooltip, tagTrigger }: TooltipProps<TT, TTT>) {
-    const { getIsOpen, isOpen, useTooltip, useTooltipTrigger } = useAriaTooltip({ focusDelay, mouseoutDelay, mouseoverDelay });
+function TooltipU<TT extends Element, TTT extends Element>({ focusDelay, mouseoutDelay, mouseoverDelay, render }: TooltipProps<TT, TTT>) {
+    const { useTooltip, useTooltipTrigger, ...info } = useAriaTooltip<TT, TTT>({ focusDelay, mouseoutDelay, mouseoverDelay });
     const { useTooltipTriggerProps } = useTooltipTrigger();
     const { useTooltipProps } = useTooltip();
     return (
         <>
-            {(render ?? defaultRender)(cloneElement(children, useTooltipTriggerProps({})), createElement(tagTooltip, useTooltipProps({}) as any))}
+            {(render ?? defaultRender)(info, useTooltipTriggerProps({}), useTooltipProps({}) as any)}
         </>
     )
 }

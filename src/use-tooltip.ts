@@ -4,19 +4,22 @@ import { useCallback, useEffect } from "preact/hooks";
 
 export type UseTooltipTrigger<TriggerType extends Element> = () => { useTooltipTriggerProps: ({ ...props }: h.JSX.HTMLAttributes<TriggerType>) => h.JSX.HTMLAttributes<TriggerType> };
 export interface UseTooltipParameters { mouseoverDelay?: number, mouseoutDelay?: number, focusDelay?: number }
-export type UseTooltip<TriggerType extends HTMLElement | SVGElement, TooltipType extends Element> = (args: UseTooltipParameters) => UseTooltipReturnType<TriggerType, TooltipType>;
-export interface UseTooltipReturnType<TriggerType extends HTMLElement | SVGElement, TooltipType extends Element> {
-    useTooltip: () => {
-        useTooltipProps: ({ ...props }: h.JSX.HTMLAttributes<TooltipType>) => h.JSX.HTMLAttributes<TooltipType>;
-    };
-    useTooltipTrigger: UseTooltipTrigger<TriggerType>;
+export type UseTooltip<TriggerType extends HTMLElement | SVGElement, TooltipType extends Element> = (args: UseTooltipParameters) => UseTooltipReturnTypeWithHooks<TriggerType, TooltipType>;
+export interface UseTooltipReturnTypeInfo {
     isOpen: boolean;
     getIsOpen: () => boolean;
 }
 
+export interface UseTooltipReturnTypeWithHooks<TriggerType extends Element, TooltipType extends Element> extends UseTooltipReturnTypeInfo {
+    useTooltip: () => {
+        useTooltipProps: ({ ...props }: h.JSX.HTMLAttributes<TooltipType>) => h.JSX.HTMLAttributes<TooltipType>;
+    };
+    useTooltipTrigger: UseTooltipTrigger<TriggerType>;
+}
+
 function returnFalse() { return false; }
 
-export function useAriaTooltip<TriggerType extends HTMLElement | SVGElement, TooltipType extends HTMLElement | SVGElement>({ mouseoverDelay, mouseoutDelay, focusDelay }: UseTooltipParameters): UseTooltipReturnType<TriggerType, TooltipType> {
+export function useAriaTooltip<TriggerType extends Element, TooltipType extends Element>({ mouseoverDelay, mouseoutDelay, focusDelay }: UseTooltipParameters): UseTooltipReturnTypeWithHooks<TriggerType, TooltipType> {
 
     mouseoverDelay ??= 400;
     mouseoutDelay ??= 40;
