@@ -1,8 +1,8 @@
-import { ComponentChildren, createContext, createElement, h, Ref, VNode } from "preact";
+import { ComponentChildren, createContext, h, Ref, VNode } from "preact";
 import { forwardRef } from "preact/compat";
 import { useContext } from "preact/hooks";
 //import { ElementToTag } from "../props";
-import { useAriaListboxSingle, UseListboxSingleItem, UseListboxSingleItemParameters, UseListboxSingleItemReturnTypeInfo, UseListboxSingleParameters, UseListboxSingleReturnTypeInfo } from "../use-listbox-single";
+import { useAriaListboxSingle, useListboxGroup, UseListboxSingleItem, UseListboxSingleItemParameters, UseListboxSingleItemReturnTypeInfo, UseListboxSingleParameters, UseListboxSingleReturnTypeInfo } from "../use-listbox-single";
 
 type Get<T, K extends keyof T> = T[K];
 
@@ -109,7 +109,7 @@ function ListboxSingleItemU<ListItemElement extends Element>({ index, blurSelf, 
         listNavigation: { text },
         listboxSingleItem: { disabled }
     });
-    
+
     return (
         <>{(render ?? defaultListItemRender)({ rovingTabIndex, singleSelection }, useListboxSingleItemProps({ children, ref }))}</>
     )
@@ -117,3 +117,24 @@ function ListboxSingleItemU<ListItemElement extends Element>({ index, blurSelf, 
 
 export const ListboxSingle = forwardRef(ListboxSingleU) as typeof ListboxSingleU;
 export const ListboxSingleItem = forwardRef(ListboxSingleItemU) as typeof ListboxSingleItemU;
+export const ListboxGroup = forwardRef(ListboxGroupU) as typeof ListboxGroupU;
+
+export interface ListboxGroupProps<ContainerElement extends Element, LabelElement extends Element> {
+    render?(info: {}, containerProps: h.JSX.HTMLAttributes<ContainerElement>, labelProps: h.JSX.HTMLAttributes<LabelElement>): VNode;
+    children?: ComponentChildren;
+    labelChildren?: ComponentChildren;
+}
+
+function ListboxGroupU<ContainerElement extends Element, LabelElement extends Element>({ render, children, labelChildren }: ListboxGroupProps<ContainerElement, LabelElement>, ref: Ref<ContainerElement>) {
+    const { useListboxGroupHeadingProps, useListboxGroupContainerProps } = useListboxGroup<ContainerElement, LabelElement>();
+    return ((render ?? defaultListboxGroupRender)({ }, useListboxGroupContainerProps({ ref, children }), useListboxGroupHeadingProps({ children: labelChildren })))
+}
+
+function defaultListboxGroupRender(info: {}, { children, ...containerProps }: h.JSX.HTMLAttributes<any>, labelProps: h.JSX.HTMLAttributes<any>) {
+    return (
+        <div {...containerProps}>
+            <div {...labelProps} />
+            {children}
+        </div>
+    )
+}

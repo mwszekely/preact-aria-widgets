@@ -106,6 +106,7 @@ export function useAriaListboxMulti<LabelElement extends Element, ListElement ex
 
     const [getShiftHeld, setShiftHeld] = usePassiveState(null, returnFalse);
 
+
     const useListboxMultiItem = useCallback<UseListboxMultiItem<ListItemElement>>(({ listboxMultiItem: { selected, disabled, onSelect }, managedChild, listNavigation: ls, rovingTabIndex: rti }) => {
         debugLog("useAriaListboxMultiItem", managedChild.index, selected);
         type E = ListItemElement;
@@ -126,7 +127,6 @@ export function useAriaListboxMulti<LabelElement extends Element, ListElement ex
 
         function useListboxMultiItemProps(props: h.JSX.HTMLAttributes<E>): h.JSX.HTMLAttributes<E> {
             const newProps: h.JSX.HTMLAttributes<E> = usePressEventHandlers<E>(disabled ? null : (e) => {
-                console.log(`Multi ${managedChild.index} is ${getSelected().toString()} and changing to ${(!getSelected()).toString()}`)
                 setTabbableIndex(managedChild.index, false);
                 stableOnSelect?.({ ...e, [EventDetail]: { selected: !getSelected() } });
                 e.preventDefault();

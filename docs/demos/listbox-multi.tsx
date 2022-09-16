@@ -1,8 +1,7 @@
 
 import { useState } from "preact-prop-helpers";
-import { StateUpdater, useContext } from "preact/hooks";
-import { ListboxMultiContext } from "../../component/listbox-multi";
-import { ListboxMulti, EventDetail, usePressEventHandlers } from "../../index";
+import { ListboxMultiItem } from "../../component/listbox-multi";
+import { EventDetail, ListboxMulti } from "../../index";
 
 /*function DemoButton({ tag, ...props }: { tag: string } & RenderableProps<{}>) {
     return <AriaButton disabled={disabled} onPress={onPress} pressed={} {...props} tag={tag as any}   />
@@ -10,46 +9,12 @@ import { ListboxMulti, EventDetail, usePressEventHandlers } from "../../index";
 
 function DemoListItem({ index }: { index: number }) {
     const [selected, setSelected] = useState(false);
-    console.log(`Rendering ListItem #${index}, ${selected.toString()}`);
     const labelText = `List item #${index}${selected ? " (selected)" : ""}`
 
-    return <Foo index={index} labelText={labelText} selected={selected} setSelected={setSelected} />
 
-   /* const { useListboxMultiItemProps, ..._itemReturn } = useContext(ListboxMultiContext)({ 
-        managedChild: { index }, 
-        rovingTabIndex: {  }, 
-        listNavigation: { text: labelText }, 
-        listboxMultiItem: { disabled: false, selected, onSelect: e => { console.log(`Changing state to ${e[EventDetail].selected.toString()}`); setSelected(e[EventDetail].selected)}}
-    });
-    //const listItem = createElement(tagListItem, useListboxMultiItemProps({ ref }) as any);
-    return (
-        <li {...useListboxMultiItemProps({ children: labelText }) } />
-    )*/
-
-    
-    /*return (
-
-        <ListboxMultiItem selected={selected} index={index} disabled={false} text={labelText} onSelect={e => { console.log(`Changing state to ${e[EventDetail].selected.toString()}`); setSelected(e[EventDetail].selected)}}> {labelText}</ListboxMultiItem >
-    )*/
-}
-
-function Foo({ index, selected, labelText, setSelected }: { index: number, selected: boolean, labelText: string, setSelected: StateUpdater<boolean> }) {
-    
-    /*const { useListboxMultiItemProps, ..._itemReturn } = useContext(ListboxMultiContext)({ 
-        managedChild: { index }, 
-        rovingTabIndex: {  }, 
-        listNavigation: { text: labelText }, 
-        listboxMultiItem: { disabled: false, selected, onSelect: e => { console.log(`Changing state to ${e[EventDetail].selected.toString()}`); setSelected(e[EventDetail].selected)}}
-    });*/
-    //const listItem = createElement(tagListItem, useListboxMultiItemProps({ ref }) as any);
     
     return (
-        <li {...({ 
-            tabIndex: 0, 
-            children: labelText, 
-            ...usePressEventHandlers(() => { setSelected(s => !s)}, {})
-            ///onKeyDown: ((e) => { if (e.code == 'Enter') setSelected(s => !s)}) 
-        }) } />
+        <ListboxMultiItem selected={selected} index={index} disabled={false} text={labelText} onSelect={e => { setSelected(e[EventDetail].selected)}}> {labelText}</ListboxMultiItem >
     )
 }
 
@@ -58,9 +23,9 @@ function Foo({ index, selected, labelText, setSelected }: { index: number, selec
 export function Blurb() {
     return (
         <>
-            <p>Checkbox groups are an alternative to multi-select lists. There is no role of <code>checkboxgroup</code>, but this aims to be an ARIA-compliant implementation of a checkbox group.</p>
+            <p><a href="https://www.w3.org/WAI/ARIA/apg/patterns/listbox/">In accordance with the ARIA guidelines for Listbox patterns,</a> this widget supports the following:</p>
             <ul>
-                <li>All normal <code>AriaCheckbox</code> functionality is supported on each individual checkbox.</li>
+                <li>The children are treated as a composite component with list navigation; see <code>AiraSingleSelectList</code> for more information</li>
                 <li>The parent checkbox switches between 3 states, remembering the last state that caused it to be "mixed".</li>
                 <li>The parent checkbox reacts to each child's <code>checked</code> prop and updates its own internal <code>checked</code> attribute (be aware of this if they're asyncronous, as you'll want to ensure they all resolve on the same tick with <code>Promise.all</code> to not clobber the user's inputs).</li>
                 <li>The children are treated as a composite component with list navigation; see <code>AiraSingleSelectList</code> for more information</li>
@@ -89,16 +54,11 @@ export function Demo() {
             <label><input type="number" min={0} value={count} onInput={e => setCount(e.currentTarget.valueAsNumber)} /> # of list items</label>
             <div>
                 <ListboxMulti tagLabel="label" tagList="ul">
-                    {/*</ListboxMulti>*Array.from((function* () {
+                    {Array.from((function* () {
                         for (let i = 0; i < count; ++i) {
                             yield <div><DemoListItem index={i} key={i} /></div>
                         }
-                    })())*/}
-                    <DemoListItem index={0} />
-                    <DemoListItem index={1} />
-                    <DemoListItem index={2} />
-                    <DemoListItem index={3} />
-                    <DemoListItem index={4} />
+                    })())}
                 </ListboxMulti>
             </div>
         </>

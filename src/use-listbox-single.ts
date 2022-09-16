@@ -1,8 +1,8 @@
 import { h } from "preact";
-import { OnTabbableIndexChange, useMergedProps, useStableCallback } from "preact-prop-helpers";
+import { OnTabbableIndexChange, useMergedProps, useRandomId, useStableCallback } from "preact-prop-helpers";
 import { useListNavigationSingleSelection, UseListNavigationSingleSelectionChildParameters, UseListNavigationSingleSelectionChildReturnTypeInfo, UseListNavigationSingleSelectionParameters, UseListNavigationSingleSelectionReturnTypeInfo } from "preact-prop-helpers/use-list-navigation";
 import { useCallback, useEffect } from "preact/hooks";
-import { debugLog, ElementToTag, EventDetail } from "./props";
+import { debugLog, ElementToTag, EventDetail, warnOnOverwrite } from "./props";
 import { usePressEventHandlers } from "./use-button";
 import { useLabel, UseLabelReturnTypeInfo } from "./use-label";
 
@@ -162,3 +162,22 @@ export function useAriaListboxSingle<LabelElement extends Element, ListElement e
 
 
 
+export function useListboxGroup<ContainerElement extends Element, HeadingElement extends Element>() {
+    const { useRandomIdReferencerElement, useRandomIdSourceElement } = useRandomId<HeadingElement>({ randomId: { prefix: "listbox-multi-group" }, managedChildren: {} });
+    const { useRandomIdSourceElementProps } = useRandomIdSourceElement();
+    const { useRandomIdReferencerElementProps } = useRandomIdReferencerElement<ContainerElement>("aria-labelledby");
+    const useListboxGroupHeadingProps = (props: h.JSX.HTMLAttributes<HeadingElement>): h.JSX.HTMLAttributes<HeadingElement> => {
+        return useRandomIdSourceElementProps(props);
+    };
+    const useListboxGroupContainerProps = ({ role, ...props }: h.JSX.HTMLAttributes<ContainerElement>): h.JSX.HTMLAttributes<ContainerElement> => {
+        return useRandomIdReferencerElementProps({
+            role: warnOnOverwrite("useListboxMultiGroupProps", "role", role, "group"),
+            ...props
+        })
+    }
+
+    return {
+        useListboxGroupContainerProps,
+        useListboxGroupHeadingProps,
+    }
+}

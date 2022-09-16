@@ -1,8 +1,8 @@
 import { h } from "preact";
-import { useEffect, useGlobalHandler, useMergedProps, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
+import { useEffect, useForceUpdate, useGlobalHandler, useMergedProps, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
 import { debugLog, enhanceEvent, EventDetail, TagSensitiveProps } from "./props";
 
-let pulse = ("vibrate" in navigator) ? (() => navigator.vibrate(10)) : (() => { });
+let pulse = (("vibrate" in navigator) && (navigator.vibrate instanceof Function)) ? (() => navigator.vibrate(10)) : (() => { });
 
 /**
  * This function can be used to enable/disable button vibration pulses on an app-wide scale.
@@ -93,6 +93,7 @@ export function usePressEventHandlers<E extends EventTarget>(onClickSync: ((e: h
     // As an emergency failsafe, when the element loses focus,
     // this is reset back to 0.
     const [active, setActive, getActive] = useState(0);
+    const forceUpdate = useForceUpdate();
 
     // If we the current text selection changes to include this element
     // DURING e.g. a mousedown, then we don't want the mouseup to "count", as it were,
@@ -109,17 +110,12 @@ export function usePressEventHandlers<E extends EventTarget>(onClickSync: ((e: h
     });
 
     useEffect(() => {
-        if (active == 0) {
-            console.log(`usePressEventHandlers.useEffect[active == 0]: setTextSelectedDuringActivationStartTime(null)`);
+        if (active == 0)
             setTextSelectedDuringActivationStartTime(null);
-        }
-        else {
-            console.log(`usePressEventHandlers.useEffect[active != 0]: (no action taken)`);
-        }
+
     }, [active == 0]);
 
     const onActiveStart = useStableCallback<NonNullable<typeof onClickSync>>((_) => {
-        console.log(`usePressEventHandlers.onActiveStart`);
         setActive(a => ++a);
     });
 
@@ -135,13 +131,12 @@ export function usePressEventHandlers<E extends EventTarget>(onClickSync: ((e: h
         // TODO: This should measure glyphs instead of characters.
         if (charactersSelected > 1 || ((timeDifference ?? 0) > 250 && charactersSelected >= 1)) {
             e.preventDefault();
-            console.log(`usePressEventHandlers.onActiveStop (preventDefault)`);
             return;
         }
 
         if (getActive() <= 0) {
-            console.log(`usePressEventHandlers.onActiveStop (handlePress)`);
             handlePress(e);
+            forceUpdate();  // TODO: Remove when issue resolved https://github.com/preactjs/preact/issues/3731
         }
     });
 
@@ -179,10 +174,16 @@ export function usePressEventHandlers<E extends EventTarget>(onClickSync: ((e: h
             e.stopPropagation();
 
             // Haptic feedback for this press event
-            pulse();
+            try {
+                // The default implementation doesn't throw,
+                // but we should guard against user implementations that could.
+                pulse();
+            }
+            finally {
+                // Actually call our handler.
+                onClickSync(e);
+            }
 
-            // Actually call our handler.
-            onClickSync(e);
         }
     });
 
