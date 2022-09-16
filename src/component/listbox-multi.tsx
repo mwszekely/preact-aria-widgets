@@ -33,7 +33,7 @@ export interface ListboxMultiItemProps<ListboxItemElement extends Element> exten
     children?: ComponentChildren;
 }
 
-const ListboxMultiContext = createContext<UseListboxMultiItem<any>>(null!);
+export const ListboxMultiContext = createContext<UseListboxMultiItem<any>>(null!);
 
 function ListboxMultiU<LabelElement extends Element, ListElement extends HTMLElement, ListItemElement extends HTMLElement>({
     render,

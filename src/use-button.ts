@@ -109,11 +109,17 @@ export function usePressEventHandlers<E extends EventTarget>(onClickSync: ((e: h
     });
 
     useEffect(() => {
-        if (active == 0)
+        if (active == 0) {
+            console.log(`usePressEventHandlers.useEffect[active == 0]: setTextSelectedDuringActivationStartTime(null)`);
             setTextSelectedDuringActivationStartTime(null);
+        }
+        else {
+            console.log(`usePressEventHandlers.useEffect[active != 0]: (no action taken)`);
+        }
     }, [active == 0]);
 
     const onActiveStart = useStableCallback<NonNullable<typeof onClickSync>>((_) => {
+        console.log(`usePressEventHandlers.onActiveStart`);
         setActive(a => ++a);
     });
 
@@ -129,10 +135,12 @@ export function usePressEventHandlers<E extends EventTarget>(onClickSync: ((e: h
         // TODO: This should measure glyphs instead of characters.
         if (charactersSelected > 1 || ((timeDifference ?? 0) > 250 && charactersSelected >= 1)) {
             e.preventDefault();
+            console.log(`usePressEventHandlers.onActiveStop (preventDefault)`);
             return;
         }
 
         if (getActive() <= 0) {
+            console.log(`usePressEventHandlers.onActiveStop (handlePress)`);
             handlePress(e);
         }
     });
@@ -229,7 +237,17 @@ export function usePressEventHandlers<E extends EventTarget>(onClickSync: ((e: h
         }
     }
 
-    return useRefElementProps(({ onKeyDown, onKeyUp, onBlur, onMouseDown, onMouseUp, onMouseLeave, onClick, style: (textSelectedDuringActivationStartTime != null) ? { cursor: "text" } : undefined, ...{ "data-pseudo-active": active && (textSelectedDuringActivationStartTime == null) ? "true" : undefined } as {} }));
+    return useRefElementProps(({
+        onKeyDown,
+        onKeyUp,
+        onBlur,
+        onMouseDown,
+        onMouseUp,
+        onMouseLeave,
+        onClick,
+        style: (textSelectedDuringActivationStartTime != null) ? { cursor: "text" } : undefined,
+        ...{ "data-pseudo-active": active && (textSelectedDuringActivationStartTime == null) ? "true" : undefined } as {}
+    }));
 }
 
 export function useAriaButton<E extends EventTarget>({ tag, pressed, onPress, disabled }: UseAriaButtonParameters<E>): UseAriaButtonReturnType<E> {

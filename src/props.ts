@@ -1,5 +1,4 @@
 import { h, Ref } from "preact";
-import { useCallback } from "preact/hooks";
 
 export type RefFromTag<T extends keyof h.JSX.IntrinsicElements> = NonNullable<h.JSX.IntrinsicElements[T]["ref"]>;
 export type ElementFromRef<R extends Ref<any>> = R extends Ref<infer E> ? E : EventTarget;
@@ -49,7 +48,7 @@ export function warnOnOverwrite<T extends WOO>(componentName: string, propName: 
     return newValue;
 }
 
-let debug = false;
+let debug = true;
 export function setDebugLogging(logging: boolean) {
     debug = logging;
 }

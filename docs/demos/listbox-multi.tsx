@@ -1,7 +1,8 @@
 
-import { ComponentChildren, h, RenderableProps } from "preact";
 import { useState } from "preact-prop-helpers";
-import { AriaButton, AriaCheckbox, ListboxMulti, ListboxMultiItem, EventDetail } from "../../index";
+import { StateUpdater, useContext } from "preact/hooks";
+import { ListboxMultiContext } from "../../component/listbox-multi";
+import { ListboxMulti, EventDetail, usePressEventHandlers } from "../../index";
 
 /*function DemoButton({ tag, ...props }: { tag: string } & RenderableProps<{}>) {
     return <AriaButton disabled={disabled} onPress={onPress} pressed={} {...props} tag={tag as any}   />
@@ -11,9 +12,44 @@ function DemoListItem({ index }: { index: number }) {
     const [selected, setSelected] = useState(false);
     console.log(`Rendering ListItem #${index}, ${selected.toString()}`);
     const labelText = `List item #${index}${selected ? " (selected)" : ""}`
-    return (
 
-        <ListboxMultiItem selected={selected} index={index} disabled={false} text={labelText} onSelect={e => { (() => { console.log(`Changing state to ${e[EventDetail].selected.toString()}`); setSelected(e[EventDetail].selected) }) }}> {labelText}</ListboxMultiItem >
+    return <Foo index={index} labelText={labelText} selected={selected} setSelected={setSelected} />
+
+   /* const { useListboxMultiItemProps, ..._itemReturn } = useContext(ListboxMultiContext)({ 
+        managedChild: { index }, 
+        rovingTabIndex: {  }, 
+        listNavigation: { text: labelText }, 
+        listboxMultiItem: { disabled: false, selected, onSelect: e => { console.log(`Changing state to ${e[EventDetail].selected.toString()}`); setSelected(e[EventDetail].selected)}}
+    });
+    //const listItem = createElement(tagListItem, useListboxMultiItemProps({ ref }) as any);
+    return (
+        <li {...useListboxMultiItemProps({ children: labelText }) } />
+    )*/
+
+    
+    /*return (
+
+        <ListboxMultiItem selected={selected} index={index} disabled={false} text={labelText} onSelect={e => { console.log(`Changing state to ${e[EventDetail].selected.toString()}`); setSelected(e[EventDetail].selected)}}> {labelText}</ListboxMultiItem >
+    )*/
+}
+
+function Foo({ index, selected, labelText, setSelected }: { index: number, selected: boolean, labelText: string, setSelected: StateUpdater<boolean> }) {
+    
+    /*const { useListboxMultiItemProps, ..._itemReturn } = useContext(ListboxMultiContext)({ 
+        managedChild: { index }, 
+        rovingTabIndex: {  }, 
+        listNavigation: { text: labelText }, 
+        listboxMultiItem: { disabled: false, selected, onSelect: e => { console.log(`Changing state to ${e[EventDetail].selected.toString()}`); setSelected(e[EventDetail].selected)}}
+    });*/
+    //const listItem = createElement(tagListItem, useListboxMultiItemProps({ ref }) as any);
+    
+    return (
+        <li {...({ 
+            tabIndex: 0, 
+            children: labelText, 
+            ...usePressEventHandlers(() => { setSelected(s => !s)}, {})
+            ///onKeyDown: ((e) => { if (e.code == 'Enter') setSelected(s => !s)}) 
+        }) } />
     )
 }
 
