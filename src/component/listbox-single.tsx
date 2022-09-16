@@ -1,7 +1,7 @@
-import { ComponentChildren, createContext, createElement, Ref, VNode } from "preact";
+import { ComponentChildren, createContext, createElement, h, Ref, VNode } from "preact";
 import { forwardRef } from "preact/compat";
 import { useContext } from "preact/hooks";
-import { ElementToTag } from "props";
+//import { ElementToTag } from "../props";
 import { useAriaListboxSingle, UseListboxSingleItem, UseListboxSingleItemParameters, UseListboxSingleItemReturnTypeInfo, UseListboxSingleParameters, UseListboxSingleReturnTypeInfo } from "../use-listbox-single";
 
 type Get<T, K extends keyof T> = T[K];
@@ -14,8 +14,8 @@ export interface ListboxSingleProps<LabelElement extends Element, ListElement ex
     Get<UseListboxSingleParameters<LabelElement, ListElement>, "typeaheadNavigation">,
     Get<UseListboxSingleParameters<LabelElement, ListElement>, "managedChildren">,
     Get<UseListboxSingleParameters<LabelElement, ListElement>, "listboxSingle"> {
-    tagLabel: ElementToTag<LabelElement>;
-    render?(info: UseListboxSingleReturnTypeInfo<ListItemElement>, label: VNode<any>, list: VNode<any>): VNode<any>;
+    //tagLabel: ElementToTag<LabelElement>;
+    render?(info: UseListboxSingleReturnTypeInfo<ListItemElement>, labelProps: h.JSX.HTMLAttributes<LabelElement>, listProps: h.JSX.HTMLAttributes<ListElement>): VNode<any>;
     children: ComponentChildren;
 }
 
@@ -29,8 +29,9 @@ export interface ListboxSingleItemProps<ListboxItemElement extends Element> exte
     Omit<Get<UseListboxSingleItemParameters, "listNavigation">, "subInfo">,
     Get<UseListboxSingleItemParameters, "rovingTabIndex">,
     Get<UseListboxSingleItemParameters, "listboxSingleItem"> {
-    tagListItem: ElementToTag<ListboxItemElement>;
-    render?(info: UseListboxSingleItemReturnTypeInfo<ListboxItemElement>, listItem: VNode<any>): VNode<any>;
+    //tagListItem: ElementToTag<ListboxItemElement>;
+    render?(info: UseListboxSingleItemReturnTypeInfo<ListboxItemElement>, listItemProps: h.JSX.HTMLAttributes<ListboxItemElement>): VNode<any>;
+    children?: ComponentChildren;
 }
 
 const ListboxSingleContext = createContext<UseListboxSingleItem<any>>(null!);
@@ -76,41 +77,41 @@ function ListboxSingleU<LabelElement extends Element, ListElement extends HTMLEl
     });
 
     const { useListboxSingleLabelProps } = useListboxSingleLabel();
-    const label = createElement(tagLabel, useListboxSingleLabelProps({}) as any);
-    const list = createElement(tagList, useListboxSingleProps({ children: vnodeChildren, ref }) as any);
+    //const label = createElement(tagLabel, useListboxSingleLabelProps({}) as any);
+    //const list = createElement(tagList, useListboxSingleProps({ children: vnodeChildren, ref }) as any);
 
 
     return (
         <ListboxSingleContext.Provider value={useListboxSingleItem}>
-            {(render ?? defaultListRender)({ ...listboxReturnType }, label, list)}
+            {(render ?? defaultListRender)({ ...listboxReturnType }, useListboxSingleLabelProps({}), useListboxSingleProps({ children: vnodeChildren, ref }))}
         </ListboxSingleContext.Provider>
     )
 }
 
-function defaultListRender(...[_info, label, list]: Parameters<NonNullable<ListboxSingleProps<any, any, any>["render"]>>): VNode<any> {
+function defaultListRender(info: UseListboxSingleReturnTypeInfo<any>, labelProps: h.JSX.HTMLAttributes<any>, listProps: h.JSX.HTMLAttributes<any>): VNode<any> {
     return (
-        <>{label}{list}</>
+        <><label {...labelProps} /><ul {...listProps} /></>
     )
 }
 
-function defaultListItemRender(...[_info, listItem]: Parameters<NonNullable<ListboxSingleItemProps<any>["render"]>>): VNode<any> {
+function defaultListItemRender(info: UseListboxSingleItemReturnTypeInfo<any>, listItemProps: h.JSX.HTMLAttributes<any>): VNode<any> {
     return (
-        <>{listItem}</>
+        <li {...listItemProps} />
     )
 }
 
 
 
-function ListboxSingleItemU<ListItemElement extends Element>({ index, tagListItem, blurSelf, disabled, flags, focusSelf, render, text, hidden }: ListboxSingleItemProps<ListItemElement>, ref: Ref<ListItemElement>) {
+function ListboxSingleItemU<ListItemElement extends Element>({ index, blurSelf, disabled, flags, focusSelf, render, text, hidden, children }: ListboxSingleItemProps<ListItemElement>, ref: Ref<ListItemElement>) {
     const { useListboxSingleItemProps, rovingTabIndex, singleSelection } = useContext(ListboxSingleContext)({
         managedChild: { index, flags },
         rovingTabIndex: { blurSelf, focusSelf, hidden },
         listNavigation: { text },
         listboxSingleItem: { disabled }
     });
-    const listItem = createElement(tagListItem, useListboxSingleItemProps({ ref }) as any);
+    
     return (
-        <>{(render ?? defaultListItemRender)({ rovingTabIndex, singleSelection }, listItem)}</>
+        <>{(render ?? defaultListItemRender)({ rovingTabIndex, singleSelection }, useListboxSingleItemProps({ children, ref }))}</>
     )
 }
 

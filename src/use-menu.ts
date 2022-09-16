@@ -3,6 +3,7 @@ import { useHasFocus, useListNavigation, UseListNavigationParameters, useMergedP
 import { UseListNavigationChildParameters, UseListNavigationChildReturnTypeInfo, UseListNavigationReturnTypeInfo } from "preact-prop-helpers/use-list-navigation";
 import { useEnsureStability } from "preact-prop-helpers/use-passive-state";
 import { useCallback, useEffect } from "preact/hooks";
+import { debugLog } from "./props";
 import { usePressEventHandlers } from "./use-button";
 import { useSoftDismiss, UseSoftDismissParameters, UseSoftDismissReturnTypeInfo } from "./use-modal";
 
@@ -98,6 +99,7 @@ export type UseMenuItem<MenuItemElement extends Element> = (args: UseAriaMenuIte
  * 
  */
 export function useMenuSurface<MenuParentElement extends Element, MenuButtonElement extends Element>({ softDismiss, menuSurface: { sendFocusToMenu, role } }: UseAriaMenuSurfaceParameters<never>): UseAriaMenuSurfaceReturnTypeWithHooks<MenuParentElement, MenuButtonElement> {
+    debugLog("useAriaMenuSurface");
     //const sendFocusWithinMenu = useStableCallback(sendFocusToMenu);
     //const [focusTrapActive, setFocusTrapActive] = useState<null | boolean>(null);
     const { open, onClose } = softDismiss;
@@ -184,6 +186,7 @@ export function useMenuSurface<MenuParentElement extends Element, MenuButtonElem
 
     return {
         useMenuSurfaceSentinel: useCallback(<E extends Element>() => {
+            debugLog("useAriaMenuSurfaceSentinel");
             const {
                 useSentinelProps: useMenuSentinelProps,
                 ...rest
@@ -243,6 +246,7 @@ export interface UseFocusSentinelParameters {
 // and keyboard users can escape to close a menu, screen readers and other input methods 
 // that don't use those two would become stuck.
 export function useFocusSentinel<E extends Element>({ focusSentinel: { open, onClose, sendFocusToMenu } }: UseFocusSentinelParameters) {
+    debugLog("useAriaFocusSentinel");
     const getSendFocusWithinMenu = useStableGetter(sendFocusToMenu);
     const stableOnClose = useStableCallback(onClose);
 
@@ -262,6 +266,7 @@ export function useFocusSentinel<E extends Element>({ focusSentinel: { open, onC
 
 export function useAriaMenu<MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element>({ linearNavigation, listNavigation, managedChildren, menuSurface, rovingTabIndex, softDismiss, typeaheadNavigation, menu }: UseAriaMenuParameters<never>): UseAriaMenuReturnTypeWithHooks<MenuParentElement, MenuItemElement, MenuButtonElement> {
 
+    debugLog("useAriaMenu");
     const { onOpen } = menu;
 
     const {
@@ -301,6 +306,8 @@ export function useAriaMenu<MenuParentElement extends Element, MenuItemElement e
     });
 
     const useMenuItem = useCallback<UseMenuItem<MenuItemElement>>(({ listNavigation, managedChild, rovingTabIndex }) => {
+        debugLog("useAriaMenuItem", managedChild.index);
+
         type E = MenuItemElement;
 
         const { useListNavigationChildProps, ...listNavRet } = useListNavigationChild({ listNavigation, managedChild, rovingTabIndex, subInfo: {} });

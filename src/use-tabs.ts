@@ -4,7 +4,7 @@ import { ChildFlagOperations, OnChildrenMountChange, useChildrenFlag, UseManaged
 import { UseListNavigationReturnTypeInfo, UseListNavigationSingleSelectionChildParameters, UseListNavigationSingleSelectionChildReturnTypeInfo, UseListNavigationSingleSelectionParameters } from "preact-prop-helpers/use-list-navigation";
 import { useCallback, useRef } from "preact/hooks";
 import { useLabel } from "./use-label";
-import { EventDetail, warnOnOverwrite } from "./props";
+import { debugLog, EventDetail, warnOnOverwrite } from "./props";
 
 
 export type TabsChangeEvent<E extends Element> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
@@ -60,6 +60,7 @@ export type UseAriaTabListLabel<LabelElement extends Element> = (args: UseAriaTa
 
 export function useAriaTabs<TabListElement extends Element, TabElement extends Element, PanelElement extends Element, LabelElement extends Element>({ tabList: { linearNavigation, listNavigation, managedChildren: tabListManagedChildren, rovingTabIndex, singleSelection, typeaheadNavigation }, tabPanels: { managedChildren: { onChildrenMountChange: ocmc, ...tabPanelsManagedChildren } } }: UseAriaTabsParameters): UseAriaTabsReturnTypeWithHooks<TabListElement, TabElement, PanelElement, LabelElement> {
 
+    debugLog("useAriaTabs");
 
     const baseId = generateRandomId("aria-tabs-");
     //const getTabListId = useCallback(() => { return baseId + "-tab-list"; }, []);
@@ -86,6 +87,7 @@ export function useAriaTabs<TabListElement extends Element, TabElement extends E
     }, [useLabelLabel]);
 
     const useAriaTabList = useCallback<UseAriaTabList<TabListElement, TabElement>>(({ ..._args }) => {
+        debugLog("useAriaTabList");
         const {
             useListNavigationSingleSelectionChild,
             useListNavigationSingleSelectionProps,
@@ -102,6 +104,7 @@ export function useAriaTabs<TabListElement extends Element, TabElement extends E
         const { useLabelInputProps } = useLabelInput()
 
         const useAriaTab = useCallback<UseAriaTab<TabElement>>(({ listNavigation, managedChild, rovingTabIndex }: UseAriaTabParameters) => {
+            debugLog("useAriaTab", managedChild.index);
             const { useListNavigationSingleSelectionChildProps, ...listNavRet2 } = useListNavigationSingleSelectionChild({ listNavigation, managedChild, rovingTabIndex, subInfo: {} });
             const { singleSelection: { selected }, rovingTabIndex: { tabbable } } = listNavRet2;
 
@@ -139,6 +142,7 @@ export function useAriaTabs<TabListElement extends Element, TabElement extends E
     }, []);
 
     const useAriaTabPanel = useCallback(({ managedChild: { flags, ...managedChild } }: UseAriaTabPanelParameters) => {
+        debugLog("useAriaTabPanel", managedChild.index);
         //const [correspondingTabId, setCorrespondingTabId] = useState<string | null>(null);
         const [isVisible, setIsVisible, getIsVisible] = useState(getVisibleIndex() == managedChild.index);
         const visibleRef = useRef<ChildFlagOperations>({ get: getIsVisible, set: setIsVisible, isValid: returnTrue });

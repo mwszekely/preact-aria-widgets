@@ -1,6 +1,6 @@
 import { h } from "preact";
 import { useCallback } from "preact/hooks";
-import { enhanceEvent, EventDetail } from "./props";
+import { debugLog, enhanceEvent, EventDetail } from "./props";
 import { useCheckboxLike, UseCheckboxLikeParameters, UseCheckboxLikeReturnTypeInfo } from "./use-label";
 
 
@@ -33,6 +33,7 @@ export interface UseAriaCheckboxReturnTypeWithHooks<InputType extends Element, L
 }
 
 export function useAriaCheckbox<InputType extends Element, LabelType extends Element>({ checkboxLike, label, checkbox }: UseAriaCheckboxParameters<InputType, LabelType>): UseAriaCheckboxReturnTypeWithHooks<InputType, LabelType> {
+    debugLog("useAriaCheckbox");
 
     const { disabled, labelPosition, checked } = checkboxLike;
     const { tagInput, tagLabel } = label;

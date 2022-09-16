@@ -1,4 +1,5 @@
 import { h, Ref } from "preact";
+import { useCallback } from "preact/hooks";
 
 export type RefFromTag<T extends keyof h.JSX.IntrinsicElements> = NonNullable<h.JSX.IntrinsicElements[T]["ref"]>;
 export type ElementFromRef<R extends Ref<any>> = R extends Ref<infer E> ? E : EventTarget;
@@ -46,4 +47,30 @@ export function warnOnOverwrite<T extends WOO>(componentName: string, propName: 
     }
 
     return newValue;
+}
+
+let debug = false;
+export function setDebugLogging(logging: boolean) {
+    debug = logging;
+}
+
+export type DebugLogTypes = 
+"useAriaAccordian" | "useAriaAccordianSection" | 
+"useAriaButton" | 
+"useAriaCheckbox" |
+"useAriaCheckboxGroup" | "useAriaCheckboxGroupParent" | "useAriaCheckboxGroupChild" | 
+"useAriaDialog" | "useAriaDrawer" | 
+"useAriaListboxMulti" | "useAriaListboxMultiItem" | 
+"useAriaListboxSingle" | "useAriaListboxSingleItem" | 
+"useAriaMenu" | "useAriaMenuSurface" | "useAriaMenuItem" | "useAriaFocusSentinel" | "useAriaMenuSurfaceSentinel" |
+"useAriaRadioGroup" | "useAriaRadio" | 
+"useAriaSlider" | "useAriaSliderThumb" | 
+"useAriaTable" | "useAriaTableRow" | "useAriaTableCell" | "useAriaTableBody" | 
+"useAriaTabs" | "useAriaTabList" | "useAriaTab" | "useAriaTabPanel" |  
+"useAriaToasts" | "useAriaToast" | 
+"useAriaTooltip" | "useAriaTooltipTooltip" | "useAriaTooltipTrigger";
+
+export function debugLog(who: DebugLogTypes, ...args: Parameters<(typeof console)["log"]>) {
+    if (debug)
+        console.debug(who + ":", ...args);
 }

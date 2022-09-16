@@ -16,7 +16,7 @@ export interface ListboxMultiProps<LabelElement extends Element, ListElement ext
     Get<UseListboxMultiParameters<LabelElement, ListElement>, "listboxMulti"> {
     //tagLabel: ElementToTag<LabelElement>;
     render?(info: UseListboxMultiReturnTypeInfo<ListItemElement>, label: h.JSX.HTMLAttributes<LabelElement>, list: h.JSX.HTMLAttributes<ListElement>): VNode<any>;
-    children: ComponentChildren;
+    children?: ComponentChildren;
 }
 
 
@@ -30,6 +30,7 @@ export interface ListboxMultiItemProps<ListboxItemElement extends Element> exten
     Get<UseListboxMultiItemParameters, "rovingTabIndex">,
     Get<UseListboxMultiItemParameters, "listboxMultiItem"> {
     render?(info: UseListboxMultiItemReturnTypeInfo<ListboxItemElement>, listItemProps: h.JSX.HTMLAttributes<ListboxItemElement>): VNode<any>;
+    children?: ComponentChildren;
 }
 
 const ListboxMultiContext = createContext<UseListboxMultiItem<any>>(null!);
@@ -95,7 +96,7 @@ function defaultListItemRender(info: UseListboxMultiItemReturnTypeInfo<any>, lis
     )
 }
 
-function ListboxMultiItemU<ListItemElement extends Element>({ index, blurSelf, disabled, flags, focusSelf, render, text, hidden, selected, onSelect }: ListboxMultiItemProps<ListItemElement>, ref: Ref<ListItemElement>) {
+function ListboxMultiItemU<ListItemElement extends Element>({ index, blurSelf, disabled, flags, focusSelf, render, text, hidden, selected, onSelect, children }: ListboxMultiItemProps<ListItemElement>, ref: Ref<ListItemElement>) {
     const { useListboxMultiItemProps, ...itemReturn } = useContext(ListboxMultiContext)({ 
         managedChild: { index, flags }, 
         rovingTabIndex: { blurSelf, focusSelf, hidden }, 
@@ -104,7 +105,7 @@ function ListboxMultiItemU<ListItemElement extends Element>({ index, blurSelf, d
     });
     //const listItem = createElement(tagListItem, useListboxMultiItemProps({ ref }) as any);
     return (
-        <>{(render ?? defaultListItemRender)(itemReturn, useListboxMultiItemProps({ ref }))}</>
+        <>{(render ?? defaultListItemRender)(itemReturn, useListboxMultiItemProps({ ref, children }))}</>
     )
 }
 

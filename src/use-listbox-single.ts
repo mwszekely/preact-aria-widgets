@@ -2,7 +2,7 @@ import { h } from "preact";
 import { OnTabbableIndexChange, useMergedProps, useStableCallback } from "preact-prop-helpers";
 import { useListNavigationSingleSelection, UseListNavigationSingleSelectionChildParameters, UseListNavigationSingleSelectionChildReturnTypeInfo, UseListNavigationSingleSelectionParameters, UseListNavigationSingleSelectionReturnTypeInfo } from "preact-prop-helpers/use-list-navigation";
 import { useCallback, useEffect } from "preact/hooks";
-import { ElementToTag, EventDetail } from "./props";
+import { debugLog, ElementToTag, EventDetail } from "./props";
 import { usePressEventHandlers } from "./use-button";
 import { useLabel, UseLabelReturnTypeInfo } from "./use-label";
 
@@ -51,6 +51,7 @@ export function useAriaListboxSingle<LabelElement extends Element, ListElement e
     rovingTabIndex: { onTabbableIndexChange, ...rti },
     typeaheadNavigation: { ...tn }
 }: UseListboxSingleParameters<LabelElement, ListElement>): UseListboxSingleReturnTypeWithHooks<LabelElement, ListElement, ListItemElement> {
+    debugLog("useAriaListboxSingle", selectedIndex);
 
     const { useLabelInput, useLabelLabel, ...labelReturnType } = useLabel<ListElement, LabelElement>({
         label: {
@@ -86,6 +87,7 @@ export function useAriaListboxSingle<LabelElement extends Element, ListElement e
 
 
     const useListboxSingleItem = useCallback<UseListboxSingleItem<ListItemElement>>(({ listboxSingleItem: { disabled }, listNavigation, managedChild, rovingTabIndex }) => {
+        debugLog("useAriaListboxSingleItem", managedChild.index);
         const { rovingTabIndex: rti_ret, singleSelection: ss_ret, useListNavigationSingleSelectionChildProps } = useListNavigationSingleSelectionChild({
             managedChild,
             listNavigation,

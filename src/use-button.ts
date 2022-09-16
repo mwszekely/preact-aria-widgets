@@ -1,6 +1,6 @@
 import { h } from "preact";
 import { useEffect, useGlobalHandler, useMergedProps, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
-import { enhanceEvent, EventDetail, TagSensitiveProps } from "./props";
+import { debugLog, enhanceEvent, EventDetail, TagSensitiveProps } from "./props";
 
 let pulse = ("vibrate" in navigator) ? (() => navigator.vibrate(10)) : (() => { });
 
@@ -233,22 +233,18 @@ export function usePressEventHandlers<E extends EventTarget>(onClickSync: ((e: h
 }
 
 export function useAriaButton<E extends EventTarget>({ tag, pressed, onPress, disabled }: UseAriaButtonParameters<E>): UseAriaButtonReturnType<E> {
+    debugLog("useAriaButton");
 
     function useAriaButtonProps({ "aria-pressed": ariaPressed, tabIndex, role, ...p }: h.JSX.HTMLAttributes<E>): h.JSX.HTMLAttributes<E> {
 
-        const props = useMergedProps<E>(usePressEventHandlers<E>((e) => (disabled? null : onPress)?.(enhanceEvent(e, { pressed: pressed == null ? null : !pressed })), undefined), p);
+        const props = useMergedProps<E>(usePressEventHandlers<E>((e) => (disabled ? null : onPress)?.(enhanceEvent(e, { pressed: pressed == null ? null : !pressed })), undefined), p);
 
         const baseProps = { role, tabIndex, "aria-pressed": ariaPressed ?? (pressed === true ? "true" : pressed === false ? "false" : undefined) };
-        const buttonProps = { ...baseProps, disabled: (disabled && disabled != "soft")? true : false, "aria-disabled": (disabled === 'soft'? 'true' : undefined) };
-        const divProps = { ...baseProps, tabIndex: tabIndex ?? 0, role: role ?? "button", "aria-disabled": disabled? "true" : undefined };
-        const anchorProps = { ...divProps };
-
+        const buttonProps = { ...baseProps, disabled: (disabled && disabled != "soft") ? true : false, "aria-disabled": (disabled === 'soft' ? 'true' : undefined) };
+        const divProps = { ...baseProps, tabIndex: tabIndex ?? (disabled === "hard" ? -1 : 0), role: role ?? "button", "aria-disabled": disabled ? "true" : undefined };
         switch (tag) {
             case "button":
                 return useMergedProps<E>(buttonProps, props);
-
-            case "a":
-                return useMergedProps<E>(anchorProps, props);
 
             default:
                 return useMergedProps<E>(divProps, props);

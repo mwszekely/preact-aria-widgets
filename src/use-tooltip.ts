@@ -1,6 +1,7 @@
 import { h } from "preact";
 import { useGlobalHandler, useHasFocus, useMergedProps, usePassiveState, useRandomId, useStableCallback, useState } from "preact-prop-helpers";
 import { useCallback, useEffect } from "preact/hooks";
+import { debugLog } from "./props";
 
 export type UseTooltipTrigger<TriggerType extends Element> = () => { useTooltipTriggerProps: ({ ...props }: h.JSX.HTMLAttributes<TriggerType>) => h.JSX.HTMLAttributes<TriggerType> };
 export interface UseTooltipParameters { mouseoverDelay?: number, mouseoutDelay?: number, focusDelay?: number }
@@ -20,6 +21,7 @@ export interface UseTooltipReturnTypeWithHooks<TriggerType extends Element, Tool
 function returnFalse() { return false; }
 
 export function useAriaTooltip<TriggerType extends Element, TooltipType extends Element>({ mouseoverDelay, mouseoutDelay, focusDelay }: UseTooltipParameters): UseTooltipReturnTypeWithHooks<TriggerType, TooltipType> {
+    debugLog("useAriaTooltip");
 
     mouseoverDelay ??= 400;
     mouseoutDelay ??= 40;
@@ -88,6 +90,7 @@ export function useAriaTooltip<TriggerType extends Element, TooltipType extends 
     }, [triggerFocusedDelayCorrected || triggerHoverDelayCorrected || tooltipFocusedDelayCorrected || tooltipHoverDelayCorrected])
 
     const useTooltipTrigger: UseTooltipTrigger<TriggerType> = useCallback(function useTooltipTrigger() {
+        debugLog("useAriaTooltipTrigger");
 
         useGlobalHandler(document, "pointermove", e => {
             const target = (e.target as HTMLElement);
@@ -119,6 +122,7 @@ export function useAriaTooltip<TriggerType extends Element, TooltipType extends 
     }, []);
 
     const useTooltip = useCallback(function useTooltip() {
+        debugLog("useAriaTooltipTooltip");
         const { useRandomIdSourceElementProps } = useRandomIdSourceElement();
         const { useHasFocusProps, getElement } = useHasFocus<TooltipType>({ onFocusedInnerChanged: setTooltipFocused })
 

@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { OnTabbableIndexChange, returnFalse, useLayoutEffect, useListNavigation, UseListNavigationChildParameters, UseListNavigationChildReturnTypeInfo, UseListNavigationParameters, UseListNavigationReturnTypeInfo, useMergedProps, usePassiveState, useRefElement, useStableCallback, useStableGetter } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
-import { ElementToTag, EventDetail } from "./props";
+import { debugLog, ElementToTag, EventDetail } from "./props";
 import { usePressEventHandlers } from "./use-button";
 import { useLabel } from "./use-label";
 
@@ -64,6 +64,7 @@ export function useAriaListboxMulti<LabelElement extends Element, ListElement ex
     typeaheadNavigation: { ...tn }
 }: UseListboxMultiParameters<LabelElement, ListElement>): UseListboxMultiReturnTypeWithHooks<LabelElement, ListElement, ListItemElement> {
 
+    debugLog("useAriaListboxMulti");
 
     //const { useHasFocusProps, getFocusedInner } = useHasFocus<ListElement>({});
 
@@ -106,6 +107,7 @@ export function useAriaListboxMulti<LabelElement extends Element, ListElement ex
     const [getShiftHeld, setShiftHeld] = usePassiveState(null, returnFalse);
 
     const useListboxMultiItem = useCallback<UseListboxMultiItem<ListItemElement>>(({ listboxMultiItem: { selected, disabled, onSelect }, managedChild, listNavigation: ls, rovingTabIndex: rti }) => {
+        debugLog("useAriaListboxMultiItem", managedChild.index, selected);
         type E = ListItemElement;
         const getSelected = useStableGetter(selected);
         const { useRefElementProps, getElement } = useRefElement<E>({});
