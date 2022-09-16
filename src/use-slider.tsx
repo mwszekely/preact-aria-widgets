@@ -2,7 +2,7 @@ import { h } from "preact";
 import { useManagedChildren, useMergedProps } from "preact-prop-helpers";
 import { UseManagedChildParameters, UseManagedChildrenParameters, UseManagedChildrenReturnTypeInfo } from "preact-prop-helpers/use-child-manager";
 import { StateUpdater, useCallback, useState } from "preact/hooks";
-import { EventDetail, TagSensitiveProps } from "./props";
+import { debugLog, EventDetail, TagSensitiveProps } from "./props";
 
 
 
@@ -62,9 +62,11 @@ export interface UseAriaSliderReturnTypeWithHooks<ThumbElement extends Element> 
 
 
 export function useAriaSlider<ThumbElement extends Element>({ slider: { max: maxParent, min: minParent }, managedChildren }: UseAriaSliderParameters): UseAriaSliderReturnTypeWithHooks<ThumbElement> {
+    debugLog("useAriaSlider");
     const { useManagedChild, ...childrenInfo } = useManagedChildren<number, AriaSliderThumbInfo, never>({ managedChildren });
 
     const useAriaSliderThumb = useCallback(function useAriaSliderThumb({ managedChild, sliderThumb }: UseAriaSliderThumbParameters<ThumbElement>): UseAriaSliderThumbReturnType<ThumbElement> {
+        debugLog("useAriaSliderThumb", managedChild.index);
         const [minParentCopy, setMinParentCopy] = useState(minParent);
         const [maxParentCopy, setMaxParentCopy] = useState(maxParent);
         const __: void = useManagedChild({ managedChild: { ...managedChild, subInfo: { setMax: setMaxParentCopy, setMin: setMinParentCopy } } });

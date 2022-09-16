@@ -29,7 +29,10 @@ export function Blurb() {
                 <li>Up/down &amp; Home/End keys navigate through the list, as does Tab and Shift+Tab</li>
                 <li></li>
             </ul>
-            <p>Important: The <code>render</code> prop each <code>AccordionSection</code> takes must wrap the button with a <a href="https://w3c.github.io/aria/#heading">heading</a> (e.g. <code>h3</code>, or <code>&lt;Heading&gt;</code>). See the default implementation for an example.</p>
+            <p><strong>Things <em>not</em> handled:</strong></p>
+            <ul>
+                <li>The <code>render</code> prop each <code>AccordionSection</code> takes must wrap the header button with a <a href="https://w3c.github.io/aria/#heading">heading</a> (e.g. <code>h3</code>, or <code>&lt;Heading&gt;</code>). See the default implementation for an example.</li>
+            </ul>
         </>
     )
 }

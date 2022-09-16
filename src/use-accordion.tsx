@@ -1,6 +1,7 @@
 import { h } from "preact";
 import { OnChildrenMountChange, returnTrue, useChildrenFlag, useHasFocus, useLinearNavigation, UseLinearNavigationParameters, UseManagedChildParameters, useManagedChildren, UseManagedChildrenParameters, UseManagedChildrenReturnTypeInfo, useRandomId, useRefElement, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
 import { useCallback, useRef } from "preact/hooks";
+import { debugLog } from "./props";
 import { useAriaButton, UseAriaButtonParameters } from "./use-button";
 
 export type UseAriaAccordion<HeaderElement extends Element, BodyElement extends Element> = (args: UseAriaAccordionParameters) => UseAriaAccordionReturnTypeWithHooks<HeaderElement, BodyElement>;
@@ -57,7 +58,7 @@ export interface UseAriaAccordionSectionReturnTypeWithHooks<HeaderElement extend
 //export interface UseAriaAccordionSectionBodyReturnType<E extends Element> { useAriaAccordionSectionBodyProps: (props: h.JSX.HTMLAttributes<E>) => h.JSX.HTMLAttributes<E>; }
 
 export function useAriaAccordion<HeaderElement extends HTMLElement, BodyElement extends HTMLElement | SVGElement>({ accordion: { initialIndex }, linearNavigation: { disableArrowKeys, disableHomeEndKeys, navigationDirection }, managedChildren: { onAfterChildLayoutEffect, onChildrenMountChange } }: UseAriaAccordionParameters): UseAriaAccordionReturnTypeWithHooks<HeaderElement, BodyElement> {
-
+    debugLog("useAriaAccordian");
     const [_currentFocusedIndex, setCurrentFocusedIndex, getCurrentFocusedIndex] = useState<number | null>(null);
 
     const mcReturnType = useManagedChildren<number, UseAriaAccordionSectionInfoBase, "tabbed" | "open">({
@@ -109,7 +110,7 @@ export function useAriaAccordion<HeaderElement extends HTMLElement, BodyElement 
 
     const useAriaAccordionSection: UseAriaAccordionSection<HeaderElement, BodyElement> = useCallback<UseAriaAccordionSection<HeaderElement, BodyElement>>(({ button: { tag, disabled }, accordionSection: { open: openFromUser }, managedChildren: { index } }) => {
 
-
+        debugLog("useAriaAccordianSection");
         const [openFromParent, setOpenFromParent, getOpenFromParent] = useState<boolean | null>(null);
 
 

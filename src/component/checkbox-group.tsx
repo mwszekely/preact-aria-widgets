@@ -1,7 +1,7 @@
 import { ComponentChildren, createContext, h, RenderableProps, VNode } from "preact";
 import { useContext } from "preact/hooks";
 import { useCheckboxGroup, UseCheckboxGroupChild, UseCheckboxGroupChildParameters, UseCheckboxGroupChildReturnTypeInfo, UseCheckboxGroupParameters, UseCheckboxGroupParentParameters, UseCheckboxGroupReturnTypeInfo } from "../use-checkbox-group";
-import { defaultRenderCombined, defaultRenderSeparate } from "./checkbox";
+import { defaultRenderWrapping, defaultRenderSeparate } from "./checkbox";
 
 type Get<T, K extends keyof T> = T[K];
 type Get2<T, K extends keyof T, K2 extends keyof T[K]> = T[K][K2];
@@ -23,6 +23,7 @@ export interface CheckboxGroupProps<InputElement extends Element, LabelElement e
     //propsInput(): h.JSX.HTMLAttributes<InputElement>;
     //propsLabel(): h.JSX.HTMLAttributes<LabelElement>;
     render?(info: UseCheckboxGroupReturnTypeInfo<InputElement, LabelElement>, input: h.JSX.HTMLAttributes<any>, label: h.JSX.HTMLAttributes<any>, children: ComponentChildren): VNode<any>;
+    labelChildren?: ComponentChildren;  // For convenience, since otherwise it's necessary to override `render` instead
 }
 
 export interface CheckboxGroupCheckboxProps<InputType extends Element, LabelType extends Element> extends
@@ -33,9 +34,10 @@ export interface CheckboxGroupCheckboxProps<InputType extends Element, LabelType
     Get2<UseCheckboxGroupChildParameters<InputType, LabelType>, "asCheckboxGroupChild", "rovingTabIndex">,
     Get2<UseCheckboxGroupChildParameters<InputType, LabelType>, "asCheckboxGroupChild", "managedChild"> {
     //labelPosition: "separate" | "wrapping";
-    propsInput(): h.JSX.HTMLAttributes<InputType>;
-    propsLabel(): h.JSX.HTMLAttributes<LabelType>;
+    //propsInput(): h.JSX.HTMLAttributes<InputType>;
+    //propsLabel(): h.JSX.HTMLAttributes<LabelType>;
     render?(info: UseCheckboxGroupChildReturnTypeInfo<InputType, LabelType>, input: h.JSX.HTMLAttributes<any>, label: h.JSX.HTMLAttributes<any>): VNode<any>;
+    children?: ComponentChildren;
 }
 
 function defaultRenderChildSeparate(inputTag: string, inputLabel: string) {
@@ -44,9 +46,9 @@ function defaultRenderChildSeparate(inputTag: string, inputLabel: string) {
     }
 }
 
-function defaultRenderChildCombined(inputTag: string, inputLabel: string) {
+function defaultRenderChildWrapping(inputTag: string, inputLabel: string) {
     return function (info: UseCheckboxGroupChildReturnTypeInfo<any, any>, input: h.JSX.HTMLAttributes<any>, label: h.JSX.HTMLAttributes<any>): VNode<any> {
-        return defaultRenderCombined(inputTag, inputLabel)(info, input, label);
+        return defaultRenderWrapping(inputTag, inputLabel)(info, input, label);
     }
 }
 
@@ -61,11 +63,11 @@ function defaultRenderGroupSeparate(inputTag: string, inputLabel: string) {
     }
 }
 
-function defaultRenderGroupCombined(inputTag: string, inputLabel: string) {
+function defaultRenderGroupWrapping(inputTag: string, inputLabel: string) {
     return function (info: UseCheckboxGroupReturnTypeInfo<any, any>, input: h.JSX.HTMLAttributes<any>, label: h.JSX.HTMLAttributes<any>, children: ComponentChildren): VNode<any> {
         return (
             <>
-                {defaultRenderCombined(inputTag, inputLabel)(info, input, label)}
+                {defaultRenderWrapping(inputTag, inputLabel)(info, input, label)}
                 {children}
             </>
         )
@@ -94,7 +96,8 @@ export function CheckboxGroup<InputType extends HTMLElement, LabelType extends H
     onTabbableIndexChange,
     onTabbableRender,
     onTabbedInTo,
-    onTabbedOutOf
+    onTabbedOutOf,
+    labelChildren
 }: CheckboxGroupProps<InputType, LabelType>) {
     const {
         useCheckboxGroupChild,
@@ -112,17 +115,17 @@ export function CheckboxGroup<InputType extends HTMLElement, LabelType extends H
     const { useCheckboxGroupParentInputProps, useCheckboxGroupParentLabelProps } = useCheckboxGroupParentInput({ checkbox: {}, checkboxLike: { disabled: parentDisabled, labelPosition }, label: { tagInput, tagLabel } });
 
     const inputProps = useCheckboxGroupParentInputProps({});
-    const labelProps = useCheckboxGroupParentLabelProps({});
-    let combined: VNode<any>;
+    const labelProps = useCheckboxGroupParentLabelProps({ children: labelChildren });
+    let wrapping: VNode<any>;
     if (labelPosition == "separate") {
-        combined = (render ?? defaultRenderGroupSeparate(tagInput, tagLabel))(checkboxGroupParentInfo, inputProps, labelProps, children);
+        wrapping = (render ?? defaultRenderGroupSeparate(tagInput, tagLabel))(checkboxGroupParentInfo, inputProps, labelProps, children);
     }
     else {
-        combined = (render ?? defaultRenderGroupCombined(tagInput, tagLabel))(checkboxGroupParentInfo, inputProps, labelProps, children);
+        wrapping = (render ?? defaultRenderGroupWrapping(tagInput, tagLabel))(checkboxGroupParentInfo, inputProps, labelProps, children);
     }
 
     return (
-        <UseCheckboxGroupChildContext.Provider value={useCheckboxGroupChild}>{combined}</UseCheckboxGroupChildContext.Provider>
+        <UseCheckboxGroupChildContext.Provider value={useCheckboxGroupChild}>{wrapping}</UseCheckboxGroupChildContext.Provider>
     )
 }
 
@@ -139,6 +142,7 @@ export function CheckboxGroupCheckbox<InputType extends HTMLElement, LabelType e
     focusSelf,
     hidden,
     onInput,
+    children,
     render
 }: CheckboxGroupCheckboxProps<InputType, LabelType>) {
     const { useCheckboxGroupChildInputProps, useCheckboxGroupChildLabelProps, ...checkboxGroupChildInfo } = useContext(UseCheckboxGroupChildContext)({
@@ -164,11 +168,11 @@ export function CheckboxGroupCheckbox<InputType extends HTMLElement, LabelType e
     });
 
     const inputProps = useCheckboxGroupChildInputProps({});
-    const labelProps = useCheckboxGroupChildLabelProps({});
+    const labelProps = useCheckboxGroupChildLabelProps({ children });
     if (labelPosition == "separate") {
         return (render ?? defaultRenderChildSeparate(tagInput, tagLabel))(checkboxGroupChildInfo, inputProps, labelProps);
     }
     else {
-        return (render ?? defaultRenderChildCombined(tagInput, tagLabel))(checkboxGroupChildInfo, inputProps, labelProps);
+        return (render ?? defaultRenderChildWrapping(tagInput, tagLabel))(checkboxGroupChildInfo, inputProps, labelProps);
     }
 }

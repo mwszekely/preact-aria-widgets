@@ -212,6 +212,8 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
                 // even if it's an input element.
                 props.inert = true;
                 props.tabIndex = -1;
+                props.role = "presentation";
+                props["aria-hidden"] = "true";
                 props.onFocus = _ => (getLabelElement() as HTMLElement | null)?.focus();
             }
             else {

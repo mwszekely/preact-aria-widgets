@@ -3,6 +3,7 @@ import { ManagedChildren, returnNull, useGridNavigation, UseGridNavigationParame
 import { UseGridNavigationCellParameters, UseGridNavigationCellReturnTypeInfo, UseGridNavigationRowParameters, UseGridNavigationRowReturnTypeInfo } from "preact-prop-helpers/use-grid-navigation";
 import { Compare, GetIndex, GetValue, UseSortableChildrenReturnTypeInfo } from "preact-prop-helpers/use-sortable-children";
 import { useCallback, useRef } from "preact/hooks";
+import { debugLog } from "./props";
 
 export type TableValueType = string | number | null | boolean | Date;
 
@@ -51,6 +52,7 @@ export function useAriaTable<
     RowElement extends Element,
     CellElement extends Element
 >({ linearNavigation, listNavigation, managedChildren, rovingTabIndex, typeaheadNavigation }: UseAriaTableParameters): UseAriaTableReturnTypeWithHooks<TableElement, BodySectionElement, RowElement, CellElement> {
+    debugLog("useAriaTable");
 
     const [getCurrentSortColumn, setCurrentSortColumn] = usePassiveState<{ index: number, direction: "ascending" | "descending" } | null>(null, returnNull);
     const bodySort = useRef<null | (() => void)>(null);
@@ -70,6 +72,7 @@ export function useAriaTable<
     const { managedChildren: { children: rows } } = gridNavRet1;
 
     const useTableRow = useCallback<UseAriaTableRow<RowElement, CellElement>>(({ asChildRowOfSection, asParentRowOfCells, tableRow: { location } }: UseAriaTableRowParameters<CellElement>): UseAriaTableRowReturnTypeWithHooks<RowElement, CellElement> => {
+        debugLog("useAriaTableRow", asChildRowOfSection.managedChild.index);
 
         const getCells = useCallback(() => {
             return cells;
@@ -84,6 +87,7 @@ export function useAriaTable<
         const { asParentOfCells: { managedChildren: { children: cells } } } = gridNavRet2;
 
         const useTableCell = useCallback<UseAriaTableCell<CellElement>>(({ listNavigation, managedChild, rovingTabIndex, subInfo }) => {
+            debugLog("useAriaTableCell", managedChild.index);
             const {
                 useGridNavigationCellProps,
                 ...gridNavRet3
@@ -124,6 +128,7 @@ export function useAriaTable<
     }, []);
 
     const useTableBody = useCallback<UseAriaTableBody<BodySectionElement, RowElement, CellElement>>(() => {
+        debugLog("useAriaTableBody");
         type C = UseRovingTabIndexSubInfo<RowElement, UseListNavigationSubInfo<UseAriaTableRowSubInfo<CellElement>>>;
         type V = {location: "head" | "body" | "foot", value: TableValueType};
         const getIndex = useCallback<GetIndex<C, never>>((i) => i.index, []);

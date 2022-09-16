@@ -1,5 +1,6 @@
 import { h } from "preact";
 import { useCallback } from "preact/hooks";
+import { debugLog } from "./props";
 import { useModal, UseModalParameters, UseSoftDismissReturnTypeInfo } from "./use-modal";
 
 export interface UseAriaDrawerReturnTypeInfo extends UseSoftDismissReturnTypeInfo {
@@ -22,6 +23,8 @@ export interface UseDrawerParameters extends UseModalParameters<never, never> {
 }
 
 export function useDrawer<DrawerElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement>({ softDismiss: { open, onClose } }: UseDrawerParameters): UseAriaDrawerReturnTypeWithHooks<DrawerElement, TitleElement, BodyElement, BackdropElement> {
+
+    debugLog("useAriaDrawer");
 
     // TODO: Drawers are not always modal.
 

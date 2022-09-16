@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { UseListNavigationChildParameters, UseListNavigationParameters, useListNavigationSingleSelection, UseListNavigationSingleSelectionChildReturnTypeInfo, UseListNavigationSingleSelectionReturnTypeInfo, useMergedProps, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
 import { useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
-import { ElementToTag, enhanceEvent, EventDetail, TagSensitiveProps } from "./props";
+import { debugLog, ElementToTag, enhanceEvent, EventDetail, TagSensitiveProps } from "./props";
 import { useCheckboxLike, useLabel } from "./use-label";
 
 //type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
@@ -59,6 +59,7 @@ export function useAriaRadioGroup<V extends string | number, G extends Element, 
     rovingTabIndex,
     typeaheadNavigation
 }: UseAriaRadioGroupParameters<V, G, GL, I, IL>): UseAriaRadioGroupReturnTypeWithHooks<V, G, GL, I, IL> {
+    debugLog("useAriaRadioGroup", selectedValue);
     const { getElement: _getRadioGroupParentElement, useRefElementProps } = useRefElement<G>({});
 
     //const getSelectedIndex = useCallback((selectedValue: V) => { return byName.current.get(selectedValue) ?? 0 }, [])
@@ -125,6 +126,7 @@ export function useAriaRadioGroup<V extends string | number, G extends Element, 
         radio: { disabled, labelPosition, tagInput, tagLabel, value }
     }) {
         const index = managedChild.index;
+        debugLog("useAriaRadio", index);
         //const [checked, setChecked, getChecked] = useState<boolean | null>(null);
 
         const onInput = useCallback((e: h.JSX.TargetedEvent<I> | h.JSX.TargetedEvent<IL>) => {
