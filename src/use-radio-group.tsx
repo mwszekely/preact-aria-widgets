@@ -1,22 +1,24 @@
 import { h } from "preact";
 import { UseListNavigationChildParameters, UseListNavigationParameters, useListNavigationSingleSelection, UseListNavigationSingleSelectionChildReturnTypeInfo, UseListNavigationSingleSelectionReturnTypeInfo, useMergedProps, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
+import { UseChildrenHaveFocusParameters, UseHasFocusParameters } from "preact-prop-helpers/use-has-focus";
 import { useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
 import { debugLog, ElementToTag, enhanceEvent, EventDetail, TagSensitiveProps } from "./props";
 import { useCheckboxLike, useLabel } from "./use-label";
 
 //type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
-export type RadioChangeEvent<EventType extends Event> = EventType & { [EventDetail]: { selectedValue: string } };
+export type RadioChangeEvent<EventType extends Event, V extends number | string> = EventType & { [EventDetail]: { selectedValue: V } };
 
 export interface UseAriaRadioGroupParameters<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, InputElement extends Element, LabelElement extends Element> extends UseListNavigationParameters<never, never, never, never, never> {
     radioGroup: {
         name: string;
 
-        selectedValue: V;
-        onInput(event: RadioChangeEvent<h.JSX.TargetedEvent<InputElement>>): void;
-        onInput(event: RadioChangeEvent<h.JSX.TargetedEvent<LabelElement>>): void;
+        selectedValue: V | null;
+        onInput(event: RadioChangeEvent<h.JSX.TargetedEvent<InputElement>, V>): void;
+        onInput(event: RadioChangeEvent<h.JSX.TargetedEvent<LabelElement>, V>): void;
         tagGroup: ElementToTag<GroupElement>;
         tagGroupLabel: ElementToTag<GroupLabelElement>;
     }
+    childrenHaveFocus: UseChildrenHaveFocusParameters["childrenHaveFocus"];
 }
 
 /*export interface UseAriaRadioInfoBase extends ListNavigationChildInfoBase<"tabbable" | "selected"> {
@@ -27,7 +29,7 @@ export interface UseAriaRadioGroupParameters<V extends string | number, GroupEle
 
 
 
-export interface UseAriaRadioParameters<V extends string | number, I extends Element, IL extends Element> extends Omit<UseListNavigationChildParameters<{}, never, never, never, never, never>, "subInfo"> {
+export interface UseAriaRadioParameters<V extends string | number, I extends Element, IL extends Element> extends Omit<UseListNavigationChildParameters<I, {}, never, never, never, never, never>, "subInfo"> {
     radio: {
         labelPosition: "wrapping" | "separate";
         value: V;
@@ -35,6 +37,7 @@ export interface UseAriaRadioParameters<V extends string | number, I extends Ele
         tagInput: ElementToTag<I>;
         tagLabel: ElementToTag<IL>;
     }
+    hasFocus: UseHasFocusParameters<I>;
     /*Omit<UseCheckboxLikeParameters<I, IL>, "onInput" | "role" | "checked"> & {
         info: Omit<Info, "setChecked" | "getChecked" | "blurSelf" | "getElement" | "focusSelf">;
         
@@ -42,7 +45,7 @@ export interface UseAriaRadioParameters<V extends string | number, I extends Ele
 }
 
 export interface UseAriaRadioGroupReturnTypeInfo<I extends Element> extends UseListNavigationSingleSelectionReturnTypeInfo<I, {}, never> {
-    
+
 }
 
 export interface UseAriaRadioGroupReturnTypeWithHooks<V extends string | number, G extends Element, GL extends Element, I extends Element, IL extends HTMLElement> extends UseAriaRadioGroupReturnTypeInfo<I> {
@@ -57,7 +60,8 @@ export function useAriaRadioGroup<V extends string | number, G extends Element, 
     managedChildren,
     radioGroup: { name, onInput, selectedValue, tagGroup, tagGroupLabel },
     rovingTabIndex,
-    typeaheadNavigation
+    typeaheadNavigation,
+    childrenHaveFocus
 }: UseAriaRadioGroupParameters<V, G, GL, I, IL>): UseAriaRadioGroupReturnTypeWithHooks<V, G, GL, I, IL> {
     debugLog("useAriaRadioGroup", selectedValue);
     const { getElement: _getRadioGroupParentElement, useRefElementProps } = useRefElement<G>({});
@@ -84,7 +88,8 @@ export function useAriaRadioGroup<V extends string | number, G extends Element, 
         managedChildren,
         rovingTabIndex,
         singleSelection: { selectedIndex },
-        typeaheadNavigation
+        typeaheadNavigation,
+        childrenHaveFocus
     });
 
     // Track whether the currently focused element is a child of the radio group parent element.
@@ -113,8 +118,13 @@ export function useAriaRadioGroup<V extends string | number, G extends Element, 
     });*/
 
     useEffect(() => {
-        const selectedIndex = byName.current.get(selectedValue);
-        setSelectedIndex(selectedIndex ?? null);
+        if (selectedValue == null) {
+            setSelectedIndex(null)
+        }
+        else {
+            const selectedIndex = byName.current.get(selectedValue);
+            setSelectedIndex(selectedIndex ?? null);
+        }
     }, [byName, selectedValue]);
 
 
@@ -123,6 +133,7 @@ export function useAriaRadioGroup<V extends string | number, G extends Element, 
         listNavigation,
         managedChild,
         rovingTabIndex,
+        hasFocus,
         radio: { disabled, labelPosition, tagInput, tagLabel, value }
     }) {
         const index = managedChild.index;
@@ -138,6 +149,7 @@ export function useAriaRadioGroup<V extends string | number, G extends Element, 
             listNavigation,
             rovingTabIndex,
             managedChild,
+            hasFocus,
             subInfo: {}
         });
 

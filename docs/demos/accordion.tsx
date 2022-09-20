@@ -2,12 +2,16 @@
 import { ComponentChildren, h, RenderableProps } from "preact";
 import { AriaAccordion, AriaAccordionSection, Heading } from "../../index";
 
-function DemoAccordion(props: RenderableProps<{}>) {
-    return <AriaAccordion {...props} render={(info, children) => { return <div id="accordion-demo">{children}</div> }} />
+function DemoAccordion({ children, ...props }: RenderableProps<{}>) {
+    return <AriaAccordion {...props} render={(info) => { return <div id="accordion-demo">{children}</div> }} />
+}
+
+function getDocument() {
+    return window.document;
 }
 
 function DemoAccordionSection({ index, body, heading, disabled, open }: { open?: boolean, disabled: boolean, index: number, heading: ComponentChildren, body: ComponentChildren }) {
-    return <AriaAccordionSection<HTMLDivElement, HTMLDivElement> index={index} open={open} disabled={disabled} render={(info, headerProps, bodyProps) => {
+    return <AriaAccordionSection<HTMLDivElement, HTMLDivElement> index={index} open={open} disabled={disabled} getDocument={getDocument} render={(info, headerProps, bodyProps) => {
         return (
             <>
                 <Heading heading={<div {...headerProps}>{heading} ({!info.accordionSection.expanded && "not "} open), ({!info.accordionSection.focused && "not "} focused)</div>}>

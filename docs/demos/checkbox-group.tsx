@@ -1,7 +1,7 @@
 
 import { ComponentChildren, h, RenderableProps } from "preact";
 import { useState } from "preact-prop-helpers";
-import { AriaButton, AriaCheckbox, CheckboxGroup, CheckboxGroupCheckbox, EventDetail } from "../../index";
+import { AriaButton, AriaCheckbox, CheckboxGroup, CheckboxGroupCheckbox, defaultRenderCheckboxGroupChild, defaultRenderCheckboxGroup, EventDetail } from "../../index";
 
 /*function DemoButton({ tag, ...props }: { tag: string } & RenderableProps<{}>) {
     return <AriaButton disabled={disabled} onPress={onPress} pressed={} {...props} tag={tag as any}   />
@@ -11,8 +11,21 @@ function DemoCheckbox({ index }: { index: number }) {
     const [checked, setChecked] = useState(false);
     const labelText = `Checkbox #${index}`
     return (
-
-        <CheckboxGroupCheckbox checked={checked} index={index} disabled={false} labelPosition="separate" text={labelText} tagInput="input" tagLabel="label" onInput={e => setChecked(e[EventDetail].checked)}>{labelText}</CheckboxGroupCheckbox>
+        <CheckboxGroupCheckbox render={defaultRenderCheckboxGroupChild({
+            labelPosition: "separate",
+            tagInput: "input",
+            tagLabel: "label",
+            makeInputProps: () => ({}),
+            makeLabelProps: () => ({ children: labelText })
+        })}
+            checked={checked}
+            index={index}
+            disabled={false}
+            labelPosition="separate"
+            text={labelText}
+            tagInput="input"
+            tagLabel="label"
+            onInput={e => setChecked(e[EventDetail].checked)} />
     )
 }
 
@@ -51,13 +64,19 @@ export function Demo() {
             <Code />
             <label><input type="number" min={0} value={count} onInput={e => setCount(e.currentTarget.valueAsNumber)} /> # of checkboxes</label>
             <div>
-                <CheckboxGroup disabled={false} labelPosition="separate" tagInput="input" tagLabel="label" labelChildren="Parent checkbox">
-                    {Array.from((function* () {
-                        for (let i = 0; i < count; ++i) {
-                            yield <div><DemoCheckbox index={i} key={i} /></div>
-                        }
-                    })())}
-                </CheckboxGroup>
+                <CheckboxGroup disabled={false} labelPosition="separate" tagInput="input" tagLabel="label" render={
+                    defaultRenderCheckboxGroup({
+                        labelPosition: "separate",
+                        tagInput: "input",
+                        tagLabel: "label",
+                        makeInputProps: () => ({}),
+                        makeLabelProps: () => ({}),
+                        children: Array.from((function* () {
+                            for (let i = 0; i < count; ++i) {
+                                yield <div><DemoCheckbox index={i} key={i} /></div>
+                            }
+                        })())
+                    })} />
             </div>
         </>
     )

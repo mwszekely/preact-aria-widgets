@@ -1,6 +1,9 @@
-import { createContext, createElement, h, VNode } from "preact";
+import { ComponentChildren, createContext, createElement, h, VNode } from "preact";
+import { UseHasFocusParameters } from "preact-prop-helpers";
 import { useContext } from "preact/hooks";
+import { ElementToTag, PropModifier } from "props";
 import { useAriaRadioGroup, UseAriaRadioGroupParameters, UseAriaRadioGroupReturnTypeInfo, UseAriaRadioParameters, UseRadio, UseRadioReturnTypeInfo } from "../use-radio-group";
+import { defaultRenderCheckboxLike, DefaultRenderCheckboxLikeParameters } from "./checkbox"
 
 type Get<T, K extends keyof T> = T[K];
 
@@ -10,10 +13,11 @@ export interface RadioGroupProps<V extends string | number, GroupElement extends
     Get<UseAriaRadioGroupParameters<V, GroupElement, GroupLabelElement, InputElement, LabelElement>, "listNavigation">,
     Get<UseAriaRadioGroupParameters<V, GroupElement, GroupLabelElement, InputElement, LabelElement>, "managedChildren">,
     Get<UseAriaRadioGroupParameters<V, GroupElement, GroupLabelElement, InputElement, LabelElement>, "rovingTabIndex">,
+    Get<UseAriaRadioGroupParameters<V, GroupElement, GroupLabelElement, InputElement, LabelElement>, "childrenHaveFocus">,
     Get<UseAriaRadioGroupParameters<V, GroupElement, GroupLabelElement, InputElement, LabelElement>, "typeaheadNavigation"> {
     //propsGroupLabel: () => h.JSX.HTMLAttributes<GroupLabelElement>;
     //propsGroup: () => h.JSX.HTMLAttributes<GroupElement>;
-    render?(info: UseAriaRadioGroupReturnTypeInfo<InputElement>, label: h.JSX.HTMLAttributes<GroupLabelElement>, group: h.JSX.HTMLAttributes<GroupElement>): VNode<any>;
+    render(info: UseAriaRadioGroupReturnTypeInfo<InputElement>, modifyLabelProps: PropModifier<GroupLabelElement>, modifyGroupProps: PropModifier<GroupElement>): VNode<any>;
 }
 
 export interface RadioProps<V extends string | number, InputElement extends Element, LabelElement extends Element> extends
@@ -21,21 +25,20 @@ export interface RadioProps<V extends string | number, InputElement extends Elem
     Get<UseAriaRadioParameters<V, InputElement, LabelElement>, "listNavigation">,
     Get<UseAriaRadioParameters<V, InputElement, LabelElement>, "rovingTabIndex">,
     Get<UseAriaRadioParameters<V, InputElement, LabelElement>, "managedChild">,
+    UseHasFocusParameters<InputElement>,
     Get<UseAriaRadioParameters<V, InputElement, LabelElement>, "radio"> {
-    // propsLabel: () => h.JSX.HTMLAttributes<LabelElement>;
-    //propsInput: () => h.JSX.HTMLAttributes<InputElement>;
-    render?(info: UseRadioReturnTypeInfo<InputElement>, input: h.JSX.HTMLAttributes<InputElement>, label: h.JSX.HTMLAttributes<LabelElement>): VNode<any>;
+    render(info: UseRadioReturnTypeInfo<InputElement>, modifyInputProps: PropModifier<InputElement>, modifyLabelProps: PropModifier<LabelElement>): VNode<any>;
 }
 
-function defaultGroupRender(info: UseAriaRadioGroupReturnTypeInfo<any>, labelProps: h.JSX.HTMLAttributes<any>, groupProps: h.JSX.HTMLAttributes<any>) {
-    const label = <div {...labelProps} />;
-    const group = <div {...groupProps} />;
-    return (
-        <>
-            {label}
-            {group}
-        </>
-    )
+export function defaultRenderRadioGroup<InputElement extends Element, LabelElement extends Element>({ tagGroup, tagLabel, makePropsGroup, makePropsLabel }: { tagLabel: ElementToTag<LabelElement>, tagGroup: ElementToTag<InputElement>, makePropsLabel: (info: UseAriaRadioGroupReturnTypeInfo<InputElement>) => h.JSX.HTMLAttributes<LabelElement>, makePropsGroup: (info: UseAriaRadioGroupReturnTypeInfo<InputElement>) => h.JSX.HTMLAttributes<InputElement> }) {
+    return function (info: UseAriaRadioGroupReturnTypeInfo<InputElement>, modifyLabelProps: PropModifier<LabelElement>, modifyGroupProps: PropModifier<InputElement>) {
+        return (
+            <>
+                {createElement(tagLabel as never, modifyLabelProps(makePropsLabel(info)))}
+                {createElement(tagGroup as never, modifyGroupProps(makePropsGroup(info)))}
+            </>
+        )
+    }
 }
 
 const RadioContext = createContext<UseRadio<any, any, any>>(null!);
@@ -55,12 +58,12 @@ export function RadioGroup<V extends string | number, GroupElement extends HTMLE
     typeaheadTimeout,
     indexDemangler,
     indexMangler,
+    onAllLostFocus,
+    onAnyGainedFocus,
     onAfterChildLayoutEffect,
     onChildrenMountChange,
     onTabbableIndexChange,
     onTabbableRender,
-    onTabbedInTo,
-    onTabbedOutOf
 }: RadioGroupProps<V, GroupElement, GroupLabelElement, InputElement, LabelElement>) {
     const {
         useRadio,
@@ -72,58 +75,37 @@ export function RadioGroup<V extends string | number, GroupElement extends HTMLE
         listNavigation: { indexDemangler, indexMangler },
         managedChildren: { onAfterChildLayoutEffect, onChildrenMountChange },
         radioGroup: { name, onInput, selectedValue, tagGroup, tagGroupLabel },
-        rovingTabIndex: { initialIndex, onTabbableIndexChange, onTabbableRender, onTabbedInTo, onTabbedOutOf },
-        typeaheadNavigation: { collator, noTypeahead, typeaheadTimeout }
+        rovingTabIndex: { initialIndex, onTabbableIndexChange, onTabbableRender },
+        typeaheadNavigation: { collator, noTypeahead, typeaheadTimeout },
+        childrenHaveFocus: { onAllLostFocus, onAnyGainedFocus }
     });
 
     return (
         <RadioContext.Provider value={useRadio}>
-            {(render ?? defaultGroupRender)(radioGroupReturn, useRadioGroupLabelProps({}), useRadioGroupProps({}))}
+            {render(radioGroupReturn, useRadioGroupLabelProps, useRadioGroupProps)}
         </RadioContext.Provider>
     )
 }
 
-function defaultRenderSeparate(inputTag: string, inputLabel: string) {
-    return function (info: UseRadioReturnTypeInfo<any>, inputProps: h.JSX.HTMLAttributes<any>, labelProps: h.JSX.HTMLAttributes<any>): VNode<any> {
-        const input = createElement(inputTag, inputProps);
-        const label = createElement(inputLabel, labelProps);
+export interface DefaultRenderRadioParameters<I extends HTMLElement, L extends HTMLElement> extends DefaultRenderCheckboxLikeParameters<I, L, UseRadioReturnTypeInfo<I>> {
 
-        return (
-            <>
-                {input}
-                {label}
-            </>
-        )
-    }
 }
 
-function defaultRenderCombined(inputTag: string, inputLabel: string) {
-    return function (info: UseRadioReturnTypeInfo<any>, inputProps: h.JSX.HTMLAttributes<any>, { children, ...labelProps }: h.JSX.HTMLAttributes<any>): VNode<any> {
-        const input = createElement(inputTag, inputProps);
-        const label = createElement(inputLabel, { ...labelProps, children: <>{input}{children}</> });
-        return (
-            <>
-                {label}
-            </>
-        )
-    }
+export function defaultRenderRadio<I extends HTMLElement, L extends HTMLElement>({ tagInput, tagLabel, makeInputProps, makeLabelProps, labelPosition }: DefaultRenderRadioParameters<I, L>) {
+    return defaultRenderCheckboxLike<I, L, UseRadioReturnTypeInfo<I>>({ labelPosition, tagInput, tagLabel, makeInputProps, makeLabelProps });
 }
 
-export function Radio<V extends string | number, InputElement extends Element, LabelElement extends Element>({ disabled, index, text, hidden, tagInput, labelPosition, tagLabel, value, render, flags, blurSelf, focusSelf }: RadioProps<V, InputElement, LabelElement>) {
+export function Radio<V extends string | number, InputElement extends Element, LabelElement extends Element>({ disabled, index, text, hidden, tagInput, labelPosition, tagLabel, value, render, flags, blurSelf, focusSelf, getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange }: RadioProps<V, InputElement, LabelElement>) {
     const { useRadioInput, useRadioLabel, ...radioReturn } = useContext(RadioContext)({
         listNavigation: { text },
         managedChild: { index, flags },
         radio: { disabled, labelPosition, tagInput, tagLabel, value },
-        rovingTabIndex: { hidden, focusSelf, blurSelf }
+        rovingTabIndex: { hidden, focusSelf, blurSelf },
+        hasFocus: { getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange }
     });
 
     const { useRadioInputProps } = useRadioInput({ tag: tagInput });
     const { useRadioLabelProps } = useRadioLabel({ tag: tagLabel });
 
-    if (labelPosition == "separate") {
-        return (render ?? defaultRenderSeparate(tagInput, tagLabel))(radioReturn, useRadioInputProps({}), useRadioLabelProps({}));
-    }
-    else {
-        return (render ?? defaultRenderCombined(tagInput, tagLabel))(radioReturn, useRadioInputProps({}), useRadioLabelProps({}));
-    }
+    return render(radioReturn, useRadioInputProps, useRadioLabelProps);
 }

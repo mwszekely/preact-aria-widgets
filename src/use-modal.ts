@@ -1,6 +1,6 @@
 
 import { h } from "preact";
-import { useActiveElement, useFocusTrap, useMergedProps, usePassiveState, useRandomId, useRefElement, useStableCallback, useStableGetter } from "preact-prop-helpers";
+import { useActiveElement, UseActiveElementParameters, useFocusTrap, useMergedProps, usePassiveState, useRandomId, useRefElement, useStableCallback, useStableGetter } from "preact-prop-helpers";
 import { useCallback, useEffect } from "preact/hooks";
 
 interface SDP {
@@ -9,7 +9,7 @@ interface SDP {
      * 
      * Usually just a single element, but e.g. a Menu + MenuButton could have two.
      */
-    getElements: () => Element | Element[] | null;
+    getElements: () => Element | (Element | null)[] | null;
 
     /**
      * Called when the component is dismissed
@@ -30,6 +30,17 @@ interface MP {
      * The default is false to be on the safe side, but this should be true whenever reasonable.
      */
     bodyIsOnlySemantic?: boolean;
+
+    /**
+     * When any modal dialog opens, it must send focus to that dialog, ideally whichever element makes the most sense in context.
+     * 
+     * For example, if it's a confirmation dialog about deleting something, it's best to send focus to the "cancel" button.
+     * 
+     * In other cases, it makes more sense to focus the dialog's title, first interactive element, etc.
+     * 
+     * In any case, you must explicitly state what to do when the dialog opens with `focusSelf`.
+     */
+    focusSelf(): void;
 }
 
 export type SoftDismissOmits = keyof SDP;
@@ -37,6 +48,7 @@ export type ModalOmits = keyof MP;
 
 export interface UseSoftDismissParameters<Omits extends SoftDismissOmits> {
     softDismiss: Omit<SDP, Omits>;
+    activeElement: UseActiveElementParameters;
 }
 
 export interface UseModalParameters<MO extends ModalOmits, SDO extends SoftDismissOmits> extends UseSoftDismissParameters<SDO | "getElements"> {
@@ -68,17 +80,19 @@ export interface UseSoftDismissReturnTypeWithHooks<T extends Node> extends UseSo
  * @param param0 
  * @returns 
  */
-export function useSoftDismiss<T extends Node>({ softDismiss: { onClose, getElements, open } }: UseSoftDismissParameters<never>): UseSoftDismissReturnTypeWithHooks<T> {
+export function useSoftDismiss<T extends Node>({ softDismiss: { onClose, getElements, open }, activeElement: { onLastActiveElementChange, ...activeElement } }: UseSoftDismissParameters<never>): UseSoftDismissReturnTypeWithHooks<T> {
 
     const stableOnClose = useStableCallback(onClose);
     const stableGetElements = useStableCallback(getElements);
     const getOpen = useStableGetter(open);
 
+    const { getDocument } = activeElement
+
     const onBackdropClick = useCallback(function onBackdropClick(e: h.JSX.TargetedEvent<any>) {
         if (!getOpen())
             return;
 
-        const document = getElement()?.ownerDocument;
+        const document = getDocument();
 
         // Basically, "was this event fired on the root-most element, or at least an element not contained by the modal?"
         // Either could be how the browser handles these sorts of "interacting with nothing" events.
@@ -95,7 +109,7 @@ export function useSoftDismiss<T extends Node>({ softDismiss: { onClose, getElem
             let foundInsideClick = false;
 
             for (const element of elements) {
-                if (element.contains(e.target)) {
+                if (element && element.contains(e.target)) {
                     foundInsideClick = true;
                     break;
                 }
@@ -107,8 +121,11 @@ export function useSoftDismiss<T extends Node>({ softDismiss: { onClose, getElem
         }
     }, [])
 
-    const { useActiveElementProps, getElement } = useActiveElement<T>({
-        onLastActiveElementChange: useCallback((newElement: Element | null) => {
+    const { } = useActiveElement({
+        ...activeElement,
+
+        onLastActiveElementChange: useCallback((newElement: Element, prev: Element | undefined) => {
+            onLastActiveElementChange?.(newElement, prev);
             let validFocusableElements = stableGetElements();
 
             if (validFocusableElements) {
@@ -153,7 +170,7 @@ export function useSoftDismiss<T extends Node>({ softDismiss: { onClose, getElem
     });
 
     return {
-        useSoftDismissProps: useCallback((props: h.JSX.HTMLAttributes<T>): h.JSX.HTMLAttributes<T> => useActiveElementProps(useRefElementProps(props)), [useActiveElementProps, useRefElementProps]),
+        useSoftDismissProps: useCallback((props: h.JSX.HTMLAttributes<T>): h.JSX.HTMLAttributes<T> => (useRefElementProps(props)), []),
         softDismiss: {
             onBackdropClick,
         }
@@ -182,9 +199,10 @@ export type UseModalBackdrop<BackdropElement extends Element> = () => { useModal
  * @param param0 
  * @returns 
  */
-export function useModal<ModalElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement>({ modal: { bodyIsOnlySemantic: descriptive }, softDismiss: { onClose, open } }: UseModalParameters<never, never>): UseModalReturnTypeWithHooks<ModalElement, TitleElement, BodyElement, BackdropElement> {
+export function useModal<ModalElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement>({ modal: { bodyIsOnlySemantic: descriptive, focusSelf }, softDismiss: { onClose, open }, activeElement }: UseModalParameters<never, never>): UseModalReturnTypeWithHooks<ModalElement, TitleElement, BodyElement, BackdropElement> {
 
     const stableOnClose = useStableCallback(onClose);
+    const stableFocusSelf = useStableCallback(focusSelf);
 
     //const [modalDescribedByBody, setModalDescribedByBody] = useState(false);
     useHideScroll(open);
@@ -195,7 +213,7 @@ export function useModal<ModalElement extends HTMLElement, TitleElement extends 
 
 
     const { useRefElementProps: useModalRefElement, getElement: getModalElement } = useRefElement<ModalElement>({})
-    const { softDismiss: { onBackdropClick }, useSoftDismissProps } = useSoftDismiss<ModalElement>({ softDismiss: { onClose: stableOnClose, getElements: getModalElement, open: !!open } });
+    const { softDismiss: { onBackdropClick }, useSoftDismissProps } = useSoftDismiss<ModalElement>({ softDismiss: { onClose: stableOnClose, getElements: getModalElement, open: !!open }, activeElement });
 
     const useModalBackdrop = useCallback<UseModalBackdrop<BackdropElement>>(function useModalBackdrop() {
         function useModalBackdropProps(props: h.JSX.HTMLAttributes<BackdropElement>): h.JSX.HTMLAttributes<BackdropElement> {
@@ -211,6 +229,10 @@ export function useModal<ModalElement extends HTMLElement, TitleElement extends 
         const { useRandomIdReferencerElementProps: useBodyIdReferencerElementProps } = useBodyIdReferencerElement<ModalElement>("aria-describedby" as never);
         console.assert(!ariaModal);
         const { useFocusTrapProps } = useFocusTrap<ModalElement>({ trapActive: open });
+        useEffect(() => {
+            if (open)
+                stableFocusSelf();
+        }, [open])
         const p1 = useBodyIdReferencerElementProps(p0);
         const p2 = useModalIdAsSourceProps(p1);
         const pFinal = useTitleIdReferencerElementProps(p2);

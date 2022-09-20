@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { OnChildrenMountChange, returnTrue, useChildrenFlag, useHasFocus, useLinearNavigation, UseLinearNavigationParameters, UseManagedChildParameters, useManagedChildren, UseManagedChildrenParameters, UseManagedChildrenReturnTypeInfo, useRandomId, useRefElement, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
+import { OnChildrenMountChange, returnTrue, useChildrenFlag, useHasFocus, UseHasFocusParameters, useLinearNavigation, UseLinearNavigationParameters, UseManagedChildParameters, useManagedChildren, UseManagedChildrenParameters, UseManagedChildrenReturnTypeInfo, useRandomId, useRefElement, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
 import { useCallback, useRef } from "preact/hooks";
 import { debugLog } from "./props";
 import { useAriaButton, UseAriaButtonParameters } from "./use-button";
@@ -31,6 +31,7 @@ export interface UseAriaAccordionSectionParameters<HeaderElement extends Element
     managedChildren: UseManagedChildParameters<number, UseAriaAccordionSectionInfoBase, "tabbed" | "open", "subInfo" | "flags">["managedChild"];
     accordionSection: { open?: boolean | undefined; }
     button: Omit<UseAriaButtonParameters<HeaderElement>, "onPress" | "pressed">;
+    hasFocus: UseHasFocusParameters<HeaderElement>;
 }
 
 export interface UseAriaAccordionSectionReturnTypeInfo {
@@ -108,7 +109,7 @@ export function useAriaAccordion<HeaderElement extends HTMLElement, BodyElement 
         }, [])
     })
 
-    const useAriaAccordionSection: UseAriaAccordionSection<HeaderElement, BodyElement> = useCallback<UseAriaAccordionSection<HeaderElement, BodyElement>>(({ button: { tag, disabled }, accordionSection: { open: openFromUser }, managedChildren: { index } }) => {
+    const useAriaAccordionSection: UseAriaAccordionSection<HeaderElement, BodyElement> = useCallback<UseAriaAccordionSection<HeaderElement, BodyElement>>(({ button: { tag, disabled }, accordionSection: { open: openFromUser }, managedChildren: { index }, hasFocus: { onFocusedInnerChanged, ...hasFocus } }) => {
 
         debugLog("useAriaAccordianSection");
         const [openFromParent, setOpenFromParent, getOpenFromParent] = useState<boolean | null>(null);
@@ -189,7 +190,9 @@ export function useAriaAccordion<HeaderElement extends HTMLElement, BodyElement 
 
 
             const { useHasFocusProps } = useHasFocus<HeaderElement>({
-                onFocusedInnerChanged: useStableCallback((focused: boolean) => {
+                ...hasFocus,
+                onFocusedInnerChanged: useStableCallback((focused: boolean, prev: boolean | undefined) => {
+                    onFocusedInnerChanged?.(focused, prev);
                     if (focused)
                         changeTabbedIndex(index);
                 })

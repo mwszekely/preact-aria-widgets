@@ -5,27 +5,35 @@ import { UseListNavigationReturnTypeInfo, UseListNavigationSingleSelectionChildP
 import { useCallback, useRef } from "preact/hooks";
 import { useLabel } from "./use-label";
 import { debugLog, EventDetail, warnOnOverwrite } from "./props";
+import { UseChildrenHaveFocusParameters, UseHasFocusParameters } from "preact-prop-helpers/use-has-focus";
 
 
 export type TabsChangeEvent<E extends Element> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 
-export interface UseAriaTabsParameters { tabList: UseListNavigationSingleSelectionParameters<never, never, never, never, never, never>; tabPanels: UseManagedChildrenParameters<number, never> }
-export interface UseAriaTabParameters extends Omit<UseListNavigationSingleSelectionChildParameters<never, never, never, never, never, never>, "subInfo"> { }
-export interface UseAriaTabPanelParameters extends UseManagedChildParameters<number, {}, "visible", never> { }
+export interface UseAriaTabsParameters {
+    tabList: UseListNavigationSingleSelectionParameters<never, never, never, never, never, never>;
+    tabPanels: UseManagedChildrenParameters<number, never>;
+}
+export interface UseAriaTabParameters<E extends Element> extends Omit<UseListNavigationSingleSelectionChildParameters<E, never, never, never, never, never, never>, "subInfo"> {
+    hasFocus: UseHasFocusParameters<E>;
+}
+export interface UseAriaTabPanelParameters extends UseManagedChildParameters<number, {}, "visible", "subInfo"> { }
 
-export interface UseAriaTabReturnTypeInfo<TabElement extends Element> extends UseListNavigationSingleSelectionChildReturnTypeInfo<TabElement> {}
+export interface UseAriaTabReturnTypeInfo<TabElement extends Element> extends UseListNavigationSingleSelectionChildReturnTypeInfo<TabElement> { }
 export interface UseAriaTabReturnTypeWithHooks<TabElement extends Element> extends UseAriaTabReturnTypeInfo<TabElement> {
     useAriaTabProps(props: h.JSX.HTMLAttributes<TabElement>): h.JSX.HTMLAttributes<TabElement>;
 }
 
 export interface UseAriaTabLabelParameters { }
-export interface UseAriaTabListParameters { }
+export interface UseAriaTabListParameters {
+    childrenHaveFocus: UseChildrenHaveFocusParameters["childrenHaveFocus"];
+}
 export interface UseAriaTabListReturnTypeInfo<TabElement extends Element> {
     tabList: UseListNavigationReturnTypeInfo<TabElement, TabInfo, never>;
 }
 export interface UseAriaTabListReturnTypeWithHooks<TabContainerElement extends Element, TabElement extends Element> extends UseAriaTabListReturnTypeInfo<TabElement> {
     useAriaTabListProps: (props: h.JSX.HTMLAttributes<TabContainerElement>) => h.JSX.HTMLAttributes<TabContainerElement>;
-    useAriaTab: ({ listNavigation, managedChild, rovingTabIndex }: UseAriaTabParameters) => UseAriaTabReturnTypeWithHooks<TabElement>
+    useAriaTab: ({ listNavigation, managedChild, rovingTabIndex }: UseAriaTabParameters<TabElement>) => UseAriaTabReturnTypeWithHooks<TabElement>
 }
 
 
@@ -53,7 +61,7 @@ export interface UseAriaTabsReturnTypeWithHooks<TabContainerElement extends Elem
     tabPanels: UseManagedChildrenReturnTypeInfo<number, TabPanelInfo, never>;
 }
 
-export type UseAriaTab<TabElement extends Element> = (args: UseAriaTabParameters) => UseAriaTabReturnTypeWithHooks<TabElement>;
+export type UseAriaTab<TabElement extends Element> = (args: UseAriaTabParameters<TabElement>) => UseAriaTabReturnTypeWithHooks<TabElement>;
 export type UseAriaTabList<TabContainerElement extends Element, TabElement extends Element> = (args: UseAriaTabListParameters) => UseAriaTabListReturnTypeWithHooks<TabContainerElement, TabElement>;
 export type UseAriaTabPanel<PanelElement extends Element> = (args: UseAriaTabPanelParameters) => UseAriaTabPanelReturnTypeWithHooks<PanelElement>;
 export type UseAriaTabListLabel<LabelElement extends Element> = (args: UseAriaTabLabelParameters) => UseAriaTabLabelReturnTypeWithHooks<LabelElement>;
@@ -86,7 +94,7 @@ export function useAriaTabs<TabListElement extends Element, TabElement extends E
         return { useAriaTabListLabelProps };
     }, [useLabelLabel]);
 
-    const useAriaTabList = useCallback<UseAriaTabList<TabListElement, TabElement>>(({ ..._args }) => {
+    const useAriaTabList = useCallback<UseAriaTabList<TabListElement, TabElement>>(({ childrenHaveFocus }) => {
         debugLog("useAriaTabList");
         const {
             useListNavigationSingleSelectionChild,
@@ -98,14 +106,15 @@ export function useAriaTabs<TabListElement extends Element, TabElement extends E
             managedChildren: tabListManagedChildren,
             rovingTabIndex,
             singleSelection,
-            typeaheadNavigation
+            typeaheadNavigation,
+            childrenHaveFocus
         });
 
         const { useLabelInputProps } = useLabelInput()
 
-        const useAriaTab = useCallback<UseAriaTab<TabElement>>(({ listNavigation, managedChild, rovingTabIndex }: UseAriaTabParameters) => {
+        const useAriaTab = useCallback<UseAriaTab<TabElement>>(({ listNavigation, managedChild, rovingTabIndex, hasFocus }: UseAriaTabParameters<TabElement>) => {
             debugLog("useAriaTab", managedChild.index);
-            const { useListNavigationSingleSelectionChildProps, ...listNavRet2 } = useListNavigationSingleSelectionChild({ listNavigation, managedChild, rovingTabIndex, subInfo: {} });
+            const { useListNavigationSingleSelectionChildProps, ...listNavRet2 } = useListNavigationSingleSelectionChild({ listNavigation, managedChild, rovingTabIndex, subInfo: {}, hasFocus });
             const { singleSelection: { selected }, rovingTabIndex: { tabbable } } = listNavRet2;
 
             const useAriaTabProps = useCallback(({ role, "aria-controls": ariaControls, "aria-selected": ariaSelected, ...props }: h.JSX.HTMLAttributes<TabElement>) => {

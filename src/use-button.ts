@@ -104,6 +104,7 @@ export function usePressEventHandlers<E extends EventTarget>(onClickSync: ((e: h
     // The flag is reset any time the selection is empty or the button is
     // no longer active.
     const [textSelectedDuringActivationStartTime, setTextSelectedDuringActivationStartTime] = useState<Date | null>(null);
+    const pseudoActive = (active && (textSelectedDuringActivationStartTime == null));
 
     useGlobalHandler(document, "selectionchange", _ => {
         setTextSelectedDuringActivationStartTime(prev => nodeSelectedTextLength(getElement()) == 0 ? null : prev != null ? prev : new Date());
@@ -247,7 +248,7 @@ export function usePressEventHandlers<E extends EventTarget>(onClickSync: ((e: h
         onMouseLeave,
         onClick,
         style: (textSelectedDuringActivationStartTime != null) ? { cursor: "text" } : undefined,
-        ...{ "data-pseudo-active": active && (textSelectedDuringActivationStartTime == null) ? "true" : undefined } as {}
+        ...{ "data-pseudo-active": pseudoActive ? "true" : undefined } as {}
     }));
 }
 

@@ -22,7 +22,7 @@ export type UseDrawerBackdrop<BackdropElement extends Element> = () => { useDraw
 export interface UseDrawerParameters extends UseModalParameters<never, never> {
 }
 
-export function useDrawer<DrawerElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement>({ softDismiss: { open, onClose } }: UseDrawerParameters): UseAriaDrawerReturnTypeWithHooks<DrawerElement, TitleElement, BodyElement, BackdropElement> {
+export function useDrawer<DrawerElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement>({ softDismiss: { open, onClose }, activeElement, modal: { bodyIsOnlySemantic, focusSelf } }: UseDrawerParameters): UseAriaDrawerReturnTypeWithHooks<DrawerElement, TitleElement, BodyElement, BackdropElement> {
 
     debugLog("useAriaDrawer");
 
@@ -34,7 +34,7 @@ export function useDrawer<DrawerElement extends HTMLElement, TitleElement extend
         useModalProps,
         useModalTitle,
         softDismiss: { onBackdropClick }
-    } = useModal<DrawerElement, TitleElement, BodyElement, BackdropElement>({ modal: { bodyIsOnlySemantic: false }, softDismiss: { onClose, open } });
+    } = useModal<DrawerElement, TitleElement, BodyElement, BackdropElement>({ modal: { bodyIsOnlySemantic: (bodyIsOnlySemantic ?? false), focusSelf }, softDismiss: { onClose, open }, activeElement });
 
     const useDrawerBackdrop = useCallback(() => {
         const { useModalBackdropProps } = useModalBackdrop();

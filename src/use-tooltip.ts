@@ -1,9 +1,9 @@
 import { h } from "preact";
-import { useGlobalHandler, useHasFocus, useMergedProps, usePassiveState, useRandomId, useStableCallback, useState } from "preact-prop-helpers";
+import { useGlobalHandler, useHasFocus, UseHasFocusParameters, useMergedProps, usePassiveState, useRandomId, useStableCallback, useState } from "preact-prop-helpers";
 import { useCallback, useEffect } from "preact/hooks";
 import { debugLog } from "./props";
 
-export type UseTooltipTrigger<TriggerType extends Element> = () => { useTooltipTriggerProps: ({ ...props }: h.JSX.HTMLAttributes<TriggerType>) => h.JSX.HTMLAttributes<TriggerType> };
+export type UseTooltipTrigger<TriggerType extends Element> = (args: { hasFocus: UseHasFocusParameters<TriggerType> }) => { useTooltipTriggerProps: ({ ...props }: h.JSX.HTMLAttributes<TriggerType>) => h.JSX.HTMLAttributes<TriggerType> };
 export interface UseTooltipParameters { mouseoverDelay?: number, mouseoutDelay?: number, focusDelay?: number }
 export type UseTooltip<TriggerType extends HTMLElement | SVGElement, TooltipType extends Element> = (args: UseTooltipParameters) => UseTooltipReturnTypeWithHooks<TriggerType, TooltipType>;
 export interface UseTooltipReturnTypeInfo {
@@ -12,7 +12,7 @@ export interface UseTooltipReturnTypeInfo {
 }
 
 export interface UseTooltipReturnTypeWithHooks<TriggerType extends Element, TooltipType extends Element> extends UseTooltipReturnTypeInfo {
-    useTooltip: () => {
+    useTooltip: (args: { hasFocus: UseHasFocusParameters<TooltipType> }) => {
         useTooltipProps: ({ ...props }: h.JSX.HTMLAttributes<TooltipType>) => h.JSX.HTMLAttributes<TooltipType>;
     };
     useTooltipTrigger: UseTooltipTrigger<TriggerType>;
@@ -89,7 +89,7 @@ export function useAriaTooltip<TriggerType extends Element, TooltipType extends 
         setOpen(triggerFocusedDelayCorrected || triggerHoverDelayCorrected || tooltipFocusedDelayCorrected || tooltipHoverDelayCorrected);
     }, [triggerFocusedDelayCorrected || triggerHoverDelayCorrected || tooltipFocusedDelayCorrected || tooltipHoverDelayCorrected])
 
-    const useTooltipTrigger: UseTooltipTrigger<TriggerType> = useCallback(function useTooltipTrigger() {
+    const useTooltipTrigger: UseTooltipTrigger<TriggerType> = useCallback(function useTooltipTrigger({ hasFocus: { onFocusedInnerChanged, ...hasFocus } }: { hasFocus: UseHasFocusParameters<TriggerType> }) {
         debugLog("useAriaTooltipTrigger");
 
         useGlobalHandler(document, "pointermove", e => {
@@ -101,7 +101,10 @@ export function useAriaTooltip<TriggerType extends Element, TooltipType extends 
             (e.target as any).focus();
         }
 
-        const { useHasFocusProps, getElement } = useHasFocus<TriggerType>({ onFocusedInnerChanged: setTriggerFocused })
+        const { useHasFocusProps, getElement } = useHasFocus<TriggerType>({
+            ...hasFocus,
+            onFocusedInnerChanged: useStableCallback((focused: boolean, prev: boolean | undefined) => { onFocusedInnerChanged?.(focused, prev); setTriggerFocused(focused) })
+        })
 
 
         function useTooltipTriggerProps({ ...props }: h.JSX.HTMLAttributes<TriggerType>): h.JSX.HTMLAttributes<TriggerType> {
@@ -121,10 +124,10 @@ export function useAriaTooltip<TriggerType extends Element, TooltipType extends 
 
     }, []);
 
-    const useTooltip = useCallback(function useTooltip() {
+    const useTooltip = useCallback(function useTooltip({ hasFocus: { onFocusedInnerChanged, ...hasFocus } }: { hasFocus: UseHasFocusParameters<TooltipType> }) {
         debugLog("useAriaTooltipTooltip");
         const { useRandomIdSourceElementProps } = useRandomIdSourceElement();
-        const { useHasFocusProps, getElement } = useHasFocus<TooltipType>({ onFocusedInnerChanged: setTooltipFocused })
+        const { useHasFocusProps, getElement } = useHasFocus<TooltipType>({ onFocusedInnerChanged: useStableCallback((focused: boolean, prev: boolean | undefined) => { onFocusedInnerChanged?.(focused, prev); setTooltipFocused(focused); }), ...hasFocus })
 
         useGlobalHandler(document, "pointermove", e => {
             const target = (e.target as HTMLElement);

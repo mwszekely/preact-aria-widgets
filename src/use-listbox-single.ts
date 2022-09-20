@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { OnTabbableIndexChange, useMergedProps, useRandomId, useStableCallback } from "preact-prop-helpers";
+import { OnTabbableIndexChange, UseHasFocusParameters, useMergedProps, useRandomId, useStableCallback } from "preact-prop-helpers";
 import { useListNavigationSingleSelection, UseListNavigationSingleSelectionChildParameters, UseListNavigationSingleSelectionChildReturnTypeInfo, UseListNavigationSingleSelectionParameters, UseListNavigationSingleSelectionReturnTypeInfo } from "preact-prop-helpers/use-list-navigation";
 import { useCallback, useEffect } from "preact/hooks";
 import { debugLog, ElementToTag, EventDetail, warnOnOverwrite } from "./props";
@@ -17,13 +17,14 @@ export interface UseListboxSingleParameters<LabelElement extends Element, ListEl
     }
 }
 
-export interface UseListboxSingleItemParameters extends Omit<UseListNavigationSingleSelectionChildParameters<{}, never, never, never, never, never>, "subInfo"> {
+export interface UseListboxSingleItemParameters<E extends Element> extends Omit<UseListNavigationSingleSelectionChildParameters<E, {}, never, never, never, never, never>, "subInfo"> {
     listboxSingleItem: { disabled?: boolean; }
+    hasFocus: UseHasFocusParameters<E>;
 }
 
 
 
-export type UseListboxSingleItem<ListItemElement extends Element> = (info: UseListboxSingleItemParameters) => UseListboxSingleItemReturnTypeWithHooks<ListItemElement>;
+export type UseListboxSingleItem<ListItemElement extends Element> = (info: UseListboxSingleItemParameters<ListItemElement>) => UseListboxSingleItemReturnTypeWithHooks<ListItemElement>;
 
 export interface UseListboxSingleItemReturnTypeInfo<ListItemElement extends Element> extends UseListNavigationSingleSelectionChildReturnTypeInfo<ListItemElement> {
 }
@@ -49,7 +50,8 @@ export function useAriaListboxSingle<LabelElement extends Element, ListElement e
     listNavigation: { ...ls },
     managedChildren: { ...mc },
     rovingTabIndex: { onTabbableIndexChange, ...rti },
-    typeaheadNavigation: { ...tn }
+    typeaheadNavigation: { ...tn },
+    childrenHaveFocus: { ...chf }
 }: UseListboxSingleParameters<LabelElement, ListElement>): UseListboxSingleReturnTypeWithHooks<LabelElement, ListElement, ListItemElement> {
     debugLog("useAriaListboxSingle", selectedIndex);
 
@@ -63,7 +65,7 @@ export function useAriaListboxSingle<LabelElement extends Element, ListElement e
     });
 
     const { useListNavigationSingleSelectionChild, useListNavigationSingleSelectionProps, ...listReturnType } = useListNavigationSingleSelection<ListElement, ListItemElement, {}, never>({
-
+        childrenHaveFocus: { ...chf },
         linearNavigation: { ...ln },
         listNavigation: { ...ls },
         managedChildren: { ...mc },
@@ -86,12 +88,13 @@ export function useAriaListboxSingle<LabelElement extends Element, ListElement e
     const stableOnSelect = useStableCallback(onSelect ?? (() => { }));
 
 
-    const useListboxSingleItem = useCallback<UseListboxSingleItem<ListItemElement>>(({ listboxSingleItem: { disabled }, listNavigation, managedChild, rovingTabIndex }) => {
+    const useListboxSingleItem = useCallback<UseListboxSingleItem<ListItemElement>>(({ listboxSingleItem: { disabled }, listNavigation, managedChild, rovingTabIndex, hasFocus }) => {
         debugLog("useAriaListboxSingleItem", managedChild.index);
         const { rovingTabIndex: rti_ret, singleSelection: ss_ret, useListNavigationSingleSelectionChildProps } = useListNavigationSingleSelectionChild({
             managedChild,
             listNavigation,
             rovingTabIndex,
+            hasFocus,
             subInfo: {}
         });
         const index = managedChild.index;

@@ -6,6 +6,11 @@ import * as Button from "./demos/button"
 import * as Checkbox from "./demos/checkbox"
 import * as CheckboxGroup from "./demos/checkbox-group"
 import * as ListboxMulti from "./demos/listbox-multi"
+import * as ListboxSingle from "./demos/listbox-single"
+import * as Menu from "./demos/menu"
+import * as Radio from "./demos/radio"
+import * as Slider from "./demos/slider"
+import * as Dialog from "./demos/dialog"
 
 //import { options } from "preact";
 //options.debounceRendering = queueMicrotask;
@@ -16,11 +21,16 @@ import * as ListboxMulti from "./demos/listbox-multi"
 const Component = () => {
     return (
         <Heading heading="Demos">
+            <Heading heading="Dialog"><Dialog.Demo /></Heading>
+            <Heading heading="Slider"><Slider.Demo /></Heading>
+            <Heading heading="Single-select Listbox"><ListboxSingle.Demo /></Heading>
             <Heading heading="Accordion"><Accordion.Demo /></Heading>
             <Heading heading="Button"><Button.Demo /></Heading>
             <Heading heading="Checkbox"><Checkbox.Demo /></Heading>
             <Heading heading="Checkbox Group"><CheckboxGroup.Demo /></Heading>
             <Heading heading="Multi-select Listbox"><ListboxMulti.Demo /></Heading>
+            <Heading heading="Menu"><Menu.Demo /></Heading>
+            <Heading heading="Radio"><Radio.Demo /></Heading>
             {/*
        
         <DemoTable />

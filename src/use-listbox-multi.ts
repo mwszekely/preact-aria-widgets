@@ -14,13 +14,13 @@ export interface UseListboxMultiParameters<LabelElement extends Element, ListEle
     }
 }
 
-export interface UseListboxMultiItemParameters extends Omit<UseListNavigationChildParameters<Info, never, never, never, never, never>, "subInfo"> {
+export interface UseListboxMultiItemParameters<E extends Element> extends Omit<UseListNavigationChildParameters<E, Info, never, never, never, never, never>, "subInfo"> {
     listboxMultiItem: { disabled?: boolean; } & Info;
 }
 
 
 
-export type UseListboxMultiItem<E extends Element> = (info: UseListboxMultiItemParameters) => UseListboxMultiItemReturnTypeWithHooks<E>;
+export type UseListboxMultiItem<E extends Element> = (info: UseListboxMultiItemParameters<E>) => UseListboxMultiItemReturnTypeWithHooks<E>;
 
 export interface UseListboxMultiItemReturnTypeInfo<E extends Element> extends UseListNavigationChildReturnTypeInfo<E> {
     listboxMultiItem: {

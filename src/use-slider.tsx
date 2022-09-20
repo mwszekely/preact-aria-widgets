@@ -22,11 +22,14 @@ export interface UseAriaSliderThumbParameters<E extends Element> extends UseMana
         min?: number;
         max?: number;
 
-        // There's no, like, "slider container" for multi-thumb sliders defined,
-        // so each individual slider needs its own label.
-        // TODO: This is like a tab/tabpanel linking thing where each label is outside
-        // of the container. For now, it's easier to just 
-        // assume a string-based label instead of an element-based one.
+        /**
+         * There's no, like, "slider container" for multi-thumb sliders defined,
+         * so each individual slider needs its own label.
+         * TODO: This is like a tab/tabpanel linking thing where each label is outside
+         * of the container. For now, it's easier to just 
+         * assume a string-based label instead of an element-based one.
+         * 
+         */
         label: string;
     }
 }

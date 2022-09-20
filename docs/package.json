@@ -15,16 +15,17 @@
         "@babel/plugin-proposal-nullish-coalescing-operator": "^7.17.12",
         "@babel/preset-env": "^7.18.2",
         "@rollup/plugin-babel": "^5.3.1",
-        "@rollup/plugin-commonjs": "^22.0.1",
-        "@rollup/plugin-node-resolve": "^13.3.0",
-        "@rollup/plugin-typescript": "^8.3.3",
+        "@rollup/plugin-commonjs": "^22.0.2",
+        "@rollup/plugin-node-resolve": "^14.1.0",
+        "@rollup/plugin-typescript": "^8.5.0",
         "clsx": "^1.1.1",
-        "rollup": "^2.75.7",
+        "rollup": "^2.79.0",
         "rollup-plugin-sourcemaps": "^0.6.3",
-        "serve": "^13.0.2",
-        "typescript": "^4.7.4"
+        "serve": "^14.0.1",
+        "typescript": "^4.8.3"
     },
     "dependencies": {
-        "preact": "^10.11.0"
+        "preact": "^10.11.0",
+        "tslib": "^2.4.0"
     }
 }
