@@ -1,19 +1,19 @@
-import { ComponentChildren, createElement, h, VNode } from "preact";
-import { createPortal } from "preact/compat"
-import { useRef } from "preact/hooks"
+import { createElement, h, VNode } from "preact";
 import { UseActiveElementParameters } from "preact-prop-helpers";
+import { createPortal } from "preact/compat";
+import { useRef } from "preact/hooks";
 import { ElementToTag, PropModifier } from "props";
 import { useAriaDialog, UseAriaDialogParameters, UseDialogReturnTypeInfo } from "../use-dialog";
 
 type Get<T, K extends keyof T> = T[K];
 
-export interface DialogProps<DialogElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement> extends
+export interface DialogProps<FocusContainerElement extends HTMLElement, DialogElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement> extends
     Get<UseAriaDialogParameters, "softDismiss">,
     Get<UseAriaDialogParameters, "modal">,
     UseActiveElementParameters,
     Get<UseAriaDialogParameters, "dialog"> {
 
-    render(dialogInfo: UseDialogReturnTypeInfo, modifyDialogProps: PropModifier<DialogElement>, modifyTitleProps: PropModifier<TitleElement>, modifyBodyProps: PropModifier<BodyElement>, modifyBackdropProps: PropModifier<BackdropElement>): VNode<any>;
+    render(dialogInfo: UseDialogReturnTypeInfo, modifyFocusContainerProps: PropModifier<FocusContainerElement>, modifyDialogProps: PropModifier<DialogElement>, modifyTitleProps: PropModifier<TitleElement>, modifyBodyProps: PropModifier<BodyElement>, modifyBackdropProps: PropModifier<BackdropElement>): VNode<any>;
 }
 
 export function defaultRenderPortal({ portalId, children }: { portalId: string, children: VNode }) {
@@ -25,30 +25,34 @@ export function defaultRenderPortal({ portalId, children }: { portalId: string, 
         return children;
 }
 
-export function defaultRenderModal<DialogElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement, InfoType>({ portalId, tagBackdrop, tagBody, tagDialog, tagTitle, makePropsBackdrop, makePropsBody, makePropsDialog, makePropsTitle }: { portalId: string, tagDialog: ElementToTag<DialogElement>; tagTitle: ElementToTag<TitleElement>; tagBody: ElementToTag<BodyElement>; tagBackdrop: ElementToTag<BackdropElement>, makePropsDialog: (info: InfoType) => h.JSX.HTMLAttributes<DialogElement>, makePropsBody: (info: InfoType) => h.JSX.HTMLAttributes<BodyElement>, makePropsTitle: (info: InfoType) => h.JSX.HTMLAttributes<TitleElement>, makePropsBackdrop: (info: InfoType) => h.JSX.HTMLAttributes<BackdropElement> }) {
-    return function (dialogInfo: InfoType, modifyDialogProps: PropModifier<DialogElement>, modifyTitleProps: PropModifier<TitleElement>, modifyBodyProps: PropModifier<BodyElement>, modifyBackdropProps: PropModifier<BackdropElement>): VNode<any> {
-        const title = createElement(tagTitle as never, modifyTitleProps(makePropsTitle(dialogInfo)));
-        const body = createElement(tagBody as never, modifyBodyProps(makePropsBody(dialogInfo)));
-        const { children, ...dialogProps } = modifyDialogProps(makePropsDialog(dialogInfo));
-        const dialog = createElement(tagDialog as never, { ...dialogProps, children: <>{title}{body}</> });
-        const backdrop = createElement(tagBackdrop as never, modifyBackdropProps(makePropsBackdrop(dialogInfo)));
+export function defaultRenderModal<FocusContainerElement extends HTMLElement, DialogElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement, InfoType>({ portalId, tagFocusContainer, tagBackdrop, tagBody, tagDialog, tagTitle, makePropsFocusContainer, makePropsBackdrop, makePropsBody, makePropsDialog, makePropsTitle }: { portalId: string, tagFocusContainer: ElementToTag<FocusContainerElement>, tagDialog: ElementToTag<DialogElement>; tagTitle: ElementToTag<TitleElement>; tagBody: ElementToTag<BodyElement>; tagBackdrop: ElementToTag<BackdropElement>, makePropsFocusContainer: (info: InfoType) => h.JSX.HTMLAttributes<FocusContainerElement>, makePropsDialog: (info: InfoType) => h.JSX.HTMLAttributes<DialogElement>, makePropsBody: (info: InfoType) => h.JSX.HTMLAttributes<BodyElement>, makePropsTitle: (info: InfoType) => h.JSX.HTMLAttributes<TitleElement>, makePropsBackdrop: (info: InfoType) => h.JSX.HTMLAttributes<BackdropElement> }) {
+    return function (dialogInfo: InfoType, modifyFocusContainerProps: PropModifier<FocusContainerElement>, modifyDialogProps: PropModifier<DialogElement>, modifyTitleProps: PropModifier<TitleElement>, modifyBodyProps: PropModifier<BodyElement>, modifyBackdropProps: PropModifier<BackdropElement>): VNode<any> {
+
+        const { children: titleChildren, ...titleProps } = modifyTitleProps(makePropsTitle(dialogInfo));
+        const { children: bodyChildren, ...bodyProps } = modifyBodyProps(makePropsBody(dialogInfo));
+        const { children: dialogChildren, ...dialogProps } = modifyDialogProps(makePropsDialog(dialogInfo));
+        const { children: backdropChildren, ...backdropProps } = modifyBackdropProps(makePropsBackdrop(dialogInfo));
+        const { children: focusContainerChildren, ...focusContainerProps } = modifyFocusContainerProps(makePropsFocusContainer(dialogInfo));
+
+        const title = createElement(tagTitle as never, titleProps, titleChildren);
+        const body = createElement(tagBody as never, bodyProps, bodyChildren);
+        const dialog = createElement(tagDialog as never, { ...dialogProps, children: <>{dialogChildren}{title}{body}</> });
+        const backdrop = createElement(tagBackdrop as never, backdropProps, backdropChildren);
+        const focusContainer = createElement(tagFocusContainer as never, focusContainerProps, <>{focusContainerChildren}{dialog}{backdrop}</>)
         return defaultRenderPortal({
             portalId,
-            children: <>
-                {dialog}
-                {backdrop}
-            </>
+            children: focusContainer
         });
     }
 }
 
 
 
-export function defaultRenderDialog<DialogElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement, InfoType>({ portalId, tagBackdrop, tagBody, tagDialog, tagTitle, makePropsBackdrop, makePropsBody, makePropsDialog, makePropsTitle }: { portalId: string, tagDialog: ElementToTag<DialogElement>; tagTitle: ElementToTag<TitleElement>; tagBody: ElementToTag<BodyElement>; tagBackdrop: ElementToTag<BackdropElement>, makePropsDialog: (info: UseDialogReturnTypeInfo) => h.JSX.HTMLAttributes<DialogElement>, makePropsBody: (info: UseDialogReturnTypeInfo) => h.JSX.HTMLAttributes<BodyElement>, makePropsTitle: (info: UseDialogReturnTypeInfo) => h.JSX.HTMLAttributes<TitleElement>, makePropsBackdrop: (info: UseDialogReturnTypeInfo) => h.JSX.HTMLAttributes<BackdropElement> }) {
-    return defaultRenderModal<DialogElement, TitleElement, BodyElement, BackdropElement, UseDialogReturnTypeInfo>({ portalId, tagBackdrop, tagBody, tagDialog, tagTitle, makePropsBackdrop, makePropsBody, makePropsDialog, makePropsTitle });
+export function defaultRenderDialog<FocusContainerElement extends HTMLElement, DialogElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement>({ portalId, tagFocusContainer, tagBackdrop, tagBody, tagDialog, tagTitle, makePropsFocusContainer, makePropsBackdrop, makePropsBody, makePropsDialog, makePropsTitle }: { portalId: string, tagFocusContainer: ElementToTag<FocusContainerElement>, tagDialog: ElementToTag<DialogElement>; tagTitle: ElementToTag<TitleElement>; tagBody: ElementToTag<BodyElement>; tagBackdrop: ElementToTag<BackdropElement>, makePropsFocusContainer: (info: UseDialogReturnTypeInfo) => h.JSX.HTMLAttributes<FocusContainerElement>, makePropsDialog: (info: UseDialogReturnTypeInfo) => h.JSX.HTMLAttributes<DialogElement>, makePropsBody: (info: UseDialogReturnTypeInfo) => h.JSX.HTMLAttributes<BodyElement>, makePropsTitle: (info: UseDialogReturnTypeInfo) => h.JSX.HTMLAttributes<TitleElement>, makePropsBackdrop: (info: UseDialogReturnTypeInfo) => h.JSX.HTMLAttributes<BackdropElement> }) {
+    return defaultRenderModal<FocusContainerElement, DialogElement, TitleElement, BodyElement, BackdropElement, UseDialogReturnTypeInfo>({ portalId, tagFocusContainer, tagBackdrop, tagBody, tagDialog, tagTitle, makePropsFocusContainer, makePropsBackdrop, makePropsBody, makePropsDialog, makePropsTitle });
 }
 
-export function Dialog<DialogElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement>({
+export function Dialog<FocusContainerElement extends HTMLElement, DialogElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement>({
     onClose,
     open,
     bodyIsOnlySemantic,
@@ -57,20 +61,22 @@ export function Dialog<DialogElement extends HTMLElement, TitleElement extends H
     onActiveElementChange,
     onLastActiveElementChange,
     onWindowFocusedChange,
+    focusSelf,
     render
-}: DialogProps<DialogElement, TitleElement, BodyElement, BackdropElement>) {
+}: DialogProps<FocusContainerElement, DialogElement, TitleElement, BodyElement, BackdropElement>) {
     const {
         useDialogBackdrop,
         useDialogBody,
         useDialogProps,
         useDialogTitle,
+        useDialogFocusContainerProps,
         ...r
-    } = useAriaDialog<DialogElement, TitleElement, BodyElement, BackdropElement>({ dialog: { onClose }, modal: { bodyIsOnlySemantic, }, softDismiss: { open }, activeElement: { getDocument, getWindow, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange } });
+    } = useAriaDialog<FocusContainerElement, DialogElement, TitleElement, BodyElement, BackdropElement>({ dialog: { onClose }, modal: { bodyIsOnlySemantic, focusSelf }, softDismiss: { open }, activeElement: { getDocument, getWindow, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange } });
 
     const { useDialogTitleProps } = useDialogTitle();
     const { useDialogBodyProps } = useDialogBody();
     const { useDialogBackdropProps } = useDialogBackdrop();
 
-    return render(r, useDialogProps, useDialogTitleProps, useDialogBodyProps, useDialogBackdropProps);
+    return render(r, useDialogFocusContainerProps, useDialogProps, useDialogTitleProps, useDialogBodyProps, useDialogBackdropProps);
 
 }

@@ -40,9 +40,7 @@ export function Blurb() {
             </ul>
             <p><strong>Things <em>not</em> handled:</strong></p>
             <ul>
-                <li>It is assumed that the parent checkbox provides sufficient labelling for all the children, which how the demo example identifies these elements. If you have a separate label, you will need to wrap the children in a <code>role=group</code> that references that label by overriding <code>render</code>.</li>
-                <li>See the caveat above for when each child's <code>onInput</code> takes a variable amount of time to actually update the <code>checked</code> prop, as it can clobber the user's last input when clicking on the parent</li>
-                <li>Listboxes do not support interactive content within them, as ARIA specifies that this is a different pattern.</li>
+                <li>Listboxes do not support interactive content within them (e.g. a dropdown menu), as ARIA specifies that this is a different pattern.</li>
             </ul>
         </>
     )

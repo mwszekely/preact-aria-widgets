@@ -1,11 +1,6 @@
 
-import { ComponentChildren, h, RenderableProps } from "preact";
 import { useState } from "preact-prop-helpers";
-import { AriaButton, AriaCheckbox, CheckboxGroup, CheckboxGroupCheckbox, defaultRenderCheckboxGroupChild, defaultRenderCheckboxGroup, EventDetail } from "../../index";
-
-/*function DemoButton({ tag, ...props }: { tag: string } & RenderableProps<{}>) {
-    return <AriaButton disabled={disabled} onPress={onPress} pressed={} {...props} tag={tag as any}   />
-}*/
+import { CheckboxGroup, CheckboxGroupCheckbox, defaultRenderCheckboxGroup, defaultRenderCheckboxGroupChild, EventDetail } from "../../index";
 
 function DemoCheckbox({ index }: { index: number }) {
     const [checked, setChecked] = useState(false);

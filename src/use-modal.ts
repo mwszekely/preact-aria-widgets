@@ -38,9 +38,11 @@ interface MP {
      * 
      * In other cases, it makes more sense to focus the dialog's title, first interactive element, etc.
      * 
-     * In any case, you must explicitly state what to do when the dialog opens with `focusSelf`.
+     * By default, we try to pick a sensible default -- if the dialog contains only descriptive content, then we focus the body. Otherwise we focus the title.
+     * 
+     * **PLEASE** consider overriding this to provide the best experience for your dialog.  You shouldn't have that many modal dialogs anyway -- take that bit of extra time if you can.
      */
-    focusSelf(): void;
+    focusSelf?(): void;
 }
 
 export type SoftDismissOmits = keyof SDP;
@@ -121,7 +123,7 @@ export function useSoftDismiss<T extends Node>({ softDismiss: { onClose, getElem
         }
     }, [])
 
-    const { } = useActiveElement({
+    const {..._unused } = useActiveElement({
         ...activeElement,
 
         onLastActiveElementChange: useCallback((newElement: Element, prev: Element | undefined) => {
@@ -181,11 +183,12 @@ export interface UseModalReturnTypeInfo extends UseSoftDismissReturnTypeInfo {
 
 }
 
-export interface UseModalReturnTypeWithHooks<ModalElement extends Element, TitleElement extends Element, BodyElement extends Element, BackdropElement extends Element> extends UseModalReturnTypeInfo {
+export interface UseModalReturnTypeWithHooks<FocusContainerElement extends Element, ModalElement extends Element, TitleElement extends Element, BodyElement extends Element, BackdropElement extends Element> extends UseModalReturnTypeInfo {
     useModalProps: (props: h.JSX.HTMLAttributes<ModalElement>) => h.JSX.HTMLAttributes<ModalElement>;
     useModalTitle: UseModalTitle<TitleElement>;
     useModalBody: UseModalBody<BodyElement>
     useModalBackdrop: UseModalBackdrop<BackdropElement>;
+    useModalFocusContainerProps(props: h.JSX.HTMLAttributes<FocusContainerElement>): h.JSX.HTMLAttributes<FocusContainerElement>;
     //softDismiss: Omit<UseSoftDismissReturnType<ModalElement>["softDismiss"], "useSoftDismissProps">;
 }
 
@@ -199,8 +202,22 @@ export type UseModalBackdrop<BackdropElement extends Element> = () => { useModal
  * @param param0 
  * @returns 
  */
-export function useModal<ModalElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement>({ modal: { bodyIsOnlySemantic: descriptive, focusSelf }, softDismiss: { onClose, open }, activeElement }: UseModalParameters<never, never>): UseModalReturnTypeWithHooks<ModalElement, TitleElement, BodyElement, BackdropElement> {
+export function useModal<FocusContainerElement extends HTMLElement, ModalElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement>({ modal: { bodyIsOnlySemantic: descriptive, focusSelf }, softDismiss: { onClose, open }, activeElement }: UseModalParameters<never, never>): UseModalReturnTypeWithHooks<FocusContainerElement, ModalElement, TitleElement, BodyElement, BackdropElement> {
 
+    const { useRefElementProps: useTitleRefElementProps, getElement: getTitleElement } = useRefElement<TitleElement>({});
+    const { useRefElementProps: useBodyRefElementProps, getElement: getBodyElement } = useRefElement<BodyElement>({});
+    focusSelf ??= (() => {
+        if (descriptive) {
+            getBodyElement()?.focus();
+        }
+        else {
+            const titleElement = getTitleElement();
+            if (titleElement)
+                titleElement.focus();
+
+        }
+        //const elementToFocus = getTitleElement() ?? getBodyElement()
+    });
     const stableOnClose = useStableCallback(onClose);
     const stableFocusSelf = useStableCallback(focusSelf);
 
@@ -223,6 +240,11 @@ export function useModal<ModalElement extends HTMLElement, TitleElement extends 
         return { useModalBackdropProps }
     }, [])
 
+    const useModalFocusContainerProps = function (props: h.JSX.HTMLAttributes<FocusContainerElement>): h.JSX.HTMLAttributes<FocusContainerElement> {
+        const { useFocusTrapProps } = useFocusTrap<FocusContainerElement>({ trapActive: open });
+        return useFocusTrapProps(props);
+    }
+
     const useModalProps = function ({ "aria-modal": ariaModal, role, ...p0 }: h.JSX.HTMLAttributes<ModalElement>): h.JSX.HTMLAttributes<ModalElement> {
         const { useRandomIdSourceElementProps: useModalIdAsSourceProps } = useModalIdAsSource();
         const { useRandomIdReferencerElementProps: useTitleIdReferencerElementProps } = useTitleIdReferencerElement<ModalElement>("aria-labelledby" as never);
@@ -243,7 +265,8 @@ export function useModal<ModalElement extends HTMLElement, TitleElement extends 
 
         const { useRandomIdSourceElementProps: useTitleIdAsSourceProps } = useTitleIdAsSource();
         const useModalTitleProps = function (props: h.JSX.HTMLAttributes<TitleElement>): h.JSX.HTMLAttributes<TitleElement> {
-            return useTitleIdAsSourceProps(props);
+            props.tabIndex ??= -1;
+            return useTitleRefElementProps(useTitleIdAsSourceProps(props));
         }
 
         return { useModalTitleProps };
@@ -254,7 +277,8 @@ export function useModal<ModalElement extends HTMLElement, TitleElement extends 
         const { useRandomIdReferencerElementProps: useModalIdAsReferencerElementProps } = useModalIdAsReferencerElement<BodyElement>("data-modal-id" as never);
 
         const useModalBodyProps = function (props: h.JSX.HTMLAttributes<BodyElement>): h.JSX.HTMLAttributes<BodyElement> {
-            return useBodyIdAsSourceProps(useModalIdAsReferencerElementProps(props));
+            props.tabIndex ??= -1;
+            return useBodyRefElementProps(useBodyIdAsSourceProps(useModalIdAsReferencerElementProps(props)));
         }
 
         return { useModalBodyProps };
@@ -267,6 +291,7 @@ export function useModal<ModalElement extends HTMLElement, TitleElement extends 
         useModalTitle,
         useModalBody,
         useModalBackdrop,
+        useModalFocusContainerProps,
         softDismiss: { onBackdropClick }
     };
 }

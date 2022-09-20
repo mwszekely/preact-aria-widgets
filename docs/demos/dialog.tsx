@@ -1,7 +1,7 @@
 
 import { useState } from "preact-prop-helpers";
-import { AriaButton, EventDetail, ListboxSingle, defaultRenderButton } from "../../index";
-import { Dialog, defaultRenderDialog } from "../../component/dialog"
+import { defaultRenderDialog, Dialog } from "../../component/dialog";
+import { AriaButton, defaultRenderButton } from "../../index";
 
 
 
@@ -29,7 +29,6 @@ export function Code() {
 }
 
 export function Demo() {
-    const [count, setCount] = useState(5);
     const [open, setOpen] = useState(false);
 
 
@@ -47,13 +46,15 @@ export function Demo() {
                     render={defaultRenderDialog({
                         portalId: "portal",
                         makePropsBackdrop: () => ({}),
+                        makePropsFocusContainer: () => ({}),
                         makePropsBody: () => ({ children: "Dialog body" }),
                         makePropsDialog: () => ({ style: { display: !open ? "none" : undefined } }),
                         makePropsTitle: () => ({ children: "Dialog title" }),
                         tagBackdrop: "div",
                         tagBody: "div",
                         tagDialog: "div",
-                        tagTitle: "div"
+                        tagTitle: "div",
+                        tagFocusContainer: "div"
                     })}
                 />
             </div>

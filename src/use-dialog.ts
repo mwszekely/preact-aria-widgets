@@ -20,25 +20,26 @@ export type UseDialogBody<BodyElement extends Element> = () => { useDialogBodyPr
 export type UseDialogBackdrop<BackdropElement extends Element> = () => { useDialogBackdropProps: (props: h.JSX.HTMLAttributes<BackdropElement>) => h.JSX.HTMLAttributes<BackdropElement>; };
 
 
-export interface UseAriaDialogReturnType<DialogElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement> extends UseModalReturnTypeInfo {
-    useDialogProps: UseModalReturnTypeWithHooks<DialogElement, TitleElement, BodyElement, BackdropElement>["useModalProps"];
+export interface UseAriaDialogReturnType<FocusContainerElement extends HTMLElement, DialogElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement> extends UseModalReturnTypeInfo {
+    useDialogProps: UseModalReturnTypeWithHooks<FocusContainerElement, DialogElement, TitleElement, BodyElement, BackdropElement>["useModalProps"];
     useDialogTitle: UseDialogTitle<TitleElement>;
     useDialogBody: UseDialogBody<BodyElement>;
     useDialogBackdrop: UseDialogBackdrop<BackdropElement>;
+    useDialogFocusContainerProps(props: h.JSX.HTMLAttributes<FocusContainerElement>): h.JSX.HTMLAttributes<FocusContainerElement>;
 }
 
 export interface UseAriaDialogParameters extends UseModalParameters<never, "onClose"> {
     dialog: { onClose: (reason: "escape" | "backdrop") => void; }
 }
 
-export function useAriaDialog<DialogElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement>({ softDismiss: { open }, modal: { bodyIsOnlySemantic, focusSelf }, dialog: { onClose }, activeElement }: UseAriaDialogParameters): UseAriaDialogReturnType<DialogElement, TitleElement, BodyElement, BackdropElement> {
+export function useAriaDialog<FocusContainerElement extends HTMLElement, DialogElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement>({ softDismiss: { open }, modal: { bodyIsOnlySemantic, focusSelf }, dialog: { onClose }, activeElement }: UseAriaDialogParameters): UseAriaDialogReturnType<FocusContainerElement, DialogElement, TitleElement, BodyElement, BackdropElement> {
     
     debugLog("useAriaDialog");
 
     // TODO: Differences between dialog and modal go here, presumably.
     // Non-modal dialogs need to be able to be repositioned, etc.
-    const { useModalBackdrop, useModalBody, useModalProps, useModalTitle, softDismiss: { onBackdropClick } } = useModal<DialogElement, TitleElement, BodyElement, BackdropElement>({ modal: { bodyIsOnlySemantic, focusSelf }, softDismiss: { onClose, open }, activeElement });
-    type R = UseAriaDialogReturnType<DialogElement, TitleElement, BodyElement, BackdropElement>;
+    const { useModalBackdrop, useModalBody, useModalProps, useModalTitle, softDismiss: { onBackdropClick }, useModalFocusContainerProps } = useModal<FocusContainerElement, DialogElement, TitleElement, BodyElement, BackdropElement>({ modal: { bodyIsOnlySemantic, focusSelf }, softDismiss: { onClose, open }, activeElement });
+    type R = UseAriaDialogReturnType<FocusContainerElement, DialogElement, TitleElement, BodyElement, BackdropElement>;
     const useDialogBackdrop = useCallback<R["useDialogBackdrop"]>(() => {
         const { useModalBackdropProps } = useModalBackdrop();
         return { useDialogBackdropProps: useModalBackdropProps };
@@ -60,6 +61,7 @@ export function useAriaDialog<DialogElement extends HTMLElement, TitleElement ex
         useDialogTitle,
         useDialogBody,
         useDialogBackdrop,
+        useDialogFocusContainerProps: useModalFocusContainerProps,
         softDismiss: { onBackdropClick },
     }
 }

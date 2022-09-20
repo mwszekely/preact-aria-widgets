@@ -1,4 +1,4 @@
-import { createContext, h, Ref, VNode } from "preact";
+import { createContext, h, VNode } from "preact";
 import { forwardRef } from "preact/compat";
 import { useContext } from "preact/hooks";
 import { ElementToTag, PropModifier } from "props";
@@ -53,7 +53,7 @@ function ListboxMultiU<LabelElement extends Element, ListElement extends HTMLEle
 
     typeaheadTimeout,
     tagList,
-}: ListboxMultiProps<LabelElement, ListElement, ListItemElement>, ref: Ref<ListElement>) {
+}: ListboxMultiProps<LabelElement, ListElement, ListItemElement>) {
     const {
         useListboxMultiItem,
         useListboxMultiLabel,
@@ -85,7 +85,7 @@ export function defaultRenderListboxMultiItem<ListItemElement extends HTMLElemen
     return defaultRenderListItem<ListItemElement, UseListboxMultiItemReturnTypeInfo<ListItemElement>>({ makePropsListItem, tagListItem });
 }
 
-function ListboxMultiItemU<ListItemElement extends Element>({ index, blurSelf, disabled, flags, focusSelf, render, text, hidden, selected, onSelect }: ListboxMultiItemProps<ListItemElement>, ref: Ref<ListItemElement>) {
+function ListboxMultiItemU<ListItemElement extends Element>({ index, blurSelf, disabled, flags, focusSelf, render, text, hidden, selected, onSelect }: ListboxMultiItemProps<ListItemElement>) {
     const { useListboxMultiItemProps, ...itemReturn } = useContext(ListboxMultiContext)({
         managedChild: { index, flags },
         rovingTabIndex: { blurSelf, focusSelf, hidden },

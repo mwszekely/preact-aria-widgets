@@ -7,11 +7,12 @@ export interface UseAriaDrawerReturnTypeInfo extends UseSoftDismissReturnTypeInf
 
 }
 
-export interface UseAriaDrawerReturnTypeWithHooks<ModalElement extends Element, TitleElement extends Element, BodyElement extends Element, BackdropElement extends Element> extends UseAriaDrawerReturnTypeInfo {
+export interface UseAriaDrawerReturnTypeWithHooks<FocusContainerElement extends Element, ModalElement extends Element, TitleElement extends Element, BodyElement extends Element, BackdropElement extends Element> extends UseAriaDrawerReturnTypeInfo {
     useDrawerProps: (props: h.JSX.HTMLAttributes<ModalElement>) => h.JSX.HTMLAttributes<ModalElement>;
     useDrawerTitle: UseDrawerTitle<TitleElement>;
     useDrawerBody: UseDrawerBody<BodyElement>
     useDrawerBackdrop: UseDrawerBackdrop<BackdropElement>;
+    useDrawerFocusContainerProps(props: h.JSX.HTMLAttributes<FocusContainerElement>): h.JSX.HTMLAttributes<FocusContainerElement>;
 }
 
 export type UseDrawerTitle<TitleElement extends Element> = () => { useDrawerTitleProps: (props: h.JSX.HTMLAttributes<TitleElement>) => h.JSX.HTMLAttributes<TitleElement>; };
@@ -22,7 +23,7 @@ export type UseDrawerBackdrop<BackdropElement extends Element> = () => { useDraw
 export interface UseDrawerParameters extends UseModalParameters<never, never> {
 }
 
-export function useDrawer<DrawerElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement>({ softDismiss: { open, onClose }, activeElement, modal: { bodyIsOnlySemantic, focusSelf } }: UseDrawerParameters): UseAriaDrawerReturnTypeWithHooks<DrawerElement, TitleElement, BodyElement, BackdropElement> {
+export function useDrawer<FocusContainerElement extends HTMLElement, DrawerElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement>({ softDismiss: { open, onClose }, activeElement, modal: { bodyIsOnlySemantic, focusSelf } }: UseDrawerParameters): UseAriaDrawerReturnTypeWithHooks<FocusContainerElement, DrawerElement, TitleElement, BodyElement, BackdropElement> {
 
     debugLog("useAriaDrawer");
 
@@ -33,8 +34,9 @@ export function useDrawer<DrawerElement extends HTMLElement, TitleElement extend
         useModalBody,
         useModalProps,
         useModalTitle,
+        useModalFocusContainerProps,
         softDismiss: { onBackdropClick }
-    } = useModal<DrawerElement, TitleElement, BodyElement, BackdropElement>({ modal: { bodyIsOnlySemantic: (bodyIsOnlySemantic ?? false), focusSelf }, softDismiss: { onClose, open }, activeElement });
+    } = useModal<FocusContainerElement, DrawerElement, TitleElement, BodyElement, BackdropElement>({ modal: { bodyIsOnlySemantic: (bodyIsOnlySemantic ?? false), focusSelf }, softDismiss: { onClose, open }, activeElement });
 
     const useDrawerBackdrop = useCallback(() => {
         const { useModalBackdropProps } = useModalBackdrop();
@@ -57,6 +59,7 @@ export function useDrawer<DrawerElement extends HTMLElement, TitleElement extend
         useDrawerTitle,
         useDrawerBody,
         useDrawerBackdrop,
+        useDrawerFocusContainerProps: useModalFocusContainerProps,
         softDismiss: { onBackdropClick }
     }
 }

@@ -1,4 +1,4 @@
-import { ComponentChildren, createContext, createElement, h, Ref, VNode } from "preact";
+import { createContext, createElement, h, VNode } from "preact";
 import { forwardRef } from "preact/compat";
 import { useContext } from "preact/hooks";
 import { ElementToTag, PropModifier } from "props";
@@ -60,7 +60,7 @@ function ListboxSingleU<LabelElement extends Element, ListElement extends HTMLEl
     selectionMode,
     tagList,
     onSelect
-}: ListboxSingleProps<LabelElement, ListElement, ListItemElement>, ref: Ref<ListElement>) {
+}: ListboxSingleProps<LabelElement, ListElement, ListItemElement>) {
     const {
         useListboxSingleItem,
         useListboxSingleLabel,
@@ -99,7 +99,7 @@ export function defaultRenderListboxSingleItem<ListItemElement extends HTMLEleme
 
 
 
-function ListboxSingleItemU<ListItemElement extends Element>({ index, blurSelf, disabled, flags, focusSelf, getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange, render, text, hidden }: ListboxSingleItemProps<ListItemElement>, ref: Ref<ListItemElement>) {
+function ListboxSingleItemU<ListItemElement extends Element>({ index, blurSelf, disabled, flags, focusSelf, getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange, render, text, hidden }: ListboxSingleItemProps<ListItemElement>) {
     const { useListboxSingleItemProps, rovingTabIndex, singleSelection } = useContext(ListboxSingleContext)({
         managedChild: { index, flags },
         rovingTabIndex: { blurSelf, focusSelf, hidden },
@@ -121,7 +121,7 @@ export interface ListboxGroupProps<ContainerElement extends Element, LabelElemen
     render(modifyContainerProps: PropModifier<ContainerElement>, modifyLabelProps: PropModifier<LabelElement>): VNode;
 }
 
-function ListboxGroupU<ContainerElement extends Element, LabelElement extends Element>({ render }: ListboxGroupProps<ContainerElement, LabelElement>, ref: Ref<ContainerElement>) {
+function ListboxGroupU<ContainerElement extends Element, LabelElement extends Element>({ render }: ListboxGroupProps<ContainerElement, LabelElement>) {
     const { useListboxGroupHeadingProps, useListboxGroupContainerProps } = useListboxGroup<ContainerElement, LabelElement>();
     return (render(useListboxGroupContainerProps, useListboxGroupHeadingProps))
 }
