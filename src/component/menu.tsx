@@ -1,4 +1,4 @@
-import { ComponentChild, ComponentChildren, createContext, createElement, h, VNode } from "preact";
+import { createContext, createElement, h, VNode } from "preact";
 import { UseActiveElementParameters, useStableCallback } from "preact-prop-helpers";
 import { useContext } from "preact/hooks";
 import { ElementToTag, PropModifier } from "props";

@@ -1,8 +1,7 @@
 import { h } from "preact";
-import { OnTabbableIndexChange, returnFalse, useLayoutEffect, useListNavigation, UseListNavigationChildParameters, UseListNavigationChildReturnTypeInfo, UseListNavigationParameters, UseListNavigationReturnTypeInfo, useMergedProps, usePassiveState, useRefElement, useStableCallback, useStableGetter } from "preact-prop-helpers";
-import { useCallback } from "preact/hooks";
+import { OnTabbableIndexChange, returnFalse, useListNavigation, UseListNavigationChildParameters, UseListNavigationChildReturnTypeInfo, UseListNavigationParameters, UseListNavigationReturnTypeInfo, useMergedProps, usePassiveState, usePress, useRefElement, useStableCallback, useStableGetter } from "preact-prop-helpers";
+import { useCallback, useLayoutEffect } from "preact/hooks";
 import { debugLog, ElementToTag, EventDetail } from "./props";
-import { usePressEventHandlers } from "./use-button";
 import { useLabel } from "./use-label";
 
 export type ListboxMultiSelectEvent<E extends EventTarget> = { [EventDetail]: { selected: boolean } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
@@ -14,13 +13,13 @@ export interface UseListboxMultiParameters<LabelElement extends Element, ListEle
     }
 }
 
-export interface UseListboxMultiItemParameters<E extends Element> extends Omit<UseListNavigationChildParameters<E, Info, never, never, never, never, never>, "subInfo"> {
+export interface UseListboxMultiItemParameters extends Omit<UseListNavigationChildParameters<Info, never, never, never, never, never>, "subInfo"> {
     listboxMultiItem: { disabled?: boolean; } & Info;
 }
 
 
 
-export type UseListboxMultiItem<E extends Element> = (info: UseListboxMultiItemParameters<E>) => UseListboxMultiItemReturnTypeWithHooks<E>;
+export type UseListboxMultiItem<E extends Element> = (info: UseListboxMultiItemParameters) => UseListboxMultiItemReturnTypeWithHooks<E>;
 
 export interface UseListboxMultiItemReturnTypeInfo<E extends Element> extends UseListNavigationChildReturnTypeInfo<E> {
     listboxMultiItem: {
@@ -126,7 +125,7 @@ export function useAriaListboxMulti<LabelElement extends Element, ListElement ex
         return { useListboxMultiItemProps, listboxMultiItem: { getSelected, tabbable: rti2_ret.tabbable }, rovingTabIndex: rti2_ret };
 
         function useListboxMultiItemProps(props: h.JSX.HTMLAttributes<E>): h.JSX.HTMLAttributes<E> {
-            const newProps: h.JSX.HTMLAttributes<E> = usePressEventHandlers<E>(disabled ? null : (e) => {
+            const usePressProps = usePress<E>(disabled ? null : (e) => {
                 setTabbableIndex(managedChild.index, false);
                 stableOnSelect?.({ ...e, [EventDetail]: { selected: !getSelected() } });
                 e.preventDefault();
@@ -139,7 +138,7 @@ export function useAriaListboxMulti<LabelElement extends Element, ListElement ex
             if (disabled)
                 props["aria-disabled"] = "true";
 
-            return useRefElementProps(useListNavigationChildProps(useMergedProps<E>(newProps, props)));
+            return useRefElementProps(useListNavigationChildProps(usePressProps(props)));
         }
 
     }, [useListNavigationChild]);

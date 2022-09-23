@@ -1,8 +1,7 @@
 import { h } from "preact";
-import { useMergedProps, useRandomId, useRefElement, useStableCallback } from "preact-prop-helpers";
+import { useMergedProps, usePress, useRandomId, useRefElement, useStableCallback } from "preact-prop-helpers";
 import { useCallback, useEffect } from "preact/hooks";
 import { ElementToTag } from "./props";
-import { usePressEventHandlers } from "./use-button";
 
 interface ULI<InputElement extends Element, LabelElement extends Element> {
     prefixLabel: string;
@@ -198,7 +197,8 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
             // For some reason, Chrome won't fire onInput events for radio buttons that are tabIndex=-1??
             // Needs investigating, but onInput works fine in Firefox
             // TODO
-            let props: h.JSX.HTMLAttributes<InputType> = usePressEventHandlers<InputType>(disabled || !handlesInput(tag, labelPosition, "input-element") ? undefined : stableOnInput, undefined);
+            const usePressProps = usePress<InputType>(disabled || !handlesInput(tag, labelPosition, "input-element") ? undefined : stableOnInput, undefined);
+            let props: h.JSX.HTMLAttributes<InputType> = usePressProps(p0);
 
             if (tag == "input")
                 props.onInput = (e: Event) => e.preventDefault();
@@ -242,7 +242,8 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
 
         function useCheckboxLikeLabelElementProps({ ...p0 }: h.JSX.HTMLAttributes<LabelType>): h.JSX.HTMLAttributes<LabelType> {
 
-            const newProps: h.JSX.HTMLAttributes<LabelType> = usePressEventHandlers<LabelType>(disabled || !handlesInput(tag, labelPosition, "label-element") ? undefined : stableOnInput, undefined);
+            const usePressProps = usePress<LabelType>(disabled || !handlesInput(tag, labelPosition, "label-element") ? undefined : stableOnInput, undefined);
+            const newProps = usePressProps(p0);
 
             if (labelPosition == "wrapping") {
                 if (p0.tabIndex == null)

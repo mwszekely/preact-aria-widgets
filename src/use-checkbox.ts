@@ -1,6 +1,6 @@
 import { h } from "preact";
 import { useCallback } from "preact/hooks";
-import { debugLog, EnhancedEvent, enhanceEvent, EventDetail } from "./props";
+import { debugLog, EnhancedEvent, enhanceEvent } from "./props";
 import { useCheckboxLike, UseCheckboxLikeParameters, UseCheckboxLikeReturnTypeInfo } from "./use-label";
 
 

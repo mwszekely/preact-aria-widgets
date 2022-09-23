@@ -1,6 +1,6 @@
 import { h } from "preact";
-import { returnFalse, useEffect, useListNavigation, UseListNavigationChildParameters, UseListNavigationParameters, UseListNavigationReturnTypeInfo, useMergedProps, usePassiveState, UseRovingTabIndexChildReturnTypeInfo, useStableCallback, useState } from "preact-prop-helpers";
-import { StateUpdater, useCallback, useRef } from "preact/hooks";
+import { returnFalse, useListNavigation, UseListNavigationChildParameters, UseListNavigationParameters, UseListNavigationReturnTypeInfo, useMergedProps, usePassiveState, UseRovingTabIndexChildReturnTypeInfo, useStableCallback, useState } from "preact-prop-helpers";
+import { StateUpdater, useCallback, useEffect, useRef } from "preact/hooks";
 import { CheckboxCheckedType } from "./use-label";
 import { debugLog, EnhancedEvent, enhanceEvent, EventDetail } from "./props";
 import { CheckboxChangeEvent, useAriaCheckbox, UseAriaCheckboxParameters, UseAriaCheckboxReturnTypeInfo } from "./use-checkbox";
@@ -64,9 +64,9 @@ export interface CBG {
 export interface UseCheckboxGroupChildParameters<InputElement extends Element, LabelElement extends Element> {
     asCheckbox: UseAriaCheckboxParameters<InputElement, LabelElement>;
     asCheckboxGroupChild: {
-        managedChild: UseListNavigationChildParameters<InputElement, CBG, never, never, never, never, never>["managedChild"];
-        listNavigation: Omit<UseListNavigationChildParameters<InputElement, CBG, never, never, never, never, never>["listNavigation"], "subInfo">;
-        rovingTabIndex: UseListNavigationChildParameters<InputElement, CBG, never, never, never, never, never>["rovingTabIndex"];
+        managedChild: UseListNavigationChildParameters<CBG, never, never, never, never, never>["managedChild"];
+        listNavigation: Omit<UseListNavigationChildParameters<CBG, never, never, never, never, never>["listNavigation"], "subInfo">;
+        rovingTabIndex: UseListNavigationChildParameters<CBG, never, never, never, never, never>["rovingTabIndex"];
     };
 }
 

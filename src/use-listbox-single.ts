@@ -1,16 +1,15 @@
 import { h } from "preact";
-import { OnTabbableIndexChange, UseHasFocusParameters, useMergedProps, useRandomId, useStableCallback } from "preact-prop-helpers";
+import { UseHasFocusParameters, useRandomId, useStableCallback } from "preact-prop-helpers";
 import { useListNavigationSingleSelection, UseListNavigationSingleSelectionChildParameters, UseListNavigationSingleSelectionChildReturnTypeInfo, UseListNavigationSingleSelectionParameters, UseListNavigationSingleSelectionReturnTypeInfo } from "preact-prop-helpers/use-list-navigation";
-import { useCallback, useEffect } from "preact/hooks";
-import { debugLog, ElementToTag, EventDetail, warnOnOverwrite } from "./props";
-import { usePressEventHandlers } from "./use-button";
+import { useCallback } from "preact/hooks";
+import { debugLog, ElementToTag, enhanceEvent, EventDetail, warnOnOverwrite } from "./props";
 import { useLabel, UseLabelReturnTypeInfo } from "./use-label";
 
 export type ListboxSingleSelectEvent<E extends EventTarget> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 
-export interface UseListboxSingleParameters<LabelElement extends Element, ListElement extends Element> extends UseListNavigationSingleSelectionParameters<never, never, never, never, never, never> {
+export interface UseListboxSingleParameters<LabelElement extends Element, ListElement extends Element> extends UseListNavigationSingleSelectionParameters<never | "onSelectedIndexChange", never, never, never, never, never> {
     listboxSingle: {
-        selectionMode: "focus" | "activate";
+        //selectionMode: "focus" | "activate";
         onSelect?(event: ListboxSingleSelectEvent<Element>): void;
         tagLabel: ElementToTag<LabelElement>;
         tagList: ElementToTag<ListElement>;
@@ -44,12 +43,12 @@ export interface UseListboxSingleReturnTypeWithHooks<LabelElement extends Elemen
 }
 
 export function useAriaListboxSingle<LabelElement extends Element, ListElement extends Element, ListItemElement extends Element>({
-    listboxSingle: { selectionMode, tagLabel, tagList, onSelect, ..._lbs },
+    listboxSingle: { tagLabel, tagList, onSelect, ..._lbs },
     singleSelection: { selectedIndex, ...ss },
     linearNavigation: { ...ln },
     listNavigation: { ...ls },
     managedChildren: { ...mc },
-    rovingTabIndex: { onTabbableIndexChange, ...rti },
+    rovingTabIndex: { ...rti },
     typeaheadNavigation: { ...tn },
     childrenHaveFocus: { ...chf }
 }: UseListboxSingleParameters<LabelElement, ListElement>): UseListboxSingleReturnTypeWithHooks<LabelElement, ListElement, ListItemElement> {
@@ -64,26 +63,22 @@ export function useAriaListboxSingle<LabelElement extends Element, ListElement e
         }
     });
 
+    const onSelectedIndexChange = useStableCallback((event: Event, newIndex: number) => {
+        stableOnSelect(enhanceEvent<ListItemElement, Event, { selectedIndex: number }>(event, { selectedIndex: newIndex }))
+    });
+
     const { useListNavigationSingleSelectionChild, useListNavigationSingleSelectionProps, ...listReturnType } = useListNavigationSingleSelection<ListElement, ListItemElement, {}, never>({
         childrenHaveFocus: { ...chf },
         linearNavigation: { ...ln },
         listNavigation: { ...ls },
         managedChildren: { ...mc },
         rovingTabIndex: {
-            ...rti,
-            onTabbableIndexChange: useStableCallback<OnTabbableIndexChange>((i) => {
-                onTabbableIndexChange?.(i);
-                if (selectionMode == "focus") {
-                    const target = (children.getAt(i!)?.subInfo.getElement());
-                    if (target)
-                        onSelect?.({ target, currentTarget: target, [EventDetail]: { selectedIndex: i! } });
-                }
-            }),
+            ...rti
         },
-        singleSelection: { ...ss, selectedIndex },
+        singleSelection: { ...ss, onSelectedIndexChange, selectedIndex },
         typeaheadNavigation: tn
     });
-    const { managedChildren: { children } } = listReturnType;
+    
     const { useLabelInputProps } = useLabelInput();
     const stableOnSelect = useStableCallback(onSelect ?? (() => { }));
 
@@ -97,14 +92,14 @@ export function useAriaListboxSingle<LabelElement extends Element, ListElement e
             hasFocus,
             subInfo: {}
         });
-        const index = managedChild.index;
+        //const index = managedChild.index;
 
-        useEffect(() => {
+        /*useEffect(() => {
             const element = rti_ret.getElement();
             if (element && rti_ret.tabbable && selectionMode == "focus") {
                 stableOnSelect?.({ target: element, currentTarget: element, [EventDetail]: { selectedIndex: index } });
             }
-        }, [rti_ret.tabbable, selectionMode, index]);
+        }, [rti_ret.tabbable, selectionMode, index]);*/
 
         return {
             useListboxSingleItemProps,
@@ -113,12 +108,12 @@ export function useAriaListboxSingle<LabelElement extends Element, ListElement e
         };
 
         function useListboxSingleItemProps<P extends h.JSX.HTMLAttributes<ListItemElement>>(props: P) {
-            const newProps: h.JSX.HTMLAttributes<ListItemElement> = usePressEventHandlers<ListItemElement>(disabled ? null : (e) => {
+            /*const newProps: h.JSX.HTMLAttributes<ListItemElement> = usePressEventHandlers<ListItemElement>(disabled ? null : (e) => {
                 const element = rti_ret.getElement();
                 if (element)
                     stableOnSelect?.({ target: element, currentTarget: element, [EventDetail]: { selectedIndex: index } });
                 e.preventDefault();
-            }, undefined);
+            }, undefined);*/
 
             props.role = "option";
             //props["aria-setsize"] = (children.getHighestIndex() + 1).toString();
@@ -127,9 +122,9 @@ export function useAriaListboxSingle<LabelElement extends Element, ListElement e
             if (disabled)
                 props["aria-disabled"] = "true";
 
-            return useListNavigationSingleSelectionChildProps(useMergedProps<ListItemElement>(newProps, props));
+            return useListNavigationSingleSelectionChildProps(props);
         }
-    }, [useListNavigationSingleSelectionChild, selectionMode]);
+    }, [useListNavigationSingleSelectionChild]);
 
 
     const useListboxSingleLabel = useCallback(function useListboxSingleLabel() {

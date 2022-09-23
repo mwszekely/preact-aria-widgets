@@ -1,14 +1,14 @@
 import { h } from "preact";
-import { UseListNavigationChildParameters, UseListNavigationParameters, useListNavigationSingleSelection, UseListNavigationSingleSelectionChildReturnTypeInfo, UseListNavigationSingleSelectionReturnTypeInfo, useMergedProps, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
+import { UseListNavigationChildParameters, useListNavigationSingleSelection, UseListNavigationSingleSelectionChildReturnTypeInfo, UseListNavigationSingleSelectionParameters, UseListNavigationSingleSelectionReturnTypeInfo, useMergedProps, useRefElement, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
 import { UseChildrenHaveFocusParameters, UseHasFocusParameters } from "preact-prop-helpers/use-has-focus";
 import { useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
-import { debugLog, ElementToTag, EnhancedEvent, enhanceEvent, EventDetail, TagSensitiveProps } from "./props";
+import { debugLog, ElementToTag, EnhancedEvent, enhanceEvent, TagSensitiveProps } from "./props";
 import { useCheckboxLike, useLabel } from "./use-label";
 
 //type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
-export type RadioChangeEvent<E extends EventTarget, V extends number | string> = EnhancedEvent<E, Event, { selectedValue: V }>;
+export type RadioChangeEvent<E extends EventTarget, V extends number | string> = EnhancedEvent<E, Event, { selectedValue: V | undefined }>;
 
-export interface UseAriaRadioGroupParameters<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, InputElement extends Element, LabelElement extends Element> extends UseListNavigationParameters<never, never, never, never, never> {
+export interface UseAriaRadioGroupParameters<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, InputElement extends Element> extends UseListNavigationSingleSelectionParameters<"selectedIndex" | "onSelectedIndexChange", never, never, never, never, never> {
     radioGroup: {
         name: string;
 
@@ -29,7 +29,7 @@ export interface UseAriaRadioGroupParameters<V extends string | number, GroupEle
 
 
 
-export interface UseAriaRadioParameters<V extends string | number, I extends Element, IL extends Element> extends Omit<UseListNavigationChildParameters<I, {}, never, never, never, never, never>, "subInfo"> {
+export interface UseAriaRadioParameters<V extends string | number, I extends Element, IL extends Element> extends Omit<UseListNavigationChildParameters<{}, never, never, never, never, never>, "subInfo"> {
     radio: {
         labelPosition: "wrapping" | "separate";
         value: V;
@@ -61,8 +61,9 @@ export function useAriaRadioGroup<V extends string | number, G extends Element, 
     radioGroup: { name, onInput, selectedValue, tagGroup, tagGroupLabel },
     rovingTabIndex,
     typeaheadNavigation,
-    childrenHaveFocus
-}: UseAriaRadioGroupParameters<V, G, GL, I, IL>): UseAriaRadioGroupReturnTypeWithHooks<V, G, GL, I, IL> {
+    childrenHaveFocus,
+    singleSelection: { selectionMode }
+}: UseAriaRadioGroupParameters<V, G, GL, I>): UseAriaRadioGroupReturnTypeWithHooks<V, G, GL, I, IL> {
     debugLog("useAriaRadioGroup", selectedValue);
     const { getElement: _getRadioGroupParentElement, useRefElementProps } = useRefElement<G>({});
 
@@ -78,16 +79,20 @@ export function useAriaRadioGroup<V extends string | number, G extends Element, 
     const { useLabelInputProps: useGroupLabelInputProps } = useGroupLabelInput();
     const { useLabelLabelProps: useGroupLabelLabelProps } = useGroupLabelLabel();
 
+    const onSelectedIndexChange = useStableCallback((e: Event, newIndex: number) => {
+        onInput(enhanceEvent<I, Event, { selectedValue: V | undefined }>(e, { selectedValue: listNavRet.managedChildren.children.getAt(newIndex)?.subInfo.subInfo.subInfo.getValue() }));
+    });
+
     const {
         useListNavigationSingleSelectionChild,
         useListNavigationSingleSelectionProps,
         ...listNavRet
-    } = useListNavigationSingleSelection<G, I, {}, never>({
+    } = useListNavigationSingleSelection<G, I, { getValue(): V }, never>({
         linearNavigation,
         listNavigation,
         managedChildren,
         rovingTabIndex,
-        singleSelection: { selectedIndex },
+        singleSelection: { selectedIndex, onSelectedIndexChange, selectionMode },
         typeaheadNavigation,
         childrenHaveFocus
     });
@@ -144,13 +149,13 @@ export function useAriaRadioGroup<V extends string | number, G extends Element, 
             stableOnInput(enhanceEvent(e, { selectedValue: value }));
         }, [stableOnInput, value, index]);
 
-
+        const getValue = useStableGetter(value);
         const { useListNavigationSingleSelectionChildProps, ...listNavRet } = useListNavigationSingleSelectionChild({
             listNavigation,
             rovingTabIndex,
             managedChild,
             hasFocus,
-            subInfo: {}
+            subInfo: { getValue }
         });
 
         const { singleSelection: { selected: checked } } = listNavRet;

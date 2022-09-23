@@ -1,15 +1,15 @@
 import { h } from "preact";
-import { ManagedChildren, returnNull, useGridNavigation, UseGridNavigationParameters, UseHasFocusParameters, useLayoutEffect, UseListNavigationReturnTypeInfo, UseListNavigationSubInfo, usePassiveState, UseRovingTabIndexSubInfo, useSortableChildren, useStableCallback } from "preact-prop-helpers";
+import { ManagedChildren, returnNull, useGridNavigation, UseGridNavigationParameters, UseHasFocusParameters, UseListNavigationReturnTypeInfo, UseListNavigationSubInfo, usePassiveState, UseRovingTabIndexSubInfo, useSortableChildren, useStableCallback } from "preact-prop-helpers";
 import { UseGridNavigationCellParameters, UseGridNavigationCellReturnTypeInfo, UseGridNavigationRowParameters, UseGridNavigationRowReturnTypeInfo } from "preact-prop-helpers/use-grid-navigation";
 import { Compare, GetIndex, GetValue, UseSortableChildrenReturnTypeInfo } from "preact-prop-helpers/use-sortable-children";
-import { useCallback, useRef } from "preact/hooks";
+import { useCallback, useLayoutEffect, useRef } from "preact/hooks";
 import { debugLog } from "./props";
 
 export type TableValueType = string | number | null | boolean | Date;
 
 export interface UseAriaTableParameters extends UseGridNavigationParameters<"indexMangler" | "indexDemangler", never, never, never, never> { }
 export interface UseAriaTableBodyParameters { }
-export interface UseAriaTableRowParameters<RowElement extends Element, CellElement extends Element> extends Omit<UseGridNavigationRowParameters<RowElement, UseAriaTableRowSubInfo<CellElement>, never, never, never, never, never, never, "subInfo", "subInfo", "subInfo", {}>, "subInfo"> {
+export interface UseAriaTableRowParameters<CellElement extends Element> extends Omit<UseGridNavigationRowParameters<UseAriaTableRowSubInfo<CellElement>, never, never, never, never, never, never, "subInfo", "subInfo", "subInfo", {}>, "subInfo"> {
     tableRow: Pick<UseAriaTableRowSubInfo<CellElement>, "location">;
 }
 export interface UseAriaTableCellParameters<CellElement extends Element> extends UseGridNavigationCellParameters<CellElement, UseAriaTableCellSubInfo, never, "subInfo", "subInfo", "subInfo", UseAriaTableCellSubInfo> {
@@ -45,7 +45,7 @@ export interface UseAriaTableReturnTypeWithHooks<TableElement extends Element, B
 }
 
 export type UseAriaTableCell<CellElement extends Element> = (p: UseAriaTableCellParameters<CellElement>) => UseAriaTableCellReturnTypeWithHooks<CellElement>;
-export type UseAriaTableRow<RowElement extends Element, CellElement extends Element> = (p: UseAriaTableRowParameters<RowElement, CellElement>) => UseAriaTableRowReturnTypeWithHooks<RowElement, CellElement>;
+export type UseAriaTableRow<RowElement extends Element, CellElement extends Element> = (p: UseAriaTableRowParameters<CellElement>) => UseAriaTableRowReturnTypeWithHooks<RowElement, CellElement>;
 export type UseAriaTableBody<BodySectionElement extends Element, RowElement extends Element, CellElement extends Element> = (p: UseAriaTableBodyParameters) => UseAriaTableBodyReturnTypeWithHooks<BodySectionElement, RowElement, CellElement>;
 
 export function useAriaTable<
@@ -73,7 +73,7 @@ export function useAriaTable<
 
     const { managedChildren: { children: rows } } = gridNavRet1;
 
-    const useTableRow = useCallback<UseAriaTableRow<RowElement, CellElement>>(({ asChildRowOfSection, asParentRowOfCells, tableRow: { location } }: UseAriaTableRowParameters<RowElement, CellElement>): UseAriaTableRowReturnTypeWithHooks<RowElement, CellElement> => {
+    const useTableRow = useCallback<UseAriaTableRow<RowElement, CellElement>>(({ asChildRowOfSection, asParentRowOfCells, tableRow: { location } }: UseAriaTableRowParameters<CellElement>): UseAriaTableRowReturnTypeWithHooks<RowElement, CellElement> => {
         debugLog("useAriaTableRow", asChildRowOfSection.managedChild.index);
 
         const getCells = useCallback(() => {

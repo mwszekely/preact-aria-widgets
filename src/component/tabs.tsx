@@ -16,7 +16,7 @@ export interface TabsProps<LabelElement extends Element, ListElement extends Ele
     Get<UseAriaTabListParameters<TabElement>, "typeaheadNavigation">,
     Get<UseAriaTabListParameters<TabElement>, "childrenHaveFocus">,
     Get<UseAriaTabListParameters<TabElement>, "tabs">,
-    Get2<UseAriaTabsParameters<TabElement>, "tabPanels", "managedChildren"> {
+    Get2<UseAriaTabsParameters, "tabPanels", "managedChildren"> {
     render(tabsInfo: UseAriaTabsReturnTypeInfo & UseAriaTabListReturnTypeInfo<TabElement>, modifyLabelProps: PropModifier<LabelElement>, modifyTabListProps: PropModifier<ListElement>): VNode<any>;
 }
 
@@ -43,7 +43,6 @@ export function Tabs<LabelElement extends Element, ListElement extends Element, 
     disableHomeEndKeys,
     indexDemangler,
     indexMangler,
-    initialIndex,
     navigationDirection,
     noTypeahead,
     onAfterChildLayoutEffect,
@@ -77,9 +76,7 @@ export function Tabs<LabelElement extends Element, ListElement extends Element, 
         singleSelection: { selectedIndex },
         typeaheadNavigation: { collator, noTypeahead, typeaheadTimeout }
     });
-    const { useAriaTabListLabelProps } = useAriaTabListLabel({})
-
-    const { tabList: { } } = tablistInfo;
+    const { useAriaTabListLabelProps } = useAriaTabListLabel({});
 
     return (
         <TabContext.Provider value={useAriaTab}>
