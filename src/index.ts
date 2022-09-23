@@ -27,7 +27,7 @@ export { Menu, MenuItem, MenuItemProps, MenuProps, defaultRenderMenu, defaultRen
 export { Radio, RadioGroup, RadioGroupProps, RadioProps, defaultRenderRadio, defaultRenderRadioGroup } from "./component/radio-group"
 export { Slider, SliderProps, SliderThumb, SliderThumbProps, defaultRenderSliderThumb } from "./component/slider"
 export { Table, TableBody, TableBodyProps, TableCell, TableCellProps, TableFoot, TableFootProps, TableHead, TableHeadProps, TableProps, TableRow, TableRowProps, defaultRenderTable, defaultRenderTableBody, defaultRenderTableCell, defaultRenderTableRow } from "./component/table"
-export { TabProps, Tabs, TabsProps, defaultRenderTabs, defaultRenderTab, defaultRenderTabPanel } from "./component/tabs"
+export { TabProps, Tabs, Tab, TabPanel, TabsProps, defaultRenderTabs, defaultRenderTab, defaultRenderTabPanel } from "./component/tabs"
 export { Toast, ToastProps, Toasts, ToastsProps } from "./component/toasts"
 export { Tooltip, TooltipProps } from "./component/tooltip"
 export { Heading, HeadingReset } from "./component/heading"

@@ -2,19 +2,19 @@ import { h } from "preact";
 import { UseListNavigationChildParameters, UseListNavigationParameters, useListNavigationSingleSelection, UseListNavigationSingleSelectionChildReturnTypeInfo, UseListNavigationSingleSelectionReturnTypeInfo, useMergedProps, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
 import { UseChildrenHaveFocusParameters, UseHasFocusParameters } from "preact-prop-helpers/use-has-focus";
 import { useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
-import { debugLog, ElementToTag, enhanceEvent, EventDetail, TagSensitiveProps } from "./props";
+import { debugLog, ElementToTag, EnhancedEvent, enhanceEvent, EventDetail, TagSensitiveProps } from "./props";
 import { useCheckboxLike, useLabel } from "./use-label";
 
 //type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
-export type RadioChangeEvent<EventType extends Event, V extends number | string> = EventType & { [EventDetail]: { selectedValue: V } };
+export type RadioChangeEvent<E extends EventTarget, V extends number | string> = EnhancedEvent<E, Event, { selectedValue: V }>;
 
 export interface UseAriaRadioGroupParameters<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, InputElement extends Element, LabelElement extends Element> extends UseListNavigationParameters<never, never, never, never, never> {
     radioGroup: {
         name: string;
 
         selectedValue: V | null;
-        onInput(event: RadioChangeEvent<h.JSX.TargetedEvent<InputElement>, V>): void;
-        onInput(event: RadioChangeEvent<h.JSX.TargetedEvent<LabelElement>, V>): void;
+        onInput(event: RadioChangeEvent<InputElement, V>): void;
+        //onInput(event: RadioChangeEvent<h.JSX.TargetedEvent<LabelElement>, V>): void;
         tagGroup: ElementToTag<GroupElement>;
         tagGroupLabel: ElementToTag<GroupLabelElement>;
     }
@@ -140,8 +140,8 @@ export function useAriaRadioGroup<V extends string | number, G extends Element, 
         debugLog("useAriaRadio", index);
         //const [checked, setChecked, getChecked] = useState<boolean | null>(null);
 
-        const onInput = useCallback((e: h.JSX.TargetedEvent<I> | h.JSX.TargetedEvent<IL>) => {
-            stableOnInput(enhanceEvent(e as any, { selectedValue: value }));
+        const onInput = useCallback((e: h.JSX.TargetedEvent<I>) => {
+            stableOnInput(enhanceEvent(e, { selectedValue: value }));
         }, [stableOnInput, value, index]);
 
 

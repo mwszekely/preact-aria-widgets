@@ -1,6 +1,6 @@
 import { h } from "preact";
 import { useEffect, useForceUpdate, useGlobalHandler, useMergedProps, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
-import { debugLog, enhanceEvent, EventDetail, TagSensitiveProps } from "./props";
+import { debugLog, EnhancedEvent, enhanceEvent, EventDetail, TagSensitiveProps } from "./props";
 
 let pulse = (("vibrate" in navigator) && (navigator.vibrate instanceof Function)) ? (() => navigator.vibrate(10)) : (() => { });
 
@@ -15,12 +15,12 @@ export function setButtonVibrate(func: () => void) {
     pulse = func;
 }
 
-export type ButtonPressEvent<EventType extends Event> = EventType & { [EventDetail]: { pressed: boolean | null } };
+export type ButtonPressEvent<E extends EventTarget> = EnhancedEvent<E, Event | Event, { pressed: boolean | null }>;
 
 export interface UseAriaButtonParameters<E extends EventTarget> extends TagSensitiveProps<E> {
     disabled?: boolean | "soft" | "hard";
     pressed?: boolean | null | undefined;
-    onPress?(event: ButtonPressEvent<h.JSX.TargetedMouseEvent<E>> | ButtonPressEvent<h.JSX.TargetedKeyboardEvent<E> | ButtonPressEvent<h.JSX.TargetedEvent<E>>>): void;
+    onPress?(event: ButtonPressEvent<E>): void;
 }
 
 export interface UseAriaButtonReturnType<E extends EventTarget> {

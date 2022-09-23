@@ -2,10 +2,10 @@ import { h } from "preact";
 import { returnFalse, useEffect, useListNavigation, UseListNavigationChildParameters, UseListNavigationParameters, UseListNavigationReturnTypeInfo, useMergedProps, usePassiveState, UseRovingTabIndexChildReturnTypeInfo, useStableCallback, useState } from "preact-prop-helpers";
 import { StateUpdater, useCallback, useRef } from "preact/hooks";
 import { CheckboxCheckedType } from "./use-label";
-import { debugLog, enhanceEvent, EventDetail } from "./props";
+import { debugLog, EnhancedEvent, enhanceEvent, EventDetail } from "./props";
 import { CheckboxChangeEvent, useAriaCheckbox, UseAriaCheckboxParameters, UseAriaCheckboxReturnTypeInfo } from "./use-checkbox";
 
-export type CheckboxGroupChangeEvent<EventType extends Event> = EventType & { [EventDetail]: { childrenChecked: boolean | Map<number, boolean | "mixed"> } };
+export type CheckboxGroupChangeEvent<E extends EventTarget> = EnhancedEvent<E, Event, { childrenChecked: boolean | Map<number, boolean | "mixed"> }>;
 
 export interface UseCheckboxGroupParameters extends UseListNavigationParameters<never, never, never, never, never> {
     /**
@@ -201,7 +201,7 @@ export function useCheckboxGroup<InputElement extends Element, LabelElement exte
         }
     }, [ariaControls]);
 
-    const onCheckboxGroupParentInput2 = useCallback((e: CheckboxChangeEvent<h.JSX.TargetedEvent<InputElement, Event>>) => {
+    const onCheckboxGroupParentInput2 = useCallback((e: CheckboxChangeEvent<InputElement>) => {
 
         e.preventDefault();
 
@@ -212,7 +212,7 @@ export function useCheckboxGroup<InputElement extends Element, LabelElement exte
         children.forEach(child => {
             let checked: boolean;
             if (nextChecked == "mixed") {
-                if (willChangeAny) 
+                if (willChangeAny)
                     checked = (child.subInfo.subInfo.subInfo.getLastUserChecked() as boolean);
                 else
                     checked = true;

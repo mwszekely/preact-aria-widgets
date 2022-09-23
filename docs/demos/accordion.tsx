@@ -11,7 +11,7 @@ function getDocument() {
 }
 
 function DemoAccordionSection({ index, body, heading, disabled, open }: { open?: boolean, disabled: boolean, index: number, heading: ComponentChildren, body: ComponentChildren }) {
-    return <AriaAccordionSection<HTMLDivElement, HTMLDivElement> index={index} open={open} disabled={disabled} getDocument={getDocument} render={(info, headerProps, bodyProps) => {
+    return <AriaAccordionSection<HTMLDivElement, HTMLDivElement> index={index} tagButton="div" tag="" open={open} disabled={disabled} getDocument={getDocument} render={(info, headerProps, bodyProps) => {
         return (
             <>
                 <Heading heading={<div {...headerProps}>{heading} ({!info.accordionSection.expanded && "not "} open), ({!info.accordionSection.focused && "not "} focused)</div>}>

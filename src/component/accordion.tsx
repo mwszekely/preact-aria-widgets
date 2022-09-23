@@ -2,7 +2,7 @@ import { createContext, createElement, h, VNode } from "preact";
 import { useEffect, UseHasFocusParameters } from "preact-prop-helpers";
 import { useContext } from "preact/hooks";
 import { ElementToTag, PropModifier } from "props";
-import { UseAriaButtonParameters } from "use-button";
+import { UseAriaButtonParameters } from "../use-button";
 import { useAriaAccordion, UseAriaAccordionParameters, UseAriaAccordionReturnTypeInfo, UseAriaAccordionSection, UseAriaAccordionSectionParameters, UseAriaAccordionSectionReturnTypeInfo } from "../use-accordion";
 import { Heading } from "./heading";
 
@@ -20,7 +20,7 @@ export interface AriaAccordionSectionProps<HeaderElement extends Element, BodyEl
     Get<UseAriaAccordionSectionParameters<HeaderElement>, "accordionSection">,
     Get<UseAriaAccordionSectionParameters<HeaderElement>, "managedChildren">,
     UseHasFocusParameters<HeaderElement>,
-    Omit<UseAriaButtonParameters<HeaderElement>, "pressed" | "onPress"> {
+    Get<UseAriaAccordionSectionParameters<HeaderElement>, "button"> {
     render(info: UseAriaAccordionSectionReturnTypeInfo, makeHeaderProps: PropModifier<HeaderElement>, makeBodyProps: PropModifier<BodyElement>): VNode<any>;
 }
 
@@ -60,7 +60,7 @@ export function defaultRenderAccordionSection<HeaderElement extends HTMLElement,
 export function AriaAccordionSection<HeaderElement extends Element, BodyElement extends Element>({
     open,
     index,
-    tag,
+    tagButton,
     disabled,
     render,
     getDocument,
@@ -78,8 +78,8 @@ export function AriaAccordionSection<HeaderElement extends Element, BodyElement 
 }: AriaAccordionSectionProps<HeaderElement, BodyElement>) {
     const useAriaAccordionSection = useContext(AccordionSectionContext);
     const { useAriaAccordionSectionBodyProps, useAriaAccordionSectionHeaderProps, ...sectionInfo } = useAriaAccordionSection({
-        button: { tag, disabled },
-        accordionSection: { open },
+        button: { disabled },
+        accordionSection: { open, tagButton },
         managedChildren: { index },
         hasFocus: { getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange }
     });

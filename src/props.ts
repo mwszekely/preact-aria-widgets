@@ -1,6 +1,6 @@
 import { h, Ref } from "preact";
 
-export type RefFromTag<T extends keyof h.JSX.IntrinsicElements> = NonNullable<h.JSX.IntrinsicElements[T]["ref"]>;
+export type RefFromTag<T extends keyof h.JSX.IntrinsicElements> = NonNullable<h.JSX.IntrinsicElements[T]["ref"]> & Ref<any>;
 export type ElementFromRef<R extends Ref<any>> = R extends Ref<infer E> ? E : EventTarget;
 export type ElementFromTag<T extends keyof h.JSX.IntrinsicElements> = ElementFromRef<RefFromTag<T>>;
 
@@ -24,9 +24,13 @@ export interface TagSensitiveProps<E extends EventTarget> {
 
 export const EventDetail = Symbol("event-detail");
 export type EventDetail = typeof EventDetail;
+export type EnhancedEvent<Target extends EventTarget, TypedEvent extends Event, Detail> = h.JSX.TargetedEvent<Target, TypedEvent> & {
+    [EventDetail]: Detail;
+};
 
-export function enhanceEvent<E extends Event, Detail extends object>(e: E, detail: Detail): E & { [EventDetail]: Detail } {
-    const event = e as E & { [EventDetail]: Detail };
+
+export function enhanceEvent<E extends EventTarget, TypedEvent extends Event, Detail extends object>(e: TypedEvent | h.JSX.TargetedEvent<E, TypedEvent>, detail: Detail): EnhancedEvent<E, TypedEvent, Detail> {
+    const event = e as unknown as EnhancedEvent<E, TypedEvent, Detail>;
     event[EventDetail] = detail;
     return event;
 }
@@ -53,21 +57,21 @@ export function setDebugLogging(logging: boolean) {
     debug = logging;
 }
 
-export type DebugLogTypes = 
-"useAriaAccordian" | "useAriaAccordianSection" | 
-"useAriaButton" | 
-"useAriaCheckbox" |
-"useAriaCheckboxGroup" | "useAriaCheckboxGroupParent" | "useAriaCheckboxGroupChild" | 
-"useAriaDialog" | "useAriaDrawer" | 
-"useAriaListboxMulti" | "useAriaListboxMultiItem" | 
-"useAriaListboxSingle" | "useAriaListboxSingleItem" | 
-"useAriaMenu" | "useAriaMenuSurface" | "useAriaMenuItem" | "useAriaFocusSentinel" | "useAriaMenuSurfaceSentinel" |
-"useAriaRadioGroup" | "useAriaRadio" | 
-"useAriaSlider" | "useAriaSliderThumb" | 
-"useAriaTable" | "useAriaTableRow" | "useAriaTableCell" | "useAriaTableBody" | 
-"useAriaTabs" | "useAriaTabList" | "useAriaTab" | "useAriaTabPanel" |  
-"useAriaToasts" | "useAriaToast" | 
-"useAriaTooltip" | "useAriaTooltipTooltip" | "useAriaTooltipTrigger";
+export type DebugLogTypes =
+    "useAriaAccordian" | "useAriaAccordianSection" |
+    "useAriaButton" |
+    "useAriaCheckbox" |
+    "useAriaCheckboxGroup" | "useAriaCheckboxGroupParent" | "useAriaCheckboxGroupChild" |
+    "useAriaDialog" | "useAriaDrawer" |
+    "useAriaListboxMulti" | "useAriaListboxMultiItem" |
+    "useAriaListboxSingle" | "useAriaListboxSingleItem" |
+    "useAriaMenu" | "useAriaMenuSurface" | "useAriaMenuItem" | "useAriaFocusSentinel" | "useAriaMenuSurfaceSentinel" |
+    "useAriaRadioGroup" | "useAriaRadio" |
+    "useAriaSlider" | "useAriaSliderThumb" |
+    "useAriaTable" | "useAriaTableRow" | "useAriaTableCell" | "useAriaTableBody" |
+    "useAriaTabs" | "useAriaTabList" | "useAriaTab" | "useAriaTabPanel" |
+    "useAriaToasts" | "useAriaToast" |
+    "useAriaTooltip" | "useAriaTooltipTooltip" | "useAriaTooltipTrigger";
 
 export function debugLog(who: DebugLogTypes, ...args: Parameters<(typeof console)["log"]>) {
     if (debug)

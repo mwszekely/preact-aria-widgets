@@ -109,7 +109,7 @@ export interface UseCheckboxLikeParameters<InputType extends Element, LabelType 
         disabled: boolean;
         checked: CheckboxCheckedType;
         onInput?(event: h.JSX.TargetedEvent<InputType>): void;
-        onInput?(event: h.JSX.TargetedEvent<LabelType>): void;
+        //onInput?(event: h.JSX.TargetedEvent<LabelType>): void;
     }
 }
 
