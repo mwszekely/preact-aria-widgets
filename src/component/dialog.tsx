@@ -3,15 +3,15 @@ import { UseActiveElementParameters } from "preact-prop-helpers";
 import { createPortal } from "preact/compat";
 import { useRef } from "preact/hooks";
 import { ElementToTag, PropModifier } from "props";
-import { useAriaDialog, UseAriaDialogParameters, UseDialogReturnTypeInfo } from "../use-dialog";
+import { useDialog, UseDialogParameters, UseDialogReturnTypeInfo } from "../use-dialog";
 
 type Get<T, K extends keyof T> = T[K];
 
 export interface DialogProps<FocusContainerElement extends HTMLElement, DialogElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement> extends
-    Get<UseAriaDialogParameters, "softDismiss">,
-    Get<UseAriaDialogParameters, "modal">,
+    Get<UseDialogParameters, "softDismiss">,
+    Get<UseDialogParameters, "modal">,
     UseActiveElementParameters,
-    Get<UseAriaDialogParameters, "dialog"> {
+    Get<UseDialogParameters, "dialog"> {
 
     render(dialogInfo: UseDialogReturnTypeInfo, modifyFocusContainerProps: PropModifier<FocusContainerElement>, modifyDialogProps: PropModifier<DialogElement>, modifyTitleProps: PropModifier<TitleElement>, modifyBodyProps: PropModifier<BodyElement>, modifyBackdropProps: PropModifier<BackdropElement>): VNode<any>;
 }
@@ -71,7 +71,7 @@ export function Dialog<FocusContainerElement extends HTMLElement, DialogElement 
         useDialogTitle,
         useDialogFocusContainerProps,
         ...r
-    } = useAriaDialog<FocusContainerElement, DialogElement, TitleElement, BodyElement, BackdropElement>({ dialog: { onClose }, modal: { bodyIsOnlySemantic, focusSelf }, softDismiss: { open }, activeElement: { getDocument, getWindow, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange } });
+    } = useDialog<FocusContainerElement, DialogElement, TitleElement, BodyElement, BackdropElement>({ dialog: { onClose }, modal: { bodyIsOnlySemantic, focusSelf }, softDismiss: { open }, activeElement: { getDocument, getWindow, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange } });
 
     const { useDialogTitleProps } = useDialogTitle();
     const { useDialogBodyProps } = useDialogBody();

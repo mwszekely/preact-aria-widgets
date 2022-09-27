@@ -1,10 +1,11 @@
 
 import { ComponentChildren, h, RenderableProps } from "preact";
 import { useState } from "preact-prop-helpers";
-import { AriaButton, AriaCheckbox, EventDetail, defaultRenderButton, defaultRenderCheckbox } from "../../index";
+import { StateUpdater } from "preact/hooks";
+import { Button, Checkbox, EventDetail, defaultRenderButton, defaultRenderCheckbox } from "../../index";
 
 /*function DemoButton({ tag, ...props }: { tag: string } & RenderableProps<{}>) {
-    return <AriaButton disabled={disabled} onPress={onPress} pressed={} {...props} tag={tag as any}   />
+    return <Button disabled={disabled} onPress={onPress} pressed={} {...props} tag={tag as any}   />
 }*/
 
 
@@ -31,40 +32,40 @@ export function Blurb() {
 }
 
 export function Code() {
-    return (<code>{`<AriaCheckbox checked={true} labelPosition="separate" tagInput="input" tagLabel="label">Label text</AriaCheckbox>`}</code>)
+    return (<code>{`<Checkbox checked={true} labelPosition="separate" tagInput="input" tagLabel="label">Label text</Checkbox>`}</code>)
 }
 
 export function Demo() {
 
-    const [checked, setChecked] = useState(false);
+    const [checked, setChecked] = useState(false as boolean | "mixed");
 
 
     return (
         <>
             <Blurb />
             <Code />
-            <AriaButton tag="button" onPress={() => { setChecked("mixed" as any); }} render={defaultRenderButton("button", () => ({ children: "Change to mixed" }))} />
-            <DemoCheckbox labelPosition="separate" disabled={false} tagInput="input" tagLabel="label" />
-            <DemoCheckbox labelPosition="wrapping" disabled={false} tagInput="input" tagLabel="label" />
-            <DemoCheckbox labelPosition="separate" disabled={false} tagInput="div" tagLabel="label" />
-            <DemoCheckbox labelPosition="wrapping" disabled={false} tagInput="div" tagLabel="label" />
-            <DemoCheckbox labelPosition="separate" disabled={false} tagInput="input" tagLabel="div" />
-            <DemoCheckbox labelPosition="wrapping" disabled={false} tagInput="input" tagLabel="div" />
-            <DemoCheckbox labelPosition="separate" disabled={false} tagInput="div" tagLabel="div" />
-            <DemoCheckbox labelPosition="wrapping" disabled={false} tagInput="div" tagLabel="div" />
-            <DemoCheckbox labelPosition="hidden" disabled={false} tagInput="input" tagLabel="label" />
+            <Button tag="button" onPress={() => { setChecked("mixed" as any); }} render={defaultRenderButton("button", () => ({ children: "Change to mixed" }))} />
+            <DemoCheckbox checked={checked} setChecked={setChecked} labelPosition="separate" disabled={false} tagInput="input" tagLabel="label" />
+            <DemoCheckbox checked={checked} setChecked={setChecked} labelPosition="wrapping" disabled={false} tagInput="input" tagLabel="label" />
+            <DemoCheckbox checked={checked} setChecked={setChecked} labelPosition="separate" disabled={false} tagInput="div" tagLabel="label" />
+            <DemoCheckbox checked={checked} setChecked={setChecked} labelPosition="wrapping" disabled={false} tagInput="div" tagLabel="label" />
+            <DemoCheckbox checked={checked} setChecked={setChecked} labelPosition="separate" disabled={false} tagInput="input" tagLabel="div" />
+            <DemoCheckbox checked={checked} setChecked={setChecked} labelPosition="wrapping" disabled={false} tagInput="input" tagLabel="div" />
+            <DemoCheckbox checked={checked} setChecked={setChecked} labelPosition="separate" disabled={false} tagInput="div" tagLabel="div" />
+            <DemoCheckbox checked={checked} setChecked={setChecked} labelPosition="wrapping" disabled={false} tagInput="div" tagLabel="div" />
+            <DemoCheckbox checked={checked} setChecked={setChecked} labelPosition="hidden" disabled={false} tagInput="input" tagLabel="label" />
         </>
     )
 }
 
-function DemoCheckbox({ labelPosition, tagInput, tagLabel, disabled }: { disabled: boolean, labelPosition: "separate" | "wrapping" | "hidden", tagInput: string, tagLabel: string }) {
-    const [checked, setChecked] = useState(false);
+function DemoCheckbox({ labelPosition, tagInput, tagLabel, disabled, checked, setChecked }: { disabled: boolean, labelPosition: "separate" | "wrapping" | "hidden", tagInput: string, tagLabel: string, checked: boolean | "mixed", setChecked: StateUpdater<boolean | "mixed"> }) {
+    //const [checked, setChecked] = useState(false);
     return (
         <div style={{ border: "1px solid black" }}>
-            <AriaCheckbox
+            <Checkbox
                 disabled={disabled}
                 checked={checked}
-                onInput={e => setChecked(e[EventDetail].checked)}
+                onCheckedChange={e => setChecked(e[EventDetail].checked)}
                 labelPosition={labelPosition == "hidden" ? "separate" : labelPosition}
                 tagInput={tagInput as never}
                 tagLabel={tagLabel as never}

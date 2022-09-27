@@ -14,7 +14,11 @@ export interface UseListboxMultiParameters<LabelElement extends Element, ListEle
 }
 
 export interface UseListboxMultiItemParameters extends Omit<UseListNavigationChildParameters<Info, never, never, never, never, never>, "subInfo"> {
-    listboxMultiItem: { disabled?: boolean; } & Info;
+    listboxMultiItem: {
+        disabled?: boolean;
+        selected: boolean;
+        onSelectedChange?(event: (ListboxMultiSelectEvent<Element>)): void;
+    };
 }
 
 
@@ -54,7 +58,7 @@ interface Info {
 }*/
 
 
-export function useAriaListboxMulti<LabelElement extends Element, ListElement extends Element, ListItemElement extends Element>({
+export function useListboxMulti<LabelElement extends Element, ListElement extends Element, ListItemElement extends Element>({
     listboxMulti: { tagLabel, tagList },
     linearNavigation: { ...ln },
     listNavigation: { ...ls },
@@ -63,7 +67,7 @@ export function useAriaListboxMulti<LabelElement extends Element, ListElement ex
     typeaheadNavigation: { ...tn }
 }: UseListboxMultiParameters<LabelElement, ListElement>): UseListboxMultiReturnTypeWithHooks<LabelElement, ListElement, ListItemElement> {
 
-    debugLog("useAriaListboxMulti");
+    debugLog("useListboxMulti");
 
     //const { useHasFocusProps, getFocusedInner } = useHasFocus<ListElement>({});
 
@@ -106,14 +110,14 @@ export function useAriaListboxMulti<LabelElement extends Element, ListElement ex
     const [getShiftHeld, setShiftHeld] = usePassiveState(null, returnFalse);
 
 
-    const useListboxMultiItem = useCallback<UseListboxMultiItem<ListItemElement>>(({ listboxMultiItem: { selected, disabled, onSelect }, managedChild, listNavigation: ls, rovingTabIndex: rti }) => {
-        debugLog("useAriaListboxMultiItem", managedChild.index, selected);
+    const useListboxMultiItem = useCallback<UseListboxMultiItem<ListItemElement>>(({ listboxMultiItem: { selected, disabled, onSelectedChange }, managedChild, listNavigation: ls, rovingTabIndex: rti }) => {
+        debugLog("useListboxMultiItem", managedChild.index, selected);
         type E = ListItemElement;
         const getSelected = useStableGetter(selected);
         const { useRefElementProps, getElement } = useRefElement<E>({});
-        const stableOnSelect = useStableCallback(onSelect ?? (() => { }));
+        const stableOnSelect = useStableCallback(onSelectedChange ?? (() => { }));
 
-        const { useListNavigationChildProps, rovingTabIndex: rti2_ret } = useListNavigationChild({ listNavigation: ls, managedChild, rovingTabIndex: rti, subInfo: { selected, onSelect } });
+        const { useListNavigationChildProps, rovingTabIndex: rti2_ret } = useListNavigationChild({ listNavigation: ls, managedChild, rovingTabIndex: rti, subInfo: { selected, onSelect: stableOnSelect } });
 
         useLayoutEffect(() => {
             const element = getElement();

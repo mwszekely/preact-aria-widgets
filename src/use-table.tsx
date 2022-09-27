@@ -7,21 +7,21 @@ import { debugLog } from "./props";
 
 export type TableValueType = string | number | null | boolean | Date;
 
-export interface UseAriaTableParameters extends UseGridNavigationParameters<"indexMangler" | "indexDemangler", never, never, never, never> { }
-export interface UseAriaTableBodyParameters { }
-export interface UseAriaTableRowParameters<CellElement extends Element> extends Omit<UseGridNavigationRowParameters<UseAriaTableRowSubInfo<CellElement>, never, never, never, never, never, never, "subInfo", "subInfo", "subInfo", {}>, "subInfo"> {
-    tableRow: Pick<UseAriaTableRowSubInfo<CellElement>, "location">;
+export interface UseTableParameters extends UseGridNavigationParameters<"indexMangler" | "indexDemangler", never, never, never, never> { }
+export interface UseTableBodyParameters { }
+export interface UseTableRowParameters<CellElement extends Element> extends Omit<UseGridNavigationRowParameters<UseTableRowSubInfo<CellElement>, never, never, never, never, never, never, "subInfo", "subInfo", "subInfo", {}>, "subInfo"> {
+    tableRow: Pick<UseTableRowSubInfo<CellElement>, "location">;
 }
-export interface UseAriaTableCellParameters<CellElement extends Element> extends UseGridNavigationCellParameters<CellElement, UseAriaTableCellSubInfo, never, "subInfo", "subInfo", "subInfo", UseAriaTableCellSubInfo> {
+export interface UseTableCellParameters<CellElement extends Element> extends UseGridNavigationCellParameters<CellElement, UseTableCellSubInfo, never, "subInfo", "subInfo", "subInfo", UseTableCellSubInfo> {
     hasFocus: UseHasFocusParameters<CellElement>;
 }
 
-export interface UseAriaTableRowSubInfo<CellElement extends Element> {
+export interface UseTableRowSubInfo<CellElement extends Element> {
     location: "head" | "body" | "foot";
-    getCells(): ManagedChildren<number, UseRovingTabIndexSubInfo<CellElement, UseListNavigationSubInfo<UseAriaTableCellSubInfo>>, "tabbable">;
+    getCells(): ManagedChildren<number, UseRovingTabIndexSubInfo<CellElement, UseListNavigationSubInfo<UseTableCellSubInfo>>, "tabbable">;
 }
 
-export interface UseAriaTableCellSubInfo {
+export interface UseTableCellSubInfo {
     location: "head" | "body" | "foot";
     value: TableValueType;
 }
@@ -29,32 +29,32 @@ export interface UseAriaTableCellSubInfo {
 
 
 
-export interface UseAriaTableCellReturnTypeInfo<CellElement extends Element> extends UseGridNavigationCellReturnTypeInfo<CellElement> { tableHeaderCell: { sort(): void } }
-export interface UseAriaTableRowReturnTypeInfo<RowElement extends Element, CellElement extends Element> extends UseGridNavigationRowReturnTypeInfo<RowElement, CellElement, UseAriaTableCellSubInfo, never> { }
-export interface UseAriaTableBodyReturnTypeInfo<RowElement extends Element, CellElement extends Element> extends UseSortableChildrenReturnTypeInfo<UseRovingTabIndexSubInfo<RowElement, UseListNavigationSubInfo<UseAriaTableRowSubInfo<CellElement>>>, never, []> { }
-export interface UseAriaTableReturnTypeInfo<RowElement extends Element, CellElement extends Element> extends UseListNavigationReturnTypeInfo<RowElement, UseAriaTableRowSubInfo<CellElement>, never> { }
+export interface UseTableCellReturnTypeInfo<CellElement extends Element> extends UseGridNavigationCellReturnTypeInfo<CellElement> { tableHeaderCell: { sort(): void } }
+export interface UseTableRowReturnTypeInfo<RowElement extends Element, CellElement extends Element> extends UseGridNavigationRowReturnTypeInfo<RowElement, CellElement, UseTableCellSubInfo, never> { }
+export interface UseTableBodyReturnTypeInfo<RowElement extends Element, CellElement extends Element> extends UseSortableChildrenReturnTypeInfo<UseRovingTabIndexSubInfo<RowElement, UseListNavigationSubInfo<UseTableRowSubInfo<CellElement>>>, never, []> { }
+export interface UseTableReturnTypeInfo<RowElement extends Element, CellElement extends Element> extends UseListNavigationReturnTypeInfo<RowElement, UseTableRowSubInfo<CellElement>, never> { }
 
 
-export interface UseAriaTableCellReturnTypeWithHooks<CellElement extends Element> extends UseAriaTableCellReturnTypeInfo<CellElement> { useTableCellProps: (props: h.JSX.HTMLAttributes<CellElement>) => h.JSX.HTMLAttributes<CellElement>; }
-export interface UseAriaTableRowReturnTypeWithHooks<RowElement extends Element, CellElement extends Element> extends UseAriaTableRowReturnTypeInfo<RowElement, CellElement> { useTableCell: UseAriaTableCell<CellElement>; useTableRowProps: (props: h.JSX.HTMLAttributes<RowElement>) => h.JSX.HTMLAttributes<RowElement>; }
-export interface UseAriaTableBodyReturnTypeWithHooks<BodySectionElement extends Element, RowElement extends Element, CellElement extends Element> extends UseAriaTableBodyReturnTypeInfo<RowElement, CellElement> { useTableBodyProps: (props: h.JSX.HTMLAttributes<BodySectionElement>) => h.JSX.HTMLAttributes<BodySectionElement> }
-export interface UseAriaTableReturnTypeWithHooks<TableElement extends Element, BodySectionElement extends Element, RowElement extends Element, CellElement extends Element> extends UseAriaTableReturnTypeInfo<RowElement, CellElement> {
-    useTableRow: UseAriaTableRow<RowElement, CellElement>;
-    useTableBody: UseAriaTableBody<BodySectionElement, RowElement, CellElement>;
+export interface UseTableCellReturnTypeWithHooks<CellElement extends Element> extends UseTableCellReturnTypeInfo<CellElement> { useTableCellProps: (props: h.JSX.HTMLAttributes<CellElement>) => h.JSX.HTMLAttributes<CellElement>; }
+export interface UseTableRowReturnTypeWithHooks<RowElement extends Element, CellElement extends Element> extends UseTableRowReturnTypeInfo<RowElement, CellElement> { useTableCell: UseTableCell<CellElement>; useTableRowProps: (props: h.JSX.HTMLAttributes<RowElement>) => h.JSX.HTMLAttributes<RowElement>; }
+export interface UseTableBodyReturnTypeWithHooks<BodySectionElement extends Element, RowElement extends Element, CellElement extends Element> extends UseTableBodyReturnTypeInfo<RowElement, CellElement> { useTableBodyProps: (props: h.JSX.HTMLAttributes<BodySectionElement>) => h.JSX.HTMLAttributes<BodySectionElement> }
+export interface UseTableReturnTypeWithHooks<TableElement extends Element, BodySectionElement extends Element, RowElement extends Element, CellElement extends Element> extends UseTableReturnTypeInfo<RowElement, CellElement> {
+    useTableRow: UseTableRow<RowElement, CellElement>;
+    useTableBody: UseTableBody<BodySectionElement, RowElement, CellElement>;
     useTableProps: (props: h.JSX.HTMLAttributes<TableElement>) => h.JSX.HTMLAttributes<TableElement>;
 }
 
-export type UseAriaTableCell<CellElement extends Element> = (p: UseAriaTableCellParameters<CellElement>) => UseAriaTableCellReturnTypeWithHooks<CellElement>;
-export type UseAriaTableRow<RowElement extends Element, CellElement extends Element> = (p: UseAriaTableRowParameters<CellElement>) => UseAriaTableRowReturnTypeWithHooks<RowElement, CellElement>;
-export type UseAriaTableBody<BodySectionElement extends Element, RowElement extends Element, CellElement extends Element> = (p: UseAriaTableBodyParameters) => UseAriaTableBodyReturnTypeWithHooks<BodySectionElement, RowElement, CellElement>;
+export type UseTableCell<CellElement extends Element> = (p: UseTableCellParameters<CellElement>) => UseTableCellReturnTypeWithHooks<CellElement>;
+export type UseTableRow<RowElement extends Element, CellElement extends Element> = (p: UseTableRowParameters<CellElement>) => UseTableRowReturnTypeWithHooks<RowElement, CellElement>;
+export type UseTableBody<BodySectionElement extends Element, RowElement extends Element, CellElement extends Element> = (p: UseTableBodyParameters) => UseTableBodyReturnTypeWithHooks<BodySectionElement, RowElement, CellElement>;
 
-export function useAriaTable<
+export function useTable<
     TableElement extends Element,
     BodySectionElement extends Element,
     RowElement extends Element,
     CellElement extends Element
->({ linearNavigation, listNavigation, managedChildren, rovingTabIndex, typeaheadNavigation }: UseAriaTableParameters): UseAriaTableReturnTypeWithHooks<TableElement, BodySectionElement, RowElement, CellElement> {
-    debugLog("useAriaTable");
+>({ linearNavigation, listNavigation, managedChildren, rovingTabIndex, typeaheadNavigation }: UseTableParameters): UseTableReturnTypeWithHooks<TableElement, BodySectionElement, RowElement, CellElement> {
+    debugLog("useTable");
 
     const [getCurrentSortColumn, setCurrentSortColumn] = usePassiveState<{ index: number, direction: "ascending" | "descending" } | null>(null, returnNull);
     const bodySort = useRef<null | (() => void)>(null);
@@ -63,7 +63,7 @@ export function useAriaTable<
         useGridNavigationProps,
         useGridNavigationRow,
         ...gridNavRet1
-    } = useGridNavigation<TableElement, RowElement, CellElement, UseAriaTableRowSubInfo<CellElement>, UseAriaTableCellSubInfo, never, never>({
+    } = useGridNavigation<TableElement, RowElement, CellElement, UseTableRowSubInfo<CellElement>, UseTableCellSubInfo, never, never>({
         linearNavigation,
         listNavigation,
         managedChildren,
@@ -73,8 +73,8 @@ export function useAriaTable<
 
     const { managedChildren: { children: rows } } = gridNavRet1;
 
-    const useTableRow = useCallback<UseAriaTableRow<RowElement, CellElement>>(({ asChildRowOfSection, asParentRowOfCells, tableRow: { location } }: UseAriaTableRowParameters<CellElement>): UseAriaTableRowReturnTypeWithHooks<RowElement, CellElement> => {
-        debugLog("useAriaTableRow", asChildRowOfSection.managedChild.index);
+    const useTableRow = useCallback<UseTableRow<RowElement, CellElement>>(({ asChildRowOfSection, asParentRowOfCells, tableRow: { location } }: UseTableRowParameters<CellElement>): UseTableRowReturnTypeWithHooks<RowElement, CellElement> => {
+        debugLog("useTableRow", asChildRowOfSection.managedChild.index);
 
         const getCells = useCallback(() => {
             return cells;
@@ -88,8 +88,8 @@ export function useAriaTable<
 
         const { asParentOfCells: { managedChildren: { children: cells } } } = gridNavRet2;
 
-        const useTableCell = useCallback<UseAriaTableCell<CellElement>>(({ listNavigation, managedChild, rovingTabIndex, subInfo, hasFocus }) => {
-            debugLog("useAriaTableCell", managedChild.index);
+        const useTableCell = useCallback<UseTableCell<CellElement>>(({ listNavigation, managedChild, rovingTabIndex, subInfo, hasFocus }) => {
+            debugLog("useTableCell", managedChild.index);
             const {
                 useGridNavigationCellProps,
                 ...gridNavRet3
@@ -129,9 +129,9 @@ export function useAriaTable<
         }
     }, []);
 
-    const useTableBody = useCallback<UseAriaTableBody<BodySectionElement, RowElement, CellElement>>(() => {
-        debugLog("useAriaTableBody");
-        type C = UseRovingTabIndexSubInfo<RowElement, UseListNavigationSubInfo<UseAriaTableRowSubInfo<CellElement>>>;
+    const useTableBody = useCallback<UseTableBody<BodySectionElement, RowElement, CellElement>>(() => {
+        debugLog("useTableBody");
+        type C = UseRovingTabIndexSubInfo<RowElement, UseListNavigationSubInfo<UseTableRowSubInfo<CellElement>>>;
         type V = { location: "head" | "body" | "foot", value: TableValueType };
         const getIndex = useCallback<GetIndex<C, never>>((i) => i.index, []);
         const getValue = useCallback<GetValue<C, never, [], V>>((i) => {
@@ -157,7 +157,7 @@ export function useAriaTable<
         const {
             useSortableProps,
             ...sortableRet
-        } = useSortableChildren<BodySectionElement, UseRovingTabIndexSubInfo<RowElement, UseListNavigationSubInfo<UseAriaTableRowSubInfo<CellElement>>>, never, [], V>({
+        } = useSortableChildren<BodySectionElement, UseRovingTabIndexSubInfo<RowElement, UseListNavigationSubInfo<UseTableRowSubInfo<CellElement>>>, never, [], V>({
             rearrangeableChildren: {
                 getIndex
             },

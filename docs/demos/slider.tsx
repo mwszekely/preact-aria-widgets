@@ -3,10 +3,6 @@ import { useState } from "preact-prop-helpers";
 import { EventDetail, ListboxSingle } from "../../index";
 import { defaultRenderSliderThumb, SliderThumb, Slider } from "../../component/slider"
 
-/*function DemoButton({ tag, ...props }: { tag: string } & RenderableProps<{}>) {
-    return <AriaButton disabled={disabled} onPress={onPress} pressed={} {...props} tag={tag as any}   />
-}*/
-
 function DemoSliderThumb({ index }: { index: number }) {
     const [value, setValue] = useState(0);
 

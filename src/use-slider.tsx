@@ -9,12 +9,12 @@ import { debugLog, EventDetail, TagSensitiveProps } from "./props";
 
 export type RangeChangeEvent<E extends EventTarget> = { [EventDetail]: { value: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 
-export interface AriaSliderThumbInfo {
+export interface SliderThumbInfo {
     setMin: StateUpdater<number>;
     setMax: StateUpdater<number>;
 }
 
-export interface UseAriaSliderThumbParameters<E extends Element> extends UseManagedChildParameters<number, AriaSliderThumbInfo, never, "subInfo"> {
+export interface UseSliderThumbParameters<E extends Element> extends UseManagedChildParameters<number, SliderThumbInfo, never, "subInfo"> {
     sliderThumb: TagSensitiveProps<E> & {
         value: number;
         valueText?: string;
@@ -34,42 +34,42 @@ export interface UseAriaSliderThumbParameters<E extends Element> extends UseMana
     }
 }
 
-export interface UseAriaSliderThumbProps<E extends Element> extends h.JSX.HTMLAttributes<E> {
+export interface UseSliderThumbProps<E extends Element> extends h.JSX.HTMLAttributes<E> {
 
 }
 
-export interface UseAriaSliderParameters extends UseManagedChildrenParameters<number, never> {
+export interface UseSliderParameters extends UseManagedChildrenParameters<number, never> {
     slider: {
         min: number;
         max: number;
     }
 }
 
-export interface UseAriaSliderThumbReturnTypeInfo {
+export interface UseSliderThumbReturnTypeInfo {
     sliderThumb: {
         min: number;
         max: number;
     }
 }
 
-export interface UseAriaSliderThumbReturnType<E extends Element> extends UseAriaSliderThumbReturnTypeInfo {
-    useAriaSliderThumbProps: (props: h.JSX.HTMLAttributes<E>) => h.JSX.HTMLAttributes<E>;
+export interface UseSliderThumbReturnType<E extends Element> extends UseSliderThumbReturnTypeInfo {
+    useSliderThumbProps: (props: h.JSX.HTMLAttributes<E>) => h.JSX.HTMLAttributes<E>;
 }
 
-export type UseAriaSliderThumb<ThumbElement extends Element> = (props: UseAriaSliderThumbParameters<ThumbElement>) => UseAriaSliderThumbReturnType<ThumbElement>;
+export type UseSliderThumb<ThumbElement extends Element> = (props: UseSliderThumbParameters<ThumbElement>) => UseSliderThumbReturnType<ThumbElement>;
 
-export interface UseAriaSliderReturnTypeInfo extends UseManagedChildrenReturnTypeInfo<number, AriaSliderThumbInfo, never> {}
-export interface UseAriaSliderReturnTypeWithHooks<ThumbElement extends Element> extends UseAriaSliderReturnTypeInfo {
-    useAriaSliderThumb: UseAriaSliderThumb<ThumbElement>;
+export interface UseSliderReturnTypeInfo extends UseManagedChildrenReturnTypeInfo<number, SliderThumbInfo, never> {}
+export interface UseSliderReturnTypeWithHooks<ThumbElement extends Element> extends UseSliderReturnTypeInfo {
+    useSliderThumb: UseSliderThumb<ThumbElement>;
 }
 
 
-export function useAriaSlider<ThumbElement extends Element>({ slider: { max: maxParent, min: minParent }, managedChildren }: UseAriaSliderParameters): UseAriaSliderReturnTypeWithHooks<ThumbElement> {
-    debugLog("useAriaSlider");
-    const { useManagedChild, ...childrenInfo } = useManagedChildren<number, AriaSliderThumbInfo, never>({ managedChildren });
+export function useSlider<ThumbElement extends Element>({ slider: { max: maxParent, min: minParent }, managedChildren }: UseSliderParameters): UseSliderReturnTypeWithHooks<ThumbElement> {
+    debugLog("useSlider");
+    const { useManagedChild, ...childrenInfo } = useManagedChildren<number, SliderThumbInfo, never>({ managedChildren });
 
-    const useAriaSliderThumb = useCallback(function useAriaSliderThumb({ managedChild, sliderThumb }: UseAriaSliderThumbParameters<ThumbElement>): UseAriaSliderThumbReturnType<ThumbElement> {
-        debugLog("useAriaSliderThumb", managedChild.index);
+    const useSliderThumb = useCallback(function useSliderThumb({ managedChild, sliderThumb }: UseSliderThumbParameters<ThumbElement>): UseSliderThumbReturnType<ThumbElement> {
+        debugLog("useSliderThumb", managedChild.index);
         const [minParentCopy, setMinParentCopy] = useState(minParent);
         const [maxParentCopy, setMaxParentCopy] = useState(maxParent);
         const __: void = useManagedChild({ managedChild: { ...managedChild, subInfo: { setMax: setMaxParentCopy, setMin: setMinParentCopy } } });
@@ -80,14 +80,14 @@ export function useAriaSlider<ThumbElement extends Element>({ slider: { max: max
         const max = (maxOverride ?? maxParentCopy);
 
         return {
-            useAriaSliderThumbProps,
+            useSliderThumbProps,
             sliderThumb: {
                 min,
                 max
             },
         }
 
-        function useAriaSliderThumbProps<P extends UseAriaSliderThumbProps<ThumbElement>>(props: P) {
+        function useSliderThumbProps<P extends UseSliderThumbProps<ThumbElement>>(props: P) {
             let newProps: h.JSX.HTMLAttributes<ThumbElement> = (
                 tag == "input" ?
                     { min, max, value, type: "range" } :
@@ -106,6 +106,6 @@ export function useAriaSlider<ThumbElement extends Element>({ slider: { max: max
         }
     }, []);
 
-    return { useAriaSliderThumb, ...childrenInfo };
+    return { useSliderThumb, ...childrenInfo };
 }
 

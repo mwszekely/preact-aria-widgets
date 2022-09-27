@@ -11,35 +11,35 @@ export type UseCheckboxInputElement<InputType extends Element> = () => { useChec
 export type UseCheckboxLabelElement<LabelType extends Element> = () => { useCheckboxLabelElementProps: ({ ...p0 }: h.JSX.HTMLAttributes<LabelType>) => h.JSX.HTMLAttributes<LabelType>; }
 
 
-export interface UseAriaCheckboxParameters<I extends Element, L extends Element> {
-    checkboxLike: Omit<UseCheckboxLikeParameters<I, L>["checkboxLike"], "onInput" | "role">;
+export interface UseCheckboxParameters<I extends Element, L extends Element> {
+    checkboxLike: Omit<UseCheckboxLikeParameters<I, L>["checkboxLike"], "onCheckedChange" | "role">;
     label: UseCheckboxLikeParameters<I, L>["label"];
     checkbox: {
-        onInput?(event: CheckboxChangeEvent<I>): void;
+        onCheckedChange?(event: CheckboxChangeEvent<I>): void;
     }
 }
 
-export interface UseAriaCheckboxReturnTypeInfo<InputType extends Element, LabelType extends Element> extends UseCheckboxLikeReturnTypeInfo<InputType, LabelType> {
+export interface UseCheckboxReturnTypeInfo<InputType extends Element, LabelType extends Element> extends UseCheckboxLikeReturnTypeInfo<InputType, LabelType> {
     //checkboxLike: UseCheckboxLikeReturnType<InputType, LabelType>["checkboxLike"];
     //label: UseCheckboxLikeReturnType<InputType, LabelType>["label"];
 }
 
-export interface UseAriaCheckboxReturnTypeWithHooks<InputType extends Element, LabelType extends Element> extends UseAriaCheckboxReturnTypeInfo<InputType, LabelType> {
+export interface UseCheckboxReturnTypeWithHooks<InputType extends Element, LabelType extends Element> extends UseCheckboxReturnTypeInfo<InputType, LabelType> {
     /** **Notably unstable** */
     useCheckboxInputElement: UseCheckboxInputElement<InputType>;
     /** **Notably unstable** */
     useCheckboxLabelElement: UseCheckboxLabelElement<LabelType>;
 }
 
-export function useAriaCheckbox<InputType extends Element, LabelType extends Element>({ checkboxLike, label, checkbox }: UseAriaCheckboxParameters<InputType, LabelType>): UseAriaCheckboxReturnTypeWithHooks<InputType, LabelType> {
-    debugLog("useAriaCheckbox");
+export function useCheckbox<InputType extends Element, LabelType extends Element>({ checkboxLike, label, checkbox }: UseCheckboxParameters<InputType, LabelType>): UseCheckboxReturnTypeWithHooks<InputType, LabelType> {
+    debugLog("useCheckbox");
 
     const { disabled, labelPosition, checked } = checkboxLike;
     const { tagInput, tagLabel } = label;
-    const { onInput } = checkbox;
+    const { onCheckedChange: onInput } = checkbox;
 
     const onInputEnhanced = (e: h.JSX.TargetedEvent<InputType>) => onInput?.(enhanceEvent<InputType, Event, { checked: boolean }>(e, { checked: !checked }));
-    const { useCheckboxLikeInputElement, useCheckboxLikeLabelElement, ...checkboxLikeRest } = useCheckboxLike<InputType, LabelType>({ checkboxLike: { role: "checkbox", checked, onInput: onInputEnhanced, disabled, labelPosition, }, label });
+    const { useCheckboxLikeInputElement, useCheckboxLikeLabelElement, ...checkboxLikeRest } = useCheckboxLike<InputType, LabelType>({ checkboxLike: { role: "checkbox", checked, onCheckedChange: onInputEnhanced, disabled, labelPosition, }, label });
 
     const useCheckboxInputElement: UseCheckboxInputElement<InputType> = useCallback(function useCheckboxInputElement() {
         const tag = tagInput;

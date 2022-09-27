@@ -1,23 +1,27 @@
 import { createElement, h, VNode, ComponentChildren } from "preact";
 import { ElementToTag, PropModifier } from "props";
-import { useAriaCheckbox, UseAriaCheckboxParameters, UseAriaCheckboxReturnTypeInfo } from "../use-checkbox";
+import { useCheckbox, UseCheckboxParameters, UseCheckboxReturnTypeInfo } from "../use-checkbox";
 
 type Get<T, K extends keyof T> = T[K];
 
-export interface AriaCheckboxProps<I extends HTMLElement, L extends HTMLElement> extends
-    Get<UseAriaCheckboxParameters<I, L>, "checkboxLike">,
-    Get<UseAriaCheckboxParameters<I, L>, "checkbox">,
-    Get<UseAriaCheckboxParameters<I, L>, "label"> {
-    render(info: UseAriaCheckboxReturnTypeInfo<I, L>, modifyInputProps: PropModifier<I>, modifyLabelProps: PropModifier<L>): VNode<any>;
+export interface CheckboxProps<I extends HTMLElement, L extends HTMLElement> extends
+    Get<UseCheckboxParameters<I, L>, "checkboxLike">,
+    Get<UseCheckboxParameters<I, L>, "checkbox">,
+    Get<UseCheckboxParameters<I, L>, "label"> {
+    render(info: UseCheckboxReturnTypeInfo<I, L>, modifyInputProps: PropModifier<I>, modifyLabelProps: PropModifier<L>): VNode<any>;
 }
 
 export function defaultRenderCheckboxLike<I extends HTMLElement, L extends HTMLElement, InfoType>({ labelPosition, tagInput, tagLabel, makeInputProps, makeLabelProps }: DefaultRenderCheckboxLikeParameters<I, L, InfoType>) {
     return function (info: InfoType, modifyInputProps: PropModifier<I>, modifyLabelProps: PropModifier<L>): VNode<any> {
 
         if (labelPosition == "wrapping") {
-            const input = createElement(tagInput as never, modifyInputProps(makeInputProps(info)));
-            const { children, ...labelProps } = makeLabelProps(info);
-            const label = createElement(tagLabel as never, modifyLabelProps({ ...labelProps, children: <>{input}{children}</> }));
+            const inputPropsBase = makeInputProps(info);
+            const labelPropsBase = makeLabelProps(info);
+
+            const inputProps = modifyInputProps(inputPropsBase);
+            const { children, ...labelProps } = modifyLabelProps(labelPropsBase);
+            const input = createElement(tagInput as never, inputProps);
+            const label = createElement(tagLabel as never, { ...labelProps, children: <>{input}{children}</> });
 
             return (
                 <>
@@ -26,8 +30,11 @@ export function defaultRenderCheckboxLike<I extends HTMLElement, L extends HTMLE
             )
         }
         else if (labelPosition == "separate") {
-            const input = createElement(tagInput as never, modifyInputProps(makeInputProps(info)));
-            const label = createElement(tagLabel as never, modifyLabelProps(makeLabelProps(info)));
+            const inputProps = modifyInputProps(makeInputProps(info))
+            const labelProps = modifyLabelProps(makeLabelProps(info))
+
+            const input = createElement(tagInput as never, inputProps);
+            const label = createElement(tagLabel as never, labelProps);
 
             return (
                 <>
@@ -44,24 +51,24 @@ export function defaultRenderCheckboxLike<I extends HTMLElement, L extends HTMLE
     }
 }
 
-export interface DefaultRenderCheckboxLikeParameters<I extends HTMLElement, L extends HTMLElement, InfoType> { 
-    labelPosition: "wrapping" | "separate" | "hidden", 
-    tagInput: ElementToTag<I>, 
-    tagLabel: ElementToTag<L>, 
-    makeInputProps: (info: InfoType) => h.JSX.HTMLAttributes<I>, 
-    makeLabelProps: (info: InfoType) => h.JSX.HTMLAttributes<L> 
+export interface DefaultRenderCheckboxLikeParameters<I extends HTMLElement, L extends HTMLElement, InfoType> {
+    labelPosition: "wrapping" | "separate" | "hidden",
+    tagInput: ElementToTag<I>,
+    tagLabel: ElementToTag<L>,
+    makeInputProps: (info: InfoType) => h.JSX.HTMLAttributes<I>,
+    makeLabelProps: (info: InfoType) => h.JSX.HTMLAttributes<L>
 }
 
-export interface DefaultRenderCheckboxParameters<I extends HTMLElement, L extends HTMLElement> extends DefaultRenderCheckboxLikeParameters<I, L, UseAriaCheckboxReturnTypeInfo<I, L>> { }
+export interface DefaultRenderCheckboxParameters<I extends HTMLElement, L extends HTMLElement> extends DefaultRenderCheckboxLikeParameters<I, L, UseCheckboxReturnTypeInfo<I, L>> { }
 
 export function defaultRenderCheckbox<I extends HTMLElement, L extends HTMLElement>({ labelPosition, tagInput, tagLabel, makeInputProps, makeLabelProps }: DefaultRenderCheckboxParameters<I, L>) {
-    return defaultRenderCheckboxLike<I, L, UseAriaCheckboxReturnTypeInfo<I, L>>({ labelPosition, tagInput, tagLabel, makeInputProps, makeLabelProps });
+    return defaultRenderCheckboxLike<I, L, UseCheckboxReturnTypeInfo<I, L>>({ labelPosition, tagInput, tagLabel, makeInputProps, makeLabelProps });
 }
 
 
 
-export function AriaCheckbox<I extends HTMLElement, L extends HTMLElement>({ checked, disabled, tagLabel, labelPosition, tagInput, onInput, render }: AriaCheckboxProps<I, L>) {
-    const { useCheckboxInputElement, useCheckboxLabelElement, ...checkboxInfo } = useAriaCheckbox({ checkbox: { onInput }, checkboxLike: { checked, disabled, labelPosition }, label: { tagInput, tagLabel } });
+export function Checkbox<I extends HTMLElement, L extends HTMLElement>({ checked, disabled, tagLabel, labelPosition, tagInput, onCheckedChange, render }: CheckboxProps<I, L>) {
+    const { useCheckboxInputElement, useCheckboxLabelElement, ...checkboxInfo } = useCheckbox({ checkbox: { onCheckedChange }, checkboxLike: { checked, disabled, labelPosition }, label: { tagInput, tagLabel } });
     const { useCheckboxInputElementProps } = useCheckboxInputElement();
     const { useCheckboxLabelElementProps } = useCheckboxLabelElement();
 

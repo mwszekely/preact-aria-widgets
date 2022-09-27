@@ -42,7 +42,7 @@ export interface UseListboxSingleReturnTypeWithHooks<LabelElement extends Elemen
     useListboxSingleLabel: () => { useListboxSingleLabelProps: (props: h.JSX.HTMLAttributes<LabelElement>) => h.JSX.HTMLAttributes<LabelElement>; }
 }
 
-export function useAriaListboxSingle<LabelElement extends Element, ListElement extends Element, ListItemElement extends Element>({
+export function useListboxSingle<LabelElement extends Element, ListElement extends Element, ListItemElement extends Element>({
     listboxSingle: { tagLabel, tagList, onSelect, ..._lbs },
     singleSelection: { selectedIndex, ...ss },
     linearNavigation: { ...ln },
@@ -52,7 +52,7 @@ export function useAriaListboxSingle<LabelElement extends Element, ListElement e
     typeaheadNavigation: { ...tn },
     childrenHaveFocus: { ...chf }
 }: UseListboxSingleParameters<LabelElement, ListElement>): UseListboxSingleReturnTypeWithHooks<LabelElement, ListElement, ListItemElement> {
-    debugLog("useAriaListboxSingle", selectedIndex);
+    debugLog("useListboxSingle", selectedIndex);
 
     const { useLabelInput, useLabelLabel, ...labelReturnType } = useLabel<ListElement, LabelElement>({
         label: {
@@ -84,7 +84,7 @@ export function useAriaListboxSingle<LabelElement extends Element, ListElement e
 
 
     const useListboxSingleItem = useCallback<UseListboxSingleItem<ListItemElement>>(({ listboxSingleItem: { disabled }, listNavigation, managedChild, rovingTabIndex, hasFocus }) => {
-        debugLog("useAriaListboxSingleItem", managedChild.index);
+        debugLog("useListboxSingleItem", managedChild.index);
         const { rovingTabIndex: rti_ret, singleSelection: ss_ret, useListNavigationSingleSelectionChildProps } = useListNavigationSingleSelectionChild({
             managedChild,
             listNavigation,

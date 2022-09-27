@@ -208,12 +208,12 @@ export function useModal<FocusContainerElement extends HTMLElement, ModalElement
     const { useRefElementProps: useBodyRefElementProps, getElement: getBodyElement } = useRefElement<BodyElement>({});
     focusSelf ??= (() => {
         if (descriptive) {
-            getBodyElement()?.focus();
+            getBodyElement()?.focus({ preventScroll: true });
         }
         else {
             const titleElement = getTitleElement();
             if (titleElement)
-                titleElement.focus();
+                titleElement.focus({ preventScroll: true });
 
         }
         //const elementToFocus = getTitleElement() ?? getBodyElement()

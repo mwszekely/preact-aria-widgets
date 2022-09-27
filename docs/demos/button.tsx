@@ -1,13 +1,7 @@
 
 import { ComponentChildren, h, RenderableProps } from "preact";
 import { useState } from "preact-prop-helpers";
-import { AriaButton, EventDetail, defaultRenderButton } from "../../index";
-
-/*function DemoButton({ tag, ...props }: { tag: string } & RenderableProps<{}>) {
-    return <AriaButton disabled={disabled} onPress={onPress} pressed={} {...props} tag={tag as any}   />
-}*/
-
-
+import { Button, EventDetail, defaultRenderButton } from "../../index";
 
 export function Blurb() {
     return (
@@ -34,8 +28,8 @@ export function Blurb() {
 }
 
 export function Code() {
-    return (<code>{`<AriaButton tag="button">Button</AriaButton>
-    <AriaButton tag="div">Div</AriaButton>`}</code>)
+    return (<code>{`<Button tag="button">Button</Button>
+    <Button tag="div">Div</Button>`}</code>)
 }
 
 export function Demo() {
@@ -53,7 +47,7 @@ export function Demo() {
             <DemoButton disabled={false} tag="div" />
             <DemoButton disabled="soft" tag="div" />
             <DemoButton disabled="hard" tag="div" />
-            <AriaButton disabled={false} tag="button" pressed={pressed} onPress={e => setPressed(e[EventDetail].pressed ?? false)} render={defaultRenderButton("button", () => ({ children: `Button (${pressed? "pressed" : "unpressed"})`}))} />
+            <Button disabled={false} tag="button" pressed={pressed} onPress={e => setPressed(e[EventDetail].pressed ?? false)} render={defaultRenderButton("button", () => ({ children: `Button (${pressed? "pressed" : "unpressed"})`}))} />
         </>
     )
 }
@@ -62,6 +56,6 @@ function DemoButton({ tag, disabled}: { tag: string, disabled: boolean | "soft" 
     const onPress = () => { alert("Button clicked") }
 
     return ( 
-        <AriaButton tag={tag as any} render={defaultRenderButton(tag, ({}) => ({ class: "btn", children: `${tag} ${disabled? ` disabled (${disabled == "soft"? "soft" : "hard"})` : ""}` }))}  />
+        <Button tag={tag as any} render={defaultRenderButton(tag, ({}) => ({ class: "btn", children: `${tag} ${disabled? ` disabled (${disabled == "soft"? "soft" : "hard"})` : ""}` }))}  />
     )
 }

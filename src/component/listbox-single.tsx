@@ -3,7 +3,7 @@ import { forwardRef } from "preact/compat";
 import { useContext } from "preact/hooks";
 import { ElementToTag, PropModifier } from "props";
 //import { ElementToTag } from "../props";
-import { useAriaListboxSingle, useListboxGroup, UseListboxSingleItem, UseListboxSingleItemParameters, UseListboxSingleItemReturnTypeInfo, UseListboxSingleParameters, UseListboxSingleReturnTypeInfo } from "../use-listbox-single";
+import { useListboxSingle, useListboxGroup, UseListboxSingleItem, UseListboxSingleItemParameters, UseListboxSingleItemReturnTypeInfo, UseListboxSingleParameters, UseListboxSingleReturnTypeInfo } from "../use-listbox-single";
 
 type Get<T, K extends keyof T> = T[K];
 
@@ -47,7 +47,6 @@ function ListboxSingleU<LabelElement extends Element, ListElement extends HTMLEl
     disableHomeEndKeys,
     indexDemangler,
     indexMangler,
-    initialIndex,
     navigationDirection,
     noTypeahead,
     onAfterChildLayoutEffect,
@@ -66,13 +65,13 @@ function ListboxSingleU<LabelElement extends Element, ListElement extends HTMLEl
         useListboxSingleLabel,
         useListboxSingleProps,
         ...listboxReturnType
-    } = useAriaListboxSingle<LabelElement, ListElement, ListItemElement>({
+    } = useListboxSingle<LabelElement, ListElement, ListItemElement>({
         linearNavigation: { disableArrowKeys, disableHomeEndKeys, navigationDirection },
-        listboxSingle: { selectionMode, tagLabel, tagList, onSelect },
+        listboxSingle: { tagLabel, tagList, onSelect },
         listNavigation: { indexDemangler, indexMangler },
         managedChildren: { onAfterChildLayoutEffect, onChildrenMountChange },
-        rovingTabIndex: { initialIndex, onTabbableIndexChange, onTabbableRender },
-        singleSelection: { selectedIndex },
+        rovingTabIndex: { onTabbableIndexChange, onTabbableRender },
+        singleSelection: { selectedIndex, selectionMode },
         typeaheadNavigation: { collator, noTypeahead, typeaheadTimeout },
         childrenHaveFocus: { onAllLostFocus, onAnyGainedFocus }
     });

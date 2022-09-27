@@ -114,12 +114,12 @@ export function CheckboxGroupCheckbox<InputType extends HTMLElement, LabelType e
     flags,
     focusSelf,
     hidden,
-    onInput,
+    onCheckedChange,
     render
 }: CheckboxGroupCheckboxProps<InputType, LabelType>) {
     const { useCheckboxGroupChildInputProps, useCheckboxGroupChildLabelProps, ...checkboxGroupChildInfo } = useContext(UseCheckboxGroupChildContext)({
         asCheckbox: {
-            checkbox: { onInput },
+            checkbox: { onCheckedChange },
             checkboxLike: { checked, disabled, labelPosition },
             label: { tagInput, tagLabel }
         },

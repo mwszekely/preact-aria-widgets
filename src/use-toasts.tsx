@@ -46,7 +46,7 @@ export interface UseToastsReturnTypeWithHooks<ContainerType extends Element> ext
 }
 
 export function useToasts<ContainerType extends Element>({ managedChildren: { onChildrenMountChange: ocmu, onAfterChildLayoutEffect } }: UseToastsParameters): UseToastsReturnTypeWithHooks<ContainerType> {
-    debugLog("useAriaToasts");
+    debugLog("useToasts");
 
     // "Pointer" to whatever index toast is currently being shown.
     // E.g. it's 0 when the first toast is shown, then when dismissed, it becomes 1.
@@ -104,7 +104,7 @@ export function useToasts<ContainerType extends Element>({ managedChildren: { on
     }, [activeToastIndex]);
 
     const useToast: UseToast = useCallback(({ toast: { politeness, timeout }, managedChild: { index } }: UseToastParameters): UseToastReturnTypeWithHooks => {
-        debugLog("useAriaToast", index);
+        debugLog("useToast", index);
         //const [status, setStatus, getStatus] = useState<"pending" | "active" | "dismissed">("pending");
         //const dismissed = (status === "dismissed");
         const dismiss = useCallback(() => { setShowing(false); }, []);

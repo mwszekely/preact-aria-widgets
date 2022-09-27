@@ -3,11 +3,11 @@ import { useCallback } from "preact/hooks";
 import { debugLog } from "./props";
 import { useModal, UseModalParameters, UseSoftDismissReturnTypeInfo } from "./use-modal";
 
-export interface UseAriaDrawerReturnTypeInfo extends UseSoftDismissReturnTypeInfo {
+export interface UseDrawerReturnTypeInfo extends UseSoftDismissReturnTypeInfo {
 
 }
 
-export interface UseAriaDrawerReturnTypeWithHooks<FocusContainerElement extends Element, ModalElement extends Element, TitleElement extends Element, BodyElement extends Element, BackdropElement extends Element> extends UseAriaDrawerReturnTypeInfo {
+export interface UseDrawerReturnTypeWithHooks<FocusContainerElement extends Element, ModalElement extends Element, TitleElement extends Element, BodyElement extends Element, BackdropElement extends Element> extends UseDrawerReturnTypeInfo {
     useDrawerProps: (props: h.JSX.HTMLAttributes<ModalElement>) => h.JSX.HTMLAttributes<ModalElement>;
     useDrawerTitle: UseDrawerTitle<TitleElement>;
     useDrawerBody: UseDrawerBody<BodyElement>
@@ -23,9 +23,9 @@ export type UseDrawerBackdrop<BackdropElement extends Element> = () => { useDraw
 export interface UseDrawerParameters extends UseModalParameters<never, never> {
 }
 
-export function useDrawer<FocusContainerElement extends HTMLElement, DrawerElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement>({ softDismiss: { open, onClose }, activeElement, modal: { bodyIsOnlySemantic, focusSelf } }: UseDrawerParameters): UseAriaDrawerReturnTypeWithHooks<FocusContainerElement, DrawerElement, TitleElement, BodyElement, BackdropElement> {
+export function useDrawer<FocusContainerElement extends HTMLElement, DrawerElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement>({ softDismiss: { open, onClose }, activeElement, modal: { bodyIsOnlySemantic, focusSelf } }: UseDrawerParameters): UseDrawerReturnTypeWithHooks<FocusContainerElement, DrawerElement, TitleElement, BodyElement, BackdropElement> {
 
-    debugLog("useAriaDrawer");
+    debugLog("useDrawer");
 
     // TODO: Drawers are not always modal.
 

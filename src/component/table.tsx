@@ -3,24 +3,24 @@ import { UseHasFocusParameters } from "preact-prop-helpers";
 import { forwardRef } from "preact/compat";
 import { useContext } from "preact/hooks";
 import { ElementToTag, PropModifier } from "props";
-import { useAriaTable, UseAriaTableBody, UseAriaTableBodyParameters, UseAriaTableBodyReturnTypeInfo, UseAriaTableCell, UseAriaTableCellParameters, UseAriaTableCellReturnTypeInfo, UseAriaTableParameters, UseAriaTableReturnTypeInfo, UseAriaTableRow, UseAriaTableRowParameters, UseAriaTableRowReturnTypeInfo } from "../use-table";
+import { useTable, UseTableBody, UseTableBodyParameters, UseTableBodyReturnTypeInfo, UseTableCell, UseTableCellParameters, UseTableCellReturnTypeInfo, UseTableParameters, UseTableReturnTypeInfo, UseTableRow, UseTableRowParameters, UseTableRowReturnTypeInfo } from "../use-table";
 
 type Get<T, K extends keyof T> = T[K];
 type Get2<T, K extends keyof T, K2 extends keyof T[K]> = T[K][K2];
 
 export interface TableProps<TableElement extends Element, RowElement extends Element, CellElement extends Element> extends
-    Get<UseAriaTableParameters, "linearNavigation">,
-    Get<UseAriaTableParameters, "listNavigation">,
-    Get<UseAriaTableParameters, "managedChildren">,
-    Get<UseAriaTableParameters, "rovingTabIndex">,
-    Get<UseAriaTableParameters, "typeaheadNavigation"> {
+    Get<UseTableParameters, "linearNavigation">,
+    Get<UseTableParameters, "listNavigation">,
+    Get<UseTableParameters, "managedChildren">,
+    Get<UseTableParameters, "rovingTabIndex">,
+    Get<UseTableParameters, "typeaheadNavigation"> {
     //tagTable: ElementToTag<TableElement>;
     //propsTable(): h.JSX.HTMLAttributes<TableElement>;
-    render(info: UseAriaTableReturnTypeInfo<RowElement, CellElement>, modifyTableProps: PropModifier<TableElement>): VNode;
+    render(info: UseTableReturnTypeInfo<RowElement, CellElement>, modifyTableProps: PropModifier<TableElement>): VNode;
 }
 
-export interface TableBodyProps<SectionElement extends Element, RowElement extends Element, CellElement extends Element> extends UseAriaTableBodyParameters {
-    render(info: UseAriaTableBodyReturnTypeInfo<RowElement, CellElement>, modifyTableBodyProps: PropModifier<SectionElement>): VNode;
+export interface TableBodyProps<SectionElement extends Element, RowElement extends Element, CellElement extends Element> extends UseTableBodyParameters {
+    render(info: UseTableBodyReturnTypeInfo<RowElement, CellElement>, modifyTableBodyProps: PropModifier<SectionElement>): VNode;
 }
 export interface TableHeadProps {
     render(): VNode;
@@ -30,42 +30,42 @@ export interface TableFootProps {
 }
 
 export interface TableRowProps<RowElement extends Element, CellElement extends Element> extends
-    Get2<UseAriaTableRowParameters<RowElement, CellElement>, "asChildRowOfSection", "listNavigation">,
-    Get2<UseAriaTableRowParameters<RowElement, CellElement>, "asChildRowOfSection", "managedChild">,
-    Get2<UseAriaTableRowParameters<RowElement, CellElement>, "asChildRowOfSection", "rovingTabIndex">,
-    Get2<UseAriaTableRowParameters<RowElement, CellElement>, "asParentRowOfCells", "linearNavigation">,
-    Get2<UseAriaTableRowParameters<RowElement, CellElement>, "asParentRowOfCells", "listNavigation">,
-    Get2<UseAriaTableRowParameters<RowElement, CellElement>, "asParentRowOfCells", "managedChildren">,
-    Get2<UseAriaTableRowParameters<RowElement, CellElement>, "asParentRowOfCells", "rovingTabIndex">,
-    Get2<UseAriaTableRowParameters<RowElement, CellElement>, "asParentRowOfCells", "typeaheadNavigation"> {
-    render(info: UseAriaTableRowReturnTypeInfo<RowElement, CellElement>, tableRowProps: h.JSX.HTMLAttributes<RowElement>): VNode;
+    Get2<UseTableRowParameters<CellElement>, "asChildRowOfSection", "listNavigation">,
+    Get2<UseTableRowParameters<CellElement>, "asChildRowOfSection", "managedChild">,
+    Get2<UseTableRowParameters<CellElement>, "asChildRowOfSection", "rovingTabIndex">,
+    Get2<UseTableRowParameters<CellElement>, "asParentRowOfCells", "linearNavigation">,
+    Get2<UseTableRowParameters<CellElement>, "asParentRowOfCells", "listNavigation">,
+    Get2<UseTableRowParameters<CellElement>, "asParentRowOfCells", "managedChildren">,
+    Get2<UseTableRowParameters<CellElement>, "asParentRowOfCells", "rovingTabIndex">,
+    Get2<UseTableRowParameters<CellElement>, "asParentRowOfCells", "typeaheadNavigation"> {
+    render(info: UseTableRowReturnTypeInfo<RowElement, CellElement>, tableRowProps: h.JSX.HTMLAttributes<RowElement>): VNode;
 }
 
 export interface TableCellProps<CellElement extends Element> extends
-    Get<UseAriaTableCellParameters<CellElement>, "listNavigation">,
-    Get<UseAriaTableCellParameters<CellElement>, "managedChild">,
-    Get<UseAriaTableCellParameters<CellElement>, "rovingTabIndex">,
-    Get<UseAriaTableCellParameters<CellElement>, "listNavigation">,
-    Get<UseAriaTableCellParameters<CellElement>, "rovingTabIndex">,
+    Get<UseTableCellParameters<CellElement>, "listNavigation">,
+    Get<UseTableCellParameters<CellElement>, "managedChild">,
+    Get<UseTableCellParameters<CellElement>, "rovingTabIndex">,
+    Get<UseTableCellParameters<CellElement>, "listNavigation">,
+    Get<UseTableCellParameters<CellElement>, "rovingTabIndex">,
     UseHasFocusParameters<CellElement>,
-    Omit<Get<UseAriaTableCellParameters<CellElement>, "subInfo">, "location"> {
-    render(info: UseAriaTableCellReturnTypeInfo<CellElement>, tableRowProps: h.JSX.HTMLAttributes<CellElement>): VNode;
+    Omit<Get<UseTableCellParameters<CellElement>, "subInfo">, "location"> {
+    render(info: UseTableCellReturnTypeInfo<CellElement>, tableRowProps: h.JSX.HTMLAttributes<CellElement>): VNode;
 }
 
 const LocationContext = createContext<"head" | "body" | "foot">(null!);
 
-const TableBodyContext = createContext<UseAriaTableBody<any, any, any>>(null!);
-const TableRowContext = createContext<UseAriaTableRow<any, any>>(null!);
-const TableCellContext = createContext<UseAriaTableCell<any>>(null!);
+const TableBodyContext = createContext<UseTableBody<any, any, any>>(null!);
+const TableRowContext = createContext<UseTableRow<any, any>>(null!);
+const TableCellContext = createContext<UseTableCell<any>>(null!);
 
-export function defaultRenderTable<TableElement extends Element, RowElement extends Element, CellElement extends Element>({ tagTable, makePropsTable }: { tagTable: ElementToTag<TableElement>, makePropsTable: (info: UseAriaTableReturnTypeInfo<RowElement, CellElement>) => h.JSX.HTMLAttributes<TableElement> }) {
-    return function (info: UseAriaTableReturnTypeInfo<RowElement, CellElement>, modifyPropsTable: PropModifier<TableElement>) {
+export function defaultRenderTable<TableElement extends Element, RowElement extends Element, CellElement extends Element>({ tagTable, makePropsTable }: { tagTable: ElementToTag<TableElement>, makePropsTable: (info: UseTableReturnTypeInfo<RowElement, CellElement>) => h.JSX.HTMLAttributes<TableElement> }) {
+    return function (info: UseTableReturnTypeInfo<RowElement, CellElement>, modifyPropsTable: PropModifier<TableElement>) {
         return createElement(tagTable as never, modifyPropsTable(makePropsTable(info)));
     }
 }
 
-export function defaultRenderTableBody<TableBodyElement extends Element, RowElement extends Element, CellElement extends Element>({ tagTableBody, makePropsTableBody }: { tagTableBody: ElementToTag<TableBodyElement>, makePropsTableBody: (info: UseAriaTableBodyReturnTypeInfo<RowElement, CellElement>) => h.JSX.HTMLAttributes<TableBodyElement> }) {
-    return function (info: UseAriaTableBodyReturnTypeInfo<RowElement, CellElement>, modifyPropsTableBody: PropModifier<TableBodyElement>) {
+export function defaultRenderTableBody<TableBodyElement extends Element, RowElement extends Element, CellElement extends Element>({ tagTableBody, makePropsTableBody }: { tagTableBody: ElementToTag<TableBodyElement>, makePropsTableBody: (info: UseTableBodyReturnTypeInfo<RowElement, CellElement>) => h.JSX.HTMLAttributes<TableBodyElement> }) {
+    return function (info: UseTableBodyReturnTypeInfo<RowElement, CellElement>, modifyPropsTableBody: PropModifier<TableBodyElement>) {
         return createElement(tagTableBody as never, modifyPropsTableBody(makePropsTableBody(info)));
     }
 }
@@ -82,14 +82,14 @@ export function defaultRenderTableFoot<TableFootElement extends Element>({ tagTa
     }
 }
 
-export function defaultRenderTableRow<RowElement extends Element, CellElement extends Element>({ tagTableRow, makePropsTableRow }: { tagTableRow: ElementToTag<RowElement>, makePropsTableRow: (info: UseAriaTableRowReturnTypeInfo<RowElement, CellElement>) => h.JSX.HTMLAttributes<RowElement> }) {
-    return function (info: UseAriaTableRowReturnTypeInfo<RowElement, CellElement>, modifyPropsTableRow: PropModifier<RowElement>) {
+export function defaultRenderTableRow<RowElement extends Element, CellElement extends Element>({ tagTableRow, makePropsTableRow }: { tagTableRow: ElementToTag<RowElement>, makePropsTableRow: (info: UseTableRowReturnTypeInfo<RowElement, CellElement>) => h.JSX.HTMLAttributes<RowElement> }) {
+    return function (info: UseTableRowReturnTypeInfo<RowElement, CellElement>, modifyPropsTableRow: PropModifier<RowElement>) {
         return createElement(tagTableRow as never, modifyPropsTableRow(makePropsTableRow(info)));
     }
 }
 
-export function defaultRenderTableCell<CellElement extends Element>({ tagTableCell, makePropsTableCell }: { tagTableCell: ElementToTag<CellElement>, makePropsTableCell: (info: UseAriaTableCellReturnTypeInfo<CellElement>) => h.JSX.HTMLAttributes<CellElement> }) {
-    return function (info: UseAriaTableCellReturnTypeInfo<CellElement>, modifyPropsTableCell: PropModifier<CellElement>) {
+export function defaultRenderTableCell<CellElement extends Element>({ tagTableCell, makePropsTableCell }: { tagTableCell: ElementToTag<CellElement>, makePropsTableCell: (info: UseTableCellReturnTypeInfo<CellElement>) => h.JSX.HTMLAttributes<CellElement> }) {
+    return function (info: UseTableCellReturnTypeInfo<CellElement>, modifyPropsTableCell: PropModifier<CellElement>) {
         return createElement(tagTableCell as never, modifyPropsTableCell(makePropsTableCell(info)));
     }
 }
@@ -107,7 +107,7 @@ function TableU<TableElement extends Element, SectionElement extends Element, Ro
     typeaheadTimeout,
     render
 }: TableProps<TableElement, RowElement, Cellement>, ref: Ref<TableElement>) {
-    const { useTableBody, useTableProps, useTableRow, ...tableInfo } = useAriaTable<TableElement, SectionElement, RowElement, Cellement>({
+    const { useTableBody, useTableProps, useTableRow, ...tableInfo } = useTable<TableElement, SectionElement, RowElement, Cellement>({
         linearNavigation: { disableArrowKeys, disableHomeEndKeys },
         listNavigation: {},
         managedChildren: { onAfterChildLayoutEffect, onChildrenMountChange },

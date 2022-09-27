@@ -1,12 +1,9 @@
 
 import { useState } from "preact-prop-helpers";
-import { EventDetail } from "../../index";
-import { Tabs, defaultRenderTabs, defaultRenderTab, defaultRenderTabPanel } from "../../"
+import { memo } from "preact/compat";
+import { defaultRenderTab, defaultRenderTabPanel, defaultRenderTabs, Tabs } from "../../";
 import { Tab, TabPanel } from "../../component/tabs";
-
-/*function DemoButton({ tag, ...props }: { tag: string } & RenderableProps<{}>) {
-    return <AriaButton disabled={disabled} onPress={onPress} pressed={} {...props} tag={tag as any}   />
-}*/
+import { EventDetail } from "../../index";
 
 
 function getDocument() { return window.document; }
@@ -43,21 +40,23 @@ export function Demo() {
             <div>
                 <Tabs
                     selectedIndex={selectedIndex}
+                    selectionMode="focus"
                     onSelectedIndexChange={e => setSelectedIndex(e[EventDetail].selectedIndex)}
 
                     render={defaultRenderTabs({
                         panels: Array.from((function* () {
                             for (let i = 0; i < count; ++i) {
-                                const label = `Tab panel #${i}`;
-                                yield <TabPanel index={i} key={i} render={defaultRenderTabPanel({ tagTabPanel: "div", makePropsTabPanel: ({ tabPanel: { visible } }) => ({ hidden: !visible, children: label }) })} />
+                                yield <DemoTabPanel i={i} />
                             }
                         })()),
-                        tagLabel: "label", tagList: "ul", makePropsLabel: () => ({ children: "Tabs example" }), makePropsList: () => ({
+                        tagLabel: "label",
+                        tagList: "ul",
+                        makePropsLabel: () => ({ children: "Tabs example" }),
+                        makePropsList: () => ({
                             children: <>
                                 {Array.from((function* () {
                                     for (let i = 0; i < count; ++i) {
-                                        const label = `Tab #${i}`;
-                                        yield <Tab key={i} index={i} getDocument={getDocument} render={defaultRenderTab({ tagTab: "li", makePropsTab: () => ({ children: label }) })} text={label} />
+                                        yield <DemoTab i={i} />
                                     }
                                 })())}
                             </>
@@ -67,3 +66,14 @@ export function Demo() {
         </>
     )
 }
+
+const DemoTab = memo(function DemoTab({ i }: { i: number }) {
+    const label = `Tab #${i}`;
+    return <Tab key={i} index={i} getDocument={getDocument} render={defaultRenderTab({ tagTab: "li", makePropsTab: () => ({ children: label }) })} text={label} />
+})
+
+const DemoTabPanel = memo(function DemoTabPanel({ i }: { i: number }) {
+    const label = `Tab panel #${i}`;
+    return <TabPanel index={i} key={i} render={defaultRenderTabPanel({ tagTabPanel: "div", makePropsTabPanel: ({ tabPanel: { visible } }) => ({ hidden: !visible, children: label }) })} />
+})
+

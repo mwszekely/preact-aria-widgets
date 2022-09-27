@@ -1,33 +1,34 @@
 import { createContext, createElement, h, VNode } from "preact";
-import { useEffect, UseHasFocusParameters } from "preact-prop-helpers";
-import { useContext } from "preact/hooks";
+import { UseHasFocusParameters } from "preact-prop-helpers";
+import { useContext, useEffect } from "preact/hooks";
 import { ElementToTag, PropModifier } from "props";
-import { UseAriaButtonParameters } from "../use-button";
-import { useAriaAccordion, UseAriaAccordionParameters, UseAriaAccordionReturnTypeInfo, UseAriaAccordionSection, UseAriaAccordionSectionParameters, UseAriaAccordionSectionReturnTypeInfo } from "../use-accordion";
+import { UseButtonParameters } from "../use-button";
+import { useAccordion, UseAccordionParameters, UseAccordionReturnTypeInfo, UseAccordionSection, UseAccordionSectionParameters, UseAccordionSectionReturnTypeInfo } from "../use-accordion";
 import { Heading } from "./heading";
+import { memo } from "preact/compat";
 
 type Get<T, K extends keyof T> = T[K];
 
-export interface AriaAccordionProps extends
-    Get<UseAriaAccordionParameters, "accordion">,
-    Get<UseAriaAccordionParameters, "linearNavigation">,
-    Get<UseAriaAccordionParameters, "managedChildren"> {
+export interface AccordionProps extends
+    Get<UseAccordionParameters, "accordion">,
+    Get<UseAccordionParameters, "linearNavigation">,
+    Get<UseAccordionParameters, "managedChildren"> {
     expandedIndex?: number | undefined | null;
-    render(info: UseAriaAccordionReturnTypeInfo): VNode<any>;
+    render(info: UseAccordionReturnTypeInfo): VNode<any>;
 }
 
-export interface AriaAccordionSectionProps<HeaderElement extends Element, BodyElement extends Element> extends
-    Get<UseAriaAccordionSectionParameters<HeaderElement>, "accordionSection">,
-    Get<UseAriaAccordionSectionParameters<HeaderElement>, "managedChildren">,
+export interface AccordionSectionProps<HeaderElement extends Element, BodyElement extends Element> extends
+    Get<UseAccordionSectionParameters<HeaderElement>, "accordionSection">,
+    Get<UseAccordionSectionParameters<HeaderElement>, "managedChildren">,
     UseHasFocusParameters<HeaderElement>,
-    Get<UseAriaAccordionSectionParameters<HeaderElement>, "button"> {
-    render(info: UseAriaAccordionSectionReturnTypeInfo, makeHeaderProps: PropModifier<HeaderElement>, makeBodyProps: PropModifier<BodyElement>): VNode<any>;
+    Get<UseAccordionSectionParameters<HeaderElement>, "button"> {
+    render(info: UseAccordionSectionReturnTypeInfo, makeHeaderProps: PropModifier<HeaderElement>, makeBodyProps: PropModifier<BodyElement>): VNode<any>;
 }
 
 
-const AccordionSectionContext = createContext<UseAriaAccordionSection<any, any>>(null!);
-export function AriaAccordion({ disableArrowKeys, disableHomeEndKeys, expandedIndex, initialIndex, navigationDirection, onAfterChildLayoutEffect, onChildrenMountChange, render }: AriaAccordionProps) {
-    const { useAriaAccordionSection, ...provider } = useAriaAccordion({
+const AccordionSectionContext = createContext<UseAccordionSection<any, any>>(null!);
+export const Accordion = memo(function Accordion({ disableArrowKeys, disableHomeEndKeys, expandedIndex, initialIndex, navigationDirection, onAfterChildLayoutEffect, onChildrenMountChange, render }: AccordionProps) {
+    const { useAccordionSection, ...provider } = useAccordion({
         accordion: { initialIndex },
         linearNavigation: { disableArrowKeys, disableHomeEndKeys, navigationDirection },
         managedChildren: { onAfterChildLayoutEffect, onChildrenMountChange }
@@ -36,12 +37,12 @@ export function AriaAccordion({ disableArrowKeys, disableHomeEndKeys, expandedIn
     useEffect(() => { provider.accordion.changeExpandedIndex(expandedIndex! ?? null); }, [expandedIndex]);
 
     return (
-        <AccordionSectionContext.Provider value={useAriaAccordionSection}>{render(provider)}</AccordionSectionContext.Provider>
+        <AccordionSectionContext.Provider value={useAccordionSection}>{render(provider)}</AccordionSectionContext.Provider>
     )
-}
+})
 
-export function defaultRenderAccordionSection<HeaderElement extends HTMLElement, BodyElement extends HTMLElement>({ makePropsHeading, makePropsBody, tagBody, tagHeading }: { tagHeading: ElementToTag<HeaderElement>; tagBody: ElementToTag<BodyElement>; makePropsHeading(info: UseAriaAccordionSectionReturnTypeInfo): h.JSX.HTMLAttributes<HeaderElement>, makePropsBody(info: UseAriaAccordionSectionReturnTypeInfo): h.JSX.HTMLAttributes<BodyElement> }) {
-    return function (info: UseAriaAccordionSectionReturnTypeInfo, modifyHeadingProps: PropModifier<HeaderElement>, modifyBodyProps: PropModifier<BodyElement>): VNode<any> {
+export function defaultRenderAccordionSection<HeaderElement extends HTMLElement, BodyElement extends HTMLElement>({ makePropsHeading, makePropsBody, tagBody, tagHeading }: { tagHeading: ElementToTag<HeaderElement>; tagBody: ElementToTag<BodyElement>; makePropsHeading(info: UseAccordionSectionReturnTypeInfo): h.JSX.HTMLAttributes<HeaderElement>, makePropsBody(info: UseAccordionSectionReturnTypeInfo): h.JSX.HTMLAttributes<BodyElement> }) {
+    return function (info: UseAccordionSectionReturnTypeInfo, modifyHeadingProps: PropModifier<HeaderElement>, modifyBodyProps: PropModifier<BodyElement>): VNode<any> {
         const {
             accordionSection: {
                 focused
@@ -57,7 +58,7 @@ export function defaultRenderAccordionSection<HeaderElement extends HTMLElement,
     }
 }
 
-export function AriaAccordionSection<HeaderElement extends Element, BodyElement extends Element>({
+export const AccordionSection = memo(function AccordionSection<HeaderElement extends Element, BodyElement extends Element>({
     open,
     index,
     tagButton,
@@ -75,16 +76,16 @@ export function AriaAccordionSection<HeaderElement extends Element, BodyElement 
     onMount,
     onUnmount,
     onWindowFocusedChange
-}: AriaAccordionSectionProps<HeaderElement, BodyElement>) {
-    const useAriaAccordionSection = useContext(AccordionSectionContext);
-    const { useAriaAccordionSectionBodyProps, useAriaAccordionSectionHeaderProps, ...sectionInfo } = useAriaAccordionSection({
+}: AccordionSectionProps<HeaderElement, BodyElement>) {
+    const useAccordionSection = useContext(AccordionSectionContext);
+    const { useAccordionSectionBodyProps, useAccordionSectionHeaderProps, ...sectionInfo } = useAccordionSection({
         button: { disabled },
         accordionSection: { open, tagButton },
         managedChildren: { index },
         hasFocus: { getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange }
     });
 
-    return render(sectionInfo, useAriaAccordionSectionHeaderProps, useAriaAccordionSectionBodyProps);
-}
+    return render(sectionInfo, useAccordionSectionHeaderProps, useAccordionSectionBodyProps);
+})
 
 

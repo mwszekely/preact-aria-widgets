@@ -3,10 +3,6 @@ import { useState } from "preact-prop-helpers";
 import { EventDetail, ListboxSingle } from "../../index";
 import { defaultRenderMenu, defaultRenderMenuItem, Menu, MenuItem } from "../../component/menu"
 
-/*function DemoButton({ tag, ...props }: { tag: string } & RenderableProps<{}>) {
-    return <AriaButton disabled={disabled} onPress={onPress} pressed={} {...props} tag={tag as any}   />
-}*/
-
 function DemoListItem({ index }: { index: number }) {
 
     return (

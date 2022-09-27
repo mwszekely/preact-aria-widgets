@@ -2,36 +2,37 @@ import { ComponentChildren, createContext, createElement, h, VNode } from "preac
 import { UseHasFocusParameters } from "preact-prop-helpers";
 import { useContext } from "preact/hooks";
 import { ElementToTag, PropModifier } from "props";
-import { useAriaRadioGroup, UseAriaRadioGroupParameters, UseAriaRadioGroupReturnTypeInfo, UseAriaRadioParameters, UseRadio, UseRadioReturnTypeInfo } from "../use-radio-group";
+import { useRadioGroup, UseRadioGroupParameters, UseRadioGroupReturnTypeInfo, UseRadioParameters, UseRadio, UseRadioReturnTypeInfo } from "../use-radio-group";
 import { defaultRenderCheckboxLike, DefaultRenderCheckboxLikeParameters } from "./checkbox"
 
 type Get<T, K extends keyof T> = T[K];
+type Get2<T, K extends keyof T, K2 extends keyof T[K]> = T[K][K2];
 
 export interface RadioGroupProps<V extends string | number, GroupElement extends Element, GroupLabelElement extends HTMLElement, InputElement extends Element, LabelElement extends Element> extends
-    Get<UseAriaRadioGroupParameters<V, GroupElement, GroupLabelElement, InputElement, LabelElement>, "radioGroup">,
-    Get<UseAriaRadioGroupParameters<V, GroupElement, GroupLabelElement, InputElement, LabelElement>, "linearNavigation">,
-    Get<UseAriaRadioGroupParameters<V, GroupElement, GroupLabelElement, InputElement, LabelElement>, "listNavigation">,
-    Get<UseAriaRadioGroupParameters<V, GroupElement, GroupLabelElement, InputElement, LabelElement>, "managedChildren">,
-    Get<UseAriaRadioGroupParameters<V, GroupElement, GroupLabelElement, InputElement, LabelElement>, "rovingTabIndex">,
-    Get<UseAriaRadioGroupParameters<V, GroupElement, GroupLabelElement, InputElement, LabelElement>, "childrenHaveFocus">,
-    Get<UseAriaRadioGroupParameters<V, GroupElement, GroupLabelElement, InputElement, LabelElement>, "typeaheadNavigation"> {
+    Get<UseRadioGroupParameters<V, GroupElement, GroupLabelElement, InputElement>, "radioGroup">,
+    Get<UseRadioGroupParameters<V, GroupElement, GroupLabelElement, InputElement>, "linearNavigation">,
+    Get<UseRadioGroupParameters<V, GroupElement, GroupLabelElement, InputElement>, "listNavigation">,
+    Get<UseRadioGroupParameters<V, GroupElement, GroupLabelElement, InputElement>, "managedChildren">,
+    Get<UseRadioGroupParameters<V, GroupElement, GroupLabelElement, InputElement>, "rovingTabIndex">,
+    Get<UseRadioGroupParameters<V, GroupElement, GroupLabelElement, InputElement>, "childrenHaveFocus">,
+    Get<UseRadioGroupParameters<V, GroupElement, GroupLabelElement, InputElement>, "typeaheadNavigation"> {
     //propsGroupLabel: () => h.JSX.HTMLAttributes<GroupLabelElement>;
     //propsGroup: () => h.JSX.HTMLAttributes<GroupElement>;
-    render(info: UseAriaRadioGroupReturnTypeInfo<InputElement>, modifyLabelProps: PropModifier<GroupLabelElement>, modifyGroupProps: PropModifier<GroupElement>): VNode<any>;
+    render(info: UseRadioGroupReturnTypeInfo<V, InputElement>, modifyLabelProps: PropModifier<GroupLabelElement>, modifyGroupProps: PropModifier<GroupElement>): VNode<any>;
 }
 
 export interface RadioProps<V extends string | number, InputElement extends Element, LabelElement extends Element> extends
-    Get<UseAriaRadioParameters<V, InputElement, LabelElement>, "radio">,
-    Get<UseAriaRadioParameters<V, InputElement, LabelElement>, "listNavigation">,
-    Get<UseAriaRadioParameters<V, InputElement, LabelElement>, "rovingTabIndex">,
-    Get<UseAriaRadioParameters<V, InputElement, LabelElement>, "managedChild">,
+    Get<UseRadioParameters<V, InputElement, LabelElement>, "radio">,
+    Get<UseRadioParameters<V, InputElement, LabelElement>, "listNavigation">,
+    Get<UseRadioParameters<V, InputElement, LabelElement>, "rovingTabIndex">,
+    Get<UseRadioParameters<V, InputElement, LabelElement>, "managedChild">,
     UseHasFocusParameters<InputElement>,
-    Get<UseAriaRadioParameters<V, InputElement, LabelElement>, "radio"> {
+    Get<UseRadioParameters<V, InputElement, LabelElement>, "radio"> {
     render(info: UseRadioReturnTypeInfo<InputElement>, modifyInputProps: PropModifier<InputElement>, modifyLabelProps: PropModifier<LabelElement>): VNode<any>;
 }
 
-export function defaultRenderRadioGroup<InputElement extends Element, LabelElement extends Element>({ tagGroup, tagLabel, makePropsGroup, makePropsLabel }: { tagLabel: ElementToTag<LabelElement>, tagGroup: ElementToTag<InputElement>, makePropsLabel: (info: UseAriaRadioGroupReturnTypeInfo<InputElement>) => h.JSX.HTMLAttributes<LabelElement>, makePropsGroup: (info: UseAriaRadioGroupReturnTypeInfo<InputElement>) => h.JSX.HTMLAttributes<InputElement> }) {
-    return function (info: UseAriaRadioGroupReturnTypeInfo<InputElement>, modifyLabelProps: PropModifier<LabelElement>, modifyGroupProps: PropModifier<InputElement>) {
+export function defaultRenderRadioGroup<V extends string | number, InputElement extends Element, LabelElement extends Element>({ tagGroup, tagLabel, makePropsGroup, makePropsLabel }: { tagLabel: ElementToTag<LabelElement>, tagGroup: ElementToTag<InputElement>, makePropsLabel: (info: UseRadioGroupReturnTypeInfo<V, InputElement>) => h.JSX.HTMLAttributes<LabelElement>, makePropsGroup: (info: UseRadioGroupReturnTypeInfo<V, InputElement>) => h.JSX.HTMLAttributes<InputElement> }) {
+    return function (info: UseRadioGroupReturnTypeInfo<V, InputElement>, modifyLabelProps: PropModifier<LabelElement>, modifyGroupProps: PropModifier<InputElement>) {
         return (
             <>
                 {createElement(tagLabel as never, modifyLabelProps(makePropsLabel(info)))}
@@ -46,9 +47,8 @@ export function RadioGroup<V extends string | number, GroupElement extends HTMLE
     render,
     tagGroup,
     tagGroupLabel,
-    initialIndex,
     name,
-    onInput,
+    onSelectedValueChange,
     selectedValue,
     collator,
     disableArrowKeys,
@@ -70,14 +70,15 @@ export function RadioGroup<V extends string | number, GroupElement extends HTMLE
         useRadioGroupLabelProps,
         useRadioGroupProps,
         ...radioGroupReturn
-    } = useAriaRadioGroup<V, GroupElement, GroupLabelElement, InputElement, LabelElement>({
+    } = useRadioGroup<V, GroupElement, GroupLabelElement, InputElement, LabelElement>({
         linearNavigation: { disableArrowKeys, disableHomeEndKeys, navigationDirection },
         listNavigation: { indexDemangler, indexMangler },
         managedChildren: { onAfterChildLayoutEffect, onChildrenMountChange },
-        radioGroup: { name, onInput, selectedValue, tagGroup, tagGroupLabel },
-        rovingTabIndex: { initialIndex, onTabbableIndexChange, onTabbableRender },
+        radioGroup: { name, onSelectedValueChange, selectedValue, tagGroup, tagGroupLabel },
+        rovingTabIndex: { onTabbableIndexChange, onTabbableRender },
         typeaheadNavigation: { collator, noTypeahead, typeaheadTimeout },
-        childrenHaveFocus: { onAllLostFocus, onAnyGainedFocus }
+        childrenHaveFocus: { onAllLostFocus, onAnyGainedFocus },
+        singleSelection: { selectionMode: "focus" }
     });
 
     return (

@@ -2,7 +2,7 @@ import { createContext, h, VNode } from "preact";
 import { forwardRef } from "preact/compat";
 import { useContext } from "preact/hooks";
 import { ElementToTag, PropModifier } from "props";
-import { useAriaListboxMulti, UseListboxMultiItem, UseListboxMultiItemParameters, UseListboxMultiItemReturnTypeInfo, UseListboxMultiParameters, UseListboxMultiReturnTypeInfo } from "../use-listbox-multi";
+import { useListboxMulti, UseListboxMultiItem, UseListboxMultiItemParameters, UseListboxMultiItemReturnTypeInfo, UseListboxMultiParameters, UseListboxMultiReturnTypeInfo } from "../use-listbox-multi";
 import { defaultRenderList, defaultRenderListItem } from "./listbox-single";
 
 
@@ -26,10 +26,10 @@ export interface ListboxMultiProps<LabelElement extends Element, ListElement ext
 
 
 export interface ListboxMultiItemProps<ListboxItemElement extends Element> extends
-    Get<UseListboxMultiItemParameters<ListboxItemElement>, "managedChild">,
-    Omit<Get<UseListboxMultiItemParameters<ListboxItemElement>, "listNavigation">, "subInfo">,
-    Get<UseListboxMultiItemParameters<ListboxItemElement>, "rovingTabIndex">,
-    Get<UseListboxMultiItemParameters<ListboxItemElement>, "listboxMultiItem"> {
+    Get<UseListboxMultiItemParameters, "managedChild">,
+    Omit<Get<UseListboxMultiItemParameters, "listNavigation">, "subInfo">,
+    Get<UseListboxMultiItemParameters, "rovingTabIndex">,
+    Get<UseListboxMultiItemParameters, "listboxMultiItem"> {
     render(info: UseListboxMultiItemReturnTypeInfo<ListboxItemElement>, modifyListItemProps: PropModifier<ListboxItemElement>): VNode<any>;
 }
 
@@ -59,7 +59,7 @@ function ListboxMultiU<LabelElement extends Element, ListElement extends HTMLEle
         useListboxMultiLabel,
         useListboxMultiProps,
         ...listboxReturnType
-    } = useAriaListboxMulti<LabelElement, ListElement, ListItemElement>({
+    } = useListboxMulti<LabelElement, ListElement, ListItemElement>({
         linearNavigation: { disableArrowKeys, disableHomeEndKeys, navigationDirection },
         listboxMulti: { tagLabel, tagList },
         listNavigation: { indexDemangler, indexMangler },
@@ -85,12 +85,12 @@ export function defaultRenderListboxMultiItem<ListItemElement extends HTMLElemen
     return defaultRenderListItem<ListItemElement, UseListboxMultiItemReturnTypeInfo<ListItemElement>>({ makePropsListItem, tagListItem });
 }
 
-function ListboxMultiItemU<ListItemElement extends Element>({ index, blurSelf, disabled, flags, focusSelf, render, text, hidden, selected, onSelect }: ListboxMultiItemProps<ListItemElement>) {
+function ListboxMultiItemU<ListItemElement extends Element>({ index, blurSelf, disabled, flags, focusSelf, render, text, hidden, selected, onSelectedChange }: ListboxMultiItemProps<ListItemElement>) {
     const { useListboxMultiItemProps, ...itemReturn } = useContext(ListboxMultiContext)({
         managedChild: { index, flags },
         rovingTabIndex: { blurSelf, focusSelf, hidden },
         listNavigation: { text },
-        listboxMultiItem: { disabled, selected, onSelect }
+        listboxMultiItem: { disabled, selected, onSelectedChange }
     });
 
     return (

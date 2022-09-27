@@ -58,20 +58,20 @@ export function setDebugLogging(logging: boolean) {
 }
 
 export type DebugLogTypes =
-    "useAriaAccordian" | "useAriaAccordianSection" |
-    "useAriaButton" |
-    "useAriaCheckbox" |
-    "useAriaCheckboxGroup" | "useAriaCheckboxGroupParent" | "useAriaCheckboxGroupChild" |
-    "useAriaDialog" | "useAriaDrawer" |
-    "useAriaListboxMulti" | "useAriaListboxMultiItem" |
-    "useAriaListboxSingle" | "useAriaListboxSingleItem" |
-    "useAriaMenu" | "useAriaMenuSurface" | "useAriaMenuItem" | "useAriaFocusSentinel" | "useAriaMenuSurfaceSentinel" |
-    "useAriaRadioGroup" | "useAriaRadio" |
-    "useAriaSlider" | "useAriaSliderThumb" |
-    "useAriaTable" | "useAriaTableRow" | "useAriaTableCell" | "useAriaTableBody" |
-    "useAriaTabs" | "useAriaTabList" | "useAriaTab" | "useAriaTabPanel" |
-    "useAriaToasts" | "useAriaToast" |
-    "useAriaTooltip" | "useAriaTooltipTooltip" | "useAriaTooltipTrigger";
+    "useAccordian" | "useAccordianSection" |
+    "useButton" |
+    "useCheckbox" |
+    "useCheckboxGroup" | "useCheckboxGroupParent" | "useCheckboxGroupChild" |
+    "useDialog" | "useDrawer" |
+    "useListboxMulti" | "useListboxMultiItem" |
+    "useListboxSingle" | "useListboxSingleItem" |
+    "useMenu" | "useMenuSurface" | "useMenuItem" | "useFocusSentinel" | "useMenuSurfaceSentinel" |
+    "useRadioGroup" | "useRadio" |
+    "useSlider" | "useSliderThumb" |
+    "useTable" | "useTableRow" | "useTableCell" | "useTableBody" |
+    "useTabs" | "useTabList" | "useTab" | "useTabPanel" |
+    "useToasts" | "useToast" |
+    "useTooltip" | "useTooltipTooltip" | "useTooltipTrigger";
 
 export function debugLog(who: DebugLogTypes, ...args: Parameters<(typeof console)["log"]>) {
     if (debug)

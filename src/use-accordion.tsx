@@ -2,39 +2,39 @@ import { h } from "preact";
 import { OnChildrenMountChange, returnTrue, useChildrenFlag, useHasFocus, UseHasFocusParameters, useLinearNavigation, UseLinearNavigationParameters, UseManagedChildParameters, useManagedChildren, UseManagedChildrenParameters, UseManagedChildrenReturnTypeInfo, useRandomId, useRefElement, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
 import { useCallback, useRef } from "preact/hooks";
 import { debugLog, ElementToTag } from "./props";
-import { useAriaButton, UseAriaButtonParameters } from "./use-button";
+import { useButton, UseButtonParameters } from "./use-button";
 
-export type UseAriaAccordion<HeaderElement extends Element, BodyElement extends Element> = (args: UseAriaAccordionParameters) => UseAriaAccordionReturnTypeWithHooks<HeaderElement, BodyElement>;
-export type UseAriaAccordionSection<HeaderElement extends Element, BodyElement extends Element> = (args: UseAriaAccordionSectionParameters<HeaderElement>) => UseAriaAccordionSectionReturnTypeWithHooks<HeaderElement, BodyElement>;
+export type UseAccordion<HeaderElement extends Element, BodyElement extends Element> = (args: UseAccordionParameters) => UseAccordionReturnTypeWithHooks<HeaderElement, BodyElement>;
+export type UseAccordionSection<HeaderElement extends Element, BodyElement extends Element> = (args: UseAccordionSectionParameters<HeaderElement>) => UseAccordionSectionReturnTypeWithHooks<HeaderElement, BodyElement>;
 
-export interface UseAriaAccordionParameters extends UseLinearNavigationParameters<"navigateToFirst" | "navigateToLast" | "navigateToNext" | "navigateToPrev">, UseManagedChildrenParameters<number, never> {
+export interface UseAccordionParameters extends UseLinearNavigationParameters<"navigateToFirst" | "navigateToLast" | "navigateToNext" | "navigateToPrev">, UseManagedChildrenParameters<number, never> {
     accordion: { initialIndex?: number | null; }
 }
 
-export interface UseAriaAccordionReturnTypeInfo extends UseManagedChildrenReturnTypeInfo<number, UseAriaAccordionSectionInfoBase, "tabbed" | "open"> {
+export interface UseAccordionReturnTypeInfo extends UseManagedChildrenReturnTypeInfo<number, UseAccordionSectionInfoBase, "tabbed" | "open"> {
     /** **STABLE** */
     accordion: { changeExpandedIndex: (arg: number | ((prevState: number | null) => number | null) | null) => number | null; }
 }
 
-export interface UseAriaAccordionReturnTypeWithHooks<HeaderElement extends Element, BodyElement extends Element> extends UseAriaAccordionReturnTypeInfo {
+export interface UseAccordionReturnTypeWithHooks<HeaderElement extends Element, BodyElement extends Element> extends UseAccordionReturnTypeInfo {
     /** **STABLE** */
-    useAriaAccordionSection: UseAriaAccordionSection<HeaderElement, BodyElement>;
+    useAccordionSection: UseAccordionSection<HeaderElement, BodyElement>;
 }
 
-export interface UseAriaAccordionSectionInfoBase {
+export interface UseAccordionSectionInfoBase {
     setOpenFromParent(open: boolean): void;
     getOpenFromParent(): boolean | null;
     focus(): void;
 }
 
-export interface UseAriaAccordionSectionParameters<HeaderElement extends Element> {
-    managedChildren: UseManagedChildParameters<number, UseAriaAccordionSectionInfoBase, "tabbed" | "open", "subInfo" | "flags">["managedChild"];
+export interface UseAccordionSectionParameters<HeaderElement extends Element> {
+    managedChildren: UseManagedChildParameters<number, UseAccordionSectionInfoBase, "tabbed" | "open", "subInfo" | "flags">["managedChild"];
     accordionSection: { open?: boolean | undefined; tagButton: ElementToTag<HeaderElement>; }
-    button: Pick<UseAriaButtonParameters<HeaderElement>, "disabled">;
+    button: Pick<UseButtonParameters<HeaderElement>, "disabled">;
     hasFocus: UseHasFocusParameters<HeaderElement>;
 }
 
-export interface UseAriaAccordionSectionReturnTypeInfo {
+export interface UseAccordionSectionReturnTypeInfo {
     accordionSection: {
         expanded: boolean;
         focused: boolean;
@@ -45,24 +45,24 @@ export interface UseAriaAccordionSectionReturnTypeInfo {
     }
 }
 
-export interface UseAriaAccordionSectionReturnTypeWithHooks<HeaderElement extends Element, BodyElement extends Element> extends UseAriaAccordionSectionReturnTypeInfo {
+export interface UseAccordionSectionReturnTypeWithHooks<HeaderElement extends Element, BodyElement extends Element> extends UseAccordionSectionReturnTypeInfo {
     /** *Unstable* */
-    useAriaAccordionSectionHeaderProps: (props: h.JSX.HTMLAttributes<HeaderElement>) => h.JSX.HTMLAttributes<HeaderElement>;
+    useAccordionSectionHeaderProps: (props: h.JSX.HTMLAttributes<HeaderElement>) => h.JSX.HTMLAttributes<HeaderElement>;
     /** *Unstable* */
-    useAriaAccordionSectionBodyProps: (props: h.JSX.HTMLAttributes<BodyElement>) => h.JSX.HTMLAttributes<BodyElement>;
+    useAccordionSectionBodyProps: (props: h.JSX.HTMLAttributes<BodyElement>) => h.JSX.HTMLAttributes<BodyElement>;
 }
 
 
-//export type UseAriaAccordionSectionHeader<E extends Element> = (args: UseAriaButtonParameters<E>) => UseAriaAccordionSectionHeaderReturnType<E>;
-//export interface UseAriaAccordionSectionHeaderReturnType<E extends Element> { useAriaAccordionSectionHeaderProps: (props: h.JSX.HTMLAttributes<E>) => h.JSX.HTMLAttributes<E>; }
-//export type UseAriaAccordionSectionBody<E extends Element> = () => UseAriaAccordionSectionBodyReturnType<E>;
-//export interface UseAriaAccordionSectionBodyReturnType<E extends Element> { useAriaAccordionSectionBodyProps: (props: h.JSX.HTMLAttributes<E>) => h.JSX.HTMLAttributes<E>; }
+//export type UseAccordionSectionHeader<E extends Element> = (args: UseButtonParameters<E>) => UseAccordionSectionHeaderReturnType<E>;
+//export interface UseAccordionSectionHeaderReturnType<E extends Element> { useAccordionSectionHeaderProps: (props: h.JSX.HTMLAttributes<E>) => h.JSX.HTMLAttributes<E>; }
+//export type UseAccordionSectionBody<E extends Element> = () => UseAccordionSectionBodyReturnType<E>;
+//export interface UseAccordionSectionBodyReturnType<E extends Element> { useAccordionSectionBodyProps: (props: h.JSX.HTMLAttributes<E>) => h.JSX.HTMLAttributes<E>; }
 
-export function useAriaAccordion<HeaderElement extends HTMLElement, BodyElement extends HTMLElement | SVGElement>({ accordion: { initialIndex }, linearNavigation: { disableArrowKeys, disableHomeEndKeys, navigationDirection }, managedChildren: { onAfterChildLayoutEffect, onChildrenMountChange } }: UseAriaAccordionParameters): UseAriaAccordionReturnTypeWithHooks<HeaderElement, BodyElement> {
-    debugLog("useAriaAccordian");
+export function useAccordion<HeaderElement extends HTMLElement, BodyElement extends HTMLElement | SVGElement>({ accordion: { initialIndex }, linearNavigation: { disableArrowKeys, disableHomeEndKeys, navigationDirection }, managedChildren: { onAfterChildLayoutEffect, onChildrenMountChange } }: UseAccordionParameters): UseAccordionReturnTypeWithHooks<HeaderElement, BodyElement> {
+    debugLog("useAccordian");
     const [_currentFocusedIndex, setCurrentFocusedIndex, getCurrentFocusedIndex] = useState<number | null>(null);
 
-    const mcReturnType = useManagedChildren<number, UseAriaAccordionSectionInfoBase, "tabbed" | "open">({
+    const mcReturnType = useManagedChildren<number, UseAccordionSectionInfoBase, "tabbed" | "open">({
         managedChildren: {
             onChildrenMountChange: useStableCallback<OnChildrenMountChange<number>>((m, u) => { ocmc2(); onChildrenMountChange?.(m, u); }),
             onAfterChildLayoutEffect
@@ -109,9 +109,9 @@ export function useAriaAccordion<HeaderElement extends HTMLElement, BodyElement 
         }, [])
     })
 
-    const useAriaAccordionSection: UseAriaAccordionSection<HeaderElement, BodyElement> = useCallback<UseAriaAccordionSection<HeaderElement, BodyElement>>(({ button: { disabled }, accordionSection: { open: openFromUser, tagButton }, managedChildren: { index }, hasFocus: { onFocusedInnerChanged, ...hasFocus } }) => {
+    const useAccordionSection: UseAccordionSection<HeaderElement, BodyElement> = useCallback<UseAccordionSection<HeaderElement, BodyElement>>(({ button: { disabled }, accordionSection: { open: openFromUser, tagButton }, managedChildren: { index }, hasFocus: { onFocusedInnerChanged, ...hasFocus } }) => {
 
-        debugLog("useAriaAccordianSection");
+        debugLog("useAccordianSection");
         const [openFromParent, setOpenFromParent, getOpenFromParent] = useState<boolean | null>(null);
 
 
@@ -172,7 +172,7 @@ export function useAriaAccordion<HeaderElement extends HTMLElement, BodyElement 
             }
         });
 
-        function useAriaAccordionSectionHeaderProps({ ["aria-expanded"]: ariaExpanded, ["aria-disabled"]: ariaDisabled, ...props }: h.JSX.HTMLAttributes<HeaderElement>): h.JSX.HTMLAttributes<HeaderElement> {
+        function useAccordionSectionHeaderProps({ ["aria-expanded"]: ariaExpanded, ["aria-disabled"]: ariaDisabled, ...props }: h.JSX.HTMLAttributes<HeaderElement>): h.JSX.HTMLAttributes<HeaderElement> {
 
             //const onFocus = () => { changeTabbedIndex(index); }
             const onPress = () => {
@@ -183,8 +183,8 @@ export function useAriaAccordion<HeaderElement extends HTMLElement, BodyElement 
             };
 
             props.tabIndex = 0;
-            const { useAriaButtonProps } = useAriaButton<HeaderElement>({ tag: tagButton, disabled, onPress });
-            const retB = useAriaButtonProps(props);
+            const { useButtonProps } = useButton<HeaderElement>({ tag: tagButton, disabled, onPress });
+            const retB = useButtonProps(props);
             //const retB = useMergedProps<HeaderElement>(usePressEventHandlers<HeaderElement>(onClick, undefined), props);
 
 
@@ -210,7 +210,7 @@ export function useAriaAccordion<HeaderElement extends HTMLElement, BodyElement 
         }
 
 
-        function useAriaAccordionSectionBodyProps({ role, ...props }: h.JSX.HTMLAttributes<BodyElement>): h.JSX.HTMLAttributes<BodyElement> {
+        function useAccordionSectionBodyProps({ role, ...props }: h.JSX.HTMLAttributes<BodyElement>): h.JSX.HTMLAttributes<BodyElement> {
             const ret1 = useBodyAsReferencerIdProps({ role: role ?? "region", ...props });
             const ret2 = useBodyAsSourceIdProps(ret1);
             ret2.tabIndex ??= -1;
@@ -226,8 +226,8 @@ export function useAriaAccordion<HeaderElement extends HTMLElement, BodyElement 
                 getBodyId,
                 getHeaderId
             },
-            useAriaAccordionSectionHeaderProps,
-            useAriaAccordionSectionBodyProps,
+            useAccordionSectionHeaderProps,
+            useAccordionSectionBodyProps,
 
         }
     }, []);
@@ -235,7 +235,7 @@ export function useAriaAccordion<HeaderElement extends HTMLElement, BodyElement 
     return {
         managedChildren: mcReturnType.managedChildren,
         accordion: { changeExpandedIndex },
-        useAriaAccordionSection,
+        useAccordionSection,
     }
 }
 

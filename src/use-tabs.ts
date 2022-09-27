@@ -10,64 +10,64 @@ import { UseChildrenHaveFocusParameters, UseHasFocusParameters } from "preact-pr
 
 export type TabsChangeEvent<E extends Element> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 
-export interface UseAriaTabsParameters {
+export interface UseTabsParameters {
     tabPanels: UseManagedChildrenParameters<number, never>;
 }
-export interface UseAriaTabParameters<E extends Element> extends Omit<UseListNavigationSingleSelectionChildParameters<E, never, never, never, never, never, never>, "subInfo"> {
+export interface UseTabParameters<E extends Element> extends Omit<UseListNavigationSingleSelectionChildParameters<E, never, never, never, never, never, never>, "subInfo"> {
     hasFocus: UseHasFocusParameters<E>;
 }
 
-export interface UseAriaTabPanelParameters extends UseManagedChildParameters<number, {}, "visible", "subInfo"> { }
+export interface UseTabPanelParameters extends UseManagedChildParameters<number, {}, "visible", "subInfo"> { }
 
-export interface UseAriaTabReturnTypeInfo<TabElement extends Element> extends UseListNavigationSingleSelectionChildReturnTypeInfo<TabElement> { }
-export interface UseAriaTabReturnTypeWithHooks<TabElement extends Element> extends UseAriaTabReturnTypeInfo<TabElement> {
-    useAriaTabProps(props: h.JSX.HTMLAttributes<TabElement>): h.JSX.HTMLAttributes<TabElement>;
+export interface UseTabReturnTypeInfo<TabElement extends Element> extends UseListNavigationSingleSelectionChildReturnTypeInfo<TabElement> { }
+export interface UseTabReturnTypeWithHooks<TabElement extends Element> extends UseTabReturnTypeInfo<TabElement> {
+    useTabProps(props: h.JSX.HTMLAttributes<TabElement>): h.JSX.HTMLAttributes<TabElement>;
 }
 
-export interface UseAriaTabLabelParameters { }
-export interface UseAriaTabListParameters<TabElement extends EventTarget> extends UseListNavigationSingleSelectionParameters<never, never, never, never, never, never> {
+export interface UseTabLabelParameters { }
+export interface UseTabListParameters<TabElement extends EventTarget> extends UseListNavigationSingleSelectionParameters<never | "onSelectedIndexChange", never, never, never, never, never> {
     tabs: { onSelectedIndexChange(e: EnhancedEvent<TabElement, Event, { selectedIndex: number }>): void; };
     childrenHaveFocus: UseChildrenHaveFocusParameters["childrenHaveFocus"];
 
 }
-export interface UseAriaTabListReturnTypeInfo<TabElement extends Element> {
+export interface UseTabListReturnTypeInfo<TabElement extends Element> {
     tabList: UseListNavigationSingleSelectionReturnTypeInfo<TabElement, TabInfo, never>;
 }
-export interface UseAriaTabListReturnTypeWithHooks<TabContainerElement extends Element, TabElement extends Element> extends UseAriaTabListReturnTypeInfo<TabElement> {
-    useAriaTabListProps: (props: h.JSX.HTMLAttributes<TabContainerElement>) => h.JSX.HTMLAttributes<TabContainerElement>;
-    useAriaTab: ({ listNavigation, managedChild, rovingTabIndex }: UseAriaTabParameters<TabElement>) => UseAriaTabReturnTypeWithHooks<TabElement>
+export interface UseTabListReturnTypeWithHooks<TabContainerElement extends Element, TabElement extends Element> extends UseTabListReturnTypeInfo<TabElement> {
+    useTabListProps: (props: h.JSX.HTMLAttributes<TabContainerElement>) => h.JSX.HTMLAttributes<TabContainerElement>;
+    useTab: ({ listNavigation, managedChild, rovingTabIndex }: UseTabParameters<TabElement>) => UseTabReturnTypeWithHooks<TabElement>
 }
 
 
-export interface UseAriaTabPanelReturnTypeInfo {
+export interface UseTabPanelReturnTypeInfo {
     tabPanel: { visible: boolean; getVisible: () => boolean; };
 }
-export interface UseAriaTabPanelReturnTypeWithHooks<LabelElement extends Element> extends UseAriaTabPanelReturnTypeInfo {
-    useAriaTabPanelProps: (props: h.JSX.HTMLAttributes<LabelElement>) => h.JSX.HTMLAttributes<LabelElement>;
+export interface UseTabPanelReturnTypeWithHooks<LabelElement extends Element> extends UseTabPanelReturnTypeInfo {
+    useTabPanelProps: (props: h.JSX.HTMLAttributes<LabelElement>) => h.JSX.HTMLAttributes<LabelElement>;
 }
 
 
-export interface UseAriaTabListLabelReturnTypeInfo { }
-export interface UseAriaTabLabelReturnTypeWithHooks<LabelElement extends Element> extends UseAriaTabListLabelReturnTypeInfo {
-    useAriaTabListLabelProps: (props: h.JSX.HTMLAttributes<LabelElement>) => h.JSX.HTMLAttributes<LabelElement>;
+export interface UseTabListLabelReturnTypeInfo { }
+export interface UseTabLabelReturnTypeWithHooks<LabelElement extends Element> extends UseTabListLabelReturnTypeInfo {
+    useTabListLabelProps: (props: h.JSX.HTMLAttributes<LabelElement>) => h.JSX.HTMLAttributes<LabelElement>;
 }
 
-export interface UseAriaTabsReturnTypeInfo {
+export interface UseTabsReturnTypeInfo {
     tabPanels: UseManagedChildrenReturnTypeInfo<number, TabPanelInfo, never>;
 }
 
-export interface UseAriaTabsReturnTypeWithHooks<TabContainerElement extends Element, TabElement extends Element, PanelElement extends Element, LabelElement extends Element> extends UseAriaTabsReturnTypeInfo {
-    useAriaTabList: UseAriaTabList<TabContainerElement, TabElement>;
-    useAriaTabPanel: UseAriaTabPanel<PanelElement>;
-    useAriaTabListLabel: UseAriaTabListLabel<LabelElement>;
+export interface UseTabsReturnTypeWithHooks<TabContainerElement extends Element, TabElement extends Element, PanelElement extends Element, LabelElement extends Element> extends UseTabsReturnTypeInfo {
+    useTabList: UseTabList<TabContainerElement, TabElement>;
+    useTabPanel: UseTabPanel<PanelElement>;
+    useTabListLabel: UseTabListLabel<LabelElement>;
 }
 
-export type UseAriaTab<TabElement extends Element> = (args: UseAriaTabParameters<TabElement>) => UseAriaTabReturnTypeWithHooks<TabElement>;
-export type UseAriaTabList<TabContainerElement extends Element, TabElement extends Element> = (args: UseAriaTabListParameters<TabElement>) => UseAriaTabListReturnTypeWithHooks<TabContainerElement, TabElement>;
-export type UseAriaTabPanel<PanelElement extends Element> = (args: UseAriaTabPanelParameters) => UseAriaTabPanelReturnTypeWithHooks<PanelElement>;
-export type UseAriaTabListLabel<LabelElement extends Element> = (args: UseAriaTabLabelParameters) => UseAriaTabLabelReturnTypeWithHooks<LabelElement>;
+export type UseTab<TabElement extends Element> = (args: UseTabParameters<TabElement>) => UseTabReturnTypeWithHooks<TabElement>;
+export type UseTabList<TabContainerElement extends Element, TabElement extends Element> = (args: UseTabListParameters<TabElement>) => UseTabListReturnTypeWithHooks<TabContainerElement, TabElement>;
+export type UseTabPanel<PanelElement extends Element> = (args: UseTabPanelParameters) => UseTabPanelReturnTypeWithHooks<PanelElement>;
+export type UseTabListLabel<LabelElement extends Element> = (args: UseTabLabelParameters) => UseTabLabelReturnTypeWithHooks<LabelElement>;
 /*
-export function useAriaTabs<TabListElement extends Element, TabElement extends Element, PanelElement extends Element, LabelElement extends Element>({ tabPanels: { managedChildren: { onChildrenMountChange: ocmc, ...tabPanelsManagedChildren } } }: UseAriaTabsParameters): UseAriaTabsReturnTypeWithHooks<TabListElement, TabElement, PanelElement, LabelElement> {
+export function useTabs<TabListElement extends Element, TabElement extends Element, PanelElement extends Element, LabelElement extends Element>({ tabPanels: { managedChildren: { onChildrenMountChange: ocmc, ...tabPanelsManagedChildren } } }: UseTabsParameters): UseTabsReturnTypeWithHooks<TabListElement, TabElement, PanelElement, LabelElement> {
     const { 
         useListNavigationSingleSelectionChild, 
         useListNavigationSingleSelectionProps 
@@ -92,9 +92,9 @@ export function useAriaTabs<TabListElement extends Element, TabElement extends E
     
 }*/
 
-export function useAriaTabs<TabListElement extends Element, TabElement extends Element, PanelElement extends Element, LabelElement extends Element>({ tabPanels: { managedChildren: { onChildrenMountChange: ocmc, ...tabPanelsManagedChildren } } }: UseAriaTabsParameters): UseAriaTabsReturnTypeWithHooks<TabListElement, TabElement, PanelElement, LabelElement> {
+export function useTabs<TabListElement extends Element, TabElement extends Element, PanelElement extends Element, LabelElement extends Element>({ tabPanels: { managedChildren: { onChildrenMountChange: ocmc, ...tabPanelsManagedChildren } } }: UseTabsParameters): UseTabsReturnTypeWithHooks<TabListElement, TabElement, PanelElement, LabelElement> {
 
-    debugLog("useAriaTabs");
+    debugLog("useTabs");
 
 
     const baseId = generateRandomId("aria-tabs-");
@@ -103,7 +103,7 @@ export function useAriaTabs<TabListElement extends Element, TabElement extends E
     const getPanelId = useCallback((index: number) => { return baseId + "-panel-" + index; }, []);
 
     // Used for the panels, not the tabs in the tablist.
-    // Those are in useAriaTabList itself.
+    // Those are in useTabList itself.
     const { useManagedChild, ...managedChildrenRet } = useManagedChildren<number, TabPanelInfo, "visible">({ managedChildren: { ...tabPanelsManagedChildren, onChildrenMountChange: useStableCallback<OnChildrenMountChange<number>>((m, u) => { ocmc?.(m, u); reevaluateClosestFit(); }) } });
     const { changeIndex: changeVisiblePanel, getCurrentIndex: getVisibleIndex, reevaluateClosestFit } = useChildrenFlag({ children: managedChildrenRet.managedChildren.children, closestFit: false, initialIndex: null, key: "visible" });
 
@@ -112,14 +112,14 @@ export function useAriaTabs<TabListElement extends Element, TabElement extends E
     const { useLabelInput, useLabelLabel } = useLabel<TabListElement, LabelElement>({ label: { prefixInput: "", prefixLabel: "", tagInput: "div" as any, tagLabel: "div" as any } });
 
 
-    const useAriaTabListLabel = useCallback(() => {
+    const useTabListLabel = useCallback(() => {
         const { useLabelLabelProps } = useLabelLabel();
-        function useAriaTabListLabelProps(props: h.JSX.HTMLAttributes<LabelElement>) { return useLabelLabelProps(props); }
-        return { useAriaTabListLabelProps };
+        function useTabListLabelProps(props: h.JSX.HTMLAttributes<LabelElement>) { return useLabelLabelProps(props); }
+        return { useTabListLabelProps };
     }, [useLabelLabel]);
 
-    const useAriaTabList = useCallback<UseAriaTabList<TabListElement, TabElement>>(({ childrenHaveFocus, tabs: { onSelectedIndexChange }, linearNavigation, listNavigation, managedChildren: tabListManagedChildren, rovingTabIndex, singleSelection, typeaheadNavigation }) => {
-        debugLog("useAriaTabList");
+    const useTabList = useCallback<UseTabList<TabListElement, TabElement>>(({ childrenHaveFocus, tabs: { onSelectedIndexChange }, linearNavigation, listNavigation, managedChildren: tabListManagedChildren, rovingTabIndex, singleSelection, typeaheadNavigation }) => {
+        debugLog("useTabList");
         const stableOnSelectedIndexChange = useStableCallback(onSelectedIndexChange);
 
         const {
@@ -131,7 +131,12 @@ export function useAriaTabs<TabListElement extends Element, TabElement extends E
             listNavigation,
             managedChildren: tabListManagedChildren,
             rovingTabIndex,
-            singleSelection,
+            singleSelection: {
+                ...singleSelection,
+                onSelectedIndexChange: useCallback((event: Event, index: number) => {
+                    onSelectedIndexChange?.(enhanceEvent<TabElement, Event, { selectedIndex: number }>(event, { selectedIndex: index }))
+                }, [])
+            },
             typeaheadNavigation,
             childrenHaveFocus
         });
@@ -142,34 +147,34 @@ export function useAriaTabs<TabListElement extends Element, TabElement extends E
 
         const { useLabelInputProps } = useLabelInput()
 
-        const useAriaTab = useCallback<UseAriaTab<TabElement>>(({ listNavigation, managedChild, rovingTabIndex, hasFocus }: UseAriaTabParameters<TabElement>): UseAriaTabReturnTypeWithHooks<TabElement> => {
-            debugLog("useAriaTab", managedChild.index);
+        const useTab = useCallback<UseTab<TabElement>>(({ listNavigation, managedChild, rovingTabIndex, hasFocus }: UseTabParameters<TabElement>): UseTabReturnTypeWithHooks<TabElement> => {
+            debugLog("useTab", managedChild.index);
             const { useListNavigationSingleSelectionChildProps, ...listNavRet2 } = useListNavigationSingleSelectionChild({ listNavigation, managedChild, rovingTabIndex, subInfo: {}, hasFocus });
             const { singleSelection: { selected }, rovingTabIndex: { tabbable } } = listNavRet2;
 
-            const useAriaTabProps = ({ role, "aria-controls": ariaControls, "aria-selected": ariaSelected, ...props }: h.JSX.HTMLAttributes<TabElement>) => {
+            const useTabProps = ({ role, "aria-controls": ariaControls, "aria-selected": ariaSelected, ...props }: h.JSX.HTMLAttributes<TabElement>) => {
                 const panelId = getPanelId(managedChild.index);
                 const tabId = getTabId(managedChild.index);
 
                 const usePressProps = usePress<TabElement>((e) => { stableOnSelectedIndexChange(enhanceEvent(e, { selectedIndex: managedChild.index })) }, {});
 
                 return useListNavigationSingleSelectionChildProps(useMergedProps({
-                    role: warnOnOverwrite("useAriaTab", "role", role, "tab"),
-                    "aria-controls": warnOnOverwrite("useAriaTab", "ariaControls", ariaControls, panelId),
-                    "aria-selected": warnOnOverwrite("useAriaTab", "ariaSelected", ariaSelected, selected ? "true" : undefined),
+                    role: warnOnOverwrite("useTab", "role", role, "tab"),
+                    "aria-controls": warnOnOverwrite("useTab", "ariaControls", ariaControls, panelId),
+                    "aria-selected": warnOnOverwrite("useTab", "ariaSelected", ariaSelected, selected ? "true" : undefined),
                     "data-tabbable": tabbable.toString(),
                     id: tabId
                 } as {}, usePressProps(props)));
             };
             return {
-                useAriaTabProps,
+                useTabProps,
                 ...listNavRet2
             }
         }, [useLabelInput, useListNavigationSingleSelectionChild]);
 
-        const useAriaTabListProps = ({ role, "aria-orientation": ariaOrientation, ...props }: h.JSX.HTMLAttributes<TabListElement>) => {
+        const useTabListProps = ({ role, "aria-orientation": ariaOrientation, ...props }: h.JSX.HTMLAttributes<TabListElement>) => {
             return useListNavigationSingleSelectionProps(useLabelInputProps(useMergedProps({
-                role: warnOnOverwrite("useAriaTabList", "role", role, "tablist"),
+                role: warnOnOverwrite("useTabList", "role", role, "tablist"),
                 "aria-orientation": ariaOrientation ?? "horizontal",
             } as {},
                 props)))
@@ -177,13 +182,13 @@ export function useAriaTabs<TabListElement extends Element, TabElement extends E
 
         return {
             tabList: listNavRet1,
-            useAriaTabListProps,
-            useAriaTab
+            useTabListProps,
+            useTab
         }
     }, [useLabelInput]);
 
-    const useAriaTabPanel = useCallback(({ managedChild: { flags, ...managedChild } }: UseAriaTabPanelParameters) => {
-        debugLog("useAriaTabPanel", managedChild.index);
+    const useTabPanel = useCallback(({ managedChild: { flags, ...managedChild } }: UseTabPanelParameters) => {
+        debugLog("useTabPanel", managedChild.index);
         //const [correspondingTabId, setCorrespondingTabId] = useState<string | null>(null);
         const [isVisible, setIsVisible, getIsVisible] = useState(getVisibleIndex() == managedChild.index);
         const visibleRef = useRef<ChildFlagOperations>({ get: getIsVisible, set: setIsVisible, isValid: returnTrue });
@@ -191,16 +196,16 @@ export function useAriaTabs<TabListElement extends Element, TabElement extends E
         const panelId = getPanelId(managedChild.index);
         const tabId = getTabId(managedChild.index);
 
-        const useAriaTabPanelProps = ({ role, "aria-labelledby": ariaLabelledBy, id, ...props }: h.JSX.HTMLAttributes<PanelElement>) => {
+        const useTabPanelProps = ({ role, "aria-labelledby": ariaLabelledBy, id, ...props }: h.JSX.HTMLAttributes<PanelElement>) => {
             return useMergedProps({
-                role: warnOnOverwrite("useAriaTabPanelProps", "role", role, "tabpanel"),
-                "aria-labelledby": warnOnOverwrite("useAriaTabPanelProps", "aria-labelledby", ariaLabelledBy, tabId),
-                id: warnOnOverwrite("useAriaTabPanelProps", "id", id, panelId)
+                role: warnOnOverwrite("useTabPanelProps", "role", role, "tabpanel"),
+                "aria-labelledby": warnOnOverwrite("useTabPanelProps", "aria-labelledby", ariaLabelledBy, tabId),
+                id: warnOnOverwrite("useTabPanelProps", "id", id, panelId)
             } as {}, props);
         }
 
         return {
-            useAriaTabPanelProps,
+            useTabPanelProps,
             tabPanel: {
                 visible: isVisible,
                 getVisible: getIsVisible
@@ -209,9 +214,9 @@ export function useAriaTabs<TabListElement extends Element, TabElement extends E
     }, []);
 
     return {
-        useAriaTabListLabel,
-        useAriaTabList,
-        useAriaTabPanel,
+        useTabListLabel,
+        useTabList,
+        useTabPanel,
         tabPanels: managedChildrenRet
     }
 

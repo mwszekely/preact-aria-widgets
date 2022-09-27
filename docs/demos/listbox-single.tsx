@@ -3,10 +3,6 @@ import { useState } from "preact-prop-helpers";
 import { defaultRenderListboxSingleItem, ListboxSingleItem } from "../../component/listbox-single";
 import { EventDetail, ListboxSingle, defaultRenderListboxSingle } from "../../index";
 
-/*function DemoButton({ tag, ...props }: { tag: string } & RenderableProps<{}>) {
-    return <AriaButton disabled={disabled} onPress={onPress} pressed={} {...props} tag={tag as any}   />
-}*/
-
 function getDocument() { return window.document; }
 
 function DemoListItem({ index }: { index: number }) {
@@ -71,7 +67,7 @@ export function Demo() {
                             })())}</>
                         })
                     })}
-                    selectionMode="activate"
+                    selectionMode="activation"
                     tagLabel="label"
                     tagList="ol"
                     selectedIndex={selectedIndex}

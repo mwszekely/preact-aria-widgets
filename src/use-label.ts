@@ -107,7 +107,7 @@ export interface UseCheckboxLikeParameters<InputType extends Element, LabelType 
         role: string;
         disabled: boolean;
         checked: CheckboxCheckedType;
-        onInput?(event: h.JSX.TargetedEvent<InputType>): void;
+        onCheckedChange?(event: h.JSX.TargetedEvent<InputType>): void;
         //onInput?(event: h.JSX.TargetedEvent<LabelType>): void;
     }
 }
@@ -161,9 +161,12 @@ export interface UseCheckboxLikeReturnTypeWithHooks<InputType extends Element, L
  * @param param0 
  * @returns 
  */
-export function useCheckboxLike<InputType extends Element, LabelType extends Element>({ checkboxLike: { checked, disabled, labelPosition, role, onInput }, label: { tagInput, tagLabel } }: UseCheckboxLikeParameters<InputType, LabelType>): UseCheckboxLikeReturnTypeWithHooks<InputType, LabelType> {
+export function useCheckboxLike<InputType extends Element, LabelType extends Element>({ checkboxLike: { checked, disabled, labelPosition, role, onCheckedChange }, label: { tagInput, tagLabel } }: UseCheckboxLikeParameters<InputType, LabelType>): UseCheckboxLikeReturnTypeWithHooks<InputType, LabelType> {
 
-    const stableOnInput = useStableCallback((e: h.JSX.TargetedEvent<InputType> | h.JSX.TargetedEvent<LabelType>) => { e.preventDefault(); onInput?.(e as h.JSX.TargetedEvent<InputType>); });
+    const stableOnInput = useStableCallback((e: h.JSX.TargetedEvent<InputType> | h.JSX.TargetedEvent<LabelType>) => { 
+        e.preventDefault(); 
+        onCheckedChange?.(e as h.JSX.TargetedEvent<InputType>); 
+    });
 
     const { useLabelInput: useILInput, useLabelLabel: useILLabel, label } = useLabel<InputType, LabelType>({ label: { prefixLabel: "aria-checkbox-label-", prefixInput: "aria-checkbox-input-", tagInput: tagInput, tagLabel: tagLabel } });
 
@@ -243,12 +246,12 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
         function useCheckboxLikeLabelElementProps({ ...p0 }: h.JSX.HTMLAttributes<LabelType>): h.JSX.HTMLAttributes<LabelType> {
 
             const usePressProps = usePress<LabelType>(disabled || !handlesInput(tag, labelPosition, "label-element") ? undefined : stableOnInput, undefined);
-            const newProps = usePressProps(p0);
+            const newProps: h.JSX.HTMLAttributes<LabelType> = usePressProps(p0);
 
             if (labelPosition == "wrapping") {
-                if (p0.tabIndex == null)
+                if (newProps.tabIndex == null)
                     newProps.tabIndex = 0;
-                if (p0.role == null)
+                if (newProps.role == null)
                     newProps.role = role;
                 newProps["aria-disabled"] = disabled.toString();
                 newProps["aria-checked"] = checked.toString();
@@ -262,7 +265,7 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
             // Just make sure that label clicks can't affect the checkbox while it's disabled
             newProps.onClick = disabled ? ((e) => { e.preventDefault() }) : newProps.onClick;
 
-            return useLabelRefElementProps(useMergedProps<LabelType>(newProps, useILLabelProps(p0)));
+            return useILLabelProps(useLabelRefElementProps(newProps));
         }
 
         return { useCheckboxLikeLabelElementProps };

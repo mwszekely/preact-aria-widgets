@@ -20,7 +20,7 @@ function DemoCheckbox({ index }: { index: number }) {
             text={labelText}
             tagInput="input"
             tagLabel="label"
-            onInput={e => setChecked(e[EventDetail].checked)} />
+            onCheckedChange={e => setChecked(e[EventDetail].checked)} />
     )
 }
 
@@ -31,7 +31,7 @@ export function Blurb() {
         <>
             <p>Checkbox groups are an alternative to multi-select lists. There is no role of <code>checkboxgroup</code>, but this aims to be an ARIA-compliant implementation of a checkbox group.</p>
             <ul>
-                <li>All normal <code>AriaCheckbox</code> functionality is supported on each individual checkbox.</li>
+                <li>All normal <code>Checkbox</code> functionality is supported on each individual checkbox.</li>
                 <li>The parent checkbox switches between 3 states, remembering the last state that caused it to be "mixed".</li>
                 <li>The parent checkbox reacts to each child's <code>checked</code> prop and updates its own internal <code>checked</code> attribute (be aware of this if they're asyncronous, as you'll want to ensure they all resolve on the same tick with <code>Promise.all</code> to not clobber the user's inputs).</li>
                 <li>The children are treated as a composite component with list navigation; see <code>AiraSingleSelectList</code> for more information</li>
@@ -65,7 +65,7 @@ export function Demo() {
                         tagInput: "input",
                         tagLabel: "label",
                         makeInputProps: () => ({}),
-                        makeLabelProps: () => ({}),
+                        makeLabelProps: () => ({ children: "Group checkbox parent" }),
                         children: Array.from((function* () {
                             for (let i = 0; i < count; ++i) {
                                 yield <div><DemoCheckbox index={i} key={i} /></div>

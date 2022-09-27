@@ -5,23 +5,23 @@ import { debugLog, EnhancedEvent, enhanceEvent, TagSensitiveProps } from "./prop
 
 export type ButtonPressEvent<E extends EventTarget> = EnhancedEvent<E, Event | Event, { pressed: boolean | null }>;
 
-export interface UseAriaButtonParameters<E extends EventTarget> extends TagSensitiveProps<E> {
+export interface UseButtonParameters<E extends EventTarget> extends TagSensitiveProps<E> {
     disabled?: boolean | "soft" | "hard";
     pressed?: boolean | null | undefined;
     onPress?(event: ButtonPressEvent<E>): void;
 }
 
-export interface UseAriaButtonReturnType<E extends EventTarget> {
+export interface UseButtonReturnType<E extends EventTarget> {
     /** *Unstable* */
-    useAriaButtonProps: (props: h.JSX.HTMLAttributes<E>) => h.JSX.HTMLAttributes<E>;
+    useButtonProps: (props: h.JSX.HTMLAttributes<E>) => h.JSX.HTMLAttributes<E>;
 }
 
 
 
-export function useAriaButton<E extends EventTarget>({ tag, pressed, onPress, disabled }: UseAriaButtonParameters<E>): UseAriaButtonReturnType<E> {
-    debugLog("useAriaButton");
+export function useButton<E extends EventTarget>({ tag, pressed, onPress, disabled }: UseButtonParameters<E>): UseButtonReturnType<E> {
+    debugLog("useButton");
 
-    function useAriaButtonProps({ "aria-pressed": ariaPressed, tabIndex, role, ...p }: h.JSX.HTMLAttributes<E>): h.JSX.HTMLAttributes<E> {
+    function useButtonProps({ "aria-pressed": ariaPressed, tabIndex, role, ...p }: h.JSX.HTMLAttributes<E>): h.JSX.HTMLAttributes<E> {
 
         const usePressProps = usePress<E>((e) => (disabled ? null : onPress)?.(enhanceEvent(e, { pressed: pressed == null ? null : !pressed })), undefined);
         const props = usePressProps(p);
@@ -39,7 +39,7 @@ export function useAriaButton<E extends EventTarget>({ tag, pressed, onPress, di
     }
 
     return {
-        useAriaButtonProps
+        useButtonProps
     }
 }
 

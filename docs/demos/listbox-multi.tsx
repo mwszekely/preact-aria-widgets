@@ -3,9 +3,6 @@ import { useState } from "preact-prop-helpers";
 import { ListboxMultiItem } from "../../component/listbox-multi";
 import { EventDetail, ListboxMulti, defaultRenderListboxMulti, defaultRenderListboxMultiItem } from "../../index";
 
-/*function DemoButton({ tag, ...props }: { tag: string } & RenderableProps<{}>) {
-    return <AriaButton disabled={disabled} onPress={onPress} pressed={} {...props} tag={tag as any}   />
-}*/
 
 function DemoListItem({ index }: { index: number }) {
     const [selected, setSelected] = useState(false);
@@ -14,7 +11,14 @@ function DemoListItem({ index }: { index: number }) {
 
 
     return (
-        <ListboxMultiItem selected={selected} index={index} disabled={false} text={labelText} onSelect={e => { setSelected(e[EventDetail].selected) }} render={defaultRenderListboxMultiItem({ tagListItem: "li", makePropsListItem: () => ({ children: labelText }) })} />
+        <ListboxMultiItem
+            selected={selected}
+            index={index}
+            disabled={false}
+            text={labelText}
+            onSelectedChange={e => { setSelected(e[EventDetail].selected) }}
+            render={defaultRenderListboxMultiItem({ tagListItem: "li", makePropsListItem: () => ({ children: labelText }) })}
+        />
     )
 }
 
@@ -28,7 +32,7 @@ export function Blurb() {
                 <li>The children are treated as a composite component with list navigation; see <code>AiraSingleSelectList</code> for more information</li>
                 <li>The parent checkbox switches between 3 states, remembering the last state that caused it to be "mixed".</li>
                 <li>The parent checkbox reacts to each child's <code>checked</code> prop and updates its own internal <code>checked</code> attribute (be aware of this if they're asyncronous, as you'll want to ensure they all resolve on the same tick with <code>Promise.all</code> to not clobber the user's inputs).</li>
-                <li>The children are treated as a composite component with list navigation; see <code>AiraSingleSelectList</code> for more information</li>                
+                <li>The children are treated as a composite component with list navigation; see <code>AiraSingleSelectList</code> for more information</li>
                 <li>Grouping is supported</li>
                 <li>Sorting/reordering is supported, though not provided by default, as it's mutually exclusive with grouping.</li>
             </ul>
