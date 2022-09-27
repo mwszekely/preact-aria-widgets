@@ -1,13 +1,14 @@
 
 import { useState } from "preact-prop-helpers";
+import { memo } from "preact/compat";
 import { defaultRenderRadio, Radio, RadioGroup } from "../../component/radio-group";
-import { EventDetail, ListboxSingle, defaultRenderRadioGroup } from "../../index";
+import { EventDetail, defaultRenderRadioGroup } from "../../index";
 
 function getDocument() {
     return window.document;
 }
 
-function DemoListItem({ index }: { index: number }) {
+const DemoRadioButton = memo(function DemoRadioButton({ index }: { index: number }) {
 
     const value = `Radio button #${index}`;
 
@@ -29,7 +30,7 @@ function DemoListItem({ index }: { index: number }) {
                 makeLabelProps: () => ({ children: value })
             })} />
     )
-}
+})
 
 
 
@@ -80,7 +81,7 @@ export function Demo() {
                                 <>
                                     {Array.from((function* () {
                                         for (let i = 0; i < count; ++i) {
-                                            yield <DemoListItem index={i} key={i} />
+                                            yield <DemoRadioButton index={i} key={i} />
                                         }
                                     })())}
                                 </>

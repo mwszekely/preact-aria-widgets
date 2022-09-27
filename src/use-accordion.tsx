@@ -1,7 +1,7 @@
 import { h } from "preact";
-import { OnChildrenMountChange, returnTrue, useChildrenFlag, useHasFocus, UseHasFocusParameters, useLinearNavigation, UseLinearNavigationParameters, UseManagedChildParameters, useManagedChildren, UseManagedChildrenParameters, UseManagedChildrenReturnTypeInfo, useRandomId, useRefElement, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
+import { OnChildrenMountChange, returnTrue, useChildrenFlag, UseHasFocusParameters, useLinearNavigation, UseLinearNavigationParameters, UseManagedChildParameters, useManagedChildren, UseManagedChildrenParameters, UseManagedChildrenReturnTypeInfo, useRandomId, useRefElement, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
 import { useCallback, useRef } from "preact/hooks";
-import { debugLog, ElementToTag } from "./props";
+import { debugLog } from "./props";
 import { useButton, UseButtonParameters } from "./use-button";
 
 export type UseAccordion<HeaderElement extends Element, BodyElement extends Element> = (args: UseAccordionParameters) => UseAccordionReturnTypeWithHooks<HeaderElement, BodyElement>;
@@ -29,8 +29,8 @@ export interface UseAccordionSectionInfoBase {
 
 export interface UseAccordionSectionParameters<HeaderElement extends Element> {
     managedChildren: UseManagedChildParameters<number, UseAccordionSectionInfoBase, "tabbed" | "open", "subInfo" | "flags">["managedChild"];
-    accordionSection: { open?: boolean | undefined; tagButton: ElementToTag<HeaderElement>; }
-    button: Pick<UseButtonParameters<HeaderElement>, "disabled">;
+    accordionSection: { open?: boolean | undefined; }
+    button: Omit<UseButtonParameters<HeaderElement>["button"], "pressed" | "onPress">;
     hasFocus: UseHasFocusParameters<HeaderElement>;
 }
 
@@ -109,7 +109,7 @@ export function useAccordion<HeaderElement extends HTMLElement, BodyElement exte
         }, [])
     })
 
-    const useAccordionSection: UseAccordionSection<HeaderElement, BodyElement> = useCallback<UseAccordionSection<HeaderElement, BodyElement>>(({ button: { disabled }, accordionSection: { open: openFromUser, tagButton }, managedChildren: { index }, hasFocus: { onFocusedInnerChanged, ...hasFocus } }) => {
+    const useAccordionSection: UseAccordionSection<HeaderElement, BodyElement> = useCallback<UseAccordionSection<HeaderElement, BodyElement>>(({ button: { disabled, tagButton }, accordionSection: { open: openFromUser }, managedChildren: { index }, hasFocus: { onFocusedInnerChanged, ...hasFocus } }) => {
 
         debugLog("useAccordianSection");
         const [openFromParent, setOpenFromParent, getOpenFromParent] = useState<boolean | null>(null);
@@ -183,30 +183,30 @@ export function useAccordion<HeaderElement extends HTMLElement, BodyElement exte
             };
 
             props.tabIndex = 0;
-            const { useButtonProps } = useButton<HeaderElement>({ tag: tagButton, disabled, onPress });
+            const { useButtonProps } = useButton<HeaderElement>({
+                button: { tagButton, disabled, onPress }, hasFocus: {
+                    ...hasFocus,
+                    onFocusedInnerChanged: useStableCallback((focused: boolean, prev: boolean | undefined) => {
+                        onFocusedInnerChanged?.(focused, prev);
+                        if (focused)
+                            changeTabbedIndex(index);
+                    })
+                }
+            });
             const retB = useButtonProps(props);
-            //const retB = useMergedProps<HeaderElement>(usePressEventHandlers<HeaderElement>(onClick, undefined), props);
 
 
 
-            const { useHasFocusProps } = useHasFocus<HeaderElement>({
-                ...hasFocus,
-                onFocusedInnerChanged: useStableCallback((focused: boolean, prev: boolean | undefined) => {
-                    onFocusedInnerChanged?.(focused, prev);
-                    if (focused)
-                        changeTabbedIndex(index);
-                })
-            })
 
             //const ret3: h.JSX.HTMLAttributes<HeaderElement>
             //    = useMergedProps<HeaderElement>(retD, { onFocus });
 
 
-            return useHasFocusProps(useLinearNavigationProps(useHeaderAsSourceIdProps(useHeaderAsReferencerIdProps({
+            return useLinearNavigationProps(useHeaderAsSourceIdProps(useHeaderAsReferencerIdProps({
                 "aria-expanded": (ariaExpanded ?? open ?? false).toString(),
                 "aria-disabled": (ariaDisabled ?? (open ? "true" : undefined)),
                 ...useHeaderRefElementProps(retB)
-            } as h.JSX.HTMLAttributes<HeaderElement>))));
+            } as h.JSX.HTMLAttributes<HeaderElement>)));
         }
 
 

@@ -1,5 +1,6 @@
 import { createContext, createElement, h, VNode } from "preact";
 import { UseActiveElementParameters, useStableCallback } from "preact-prop-helpers";
+import { memo } from "preact/compat";
 import { useContext } from "preact/hooks";
 import { ElementToTag, PropModifier } from "props";
 import { useMenu, UseMenuItemParameters, UseMenuItemReturnTypeInfo, UseMenuParameters, UseMenuReturnTypeInfo, UseMenuItem } from "../use-menu";
@@ -42,7 +43,7 @@ export interface MenuItemProps<MenuItemElement extends Element> extends
 
 const MenuItemContext = createContext<UseMenuItem<any>>(null!);
 
-export function Menu<SurfaceElement extends Element, ParentElement extends Element, SentinelElement extends Element, ChildElement extends Element, ButtonElement extends Element>({
+export const Menu = memo(function Menu<SurfaceElement extends Element, ParentElement extends Element, SentinelElement extends Element, ChildElement extends Element, ButtonElement extends Element>({
     initialIndex,
     collator,
     disableArrowKeys,
@@ -85,6 +86,7 @@ export function Menu<SurfaceElement extends Element, ParentElement extends Eleme
         softDismiss: { onClose: useStableCallback(onClose), open },
         typeaheadNavigation: { collator, noTypeahead, typeaheadTimeout },
         activeElement: { getDocument, getWindow },
+        menuButtonHasFocus: { getDocument, getWindow }
     });
 
     const { useMenuSentinelProps: useFirstSentinelProps } = useMenuSentinel<SentinelElement>();
@@ -95,16 +97,16 @@ export function Menu<SurfaceElement extends Element, ParentElement extends Eleme
         </MenuItemContext.Provider>
     )
 
-}
+})
 
-export function MenuItem<MenuItemElement extends Element>({ render, index, text, hidden, blurSelf, flags, focusSelf }: MenuItemProps<MenuItemElement>) {
+export const MenuItem = memo(function MenuItem<MenuItemElement extends Element>({ render, index, text, hidden, flags, focusSelf }: MenuItemProps<MenuItemElement>) {
     const { useMenuItemProps, ...rest } = useContext(MenuItemContext)({
         listNavigation: { text },
         managedChild: { index, flags },
-        rovingTabIndex: { blurSelf, focusSelf, hidden }
+        rovingTabIndex: { focusSelf, hidden }
     });
     return render(rest, useMenuItemProps);
-}
+})
 
 export function defaultRenderMenu<SurfaceElement extends Element, MenuElement extends Element, MenuItemElement extends Element, SentinelElement extends Element, ButtonElement extends Element>({ portalId, tagButton, tagMenu, tagSurface, tagSentinel, makePropsButton, makePropsMenu, makePropsSurface, makePropsSentinel }: { portalId: string, tagSurface: ElementToTag<SurfaceElement>, tagMenu: ElementToTag<MenuElement>, tagButton: ElementToTag<ButtonElement>, tagSentinel: ElementToTag<SentinelElement>, makePropsSurface: (info: UseMenuReturnTypeInfo<SurfaceElement, MenuElement, MenuItemElement, ButtonElement>) => h.JSX.HTMLAttributes<SurfaceElement>, makePropsMenu: (info: UseMenuReturnTypeInfo<SurfaceElement, MenuElement, MenuItemElement, ButtonElement>) => h.JSX.HTMLAttributes<MenuElement>, makePropsButton: (info: UseMenuReturnTypeInfo<SurfaceElement, MenuElement, MenuItemElement, ButtonElement>) => h.JSX.HTMLAttributes<ButtonElement>, makePropsSentinel: (info: UseMenuReturnTypeInfo<SurfaceElement, MenuElement, MenuItemElement, ButtonElement>) => h.JSX.HTMLAttributes<SentinelElement> }) {
     return function (menuInfo: UseMenuReturnTypeInfo<SurfaceElement, MenuElement, MenuItemElement, ButtonElement>, modifyMenuButtonProps: PropModifier<ButtonElement>, modifyMenuSurfaceProps: PropModifier<SurfaceElement>, modifyMenuProps: PropModifier<MenuElement>, modifyFirstSentinelProps: PropModifier<SentinelElement>, modifyLastSentinelProps: PropModifier<SentinelElement>) {

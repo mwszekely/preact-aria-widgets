@@ -1,5 +1,5 @@
 import { createContext, h, VNode } from "preact";
-import { forwardRef } from "preact/compat";
+import { memo } from "preact/compat";
 import { useContext } from "preact/hooks";
 import { ElementToTag, PropModifier } from "props";
 import { useListboxMulti, UseListboxMultiItem, UseListboxMultiItemParameters, UseListboxMultiItemReturnTypeInfo, UseListboxMultiParameters, UseListboxMultiReturnTypeInfo } from "../use-listbox-multi";
@@ -26,16 +26,17 @@ export interface ListboxMultiProps<LabelElement extends Element, ListElement ext
 
 
 export interface ListboxMultiItemProps<ListboxItemElement extends Element> extends
-    Get<UseListboxMultiItemParameters, "managedChild">,
-    Omit<Get<UseListboxMultiItemParameters, "listNavigation">, "subInfo">,
-    Get<UseListboxMultiItemParameters, "rovingTabIndex">,
-    Get<UseListboxMultiItemParameters, "listboxMultiItem"> {
+    Get<UseListboxMultiItemParameters<ListboxItemElement>, "managedChild">,
+    Omit<Get<UseListboxMultiItemParameters<ListboxItemElement>, "listNavigation">, "subInfo">,
+    Get<UseListboxMultiItemParameters<ListboxItemElement>, "rovingTabIndex">,
+    Get<UseListboxMultiItemParameters<ListboxItemElement>, "listboxMultiItem">,
+    Get<UseListboxMultiItemParameters<ListboxItemElement>, "hasFocus"> {
     render(info: UseListboxMultiItemReturnTypeInfo<ListboxItemElement>, modifyListItemProps: PropModifier<ListboxItemElement>): VNode<any>;
 }
 
 export const ListboxMultiContext = createContext<UseListboxMultiItem<any>>(null!);
 
-function ListboxMultiU<LabelElement extends Element, ListElement extends HTMLElement, ListItemElement extends HTMLElement>({
+export const ListboxMulti = memo(function ListboxMulti<LabelElement extends Element, ListElement extends HTMLElement, ListItemElement extends HTMLElement>({
     render,
     tagLabel,
     collator,
@@ -74,7 +75,7 @@ function ListboxMultiU<LabelElement extends Element, ListElement extends HTMLEle
             {render(listboxReturnType, useListboxMultiLabelProps, useListboxMultiProps)}
         </ListboxMultiContext.Provider>
     )
-}
+})
 
 
 export function defaultRenderListboxMulti<LabelElement extends Element, ListElement extends HTMLElement, ListItemElement extends Element>({ makePropsList, makePropsLabel, tagLabel, tagList }: { tagLabel: ElementToTag<LabelElement>, tagList: ElementToTag<ListElement>, makePropsLabel: (info: UseListboxMultiReturnTypeInfo<ListItemElement>) => h.JSX.HTMLAttributes<LabelElement>, makePropsList: (info: UseListboxMultiReturnTypeInfo<ListItemElement>) => h.JSX.HTMLAttributes<ListElement> }) {
@@ -85,18 +86,17 @@ export function defaultRenderListboxMultiItem<ListItemElement extends HTMLElemen
     return defaultRenderListItem<ListItemElement, UseListboxMultiItemReturnTypeInfo<ListItemElement>>({ makePropsListItem, tagListItem });
 }
 
-function ListboxMultiItemU<ListItemElement extends Element>({ index, blurSelf, disabled, flags, focusSelf, render, text, hidden, selected, onSelectedChange }: ListboxMultiItemProps<ListItemElement>) {
+export const ListboxMultiItem = memo(function ListboxMultiItem<ListItemElement extends Element>({ index, disabled, flags, focusSelf, render, text, hidden, selected, onSelectedChange, getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange }: ListboxMultiItemProps<ListItemElement>) {
     const { useListboxMultiItemProps, ...itemReturn } = useContext(ListboxMultiContext)({
         managedChild: { index, flags },
-        rovingTabIndex: { blurSelf, focusSelf, hidden },
+        rovingTabIndex: { focusSelf, hidden },
         listNavigation: { text },
-        listboxMultiItem: { disabled, selected, onSelectedChange }
+        listboxMultiItem: { disabled, selected, onSelectedChange },
+        hasFocus: { getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange }
     });
 
     return (
         <>{render(itemReturn, useListboxMultiItemProps)}</>
     )
-}
+})
 
-export const ListboxMulti = forwardRef(ListboxMultiU) as typeof ListboxMultiU;
-export const ListboxMultiItem = forwardRef(ListboxMultiItemU) as typeof ListboxMultiItemU;

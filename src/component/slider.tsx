@@ -1,5 +1,5 @@
-import { ComponentChildren, createContext, createElement, h, Ref, VNode } from "preact";
-import { forwardRef } from "preact/compat";
+import { ComponentChildren, createContext, createElement, h, VNode } from "preact";
+import { memo } from "preact/compat";
 import { useContext } from "preact/hooks";
 import { ElementToTag, PropModifier } from "props";
 import { useSlider, UseSliderParameters, UseSliderThumb, UseSliderThumbParameters, UseSliderThumbReturnTypeInfo } from "../use-slider";
@@ -16,7 +16,7 @@ export interface SliderThumbProps<ThumbElement extends Element> extends Get<UseS
 
 const SliderThumbContext = createContext<UseSliderThumb<any>>(null!);
 
-export function Slider({ max, min, onAfterChildLayoutEffect, onChildrenMountChange, children }: SliderProps) {
+export const Slider = memo( function Slider({ max, min, onAfterChildLayoutEffect, onChildrenMountChange, children }: SliderProps) {
     const { useSliderThumb, ..._sliderInfo } = useSlider({
         managedChildren: { onAfterChildLayoutEffect, onChildrenMountChange },
         slider: { max, min }
@@ -25,18 +25,16 @@ export function Slider({ max, min, onAfterChildLayoutEffect, onChildrenMountChan
     return (
         <SliderThumbContext.Provider value={useSliderThumb}>{children}</SliderThumbContext.Provider>
     );
-}
+})
 
-function SliderThumbU<ThumbElement extends Element>({ label, tag, value, max, min, onValueChange, index, flags, render, valueText }: SliderThumbProps<ThumbElement>, ref: Ref<ThumbElement>) {
+export const SliderThumb = memo(function SliderThumbU<ThumbElement extends Element>({ label, tag, value, max, min, onValueChange, index, flags, render, valueText }: SliderThumbProps<ThumbElement>) {
     const { useSliderThumbProps, ...sliderInfo } = useContext(SliderThumbContext)({ managedChild: { index, flags }, sliderThumb: { label, tag, value, max, min, onValueChange, valueText } });
 
     return render(sliderInfo, useSliderThumbProps)
-}
+})
 
 export function defaultRenderSliderThumb<E extends Element>({ tagThumb, makePropsThumb }: { tagThumb: ElementToTag<E>, makePropsThumb: (info: UseSliderThumbReturnTypeInfo) => h.JSX.HTMLAttributes<E> }) {
     return function (info: UseSliderThumbReturnTypeInfo, modifyThumbProps: PropModifier<E>) {
         return createElement(tagThumb as never, modifyThumbProps(makePropsThumb(info)))
     }
 }
-
-export const SliderThumb = forwardRef(SliderThumbU) as typeof SliderThumbU;

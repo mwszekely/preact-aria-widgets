@@ -13,6 +13,8 @@ export type UseCheckboxLabelElement<LabelType extends Element> = () => { useChec
 
 export interface UseCheckboxParameters<I extends Element, L extends Element> {
     checkboxLike: Omit<UseCheckboxLikeParameters<I, L>["checkboxLike"], "onCheckedChange" | "role">;
+    hasFocusInput: UseCheckboxLikeParameters<I, L>["hasFocusInput"];
+    hasFocusLabel: UseCheckboxLikeParameters<I, L>["hasFocusLabel"];
     label: UseCheckboxLikeParameters<I, L>["label"];
     checkbox: {
         onCheckedChange?(event: CheckboxChangeEvent<I>): void;
@@ -31,7 +33,7 @@ export interface UseCheckboxReturnTypeWithHooks<InputType extends Element, Label
     useCheckboxLabelElement: UseCheckboxLabelElement<LabelType>;
 }
 
-export function useCheckbox<InputType extends Element, LabelType extends Element>({ checkboxLike, label, checkbox }: UseCheckboxParameters<InputType, LabelType>): UseCheckboxReturnTypeWithHooks<InputType, LabelType> {
+export function useCheckbox<InputType extends Element, LabelType extends Element>({ checkboxLike, label, checkbox, hasFocusInput, hasFocusLabel }: UseCheckboxParameters<InputType, LabelType>): UseCheckboxReturnTypeWithHooks<InputType, LabelType> {
     debugLog("useCheckbox");
 
     const { disabled, labelPosition, checked } = checkboxLike;
@@ -39,7 +41,7 @@ export function useCheckbox<InputType extends Element, LabelType extends Element
     const { onCheckedChange: onInput } = checkbox;
 
     const onInputEnhanced = (e: h.JSX.TargetedEvent<InputType>) => onInput?.(enhanceEvent<InputType, Event, { checked: boolean }>(e, { checked: !checked }));
-    const { useCheckboxLikeInputElement, useCheckboxLikeLabelElement, ...checkboxLikeRest } = useCheckboxLike<InputType, LabelType>({ checkboxLike: { role: "checkbox", checked, onCheckedChange: onInputEnhanced, disabled, labelPosition, }, label });
+    const { useCheckboxLikeInputElement, useCheckboxLikeLabelElement, ...checkboxLikeRest } = useCheckboxLike<InputType, LabelType>({ hasFocusInput, hasFocusLabel, checkboxLike: { role: "checkbox", checked, onCheckedChange: onInputEnhanced, disabled, labelPosition, }, label });
 
     const useCheckboxInputElement: UseCheckboxInputElement<InputType> = useCallback(function useCheckboxInputElement() {
         const tag = tagInput;

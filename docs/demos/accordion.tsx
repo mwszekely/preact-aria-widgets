@@ -1,26 +1,25 @@
 
 import { ComponentChildren, h, RenderableProps } from "preact";
-import { Accordion, AccordionSection, Heading } from "../../index";
+import { memo } from "preact/compat";
+import { useState } from "preact/hooks";
+import { Accordion, AccordionSection, defaultRenderAccordionSection } from "../../index";
 
 function DemoAccordion({ children, ...props }: RenderableProps<{}>) {
-    return <Accordion {...props} render={(info) => { return <div id="accordion-demo">{children}</div> }} />
+    return <Accordion {...props} render={(_info) => { return <div id="accordion-demo">{children}</div> }} />
 }
 
 function getDocument() {
     return window.document;
 }
 
-function DemoAccordionSection({ index, body, heading, disabled, open }: { open?: boolean, disabled: boolean, index: number, heading: ComponentChildren, body: ComponentChildren }) {
-    return <AccordionSection<HTMLDivElement, HTMLDivElement> index={index} tagButton="div" open={open} disabled={disabled} getDocument={getDocument} render={(info, headerProps, bodyProps) => {
-        return (
-            <>
-                <Heading heading={<div {...headerProps}>{heading} ({!info.accordionSection.expanded && "not "} open), ({!info.accordionSection.focused && "not "} focused)</div>}>
-                    <div {...bodyProps}>{body}</div>
-                </Heading>
-            </>
-        )
-    }}></AccordionSection>
-}
+const DemoAccordionSection = memo(function DemoAccordionSection({ index, body, heading, disabled, open }: { open?: boolean, disabled: boolean, index: number, heading: ComponentChildren, body: ComponentChildren }) {
+    return <AccordionSection<HTMLButtonElement, HTMLDivElement> index={index} tagButton="button" open={open} disabled={disabled} getDocument={getDocument} render={defaultRenderAccordionSection({
+        makePropsBody: (info) => { return { hidden: !info.accordionSection.expanded, children: body } },
+        makePropsHeading: () => { return { children: heading } },
+        tagBody: "div",
+        tagHeading: "button"
+    })} />
+})
 
 export function Blurb() {
     return (
@@ -50,17 +49,24 @@ export function Code() {
 }
 
 export function Demo() {
+    const [count, setCount] = useState(5);
 
     return (
         <>
             <Blurb />
             <Code />
+            <label><input type="number" min={0} value={count} onInput={e => setCount(e.currentTarget.valueAsNumber)} /> # of accordion sections</label>
             <DemoAccordion>
-                <DemoAccordionSection index={0} heading="Accordion section #0" body="Body content #0" disabled={false} />
-                <DemoAccordionSection index={1} heading="Accordion section #1" body="Body content #1" disabled={false} />
-                <DemoAccordionSection index={2} heading="Accordion section #2 (disabled)" body="Body content #2" disabled={true} />
-                <DemoAccordionSection index={3} heading="Accordion section #3 (forced open)" body="Body content #3" disabled={false} open={true} />
-                <DemoAccordionSection index={4} heading="Accordion section #4 (forced closed)" body="Body content #4" disabled={false} open={false} />
+                <>{Array.from((function* () {
+                    yield <DemoAccordionSection index={0} heading="Accordion section #0" body="Body content #0" disabled={false} />
+                    yield <DemoAccordionSection index={1} heading="Accordion section #1" body="Body content #1" disabled={false} />
+                    yield <DemoAccordionSection index={2} heading="Accordion section #2 (disabled)" body="Body content #2" disabled={true} />
+                    yield <DemoAccordionSection index={3} heading="Accordion section #3 (forced open)" body="Body content #3" disabled={false} open={true} />
+                    yield <DemoAccordionSection index={4} heading="Accordion section #4 (forced closed)" body="Body content #4" disabled={false} open={false} />
+                    for (let i = 5; i < count; ++i) {
+                        yield <DemoAccordionSection index={i} heading={`Accordion section #${i}`} body={`BodyContent #${i}`} disabled={false} />
+                    }
+                })()).slice(0, count)}</>
             </DemoAccordion>
         </>
     )

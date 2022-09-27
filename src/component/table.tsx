@@ -1,6 +1,6 @@
 import { createContext, createElement, h, Ref, VNode } from "preact";
 import { UseHasFocusParameters } from "preact-prop-helpers";
-import { forwardRef } from "preact/compat";
+import { memo } from "preact/compat";
 import { useContext } from "preact/hooks";
 import { ElementToTag, PropModifier } from "props";
 import { useTable, UseTableBody, UseTableBodyParameters, UseTableBodyReturnTypeInfo, UseTableCell, UseTableCellParameters, UseTableCellReturnTypeInfo, UseTableParameters, UseTableReturnTypeInfo, UseTableRow, UseTableRowParameters, UseTableRowReturnTypeInfo } from "../use-table";
@@ -94,7 +94,7 @@ export function defaultRenderTableCell<CellElement extends Element>({ tagTableCe
     }
 }
 
-function TableU<TableElement extends Element, SectionElement extends Element, RowElement extends Element, Cellement extends Element>({
+export const Table = memo(function TableU<TableElement extends Element, SectionElement extends Element, RowElement extends Element, Cellement extends Element>({
     collator,
     disableArrowKeys,
     disableHomeEndKeys,
@@ -106,7 +106,7 @@ function TableU<TableElement extends Element, SectionElement extends Element, Ro
     onTabbableRender,
     typeaheadTimeout,
     render
-}: TableProps<TableElement, RowElement, Cellement>, ref: Ref<TableElement>) {
+}: TableProps<TableElement, RowElement, Cellement>) {
     const { useTableBody, useTableProps, useTableRow, ...tableInfo } = useTable<TableElement, SectionElement, RowElement, Cellement>({
         linearNavigation: { disableArrowKeys, disableHomeEndKeys },
         listNavigation: {},
@@ -122,27 +122,24 @@ function TableU<TableElement extends Element, SectionElement extends Element, Ro
             </TableRowContext.Provider>
         </TableBodyContext.Provider>
     )
-}
+})
 
-function TableBodyU<SectionElement extends Element, RowElement extends Element, Cellement extends Element>({
-    render
-}: TableBodyProps<SectionElement, RowElement, Cellement>, ref: Ref<SectionElement>) {
+export const TableBody = memo(function TableBodyU<SectionElement extends Element, RowElement extends Element, Cellement extends Element>({ render }: TableBodyProps<SectionElement, RowElement, Cellement>) {
     const { useTableBodyProps, ...sectionInfo } = useContext(TableBodyContext)({});
     return <LocationContext.Provider value="body">{render(sectionInfo, useTableBodyProps)}</LocationContext.Provider>
-}
+})
 
-function TableHeadU<SectionElement extends Element>({ render }: TableHeadProps, ref: Ref<SectionElement>) {
+export const TableHead = memo(function TableHeadU({ render }: TableHeadProps) {
     return <LocationContext.Provider value="head">{(render())}</LocationContext.Provider>
-}
+})
 
-function TableFootU<SectionElement extends Element>({ render }: TableFootProps, ref: Ref<SectionElement>) {
+export const TableFoot = memo(function TableFootU({ render }: TableFootProps) {
     return <LocationContext.Provider value="foot">{(render())}</LocationContext.Provider>
-}
+})
 
-function TableRowU<RowElement extends Element, Cellement extends Element>({
+export const TableRow = memo(function TableRowU<RowElement extends Element, Cellement extends Element>({
     index,
     text,
-    blurSelf,
     collator,
     disableArrowKeys,
     disableHomeEndKeys,
@@ -164,7 +161,7 @@ function TableRowU<RowElement extends Element, Cellement extends Element>({
         asChildRowOfSection: {
             listNavigation: { text },
             managedChild: { index, flags },
-            rovingTabIndex: { blurSelf, focusSelf, hidden },
+            rovingTabIndex: { focusSelf, hidden },
             subInfo: {}
         },
         asParentRowOfCells: {
@@ -177,13 +174,13 @@ function TableRowU<RowElement extends Element, Cellement extends Element>({
         tableRow: { location: useContext(LocationContext) }
     });
     return <TableCellContext.Provider value={useTableCell}>{(render ?? defaultRenderTableRow)(rowInfo, useTableRowProps({ ref }))}</TableCellContext.Provider>
-}
+})
 
-function TableCellU<CellElement extends Element>({ index, text, blurSelf, flags, focusSelf, hidden, value, getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange, render }: TableCellProps<CellElement>, ref: Ref<CellElement>) {
+export const TableCell = memo(function TableCell<CellElement extends Element>({ index, text, flags, focusSelf, hidden, value, getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange, render }: TableCellProps<CellElement>, ref: Ref<CellElement>) {
     const { useTableCellProps, ...cellInfo } = useContext(TableCellContext)({
         listNavigation: { text },
         managedChild: { index, flags },
-        rovingTabIndex: { blurSelf, focusSelf, hidden },
+        rovingTabIndex: { focusSelf, hidden },
         hasFocus: { getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange },
         subInfo: {
             location: useContext(LocationContext),
@@ -192,12 +189,5 @@ function TableCellU<CellElement extends Element>({ index, text, blurSelf, flags,
     });
 
     return (render ?? defaultRenderTableCell)(cellInfo, useTableCellProps({ ref }));
-}
-
-export const Table = forwardRef(TableU) as typeof TableU;
-export const TableBody = forwardRef(TableBodyU) as typeof TableBodyU;
-export const TableHead = forwardRef(TableHeadU) as typeof TableHeadU;
-export const TableFoot = forwardRef(TableFootU) as typeof TableFootU;
-export const TableRow = forwardRef(TableRowU) as typeof TableRowU;
-export const TableCell = forwardRef(TableCellU) as typeof TableCellU;
+})
 

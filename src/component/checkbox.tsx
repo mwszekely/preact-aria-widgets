@@ -1,4 +1,5 @@
-import { createElement, h, VNode, ComponentChildren } from "preact";
+import { createElement, h, VNode } from "preact";
+import { memo } from "preact/compat";
 import { ElementToTag, PropModifier } from "props";
 import { useCheckbox, UseCheckboxParameters, UseCheckboxReturnTypeInfo } from "../use-checkbox";
 
@@ -7,7 +8,8 @@ type Get<T, K extends keyof T> = T[K];
 export interface CheckboxProps<I extends HTMLElement, L extends HTMLElement> extends
     Get<UseCheckboxParameters<I, L>, "checkboxLike">,
     Get<UseCheckboxParameters<I, L>, "checkbox">,
-    Get<UseCheckboxParameters<I, L>, "label"> {
+    Get<UseCheckboxParameters<I, L>, "label">,
+    Get<UseCheckboxParameters<I, L>, "hasFocusInput"> {
     render(info: UseCheckboxReturnTypeInfo<I, L>, modifyInputProps: PropModifier<I>, modifyLabelProps: PropModifier<L>): VNode<any>;
 }
 
@@ -67,11 +69,17 @@ export function defaultRenderCheckbox<I extends HTMLElement, L extends HTMLEleme
 
 
 
-export function Checkbox<I extends HTMLElement, L extends HTMLElement>({ checked, disabled, tagLabel, labelPosition, tagInput, onCheckedChange, render }: CheckboxProps<I, L>) {
-    const { useCheckboxInputElement, useCheckboxLabelElement, ...checkboxInfo } = useCheckbox({ checkbox: { onCheckedChange }, checkboxLike: { checked, disabled, labelPosition }, label: { tagInput, tagLabel } });
+export const Checkbox = memo(function Checkbox<I extends HTMLElement, L extends HTMLElement>({ checked, disabled, tagLabel, labelPosition, tagInput, onCheckedChange, render, getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange }: CheckboxProps<I, L>) {
+    const { useCheckboxInputElement, useCheckboxLabelElement, ...checkboxInfo } = useCheckbox<I, L>({
+        checkbox: { onCheckedChange },
+        checkboxLike: { checked, disabled, labelPosition },
+        label: { tagInput, tagLabel },
+        hasFocusInput: { getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange },
+        hasFocusLabel: { getDocument, getWindow, onActiveElementChange, onElementChange: onElementChange as any, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount: onMount as any, onUnmount: onUnmount as any, onWindowFocusedChange }
+    });
     const { useCheckboxInputElementProps } = useCheckboxInputElement();
     const { useCheckboxLabelElementProps } = useCheckboxLabelElement();
 
 
     return render(checkboxInfo, useCheckboxInputElementProps, useCheckboxLabelElementProps);
-}
+})

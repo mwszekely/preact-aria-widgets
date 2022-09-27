@@ -89,11 +89,11 @@ export const Tabs = memo(function Tabs<LabelElement extends Element, ListElement
     )
 })
 
-export const Tab = memo(function Tab<TabElement extends Element>({ index, text, blurSelf, flags, focusSelf, hidden, getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange, render }: TabProps<TabElement>) {
+export const Tab = memo(function Tab<TabElement extends Element>({ index, text, flags, focusSelf, hidden, getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange, render }: TabProps<TabElement>) {
     const { useTabProps, ...tabInfo } = useContext(TabContext)({
         listNavigation: { text },
         managedChild: { index, flags },
-        rovingTabIndex: { blurSelf, focusSelf, hidden },
+        rovingTabIndex: { focusSelf, hidden },
         hasFocus: { getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange }
     });
 

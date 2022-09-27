@@ -1,14 +1,18 @@
 import { h } from "preact";
-import { useMergedProps, usePress } from "preact-prop-helpers";
-import { debugLog, EnhancedEvent, enhanceEvent, TagSensitiveProps } from "./props";
+import { UseHasFocusParameters, useMergedProps, usePress } from "preact-prop-helpers";
+import { debugLog, ElementToTag, EnhancedEvent, enhanceEvent } from "./props";
 
 
 export type ButtonPressEvent<E extends EventTarget> = EnhancedEvent<E, Event | Event, { pressed: boolean | null }>;
 
-export interface UseButtonParameters<E extends EventTarget> extends TagSensitiveProps<E> {
-    disabled?: boolean | "soft" | "hard";
-    pressed?: boolean | null | undefined;
-    onPress?(event: ButtonPressEvent<E>): void;
+export interface UseButtonParameters<E extends Node> {
+    button: {
+        tagButton: ElementToTag<E>;
+        disabled?: boolean | "soft" | "hard";
+        pressed?: boolean | null | undefined;
+        onPress?(event: ButtonPressEvent<E>): void;
+    }
+    hasFocus: UseHasFocusParameters<E>;
 }
 
 export interface UseButtonReturnType<E extends EventTarget> {
@@ -18,18 +22,22 @@ export interface UseButtonReturnType<E extends EventTarget> {
 
 
 
-export function useButton<E extends EventTarget>({ tag, pressed, onPress, disabled }: UseButtonParameters<E>): UseButtonReturnType<E> {
+export function useButton<E extends Node>({ button: { tagButton, disabled, onPress, pressed }, hasFocus }: UseButtonParameters<E>): UseButtonReturnType<E> {
     debugLog("useButton");
 
     function useButtonProps({ "aria-pressed": ariaPressed, tabIndex, role, ...p }: h.JSX.HTMLAttributes<E>): h.JSX.HTMLAttributes<E> {
 
-        const usePressProps = usePress<E>((e) => (disabled ? null : onPress)?.(enhanceEvent(e, { pressed: pressed == null ? null : !pressed })), undefined);
+        const usePressProps = usePress<E>({
+            onClickSync: (e) => (disabled ? null : onPress)?.(enhanceEvent(e, { pressed: pressed == null ? null : !pressed })),
+            exclude: undefined,
+            hasFocus
+        });
         const props = usePressProps(p);
 
         const baseProps = { role, tabIndex, "aria-pressed": ariaPressed ?? (pressed === true ? "true" : pressed === false ? "false" : undefined) };
         const buttonProps = { ...baseProps, disabled: (disabled && disabled != "soft") ? true : false, "aria-disabled": (disabled === 'soft' ? 'true' : undefined) };
         const divProps = { ...baseProps, tabIndex: tabIndex ?? (disabled === "hard" ? -1 : 0), role: role ?? "button", "aria-disabled": disabled ? "true" : undefined };
-        switch (tag) {
+        switch (tagButton) {
             case "button":
                 return useMergedProps<E>(buttonProps, props);
 

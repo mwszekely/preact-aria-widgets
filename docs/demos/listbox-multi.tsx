@@ -1,10 +1,14 @@
 
 import { useState } from "preact-prop-helpers";
+import { memo } from "preact/compat";
 import { ListboxMultiItem } from "../../component/listbox-multi";
 import { EventDetail, ListboxMulti, defaultRenderListboxMulti, defaultRenderListboxMultiItem } from "../../index";
 
+function getDocument() {
+    return window.document;
+}
 
-function DemoListItem({ index }: { index: number }) {
+const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
     const [selected, setSelected] = useState(false);
     const labelText = `List item #${index}${selected ? " (selected)" : ""}`
 
@@ -12,6 +16,7 @@ function DemoListItem({ index }: { index: number }) {
 
     return (
         <ListboxMultiItem
+        getDocument={getDocument} 
             selected={selected}
             index={index}
             disabled={false}
@@ -20,7 +25,7 @@ function DemoListItem({ index }: { index: number }) {
             render={defaultRenderListboxMultiItem({ tagListItem: "li", makePropsListItem: () => ({ children: labelText }) })}
         />
     )
-}
+})
 
 
 
@@ -63,7 +68,7 @@ export function Demo() {
                     tagLabel: "label", tagList: "ul", makePropsLabel: () => ({}), makePropsList: () => ({
                         children: Array.from((function* () {
                             for (let i = 0; i < count; ++i) {
-                                yield <div><DemoListItem index={i} key={i} /></div>
+                                yield <DemoListItem index={i} key={i} />
                             }
                         })())
                     })

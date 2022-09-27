@@ -2,7 +2,6 @@ import { createContext, createElement, h, VNode } from "preact";
 import { UseHasFocusParameters } from "preact-prop-helpers";
 import { useContext, useEffect } from "preact/hooks";
 import { ElementToTag, PropModifier } from "props";
-import { UseButtonParameters } from "../use-button";
 import { useAccordion, UseAccordionParameters, UseAccordionReturnTypeInfo, UseAccordionSection, UseAccordionSectionParameters, UseAccordionSectionReturnTypeInfo } from "../use-accordion";
 import { Heading } from "./heading";
 import { memo } from "preact/compat";
@@ -43,11 +42,6 @@ export const Accordion = memo(function Accordion({ disableArrowKeys, disableHome
 
 export function defaultRenderAccordionSection<HeaderElement extends HTMLElement, BodyElement extends HTMLElement>({ makePropsHeading, makePropsBody, tagBody, tagHeading }: { tagHeading: ElementToTag<HeaderElement>; tagBody: ElementToTag<BodyElement>; makePropsHeading(info: UseAccordionSectionReturnTypeInfo): h.JSX.HTMLAttributes<HeaderElement>, makePropsBody(info: UseAccordionSectionReturnTypeInfo): h.JSX.HTMLAttributes<BodyElement> }) {
     return function (info: UseAccordionSectionReturnTypeInfo, modifyHeadingProps: PropModifier<HeaderElement>, modifyBodyProps: PropModifier<BodyElement>): VNode<any> {
-        const {
-            accordionSection: {
-                focused
-            }
-        } = info;
         return (
             <>
                 <Heading heading={createElement(tagHeading as never, modifyHeadingProps({ ...makePropsHeading(info) }))}>
@@ -79,8 +73,8 @@ export const AccordionSection = memo(function AccordionSection<HeaderElement ext
 }: AccordionSectionProps<HeaderElement, BodyElement>) {
     const useAccordionSection = useContext(AccordionSectionContext);
     const { useAccordionSectionBodyProps, useAccordionSectionHeaderProps, ...sectionInfo } = useAccordionSection({
-        button: { disabled },
-        accordionSection: { open, tagButton },
+        button: { disabled, tagButton },
+        accordionSection: { open },
         managedChildren: { index },
         hasFocus: { getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange }
     });

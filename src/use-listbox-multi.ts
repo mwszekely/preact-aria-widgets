@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { OnTabbableIndexChange, returnFalse, useListNavigation, UseListNavigationChildParameters, UseListNavigationChildReturnTypeInfo, UseListNavigationParameters, UseListNavigationReturnTypeInfo, useMergedProps, usePassiveState, usePress, useRefElement, useStableCallback, useStableGetter } from "preact-prop-helpers";
+import { OnTabbableIndexChange, returnFalse, UseHasFocusParameters, useListNavigation, UseListNavigationChildParameters, UseListNavigationChildReturnTypeInfo, UseListNavigationParameters, UseListNavigationReturnTypeInfo, useMergedProps, usePassiveState, usePress, useRefElement, useStableCallback, useStableGetter } from "preact-prop-helpers";
 import { useCallback, useLayoutEffect } from "preact/hooks";
 import { debugLog, ElementToTag, EventDetail } from "./props";
 import { useLabel } from "./use-label";
@@ -13,17 +13,18 @@ export interface UseListboxMultiParameters<LabelElement extends Element, ListEle
     }
 }
 
-export interface UseListboxMultiItemParameters extends Omit<UseListNavigationChildParameters<Info, never, never, never, never, never>, "subInfo"> {
+export interface UseListboxMultiItemParameters<E extends Element> extends Omit<UseListNavigationChildParameters<Info, never, never, never, never, never>, "subInfo"> {
     listboxMultiItem: {
         disabled?: boolean;
         selected: boolean;
-        onSelectedChange?(event: (ListboxMultiSelectEvent<Element>)): void;
+        onSelectedChange?(event: (ListboxMultiSelectEvent<E>)): void;
     };
+    hasFocus: UseHasFocusParameters<E>;
 }
 
 
 
-export type UseListboxMultiItem<E extends Element> = (info: UseListboxMultiItemParameters) => UseListboxMultiItemReturnTypeWithHooks<E>;
+export type UseListboxMultiItem<E extends Element> = (info: UseListboxMultiItemParameters<E>) => UseListboxMultiItemReturnTypeWithHooks<E>;
 
 export interface UseListboxMultiItemReturnTypeInfo<E extends Element> extends UseListNavigationChildReturnTypeInfo<E> {
     listboxMultiItem: {
@@ -110,7 +111,7 @@ export function useListboxMulti<LabelElement extends Element, ListElement extend
     const [getShiftHeld, setShiftHeld] = usePassiveState(null, returnFalse);
 
 
-    const useListboxMultiItem = useCallback<UseListboxMultiItem<ListItemElement>>(({ listboxMultiItem: { selected, disabled, onSelectedChange }, managedChild, listNavigation: ls, rovingTabIndex: rti }) => {
+    const useListboxMultiItem = useCallback<UseListboxMultiItem<ListItemElement>>(({ listboxMultiItem: { selected, disabled, onSelectedChange }, managedChild, listNavigation: ls, rovingTabIndex: rti, hasFocus }) => {
         debugLog("useListboxMultiItem", managedChild.index, selected);
         type E = ListItemElement;
         const getSelected = useStableGetter(selected);
@@ -129,11 +130,15 @@ export function useListboxMulti<LabelElement extends Element, ListElement extend
         return { useListboxMultiItemProps, listboxMultiItem: { getSelected, tabbable: rti2_ret.tabbable }, rovingTabIndex: rti2_ret };
 
         function useListboxMultiItemProps(props: h.JSX.HTMLAttributes<E>): h.JSX.HTMLAttributes<E> {
-            const usePressProps = usePress<E>(disabled ? null : (e) => {
-                setTabbableIndex(managedChild.index, false);
-                stableOnSelect?.({ ...e, [EventDetail]: { selected: !getSelected() } });
-                e.preventDefault();
-            }, {});
+            const usePressProps = usePress<E>({
+                onClickSync: disabled ? null : (e) => {
+                    setTabbableIndex(managedChild.index, false);
+                    stableOnSelect?.({ ...e, [EventDetail]: { selected: !getSelected() } });
+                    e.preventDefault();
+                }, 
+                exclude: {},
+                hasFocus
+            });
 
             props.role = "option";
             //props["aria-setsize"] = (childCount).toString();

@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { useMergedProps, usePress, useRandomId, useRefElement, useStableCallback } from "preact-prop-helpers";
+import { UseHasFocusParameters, useMergedProps, usePress, useRandomId, useRefElement, useStableCallback } from "preact-prop-helpers";
 import { useCallback, useEffect } from "preact/hooks";
 import { ElementToTag } from "./props";
 
@@ -110,6 +110,8 @@ export interface UseCheckboxLikeParameters<InputType extends Element, LabelType 
         onCheckedChange?(event: h.JSX.TargetedEvent<InputType>): void;
         //onInput?(event: h.JSX.TargetedEvent<LabelType>): void;
     }
+    hasFocusInput: UseHasFocusParameters<InputType>;
+    hasFocusLabel: UseHasFocusParameters<LabelType>;
 }
 
 const handlesInput = <E extends Element>(tag: ElementToTag<E>, labelPosition: "wrapping" | "separate", which: "input-element" | "label-element") => {
@@ -161,11 +163,11 @@ export interface UseCheckboxLikeReturnTypeWithHooks<InputType extends Element, L
  * @param param0 
  * @returns 
  */
-export function useCheckboxLike<InputType extends Element, LabelType extends Element>({ checkboxLike: { checked, disabled, labelPosition, role, onCheckedChange }, label: { tagInput, tagLabel } }: UseCheckboxLikeParameters<InputType, LabelType>): UseCheckboxLikeReturnTypeWithHooks<InputType, LabelType> {
+export function useCheckboxLike<InputType extends Element, LabelType extends Element>({ checkboxLike: { checked, disabled, labelPosition, role, onCheckedChange }, label: { tagInput, tagLabel }, hasFocusInput, hasFocusLabel }: UseCheckboxLikeParameters<InputType, LabelType>): UseCheckboxLikeReturnTypeWithHooks<InputType, LabelType> {
 
-    const stableOnInput = useStableCallback((e: h.JSX.TargetedEvent<InputType> | h.JSX.TargetedEvent<LabelType>) => { 
-        e.preventDefault(); 
-        onCheckedChange?.(e as h.JSX.TargetedEvent<InputType>); 
+    const stableOnInput = useStableCallback((e: h.JSX.TargetedEvent<InputType> | h.JSX.TargetedEvent<LabelType>) => {
+        e.preventDefault();
+        onCheckedChange?.(e as h.JSX.TargetedEvent<InputType>);
     });
 
     const { useLabelInput: useILInput, useLabelLabel: useILLabel, label } = useLabel<InputType, LabelType>({ label: { prefixLabel: "aria-checkbox-label-", prefixInput: "aria-checkbox-input-", tagInput: tagInput, tagLabel: tagLabel } });
@@ -200,7 +202,11 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
             // For some reason, Chrome won't fire onInput events for radio buttons that are tabIndex=-1??
             // Needs investigating, but onInput works fine in Firefox
             // TODO
-            const usePressProps = usePress<InputType>(disabled || !handlesInput(tag, labelPosition, "input-element") ? undefined : stableOnInput, undefined);
+            const usePressProps = usePress<InputType>({
+                onClickSync: disabled || !handlesInput(tag, labelPosition, "input-element") ? undefined : stableOnInput,
+                exclude: undefined,
+                hasFocus: hasFocusInput
+            });
             let props: h.JSX.HTMLAttributes<InputType> = usePressProps(p0);
 
             if (tag == "input")
@@ -245,7 +251,11 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
 
         function useCheckboxLikeLabelElementProps({ ...p0 }: h.JSX.HTMLAttributes<LabelType>): h.JSX.HTMLAttributes<LabelType> {
 
-            const usePressProps = usePress<LabelType>(disabled || !handlesInput(tag, labelPosition, "label-element") ? undefined : stableOnInput, undefined);
+            const usePressProps = usePress<LabelType>({
+                onClickSync: disabled || !handlesInput(tag, labelPosition, "label-element") ? undefined : stableOnInput,
+                exclude: undefined,
+                hasFocus: hasFocusLabel
+            });
             const newProps: h.JSX.HTMLAttributes<LabelType> = usePressProps(p0);
 
             if (labelPosition == "wrapping") {

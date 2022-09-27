@@ -1,6 +1,6 @@
 import { createElement, h, VNode } from "preact";
 import { UseActiveElementParameters } from "preact-prop-helpers";
-import { createPortal } from "preact/compat";
+import { createPortal, memo } from "preact/compat";
 import { useRef } from "preact/hooks";
 import { ElementToTag, PropModifier } from "props";
 import { useDialog, UseDialogParameters, UseDialogReturnTypeInfo } from "../use-dialog";
@@ -52,7 +52,7 @@ export function defaultRenderDialog<FocusContainerElement extends HTMLElement, D
     return defaultRenderModal<FocusContainerElement, DialogElement, TitleElement, BodyElement, BackdropElement, UseDialogReturnTypeInfo>({ portalId, tagFocusContainer, tagBackdrop, tagBody, tagDialog, tagTitle, makePropsFocusContainer, makePropsBackdrop, makePropsBody, makePropsDialog, makePropsTitle });
 }
 
-export function Dialog<FocusContainerElement extends HTMLElement, DialogElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement>({
+export const Dialog = memo(function Dialog<FocusContainerElement extends HTMLElement, DialogElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement>({
     onClose,
     open,
     bodyIsOnlySemantic,
@@ -79,4 +79,4 @@ export function Dialog<FocusContainerElement extends HTMLElement, DialogElement 
 
     return render(r, useDialogFocusContainerProps, useDialogProps, useDialogTitleProps, useDialogBodyProps, useDialogBackdropProps);
 
-}
+});

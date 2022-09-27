@@ -37,7 +37,8 @@ export interface UseRadioParameters<V extends string | number, I extends Element
         tagInput: ElementToTag<I>;
         tagLabel: ElementToTag<IL>;
     }
-    hasFocus: UseHasFocusParameters<I>;
+    hasFocusInput: UseHasFocusParameters<I>;
+    hasFocusLabel: UseHasFocusParameters<IL>;
     /*Omit<UseCheckboxLikeParameters<I, IL>, "onInput" | "role" | "checked"> & {
         info: Omit<Info, "setChecked" | "getChecked" | "blurSelf" | "getElement" | "focusSelf">;
         
@@ -141,7 +142,8 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
         listNavigation,
         managedChild,
         rovingTabIndex,
-        hasFocus,
+        hasFocusInput,
+        hasFocusLabel,
         radio: { disabled, labelPosition, tagInput, tagLabel, value }
     }) {
         const index = managedChild.index;
@@ -158,7 +160,7 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
             listNavigation,
             rovingTabIndex,
             managedChild,
-            hasFocus,
+            hasFocus: hasFocusInput,
             subInfo: { getValue }
         });
 
@@ -175,7 +177,9 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
             label: {
                 tagInput: tagInput as never,
                 tagLabel: tagLabel as never
-            }
+            },
+            hasFocusInput,
+            hasFocusLabel
         });
 
 

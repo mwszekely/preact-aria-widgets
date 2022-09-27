@@ -1,16 +1,17 @@
 
 import { useState } from "preact-prop-helpers";
+import { memo } from "preact/compat";
 import { defaultRenderListboxSingleItem, ListboxSingleItem } from "../../component/listbox-single";
 import { EventDetail, ListboxSingle, defaultRenderListboxSingle } from "../../index";
 
 function getDocument() { return window.document; }
 
-function DemoListItem({ index }: { index: number }) {
+const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
 
     return (
         <ListboxSingleItem<HTMLLIElement> index={index} getDocument={getDocument} disabled={false} text={`List item #${index}`} render={defaultRenderListboxSingleItem({ tagListItem: "li", makePropsListItem: ({ singleSelection: { selected } }) => ({ children: `List item #${index}${selected ? " (selected)" : ""}` }) })} />
     )
-}
+})
 
 
 
@@ -62,7 +63,7 @@ export function Demo() {
                         tagLabel: "label", tagList: "ol", makePropsLabel: () => ({}), makePropsList: () => ({
                             children: <>{Array.from((function* () {
                                 for (let i = 0; i < count; ++i) {
-                                    yield <div><DemoListItem index={i} key={i} /></div>
+                                    yield <DemoListItem index={i} key={i} />
                                 }
                             })())}</>
                         })

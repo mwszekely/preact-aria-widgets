@@ -113,8 +113,10 @@ export interface UseCheckboxGroupReturnTypeWithHooks<InputElement extends Elemen
 }
 
 export interface UseCheckboxGroupParentParameters<InputElement extends Element, LabelElement extends Element> {
-    checkbox: Omit<UseCheckboxParameters<InputElement, LabelElement>["checkbox"], "onInput">;
+    checkbox: Omit<UseCheckboxParameters<InputElement, LabelElement>["checkbox"], "onCheckedChange">;
     label: UseCheckboxParameters<InputElement, LabelElement>["label"];
+    hasFocusLabel: UseCheckboxParameters<InputElement, LabelElement>["hasFocusLabel"];
+    hasFocusInput: UseCheckboxParameters<InputElement, LabelElement>["hasFocusInput"];
     checkboxLike: Omit<UseCheckboxParameters<InputElement, LabelElement>["checkboxLike"], "checked">;
 }
 
@@ -176,17 +178,17 @@ export function useCheckboxGroup<InputElement extends Element, LabelElement exte
     // If the user has changed the parent checkbox's value, then this ref holds a memory of what values were held before.
     // Otherwise, it's null when the last input was from a child checkbox. 
     //const savedCheckedValues = useRef<Map<number, boolean | "mixed"> | null>(null);
-    const useCheckboxGroupParentInput = useCallback<UseCheckboxGroupParent<InputElement, LabelElement>>(({ checkbox, checkboxLike, label }) => {
+    const useCheckboxGroupParentInput = useCallback<UseCheckboxGroupParent<InputElement, LabelElement>>(({ checkbox, checkboxLike, label, hasFocusLabel, hasFocusInput }) => {
         debugLog("useCheckboxGroupParent");
         const { ..._void } = checkbox;
-        const { disabled, labelPosition } = checkboxLike;
-        const { tagInput, tagLabel } = label;
+        const { disabled, labelPosition,  ..._void2 } = checkboxLike;
+        const { tagInput, tagLabel,  ..._void3 } = label;
 
         const [checked, setChecked] = useState<CheckboxCheckedType>(false);
         useEffect(() => {
             setSetParentCheckboxChecked(() => setChecked);
         }, [])
-        const { useCheckboxInputElement, useCheckboxLabelElement } = useCheckbox<InputElement, LabelElement>({ checkboxLike: { labelPosition, checked, disabled, }, label: { tagInput, tagLabel }, checkbox: { onCheckedChange: onCheckboxGroupParentInput2 as any, } });
+        const { useCheckboxInputElement, useCheckboxLabelElement } = useCheckbox<InputElement, LabelElement>({ checkboxLike: { labelPosition, checked, disabled, }, label: { tagInput, tagLabel }, checkbox: { onCheckedChange: onCheckboxGroupParentInput2 as any, }, hasFocusInput, hasFocusLabel });
         const { useCheckboxInputElementProps } = useCheckboxInputElement();
         const { useCheckboxLabelElementProps } = useCheckboxLabelElement();
         return {
@@ -269,7 +271,7 @@ export function useCheckboxGroup<InputElement extends Element, LabelElement exte
 
     const useCheckboxGroupChild: UseCheckboxGroupChild<InputElement, LabelElement> = useCallback<UseCheckboxGroupChild<InputElement, LabelElement>>(function ({ asCheckbox, asCheckboxGroupChild }) {
         debugLog("useCheckboxGroupChild", asCheckboxGroupChild.managedChild.index, asCheckbox.checkboxLike.checked);
-        const { checkbox: { onCheckedChange }, checkboxLike: { checked, disabled, labelPosition }, label: { tagInput, tagLabel } } = asCheckbox;
+        const { checkbox: { onCheckedChange }, checkboxLike: { checked, disabled, labelPosition }, label: { tagInput, tagLabel }, hasFocusInput, hasFocusLabel } = asCheckbox;
         const { managedChild: { index } } = asCheckboxGroupChild;
         //labelPosition ??= "separate";
         const [getLastUserChecked, setLastUserChecked] = usePassiveState<boolean | "mixed">(null, returnFalse);
@@ -292,7 +294,9 @@ export function useCheckboxGroup<InputElement extends Element, LabelElement exte
             label: {
                 tagInput,
                 tagLabel
-            }
+            },
+            hasFocusInput,
+            hasFocusLabel
         });
 
         const { label: { inputId, labelId } } = checkboxReturnType;

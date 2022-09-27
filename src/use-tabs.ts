@@ -156,7 +156,11 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
                 const panelId = getPanelId(managedChild.index);
                 const tabId = getTabId(managedChild.index);
 
-                const usePressProps = usePress<TabElement>((e) => { stableOnSelectedIndexChange(enhanceEvent(e, { selectedIndex: managedChild.index })) }, {});
+                const usePressProps = usePress<TabElement>({
+                    onClickSync: (e) => { stableOnSelectedIndexChange(enhanceEvent(e, { selectedIndex: managedChild.index })) },
+                    exclude: {},
+                    hasFocus
+                });
 
                 return useListNavigationSingleSelectionChildProps(useMergedProps({
                     role: warnOnOverwrite("useTab", "role", role, "tab"),

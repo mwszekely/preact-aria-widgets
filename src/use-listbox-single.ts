@@ -108,12 +108,6 @@ export function useListboxSingle<LabelElement extends Element, ListElement exten
         };
 
         function useListboxSingleItemProps<P extends h.JSX.HTMLAttributes<ListItemElement>>(props: P) {
-            /*const newProps: h.JSX.HTMLAttributes<ListItemElement> = usePressEventHandlers<ListItemElement>(disabled ? null : (e) => {
-                const element = rti_ret.getElement();
-                if (element)
-                    stableOnSelect?.({ target: element, currentTarget: element, [EventDetail]: { selectedIndex: index } });
-                e.preventDefault();
-            }, undefined);*/
 
             props.role = "option";
             //props["aria-setsize"] = (children.getHighestIndex() + 1).toString();

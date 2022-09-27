@@ -3,7 +3,11 @@ import { memo } from "preact/compat";
 import { PropModifier } from "props";
 import { useButton, UseButtonParameters } from "../use-button";
 
-export interface ButtonProps<E extends EventTarget> extends UseButtonParameters<E> {
+type Get<T, K extends keyof T> = T[K];
+
+export interface ButtonProps<E extends Node> extends
+    Get<UseButtonParameters<E>, "button">,
+    Get<UseButtonParameters<E>, "hasFocus"> {
     render(button: PropModifier<E>): VNode<any>;
 }
 
@@ -13,7 +17,7 @@ export function defaultRenderButton(tag: string, makeButtonProps: (info: {}) => 
     }
 }
 
-export const Button = memo(function Button<E extends Element>({ tag, onPress, pressed, render, disabled }: ButtonProps<E>) {
-    const { useButtonProps } = useButton<E>({ tag, onPress, pressed, disabled });
+export const Button = memo(function Button<E extends Element>({ tagButton, onPress, pressed, render, disabled, getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange }: ButtonProps<E>) {
+    const { useButtonProps } = useButton<E>({ button: { tagButton, onPress, pressed, disabled }, hasFocus: { getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange } });
     return render(useButtonProps);
 })

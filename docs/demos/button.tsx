@@ -1,7 +1,10 @@
 
-import { ComponentChildren, h, RenderableProps } from "preact";
 import { useState } from "preact-prop-helpers";
-import { Button, EventDetail, defaultRenderButton } from "../../index";
+import { Button, defaultRenderButton, EventDetail } from "../../index";
+
+function getDocument() {
+    return window.document;
+}
 
 export function Blurb() {
     return (
@@ -33,10 +36,8 @@ export function Code() {
 }
 
 export function Demo() {
-
-    const onPress = () => { alert("Button clicked") }
     const [pressed, setPressed] = useState(false);
-;
+
     return (
         <>
             <Blurb />
@@ -47,7 +48,7 @@ export function Demo() {
             <DemoButton disabled={false} tag="div" />
             <DemoButton disabled="soft" tag="div" />
             <DemoButton disabled="hard" tag="div" />
-            <Button disabled={false} tag="button" pressed={pressed} onPress={e => setPressed(e[EventDetail].pressed ?? false)} render={defaultRenderButton("button", () => ({ children: `Button (${pressed? "pressed" : "unpressed"})`}))} />
+            <Button getDocument={getDocument} disabled={false} tagButton="button" pressed={pressed} onPress={e => setPressed(e[EventDetail].pressed ?? false)} render={defaultRenderButton("button", () => ({ children: `Toggle button (${pressed? "pressed" : "unpressed"})`}))} />
         </>
     )
 }
@@ -56,6 +57,6 @@ function DemoButton({ tag, disabled}: { tag: string, disabled: boolean | "soft" 
     const onPress = () => { alert("Button clicked") }
 
     return ( 
-        <Button tag={tag as any} render={defaultRenderButton(tag, ({}) => ({ class: "btn", children: `${tag} ${disabled? ` disabled (${disabled == "soft"? "soft" : "hard"})` : ""}` }))}  />
+        <Button getDocument={getDocument} tagButton={tag as any} onPress={onPress} render={defaultRenderButton(tag, () => ({ class: "btn", children: `${tag} ${disabled? ` disabled (${disabled == "soft"? "soft" : "hard"})` : ""}` }))}  />
     )
 }

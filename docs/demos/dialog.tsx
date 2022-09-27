@@ -46,7 +46,7 @@ export function Demo() {
             <Blurb />
             <Code />
             <div>
-                <Button tag="button" onPress={() => setOpen(true)} render={defaultRenderButton("button", () => ({ children: "Open dialog " + (open ? "(open)" : "(closed)") }))} />
+                <Button tagButton="button" getDocument={getDocument} onPress={() => setOpen(true)} render={defaultRenderButton("button", () => ({ children: "Open dialog " + (open ? "(open)" : "(closed)") }))} />
                 <Dialog
                     getDocument={getDocument}
                     onClose={() => setOpen(false)}

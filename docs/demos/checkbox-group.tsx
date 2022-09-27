@@ -2,6 +2,11 @@
 import { useState } from "preact-prop-helpers";
 import { CheckboxGroup, CheckboxGroupCheckbox, defaultRenderCheckboxGroup, defaultRenderCheckboxGroupChild, EventDetail } from "../../index";
 
+
+function getDocument() {
+    return window.document;
+}
+
 function DemoCheckbox({ index }: { index: number }) {
     const [checked, setChecked] = useState(false);
     const labelText = `Checkbox #${index}`
@@ -13,6 +18,7 @@ function DemoCheckbox({ index }: { index: number }) {
             makeInputProps: () => ({}),
             makeLabelProps: () => ({ children: labelText })
         })}
+            getDocument={getDocument}
             checked={checked}
             index={index}
             disabled={false}
@@ -59,7 +65,7 @@ export function Demo() {
             <Code />
             <label><input type="number" min={0} value={count} onInput={e => setCount(e.currentTarget.valueAsNumber)} /> # of checkboxes</label>
             <div>
-                <CheckboxGroup disabled={false} labelPosition="separate" tagInput="input" tagLabel="label" render={
+                <CheckboxGroup getDocument={getDocument} disabled={false} labelPosition="separate" tagInput="input" tagLabel="label" render={
                     defaultRenderCheckboxGroup({
                         labelPosition: "separate",
                         tagInput: "input",

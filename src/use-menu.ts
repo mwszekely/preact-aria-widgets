@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { useListNavigation, UseListNavigationParameters, useMergedProps, usePress, useRandomId, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
+import { UseHasFocusParameters, useListNavigation, UseListNavigationParameters, useMergedProps, usePress, useRandomId, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
 import { UseListNavigationChildParameters, UseListNavigationChildReturnTypeInfo, UseListNavigationReturnTypeInfo } from "preact-prop-helpers/use-list-navigation";
 import { returnFalse, useEnsureStability, usePassiveState } from "preact-prop-helpers/use-passive-state";
 import { useCallback, useEffect, useRef } from "preact/hooks";
@@ -36,6 +36,7 @@ export interface UseMenuParameters<S extends Element, B extends Element, MSO ext
         // Corresponds to what arrow key can open this menu
         openDirection: "down" | "up" | "left" | "right" | null;
     }
+    menuButtonHasFocus: UseHasFocusParameters<B>;
 }
 export interface UseMenuButtonParameters extends UseListNavigationChildParameters<never, never, never, never, never, never> { }
 export interface UseMenuItemParameters extends Omit<UseListNavigationChildParameters<{}, never, never, never, never, never>, "subInfo"> { }
@@ -270,7 +271,7 @@ export function useFocusSentinel<E extends Element>({ focusSentinel: { open, onC
     }
 }
 
-export function useMenu<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element>({ linearNavigation, listNavigation, managedChildren, menuSurface, rovingTabIndex, softDismiss, typeaheadNavigation, menu, activeElement }: UseMenuParameters<MenuSurfaceElement, MenuButtonElement, never>): UseMenuReturnTypeWithHooks<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement> {
+export function useMenu<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element>({ menuButtonHasFocus, linearNavigation, listNavigation, managedChildren, menuSurface, rovingTabIndex, softDismiss, typeaheadNavigation, menu, activeElement }: UseMenuParameters<MenuSurfaceElement, MenuButtonElement, never>): UseMenuReturnTypeWithHooks<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement> {
 
     debugLog("useMenu");
     const { onOpen } = menu;
@@ -317,12 +318,16 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
     });
 
     const useMenuButtonProps = ((p: h.JSX.HTMLAttributes<MenuButtonElement>) => {
-        const usePressProps = usePress<MenuButtonElement>(() => {
-            if (open)
-                onClose?.("escape");
-            else
-                onOpen?.();
-        }, {});
+        const usePressProps = usePress<MenuButtonElement>({
+            onClickSync: () => {
+                if (open)
+                    onClose?.("escape");
+                else
+                    onOpen?.();
+            }, 
+            exclude: {},
+            hasFocus: menuButtonHasFocus
+        });
         const props = useMenuSurfaceButtonProps(p);
         return usePressProps(props);
     });

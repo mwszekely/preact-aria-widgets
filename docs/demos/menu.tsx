@@ -1,7 +1,6 @@
 
 import { useState } from "preact-prop-helpers";
-import { EventDetail, ListboxSingle } from "../../index";
-import { defaultRenderMenu, defaultRenderMenuItem, Menu, MenuItem } from "../../component/menu"
+import { defaultRenderMenu, defaultRenderMenuItem, Menu, MenuItem } from "../../component/menu";
 
 function DemoListItem({ index }: { index: number }) {
 

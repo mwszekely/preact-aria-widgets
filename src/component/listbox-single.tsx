@@ -1,5 +1,5 @@
 import { createContext, createElement, h, VNode } from "preact";
-import { forwardRef } from "preact/compat";
+import { memo } from "preact/compat";
 import { useContext } from "preact/hooks";
 import { ElementToTag, PropModifier } from "props";
 //import { ElementToTag } from "../props";
@@ -98,10 +98,10 @@ export function defaultRenderListboxSingleItem<ListItemElement extends HTMLEleme
 
 
 
-function ListboxSingleItemU<ListItemElement extends Element>({ index, blurSelf, disabled, flags, focusSelf, getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange, render, text, hidden }: ListboxSingleItemProps<ListItemElement>) {
+function ListboxSingleItemU<ListItemElement extends Element>({ index, disabled, flags, focusSelf, getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange, render, text, hidden }: ListboxSingleItemProps<ListItemElement>) {
     const { useListboxSingleItemProps, rovingTabIndex, singleSelection } = useContext(ListboxSingleContext)({
         managedChild: { index, flags },
-        rovingTabIndex: { blurSelf, focusSelf, hidden },
+        rovingTabIndex: { focusSelf, hidden },
         listNavigation: { text },
         listboxSingleItem: { disabled },
         hasFocus: { getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange }
@@ -112,9 +112,9 @@ function ListboxSingleItemU<ListItemElement extends Element>({ index, blurSelf, 
     )
 }
 
-export const ListboxSingle = forwardRef(ListboxSingleU) as typeof ListboxSingleU;
-export const ListboxSingleItem = forwardRef(ListboxSingleItemU) as typeof ListboxSingleItemU;
-export const ListboxGroup = forwardRef(ListboxGroupU) as typeof ListboxGroupU;
+export const ListboxSingle = memo(ListboxSingleU) as typeof ListboxSingleU;
+export const ListboxSingleItem = memo(ListboxSingleItemU) as typeof ListboxSingleItemU;
+export const ListboxGroup = memo(ListboxGroupU) as typeof ListboxGroupU;
 
 export interface ListboxGroupProps<ContainerElement extends Element, LabelElement extends Element> {
     render(modifyContainerProps: PropModifier<ContainerElement>, modifyLabelProps: PropModifier<LabelElement>): VNode;

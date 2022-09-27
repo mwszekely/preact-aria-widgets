@@ -1,8 +1,7 @@
 
-import { ComponentChildren, h, RenderableProps } from "preact";
 import { useState } from "preact-prop-helpers";
 import { StateUpdater } from "preact/hooks";
-import { Button, Checkbox, EventDetail, defaultRenderButton, defaultRenderCheckbox } from "../../index";
+import { Button, Checkbox, defaultRenderButton, defaultRenderCheckbox, EventDetail } from "../../index";
 
 /*function DemoButton({ tag, ...props }: { tag: string } & RenderableProps<{}>) {
     return <Button disabled={disabled} onPress={onPress} pressed={} {...props} tag={tag as any}   />
@@ -44,7 +43,7 @@ export function Demo() {
         <>
             <Blurb />
             <Code />
-            <Button tag="button" onPress={() => { setChecked("mixed" as any); }} render={defaultRenderButton("button", () => ({ children: "Change to mixed" }))} />
+            <Button tagButton="button" getDocument={getDocument} onPress={() => { setChecked("mixed" as any); }} render={defaultRenderButton("button", () => ({ children: "Change to mixed" }))} />
             <DemoCheckbox checked={checked} setChecked={setChecked} labelPosition="separate" disabled={false} tagInput="input" tagLabel="label" />
             <DemoCheckbox checked={checked} setChecked={setChecked} labelPosition="wrapping" disabled={false} tagInput="input" tagLabel="label" />
             <DemoCheckbox checked={checked} setChecked={setChecked} labelPosition="separate" disabled={false} tagInput="div" tagLabel="label" />
@@ -63,6 +62,7 @@ function DemoCheckbox({ labelPosition, tagInput, tagLabel, disabled, checked, se
     return (
         <div style={{ border: "1px solid black" }}>
             <Checkbox
+            getDocument={getDocument}
                 disabled={disabled}
                 checked={checked}
                 onCheckedChange={e => setChecked(e[EventDetail].checked)}
@@ -80,4 +80,9 @@ function DemoCheckbox({ labelPosition, tagInput, tagLabel, disabled, checked, se
             {labelPosition == "hidden" && <div>(This is not a label -- the actual label is via the <code>aria-label</code> prop)</div>}
         </div>
     )
+}
+
+
+function getDocument() {
+    return window.document;
 }

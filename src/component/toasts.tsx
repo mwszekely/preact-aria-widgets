@@ -1,4 +1,5 @@
 import { createContext, h, VNode } from "preact";
+import { memo } from "preact/compat";
 import { useContext } from "preact/hooks";
 import { UseToast, UseToastParameters, UseToastReturnTypeInfo, useToasts, UseToastsParameters, UseToastsReturnTypeInfo } from "../use-toasts";
 
@@ -16,16 +17,16 @@ export interface ToastProps extends Get<UseToastParameters, "managedChild">, Get
 
 const ToastContext = createContext<UseToast>(null!);
 
-export function Toasts<ContainerType extends HTMLElement>({ onAfterChildLayoutEffect, onChildrenMountChange, render }: ToastsProps<ContainerType>) {
+export const Toasts = memo(function Toasts<ContainerType extends HTMLElement>({ onAfterChildLayoutEffect, onChildrenMountChange, render }: ToastsProps<ContainerType>) {
     const { useToast, useToastContainerProps, ...info } = useToasts<ContainerType>({ managedChildren: { onAfterChildLayoutEffect, onChildrenMountChange } });
 
     return (
         <ToastContext.Provider value={useToast}>
             {render(info, useToastContainerProps({}))}
         </ToastContext.Provider>)
-}
+})
 
-export function Toast({ render, index, subInfo, timeout, flags, politeness }: ToastProps) {
+export const Toast = memo(function Toast({ render, index, subInfo, timeout, flags, politeness }: ToastProps) {
     const { ...toastInfo } = useContext(ToastContext)({
         managedChild: { index, subInfo, flags },
         toast: { timeout, politeness }
@@ -33,4 +34,4 @@ export function Toast({ render, index, subInfo, timeout, flags, politeness }: To
 
 
     return render(toastInfo);
-}
+})
