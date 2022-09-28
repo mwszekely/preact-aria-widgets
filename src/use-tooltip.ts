@@ -1,10 +1,10 @@
 import { h } from "preact";
-import { useGlobalHandler, useHasFocus, UseHasFocusParameters, useMergedProps, usePassiveState, useRandomId, useStableCallback, useState } from "preact-prop-helpers";
+import { useGlobalHandler, useHasFocus, UseHasFocusParameters, useMergedProps, usePassiveState, useRandomId, useStableCallback, useState, useTimeout } from "preact-prop-helpers";
 import { useCallback, useEffect } from "preact/hooks";
 import { debugLog } from "./props";
 
 export type UseTooltipTrigger<TriggerType extends Element> = (args: { hasFocus: UseHasFocusParameters<TriggerType> }) => { useTooltipTriggerProps: ({ ...props }: h.JSX.HTMLAttributes<TriggerType>) => h.JSX.HTMLAttributes<TriggerType> };
-export interface UseTooltipParameters { mouseoverDelay?: number, mouseoutDelay?: number, focusDelay?: number }
+export interface UseTooltipParameters { mouseoverDelay?: number, mouseoutToleranceDelay?: number, focusDelay?: number }
 export type UseTooltip<TriggerType extends HTMLElement | SVGElement, TooltipType extends Element> = (args: UseTooltipParameters) => UseTooltipReturnTypeWithHooks<TriggerType, TooltipType>;
 export interface UseTooltipReturnTypeInfo {
     isOpen: boolean;
@@ -20,11 +20,11 @@ export interface UseTooltipReturnTypeWithHooks<TriggerType extends Element, Popu
 
 function returnFalse() { return false; }
 
-export function useTooltip<TriggerType extends Element, PopupType extends Element>({ mouseoverDelay, mouseoutDelay, focusDelay }: UseTooltipParameters): UseTooltipReturnTypeWithHooks<TriggerType, PopupType> {
+export function useTooltip<TriggerType extends Element, PopupType extends Element>({ mouseoverDelay, mouseoutToleranceDelay, focusDelay }: UseTooltipParameters): UseTooltipReturnTypeWithHooks<TriggerType, PopupType> {
     debugLog("useTooltip");
 
     mouseoverDelay ??= 400;
-    mouseoutDelay ??= 40;
+    mouseoutToleranceDelay ??= 500;
     focusDelay ??= 1;
 
     // The escape key should close tooltips, but do nothing else.
@@ -38,8 +38,7 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
             e.preventDefault();
             e.stopImmediatePropagation();
             setOpen(false);
-            setTriggerHoverDelayCorrected(false);
-            setTooltipHoverDelayCorrected(false);
+            setHoverState("hidden");
             setTriggerFocusedDelayCorrected(false);
             setTooltipFocusedDelayCorrected(false);
         }
@@ -66,28 +65,87 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
             return () => clearTimeout(handle);
         }
     }), returnFalse);
-    const [, setTriggerHover] = usePassiveState(useStableCallback((hovering: boolean) => {
-        const delay = hovering ? mouseoverDelay : mouseoutDelay;
-        if (delay != null && isFinite(delay)) {
-            const handle = setTimeout(() => setTriggerHoverDelayCorrected(hovering), delay);
-            return () => clearTimeout(handle);
+    const onHoverChange = useStableCallback(function onHoverChange(hovering: boolean) {
+        if (hovering) {
+            switch (hoverState) {
+                case "hiding": {
+                    console.log("setHoverState(shown)")
+                    // We're hoving over the tooltip right after hovering away from it.
+                    // In this case, we show it again immediately
+                    setHoverState("shown");
+                    break;
+                }
+                case "hidden": {
+                    console.log("setHoverState(showing2)")
+                    // The tooltip isn't showing and hasn't for awhile (if ever)
+                    // Wait for our mouseover delay
+                    setHoverState("showing2");
+                    break;
+                    //const handle = setTimeout(() => { console.log("setHoverState(shown)");  setHoverState("shown") }, mouseoverDelay);
+                    //return () => clearTimeout(handle);
+                }
+            }
         }
-    }), returnFalse);
-    const [, setTooltipHover] = usePassiveState(useStableCallback((hovering: boolean) => {
-        const delay = hovering ? mouseoverDelay : mouseoutDelay;
-        if (delay != null && isFinite(delay)) {
-            const handle = setTimeout(() => setTooltipHoverDelayCorrected(hovering), delay);
-            return () => clearTimeout(handle);
+        else {
+            switch (hoverState) {
+                case "shown": {
+                    console.log("setHoverState(hiding)")
+                    // The mouse has left the trigger, but delay truly hiding it for a moment
+                    setHoverState("hiding");
+                    break;
+                    //const handle = setTimeout(() => { console.log("setHoverState(hidden)"); setHoverState("hidden");}, mouseoverDelay);
+                    //return () => clearTimeout(handle);
+                }
+                case "showing2": {
+                    console.log("setHoverState(hidden)")
+                    // During a mouseover delay, when we mouseout,
+                    // just reset the timer
+                    setHoverState("hidden");
+                    break;
+                }
+            }
         }
-    }), returnFalse);
-    const [triggerFocusedDelayCorrected, setTriggerFocusedDelayCorrected] = useState(false);
-    const [triggerHoverDelayCorrected, setTriggerHoverDelayCorrected] = useState(false);
-    const [tooltipFocusedDelayCorrected, setTooltipFocusedDelayCorrected] = useState(false);
-    const [tooltipHoverDelayCorrected, setTooltipHoverDelayCorrected] = useState(false);
+    })
 
+    const [, setTriggerHover] = usePassiveState(onHoverChange, returnFalse);
+    const [, setTooltipHover] = usePassiveState(onHoverChange, returnFalse);
+    const [triggerFocusedDelayCorrected, setTriggerFocusedDelayCorrected] = useState(false);
+    const [hoverState, setHoverState] = useState<"hidden" | "showing2" | "shown" | "hiding">("hidden");
+
+
+
+    useTimeout({
+        triggerIndex: hoverState,
+        timeout: (hoverState == "showing2") ? mouseoverDelay : null,
+        callback: () => {
+            if (hoverState == "showing2") {
+                console.log("setHoverState(shown)")
+                setHoverState("shown");
+            }
+        }
+    })
+
+
+
+    useTimeout({
+        triggerIndex: hoverState,
+        timeout: (hoverState == "hiding") ? mouseoutToleranceDelay : null,
+        callback: () => {
+            if (hoverState == "hiding") {
+                console.log("setHoverState(hidden)")
+                setHoverState("hidden");
+            }
+        }
+    })
+
+    //const [triggerHoverDelayCorrected, setTriggerHoverDelayCorrected] = useState(false);
+    const [tooltipFocusedDelayCorrected, setTooltipFocusedDelayCorrected] = useState(false);
+    //const [tooltipHoverDelayCorrected, setTooltipHoverDelayCorrected] = useState(false);
+
+    const hoverDelayCorrected = (hoverState == "shown");
     useEffect(() => {
-        setOpen(triggerFocusedDelayCorrected || triggerHoverDelayCorrected || tooltipFocusedDelayCorrected || tooltipHoverDelayCorrected);
-    }, [triggerFocusedDelayCorrected || triggerHoverDelayCorrected || tooltipFocusedDelayCorrected || tooltipHoverDelayCorrected])
+        setOpen(triggerFocusedDelayCorrected || hoverDelayCorrected || tooltipFocusedDelayCorrected);
+    }, [triggerFocusedDelayCorrected || hoverDelayCorrected || tooltipFocusedDelayCorrected])
 
     const useTooltipTrigger: UseTooltipTrigger<TriggerType> = useCallback(function useTooltipTrigger({ hasFocus: { onFocusedInnerChanged, ...hasFocus } }: { hasFocus: UseHasFocusParameters<TriggerType> }) {
         debugLog("useTooltipTrigger");

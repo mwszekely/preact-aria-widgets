@@ -1,31 +1,34 @@
-import { h, VNode } from "preact";
+import { createElement, h, VNode } from "preact";
 import { UseActiveElementParameters } from "preact-prop-helpers";
 import { memo } from "preact/compat";
+import { ElementToTag, PropModifier } from "props";
 import { useTooltip, UseTooltipParameters, UseTooltipReturnTypeInfo } from "../use-tooltip";
+import { defaultRenderPortal } from "./dialog";
 
-export interface TooltipProps<TT extends Element, TTT extends Element> extends UseTooltipParameters {
+export interface TooltipProps<TriggerType extends Element, PopupType extends Element> extends UseTooltipParameters {
     getDocument: UseActiveElementParameters["getDocument"];
     getWindow?: UseActiveElementParameters["getWindow"];
-    render?: (info: UseTooltipReturnTypeInfo, triggerProps: h.JSX.HTMLAttributes<TT>, tooltipProps: h.JSX.HTMLAttributes<TTT>) => VNode;
+    render(info: UseTooltipReturnTypeInfo, modifyTriggerProps: PropModifier<TriggerType>, modifyTooltipProps: PropModifier<PopupType>): VNode;
 }
 
-function defaultRender(info: UseTooltipReturnTypeInfo, triggerProps: h.JSX.HTMLAttributes<any>, tooltipProps: h.JSX.HTMLAttributes<any>) {
-    return (
-        <>
-            <div {...triggerProps} />
-            <div {...tooltipProps} />
-        </>
-    )
+export function defaultRenderTooltip<TriggerType extends Element, PopupType extends Element>({ tagTooltip, tagTrigger, makeTooltipProps, makeTriggerProps, portalId }: { portalId: string, tagTrigger: ElementToTag<TriggerType>, tagTooltip: ElementToTag<PopupType>, makeTriggerProps: (info: UseTooltipReturnTypeInfo) => h.JSX.HTMLAttributes<TriggerType>, makeTooltipProps: (info: UseTooltipReturnTypeInfo) => h.JSX.HTMLAttributes<PopupType> }) {
+    return function (info: UseTooltipReturnTypeInfo, modifyPropsTrigger: PropModifier<TriggerType>, modifyPropsTooltip: PropModifier<PopupType>) {
+        return (
+            <>
+                {createElement(tagTrigger as never, modifyPropsTrigger(makeTriggerProps(info)))}
+                {defaultRenderPortal({
+                    portalId,
+                    children: createElement(tagTooltip as never, modifyPropsTooltip(makeTooltipProps(info)))
+                })}
+            </>
+        )
+    }
 }
 
-export const Tooltip = memo(function TooltipU<TT extends Element, TTT extends Element>({ focusDelay, mouseoutDelay, mouseoverDelay, getDocument, getWindow, render }: TooltipProps<TT, TTT>) {
-    const { useTooltipPopup, useTooltipTrigger, ...info } = useTooltip<TT, TTT>({ focusDelay, mouseoutDelay, mouseoverDelay });
+export const Tooltip = memo(function TooltipU<TriggerType extends Element, PopupType extends Element>({ focusDelay, mouseoutToleranceDelay, mouseoverDelay, getDocument, getWindow, render }: TooltipProps<TriggerType, PopupType>) {
+    const { useTooltipPopup, useTooltipTrigger, ...info } = useTooltip<TriggerType, PopupType>({ focusDelay, mouseoutToleranceDelay, mouseoverDelay });
     const { useTooltipTriggerProps } = useTooltipTrigger({ hasFocus: { getDocument, getWindow } });
     const { useTooltipPopupProps } = useTooltipPopup({ hasFocus: { getDocument, getWindow } });
-    return (
-        <>
-            {(render ?? defaultRender)(info, useTooltipTriggerProps({}), useTooltipPopupProps({}) as any)}
-        </>
-    )
+    return render(info, useTooltipTriggerProps, useTooltipPopupProps);
 })
 

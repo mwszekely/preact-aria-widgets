@@ -29,7 +29,7 @@ export { Slider, SliderProps, SliderThumb, SliderThumbProps, defaultRenderSlider
 export { Table, TableBody, TableBodyProps, TableCell, TableCellProps, TableFoot, TableFootProps, TableHead, TableHeadProps, TableProps, TableRow, TableRowProps, defaultRenderTable, defaultRenderTableBody, defaultRenderTableCell, defaultRenderTableRow } from "./component/table"
 export { TabProps, Tabs, Tab, TabPanel, TabsProps, defaultRenderTabs, defaultRenderTab, defaultRenderTabPanel } from "./component/tabs"
 export { Toast, ToastProps, Toasts, ToastsProps } from "./component/toasts"
-export { Tooltip, TooltipProps } from "./component/tooltip"
+export { Tooltip, TooltipProps, defaultRenderTooltip } from "./component/tooltip"
 export { Heading, HeadingReset } from "./component/heading"
 
 export { EventDetail } from "./props";
