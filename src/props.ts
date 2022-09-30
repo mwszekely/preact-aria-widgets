@@ -69,6 +69,7 @@ export type DebugLogTypes =
     "useRadioGroup" | "useRadio" |
     "useSlider" | "useSliderThumb" |
     "useTable" | "useTableRow" | "useTableCell" | "useTableBody" |
+    "useGridlist" | "useGridlistRow" | "useGridlistChild" | "useGridlistSection" |
     "useTabs" | "useTabList" | "useTab" | "useTabPanel" |
     "useToasts" | "useToast" |
     "useTooltip" | "useTooltipTooltip" | "useTooltipTrigger";

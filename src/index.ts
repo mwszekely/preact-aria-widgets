@@ -32,6 +32,8 @@ export { Toast, ToastProps, Toasts, ToastsProps } from "./component/toasts"
 export { Tooltip, TooltipProps, defaultRenderTooltip } from "./component/tooltip"
 export { Heading, HeadingReset } from "./component/heading"
 
+export { useGridlist, UseGridlistChild, UseGridlistChildParameters, UseGridlistChildReturnTypeInfo, UseGridlistChildReturnTypeWithHooks, UseGridlistChildSubInfo, UseGridlistParameters, UseGridlistReturnTypeInfo, UseGridlistReturnTypeWithHooks, UseGridlistRow, UseGridlistRowParameters, UseGridlistRowReturnTypeInfo, UseGridlistRowReturnTypeWithHooks, UseGridlistRowSubInfo, UseGridlistSection, UseGridlistSectionParameters, UseGridlistSectionReturnTypeInfo, UseGridlistSectionReturnTypeWithHooks } from "./use-gridlist"
+
 export { EventDetail } from "./props";
 export type { TagSensitiveProps } from "./props";
 

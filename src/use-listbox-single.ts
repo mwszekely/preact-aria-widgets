@@ -92,14 +92,6 @@ export function useListboxSingle<LabelElement extends Element, ListElement exten
             hasFocus,
             subInfo: {}
         });
-        //const index = managedChild.index;
-
-        /*useEffect(() => {
-            const element = rti_ret.getElement();
-            if (element && rti_ret.tabbable && selectionMode == "focus") {
-                stableOnSelect?.({ target: element, currentTarget: element, [EventDetail]: { selectedIndex: index } });
-            }
-        }, [rti_ret.tabbable, selectionMode, index]);*/
 
         return {
             useListboxSingleItemProps,
@@ -110,8 +102,6 @@ export function useListboxSingle<LabelElement extends Element, ListElement exten
         function useListboxSingleItemProps<P extends h.JSX.HTMLAttributes<ListItemElement>>(props: P) {
 
             props.role = "option";
-            //props["aria-setsize"] = (children.getHighestIndex() + 1).toString();
-            //props["aria-posinset"] = (info.index + 1).toString();
             props["aria-selected"] = (ss_ret.selected ?? false).toString();
             if (disabled)
                 props["aria-disabled"] = "true";
@@ -137,12 +127,6 @@ export function useListboxSingle<LabelElement extends Element, ListElement exten
         useListboxSingleLabel,
         ...listReturnType,
         ...labelReturnType
-        /*label: labelReturnType.label,
-        linearNavigation: listReturnType.linearNavigation,
-        listNavigation: listReturnType.listNavigation,
-        managedChildren: listReturnType.managedChildren,
-        rovingTabIndex: listReturnType.rovingTabIndex,
-        typeaheadNavigation: listReturnType.typeaheadNavigation*/
     };
 
 
