@@ -13,6 +13,7 @@ import * as Slider from "./demos/slider"
 import * as Dialog from "./demos/dialog"
 import * as Tabs from "./demos/tabs"
 import * as Tooltip from "./demos/tooltip"
+import * as Toast from "./demos/toast"
 
 //import { options } from "preact";
 //options.debounceRendering = queueMicrotask;
@@ -23,6 +24,7 @@ import * as Tooltip from "./demos/tooltip"
 const Component = () => {
     return (
         <Heading heading="Demos">
+            <Heading heading="Toast"><Toast.Demo /></Heading>
             <Heading heading="Tooltip"><Tooltip.Demo /></Heading>
             <Heading heading="Tabs"><Tabs.Demo /></Heading>
             <Heading heading="Dialog"><Dialog.Demo /></Heading>

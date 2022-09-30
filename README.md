@@ -14,8 +14,12 @@ Overall goals:
 * Widgets are *extremely* low level, effectively just trying to be glue between the final GUI interface code and ARIA as a whole.
     * No assumptions are made about DOM structure &mdash; almost anything is allowable as long as you apply the props given
     * No styling is provided, even in the case of E.G. hiding a menu. Attributes such as `inert` are used over `hidden`. You must use the `render` prop to set `display: none` or `hidden=true`. 
-* Widgets' props are simplistic and based on primitive types (including functions); a multi-select list does not receive a prop containing an array of all the list data, rather, each child has a simple boolean `selected` prop and the parent finds a way to work with that.
+* Widgets' props are simplistic and based on primitive types (including functions); a multi-select list does not receive a prop containing an array of all the list data, rather, each child has a simple boolean `selected` prop and the parent finds a way to work with that efficiently.
     * In this way, the hooks/components are designed to work around the most comfortable way to provide these props in a real environment
+
+Other design decisions:
+* A lot of these hooks are composed of other hooks in deeply nested ways. To avoid confusion about who takes what parameter/who returns what info, hooks will generally just take one single object parameter where each entry contains the arguments passed to the hook used. Simiarly when returning information, each entry in the object will refer to the information returned specifically by that hook
+    * For example, `useListboxSingle` makes use of roving tabindex as well as a singular selection mechanic, so its call with its one argument looks like `useListboxSingle({ rovingTabIndex: { ... }, singleSelection: { ... }, listboxSingle: { ... } })`
 
 Documentation, testing, production-readiness are all TODO.
 

@@ -1,8 +1,5 @@
 
-import { useState } from "preact-prop-helpers";
-import { memo } from "preact/compat";
-import { defaultRenderTab, defaultRenderTabPanel, defaultRenderTabs, Tabs, Tooltip, defaultRenderTooltip } from "../../";
-import { EventDetail } from "../../index";
+import { defaultRenderTooltip, Tooltip } from "../../";
 
 
 function getDocument() { return window.document; }
@@ -15,12 +12,12 @@ export function Blurb() {
                 <li>Hovering or focusing the trigger element shows the tooltip</li>
                 <li>The tooltip stays shown when it itself is hovered/focused as well, so that the text inside can be selected</li>
                 <li>Moving the mouse between the trigger and the tooltip has some tolerance associated with immediately hiding the tooltip.</li>
-                <li>This can have a custom delay associated with it</li>
-                <li></li>
+                <li>Hovering, focusing, and re-hovering can each have a custom delay associated with it</li>
             </ul>
             <p><strong>Things <em>not</em> handled:</strong></p>
             <ul>
                 <li>You must ensure that either the tooltip contains a focusable element (a button, link, <code>&lt;div tabIndex="-1" /&gt;</code>, etc.)</li>
+                <li>Long presses on mobile devices are not yet handled (e.g. a long press on a button triggers a tooltip but does not activate the button)</li>
             </ul>
         </>
     )

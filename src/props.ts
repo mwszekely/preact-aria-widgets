@@ -52,7 +52,7 @@ export function warnOnOverwrite<T extends WOO>(componentName: string, propName: 
     return newValue;
 }
 
-let debug = true;
+let debug = false;
 export function setDebugLogging(logging: boolean) {
     debug = logging;
 }
