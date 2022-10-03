@@ -14,6 +14,7 @@ export { useRadioGroup, UseRadio, RadioChangeEvent, UseRadioGroupParameters, Use
 export { useSlider, SliderThumbInfo, RangeChangeEvent, UseSliderParameters as UseSliderArguments, UseSliderThumb, UseSliderThumbParameters as UseSliderThumbArguments, UseSliderThumbProps, UseSliderThumbReturnType } from "./use-slider";
 export { useToasts, UseToast, UseToastParameters } from "./use-toasts";
 export { useTable, TableValueType, UseTableBody, UseTableBodyParameters, UseTableBodyReturnTypeInfo, UseTableBodyReturnTypeWithHooks, UseTableCell, UseTableCellParameters, UseTableCellReturnTypeInfo, UseTableCellReturnTypeWithHooks, UseTableCellSubInfo, UseTableParameters, UseTableReturnTypeInfo, UseTableReturnTypeWithHooks, UseTableRow, UseTableRowParameters, UseTableRowReturnTypeInfo, UseTableRowReturnTypeWithHooks, UseTableRowSubInfo, } from "./use-table";
+export { useGridlist, UseGridlistChild, UseGridlistChildParameters, UseGridlistChildReturnTypeInfo, UseGridlistChildReturnTypeWithHooks, UseGridlistChildSubInfo, UseGridlistParameters, UseGridlistReturnTypeInfo, UseGridlistReturnTypeWithHooks, UseGridlistRow, UseGridlistRowParameters, UseGridlistRowReturnTypeInfo, UseGridlistRowReturnTypeWithHooks, UseGridlistRowSubInfo, UseGridlistSection, UseGridlistSectionParameters, UseGridlistSectionReturnTypeInfo, UseGridlistSectionReturnTypeWithHooks } from "./use-gridlist"
 
 export { Accordion, AccordionProps, AccordionSection, AccordionSectionProps, defaultRenderAccordionSection } from "./component/accordion"
 export { Button, ButtonProps, defaultRenderButton } from "./component/button"
@@ -32,7 +33,7 @@ export { Toast, ToastProps, Toasts, ToastsProps } from "./component/toasts"
 export { Tooltip, TooltipProps, defaultRenderTooltip } from "./component/tooltip"
 export { Heading, HeadingReset } from "./component/heading"
 
-export { useGridlist, UseGridlistChild, UseGridlistChildParameters, UseGridlistChildReturnTypeInfo, UseGridlistChildReturnTypeWithHooks, UseGridlistChildSubInfo, UseGridlistParameters, UseGridlistReturnTypeInfo, UseGridlistReturnTypeWithHooks, UseGridlistRow, UseGridlistRowParameters, UseGridlistRowReturnTypeInfo, UseGridlistRowReturnTypeWithHooks, UseGridlistRowSubInfo, UseGridlistSection, UseGridlistSectionParameters, UseGridlistSectionReturnTypeInfo, UseGridlistSectionReturnTypeWithHooks } from "./use-gridlist"
+export { Gridlist, GridlistChild, GridlistChildProps, GridlistFootProps, GridlistHeadProps, GridlistProps, GridlistRow, GridlistRowProps, GridlistSection, GridlistSectionProps, defaultRenderGridlist, defaultRenderGridlistChild, defaultRenderGridlistFoot, defaultRenderGridlistHead, defaultRenderGridlistRow, defaultRenderGridlistSection } from "./component/gridlist"
 
 export { EventDetail } from "./props";
 export type { TagSensitiveProps } from "./props";

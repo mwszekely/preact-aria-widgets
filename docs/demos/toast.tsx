@@ -18,7 +18,7 @@ export function Blurb() {
             </ul>
             <p><strong>Things <em>not</em> handled:</strong></p>
             <ul>
-                <li>Auto-dismiss behavior is very situational. An auto-dismissed toast should only refer to information that can be viewed elsewhere; "X files deleted" can be double-checked in the Recycle Bin, "X has logged in" and you can see them an everyone else in a tab somewhere, etc. This obviously cannot be checked by the type system.</li>
+                <li>Auto-dismiss behavior is very situational. An auto-dismissed toast should only refer to information that can be viewed elsewhere; "X files deleted" can be double-checked in the Recycle Bin, "X has logged in" which you can along with everyone else in a tab somewhere, etc. This obviously cannot be checked programmatically.</li>
                 <li>TODO: Focus management related to toasts that have interactive content</li>
                 <li>TODO: Toasts are still announced even when the current browser tab is hidden instead of saving them for when the user returns</li>
                 <li>TODO: Toasts still auto-dismiss when they have focus/are being interacted with</li>
@@ -42,7 +42,7 @@ export function Demo() {
 
         setToasts(t => [...t, <Toast index={index} key={index} render={({ toast: { dismiss, showing, dismissed, numberOfToastsAheadOfUs } }) => (
             <div style={showing ? {} : { opacity: 0.5 }}>This the toast with an index of {index}. (#{numberOfToastsAheadOfUs} in the queue to be shown). <button disabled={dismissed} onClick={dismiss}>Click to dismiss</button></div>
-        )} timeout={1000} />]);
+        )} timeout={null} />]);
     }, []);
 
     return (
@@ -51,7 +51,7 @@ export function Demo() {
             <Code />
             <button onClick={pushToast}>Push a toast</button>
             <div>
-                <Toasts<HTMLDivElement> visibleCount={4} render={(info, props) => { return <div {...props}>{toasts}</div> }} />
+                <Toasts<HTMLDivElement> visibleCount={3} render={(info, props) => { return <div {...props}>{toasts}</div> }} />
             </div>
         </>
     )

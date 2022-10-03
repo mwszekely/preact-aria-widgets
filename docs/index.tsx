@@ -14,6 +14,8 @@ import * as Dialog from "./demos/dialog"
 import * as Tabs from "./demos/tabs"
 import * as Tooltip from "./demos/tooltip"
 import * as Toast from "./demos/toast"
+import * as Table from "./demos/table"
+import * as Gridlist from "./demos/gridlist"
 
 //import { options } from "preact";
 //options.debounceRendering = queueMicrotask;
@@ -24,10 +26,12 @@ import * as Toast from "./demos/toast"
 const Component = () => {
     return (
         <Heading heading="Demos">
+            <Heading heading="Dialog"><Dialog.Demo /></Heading>
+            <Heading heading="Gridlist"><Gridlist.Demo /></Heading>
+            <Heading heading="Table"><Table.Demo /></Heading>
             <Heading heading="Toast"><Toast.Demo /></Heading>
             <Heading heading="Tooltip"><Tooltip.Demo /></Heading>
             <Heading heading="Tabs"><Tabs.Demo /></Heading>
-            <Heading heading="Dialog"><Dialog.Demo /></Heading>
             <Heading heading="Slider"><Slider.Demo /></Heading>
             <Heading heading="Single-select Listbox"><ListboxSingle.Demo /></Heading>
             <Heading heading="Accordion"><Accordion.Demo /></Heading>

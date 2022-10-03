@@ -83,7 +83,7 @@ export function useAccordion<HeaderElement extends HTMLElement, BodyElement exte
             navigateToPrev,
             disableArrowKeys,
             disableHomeEndKeys,
-            navigationDirection: navigationDirection ?? "block"
+            navigationDirection: navigationDirection ?? "vertical"  // TODO: Make this relative to the page's logical direction
         }
     });
 

@@ -3,9 +3,9 @@ import { ManagedChildren, returnNull, useGridNavigation, UseGridNavigationParame
 import { UseGridNavigationCellParameters, UseGridNavigationCellReturnTypeInfo, UseGridNavigationRowParameters, UseGridNavigationRowReturnTypeInfo } from "preact-prop-helpers/use-grid-navigation";
 import { Compare, GetIndex, GetValue, UseSortableChildrenReturnTypeInfo } from "preact-prop-helpers/use-sortable-children";
 import { useCallback, useLayoutEffect, useRef } from "preact/hooks";
-import { debugLog } from "./props";
+import { debugLog, warnOnOverwrite } from "./props";
 
-export interface UseGridlistParameters extends UseGridNavigationParameters<"indexMangler" | "indexDemangler", never, never, never, never> { }
+export interface UseGridlistParameters extends Omit<UseGridNavigationParameters<"indexMangler" | "indexDemangler", never, never, never, never>, "gridNavigation"> { }
 export interface UseGridlistSectionParameters { compareRows: (lhsIndex: number, rhsIndex: number) => number }
 export interface UseGridlistRowParameters<CellElement extends Element> extends Omit<UseGridNavigationRowParameters<UseGridlistRowSubInfo<CellElement>, never, never, never, never, never, never, "subInfo", "subInfo", "subInfo", {}>, "subInfo"> {
     gridlistRow: Pick<UseGridlistRowSubInfo<CellElement>, "locationIndex">;
@@ -45,6 +45,8 @@ export type UseGridlistChild<CellElement extends Element> = (p: UseGridlistChild
 export type UseGridlistRow<RowElement extends Element, CellElement extends Element> = (p: UseGridlistRowParameters<CellElement>) => UseGridlistRowReturnTypeWithHooks<RowElement, CellElement>;
 export type UseGridlistSection<BodySectionElement extends Element, RowElement extends Element, CellElement extends Element> = (p: UseGridlistSectionParameters) => UseGridlistSectionReturnTypeWithHooks<BodySectionElement, RowElement, CellElement>;
 
+function identity(t: number) { return t; }
+
 export function useGridlist<
     GridlistElement extends Element,
     BodySectionElement extends Element,
@@ -56,6 +58,9 @@ export function useGridlist<
     const [getCurrentSortColumn, setCurrentSortColumn] = usePassiveState<{ index: number, direction: "ascending" | "descending" } | null>(null, returnNull);
     const bodySort = useRef<null | (() => void)>(null);
 
+    // TODO: Comparing the location should happen out here, not in each section so that grid navigation works right...
+    const manglers = useRef({ rowIndexMangler: identity, rowIndexDemangler: identity });
+
     const {
         useGridNavigationProps,
         useGridNavigationRow,
@@ -65,7 +70,8 @@ export function useGridlist<
         listNavigation,
         managedChildren,
         rovingTabIndex,
-        typeaheadNavigation
+        typeaheadNavigation,
+        gridNavigation: { rowIndexDemangler: useCallback((n: number) => manglers.current.rowIndexDemangler(n), []), rowIndexMangler: useCallback((n: number) => manglers.current.rowIndexMangler(n), []) },
     });
 
     const { managedChildren: { children: rows } } = gridNavRet1;
@@ -92,7 +98,10 @@ export function useGridlist<
                 ...gridNavRet3
             } = useGridNavigationCell({ listNavigation, managedChild, rovingTabIndex, subInfo, hasFocus });
 
-            const useGridlistChildProps: typeof useGridNavigationCellProps = (props) => props;
+            const useGridlistChildProps: typeof useGridNavigationCellProps = (props) => {
+                props.role = warnOnOverwrite("useGridlistChild", "role", props.role, "cell");
+                return useGridNavigationCellProps(props);
+            }
             return {
                 useGridlistChildProps,
                 ...gridNavRet3
@@ -100,7 +109,10 @@ export function useGridlist<
 
         }, []);
 
-        const useGridlistRowProps: typeof useGridNavigationRowProps = (props) => props;
+        const useGridlistRowProps: typeof useGridNavigationRowProps = (props) => {
+            props.role = warnOnOverwrite("useGridlistRow", "role", props.role, "row");
+            return useGridNavigationRowProps(props);
+        };
 
         return {
             useGridlistChild,
@@ -151,6 +163,7 @@ export function useGridlist<
 
         const useGridlistSectionProps = (props: h.JSX.HTMLAttributes<BodySectionElement>) => {
             console.assert(props.children != null);
+            props.role = warnOnOverwrite("useGridlistSection", "role", props.role, "rowgroup");
             return useSortableProps(props as h.JSX.HTMLAttributes<BodySectionElement> & { children: any });
         }
 
@@ -160,7 +173,10 @@ export function useGridlist<
         }
     }, []);
 
-    const useGridlistProps: typeof useGridNavigationProps = useGridNavigationProps;
+    const useGridlistProps: typeof useGridNavigationProps = (props) => {
+        props.role = warnOnOverwrite("useGridlist", "role", props.role, "grid");
+        return useGridNavigationProps(props);
+    };
 
     return {
         useGridlistProps,

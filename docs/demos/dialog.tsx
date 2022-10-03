@@ -1,5 +1,6 @@
 
 import { useState } from "preact-prop-helpers";
+import { useCallback } from "preact/hooks";
 import { defaultRenderDialog, Dialog } from "../../component/dialog";
 import { Button, defaultRenderButton } from "../../index";
 
@@ -40,6 +41,8 @@ export function Code() {
 export function Demo() {
     const [open, setOpen] = useState(false);
 
+    const r = useCallback((...args: any[]) => { console.log(...args); }, []);
+
 
     return (
         <>
@@ -54,11 +57,11 @@ export function Demo() {
                     bodyIsOnlySemantic={true}
                     render={defaultRenderDialog({
                         portalId: "portal",
-                        makePropsBackdrop: () => ({}),
-                        makePropsFocusContainer: () => ({}),
-                        makePropsBody: () => ({ children: "Dialog body" }),
-                        makePropsDialog: () => ({ style: { display: !open ? "none" : undefined } }),
-                        makePropsTitle: () => ({ children: "Dialog title" }),
+                        makePropsBackdrop: () => ({ "data-type": "backdrop" } as {}),
+                        makePropsFocusContainer: () => ({ "data-type": "focus" } as {}),
+                        makePropsBody: () => ({ children: "Dialog body" , "data-type": "body"} as {}),
+                        makePropsDialog: () => ({ style: { display: !open ? "none" : undefined }, "data-type": "dialog" } as {}),
+                        makePropsTitle: () => ({ children: "Dialog title", "data-type": "title" } as {}),
                         tagBackdrop: "div",
                         tagBody: "div",
                         tagDialog: "div",

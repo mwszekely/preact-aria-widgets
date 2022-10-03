@@ -1,7 +1,7 @@
 import { createContext, createElement, h, Ref, VNode } from "preact";
 import { UseHasFocusParameters } from "preact-prop-helpers";
 import { memo } from "preact/compat";
-import { useContext } from "preact/hooks";
+import { useCallback, useContext, useRef } from "preact/hooks";
 import { ElementToTag, PropModifier } from "props";
 import { useGridlist, UseGridlistSection, UseGridlistSectionParameters, UseGridlistSectionReturnTypeInfo, UseGridlistChild, UseGridlistChildParameters, UseGridlistChildReturnTypeInfo, UseGridlistParameters, UseGridlistReturnTypeInfo, UseGridlistRow, UseGridlistRowParameters, UseGridlistRowReturnTypeInfo } from "../use-gridlist";
 
@@ -39,7 +39,7 @@ export interface GridlistRowProps<RowElement extends Element, CellElement extend
     Get2<UseGridlistRowParameters<CellElement>, "asParentRowOfCells", "managedChildren">,
     Get2<UseGridlistRowParameters<CellElement>, "asParentRowOfCells", "rovingTabIndex">,
     Get2<UseGridlistRowParameters<CellElement>, "asParentRowOfCells", "typeaheadNavigation"> {
-    render(info: UseGridlistRowReturnTypeInfo<RowElement, CellElement>, tableRowProps: h.JSX.HTMLAttributes<RowElement>): VNode;
+    render(info: UseGridlistRowReturnTypeInfo<RowElement, CellElement>, modifyGridlistRowProps: PropModifier<RowElement>): VNode;
 }
 
 export interface GridlistChildProps<CellElement extends Element> extends
@@ -50,11 +50,12 @@ export interface GridlistChildProps<CellElement extends Element> extends
     Get<UseGridlistChildParameters<CellElement>, "rovingTabIndex">,
     UseHasFocusParameters<CellElement>,
     Omit<Get<UseGridlistChildParameters<CellElement>, "subInfo">, "location"> {
-    render(info: UseGridlistChildReturnTypeInfo<CellElement>, tableRowProps: h.JSX.HTMLAttributes<CellElement>): VNode;
+    render(info: UseGridlistChildReturnTypeInfo<CellElement>, modifyGridlistChildProps: PropModifier<CellElement>): VNode;
 }
 
 const LocationIndexContext = createContext(0);
 
+const SetManglersContext = createContext<(m: (n: number) => number, d: (n: number) => number) => void>(null!);
 const GridlistSectionContext = createContext<UseGridlistSection<any, any, any>>(null!);
 const GridlistRowContext = createContext<UseGridlistRow<any, any>>(null!);
 const GridlistChildContext = createContext<UseGridlistChild<any>>(null!);
@@ -108,20 +109,20 @@ export const Gridlist = memo(function GridlistU<GridlistElement extends Element,
     typeaheadTimeout,
     render
 }: GridlistProps<GridlistElement, RowElement, Cellement>) {
-    const { useGridlistSection, useGridlistProps, useGridlistRow, ...tableInfo } = useGridlist<GridlistElement, SectionElement, RowElement, Cellement>({
+    const { useGridlistSection, useGridlistProps, useGridlistRow, ...gridlistInfo } = useGridlist<GridlistElement, SectionElement, RowElement, Cellement>({
         linearNavigation: { disableArrowKeys, disableHomeEndKeys },
         listNavigation: {},
         managedChildren: { onAfterChildLayoutEffect, onChildrenMountChange },
         rovingTabIndex: { initialIndex, onTabbableIndexChange, onTabbableRender },
-        typeaheadNavigation: { collator, noTypeahead, typeaheadTimeout }
+        typeaheadNavigation: { collator, noTypeahead, typeaheadTimeout },
     });
 
     return (
-        <GridlistSectionContext.Provider value={useGridlistSection}>
-            <GridlistRowContext.Provider value={useGridlistRow}>
-                {(render ?? defaultRenderGridlist)(tableInfo, useGridlistProps)}
-            </GridlistRowContext.Provider>
-        </GridlistSectionContext.Provider>
+            <GridlistSectionContext.Provider value={useGridlistSection}>
+                <GridlistRowContext.Provider value={useGridlistRow}>
+                    {render(gridlistInfo, useGridlistProps)}
+                </GridlistRowContext.Provider>
+            </GridlistSectionContext.Provider>
     )
 })
 
@@ -166,7 +167,7 @@ export const GridlistRow = memo(function GridlistRowU<RowElement extends Element
         },
         gridlistRow: { locationIndex: useContext(LocationIndexContext) }
     });
-    return <GridlistChildContext.Provider value={useGridlistChild}>{(render ?? defaultRenderGridlistRow)(rowInfo, useGridlistRowProps({ ref }))}</GridlistChildContext.Provider>
+    return <GridlistChildContext.Provider value={useGridlistChild}>{render(rowInfo, useGridlistRowProps)}</GridlistChildContext.Provider>
 })
 
 export const GridlistChild = memo(function GridlistChild<CellElement extends Element>({ index, text, flags, focusSelf, hidden, getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange, render }: GridlistChildProps<CellElement>, ref: Ref<CellElement>) {
@@ -180,6 +181,6 @@ export const GridlistChild = memo(function GridlistChild<CellElement extends Ele
         }
     });
 
-    return (render ?? defaultRenderGridlistChild)(cellInfo, useGridlistChildProps({ ref }));
+    return render(cellInfo, useGridlistChildProps);
 })
 

@@ -58,17 +58,6 @@ export interface UseToastsReturnTypeWithHooks<ContainerType extends Element> ext
 export function useToasts<ContainerType extends Element>({ managedChildren: { onChildrenMountChange: ocmu, onAfterChildLayoutEffect }, toasts: { visibleCount } }: UseToastsParameters): UseToastsReturnTypeWithHooks<ContainerType> {
     debugLog("useToasts");
 
-    // "Pointer" to whatever index toast is currently being shown.
-    // E.g. it's 0 when the first toast is shown, then when dismissed, it becomes 1.
-    // When the second toast is shown, it stays at 1 until dismissed, when it then becomes 2, etc.
-    // Because toasts can potentially be dismissed out of order, this represents the "oldest" toast that still hasn't been dismissed,
-    // even if "younger" ones have.
-    //const [activeToastIndex, setActiveToastIndex, getActiveToastIndex] = useState(-1);
-    /*const showingIndices = useRef<Set<number>>(null!);
-    const dismissedIndices = useRef<Set<number>>(null!);
-    showingIndices.current ??= new Set();
-    dismissedIndices.current ??= new Set();*/
-
     // Normally, this does just look like [0, 1, 2, 3], etc
     // so it could be just an index to the current toast,
     // but if we dismiss toasts out of order, it's [0, 2, 3] or something.
@@ -87,7 +76,9 @@ export function useToasts<ContainerType extends Element>({ managedChildren: { on
 
     // When a toast is shown or hidden, always make sure that we're showing all the toasts that we should be.
     const showHighestPriorityToast = useCallback(() => {
-        for (let i = 0; i < getMaxVisibleCount(); ++i) {
+        const max = Math.min(getMaxVisibleCount(), currentIndexQueue.current.length)
+        for (let i = 0; i < max; ++i) {
+
             const highestPriorityToast = toastQueue.getAt(currentIndexQueue.current[i]);
             console.assert(!!highestPriorityToast);
             highestPriorityToast?.subInfo.show();
@@ -104,18 +95,44 @@ export function useToasts<ContainerType extends Element>({ managedChildren: { on
 
     // Any time a toast is dismissed, update our bottommostToastIndex to point to the next toast in the queue, if one exists.
     const onAnyToastDismissed = useCallback((_index: number) => {
+
+        // When we dismiss a toast, remove it from the "to-display" queue by actually splicing it out of the array.
+        // Then notify each toast of its change in position within that queue to keep the two in sync.
         const removalIndex = currentIndexQueue.current.findIndex(i => i == _index);
-        toastQueue.forEach(c => c.subInfo.setNumberAheadOfMe(f => f - 1));
-        if (removalIndex != -1) {
-            //for (let i = removalIndex; i < currentIndexQueue.current.length; ++i) {
-            //    toastQueue.getAt(i)?.subInfo.setNumberAheadOfMe(p => (p - 1));
-            //}
-            currentIndexQueue.current.splice(removalIndex, 1);
-        }
+
+
+        // For all toasts that have already been dismissed, shift them even further back by one to "make space" 
+        // (they're removed from the queue but this is the negative index they would have if we kept negatives in the queue)
+        // for the newly-dismissed toast.
+        toastQueue.forEach(c => {
+            c.subInfo.setNumberAheadOfMe(prev => {
+                if (prev < 0)
+                    return prev - 1;
+                else
+                    return prev;
+            });
+        });
+        // Let this toast know that it's now the most recently dismissed toast
+        toastQueue.getAt(_index)?.subInfo.setNumberAheadOfMe(-1);
+
+        // Notify all toasts waiting behind this one in the queue that they've moved up one slot
+        toastQueue.forEach(c => {
+            c.subInfo.setNumberAheadOfMe(prev => {
+                if (prev > removalIndex)
+                    return prev - 1;
+                else
+                    return prev;
+            });
+        });
+
+        // Actually modify the queue itself
+        currentIndexQueue.current.splice(removalIndex, 1);
+
+        // And after all that, make sure that we're showing any toasts that have been waiting in the queue
         showHighestPriorityToast();
     }, []);
 
-    
+
 
     const [_mouseOver2, setMouseOver, _getMouseOver] = useState(false);
 
@@ -148,7 +165,7 @@ export function useToasts<ContainerType extends Element>({ managedChildren: { on
         const dismiss = useCallback(() => {
             if (!getDismissed2())
                 onAnyToastDismissed(getIndex());
-                
+
             setDismissed2(true);
             setShowing2(false);
         }, []);
@@ -159,7 +176,7 @@ export function useToasts<ContainerType extends Element>({ managedChildren: { on
 
         useEffect(() => {
             if (!getDismissed2() && !getShowing2()) {
-                if (numberOfToastsAheadOfUs < getMaxVisibleCount()) {
+                if (numberOfToastsAheadOfUs >= 0 && numberOfToastsAheadOfUs < getMaxVisibleCount()) {
                     show();
                 }
             }
@@ -211,8 +228,6 @@ export function useToasts<ContainerType extends Element>({ managedChildren: { on
         }, [showing]);*/
 
         const dismissTimeoutKey = (timeout == null || numberOfToastsAheadOfUs != 0) ? null : isFinite(timeout) ? timeout : timeout > 0 ? null : 0;
-
-        console.log(`${index}: ${timeout}, ${numberOfToastsAheadOfUs}`);
 
         useTimeout({
             timeout: dismissTimeoutKey,

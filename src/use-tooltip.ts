@@ -69,14 +69,12 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
         if (hovering) {
             switch (hoverState) {
                 case "hiding": {
-                    console.log("setHoverState(shown)")
                     // We're hoving over the tooltip right after hovering away from it.
                     // In this case, we show it again immediately
                     setHoverState("shown");
                     break;
                 }
                 case "hidden": {
-                    console.log("setHoverState(showing2)")
                     // The tooltip isn't showing and hasn't for awhile (if ever)
                     // Wait for our mouseover delay
                     setHoverState("showing2");
@@ -89,7 +87,6 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
         else {
             switch (hoverState) {
                 case "shown": {
-                    console.log("setHoverState(hiding)")
                     // The mouse has left the trigger, but delay truly hiding it for a moment
                     setHoverState("hiding");
                     break;
@@ -97,7 +94,6 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
                     //return () => clearTimeout(handle);
                 }
                 case "showing2": {
-                    console.log("setHoverState(hidden)")
                     // During a mouseover delay, when we mouseout,
                     // just reset the timer
                     setHoverState("hidden");
@@ -119,7 +115,6 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
         timeout: (hoverState == "showing2") ? mouseoverDelay : null,
         callback: () => {
             if (hoverState == "showing2") {
-                console.log("setHoverState(shown)")
                 setHoverState("shown");
             }
         }
@@ -132,7 +127,6 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
         timeout: (hoverState == "hiding") ? mouseoutToleranceDelay : null,
         callback: () => {
             if (hoverState == "hiding") {
-                console.log("setHoverState(hidden)")
                 setHoverState("hidden");
             }
         }

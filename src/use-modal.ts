@@ -123,7 +123,7 @@ export function useSoftDismiss<T extends Node>({ softDismiss: { onClose, getElem
         }
     }, [])
 
-    const {..._unused } = useActiveElement({
+    const { ..._unused } = useActiveElement({
         ...activeElement,
 
         onLastActiveElementChange: useCallback((newElement: Element, prev: Element | undefined) => {
@@ -146,33 +146,38 @@ export function useSoftDismiss<T extends Node>({ softDismiss: { onClose, getElem
 
 
     const { useRefElementProps } = useRefElement<T>({
+        onMount: useCallback(() => { debugger; }, []),
+        onUnmount: useCallback(() => { debugger; }, []),
         onElementChange: useCallback((e: T | null) => {
-            const document = e?.ownerDocument;
-            const window = document?.defaultView;
+            debugger;
+            if (e) {
+                const document = e.ownerDocument;
+                const window = document?.defaultView;
 
-            // Since everything else is inert, we listen for captured clicks on the window
-            // (we don't use onClick since that doesn't fire when clicked on empty/inert areas)
-            // Note: We need a *separate* touch event on mobile Safari, because
-            // it doesn't let click events bubble or be captured from traditionally non-interactive elements,
-            // but touch events work as expected.
-            const mouseDown = (e: MouseEvent) => { if (getOpen()) onBackdropClick(e); };
-            const touchStart = (e: TouchEvent) => { if (getOpen()) onBackdropClick(e); };
-            const keyDown = (e: KeyboardEvent) => { if (e.key === "Escape") { stableOnClose("escape"); } };
+                // Since everything else is inert, we listen for captured clicks on the window
+                // (we don't use onClick since that doesn't fire when clicked on empty/inert areas)
+                // Note: We need a *separate* touch event on mobile Safari, because
+                // it doesn't let click events bubble or be captured from traditionally non-interactive elements,
+                // but touch events work as expected.
+                const mouseDown = (e: MouseEvent) => { if (getOpen()) onBackdropClick(e); };
+                const touchStart = (e: TouchEvent) => { if (getOpen()) onBackdropClick(e); };
+                const keyDown = (e: KeyboardEvent) => { if (e.key === "Escape") { stableOnClose("escape"); } };
 
-            window?.addEventListener("mousedown", mouseDown, { capture: true });
-            window?.addEventListener("touchstart", touchStart, { capture: true });
-            window?.addEventListener("keydown", keyDown);
+                window?.addEventListener("mousedown", mouseDown, { capture: true });
+                window?.addEventListener("touchstart", touchStart, { capture: true });
+                window?.addEventListener("keydown", keyDown);
 
-            return () => {
-                window?.removeEventListener("mousedown", mouseDown);
-                window?.removeEventListener("touchstart", touchStart);
-                window?.removeEventListener("keydown", keyDown);
+                return () => {
+                    window?.removeEventListener("mousedown", mouseDown);
+                    window?.removeEventListener("touchstart", touchStart);
+                    window?.removeEventListener("keydown", keyDown);
+                }
             }
         }, [])
     });
 
     return {
-        useSoftDismissProps: useCallback((props: h.JSX.HTMLAttributes<T>): h.JSX.HTMLAttributes<T> => (useRefElementProps(props)), []),
+        useSoftDismissProps: useCallback((props: h.JSX.HTMLAttributes<T>): h.JSX.HTMLAttributes<T> => { debugger; return useRefElementProps(props) }, []),
         softDismiss: {
             onBackdropClick,
         }
@@ -250,7 +255,6 @@ export function useModal<FocusContainerElement extends HTMLElement, ModalElement
         const { useRandomIdReferencerElementProps: useTitleIdReferencerElementProps } = useTitleIdReferencerElement<ModalElement>("aria-labelledby" as never);
         const { useRandomIdReferencerElementProps: useBodyIdReferencerElementProps } = useBodyIdReferencerElement<ModalElement>("aria-describedby" as never);
         console.assert(!ariaModal);
-        const { useFocusTrapProps } = useFocusTrap<ModalElement>({ trapActive: open });
         useEffect(() => {
             if (open)
                 stableFocusSelf();
@@ -258,7 +262,7 @@ export function useModal<FocusContainerElement extends HTMLElement, ModalElement
         const p1 = useBodyIdReferencerElementProps(p0);
         const p2 = useModalIdAsSourceProps(p1);
         const pFinal = useTitleIdReferencerElementProps(p2);
-        return useFocusTrapProps(useSoftDismissProps(useMergedProps<ModalElement>(useModalRefElement({ role: role || "dialog" }), descriptive ? pFinal : p2)));
+        return useSoftDismissProps(useMergedProps<ModalElement>(useModalRefElement({ role: role || "dialog" }), descriptive ? pFinal : p2));
     }
 
     const useModalTitle = useCallback<UseModalTitle<TitleElement>>(function useModalTitle() {

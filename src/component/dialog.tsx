@@ -36,9 +36,11 @@ export function defaultRenderModal<FocusContainerElement extends HTMLElement, Di
 
         const title = createElement(tagTitle as never, titleProps, titleChildren);
         const body = createElement(tagBody as never, bodyProps, bodyChildren);
-        const dialog = createElement(tagDialog as never, { ...dialogProps, children: <>{dialogChildren}{title}{body}</> });
+        const dialog = createElement(tagDialog as never, dialogProps, dialogChildren, title, body);
+
         const backdrop = createElement(tagBackdrop as never, backdropProps, backdropChildren);
-        const focusContainer = createElement(tagFocusContainer as never, focusContainerProps, <>{focusContainerChildren}{dialog}{backdrop}</>)
+        const focusContainer = createElement(tagFocusContainer as never, focusContainerProps, <div>{focusContainerChildren}{dialog}{backdrop}</div>);
+
         return defaultRenderPortal({
             portalId,
             children: focusContainer
