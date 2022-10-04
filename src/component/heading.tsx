@@ -1,11 +1,11 @@
 import { ComponentChildren, createContext, createElement, h } from "preact";
 import { memo } from "preact/compat";
 import { useContext } from "preact/hooks";
-import { warnOnOverwrite } from "../props";
+import { ElementToTag, warnOnOverwrite } from "../props";
 
 const HeadingLevelContext = createContext(0);
 
-export const Heading = memo(function Heading({ children, heading, ...props }: { heading: ComponentChildren } & h.JSX.HTMLAttributes<HTMLHeadingElement>) {
+export const Heading = memo(function Heading<T extends Element>({ children, heading, ...props }: { heading: ComponentChildren } & h.JSX.HTMLAttributes<T>) {
     const headingLevelBeforeUs = useContext(HeadingLevelContext);
     const newHeadingLevel = headingLevelBeforeUs + 1;
     let tag: string;

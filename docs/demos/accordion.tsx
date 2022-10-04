@@ -15,9 +15,10 @@ function getDocument() {
 const DemoAccordionSection = memo(function DemoAccordionSection({ index, body, heading, disabled, open }: { open?: boolean, disabled: boolean, index: number, heading: ComponentChildren, body: ComponentChildren }) {
     return <AccordionSection<HTMLButtonElement, HTMLDivElement> index={index} tagButton="button" open={open} disabled={disabled} getDocument={getDocument} render={defaultRenderAccordionSection({
         makePropsBody: (info) => { return { hidden: !info.accordionSection.expanded, children: body } },
-        makePropsHeading: () => { return { children: heading } },
+        makePropsHeadingButton: () => { return { children: heading } },
+        makePropsHeadingContainer: () => ({}),
         tagBody: "div",
-        tagHeading: "button"
+        tagHeadingButton: "button"
     })} />
 })
 
