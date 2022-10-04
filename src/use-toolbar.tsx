@@ -4,7 +4,7 @@ import { useCallback } from "preact/hooks";
 import { PropModifier, warnOnOverwrite } from "./props";
 
 export interface UseToolbarParameters extends UseListNavigationParameters<never, "navigationDirection", never, never, never> {
-    toolbar: { orientation: "horizontal" | "vertical"; }
+    toolbar: { orientation: "horizontal" | "vertical"; role?: string; }
 }
 
 export interface UseToolbarReturnTypeInfo<ChildElement extends Element> extends UseListNavigationReturnTypeInfo<ChildElement, {}, never> {
@@ -23,7 +23,7 @@ export interface UseToolbarChildReturnTypeWithHooks<ChildElement extends Element
     useToolbarChildProps: PropModifier<ChildElement>;
 }
 
-export function useToolbar<ContainerElement extends Element, ChildElement extends Element>({ linearNavigation, listNavigation, managedChildren, rovingTabIndex, typeaheadNavigation, toolbar: { orientation } }: UseToolbarParameters): UseToolbarReturnTypeWithHooks<ContainerElement, ChildElement> {
+export function useToolbar<ContainerElement extends Element, ChildElement extends Element>({ linearNavigation, listNavigation, managedChildren, rovingTabIndex, typeaheadNavigation, toolbar: { orientation, role } }: UseToolbarParameters): UseToolbarReturnTypeWithHooks<ContainerElement, ChildElement> {
     const {
         useListNavigationChild,
         useListNavigationProps,
@@ -45,7 +45,7 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
     }, [])
 
     function useToolbarProps(p: h.JSX.HTMLAttributes<ContainerElement>) {
-        warnOnOverwrite("useToolbar", "role", p.role, "toolbar");
+        warnOnOverwrite("useToolbar", "role", p.role, (role ?? "toolbar"));
         return useListNavigationProps(p);
     }
 
