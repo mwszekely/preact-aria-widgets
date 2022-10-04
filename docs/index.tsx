@@ -16,6 +16,7 @@ import * as Tooltip from "./demos/tooltip"
 import * as Toast from "./demos/toast"
 import * as Table from "./demos/table"
 import * as Gridlist from "./demos/gridlist"
+import * as Toolbar from "./demos/toolbar"
 
 //import { options } from "preact";
 //options.debounceRendering = queueMicrotask;
@@ -26,6 +27,7 @@ import * as Gridlist from "./demos/gridlist"
 const Component = () => {
     return (
         <Heading heading="Demos">
+            <Heading heading="Toolbar"><Toolbar.Demo /></Heading>
             <Heading heading="Dialog"><Dialog.Demo /></Heading>
             <Heading heading="Gridlist"><Gridlist.Demo /></Heading>
             <Heading heading="Table"><Table.Demo /></Heading>

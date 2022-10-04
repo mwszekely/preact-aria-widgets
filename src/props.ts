@@ -1,4 +1,4 @@
-import { h, Ref } from "preact";
+import { ComponentType, h, Ref } from "preact";
 
 export type RefFromTag<T extends keyof h.JSX.IntrinsicElements> = NonNullable<h.JSX.IntrinsicElements[T]["ref"]> & Ref<any>;
 export type ElementFromRef<R extends Ref<any>> = R extends Ref<infer E> ? E : EventTarget;
@@ -8,6 +8,11 @@ export type ElementToTag<E extends EventTarget> = keyof SubType<HTMLElementTagNa
 type SubType<Base, Condition> = Pick<Base, {
     [Key in keyof Base]: Base[Key] extends Condition ? Key : never
 }[keyof Base]>;
+
+
+export type PropsOfType<T> =
+    T extends keyof h.JSX.IntrinsicElements ? h.JSX.IntrinsicElements[T] : 
+    T extends ComponentType<infer P>? P : never;
 
 /**
  * For times when more than just the abstract element type is needed,
@@ -80,3 +85,4 @@ export function debugLog(who: DebugLogTypes, ...args: Parameters<(typeof console
 }
 
 export type PropModifier<T extends EventTarget> = (props: h.JSX.HTMLAttributes<T>) => h.JSX.HTMLAttributes<T>;
+export type PropModifier2<P> = (props: P) => P;

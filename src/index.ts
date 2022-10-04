@@ -15,6 +15,7 @@ export { useSlider, SliderThumbInfo, RangeChangeEvent, UseSliderParameters as Us
 export { useToasts, UseToast, UseToastParameters } from "./use-toasts";
 export { useTable, TableValueType, UseTableBody, UseTableBodyParameters, UseTableBodyReturnTypeInfo, UseTableBodyReturnTypeWithHooks, UseTableCell, UseTableCellParameters, UseTableCellReturnTypeInfo, UseTableCellReturnTypeWithHooks, UseTableCellSubInfo, UseTableParameters, UseTableReturnTypeInfo, UseTableReturnTypeWithHooks, UseTableRow, UseTableRowParameters, UseTableRowReturnTypeInfo, UseTableRowReturnTypeWithHooks, UseTableRowSubInfo, } from "./use-table";
 export { useGridlist, UseGridlistChild, UseGridlistChildParameters, UseGridlistChildReturnTypeInfo, UseGridlistChildReturnTypeWithHooks, UseGridlistChildSubInfo, UseGridlistParameters, UseGridlistReturnTypeInfo, UseGridlistReturnTypeWithHooks, UseGridlistRow, UseGridlistRowParameters, UseGridlistRowReturnTypeInfo, UseGridlistRowReturnTypeWithHooks, UseGridlistRowSubInfo, UseGridlistSection, UseGridlistSectionParameters, UseGridlistSectionReturnTypeInfo, UseGridlistSectionReturnTypeWithHooks } from "./use-gridlist"
+export { useToolbar, UseToolbarChild, UseToolbarChildParameters, UseToolbarChildReturnTypeInfo, UseToolbarChildReturnTypeWithHooks, UseToolbarParameters, UseToolbarReturnTypeInfo, UseToolbarReturnTypeWithHooks } from "./use-toolbar"
 
 export { Accordion, AccordionProps, AccordionSection, AccordionSectionProps, defaultRenderAccordionSection } from "./component/accordion"
 export { Button, ButtonProps, defaultRenderButton } from "./component/button"
@@ -32,8 +33,8 @@ export { TabProps, Tabs, Tab, TabPanel, TabsProps, defaultRenderTabs, defaultRen
 export { Toast, ToastProps, Toasts, ToastsProps } from "./component/toasts"
 export { Tooltip, TooltipProps, defaultRenderTooltip } from "./component/tooltip"
 export { Heading, HeadingReset } from "./component/heading"
-
 export { Gridlist, GridlistChild, GridlistChildProps, GridlistFootProps, GridlistHeadProps, GridlistProps, GridlistRow, GridlistRowProps, GridlistSection, GridlistSectionProps, defaultRenderGridlist, defaultRenderGridlistChild, defaultRenderGridlistFoot, defaultRenderGridlistHead, defaultRenderGridlistRow, defaultRenderGridlistSection } from "./component/gridlist"
+export { Toolbar, ToolbarChild, ToolbarChildProps, ToolbarProps, defaultRenderToolbar, defaultRenderToolbarChild } from "./component/toolbar"
 
 export { EventDetail } from "./props";
 export type { TagSensitiveProps } from "./props";
