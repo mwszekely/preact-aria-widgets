@@ -3,7 +3,7 @@ import { UseListNavigationChildParameters, useListNavigationSingleSelection, Use
 import { UseChildrenHaveFocusParameters, UseHasFocusParameters } from "preact-prop-helpers/use-has-focus";
 import { useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
 import { debugLog, ElementToTag, EnhancedEvent, enhanceEvent, TagSensitiveProps } from "./props";
-import { useCheckboxLike, useLabel } from "./use-label";
+import { useCheckboxLike, UseCheckboxLikeReturnTypeInfo, useLabel } from "./use-label";
 
 //type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RadioChangeEvent<E extends EventTarget, V extends number | string> = EnhancedEvent<E, Event, { selectedValue: V | undefined }>;
@@ -14,18 +14,11 @@ export interface UseRadioGroupParameters<V extends string | number, GroupElement
 
         selectedValue: V | null;
         onSelectedValueChange(event: RadioChangeEvent<InputElement, V>): void;
-        //onInput(event: RadioChangeEvent<h.JSX.TargetedEvent<LabelElement>, V>): void;
         tagGroup: ElementToTag<GroupElement>;
         tagGroupLabel: ElementToTag<GroupLabelElement>;
     }
     childrenHaveFocus: UseChildrenHaveFocusParameters["childrenHaveFocus"];
 }
-
-/*export interface UseRadioInfoBase extends ListNavigationChildInfoBase<"tabbable" | "selected"> {
-    setChecked(checked: boolean): void;
-    getChecked(): boolean | null;
-}*/
-
 
 
 
@@ -39,10 +32,6 @@ export interface UseRadioParameters<V extends string | number, I extends Element
     }
     hasFocusInput: UseHasFocusParameters<I>;
     hasFocusLabel: UseHasFocusParameters<IL>;
-    /*Omit<UseCheckboxLikeParameters<I, IL>, "onInput" | "role" | "checked"> & {
-        info: Omit<Info, "setChecked" | "getChecked" | "blurSelf" | "getElement" | "focusSelf">;
-        
-    }*/
 }
 
 export interface UseRadioGroupReturnTypeInfo<V extends string | number, I extends Element> extends UseListNavigationSingleSelectionReturnTypeInfo<I, {}, never> {
@@ -71,13 +60,8 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
     debugLog("useRadioGroup", selectedValue);
     const { getElement: _getRadioGroupParentElement, useRefElementProps } = useRefElement<G>({});
 
-    //const getSelectedIndex = useCallback((selectedValue: V) => { return byName.current.get(selectedValue) ?? 0 }, [])
-
     const [selectedIndex, setSelectedIndex] = useState<number | null>(0);
     const byName = useRef(new Map<V, any>());
-    //const stableOnInput = useStableCallback(onSelectedValueChange);
-
-    //const [anyRadiosFocused, setAnyRadiosFocused, getAnyRadiosFocused] = useState(false);
 
     const { useLabelInput: useGroupLabelInput, useLabelLabel: useGroupLabelLabel } = useLabel<G, GL>({ label: { prefixLabel: "aria-radio-group-label-", tagInput: tagGroup as never, tagLabel: tagGroupLabel as never, prefixInput: "aria-radio-group-" } })
     const { useLabelInputProps: useGroupLabelInputProps } = useGroupLabelInput();
@@ -100,31 +84,12 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
         typeaheadNavigation,
         childrenHaveFocus
     });
-
-    // Track whether the currently focused element is a child of the radio group parent element.
-    // When it's not, we reset the tabbable index back to the currently selected element.
-    //const { useActiveElementProps } = useActiveElement<G>({ onActiveElementChange: useCallback((activeElement: Node | null) => setAnyRadiosFocused(!!(getRadioGroupParentElement()?.contains(activeElement))), []) });
-    /*useEffect(() => {
-        if (!anyRadiosFocused)
-            navigateToIndex(selectedIndex ?? 0);
-    }, [anyRadiosFocused, selectedIndex, navigateToIndex]);*/
-
-
     const useRadioGroupProps = useCallback(({ ...props }: h.JSX.HTMLAttributes<G>): h.JSX.HTMLAttributes<G> => {
         props.role = "radiogroup";
         return useGroupLabelInputProps(useListNavigationSingleSelectionProps(useRefElementProps(props)));
     }, [useRefElementProps])
 
     const useRadioGroupLabelProps = useCallback((props: h.JSX.HTMLAttributes<GL>): h.JSX.HTMLAttributes<GL> => { return useGroupLabelLabelProps(props); }, [useGroupLabelLabelProps]);
-
-    //const correctedIndex = (selectedIndex == null || selectedIndex < 0 || selectedIndex >= managedChildren.length) ? null : selectedIndex;
-    /*const { onChildrenMountChange } = useChildrenFlag({
-        initialIndex: 0,
-        children,
-        key: "selected"
-        //setChildFlag: (i, checked) => managedChildren[i]?.setChecked(checked),
-        //getChildFlag: ((i) => managedChildren[i]?.getChecked() ?? false)
-    });*/
 
     useEffect(() => {
         if (selectedValue == null) {
@@ -148,8 +113,6 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
     }) {
         const index = managedChild.index;
         debugLog("useRadio", index);
-        //const [checked, setChecked, getChecked] = useState<boolean | null>(null);
-
         const onInput = useStableCallback((e: h.JSX.TargetedEvent<I>) => {
             e.preventDefault();
             onSelectedIndexChange(e, index);
@@ -166,7 +129,7 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
 
         const { singleSelection: { selected: checked } } = listNavRet;
 
-        const { useCheckboxLikeInputElement, useCheckboxLikeLabelElement } = useCheckboxLike<I, IL>({
+        const { useCheckboxLikeInputElement, useCheckboxLikeLabelElement, ...checkboxRet } = useCheckboxLike<I, IL>({
             checkboxLike: {
                 checked: (checked ?? false),
                 labelPosition,
@@ -227,9 +190,8 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
         return {
             useRadioInput,
             useRadioLabel,
-            ...listNavRet
-            //checked: checked ?? false,
-            //tabbable: tabbable ?? false
+            ...listNavRet,
+            ...checkboxRet
         }
 
     }, [byName, useListNavigationSingleSelectionChild]);
@@ -246,9 +208,9 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
     }
 }
 
-export interface UseRadioReturnTypeInfo<I extends Element> extends UseListNavigationSingleSelectionChildReturnTypeInfo<I> { }
+export interface UseRadioReturnTypeInfo<I extends Element, IL extends Element> extends UseListNavigationSingleSelectionChildReturnTypeInfo<I>, UseCheckboxLikeReturnTypeInfo<I, IL> { }
 
-export interface UseRadioReturnTypeWithHooks<I extends Element, L extends Element> extends UseRadioReturnTypeInfo<I> {
+export interface UseRadioReturnTypeWithHooks<I extends Element, L extends Element> extends UseRadioReturnTypeInfo<I, L> {
     useRadioInput: UseRadioInput<I>;
     useRadioLabel: UseRadioLabel<L>;
 }

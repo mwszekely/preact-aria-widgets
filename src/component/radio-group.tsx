@@ -29,7 +29,7 @@ export interface RadioProps<V extends string | number, InputElement extends Elem
     Get<UseRadioParameters<V, InputElement, LabelElement>, "hasFocusInput">,
     UseHasFocusParameters<InputElement>,
     Get<UseRadioParameters<V, InputElement, LabelElement>, "radio"> {
-    render(info: UseRadioReturnTypeInfo<InputElement>, modifyInputProps: PropModifier<InputElement>, modifyLabelProps: PropModifier<LabelElement>): VNode<any>;
+    render(info: UseRadioReturnTypeInfo<InputElement, LabelElement>, modifyInputProps: PropModifier<InputElement>, modifyLabelProps: PropModifier<LabelElement>): VNode<any>;
 }
 
 export function defaultRenderRadioGroup<V extends string | number, InputElement extends Element, LabelElement extends Element>({ tagGroup, tagLabel, makePropsGroup, makePropsLabel }: { tagLabel: ElementToTag<LabelElement>, tagGroup: ElementToTag<InputElement>, makePropsLabel: (info: UseRadioGroupReturnTypeInfo<V, InputElement>) => h.JSX.HTMLAttributes<LabelElement>, makePropsGroup: (info: UseRadioGroupReturnTypeInfo<V, InputElement>) => h.JSX.HTMLAttributes<InputElement> }) {
@@ -89,12 +89,12 @@ export const RadioGroup = memo(function RadioGroup<V extends string | number, Gr
     )
 })
 
-export interface DefaultRenderRadioParameters<I extends HTMLElement, L extends HTMLElement> extends DefaultRenderCheckboxLikeParameters<I, L, UseRadioReturnTypeInfo<I>> {
+export interface DefaultRenderRadioParameters<I extends HTMLElement, L extends HTMLElement> extends DefaultRenderCheckboxLikeParameters<I, L, UseRadioReturnTypeInfo<I, L>> {
 
 }
 
 export function defaultRenderRadio<I extends HTMLElement, L extends HTMLElement>({ tagInput, tagLabel, makeInputProps, makeLabelProps, labelPosition }: DefaultRenderRadioParameters<I, L>) {
-    return defaultRenderCheckboxLike<I, L, UseRadioReturnTypeInfo<I>>({ labelPosition, tagInput, tagLabel, makeInputProps, makeLabelProps });
+    return defaultRenderCheckboxLike<I, L, UseRadioReturnTypeInfo<I, L>>({ labelPosition, tagInput, tagLabel, makeInputProps, makeLabelProps });
 }
 
 export const Radio = memo(function Radio<V extends string | number, InputElement extends Element, LabelElement extends Element>({ disabled, index, text, hidden, tagInput, labelPosition, tagLabel, value, render, flags, focusSelf, getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange }: RadioProps<V, InputElement, LabelElement>) {
