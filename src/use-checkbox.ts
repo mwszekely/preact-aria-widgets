@@ -22,8 +22,7 @@ export interface UseCheckboxParameters<I extends Element, L extends Element> {
 }
 
 export interface UseCheckboxReturnTypeInfo<InputType extends Element, LabelType extends Element> extends UseCheckboxLikeReturnTypeInfo<InputType, LabelType> {
-    //checkboxLike: UseCheckboxLikeReturnType<InputType, LabelType>["checkboxLike"];
-    //label: UseCheckboxLikeReturnType<InputType, LabelType>["label"];
+
 }
 
 export interface UseCheckboxReturnTypeWithHooks<InputType extends Element, LabelType extends Element> extends UseCheckboxReturnTypeInfo<InputType, LabelType> {

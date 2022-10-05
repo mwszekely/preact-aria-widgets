@@ -15,7 +15,7 @@ export interface UseToastsParameters extends UseManagedChildrenParameters<number
 
 type Showing = never; //"showing";
 
-export interface UseToastParameters extends UseManagedChildParameters<number, ToastInfo, Showing, "subInfo"> {
+export interface UseToastParameters<C, K extends string, SubbestInfo> extends UseManagedChildParameters<number, ToastInfo<C>, Showing | K, never, SubbestInfo> {
     //info: Omit<ToastInfoBase, "dismissed" | "getStatus" | "setStatus" | "focus" | "flags">;
     toast: {
         politeness?: "polite" | "assertive";
@@ -23,16 +23,17 @@ export interface UseToastParameters extends UseManagedChildParameters<number, To
     }
 }
 
-export interface ToastInfo {
+export interface ToastInfo<C> {
     //dismissed: boolean;
     setNumberAheadOfMe: StateUpdater<number>;
     focus(): void;
     show(): void;
+    subInfo: C;
     //setStatus: StateUpdater<"pending" | "active" | "dismissed">;
     //getStatus(): null | "pending" | "active" | "dismissed";
 }
 
-export type UseToast = (args: UseToastParameters) => UseToastReturnTypeInfo;
+export type UseToast<C, K extends string> = (args: UseToastParameters<C, K, C>) => UseToastReturnTypeInfo;
 
 export interface UseToastReturnTypeInfo {
     toast: {
@@ -44,18 +45,18 @@ export interface UseToastReturnTypeInfo {
     }
 }
 
-export interface UseToastsReturnTypeInfo extends UseManagedChildrenReturnTypeInfo<number, ToastInfo, Showing> {
+export interface UseToastsReturnTypeInfo<C> extends UseManagedChildrenReturnTypeInfo<number, ToastInfo<C>, Showing> {
     toasts: {};
 }
 
 export interface UseToastReturnTypeWithHooks extends UseToastReturnTypeInfo { }
 
-export interface UseToastsReturnTypeWithHooks<ContainerType extends Element> extends UseToastsReturnTypeInfo {
-    useToast: UseToast;
+export interface UseToastsReturnTypeWithHooks<ContainerType extends Element, C, K extends string> extends UseToastsReturnTypeInfo<C> {
+    useToast: UseToast<C, K>;
     useToastContainerProps(props: h.JSX.HTMLAttributes<ContainerType>): h.JSX.HTMLAttributes<ContainerType>;
 }
 
-export function useToasts<ContainerType extends Element>({ managedChildren: { onChildrenMountChange: ocmu, onAfterChildLayoutEffect }, toasts: { visibleCount } }: UseToastsParameters): UseToastsReturnTypeWithHooks<ContainerType> {
+export function useToasts<ContainerType extends Element, C, K extends string>({ managedChildren: { onChildrenMountChange: ocmu, onAfterChildLayoutEffect }, toasts: { visibleCount } }: UseToastsParameters): UseToastsReturnTypeWithHooks<ContainerType, C, K> {
     debugLog("useToasts");
 
     // Normally, this does just look like [0, 1, 2, 3], etc
@@ -70,7 +71,7 @@ export function useToasts<ContainerType extends Element>({ managedChildren: { on
     const getMaxVisibleCount = useStableGetter(visibleCount);
 
     const { getElement, useRefElementProps } = useRefElement<ContainerType>({});
-    const { useManagedChild, ...childInfo } = useManagedChildren<number, ToastInfo, Showing>({ managedChildren: { onAfterChildLayoutEffect, onChildrenMountChange: ocmu } });
+    const { useManagedChild, ...childInfo } = useManagedChildren<number, ToastInfo<C>, K | Showing>({ managedChildren: { onAfterChildLayoutEffect, onChildrenMountChange: ocmu } });
 
     const { managedChildren: { children: toastQueue } } = childInfo;
 
@@ -153,7 +154,7 @@ export function useToasts<ContainerType extends Element>({ managedChildren: { on
         changeIndex(activeToastIndex);
     }, [activeToastIndex]);*/
 
-    const useToast: UseToast = useCallback(({ toast: { politeness, timeout }, managedChild: { index } }: UseToastParameters): UseToastReturnTypeWithHooks => {
+    const useToast: UseToast<C, K> = useCallback(({ toast: { politeness, timeout }, managedChild: { index, flags }, subInfo }) => {
         debugLog("useToast", index);
         const [numberOfToastsAheadOfUs, setNumberOfToastsAheadOfUs] = useState(Infinity);
         const getIndex = useStableGetter(index);
@@ -209,7 +210,7 @@ export function useToasts<ContainerType extends Element>({ managedChildren: { on
         })*/
         //const showingRef = useRef<ChildFlagOperations>({ get: getShowing, set: setShowing, isValid: returnTrue });
 
-        const __: void = useManagedChild({ managedChild: { index, flags: { /*showing: showingRef.current*/ }, subInfo: { focus, setNumberAheadOfMe: setNumberOfToastsAheadOfUs, show } } });
+        const __: void = useManagedChild({ managedChild: { index, flags: { ...flags } }, subInfo: { focus, setNumberAheadOfMe: setNumberOfToastsAheadOfUs, show, subInfo } });
 
         //const isActive = (status === "active");
         const [triggerIndex, setTriggerIndex] = useState(1);

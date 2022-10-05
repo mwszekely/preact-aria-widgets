@@ -2,7 +2,7 @@ import { h } from "preact";
 import { UseHasFocusParameters, useRandomId, useStableCallback } from "preact-prop-helpers";
 import { useListNavigationSingleSelection, UseListNavigationSingleSelectionChildParameters, UseListNavigationSingleSelectionChildReturnTypeInfo, UseListNavigationSingleSelectionParameters, UseListNavigationSingleSelectionReturnTypeInfo } from "preact-prop-helpers/use-list-navigation";
 import { useCallback } from "preact/hooks";
-import { debugLog, ElementToTag, enhanceEvent, EventDetail, warnOnOverwrite } from "./props";
+import { debugLog, ElementToTag, enhanceEvent, EventDetail, overwriteWithWarning } from "./props";
 import { useLabel, UseLabelReturnTypeInfo } from "./use-label";
 
 export type ListboxSingleSelectEvent<E extends EventTarget> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
@@ -16,14 +16,14 @@ export interface UseListboxSingleParameters<LabelElement extends Element, ListEl
     }
 }
 
-export interface UseListboxSingleItemParameters<E extends Element> extends Omit<UseListNavigationSingleSelectionChildParameters<E, {}, never, never, never, never, never>, "subInfo"> {
+export interface UseListboxSingleItemParameters<E extends Element, C, K extends string, SubbestInfo> extends UseListNavigationSingleSelectionChildParameters<E, C, K, never, never, never, SubbestInfo> {
     listboxSingleItem: { disabled?: boolean; }
     hasFocus: UseHasFocusParameters<E>;
 }
 
 
 
-export type UseListboxSingleItem<ListItemElement extends Element> = (info: UseListboxSingleItemParameters<ListItemElement>) => UseListboxSingleItemReturnTypeWithHooks<ListItemElement>;
+export type UseListboxSingleItem<ListItemElement extends Element, C, K extends string> = (info: UseListboxSingleItemParameters<ListItemElement, C, K, C>) => UseListboxSingleItemReturnTypeWithHooks<ListItemElement>;
 
 export interface UseListboxSingleItemReturnTypeInfo<ListItemElement extends Element> extends UseListNavigationSingleSelectionChildReturnTypeInfo<ListItemElement> {
 }
@@ -32,17 +32,17 @@ export interface UseListboxSingleItemReturnTypeWithHooks<ListItemElement extends
     useListboxSingleItemProps: (props: h.JSX.HTMLAttributes<ListItemElement>) => h.JSX.HTMLAttributes<ListItemElement>;
 }
 
-export interface UseListboxSingleReturnTypeInfo<ListItemElement extends Element> extends UseListNavigationSingleSelectionReturnTypeInfo<ListItemElement, {}, never>, UseLabelReturnTypeInfo {
+export interface UseListboxSingleReturnTypeInfo<ListItemElement extends Element, C, K extends string> extends UseListNavigationSingleSelectionReturnTypeInfo<ListItemElement, C, K>, UseLabelReturnTypeInfo {
 
 }
 
-export interface UseListboxSingleReturnTypeWithHooks<LabelElement extends Element, ListElement extends Element, ListItemElement extends Element> extends UseListboxSingleReturnTypeInfo<ListItemElement> {
-    useListboxSingleItem: UseListboxSingleItem<ListItemElement>;
+export interface UseListboxSingleReturnTypeWithHooks<LabelElement extends Element, ListElement extends Element, ListItemElement extends Element, C, K extends string> extends UseListboxSingleReturnTypeInfo<ListItemElement, C, K> {
+    useListboxSingleItem: UseListboxSingleItem<ListItemElement, C, K>;
     useListboxSingleProps: (props: h.JSX.HTMLAttributes<ListElement>) => h.JSX.HTMLAttributes<ListElement>;
     useListboxSingleLabel: () => { useListboxSingleLabelProps: (props: h.JSX.HTMLAttributes<LabelElement>) => h.JSX.HTMLAttributes<LabelElement>; }
 }
 
-export function useListboxSingle<LabelElement extends Element, ListElement extends Element, ListItemElement extends Element>({
+export function useListboxSingle<LabelElement extends Element, ListElement extends Element, ListItemElement extends Element, C, K extends string>({
     listboxSingle: { tagLabel, tagList, onSelect, ..._lbs },
     singleSelection: { selectedIndex, ...ss },
     linearNavigation: { ...ln },
@@ -51,7 +51,7 @@ export function useListboxSingle<LabelElement extends Element, ListElement exten
     rovingTabIndex: { ...rti },
     typeaheadNavigation: { ...tn },
     childrenHaveFocus: { ...chf }
-}: UseListboxSingleParameters<LabelElement, ListElement>): UseListboxSingleReturnTypeWithHooks<LabelElement, ListElement, ListItemElement> {
+}: UseListboxSingleParameters<LabelElement, ListElement>): UseListboxSingleReturnTypeWithHooks<LabelElement, ListElement, ListItemElement, C, K> {
     debugLog("useListboxSingle", selectedIndex);
 
     const { useLabelInput, useLabelLabel, ...labelReturnType } = useLabel<ListElement, LabelElement>({
@@ -67,7 +67,7 @@ export function useListboxSingle<LabelElement extends Element, ListElement exten
         stableOnSelect(enhanceEvent<ListItemElement, Event, { selectedIndex: number }>(event, { selectedIndex: newIndex }))
     });
 
-    const { useListNavigationSingleSelectionChild, useListNavigationSingleSelectionProps, ...listReturnType } = useListNavigationSingleSelection<ListElement, ListItemElement, {}, never>({
+    const { useListNavigationSingleSelectionChild, useListNavigationSingleSelectionProps, ...listReturnType } = useListNavigationSingleSelection<ListElement, ListItemElement, C, K>({
         childrenHaveFocus: { ...chf },
         linearNavigation: { ...ln },
         listNavigation: { ...ls },
@@ -78,19 +78,19 @@ export function useListboxSingle<LabelElement extends Element, ListElement exten
         singleSelection: { ...ss, onSelectedIndexChange, selectedIndex },
         typeaheadNavigation: tn
     });
-    
+
     const { useLabelInputProps } = useLabelInput();
     const stableOnSelect = useStableCallback(onSelect ?? (() => { }));
 
 
-    const useListboxSingleItem = useCallback<UseListboxSingleItem<ListItemElement>>(({ listboxSingleItem: { disabled }, listNavigation, managedChild, rovingTabIndex, hasFocus }) => {
+    const useListboxSingleItem = useCallback<UseListboxSingleItem<ListItemElement, C, K>>(({ listboxSingleItem: { disabled }, listNavigation, managedChild, rovingTabIndex, hasFocus, subInfo }) => {
         debugLog("useListboxSingleItem", managedChild.index);
         const { rovingTabIndex: rti_ret, singleSelection: ss_ret, useListNavigationSingleSelectionChildProps } = useListNavigationSingleSelectionChild({
             managedChild,
             listNavigation,
             rovingTabIndex,
             hasFocus,
-            subInfo: {}
+            subInfo
         });
 
         return {
@@ -145,11 +145,9 @@ export function useListboxGroup<ContainerElement extends Element, HeadingElement
     const useListboxGroupHeadingProps = (props: h.JSX.HTMLAttributes<HeadingElement>): h.JSX.HTMLAttributes<HeadingElement> => {
         return useRandomIdSourceElementProps(props);
     };
-    const useListboxGroupContainerProps = ({ role, ...props }: h.JSX.HTMLAttributes<ContainerElement>): h.JSX.HTMLAttributes<ContainerElement> => {
-        return useRandomIdReferencerElementProps({
-            role: warnOnOverwrite("useListboxMultiGroupProps", "role", role, "group"),
-            ...props
-        })
+    const useListboxGroupContainerProps = (props: h.JSX.HTMLAttributes<ContainerElement>): h.JSX.HTMLAttributes<ContainerElement> => {
+        overwriteWithWarning("useListboxMultiGroupProps", props, "role", "group");
+        return useRandomIdReferencerElementProps(props);
     }
 
     return {

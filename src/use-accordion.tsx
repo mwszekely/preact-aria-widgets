@@ -4,31 +4,31 @@ import { useCallback, useRef } from "preact/hooks";
 import { debugLog } from "./props";
 import { useButton, UseButtonParameters } from "./use-button";
 
-export type UseAccordion<HeaderElement extends Element, BodyElement extends Element> = (args: UseAccordionParameters) => UseAccordionReturnTypeWithHooks<HeaderElement, BodyElement>;
-export type UseAccordionSection<HeaderElement extends Element, BodyElement extends Element> = (args: UseAccordionSectionParameters<HeaderElement>) => UseAccordionSectionReturnTypeWithHooks<HeaderElement, BodyElement>;
+export type UseAccordion<HeaderElement extends Element, BodyElement extends Element, AccSubInfo> = (args: UseAccordionParameters) => UseAccordionReturnTypeWithHooks<HeaderElement, BodyElement, AccSubInfo>;
+export type UseAccordionSection<HeaderElement extends Element, BodyElement extends Element, AccSubInfo> = (args: UseAccordionSectionParameters<HeaderElement, AccSubInfo, never, AccSubInfo>) => UseAccordionSectionReturnTypeWithHooks<HeaderElement, BodyElement>;
 
 export interface UseAccordionParameters extends UseLinearNavigationParameters<"navigateToFirst" | "navigateToLast" | "navigateToNext" | "navigateToPrev">, UseManagedChildrenParameters<number, never> {
     accordion: { initialIndex?: number | null; }
 }
 
-export interface UseAccordionReturnTypeInfo extends UseManagedChildrenReturnTypeInfo<number, UseAccordionSectionInfoBase, "tabbed" | "open"> {
+export interface UseAccordionReturnTypeInfo<AccSubInfo> extends UseManagedChildrenReturnTypeInfo<number, UseAccordionSectionInfoBase<AccSubInfo>, "tabbed" | "open"> {
     /** **STABLE** */
     accordion: { changeExpandedIndex: (arg: number | ((prevState: number | null) => number | null) | null) => number | null; }
 }
 
-export interface UseAccordionReturnTypeWithHooks<HeaderElement extends Element, BodyElement extends Element> extends UseAccordionReturnTypeInfo {
+export interface UseAccordionReturnTypeWithHooks<HeaderElement extends Element, BodyElement extends Element, AccSubInfo> extends UseAccordionReturnTypeInfo<AccSubInfo> {
     /** **STABLE** */
-    useAccordionSection: UseAccordionSection<HeaderElement, BodyElement>;
+    useAccordionSection: UseAccordionSection<HeaderElement, BodyElement, AccSubInfo>;
 }
 
-export interface UseAccordionSectionInfoBase {
+export interface UseAccordionSectionInfoBase<AccSubInfo> {
     setOpenFromParent(open: boolean): void;
     getOpenFromParent(): boolean | null;
     focus(): void;
+    subInfo: AccSubInfo;
 }
 
-export interface UseAccordionSectionParameters<HeaderElement extends Element> {
-    managedChildren: UseManagedChildParameters<number, UseAccordionSectionInfoBase, "tabbed" | "open", "subInfo" | "flags">["managedChild"];
+export interface UseAccordionSectionParameters<HeaderElement extends Element, AccSubInfo, K extends string, SubbestInfo> extends UseManagedChildParameters<number, UseAccordionSectionInfoBase<AccSubInfo>, K | "tabbed" | "open", never, SubbestInfo> {
     accordionSection: { open?: boolean | undefined; }
     button: Omit<UseButtonParameters<HeaderElement>["button"], "pressed" | "onPress">;
     hasFocus: UseHasFocusParameters<HeaderElement>;
@@ -58,11 +58,11 @@ export interface UseAccordionSectionReturnTypeWithHooks<HeaderElement extends El
 //export type UseAccordionSectionBody<E extends Element> = () => UseAccordionSectionBodyReturnType<E>;
 //export interface UseAccordionSectionBodyReturnType<E extends Element> { useAccordionSectionBodyProps: (props: h.JSX.HTMLAttributes<E>) => h.JSX.HTMLAttributes<E>; }
 
-export function useAccordion<HeaderElement extends HTMLElement, BodyElement extends HTMLElement | SVGElement>({ accordion: { initialIndex }, linearNavigation: { disableArrowKeys, disableHomeEndKeys, navigationDirection }, managedChildren: { onAfterChildLayoutEffect, onChildrenMountChange } }: UseAccordionParameters): UseAccordionReturnTypeWithHooks<HeaderElement, BodyElement> {
+export function useAccordion<HeaderElement extends HTMLElement, BodyElement extends HTMLElement | SVGElement, AccSubInfo>({ accordion: { initialIndex }, linearNavigation: { disableArrowKeys, disableHomeEndKeys, navigationDirection }, managedChildren: { onAfterChildLayoutEffect, onChildrenMountChange } }: UseAccordionParameters): UseAccordionReturnTypeWithHooks<HeaderElement, BodyElement, AccSubInfo> {
     debugLog("useAccordian");
     const [_currentFocusedIndex, setCurrentFocusedIndex, getCurrentFocusedIndex] = useState<number | null>(null);
 
-    const mcReturnType = useManagedChildren<number, UseAccordionSectionInfoBase, "tabbed" | "open">({
+    const mcReturnType = useManagedChildren<number, UseAccordionSectionInfoBase<AccSubInfo>, "tabbed" | "open">({
         managedChildren: {
             onChildrenMountChange: useStableCallback<OnChildrenMountChange<number>>((m, u) => { ocmc2(); onChildrenMountChange?.(m, u); }),
             onAfterChildLayoutEffect
@@ -109,7 +109,7 @@ export function useAccordion<HeaderElement extends HTMLElement, BodyElement exte
         }, [])
     })
 
-    const useAccordionSection: UseAccordionSection<HeaderElement, BodyElement> = useCallback<UseAccordionSection<HeaderElement, BodyElement>>(({ button: { disabled, tagButton }, accordionSection: { open: openFromUser }, managedChildren: { index }, hasFocus: { onFocusedInnerChanged, ...hasFocus } }) => {
+    const useAccordionSection: UseAccordionSection<HeaderElement, BodyElement, AccSubInfo> = useCallback<UseAccordionSection<HeaderElement, BodyElement, AccSubInfo>>(({ button: { disabled, tagButton }, accordionSection: { open: openFromUser }, managedChild: { index, flags }, subInfo, hasFocus: { onFocusedInnerChanged, ...hasFocus } }) => {
 
         debugLog("useAccordianSection");
         const [openFromParent, setOpenFromParent, getOpenFromParent] = useState<boolean | null>(null);
@@ -161,14 +161,15 @@ export function useAccordion<HeaderElement extends HTMLElement, BodyElement exte
                 index: index,
                 flags: {
                     open: openRef.current,
-                    tabbed: tabbedRef.current
-                },
-                subInfo: {
-                    focus,
-                    getOpenFromParent,
-                    setOpenFromParent
-                },
-                // info: { index, setOpenFromParent, getOpenFromParent, focus, flags: { open: openRef.current, tabbed: tabbedRef.current } }
+                    tabbed: tabbedRef.current,
+                    ...flags
+                }
+            },
+            subInfo: {
+                focus,
+                getOpenFromParent,
+                setOpenFromParent,
+                subInfo
             }
         });
 

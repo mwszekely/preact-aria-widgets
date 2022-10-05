@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { useListNavigation, UseListNavigationChildParameters, UseListNavigationChildReturnTypeInfo, UseListNavigationParameters, UseListNavigationReturnTypeInfo } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
-import { PropModifier, warnOnOverwrite } from "./props";
+import { PropModifier, overwriteWithWarning } from "./props";
 
 export interface UseToolbarParameters extends UseListNavigationParameters<never, "navigationDirection", never, never, never> {
     toolbar: { orientation: "horizontal" | "vertical"; role?: string; }
@@ -45,7 +45,7 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
     }, [])
 
     function useToolbarProps(p: h.JSX.HTMLAttributes<ContainerElement>) {
-        warnOnOverwrite("useToolbar", "role", p.role, (role ?? "toolbar"));
+        overwriteWithWarning("useToolbar", p, "role", (role ?? "toolbar"));
         return useListNavigationProps(p);
     }
 

@@ -1,6 +1,6 @@
 import { createElement, h, VNode } from "preact";
 import { memo } from "preact/compat";
-import { PropModifier } from "props";
+import { ElementToTag, PropModifier } from "props";
 import { useButton, UseButtonParameters } from "../use-button";
 
 type Get<T, K extends keyof T> = T[K];
@@ -11,9 +11,9 @@ export interface ButtonProps<E extends Node> extends
     render(button: PropModifier<E>): VNode<any>;
 }
 
-export function defaultRenderButton(tag: string, makeButtonProps: (info: {}) => h.JSX.HTMLAttributes<any>) {
+export function defaultRenderButton<E extends Element>({ tagButton, makePropsButton }: {tagButton: ElementToTag<E>, makePropsButton: (info: {}) => h.JSX.HTMLAttributes<E>}) {
     return function (modifyButtonProps: PropModifier<any>) {
-        return createElement(tag as any, modifyButtonProps(makeButtonProps({})));
+        return createElement(tagButton as any, modifyButtonProps(makePropsButton({})));
     }
 }
 

@@ -1,7 +1,7 @@
 import { ComponentChildren, createContext, createElement, h } from "preact";
 import { memo } from "preact/compat";
 import { useContext } from "preact/hooks";
-import { ElementToTag, warnOnOverwrite } from "../props";
+import { overwriteWithWarning } from "../props";
 
 const HeadingLevelContext = createContext(0);
 
@@ -14,7 +14,7 @@ export const Heading = memo(function Heading<T extends Element>({ children, head
     }
     else {
         tag = 'div';
-        props["aria-level"] = warnOnOverwrite("Heading", "aria-level", props["aria-level"], `${newHeadingLevel}`);
+        overwriteWithWarning("Heading", props, "aria-level", `${newHeadingLevel}`);
     }
 
     return (

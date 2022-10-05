@@ -3,7 +3,7 @@ import { UseHasFocusParameters, useListNavigation, UseListNavigationParameters, 
 import { UseListNavigationChildParameters, UseListNavigationChildReturnTypeInfo, UseListNavigationReturnTypeInfo } from "preact-prop-helpers/use-list-navigation";
 import { returnFalse, useEnsureStability, usePassiveState } from "preact-prop-helpers/use-passive-state";
 import { useCallback, useEffect, useRef } from "preact/hooks";
-import { debugLog, warnOnOverwrite } from "./props";
+import { debugLog, overwriteWithWarning } from "./props";
 import { useSoftDismiss, UseSoftDismissParameters, UseSoftDismissReturnTypeInfo } from "./use-modal";
 
 interface MSP {
@@ -165,8 +165,8 @@ export function useMenuSurface<MenuSurfaceElement extends Element, MenuParentEle
     };
 
     const useMenuSurfaceButtonProps = (props: h.JSX.HTMLAttributes<MenuButtonElement>): h.JSX.HTMLAttributes<MenuButtonElement> => {
-        props["aria-expanded"] = warnOnOverwrite("useMenuSurfaceButtonProps", "aria-expanded", open, open.toString());
-        props["aria-haspopup"] = warnOnOverwrite("useMenuSurfaceButtonProps", "aria-haspopup", role, role);
+        overwriteWithWarning("useMenuSurfaceButtonProps", props, "aria-expanded", open.toString());
+        overwriteWithWarning("useMenuSurfaceButtonProps", props, "aria-haspopup", role);
         return useButtonRefElementProps((useRandomIdReferencerElementProps(props)));
     };
 
@@ -265,8 +265,12 @@ export function useFocusSentinel<E extends Element>({ focusSentinel: { open, onC
     const onClick = () => stableOnClose();
 
     return {
-        useSentinelProps: function ({ tabIndex, ...p }: h.JSX.HTMLAttributes<E>): h.JSX.HTMLAttributes<E> {
-            return useMergedProps<E>({ onFocus, onClick, tabIndex: warnOnOverwrite("useFocusSentinel", "tabIndex", tabIndex, 0) }, p);
+        useSentinelProps: function (p: h.JSX.HTMLAttributes<E>): h.JSX.HTMLAttributes<E> {
+            overwriteWithWarning("useFocusSentinel", p, "tabIndex", 0)
+            return useMergedProps<E>({ 
+                onFocus, 
+                onClick
+            }, p);
         }
     }
 }
@@ -324,7 +328,7 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
                     onClose?.("escape");
                 else
                     onOpen?.();
-            }, 
+            },
             exclude: {},
             hasFocus: menuButtonHasFocus
         });

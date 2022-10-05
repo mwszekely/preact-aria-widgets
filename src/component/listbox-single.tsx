@@ -7,7 +7,7 @@ import { useListboxSingle, useListboxGroup, UseListboxSingleItem, UseListboxSing
 
 type Get<T, K extends keyof T> = T[K];
 
-export interface ListboxSingleProps<LabelElement extends Element, ListElement extends Element, ListItemElement extends Element> extends
+export interface ListboxSingleProps<LabelElement extends Element, ListElement extends Element, ListItemElement extends Element, C, K extends string> extends
     Get<UseListboxSingleParameters<LabelElement, ListElement>, "singleSelection">,
     Get<UseListboxSingleParameters<LabelElement, ListElement>, "linearNavigation">,
     Get<UseListboxSingleParameters<LabelElement, ListElement>, "listNavigation">,
@@ -17,7 +17,7 @@ export interface ListboxSingleProps<LabelElement extends Element, ListElement ex
     Get<UseListboxSingleParameters<LabelElement, ListElement>, "childrenHaveFocus">,
     Get<UseListboxSingleParameters<LabelElement, ListElement>, "listboxSingle"> {
     //tagLabel: ElementToTag<LabelElement>;
-    render(info: UseListboxSingleReturnTypeInfo<ListItemElement>, modifyPropsLabel: PropModifier<LabelElement>, modifyPropsList: PropModifier<ListElement>): VNode<any>;
+    render(info: UseListboxSingleReturnTypeInfo<ListItemElement, C, K>, modifyPropsLabel: PropModifier<LabelElement>, modifyPropsList: PropModifier<ListElement>): VNode<any>;
 }
 
 
@@ -25,19 +25,20 @@ export interface ListboxSingleProps<LabelElement extends Element, ListElement ex
 
 
 
-export interface ListboxSingleItemProps<ListboxItemElement extends Element> extends
-    Get<UseListboxSingleItemParameters<ListboxItemElement>, "managedChild">,
-    Omit<Get<UseListboxSingleItemParameters<ListboxItemElement>, "listNavigation">, "subInfo">,
-    Get<UseListboxSingleItemParameters<ListboxItemElement>, "rovingTabIndex">,
-    Get<UseListboxSingleItemParameters<ListboxItemElement>, "hasFocus">,
-    Get<UseListboxSingleItemParameters<ListboxItemElement>, "listboxSingleItem"> {
+export interface ListboxSingleItemProps<ListboxItemElement extends Element, C, K extends string> extends
+    Get<UseListboxSingleItemParameters<ListboxItemElement, C, K, C>, "managedChild">,
+    Get<UseListboxSingleItemParameters<ListboxItemElement, C, K, C>, "listNavigation">,
+    Get<UseListboxSingleItemParameters<ListboxItemElement, C, K, C>, "rovingTabIndex">,
+    Get<UseListboxSingleItemParameters<ListboxItemElement, C, K, C>, "hasFocus">,
+    Get<UseListboxSingleItemParameters<ListboxItemElement, C, K, C>, "listboxSingleItem"> {
     //tagListItem: ElementToTag<ListboxItemElement>;
+    subInfo: Get<UseListboxSingleItemParameters<ListboxItemElement, C, K, C>, "subInfo">,
     render(info: UseListboxSingleItemReturnTypeInfo<ListboxItemElement>, modifyListItemProps: PropModifier<ListboxItemElement>): VNode<any>;
 }
 
-const ListboxSingleContext = createContext<UseListboxSingleItem<any>>(null!);
+const ListboxSingleContext = createContext<UseListboxSingleItem<any, any, any>>(null!);
 
-function ListboxSingleU<LabelElement extends Element, ListElement extends HTMLElement, ListItemElement extends HTMLElement>({
+function ListboxSingleU<LabelElement extends Element, ListElement extends HTMLElement, ListItemElement extends HTMLElement, C, K extends string>({
     render,
 
     selectedIndex,
@@ -59,13 +60,13 @@ function ListboxSingleU<LabelElement extends Element, ListElement extends HTMLEl
     selectionMode,
     tagList,
     onSelect
-}: ListboxSingleProps<LabelElement, ListElement, ListItemElement>) {
+}: ListboxSingleProps<LabelElement, ListElement, ListItemElement, C, K>) {
     const {
         useListboxSingleItem,
         useListboxSingleLabel,
         useListboxSingleProps,
         ...listboxReturnType
-    } = useListboxSingle<LabelElement, ListElement, ListItemElement>({
+    } = useListboxSingle<LabelElement, ListElement, ListItemElement, C, K>({
         linearNavigation: { disableArrowKeys, disableHomeEndKeys, navigationDirection },
         listboxSingle: { tagLabel, tagList, onSelect },
         listNavigation: { indexDemangler, indexMangler },
@@ -88,8 +89,8 @@ function ListboxSingleU<LabelElement extends Element, ListElement extends HTMLEl
     )
 }
 
-export function defaultRenderListboxSingle<LabelElement extends Element, ListElement extends HTMLElement, ListItemElement extends Element>({ makePropsList, makePropsLabel, tagLabel, tagList }: { tagLabel: ElementToTag<LabelElement>, tagList: ElementToTag<ListElement>, makePropsLabel: (info: UseListboxSingleReturnTypeInfo<ListItemElement>) => h.JSX.HTMLAttributes<LabelElement>, makePropsList: (info: UseListboxSingleReturnTypeInfo<ListItemElement>) => h.JSX.HTMLAttributes<ListElement> }) {
-    return defaultRenderList<LabelElement, ListElement, UseListboxSingleReturnTypeInfo<ListItemElement>>({ makePropsLabel, makePropsList, tagLabel, tagList })
+export function defaultRenderListboxSingle<LabelElement extends Element, ListElement extends HTMLElement, ListItemElement extends Element, C, K extends string>({ makePropsList, makePropsLabel, tagLabel, tagList }: { tagLabel: ElementToTag<LabelElement>, tagList: ElementToTag<ListElement>, makePropsLabel: (info: UseListboxSingleReturnTypeInfo<ListItemElement, C, K>) => h.JSX.HTMLAttributes<LabelElement>, makePropsList: (info: UseListboxSingleReturnTypeInfo<ListItemElement, C, K>) => h.JSX.HTMLAttributes<ListElement> }) {
+    return defaultRenderList<LabelElement, ListElement, UseListboxSingleReturnTypeInfo<ListItemElement, C, K>>({ makePropsLabel, makePropsList, tagLabel, tagList })
 }
 
 export function defaultRenderListboxSingleItem<ListItemElement extends HTMLElement>({ makePropsListItem, tagListItem }: { tagListItem: ElementToTag<ListItemElement>, makePropsListItem: (info: UseListboxSingleItemReturnTypeInfo<ListItemElement>) => h.JSX.HTMLAttributes<ListItemElement> }) {
@@ -98,13 +99,14 @@ export function defaultRenderListboxSingleItem<ListItemElement extends HTMLEleme
 
 
 
-function ListboxSingleItemU<ListItemElement extends Element>({ index, disabled, flags, focusSelf, getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange, render, text, hidden }: ListboxSingleItemProps<ListItemElement>) {
-    const { useListboxSingleItemProps, rovingTabIndex, singleSelection } = useContext(ListboxSingleContext)({
+function ListboxSingleItemU<ListItemElement extends Element, C, K extends string>({ index, disabled, flags, focusSelf, getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange, render, text, hidden, subInfo }: ListboxSingleItemProps<ListItemElement, C, K>) {
+    const { useListboxSingleItemProps, rovingTabIndex, singleSelection } = (useContext(ListboxSingleContext) as UseListboxSingleItem<ListItemElement, C, K>)({
         managedChild: { index, flags },
         rovingTabIndex: { focusSelf, hidden },
         listNavigation: { text },
         listboxSingleItem: { disabled },
-        hasFocus: { getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange }
+        hasFocus: { getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange },
+        subInfo
     });
 
     return (

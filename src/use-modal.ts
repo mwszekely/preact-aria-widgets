@@ -146,10 +146,7 @@ export function useSoftDismiss<T extends Node>({ softDismiss: { onClose, getElem
 
 
     const { useRefElementProps } = useRefElement<T>({
-        onMount: useCallback(() => { debugger; }, []),
-        onUnmount: useCallback(() => { debugger; }, []),
         onElementChange: useCallback((e: T | null) => {
-            debugger;
             if (e) {
                 const document = e.ownerDocument;
                 const window = document?.defaultView;
@@ -177,7 +174,7 @@ export function useSoftDismiss<T extends Node>({ softDismiss: { onClose, getElem
     });
 
     return {
-        useSoftDismissProps: useCallback((props: h.JSX.HTMLAttributes<T>): h.JSX.HTMLAttributes<T> => { debugger; return useRefElementProps(props) }, []),
+        useSoftDismissProps: useRefElementProps,// useCallback((props: h.JSX.HTMLAttributes<T>): h.JSX.HTMLAttributes<T> => { return useRefElementProps(props) }, []),
         softDismiss: {
             onBackdropClick,
         }

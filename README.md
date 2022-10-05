@@ -4,6 +4,8 @@ Preact props that implement ARIA-compliant widgets in the style of `preact-prop-
 
 This library is split into two parts: hook implementations and component implementations. Both are very low level; the components expect you to pass in a `render` function that takes all the information and props that the hook as prepared for you and returns the actual markup used by that component.  For example, `Checkbox` components can be rendered as `<label /><input />` or  `<label><input /></label>` or `<input aria-label="..." />`, etc. based on how you handle that `render` prop.
 
+The intent is to help ensure that individual widgets on a given page are accessible, but it is still up to you to ensure that the page as a whole is too. Don't forget to do lots of testing.
+
 Overall goals:
 * Widgets should all be equally accessible no matter the input method
 * Widgets are compliant with ARIA specifications
