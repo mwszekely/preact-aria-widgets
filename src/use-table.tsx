@@ -1,6 +1,6 @@
 import { h } from "preact";
-import { ManagedChildren, returnNull, useGridNavigation, UseGridNavigationParameters, UseHasFocusParameters, UseListNavigationReturnTypeInfo, UseListNavigationSubInfo, usePassiveState, UseRovingTabIndexSubInfo, useSortableChildren, useStableCallback, useState } from "preact-prop-helpers";
-import { UseGridNavigationCellParameters, UseGridNavigationCellReturnTypeInfo, UseGridNavigationRowParameters, UseGridNavigationRowReturnTypeInfo } from "preact-prop-helpers/use-grid-navigation";
+import { ManagedChildren, returnNull, useGridNavigation, UseGridNavigationParameters, UseHasFocusParameters, UseListNavigationSubInfo, usePassiveState, UseRovingTabIndexSubInfo, useSortableChildren, useStableCallback, useState } from "preact-prop-helpers";
+import { UseGridNavigationCellParameters, UseGridNavigationCellReturnTypeInfo, UseGridNavigationCellSubInfo, UseGridNavigationReturnTypeInfo, UseGridNavigationRowParameters, UseGridNavigationRowReturnTypeInfo, UseGridNavigationRowSubInfo } from "preact-prop-helpers/use-grid-navigation";
 import { PassiveStateUpdater } from "preact-prop-helpers/use-passive-state";
 import { GetIndex, UseSortableChildrenReturnTypeInfo } from "preact-prop-helpers/use-sortable-children";
 import { useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
@@ -14,13 +14,18 @@ export interface UseTableRowParameters<RowElement extends Element, CellElement e
     tableRow: Pick<UseTableRowSubInfo<CellElement, CR, CC>, "location"> & { tagTableRow: ElementToTag<RowElement> };
 }
 export interface UseTableCellParameters<CellElement extends Element, CC, KC extends string, SubbestInfoC> extends UseGridNavigationCellParameters<CellElement, UseTableCellSubInfo<CC>, KC, never, never, never, SubbestInfoC> {
-    tableCell: { tagTableCell: ElementToTag<CellElement>; headerType: "row" | "column" | null };
+    tableCell: {
+        tagTableCell: ElementToTag<CellElement>;
+        headerType: "row" | "column" | null;
+        location: UseTableRowSubInfo<CellElement, any, CC>["location"];
+        value: TableValueType;
+    };
     hasFocus: UseHasFocusParameters<CellElement>;
 }
 
 export interface UseTableRowSubInfo<CellElement extends Element, CR, CC> {
     location: "head" | "body" | "foot";
-    getCells(): ManagedChildren<number, UseRovingTabIndexSubInfo<CellElement, UseListNavigationSubInfo<UseTableCellSubInfo<CC>>>, "tabbable">;
+    getCells(): ManagedChildren<number, UseRovingTabIndexSubInfo<CellElement, UseListNavigationSubInfo<UseGridNavigationCellSubInfo<UseTableCellSubInfo<CC>>>>, "tabbable">;
     subInfo: CR;
 }
 
@@ -37,7 +42,7 @@ export interface UseTableCellSubInfo<CC> {
 export interface UseTableCellReturnTypeInfo<CellElement extends Element> extends UseGridNavigationCellReturnTypeInfo<CellElement> { tableHeaderCell: { sort(): void, sortDirection: TableSortDirection | null; } }
 export interface UseTableRowReturnTypeInfo<RowElement extends Element, CellElement extends Element, CC, KC extends string> extends UseGridNavigationRowReturnTypeInfo<RowElement, CellElement, UseTableCellSubInfo<CC>, KC> { }
 export interface UseTableBodyReturnTypeInfo<RowElement extends Element, CellElement extends Element, CR, CC, KR extends string> extends UseSortableChildrenReturnTypeInfo<CRFull<RowElement, CellElement, CR, CC>, KR> { }
-export interface UseTableReturnTypeInfo<RowElement extends Element, CellElement extends Element, CR, CC> extends UseListNavigationReturnTypeInfo<RowElement, UseTableRowSubInfo<CellElement, CR, CC>, never> { }
+export interface UseTableReturnTypeInfo<RowElement extends Element, CellElement extends Element, CR, CC> extends UseGridNavigationReturnTypeInfo<RowElement, UseTableRowSubInfo<CellElement, CR, CC>, never> { }
 
 
 export interface UseTableCellReturnTypeWithHooks<CellElement extends Element> extends UseTableCellReturnTypeInfo<CellElement> { useTableCellProps: (props: h.JSX.HTMLAttributes<CellElement>) => h.JSX.HTMLAttributes<CellElement>; }
@@ -47,10 +52,10 @@ export interface UseTableReturnTypeWithHooks<TableElement extends Element, BodyS
     useTableRow: UseTableRow<RowElement, CellElement, CR, CC, KR, KC>;
     useTableBody: UseTableBody<BodySectionElement, RowElement, CellElement, CR, CC, KR>;
     useTableProps: (props: h.JSX.HTMLAttributes<TableElement>) => h.JSX.HTMLAttributes<TableElement>;
-    useTableSectionProps: (tag: string, location: UseTableRowSubInfo<any,any,any>["location"], props: h.JSX.HTMLAttributes<any>) => h.JSX.HTMLAttributes<any>;
+    useTableSectionProps: (tag: string, location: UseTableRowSubInfo<any, any, any>["location"], props: h.JSX.HTMLAttributes<any>) => h.JSX.HTMLAttributes<any>;
 }
 
-export type UseTableCell<CellElement extends Element, CC, KC extends string> = (p: UseTableCellParameters<CellElement, CC, KC, Omit<UseTableCellSubInfo<CC>, "setMySortDirection">>) => UseTableCellReturnTypeWithHooks<CellElement>;
+export type UseTableCell<CellElement extends Element, CC, KC extends string> = (p: UseTableCellParameters<CellElement, CC, KC, CC>) => UseTableCellReturnTypeWithHooks<CellElement>;
 export type UseTableRow<RowElement extends Element, CellElement extends Element, CR, CC, KR extends string, KC extends string> = (p: UseTableRowParameters<RowElement, CellElement, CR, CC, KR, CR>) => UseTableRowReturnTypeWithHooks<RowElement, CellElement, CC, KC>;
 export type UseTableBody<BodySectionElement extends Element, RowElement extends Element, CellElement extends Element, CR, CC, KR extends string> = (p: UseTableBodyParameters) => UseTableBodyReturnTypeWithHooks<BodySectionElement, RowElement, CellElement, CR, CC, KR>;
 
@@ -59,7 +64,7 @@ export type TableSortDirection = "ascending" | "descending";
 function identity(t: number) { return t; }
 
 
-export function updateSortColumn<CC>({ getCurrentSortColumn, setCurrentSortColumn, cellIndex, cells }: { getCurrentSortColumn: () => (null | SortColumnInfo); setCurrentSortColumn: PassiveStateUpdater<null | SortColumnInfo>, cellIndex: number, cells: ManagedChildren<number, UseRovingTabIndexSubInfo<any, UseListNavigationSubInfo<UseTableCellSubInfo<CC>>>, "tabbable"> }) {
+export function updateSortColumn<CellElement extends Element, CC, KC extends string>({ getCurrentSortColumn, setCurrentSortColumn, cellIndex, cells }: { getCurrentSortColumn: () => (null | SortColumnInfo); setCurrentSortColumn: PassiveStateUpdater<null | SortColumnInfo>, cellIndex: number, cells: ManagedChildren<number, UseRovingTabIndexSubInfo<CellElement, UseListNavigationSubInfo<UseGridNavigationCellSubInfo<UseTableCellSubInfo<CC>>>>, "tabbable" | KC> }) {
     const sortInfo = getCurrentSortColumn() ?? { index: -1, direction: 'ascending' };
     //const cellIndex = managedChild.index;
     if (sortInfo.index == cellIndex) {
@@ -79,17 +84,18 @@ export function updateSortColumn<CC>({ getCurrentSortColumn, setCurrentSortColum
 
     cells.forEach(cell => {
         if (cell.index == cellIndex) {
-            cell.subInfo.subInfo.subInfo.setMySortDirection(sortInfo.direction);
+            cell.subInfo.subInfo.subInfo.subInfo.setMySortDirection(sortInfo.direction);
         }
         else {
-            cell.subInfo.subInfo.subInfo.setMySortDirection(null);
+            cell.subInfo.subInfo.subInfo.subInfo.setMySortDirection(null);
         }
     })
 
     //bodySort.current!();
 }
 
-type CRFull<RowElement extends Element, CellElement extends Element, CR, CC> = UseRovingTabIndexSubInfo<RowElement, UseListNavigationSubInfo<UseTableRowSubInfo<CellElement, CR, CC>>>;
+type CRFull<RowElement extends Element, CellElement extends Element, CR, CC> = UseRovingTabIndexSubInfo<RowElement, UseListNavigationSubInfo<UseGridNavigationRowSubInfo<UseTableRowSubInfo<CellElement, CR, CC>>>>;
+//UseRovingTabIndexSubInfo<RowElement, UseListNavigationSubInfo<UseTableRowSubInfo<CellElement, CR, CC>>>;
 
 export interface SortColumnInfo {
     index: number,
@@ -142,42 +148,16 @@ export function useTable<
 
         const { asParentOfCells: { managedChildren: { children: cells } } } = gridNavRet2;
 
-        const useTableCell = useCallback<UseTableCell<CellElement, CC, KC>>(({ listNavigation, managedChild, rovingTabIndex, subInfo, hasFocus, tableCell: { tagTableCell, headerType } }) => {
+        const useTableCell = useCallback<UseTableCell<CellElement, CC, KC>>(({ listNavigation, managedChild, rovingTabIndex, subInfo, hasFocus, tableCell: { tagTableCell, headerType, location, value } }) => {
             const [mySortDirection, setMySortDirection] = useState<TableSortDirection | null>(null);
             debugLog("useTableCell", managedChild.index);
             const {
                 useGridNavigationCellProps,
                 ...gridNavRet3
-            } = useGridNavigationCell({ listNavigation, managedChild, rovingTabIndex, subInfo: { ...subInfo, setMySortDirection }, hasFocus });
+            } = useGridNavigationCell({ listNavigation, managedChild, rovingTabIndex, subInfo: { setMySortDirection, location, value, subInfo }, hasFocus });
 
             const sort = useStableCallback(() => {
-                /*const sortInfo = getCurrentSortColumn() ?? { index: -1, direction: 'ascending' };
-                const cellIndex = managedChild.index;
-                if (sortInfo.index == cellIndex) {
-                    if (sortInfo.direction[0] == 'a') {
-                        sortInfo.direction = 'descending';
-                    }
-                    else {
-                        sortInfo.direction = 'ascending';
-                    }
-                }
-                else {
-                    sortInfo.direction = "ascending";
-                }
-
-                sortInfo.index = managedChild.index;
-                setCurrentSortColumn(sortInfo);
-
-                getCells().forEach(cell => {
-                    if (cell.index == managedChild.index) {
-                        cell.subInfo.subInfo.subInfo.setMySortDirection(sortInfo.direction);
-                    }
-                    else {
-                        cell.subInfo.subInfo.subInfo.setMySortDirection(null);
-                    }
-                })*/
-                updateSortColumn({ getCurrentSortColumn, setCurrentSortColumn, cellIndex: managedChild.index, cells: getCells() });
-
+                updateSortColumn<CellElement, CC, KC>({ getCurrentSortColumn, setCurrentSortColumn, cellIndex: managedChild.index, cells: getCells() });
                 bodySort.current!();
             });
 
@@ -241,16 +221,16 @@ export function useTable<
             },
             sortableChildren: {
                 compare: (lhs, rhs) => {
-                    const lhsCells = lhs.subInfo.subInfo.subInfo.getCells();
-                    const rhsCells = rhs.subInfo.subInfo.subInfo.getCells();
+                    const lhsCells = lhs.subInfo.subInfo.subInfo.subInfo.getCells();
+                    const rhsCells = rhs.subInfo.subInfo.subInfo.subInfo.getCells();
                     const lhsCell = lhsCells.getAt(getCurrentSortColumn()?.index ?? 0);
                     const rhsCell = rhsCells.getAt(getCurrentSortColumn()?.index ?? 0);
 
-                    const lhsLocation = lhsCell?.subInfo.subInfo.subInfo.location;
-                    const rhsLocation = rhsCell?.subInfo.subInfo.subInfo.location;
+                    const lhsLocation = lhsCell?.subInfo.subInfo.subInfo.subInfo.location;
+                    const rhsLocation = rhsCell?.subInfo.subInfo.subInfo.subInfo.location;
 
-                    const lhsValue = lhsCell?.subInfo.subInfo.subInfo.value;
-                    const rhsValue = rhsCell?.subInfo.subInfo.subInfo.value;
+                    const lhsValue = lhsCell?.subInfo.subInfo.subInfo.subInfo.value;
+                    const rhsValue = rhsCell?.subInfo.subInfo.subInfo.subInfo.value;
 
                     if (lhsLocation === rhsLocation)
                         return +(lhsValue ?? -Infinity) - +(rhsValue ?? -Infinity);

@@ -50,8 +50,8 @@ export interface GridlistChildProps<CellElement extends Element, CC, KC extends 
     Get<UseGridlistChildParameters<CellElement, CC, KC, CC>, "listNavigation">,
     Get<UseGridlistChildParameters<CellElement, CC, KC, CC>, "rovingTabIndex">,
     UseHasFocusParameters<CellElement>
-    //Omit<Get<UseGridlistChildParameters<CellElement, CC, KC, CC>, "subInfo">, "location"> 
-    {
+//Omit<Get<UseGridlistChildParameters<CellElement, CC, KC, CC>, "subInfo">, "location"> 
+{
     subInfo: Get<UseGridlistChildParameters<CellElement, CC, KC, CC>, "subInfo">,
     render(info: UseGridlistChildReturnTypeInfo<CellElement>, modifyGridlistChildProps: PropModifier<CellElement>): VNode;
 }
@@ -99,7 +99,7 @@ export function defaultRenderGridlistChild<CellElement extends Element>({ tagGri
     }
 }
 
-export const Gridlist = memo(function GridlistU<GridlistElement extends Element, SectionElement extends Element, RowElement extends Element, Cellement extends Element, CR, CC, KR extends string, KC extends string>({
+export const Gridlist = memo(function GridlistU<GridlistElement extends Element, SectionElement extends Element, RowElement extends Element, Cellement extends Element, CR = undefined, CC = undefined, KR extends string = never, KC extends string = never>({
     collator,
     disableArrowKeys,
     disableHomeEndKeys,
@@ -129,12 +129,12 @@ export const Gridlist = memo(function GridlistU<GridlistElement extends Element,
     )
 })
 
-export const GridlistSection = memo(function GridlistSectionU<SectionElement extends Element, RowElement extends Element, Cellement extends Element, CR, CC, KR extends string>({ render, compareRows, index }: GridlistSectionProps<SectionElement, RowElement, Cellement, CR, CC, KR>) {
+export const GridlistSection = memo(function GridlistSectionU<SectionElement extends Element, RowElement extends Element, Cellement extends Element, CR = undefined, CC = undefined, KR extends string = never>({ render, compareRows, index }: GridlistSectionProps<SectionElement, RowElement, Cellement, CR, CC, KR>) {
     const { useGridlistSectionProps, ...sectionInfo } = useContext(GridlistSectionContext)({ compareRows });
     return <LocationIndexContext.Provider value={index}>{render(sectionInfo, useGridlistSectionProps)}</LocationIndexContext.Provider>
 })
 
-export const GridlistRow = memo(function GridlistRowU<RowElement extends Element, Cellement extends Element, CR, CC, KR extends string, KC extends string>({
+export const GridlistRow = memo(function GridlistRowU<RowElement extends Element, Cellement extends Element, CR = undefined, CC = undefined, KR extends string = never, KC extends string = never>({
     index,
     text,
     collator,
@@ -174,18 +174,16 @@ export const GridlistRow = memo(function GridlistRowU<RowElement extends Element
     return <GridlistChildContext.Provider value={useGridlistChild}>{render(rowInfo, useGridlistRowProps)}</GridlistChildContext.Provider>
 })
 
-export const GridlistChild = memo(function GridlistChild<CellElement extends Element, CC, KC extends string>({ index, text, flags, focusSelf, hidden, getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange, render }: GridlistChildProps<CellElement, CC, KC>) {
+export const GridlistChild = memo(function GridlistChild<CellElement extends Element, CC = undefined, KC extends string = never>({ index, text, flags, focusSelf, hidden, getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange, render, subInfo }: GridlistChildProps<CellElement, CC, KC>) {
     const { useGridlistChildProps, ...cellInfo } = (useContext(GridlistChildContext) as UseGridlistChild<CellElement, CC, KC>)({
         listNavigation: { text },
         managedChild: { index, flags },
         rovingTabIndex: { focusSelf, hidden },
         hasFocus: { getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange },
-        subInfo: {
-            locationIndex: useContext(LocationIndexContext),
-            subInfo
-        }
+        gridlistChild: { locationIndex: useContext(LocationIndexContext) },
+        subInfo
     });
 
     return render(cellInfo, useGridlistChildProps);
-})
+});
 

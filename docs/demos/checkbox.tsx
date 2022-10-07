@@ -43,7 +43,7 @@ export function Demo() {
         <>
             <Blurb />
             <Code />
-            <Button tagButton="button" getDocument={getDocument} onPress={() => { setChecked("mixed" as any); }} render={defaultRenderButton("button", () => ({ children: "Change to mixed" }))} />
+            <Button tagButton="button" getDocument={getDocument} onPress={() => { setChecked("mixed" as any); }} render={defaultRenderButton({ tagButton: "button", makePropsButton: () => ({ children: "Change to mixed" }) })} />
             <DemoCheckbox checked={checked} setChecked={setChecked} labelPosition="separate" disabled={false} tagInput="input" tagLabel="label" />
             <DemoCheckbox checked={checked} setChecked={setChecked} labelPosition="wrapping" disabled={false} tagInput="input" tagLabel="label" />
             <DemoCheckbox checked={checked} setChecked={setChecked} labelPosition="separate" disabled={false} tagInput="div" tagLabel="label" />
@@ -62,7 +62,7 @@ function DemoCheckbox({ labelPosition, tagInput, tagLabel, disabled, checked, se
     return (
         <div style={{ border: "1px solid black" }}>
             <Checkbox
-            getDocument={getDocument}
+                getDocument={getDocument}
                 disabled={disabled}
                 checked={checked}
                 onCheckedChange={e => setChecked(e[EventDetail].checked)}

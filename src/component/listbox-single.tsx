@@ -26,19 +26,19 @@ export interface ListboxSingleProps<LabelElement extends Element, ListElement ex
 
 
 export interface ListboxSingleItemProps<ListboxItemElement extends Element, C, K extends string> extends
-    Get<UseListboxSingleItemParameters<ListboxItemElement, C, K, C>, "managedChild">,
-    Get<UseListboxSingleItemParameters<ListboxItemElement, C, K, C>, "listNavigation">,
-    Get<UseListboxSingleItemParameters<ListboxItemElement, C, K, C>, "rovingTabIndex">,
-    Get<UseListboxSingleItemParameters<ListboxItemElement, C, K, C>, "hasFocus">,
-    Get<UseListboxSingleItemParameters<ListboxItemElement, C, K, C>, "listboxSingleItem"> {
+    Get<UseListboxSingleItemParameters<ListboxItemElement, C, K>, "managedChild">,
+    Get<UseListboxSingleItemParameters<ListboxItemElement, C, K>, "listNavigation">,
+    Get<UseListboxSingleItemParameters<ListboxItemElement, C, K>, "rovingTabIndex">,
+    Get<UseListboxSingleItemParameters<ListboxItemElement, C, K>, "hasFocus">,
+    Get<UseListboxSingleItemParameters<ListboxItemElement, C, K>, "listboxSingleItem"> {
     //tagListItem: ElementToTag<ListboxItemElement>;
-    subInfo: Get<UseListboxSingleItemParameters<ListboxItemElement, C, K, C>, "subInfo">,
+    subInfo: Get<UseListboxSingleItemParameters<ListboxItemElement, C, K>, "subInfo">,
     render(info: UseListboxSingleItemReturnTypeInfo<ListboxItemElement>, modifyListItemProps: PropModifier<ListboxItemElement>): VNode<any>;
 }
 
 const ListboxSingleContext = createContext<UseListboxSingleItem<any, any, any>>(null!);
 
-function ListboxSingleU<LabelElement extends Element, ListElement extends HTMLElement, ListItemElement extends HTMLElement, C, K extends string>({
+function ListboxSingleU<LabelElement extends Element, ListElement extends HTMLElement, ListItemElement extends HTMLElement, C = undefined, K extends string = never>({
     render,
 
     selectedIndex,
@@ -84,7 +84,7 @@ function ListboxSingleU<LabelElement extends Element, ListElement extends HTMLEl
 
     return (
         <ListboxSingleContext.Provider value={useListboxSingleItem}>
-            {render({ ...listboxReturnType }, useListboxSingleLabelProps, useListboxSingleProps)}
+            {render(listboxReturnType, useListboxSingleLabelProps, useListboxSingleProps)}
         </ListboxSingleContext.Provider>
     )
 }
@@ -99,7 +99,7 @@ export function defaultRenderListboxSingleItem<ListItemElement extends HTMLEleme
 
 
 
-function ListboxSingleItemU<ListItemElement extends Element, C, K extends string>({ index, disabled, flags, focusSelf, getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange, render, text, hidden, subInfo }: ListboxSingleItemProps<ListItemElement, C, K>) {
+function ListboxSingleItemU<ListItemElement extends Element, C = undefined, K extends string = never>({ index, disabled, flags, focusSelf, getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange, render, text, hidden, subInfo }: ListboxSingleItemProps<ListItemElement, C, K>) {
     const { useListboxSingleItemProps, rovingTabIndex, singleSelection } = (useContext(ListboxSingleContext) as UseListboxSingleItem<ListItemElement, C, K>)({
         managedChild: { index, flags },
         rovingTabIndex: { focusSelf, hidden },

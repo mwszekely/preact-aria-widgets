@@ -10,11 +10,12 @@ export interface SliderProps extends Get<UseSliderParameters, "managedChildren">
     children: ComponentChildren;
 }
 
-export interface SliderThumbProps<ThumbElement extends Element> extends Get<UseSliderThumbParameters<ThumbElement>, "managedChild">, Get<UseSliderThumbParameters<ThumbElement>, "sliderThumb"> {
+export interface SliderThumbProps<ThumbElement extends Element, C, K extends string> extends Get<UseSliderThumbParameters<ThumbElement, C, K>, "managedChild">, Get<UseSliderThumbParameters<ThumbElement, C, K>, "sliderThumb"> {
+    subInfo: Get<UseSliderThumbParameters<ThumbElement, C, K>, "subInfo">;
     render(info: UseSliderThumbReturnTypeInfo, modifyThumbProps: PropModifier<ThumbElement>): VNode;
 }
 
-const SliderThumbContext = createContext<UseSliderThumb<any>>(null!);
+const SliderThumbContext = createContext<UseSliderThumb<any, any, any>>(null!);
 
 export const Slider = memo( function Slider({ max, min, onAfterChildLayoutEffect, onChildrenMountChange, children }: SliderProps) {
     const { useSliderThumb, ..._sliderInfo } = useSlider({
@@ -27,8 +28,12 @@ export const Slider = memo( function Slider({ max, min, onAfterChildLayoutEffect
     );
 })
 
-export const SliderThumb = memo(function SliderThumbU<ThumbElement extends Element>({ label, tag, value, max, min, onValueChange, index, flags, render, valueText }: SliderThumbProps<ThumbElement>) {
-    const { useSliderThumbProps, ...sliderInfo } = useContext(SliderThumbContext)({ managedChild: { index, flags }, sliderThumb: { label, tag, value, max, min, onValueChange, valueText } });
+export const SliderThumb = memo(function SliderThumbU<ThumbElement extends Element, C = undefined, K extends string = never>({ label, tag, value, max, min, onValueChange, index, flags, render, valueText, subInfo }: SliderThumbProps<ThumbElement, C, K>) {
+    const { useSliderThumbProps, ...sliderInfo } = (useContext(SliderThumbContext) as UseSliderThumb<ThumbElement, C, K>)({ 
+        managedChild: { index, flags }, 
+        sliderThumb: { label, tag, value, max, min, onValueChange, valueText },
+        subInfo
+     });
 
     return render(sliderInfo, useSliderThumbProps)
 })

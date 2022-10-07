@@ -16,14 +16,14 @@ export interface UseListboxSingleParameters<LabelElement extends Element, ListEl
     }
 }
 
-export interface UseListboxSingleItemParameters<E extends Element, C, K extends string, SubbestInfo> extends UseListNavigationSingleSelectionChildParameters<E, C, K, never, never, never, SubbestInfo> {
+export interface UseListboxSingleItemParameters<E extends Element, C, K extends string> extends UseListNavigationSingleSelectionChildParameters<E, UseListboxSingleSubInfo<C>, K, never, never, never, C> {
     listboxSingleItem: { disabled?: boolean; }
     hasFocus: UseHasFocusParameters<E>;
 }
 
 
 
-export type UseListboxSingleItem<ListItemElement extends Element, C, K extends string> = (info: UseListboxSingleItemParameters<ListItemElement, C, K, C>) => UseListboxSingleItemReturnTypeWithHooks<ListItemElement>;
+export type UseListboxSingleItem<ListItemElement extends Element, C, K extends string> = (info: UseListboxSingleItemParameters<ListItemElement, C, K>) => UseListboxSingleItemReturnTypeWithHooks<ListItemElement>;
 
 export interface UseListboxSingleItemReturnTypeInfo<ListItemElement extends Element> extends UseListNavigationSingleSelectionChildReturnTypeInfo<ListItemElement> {
 }
@@ -32,7 +32,7 @@ export interface UseListboxSingleItemReturnTypeWithHooks<ListItemElement extends
     useListboxSingleItemProps: (props: h.JSX.HTMLAttributes<ListItemElement>) => h.JSX.HTMLAttributes<ListItemElement>;
 }
 
-export interface UseListboxSingleReturnTypeInfo<ListItemElement extends Element, C, K extends string> extends UseListNavigationSingleSelectionReturnTypeInfo<ListItemElement, C, K>, UseLabelReturnTypeInfo {
+export interface UseListboxSingleReturnTypeInfo<ListItemElement extends Element, C, K extends string> extends UseListNavigationSingleSelectionReturnTypeInfo<ListItemElement, UseListboxSingleSubInfo<C>, K>, UseLabelReturnTypeInfo {
 
 }
 
@@ -42,7 +42,11 @@ export interface UseListboxSingleReturnTypeWithHooks<LabelElement extends Elemen
     useListboxSingleLabel: () => { useListboxSingleLabelProps: (props: h.JSX.HTMLAttributes<LabelElement>) => h.JSX.HTMLAttributes<LabelElement>; }
 }
 
-export function useListboxSingle<LabelElement extends Element, ListElement extends Element, ListItemElement extends Element, C, K extends string>({
+export interface UseListboxSingleSubInfo<C> {
+    subInfo: C;
+}
+
+export function useListboxSingle<LabelElement extends Element, ListElement extends Element, ListItemElement extends Element, C = undefined, K extends string = never>({
     listboxSingle: { tagLabel, tagList, onSelect, ..._lbs },
     singleSelection: { selectedIndex, ...ss },
     linearNavigation: { ...ln },
@@ -67,7 +71,7 @@ export function useListboxSingle<LabelElement extends Element, ListElement exten
         stableOnSelect(enhanceEvent<ListItemElement, Event, { selectedIndex: number }>(event, { selectedIndex: newIndex }))
     });
 
-    const { useListNavigationSingleSelectionChild, useListNavigationSingleSelectionProps, ...listReturnType } = useListNavigationSingleSelection<ListElement, ListItemElement, C, K>({
+    const { useListNavigationSingleSelectionChild, useListNavigationSingleSelectionProps, ...listReturnType } = useListNavigationSingleSelection<ListElement, ListItemElement, UseListboxSingleSubInfo<C>, K>({
         childrenHaveFocus: { ...chf },
         linearNavigation: { ...ln },
         listNavigation: { ...ls },
@@ -90,7 +94,9 @@ export function useListboxSingle<LabelElement extends Element, ListElement exten
             listNavigation,
             rovingTabIndex,
             hasFocus,
-            subInfo
+            subInfo: { 
+                subInfo 
+            }
         });
 
         return {
@@ -125,8 +131,13 @@ export function useListboxSingle<LabelElement extends Element, ListElement exten
         useListboxSingleItem,
         useListboxSingleProps,
         useListboxSingleLabel,
-        ...listReturnType,
-        ...labelReturnType
+        label: labelReturnType.label,
+        linearNavigation: listReturnType.linearNavigation,
+        listNavigation: listReturnType.listNavigation,
+        managedChildren: listReturnType.managedChildren,
+        rovingTabIndex: listReturnType.rovingTabIndex,
+        singleSelection: listReturnType.singleSelection,
+        typeaheadNavigation: listReturnType.typeaheadNavigation
     };
 
 

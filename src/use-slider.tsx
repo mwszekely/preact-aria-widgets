@@ -9,12 +9,13 @@ import { debugLog, EventDetail, TagSensitiveProps } from "./props";
 
 export type RangeChangeEvent<E extends EventTarget> = { [EventDetail]: { value: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 
-export interface SliderThumbInfo {
+export interface SliderThumbInfo<C> {
     setMin: StateUpdater<number>;
     setMax: StateUpdater<number>;
+    subInfo: C;
 }
 
-export interface UseSliderThumbParameters<E extends Element> extends UseManagedChildParameters<number, SliderThumbInfo, never, "subInfo"> {
+export interface UseSliderThumbParameters<E extends Element, C, K extends string> extends UseManagedChildParameters<number, SliderThumbInfo<C>, K, never, C> {
     sliderThumb: TagSensitiveProps<E> & {
         value: number;
         valueText?: string;
@@ -56,23 +57,23 @@ export interface UseSliderThumbReturnType<E extends Element> extends UseSliderTh
     useSliderThumbProps: (props: h.JSX.HTMLAttributes<E>) => h.JSX.HTMLAttributes<E>;
 }
 
-export type UseSliderThumb<ThumbElement extends Element> = (props: UseSliderThumbParameters<ThumbElement>) => UseSliderThumbReturnType<ThumbElement>;
+export type UseSliderThumb<ThumbElement extends Element, C, K extends string> = (props: UseSliderThumbParameters<ThumbElement, C, K>) => UseSliderThumbReturnType<ThumbElement>;
 
-export interface UseSliderReturnTypeInfo extends UseManagedChildrenReturnTypeInfo<number, SliderThumbInfo, never> {}
-export interface UseSliderReturnTypeWithHooks<ThumbElement extends Element> extends UseSliderReturnTypeInfo {
-    useSliderThumb: UseSliderThumb<ThumbElement>;
+export interface UseSliderReturnTypeInfo<C, K extends string> extends UseManagedChildrenReturnTypeInfo<number, SliderThumbInfo<C>, K> {}
+export interface UseSliderReturnTypeWithHooks<ThumbElement extends Element, C, K extends string> extends UseSliderReturnTypeInfo<C, K> {
+    useSliderThumb: UseSliderThumb<ThumbElement, C, K>;
 }
 
 
-export function useSlider<ThumbElement extends Element>({ slider: { max: maxParent, min: minParent }, managedChildren }: UseSliderParameters): UseSliderReturnTypeWithHooks<ThumbElement> {
+export function useSlider<ThumbElement extends Element, C, K extends string>({ slider: { max: maxParent, min: minParent }, managedChildren }: UseSliderParameters): UseSliderReturnTypeWithHooks<ThumbElement, C, K> {
     debugLog("useSlider");
-    const { useManagedChild, ...childrenInfo } = useManagedChildren<number, SliderThumbInfo, never>({ managedChildren });
+    const { useManagedChild, ...childrenInfo } = useManagedChildren<number, SliderThumbInfo<C>, K>({ managedChildren });
 
-    const useSliderThumb = useCallback(function useSliderThumb({ managedChild, sliderThumb }: UseSliderThumbParameters<ThumbElement>): UseSliderThumbReturnType<ThumbElement> {
+    const useSliderThumb = useCallback(function useSliderThumb({ managedChild, sliderThumb, subInfo }: UseSliderThumbParameters<ThumbElement, C, K>): UseSliderThumbReturnType<ThumbElement> {
         debugLog("useSliderThumb", managedChild.index);
         const [minParentCopy, setMinParentCopy] = useState(minParent);
         const [maxParentCopy, setMaxParentCopy] = useState(maxParent);
-        const __: void = useManagedChild({ managedChild: { ...managedChild, subInfo: { setMax: setMaxParentCopy, setMin: setMinParentCopy } } });
+        const __: void = useManagedChild({ managedChild: { ...managedChild }, subInfo: { setMax: setMaxParentCopy, setMin: setMinParentCopy, subInfo } });
 
         const { tag, value, max: maxOverride, min: minOverride, onValueChange, valueText, label } = sliderThumb;
 

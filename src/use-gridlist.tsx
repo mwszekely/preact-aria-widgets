@@ -1,6 +1,6 @@
 import { h } from "preact";
-import { ManagedChildInfo, ManagedChildren, useGridNavigation, UseGridNavigationParameters, UseHasFocusParameters, UseListNavigationReturnTypeInfo, UseListNavigationSubInfo, UseRovingTabIndexSubInfo, useSortableChildren } from "preact-prop-helpers";
-import { UseGridNavigationCellParameters, UseGridNavigationCellReturnTypeInfo, UseGridNavigationRowParameters, UseGridNavigationRowReturnTypeInfo } from "preact-prop-helpers/use-grid-navigation";
+import { ManagedChildInfo, ManagedChildren, useGridNavigation, UseGridNavigationParameters, UseHasFocusParameters, UseListNavigationSubInfo, UseRovingTabIndexSubInfo, useSortableChildren } from "preact-prop-helpers";
+import { UseGridNavigationCellParameters, UseGridNavigationCellReturnTypeInfo, UseGridNavigationCellSubInfo, UseGridNavigationReturnTypeInfo, UseGridNavigationRowParameters, UseGridNavigationRowReturnTypeInfo } from "preact-prop-helpers/use-grid-navigation";
 import { UseSortableChildrenReturnTypeInfo } from "preact-prop-helpers/use-sortable-children";
 import { useCallback, useRef } from "preact/hooks";
 import { debugLog, overwriteWithWarning } from "./props";
@@ -12,11 +12,12 @@ export interface UseGridlistRowParameters<CellElement extends Element, CR, CC, K
 }
 export interface UseGridlistChildParameters<CellElement extends Element, CC, KC extends string, SubbestInfoC> extends UseGridNavigationCellParameters<CellElement, UseGridlistChildSubInfo<CC>, KC, never, never, never, SubbestInfoC> {
     hasFocus: UseHasFocusParameters<CellElement>;
+    gridlistChild: { locationIndex: number }
 }
 
 export interface UseGridlistRowSubInfo<CellElement extends Element, CR, CC> {
     locationIndex: number;
-    getCells(): ManagedChildren<number, UseRovingTabIndexSubInfo<CellElement, UseListNavigationSubInfo<UseGridlistChildSubInfo<CC>>>, "tabbable">;
+    getCells(): ManagedChildren<number, UseRovingTabIndexSubInfo<CellElement, UseListNavigationSubInfo<UseGridNavigationCellSubInfo<UseGridlistChildSubInfo<CC>>>>, "tabbable">;
     //value: TableValueType;
     subInfo: CR;
 }
@@ -32,7 +33,7 @@ export interface UseGridlistChildSubInfo<CC> {
 export interface UseGridlistChildReturnTypeInfo<CellElement extends Element> extends UseGridNavigationCellReturnTypeInfo<CellElement> { }
 export interface UseGridlistRowReturnTypeInfo<RowElement extends Element, CellElement extends Element, CC> extends UseGridNavigationRowReturnTypeInfo<RowElement, CellElement, UseGridlistChildSubInfo<CC>, never> { }
 export interface UseGridlistSectionReturnTypeInfo<RowElement extends Element, CellElement extends Element, CR, CC, KR extends string> extends UseSortableChildrenReturnTypeInfo<UseRovingTabIndexSubInfo<RowElement, UseListNavigationSubInfo<UseGridlistRowSubInfo<CellElement, CR, CC>>>, KR> { }
-export interface UseGridlistReturnTypeInfo<RowElement extends Element, CellElement extends Element, CR, CC> extends UseListNavigationReturnTypeInfo<RowElement, UseGridlistRowSubInfo<CellElement, CR, CC>, never> { }
+export interface UseGridlistReturnTypeInfo<RowElement extends Element, CellElement extends Element, CR, CC> extends UseGridNavigationReturnTypeInfo<RowElement, UseGridlistRowSubInfo<CellElement, CR, CC>, never> { }
 
 
 export interface UseGridlistChildReturnTypeWithHooks<CellElement extends Element> extends UseGridlistChildReturnTypeInfo<CellElement> { useGridlistChildProps: (props: h.JSX.HTMLAttributes<CellElement>) => h.JSX.HTMLAttributes<CellElement>; }
@@ -99,7 +100,7 @@ export function useGridlist<
 
         const { asParentOfCells: { managedChildren: { children: cells } } } = gridNavRet2;
 
-        const useGridlistChild = useCallback<UseGridlistChild<CellElement, CC, KC>>(({ listNavigation, managedChild, rovingTabIndex, subInfo, hasFocus }) => {
+        const useGridlistChild = useCallback<UseGridlistChild<CellElement, CC, KC>>(({ listNavigation, managedChild, rovingTabIndex, subInfo, hasFocus, gridlistChild: { locationIndex } }) => {
             debugLog("useGridlistChild", managedChild.index);
             const {
                 useGridNavigationCellProps,
@@ -122,11 +123,13 @@ export function useGridlist<
             return useGridNavigationRowProps(props);
         };
 
-        return {
+        const ret: UseGridlistRowReturnTypeWithHooks<RowElement, CellElement, CC, KC> = {
             useGridlistChild,
             useGridlistRowProps,
             ...gridNavRet2
         }
+
+        return ret;
     }, []);
 
     const useGridlistSection = useCallback<UseGridlistSection<BodySectionElement, RowElement, CellElement, CR, CC, KR>>(({ compareRows }) => {

@@ -5,13 +5,14 @@ import { UseToast, UseToastParameters, UseToastReturnTypeInfo, useToasts, UseToa
 
 type Get<T, K extends keyof T> = T[K];
 
-export interface ToastsProps<ContainerType extends HTMLElement> extends Get<UseToastsParameters, "managedChildren">, Get<UseToastsParameters, "toasts"> {
+export interface ToastsProps<ContainerType extends HTMLElement, C> extends Get<UseToastsParameters, "managedChildren">, Get<UseToastsParameters, "toasts"> {
     //tagContainer: ElementToTag<ContainerElement>;
     //children: VNode[];
-    render(args: UseToastsReturnTypeInfo, props: h.JSX.HTMLAttributes<ContainerType>): VNode;
+    render(args: UseToastsReturnTypeInfo<C>, props: h.JSX.HTMLAttributes<ContainerType>): VNode;
 }
 
-export interface ToastProps extends Get<UseToastParameters, "managedChild">, Get<UseToastParameters, "toast"> {
+export interface ToastProps<C, K extends string> extends Get<UseToastParameters<C, K, C>, "managedChild">, Get<UseToastParameters<C, K, C>, "toast"> {
+    subInfo: Get<UseToastParameters<C, K, C>, "subInfo">;
     render(args: UseToastReturnTypeInfo): VNode;
 }
 
@@ -25,10 +26,10 @@ export interface ToastProps extends Get<UseToastParameters, "managedChild">, Get
     }
 }*/
 
-const ToastContext = createContext<UseToast>(null!);
+const ToastContext = createContext<UseToast<any, any>>(null!);
 
-export const Toasts = memo(function Toasts<ContainerType extends HTMLElement>({ onAfterChildLayoutEffect, onChildrenMountChange, render, visibleCount }: ToastsProps<ContainerType>) {
-    const { useToast, useToastContainerProps, ...info } = useToasts<ContainerType>({ managedChildren: { onAfterChildLayoutEffect, onChildrenMountChange }, toasts: { visibleCount } });
+export const Toasts = memo(function Toasts<ContainerType extends HTMLElement, C = undefined, K extends string = never>({ onAfterChildLayoutEffect, onChildrenMountChange, render, visibleCount }: ToastsProps<ContainerType, C>) {
+    const { useToast, useToastContainerProps, ...info } = useToasts<ContainerType, C, K>({ managedChildren: { onAfterChildLayoutEffect, onChildrenMountChange }, toasts: { visibleCount } });
 
     return (
         <ToastContext.Provider value={useToast}>
@@ -36,10 +37,11 @@ export const Toasts = memo(function Toasts<ContainerType extends HTMLElement>({ 
         </ToastContext.Provider>)
 })
 
-export const Toast = memo(function Toast({ render, index, timeout, flags, politeness }: ToastProps) {
-    const { ...toastInfo } = useContext(ToastContext)({
+export const Toast = memo(function Toast<C = undefined, K extends string = never>({ render, index, timeout, flags, politeness, subInfo }: ToastProps<C, K>) {
+    const { ...toastInfo } = (useContext(ToastContext) as UseToast<C, K>)({
         managedChild: { index, flags },
-        toast: { timeout, politeness }
+        toast: { timeout, politeness },
+        subInfo
     });
 
 

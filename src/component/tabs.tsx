@@ -8,7 +8,7 @@ import { UseTab, UseTabListParameters, UseTabListReturnTypeInfo, UseTabPanel, Us
 type Get<T, K extends keyof T> = T[K];
 type Get2<T, K extends keyof T, K2 extends keyof T[K]> = T[K][K2];
 
-export interface TabsProps<LabelElement extends Element, ListElement extends Element, TabElement extends Element> extends
+export interface TabsProps<LabelElement extends Element, ListElement extends Element, TabElement extends Element, TC, PC> extends
     Get<UseTabListParameters<TabElement>, "linearNavigation">,
     Get<UseTabListParameters<TabElement>, "listNavigation">,
     Get<UseTabListParameters<TabElement>, "managedChildren">,
@@ -18,26 +18,28 @@ export interface TabsProps<LabelElement extends Element, ListElement extends Ele
     Get<UseTabListParameters<TabElement>, "childrenHaveFocus">,
     Get<UseTabListParameters<TabElement>, "tabs">,
     Get2<UseTabsParameters, "tabPanels", "managedChildren"> {
-    render(tabsInfo: UseTabsReturnTypeInfo & UseTabListReturnTypeInfo<TabElement>, modifyLabelProps: PropModifier<LabelElement>, modifyTabListProps: PropModifier<ListElement>): VNode<any>;
+    render(tabListInfo: UseTabListReturnTypeInfo<TabElement, TC>, tabsInfo: UseTabsReturnTypeInfo<PC>, modifyLabelProps: PropModifier<LabelElement>, modifyTabListProps: PropModifier<ListElement>): VNode<any>;
 }
 
-export interface TabProps<TabElement extends Element> extends Get<UseTabParameters<TabElement>, "listNavigation">,
-    Get<UseTabParameters<TabElement>, "managedChild">,
+export interface TabProps<TabElement extends Element, TC, TK extends string> extends Get<UseTabParameters<TabElement, TC, TK, TC>, "listNavigation">,
+    Get<UseTabParameters<TabElement, TC, TK, TC>, "managedChild">,
     UseHasFocusParameters<TabElement>,
-    Get<UseTabParameters<TabElement>, "rovingTabIndex"> {
+    Get<UseTabParameters<TabElement, TC, TK, TC>, "rovingTabIndex"> {
+    subInfo: Get<UseTabParameters<TabElement, TC, TK, TC>, "subInfo">;
     // tagListItem: ElementToTag<ListboxItemElement>;
     // propsListItem: (args: ListboxSinglePropsDerivedFrom) => h.JSX.HTMLAttributes<ListboxItemElement>;
     render(info: UseTabReturnTypeInfo<TabElement>, modifyListItem: PropModifier<TabElement>): VNode<any>;
 }
 
-export interface TabPanelProps<TabPanelElement extends Element> extends Get<UseTabPanelParameters, "managedChild"> {
+export interface TabPanelProps<TabPanelElement extends Element, PC, PK extends string> extends Get<UseTabPanelParameters<PC, PK, PC>, "managedChild"> {
+    subInfo: Get<UseTabPanelParameters<PC, PK, PC>, "subInfo">;
     render(info: UseTabPanelReturnTypeInfo, modifyTabPanelProps: PropModifier<TabPanelElement>): VNode;
 }
 
-const TabContext = createContext<UseTab<any>>(null!);
-const TabPanelContext = createContext<UseTabPanel<any>>(null!);
+const TabContext = createContext<UseTab<any, any, any>>(null!);
+const TabPanelContext = createContext<UseTabPanel<any, any, any>>(null!);
 
-export const Tabs = memo(function Tabs<LabelElement extends Element, ListElement extends Element, TabElement extends Element, TabPanelElement extends Element>({
+export const Tabs = memo(function Tabs<LabelElement extends Element, ListElement extends Element, TabElement extends Element, TabPanelElement extends Element, TC, PC, TK extends string, PK extends string>({
     selectedIndex,
     selectionMode,
     collator,
@@ -56,13 +58,13 @@ export const Tabs = memo(function Tabs<LabelElement extends Element, ListElement
     onAnyGainedFocus,
     onSelectedIndexChange,
     render
-}: TabsProps<LabelElement, ListElement, TabElement>) {
+}: TabsProps<LabelElement, ListElement, TabElement, TC, PC>) {
     const {
         useTabList,
         useTabListLabel,
         useTabPanel,
         ...tabsInfo
-    } = useTabs<ListElement, TabElement, TabPanelElement, LabelElement>({
+    } = useTabs<ListElement, TabElement, TabPanelElement, LabelElement, TC, PC, TK, PK>({
         tabPanels: {
             managedChildren: { onAfterChildLayoutEffect, onChildrenMountChange }
         }
@@ -83,33 +85,34 @@ export const Tabs = memo(function Tabs<LabelElement extends Element, ListElement
     return (
         <TabContext.Provider value={useTab}>
             <TabPanelContext.Provider value={useTabPanel}>
-                {render({ ...tabsInfo, ...tablistInfo }, useTabListLabelProps, useTabListProps)}
+                {render(tablistInfo, tabsInfo, useTabListLabelProps, useTabListProps)}
             </TabPanelContext.Provider>
         </TabContext.Provider>
     )
 })
 
-export const Tab = memo(function Tab<TabElement extends Element>({ index, text, flags, focusSelf, hidden, getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange, render }: TabProps<TabElement>) {
+export const Tab = memo(function Tab<TabElement extends Element, TC, TK extends string>({ index, text, flags, focusSelf, hidden, getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange, render, subInfo }: TabProps<TabElement, TC, TK>) {
     const { useTabProps, ...tabInfo } = useContext(TabContext)({
         listNavigation: { text },
         managedChild: { index, flags },
         rovingTabIndex: { focusSelf, hidden },
-        hasFocus: { getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange }
+        hasFocus: { getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange },
+   subInfo
     });
 
     return render(tabInfo, useTabProps)
 })
 
-export const TabPanel = memo(function TabPanel<TabPanelElement extends Element>({ index, flags, render }: TabPanelProps<TabPanelElement>) {
-    const { useTabPanelProps, ...tabPanelInfo } = useContext(TabPanelContext)({ managedChild: { index, flags } });
+export const TabPanel = memo(function TabPanel<TabPanelElement extends Element, PC, PK extends string>({ index, flags, render, subInfo }: TabPanelProps<TabPanelElement, PC, PK>) {
+    const { useTabPanelProps, ...tabPanelInfo } = (useContext(TabPanelContext) as UseTabPanel<TabPanelElement, PC, PK>)({ managedChild: { index, flags }, subInfo });
 
     return render(tabPanelInfo, useTabPanelProps)
 })
 
-export function defaultRenderTabs<LabelElement extends Element, ListElement extends Element>({ tagLabel, tagList, makePropsLabel, makePropsList, panels }: { panels: VNode[], tagLabel: ElementToTag<LabelElement>, tagList: ElementToTag<ListElement>, makePropsLabel: (info: UseTabsReturnTypeInfo) => h.JSX.HTMLAttributes<LabelElement>, makePropsList: (info: UseTabsReturnTypeInfo) => h.JSX.HTMLAttributes<ListElement> }) {
-    return function (tabsInfo: UseTabsReturnTypeInfo & UseTabListReturnTypeInfo<any>, modifyLabelProps: PropModifier<LabelElement>, modifyListProps: PropModifier<ListElement>) {
-        const label = createElement(tagLabel as never, modifyLabelProps(makePropsLabel(tabsInfo)))
-        const list = createElement(tagList as never, modifyListProps(makePropsList(tabsInfo)));
+export function defaultRenderTabs<LabelElement extends Element, ListElement extends Element, TabElement extends Element, TC, PC>({ tagLabel, tagList, makePropsLabel, makePropsList, panels }: { panels: VNode[], tagLabel: ElementToTag<LabelElement>, tagList: ElementToTag<ListElement>, makePropsLabel: (infoTabs: UseTabsReturnTypeInfo<PC>, infoList: UseTabListReturnTypeInfo<TabElement, TC>) => h.JSX.HTMLAttributes<LabelElement>, makePropsList: (infoTabs: UseTabsReturnTypeInfo<PC>, infoList: UseTabListReturnTypeInfo<TabElement, TC>) => h.JSX.HTMLAttributes<ListElement> }) {
+    return function (tablistInfo: UseTabListReturnTypeInfo<TabElement, TC>, tabsInfo: UseTabsReturnTypeInfo<PC>, modifyLabelProps: PropModifier<LabelElement>, modifyListProps: PropModifier<ListElement>) {
+        const label = createElement(tagLabel as never, modifyLabelProps(makePropsLabel(tabsInfo, tablistInfo)))
+        const list = createElement(tagList as never, modifyListProps(makePropsList(tabsInfo, tablistInfo)));
         return (
             <>
                 {label}

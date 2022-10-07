@@ -11,13 +11,7 @@ function DemoCheckbox({ index }: { index: number }) {
     const [checked, setChecked] = useState(false);
     const labelText = `Checkbox #${index}`
     return (
-        <CheckboxGroupCheckbox render={defaultRenderCheckboxGroupChild({
-            labelPosition: "separate",
-            tagInput: "input",
-            tagLabel: "label",
-            makeInputProps: () => ({}),
-            makeLabelProps: () => ({ children: labelText })
-        })}
+        <CheckboxGroupCheckbox<HTMLInputElement, HTMLLabelElement>
             getDocument={getDocument}
             checked={checked}
             index={index}
@@ -26,7 +20,16 @@ function DemoCheckbox({ index }: { index: number }) {
             text={labelText}
             tagInput="input"
             tagLabel="label"
-            onCheckedChange={e => setChecked(e[EventDetail].checked)} />
+            onCheckedChange={e => setChecked(e[EventDetail].checked)}
+            subInfo={undefined}
+            render={defaultRenderCheckboxGroupChild({
+                labelPosition: "separate",
+                tagInput: "input",
+                tagLabel: "label",
+                makeInputProps: () => ({}),
+                makeLabelProps: () => ({ children: labelText })
+            })} 
+            />
     )
 }
 

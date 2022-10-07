@@ -1,10 +1,9 @@
 
-import { useState } from "preact-prop-helpers";
-import { memo, useRef } from "preact/compat";
-import { Table, TableBody, TableBodyProps, TableCell, TableCellProps, TableFoot, TableFootProps, TableHead, TableHeadProps, TableProps, TableRow, TableRowProps, defaultRenderTable, defaultRenderTableBody, defaultRenderTableCell, defaultRenderTableFoot, defaultRenderTableHead, defaultRenderTableRow } from "../../component/table";
-import { EventDetail, ListboxSingle, defaultRenderListboxSingle } from "../../index";
-import { useCallback } from "preact/hooks"
 import { h } from "preact";
+import { useState } from "preact-prop-helpers";
+import { useRef } from "preact/compat";
+import { useCallback } from "preact/hooks";
+import { defaultRenderTable, defaultRenderTableBody, defaultRenderTableCell, defaultRenderTableHead, defaultRenderTableRow, Table, TableBody, TableCell, TableHead, TableRow } from "../../component/table";
 
 function getDocument() { return window.document; }
 
@@ -51,20 +50,20 @@ function DemoTableCell({ index, header }: { index: number, header?: boolean }) {
 
     if (header) {
         const text = `Header #${index}`;
-        return <TableCell headerType="column" tagTableCell="th" index={index} getDocument={getDocument} text={text} value={text} render={defaultRenderTableCell({ tagTableCell: "th", makePropsTableCell: (info) => ({ children: <button tabIndex={info.rovingTabIndex.tabbable ? 0 : -1} onClick={() => info.tableHeaderCell.sort()}>{text}</button> }) })} />
+        return <TableCell location="head" headerType="column" tagTableCell="th" index={index} getDocument={getDocument} text={text} value={text} render={defaultRenderTableCell({ tagTableCell: "th", makePropsTableCell: (info) => ({ children: <button tabIndex={info.rovingTabIndex.tabbable ? 0 : -1} onClick={() => info.tableHeaderCell.sort()}>{text}</button> }) })}  subInfo={undefined} />
     }
     else {
-        const text = `Cell in column #${index}`;
+        //const text = `Cell in column #${index}`;
         switch (index) {
             case 0:
-                return <TableCell headerType={null} tagTableCell="td" index={index} getDocument={getDocument} text={""} value={""} render={defaultRenderTableCell({
+                return <TableCell location="body" headerType={null} tagTableCell="td" index={index} getDocument={getDocument} text={""} value={""} render={defaultRenderTableCell({
                     tagTableCell: "td", makePropsTableCell: (info) => ({
                         children: <DemoInput tabbable={info.rovingTabIndex.tabbable} />
 
                     })
-                })} />
+                })}  subInfo={undefined} />
             default:
-                return <TableCell headerType={null} tagTableCell="td" index={index} getDocument={getDocument} text={r.current.toString()} value={r.current.toString()} render={defaultRenderTableCell({ tagTableCell: "td", makePropsTableCell: () => ({ children: r.current.toString() }) })} />
+                return <TableCell location="body" headerType={null} tagTableCell="td" index={index} getDocument={getDocument} text={r.current.toString()} value={r.current.toString()} render={defaultRenderTableCell({ tagTableCell: "td", makePropsTableCell: () => ({ children: r.current.toString() }) })}  subInfo={undefined} />
         }
     }
 }
@@ -96,7 +95,7 @@ export function Demo() {
                                                 <DemoTableCell key={2} index={2} header={true} />
                                             </>
                                         })
-                                    })} />
+                                    })}  subInfo={undefined} />
                                 })
                             })} />
                             <TableBody render={defaultRenderTableBody({
@@ -113,7 +112,7 @@ export function Demo() {
                                                         <DemoTableCell key={2} index={2} />
                                                     </>
                                                 })
-                                            })} />
+                                            })}  subInfo={undefined} />
                                         }
                                     }())
                                 })

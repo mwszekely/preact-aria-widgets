@@ -27,7 +27,7 @@ export interface AccordionSectionProps<HeaderElement extends Element, BodyElemen
 
 
 const AccordionSectionContext = createContext<UseAccordionSection<any, any, any>>(null!);
-export const Accordion = memo(function Accordion<HeaderElement extends HTMLElement, BodyElement extends HTMLElement | SVGElement, AccSubInfo>({
+export const Accordion = memo(function Accordion<HeaderElement extends HTMLElement, BodyElement extends HTMLElement | SVGElement, AccSubInfo = undefined>({
     disableArrowKeys,
     disableHomeEndKeys,
     expandedIndex,

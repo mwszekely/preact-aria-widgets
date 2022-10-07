@@ -69,11 +69,11 @@ export function Demo() {
 
 const DemoTab = memo(function DemoTab({ i }: { i: number }) {
     const label = `Tab #${i}`;
-    return <Tab key={i} index={i} getDocument={getDocument} render={defaultRenderTab({ tagTab: "li", makePropsTab: () => ({ children: label }) })} text={label} />
+    return <Tab key={i} index={i} getDocument={getDocument} render={defaultRenderTab({ tagTab: "li", makePropsTab: () => ({ children: label }) })} text={label} subInfo={undefined} />
 })
 
 const DemoTabPanel = memo(function DemoTabPanel({ i }: { i: number }) {
     const label = `Tab panel #${i}`;
-    return <TabPanel index={i} key={i} render={defaultRenderTabPanel({ tagTabPanel: "div", makePropsTabPanel: ({ tabPanel: { visible } }) => ({ hidden: !visible, children: label }) })} />
+    return <TabPanel index={i} key={i} render={defaultRenderTabPanel({ tagTabPanel: "div", makePropsTabPanel: ({ tabPanel: { visible } }) => ({ hidden: !visible, children: label }) })} subInfo={undefined} />
 })
 

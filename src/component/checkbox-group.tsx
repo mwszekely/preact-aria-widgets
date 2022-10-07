@@ -60,7 +60,7 @@ export function defaultRenderCheckboxGroup<InputType extends HTMLElement, LabelT
 }
 
 const UseCheckboxGroupChildContext = createContext<UseCheckboxGroupChild<any, any, any, any>>(null!);
-export const CheckboxGroup = memo(function CheckboxGroup<InputType extends HTMLElement, LabelType extends HTMLElement, C, K extends string>({
+export const CheckboxGroup = memo(function CheckboxGroup<InputType extends HTMLElement, LabelType extends HTMLElement, C = undefined, K extends string = never>({
     disabled: parentDisabled,
     tagInput,
     tagLabel,
@@ -111,7 +111,7 @@ export const CheckboxGroup = memo(function CheckboxGroup<InputType extends HTMLE
     )
 })
 
-export const CheckboxGroupCheckbox = memo(function CheckboxGroupCheckbox<InputType extends HTMLElement, LabelType extends HTMLElement, C, K extends string>({
+export const CheckboxGroupCheckbox = memo(function CheckboxGroupCheckbox<InputType extends HTMLElement, LabelType extends HTMLElement, C = undefined, K extends string = never>({
     checked,
     disabled,
     index,

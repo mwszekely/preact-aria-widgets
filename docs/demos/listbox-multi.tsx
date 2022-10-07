@@ -23,6 +23,7 @@ const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
             text={labelText}
             onSelectedChange={e => { setSelected(e[EventDetail].selected) }}
             render={defaultRenderListboxMultiItem({ tagListItem: "li", makePropsListItem: () => ({ children: labelText }) })}
+            subInfo={undefined}
         />
     )
 })

@@ -9,7 +9,7 @@ import { defaultRenderList, defaultRenderListItem } from "./listbox-single";
 
 type Get<T, K extends keyof T> = T[K];
 
-export interface ListboxMultiProps<LabelElement extends Element, ListElement extends Element, ListItemElement extends Element> extends
+export interface ListboxMultiProps<LabelElement extends Element, ListElement extends Element, ListItemElement extends Element, C, K extends string> extends
     Get<UseListboxMultiParameters<LabelElement, ListElement>, "linearNavigation">,
     Get<UseListboxMultiParameters<LabelElement, ListElement>, "listNavigation">,
     Get<UseListboxMultiParameters<LabelElement, ListElement>, "rovingTabIndex">,
@@ -17,7 +17,7 @@ export interface ListboxMultiProps<LabelElement extends Element, ListElement ext
     Get<UseListboxMultiParameters<LabelElement, ListElement>, "managedChildren">,
     Get<UseListboxMultiParameters<LabelElement, ListElement>, "listboxMulti"> {
     //tagLabel: ElementToTag<LabelElement>;
-    render(info: UseListboxMultiReturnTypeInfo<ListItemElement>, modifyPropsLabel: PropModifier<LabelElement>, modifyPropsList: PropModifier<ListElement>): VNode<any>;
+    render(info: UseListboxMultiReturnTypeInfo<ListItemElement, C, K>, modifyPropsLabel: PropModifier<LabelElement>, modifyPropsList: PropModifier<ListElement>): VNode<any>;
 }
 
 
@@ -25,18 +25,19 @@ export interface ListboxMultiProps<LabelElement extends Element, ListElement ext
 
 
 
-export interface ListboxMultiItemProps<ListboxItemElement extends Element> extends
-    Get<UseListboxMultiItemParameters<ListboxItemElement>, "managedChild">,
-    Omit<Get<UseListboxMultiItemParameters<ListboxItemElement>, "listNavigation">, "subInfo">,
-    Get<UseListboxMultiItemParameters<ListboxItemElement>, "rovingTabIndex">,
-    Get<UseListboxMultiItemParameters<ListboxItemElement>, "listboxMultiItem">,
-    Get<UseListboxMultiItemParameters<ListboxItemElement>, "hasFocus"> {
+export interface ListboxMultiItemProps<ListboxItemElement extends Element, C, K extends string> extends
+    Get<UseListboxMultiItemParameters<ListboxItemElement, C, K>, "managedChild">,
+    Omit<Get<UseListboxMultiItemParameters<ListboxItemElement, C, K>, "listNavigation">, "subInfo">,
+    Get<UseListboxMultiItemParameters<ListboxItemElement, C, K>, "rovingTabIndex">,
+    Get<UseListboxMultiItemParameters<ListboxItemElement, C, K>, "listboxMultiItem">,
+    Get<UseListboxMultiItemParameters<ListboxItemElement, C, K>, "hasFocus"> {
+    subInfo: Get<UseListboxMultiItemParameters<ListboxItemElement, C, K>, "subInfo">;
     render(info: UseListboxMultiItemReturnTypeInfo<ListboxItemElement>, modifyListItemProps: PropModifier<ListboxItemElement>): VNode<any>;
 }
 
-export const ListboxMultiContext = createContext<UseListboxMultiItem<any>>(null!);
+export const ListboxMultiContext = createContext<UseListboxMultiItem<any, any, any>>(null!);
 
-export const ListboxMulti = memo(function ListboxMulti<LabelElement extends Element, ListElement extends HTMLElement, ListItemElement extends HTMLElement>({
+export const ListboxMulti = memo(function ListboxMulti<LabelElement extends Element, ListElement extends HTMLElement, ListItemElement extends HTMLElement, C = undefined, K extends string = never>({
     render,
     tagLabel,
     collator,
@@ -54,13 +55,13 @@ export const ListboxMulti = memo(function ListboxMulti<LabelElement extends Elem
 
     typeaheadTimeout,
     tagList,
-}: ListboxMultiProps<LabelElement, ListElement, ListItemElement>) {
+}: ListboxMultiProps<LabelElement, ListElement, ListItemElement, C, K>) {
     const {
         useListboxMultiItem,
         useListboxMultiLabel,
         useListboxMultiProps,
         ...listboxReturnType
-    } = useListboxMulti<LabelElement, ListElement, ListItemElement>({
+    } = useListboxMulti<LabelElement, ListElement, ListItemElement, C, K>({
         linearNavigation: { disableArrowKeys, disableHomeEndKeys, navigationDirection },
         listboxMulti: { tagLabel, tagList },
         listNavigation: { indexDemangler, indexMangler },
@@ -78,21 +79,22 @@ export const ListboxMulti = memo(function ListboxMulti<LabelElement extends Elem
 })
 
 
-export function defaultRenderListboxMulti<LabelElement extends Element, ListElement extends HTMLElement, ListItemElement extends Element>({ makePropsList, makePropsLabel, tagLabel, tagList }: { tagLabel: ElementToTag<LabelElement>, tagList: ElementToTag<ListElement>, makePropsLabel: (info: UseListboxMultiReturnTypeInfo<ListItemElement>) => h.JSX.HTMLAttributes<LabelElement>, makePropsList: (info: UseListboxMultiReturnTypeInfo<ListItemElement>) => h.JSX.HTMLAttributes<ListElement> }) {
-    return defaultRenderList<LabelElement, ListElement, UseListboxMultiReturnTypeInfo<ListItemElement>>({ makePropsLabel, makePropsList, tagLabel, tagList })
+export function defaultRenderListboxMulti<LabelElement extends Element, ListElement extends HTMLElement, ListItemElement extends Element, C, K extends string>({ makePropsList, makePropsLabel, tagLabel, tagList }: { tagLabel: ElementToTag<LabelElement>, tagList: ElementToTag<ListElement>, makePropsLabel: (info: UseListboxMultiReturnTypeInfo<ListItemElement, C, K>) => h.JSX.HTMLAttributes<LabelElement>, makePropsList: (info: UseListboxMultiReturnTypeInfo<ListItemElement, C, K>) => h.JSX.HTMLAttributes<ListElement> }) {
+    return defaultRenderList<LabelElement, ListElement, UseListboxMultiReturnTypeInfo<ListItemElement, C, K>>({ makePropsLabel, makePropsList, tagLabel, tagList })
 }
 
 export function defaultRenderListboxMultiItem<ListItemElement extends HTMLElement>({ makePropsListItem, tagListItem }: { tagListItem: ElementToTag<ListItemElement>, makePropsListItem: (info: UseListboxMultiItemReturnTypeInfo<ListItemElement>) => h.JSX.HTMLAttributes<ListItemElement> }) {
     return defaultRenderListItem<ListItemElement, UseListboxMultiItemReturnTypeInfo<ListItemElement>>({ makePropsListItem, tagListItem });
 }
 
-export const ListboxMultiItem = memo(function ListboxMultiItem<ListItemElement extends Element>({ index, disabled, flags, focusSelf, render, text, hidden, selected, onSelectedChange, getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange }: ListboxMultiItemProps<ListItemElement>) {
+export const ListboxMultiItem = memo(function ListboxMultiItem<ListItemElement extends Element, C = undefined, K extends string = never>({ index, disabled, flags, focusSelf, render, text, hidden, selected, onSelectedChange, getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange, subInfo }: ListboxMultiItemProps<ListItemElement, C, K>) {
     const { useListboxMultiItemProps, ...itemReturn } = useContext(ListboxMultiContext)({
         managedChild: { index, flags },
         rovingTabIndex: { focusSelf, hidden },
         listNavigation: { text },
         listboxMultiItem: { disabled, selected, onSelectedChange },
-        hasFocus: { getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange }
+        hasFocus: { getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange },
+        subInfo
     });
 
     return (

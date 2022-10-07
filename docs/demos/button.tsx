@@ -48,15 +48,30 @@ export function Demo() {
             <DemoButton disabled={false} tag="div" />
             <DemoButton disabled="soft" tag="div" />
             <DemoButton disabled="hard" tag="div" />
-            <Button getDocument={getDocument} disabled={false} tagButton="button" pressed={pressed} onPress={e => setPressed(e[EventDetail].pressed ?? false)} render={defaultRenderButton("button", () => ({ children: `Toggle button (${pressed? "pressed" : "unpressed"})`}))} />
+            <Button
+                getDocument={getDocument}
+                disabled={false}
+                tagButton="button"
+                pressed={pressed}
+                onPress={e => setPressed(e[EventDetail].pressed ?? false)}
+                render={defaultRenderButton({ tagButton: "button", makePropsButton: () => ({ children: `Toggle button (${pressed ? "pressed" : "unpressed"})` }) })}
+            />
         </>
     )
 }
 
-function DemoButton({ tag, disabled}: { tag: string, disabled: boolean | "soft" | "hard" }) {
+function DemoButton({ tag, disabled }: { tag: string, disabled: boolean | "soft" | "hard" }) {
     const onPress = () => { alert("Button clicked") }
 
-    return ( 
-        <Button getDocument={getDocument} tagButton={tag as any} onPress={onPress} render={defaultRenderButton(tag, () => ({ class: "btn", children: `${tag} ${disabled? ` disabled (${disabled == "soft"? "soft" : "hard"})` : ""}` }))}  />
+    return (
+        <Button
+            getDocument={getDocument}
+            tagButton={tag as any}
+            onPress={onPress}
+            render={defaultRenderButton({
+                tagButton: tag,
+                makePropsButton: () => ({ class: "btn", children: `${tag} ${disabled ? ` disabled (${disabled == "soft" ? "soft" : "hard"})` : ""}` })
+            })}
+        />
     )
 }

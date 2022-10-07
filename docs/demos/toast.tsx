@@ -40,7 +40,7 @@ export function Demo() {
         const index = currentIndex.current;
         currentIndex.current += 1;
 
-        setToasts(t => [...t, <Toast index={index} key={index} render={({ toast: { dismiss, showing, dismissed, numberOfToastsAheadOfUs } }) => (
+        setToasts(t => [...t, <Toast subInfo={undefined} index={index} key={index} render={({ toast: { dismiss, showing, dismissed, numberOfToastsAheadOfUs } }) => (
             <div style={showing ? {} : { opacity: 0.5 }}>This the toast with an index of {index}. (#{numberOfToastsAheadOfUs} in the queue to be shown). <button disabled={dismissed} onClick={dismiss}>Click to dismiss</button></div>
         )} timeout={null} />]);
     }, []);

@@ -1,7 +1,7 @@
 
 import { useState } from "preact-prop-helpers";
-import { EventDetail, ListboxSingle } from "../../index";
-import { defaultRenderSliderThumb, SliderThumb, Slider } from "../../component/slider"
+import { defaultRenderSliderThumb, Slider, SliderThumb } from "../../component/slider";
+import { EventDetail } from "../../index";
 
 function DemoSliderThumb({ index }: { index: number }) {
     const [value, setValue] = useState(0);
@@ -15,11 +15,11 @@ function DemoSliderThumb({ index }: { index: number }) {
             onValueChange={e => setValue(e[EventDetail].value)}
             min={0}
             max={10}
+            subInfo={undefined}
             render={defaultRenderSliderThumb({ tagThumb: "input", makePropsThumb: () => ({}) })} />
     )
 }
 
-function getDocument() { return window.document; }
 
 export function Blurb() {
     return (
@@ -44,7 +44,6 @@ export function Code() {
 
 export function Demo() {
     const [count, setCount] = useState(5);
-    const [open, setOpen] = useState(false);
 
 
     return (

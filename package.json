@@ -19,7 +19,7 @@
   "author": "",
   "license": "ISC",
   "peerDependencies": {
-    "preact": "^10.6.4"
+    "preact": "^10.11.1"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.18.6",
