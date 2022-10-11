@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { UseHasFocusParameters, useListNavigation, UseListNavigationParameters, useMergedProps, usePress, useRandomId, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
-import { UseListNavigationChildParameters, UseListNavigationChildReturnTypeInfo, UseListNavigationReturnTypeInfo } from "preact-prop-helpers/use-list-navigation";
-import { returnFalse, useEnsureStability, usePassiveState } from "preact-prop-helpers/use-passive-state";
+import { UseListNavigationChildParameters, UseListNavigationChildReturnTypeInfo, UseListNavigationReturnTypeInfo } from "preact-prop-helpers";
+import { returnFalse, useEnsureStability, usePassiveState } from "preact-prop-helpers";
 import { useCallback, useEffect, useRef } from "preact/hooks";
 import { debugLog, overwriteWithWarning } from "./props";
 import { useSoftDismiss, UseSoftDismissParameters, UseSoftDismissReturnTypeInfo } from "./use-modal";

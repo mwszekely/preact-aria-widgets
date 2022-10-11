@@ -1,11 +1,11 @@
 import { h } from "preact";
 import { generateRandomId, returnTrue, useListNavigationSingleSelection, useManagedChildren, useMergedProps, usePress, useStableCallback, useState } from "preact-prop-helpers";
-import { ChildFlagOperations, OnChildrenMountChange, useChildrenFlag, UseManagedChildParameters, UseManagedChildrenParameters, UseManagedChildrenReturnTypeInfo } from "preact-prop-helpers/use-child-manager";
-import { UseListNavigationSingleSelectionChildParameters, UseListNavigationSingleSelectionChildReturnTypeInfo, UseListNavigationSingleSelectionParameters, UseListNavigationSingleSelectionReturnTypeInfo } from "preact-prop-helpers/use-list-navigation";
+import { ChildFlagOperations, OnChildrenMountChange, useChildrenFlag, UseManagedChildParameters, UseManagedChildrenParameters, UseManagedChildrenReturnTypeInfo } from "preact-prop-helpers";
+import { UseListNavigationSingleSelectionChildParameters, UseListNavigationSingleSelectionChildReturnTypeInfo, UseListNavigationSingleSelectionParameters, UseListNavigationSingleSelectionReturnTypeInfo } from "preact-prop-helpers";
 import { useCallback, useEffect, useRef } from "preact/hooks";
 import { useLabel } from "./use-label";
 import { debugLog, EnhancedEvent, enhanceEvent, EventDetail, overwriteWithWarning } from "./props";
-import { UseChildrenHaveFocusParameters, UseHasFocusParameters } from "preact-prop-helpers/use-has-focus";
+import { UseChildrenHaveFocusParameters, UseHasFocusParameters } from "preact-prop-helpers";
 
 
 export type TabsChangeEvent<E extends Element> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;

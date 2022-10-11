@@ -1,6 +1,6 @@
 import { h } from "preact";
 import { UseHasFocusParameters, useRandomId, useStableCallback } from "preact-prop-helpers";
-import { useListNavigationSingleSelection, UseListNavigationSingleSelectionChildParameters, UseListNavigationSingleSelectionChildReturnTypeInfo, UseListNavigationSingleSelectionParameters, UseListNavigationSingleSelectionReturnTypeInfo } from "preact-prop-helpers/use-list-navigation";
+import { useListNavigationSingleSelection, UseListNavigationSingleSelectionChildParameters, UseListNavigationSingleSelectionChildReturnTypeInfo, UseListNavigationSingleSelectionParameters, UseListNavigationSingleSelectionReturnTypeInfo } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { debugLog, ElementToTag, enhanceEvent, EventDetail, overwriteWithWarning } from "./props";
 import { useLabel, UseLabelReturnTypeInfo } from "./use-label";

@@ -1,6 +1,6 @@
 import { h } from "preact";
 import { UseListNavigationChildParameters, useListNavigationSingleSelection, UseListNavigationSingleSelectionChildReturnTypeInfo, UseListNavigationSingleSelectionParameters, UseListNavigationSingleSelectionReturnTypeInfo, useMergedProps, useRefElement, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
-import { UseChildrenHaveFocusParameters, UseHasFocusParameters } from "preact-prop-helpers/use-has-focus";
+import { UseChildrenHaveFocusParameters, UseHasFocusParameters } from "preact-prop-helpers";
 import { useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
 import { debugLog, ElementToTag, EnhancedEvent, enhanceEvent, TagSensitiveProps } from "./props";
 import { useCheckboxLike, UseCheckboxLikeReturnTypeInfo, useLabel } from "./use-label";

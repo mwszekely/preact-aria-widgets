@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { ManagedChildInfo, ManagedChildren, useGridNavigation, UseGridNavigationParameters, UseHasFocusParameters, UseListNavigationSubInfo, UseRovingTabIndexSubInfo, useSortableChildren } from "preact-prop-helpers";
-import { UseGridNavigationCellParameters, UseGridNavigationCellReturnTypeInfo, UseGridNavigationCellSubInfo, UseGridNavigationReturnTypeInfo, UseGridNavigationRowParameters, UseGridNavigationRowReturnTypeInfo } from "preact-prop-helpers/use-grid-navigation";
-import { UseSortableChildrenReturnTypeInfo } from "preact-prop-helpers/use-sortable-children";
+import { UseGridNavigationCellParameters, UseGridNavigationCellReturnTypeInfo, UseGridNavigationCellSubInfo, UseGridNavigationReturnTypeInfo, UseGridNavigationRowParameters, UseGridNavigationRowReturnTypeInfo } from "preact-prop-helpers";
+import { UseSortableChildrenReturnTypeInfo } from "preact-prop-helpers";
 import { useCallback, useRef } from "preact/hooks";
 import { debugLog, overwriteWithWarning } from "./props";
 
