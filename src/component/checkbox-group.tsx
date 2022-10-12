@@ -16,7 +16,7 @@ export interface CheckboxGroupProps<InputElement extends Element, LabelElement e
     Get<UseCheckboxGroupParameters, "managedChildren">,
     Get<UseCheckboxGroupParameters, "rovingTabIndex">,
     Get<UseCheckboxGroupParameters, "typeaheadNavigation">,
-    Get<UseCheckboxGroupParentParameters<InputElement, LabelElement>, "checkbox">,
+    //Get<UseCheckboxGroupParentParameters<InputElement, LabelElement>, "checkbox">,
     Get<UseCheckboxGroupParentParameters<InputElement, LabelElement>, "checkboxLike">,
     Get<UseCheckboxGroupParentParameters<InputElement, LabelElement>, "label"> {
     getDocument: UseHasFocusParameters<InputElement>["getDocument"];
@@ -25,15 +25,15 @@ export interface CheckboxGroupProps<InputElement extends Element, LabelElement e
 }
 
 export interface CheckboxGroupCheckboxProps<InputType extends Element, LabelType extends Element, CBGSubInfo, K extends string> extends
-    Get2<UseCheckboxGroupChildParameters<InputType, LabelType, CBGSubInfo, K, CBGSubInfo>, "asCheckbox", "checkbox">,
-    Get2<UseCheckboxGroupChildParameters<InputType, LabelType, CBGSubInfo, K, CBGSubInfo>, "asCheckbox", "label">,
-    Get2<UseCheckboxGroupChildParameters<InputType, LabelType, CBGSubInfo, K, CBGSubInfo>, "asCheckbox", "checkboxLike">,
-    Get2<UseCheckboxGroupChildParameters<InputType, LabelType, CBGSubInfo, K, CBGSubInfo>, "asCheckboxGroupChild", "listNavigation">,
-    Get2<UseCheckboxGroupChildParameters<InputType, LabelType, CBGSubInfo, K, CBGSubInfo>, "asCheckboxGroupChild", "rovingTabIndex">,
-    Get2<UseCheckboxGroupChildParameters<InputType, LabelType, CBGSubInfo, K, CBGSubInfo>, "asCheckboxGroupChild", "managedChild"> {
+    // Get2<UseCheckboxGroupChildParameters<CBGSubInfo, K, CBGSubInfo>, "asCheckbox", "checkbox">,
+    // Get2<UseCheckboxGroupChildParameters<CBGSubInfo, K, CBGSubInfo>, "asCheckbox", "label">,
+    // Get2<UseCheckboxGroupChildParameters<CBGSubInfo, K, CBGSubInfo>, "asCheckbox", "checkboxLike">,
+    Get2<UseCheckboxGroupChildParameters<CBGSubInfo, K, CBGSubInfo>, "asCheckboxGroupChild", "listNavigation">,
+    Get2<UseCheckboxGroupChildParameters<CBGSubInfo, K, CBGSubInfo>, "asCheckboxGroupChild", "rovingTabIndex">,
+    Get2<UseCheckboxGroupChildParameters<CBGSubInfo, K, CBGSubInfo>, "asCheckboxGroupChild", "managedChild"> {
     getDocument: UseHasFocusParameters<InputType>["getDocument"];
     getWindow?: UseHasFocusParameters<InputType>["getWindow"];
-    subInfo: Get2<UseCheckboxGroupChildParameters<InputType, LabelType, CBGSubInfo, K, CBGSubInfo>, "asCheckboxGroupChild", "subInfo">
+    subInfo: Get2<UseCheckboxGroupChildParameters<CBGSubInfo, K, CBGSubInfo>, "asCheckboxGroupChild", "subInfo">
     render(info: UseCheckboxGroupChildReturnTypeInfo<InputType, LabelType>, modifyInputProps: PropModifier<InputType>, label: PropModifier<LabelType>): VNode<any>;
 }
 
@@ -43,8 +43,8 @@ export interface DefaultRenderCheckboxGroupParameters<InputType extends HTMLElem
 }
 
 export function defaultRenderCheckboxGroupChild<InputType extends HTMLElement, LabelType extends HTMLElement>({ tagInput, tagLabel, labelPosition, makeInputProps, makeLabelProps }: DefaultRenderCheckboxGroupChildParameters<InputType, LabelType>) {
-    return function (info: UseCheckboxGroupChildReturnTypeInfo<InputType, LabelType>, modifyInputProps: PropModifier<InputType>, modifyLabelProps: PropModifier<LabelType>): VNode<any> {
-        return defaultRenderCheckboxLike({ labelPosition, tagInput, tagLabel, makeInputProps, makeLabelProps })(info, modifyInputProps, modifyLabelProps);
+    return function (groupInfo: UseCheckboxGroupChildReturnTypeInfo<InputType, LabelType>, modifyInputProps: PropModifier<InputType>, modifyLabelProps: PropModifier<LabelType>): VNode<any> {
+        return defaultRenderCheckboxLike({ labelPosition, tagInput, tagLabel, makeInputProps, makeLabelProps })(groupInfo, modifyInputProps, modifyLabelProps);
     }
 }
 
@@ -61,9 +61,9 @@ export function defaultRenderCheckboxGroup<InputType extends HTMLElement, LabelT
 
 const UseCheckboxGroupChildContext = createContext<UseCheckboxGroupChild<any, any, any, any>>(null!);
 export const CheckboxGroup = memo(function CheckboxGroup<InputType extends HTMLElement, LabelType extends HTMLElement, C = undefined, K extends string = never>({
-    disabled: parentDisabled,
+    //disabled: parentDisabled,
     tagInput,
-    tagLabel,
+    //tagLabel,
     render,
     getDocument,
     getWindow,
@@ -95,7 +95,12 @@ export const CheckboxGroup = memo(function CheckboxGroup<InputType extends HTMLE
     });
 
 
-    const { useCheckboxGroupParentInputProps, useCheckboxGroupParentLabelProps } = useCheckboxGroupParentInput({ checkbox: {}, checkboxLike: { disabled: parentDisabled, labelPosition }, label: { tagInput, tagLabel }, hasFocusInput: { getWindow, getDocument }, hasFocusLabel: { getWindow, getDocument } });
+    const { useCheckboxGroupParentInputProps, useCheckboxGroupParentLabelProps, ...restParentInfo } = useCheckboxGroupParentInput({
+        checkboxLike: { labelPosition },
+        label: { tagInput },
+    });
+
+    const { checkboxGroupParent: {checked: parentChecked, onCheckedChange: onParentCheckedChange} } = restParentInfo;
 
 
     let wrapping: VNode<any>;
