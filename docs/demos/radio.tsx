@@ -15,6 +15,7 @@ const DemoRadioButton = memo(function DemoRadioButton({ index }: { index: number
     return (
         <Radio<number, HTMLInputElement, HTMLLabelElement>
             index={index}
+            subInfo={undefined}
             getDocument={getDocument}
             disabled={false}
             labelPosition="separate"
