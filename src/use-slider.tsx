@@ -1,6 +1,6 @@
 import { h } from "preact";
 import { useManagedChildren, useMergedProps } from "preact-prop-helpers";
-import { UseManagedChildParameters, UseManagedChildrenParameters, UseManagedChildrenReturnTypeInfo } from "preact-prop-helpers/use-child-manager";
+import { UseManagedChildParameters, UseManagedChildrenParameters, UseManagedChildrenReturnTypeInfo } from "preact-prop-helpers";
 import { StateUpdater, useCallback, useState } from "preact/hooks";
 import { debugLog, EventDetail, TagSensitiveProps } from "./props";
 
