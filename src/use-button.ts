@@ -1,6 +1,6 @@
 import { h } from "preact";
 import { UseHasFocusParameters, useMergedProps, usePress } from "preact-prop-helpers";
-import { debugLog, ElementToTag, EnhancedEvent, enhanceEvent } from "./props";
+import { debugLog, DisabledType, ElementToTag, EnhancedEvent, enhanceEvent } from "./props";
 
 
 export type ButtonPressEvent<E extends EventTarget> = EnhancedEvent<E, Event | Event, { pressed: boolean | null }>;
@@ -8,7 +8,7 @@ export type ButtonPressEvent<E extends EventTarget> = EnhancedEvent<E, Event | E
 export interface UseButtonParameters<E extends Node> {
     button: {
         tagButton: ElementToTag<E>;
-        disabled?: boolean | "soft" | "hard";
+        disabled?: DisabledType;
         pressed?: boolean | null | undefined;
         onPress?(event: ButtonPressEvent<E>): void;
     }

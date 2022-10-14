@@ -1,11 +1,20 @@
 
 import { useState } from "preact-prop-helpers";
 import { defaultRenderMenu, defaultRenderMenuItem, Menu, MenuItem } from "../../component/menu";
+import { EventDetail } from "../../props";
 
 function DemoListItem({ index }: { index: number }) {
 
     return (
-        <MenuItem<HTMLLIElement> index={index} text={`List item #${index}`} render={defaultRenderMenuItem({ tagMenuItem: "li", makePropsMenuItem: () => ({ children: `Menu item #${index}` }) })} />
+        <MenuItem<HTMLLIElement> 
+        index={index} 
+        text={`List item #${index}`} 
+        subInfo={undefined} 
+        onPress={e => alert(`Menu item #${e[EventDetail].index} pressed`)}
+        disabled={false}
+        getDocument={getDocument}
+        render={defaultRenderMenuItem({ tagMenuItem: "li", makePropsMenuItem: () => ({ children: `Menu item #${index}` }) })}
+         />
     )
 }
 

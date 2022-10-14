@@ -3,7 +3,7 @@ import { UseHasFocusParameters, useListNavigation, UseListNavigationParameters, 
 import { UseListNavigationChildParameters, UseListNavigationChildReturnTypeInfo, UseListNavigationReturnTypeInfo } from "preact-prop-helpers";
 import { returnFalse, useEnsureStability, usePassiveState } from "preact-prop-helpers";
 import { useCallback, useEffect, useRef } from "preact/hooks";
-import { debugLog, overwriteWithWarning } from "./props";
+import { debugLog, DisabledType, EnhancedEvent, enhanceEvent, overwriteWithWarning } from "./props";
 import { useSoftDismiss, UseSoftDismissParameters, UseSoftDismissReturnTypeInfo } from "./use-modal";
 
 interface MSP {
@@ -24,6 +24,10 @@ interface MSP {
 
 export type MenuSurfaceOmits = keyof MSP;
 
+export interface MenuItemSubInfo<C> {
+    subInfo: C;
+}
+
 export interface UseMenuSurfaceParameters<_S extends Element, _B extends Element, MSO extends MenuSurfaceOmits> extends UseSoftDismissParameters<"getElements"> {
     menuSurface: Omit<MSP, MSO>;
     //hasFocusButton: UseHasFocusParameters<B>;
@@ -39,7 +43,10 @@ export interface UseMenuParameters<S extends Element, B extends Element, MSO ext
     menuButtonHasFocus: UseHasFocusParameters<B>;
 }
 export interface UseMenuButtonParameters extends UseListNavigationChildParameters<never, never, never, never, never, never> { }
-export interface UseMenuItemParameters extends Omit<UseListNavigationChildParameters<{}, never, never, never, never, never>, "subInfo"> { }
+export interface UseMenuItemParameters<MenuItemElement extends Element, C, K extends string> extends UseListNavigationChildParameters<MenuItemSubInfo<C>, K, never, never, never, C> { 
+    hasFocus: UseHasFocusParameters<MenuItemElement>;
+    menuItem: { disabled: DisabledType; onPress: (e: EnhancedEvent<MenuItemElement, h.JSX.TargetedEvent<MenuItemElement>, { index: number }>) => void; }
+}
 
 export interface UseMenuSurfaceReturnTypeInfo<_MenuParentElement extends Element, _MenuButtonElement extends Element> extends UseSoftDismissReturnTypeInfo {
     menuSurface: {
@@ -58,7 +65,7 @@ export interface UseMenuSurfaceReturnTypeInfo<_MenuParentElement extends Element
         getWindowFocused: () => boolean;*/
     }
 }
-export interface UseMenuReturnTypeInfo<MenuSurfaceElement extends Element, _MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element> extends UseMenuSurfaceReturnTypeInfo<MenuSurfaceElement, MenuButtonElement>, UseListNavigationReturnTypeInfo<MenuItemElement, {}, never> { }
+export interface UseMenuReturnTypeInfo<MenuSurfaceElement extends Element, _MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element, C, K extends string> extends UseMenuSurfaceReturnTypeInfo<MenuSurfaceElement, MenuButtonElement>, UseListNavigationReturnTypeInfo<MenuItemElement, MenuItemSubInfo<C>, K> { }
 export interface UseMenuButtonReturnTypeInfo extends UseListNavigationChildReturnTypeInfo<never> { }
 export interface UseMenuItemReturnTypeInfo<MenuItemElement extends Element> extends UseListNavigationChildReturnTypeInfo<MenuItemElement> { }
 
@@ -69,12 +76,12 @@ export interface UseMenuSurfaceReturnTypeWithHooks<MenuSurfaceElement extends El
     useMenuSurfaceButtonProps: (props: h.JSX.HTMLAttributes<MenuButtonElement>) => h.JSX.HTMLAttributes<any>;
 
 }
-export interface UseMenuReturnTypeWithHooks<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element> extends UseMenuReturnTypeInfo<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement> {
+export interface UseMenuReturnTypeWithHooks<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element, C, K extends string> extends UseMenuReturnTypeInfo<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement, C, K> {
     useMenuSentinel: <E extends Element>() => { useMenuSentinelProps: (p: h.JSX.HTMLAttributes<E>) => h.JSX.HTMLAttributes<E>; };
     useMenuProps: (props: h.JSX.HTMLAttributes<MenuParentElement>) => h.JSX.HTMLAttributes<MenuParentElement>;
     useMenuSurfaceProps: (props: h.JSX.HTMLAttributes<MenuSurfaceElement>) => h.JSX.HTMLAttributes<MenuSurfaceElement>;
     useMenuButtonProps: (props: h.JSX.HTMLAttributes<MenuButtonElement>) => h.JSX.HTMLAttributes<MenuButtonElement>;
-    useMenuItem: UseMenuItem<MenuItemElement>;
+    useMenuItem: UseMenuItem<MenuItemElement, C, K>;
 }
 export interface UseMenuButtonReturnTypeWithHooks extends UseMenuButtonReturnTypeInfo { }
 export interface UseMenuItemReturnTypeWithHooks<MenuItemElement extends Element> extends UseMenuItemReturnTypeInfo<MenuItemElement> { }
@@ -87,7 +94,7 @@ export interface UseMenuItemReturnTypeWithHooks<MenuItemElement extends Element>
 
 export type UseMenuItemProps<MenuItemElement extends Element> = (props: h.JSX.HTMLAttributes<MenuItemElement>) => h.JSX.HTMLAttributes<MenuItemElement>;
 
-export type UseMenuItem<MenuItemElement extends Element> = (args: UseMenuItemParameters) => UseMenuItemReturnTypeWithHooks<MenuItemElement>;
+export type UseMenuItem<MenuItemElement extends Element, C, K extends string> = (args: UseMenuItemParameters<MenuItemElement, C, K>) => UseMenuItemReturnTypeWithHooks<MenuItemElement>;
 
 //export interface UseMenuChildInfoBase<K extends string> extends ListNavigationChildInfoBase<K> {}
 
@@ -275,7 +282,7 @@ export function useFocusSentinel<E extends Element>({ focusSentinel: { open, onC
     }
 }
 
-export function useMenu<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element>({ menuButtonHasFocus, linearNavigation, listNavigation, managedChildren, menuSurface, rovingTabIndex, softDismiss, typeaheadNavigation, menu, activeElement }: UseMenuParameters<MenuSurfaceElement, MenuButtonElement, never>): UseMenuReturnTypeWithHooks<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement> {
+export function useMenu<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element, C, K extends string>({ menuButtonHasFocus, linearNavigation, listNavigation, managedChildren, menuSurface, rovingTabIndex, softDismiss, typeaheadNavigation, menu, activeElement }: UseMenuParameters<MenuSurfaceElement, MenuButtonElement, never>): UseMenuReturnTypeWithHooks<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement, C, K> {
 
     debugLog("useMenu");
     const { onOpen } = menu;
@@ -285,7 +292,7 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
         useListNavigationChild,
         useListNavigationProps,
         ...useListNavReturn
-    } = useListNavigation<MenuParentElement, MenuItemElement, {}, string>({
+    } = useListNavigation<MenuParentElement, MenuItemElement, MenuItemSubInfo<C>, K>({
         linearNavigation,
         listNavigation,
         managedChildren,
@@ -336,16 +343,20 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
         return usePressProps(props);
     });
 
-    const useMenuItem = useCallback<UseMenuItem<MenuItemElement>>(({ listNavigation, managedChild, rovingTabIndex }) => {
+    const useMenuItem = useCallback<UseMenuItem<MenuItemElement, C, K>>(({ listNavigation, managedChild, rovingTabIndex, subInfo, menuItem: { disabled, onPress }, hasFocus }) => {
         debugLog("useMenuItem", managedChild.index);
 
-        type E = MenuItemElement;
+        const usePressProps = usePress<MenuItemElement>({
+            onClickSync: (e) => (disabled ? null : onPress)?.(enhanceEvent(e, { index: managedChild.index })),
+            exclude: undefined,
+            hasFocus
+        });
 
-        const { useListNavigationChildProps, ...listNavRet } = useListNavigationChild({ listNavigation, managedChild, rovingTabIndex, subInfo: {} });
+        const { useListNavigationChildProps, ...listNavRet } = useListNavigationChild({ listNavigation, managedChild, rovingTabIndex, subInfo: { subInfo } });
 
-        function useMenuItemProps<P extends h.JSX.HTMLAttributes<E>>({ ...props }: P) {
+        function useMenuItemProps<P extends h.JSX.HTMLAttributes<MenuItemElement>>({ ...props }: P) {
             props.role = "menuitem";
-            return useMergedProps<E>({}, useListNavigationChildProps(props));
+            return usePressProps(useListNavigationChildProps(props));
         }
 
         return { useMenuItemProps, ...listNavRet };

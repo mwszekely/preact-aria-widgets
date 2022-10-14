@@ -49,9 +49,14 @@ export function defaultRenderCheckboxGroupChild<InputType extends HTMLElement, L
     }
 }
 
-export function defaultRenderCheckboxGroupParent<InputType extends Element, LabelType extends Element>({ render, disabled, getDocument, labelPosition, tagInput, tagLabel, getWindow, onActiveElementChange, onCheckedChange: onCheckedChangeUser, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange }: Omit<CheckboxProps<InputType, LabelType>, "checked">) {
+interface Foo<InputType extends Element, LabelType extends Element> extends Omit<CheckboxProps<InputType, LabelType>, "checked" | "onCheckedChange"> {
+    onCheckedChangeStart(): void;
+    onCheckedChangeEnd(ex?: any): void;
+}
+
+export function defaultRenderCheckboxGroupParent<InputType extends Element, LabelType extends Element>({ render, disabled, getDocument, labelPosition, tagInput, tagLabel, getWindow, onActiveElementChange, onCheckedChangeStart, onCheckedChangeEnd, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange }: Foo<InputType, LabelType>) {
     return function (parentInfo: UseCheckboxGroupParentReturnTypeInfo, modifyControlProps: PropModifier<any>) {
-        const { checkboxGroupParent: { checked, onCheckedChange: onCheckedChangeParent } } = parentInfo;
+        const { checkboxGroupParent: { checked, onParentCheckedChange } } = parentInfo;
         return (
             <Checkbox<InputType, LabelType>
                 checked={checked}
@@ -68,7 +73,25 @@ export function defaultRenderCheckboxGroupParent<InputType extends Element, Labe
                 tagLabel={tagLabel}
                 getWindow={getWindow}
                 onActiveElementChange={onActiveElementChange}
-                onCheckedChange={e => { onCheckedChangeParent(e); onCheckedChangeUser?.(e) }}
+                onCheckedChange={e => {
+                    let exception: any;
+                    onCheckedChangeStart();
+                    (async () => {
+
+                        try {
+                            await onParentCheckedChange(e);
+                        }
+                        catch (ex) {
+                            exception = ex;
+                        }
+                        finally {
+                            onCheckedChangeEnd(exception);
+                        }
+                    }
+
+                    )()
+
+                }}
                 onElementChange={onElementChange}
                 onFocusedChanged={onFocusedChanged}
                 onFocusedInnerChanged={onFocusedInnerChanged}

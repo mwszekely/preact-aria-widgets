@@ -15,23 +15,20 @@ function DemoCheckbox({ index }: { index: number }) {
     const inputElement = useRef<HTMLInputElement>(null);
     return (
         <CheckboxGroupChild<HTMLInputElement, HTMLLabelElement>
-            //getDocument={getDocument}
             checked={checked}
             index={index}
-            //disabled={false}
-            //labelPosition="separate"
             text={labelText}
             subInfo={undefined}
-            onChangeFromParent={(checked) => { setChecked(checked); }}
+            onChangeFromParent={async (checked) => { await new Promise(resolve => setTimeout(resolve, Math.random() * 2000)); setChecked(checked); }}
             focus={useStableCallback(() => inputElement.current?.focus())}
-            render={({ checkboxGroupChild: { onControlIdChanged, onCheckedChange } }, modifyControlProps) => {
+            render={({ checkboxGroupChild: { onControlIdChanged, onChildCheckedChange } }, modifyControlProps) => {
 
                 return (
                     <Checkbox
                         checked={checked}
                         disabled={false}
                         getDocument={getDocument}
-                        onCheckedChange={e => { setChecked(e[EventDetail].checked); onCheckedChange(e[EventDetail].checked); }}
+                        onCheckedChange={e => { setChecked(e[EventDetail].checked); onChildCheckedChange(e[EventDetail].checked); }}
                         labelPosition={"separate"}
                         tagInput={"input"}
                         tagLabel={"label"}
@@ -63,14 +60,14 @@ export function Blurb() {
             <ul>
                 <li>All normal <code>Checkbox</code> functionality is supported on each individual checkbox.</li>
                 <li>The parent checkbox switches between 3 states, remembering the last state that caused it to be "mixed".</li>
-                <li>The parent checkbox reacts to each child's <code>checked</code> prop and updates its own internal <code>checked</code> attribute (be aware of this if they're asyncronous, as you'll want to ensure they all resolve on the same tick with <code>Promise.all</code> to not clobber the user's inputs).</li>
+                <li>The parent's "mixed" state changes all children back to whatever state the user had most recently created; the distinction is drawn when a child calls <code>onChildCheckedChange</code> during its event handler. This call is what notifies the parent checkbox what to use when switching to that "mixed" state.</li>
                 <li>The children are treated as a composite component with list navigation; see <code>AiraSingleSelectList</code> for more information</li>
                 <li><code>aria-controls</code> is set on the parent Checkbox to contain the IDs of all child checkboxes. This has no effect on any technology that I am aware of, but it's there just in case.</li>
             </ul>
             <p><strong>Things <em>not</em> handled:</strong></p>
             <ul>
+                <li><code>CheckboxGroupParent</code> has supports child checkboxes being asyncronous (e.g. if each child's <code>onChangeFromParent</code> is async, then the parent's <code>onParentCheckedChange</code> will asyncronously wait for all of them), but you must apply any relevant labelling of this circumstance yourself.</li>
                 <li>As mentioned, <code>aria-controls</code> basically does nothing. Please ensure you're using good labelling here; it is assumed that the parent checkbox provides sufficient labelling for all the children, which how the demo example identifies these elements. If you have a separate label, you will need to wrap the children in a <code>role=group</code> that references that label by overriding <code>render</code>.</li>
-                <li>See the caveat above for when each child's <code>onInput</code> takes a variable amount of time to actually update the <code>checked</code> prop, as it can clobber the user's last input when clicking on the parent</li>
             </ul>
         </>
     )
@@ -82,6 +79,7 @@ export function Code() {
 
 export function Demo() {
     const [count, setCount] = useState(5);
+    const [pending, setPending] = useState(false);
 
 
     return (
@@ -96,12 +94,21 @@ export function Demo() {
                         return <div {...({
                             children: (
                                 <>
-                                    <CheckboxGroupParent 
-                                    index={0}
-                                    subInfo={undefined}
-                                    text="Parent checkbox"
-                                    render={defaultRenderCheckboxGroupParent<HTMLInputElement, HTMLLabelElement>({ disabled: false, getDocument, labelPosition: "separate", tagInput: "input", tagLabel: "label", render: defaultRenderCheckbox({ tagInput: "input", tagLabel: "label", labelPosition: "separate", makeInputProps: () => ({}), makeLabelProps: () => ({ children: "Parent checkbox" }) }) })}
-                                     />
+                                    <CheckboxGroupParent
+                                        index={0}
+                                        subInfo={undefined}
+                                        text="Parent checkbox"
+                                        render={defaultRenderCheckboxGroupParent<HTMLInputElement, HTMLLabelElement>({
+                                            disabled: pending,
+                                            getDocument,
+                                            labelPosition: "separate",
+                                            tagInput: "input",
+                                            tagLabel: "label",
+                                            onCheckedChangeStart: () => { setPending(true) },
+                                            onCheckedChangeEnd: () => { setPending(false) },
+                                            render: defaultRenderCheckbox({ tagInput: "input", tagLabel: "label", labelPosition: "separate", makeInputProps: () => ({}), makeLabelProps: () => ({ children: "Parent checkbox" }) })
+                                        })}
+                                    />
                                     <div style={{ display: "flex" }} {...modifyChildContainerProps({})}>
                                         <>{Array.from((function* () {
                                             for (let i = 0; i < count; ++i) {

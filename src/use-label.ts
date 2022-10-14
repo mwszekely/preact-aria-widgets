@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { UseHasFocusParameters, useMergedProps, usePress, useRandomId, useRefElement, useStableCallback } from "preact-prop-helpers";
 import { useCallback, useEffect } from "preact/hooks";
-import { ElementToTag } from "./props";
+import { DisabledType, ElementToTag } from "./props";
 
 interface ULI<InputElement extends Element, LabelElement extends Element> {
     prefixLabel: string;
@@ -105,7 +105,7 @@ export interface UseCheckboxLikeParameters<InputType extends Element, LabelType 
         labelPosition: "wrapping" | "separate";
         /** The role attribute to use, when applicable */
         role: string;
-        disabled: boolean;
+        disabled: DisabledType;
         checked: CheckboxCheckedType;
         onCheckedChange?(event: h.JSX.TargetedEvent<InputType>): void;
         //onInput?(event: h.JSX.TargetedEvent<LabelType>): void;
@@ -217,11 +217,11 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
             // Needs investigating, but onInput works fine in Firefox
             // TODO
             const usePressProps = usePress<InputType>({
-                onClickSync: disabled || !handlesInput(tag, labelPosition, "input-element") ? undefined : stableOnInput,
+                onClickSync: !!disabled || !handlesInput(tag, labelPosition, "input-element") ? undefined : stableOnInput,
                 exclude: undefined,
                 hasFocus: hasFocusInput
             });
-            let props: h.JSX.HTMLAttributes<InputType> = useMergedProps<InputType>(
+            const props: h.JSX.HTMLAttributes<InputType> = useMergedProps<InputType>(
                 useRefElementProps(useILInputProps(usePressProps({}))),
                 { onInput: tag == "input" ? ((e: Event) => e.preventDefault()) : undefined }
             );
@@ -239,13 +239,17 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
             else {
                 if (tag === "input") {
                     props.checked = (checked === true);
+                    if (disabled === true || disabled === 'hard')
+                        props.disabled = true;
+                    else 
+                        props["aria-disabled"] = "true";
                 }
                 else {
                     props.role = role;
                     props.tabIndex = 0;
                     props["aria-checked"] = checked === "mixed" ? "mixed" : checked === true ? "true" : undefined;
+                    props["aria-disabled"] = "true";
                 }
-                props["aria-disabled"] = disabled.toString();
 
             }
 
@@ -263,7 +267,7 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
         function useCheckboxLikeLabelElementProps({ ...userProps }: h.JSX.HTMLAttributes<LabelType>): h.JSX.HTMLAttributes<LabelType> {
 
             const usePressProps = usePress<LabelType>({
-                onClickSync: disabled || !handlesInput(tag, labelPosition, "label-element") ? undefined : stableOnInput,
+                onClickSync: !!disabled || !handlesInput(tag, labelPosition, "label-element") ? undefined : stableOnInput,
                 exclude: undefined,
                 hasFocus: hasFocusLabel
             });
@@ -274,7 +278,7 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
                     newProps.tabIndex = 0;
                 if (newProps.role == null)
                     newProps.role = role;
-                newProps["aria-disabled"] = disabled.toString();
+                newProps["aria-disabled"] = (!!disabled).toString();
                 newProps["aria-checked"] = checked.toString();
             }
             else {
@@ -298,7 +302,7 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
     });
 
     const focusSelf = useStableCallback(() => {
-        let element = getControlElement() as HTMLElement | null;
+        const element = getControlElement() as HTMLElement | null;
         element?.focus();
     })
 
