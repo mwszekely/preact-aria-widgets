@@ -1,9 +1,9 @@
 import { h } from "preact";
-import { returnFalse, useListNavigation, UseListNavigationChildParameters, UseListNavigationParameters, UseListNavigationReturnTypeInfo, useMergedProps, usePassiveState, UseRovingTabIndexChildReturnTypeInfo, useStableCallback, useState } from "preact-prop-helpers";
-import { StateUpdater, useCallback, useEffect, useRef } from "preact/hooks";
+import { returnFalse, returnZero, useListNavigation, UseListNavigationChildParameters, UseListNavigationParameters, UseListNavigationReturnTypeInfo, useMergedProps, usePassiveState, UseRovingTabIndexChildReturnTypeInfo, useStableCallback, useState } from "preact-prop-helpers";
+import { StateUpdater, useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
+import { debugLog, EnhancedEvent, PropModifier } from "./props";
+import { CheckboxChangeEvent } from "./use-checkbox";
 import { CheckboxCheckedType } from "./use-label";
-import { debugLog, EnhancedEvent, enhanceEvent, EventDetail, PropModifier } from "./props";
-import { CheckboxChangeEvent, UseCheckboxParameters } from "./use-checkbox";
 
 export type CheckboxGroupChangeEvent<E extends EventTarget> = EnhancedEvent<E, Event, { childrenChecked: boolean | Map<number, boolean | "mixed"> }>;
 
@@ -132,7 +132,7 @@ export interface UseCheckboxGroupReturnTypeWithHooks<InputElement extends Elemen
     useListNavigationProps: PropModifier<any>;
 }
 
-export interface UseCheckboxGroupParentParameters<InputElement extends Element, LabelElement extends Element> {
+export interface UseCheckboxGroupParentParameters<_InputElement extends Element, _LabelElement extends Element> {
     //checkbox: Pick<UseCheckboxParameters<InputElement, LabelElement>["checkbox"], "tagInput" | "tagLabel">;
     //label: Pick<UseCheckboxParameters<InputElement, LabelElement>["label"], "tagInput">;
     //hasFocusLabel: UseCheckboxParameters<InputElement, LabelElement>["hasFocusLabel"];
@@ -185,9 +185,11 @@ export function useCheckboxGroup<InputElement extends Element, LabelElement exte
     // generate a new string with all of them concatenated together
     // (but only once per render);
     const allIds = useRef(new Set<string>());
-    const [ariaControls, setControls] = useState("");
-    const [updateIndex, setIdUpdateIndex] = useState(0);
-
+    //const [updateIndex, setIdUpdateIndex] = useState(0);
+    const foo = useRef<StateUpdater<string> | null>(null);
+    const allControlIds = useRef<Set<string>>(new Set());
+    const [_getUpdateIndex, setUpdateIndex] = usePassiveState<number>(useStableCallback(() => { foo.current?.(Array.from(allControlIds.current).join(" ")) }), returnZero);
+    //const [getControlIds, setSetControlIds] = usePassiveState<StateUpdater<string> | null>(useStableCallback(controls => foo.current?.(controls)));
 
     const [checkedCount, setCheckedCount] = useState(0);
     const checkedIndices = useRef(new Set<number>());
@@ -207,7 +209,11 @@ export function useCheckboxGroup<InputElement extends Element, LabelElement exte
     // If the user has changed the parent checkbox's value, then this ref holds a memory of what values were held before.
     // Otherwise, it's null when the last input was from a child checkbox. 
     //const savedCheckedValues = useRef<Map<number, boolean | "mixed"> | null>(null);
-    const useCheckboxGroupParent = useCallback<UseCheckboxGroupParent<InputElement, LabelElement>>(({ }) => {
+    const useCheckboxGroupParent = useCallback<UseCheckboxGroupParent<InputElement, LabelElement>>(({ ..._void }) => {
+        const [ariaControls, setControls] = useState("");
+        useLayoutEffect(() => {
+            foo.current = setControls;
+        }, [setControls]);
         debugLog("useCheckboxGroupParent");
 
         const [checked, setChecked] = useState<CheckboxCheckedType>(false);
@@ -222,10 +228,9 @@ export function useCheckboxGroup<InputElement extends Element, LabelElement exte
                 return (useMergedProps<InputElement>(useMergedProps<InputElement>({}, { "aria-controls": ariaControls } as h.JSX.HTMLAttributes<InputElement>), props));
             }
         }
-    }, [ariaControls]);
+    }, []);
 
     const onCheckboxGroupParentInput = useCallback((e: CheckboxChangeEvent<InputElement>) => {
-        debugger;
         e.preventDefault();
 
         const selfIsChecked = getSelfIsCheckedStable();
@@ -233,7 +238,7 @@ export function useCheckboxGroup<InputElement extends Element, LabelElement exte
         let willChangeAny = false;
         children.forEach(child => willChangeAny ||= (child.subInfo.subInfo.subInfo.checked != child.subInfo.subInfo.subInfo.getLastUserChecked()));
         children.forEach(child => {
-            let prevChecked = child.subInfo.subInfo.subInfo.checked;
+            const prevChecked = child.subInfo.subInfo.subInfo.checked;
             let checked: CheckboxCheckedType;
             if (nextChecked == "mixed") {
                 if (willChangeAny)
@@ -247,21 +252,6 @@ export function useCheckboxGroup<InputElement extends Element, LabelElement exte
             if (checked != prevChecked)
                 child.subInfo.subInfo.subInfo.setCheckedFromParentInput(checked);
         });
-        /*if (selfIsChecked === true || (selfIsChecked === false && savedCheckedValues.current == null)) {
-            return onUpdateChildren(enhanceEvent(e, { childrenChecked: false }));
-        }
-        else if (selfIsChecked === "mixed") {
-
-            savedCheckedValues.current = new Map();
-            children.forEach(child => {
-                savedCheckedValues.current!.set(child.index, child.getLastUserChecked());
-            })
-
-            return onUpdateChildren(enhanceEvent(e, { childrenChecked: true }));
-        }
-        else {
-            return onUpdateChildren(enhanceEvent(e, { childrenChecked: savedCheckedValues.current ?? true }));
-        }*/
     }, [])
 
     const notifyChecked = useCallback((index: number, checked: boolean | "mixed") => {
@@ -278,19 +268,6 @@ export function useCheckboxGroup<InputElement extends Element, LabelElement exte
             }
         }
     }, []);
-
-    /*useEffect(() => {
-        let percentage = checkedCount / managedChildren.length;
-        setSelfIsChecked(percentage <= 0 ? false : percentage >= 1 ? true : "mixed")
-    }, [setSelfIsChecked, managedChildren.length, checkedCount]);*/
-
-    /*const useCheckboxGroupParentProps = useCallback((props: h.JSX.HTMLAttributes<InputElement>) => {
-        return 
-    }, [ariaControls]);*/
-
-    useEffect(() => {
-        setControls(Array.from(allIds.current).join(" "));
-    }, [updateIndex])
 
     const useCheckboxGroupChild: UseCheckboxGroupChild<InputElement, LabelElement, CBGSubInfo, K> = useCallback<UseCheckboxGroupChild<InputElement, LabelElement, CBGSubInfo, K>>(function (asCheckboxGroupChild) {
         debugLog("useCheckboxGroupChild", asCheckboxGroupChild.managedChild.index);
@@ -310,7 +287,7 @@ export function useCheckboxGroup<InputElement extends Element, LabelElement exte
                 allIds.current.add(next);
 
             if (!!next || !!prev) {
-                setIdUpdateIndex(i => ++i);
+                setUpdateIndex(i => ((i ?? 0) + 1));
             }
         }, []);
 

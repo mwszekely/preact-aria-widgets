@@ -1,7 +1,7 @@
 
-import { returnNull, returnUndefined, usePassiveState, useStableCallback, useState } from "preact-prop-helpers";
+import { returnUndefined, usePassiveState, useStableCallback, useState } from "preact-prop-helpers";
 import { useEffect, useRef } from "preact/hooks";
-import { Checkbox, CheckboxCheckedType, CheckboxGroup, CheckboxGroupCheckbox, defaultRenderCheckbox, defaultRenderCheckboxGroup, defaultRenderCheckboxGroupChild, EventDetail } from "../../index";
+import { Checkbox, CheckboxCheckedType, CheckboxGroup, CheckboxGroupCheckbox, defaultRenderCheckbox, EventDetail } from "../../index";
 
 
 function getDocument() {
@@ -34,7 +34,7 @@ function DemoCheckbox({ index }: { index: number }) {
                         labelPosition={"separate"}
                         tagInput={"input"}
                         tagLabel={"label"}
-                        render={({ checkboxLike: { }, label: { inputId } }, modifyInput, modifyLabel) => {
+                        render={({ label: { inputId } }, modifyInput, modifyLabel) => {
 
                             const [_getControlId, setControlId] = usePassiveState<string | undefined>(onControlIdChanged, returnUndefined);
                             useEffect(() => { setControlId(inputId); return () => setControlId(undefined); }, [inputId]);
@@ -90,7 +90,7 @@ export function Demo() {
             <label><input type="number" min={0} value={count} onInput={e => setCount(e.currentTarget.valueAsNumber)} /> # of checkboxes</label>
             <div>
                 <CheckboxGroup<HTMLInputElement, HTMLLabelElement> render={
-                    ({ checkboxGroup: { parentIsChecked, parentPercentChecked }, ...info }, { checkboxGroupParent: { checked, onCheckedChange }, ...info2 }, modifyControlProps, modifyChildContainerProps) => {
+                    ({ checkboxGroup: { parentIsChecked, parentPercentChecked }, ..._info }, { checkboxGroupParent: { checked, onCheckedChange }, ..._info2 }, modifyControlProps, modifyChildContainerProps) => {
 
                         return (
                             <div>
