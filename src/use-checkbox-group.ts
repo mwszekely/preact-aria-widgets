@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { returnFalse, returnZero, useListNavigation, UseListNavigationChildParameters, UseListNavigationParameters, UseListNavigationReturnTypeInfo, useMergedProps, usePassiveState, UseRovingTabIndexChildReturnTypeInfo, useStableCallback, useState } from "preact-prop-helpers";
+import { returnFalse, returnNull, returnZero, useListNavigation, UseListNavigationChildParameters, UseListNavigationParameters, UseListNavigationReturnTypeInfo, useMergedProps, usePassiveState, UseRovingTabIndexChildReturnTypeInfo, useStableCallback, useState } from "preact-prop-helpers";
 import { StateUpdater, useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
 import { debugLog, EnhancedEvent, PropModifier } from "./props";
 import { CheckboxChangeEvent } from "./use-checkbox";
@@ -185,11 +185,9 @@ export function useCheckboxGroup<InputElement extends Element, LabelElement exte
     // generate a new string with all of them concatenated together
     // (but only once per render);
     const allIds = useRef(new Set<string>());
-    //const [updateIndex, setIdUpdateIndex] = useState(0);
-    const foo = useRef<StateUpdater<string> | null>(null);
-    const allControlIds = useRef<Set<string>>(new Set());
-    const [_getUpdateIndex, setUpdateIndex] = usePassiveState<number>(useStableCallback(() => { foo.current?.(Array.from(allControlIds.current).join(" ")) }), returnZero);
-    //const [getControlIds, setSetControlIds] = usePassiveState<StateUpdater<string> | null>(useStableCallback(controls => foo.current?.(controls)));
+    const updateParentControlIds = useStableCallback((setter: StateUpdater<string> | null) => { setter?.(Array.from(allIds.current).join(" ")) });
+    const [getSetter, setSetter] = usePassiveState<StateUpdater<string> | null>(updateParentControlIds, returnNull);
+    const [_getUpdateIndex, setUpdateIndex] = usePassiveState<number>(useStableCallback(() => { updateParentControlIds(getSetter()) }), returnZero);
 
     const [checkedCount, setCheckedCount] = useState(0);
     const checkedIndices = useRef(new Set<number>());
@@ -212,7 +210,7 @@ export function useCheckboxGroup<InputElement extends Element, LabelElement exte
     const useCheckboxGroupParent = useCallback<UseCheckboxGroupParent<InputElement, LabelElement>>(({ ..._void }) => {
         const [ariaControls, setControls] = useState("");
         useLayoutEffect(() => {
-            foo.current = setControls;
+            setSetter(() => setControls);
         }, [setControls]);
         debugLog("useCheckboxGroupParent");
 
