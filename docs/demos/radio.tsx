@@ -13,23 +13,25 @@ const DemoRadioButton = memo(function DemoRadioButton({ index }: { index: number
     const value = `Radio button #${index}`;
 
     return (
-        <Radio<number, HTMLInputElement, HTMLLabelElement>
-            index={index}
-            subInfo={undefined}
-            getDocument={getDocument}
-            disabled={false}
-            labelPosition="separate"
-            text={value}
-            value={index}
-            tagInput="input"
-            tagLabel="label"
-            render={defaultRenderRadio({
-                labelPosition: "separate",
-                tagInput: "input",
-                tagLabel: "label",
-                makeInputProps: () => ({ name: "radio-demo" }),
-                makeLabelProps: () => ({ children: value })
-            })} />
+        <div>
+            <Radio<number, HTMLInputElement, HTMLLabelElement>
+                index={index}
+                subInfo={undefined}
+                getDocument={getDocument}
+                disabled={false}
+                labelPosition="separate"
+                text={value}
+                value={index}
+                tagInput="input"
+                tagLabel="label"
+                render={defaultRenderRadio({
+                    labelPosition: "separate",
+                    tagInput: "input",
+                    tagLabel: "label",
+                    makeInputProps: () => ({ name: "radio-demo" }),
+                    makeLabelProps: () => ({ children: value })
+                })} />
+        </div>
     )
 })
 
@@ -79,15 +81,15 @@ export function Demo() {
                         tagLabel: "label",
                         makePropsGroup: () => ({
                             children:
-                                <>
+                                <div>
                                     {Array.from((function* () {
                                         for (let i = 0; i < count; ++i) {
                                             yield <DemoRadioButton index={i} key={i} />
                                         }
                                     })())}
-                                </>
+                                </div>
                         }),
-                        makePropsLabel: (info) => ({ children: "Radio group example " + "(" + info.radioGroup.selectedIndex?.toString() + ")" })
+                        makePropsLabel: (info) => ({ children: "Radio group example " + "(" + (info.radioGroup.selectedIndex ?? "null").toString() + ")" })
                     })} />
             </div>
         </>

@@ -2,7 +2,7 @@ import { h } from "preact";
 import { returnFalse, useListNavigation, UseListNavigationChildParameters, UseListNavigationParameters, UseListNavigationReturnTypeInfo, useMergedProps, usePassiveState, UseRovingTabIndexChildReturnTypeInfo, useStableCallback, useState } from "preact-prop-helpers";
 import { StateUpdater, useCallback, useEffect, useRef } from "preact/hooks";
 import { CheckboxCheckedType } from "./use-label";
-import { debugLog, EnhancedEvent, enhanceEvent, EventDetail } from "./props";
+import { debugLog, EnhancedEvent, enhanceEvent, EventDetail, PropModifier } from "./props";
 import { CheckboxChangeEvent, UseCheckboxParameters } from "./use-checkbox";
 
 export type CheckboxGroupChangeEvent<E extends EventTarget> = EnhancedEvent<E, Event, { childrenChecked: boolean | Map<number, boolean | "mixed"> }>;
@@ -57,32 +57,43 @@ export interface UseCheckboxGroupParameters extends UseListNavigationParameters<
 interface CheckboxGroupInfoBase<CBGSubInfo> {
     checked: boolean | "mixed";
     getLastUserChecked(): boolean | "mixed";
-    onCheckedChange: UseCheckboxParameters<any, any>["checkbox"]["onCheckedChange"];
+    setCheckedFromParentInput(newChecked: CheckboxCheckedType): void;
+    //onCheckedChange: UseCheckboxParameters<any, any>["checkbox"]["onCheckedChange"];
     subInfo: CBGSubInfo;
 }
 
 
-export interface UseCheckboxGroupChildParameters<CBGSubInfo, K extends string, SubbestInfo> {
+export interface UseCheckboxGroupChildParameters<CBGSubInfo, K extends string, SubbestInfo> extends UseListNavigationChildParameters<CheckboxGroupInfoBase<CBGSubInfo>, K, never, "focusSelf", never, SubbestInfo> {
     //asCheckbox: UseCheckboxParameters<InputElement, LabelElement>;
-    asCheckboxGroupChild: UseCheckboxGroupChildParametersACGC<CBGSubInfo, K, SubbestInfo>;
+    //asCheckboxGroupChild: UseCheckboxGroupChildParametersACGC<CBGSubInfo, K, SubbestInfo>;
+    checkboxGroupChild: {
+        //controlId: string;
+        focus(): void;
+        //labelPosition: "separate" | "wrapping";
+        checked: CheckboxCheckedType;
+        onChangeFromParent(checked: CheckboxCheckedType): void;
+    }
 }
 
-interface UseCheckboxGroupChildParametersACGC<CBGSubInfo, K extends string, SubbestInfo> extends UseListNavigationChildParameters<CheckboxGroupInfoBase<CBGSubInfo>, K, never, never, never, SubbestInfo> {
-    labelId: string;
-    inputId: string;
-    labelPosition: "separate" | "wrapping";
-    checked: CheckboxCheckedType;
-}
+/*interface UseCheckboxGroupChildParametersACGC<CBGSubInfo, K extends string, SubbestInfo> extends UseListNavigationChildParameters<CheckboxGroupInfoBase<CBGSubInfo>, K, never, never, never, SubbestInfo> {
+
+}*/
 
 export interface UseCheckboxGroupChildReturnTypeInfo<InputElement extends Element, _LabelElement extends Element> extends UseRovingTabIndexChildReturnTypeInfo<InputElement> {
     checkboxGroupChild: {
-        onCheckedChange: (event: CheckboxChangeEvent<InputElement>) => void;
+        onControlIdChanged: (next: string | undefined, prev: string | undefined) => void;
+        onCheckedChange: (checked: CheckboxCheckedType) => void;
     }
 }
 
 export interface UseCheckboxGroupChildReturnTypeWithHooks<InputElement extends Element, LabelElement extends Element> extends UseCheckboxGroupChildReturnTypeInfo<InputElement, LabelElement> {
-    useCheckboxGroupChildInputProps: ({ tabIndex, ...props }: h.JSX.HTMLAttributes<InputElement>) => h.JSX.HTMLAttributes<InputElement>;
-    useCheckboxGroupChildLabelProps: ({ tabIndex, ...props }: h.JSX.HTMLAttributes<LabelElement>) => h.JSX.HTMLAttributes<LabelElement>;
+    // This is just whichever of the two should receive list-nav-related props (so based on `labelPosition` for checkboxes).
+    // Alternatively, don't use this if you explicitly don't want this group's list navigation
+    useListNavigationChildProps:
+    {
+        ({ tabIndex, ...props }: h.JSX.HTMLAttributes<InputElement>): h.JSX.HTMLAttributes<InputElement>;
+        ({ tabIndex, ...props }: h.JSX.HTMLAttributes<LabelElement>): h.JSX.HTMLAttributes<LabelElement>;
+    }
 }
 
 export type UseCheckboxGroupChild<InputElement extends Element, LabelElement extends Element, CBGSubInfo, K extends string> = (args: UseCheckboxGroupChildParameters<CBGSubInfo, K, CBGSubInfo>) => UseCheckboxGroupChildReturnTypeWithHooks<InputElement, LabelElement> /*{
@@ -115,25 +126,33 @@ export interface UseCheckboxGroupReturnTypeWithHooks<InputElement extends Elemen
      * 
      * **Notably unstable!** because it relies on `ariaControls`, populated by all child checkboxes
      */
-    useCheckboxGroupParentInput: UseCheckboxGroupParent<InputElement, LabelElement>;
+    useCheckboxGroupParent: UseCheckboxGroupParent<InputElement, LabelElement>;
+
+    // Use on either e.g. the div containing the children, or each individual child
+    useListNavigationProps: PropModifier<any>;
 }
 
 export interface UseCheckboxGroupParentParameters<InputElement extends Element, LabelElement extends Element> {
     //checkbox: Pick<UseCheckboxParameters<InputElement, LabelElement>["checkbox"], "tagInput" | "tagLabel">;
-    label: Pick<UseCheckboxParameters<InputElement, LabelElement>["label"], "tagInput">;
+    //label: Pick<UseCheckboxParameters<InputElement, LabelElement>["label"], "tagInput">;
     //hasFocusLabel: UseCheckboxParameters<InputElement, LabelElement>["hasFocusLabel"];
     //hasFocusInput: UseCheckboxParameters<InputElement, LabelElement>["hasFocusInput"];
-    checkboxLike: Pick<UseCheckboxParameters<InputElement, LabelElement>["checkboxLike"], "labelPosition">;
+    //checkboxLike: Pick<UseCheckboxParameters<InputElement, LabelElement>["checkboxLike"], "labelPosition">;
 }
 
-export type UseCheckboxGroupParent<InputElement extends Element, LabelElement extends Element> = (a: UseCheckboxGroupParentParameters<InputElement, LabelElement>) => {
-    useCheckboxGroupParentInputProps: (props: h.JSX.HTMLAttributes<InputElement>) => h.JSX.HTMLAttributes<InputElement>;
-    useCheckboxGroupParentLabelProps: (props: h.JSX.HTMLAttributes<LabelElement>) => h.JSX.HTMLAttributes<LabelElement>;
+export type UseCheckboxGroupParent<InputElement extends Element, LabelElement extends Element> = (a: UseCheckboxGroupParentParameters<InputElement, LabelElement>) => UseCheckboxGroupParentReturnTypeWithHooks<InputElement, LabelElement>;
+
+export interface UseCheckboxGroupParentReturnTypeInfo<InputElement extends Element, _LabelElement extends Element> {
     checkboxGroupParent: {
         checked: CheckboxCheckedType;
+        //percent: number;
         onCheckedChange: (e: CheckboxChangeEvent<InputElement>) => void;
     }
-};
+}
+
+export interface UseCheckboxGroupParentReturnTypeWithHooks<InputElement extends Element, _LabelElement extends Element> extends UseCheckboxGroupParentReturnTypeInfo<InputElement, _LabelElement> {
+    useCheckboxGroupParentProps: (props: h.JSX.HTMLAttributes<InputElement>) => h.JSX.HTMLAttributes<InputElement>;
+}
 
 
 /**
@@ -188,34 +207,25 @@ export function useCheckboxGroup<InputElement extends Element, LabelElement exte
     // If the user has changed the parent checkbox's value, then this ref holds a memory of what values were held before.
     // Otherwise, it's null when the last input was from a child checkbox. 
     //const savedCheckedValues = useRef<Map<number, boolean | "mixed"> | null>(null);
-    const useCheckboxGroupParentInput = useCallback<UseCheckboxGroupParent<InputElement, LabelElement>>(({ checkboxLike, label }) => {
+    const useCheckboxGroupParent = useCallback<UseCheckboxGroupParent<InputElement, LabelElement>>(({ }) => {
         debugLog("useCheckboxGroupParent");
-        const { labelPosition, ..._void2 } = checkboxLike;
-        const { tagInput, ..._void3 } = label;
 
         const [checked, setChecked] = useState<CheckboxCheckedType>(false);
         useEffect(() => {
             setSetParentCheckboxChecked(() => setChecked);
         }, [])
-        //const { useCheckboxInputElement, useCheckboxLabelElement } = useCheckbox<InputElement, LabelElement>({ checkboxLike: { labelPosition, checked, disabled, }, label: { tagInput, tagLabel }, checkbox: { onCheckedChange: onCheckboxGroupParentInput as any, }, hasFocusInput, hasFocusLabel });
-        //const { useCheckboxInputElementProps } = useCheckboxInputElement();
-        //const { useCheckboxLabelElementProps } = useCheckboxLabelElement();
+
         const checkboxGroupParent = { checked, onCheckedChange: onCheckboxGroupParentInput };
         return {
             checkboxGroupParent,
-            useCheckboxGroupParentInputProps: function useCheckboxGroupParentInputProps(props: h.JSX.HTMLAttributes<InputElement>): h.JSX.HTMLAttributes<InputElement> {
-                const ret = (useMergedProps<InputElement>(useMergedProps<InputElement>({}, { "aria-controls": ariaControls, onInput: tagInput == "input" ? (e => e.preventDefault()) : undefined } as h.JSX.HTMLAttributes<InputElement>), props));
-                return (labelPosition == "separate" ? ret : props);
-            },
-            useCheckboxGroupParentLabelProps: function useCheckboxGroupParentLabelProps(props: h.JSX.HTMLAttributes<LabelElement>): h.JSX.HTMLAttributes<LabelElement> {
-                const ret = (useMergedProps<LabelElement>(useMergedProps<LabelElement>({}, { "aria-controls": ariaControls } as any) as any, props));
-                return (labelPosition == "wrapping" ? ret : props)
+            useCheckboxGroupParentProps: function useCheckboxGroupParentInputProps(props: h.JSX.HTMLAttributes<InputElement>): h.JSX.HTMLAttributes<InputElement> {
+                return (useMergedProps<InputElement>(useMergedProps<InputElement>({}, { "aria-controls": ariaControls } as h.JSX.HTMLAttributes<InputElement>), props));
             }
         }
     }, [ariaControls]);
 
     const onCheckboxGroupParentInput = useCallback((e: CheckboxChangeEvent<InputElement>) => {
-
+        debugger;
         e.preventDefault();
 
         const selfIsChecked = getSelfIsCheckedStable();
@@ -223,17 +233,19 @@ export function useCheckboxGroup<InputElement extends Element, LabelElement exte
         let willChangeAny = false;
         children.forEach(child => willChangeAny ||= (child.subInfo.subInfo.subInfo.checked != child.subInfo.subInfo.subInfo.getLastUserChecked()));
         children.forEach(child => {
-            let checked: boolean;
+            let prevChecked = child.subInfo.subInfo.subInfo.checked;
+            let checked: CheckboxCheckedType;
             if (nextChecked == "mixed") {
                 if (willChangeAny)
-                    checked = (child.subInfo.subInfo.subInfo.getLastUserChecked() as boolean);
+                    checked = (child.subInfo.subInfo.subInfo.getLastUserChecked());
                 else
                     checked = true;
             }
             else {
                 checked = nextChecked;
             }
-            child.subInfo.subInfo.subInfo.onCheckedChange?.(enhanceEvent(e, { checked }));
+            if (checked != prevChecked)
+                child.subInfo.subInfo.subInfo.setCheckedFromParentInput(checked);
         });
         /*if (selfIsChecked === true || (selfIsChecked === false && savedCheckedValues.current == null)) {
             return onUpdateChildren(enhanceEvent(e, { childrenChecked: false }));
@@ -280,55 +292,27 @@ export function useCheckboxGroup<InputElement extends Element, LabelElement exte
         setControls(Array.from(allIds.current).join(" "));
     }, [updateIndex])
 
-    const useCheckboxGroupChild: UseCheckboxGroupChild<InputElement, LabelElement, CBGSubInfo, K> = useCallback<UseCheckboxGroupChild<InputElement, LabelElement, CBGSubInfo, K>>(function ({ asCheckboxGroupChild }) {
+    const useCheckboxGroupChild: UseCheckboxGroupChild<InputElement, LabelElement, CBGSubInfo, K> = useCallback<UseCheckboxGroupChild<InputElement, LabelElement, CBGSubInfo, K>>(function (asCheckboxGroupChild) {
         debugLog("useCheckboxGroupChild", asCheckboxGroupChild.managedChild.index);
         //const { checkbox: { onCheckedChange }, checkboxLike: { checked, disabled, labelPosition }, label: { tagInput, tagLabel }, hasFocusInput, hasFocusLabel } = asCheckbox;
-        const { managedChild: { index }, subInfo, inputId, labelId, labelPosition, checked } = asCheckboxGroupChild;
+        const { managedChild: { index }, subInfo, checkboxGroupChild: { checked, focus, onChangeFromParent } } = asCheckboxGroupChild;
         //labelPosition ??= "separate";
         const [getLastUserChecked, setLastUserChecked] = usePassiveState<boolean | "mixed">(null, returnFalse);
-        const onCheckedChange = useStableCallback((e: CheckboxChangeEvent<InputElement>) => {
-            setLastUserChecked(e[EventDetail].checked);
-            onCheckedChange?.(e as any);
+        const onCheckedChange = useStableCallback((checked: CheckboxCheckedType) => {
+            setLastUserChecked(checked);
         });
-        /*const {
-            useCheckboxInputElement,
-            useCheckboxLabelElement,
-            ...checkboxReturnType
-        } = useCheckbox<InputElement, LabelElement>({
-            checkbox: {
-                onCheckedChange: useStableCallback<NonNullable<typeof onCheckedChange>>(e => {
-                    setLastUserChecked(e[EventDetail].checked);
-                    onCheckedChange?.(e as any);
-                }),
-            },
-            checkboxLike: {
-                checked,
-                labelPosition,
-                disabled,
-            },
-            label: {
-                tagInput,
-                tagLabel
-            },
-            hasFocusInput,
-            hasFocusLabel
-        });*/
 
-        //const { label: { inputId, labelId } } = checkboxReturnType;
+        const onControlIdChanged = useCallback((next: string | undefined, prev: string | undefined) => {
+            if (prev)
+                allIds.current.delete(prev);
 
-        //const getChecked = useStableGetter(checked);
+            if (next)
+                allIds.current.add(next);
 
-        const controlsId = (labelPosition == "separate" ? inputId : labelId)!;
-
-        useEffect(() => {
-            allIds.current.add(controlsId);
-            setIdUpdateIndex(i => ++i);
-
-            return () => {
-                allIds.current.delete(controlsId);
+            if (!!next || !!prev) {
                 setIdUpdateIndex(i => ++i);
             }
-        }, [controlsId]);
+        }, []);
 
 
         useEffect(() => {
@@ -336,31 +320,19 @@ export function useCheckboxGroup<InputElement extends Element, LabelElement exte
         }, [index, checked]);
 
         const { useListNavigationChildProps, ...listNavigationReturnType } = useListNavigationChild({
-            subInfo: { getLastUserChecked, onCheckedChange, checked, subInfo },
+            subInfo: { getLastUserChecked, setCheckedFromParentInput: onChangeFromParent, checked, subInfo },
             listNavigation: { ...asCheckboxGroupChild.listNavigation },
             managedChild: asCheckboxGroupChild.managedChild,
-            rovingTabIndex: asCheckboxGroupChild.rovingTabIndex
+            rovingTabIndex: { ...asCheckboxGroupChild.rovingTabIndex, focusSelf: focus }
         });
 
         return {
             checkboxGroupChild: {
                 onCheckedChange,
+                onControlIdChanged
             },
-            //checkboxLike: checkboxReturnType.checkboxLike,
-            //label: checkboxReturnType.label,
-            rovingTabIndex: listNavigationReturnType.rovingTabIndex,
-            useCheckboxGroupChildInputProps: (props: h.JSX.HTMLAttributes<InputElement>): h.JSX.HTMLAttributes<InputElement> => {
-                //const { useCheckboxInputElementProps } = useCheckboxInputElement();
-                const ret = (props);
-                const ret2 = useListNavigationChildProps(useListNavigationProps(ret) as h.JSX.HTMLAttributes<InputElement>);
-                return (labelPosition == "separate" ? ret2 : ret) as h.JSX.HTMLAttributes<InputElement>;
-            },
-            useCheckboxGroupChildLabelProps: (props: h.JSX.HTMLAttributes<LabelElement>): h.JSX.HTMLAttributes<LabelElement> => {
-                //const { useCheckboxLabelElementProps } = useCheckboxLabelElement();
-                const ret = (props);
-                const ret2 = useListNavigationChildProps(useListNavigationProps(ret as any) as any);
-                return (labelPosition == "wrapping" ? ret2 : ret) as h.JSX.HTMLAttributes<LabelElement>;
-            }
+            ...listNavigationReturnType,
+            useListNavigationChildProps: useListNavigationChildProps as any,
         }
 
 
@@ -368,7 +340,8 @@ export function useCheckboxGroup<InputElement extends Element, LabelElement exte
 
     return {
         useCheckboxGroupChild,
-        useCheckboxGroupParentInput,
+        useCheckboxGroupParent,
+        useListNavigationProps,
         linearNavigation: listReturnType.linearNavigation,
         listNavigation: listReturnType.listNavigation,
         managedChildren: listReturnType.managedChildren,

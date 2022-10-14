@@ -3,7 +3,7 @@ import { UseHasFocusParameters } from "preact-prop-helpers";
 import { memo } from "preact/compat";
 import { useContext } from "preact/hooks";
 import { PropModifier } from "props";
-import { useCheckboxGroup, UseCheckboxGroupChild, UseCheckboxGroupChildParameters, UseCheckboxGroupChildReturnTypeInfo, UseCheckboxGroupParameters, UseCheckboxGroupParentParameters, UseCheckboxGroupReturnTypeInfo } from "../use-checkbox-group";
+import { useCheckboxGroup, UseCheckboxGroupChild, UseCheckboxGroupChildParameters, UseCheckboxGroupChildReturnTypeInfo, UseCheckboxGroupParameters, UseCheckboxGroupParentParameters, UseCheckboxGroupParentReturnTypeInfo, UseCheckboxGroupReturnTypeInfo } from "../use-checkbox-group";
 import { defaultRenderCheckboxLike, DefaultRenderCheckboxLikeParameters } from "./checkbox";
 
 type Get<T, K extends keyof T> = T[K];
@@ -15,26 +15,20 @@ export interface CheckboxGroupProps<InputElement extends Element, LabelElement e
     Get<UseCheckboxGroupParameters, "listNavigation">,
     Get<UseCheckboxGroupParameters, "managedChildren">,
     Get<UseCheckboxGroupParameters, "rovingTabIndex">,
-    Get<UseCheckboxGroupParameters, "typeaheadNavigation">,
-    //Get<UseCheckboxGroupParentParameters<InputElement, LabelElement>, "checkbox">,
-    Get<UseCheckboxGroupParentParameters<InputElement, LabelElement>, "checkboxLike">,
-    Get<UseCheckboxGroupParentParameters<InputElement, LabelElement>, "label"> {
-    getDocument: UseHasFocusParameters<InputElement>["getDocument"];
-    getWindow?: UseHasFocusParameters<InputElement>["getWindow"];
-    render(info: UseCheckboxGroupReturnTypeInfo<InputElement, LabelElement, CBGSubInfo, K>, modifyInputProps: PropModifier<InputElement>, label: PropModifier<LabelElement>): VNode<any>;
+    Get<UseCheckboxGroupParameters, "typeaheadNavigation"> {
+    render(info: UseCheckboxGroupReturnTypeInfo<InputElement, LabelElement, CBGSubInfo, K>, parentCheckboxInfo: UseCheckboxGroupParentReturnTypeInfo<InputElement, LabelElement>, modifyControlProps: PropModifier<InputElement>, modifyChildContainerProps: PropModifier<any>): VNode<any>;
 }
 
 export interface CheckboxGroupCheckboxProps<InputType extends Element, LabelType extends Element, CBGSubInfo, K extends string> extends
     // Get2<UseCheckboxGroupChildParameters<CBGSubInfo, K, CBGSubInfo>, "asCheckbox", "checkbox">,
     // Get2<UseCheckboxGroupChildParameters<CBGSubInfo, K, CBGSubInfo>, "asCheckbox", "label">,
     // Get2<UseCheckboxGroupChildParameters<CBGSubInfo, K, CBGSubInfo>, "asCheckbox", "checkboxLike">,
-    Get2<UseCheckboxGroupChildParameters<CBGSubInfo, K, CBGSubInfo>, "asCheckboxGroupChild", "listNavigation">,
-    Get2<UseCheckboxGroupChildParameters<CBGSubInfo, K, CBGSubInfo>, "asCheckboxGroupChild", "rovingTabIndex">,
-    Get2<UseCheckboxGroupChildParameters<CBGSubInfo, K, CBGSubInfo>, "asCheckboxGroupChild", "managedChild"> {
-    getDocument: UseHasFocusParameters<InputType>["getDocument"];
-    getWindow?: UseHasFocusParameters<InputType>["getWindow"];
-    subInfo: Get2<UseCheckboxGroupChildParameters<CBGSubInfo, K, CBGSubInfo>, "asCheckboxGroupChild", "subInfo">
-    render(info: UseCheckboxGroupChildReturnTypeInfo<InputType, LabelType>, modifyInputProps: PropModifier<InputType>, label: PropModifier<LabelType>): VNode<any>;
+    Get<UseCheckboxGroupChildParameters<CBGSubInfo, K, CBGSubInfo>, "listNavigation">,
+    Get<UseCheckboxGroupChildParameters<CBGSubInfo, K, CBGSubInfo>, "rovingTabIndex">,
+    Get<UseCheckboxGroupChildParameters<CBGSubInfo, K, CBGSubInfo>, "managedChild">,
+    Get<UseCheckboxGroupChildParameters<CBGSubInfo, K, CBGSubInfo>, "checkboxGroupChild"> {
+    subInfo: Get<UseCheckboxGroupChildParameters<CBGSubInfo, K, CBGSubInfo>, "subInfo">
+    render(info: UseCheckboxGroupChildReturnTypeInfo<InputType, LabelType>, modifyControlProps: PropModifier<InputType>): VNode<any>;
 }
 
 export interface DefaultRenderCheckboxGroupChildParameters<InputType extends HTMLElement, LabelType extends HTMLElement> extends DefaultRenderCheckboxLikeParameters<InputType, LabelType, UseCheckboxGroupChildReturnTypeInfo<InputType, LabelType>> { }
@@ -61,13 +55,7 @@ export function defaultRenderCheckboxGroup<InputType extends HTMLElement, LabelT
 
 const UseCheckboxGroupChildContext = createContext<UseCheckboxGroupChild<any, any, any, any>>(null!);
 export const CheckboxGroup = memo(function CheckboxGroup<InputType extends HTMLElement, LabelType extends HTMLElement, C = undefined, K extends string = never>({
-    //disabled: parentDisabled,
-    tagInput,
-    //tagLabel,
     render,
-    getDocument,
-    getWindow,
-    labelPosition,
     initialIndex,
     collator,
     disableArrowKeys,
@@ -80,11 +68,13 @@ export const CheckboxGroup = memo(function CheckboxGroup<InputType extends HTMLE
     onAfterChildLayoutEffect,
     onChildrenMountChange,
     onTabbableIndexChange,
-    onTabbableRender
+    onTabbableRender,
+    ..._rest
 }: CheckboxGroupProps<InputType, LabelType, C, K>) {
     const {
         useCheckboxGroupChild,
-        useCheckboxGroupParentInput,
+        useCheckboxGroupParent,
+        useListNavigationProps,
         ...checkboxGroupParentInfo
     } = useCheckboxGroup<InputType, LabelType, C, K>({
         linearNavigation: { disableArrowKeys, disableHomeEndKeys, navigationDirection },
@@ -94,73 +84,51 @@ export const CheckboxGroup = memo(function CheckboxGroup<InputType extends HTMLE
         typeaheadNavigation: { collator, noTypeahead, typeaheadTimeout }
     });
 
-
-    const { useCheckboxGroupParentInputProps, useCheckboxGroupParentLabelProps, ...restParentInfo } = useCheckboxGroupParentInput({
-        checkboxLike: { labelPosition },
-        label: { tagInput },
+    const { useCheckboxGroupParentProps, ...restParentInfo } = useCheckboxGroupParent({
+        checkboxLike: {  },
+        label: {  },
     });
 
-    const { checkboxGroupParent: {checked: parentChecked, onCheckedChange: onParentCheckedChange} } = restParentInfo;
 
-
-    let wrapping: VNode<any>;
-    if (labelPosition == "separate") {
-        wrapping = render(checkboxGroupParentInfo, useCheckboxGroupParentInputProps, useCheckboxGroupParentLabelProps);
-    }
-    else {
-        wrapping = render(checkboxGroupParentInfo, useCheckboxGroupParentInputProps, useCheckboxGroupParentLabelProps);
-    }
+    let wrapping: VNode<any> = render(checkboxGroupParentInfo, restParentInfo, useCheckboxGroupParentProps, useListNavigationProps);
 
     return (
         <UseCheckboxGroupChildContext.Provider value={useCheckboxGroupChild}>{wrapping}</UseCheckboxGroupChildContext.Provider>
     )
-})
+});
 
 export const CheckboxGroupCheckbox = memo(function CheckboxGroupCheckbox<InputType extends HTMLElement, LabelType extends HTMLElement, C = undefined, K extends string = never>({
-    checked,
-    disabled,
     index,
-    labelPosition,
-    tagInput,
-    tagLabel,
     text,
     subInfo,
-    getWindow,
-    getDocument,
     flags,
-    focusSelf,
     hidden,
-    onCheckedChange,
-    render
+    render,
+    checked,
+    noModifyTabIndex,
+    focus,
+    onChangeFromParent,
+    ..._rest
 }: CheckboxGroupCheckboxProps<InputType, LabelType, C, K>) {
-    const { useCheckboxGroupChildInputProps, useCheckboxGroupChildLabelProps, ...checkboxGroupChildInfo } = (useContext(UseCheckboxGroupChildContext) as UseCheckboxGroupChild<InputType, LabelType, C, K>)({
-        asCheckbox: {
-            checkbox: { onCheckedChange },
-            checkboxLike: { checked, disabled, labelPosition },
-            label: { tagInput, tagLabel },
-            hasFocusInput: { getWindow, getDocument },
-            hasFocusLabel: { getWindow, getDocument }
+    const { useListNavigationChildProps, ...checkboxGroupChildInfo } = (useContext(UseCheckboxGroupChildContext) as UseCheckboxGroupChild<InputType, LabelType, C, K>)({
+        listNavigation: {
+            text
         },
-        asCheckboxGroupChild: {
-            listNavigation: {
-                text
-            },
-            managedChild: {
-                index,
-                flags
-            },
-            rovingTabIndex: {
-                focusSelf,
-                hidden
-            },
-            subInfo
-        }
+        managedChild: {
+            index,
+            flags
+        },
+        rovingTabIndex: {
+            hidden,
+            noModifyTabIndex
+        },
+        checkboxGroupChild: {
+            checked,
+            focus,
+            onChangeFromParent
+        },
+        subInfo
     });
 
-    if (labelPosition == "separate") {
-        return render(checkboxGroupChildInfo, useCheckboxGroupChildInputProps, useCheckboxGroupChildLabelProps);
-    }
-    else {
-        return render(checkboxGroupChildInfo, useCheckboxGroupChildInputProps, useCheckboxGroupChildLabelProps);
-    }
+    return render(checkboxGroupChildInfo, useListNavigationChildProps);
 });
