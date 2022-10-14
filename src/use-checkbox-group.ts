@@ -2,7 +2,6 @@ import { h } from "preact";
 import { returnFalse, returnNull, returnZero, useListNavigation, UseListNavigationChildParameters, UseListNavigationParameters, UseListNavigationReturnTypeInfo, useMergedProps, usePassiveState, UseRovingTabIndexChildReturnTypeInfo, useStableCallback, useState } from "preact-prop-helpers";
 import { StateUpdater, useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
 import { debugLog, EnhancedEvent, PropModifier } from "./props";
-import { CheckboxChangeEvent } from "./use-checkbox";
 import { CheckboxCheckedType } from "./use-label";
 
 export type CheckboxGroupChangeEvent<E extends EventTarget> = EnhancedEvent<E, Event, { childrenChecked: boolean | Map<number, boolean | "mixed"> }>;
@@ -135,15 +134,15 @@ export interface UseCheckboxGroupParentParameters<CBGSubInfo, K extends string, 
 
 export type UseCheckboxGroupParent<InputElement extends Element, LabelElement extends Element, CBGSubInfo, K extends string> = (a: UseCheckboxGroupParentParameters<CBGSubInfo, K, CBGSubInfo>) => UseCheckboxGroupParentReturnTypeWithHooks<InputElement, LabelElement>;
 
-export interface UseCheckboxGroupParentReturnTypeInfo<InputElement extends Element, _LabelElement extends Element> {
+export interface UseCheckboxGroupParentReturnTypeInfo {
     checkboxGroupParent: {
         checked: CheckboxCheckedType;
         getPercent(): number;
-        onCheckedChange: (e: CheckboxChangeEvent<InputElement>) => void;
+        onCheckedChange: (e: Event) => void;
     }
 }
 
-export interface UseCheckboxGroupParentReturnTypeWithHooks<InputElement extends Element, _LabelElement extends Element> extends UseCheckboxGroupParentReturnTypeInfo<InputElement, _LabelElement> {
+export interface UseCheckboxGroupParentReturnTypeWithHooks<InputElement extends Element, _LabelElement extends Element> extends UseCheckboxGroupParentReturnTypeInfo {
     useCheckboxGroupParentProps: (props: h.JSX.HTMLAttributes<InputElement>) => h.JSX.HTMLAttributes<InputElement>;
 }
 
@@ -233,7 +232,7 @@ export function useCheckboxGroup<InputElement extends Element, LabelElement exte
         }
     }, []);
 
-    const onCheckboxGroupParentInput = useCallback((e: CheckboxChangeEvent<InputElement>) => {
+    const onCheckboxGroupParentInput = useCallback((e: Event) => {
         e.preventDefault();
 
         const selfIsChecked = getSelfIsChecked(getPercentChecked(getTotalChecked(), getTotalChildren()));

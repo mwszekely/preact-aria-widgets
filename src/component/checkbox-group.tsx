@@ -18,12 +18,12 @@ export interface CheckboxGroupProps<InputElement extends Element, LabelElement e
     render(info: UseCheckboxGroupReturnTypeInfo<InputElement, LabelElement, CBGSubInfo, K>, modifyChildContainerProps: PropModifier<any>): VNode<any>;
 }
 
-export interface CheckboxGroupParentProps<InputElement extends Element, LabelElement extends Element, C, K extends string> extends
+export interface CheckboxGroupParentProps<InputElement extends Element, _LabelElement extends Element, C, K extends string> extends
     Get<UseCheckboxGroupParentParameters<C, K, C>, "listNavigation">,
     Get<UseCheckboxGroupParentParameters<C, K, C>, "rovingTabIndex">,
     Get<UseCheckboxGroupParentParameters<C, K, C>, "managedChild"> {
     subInfo: Get<UseCheckboxGroupParentParameters<C, K, C>, "subInfo">
-    render(parentCheckboxInfo: UseCheckboxGroupParentReturnTypeInfo<InputElement, LabelElement>, modifyControlProps: PropModifier<InputElement>): VNode<any>;
+    render(parentCheckboxInfo: UseCheckboxGroupParentReturnTypeInfo, modifyControlProps: PropModifier<InputElement>): VNode<any>;
 }
 
 export interface CheckboxGroupChildProps<InputType extends Element, LabelType extends Element, CBGSubInfo, K extends string> extends
@@ -50,7 +50,7 @@ export function defaultRenderCheckboxGroupChild<InputType extends HTMLElement, L
 }
 
 export function defaultRenderCheckboxGroupParent<InputType extends Element, LabelType extends Element>({ render, disabled, getDocument, labelPosition, tagInput, tagLabel, getWindow, onActiveElementChange, onCheckedChange: onCheckedChangeUser, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange }: Omit<CheckboxProps<InputType, LabelType>, "checked">) {
-    return function (parentInfo: UseCheckboxGroupParentReturnTypeInfo<InputType, LabelType>, modifyControlProps: PropModifier<any>) {
+    return function (parentInfo: UseCheckboxGroupParentReturnTypeInfo, modifyControlProps: PropModifier<any>) {
         const { checkboxGroupParent: { checked, onCheckedChange: onCheckedChangeParent } } = parentInfo;
         return (
             <Checkbox<InputType, LabelType>
