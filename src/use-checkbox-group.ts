@@ -122,9 +122,9 @@ export interface UseCheckboxGroupReturnTypeWithHooks<InputElement extends Elemen
      */
     useCheckboxGroupChild: UseCheckboxGroupChild<InputElement, LabelElement, CBGSubInfo, K>;
     /**
-     * The parent checkbox must use this hook
+     * **STABLE**
      * 
-     * **Notably unstable!** because it relies on `ariaControls`, populated by all child checkboxes
+     * The parent checkbox must use this hook
      */
     useCheckboxGroupParent: UseCheckboxGroupParent<InputElement, LabelElement>;
 
@@ -132,12 +132,8 @@ export interface UseCheckboxGroupReturnTypeWithHooks<InputElement extends Elemen
     useListNavigationProps: PropModifier<any>;
 }
 
+/* eslint-disable @typescript-eslint/no-empty-interface */
 export interface UseCheckboxGroupParentParameters<_InputElement extends Element, _LabelElement extends Element> {
-    //checkbox: Pick<UseCheckboxParameters<InputElement, LabelElement>["checkbox"], "tagInput" | "tagLabel">;
-    //label: Pick<UseCheckboxParameters<InputElement, LabelElement>["label"], "tagInput">;
-    //hasFocusLabel: UseCheckboxParameters<InputElement, LabelElement>["hasFocusLabel"];
-    //hasFocusInput: UseCheckboxParameters<InputElement, LabelElement>["hasFocusInput"];
-    //checkboxLike: Pick<UseCheckboxParameters<InputElement, LabelElement>["checkboxLike"], "labelPosition">;
 }
 
 export type UseCheckboxGroupParent<InputElement extends Element, LabelElement extends Element> = (a: UseCheckboxGroupParentParameters<InputElement, LabelElement>) => UseCheckboxGroupParentReturnTypeWithHooks<InputElement, LabelElement>;

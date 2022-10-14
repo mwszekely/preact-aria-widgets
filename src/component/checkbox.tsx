@@ -5,7 +5,7 @@ import { useCheckbox, UseCheckboxParameters, UseCheckboxReturnTypeInfo } from ".
 
 type Get<T, K extends keyof T> = T[K];
 
-export interface CheckboxProps<I extends HTMLElement, L extends HTMLElement> extends
+export interface CheckboxProps<I extends Element, L extends Element> extends
     Get<UseCheckboxParameters<I, L>, "checkboxLike">,
     Get<UseCheckboxParameters<I, L>, "checkbox">,
     Get<UseCheckboxParameters<I, L>, "label">,
@@ -13,7 +13,7 @@ export interface CheckboxProps<I extends HTMLElement, L extends HTMLElement> ext
     render(info: UseCheckboxReturnTypeInfo<I, L>, modifyInputProps: PropModifier<I>, modifyLabelProps: PropModifier<L>): VNode<any>;
 }
 
-export function defaultRenderCheckboxLike<I extends HTMLElement, L extends HTMLElement, InfoType>({ labelPosition, tagInput, tagLabel, makeInputProps, makeLabelProps }: DefaultRenderCheckboxLikeParameters<I, L, InfoType>) {
+export function defaultRenderCheckboxLike<I extends Element, L extends Element, InfoType>({ labelPosition, tagInput, tagLabel, makeInputProps, makeLabelProps }: DefaultRenderCheckboxLikeParameters<I, L, InfoType>) {
     return function (info: InfoType, modifyInputProps: PropModifier<I>, modifyLabelProps: PropModifier<L>): VNode<any> {
 
         if (labelPosition == "wrapping") {
@@ -53,7 +53,7 @@ export function defaultRenderCheckboxLike<I extends HTMLElement, L extends HTMLE
     }
 }
 
-export interface DefaultRenderCheckboxLikeParameters<I extends HTMLElement, L extends HTMLElement, InfoType> {
+export interface DefaultRenderCheckboxLikeParameters<I extends Element, L extends Element, InfoType> {
     labelPosition: "wrapping" | "separate" | "hidden",
     tagInput: ElementToTag<I>,
     tagLabel: ElementToTag<L>,
@@ -61,15 +61,15 @@ export interface DefaultRenderCheckboxLikeParameters<I extends HTMLElement, L ex
     makeLabelProps: (info: InfoType) => h.JSX.HTMLAttributes<L>
 }
 
-export interface DefaultRenderCheckboxParameters<I extends HTMLElement, L extends HTMLElement> extends DefaultRenderCheckboxLikeParameters<I, L, UseCheckboxReturnTypeInfo<I, L>> { }
+export interface DefaultRenderCheckboxParameters<I extends Element, L extends Element> extends DefaultRenderCheckboxLikeParameters<I, L, UseCheckboxReturnTypeInfo<I, L>> { }
 
-export function defaultRenderCheckbox<I extends HTMLElement, L extends HTMLElement>({ labelPosition, tagInput, tagLabel, makeInputProps, makeLabelProps }: DefaultRenderCheckboxParameters<I, L>) {
+export function defaultRenderCheckbox<I extends Element, L extends Element>({ labelPosition, tagInput, tagLabel, makeInputProps, makeLabelProps }: DefaultRenderCheckboxParameters<I, L>) {
     return defaultRenderCheckboxLike<I, L, UseCheckboxReturnTypeInfo<I, L>>({ labelPosition, tagInput, tagLabel, makeInputProps, makeLabelProps });
 }
 
 
 
-export const Checkbox = memo(function Checkbox<I extends HTMLElement, L extends HTMLElement>({ checked, disabled, tagLabel, labelPosition, tagInput, onCheckedChange, render, getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange }: CheckboxProps<I, L>) {
+export const Checkbox = memo(function Checkbox<I extends Element, L extends Element>({ checked, disabled, tagLabel, labelPosition, tagInput, onCheckedChange, render, getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange }: CheckboxProps<I, L>) {
     const { useCheckboxInputElement, useCheckboxLabelElement, ...checkboxInfo } = useCheckbox<I, L>({
         checkbox: { onCheckedChange },
         checkboxLike: { checked, disabled, labelPosition },

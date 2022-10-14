@@ -6,7 +6,6 @@ import { debugLog } from "./props";
 
 
 
-/* eslint-disable @typescript-eslint/no-empty-interface */
 export interface UseToastsParameters extends UseManagedChildrenParameters<number, never> {
     toasts: {
         visibleCount: number;   // The maximum number of toasts that are shown at one time (used for automatic management of when to show toasts, i.e. don't show this toast if 2 are already on-screen -- 1 is a good default)

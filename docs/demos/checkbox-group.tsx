@@ -1,6 +1,7 @@
 
 import { returnUndefined, usePassiveState, useStableCallback, useState } from "preact-prop-helpers";
 import { useEffect, useRef } from "preact/hooks";
+import { CheckboxGroupParent, defaultRenderCheckboxGroupParent } from "../../component/checkbox-group";
 import { Checkbox, CheckboxCheckedType, CheckboxGroup, CheckboxGroupCheckbox, defaultRenderCheckbox, EventDetail } from "../../index";
 
 
@@ -90,7 +91,31 @@ export function Demo() {
             <label><input type="number" min={0} value={count} onInput={e => setCount(e.currentTarget.valueAsNumber)} /> # of checkboxes</label>
             <div>
                 <CheckboxGroup<HTMLInputElement, HTMLLabelElement> render={
-                    ({ checkboxGroup: { parentIsChecked, parentPercentChecked }, ..._info }, { checkboxGroupParent: { checked, onCheckedChange }, ..._info2 }, modifyControlProps, modifyChildContainerProps) => {
+                    (info, modifyChildContainerProps) => {
+
+                        return <div {...({
+                            children: (
+                                <>
+                                    <CheckboxGroupParent render={defaultRenderCheckboxGroupParent({ disabled: false, getDocument, labelPosition: "separate", tagInput: "input", tagLabel: "label", render: defaultRenderCheckbox({ tagInput: "input", tagLabel: "label", labelPosition: "separate", makeInputProps: () => ({}), makeLabelProps: () => ({ children: "Parent checkbox" }) }) })} />
+                                    <div style={{ display: "flex" }} {...modifyChildContainerProps({})}>
+                                        <>{Array.from((function* () {
+                                            for (let i = 0; i < count; ++i) {
+                                                yield <DemoCheckbox index={i} key={i} />
+                                            }
+                                        })())}</>
+                                    </div>
+                                </>
+                            )
+                        })} />
+                    }} />
+            </div>
+        </>
+    )
+}
+
+/*
+
+({ checkboxGroup: { parentIsChecked, parentPercentChecked }, ..._info }, { checkboxGroupParent: { checked, onCheckedChange }, ..._info2 }, modifyControlProps, modifyChildContainerProps) => {
 
                         return (
                             <div>
@@ -121,8 +146,6 @@ export function Demo() {
                                 </div>
                             </div>
                         )
-                    }} />
-            </div>
-        </>
-    )
-}
+                    }
+                    
+ */
