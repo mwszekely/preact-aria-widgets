@@ -2,7 +2,7 @@
 import { returnUndefined, usePassiveState, useStableCallback, useState } from "preact-prop-helpers";
 import { useEffect, useRef } from "preact/hooks";
 import { CheckboxGroupParent, defaultRenderCheckboxGroupParent } from "../../component/checkbox-group";
-import { Checkbox, CheckboxCheckedType, CheckboxGroup, CheckboxGroupCheckbox, defaultRenderCheckbox, EventDetail } from "../../index";
+import { Checkbox, CheckboxCheckedType, CheckboxGroup, CheckboxGroupChild, defaultRenderCheckbox, EventDetail } from "../../index";
 
 
 function getDocument() {
@@ -14,7 +14,7 @@ function DemoCheckbox({ index }: { index: number }) {
     const labelText = `Checkbox #${index}`
     const inputElement = useRef<HTMLInputElement>(null);
     return (
-        <CheckboxGroupCheckbox<HTMLInputElement, HTMLLabelElement>
+        <CheckboxGroupChild<HTMLInputElement, HTMLLabelElement>
             //getDocument={getDocument}
             checked={checked}
             index={index}

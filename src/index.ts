@@ -20,7 +20,7 @@ export { useToolbar, UseToolbarChild, UseToolbarChildParameters, UseToolbarChild
 export { Accordion, AccordionProps, AccordionSection, AccordionSectionProps, defaultRenderAccordionSection } from "./component/accordion"
 export { Button, ButtonProps, defaultRenderButton } from "./component/button"
 export { Checkbox, CheckboxProps, defaultRenderCheckbox, defaultRenderCheckboxLike } from "./component/checkbox"
-export { CheckboxGroup, CheckboxGroupCheckbox, CheckboxGroupCheckboxProps, CheckboxGroupProps, defaultRenderCheckboxGroup, defaultRenderCheckboxGroupChild } from "./component/checkbox-group"
+export { CheckboxGroup, CheckboxGroupChild, CheckboxGroupChildProps, CheckboxGroupProps, defaultRenderCheckboxGroup, defaultRenderCheckboxGroupChild, CheckboxGroupParent, CheckboxGroupParentProps, DefaultRenderCheckboxGroupChildParameters, DefaultRenderCheckboxGroupParameters, defaultRenderCheckboxGroupParent } from "./component/checkbox-group"
 export { Dialog, DialogProps, defaultRenderDialog } from "./component/dialog"
 export { Drawer, DrawerProps, defaultRenderDrawer } from "./component/drawer"
 export { ListboxMulti, ListboxMultiItem, ListboxMultiItemProps, ListboxMultiProps, defaultRenderListboxMulti, defaultRenderListboxMultiItem } from "./component/listbox-multi"

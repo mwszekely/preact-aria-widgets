@@ -26,7 +26,7 @@ export interface CheckboxGroupParentProps<InputElement extends Element, LabelEle
     render(parentCheckboxInfo: UseCheckboxGroupParentReturnTypeInfo<InputElement, LabelElement>, modifyControlProps: PropModifier<InputElement>): VNode<any>;
 }
 
-export interface CheckboxGroupCheckboxProps<InputType extends Element, LabelType extends Element, CBGSubInfo, K extends string> extends
+export interface CheckboxGroupChildProps<InputType extends Element, LabelType extends Element, CBGSubInfo, K extends string> extends
     // Get2<UseCheckboxGroupChildParameters<CBGSubInfo, K, CBGSubInfo>, "asCheckbox", "checkbox">,
     // Get2<UseCheckboxGroupChildParameters<CBGSubInfo, K, CBGSubInfo>, "asCheckbox", "label">,
     // Get2<UseCheckboxGroupChildParameters<CBGSubInfo, K, CBGSubInfo>, "asCheckbox", "checkboxLike">,
@@ -147,7 +147,7 @@ export const CheckboxGroupParent = memo(function CheckboxGroupParent<InputType e
     return render(info, useCheckboxGroupParentProps);
 })
 
-export const CheckboxGroupCheckbox = memo(function CheckboxGroupCheckbox<InputType extends HTMLElement, LabelType extends HTMLElement, C = undefined, K extends string = never>({
+export const CheckboxGroupChild = memo(function CheckboxGroupChild<InputType extends HTMLElement, LabelType extends HTMLElement, C = undefined, K extends string = never>({
     index,
     text,
     subInfo,
@@ -159,7 +159,7 @@ export const CheckboxGroupCheckbox = memo(function CheckboxGroupCheckbox<InputTy
     focus,
     onChangeFromParent,
     ..._rest
-}: CheckboxGroupCheckboxProps<InputType, LabelType, C, K>) {
+}: CheckboxGroupChildProps<InputType, LabelType, C, K>) {
     const { useListNavigationChildProps, ...checkboxGroupChildInfo } = (useContext(UseCheckboxGroupChildContext) as UseCheckboxGroupChild<InputType, LabelType, C, K>)({
         listNavigation: {
             text
