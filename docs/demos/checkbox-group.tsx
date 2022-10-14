@@ -96,11 +96,16 @@ export function Demo() {
                         return <div {...({
                             children: (
                                 <>
-                                    <CheckboxGroupParent render={defaultRenderCheckboxGroupParent({ disabled: false, getDocument, labelPosition: "separate", tagInput: "input", tagLabel: "label", render: defaultRenderCheckbox({ tagInput: "input", tagLabel: "label", labelPosition: "separate", makeInputProps: () => ({}), makeLabelProps: () => ({ children: "Parent checkbox" }) }) })} />
+                                    <CheckboxGroupParent 
+                                    index={0}
+                                    subInfo={undefined}
+                                    text="Parent checkbox"
+                                    render={defaultRenderCheckboxGroupParent<HTMLInputElement, HTMLLabelElement>({ disabled: false, getDocument, labelPosition: "separate", tagInput: "input", tagLabel: "label", render: defaultRenderCheckbox({ tagInput: "input", tagLabel: "label", labelPosition: "separate", makeInputProps: () => ({}), makeLabelProps: () => ({ children: "Parent checkbox" }) }) })}
+                                     />
                                     <div style={{ display: "flex" }} {...modifyChildContainerProps({})}>
                                         <>{Array.from((function* () {
                                             for (let i = 0; i < count; ++i) {
-                                                yield <DemoCheckbox index={i} key={i} />
+                                                yield <DemoCheckbox index={i + 1} key={i} />
                                             }
                                         })())}</>
                                     </div>
