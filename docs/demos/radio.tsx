@@ -78,7 +78,7 @@ export function Demo() {
                     selectedValue={selectedIndex}
                     tagGroupLabel="label"
                     tagGroup="div"
-                    render={defaultRenderRadioGroup({
+                    render={defaultRenderRadioGroup<number, HTMLDivElement, HTMLLabelElement, HTMLInputElement, undefined, never>({
                         tagGroup: "div",
                         tagLabel: "label",
                         makePropsGroup: () => ({

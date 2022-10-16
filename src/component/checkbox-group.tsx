@@ -1,7 +1,6 @@
 import { ComponentChildren, createContext, Ref, RenderableProps, VNode } from "preact";
-import { memo } from "preact/compat";
 import { useContext, useImperativeHandle } from "preact/hooks";
-import { PropModifier } from "props";
+import { PropModifier } from "../props";
 import { useCheckboxGroup, UseCheckboxGroupChild, UseCheckboxGroupChildParameters, UseCheckboxGroupChildReturnTypeInfo, UseCheckboxGroupParameters, UseCheckboxGroupParent, UseCheckboxGroupParentParameters, UseCheckboxGroupParentReturnTypeInfo, UseCheckboxGroupReturnTypeInfo } from "../use-checkbox-group";
 import { Checkbox, CheckboxProps, defaultRenderCheckboxLike, DefaultRenderCheckboxLikeParameters } from "./checkbox";
 import { memoForwardRef } from "./util";

@@ -1,7 +1,6 @@
 import { createContext, h, Ref, VNode } from "preact";
-import { memo } from "preact/compat";
 import { useContext, useImperativeHandle } from "preact/hooks";
-import { ElementToTag, PropModifier } from "props";
+import { ElementToTag, PropModifier } from "../props";
 import { useListboxMulti, UseListboxMultiItem, UseListboxMultiItemParameters, UseListboxMultiItemReturnTypeInfo, UseListboxMultiParameters, UseListboxMultiReturnTypeInfo } from "../use-listbox-multi";
 import { defaultRenderList, defaultRenderListItem } from "./listbox-single";
 import { memoForwardRef } from "./util";

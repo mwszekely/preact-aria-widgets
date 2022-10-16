@@ -19,7 +19,7 @@ const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
                     <Button
                         getDocument={getDocument}
                         tagButton="button"
-                        render={defaultRenderButton({ tagButton: "button", makePropsButton: () => modifyProps({ "data-tabbable": tabbable.toString(), children: `Button #${index}` }) })} />
+                        render={defaultRenderButton({ tagButton: "button", makePropsButton: () => modifyProps({ ...({ "data-tabbable": tabbable.toString() } as {}), children: `Button #${index}` }) })} />
                 );
             }}
         />

@@ -1,8 +1,8 @@
-import { createElement, h, VNode, Ref } from "preact";
+import { createElement, h, Ref, VNode } from "preact";
 import { UseActiveElementParameters } from "preact-prop-helpers";
-import { createPortal, memo } from "preact/compat";
+import { createPortal } from "preact/compat";
 import { useImperativeHandle, useRef } from "preact/hooks";
-import { ElementToTag, PropModifier } from "props";
+import { ElementToTag, PropModifier } from "../props";
 import { useDialog, UseDialogParameters, UseDialogReturnTypeInfo } from "../use-dialog";
 import { memoForwardRef } from "./util";
 

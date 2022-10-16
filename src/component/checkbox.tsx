@@ -1,7 +1,7 @@
 import { createElement, h, Ref, VNode } from "preact";
-import { ElementToTag, PropModifier } from "props";
+import { useImperativeHandle } from "preact/hooks";
+import { ElementToTag, PropModifier } from "../props";
 import { useCheckbox, UseCheckboxParameters, UseCheckboxReturnTypeInfo } from "../use-checkbox";
-import { useImperativeHandle, useRef } from "preact/hooks"
 import { memoForwardRef } from "./util";
 
 type Get<T, K extends keyof T> = T[K];

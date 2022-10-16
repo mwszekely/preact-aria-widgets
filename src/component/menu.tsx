@@ -1,7 +1,7 @@
 import { createElement, h, Ref, VNode } from "preact";
 import { UseActiveElementParameters, useStableCallback } from "preact-prop-helpers";
-import { memo, useImperativeHandle } from "preact/compat";
-import { ElementToTag, PropModifier } from "props";
+import { useImperativeHandle } from "preact/compat";
+import { ElementToTag, PropModifier } from "../props";
 import { useMenu, UseMenuParameters, UseMenuReturnTypeInfo } from "../use-menu";
 import { defaultRenderPortal } from "./dialog";
 import { MenuItemContext } from "./menubar";

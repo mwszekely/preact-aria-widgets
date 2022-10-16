@@ -1,5 +1,4 @@
 import { createContext, h, Ref, VNode } from "preact";
-import { memo } from "preact/compat";
 import { useContext, useImperativeHandle } from "preact/hooks";
 import { UseToast, UseToastParameters, UseToastReturnTypeInfo, useToasts, UseToastsParameters, UseToastsReturnTypeInfo } from "../use-toasts";
 import { memoForwardRef } from "./util";

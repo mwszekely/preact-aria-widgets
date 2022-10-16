@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { useAsyncHandler, UseAsyncHandlerParameters, UseAsyncHandlerReturnType, UseManagedChildParameters, useManagedChildren, UseManagedChildrenParameters, UseManagedChildrenReturnTypeInfo, useMergedProps, useState } from "preact-prop-helpers";
 import { StateUpdater, useCallback, useEffect } from "preact/hooks";
-import { ElementToTag } from "props";
+import { ElementToTag } from "./props";
 import { useLabel, UseLabelReturnTypeInfo } from "./use-label";
 
 type T = "indicator" | "region" | "label";

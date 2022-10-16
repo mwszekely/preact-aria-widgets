@@ -1,10 +1,9 @@
 import { createContext, createElement, h, Ref, VNode } from "preact";
 import { UseHasFocusParameters } from "preact-prop-helpers";
-import { memo } from "preact/compat";
 import { useContext, useImperativeHandle } from "preact/hooks";
-import { ElementToTag, PropModifier } from "props";
-import { useRadioGroup, UseRadioGroupParameters, UseRadioGroupReturnTypeInfo, UseRadioParameters, UseRadio, UseRadioReturnTypeInfo } from "../use-radio-group";
-import { defaultRenderCheckboxLike, DefaultRenderCheckboxLikeParameters } from "./checkbox"
+import { ElementToTag, PropModifier } from "../props";
+import { UseRadio, useRadioGroup, UseRadioGroupParameters, UseRadioGroupReturnTypeInfo, UseRadioParameters, UseRadioReturnTypeInfo } from "../use-radio-group";
+import { defaultRenderCheckboxLike, DefaultRenderCheckboxLikeParameters } from "./checkbox";
 import { memoForwardRef } from "./util";
 
 type Get<T, K extends keyof T> = T[K];
@@ -35,8 +34,8 @@ export interface RadioProps<V extends string | number, InputElement extends Elem
     render(info: UseRadioReturnTypeInfo<InputElement, LabelElement>, modifyInputProps: PropModifier<InputElement>, modifyLabelProps: PropModifier<LabelElement>): VNode<any>;
 }
 
-export function defaultRenderRadioGroup<V extends string | number, InputElement extends Element, LabelElement extends Element, C, K extends string>({ tagGroup, tagLabel, makePropsGroup, makePropsLabel }: { tagLabel: ElementToTag<LabelElement>, tagGroup: ElementToTag<InputElement>, makePropsLabel: (info: UseRadioGroupReturnTypeInfo<V, InputElement, C, K>) => h.JSX.HTMLAttributes<LabelElement>, makePropsGroup: (info: UseRadioGroupReturnTypeInfo<V, InputElement, C, K>) => h.JSX.HTMLAttributes<InputElement> }) {
-    return function (info: UseRadioGroupReturnTypeInfo<V, InputElement, C, K>, modifyLabelProps: PropModifier<LabelElement>, modifyGroupProps: PropModifier<InputElement>) {
+export function defaultRenderRadioGroup<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, InputElement extends Element, C, K extends string>({ tagGroup, tagLabel, makePropsGroup, makePropsLabel }: { tagLabel: ElementToTag<GroupLabelElement>, tagGroup: ElementToTag<GroupElement>, makePropsLabel: (info: UseRadioGroupReturnTypeInfo<V, InputElement, C, K>) => h.JSX.HTMLAttributes<GroupLabelElement>, makePropsGroup: (info: UseRadioGroupReturnTypeInfo<V, InputElement, C, K>) => h.JSX.HTMLAttributes<GroupElement> }) {
+    return function (info: UseRadioGroupReturnTypeInfo<V, InputElement, C, K>, modifyLabelProps: PropModifier<GroupLabelElement>, modifyGroupProps: PropModifier<GroupElement>) {
         return (
             <>
                 {createElement(tagLabel as never, modifyLabelProps(makePropsLabel(info)))}

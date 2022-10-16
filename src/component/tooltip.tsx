@@ -1,7 +1,7 @@
 import { createElement, h, Ref, VNode } from "preact";
 import { UseActiveElementParameters } from "preact-prop-helpers";
-import { memo, useImperativeHandle } from "preact/compat";
-import { ElementToTag, PropModifier } from "props";
+import { useImperativeHandle } from "preact/compat";
+import { ElementToTag, PropModifier } from "../props";
 import { useTooltip, UseTooltipParameters, UseTooltipReturnTypeInfo } from "../use-tooltip";
 import { defaultRenderPortal } from "./dialog";
 import { memoForwardRef } from "./util";

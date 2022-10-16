@@ -1,7 +1,6 @@
 import { createContext, createElement, h, Ref, VNode } from "preact";
-import { memo } from "preact/compat";
 import { useContext, useImperativeHandle } from "preact/hooks";
-import { ElementToTag, PropModifier } from "props";
+import { ElementToTag, PropModifier } from "../props";
 //import { ElementToTag } from "../props";
 import { useToolbar, UseToolbarChild, UseToolbarChildParameters, UseToolbarChildReturnTypeInfo, UseToolbarParameters, UseToolbarReturnTypeInfo } from "../use-toolbar";
 import { memoForwardRef } from "./util";

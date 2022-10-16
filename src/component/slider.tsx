@@ -1,7 +1,6 @@
 import { ComponentChildren, createContext, createElement, h, Ref, VNode } from "preact";
-import { memo } from "preact/compat";
 import { useContext, useImperativeHandle } from "preact/hooks";
-import { ElementToTag, PropModifier } from "props";
+import { ElementToTag, PropModifier } from "../props";
 import { useSlider, UseSliderParameters, UseSliderReturnTypeInfo, UseSliderThumb, UseSliderThumbParameters, UseSliderThumbReturnTypeInfo } from "../use-slider";
 import { memoForwardRef } from "./util";
 

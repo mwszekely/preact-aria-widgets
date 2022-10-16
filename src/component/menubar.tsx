@@ -1,9 +1,8 @@
-import { createContext, createElement, h, VNode, Ref } from "preact";
-import { memo } from "preact/compat";
+import { createContext, createElement, h, Ref, VNode } from "preact";
 import { useContext, useImperativeHandle } from "preact/hooks";
-import { ElementToTag, PropModifier } from "props";
+import { ElementToTag, PropModifier } from "../props";
 //import { ElementToTag } from "../props";
-import { useMenubar, UseMenuItem, UseMenuItemParameters, UseMenuItemReturnTypeInfo, UseMenubarParameters, UseMenubarReturnTypeInfo } from "../use-menubar";
+import { useMenubar, UseMenubarParameters, UseMenubarReturnTypeInfo, UseMenuItem, UseMenuItemParameters, UseMenuItemReturnTypeInfo } from "../use-menubar";
 import { memoForwardRef } from "./util";
 
 type Get<T, K extends keyof T> = T[K];

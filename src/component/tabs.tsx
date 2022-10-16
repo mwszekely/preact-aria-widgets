@@ -1,8 +1,7 @@
 import { createContext, createElement, h, Ref, VNode } from "preact";
 import { UseHasFocusParameters } from "preact-prop-helpers";
-import { memo } from "preact/compat";
 import { useContext, useImperativeHandle } from "preact/hooks";
-import { ElementToTag, PropModifier } from "props";
+import { ElementToTag, PropModifier } from "../props";
 import { UseTab, UseTabListParameters, UseTabListReturnTypeInfo, UseTabPanel, UseTabPanelParameters, UseTabPanelReturnTypeInfo, UseTabParameters, UseTabReturnTypeInfo, useTabs, UseTabsParameters, UseTabsReturnTypeInfo } from "../use-tabs";
 import { memoForwardRef } from "./util";
 

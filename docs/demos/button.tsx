@@ -69,7 +69,7 @@ function DemoButton({ tag, disabled }: { tag: string, disabled: boolean | "soft"
             tagButton={tag as any}
             onPress={onPress}
             render={defaultRenderButton({
-                tagButton: tag,
+                tagButton: tag as any,
                 makePropsButton: () => ({ class: "btn", children: `${tag} ${disabled ? ` disabled (${disabled == "soft" ? "soft" : "hard"})` : ""}` })
             })}
         />

@@ -23,7 +23,7 @@ function DemoCheckbox({ index }: { index: number }) {
             render={({ checkboxGroupChild: { onControlIdChanged, onChildCheckedChange } }, modifyControlProps) => {
 
                 return (
-                    <Checkbox
+                    <Checkbox<HTMLInputElement, HTMLLabelElement>
                         checked={checked}
                         disabled={false}
                         getDocument={getDocument}
@@ -87,6 +87,7 @@ export function Demo() {
             <Code />
             <label><input type="number" min={0} value={count} onInput={e => setCount(e.currentTarget.valueAsNumber)} /> # of checkboxes</label>
             <div>
+                <p><strong>Note:</strong> Each checkbox takes a random amount of time to update when modified via the parent checkbox to test async handling.</p>
                 <CheckboxGroup<HTMLInputElement, HTMLLabelElement> render={
                     (info, modifyChildContainerProps) => {
 

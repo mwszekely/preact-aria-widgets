@@ -34,7 +34,7 @@ export interface UseRadioParameters<V extends string | number, I extends Element
     //hasFocusLabel: UseHasFocusParameters<IL>;
 }
 
-export interface UseRadioGroupReturnTypeInfo<V extends string | number, I extends Element, C, K extends string> extends UseListNavigationSingleSelectionReturnTypeInfo<I, RadioSubInfo<V, C>, K> {
+export interface UseRadioGroupReturnTypeInfo<V extends string | number, InputElement extends Element, C, K extends string> extends UseListNavigationSingleSelectionReturnTypeInfo<InputElement, RadioSubInfo<V, C>, K> {
     radioGroup: {
         selectedIndex: number | null;
         selectedValue: V | null;

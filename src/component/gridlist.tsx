@@ -1,8 +1,7 @@
-import { createContext, createElement, h, VNode, Ref } from "preact";
+import { createContext, createElement, h, Ref, VNode } from "preact";
 import { UseHasFocusParameters } from "preact-prop-helpers";
-import { memo } from "preact/compat";
 import { useContext, useImperativeHandle } from "preact/hooks";
-import { ElementToTag, PropModifier } from "props";
+import { ElementToTag, PropModifier } from "../props";
 import { useGridlist, UseGridlistChild, UseGridlistChildParameters, UseGridlistChildReturnTypeInfo, UseGridlistParameters, UseGridlistReturnTypeInfo, UseGridlistRow, UseGridlistRowParameters, UseGridlistRowReturnTypeInfo, UseGridlistSection, UseGridlistSectionParameters, UseGridlistSectionReturnTypeInfo } from "../use-gridlist";
 import { memoForwardRef } from "./util";
 

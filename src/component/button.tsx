@@ -1,6 +1,6 @@
 import { createElement, h, Ref, VNode } from "preact";
-import { memo, useImperativeHandle } from "preact/compat";
-import { ElementToTag, PropModifier } from "props";
+import { useImperativeHandle } from "preact/compat";
+import { ElementToTag, PropModifier } from "../props";
 import { useButton, UseButtonParameters } from "../use-button";
 import { memoForwardRef } from "./util";
 

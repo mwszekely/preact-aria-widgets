@@ -71,8 +71,8 @@ function DemoCheckbox({ labelPosition, tagInput, tagLabel, disabled, checked, se
                 tagLabel={tagLabel as never}
                 render={defaultRenderCheckbox({
                     labelPosition,
-                    tagInput,
-                    tagLabel,
+                    tagInput: tagInput as any,
+                    tagLabel: tagLabel as any,
                     makeInputProps: () => ({ "aria-label": labelPosition == "hidden" ? `Hidden label (technically separate), ${tagInput} and ${tagLabel} ${checked ? "checked" : "not checked"}` : undefined, }),
                     makeLabelProps: () => ({ children: `${labelPosition}, ${tagInput} and ${tagLabel}, ${checked ? "checked" : "not checked"}` })
                 })}

@@ -1,10 +1,9 @@
 import { createContext, createElement, h, Ref, VNode } from "preact";
 import { UseHasFocusParameters } from "preact-prop-helpers";
 import { useContext, useEffect, useImperativeHandle } from "preact/hooks";
-import { ElementToTag, PropModifier } from "props";
+import { ElementToTag, PropModifier } from "../props";
 import { useAccordion, UseAccordionParameters, UseAccordionReturnTypeInfo, UseAccordionSection, UseAccordionSectionParameters, UseAccordionSectionReturnTypeInfo } from "../use-accordion";
 import { Heading } from "./heading";
-import { memo } from "preact/compat";
 import { memoForwardRef } from "./util";
 
 type Get<T, K extends keyof T> = T[K];

@@ -39,9 +39,8 @@ function DemoGridlistChild1({ row }: { row: number }) {
 function DemoGridlistChild2() {
     const cb = useRef<UseCheckboxReturnTypeInfo<HTMLInputElement, HTMLLabelElement>>(null);
     const [b, setB] = useState(false);
-    return <GridlistChild<HTMLInputElement> noModifyTabIndex={true} focusSelf={e => { debugger; cb.current?.checkboxLike.focusSelf() }} getDocument={getDocument} index={1} text={b.toString()} render={defaultRenderGridlistChild({ tagGridlistChild: "div", makePropsGridlistChild: (info) => ({ children: <Checkbox ref={cb} labelPosition={"separate"} tagInput="input" tagLabel="label" checked={b} disabled={false} getDocument={getDocument} onCheckedChange={e => setB(e[EventDetail].checked)} render={defaultRenderCheckbox({ labelPosition: "separate", tagInput: "input", tagLabel: "label", makeInputProps: () => ({ tabIndex: info.rovingTabIndex.tabbable? 0 : -1 }), makeLabelProps: () => ({ children: "Checkbox" }) })} /> }) })} subInfo={undefined} />
+    return <GridlistChild<HTMLDivElement> noModifyTabIndex={true} focusSelf={e => { debugger; cb.current?.checkboxLike.focusSelf() }} getDocument={getDocument} index={1} text={b.toString()} render={defaultRenderGridlistChild<HTMLDivElement>({ tagGridlistChild: "div", makePropsGridlistChild: (info) => ({ children: <Checkbox ref={cb} labelPosition={"separate"} tagInput="input" tagLabel="label" checked={b} disabled={false} getDocument={getDocument} onCheckedChange={e => setB(e[EventDetail].checked)} render={defaultRenderCheckbox({ labelPosition: "separate", tagInput: "input", tagLabel: "label", makeInputProps: () => ({ tabIndex: info.rovingTabIndex.tabbable? 0 : -1 }), makeLabelProps: () => ({ children: "Checkbox" }) })} /> }) })} subInfo={undefined} />
 }
-function noop() { }
 
 export function Demo() {
     const [count, setCount] = useState(5);

@@ -1,8 +1,8 @@
 import { h, Ref, VNode } from "preact";
 import { UseActiveElementParameters } from "preact-prop-helpers";
-import { memo, useImperativeHandle } from "preact/compat";
-import { ElementToTag, PropModifier } from "props";
-import { UseDrawerReturnTypeInfo, useDrawer, UseDrawerParameters } from "../use-drawer";
+import { useImperativeHandle } from "preact/compat";
+import { ElementToTag, PropModifier } from "../props";
+import { useDrawer, UseDrawerParameters, UseDrawerReturnTypeInfo } from "../use-drawer";
 import { defaultRenderModal } from "./dialog";
 import { memoForwardRef } from "./util";
 

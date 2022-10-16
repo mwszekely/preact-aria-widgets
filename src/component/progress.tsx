@@ -1,7 +1,7 @@
 import { createContext, Ref, VNode } from "preact";
 import { useContext, useImperativeHandle } from "preact/hooks";
-import { PropModifier } from "props";
-import { UseProgressIndicator, UseProgressIndicatorParameters, UseProgressLabel, UseProgressLabelParameters, UseProgressParameters, UseProgressRegion, UseProgressRegionParameters, UseProgressReturnTypeInfo, useProgressWithHandler, UseProgressWithHandlerParameters, UseProgressWithHandlerReturnTypeInfo } from "../use-progress";
+import { PropModifier } from "../props";
+import { UseProgressIndicator, UseProgressIndicatorParameters, UseProgressLabel, UseProgressLabelParameters, UseProgressRegion, UseProgressRegionParameters, useProgressWithHandler, UseProgressWithHandlerParameters, UseProgressWithHandlerReturnTypeInfo } from "../use-progress";
 import { memoForwardRef } from "./util";
 
 type Get<T, K extends keyof T> = T[K];
