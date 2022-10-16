@@ -1,5 +1,6 @@
 import { h } from "preact";
 import { UseHasFocusParameters, useMergedProps, usePress } from "preact-prop-helpers";
+import { useCallback } from "preact/hooks";
 import { debugLog, DisabledType, ElementToTag, EnhancedEvent, enhanceEvent } from "./props";
 
 
@@ -22,7 +23,7 @@ export interface UseButtonReturnType<E extends EventTarget> {
 
 
 
-export function useButton<E extends Node>({ button: { tagButton, disabled, onPress, pressed }, hasFocus }: UseButtonParameters<E>): UseButtonReturnType<E> {
+export function useButton<E extends Element>({ button: { tagButton, disabled, onPress, pressed }, hasFocus }: UseButtonParameters<E>): UseButtonReturnType<E> {
     debugLog("useButton");
 
     function useButtonProps({ "aria-pressed": ariaPressed, tabIndex, role, ...p }: h.JSX.HTMLAttributes<E>): h.JSX.HTMLAttributes<E> {
@@ -30,7 +31,8 @@ export function useButton<E extends Node>({ button: { tagButton, disabled, onPre
         const usePressProps = usePress<E>({
             onClickSync: (e) => (disabled ? null : onPress)?.(enhanceEvent(e, { pressed: pressed == null ? null : !pressed })),
             exclude: undefined,
-            hasFocus
+            hasFocus,
+            focusSelf: useCallback(e => (e as Element as HTMLElement).focus?.(), [])
         });
         const props = usePressProps(p);
 

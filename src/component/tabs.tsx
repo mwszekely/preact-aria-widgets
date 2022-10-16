@@ -1,45 +1,48 @@
-import { createContext, createElement, h, VNode } from "preact";
+import { createContext, createElement, h, Ref, VNode } from "preact";
 import { UseHasFocusParameters } from "preact-prop-helpers";
 import { memo } from "preact/compat";
-import { useContext } from "preact/hooks";
+import { useContext, useImperativeHandle } from "preact/hooks";
 import { ElementToTag, PropModifier } from "props";
 import { UseTab, UseTabListParameters, UseTabListReturnTypeInfo, UseTabPanel, UseTabPanelParameters, UseTabPanelReturnTypeInfo, UseTabParameters, UseTabReturnTypeInfo, useTabs, UseTabsParameters, UseTabsReturnTypeInfo } from "../use-tabs";
+import { memoForwardRef } from "./util";
 
 type Get<T, K extends keyof T> = T[K];
 type Get2<T, K extends keyof T, K2 extends keyof T[K]> = T[K][K2];
 
-export interface TabsProps<LabelElement extends Element, ListElement extends Element, TabElement extends Element, TC, PC> extends
-    Get<UseTabListParameters<TabElement>, "linearNavigation">,
-    Get<UseTabListParameters<TabElement>, "listNavigation">,
-    Get<UseTabListParameters<TabElement>, "managedChildren">,
-    Get<UseTabListParameters<TabElement>, "rovingTabIndex">,
-    Get<UseTabListParameters<TabElement>, "singleSelection">,
-    Get<UseTabListParameters<TabElement>, "typeaheadNavigation">,
-    Get<UseTabListParameters<TabElement>, "childrenHaveFocus">,
-    Get<UseTabListParameters<TabElement>, "tabs">,
+export interface TabsProps<LabelElement extends Element, ListElement extends Element, TabElement extends Element, TC, PC, TK extends string> extends
+    Get<UseTabListParameters<TabElement, TC, TK>, "linearNavigation">,
+    Get<UseTabListParameters<TabElement, TC, TK>, "listNavigation">,
+    Get<UseTabListParameters<TabElement, TC, TK>, "managedChildren">,
+    Get<UseTabListParameters<TabElement, TC, TK>, "rovingTabIndex">,
+    Get<UseTabListParameters<TabElement, TC, TK>, "singleSelection">,
+    Get<UseTabListParameters<TabElement, TC, TK>, "typeaheadNavigation">,
+    Get<UseTabListParameters<TabElement, TC, TK>, "childrenHaveFocus">,
+    //Get<UseTabListParameters<TabElement, TC, TK>, >,
     Get2<UseTabsParameters, "tabPanels", "managedChildren"> {
+    ref?: Ref<UseTabsReturnTypeInfo<PC>>;
     render(tabListInfo: UseTabListReturnTypeInfo<TabElement, TC>, tabsInfo: UseTabsReturnTypeInfo<PC>, modifyLabelProps: PropModifier<LabelElement>, modifyTabListProps: PropModifier<ListElement>): VNode<any>;
 }
 
 export interface TabProps<TabElement extends Element, TC, TK extends string> extends Get<UseTabParameters<TabElement, TC, TK, TC>, "listNavigation">,
     Get<UseTabParameters<TabElement, TC, TK, TC>, "managedChild">,
     UseHasFocusParameters<TabElement>,
-    Get<UseTabParameters<TabElement, TC, TK, TC>, "rovingTabIndex"> {
+    Get<UseTabParameters<TabElement, TC, TK, TC>, "rovingTabIndex">,
+    Get<UseTabParameters<TabElement, TC, TK, TC>, "singleSelection"> {
     subInfo: Get<UseTabParameters<TabElement, TC, TK, TC>, "subInfo">;
-    // tagListItem: ElementToTag<ListboxItemElement>;
-    // propsListItem: (args: ListboxSinglePropsDerivedFrom) => h.JSX.HTMLAttributes<ListboxItemElement>;
+    ref?: Ref<UseTabReturnTypeInfo<TabElement>>;
     render(info: UseTabReturnTypeInfo<TabElement>, modifyListItem: PropModifier<TabElement>): VNode<any>;
 }
 
 export interface TabPanelProps<TabPanelElement extends Element, PC, PK extends string> extends Get<UseTabPanelParameters<PC, PK, PC>, "managedChild"> {
     subInfo: Get<UseTabPanelParameters<PC, PK, PC>, "subInfo">;
+    ref?: Ref<UseTabPanelReturnTypeInfo>;
     render(info: UseTabPanelReturnTypeInfo, modifyTabPanelProps: PropModifier<TabPanelElement>): VNode;
 }
 
 const TabContext = createContext<UseTab<any, any, any>>(null!);
 const TabPanelContext = createContext<UseTabPanel<any, any, any>>(null!);
 
-export const Tabs = memo(function Tabs<LabelElement extends Element, ListElement extends Element, TabElement extends Element, TabPanelElement extends Element, TC, PC, TK extends string, PK extends string>({
+export const Tabs = memoForwardRef(function Tabs<LabelElement extends Element, ListElement extends Element, TabElement extends Element, TabPanelElement extends Element, TC = undefined, PC = undefined, TK extends string = never, PK extends string = never>({
     selectedIndex,
     selectionMode,
     collator,
@@ -56,9 +59,9 @@ export const Tabs = memo(function Tabs<LabelElement extends Element, ListElement
     typeaheadTimeout,
     onAllLostFocus,
     onAnyGainedFocus,
-    onSelectedIndexChange,
+    setSelectedIndex,
     render
-}: TabsProps<LabelElement, ListElement, TabElement, TC, PC>) {
+}: TabsProps<LabelElement, ListElement, TabElement, TC, PC, TK>, ref?: Ref<any>) {
     const {
         useTabList,
         useTabListLabel,
@@ -70,14 +73,15 @@ export const Tabs = memo(function Tabs<LabelElement extends Element, ListElement
         }
     });
 
+    useImperativeHandle(ref!, () => tabsInfo);
+
     const { useTab, useTabListProps, ...tablistInfo } = useTabList({
         childrenHaveFocus: { onAllLostFocus, onAnyGainedFocus },
-        tabs: { onSelectedIndexChange },
         linearNavigation: { disableArrowKeys, disableHomeEndKeys, navigationDirection },
         listNavigation: { indexDemangler, indexMangler },
         managedChildren: { onAfterChildLayoutEffect, onChildrenMountChange },
         rovingTabIndex: { onTabbableIndexChange, onTabbableRender },
-        singleSelection: { selectedIndex, selectionMode },
+        singleSelection: { selectedIndex, selectionMode, setSelectedIndex },
         typeaheadNavigation: { collator, noTypeahead, typeaheadTimeout }
     });
     const { useTabListLabelProps } = useTabListLabel({});
@@ -91,20 +95,25 @@ export const Tabs = memo(function Tabs<LabelElement extends Element, ListElement
     )
 })
 
-export const Tab = memo(function Tab<TabElement extends Element, TC, TK extends string>({ index, text, flags, focusSelf, hidden, getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange, render, subInfo }: TabProps<TabElement, TC, TK>) {
+export const Tab = memoForwardRef(function Tab<TabElement extends Element, TC = undefined, TK extends string = never>({ index, text, flags, focusSelf, hidden, getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange, render, subInfo, noModifyTabIndex, unselectable }: TabProps<TabElement, TC, TK>, ref?: Ref<any>) {
     const { useTabProps, ...tabInfo } = useContext(TabContext)({
         listNavigation: { text },
+        singleSelection: { unselectable, focusSelf },
         managedChild: { index, flags },
-        rovingTabIndex: { focusSelf, hidden },
+        rovingTabIndex: { focusSelf, hidden, noModifyTabIndex },
         hasFocus: { getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange },
-   subInfo
+        subInfo
     });
+
+    useImperativeHandle(ref!, () => tabInfo);
 
     return render(tabInfo, useTabProps)
 })
 
-export const TabPanel = memo(function TabPanel<TabPanelElement extends Element, PC, PK extends string>({ index, flags, render, subInfo }: TabPanelProps<TabPanelElement, PC, PK>) {
+export const TabPanel = memoForwardRef(function TabPanel<TabPanelElement extends Element, PC = undefined, PK extends string = never>({ index, flags, render, subInfo }: TabPanelProps<TabPanelElement, PC, PK>, ref?: Ref<any>) {
     const { useTabPanelProps, ...tabPanelInfo } = (useContext(TabPanelContext) as UseTabPanel<TabPanelElement, PC, PK>)({ managedChild: { index, flags }, subInfo });
+
+    useImperativeHandle(ref!, () => tabPanelInfo);
 
     return render(tabPanelInfo, useTabPanelProps)
 })

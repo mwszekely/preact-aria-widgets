@@ -1,10 +1,11 @@
-import { createContext, createElement, h, VNode } from "preact";
+import { createContext, createElement, h, Ref, VNode } from "preact";
 import { UseHasFocusParameters } from "preact-prop-helpers";
-import { useContext, useEffect } from "preact/hooks";
+import { useContext, useEffect, useImperativeHandle } from "preact/hooks";
 import { ElementToTag, PropModifier } from "props";
 import { useAccordion, UseAccordionParameters, UseAccordionReturnTypeInfo, UseAccordionSection, UseAccordionSectionParameters, UseAccordionSectionReturnTypeInfo } from "../use-accordion";
 import { Heading } from "./heading";
 import { memo } from "preact/compat";
+import { memoForwardRef } from "./util";
 
 type Get<T, K extends keyof T> = T[K];
 
@@ -13,6 +14,7 @@ export interface AccordionProps<AccSubInfo> extends
     Get<UseAccordionParameters, "linearNavigation">,
     Get<UseAccordionParameters, "managedChildren"> {
     expandedIndex?: number | undefined | null;
+    ref?: Ref<UseAccordionReturnTypeInfo<AccSubInfo>>
     render(info: UseAccordionReturnTypeInfo<AccSubInfo>): VNode<any>;
 }
 
@@ -22,12 +24,13 @@ export interface AccordionSectionProps<HeaderElement extends Element, BodyElemen
     UseHasFocusParameters<HeaderElement>,
     Get<UseAccordionSectionParameters<HeaderElement, AccSubInfo, K, {}>, "button"> {
     subInfo: Get<UseAccordionSectionParameters<HeaderElement, AccSubInfo, K, AccSubInfo>, "subInfo">;
+    ref?: Ref<UseAccordionSectionReturnTypeInfo>;
     render(info: UseAccordionSectionReturnTypeInfo, makeHeaderProps: PropModifier<HeaderElement>, makeBodyProps: PropModifier<BodyElement>): VNode<any>;
 }
 
 
 const AccordionSectionContext = createContext<UseAccordionSection<any, any, any>>(null!);
-export const Accordion = memo(function Accordion<HeaderElement extends HTMLElement, BodyElement extends HTMLElement | SVGElement, AccSubInfo = undefined>({
+export const Accordion = memoForwardRef(function Accordion<HeaderElement extends HTMLElement, BodyElement extends HTMLElement | SVGElement, AccSubInfo = undefined>({
     disableArrowKeys,
     disableHomeEndKeys,
     expandedIndex,
@@ -37,14 +40,14 @@ export const Accordion = memo(function Accordion<HeaderElement extends HTMLEleme
     onChildrenMountChange,
     render,
     ..._rest
-}: AccordionProps<AccSubInfo>) {
+}: AccordionProps<AccSubInfo>, ref?: Ref<any>) {
 
     const { useAccordionSection, ...provider } = useAccordion<HeaderElement, BodyElement, AccSubInfo>({
         accordion: { initialIndex },
         linearNavigation: { disableArrowKeys, disableHomeEndKeys, navigationDirection },
         managedChildren: { onAfterChildLayoutEffect, onChildrenMountChange }
     });
-
+    useImperativeHandle(ref!, () => provider);
     useEffect(() => { provider.accordion.changeExpandedIndex(expandedIndex! ?? null); }, [expandedIndex]);
 
     return (
@@ -64,7 +67,7 @@ export function defaultRenderAccordionSection<HeaderContainerElement extends HTM
     }
 }
 
-export const AccordionSection = memo(function AccordionSection<HeaderElement extends Element, BodyElement extends Element, AccSubInfo, K extends string>({
+export const AccordionSection = memoForwardRef(function AccordionSection<HeaderElement extends Element, BodyElement extends Element, AccSubInfo, K extends string>({
     open,
     index,
     tagButton,
@@ -84,7 +87,7 @@ export const AccordionSection = memo(function AccordionSection<HeaderElement ext
     onUnmount,
     onWindowFocusedChange,
     subInfo
-}: AccordionSectionProps<HeaderElement, BodyElement, AccSubInfo, K>) {
+}: AccordionSectionProps<HeaderElement, BodyElement, AccSubInfo, K>, ref?: Ref<any>) {
     const useAccordionSection = useContext(AccordionSectionContext) as UseAccordionSection<HeaderElement, BodyElement, AccSubInfo>;
     const { useAccordionSectionBodyProps, useAccordionSectionHeaderProps, ...sectionInfo } = useAccordionSection({
         button: { disabled, tagButton },
@@ -93,6 +96,8 @@ export const AccordionSection = memo(function AccordionSection<HeaderElement ext
         hasFocus: { getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange },
         subInfo
     });
+
+    useImperativeHandle(ref!, () => sectionInfo);
 
     return render(sectionInfo, useAccordionSectionHeaderProps, useAccordionSectionBodyProps);
 })

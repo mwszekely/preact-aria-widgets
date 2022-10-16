@@ -1,20 +1,21 @@
-import { createContext, createElement, h, VNode } from "preact";
+import { createContext, createElement, h, Ref, VNode } from "preact";
 import { memo } from "preact/compat";
-import { useContext } from "preact/hooks";
+import { useContext, useImperativeHandle } from "preact/hooks";
 import { ElementToTag, PropModifier } from "props";
 //import { ElementToTag } from "../props";
 import { useToolbar, UseToolbarChild, UseToolbarChildParameters, UseToolbarChildReturnTypeInfo, UseToolbarParameters, UseToolbarReturnTypeInfo } from "../use-toolbar";
+import { memoForwardRef } from "./util";
 
 type Get<T, K extends keyof T> = T[K];
 
 export interface ToolbarProps<ToolbarContainerElement extends Element, ToolbarChildElement extends Element, C, K extends string> extends
-    Get<UseToolbarParameters, "linearNavigation">,
-    Get<UseToolbarParameters, "listNavigation">,
-    Get<UseToolbarParameters, "rovingTabIndex">,
-    Get<UseToolbarParameters, "typeaheadNavigation">,
-    Get<UseToolbarParameters, "managedChildren">,
-    Get<UseToolbarParameters, "toolbar"> {
-    //tagLabel: ElementToTag<LabelElement>;
+    Get<UseToolbarParameters<never>, "linearNavigation">,
+    Get<UseToolbarParameters<never>, "listNavigation">,
+    Get<UseToolbarParameters<never>, "rovingTabIndex">,
+    Get<UseToolbarParameters<never>, "typeaheadNavigation">,
+    Get<UseToolbarParameters<never>, "managedChildren">,
+    Get<UseToolbarParameters<never>, "toolbar"> {
+    ref?: Ref<UseToolbarReturnTypeInfo<ToolbarChildElement, C, K>>;
     render(info: UseToolbarReturnTypeInfo<ToolbarChildElement, C, K>, modifyPropsToolbar: PropModifier<ToolbarContainerElement>): VNode<any>;
 }
 
@@ -24,18 +25,20 @@ export interface ToolbarProps<ToolbarContainerElement extends Element, ToolbarCh
 
 
 export interface ToolbarChildProps<ToolbarChildElement extends Element, C, K extends string> extends
-    Get<UseToolbarChildParameters<C, K>, "managedChild">,
-    Get<UseToolbarChildParameters<C, K>, "rovingTabIndex">,
-    Get<UseToolbarChildParameters<C, K>, "listNavigation"> {
+    Get<UseToolbarChildParameters<ToolbarChildElement, C, K, C>, "managedChild">,
+    Get<UseToolbarChildParameters<ToolbarChildElement, C, K, C>, "rovingTabIndex">,
+    Get<UseToolbarChildParameters<ToolbarChildElement, C, K, C>, "listNavigation"> {
     //tagListItem: ElementToTag<ListboxItemElement>;
-    subInfo: Get<UseToolbarChildParameters<C, K>, "subInfo">;
+    subInfo: Get<UseToolbarChildParameters<ToolbarChildElement, C, K, C>, "subInfo">;
+    ref?: Ref<UseToolbarChildReturnTypeInfo<ToolbarChildElement>>;
     render(info: UseToolbarChildReturnTypeInfo<ToolbarChildElement>, modifyPropsToolbarChild: PropModifier<ToolbarChildElement>): VNode<any>;
 }
 
 const ToolbarContext = createContext<UseToolbarChild<any, any, any>>(null!);
 
-function ToolbarU<ContainerElement extends Element, ChildElement extends Element, C = undefined, K extends string = never>({
+export const Toolbar = memoForwardRef(function ToolbarU<ContainerElement extends Element, ChildElement extends Element, C = undefined, K extends string = never>({
     render,
+    role,
     collator,
     disableArrowKeys,
     disableHomeEndKeys,
@@ -49,51 +52,53 @@ function ToolbarU<ContainerElement extends Element, ChildElement extends Element
     onTabbableRender,
     typeaheadTimeout,
     initialIndex
-}: ToolbarProps<ContainerElement, ChildElement, C, K>) {
+}: ToolbarProps<ContainerElement, ChildElement, C, K>, ref?: Ref<any>) {
     const {
         useToolbarChild,
         useToolbarProps,
         ...listboxReturnType
     } = useToolbar<ContainerElement, ChildElement, C, K>({
         linearNavigation: { disableArrowKeys, disableHomeEndKeys },
-        toolbar: { orientation },
+        toolbar: { orientation, role },
         listNavigation: { indexDemangler, indexMangler },
         managedChildren: { onAfterChildLayoutEffect, onChildrenMountChange },
         rovingTabIndex: { onTabbableIndexChange, onTabbableRender, initialIndex },
         typeaheadNavigation: { collator, noTypeahead, typeaheadTimeout }
     });
 
+    useImperativeHandle(ref!, () => listboxReturnType);
+
     return (
         <ToolbarContext.Provider value={useToolbarChild}>
             {render(listboxReturnType, useToolbarProps)}
         </ToolbarContext.Provider>
     )
-}
+})
 
 
-function ToolbarChildU<ToolbarChildElement extends Element, C = undefined, K extends string = never>({
+export const ToolbarChild = memoForwardRef(function ToolbarChildU<ToolbarChildElement extends Element, C = undefined, K extends string = never>({
     index,
     render,
     flags,
     focusSelf,
     hidden,
     text,
+    noModifyTabIndex,
     subInfo
-}: ToolbarChildProps<ToolbarChildElement, C, K>) {
-    const { useToolbarChildProps, rovingTabIndex } = (useContext(ToolbarContext) as UseToolbarChild<ToolbarChildElement, C, K>)({
+}: ToolbarChildProps<ToolbarChildElement, C, K>, ref?: Ref<any>) {
+    const { useToolbarChildProps, ...info } = (useContext(ToolbarContext) as UseToolbarChild<ToolbarChildElement, C, K>)({
         managedChild: { index, flags },
-        rovingTabIndex: { focusSelf, hidden },
+        rovingTabIndex: { focusSelf, hidden, noModifyTabIndex },
         listNavigation: { text },
         subInfo
     });
 
-    return (
-        <>{render({ rovingTabIndex }, useToolbarChildProps)}</>
-    )
-}
+    useImperativeHandle(ref!, () => info);
 
-export const Toolbar = memo(ToolbarU) as typeof ToolbarU;
-export const ToolbarChild = memo(ToolbarChildU) as typeof ToolbarChildU;
+    return (
+        <>{render(info, useToolbarChildProps)}</>
+    )
+})
 
 export function defaultRenderToolbar<ContainerElement extends Element, ChildElement extends Element, C, K extends string>({ makePropsContainer, tagContainer }: { tagContainer: ElementToTag<ContainerElement>, makePropsContainer: (info: UseToolbarReturnTypeInfo<ChildElement, C, K>) => h.JSX.HTMLAttributes<ContainerElement> }) {
     return function (info: UseToolbarReturnTypeInfo<ChildElement, C, K>, modifyPropsContainer: PropModifier<ContainerElement>): VNode<any> {

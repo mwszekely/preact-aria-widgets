@@ -41,7 +41,7 @@ export function Demo() {
                 <Tabs
                     selectedIndex={selectedIndex}
                     selectionMode="focus"
-                    onSelectedIndexChange={e => setSelectedIndex(e[EventDetail].selectedIndex)}
+                    setSelectedIndex={setSelectedIndex}
 
                     render={defaultRenderTabs({
                         panels: Array.from((function* () {
@@ -69,7 +69,7 @@ export function Demo() {
 
 const DemoTab = memo(function DemoTab({ i }: { i: number }) {
     const label = `Tab #${i}`;
-    return <Tab key={i} index={i} getDocument={getDocument} render={defaultRenderTab({ tagTab: "li", makePropsTab: () => ({ children: label }) })} text={label} subInfo={undefined} />
+    return <Tab<HTMLLIElement> focusSelf={e => e.focus()} key={i} index={i} getDocument={getDocument} render={defaultRenderTab({ tagTab: "li", makePropsTab: () => ({ children: label }) })} text={label} subInfo={undefined} unselectable={false} />
 })
 
 const DemoTabPanel = memo(function DemoTabPanel({ i }: { i: number }) {

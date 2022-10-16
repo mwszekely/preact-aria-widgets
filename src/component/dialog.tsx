@@ -1,9 +1,10 @@
-import { createElement, h, VNode } from "preact";
+import { createElement, h, VNode, Ref } from "preact";
 import { UseActiveElementParameters } from "preact-prop-helpers";
 import { createPortal, memo } from "preact/compat";
-import { useRef } from "preact/hooks";
+import { useImperativeHandle, useRef } from "preact/hooks";
 import { ElementToTag, PropModifier } from "props";
 import { useDialog, UseDialogParameters, UseDialogReturnTypeInfo } from "../use-dialog";
+import { memoForwardRef } from "./util";
 
 type Get<T, K extends keyof T> = T[K];
 
@@ -12,7 +13,7 @@ export interface DialogProps<FocusContainerElement extends HTMLElement, DialogEl
     Get<UseDialogParameters, "modal">,
     UseActiveElementParameters,
     Get<UseDialogParameters, "dialog"> {
-
+    ref?: Ref<UseDialogReturnTypeInfo>;
     render(dialogInfo: UseDialogReturnTypeInfo, modifyFocusContainerProps: PropModifier<FocusContainerElement>, modifyDialogProps: PropModifier<DialogElement>, modifyTitleProps: PropModifier<TitleElement>, modifyBodyProps: PropModifier<BodyElement>, modifyBackdropProps: PropModifier<BackdropElement>): VNode<any>;
 }
 
@@ -54,7 +55,7 @@ export function defaultRenderDialog<FocusContainerElement extends HTMLElement, D
     return defaultRenderModal<FocusContainerElement, DialogElement, TitleElement, BodyElement, BackdropElement, UseDialogReturnTypeInfo>({ portalId, tagFocusContainer, tagBackdrop, tagBody, tagDialog, tagTitle, makePropsFocusContainer, makePropsBackdrop, makePropsBody, makePropsDialog, makePropsTitle });
 }
 
-export const Dialog = memo(function Dialog<FocusContainerElement extends HTMLElement, DialogElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement>({
+export const Dialog = memoForwardRef(function Dialog<FocusContainerElement extends HTMLElement, DialogElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement>({
     onClose,
     open,
     bodyIsOnlySemantic,
@@ -65,7 +66,7 @@ export const Dialog = memo(function Dialog<FocusContainerElement extends HTMLEle
     onWindowFocusedChange,
     focusSelf,
     render
-}: DialogProps<FocusContainerElement, DialogElement, TitleElement, BodyElement, BackdropElement>) {
+}: DialogProps<FocusContainerElement, DialogElement, TitleElement, BodyElement, BackdropElement>, ref?: Ref<any>) {
     const {
         useDialogBackdrop,
         useDialogBody,
@@ -74,6 +75,8 @@ export const Dialog = memo(function Dialog<FocusContainerElement extends HTMLEle
         useDialogFocusContainerProps,
         ...r
     } = useDialog<FocusContainerElement, DialogElement, TitleElement, BodyElement, BackdropElement>({ dialog: { onClose }, modal: { bodyIsOnlySemantic, focusSelf }, softDismiss: { open }, activeElement: { getDocument, getWindow, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange } });
+
+    useImperativeHandle(ref!, () => r);
 
     const { useDialogTitleProps } = useDialogTitle();
     const { useDialogBodyProps } = useDialogBody();

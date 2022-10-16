@@ -70,7 +70,7 @@ export type DebugLogTypes =
     "useDialog" | "useDrawer" |
     "useListboxMulti" | "useListboxMultiItem" |
     "useListboxSingle" | "useListboxSingleItem" |
-    "useMenu" | "useMenuSurface" | "useMenuItem" | "useFocusSentinel" | "useMenuSurfaceSentinel" |
+    "useMenubar" | "useMenu" | "useMenuSurface" | "useMenuItem" | "useFocusSentinel" | "useMenuSurfaceSentinel" |
     "useRadioGroup" | "useRadio" |
     "useSlider" | "useSliderThumb" |
     "useTable" | "useTableRow" | "useTableCell" | "useTableBody" |

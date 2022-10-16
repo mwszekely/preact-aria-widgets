@@ -13,7 +13,7 @@ export interface UseListboxMultiParameters<LabelElement extends Element, ListEle
     }
 }
 
-export interface UseListboxMultiItemParameters<E extends Element, C, K extends string> extends UseListNavigationChildParameters<UseListboxMultiSubInfo<C>, K, never, never, never, C> {
+export interface UseListboxMultiItemParameters<E extends Element, C, K extends string> extends UseListNavigationChildParameters<E, UseListboxMultiSubInfo<C>, K, never, never, never, C> {
     listboxMultiItem: {
         disabled?: boolean;
         selected: boolean;
@@ -64,8 +64,6 @@ export function useListboxMulti<LabelElement extends Element, ListElement extend
 
     debugLog("useListboxMulti");
 
-    //const { useHasFocusProps, getFocusedInner } = useHasFocus<ListElement>({});
-
     const { useLabelInput, useLabelLabel } = useLabel<ListElement, LabelElement>({
         label: {
             prefixLabel: "aria-listbox-label-",
@@ -84,11 +82,6 @@ export function useListboxMulti<LabelElement extends Element, ListElement extend
             ...rti,
             onTabbableIndexChange: useStableCallback<OnTabbableIndexChange>((i) => {
                 onTabbableIndexChange?.(i);
-                /*if (selectionMode == "focus") {
-                    const target = (children.getAt(i!)?.subInfo.getElement());
-                    if (target)
-                        onSelect?.({ target, currentTarget: target, [EventDetail]: { selectedIndex: i! } });
-                }*/
             }),
         },
         typeaheadNavigation: tn
@@ -131,7 +124,8 @@ export function useListboxMulti<LabelElement extends Element, ListElement extend
                     e.preventDefault();
                 }, 
                 exclude: {},
-                hasFocus
+                hasFocus,
+                focusSelf: e => rti.focusSelf
             });
 
             props.role = "option";

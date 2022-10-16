@@ -9,7 +9,17 @@ function getDocument() { return window.document; }
 const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
 
     return (
-        <ListboxSingleItem<HTMLLIElement> index={index} getDocument={getDocument} disabled={false} text={`List item #${index}`} render={defaultRenderListboxSingleItem({ tagListItem: "li", makePropsListItem: ({ singleSelection: { selected } }) => ({ children: `List item #${index}${selected ? " (selected)" : ""}` }) })} subInfo={undefined} />
+        <ListboxSingleItem<HTMLLIElement>
+            index={index}
+            focusSelf={e => e.focus()}
+            ariaPropName="aria-selected"
+            unselectable={false}
+            getDocument={getDocument}
+            disabled={false}
+            text={`List item #${index}`}
+            render={defaultRenderListboxSingleItem({ tagListItem: "li", makePropsListItem: ({ singleSelection: { selected } }) => ({ children: `List item #${index}${selected ? " (selected)" : ""}` }) })}
+            subInfo={undefined}
+        />
     )
 })
 

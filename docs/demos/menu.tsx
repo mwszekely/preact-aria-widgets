@@ -1,20 +1,23 @@
 
 import { useState } from "preact-prop-helpers";
-import { defaultRenderMenu, defaultRenderMenuItem, Menu, MenuItem } from "../../component/menu";
+import { defaultRenderMenu, Menu } from "../../component/menu";
+import { defaultRenderMenuItem, MenuItem } from "../../component/menubar";
 import { EventDetail } from "../../props";
 
 function DemoListItem({ index }: { index: number }) {
 
     return (
-        <MenuItem<HTMLLIElement> 
-        index={index} 
-        text={`List item #${index}`} 
-        subInfo={undefined} 
-        onPress={e => alert(`Menu item #${e[EventDetail].index} pressed`)}
-        disabled={false}
-        getDocument={getDocument}
-        render={defaultRenderMenuItem({ tagMenuItem: "li", makePropsMenuItem: () => ({ children: `Menu item #${index}` }) })}
-         />
+        <MenuItem<HTMLLIElement>
+            index={index}
+            focusSelf={e => e.focus()}
+            role="menuitem"
+            text={`List item #${index}`}
+            subInfo={undefined}
+            onPress={e => alert(`Menu item #${e[EventDetail].index} pressed`)}
+            disabled={false}
+            getDocument={getDocument}
+            render={defaultRenderMenuItem({ tagChild: "li", makePropsChild: () => ({ children: `Menu item #${index}` }) })}
+        />
     )
 }
 
@@ -53,6 +56,7 @@ export function Demo() {
             <label><input type="number" min={0} value={count} onInput={e => setCount(e.currentTarget.valueAsNumber)} /> # of menu items</label>
             <div>
                 <Menu<HTMLDivElement, HTMLUListElement, HTMLDivElement, HTMLLIElement, HTMLButtonElement>
+                    orientation="vertical"
                     getDocument={getDocument}
                     onOpen={() => setOpen(true)}
                     onClose={() => setOpen(false)}
@@ -64,7 +68,7 @@ export function Demo() {
                         tagSentinel: "div",
                         tagSurface: "div",
                         portalId: "portal",
-                        makePropsButton: () => ({ children: "Open menu" + (open? " (open)" : " (closed)") }),
+                        makePropsButton: () => ({ children: "Open menu" + (open ? " (open)" : " (closed)") }),
                         makePropsMenu: () => ({
                             children: <>{Array.from((function* () {
                                 for (let i = 0; i < count; ++i) {
@@ -72,7 +76,7 @@ export function Demo() {
                                 }
                             })())}</>
                         }),
-                        makePropsSurface: () => ({ style: { display: !open? "none" : undefined } }),
+                        makePropsSurface: () => ({ style: { display: !open ? "none" : undefined } }),
                         makePropsSentinel: () => ({}),
                     })} />
             </div>

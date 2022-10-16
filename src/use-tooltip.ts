@@ -150,7 +150,7 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
         }, { capture: true });
 
         function onTouchEnd(e: TouchEvent) {
-            (e.target as any).focus();
+            (e.target as any).focus?.();
         }
 
         const { useHasFocusProps, getElement } = useHasFocus<TriggerType>({

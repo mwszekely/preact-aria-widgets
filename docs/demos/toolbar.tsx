@@ -9,9 +9,10 @@ function getDocument() { return window.document; }
 const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
 
     return (
-        <ToolbarChild
+        <ToolbarChild<HTMLButtonElement>
             index={index}
             subInfo={undefined}
+            focusSelf={e => e.focus()}
             text={`List item #${index}`}
             render={({ rovingTabIndex: { tabbable } }, modifyProps) => {
                 return (
@@ -62,6 +63,7 @@ export function Demo() {
             <div>
                 <Toolbar
                     orientation="horizontal"
+                    role="toolbar"
                     render={defaultRenderToolbar({
                         tagContainer: "div",
                         makePropsContainer: () => ({

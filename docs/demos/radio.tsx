@@ -16,12 +16,14 @@ const DemoRadioButton = memo(function DemoRadioButton({ index }: { index: number
         <div>
             <Radio<number, HTMLInputElement, HTMLLabelElement>
                 index={index}
+                focusSelf={e => e.focus()}
                 subInfo={undefined}
                 getDocument={getDocument}
                 disabled={false}
                 labelPosition="separate"
                 text={value}
                 value={index}
+                unselectable={false}
                 tagInput="input"
                 tagLabel="label"
                 render={defaultRenderRadio({

@@ -12,7 +12,6 @@ function getDocument() {
 function DemoCheckbox({ index }: { index: number }) {
     const [checked, setChecked] = useState<CheckboxCheckedType>(false);
     const labelText = `Checkbox #${index}`
-    const inputElement = useRef<HTMLInputElement>(null);
     return (
         <CheckboxGroupChild<HTMLInputElement, HTMLLabelElement>
             checked={checked}
@@ -20,7 +19,7 @@ function DemoCheckbox({ index }: { index: number }) {
             text={labelText}
             subInfo={undefined}
             onChangeFromParent={async (checked) => { await new Promise(resolve => setTimeout(resolve, Math.random() * 2000)); setChecked(checked); }}
-            focus={useStableCallback(() => inputElement.current?.focus())}
+            focusSelf={useStableCallback((e) => e.focus())}
             render={({ checkboxGroupChild: { onControlIdChanged, onChildCheckedChange } }, modifyControlProps) => {
 
                 return (
@@ -39,7 +38,7 @@ function DemoCheckbox({ index }: { index: number }) {
 
                             return (
                                 <div style={{ border: "1px solid black" }}>
-                                    <input {...modifyControlProps(modifyInput({ ref: inputElement }))} />
+                                    <input {...modifyControlProps(modifyInput({  }))} />
                                     <label {...modifyLabel({ children: `Checkbox #${index}` })} />
                                 </div>
                             );
@@ -96,6 +95,7 @@ export function Demo() {
                                 <>
                                     <CheckboxGroupParent
                                         index={0}
+                                        focusSelf={e => e.focus()}
                                         subInfo={undefined}
                                         text="Parent checkbox"
                                         render={defaultRenderCheckboxGroupParent<HTMLInputElement, HTMLLabelElement>({

@@ -15,8 +15,9 @@ const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
 
 
     return (
-        <ListboxMultiItem
-        getDocument={getDocument} 
+        <ListboxMultiItem<HTMLLIElement>
+            getDocument={getDocument}
+            focusSelf={e => e.focus()}
             selected={selected}
             index={index}
             disabled={false}

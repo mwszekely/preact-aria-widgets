@@ -184,6 +184,11 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
         onCheckedChange?.(e as h.JSX.TargetedEvent<InputType>);
     });
 
+    const focusSelf = useStableCallback(() => {
+        const element = getControlElement() as HTMLElement | null;
+        element?.focus();
+    })
+
     const { useLabelInput: useILInput, useLabelLabel: useILLabel, label } = useLabel<InputType, LabelType>({ label: { prefixLabel: "aria-checkbox-label-", prefixInput: "aria-checkbox-input-", tagInput: tagInput, tagLabel: tagLabel } });
 
 
@@ -219,7 +224,8 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
             const usePressProps = usePress<InputType>({
                 onClickSync: !!disabled || !handlesInput(tag, labelPosition, "input-element") ? undefined : stableOnInput,
                 exclude: undefined,
-                hasFocus: hasFocusInput
+                hasFocus: hasFocusInput,
+                focusSelf
             });
             const props: h.JSX.HTMLAttributes<InputType> = useMergedProps<InputType>(
                 useRefElementProps(useILInputProps(usePressProps({}))),
@@ -234,7 +240,7 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
                 props.tabIndex = -1;
                 props.role = "presentation";
                 props["aria-hidden"] = "true";
-                props.onFocus = _ => (getLabelElement() as HTMLElement | null)?.focus();
+                props.onFocus = _ => (getLabelElement() as HTMLElement | null)?.focus?.();
             }
             else {
                 if (tag === "input") {
@@ -269,7 +275,8 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
             const usePressProps = usePress<LabelType>({
                 onClickSync: !!disabled || !handlesInput(tag, labelPosition, "label-element") ? undefined : stableOnInput,
                 exclude: undefined,
-                hasFocus: hasFocusLabel
+                hasFocus: hasFocusLabel,
+                focusSelf
             });
             const newProps: h.JSX.HTMLAttributes<LabelType> = usePressProps({});
 
@@ -300,11 +307,6 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
     const getControlElement = useStableCallback(<T extends InputType | LabelType>() => {
         return (((labelPosition == "wrapping") ? getLabelElement() : getInputElement()) as T | null);
     });
-
-    const focusSelf = useStableCallback(() => {
-        const element = getControlElement() as HTMLElement | null;
-        element?.focus();
-    })
 
 
     return {

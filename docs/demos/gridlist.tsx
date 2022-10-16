@@ -1,7 +1,10 @@
 
-import { useState } from "preact-prop-helpers";
+import { usePassiveState, useState } from "preact-prop-helpers";
 import { useRef } from "preact/compat";
+import { Checkbox, defaultRenderCheckbox } from "../../component/checkbox";
 import { defaultRenderGridlist, defaultRenderGridlistChild, defaultRenderGridlistRow, defaultRenderGridlistSection, Gridlist, GridlistChild, GridlistRow, GridlistSection } from "../../component/gridlist";
+import { EventDetail } from "../../props";
+import { UseCheckboxReturnTypeInfo } from "../../use-checkbox";
 
 function getDocument() { return window.document; }
 
@@ -30,18 +33,19 @@ export function Code() {
 
 function DemoGridlistChild1({ row }: { row: number }) {
     const text = "Gridlist child " + row;
-    return <GridlistChild getDocument={getDocument} index={0} text={text} render={defaultRenderGridlistChild({ tagGridlistChild: "div", makePropsGridlistChild: (_info) => ({ children: text }) })} subInfo={undefined} />
+    return <GridlistChild<HTMLDivElement> getDocument={getDocument} focusSelf={e => e.focus()} index={0} text={text} render={defaultRenderGridlistChild({ tagGridlistChild: "div", makePropsGridlistChild: (_info) => ({ children: text }) })} subInfo={undefined} />
 }
 
 function DemoGridlistChild2() {
-    const ref = useRef<HTMLInputElement>(null);
+    const cb = useRef<UseCheckboxReturnTypeInfo<HTMLInputElement, HTMLLabelElement>>(null);
     const [b, setB] = useState(false);
-    return <GridlistChild focusSelf={() => ref.current?.focus()} getDocument={getDocument} index={1} text={b.toString()} render={defaultRenderGridlistChild({ tagGridlistChild: "div", makePropsGridlistChild: (info) => ({ children: <input ref={ref} type="checkbox" tabIndex={info.rovingTabIndex.tabbable? 0 : -1} checked={b} onInput={e => setB(e.currentTarget.checked)} /> }) })} subInfo={undefined} />
+    return <GridlistChild<HTMLInputElement> noModifyTabIndex={true} focusSelf={e => { debugger; cb.current?.checkboxLike.focusSelf() }} getDocument={getDocument} index={1} text={b.toString()} render={defaultRenderGridlistChild({ tagGridlistChild: "div", makePropsGridlistChild: (info) => ({ children: <Checkbox ref={cb} labelPosition={"separate"} tagInput="input" tagLabel="label" checked={b} disabled={false} getDocument={getDocument} onCheckedChange={e => setB(e[EventDetail].checked)} render={defaultRenderCheckbox({ labelPosition: "separate", tagInput: "input", tagLabel: "label", makeInputProps: () => ({ tabIndex: info.rovingTabIndex.tabbable? 0 : -1 }), makeLabelProps: () => ({ children: "Checkbox" }) })} /> }) })} subInfo={undefined} />
 }
+function noop() { }
 
 export function Demo() {
     const [count, setCount] = useState(5);
-
+    const [selectedIndex, setSelectedIndex] = useState(null as number | null);
 
     return (
         <>
@@ -49,24 +53,39 @@ export function Demo() {
             <Code />
             <label><input type="number" min={0} value={count} onInput={e => setCount(e.currentTarget.valueAsNumber)} /> # of table rows</label>
             <div>
-                <Gridlist initialIndex={0} render={defaultRenderGridlist({
-                    tagGridlist: "div", makePropsGridlist: (_info) => ({
-                        children: <GridlistSection index={0} compareRows={(lhs, rhs) => lhs - rhs} render={defaultRenderGridlistSection({
-                            tagGridlistSection: "div", makePropsGridlistSection: (_info) => ({
-                                children: Array.from(function* () {
-                                    for (let i = 0; i < count; ++i) {
-                                        yield <GridlistRow subInfo={undefined} index={i} text="" render={defaultRenderGridlistRow({
-                                            tagGridlistRow: "div", makePropsGridlistRow: (_info) => ({
-                                                children: [<DemoGridlistChild1 row={i} />, <DemoGridlistChild2 />]
-                                            })
-                                        })} />
-                                    }
-                                }())
-                            })
-                        })} />
-                    })
-                })} />
-            
+                <Gridlist
+                    initialIndex={0}
+                    selectedIndex={selectedIndex}
+                    selectionMode="activation"
+                    setSelectedIndex={setSelectedIndex}
+                    render={defaultRenderGridlist({
+                        tagGridlist: "div", makePropsGridlist: (_info) => ({
+                            children: <GridlistSection index={0} compareRows={(lhs, rhs) => lhs - rhs} render={defaultRenderGridlistSection({
+                                tagGridlistSection: "div", makePropsGridlistSection: (_info) => ({
+                                    children: Array.from(function* () {
+                                        for (let i = 0; i < count; ++i) {
+                                            yield (
+                                                <GridlistRow<HTMLDivElement, HTMLDivElement>
+                                                    ariaPropName="aria-selected"
+                                                    getDocument={getDocument}
+                                                    selected={false}
+                                                    unselectable={true}
+                                                    subInfo={undefined}
+                                                    index={i}
+                                                    text=""
+                                                    render={defaultRenderGridlistRow({
+                                                        tagGridlistRow: "div", makePropsGridlistRow: (_info) => ({
+                                                            children: [<DemoGridlistChild1 row={i} />, <DemoGridlistChild2 />]
+                                                        })
+                                                    })} />
+                                            )
+                                        }
+                                    }())
+                                })
+                            })} />
+                        })
+                    })} />
+
 
             </div>
         </>

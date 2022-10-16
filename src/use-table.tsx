@@ -10,7 +10,7 @@ export type TableValueType = string | number | null | boolean | Date;
 
 export interface UseTableParameters extends Omit<UseGridNavigationParameters<"indexMangler" | "indexDemangler", never, never, never, never>, "gridNavigation"> { }
 export interface UseTableBodyParameters { }
-export interface UseTableRowParameters<RowElement extends Element, CellElement extends Element, CR, CC, KR extends string, SubbestInfoR> extends UseGridNavigationRowParameters<UseTableRowSubInfo<CellElement, CR, CC>, KR, never, never, never, never, never, never, never, never, SubbestInfoR> {
+export interface UseTableRowParameters<RowElement extends Element, CellElement extends Element, CR, CC, KR extends string, SubbestInfoR> extends UseGridNavigationRowParameters<RowElement, UseTableRowSubInfo<CellElement, CR, CC>, KR, never, never, never, never, never, never, never, never, SubbestInfoR> {
     tableRow: Pick<UseTableRowSubInfo<CellElement, CR, CC>, "location"> & { tagTableRow: ElementToTag<RowElement> };
 }
 export interface UseTableCellParameters<CellElement extends Element, CC, KC extends string, SubbestInfoC> extends UseGridNavigationCellParameters<CellElement, UseTableCellSubInfo<CC>, KC, never, never, never, SubbestInfoC> {

@@ -8,7 +8,7 @@ import { useCheckboxLike, UseCheckboxLikeReturnTypeInfo, useLabel } from "./use-
 //type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RadioChangeEvent<E extends EventTarget, V extends number | string> = EnhancedEvent<E, Event, { selectedValue: V | undefined }>;
 
-export interface UseRadioGroupParameters<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, InputElement extends Element> extends UseListNavigationSingleSelectionParameters<"selectedIndex" | "onSelectedIndexChange", never, never, never, never, never> {
+export interface UseRadioGroupParameters<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, InputElement extends Element, C, K extends string> extends UseListNavigationSingleSelectionParameters<InputElement, RadioSubInfo<V, C>, K, "selectedIndex" | "setSelectedIndex", never, never, never, never, never> {
     radioGroup: {
         name: string;
 
@@ -22,7 +22,7 @@ export interface UseRadioGroupParameters<V extends string | number, GroupElement
 
 
 
-export interface UseRadioParameters<V extends string | number, I extends Element, IL extends Element, C, K extends string> extends UseListNavigationSingleSelectionChildParameters<I, RadioSubInfo<V, C>, K, never, never, never, C> {
+export interface UseRadioParameters<V extends string | number, I extends Element, IL extends Element, C, K extends string> extends UseListNavigationSingleSelectionChildParameters<I, RadioSubInfo<V, C>, K, "ariaPropName",never, never, never, C> {
     radio: {
         labelPosition: "wrapping" | "separate";
         value: V;
@@ -30,8 +30,8 @@ export interface UseRadioParameters<V extends string | number, I extends Element
         tagInput: ElementToTag<I>;
         tagLabel: ElementToTag<IL>;
     }
-    hasFocusInput: UseHasFocusParameters<I>;
-    hasFocusLabel: UseHasFocusParameters<IL>;
+    //hasFocusInput: UseHasFocusParameters<I>;
+    //hasFocusLabel: UseHasFocusParameters<IL>;
 }
 
 export interface UseRadioGroupReturnTypeInfo<V extends string | number, I extends Element, C, K extends string> extends UseListNavigationSingleSelectionReturnTypeInfo<I, RadioSubInfo<V, C>, K> {
@@ -61,7 +61,7 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
     typeaheadNavigation,
     childrenHaveFocus,
     singleSelection: { selectionMode }
-}: UseRadioGroupParameters<V, G, GL, I>): UseRadioGroupReturnTypeWithHooks<V, G, GL, I, IL, UC, K> {
+}: UseRadioGroupParameters<V, G, GL, I, UC, K>): UseRadioGroupReturnTypeWithHooks<V, G, GL, I, IL, UC, K> {
 
     debugLog("useRadioGroup", selectedValue);
     const { getElement: _getRadioGroupParentElement, useRefElementProps } = useRefElement<G>({});
@@ -86,7 +86,7 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
         listNavigation,
         managedChildren,
         rovingTabIndex,
-        singleSelection: { selectedIndex, onSelectedIndexChange, selectionMode },
+        singleSelection: { selectedIndex, setSelectedIndex, selectionMode },
         typeaheadNavigation,
         childrenHaveFocus
     });
@@ -113,9 +113,9 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
         listNavigation,
         managedChild,
         rovingTabIndex,
-        hasFocusInput,
-        hasFocusLabel,
         radio: { disabled, labelPosition, tagInput, tagLabel, value },
+        hasFocus,
+        singleSelection,
         subInfo
     }) {
         const index = managedChild.index;
@@ -133,8 +133,9 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
                 index: managedChild.index,
                 flags: managedChild.flags
             },
-            hasFocus: hasFocusInput,
-            subInfo: { getValue, subInfo }
+            hasFocus,
+            subInfo: { getValue, subInfo },
+            singleSelection: { ariaPropName: tagInput == "input" && labelPosition == "separate"? null : "aria-selected", ...singleSelection }
         });
 
         const { singleSelection: { selected: checked } } = listNavRet;
@@ -151,8 +152,8 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
                 tagInput: tagInput as never,
                 tagLabel: tagLabel as never
             },
-            hasFocusInput,
-            hasFocusLabel
+            hasFocusInput: hasFocus,
+            hasFocusLabel: hasFocus as any
         });
 
 

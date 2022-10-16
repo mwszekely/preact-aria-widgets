@@ -50,20 +50,20 @@ function DemoTableCell({ index, header }: { index: number, header?: boolean }) {
 
     if (header) {
         const text = `Header #${index}`;
-        return <TableCell location="head" headerType="column" tagTableCell="th" index={index} getDocument={getDocument} text={text} value={text} render={defaultRenderTableCell({ tagTableCell: "th", makePropsTableCell: (info) => ({ children: <button tabIndex={info.rovingTabIndex.tabbable ? 0 : -1} onClick={() => info.tableHeaderCell.sort()}>{text}</button> }) })}  subInfo={undefined} />
+        return <TableCell<HTMLTableCellElement> focusSelf={e => e.focus()} location="head" headerType="column" tagTableCell="th" index={index} getDocument={getDocument} text={text} value={text} render={defaultRenderTableCell({ tagTableCell: "th", makePropsTableCell: (info) => ({ children: <button tabIndex={info.rovingTabIndex.tabbable ? 0 : -1} onClick={() => info.tableHeaderCell.sort()}>{text}</button> }) })}  subInfo={undefined} />
     }
     else {
         //const text = `Cell in column #${index}`;
         switch (index) {
             case 0:
-                return <TableCell location="body" headerType={null} tagTableCell="td" index={index} getDocument={getDocument} text={""} value={""} render={defaultRenderTableCell({
+                return <TableCell<HTMLTableCellElement> focusSelf={e => e.focus()} location="body" headerType={null} tagTableCell="td" index={index} getDocument={getDocument} text={""} value={""} render={defaultRenderTableCell({
                     tagTableCell: "td", makePropsTableCell: (info) => ({
                         children: <DemoInput tabbable={info.rovingTabIndex.tabbable} />
 
                     })
                 })}  subInfo={undefined} />
             default:
-                return <TableCell location="body" headerType={null} tagTableCell="td" index={index} getDocument={getDocument} text={r.current.toString()} value={r.current.toString()} render={defaultRenderTableCell({ tagTableCell: "td", makePropsTableCell: () => ({ children: r.current.toString() }) })}  subInfo={undefined} />
+                return <TableCell<HTMLTableCellElement> focusSelf={e => e.focus()} location="body" headerType={null} tagTableCell="td" index={index} getDocument={getDocument} text={r.current.toString()} value={r.current.toString()} render={defaultRenderTableCell({ tagTableCell: "td", makePropsTableCell: () => ({ children: r.current.toString() }) })}  subInfo={undefined} />
         }
     }
 }

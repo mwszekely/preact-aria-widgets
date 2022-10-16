@@ -22,6 +22,7 @@ Overall goals:
 Other design decisions:
 * A lot of these hooks are composed of other hooks in deeply nested ways. To avoid confusion about who takes what parameter/who returns what info, hooks will generally just take one single object parameter where each entry contains the arguments passed to the hook used. Simiarly when returning information, each entry in the object will refer to the information returned specifically by that hook
     * For example, `useListboxSingle` makes use of roving tabindex as well as a singular selection mechanic, so its call with its one argument looks like `useListboxSingle({ rovingTabIndex: { ... }, singleSelection: { ... }, listboxSingle: { ... } })`
+    * Beyond each component's `render` prop passing in all the information returned by its corresponding hook, each component's `ref` prop can also be used to retrieve this information with (e.g. for checkboxes) `const ref = useRef<UseCheckboxReturnTypeInfo>(null)`, then `<Checkbox ref={ref} />` lets you do things like `ref.current.checkboxLike.focusSelf()`, which (as an example) sends focus to whichever element is responsible (based on label position and element types, etc.). What's available is grouped by the hooks used so expect a lot of `listNavigation` and related repeats throughout.
 
 Documentation, testing, production-readiness are all TODO.
 
@@ -34,12 +35,14 @@ Current components:
 5. Dialog (modal)
 6. Drawer (modal)
 7. Listbox (single & multi)
-8. Menu (w/ menu button)
-9. Radio Group
-10. Tabs & tab panels
-11. Data table
-12. Toasts (a.k.a. Snackbars)
-13. Tooltip
+8. "Gridlist"s (listbox-ish but allows interactive content)
+9. Menu (w/ menu button)
+10. Radio Group
+11. Tabs & tab panels
+12. Data table
+13. Toasts (a.k.a. Snackbars)
+14. Tooltip
+15. Progress & loading content
 
 Other components (e.g. tree views) are TODO
 

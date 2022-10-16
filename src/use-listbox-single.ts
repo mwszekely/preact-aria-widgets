@@ -7,7 +7,7 @@ import { useLabel, UseLabelReturnTypeInfo } from "./use-label";
 
 export type ListboxSingleSelectEvent<E extends EventTarget> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 
-export interface UseListboxSingleParameters<LabelElement extends Element, ListElement extends Element> extends UseListNavigationSingleSelectionParameters<never | "onSelectedIndexChange", never, never, never, never, never> {
+export interface UseListboxSingleParameters<LabelElement extends Element, ListElement extends Element, ListItemElement extends Element, C, K extends string> extends UseListNavigationSingleSelectionParameters<ListItemElement, C, K, never | "setSelectedIndex", never, never, never, never, never> {
     listboxSingle: {
         //selectionMode: "focus" | "activate";
         onSelect?(event: ListboxSingleSelectEvent<Element>): void;
@@ -16,7 +16,7 @@ export interface UseListboxSingleParameters<LabelElement extends Element, ListEl
     }
 }
 
-export interface UseListboxSingleItemParameters<E extends Element, C, K extends string> extends UseListNavigationSingleSelectionChildParameters<E, UseListboxSingleSubInfo<C>, K, never, never, never, C> {
+export interface UseListboxSingleItemParameters<E extends Element, C, K extends string> extends UseListNavigationSingleSelectionChildParameters<E, UseListboxSingleSubInfo<C>, K, never, never, never, never, C> {
     listboxSingleItem: { disabled?: boolean; }
     hasFocus: UseHasFocusParameters<E>;
 }
@@ -49,13 +49,13 @@ export interface UseListboxSingleSubInfo<C> {
 export function useListboxSingle<LabelElement extends Element, ListElement extends Element, ListItemElement extends Element, C = undefined, K extends string = never>({
     listboxSingle: { tagLabel, tagList, onSelect, ..._lbs },
     singleSelection: { selectedIndex, ...ss },
-    linearNavigation: { ...ln },
-    listNavigation: { ...ls },
-    managedChildren: { ...mc },
-    rovingTabIndex: { ...rti },
-    typeaheadNavigation: { ...tn },
-    childrenHaveFocus: { ...chf }
-}: UseListboxSingleParameters<LabelElement, ListElement>): UseListboxSingleReturnTypeWithHooks<LabelElement, ListElement, ListItemElement, C, K> {
+    linearNavigation,
+    listNavigation,
+    managedChildren,
+    rovingTabIndex,
+    typeaheadNavigation,
+    childrenHaveFocus,
+}: UseListboxSingleParameters<LabelElement, ListElement, ListItemElement, C, K>): UseListboxSingleReturnTypeWithHooks<LabelElement, ListElement, ListItemElement, C, K> {
     debugLog("useListboxSingle", selectedIndex);
 
     const { useLabelInput, useLabelLabel, ...labelReturnType } = useLabel<ListElement, LabelElement>({
@@ -67,33 +67,32 @@ export function useListboxSingle<LabelElement extends Element, ListElement exten
         }
     });
 
-    const onSelectedIndexChange = useStableCallback((event: Event, newIndex: number) => {
+    const onSelectedIndexChange = useStableCallback((newIndex: number, event: any) => {
         stableOnSelect(enhanceEvent<ListItemElement, Event, { selectedIndex: number }>(event, { selectedIndex: newIndex }))
     });
 
     const { useListNavigationSingleSelectionChild, useListNavigationSingleSelectionProps, ...listReturnType } = useListNavigationSingleSelection<ListElement, ListItemElement, UseListboxSingleSubInfo<C>, K>({
-        childrenHaveFocus: { ...chf },
-        linearNavigation: { ...ln },
-        listNavigation: { ...ls },
-        managedChildren: { ...mc },
-        rovingTabIndex: {
-            ...rti
-        },
-        singleSelection: { ...ss, onSelectedIndexChange, selectedIndex },
-        typeaheadNavigation: tn
+        childrenHaveFocus,
+        linearNavigation,
+        listNavigation,
+        managedChildren,
+        rovingTabIndex,
+        singleSelection: { ...ss, setSelectedIndex: onSelectedIndexChange, selectedIndex },
+        typeaheadNavigation,
     });
 
     const { useLabelInputProps } = useLabelInput();
     const stableOnSelect = useStableCallback(onSelect ?? (() => { }));
 
 
-    const useListboxSingleItem = useCallback<UseListboxSingleItem<ListItemElement, C, K>>(({ listboxSingleItem: { disabled }, listNavigation, managedChild, rovingTabIndex, hasFocus, subInfo }) => {
+    const useListboxSingleItem = useCallback<UseListboxSingleItem<ListItemElement, C, K>>(({ listboxSingleItem: { disabled }, listNavigation, managedChild, rovingTabIndex, hasFocus, singleSelection, subInfo }) => {
         debugLog("useListboxSingleItem", managedChild.index);
         const { rovingTabIndex: rti_ret, singleSelection: ss_ret, useListNavigationSingleSelectionChildProps } = useListNavigationSingleSelectionChild({
             managedChild,
             listNavigation,
             rovingTabIndex,
             hasFocus,
+            singleSelection: { ...singleSelection },
             subInfo: { 
                 subInfo 
             }

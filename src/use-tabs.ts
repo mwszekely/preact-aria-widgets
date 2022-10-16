@@ -13,7 +13,7 @@ export type TabsChangeEvent<E extends Element> = { [EventDetail]: { selectedInde
 export interface UseTabsParameters {
     tabPanels: UseManagedChildrenParameters<number, never>;
 }
-export interface UseTabParameters<E extends Element, C, K extends string, SubbestInfo> extends UseListNavigationSingleSelectionChildParameters<E, C, K, never, never, never, SubbestInfo> {
+export interface UseTabParameters<E extends Element, C, K extends string, SubbestInfo> extends UseListNavigationSingleSelectionChildParameters<E, C, K, "ariaPropName", never, never, never, SubbestInfo> {
     hasFocus: UseHasFocusParameters<E>;
 }
 
@@ -25,8 +25,8 @@ export interface UseTabReturnTypeWithHooks<TabElement extends Element> extends U
 }
 
 export interface UseTabLabelParameters { }
-export interface UseTabListParameters<TabElement extends EventTarget> extends UseListNavigationSingleSelectionParameters<never | "onSelectedIndexChange", never, never, never, never, never> {
-    tabs: { onSelectedIndexChange(e: EnhancedEvent<TabElement, Event, { selectedIndex: number }>): void; };
+export interface UseTabListParameters<TabElement extends Element, C, K extends string> extends UseListNavigationSingleSelectionParameters<TabElement, C, K, never, never, never, never, never, never> {
+    //tabs: { onSelectedIndexChange(e: EnhancedEvent<TabElement, Event, { selectedIndex: number }>): void; };
     childrenHaveFocus: UseChildrenHaveFocusParameters["childrenHaveFocus"];
 
 }
@@ -63,7 +63,7 @@ export interface UseTabsReturnTypeWithHooks<TabContainerElement extends Element,
 }
 
 export type UseTab<TabElement extends Element, TC, TK extends string> = (args: UseTabParameters<TabElement, TC, TK, TC>) => UseTabReturnTypeWithHooks<TabElement>;
-export type UseTabList<TabContainerElement extends Element, TabElement extends Element, C, K extends string> = (args: UseTabListParameters<TabElement>) => UseTabListReturnTypeWithHooks<TabContainerElement, TabElement, C, K>;
+export type UseTabList<TabContainerElement extends Element, TabElement extends Element, C, K extends string> = (args: UseTabListParameters<TabElement, C, K>) => UseTabListReturnTypeWithHooks<TabContainerElement, TabElement, C, K>;
 export type UseTabPanel<PanelElement extends Element, PC, PK extends string> = (args: UseTabPanelParameters<PC, PK, PC>) => UseTabPanelReturnTypeWithHooks<PanelElement>;
 export type UseTabListLabel<LabelElement extends Element> = (args: UseTabLabelParameters) => UseTabLabelReturnTypeWithHooks<LabelElement>;
 /*
@@ -118,9 +118,9 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
         return { useTabListLabelProps };
     }, [useLabelLabel]);
 
-    const useTabList = useCallback<UseTabList<TabListElement, TabElement, TC, TK>>(({ childrenHaveFocus, tabs: { onSelectedIndexChange }, linearNavigation, listNavigation, managedChildren: tabListManagedChildren, rovingTabIndex, singleSelection, typeaheadNavigation }) => {
+    const useTabList = useCallback<UseTabList<TabListElement, TabElement, TC, TK>>(({ childrenHaveFocus, linearNavigation, listNavigation, managedChildren: tabListManagedChildren, rovingTabIndex, singleSelection, typeaheadNavigation }) => {
         debugLog("useTabList");
-        const stableOnSelectedIndexChange = useStableCallback(onSelectedIndexChange);
+        const stableOnSelectedIndexChange = useStableCallback(singleSelection.setSelectedIndex);
 
         const {
             useListNavigationSingleSelectionChild,
@@ -131,12 +131,7 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
             listNavigation,
             managedChildren: tabListManagedChildren,
             rovingTabIndex,
-            singleSelection: {
-                ...singleSelection,
-                onSelectedIndexChange: useCallback((event: Event, index: number) => {
-                    onSelectedIndexChange?.(enhanceEvent<TabElement, Event, { selectedIndex: number }>(event, { selectedIndex: index }))
-                }, [])
-            },
+            singleSelection,
             typeaheadNavigation,
             childrenHaveFocus
         });
@@ -147,9 +142,9 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
 
         const { useLabelInputProps } = useLabelInput()
 
-        const useTab = useCallback<UseTab<TabElement, TC, TK>>(({ listNavigation, managedChild, rovingTabIndex, hasFocus, subInfo }) => {
+        const useTab = useCallback<UseTab<TabElement, TC, TK>>(({ listNavigation, managedChild, rovingTabIndex, hasFocus, singleSelection, subInfo }) => {
             debugLog("useTab", managedChild.index);
-            const { useListNavigationSingleSelectionChildProps, ...listNavRet2 } = useListNavigationSingleSelectionChild({ listNavigation, managedChild, rovingTabIndex, subInfo: { subInfo }, hasFocus });
+            const { useListNavigationSingleSelectionChildProps, ...listNavRet2 } = useListNavigationSingleSelectionChild({ listNavigation, managedChild, rovingTabIndex, subInfo: { subInfo }, hasFocus, singleSelection: { ariaPropName: "aria-selected", ...singleSelection } });
             const { singleSelection: { selected }, rovingTabIndex: { tabbable } } = listNavRet2;
 
             const useTabProps = (props: h.JSX.HTMLAttributes<TabElement>) => {
@@ -157,15 +152,15 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
                 const tabId = getTabId(managedChild.index);
 
                 const usePressProps = usePress<TabElement>({
-                    onClickSync: (e) => { stableOnSelectedIndexChange(enhanceEvent(e, { selectedIndex: managedChild.index })) },
+                    onClickSync: (e) => { stableOnSelectedIndexChange(managedChild.index, e) },
                     exclude: {},
-                    hasFocus
+                    hasFocus,
+                    focusSelf: rovingTabIndex.focusSelf
                 });
 
 
                 overwriteWithWarning("useTab", props, "role", "tab");
                 overwriteWithWarning("useTab", props, "aria-controls", panelId);
-                overwriteWithWarning("useTab", props, "aria-selected", selected ? "true" : undefined);
 
                 return useListNavigationSingleSelectionChildProps(useMergedProps({
                     "data-tabbable": tabbable.toString(),

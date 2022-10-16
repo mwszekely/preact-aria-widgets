@@ -17,7 +17,7 @@ export interface UseCheckboxParameters<I extends Element, L extends Element> {
     hasFocusLabel: UseCheckboxLikeParameters<I, L>["hasFocusLabel"];
     label: UseCheckboxLikeParameters<I, L>["label"];
     checkbox: {
-        onCheckedChange?(event: CheckboxChangeEvent<I>): void;
+        onCheckedChange(event: CheckboxChangeEvent<I>): void;
     }
 }
 

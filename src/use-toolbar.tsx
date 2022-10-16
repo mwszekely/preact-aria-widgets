@@ -3,8 +3,17 @@ import { useListNavigation, UseListNavigationChildParameters, UseListNavigationC
 import { useCallback } from "preact/hooks";
 import { PropModifier, overwriteWithWarning } from "./props";
 
-export interface UseToolbarParameters extends UseListNavigationParameters<never, "navigationDirection", never, never, never> {
-    toolbar: { orientation: "horizontal" | "vertical"; role?: string; }
+interface TP { 
+    orientation: "horizontal" | "vertical"; 
+
+    // Should be "toolbar" for toolbars, null if someone else takes care of the role, and whatever string is applicable otherwise
+    role: string | null; 
+};
+
+export type ToolbarOmits = keyof TP;
+
+export interface UseToolbarParameters<TBOmits extends ToolbarOmits> extends UseListNavigationParameters<never, "navigationDirection", never, never, never> {
+    toolbar: Omit<TP, TBOmits>;
 }
 
 export interface UseToolbarReturnTypeInfo<ChildElement extends Element, C, K extends string> extends UseListNavigationReturnTypeInfo<ChildElement, UseToolbarSubInfo<C>, K> {
@@ -20,14 +29,26 @@ export interface UseToolbarReturnTypeWithHooks<ContainerElement extends Element,
     useToolbarChild: UseToolbarChild<ChildElement, C, K>;
 }
 
-export type UseToolbarChild<ChildElement extends Element, C, K extends string> = (i: UseToolbarChildParameters<C, K>) => UseToolbarChildReturnTypeWithHooks<ChildElement>;
-export type UseToolbarChildParameters<C, K extends string> = UseListNavigationChildParameters<UseToolbarSubInfo<C>, K, never, never, never, C>;
-export type UseToolbarChildReturnTypeInfo<ChildElement extends Element> = UseListNavigationChildReturnTypeInfo<ChildElement>
+export type UseToolbarChild<ChildElement extends Element, C, K extends string> = (i: UseToolbarChildParameters<ChildElement, C, K, C>) => UseToolbarChildReturnTypeWithHooks<ChildElement>;
+export interface UseToolbarChildParameters<E extends Element, C, K extends string, SubbestInfo> extends UseListNavigationChildParameters<E, UseToolbarSubInfo<C>, K, never, never, never, SubbestInfo> { }
+export interface UseToolbarChildReturnTypeInfo<ChildElement extends Element> extends UseListNavigationChildReturnTypeInfo<ChildElement> { }
 export interface UseToolbarChildReturnTypeWithHooks<ChildElement extends Element> extends UseToolbarChildReturnTypeInfo<ChildElement> {
     useToolbarChildProps: PropModifier<ChildElement>;
 }
 
-export function useToolbar<ContainerElement extends Element, ChildElement extends Element, C, K extends string>({ linearNavigation, listNavigation, managedChildren, rovingTabIndex, typeaheadNavigation, toolbar: { orientation, role } }: UseToolbarParameters): UseToolbarReturnTypeWithHooks<ContainerElement, ChildElement, C, K> {
+/**
+ * A toolbar is just a collection of widgets in an expected order and with the usual keyboard navigation stuff.
+ * 
+ * The main difference between a toolbar and a menubar is that a menubar contains purely static menuitems, 
+ * but a toolbar is the more general case, being able to contain anything at all. 
+ * A menubar is implemented as a special case of a toolbar, and a menu is implemented as a specialized menubar
+ * 
+ * Either way, be sure to specify the role and orientation this toolbar has (role=toolbar if you're using this as an actual toolbar).
+ * 
+ * @param param0 
+ * @returns 
+ */
+export function useToolbar<ContainerElement extends Element, ChildElement extends Element, C, K extends string>({ linearNavigation, listNavigation, managedChildren, rovingTabIndex, typeaheadNavigation, toolbar: { orientation, role } }: UseToolbarParameters<never>): UseToolbarReturnTypeWithHooks<ContainerElement, ChildElement, C, K> {
     const {
         useListNavigationChild,
         useListNavigationProps,
@@ -40,7 +61,7 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
         typeaheadNavigation
     });
 
-    const useToolbarChild = useCallback(({ listNavigation, managedChild, rovingTabIndex, subInfo }: UseToolbarChildParameters<C, K>) => {
+    const useToolbarChild = useCallback<UseToolbarChild<ChildElement, C, K>>(({ listNavigation, managedChild, rovingTabIndex, subInfo }) => {
         const { useListNavigationChildProps, ...listRet } = useListNavigationChild({
             listNavigation,
             managedChild,
@@ -55,7 +76,7 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
     }, [])
 
     function useToolbarProps(p: h.JSX.HTMLAttributes<ContainerElement>) {
-        overwriteWithWarning("useToolbar", p, "role", (role ?? "toolbar"));
+        overwriteWithWarning("useToolbar", p, "role", role ?? undefined);
         return useListNavigationProps(p);
     }
 

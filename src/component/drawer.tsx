@@ -1,9 +1,10 @@
-import { h, VNode } from "preact";
+import { h, Ref, VNode } from "preact";
 import { UseActiveElementParameters } from "preact-prop-helpers";
-import { memo } from "preact/compat";
+import { memo, useImperativeHandle } from "preact/compat";
 import { ElementToTag, PropModifier } from "props";
 import { UseDrawerReturnTypeInfo, useDrawer, UseDrawerParameters } from "../use-drawer";
 import { defaultRenderModal } from "./dialog";
+import { memoForwardRef } from "./util";
 
 type Get<T, K extends keyof T> = T[K];
 
@@ -11,6 +12,7 @@ export interface DrawerProps<FocusContainerElement extends HTMLElement, DrawerEl
     Get<UseDrawerParameters, "softDismiss">,
     UseActiveElementParameters,
     Get<UseDrawerParameters, "modal"> {
+    ref?: Ref<UseDrawerReturnTypeInfo>;
     render(drawerInfo: UseDrawerReturnTypeInfo, modifyFocusContainerProps: PropModifier<FocusContainerElement>, modifyDrawerProps: PropModifier<DrawerElement>, modifyTitleProps: PropModifier<TitleElement>, modifyBodyProps: PropModifier<BodyElement>, modifyBackdropProps: PropModifier<BackdropElement>): VNode<any>;
 }
 
@@ -18,7 +20,7 @@ export function defaultRenderDrawer<FocusContainerElement extends HTMLElement, D
     return defaultRenderModal<FocusContainerElement, DialogElement, TitleElement, BodyElement, BackdropElement, UseDrawerReturnTypeInfo>({ portalId, makePropsFocusContainer, makePropsBackdrop, makePropsBody, makePropsDialog, makePropsTitle, tagFocusContainer, tagBackdrop, tagBody, tagDialog, tagTitle });
 }
 
-export const Drawer = memo(function Drawer<FocusContainerElement extends HTMLElement, DrawerElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement>({ render, onClose, open, bodyIsOnlySemantic, focusSelf, getDocument, getWindow, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange }: DrawerProps<FocusContainerElement, DrawerElement, TitleElement, BodyElement, BackdropElement>) {
+export const Drawer = memoForwardRef(function Drawer<FocusContainerElement extends HTMLElement, DrawerElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement>({ render, onClose, open, bodyIsOnlySemantic, focusSelf, getDocument, getWindow, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange }: DrawerProps<FocusContainerElement, DrawerElement, TitleElement, BodyElement, BackdropElement>, ref: Ref<any>) {
     const {
         useDrawerBackdrop,
         useDrawerBody,
@@ -27,7 +29,7 @@ export const Drawer = memo(function Drawer<FocusContainerElement extends HTMLEle
         useDrawerFocusContainerProps,
         ...drawerInfo
     } = useDrawer<FocusContainerElement, DrawerElement, TitleElement, BodyElement, BackdropElement>({ modal: { bodyIsOnlySemantic, focusSelf }, softDismiss: { onClose, open }, activeElement: { getDocument, getWindow, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange } });
-
+    useImperativeHandle(ref!, () => drawerInfo);
     const { useDrawerTitleProps } = useDrawerTitle();
     const { useDrawerBodyProps } = useDrawerBody();
     const { useDrawerBackdropProps } = useDrawerBackdrop();

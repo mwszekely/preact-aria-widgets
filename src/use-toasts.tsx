@@ -190,7 +190,7 @@ export function useToasts<ContainerType extends Element, C, K extends string>({ 
             const element = getElement();
             if (element) {
                 const firstFocusable = findFirstFocusable(element);
-                firstFocusable?.focus();
+                firstFocusable?.focus?.();
             }
         }, []);
 
