@@ -66,7 +66,7 @@ export function defaultRenderAccordionSection<HeaderContainerElement extends HTM
     }
 }
 
-export const AccordionSection = memoForwardRef(function AccordionSection<HeaderElement extends Element, BodyElement extends Element, AccSubInfo, K extends string>({
+export const AccordionSection = memoForwardRef(function AccordionSection<HeaderElement extends Element, BodyElement extends Element, AccSubInfo = undefined, K extends string = never>({
     open,
     index,
     tagButton,

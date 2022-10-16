@@ -98,17 +98,10 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
 
         const { disabled, onPress } = menuItem;
 
-        const usePressProps = usePress<MenuItemElement>({
-            onClickSync: (e) => (disabled ? null : onPress)?.(enhanceEvent(e, { index: managedChild.index })),
-            exclude: undefined,
-            hasFocus,
-            focusSelf: rovingTabIndex.focusSelf
-        });
-
         const { useMenuItemProps: useListNavigationChildProps, ...listNavRet } = useListNavigationChild({ listNavigation, managedChild, rovingTabIndex, subInfo: { subInfo }, hasFocus, menuItem });
 
         function useMenuItemProps<P extends h.JSX.HTMLAttributes<MenuItemElement>>({ ...props }: P) {
-            return usePressProps(useListNavigationChildProps(props));
+            return useListNavigationChildProps(props);
         }
 
         return { useMenuItemProps, ...listNavRet };
