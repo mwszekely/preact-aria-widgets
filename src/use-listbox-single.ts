@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { UseHasFocusParameters, useRandomId, useStableCallback } from "preact-prop-helpers";
+import { UseHasFocusParameters, useMergedProps, useRandomId, useStableCallback } from "preact-prop-helpers";
 import { useListNavigationSingleSelection, UseListNavigationSingleSelectionChildParameters, UseListNavigationSingleSelectionChildReturnTypeInfo, UseListNavigationSingleSelectionParameters, UseListNavigationSingleSelectionReturnTypeInfo } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { debugLog, ElementToTag, enhanceEvent, EventDetail, overwriteWithWarning } from "./props";
@@ -71,7 +71,7 @@ export function useListboxSingle<LabelElement extends Element, ListElement exten
         stableOnSelect(enhanceEvent<ListItemElement, Event, { selectedIndex: number }>(event, { selectedIndex: newIndex }))
     });
 
-    const { useListNavigationSingleSelectionChild, useListNavigationSingleSelectionProps, ...listReturnType } = useListNavigationSingleSelection<ListElement, ListItemElement, UseListboxSingleSubInfo<C>, K>({
+    const { useListNavigationSingleSelectionChild, listNavigationSingleSelectionProps, ...listReturnType } = useListNavigationSingleSelection<ListElement, ListItemElement, UseListboxSingleSubInfo<C>, K>({
         childrenHaveFocus,
         linearNavigation,
         listNavigation,
@@ -87,7 +87,7 @@ export function useListboxSingle<LabelElement extends Element, ListElement exten
 
     const useListboxSingleItem = useCallback<UseListboxSingleItem<ListItemElement, C, K>>(({ listboxSingleItem: { disabled }, listNavigation, managedChild, rovingTabIndex, hasFocus, singleSelection, subInfo }) => {
         debugLog("useListboxSingleItem", managedChild.index);
-        const { rovingTabIndex: rti_ret, singleSelection: ss_ret, useListNavigationSingleSelectionChildProps } = useListNavigationSingleSelectionChild({
+        const { rovingTabIndex: rti_ret, singleSelection: ss_ret, listNavigationSingleSelectionChildProps } = useListNavigationSingleSelectionChild({
             managedChild,
             listNavigation,
             rovingTabIndex,
@@ -111,7 +111,7 @@ export function useListboxSingle<LabelElement extends Element, ListElement exten
             if (disabled)
                 props["aria-disabled"] = "true";
 
-            return useListNavigationSingleSelectionChildProps(props);
+            return useMergedProps(listNavigationSingleSelectionChildProps, props);
         }
     }, [useListNavigationSingleSelectionChild]);
 
@@ -142,7 +142,7 @@ export function useListboxSingle<LabelElement extends Element, ListElement exten
 
     function useListboxSingleProps(props: h.JSX.HTMLAttributes<ListElement>) {
         props.role = "listbox";
-        return useListNavigationSingleSelectionProps(useLabelInputProps(props));
+        return useMergedProps(listNavigationSingleSelectionProps, useLabelInputProps(props));
     }
 }
 

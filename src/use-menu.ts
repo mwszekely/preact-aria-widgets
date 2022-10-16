@@ -78,7 +78,7 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
     });
 
     const useMenuButtonProps = ((p: h.JSX.HTMLAttributes<MenuButtonElement>) => {
-        const usePressProps = usePress<MenuButtonElement>({
+        const pressProps = usePress<MenuButtonElement>({
             onClickSync: () => {
                 if (open)
                     onClose?.("escape");
@@ -90,7 +90,7 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
             focusSelf: useCallback(e => (e as Element as HTMLElement).focus?.(), [])
         });
         const props = useMenuSurfaceButtonProps(p);
-        return usePressProps(props);
+        return useMergedProps(pressProps, props);
     });
 
     const useMenuItem = useCallback<UseMenuItem<MenuItemElement, C, K>>(({ listNavigation, managedChild, rovingTabIndex, subInfo, menuItem, hasFocus }) => {

@@ -80,10 +80,10 @@ export function useMenuSurface<MenuSurfaceElement extends Element, MenuParentEle
     const { useRandomIdSourceElementProps } = useRandomIdSourceElement();
     const { useRandomIdReferencerElementProps } = useRandomIdReferencerElement<MenuButtonElement>("aria-controls" as never);
 
-    const { getElement: getButtonElement, useRefElementProps: useButtonRefElementProps } = useRefElement<MenuButtonElement>({ onElementChange: setOpenerElement });
+    const { getElement: getButtonElement, refElementProps: useButtonRefElementProps } = useRefElement<MenuButtonElement>({ onElementChange: setOpenerElement });
 
-    const { getElement: getMenuElement, useRefElementProps: useMenuBaseRefElementProps } = useRefElement<MenuSurfaceElement>({});
-    const { useSoftDismissProps, ...softDismissReturn } = useSoftDismiss<any>({
+    const { getElement: getMenuElement, refElementProps: useMenuBaseRefElementProps } = useRefElement<MenuSurfaceElement>({});
+    const { softDismissProps, ...softDismissReturn } = useSoftDismiss<any>({
         softDismiss: {
             ...softDismiss,
             getElements: () => ([getButtonElement(), getMenuElement()]),
@@ -103,13 +103,13 @@ export function useMenuSurface<MenuSurfaceElement extends Element, MenuParentEle
             }
         }
 
-        return useSoftDismissProps((useMenuBaseRefElementProps((useMergedProps<MenuSurfaceElement>({ onKeyDown }, (props))))));
+        return useMergedProps(softDismissProps, useMergedProps(useMenuBaseRefElementProps, useMergedProps<MenuSurfaceElement>({ onKeyDown }, (props))));
     };
 
     const useMenuSurfaceButtonProps = (props: h.JSX.HTMLAttributes<MenuButtonElement>): h.JSX.HTMLAttributes<MenuButtonElement> => {
         overwriteWithWarning("useMenuSurfaceButtonProps", props, "aria-expanded", open.toString());
         overwriteWithWarning("useMenuSurfaceButtonProps", props, "aria-haspopup", role);
-        return useButtonRefElementProps((useRandomIdReferencerElementProps(props)));
+        return useMergedProps(useButtonRefElementProps, useRandomIdReferencerElementProps(props));
     };
 
 

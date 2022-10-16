@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { ManagedChildren, returnNull, useGridNavigation, UseGridNavigationParameters, UseHasFocusParameters, UseListNavigationSubInfo, usePassiveState, UseRovingTabIndexSubInfo, useSortableChildren, useStableCallback, useState } from "preact-prop-helpers";
+import { ManagedChildren, returnNull, useGridNavigation, UseGridNavigationParameters, UseHasFocusParameters, UseListNavigationSubInfo, useMergedProps, usePassiveState, UseRovingTabIndexSubInfo, useSortableChildren, useStableCallback, useState } from "preact-prop-helpers";
 import { UseGridNavigationCellParameters, UseGridNavigationCellReturnTypeInfo, UseGridNavigationCellSubInfo, UseGridNavigationReturnTypeInfo, UseGridNavigationRowParameters, UseGridNavigationRowReturnTypeInfo, UseGridNavigationRowSubInfo } from "preact-prop-helpers";
 import { PassiveStateUpdater } from "preact-prop-helpers";
 import { GetIndex, UseSortableChildrenReturnTypeInfo } from "preact-prop-helpers";
@@ -119,7 +119,7 @@ export function useTable<
     const manglers = useRef({ rowIndexMangler: identity, rowIndexDemangler: identity });
 
     const {
-        useGridNavigationProps,
+        gridNavigationProps,
         useGridNavigationRow,
         ...gridNavRet1
     } = useGridNavigation<TableElement, RowElement, CellElement, UseTableRowSubInfo<CellElement, CR, CC>, UseTableCellSubInfo<CC>, KR, KC>({
@@ -142,7 +142,7 @@ export function useTable<
 
         const {
             useGridNavigationCell,
-            useGridNavigationRowProps,
+            gridNavigationRowProps,
             ...gridNavRet2
         } = useGridNavigationRow({ asChildRowOfSection: { ...asChildRowOfSection, subInfo: { getCells, location, subInfo } }, asParentRowOfCells });
 
@@ -152,7 +152,7 @@ export function useTable<
             const [mySortDirection, setMySortDirection] = useState<TableSortDirection | null>(null);
             debugLog("useTableCell", managedChild.index);
             const {
-                useGridNavigationCellProps,
+                gridNavigationCellProps,
                 ...gridNavRet3
             } = useGridNavigationCell({ listNavigation, managedChild, rovingTabIndex, subInfo: { setMySortDirection, location, value, subInfo }, hasFocus });
 
@@ -161,7 +161,7 @@ export function useTable<
                 bodySort.current!();
             });
 
-            const useTableCellProps: typeof useGridNavigationCellProps = (props) => {
+            const useTableCellProps = (props: h.JSX.HTMLAttributes<CellElement>) => {
 
                 if (tagTableCell != "td" && tagTableCell != "th") {
                     if (headerType == "row")
@@ -185,7 +185,7 @@ export function useTable<
                         overwriteWithWarning("useTableCell", props, "aria-sort", "ascending");
                     }
                 }
-                return useGridNavigationCellProps(props);
+                return useMergedProps(gridNavigationCellProps, props);
             }
             return {
                 tableHeaderCell: { sort, sortDirection: mySortDirection },
@@ -195,10 +195,10 @@ export function useTable<
 
         }, []);
 
-        const useTableRowProps: typeof useGridNavigationRowProps = (props) => {
+        const useTableRowProps = (props: h.JSX.HTMLAttributes<RowElement>) => {
             if (tagTableRow != "tr")
                 overwriteWithWarning("useTableRow", props, "role", "row");
-            return useGridNavigationRowProps(props);
+            return useMergedProps<RowElement>(gridNavigationRowProps, props);
         };
 
         return {
@@ -266,7 +266,7 @@ export function useTable<
         }
     }, []);
 
-    const useTableProps: typeof useGridNavigationProps = useGridNavigationProps;
+    const useTableProps = (props: h.JSX.HTMLAttributes<TableElement>) => useMergedProps(gridNavigationProps, props);
 
     const useTableSectionProps = useCallback((tag: string, location: UseTableRowSubInfo<any, any, any>["location"], props: h.JSX.HTMLAttributes<any>) => {
         if (!(tag == "thead" || tag == "tbody" || tag == "tfoot")) {

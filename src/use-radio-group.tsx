@@ -79,7 +79,7 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
 
     const {
         useListNavigationSingleSelectionChild,
-        useListNavigationSingleSelectionProps,
+        listNavigationSingleSelectionProps,
         ...listNavRet
     } = useListNavigationSingleSelection<G, I, RadioSubInfo<V, UC>, K>({
         linearNavigation,
@@ -92,7 +92,7 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
     });
     const useRadioGroupProps = useCallback(({ ...props }: h.JSX.HTMLAttributes<G>): h.JSX.HTMLAttributes<G> => {
         props.role = "radiogroup";
-        return useGroupLabelInputProps(useListNavigationSingleSelectionProps(useRefElementProps(props)));
+        return (useMergedProps<G>(useGroupLabelInputProps(listNavigationSingleSelectionProps), useRefElementProps(props)));
     }, [useRefElementProps])
 
     const useRadioGroupLabelProps = useCallback((props: h.JSX.HTMLAttributes<GL>): h.JSX.HTMLAttributes<GL> => { return useGroupLabelLabelProps(props); }, [useGroupLabelLabelProps]);
@@ -126,7 +126,7 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
         });
 
         const getValue = useStableGetter(value);
-        const { useListNavigationSingleSelectionChildProps, ...listNavRet } = useListNavigationSingleSelectionChild({
+        const { listNavigationSingleSelectionChildProps, ...listNavRet } = useListNavigationSingleSelectionChild({
             listNavigation,
             rovingTabIndex,
             managedChild: {
@@ -174,7 +174,7 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
                     props["aria-checked"] = (checked ?? false).toString();
                 }
 
-                const propsIfInputHandlesFocus = useListNavigationSingleSelectionChildProps(props);
+                const propsIfInputHandlesFocus = useMergedProps(listNavigationSingleSelectionChildProps, props);
 
                 const { useCheckboxLikeInputElementProps } = useCheckboxLikeInputElement();
                 return (useMergedProps<I>((useCheckboxLikeInputElementProps({})), labelPosition == "separate" ? propsIfInputHandlesFocus : props));
@@ -189,7 +189,7 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
             //const tag = tagLabel;
             const useRadioLabelProps = (props: h.JSX.HTMLAttributes<IL>): h.JSX.HTMLAttributes<IL> => {
                 const { useCheckboxLikeLabelElementProps } = useCheckboxLikeLabelElement();
-                const propsIfLabelHandlesFocus = useListNavigationSingleSelectionChildProps(props as any);
+                const propsIfLabelHandlesFocus = useMergedProps(listNavigationSingleSelectionChildProps, props as any);
                 return useCheckboxLikeLabelElementProps(useMergedProps<IL>({} as any, labelPosition == "wrapping" ? propsIfLabelHandlesFocus as any : props as any))
             };
 

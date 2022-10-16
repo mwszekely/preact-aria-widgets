@@ -15,7 +15,7 @@ export interface ToolbarProps<ToolbarContainerElement extends Element, ToolbarCh
     Get<UseToolbarParameters<never>, "managedChildren">,
     Get<UseToolbarParameters<never>, "toolbar"> {
     ref?: Ref<UseToolbarReturnTypeInfo<ToolbarChildElement, C, K>>;
-    render(info: UseToolbarReturnTypeInfo<ToolbarChildElement, C, K>, modifyPropsToolbar: PropModifier<ToolbarContainerElement>): VNode<any>;
+    render(info: UseToolbarReturnTypeInfo<ToolbarChildElement, C, K>, propsToolbar: PropModifier<ToolbarContainerElement>): VNode<any>;
 }
 
 
@@ -30,7 +30,7 @@ export interface ToolbarChildProps<ToolbarChildElement extends Element, C, K ext
     //tagListItem: ElementToTag<ListboxItemElement>;
     subInfo: Get<UseToolbarChildParameters<ToolbarChildElement, C, K, C>, "subInfo">;
     ref?: Ref<UseToolbarChildReturnTypeInfo<ToolbarChildElement>>;
-    render(info: UseToolbarChildReturnTypeInfo<ToolbarChildElement>, modifyPropsToolbarChild: PropModifier<ToolbarChildElement>): VNode<any>;
+    render(info: UseToolbarChildReturnTypeInfo<ToolbarChildElement>, modifyPropsToolbarChild: h.JSX.HTMLAttributes<ToolbarChildElement>): VNode<any>;
 }
 
 const ToolbarContext = createContext<UseToolbarChild<any, any, any>>(null!);
@@ -85,7 +85,7 @@ export const ToolbarChild = memoForwardRef(function ToolbarChildU<ToolbarChildEl
     noModifyTabIndex,
     subInfo
 }: ToolbarChildProps<ToolbarChildElement, C, K>, ref?: Ref<any>) {
-    const { useToolbarChildProps, ...info } = (useContext(ToolbarContext) as UseToolbarChild<ToolbarChildElement, C, K>)({
+    const { toolbarChildProps, ...info } = (useContext(ToolbarContext) as UseToolbarChild<ToolbarChildElement, C, K>)({
         managedChild: { index, flags },
         rovingTabIndex: { focusSelf, hidden, noModifyTabIndex },
         listNavigation: { text },
@@ -95,7 +95,7 @@ export const ToolbarChild = memoForwardRef(function ToolbarChildU<ToolbarChildEl
     useImperativeHandle(ref!, () => info);
 
     return (
-        <>{render(info, useToolbarChildProps)}</>
+        <>{render(info, toolbarChildProps)}</>
     )
 })
 

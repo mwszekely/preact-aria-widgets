@@ -58,18 +58,18 @@ export function useMenubar<MenuParentElement extends Element, MenuItemElement ex
     const useMenuItem = useCallback<UseMenuItem<MenuItemElement, C, K>>(({ listNavigation, managedChild, rovingTabIndex, subInfo, menuItem: { disabled, onPress, role }, hasFocus }) => {
         debugLog("useMenuItem", managedChild.index);
 
-        const usePressProps = usePress<MenuItemElement>({
+        const pressProps = usePress<MenuItemElement>({
             onClickSync: (e) => (disabled ? null : onPress)?.(enhanceEvent(e, { index: managedChild.index })),
             exclude: undefined,
             hasFocus,
             focusSelf: rovingTabIndex.focusSelf
         });
 
-        const { useToolbarChildProps, ...listNavRet } = useToolbarChild({ listNavigation, managedChild, rovingTabIndex, subInfo });
+        const { toolbarChildProps, ...listNavRet } = useToolbarChild({ listNavigation, managedChild, rovingTabIndex, subInfo });
 
-        function useMenuItemProps<P extends h.JSX.HTMLAttributes<MenuItemElement>>(props: P) {
+        function useMenuItemProps(props: h.JSX.HTMLAttributes<MenuItemElement>) {
             overwriteWithWarning("useMenuItem", props, "role", role);
-            return usePressProps(useToolbarChildProps(props));
+            return useMergedProps(pressProps, useMergedProps(toolbarChildProps, props));
         }
 
         return { useMenuItemProps, ...listNavRet };

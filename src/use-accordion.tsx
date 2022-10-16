@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { OnChildrenMountChange, returnTrue, useChildrenFlag, UseHasFocusParameters, useLinearNavigation, UseLinearNavigationParameters, UseManagedChildParameters, useManagedChildren, UseManagedChildrenParameters, UseManagedChildrenReturnTypeInfo, useRandomId, useRefElement, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
+import { OnChildrenMountChange, returnTrue, useChildrenFlag, UseHasFocusParameters, useLinearNavigation, UseLinearNavigationParameters, UseManagedChildParameters, useManagedChildren, UseManagedChildrenParameters, UseManagedChildrenReturnTypeInfo, useMergedProps, useRandomId, useRefElement, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
 import { useCallback, useRef } from "preact/hooks";
 import { debugLog } from "./props";
 import { useButton, UseButtonParameters } from "./use-button";
@@ -87,7 +87,7 @@ export function useAccordion<HeaderElement extends HTMLElement, BodyElement exte
         }
     });
 
-    const { useLinearNavigationProps } = linearReturnType;
+    const { linearNavigationProps } = linearReturnType;
 
 
     const { changeIndex: changeExpandedIndex, getCurrentIndex: _getCurrentExpandedIndex } = useChildrenFlag({
@@ -127,8 +127,8 @@ export function useAccordion<HeaderElement extends HTMLElement, BodyElement exte
         //const getOpen = useStableGetter(!!open);
         const getIndex = useStableGetter(index);
 
-        const { getElement: getHeaderElement, useRefElementProps: useHeaderRefElementProps } = useRefElement<HeaderElement>({});
-        const { getElement: getBodyElement, useRefElementProps: useBodyRefElementProps } = useRefElement<BodyElement>({});
+        const { getElement: getHeaderElement, refElementProps: headerRefElementProps } = useRefElement<HeaderElement>({});
+        const { getElement: getBodyElement, refElementProps: bodyRefElementProps } = useRefElement<BodyElement>({});
         const focus = useCallback(() => {
             if (getCurrentFocusedIndex() != null)
                 (getHeaderElement() as Element as HTMLElement | undefined)?.focus();
@@ -173,8 +173,6 @@ export function useAccordion<HeaderElement extends HTMLElement, BodyElement exte
             }
         });
 
-        function useAccordionSectionHeaderProps({ ["aria-expanded"]: ariaExpanded, ["aria-disabled"]: ariaDisabled, ...props }: h.JSX.HTMLAttributes<HeaderElement>): h.JSX.HTMLAttributes<HeaderElement> {
-
             //const onFocus = () => { changeTabbedIndex(index); }
             const onPress = () => {
                 if (getOpenFromParent())
@@ -183,7 +181,6 @@ export function useAccordion<HeaderElement extends HTMLElement, BodyElement exte
                     changeExpandedIndex(index);
             };
 
-            props.tabIndex = 0;
             const { useButtonProps } = useButton<HeaderElement>({
                 button: { tagButton, disabled, onPress }, hasFocus: {
                     ...hasFocus,
@@ -194,19 +191,15 @@ export function useAccordion<HeaderElement extends HTMLElement, BodyElement exte
                     })
                 }
             });
-            const retB = useButtonProps(props);
+        function useAccordionSectionHeaderProps({ ["aria-expanded"]: ariaExpanded, ["aria-disabled"]: ariaDisabled, ...props }: h.JSX.HTMLAttributes<HeaderElement>): h.JSX.HTMLAttributes<HeaderElement> {
+
+            props.tabIndex = 0;
 
 
-
-
-            //const ret3: h.JSX.HTMLAttributes<HeaderElement>
-            //    = useMergedProps<HeaderElement>(retD, { onFocus });
-
-
-            return useLinearNavigationProps(useHeaderAsSourceIdProps(useHeaderAsReferencerIdProps({
+            return useHeaderAsSourceIdProps(useHeaderAsReferencerIdProps(useMergedProps(linearNavigationProps, {
                 "aria-expanded": (ariaExpanded ?? open ?? false).toString(),
                 "aria-disabled": (ariaDisabled ?? (open ? "true" : undefined)),
-                ...useHeaderRefElementProps(retB)
+                ...useMergedProps(headerRefElementProps, useButtonProps(props))
             } as h.JSX.HTMLAttributes<HeaderElement>)));
         }
 
@@ -215,7 +208,7 @@ export function useAccordion<HeaderElement extends HTMLElement, BodyElement exte
             const ret1 = useBodyAsReferencerIdProps({ role: role ?? "region", ...props });
             const ret2 = useBodyAsSourceIdProps(ret1);
             ret2.tabIndex ??= -1;
-            return useBodyRefElementProps(ret2);
+            return useMergedProps(bodyRefElementProps, ret2);
         }
 
         return {

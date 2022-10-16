@@ -1,5 +1,5 @@
 
-import { returnUndefined, usePassiveState, useStableCallback, useState } from "preact-prop-helpers";
+import { returnUndefined, useMergedProps, usePassiveState, useStableCallback, useState } from "preact-prop-helpers";
 import { useEffect, useRef } from "preact/hooks";
 import { CheckboxGroupParent, defaultRenderCheckboxGroupParent } from "../../component/checkbox-group";
 import { Checkbox, CheckboxCheckedType, CheckboxGroup, CheckboxGroupChild, defaultRenderCheckbox, EventDetail } from "../../index";
@@ -38,7 +38,7 @@ function DemoCheckbox({ index }: { index: number }) {
 
                             return (
                                 <div style={{ border: "1px solid black" }}>
-                                    <input {...modifyControlProps(modifyInput({  }))} />
+                                    <input {...modifyInput(modifyControlProps)} />
                                     <label {...modifyLabel({ children: `Checkbox #${index}` })} />
                                 </div>
                             );
@@ -89,7 +89,7 @@ export function Demo() {
             <div>
                 <p><strong>Note:</strong> Each checkbox takes a random amount of time to update when modified via the parent checkbox to test async handling.</p>
                 <CheckboxGroup<HTMLInputElement, HTMLLabelElement> render={
-                    (info, modifyChildContainerProps) => {
+                    (info, childContainerProps) => {
 
                         return <div {...({
                             children: (
@@ -110,7 +110,7 @@ export function Demo() {
                                             render: defaultRenderCheckbox({ tagInput: "input", tagLabel: "label", labelPosition: "separate", makeInputProps: () => ({}), makeLabelProps: () => ({ children: "Parent checkbox" }) })
                                         })}
                                     />
-                                    <div style={{ display: "flex" }} {...modifyChildContainerProps({})}>
+                                    <div style={{ display: "flex" }} {...useMergedProps(childContainerProps, {})}>
                                         <>{Array.from((function* () {
                                             for (let i = 0; i < count; ++i) {
                                                 yield <DemoCheckbox index={i + 1} key={i} />

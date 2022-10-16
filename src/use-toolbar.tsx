@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { useListNavigation, UseListNavigationChildParameters, UseListNavigationChildReturnTypeInfo, UseListNavigationParameters, UseListNavigationReturnTypeInfo } from "preact-prop-helpers";
+import { useListNavigation, UseListNavigationChildParameters, UseListNavigationChildReturnTypeInfo, UseListNavigationParameters, UseListNavigationReturnTypeInfo, useMergedProps } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { PropModifier, overwriteWithWarning } from "./props";
 
@@ -33,7 +33,7 @@ export type UseToolbarChild<ChildElement extends Element, C, K extends string> =
 export interface UseToolbarChildParameters<E extends Element, C, K extends string, SubbestInfo> extends UseListNavigationChildParameters<E, UseToolbarSubInfo<C>, K, never, never, never, SubbestInfo> { }
 export interface UseToolbarChildReturnTypeInfo<ChildElement extends Element> extends UseListNavigationChildReturnTypeInfo<ChildElement> { }
 export interface UseToolbarChildReturnTypeWithHooks<ChildElement extends Element> extends UseToolbarChildReturnTypeInfo<ChildElement> {
-    useToolbarChildProps: PropModifier<ChildElement>;
+    toolbarChildProps: h.JSX.HTMLAttributes<ChildElement>;
 }
 
 /**
@@ -51,7 +51,7 @@ export interface UseToolbarChildReturnTypeWithHooks<ChildElement extends Element
 export function useToolbar<ContainerElement extends Element, ChildElement extends Element, C, K extends string>({ linearNavigation, listNavigation, managedChildren, rovingTabIndex, typeaheadNavigation, toolbar: { orientation, role } }: UseToolbarParameters<never>): UseToolbarReturnTypeWithHooks<ContainerElement, ChildElement, C, K> {
     const {
         useListNavigationChild,
-        useListNavigationProps,
+        listNavigationProps,
         ...listRet
     } = useListNavigation<ContainerElement, ChildElement, UseToolbarSubInfo<C>, K>({
         linearNavigation: { ...linearNavigation, navigationDirection: orientation },
@@ -62,7 +62,7 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
     });
 
     const useToolbarChild = useCallback<UseToolbarChild<ChildElement, C, K>>(({ listNavigation, managedChild, rovingTabIndex, subInfo }) => {
-        const { useListNavigationChildProps, ...listRet } = useListNavigationChild({
+        const { listNavigationChildProps, ...listRet } = useListNavigationChild({
             listNavigation,
             managedChild,
             rovingTabIndex,
@@ -71,13 +71,13 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
 
         return {
             ...listRet,
-            useToolbarChildProps: useListNavigationChildProps
+            toolbarChildProps: listNavigationChildProps
         }
     }, [])
 
     function useToolbarProps(p: h.JSX.HTMLAttributes<ContainerElement>) {
         overwriteWithWarning("useToolbar", p, "role", role ?? undefined);
-        return useListNavigationProps(p);
+        return useMergedProps(listNavigationProps, p);
     }
 
     return {

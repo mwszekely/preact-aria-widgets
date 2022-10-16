@@ -1,4 +1,4 @@
-import { ComponentChildren, createContext, Ref, RenderableProps, VNode } from "preact";
+import { ComponentChildren, createContext, h, Ref, RenderableProps, VNode } from "preact";
 import { useContext, useImperativeHandle } from "preact/hooks";
 import { PropModifier } from "../props";
 import { useCheckboxGroup, UseCheckboxGroupChild, UseCheckboxGroupChildParameters, UseCheckboxGroupChildReturnTypeInfo, UseCheckboxGroupParameters, UseCheckboxGroupParent, UseCheckboxGroupParentParameters, UseCheckboxGroupParentReturnTypeInfo, UseCheckboxGroupReturnTypeInfo } from "../use-checkbox-group";
@@ -16,7 +16,7 @@ export interface CheckboxGroupProps<InputElement extends Element, LabelElement e
     Get<UseCheckboxGroupParameters, "rovingTabIndex">,
     Get<UseCheckboxGroupParameters, "typeaheadNavigation"> {
     ref?: Ref<UseCheckboxGroupReturnTypeInfo<InputElement, LabelElement, CBGSubInfo, K>>;
-    render(info: UseCheckboxGroupReturnTypeInfo<InputElement, LabelElement, CBGSubInfo, K>, modifyChildContainerProps: PropModifier<any>): VNode<any>;
+    render(info: UseCheckboxGroupReturnTypeInfo<InputElement, LabelElement, CBGSubInfo, K>, modifyChildContainerProps: h.JSX.HTMLAttributes<any>): VNode<any>;
 }
 
 export interface CheckboxGroupParentProps<InputElement extends Element, _LabelElement extends Element, C, K extends string> extends
@@ -38,7 +38,7 @@ export interface CheckboxGroupChildProps<InputType extends Element, LabelType ex
     Get<UseCheckboxGroupChildParameters<InputType, CBGSubInfo, K, CBGSubInfo>, "checkboxGroupChild"> {
     subInfo: Get<UseCheckboxGroupChildParameters<InputType, CBGSubInfo, K, CBGSubInfo>, "subInfo">;
     ref?: Ref<UseCheckboxGroupChildReturnTypeInfo<InputType, LabelType>>;
-    render(info: UseCheckboxGroupChildReturnTypeInfo<InputType, LabelType>, modifyControlProps: PropModifier<InputType>): VNode<any>;
+    render(info: UseCheckboxGroupChildReturnTypeInfo<InputType, LabelType>, modifyControlProps: h.JSX.HTMLAttributes<InputType>): VNode<any>;
 }
 
 export interface DefaultRenderCheckboxGroupChildParameters<InputType extends HTMLElement, LabelType extends HTMLElement> extends DefaultRenderCheckboxLikeParameters<InputType, LabelType, UseCheckboxGroupChildReturnTypeInfo<InputType, LabelType>> { }
@@ -142,7 +142,7 @@ export const CheckboxGroup = memoForwardRef(function CheckboxGroup<InputType ext
     const {
         useCheckboxGroupChild,
         useCheckboxGroupParent,
-        useListNavigationProps,
+        listNavigationProps,
         ...checkboxGroupParentInfo
     } = useCheckboxGroup<InputType, LabelType, C, K>({
         linearNavigation: { disableArrowKeys, disableHomeEndKeys, navigationDirection },
@@ -157,7 +157,7 @@ export const CheckboxGroup = memoForwardRef(function CheckboxGroup<InputType ext
     return (
         <UseCheckboxGroupParentContext.Provider value={useCheckboxGroupParent}>
             <UseCheckboxGroupChildContext.Provider value={useCheckboxGroupChild}>
-                {render(checkboxGroupParentInfo, useListNavigationProps)}
+                {render(checkboxGroupParentInfo, listNavigationProps)}
             </UseCheckboxGroupChildContext.Provider>
         </UseCheckboxGroupParentContext.Provider>
     )
@@ -187,7 +187,7 @@ export const CheckboxGroupChild = memoForwardRef(function CheckboxGroupChild<Inp
     onChangeFromParent,
     ..._rest
 }: CheckboxGroupChildProps<InputType, LabelType, C, K>, ref?: Ref<any>) {
-    const { useListNavigationChildProps, ...checkboxGroupChildInfo } = (useContext(UseCheckboxGroupChildContext) as UseCheckboxGroupChild<InputType, LabelType, C, K>)({
+    const { listNavigationChildProps, ...checkboxGroupChildInfo } = (useContext(UseCheckboxGroupChildContext) as UseCheckboxGroupChild<InputType, LabelType, C, K>)({
         listNavigation: {
             text
         },
@@ -209,5 +209,5 @@ export const CheckboxGroupChild = memoForwardRef(function CheckboxGroupChild<Inp
 
     useImperativeHandle(ref!, () => checkboxGroupChildInfo);
 
-    return render(checkboxGroupChildInfo, useListNavigationChildProps);
+    return render(checkboxGroupChildInfo, listNavigationChildProps as h.JSX.HTMLAttributes<any>);
 });

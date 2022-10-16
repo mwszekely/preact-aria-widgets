@@ -1,5 +1,5 @@
 
-import { useState } from "preact-prop-helpers";
+import { useMergedProps, useState } from "preact-prop-helpers";
 import { memo } from "preact/compat";
 import { ToolbarChild } from "../../component/toolbar";
 import { Button, defaultRenderButton, defaultRenderToolbar, Toolbar } from "../../index";
@@ -14,12 +14,12 @@ const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
             subInfo={undefined}
             focusSelf={e => e.focus()}
             text={`List item #${index}`}
-            render={({ rovingTabIndex: { tabbable } }, modifyProps) => {
+            render={({ rovingTabIndex: { tabbable } }, toolbarChildProps) => {
                 return (
                     <Button
                         getDocument={getDocument}
                         tagButton="button"
-                        render={defaultRenderButton({ tagButton: "button", makePropsButton: () => modifyProps({ ...({ "data-tabbable": tabbable.toString() } as {}), children: `Button #${index}` }) })} />
+                        render={defaultRenderButton({ tagButton: "button", makePropsButton: () => useMergedProps(toolbarChildProps, { ...({ "data-tabbable": tabbable.toString() } as {}), children: `Button #${index}` }) })} />
                 );
             }}
         />

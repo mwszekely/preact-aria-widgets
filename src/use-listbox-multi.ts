@@ -89,7 +89,7 @@ export function useListboxMulti<LabelElement extends Element, ListElement extend
 
     const {
         useListNavigationChild,
-        useListNavigationProps,
+        listNavigationProps,
         rovingTabIndex: { setTabbableIndex }
     } = listReturnType
 
@@ -102,10 +102,10 @@ export function useListboxMulti<LabelElement extends Element, ListElement extend
         debugLog("useListboxMultiItem", managedChild.index, selected);
         type E = ListItemElement;
         const getSelected = useStableGetter(selected);
-        const { useRefElementProps, getElement } = useRefElement<E>({});
+        const { refElementProps, getElement } = useRefElement<E>({});
         const stableOnSelect = useStableCallback(onSelectedChange ?? (() => { }));
 
-        const { useListNavigationChildProps, rovingTabIndex: rti2_ret } = useListNavigationChild({ listNavigation: ls, managedChild, rovingTabIndex: rti, subInfo: { subInfo, selected, onSelect: stableOnSelect } });
+        const { listNavigationChildProps, rovingTabIndex: rti2_ret } = useListNavigationChild({ listNavigation: ls, managedChild, rovingTabIndex: rti, subInfo: { subInfo, selected, onSelect: stableOnSelect } });
 
         useLayoutEffect(() => {
             const element = getElement();
@@ -117,7 +117,7 @@ export function useListboxMulti<LabelElement extends Element, ListElement extend
         return { useListboxMultiItemProps, listboxMultiItem: { getSelected, tabbable: rti2_ret.tabbable }, rovingTabIndex: rti2_ret };
 
         function useListboxMultiItemProps(props: h.JSX.HTMLAttributes<E>): h.JSX.HTMLAttributes<E> {
-            const usePressProps = usePress<E>({
+            const pressProps = usePress<E>({
                 onClickSync: disabled ? null : (e) => {
                     setTabbableIndex(managedChild.index, false);
                     stableOnSelect?.({ ...e, [EventDetail]: { selected: !getSelected() } });
@@ -135,7 +135,7 @@ export function useListboxMulti<LabelElement extends Element, ListElement extend
             if (disabled)
                 props["aria-disabled"] = "true";
 
-            return useRefElementProps(useListNavigationChildProps(usePressProps(props)));
+            return useMergedProps(useMergedProps(refElementProps, listNavigationChildProps), useMergedProps(pressProps, props));
         }
 
     }, [useListNavigationChild]);
@@ -164,7 +164,7 @@ export function useListboxMulti<LabelElement extends Element, ListElement extend
     function useListboxMultiProps(props: h.JSX.HTMLAttributes<ListElement>): h.JSX.HTMLAttributes<ListElement> {
         props.role = "listbox";
         props["aria-multiselectable"] = "true";
-        return useListNavigationProps(useLabelInputProps(useMergedProps<ListElement>({ onKeyDown, onKeyUp, onfocusout: onFocusOut }, props)));
+        return useLabelInputProps(useMergedProps(listNavigationProps, useMergedProps<ListElement>({ onKeyDown, onKeyUp, onfocusout: onFocusOut }, props)));
     }
 
 

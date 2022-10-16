@@ -192,13 +192,13 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
     const { useLabelInput: useILInput, useLabelLabel: useILLabel, label } = useLabel<InputType, LabelType>({ label: { prefixLabel: "aria-checkbox-label-", prefixInput: "aria-checkbox-input-", tagInput: tagInput, tagLabel: tagLabel } });
 
 
-    const { getElement: getLabelElement, useRefElementProps: useLabelRefElementProps } = useRefElement<LabelType>();
-    const { getElement: getInputElement, useRefElementProps: useInputRefElementProps } = useRefElement<InputType>();
+    const { getElement: getLabelElement, refElementProps: useLabelRefElementProps } = useRefElement<LabelType>();
+    const { getElement: getInputElement, refElementProps: useInputRefElementProps } = useRefElement<InputType>();
 
     const useCheckboxLikeInputElement: UseCheckboxLikeInputElement<InputType> = useCallback(function useCheckboxInputElement() {
         const tag = tagInput;
         const { useLabelInputProps: useILInputProps } = useILInput();
-        const { useRefElementProps, getElement } = useRefElement<InputType>({});
+        const { refElementProps, getElement } = useRefElement<InputType>({});
 
         // onClick and onChange are a bit messy, so we need to
         // *always* make sure that the visible state is correct
@@ -221,15 +221,17 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
             // For some reason, Chrome won't fire onInput events for radio buttons that are tabIndex=-1??
             // Needs investigating, but onInput works fine in Firefox
             // TODO
-            const usePressProps = usePress<InputType>({
+            const pressProps = usePress<InputType>({
                 onClickSync: !!disabled || !handlesInput(tag, labelPosition, "input-element") ? undefined : stableOnInput,
                 exclude: undefined,
                 hasFocus: hasFocusInput,
                 focusSelf
             });
-            const props: h.JSX.HTMLAttributes<InputType> = useMergedProps<InputType>(
-                useRefElementProps(useILInputProps(usePressProps({}))),
-                { onInput: tag == "input" ? ((e: Event) => e.preventDefault()) : undefined }
+            const props: h.JSX.HTMLAttributes<InputType> = useILInputProps(
+                useMergedProps<InputType>(
+                    useMergedProps(refElementProps, pressProps),
+                    { onInput: tag == "input" ? ((e: Event) => e.preventDefault()) : undefined }
+                )
             );
 
             if (labelPosition == "wrapping") {
@@ -247,7 +249,7 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
                     props.checked = (checked === true);
                     if (disabled === true || disabled === 'hard')
                         props.disabled = true;
-                    else 
+                    else
                         props["aria-disabled"] = "true";
                 }
                 else {
@@ -262,7 +264,7 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
             // Make sure that label clicks can't affect the checkbox while it's disabled
             props.onClick = disabled ? ((e) => { e.preventDefault() }) : props.onClick;
 
-            return useInputRefElementProps(useMergedProps(userProps, props));
+            return useMergedProps(useInputRefElementProps, useMergedProps(userProps, props));
         }
     }, [useILInput, role, labelPosition, disabled, checked, tagInput]);
 
@@ -272,13 +274,13 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
 
         function useCheckboxLikeLabelElementProps({ ...userProps }: h.JSX.HTMLAttributes<LabelType>): h.JSX.HTMLAttributes<LabelType> {
 
-            const usePressProps = usePress<LabelType>({
+            const pressProps = usePress<LabelType>({
                 onClickSync: !!disabled || !handlesInput(tag, labelPosition, "label-element") ? undefined : stableOnInput,
                 exclude: undefined,
                 hasFocus: hasFocusLabel,
                 focusSelf
             });
-            const newProps: h.JSX.HTMLAttributes<LabelType> = usePressProps({});
+            const newProps: h.JSX.HTMLAttributes<LabelType> = pressProps;
 
             if (labelPosition == "wrapping") {
                 if (newProps.tabIndex == null)
@@ -297,7 +299,7 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
             // Just make sure that label clicks can't affect the checkbox while it's disabled
             newProps.onClick = disabled ? ((e) => { e.preventDefault() }) : newProps.onClick;
 
-            return useILLabelProps(useLabelRefElementProps(useMergedProps(newProps, userProps)));
+            return useILLabelProps(useMergedProps(useLabelRefElementProps, useMergedProps(newProps, userProps)));
         }
 
         return { useCheckboxLikeLabelElementProps };

@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { ManagedChildInfo, ManagedChildren, useGridNavigation, UseGridNavigationParameters, UseGridNavigationRowSubInfo, UseHasFocusParameters, UseListNavigationSubInfo, UseRovingTabIndexSubInfo, UseSingleSelectionChildParameters, UseSingleSelectionParameters, UseSingleSelectionReturnTypeInfo, useSortableChildren, UseSortableChildrenParameters, useStableCallback } from "preact-prop-helpers";
+import { ManagedChildInfo, ManagedChildren, useGridNavigation, UseGridNavigationParameters, UseGridNavigationRowSubInfo, UseHasFocusParameters, UseListNavigationSubInfo, useMergedProps, UseRovingTabIndexSubInfo, UseSingleSelectionChildParameters, UseSingleSelectionParameters, UseSingleSelectionReturnTypeInfo, useSortableChildren, UseSortableChildrenParameters, useStableCallback } from "preact-prop-helpers";
 import { UseGridNavigationCellParameters, UseGridNavigationCellReturnTypeInfo, UseGridNavigationCellSubInfo, UseGridNavigationReturnTypeInfo, UseGridNavigationRowParameters, UseGridNavigationRowReturnTypeInfo, useSingleSelection } from "preact-prop-helpers";
 import { UseSortableChildrenReturnTypeInfo } from "preact-prop-helpers";
 import { useCallback, useRef } from "preact/hooks";
@@ -77,7 +77,7 @@ export function useGridlist<
     const manglers = useRef({ rowIndexMangler: identity, rowIndexDemangler: identity });
 
     const {
-        useGridNavigationProps,
+        gridNavigationProps,
         useGridNavigationRow,
         ...gridNavRet1
     } = useGridNavigation<GridlistElement, RowElement, CellElement, UseGridlistRowSubInfo<CellElement, CR, CC>, UseGridlistChildSubInfo<CC>, KR | "selected", KC>({
@@ -110,7 +110,7 @@ export function useGridlist<
             return cells;
         }, [])
 
-        const { flags: ssflags, useSingleSelectionChildProps, ...singleSelectInfo } = useSingleSelectionChild({
+        const { flags: ssflags, singleSelectionChildProps, ...singleSelectInfo } = useSingleSelectionChild({
             hasFocus: hasFocus,
             managedChild: asChildRowOfSection.managedChild,
             singleSelection: {
@@ -121,7 +121,7 @@ export function useGridlist<
 
         const {
             useGridNavigationCell,
-            useGridNavigationRowProps,
+            gridNavigationRowProps,
             ...gridNavRet2
         } = useGridNavigationRow({
             asChildRowOfSection: {
@@ -139,13 +139,13 @@ export function useGridlist<
         const useGridlistChild = useCallback<UseGridlistChild<CellElement, CC, KC>>(({ listNavigation, managedChild, rovingTabIndex, subInfo, hasFocus, gridlistChild: { locationIndex } }) => {
             debugLog("useGridlistChild", managedChild.index);
             const {
-                useGridNavigationCellProps,
+                gridNavigationCellProps,
                 ...gridNavRet3
             } = useGridNavigationCell({ listNavigation, managedChild, rovingTabIndex, subInfo: { locationIndex, subInfo }, hasFocus });
 
-            const useGridlistChildProps: typeof useGridNavigationCellProps = (props) => {
+            const useGridlistChildProps = (props: h.JSX.HTMLAttributes<CellElement>) => {
                 overwriteWithWarning("useGridlistChild", props, "role", "cell");
-                return useGridNavigationCellProps(props);
+                return useMergedProps(gridNavigationCellProps, props);
             }
             return {
                 useGridlistChildProps,
@@ -154,9 +154,9 @@ export function useGridlist<
 
         }, []);
 
-        const useGridlistRowProps: typeof useGridNavigationRowProps = (props) => {
+        const useGridlistRowProps = (props: h.JSX.HTMLAttributes<RowElement>) => {
             overwriteWithWarning("useGridlistRow", props, "role", "row");
-            const ret = useGridNavigationRowProps(useSingleSelectionChildProps(props));
+            const ret = useMergedProps(useMergedProps(gridNavigationRowProps, singleSelectionChildProps), props);
             ret[singleSelection.ariaPropName as keyof h.JSX.HTMLAttributes<any>] = (selected || singleSelectInfo.singleSelection.selected || false).toString();
             return ret;
         };
@@ -204,10 +204,10 @@ export function useGridlist<
         }
     }, []);
 
-    const useGridlistProps: typeof useGridNavigationProps = (props) => {
+    const useGridlistProps = (props: h.JSX.HTMLAttributes<GridlistElement>) => {
         overwriteWithWarning("useGridlist", props, "role", "grid");
         overwriteWithWarning("useGridlist", props, "aria-multiselectable", (gridlist.selectedIndex === "multi").toString())
-        return useGridNavigationProps(props);
+        return useMergedProps(gridNavigationProps, props);
     };
 
     return {

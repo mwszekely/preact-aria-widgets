@@ -88,12 +88,9 @@ export interface UseCheckboxGroupChildReturnTypeInfo<InputElement extends Elemen
 export interface UseCheckboxGroupChildReturnTypeWithHooks<InputElement extends Element, LabelElement extends Element> extends UseCheckboxGroupChildReturnTypeInfo<InputElement, LabelElement> {
     // This is just whichever of the two should receive list-nav-related props (so based on `labelPosition` for checkboxes).
     // Alternatively, don't use this if you explicitly don't want this group's list navigation
-    useListNavigationChildProps:
-    {
-        ({ tabIndex, ...props }: h.JSX.HTMLAttributes<InputElement>): h.JSX.HTMLAttributes<InputElement>;
-        ({ tabIndex, ...props }: h.JSX.HTMLAttributes<LabelElement>): h.JSX.HTMLAttributes<LabelElement>;
-    }
+    listNavigationChildProps: h.JSX.HTMLAttributes<InputElement> | h.JSX.HTMLAttributes<LabelElement>;
 }
+
 
 export type UseCheckboxGroupChild<InputElement extends Element, LabelElement extends Element, CBGSubInfo, K extends string> = (args: UseCheckboxGroupChildParameters<InputElement, CBGSubInfo, K, CBGSubInfo>) => UseCheckboxGroupChildReturnTypeWithHooks<InputElement, LabelElement> /*{
     //tabbable: boolean | null;
@@ -125,7 +122,7 @@ export interface UseCheckboxGroupReturnTypeWithHooks<InputElement extends Elemen
     useCheckboxGroupParent: UseCheckboxGroupParent<InputElement, LabelElement, CBGSubInfo, K>;
 
     // Use on either e.g. the div containing the children, or each individual child
-    useListNavigationProps: PropModifier<any>;
+    listNavigationProps: h.JSX.HTMLAttributes<any>;
 }
 
 /* eslint-disable @typescript-eslint/no-empty-interface */
@@ -158,7 +155,7 @@ export function useCheckboxGroup<InputElement extends Element, LabelElement exte
     //const onUpdateChildren = useStableCallback(onUpdateChildrenUnstable ?? (() => {}));
     const {
         useListNavigationChild,
-        useListNavigationProps,
+        listNavigationProps,
         ...listReturnType
     } = useListNavigation<InputElement, InputElement, CheckboxGroupInfoBase<CBGSubInfo>, K>({
         linearNavigation,
@@ -203,7 +200,7 @@ export function useCheckboxGroup<InputElement extends Element, LabelElement exte
     //const savedCheckedValues = useRef<Map<number, boolean | "mixed"> | null>(null);
     const useCheckboxGroupParent = useCallback<UseCheckboxGroupParent<InputElement, LabelElement, CBGSubInfo, K>>(({ ...listNavArgs }): UseCheckboxGroupParentReturnTypeWithHooks<InputElement, LabelElement> => {
 
-        const { useListNavigationChildProps, ...listNavigationReturnType } = useListNavigationChild({
+        const { listNavigationChildProps, ...listNavigationReturnType } = useListNavigationChild({
             listNavigation: listNavArgs.listNavigation,
             managedChild: listNavArgs.managedChild,
             rovingTabIndex: listNavArgs.rovingTabIndex,
@@ -222,12 +219,12 @@ export function useCheckboxGroup<InputElement extends Element, LabelElement exte
             setSetParentCheckboxChecked(() => setChecked);
         }, [])
 
-        const checkboxGroupParent = { checked, onParentCheckedChange: onCheckboxGroupParentInput, getPercent: useStableCallback(() => { return getPercentChecked(getTotalChecked(), getTotalChildren()) })  };
+        const checkboxGroupParent = { checked, onParentCheckedChange: onCheckboxGroupParentInput, getPercent: useStableCallback(() => { return getPercentChecked(getTotalChecked(), getTotalChildren()) }) };
         return {
             checkboxGroupParent,
             ...listNavigationReturnType,
             useCheckboxGroupParentProps: function useCheckboxGroupParentInputProps(props: h.JSX.HTMLAttributes<InputElement>): h.JSX.HTMLAttributes<InputElement> {
-                return useListNavigationChildProps(useMergedProps<InputElement>(useMergedProps<InputElement>({}, { "aria-controls": ariaControls } as h.JSX.HTMLAttributes<InputElement>), props));
+                return useMergedProps(listNavigationChildProps, useMergedProps<InputElement>(useMergedProps<InputElement>({}, { "aria-controls": ariaControls } as h.JSX.HTMLAttributes<InputElement>), props));
             }
         }
     }, []);
@@ -256,7 +253,7 @@ export function useCheckboxGroup<InputElement extends Element, LabelElement exte
                 else {
                     checked = nextChecked;
                 }
-                if (checked != prevChecked){
+                if (checked != prevChecked) {
                     const promise = child.subInfo.subInfo.subInfo.setCheckedFromParentInput(checked, e);
                     if (promise) {
                         promises.push(promise);
@@ -269,7 +266,7 @@ export function useCheckboxGroup<InputElement extends Element, LabelElement exte
     }, []);
 
     const useCheckboxGroupChild: UseCheckboxGroupChild<InputElement, LabelElement, CBGSubInfo, K> = useCallback<UseCheckboxGroupChild<InputElement, LabelElement, CBGSubInfo, K>>(function (asCheckboxGroupChild) {
-        
+
         debugLog("useCheckboxGroupChild", asCheckboxGroupChild.managedChild.index);
         //const { checkbox: { onCheckedChange }, checkboxLike: { checked, disabled, labelPosition }, label: { tagInput, tagLabel }, hasFocusInput, hasFocusLabel } = asCheckbox;
         const { subInfo, checkboxGroupChild: { checked, focusSelf, onChangeFromParent } } = asCheckboxGroupChild;
@@ -301,11 +298,11 @@ export function useCheckboxGroup<InputElement extends Element, LabelElement exte
         useEffect(() => {
             if (checked) {
                 setTotalChecked(c => ((c ?? 0) + 1));
-                return () =>  setTotalChecked(c => ((c ?? 0) - 1));
+                return () => setTotalChecked(c => ((c ?? 0) - 1));
             }
         }, [checked]);
 
-        const { useListNavigationChildProps, ...listNavigationReturnType } = useListNavigationChild({
+        const { listNavigationChildProps, ...listNavigationReturnType } = useListNavigationChild({
             subInfo: { type: "child", getLastUserChecked, setCheckedFromParentInput: onChangeFromParent, getChecked, subInfo },
             listNavigation: asCheckboxGroupChild.listNavigation,
             managedChild: asCheckboxGroupChild.managedChild,
@@ -318,7 +315,7 @@ export function useCheckboxGroup<InputElement extends Element, LabelElement exte
                 onControlIdChanged
             },
             ...listNavigationReturnType,
-            useListNavigationChildProps: useListNavigationChildProps as any,
+            listNavigationChildProps: listNavigationChildProps as any,
         }
 
 
@@ -327,7 +324,7 @@ export function useCheckboxGroup<InputElement extends Element, LabelElement exte
     return {
         useCheckboxGroupChild,
         useCheckboxGroupParent,
-        useListNavigationProps,
+        listNavigationProps,
         linearNavigation: listReturnType.linearNavigation,
         listNavigation: listReturnType.listNavigation,
         managedChildren: listReturnType.managedChildren,

@@ -28,13 +28,13 @@ export function useButton<E extends Element>({ button: { tagButton, disabled, on
 
     function useButtonProps({ "aria-pressed": ariaPressed, tabIndex, role, ...p }: h.JSX.HTMLAttributes<E>): h.JSX.HTMLAttributes<E> {
 
-        const usePressProps = usePress<E>({
+        const pressProps = usePress<E>({
             onClickSync: (e) => (disabled ? null : onPress)?.(enhanceEvent(e, { pressed: pressed == null ? null : !pressed })),
             exclude: undefined,
             hasFocus,
             focusSelf: useCallback(e => (e as Element as HTMLElement).focus?.(), [])
         });
-        const props = usePressProps(p);
+        const props = useMergedProps(pressProps, p);
 
         const baseProps = { role, tabIndex, "aria-pressed": ariaPressed ?? (pressed === true ? "true" : pressed === false ? "false" : undefined) };
         const buttonProps = { ...baseProps, disabled: (disabled && disabled != "soft") ? true : false, "aria-disabled": (disabled === 'soft' ? 'true' : undefined) };

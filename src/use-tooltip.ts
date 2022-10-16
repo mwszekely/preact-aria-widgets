@@ -153,7 +153,7 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
             (e.target as any).focus?.();
         }
 
-        const { useHasFocusProps, getElement } = useHasFocus<TriggerType>({
+        const { hasFocusProps, getElement } = useHasFocus<TriggerType>({
             ...hasFocus,
             onFocusedInnerChanged: useStableCallback((focused: boolean, prev: boolean | undefined) => { onFocusedInnerChanged?.(focused, prev); setTriggerFocused(focused) })
         })
@@ -166,7 +166,8 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
             // not this one, so we don't set tabIndex=0
             props.tabIndex ??= -1;
             return useRandomIdReferencerElementProps(
-                useHasFocusProps(
+                useMergedProps(
+                    hasFocusProps,
                     useMergedProps<TriggerType>({ onTouchEnd }, (props as any) as unknown as h.JSX.HTMLAttributes<TriggerType>)
                 )
             );
@@ -179,7 +180,7 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
     const useTooltipPopup = useCallback(function useTooltip({ hasFocus: { onFocusedInnerChanged, ...hasFocus } }: { hasFocus: UseHasFocusParameters<PopupType> }) {
         debugLog("useTooltipTooltip");
         const { useRandomIdSourceElementProps } = useRandomIdSourceElement();
-        const { useHasFocusProps, getElement } = useHasFocus<PopupType>({ onFocusedInnerChanged: useStableCallback((focused: boolean, prev: boolean | undefined) => { onFocusedInnerChanged?.(focused, prev); setTooltipFocused(focused); }), ...hasFocus })
+        const { hasFocusProps, getElement } = useHasFocus<PopupType>({ onFocusedInnerChanged: useStableCallback((focused: boolean, prev: boolean | undefined) => { onFocusedInnerChanged?.(focused, prev); setTooltipFocused(focused); }), ...hasFocus })
 
         useGlobalHandler(document, "pointermove", e => {
             const target = (e.target as HTMLElement);
@@ -187,7 +188,7 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
         }, { capture: true });
 
         function useTooltipPopupProps({ ...props }: h.JSX.HTMLAttributes<PopupType>): h.JSX.HTMLAttributes<PopupType> {
-            return useRandomIdSourceElementProps(useHasFocusProps(useMergedProps<PopupType>({}, props)));
+            return useRandomIdSourceElementProps(useMergedProps(hasFocusProps, useMergedProps<PopupType>({}, props)));
         }
 
         return { useTooltipPopupProps };

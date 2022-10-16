@@ -124,7 +124,7 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
 
         const {
             useListNavigationSingleSelectionChild,
-            useListNavigationSingleSelectionProps,
+            listNavigationSingleSelectionProps,
             ...listNavRet1
         } = useListNavigationSingleSelection<TabListElement, TabElement, TabInfo<TC>, never>({
             linearNavigation,
@@ -144,14 +144,14 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
 
         const useTab = useCallback<UseTab<TabElement, TC, TK>>(({ listNavigation, managedChild, rovingTabIndex, hasFocus, singleSelection, subInfo }) => {
             debugLog("useTab", managedChild.index);
-            const { useListNavigationSingleSelectionChildProps, ...listNavRet2 } = useListNavigationSingleSelectionChild({ listNavigation, managedChild, rovingTabIndex, subInfo: { subInfo }, hasFocus, singleSelection: { ariaPropName: "aria-selected", ...singleSelection } });
+            const { listNavigationSingleSelectionChildProps, ...listNavRet2 } = useListNavigationSingleSelectionChild({ listNavigation, managedChild, rovingTabIndex, subInfo: { subInfo }, hasFocus, singleSelection: { ariaPropName: "aria-selected", ...singleSelection } });
             const { singleSelection: { selected }, rovingTabIndex: { tabbable } } = listNavRet2;
 
             const useTabProps = (props: h.JSX.HTMLAttributes<TabElement>) => {
                 const panelId = getPanelId(managedChild.index);
                 const tabId = getTabId(managedChild.index);
 
-                const usePressProps = usePress<TabElement>({
+                const pressProps = usePress<TabElement>({
                     onClickSync: (e) => { stableOnSelectedIndexChange(managedChild.index, e) },
                     exclude: {},
                     hasFocus,
@@ -162,10 +162,10 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
                 overwriteWithWarning("useTab", props, "role", "tab");
                 overwriteWithWarning("useTab", props, "aria-controls", panelId);
 
-                return useListNavigationSingleSelectionChildProps(useMergedProps({
+                return useMergedProps(listNavigationSingleSelectionChildProps, useMergedProps({
                     "data-tabbable": tabbable.toString(),
                     id: tabId
-                } as {}, usePressProps(props)));
+                } as {}, useMergedProps(pressProps, props)));
             };
             return {
                 useTabProps,
@@ -175,7 +175,7 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
 
         const useTabListProps = ({ "aria-orientation": ariaOrientation, ...props }: h.JSX.HTMLAttributes<TabListElement>) => {
             overwriteWithWarning("useTabList", props, "role", "tablist");
-            return useListNavigationSingleSelectionProps(useLabelInputProps(useMergedProps({
+            return useMergedProps(listNavigationSingleSelectionProps, useLabelInputProps(useMergedProps({
                 "aria-orientation": ariaOrientation ?? "horizontal",
             } as {},
                 props)))
