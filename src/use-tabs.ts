@@ -124,7 +124,7 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
 
         const {
             useListNavigationSingleSelectionChild,
-            listNavigationSingleSelectionProps,
+            props: listNavigationSingleSelectionProps,
             ...listNavRet1
         } = useListNavigationSingleSelection<TabListElement, TabElement, TabInfo<TC>, never>({
             linearNavigation,
@@ -144,14 +144,14 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
 
         const useTab = useCallback<UseTab<TabElement, TC, TK>>(({ listNavigation, managedChild, rovingTabIndex, hasFocus, singleSelection, subInfo }) => {
             debugLog("useTab", managedChild.index);
-            const { listNavigationSingleSelectionChildProps, ...listNavRet2 } = useListNavigationSingleSelectionChild({ listNavigation, managedChild, rovingTabIndex, subInfo: { subInfo }, hasFocus, singleSelection: { ariaPropName: "aria-selected", ...singleSelection } });
+            const { props: listNavigationSingleSelectionChildProps, ...listNavRet2 } = useListNavigationSingleSelectionChild({ listNavigation, managedChild, rovingTabIndex, subInfo: { subInfo }, hasFocus, singleSelection: { ariaPropName: "aria-selected", ...singleSelection } });
             const { singleSelection: { selected }, rovingTabIndex: { tabbable } } = listNavRet2;
 
             const useTabProps = (props: h.JSX.HTMLAttributes<TabElement>) => {
                 const panelId = getPanelId(managedChild.index);
                 const tabId = getTabId(managedChild.index);
 
-                const pressProps = usePress<TabElement>({
+                const { props: pressProps } = usePress<TabElement>({
                     onClickSync: (e) => { stableOnSelectedIndexChange(managedChild.index, e) },
                     exclude: {},
                     hasFocus,

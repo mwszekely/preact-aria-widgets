@@ -71,7 +71,7 @@ export function useListboxSingle<LabelElement extends Element, ListElement exten
         stableOnSelect(enhanceEvent<ListItemElement, Event, { selectedIndex: number }>(event, { selectedIndex: newIndex }))
     });
 
-    const { useListNavigationSingleSelectionChild, listNavigationSingleSelectionProps, ...listReturnType } = useListNavigationSingleSelection<ListElement, ListItemElement, UseListboxSingleSubInfo<C>, K>({
+    const { useListNavigationSingleSelectionChild, props: listNavigationSingleSelectionProps, ...listReturnType } = useListNavigationSingleSelection<ListElement, ListItemElement, UseListboxSingleSubInfo<C>, K>({
         childrenHaveFocus,
         linearNavigation,
         listNavigation,
@@ -87,7 +87,7 @@ export function useListboxSingle<LabelElement extends Element, ListElement exten
 
     const useListboxSingleItem = useCallback<UseListboxSingleItem<ListItemElement, C, K>>(({ listboxSingleItem: { disabled }, listNavigation, managedChild, rovingTabIndex, hasFocus, singleSelection, subInfo }) => {
         debugLog("useListboxSingleItem", managedChild.index);
-        const { rovingTabIndex: rti_ret, singleSelection: ss_ret, listNavigationSingleSelectionChildProps } = useListNavigationSingleSelectionChild({
+        const { rovingTabIndex: rti_ret, singleSelection: ss_ret, props: listNavigationSingleSelectionChildProps, hasFocus: hf_ret } = useListNavigationSingleSelectionChild({
             managedChild,
             listNavigation,
             rovingTabIndex,
@@ -101,7 +101,8 @@ export function useListboxSingle<LabelElement extends Element, ListElement exten
         return {
             useListboxSingleItemProps,
             rovingTabIndex: rti_ret,
-            singleSelection: ss_ret
+            singleSelection: ss_ret,
+            hasFocus: hf_ret
         };
 
         function useListboxSingleItemProps<P extends h.JSX.HTMLAttributes<ListItemElement>>(props: P) {
@@ -150,8 +151,8 @@ export function useListboxSingle<LabelElement extends Element, ListElement exten
 
 export function useListboxGroup<ContainerElement extends Element, HeadingElement extends Element>() {
     const { useRandomIdReferencerElement, useRandomIdSourceElement } = useRandomId<HeadingElement>({ randomId: { prefix: "listbox-multi-group" }, managedChildren: {} });
-    const { useRandomIdSourceElementProps } = useRandomIdSourceElement();
-    const { useRandomIdReferencerElementProps } = useRandomIdReferencerElement<ContainerElement>("aria-labelledby");
+    const { useProps: useRandomIdSourceElementProps } = useRandomIdSourceElement();
+    const { useProps: useRandomIdReferencerElementProps } = useRandomIdReferencerElement<ContainerElement>("aria-labelledby");
     const useListboxGroupHeadingProps = (props: h.JSX.HTMLAttributes<HeadingElement>): h.JSX.HTMLAttributes<HeadingElement> => {
         return useRandomIdSourceElementProps(props);
     };

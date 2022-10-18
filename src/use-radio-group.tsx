@@ -64,7 +64,7 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
 }: UseRadioGroupParameters<V, G, GL, I, UC, K>): UseRadioGroupReturnTypeWithHooks<V, G, GL, I, IL, UC, K> {
 
     debugLog("useRadioGroup", selectedValue);
-    const { getElement: _getRadioGroupParentElement, useRefElementProps } = useRefElement<G>({});
+    const { getElement: _getRadioGroupParentElement, useProps: useRefElementProps } = useRefElement<G>({});
 
     const [selectedIndex, setSelectedIndex] = useState<number | null>(0);
     const byName = useRef(new Map<V, any>());
@@ -79,7 +79,7 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
 
     const {
         useListNavigationSingleSelectionChild,
-        listNavigationSingleSelectionProps,
+        props: listNavigationSingleSelectionProps,
         ...listNavRet
     } = useListNavigationSingleSelection<G, I, RadioSubInfo<V, UC>, K>({
         linearNavigation,
@@ -126,7 +126,7 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
         });
 
         const getValue = useStableGetter(value);
-        const { listNavigationSingleSelectionChildProps, ...listNavRet } = useListNavigationSingleSelectionChild({
+        const { props: listNavigationSingleSelectionChildProps, ...listNavRet } = useListNavigationSingleSelectionChild({
             listNavigation,
             rovingTabIndex,
             managedChild: {

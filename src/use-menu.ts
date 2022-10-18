@@ -78,7 +78,7 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
     });
 
     const useMenuButtonProps = ((p: h.JSX.HTMLAttributes<MenuButtonElement>) => {
-        const pressProps = usePress<MenuButtonElement>({
+        const { props: pressProps } = usePress<MenuButtonElement>({
             onClickSync: () => {
                 if (open)
                     onClose?.("escape");

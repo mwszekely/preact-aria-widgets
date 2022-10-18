@@ -145,7 +145,7 @@ export function useSoftDismiss<T extends Node>({ softDismiss: { onClose, getElem
     });
 
 
-    const { refElementProps } = useRefElement<T>({
+    const { props: refElementProps } = useRefElement<T>({
         onElementChange: useCallback((e: T | null) => {
             if (e) {
                 const document = e.ownerDocument;
@@ -206,8 +206,8 @@ export type UseModalBackdrop<BackdropElement extends Element> = () => { useModal
  */
 export function useModal<FocusContainerElement extends HTMLElement, ModalElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement>({ modal: { bodyIsOnlySemantic: descriptive, focusSelf }, softDismiss: { onClose, open }, activeElement }: UseModalParameters<never, never>): UseModalReturnTypeWithHooks<FocusContainerElement, ModalElement, TitleElement, BodyElement, BackdropElement> {
 
-    const { refElementProps: useTitleRefElementProps, getElement: getTitleElement } = useRefElement<TitleElement>({});
-    const { refElementProps: useBodyRefElementProps, getElement: getBodyElement } = useRefElement<BodyElement>({});
+    const { props: useTitleRefElementProps, getElement: getTitleElement } = useRefElement<TitleElement>({});
+    const { props: useBodyRefElementProps, getElement: getBodyElement } = useRefElement<BodyElement>({});
     focusSelf ??= (() => {
         if (descriptive) {
             getBodyElement()?.focus({ preventScroll: true });
@@ -231,7 +231,7 @@ export function useModal<FocusContainerElement extends HTMLElement, ModalElement
     const { useRandomIdSourceElement: useTitleIdAsSource, useRandomIdReferencerElement: useTitleIdReferencerElement } = useRandomId<TitleElement>({ randomId: { prefix: "aria-modal-title-" }, managedChildren: { onAfterChildLayoutEffect: null, onChildrenMountChange: null } });
 
 
-    const { refElementProps: useModalRefElement, getElement: getModalElement } = useRefElement<ModalElement>({})
+    const { props: useModalRefElement, getElement: getModalElement } = useRefElement<ModalElement>({})
     const { softDismiss: { onBackdropClick }, softDismissProps } = useSoftDismiss<ModalElement>({ softDismiss: { onClose: stableOnClose, getElements: getModalElement, open: !!open }, activeElement });
 
     const useModalBackdrop = useCallback<UseModalBackdrop<BackdropElement>>(function useModalBackdrop() {
@@ -243,14 +243,14 @@ export function useModal<FocusContainerElement extends HTMLElement, ModalElement
     }, [])
 
     const useModalFocusContainerProps = function (props: h.JSX.HTMLAttributes<FocusContainerElement>): h.JSX.HTMLAttributes<FocusContainerElement> {
-        const { useFocusTrapProps } = useFocusTrap<FocusContainerElement>({ trapActive: open });
-        return useFocusTrapProps(props);
+        const { props: useFocusTrapProps } = useFocusTrap<FocusContainerElement>({ trapActive: open });
+        return useMergedProps(useFocusTrapProps, props);
     }
 
     const useModalProps = function ({ "aria-modal": ariaModal, role, ...p0 }: h.JSX.HTMLAttributes<ModalElement>): h.JSX.HTMLAttributes<ModalElement> {
-        const { useRandomIdSourceElementProps: useModalIdAsSourceProps } = useModalIdAsSource();
-        const { useRandomIdReferencerElementProps: useTitleIdReferencerElementProps } = useTitleIdReferencerElement<ModalElement>("aria-labelledby" as never);
-        const { useRandomIdReferencerElementProps: useBodyIdReferencerElementProps } = useBodyIdReferencerElement<ModalElement>("aria-describedby" as never);
+        const { useProps: useModalIdAsSourceProps } = useModalIdAsSource();
+        const { useProps: useTitleIdReferencerElementProps } = useTitleIdReferencerElement<ModalElement>("aria-labelledby" as never);
+        const { useProps: useBodyIdReferencerElementProps } = useBodyIdReferencerElement<ModalElement>("aria-describedby" as never);
         console.assert(!ariaModal);
         useEffect(() => {
             if (open)
@@ -264,7 +264,7 @@ export function useModal<FocusContainerElement extends HTMLElement, ModalElement
 
     const useModalTitle = useCallback<UseModalTitle<TitleElement>>(function useModalTitle() {
 
-        const { useRandomIdSourceElementProps: useTitleIdAsSourceProps } = useTitleIdAsSource();
+        const { useProps: useTitleIdAsSourceProps } = useTitleIdAsSource();
         const useModalTitleProps = function (props: h.JSX.HTMLAttributes<TitleElement>): h.JSX.HTMLAttributes<TitleElement> {
             props.tabIndex ??= -1;
             return useMergedProps(useTitleRefElementProps, useTitleIdAsSourceProps(props));
@@ -274,8 +274,8 @@ export function useModal<FocusContainerElement extends HTMLElement, ModalElement
     }, [])
 
     const useModalBody = useCallback<UseModalBody<BodyElement>>(function useModalBody() {
-        const { useRandomIdSourceElementProps: useBodyIdAsSourceProps } = useBodyIdAsSource();
-        const { useRandomIdReferencerElementProps: useModalIdAsReferencerElementProps } = useModalIdAsReferencerElement<BodyElement>("data-modal-id" as never);
+        const { useProps: useBodyIdAsSourceProps } = useBodyIdAsSource();
+        const { useProps: useModalIdAsReferencerElementProps } = useModalIdAsReferencerElement<BodyElement>("data-modal-id" as never);
 
         const useModalBodyProps = function (props: h.JSX.HTMLAttributes<BodyElement>): h.JSX.HTMLAttributes<BodyElement> {
             props.tabIndex ??= -1;

@@ -3,29 +3,29 @@ import { useListNavigation, UseListNavigationChildParameters, UseListNavigationC
 import { useCallback } from "preact/hooks";
 import { PropModifier, overwriteWithWarning } from "./props";
 
-interface TP { 
-    orientation: "horizontal" | "vertical"; 
+interface TP {
+    orientation: "horizontal" | "vertical";
 
     // Should be "toolbar" for toolbars, null if someone else takes care of the role, and whatever string is applicable otherwise
-    role: string | null; 
+    role: string | null;
 };
 
 export type ToolbarOmits = keyof TP;
 
 export interface UseToolbarParameters<TBOmits extends ToolbarOmits> extends UseListNavigationParameters<never, "navigationDirection", never, never, never> {
-    toolbar: Omit<TP, TBOmits>;
+    toolbarParameters: Omit<TP, TBOmits>;
 }
 
-export interface UseToolbarReturnTypeInfo<ChildElement extends Element, C, K extends string> extends UseListNavigationReturnTypeInfo<ChildElement, UseToolbarSubInfo<C>, K> {
-
+export interface UseToolbarReturnTypeInfo<ContainerElement extends Element, ChildElement extends Element, C, K extends string> extends UseListNavigationReturnTypeInfo<ContainerElement, ChildElement, UseToolbarSubInfo<C>, K> {
+    toolbarReturn: { propsUnstable: h.JSX.HTMLAttributes<ContainerElement> };
 }
 
 export interface UseToolbarSubInfo<C> {
     subInfo: C;
 }
 
-export interface UseToolbarReturnTypeWithHooks<ContainerElement extends Element, ChildElement extends Element, C, K extends string> extends UseToolbarReturnTypeInfo<ChildElement, C, K> {
-    useToolbarProps: PropModifier<ContainerElement>;
+export interface UseToolbarReturnTypeWithHooks<ContainerElement extends Element, ChildElement extends Element, C, K extends string> extends UseToolbarReturnTypeInfo<ContainerElement, ChildElement, C, K> {
+    //useToolbarProps: PropModifier<ContainerElement>;
     useToolbarChild: UseToolbarChild<ChildElement, C, K>;
 }
 
@@ -33,7 +33,6 @@ export type UseToolbarChild<ChildElement extends Element, C, K extends string> =
 export interface UseToolbarChildParameters<E extends Element, C, K extends string, SubbestInfo> extends UseListNavigationChildParameters<E, UseToolbarSubInfo<C>, K, never, never, never, SubbestInfo> { }
 export interface UseToolbarChildReturnTypeInfo<ChildElement extends Element> extends UseListNavigationChildReturnTypeInfo<ChildElement> { }
 export interface UseToolbarChildReturnTypeWithHooks<ChildElement extends Element> extends UseToolbarChildReturnTypeInfo<ChildElement> {
-    toolbarChildProps: h.JSX.HTMLAttributes<ChildElement>;
 }
 
 /**
@@ -48,45 +47,59 @@ export interface UseToolbarChildReturnTypeWithHooks<ChildElement extends Element
  * @param param0 
  * @returns 
  */
-export function useToolbar<ContainerElement extends Element, ChildElement extends Element, C, K extends string>({ linearNavigation, listNavigation, managedChildren, rovingTabIndex, typeaheadNavigation, toolbar: { orientation, role } }: UseToolbarParameters<never>): UseToolbarReturnTypeWithHooks<ContainerElement, ChildElement, C, K> {
+export function useToolbar<ContainerElement extends Element, ChildElement extends Element, C, K extends string>({
+    linearNavigationParameters,
+    listNavigationParameters,
+    managedChildrenParameters,
+    rovingTabIndexParameters,
+    typeaheadNavigationParameters,
+    toolbarParameters: { orientation, role }
+}: UseToolbarParameters<never>): UseToolbarReturnTypeWithHooks<ContainerElement, ChildElement, C, K> {
     const {
         useListNavigationChild,
-        listNavigationProps,
-        ...listRet
+        linearNavigationReturn,
+        listNavigationReturn,
+        managedChildrenReturn,
+        rovingTabIndexReturn,
+        typeaheadNavigationReturn,
+        ..._void
     } = useListNavigation<ContainerElement, ChildElement, UseToolbarSubInfo<C>, K>({
-        linearNavigation: { ...linearNavigation, navigationDirection: orientation },
-        listNavigation,
-        managedChildren,
-        rovingTabIndex,
-        typeaheadNavigation
+        linearNavigationParameters: { ...linearNavigationParameters, navigationDirection: orientation },
+        listNavigationParameters,
+        managedChildrenParameters,
+        rovingTabIndexParameters,
+        typeaheadNavigationParameters
     });
 
-    const useToolbarChild = useCallback<UseToolbarChild<ChildElement, C, K>>(({ listNavigation, managedChild, rovingTabIndex, subInfo }) => {
-        const { listNavigationChildProps, ...listRet } = useListNavigationChild({
-            listNavigation,
-            managedChild,
-            rovingTabIndex,
+    const useToolbarChild = useCallback<UseToolbarChild<ChildElement, C, K>>(({
+        refElementReturn,
+        listNavigationChildParameters,
+        managedChildParameters,
+        rovingTabIndexChildParameters,
+        subInfo,
+        ..._void
+    }) => {
+        const { rovingTabIndexChildReturn, hasCurrentFocusParameters } = useListNavigationChild({
+            listNavigationChildParameters,
+            managedChildParameters,
+            rovingTabIndexChildParameters,
+            refElementReturn,
             subInfo: { subInfo }
         });
 
         return {
-            ...listRet,
-            toolbarChildProps: listNavigationChildProps
+            hasCurrentFocusParameters,
+            rovingTabIndexChildReturn
         }
-    }, [])
-
-    function useToolbarProps(p: h.JSX.HTMLAttributes<ContainerElement>) {
-        overwriteWithWarning("useToolbar", p, "role", role ?? undefined);
-        return useMergedProps(listNavigationProps, p);
-    }
+    }, []);
 
     return {
-        useToolbarProps,
+        toolbarReturn: { propsUnstable: { role: role ?? undefined } },
         useToolbarChild,
-        linearNavigation: listRet.linearNavigation,
-        listNavigation: listRet.listNavigation,
-        managedChildren: listRet.managedChildren,
-        rovingTabIndex: listRet.rovingTabIndex,
-        typeaheadNavigation: listRet.typeaheadNavigation
+        linearNavigationReturn,
+        listNavigationReturn,
+        managedChildrenReturn,
+        rovingTabIndexReturn,
+        typeaheadNavigationReturn
     }
 }

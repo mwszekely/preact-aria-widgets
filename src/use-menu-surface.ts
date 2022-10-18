@@ -77,12 +77,12 @@ export function useMenuSurface<MenuSurfaceElement extends Element, MenuParentEle
     const [, setOpenerElement, getOpenerElement] = useState<MenuButtonElement | null>(null);
 
     const { useRandomIdSourceElement, useRandomIdReferencerElement } = useRandomId<MenuParentElement>({ randomId: { prefix: "aria-menu-" }, managedChildren: {} });
-    const { useRandomIdSourceElementProps } = useRandomIdSourceElement();
-    const { useRandomIdReferencerElementProps } = useRandomIdReferencerElement<MenuButtonElement>("aria-controls" as never);
+    const { useProps: useRandomIdSourceElementProps } = useRandomIdSourceElement();
+    const { useProps: useRandomIdReferencerElementProps } = useRandomIdReferencerElement<MenuButtonElement>("aria-controls" as never);
 
-    const { getElement: getButtonElement, refElementProps: useButtonRefElementProps } = useRefElement<MenuButtonElement>({ onElementChange: setOpenerElement });
+    const { getElement: getButtonElement, props: useButtonRefElementProps } = useRefElement<MenuButtonElement>({ onElementChange: setOpenerElement });
 
-    const { getElement: getMenuElement, refElementProps: useMenuBaseRefElementProps } = useRefElement<MenuSurfaceElement>({});
+    const { getElement: getMenuElement, props: useMenuBaseRefElementProps } = useRefElement<MenuSurfaceElement>({});
     const { softDismissProps, ...softDismissReturn } = useSoftDismiss<any>({
         softDismiss: {
             ...softDismiss,

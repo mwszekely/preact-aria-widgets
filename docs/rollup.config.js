@@ -14,8 +14,8 @@ export default {
         name: "bundle",
         sourcemap: "inline"
     },
-    plugins: [
-        typescript({ sourceMap: true, inlineSources: true }),
+    plugins: [,
+        typescript({  }),
         commonjs({ sourceMap: true }),
         resolve({ dedupe: ['preact', "preact/compat", "preact/hooks", "preact-prop-helpers"] }),
         getBabelOutputPlugin({

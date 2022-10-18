@@ -1,19 +1,18 @@
 import { h } from "preact";
-import { UseHasFocusParameters, useMergedProps, usePress } from "preact-prop-helpers";
+import { useMergedProps, usePress, useRefElement, UseRefElementParameters, useStableCallback } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { debugLog, DisabledType, ElementToTag, EnhancedEvent, enhanceEvent } from "./props";
 
 
 export type ButtonPressEvent<E extends EventTarget> = EnhancedEvent<E, Event | Event, { pressed: boolean | null }>;
 
-export interface UseButtonParameters<E extends Node> {
-    button: {
+export interface UseButtonParameters<E extends Node> extends UseRefElementParameters<E> {
+    buttonParameters: {
         tagButton: ElementToTag<E>;
         disabled?: DisabledType;
         pressed?: boolean | null | undefined;
         onPress?(event: ButtonPressEvent<E>): void;
     }
-    hasFocus: UseHasFocusParameters<E>;
 }
 
 export interface UseButtonReturnType<E extends EventTarget> {
@@ -23,18 +22,25 @@ export interface UseButtonReturnType<E extends EventTarget> {
 
 
 
-export function useButton<E extends Element>({ button: { tagButton, disabled, onPress, pressed }, hasFocus }: UseButtonParameters<E>): UseButtonReturnType<E> {
+export function useButton<E extends Element>({ buttonParameters: { tagButton, disabled, onPress, pressed }, refElementParameters }: UseButtonParameters<E>): UseButtonReturnType<E> {
     debugLog("useButton");
+
+    const { refElementReturn } = useRefElement<E>({ refElementParameters });
+    const focusSelf = useCallback((e: any) => (e as Element as HTMLElement).focus?.(), [])
+    const { pressReturn } = usePress<E>({
+        refElementReturn,
+        pressParameters: {
+            onClickSync: (e) => (disabled ? null : onPress)?.(enhanceEvent(e, { pressed: pressed == null ? null : !pressed })),
+            exclude: undefined,
+            focusSelf,
+        },
+    });
+
+    const { propsStable, propsUnstable } = pressReturn;
 
     function useButtonProps({ "aria-pressed": ariaPressed, tabIndex, role, ...p }: h.JSX.HTMLAttributes<E>): h.JSX.HTMLAttributes<E> {
 
-        const pressProps = usePress<E>({
-            onClickSync: (e) => (disabled ? null : onPress)?.(enhanceEvent(e, { pressed: pressed == null ? null : !pressed })),
-            exclude: undefined,
-            hasFocus,
-            focusSelf: useCallback(e => (e as Element as HTMLElement).focus?.(), [])
-        });
-        const props = useMergedProps(pressProps, p);
+        const props = useMergedProps(propsStable, propsUnstable, p);
 
         const baseProps = { role, tabIndex, "aria-pressed": ariaPressed ?? (pressed === true ? "true" : pressed === false ? "false" : undefined) };
         const buttonProps = { ...baseProps, disabled: (disabled && disabled != "soft") ? true : false, "aria-disabled": (disabled === 'soft' ? 'true' : undefined) };

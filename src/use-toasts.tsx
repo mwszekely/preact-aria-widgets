@@ -69,7 +69,7 @@ export function useToasts<ContainerType extends Element, C, K extends string>({ 
 
     const getMaxVisibleCount = useStableGetter(visibleCount);
 
-    const { getElement, useRefElementProps } = useRefElement<ContainerType>({});
+    const { getElement, props: refElementProps } = useRefElement<ContainerType>({});
     const { useManagedChild, ...childInfo } = useManagedChildren<number, ToastInfo<C>, K | Showing>({ managedChildren: { onAfterChildLayoutEffect, onChildrenMountChange: ocmu } });
 
     const { managedChildren: { children: toastQueue } } = childInfo;
@@ -251,7 +251,7 @@ export function useToasts<ContainerType extends Element, C, K extends string>({ 
     }, []);
 
     function useToastContainerProps({ role, "aria-live": ariaLive, "aria-relevant": ariaRelevant, ...props }: h.JSX.HTMLAttributes<ContainerType>): h.JSX.HTMLAttributes<ContainerType> {
-        return useMergedProps<ContainerType>(useRefElementProps({ class: "toasts-container", role: role || "status", "aria-live": politeness ?? ariaLive ?? "polite", "aria-relevant": ariaRelevant ?? "additions" } as h.JSX.HTMLAttributes<ContainerType>), props);
+        return useMergedProps<ContainerType>(useMergedProps(refElementProps, { class: "toasts-container", role: role || "status", "aria-live": politeness ?? ariaLive ?? "polite", "aria-relevant": ariaRelevant ?? "additions" } as h.JSX.HTMLAttributes<ContainerType>), props);
     }
 
 

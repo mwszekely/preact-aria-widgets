@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { ManagedChildInfo, ManagedChildren, useGridNavigation, UseGridNavigationParameters, UseGridNavigationRowSubInfo, UseHasFocusParameters, UseListNavigationSubInfo, useMergedProps, UseRovingTabIndexSubInfo, UseSingleSelectionChildParameters, UseSingleSelectionParameters, UseSingleSelectionReturnTypeInfo, useSortableChildren, UseSortableChildrenParameters, useStableCallback } from "preact-prop-helpers";
+import { ManagedChildInfo, ManagedChildren, useGridNavigation, UseGridNavigationParameters, UseGridNavigationRowSubInfo, UseListNavigationSubInfo, useMergedProps, UseRovingTabIndexSubInfo, UseSingleSelectionChildParameters, UseSingleSelectionParameters, UseSingleSelectionReturnTypeInfo, useSortableChildren, UseSortableChildrenParameters, useStableCallback } from "preact-prop-helpers";
 import { UseGridNavigationCellParameters, UseGridNavigationCellReturnTypeInfo, UseGridNavigationCellSubInfo, UseGridNavigationReturnTypeInfo, UseGridNavigationRowParameters, UseGridNavigationRowReturnTypeInfo, useSingleSelection } from "preact-prop-helpers";
 import { UseSortableChildrenReturnTypeInfo } from "preact-prop-helpers";
 import { useCallback, useRef } from "preact/hooks";
@@ -110,7 +110,7 @@ export function useGridlist<
             return cells;
         }, [])
 
-        const { flags: ssflags, singleSelectionChildProps, ...singleSelectInfo } = useSingleSelectionChild({
+        const { flags: ssflags, props: singleSelectionChildProps, ...singleSelectInfo } = useSingleSelectionChild({
             hasFocus: hasFocus,
             managedChild: asChildRowOfSection.managedChild,
             singleSelection: {
@@ -139,7 +139,7 @@ export function useGridlist<
         const useGridlistChild = useCallback<UseGridlistChild<CellElement, CC, KC>>(({ listNavigation, managedChild, rovingTabIndex, subInfo, hasFocus, gridlistChild: { locationIndex } }) => {
             debugLog("useGridlistChild", managedChild.index);
             const {
-                gridNavigationCellProps,
+                props: gridNavigationCellProps,
                 ...gridNavRet3
             } = useGridNavigationCell({ listNavigation, managedChild, rovingTabIndex, subInfo: { locationIndex, subInfo }, hasFocus });
 

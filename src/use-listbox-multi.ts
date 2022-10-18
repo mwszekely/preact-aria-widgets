@@ -89,7 +89,7 @@ export function useListboxMulti<LabelElement extends Element, ListElement extend
 
     const {
         useListNavigationChild,
-        listNavigationProps,
+        props: listNavigationProps,
         rovingTabIndex: { setTabbableIndex }
     } = listReturnType
 
@@ -102,10 +102,10 @@ export function useListboxMulti<LabelElement extends Element, ListElement extend
         debugLog("useListboxMultiItem", managedChild.index, selected);
         type E = ListItemElement;
         const getSelected = useStableGetter(selected);
-        const { refElementProps, getElement } = useRefElement<E>({});
+        const { props: refElementProps, getElement } = useRefElement<E>({});
         const stableOnSelect = useStableCallback(onSelectedChange ?? (() => { }));
 
-        const { listNavigationChildProps, rovingTabIndex: rti2_ret } = useListNavigationChild({ listNavigation: ls, managedChild, rovingTabIndex: rti, subInfo: { subInfo, selected, onSelect: stableOnSelect } });
+        const { props: listNavigationChildProps, rovingTabIndex: rti2_ret, hasFocus: hf2_ret } = useListNavigationChild({ listNavigation: ls, managedChild, rovingTabIndex: rti, subInfo: { subInfo, selected, onSelect: stableOnSelect } });
 
         useLayoutEffect(() => {
             const element = getElement();
@@ -114,15 +114,15 @@ export function useListboxMulti<LabelElement extends Element, ListElement extend
             }
         }, [rti2_ret.tabbable]);
 
-        return { useListboxMultiItemProps, listboxMultiItem: { getSelected, tabbable: rti2_ret.tabbable }, rovingTabIndex: rti2_ret };
+        return { useListboxMultiItemProps, listboxMultiItem: { getSelected, tabbable: rti2_ret.tabbable }, rovingTabIndex: rti2_ret, hasFocus: hf2_ret };
 
         function useListboxMultiItemProps(props: h.JSX.HTMLAttributes<E>): h.JSX.HTMLAttributes<E> {
-            const pressProps = usePress<E>({
+            const { props: pressProps } = usePress<E>({
                 onClickSync: disabled ? null : (e) => {
                     setTabbableIndex(managedChild.index, false);
                     stableOnSelect?.({ ...e, [EventDetail]: { selected: !getSelected() } });
                     e.preventDefault();
-                }, 
+                },
                 exclude: {},
                 hasFocus,
                 focusSelf: e => rti.focusSelf

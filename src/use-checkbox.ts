@@ -1,4 +1,5 @@
 import { h } from "preact";
+import { useStableCallback } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { debugLog, EnhancedEvent, enhanceEvent } from "./props";
 import { useCheckboxLike, UseCheckboxLikeParameters, UseCheckboxLikeReturnTypeInfo } from "./use-label";
@@ -7,74 +8,78 @@ import { useCheckboxLike, UseCheckboxLikeParameters, UseCheckboxLikeReturnTypeIn
 
 export type CheckboxChangeEvent<E extends EventTarget> = EnhancedEvent<E, Event, { checked: boolean }>;
 
-export type UseCheckboxInputElement<InputType extends Element> = () => { useCheckboxInputElementProps: ({ ...p0 }: h.JSX.HTMLAttributes<InputType>) => h.JSX.HTMLAttributes<InputType>; }
-export type UseCheckboxLabelElement<LabelType extends Element> = () => { useCheckboxLabelElementProps: ({ ...p0 }: h.JSX.HTMLAttributes<LabelType>) => h.JSX.HTMLAttributes<LabelType>; }
-
-
-export interface UseCheckboxParameters<I extends Element, L extends Element> {
-    checkboxLike: Omit<UseCheckboxLikeParameters<I, L>["checkboxLike"], "onCheckedChange" | "role">;
-    hasFocusInput: UseCheckboxLikeParameters<I, L>["hasFocusInput"];
-    hasFocusLabel: UseCheckboxLikeParameters<I, L>["hasFocusLabel"];
-    label: UseCheckboxLikeParameters<I, L>["label"];
-    checkbox: {
+export interface UseCheckboxParameters<I extends Element, L extends Element> extends UseCheckboxLikeParameters<I, L, "onInput" | "role", "prefix"> {
+    checkboxParameters: {
         onCheckedChange(event: CheckboxChangeEvent<I>): void;
     }
 }
 
 export interface UseCheckboxReturnTypeInfo<InputType extends Element, LabelType extends Element> extends UseCheckboxLikeReturnTypeInfo<InputType, LabelType> {
-
+    checkboxReturn: { propsUnstable: h.JSX.HTMLAttributes<InputType> }
 }
+
 
 export interface UseCheckboxReturnTypeWithHooks<InputType extends Element, LabelType extends Element> extends UseCheckboxReturnTypeInfo<InputType, LabelType> {
     /** **Notably unstable** */
-    useCheckboxInputElement: UseCheckboxInputElement<InputType>;
+    //useCheckboxInputElement: UseCheckboxInputElement<InputType, LabelType>;
     /** **Notably unstable** */
-    useCheckboxLabelElement: UseCheckboxLabelElement<LabelType>;
+    //useCheckboxLabelElement: UseCheckboxLabelElement<InputType, LabelType>;
 }
 
-export function useCheckbox<InputType extends Element, LabelType extends Element>({ checkboxLike, label, checkbox, hasFocusInput, hasFocusLabel }: UseCheckboxParameters<InputType, LabelType>): UseCheckboxReturnTypeWithHooks<InputType, LabelType> {
+export function useCheckbox<InputType extends Element, LabelType extends Element>({
+    checkboxParameters: { onCheckedChange },
+    checkboxLikeParameters,
+    labelParameters,
+    randomIdInputParameters,
+    randomIdLabelParameters,
+    randomIdReferencerElementInputParameters,
+    randomIdReferencerElementLabelParameters,
+    refElementInputReturn,
+    refElementLabelReturn
+}: UseCheckboxParameters<InputType, LabelType>): UseCheckboxReturnTypeWithHooks<InputType, LabelType> {
     debugLog("useCheckbox");
 
-    const { disabled, labelPosition, checked } = checkboxLike;
-    const { tagInput, tagLabel } = label;
-    const { onCheckedChange: onInput } = checkbox;
+    const { tagInput, labelPosition } = labelParameters;
+    const { checked } = checkboxLikeParameters;
 
-    const onInputEnhanced = (e: h.JSX.TargetedEvent<InputType>) => onInput?.(enhanceEvent<InputType, Event, { checked: boolean }>(e, { checked: !checked }));
-    const { useCheckboxLikeInputElement, useCheckboxLikeLabelElement, ...checkboxLikeRest } = useCheckboxLike<InputType, LabelType>({ hasFocusInput, hasFocusLabel, checkboxLike: { role: "checkbox", checked, onCheckedChange: onInputEnhanced, disabled, labelPosition, }, label });
-
-    const useCheckboxInputElement: UseCheckboxInputElement<InputType> = useCallback(function useCheckboxInputElement() {
-        const tag = tagInput;
-        const { useCheckboxLikeInputElementProps } = useCheckboxLikeInputElement();
-
-        return { useCheckboxInputElementProps };
-
-        function useCheckboxInputElementProps({ ...p0 }: h.JSX.HTMLAttributes<InputType>) {
-
-            const props: h.JSX.HTMLAttributes<InputType> = useCheckboxLikeInputElementProps(p0);
-            props.checked ??= !!checked;
-
-            if (tag == "input")
-                props.type = "checkbox";
-
-            return props;
-        }
-    }, [useCheckboxLikeInputElement, checked, labelPosition, disabled, tagInput]);
-
-    const useCheckboxLabelElement = useCallback(function useCheckboxLabelElement() {
-        const { useCheckboxLikeLabelElementProps } = useCheckboxLikeLabelElement();
-
-        function useCheckboxLabelElementProps({ ...props }: h.JSX.HTMLAttributes<LabelType>) {
-            return useCheckboxLikeLabelElementProps(props);
-        }
-
-        return { useCheckboxLabelElementProps };
-    }, [useCheckboxLikeLabelElement, disabled, labelPosition, tagLabel]);
+    const onInputEnhanced = useStableCallback((e: Event) => onCheckedChange?.(enhanceEvent<InputType, Event, { checked: boolean }>(e, { checked: !checked })));
+    const {
+        pressInputReturn,
+        pressLabelReturn,
+        randomIdInputReturn,
+        randomIdLabelReturn,
+        randomIdReferencerInputReturn,
+        randomIdReferencerLabelReturn,
+        randomIdSourceInputReturn,
+        randomIdSourceLabelReturn,
+        labelInputReturn,
+        checkboxLikeInputReturn,
+        checkboxLikeLabelReturn
+    } = useCheckboxLike<InputType, LabelType>({
+        randomIdInputParameters: { ...randomIdInputParameters, prefix: "checkbox-i-" },
+        randomIdLabelParameters: { ...randomIdLabelParameters, prefix: "checkbox-l-" },
+        randomIdReferencerElementInputParameters,
+        randomIdReferencerElementLabelParameters,
+        refElementInputReturn,
+        refElementLabelReturn,
+        checkboxLikeParameters: { role: "checkbox", onInput: onInputEnhanced, ...checkboxLikeParameters },
+        labelParameters
+    });
 
 
     return {
-        useCheckboxInputElement,
-        useCheckboxLabelElement,
-        ...checkboxLikeRest
+        checkboxReturn: { propsUnstable: { type: (tagInput == "input" && labelPosition != "wrapping" ? "checkbox" : undefined) } },
+        pressInputReturn,
+        pressLabelReturn,
+        randomIdInputReturn,
+        randomIdLabelReturn,
+        randomIdReferencerInputReturn,
+        randomIdReferencerLabelReturn,
+        randomIdSourceInputReturn,
+        randomIdSourceLabelReturn,
+        labelInputReturn,
+        checkboxLikeInputReturn,
+        checkboxLikeLabelReturn
     };
 
 }

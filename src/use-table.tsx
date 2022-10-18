@@ -152,7 +152,7 @@ export function useTable<
             const [mySortDirection, setMySortDirection] = useState<TableSortDirection | null>(null);
             debugLog("useTableCell", managedChild.index);
             const {
-                gridNavigationCellProps,
+                props: gridNavigationCellProps,
                 ...gridNavRet3
             } = useGridNavigationCell({ listNavigation, managedChild, rovingTabIndex, subInfo: { setMySortDirection, location, value, subInfo }, hasFocus });
 
