@@ -7,7 +7,7 @@ import { useButton, UseButtonParameters } from "./use-button";
 export type UseAccordion<HeaderElement extends Element, BodyElement extends Element, AccSubInfo> = (args: UseAccordionParameters) => UseAccordionReturnTypeWithHooks<HeaderElement, BodyElement, AccSubInfo>;
 export type UseAccordionSection<HeaderElement extends Element, BodyElement extends Element, AccSubInfo> = (args: UseAccordionSectionParameters<HeaderElement, AccSubInfo, never, AccSubInfo>) => UseAccordionSectionReturnTypeWithHooks<HeaderElement, BodyElement>;
 
-export interface UseAccordionParameters extends UseLinearNavigationParameters<"navigateToFirst" | "navigateToLast" | "navigateToNext" | "navigateToPrev">, UseManagedChildrenParameters<number, never> {
+export interface UseAccordionParameters extends UseLinearNavigationParameters{//<"navigateToFirst" | "navigateToLast" | "navigateToNext" | "navigateToPrev">, UseManagedChildrenParameters<number, never> {
     accordionParameters: { initialIndex?: number | null; }
 }
 
@@ -29,7 +29,7 @@ export interface UseAccordionSectionInfoBase<AccSubInfo> {
 }
 
 export interface UseAccordionSectionParameters<HeaderElement extends Element, AccSubInfo, K extends string, SubbestInfo> extends
-    UseManagedChildParameters<number, UseAccordionSectionInfoBase<AccSubInfo>, K | "tabbed" | "open", never, SubbestInfo>,
+    UseManagedChildParameters<UseAccordionSectionInfoBase<AccSubInfo>, K | "tabbed" | "open", never, SubbestInfo>,
     UseRefElementParameters<HeaderElement> {
     accordionSectionParameters: { open?: boolean | undefined; }
     accordionButtonParameters: Omit<UseButtonParameters<HeaderElement>["buttonParameters"], "pressed" | "onPress">;

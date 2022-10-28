@@ -49,23 +49,24 @@ export type SoftDismissOmits = keyof SDP;
 export type ModalOmits = keyof MP;
 
 export interface UseSoftDismissParameters<Omits extends SoftDismissOmits> {
-    softDismiss: Omit<SDP, Omits>;
-    activeElement: UseActiveElementParameters;
+    softDismissParameters: Omit<SDP, Omits>;
+    activeElementParameters: UseActiveElementParameters;
 }
 
 export interface UseModalParameters<MO extends ModalOmits, SDO extends SoftDismissOmits> extends UseSoftDismissParameters<SDO | "getElements"> {
-    modal: Omit<MP, MO>;
+    modalParameters: Omit<MP, MO>;
 }
 
-export interface UseSoftDismissReturnTypeInfo {
-    softDismiss: {
+export interface UseSoftDismissReturnTypeInfo<T extends Node> {
+    softDismissReturn: {
         onBackdropClick: (e: h.JSX.TargetedEvent<any>) => void;
+        propsUnstable: h.JSX.HTMLAttributes<T>
     };
 }
 
-export interface UseSoftDismissReturnTypeWithHooks<T extends Node> extends UseSoftDismissReturnTypeInfo {
+export interface UseSoftDismissReturnTypeWithHooks<T extends Node> extends UseSoftDismissReturnTypeInfo<T> {
     /** This basically can be any element -- it's only used to get the owning window/document. */
-    softDismissProps: h.JSX.HTMLAttributes<T>;
+    //softDismissProps: h.JSX.HTMLAttributes<T>;
 }
 
 /**
@@ -82,7 +83,7 @@ export interface UseSoftDismissReturnTypeWithHooks<T extends Node> extends UseSo
  * @param param0 
  * @returns 
  */
-export function useSoftDismiss<T extends Node>({ softDismiss: { onClose, getElements, open }, activeElement: { onLastActiveElementChange, ...activeElement } }: UseSoftDismissParameters<never>): UseSoftDismissReturnTypeWithHooks<T> {
+export function useSoftDismiss<T extends Node>({ softDismissParameters: { onClose, getElements, open }, activeElementParameters: { onLastActiveElementChange, ...activeElement } }: UseSoftDismissParameters<never>): UseSoftDismissReturnTypeWithHooks<T> {
 
     const stableOnClose = useStableCallback(onClose);
     const stableGetElements = useStableCallback(getElements);

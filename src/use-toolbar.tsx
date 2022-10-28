@@ -1,22 +1,20 @@
 import { h } from "preact";
-import { useListNavigation, UseListNavigationChildParameters, UseListNavigationChildReturnTypeInfo, UseListNavigationParameters, UseListNavigationReturnTypeInfo, useMergedProps } from "preact-prop-helpers";
+import { useListNavigation, UseListNavigationChildInfo, UseListNavigationChildParameters, UseListNavigationChildReturnTypeInfo, UseListNavigationParameters, UseListNavigationReturnTypeInfo, useMergedProps } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { PropModifier, overwriteWithWarning } from "./props";
 
-interface TP {
-    orientation: "horizontal" | "vertical";
 
-    // Should be "toolbar" for toolbars, null if someone else takes care of the role, and whatever string is applicable otherwise
-    role: string | null;
-};
 
-export type ToolbarOmits = keyof TP;
-
-export interface UseToolbarParameters<TBOmits extends ToolbarOmits> extends UseListNavigationParameters<never, "navigationDirection", never, never, never> {
-    toolbarParameters: Omit<TP, TBOmits>;
+export interface UseToolbarParameters<ChildElement extends Element, M extends UseListNavigationChildInfo<ChildElement>> extends UseListNavigationParameters<ChildElement, M> {
+    toolbarParameters: {
+        orientation: "horizontal" | "vertical";
+    
+        // Should be "toolbar" for toolbars, null if someone else takes care of the role, and whatever string is applicable otherwise
+        role: string | null;
+    }
 }
 
-export interface UseToolbarReturnTypeInfo<ContainerElement extends Element, ChildElement extends Element, C, K extends string> extends UseListNavigationReturnTypeInfo<ContainerElement, ChildElement, UseToolbarSubInfo<C>, K> {
+export interface UseToolbarReturnTypeInfo<ContainerElement extends Element, ChildElement extends Element> extends UseListNavigationReturnTypeInfo<ContainerElement, ChildElement> {
     toolbarReturn: { propsUnstable: h.JSX.HTMLAttributes<ContainerElement> };
 }
 
@@ -24,13 +22,13 @@ export interface UseToolbarSubInfo<C> {
     subInfo: C;
 }
 
-export interface UseToolbarReturnTypeWithHooks<ContainerElement extends Element, ChildElement extends Element, C, K extends string> extends UseToolbarReturnTypeInfo<ContainerElement, ChildElement, C, K> {
+export interface UseToolbarReturnTypeWithHooks<ContainerElement extends Element, ChildElement extends Element> extends UseToolbarReturnTypeInfo<ContainerElement, ChildElement> {
     //useToolbarProps: PropModifier<ContainerElement>;
-    useToolbarChild: UseToolbarChild<ChildElement, C, K>;
+    useToolbarChild: UseToolbarChild<ChildElement>;
 }
 
-export type UseToolbarChild<ChildElement extends Element, C, K extends string> = (i: UseToolbarChildParameters<ChildElement, C, K, C>) => UseToolbarChildReturnTypeWithHooks<ChildElement>;
-export interface UseToolbarChildParameters<E extends Element, C, K extends string, SubbestInfo> extends UseListNavigationChildParameters<E, UseToolbarSubInfo<C>, K, never, never, never, SubbestInfo> { }
+export type UseToolbarChild<ChildElement extends Element> = (i: UseToolbarChildParameters<ChildElement>) => UseToolbarChildReturnTypeWithHooks<ChildElement>;
+export interface UseToolbarChildParameters<E extends Element> extends UseListNavigationChildParameters<E> { }
 export interface UseToolbarChildReturnTypeInfo<ChildElement extends Element> extends UseListNavigationChildReturnTypeInfo<ChildElement> { }
 export interface UseToolbarChildReturnTypeWithHooks<ChildElement extends Element> extends UseToolbarChildReturnTypeInfo<ChildElement> {
 }
@@ -47,23 +45,19 @@ export interface UseToolbarChildReturnTypeWithHooks<ChildElement extends Element
  * @param param0 
  * @returns 
  */
-export function useToolbar<ContainerElement extends Element, ChildElement extends Element, C, K extends string>({
+export function useToolbar<ContainerElement extends Element, ChildElement extends Element, M extends UseListNavigationChildInfo<ChildElement>>({
     linearNavigationParameters,
-    listNavigationParameters,
-    managedChildrenParameters,
+    managedChildrenReturn,
     rovingTabIndexParameters,
     typeaheadNavigationParameters,
     toolbarParameters: { orientation, role }
-}: UseToolbarParameters<never>): UseToolbarReturnTypeWithHooks<ContainerElement, ChildElement, C, K> {
+}: UseToolbarParameters<ChildElement, M>): UseToolbarReturnTypeWithHooks<ContainerElement, ChildElement> {
     const {
-        useListNavigationChild,
         linearNavigationReturn,
-        listNavigationReturn,
-        managedChildrenReturn,
         rovingTabIndexReturn,
         typeaheadNavigationReturn,
         ..._void
-    } = useListNavigation<ContainerElement, ChildElement, UseToolbarSubInfo<C>, K>({
+    } = useListNavigation<ContainerElement, ChildElement, M>({
         linearNavigationParameters: { ...linearNavigationParameters, navigationDirection: orientation },
         listNavigationParameters,
         managedChildrenParameters,
