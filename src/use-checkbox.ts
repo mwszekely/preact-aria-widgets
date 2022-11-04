@@ -1,8 +1,7 @@
 import { h } from "preact";
 import { useStableCallback } from "preact-prop-helpers";
-import { useCallback } from "preact/hooks";
 import { debugLog, EnhancedEvent, enhanceEvent } from "./props";
-import { useCheckboxLike, UseCheckboxLikeParameters, UseCheckboxLikeReturnTypeInfo } from "./use-label";
+import { useCheckboxLike, UseCheckboxLikeParameters, UseCheckboxLikeReturnType } from "./use-label";
 
 
 
@@ -14,16 +13,8 @@ export interface UseCheckboxParameters<I extends Element, L extends Element> ext
     }
 }
 
-export interface UseCheckboxReturnTypeInfo<InputType extends Element, LabelType extends Element> extends UseCheckboxLikeReturnTypeInfo<InputType, LabelType> {
+export interface UseCheckboxReturnType<InputType extends Element, LabelType extends Element> extends UseCheckboxLikeReturnType<InputType, LabelType> {
     checkboxReturn: { propsUnstable: h.JSX.HTMLAttributes<InputType> }
-}
-
-
-export interface UseCheckboxReturnTypeWithHooks<InputType extends Element, LabelType extends Element> extends UseCheckboxReturnTypeInfo<InputType, LabelType> {
-    /** **Notably unstable** */
-    //useCheckboxInputElement: UseCheckboxInputElement<InputType, LabelType>;
-    /** **Notably unstable** */
-    //useCheckboxLabelElement: UseCheckboxLabelElement<InputType, LabelType>;
 }
 
 export function useCheckbox<InputType extends Element, LabelType extends Element>({
@@ -36,7 +27,7 @@ export function useCheckbox<InputType extends Element, LabelType extends Element
     randomIdReferencerElementLabelParameters,
     refElementInputReturn,
     refElementLabelReturn
-}: UseCheckboxParameters<InputType, LabelType>): UseCheckboxReturnTypeWithHooks<InputType, LabelType> {
+}: UseCheckboxParameters<InputType, LabelType>): UseCheckboxReturnType<InputType, LabelType> {
     debugLog("useCheckbox");
 
     const { tagInput, labelPosition } = labelParameters;
