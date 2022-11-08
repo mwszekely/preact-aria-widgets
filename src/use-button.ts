@@ -27,28 +27,29 @@ export interface UseButtonReturnType<E extends Element> extends UsePressReturnTy
 export function useButton<E extends Element>({ buttonParameters: { tagButton, disabled, onPress, pressed, role }, pressParameters, refElementParameters }: UseButtonParameters<E>): UseButtonReturnType<E> {
     debugLog("useButton");
 
-    const { refElementReturn } = useRefElement<E>({ refElementParameters });
+    const refElementReturn = useRefElement<E>({ refElementParameters });
     const focusSelf = useCallback((e: any) => (e as Element as HTMLElement).focus?.(), [])
-    const { pressReturn } = usePress<E>({
-        refElementReturn,
+    const pressReturn = usePress<E>({
+        ...refElementReturn,
         pressParameters: {
             onPressSync: (e) => (disabled ? null : onPress)?.(enhanceEvent(e, { pressed: pressed == null ? null : !pressed })),
             focusSelf,
-           ...pressParameters
+            ...pressParameters
         },
     });
 
-    const { propsStable } = pressReturn;
+    const { pressReturn: { propsStable: pressProps } } = pressReturn;
+    const { refElementReturn: { propsStable: refProps } } = refElementReturn;
 
-        const baseProps = { "aria-pressed": (pressed === true ? "true" : pressed === false ? "false" : undefined) };
-        const buttonProps = { ...baseProps, disabled: (disabled && disabled != "soft") ? true : false, "aria-disabled": (disabled === 'soft' ? 'true' : undefined), role: role == "button"? undefined : role };
-        const divProps = { ...baseProps, tabIndex: (disabled === "hard" ? -1 : 0), role, "aria-disabled": disabled ? "true" : undefined };
+    const baseProps = { "aria-pressed": (pressed === true ? "true" : pressed === false ? "false" : undefined) };
+    const buttonProps = { ...baseProps, disabled: (disabled && disabled != "soft") ? true : false, "aria-disabled": (disabled === 'soft' ? 'true' : undefined), role: role == "button" ? undefined : role };
+    const divProps = { ...baseProps, tabIndex: (disabled === "hard" ? -1 : 0), role, "aria-disabled": disabled ? "true" : undefined };
 
 
     return {
-        pressReturn,
-        refElementReturn,
-        props: useMergedProps<E>(propsStable, (tagButton == 'button'? buttonProps : divProps)),
+        ...refElementReturn,
+        ...pressReturn,
+        props: useMergedProps<E>(pressProps, refProps, (tagButton == 'button' ? buttonProps : divProps)),
     }
 }
 

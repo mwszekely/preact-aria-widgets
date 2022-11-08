@@ -1,9 +1,7 @@
 import { h } from "preact";
-import { UseHasFocusParameters, useListNavigation, UseListNavigationParameters, useMergedProps, usePress, useRandomId, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
-import { UseListNavigationChildParameters, UseListNavigationChildReturnTypeInfo, UseListNavigationReturnTypeInfo } from "preact-prop-helpers";
-import { returnFalse, useEnsureStability, usePassiveState } from "preact-prop-helpers";
+import { returnFalse, useEnsureStability, UseListNavigationChildReturnTypeInfo, useMergedProps, usePassiveState, useRandomId, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
 import { useCallback, useEffect, useRef } from "preact/hooks";
-import { debugLog, DisabledType, EnhancedEvent, enhanceEvent, overwriteWithWarning } from "./props";
+import { debugLog, overwriteWithWarning } from "./props";
 import { useSoftDismiss, UseSoftDismissParameters, UseSoftDismissReturnTypeInfo } from "./use-modal";
 
 interface MSP {
@@ -29,7 +27,7 @@ export interface UseMenuSurfaceParameters<_S extends Element, _B extends Element
 }
 
 
-export interface UseMenuSurfaceReturnTypeInfo<_MenuParentElement extends Element, _MenuButtonElement extends Element> extends UseSoftDismissReturnTypeInfo {}
+export interface UseMenuSurfaceReturnTypeInfo<_MenuParentElement extends Element, _MenuButtonElement extends Element> extends UseSoftDismissReturnTypeInfo { }
 export interface UseMenuButtonReturnTypeInfo extends UseListNavigationChildReturnTypeInfo<never> { }
 
 export interface UseMenuSurfaceReturnTypeWithHooks<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuButtonElement extends Element> extends UseMenuSurfaceReturnTypeInfo<MenuSurfaceElement, MenuButtonElement> {
@@ -76,13 +74,13 @@ export function useMenuSurface<MenuSurfaceElement extends Element, MenuParentEle
 
     const [, setOpenerElement, getOpenerElement] = useState<MenuButtonElement | null>(null);
 
-    const { useRandomIdSourceElement, useRandomIdReferencerElement } = useRandomId<MenuParentElement>({ randomId: { prefix: "aria-menu-" }, managedChildren: {} });
-    const { useProps: useRandomIdSourceElementProps } = useRandomIdSourceElement();
-    const { useProps: useRandomIdReferencerElementProps } = useRandomIdReferencerElement<MenuButtonElement>("aria-controls" as never);
+    const { useRandomIdSourceElement, useRandomIdReferencerElement, ...void1 } = useRandomId<MenuParentElement>({ randomIdParameters: { prefix: "aria-menu-" } });
+    const { randomIdSourceReturn, ...void2 } = useRandomIdSourceElement();
+    const { randomIdReferencerReturn, ...void3 } = useRandomIdReferencerElement<MenuButtonElement>("aria-controls" as never);
 
-    const { getElement: getButtonElement, props: useButtonRefElementProps } = useRefElement<MenuButtonElement>({ onElementChange: setOpenerElement });
+    const { refElementReturn: { getElement: getButtonElement, propsStable: p1 }, ...void4 } = useRefElement<MenuButtonElement>({ refElementParameters: { onElementChange: setOpenerElement } });
 
-    const { getElement: getMenuElement, props: useMenuBaseRefElementProps } = useRefElement<MenuSurfaceElement>({});
+    const { refElementReturn: { getElement: getMenuElement, propsStable: p2, ...void5 }, ...void6 } = useRefElement<MenuSurfaceElement>({ refElementParameters: { onElementChange: undefined } });
     const { softDismissProps, ...softDismissReturn } = useSoftDismiss<any>({
         softDismiss: {
             ...softDismiss,
@@ -188,8 +186,8 @@ export function useFocusSentinel<E extends Element>({ focusSentinel: { open, onC
     return {
         useSentinelProps: function (p: h.JSX.HTMLAttributes<E>): h.JSX.HTMLAttributes<E> {
             overwriteWithWarning("useFocusSentinel", p, "tabIndex", 0)
-            return useMergedProps<E>({ 
-                onFocus, 
+            return useMergedProps<E>({
+                onFocus,
                 onClick
             }, p);
         }

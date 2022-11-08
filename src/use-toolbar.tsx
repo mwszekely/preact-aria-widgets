@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { useCompleteListNavigation, UseCompleteListNavigationChildParameters, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseListNavigationSingleSelectionChildInfo, UseListNavigationChildReturnType } from "preact-prop-helpers";
+import { useCompleteListNavigation, UseCompleteListNavigationChildParameters, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseListNavigationSingleSelectionChildInfo, UseListNavigationChildReturnType, useCompleteListNavigationChild } from "preact-prop-helpers";
 
 
 
@@ -7,7 +7,7 @@ import { useCompleteListNavigation, UseCompleteListNavigationChildParameters, Us
 export interface UseToolbarParameters<ContainerElement extends Element, ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends UseCompleteListNavigationParameters<ContainerElement, ChildElement, M> {
     toolbarParameters: {
         orientation: "horizontal" | "vertical";
-    
+
         // Should be "toolbar" for toolbars, null if someone else takes care of the role, and whatever string is applicable otherwise
         role: string | null;
     };
@@ -49,18 +49,18 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
     typeaheadNavigationParameters,
     toolbarParameters: { orientation, role }
 }: UseToolbarParameters<ContainerElement, ChildElement, UseToolbarSubInfo<ChildElement>>): UseToolbarReturnType<ContainerElement, ChildElement> {
-    type M =  UseToolbarSubInfo<ChildElement>;
+    type M = UseToolbarSubInfo<ChildElement>;
     const {
-       childrenHaveFocusReturn,
-       context,
-       linearNavigationReturn,
-       managedChildrenReturn,
-       props,
-       rearrangeableChildrenReturn,
-       rovingTabIndexReturn,
-       singleSelectionReturn,
-       sortableChildrenReturn,
-       typeaheadNavigationReturn,
+        childrenHaveFocusReturn,
+        context,
+        linearNavigationReturn,
+        managedChildrenReturn,
+        props,
+        rearrangeableChildrenReturn,
+        rovingTabIndexReturn,
+        singleSelectionReturn,
+        sortableChildrenReturn,
+        typeaheadNavigationReturn,
         ..._void
     } = useCompleteListNavigation<ContainerElement, ChildElement, M>({
         linearNavigationParameters: { ...linearNavigationParameters, navigationDirection: orientation },
@@ -89,23 +89,41 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
 
 
 export function useToolbarChild<ChildElement extends Element>({
-    refElementReturn,
-    listNavigationChildParameters,
+    childrenHaveFocusChildContext,
+    completeListNavigationChildParameters,
+    managedChildContext,
     managedChildParameters,
-    rovingTabIndexChildParameters,
-    subInfo,
-    ..._void
-}: UseToolbarChildParameters<ChildElement>) {
-    const { rovingTabIndexChildReturn, hasCurrentFocusParameters } = useListNavigationChild({
-        listNavigationChildParameters,
+    pressParameters,
+    rovingTabIndexChildContext,
+    singleSelectionChildParameters,
+    singleSelectionContext,
+    typeaheadNavigationChildContext,
+    typeaheadNavigationChildParameters
+}: UseToolbarChildParameters<ChildElement, UseToolbarSubInfo<ChildElement>>) {
+    const { 
+        hasCurrentFocusReturn,
+        pressReturn,
+        props,
+        rovingTabIndexChildReturn,
+        singleSelectionChildReturn
+    } = useCompleteListNavigationChild<ChildElement, UseToolbarSubInfo<ChildElement>>({
         managedChildParameters,
-        rovingTabIndexChildParameters,
-        refElementReturn,
-        subInfo: { subInfo }
+        childrenHaveFocusChildContext,
+        completeListNavigationChildParameters,
+        managedChildContext,
+        pressParameters,
+        rovingTabIndexChildContext,
+        singleSelectionChildParameters,
+        singleSelectionContext,
+        typeaheadNavigationChildContext,
+        typeaheadNavigationChildParameters,
     });
 
     return {
-        hasCurrentFocusParameters,
-        rovingTabIndexChildReturn
+        hasCurrentFocusReturn,
+        pressReturn,
+        props,
+        rovingTabIndexChildReturn,
+        singleSelectionChildReturn
     }
 }
