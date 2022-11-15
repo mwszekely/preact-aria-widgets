@@ -1,3 +1,4 @@
+import { h } from "preact";
 import { ForwardFn, forwardRef, memo } from "preact/compat";
 
 export function memoForwardRef<T extends ForwardFn<any, any>>(fn: T): T {

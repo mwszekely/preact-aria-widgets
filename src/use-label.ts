@@ -1,8 +1,8 @@
 import { h } from "preact";
-import { useEnsureStability, usePress, UsePressReturnType, useRandomId, UseRandomIdParameters, UseRandomIdParametersOmits, UseRandomIdReferencerElementParameters, UseRandomIdReferencerElementParametersOmits, UseRandomIdReferencerElementReturn, UseRandomIdReturnTypeInfo, UseRandomIdSourceElementReturn, UseRefElementReturnType } from "preact-prop-helpers";
+import { useEnsureStability, useMergedProps, usePress, UsePressReturnType, useRandomDualIds, UseRandomDualIdsParameters, UseRandomDualIdsReturnType, UseRefElementReturnType } from "preact-prop-helpers";
 import { useCallback, useEffect } from "preact/hooks";
 import { DisabledType, ElementToTag } from "./props";
-
+/*
 interface UseLabelGenericParameters<InputElement extends Element, LabelElement extends Element, RIPOmits extends UseRandomIdParametersOmits, RIREPOmits extends UseRandomIdReferencerElementParametersOmits> {
     randomIdInputParameters: UseRandomIdParameters<RIPOmits>["randomIdParameters"];
     randomIdLabelParameters: UseRandomIdParameters<RIPOmits>["randomIdParameters"];
@@ -39,7 +39,7 @@ interface UseLabelGenericLabelReturnType<_InputElement extends Element, LabelEle
     randomIdReferencerReturnLabel: {
         propsStable: h.JSX.HTMLAttributes<LabelElement>;
     };
-}
+}*/
 
 /**
  * Adds an ID and "aria-labelledby" for two elements, an "input" element and a "label" element.
@@ -48,7 +48,7 @@ interface UseLabelGenericLabelReturnType<_InputElement extends Element, LabelEle
  * 
  * @see useInputLabel
  */
-export function useLabelGeneric<InputElement extends Element, LabelElement extends Element>({
+/*export function useLabelGeneric<InputElement extends Element, LabelElement extends Element>({
     randomIdInputParameters,
     randomIdLabelParameters,
     randomIdReferencerElementInputParameters,
@@ -74,12 +74,15 @@ export function useLabelGeneric<InputElement extends Element, LabelElement exten
         randomIdInputReturn,
         randomIdLabelReturn
     }
-}
+}*/
 
 
 
 
-export interface UseLabelParameters<InputElement extends Element, LabelElement extends Element, RIPOmits extends UseRandomIdParametersOmits> extends UseLabelGenericParameters<InputElement, LabelElement, RIPOmits, "referencerProp"> {
+export interface UseLabelParameters<InputElement extends Element, LabelElement extends Element> {
+    randomIdInputParameters: Omit<UseRandomDualIdsParameters["randomIdInputParameters"], "referencerProp">;
+    randomIdLabelParameters: Omit<UseRandomDualIdsParameters["randomIdLabelParameters"], "referencerProp">;
+
     labelParameters: {
         tagInput: ElementToTag<InputElement>;
         tagLabel: ElementToTag<LabelElement>;
@@ -100,17 +103,17 @@ export interface UseLabelParameters<InputElement extends Element, LabelElement e
     }
 }
 
-export interface UseLabelReturnType<InputElement extends Element, LabelElement extends Element> extends UseLabelGenericReturnType<InputElement, LabelElement> {
-    labelInputReturn: { unstableProps: h.JSX.HTMLAttributes<InputElement> }
+export interface UseLabelReturnType<InputElement extends Element, LabelElement extends Element> extends UseRandomDualIdsReturnType<InputElement, LabelElement> {
+    //labelInputReturn: { unstableProps: h.JSX.HTMLAttributes<InputElement> }
 }
 
-export interface UseLabelLabelParameters<_InputElement extends Element, LabelElement extends Element> extends UseLabelGenericLabelParameters<_InputElement, LabelElement> { }
-export interface UseLabelInputParameters<_InputElement extends Element, LabelElement extends Element> extends UseLabelGenericInputParameters<_InputElement, LabelElement> { }
+/*export interface UseLabelLabelParameters<_InputElement extends Element, LabelElement extends Element> extends UseLabelGenericLabelParameters<_InputElement, LabelElement> { }
+export interface UseLabelInputParameters<_InputElement extends Element, LabelElement extends Element> extends UseLabelGenericInputParameters<_InputElement, LabelElement> { }*/
 
 /*export interface UseLabelInputParameters<InputElement extends Element, _LabelElement extends Element> {
     //randomIdReferencerParameters: Omit<UseRandomIdReferencerElementParameters<InputElement>["randomIdReferencerParameters"], "referencerProp">
 }*/
-
+/*
 export interface UseLabelInputReturnType<InputElement extends Element, LabelElement extends Element> extends UseLabelGenericInputReturnType<InputElement, LabelElement> {
     randomIdSourceReturnInput: {
         propsStable: h.JSX.HTMLAttributes<InputElement>;
@@ -127,15 +130,13 @@ export interface UseLabelLabelReturnType<InputElement extends Element, LabelElem
     randomIdReferencerReturnLabel: {
         propsStable: h.JSX.HTMLAttributes<LabelElement>;
     };
-}
+}*/
 
 export function useLabel<InputElement extends Element, LabelElement extends Element>({
     randomIdInputParameters,
     randomIdLabelParameters,
-    randomIdReferencerElementInputParameters,
-    randomIdReferencerElementLabelParameters,
     labelParameters: { tagInput, tagLabel, ariaLabel, labelPosition }
-}: UseLabelParameters<InputElement, LabelElement, never>): UseLabelReturnType<InputElement, LabelElement> {
+}: UseLabelParameters<InputElement, LabelElement>): UseLabelReturnType<InputElement, LabelElement> {
     useEnsureStability("useLabel", tagInput, tagLabel, labelPosition);
     const synthetic = !(tagInput == "input" && tagLabel == "label");
 
@@ -151,27 +152,23 @@ export function useLabel<InputElement extends Element, LabelElement extends Elem
     let _comment: any;
 
     const {
+        propsInput,
+        propsLabel,
         randomIdInputReturn,
-        randomIdLabelReturn,
-        randomIdReferencerInputReturn,
-        randomIdReferencerLabelReturn,
-        randomIdSourceInputReturn,
-        randomIdSourceLabelReturn
-    } = useLabelGeneric<InputElement, LabelElement>({
-        randomIdInputParameters,
-        randomIdLabelParameters,
-        randomIdReferencerElementInputParameters: { ...randomIdReferencerElementInputParameters, referencerProp: synthetic? "aria-labelledby" : null },
-        randomIdReferencerElementLabelParameters: { ...randomIdReferencerElementLabelParameters, referencerProp: !synthetic && labelPosition === "separate"? "for" : null },
+        randomIdLabelReturn
+    } = useRandomDualIds<InputElement, LabelElement>({
+        randomIdInputParameters: { ...randomIdInputParameters, referencerProp: synthetic? "aria-labelledby" : null },
+        randomIdLabelParameters: { ...randomIdLabelParameters, referencerProp: !synthetic && labelPosition === "separate"? "for" : null },
+        /*randomIdReferencerElementInputParameters: { ...randomIdReferencerElementInputParameters, referencerProp: synthetic? "aria-labelledby" : null },
+        randomIdReferencerElementLabelParameters: { ...randomIdReferencerElementLabelParameters, referencerProp: !synthetic && labelPosition === "separate"? "for" : null },*/
     });
 
     return {
+        propsInput,
+        propsLabel,
         randomIdInputReturn,
         randomIdLabelReturn,
-        randomIdReferencerInputReturn,
-        randomIdReferencerLabelReturn,
-        randomIdSourceInputReturn,
-        randomIdSourceLabelReturn,
-        labelInputReturn: { unstableProps: { ["aria-label"]: labelPosition == "none" ? ariaLabel! : undefined } }
+        //labelInputReturn: { unstableProps: { ["aria-label"]: labelPosition == "none" ? ariaLabel! : undefined } }
     }
 }
 
@@ -184,26 +181,27 @@ function preventDefault(e: Event) {
 export type CheckboxCheckedType = boolean | "mixed";
 //export type LabelPosition = "wrapping" | "separate" | "dual" | "none";
 
-interface CLP {
-    /**
-     * Where the label element is positioned relative to the input element.
-     * * `wrapping`: The label wraps the input and no `id` or `for` props are needed, as in `<label><input /> label content</label>`
-     * * `separate`: The label and input are in separate branches, as in `<input /><label>label content</label>`
-     * * `dual`: One element serves in both roles at once, as in `<div role="checkbox">label content</div> `
-     * * `none`: There is no visible label element, as in `<input aria-label="label content" />`
-     * 
-     * In combination with `tagInput` and `tagLabel`, `labelPosition` determines which element receives which props and event handlers.
-     */
-    //labelPosition: LabelPosition;
-    /** The role attribute to use, when applicable */
-    role: string;
-    disabled: DisabledType;
-    checked: CheckboxCheckedType;
-    onInput(event: Event): void;
-}
 
-export interface UseCheckboxLikeParameters<InputType extends Element, LabelType extends Element, CLPOmits extends keyof CLP, RIPOmits extends UseRandomIdParametersOmits> extends UseLabelParameters<InputType, LabelType, RIPOmits> {
-    checkboxLikeParameters: Omit<CLP, CLPOmits>;
+
+export interface UseCheckboxLikeParameters<InputType extends Element, LabelType extends Element> extends UseLabelParameters<InputType, LabelType> {
+    checkboxLikeParameters:{
+        /**
+         * Where the label element is positioned relative to the input element.
+         * * `wrapping`: The label wraps the input and no `id` or `for` props are needed, as in `<label><input /> label content</label>`
+         * * `separate`: The label and input are in separate branches, as in `<input /><label>label content</label>`
+         * * `dual`: One element serves in both roles at once, as in `<div role="checkbox">label content</div> `
+         * * `none`: There is no visible label element, as in `<input aria-label="label content" />`
+         * 
+         * In combination with `tagInput` and `tagLabel`, `labelPosition` determines which element receives which props and event handlers.
+         */
+        //labelPosition: LabelPosition;
+        /** The role attribute to use, when applicable */
+        role: string;
+        disabled: DisabledType;
+        checked: CheckboxCheckedType;
+        onInput(event: Event): void;
+    };
+
     refElementLabelReturn: Required<Pick<UseRefElementReturnType<LabelType>["refElementReturn"], "getElement">>;
     refElementInputReturn: Required<Pick<UseRefElementReturnType<InputType>["refElementReturn"], "getElement">>;
 }
@@ -229,12 +227,10 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
     labelParameters,
     randomIdInputParameters,
     randomIdLabelParameters,
-    randomIdReferencerElementInputParameters,
-    randomIdReferencerElementLabelParameters,
     checkboxLikeParameters: { checked, disabled, onInput: onInputSync, role },
     refElementInputReturn,
     refElementLabelReturn,
-}: UseCheckboxLikeParameters<InputType, LabelType, never, never>): UseCheckboxLikeReturnType<InputType, LabelType> {
+}: UseCheckboxLikeParameters<InputType, LabelType>): UseCheckboxLikeReturnType<InputType, LabelType> {
     
     const { getElement: getInputElement } = refElementInputReturn;
     const { getElement: getLabelElement } = refElementLabelReturn;
@@ -256,17 +252,12 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
     const {
         randomIdInputReturn,
         randomIdLabelReturn,
-        randomIdReferencerInputReturn,
-        randomIdReferencerLabelReturn,
-        randomIdSourceInputReturn,
-        randomIdSourceLabelReturn,
-        labelInputReturn
+        propsInput,
+        propsLabel
     } = useLabel<InputType, LabelType>({
         labelParameters,
         randomIdInputParameters,
         randomIdLabelParameters,
-        randomIdReferencerElementInputParameters,
-        randomIdReferencerElementLabelParameters,
     });
     const { getElement: getInput } = refElementInputReturn;
     const { getElement: getLabel } = refElementLabelReturn;
@@ -343,15 +334,12 @@ export function useCheckboxLike<InputType extends Element, LabelType extends Ele
     return {
         randomIdInputReturn,
         randomIdLabelReturn,
-        randomIdReferencerInputReturn,
-        randomIdReferencerLabelReturn,
-        randomIdSourceInputReturn,
-        randomIdSourceLabelReturn,
         pressInputReturn,
         pressLabelReturn,
-        labelInputReturn,
         checkboxLikeInputReturn: { propsUnstable: propsUnstableInput },
         checkboxLikeLabelReturn: { propsUnstable: propsUnstableLabel },
+        propsInput: useMergedProps(propsInput, propsUnstableInput),
+        propsLabel: useMergedProps(propsLabel, propsUnstableLabel)
     }
 }
 

@@ -1,15 +1,15 @@
 import { h } from "preact";
-import { useListNavigationSingleSelection, UseListNavigationSingleSelectionChildParameters, UseListNavigationSingleSelectionChildReturnTypeInfo, UseListNavigationSingleSelectionParameters, UseListNavigationSingleSelectionReturnTypeInfo, useMergedProps, useRefElement, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
+import { UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useListNavigationSingleSelection, UseListNavigationSingleSelectionChildParameters, UseListNavigationSingleSelectionParameters, UseListNavigationSingleSelectionSortableChildInfo, useMergedProps, useRefElement, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
 import { UseChildrenHaveFocusParameters, UseHasFocusParameters } from "preact-prop-helpers/use-has-focus";
 import { useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
 import { debugLog, ElementToTag, EnhancedEvent, enhanceEvent, TagSensitiveProps } from "./props";
-import { useCheckboxLike, UseCheckboxLikeReturnTypeInfo, useLabel } from "./use-label";
+import { useCheckboxLike, useLabel } from "./use-label";
 
 //type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RadioChangeEvent<E extends EventTarget, V extends number | string> = EnhancedEvent<E, Event, { selectedValue: V | undefined }>;
 
-export interface UseRadioGroupParameters<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, InputElement extends Element, C, K extends string> extends UseListNavigationSingleSelectionParameters<InputElement, RadioSubInfo<V, C>, K, "selectedIndex" | "setSelectedIndex", never, never, never, never, never> {
-    radioGroup: {
+export interface UseRadioGroupParameters<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, InputElement extends Element> extends UseCompleteListNavigationParameters<GroupElement, InputElement, RadioSubInfo<InputElement, V>> {
+    radioGroupParameters: {
         name: string;
 
         selectedValue: V | null;
@@ -22,8 +22,8 @@ export interface UseRadioGroupParameters<V extends string | number, GroupElement
 
 
 
-export interface UseRadioParameters<V extends string | number, I extends Element, IL extends Element, C, K extends string> extends UseListNavigationSingleSelectionChildParameters<I, RadioSubInfo<V, C>, K, "ariaPropName",never, never, never, C> {
-    radio: {
+export interface UseRadioParameters<TabbableChildElement extends Element, V extends string | number, I extends Element, IL extends Element> extends UseListNavigationSingleSelectionChildParameters<TabbableChildElement> {
+    radioParameters: {
         labelPosition: "wrapping" | "separate";
         value: V;
         disabled: boolean;
@@ -34,34 +34,32 @@ export interface UseRadioParameters<V extends string | number, I extends Element
     //hasFocusLabel: UseHasFocusParameters<IL>;
 }
 
-export interface UseRadioGroupReturnTypeInfo<V extends string | number, InputElement extends Element, C, K extends string> extends UseListNavigationSingleSelectionReturnTypeInfo<InputElement, RadioSubInfo<V, C>, K> {
-    radioGroup: {
+export interface UseRadioGroupReturnType<GroupElement extends Element, TabbableChildElement extends Element, V extends string | number> extends UseCompleteListNavigationReturnType<GroupElement, TabbableChildElement, RadioSubInfo<TabbableChildElement, V>> {
+    radioGroupReturn: {
         selectedIndex: number | null;
         selectedValue: V | null;
     }
 }
-
+/*
 export interface UseRadioGroupReturnTypeWithHooks<V extends string | number, G extends Element, GL extends Element, I extends Element, IL extends HTMLElement, C, K extends string> extends UseRadioGroupReturnTypeInfo<V, I, C, K> {
     useRadioGroupLabelProps: (props: h.JSX.HTMLAttributes<GL>) => h.JSX.HTMLAttributes<GL>;
     useRadioGroupProps: (props: h.JSX.HTMLAttributes<G>) => h.JSX.HTMLAttributes<G>;
     useRadio: UseRadio<V, I, IL, C, K>;
-}
+}*/
 
-interface RadioSubInfo<V extends string | number, C> {
+interface RadioSubInfo<TabbableChildElement extends Element, V extends string | number> extends UseListNavigationSingleSelectionSortableChildInfo<TabbableChildElement> {
     getValue(): V;
-    subInfo: C;
 }
 
 export function useRadioGroup<V extends string | number, G extends Element, GL extends Element, I extends Element, IL extends HTMLElement, UC, K extends string>({
-    linearNavigation,
-    listNavigation,
-    managedChildren,
-    radioGroup: { name, onSelectedValueChange, selectedValue, tagGroup, tagGroupLabel },
-    rovingTabIndex,
-    typeaheadNavigation,
-    childrenHaveFocus,
-    singleSelection: { selectionMode }
-}: UseRadioGroupParameters<V, G, GL, I, UC, K>): UseRadioGroupReturnTypeWithHooks<V, G, GL, I, IL, UC, K> {
+    linearNavigationParameters,
+    rearrangeableChildrenParameters,
+    rovingTabIndexParameters,
+    sortableChildrenParameters,
+    typeaheadNavigationParameters,
+    radioGroupParameters: { name, onSelectedValueChange, selectedValue, tagGroup, tagGroupLabel },
+    singleSelectionParameters: { selectionMode }
+}: UseRadioGroupParameters<V, G, GL, I>): UseRadioGroupReturnType<G, I, V> {
 
     debugLog("useRadioGroup", selectedValue);
     const { getElement: _getRadioGroupParentElement, useProps: useRefElementProps } = useRefElement<G>({});

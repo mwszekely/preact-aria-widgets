@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { useCompleteListNavigation, UseCompleteListNavigationChildParameters, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseListNavigationSingleSelectionChildInfo, UseListNavigationChildReturnType, useCompleteListNavigationChild } from "preact-prop-helpers";
+import { useCompleteListNavigation, UseCompleteListNavigationChildParameters, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseListNavigationSingleSelectionChildInfo, UseListNavigationChildReturnType, useCompleteListNavigationChild, CompleteListNavigationContext, UseCompleteListNavigationChildReturnType } from "preact-prop-helpers";
 
 
 
@@ -13,7 +13,7 @@ export interface UseToolbarParameters<ContainerElement extends Element, ChildEle
     };
 }
 
-export interface UseToolbarReturnType<ContainerElement extends Element, ChildElement extends Element> extends UseCompleteListNavigationReturnType<ContainerElement, ChildElement, UseToolbarSubInfo<ChildElement>> {
+export interface UseToolbarReturnType<ContainerElement extends Element, ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends UseCompleteListNavigationReturnType<ContainerElement, ChildElement, M> {
     toolbarReturn: { propsUnstable: h.JSX.HTMLAttributes<ContainerElement> };
 }
 
@@ -21,10 +21,12 @@ export interface UseToolbarSubInfo<ChildElement extends Element> extends UseList
 
 }
 
+export type UseToolbarContext<ContainerElement extends Element, ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> = CompleteListNavigationContext<ContainerElement, ChildElement, M>;
+
 
 //export type UseToolbarChild<ChildElement extends Element, C, K extends string> = (i: UseToolbarChildParameters<ChildElement, C, K, C>) => UseToolbarChildReturnTypeWithHooks<ChildElement>;
 export interface UseToolbarChildParameters<E extends Element, M extends UseToolbarSubInfo<E>> extends UseCompleteListNavigationChildParameters<E, M> { }
-export interface UseToolbarChildReturnTypeInfo<ChildElement extends Element> extends UseListNavigationChildReturnType<ChildElement> { }
+export interface UseToolbarChildReturnTypeInfo<ChildElement extends Element> extends UseCompleteListNavigationChildReturnType<ChildElement> { }
 export interface UseToolbarChildReturnTypeWithHooks<ChildElement extends Element> extends UseToolbarChildReturnTypeInfo<ChildElement> {
 }
 
@@ -40,90 +42,34 @@ export interface UseToolbarChildReturnTypeWithHooks<ChildElement extends Element
  * @param param0 
  * @returns 
  */
-export function useToolbar<ContainerElement extends Element, ChildElement extends Element>({
+export function useToolbar<ContainerElement extends Element, ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>>({
     linearNavigationParameters,
-    rearrangeableChildrenParameters,
-    singleSelectionParameters,
-    sortableChildrenParameters,
-    rovingTabIndexParameters,
-    typeaheadNavigationParameters,
-    toolbarParameters: { orientation, role }
-}: UseToolbarParameters<ContainerElement, ChildElement, UseToolbarSubInfo<ChildElement>>): UseToolbarReturnType<ContainerElement, ChildElement> {
-    type M = UseToolbarSubInfo<ChildElement>;
+    toolbarParameters: { orientation, role },
+    ...listNavParameters
+}: UseToolbarParameters<ContainerElement, ChildElement, M>): UseToolbarReturnType<ContainerElement, ChildElement, M> {
     const {
-        childrenHaveFocusReturn,
         context,
-        linearNavigationReturn,
-        managedChildrenReturn,
         props,
-        rearrangeableChildrenReturn,
-        rovingTabIndexReturn,
-        singleSelectionReturn,
-        sortableChildrenReturn,
-        typeaheadNavigationReturn,
-        ..._void
+        
+        ...listNavReturn
     } = useCompleteListNavigation<ContainerElement, ChildElement, M>({
+        ...listNavParameters,
         linearNavigationParameters: { ...linearNavigationParameters, navigationDirection: orientation },
-        rearrangeableChildrenParameters,
-        singleSelectionParameters,
-        sortableChildrenParameters,
-        rovingTabIndexParameters,
-        typeaheadNavigationParameters
     });
 
     return {
         toolbarReturn: { propsUnstable: { role: role ?? undefined } },
         context,
-        childrenHaveFocusReturn,
         props,
-        rearrangeableChildrenReturn,
-        singleSelectionReturn,
-        sortableChildrenReturn,
-        linearNavigationReturn,
-        //listNavigationReturn,
-        managedChildrenReturn,
-        rovingTabIndexReturn,
-        typeaheadNavigationReturn
+        ...listNavReturn
     }
 }
 
 
 export function useToolbarChild<ChildElement extends Element>({
-    childrenHaveFocusChildContext,
-    completeListNavigationChildParameters,
-    managedChildContext,
-    managedChildParameters,
-    pressParameters,
-    rovingTabIndexChildContext,
-    singleSelectionChildParameters,
-    singleSelectionContext,
-    typeaheadNavigationChildContext,
-    typeaheadNavigationChildParameters
-}: UseToolbarChildParameters<ChildElement, UseToolbarSubInfo<ChildElement>>) {
-    const { 
-        hasCurrentFocusReturn,
-        pressReturn,
-        props,
-        rovingTabIndexChildReturn,
-        singleSelectionChildReturn
-    } = useCompleteListNavigationChild<ChildElement, UseToolbarSubInfo<ChildElement>>({
-        managedChildParameters,
-        childrenHaveFocusChildContext,
-        completeListNavigationChildParameters,
-        managedChildContext,
-        pressParameters,
-        rovingTabIndexChildContext,
-        singleSelectionChildParameters,
-        singleSelectionContext,
-        typeaheadNavigationChildContext,
-        typeaheadNavigationChildParameters,
+    ...listNavChildParameters
+}: UseToolbarChildParameters<ChildElement, UseToolbarSubInfo<ChildElement>>): UseToolbarChildReturnTypeInfo<ChildElement> {
+    return useCompleteListNavigationChild<ChildElement, UseToolbarSubInfo<ChildElement>>({
+        ...listNavChildParameters
     });
-
-    return {
-        hasCurrentFocusReturn,
-        pressReturn,
-        props,
-        rovingTabIndexChildReturn,
-        singleSelectionChildReturn
-    }
 }

@@ -1,142 +1,170 @@
 import { h } from "preact";
-import { useAsyncHandler, UseAsyncHandlerParameters, UseAsyncHandlerReturnType, UseManagedChildParameters, useManagedChildren, UseManagedChildrenParameters, UseManagedChildrenReturnTypeInfo, useMergedProps, useState } from "preact-prop-helpers";
+import { ManagedChildInfo, useAsyncHandler, UseAsyncHandlerParameters, UseAsyncHandlerReturnType, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenParameters, UseManagedChildrenReturnType, useMergedProps, useState } from "preact-prop-helpers";
 import { StateUpdater, useCallback, useEffect } from "preact/hooks";
 import { ElementToTag } from "./props";
-import { useLabel, UseLabelReturnTypeInfo } from "./use-label";
+import { useLabel, UseLabelParameters, UseLabelReturnType } from "./use-label";
 
 type T = "indicator" | "region" | "label";
 
-export interface UseProgressParameters<IndicatorElement extends Element, LabelElement extends Element> extends UseManagedChildrenParameters<T, never> {
-    progress: {
+export interface UseProgressParameters<IndicatorElement extends Element, LabelElement extends Element> extends UseManagedChildrenParameters<ProgressSubInfo>, Omit<UseLabelParameters<IndicatorElement, LabelElement>, "randomIdLabelParameters" | "randomIdInputParameters"> {
+    /*progressParameters: {
         tagProgress: ElementToTag<IndicatorElement>;
         tagLabel: ElementToTag<LabelElement>;
-    }
+    }*/
 }
 
-interface PSI_Base<C> {
-    subInfo: C
+interface PSI_Base extends ManagedChildInfo<T> {
 }
 
-interface PSI_I<C> extends PSI_Base<C> {
-    type: "indicator";
+interface PSI_I extends PSI_Base {
+    index: "indicator";
 }
 
-interface PSI_R<C> extends PSI_Base<C> {
-    type: "region";
+interface PSI_R extends PSI_Base {
+    index: "region";
     setBusy: StateUpdater<boolean>;
 }
 
 
-interface PSI_L<C> extends PSI_Base<C> {
-    type: "label";
+interface PSI_L extends PSI_Base {
+    index: "label";
     setHidden: StateUpdater<boolean>;
 }
 
-export type ProgressSubInfo<C> = (PSI_I<C> | PSI_R<C> | PSI_L<C>);
+export type ProgressSubInfo = (PSI_I | PSI_R | PSI_L);
 
-export interface UseProgressIndicatorParameters<C, K extends string, SubbestInfo> extends UseManagedChildParameters<"indicator", ProgressSubInfo<C>, K, "index", SubbestInfo> {
-    progress: {
+export interface UseProgressIndicatorParameters extends Omit<UseManagedChildParameters<PSI_I>, "managedChildParameters"> {
+    managedChildParameters: Omit<UseManagedChildParameters<PSI_I>["managedChildParameters"], "index">;
+    progressIndicatorParameters: {
         max: number;
         value: number | "indeterminate" | "disabled";
         valueText: string;
     }
 }
-export interface UseProgressLabelParameters<C, K extends string, SubbestInfo> extends UseManagedChildParameters<"label", ProgressSubInfo<C>, K, "index", SubbestInfo> { }
-export interface UseProgressRegionParameters<C, K extends string, SubbestInfo> extends UseManagedChildParameters<"region", ProgressSubInfo<C>, K, "index", SubbestInfo> { }
+export interface UseProgressLabelParameters extends UseManagedChildParameters<PSI_L> { }
+export interface UseProgressRegionParameters extends UseManagedChildParameters<PSI_R> { }
 
-export interface UseProgressReturnTypeInfo<C, K extends string> extends UseManagedChildrenReturnTypeInfo<T, ProgressSubInfo<C>, K>, UseLabelReturnTypeInfo {
+export interface UseProgressReturnType<ProgressElement extends Element, ProgressLabelElement extends Element> extends UseManagedChildrenReturnType<ProgressSubInfo>, UseLabelReturnType<ProgressElement, ProgressLabelElement> {
 
 }
 
-export interface UseProgressReturnTypeInfoWithHooks<I extends Element, L extends Element, C, K extends string> extends UseProgressReturnTypeInfo<C, K> {
+/*export interface UseProgressReturnTypeInfoWithHooks<I extends Element, L extends Element, C, K extends string> extends UseProgressReturnTypeInfo<C, K> {
     useProgressIndicator: UseProgressIndicator<I, C, K>;
     useProgressLabel: UseProgressLabel<L, C, K>;
     useProgressRegion: UseProgressRegion<any, C, K>;
-}
+}*/
 
-export type UseProgressIndicator<I extends Element, C, K extends string> = (a: UseProgressIndicatorParameters<C, K, C>) => { progress: { busy: boolean; }; useProgressIndicatorProps: (props: h.JSX.HTMLAttributes<I>) => h.JSX.HTMLAttributes<I> };
-export type UseProgressRegion<R extends Element, C, K extends string> = (a: UseProgressRegionParameters<C, K, C>) => { progress: { busy: boolean; }; useProgressRegionProps: (props: h.JSX.HTMLAttributes<R>) => h.JSX.HTMLAttributes<R> };
-export type UseProgressLabel<L extends Element, C, K extends string> = (a: UseProgressLabelParameters<C, K, C>) => { progress: { busy: boolean; }; useProgressLabelProps: (props: h.JSX.HTMLAttributes<L>) => h.JSX.HTMLAttributes<L> };
+export type UseProgressIndicator<I extends Element> = (a: UseProgressIndicatorParameters) => { progress: { busy: boolean; }; useProgressIndicatorProps: (props: h.JSX.HTMLAttributes<I>) => h.JSX.HTMLAttributes<I> };
+export type UseProgressRegion<R extends Element> = (a: UseProgressRegionParameters) => { progress: { busy: boolean; }; useProgressRegionProps: (props: h.JSX.HTMLAttributes<R>) => h.JSX.HTMLAttributes<R> };
+export type UseProgressLabel<L extends Element> = (a: UseProgressLabelParameters) => { progress: { busy: boolean; }; useProgressLabelProps: (props: h.JSX.HTMLAttributes<L>) => h.JSX.HTMLAttributes<L> };
 
-export function useProgress<ProgressElement extends Element, LabelElement extends Element, C, K extends string>({ managedChildren, progress: { tagProgress: tag, tagLabel } }: UseProgressParameters<ProgressElement, LabelElement>): UseProgressReturnTypeInfoWithHooks<ProgressElement, LabelElement, C, K> {
+export function useProgress<ProgressElement extends Element, LabelElement extends Element>({
+    managedChildrenParameters,
+    labelParameters,
+}: UseProgressParameters<ProgressElement, LabelElement>): UseProgressReturnType<ProgressElement, LabelElement> {
 
-    const { useLabelInput, useLabelLabel, ...labelInfo } = useLabel({ label: { prefixInput: "progress-indicator", prefixLabel: "progress-label-", tagInput: tag, tagLabel } })
-    const { useManagedChild, ...mcInfo } = useManagedChildren<T, ProgressSubInfo<C>, K>({
-        managedChildren
+    const {
+        propsInput,
+        propsLabel,
+        randomIdInputReturn,
+        randomIdLabelReturn
+    } = useLabel({
+        labelParameters,
+        randomIdInputParameters: { prefix: "progress-indicator-" },
+        randomIdLabelParameters: { prefix: "progress-label-" }
+    })
+    const {
+        managedChildContext,
+        managedChildrenReturn
+    } = useManagedChildren<ProgressSubInfo>({
+        managedChildrenParameters
     });
 
-    const { managedChildren: { children } } = mcInfo;
-
-    const useProgressIndicator = useCallback(({ managedChild, subInfo, progress: { max, value, valueText } }: UseProgressIndicatorParameters<C, K, C>) => {
-        const _: void = useManagedChild({ managedChild: { index: "indicator", ...managedChild }, subInfo: { type: "indicator", subInfo } });
-
-        const busy = (!!value);
-        useEffect(() => {
-            const region = children.getAt("region");
-            const label = children.getAt("label");
-            if (region && region.subInfo.type == "region") {
-                region.subInfo.setBusy(busy);
-            }
-            if (label && label.subInfo.type == "label") {
-                label.subInfo.setHidden(busy);
-            }
-        }, [busy]);
-        const { useLabelInputProps } = useLabelInput();
-        return {
-            progress: { busy },
-            useProgressIndicatorProps: ({ "aria-valuemax": ariaValueMax, "aria-valuenow": ariaValueNow, "aria-valuetext": ariaValueText, role, ...p }: h.JSX.HTMLAttributes<ProgressElement>) => {
-                if (value == "disabled") {
-                    p["aria-hidden"] = "true";
-                }
-                if (typeof value != "number") {
-                    value = null!;
-                    max ??= 100;
-                }
-                const extraProps: h.JSX.HTMLAttributes<ProgressElement> = tag === "progress" ?
-                    {
-                        max,
-                        value: (value ?? undefined),
-                        "aria-valuemin": "0",
-                        "aria-valuenow": value == null ? undefined : `${value}`,
-                    } as h.JSX.HTMLAttributes<HTMLProgressElement> as any as h.JSX.HTMLAttributes<ProgressElement>
-                    :
-                    {
-                        "aria-valuemin": "0",
-                        "aria-valuemax": max == null ? undefined : `${max}`,
-                        "aria-valuetext": valueText == null ? undefined : `${valueText}`,
-                        "aria-valuenow": value == null ? undefined : `${value}`,
-                        role: "progressbar"
-                    };
-
-
-                return useLabelInputProps(useMergedProps<ProgressElement>(p, extraProps));
-
-            }
-        }
-
-    }, [useLabelInput]);
-
-    const useProgressLabel = useCallback(({ managedChild, subInfo }: UseProgressLabelParameters<C, K, C>) => {
-        const [hidden, setHidden] = useState(false);
-        const _: void = useManagedChild({ managedChild: { index: "label", ...managedChild }, subInfo: { type: "label", setHidden, subInfo } });
-        const { useLabelLabelProps } = useLabelLabel();
-        return { progress: { busy: !hidden }, useProgressLabelProps: (props: h.JSX.HTMLAttributes<LabelElement>) => useLabelLabelProps(useMergedProps<LabelElement>(props, { "aria-hidden": (hidden ? "true" : undefined) })) }
-    }, [useLabelLabel]);
-
-    const useProgressRegion = useCallback(({ managedChild, subInfo }: UseProgressRegionParameters<C, K, C>) => {
-        const [busy, setBusy] = useState(false);
-        const _: void = useManagedChild({ managedChild: { index: "region", ...managedChild }, subInfo: { type: "region", setBusy, subInfo } });
-        return { progress: { busy }, useProgressRegionProps: (props: h.JSX.HTMLAttributes<any>) => { return useMergedProps(props, { "aria-busy": busy.toString() }) } }
-    }, []);
-
     return {
-        ...labelInfo,
-        ...mcInfo,
-        useProgressIndicator,
-        useProgressRegion,
-        useProgressLabel
+        propsInput,
+        propsLabel,
+        randomIdInputReturn,
+        randomIdLabelReturn,
+        managedChildContext,
+        managedChildrenReturn
     }
 }
+
+
+
+export function useProgressIndicator<ProgressElement extends Element>({ managedChildParameters, managedChildContext, progressIndicatorParameters: { max, value, valueText } }: UseProgressIndicatorParameters) {
+    const _: void = useManagedChild<PSI_I>({ managedChildParameters: { index: "indicator", ...managedChildParameters }, managedChildContext });
+
+    const busy = (!!value);
+    useEffect(() => {
+        const region = children.getAt("region");
+        const label = children.getAt("label");
+        if (region && region.subInfo.type == "region") {
+            region.subInfo.setBusy(busy);
+        }
+        if (label && label.subInfo.type == "label") {
+            label.subInfo.setHidden(busy);
+        }
+    }, [busy]);
+    const { useLabelInputProps } = useLabelInput();
+    return {
+        progress: { busy },
+        useProgressIndicatorProps: ({ "aria-valuemax": ariaValueMax, "aria-valuenow": ariaValueNow, "aria-valuetext": ariaValueText, role, ...p }: h.JSX.HTMLAttributes<ProgressElement>) => {
+            if (value == "disabled") {
+                p["aria-hidden"] = "true";
+            }
+            if (typeof value != "number") {
+                value = null!;
+                max ??= 100;
+            }
+            const extraProps: h.JSX.HTMLAttributes<ProgressElement> = tag === "progress" ?
+                {
+                    max,
+                    value: (value ?? undefined),
+                    "aria-valuemin": "0",
+                    "aria-valuenow": value == null ? undefined : `${value}`,
+                } as h.JSX.HTMLAttributes<HTMLProgressElement> as any as h.JSX.HTMLAttributes<ProgressElement>
+                :
+                {
+                    "aria-valuemin": "0",
+                    "aria-valuemax": max == null ? undefined : `${max}`,
+                    "aria-valuetext": valueText == null ? undefined : `${valueText}`,
+                    "aria-valuenow": value == null ? undefined : `${value}`,
+                    role: "progressbar"
+                };
+
+
+            return useLabelInputProps(useMergedProps<ProgressElement>(p, extraProps));
+
+        }
+    }
+
+}
+
+export function useProgressLabel({ managedChild, subInfo }: UseProgressLabelParameters<C, K, C>) {
+    const [hidden, setHidden] = useState(false);
+    const _: void = useManagedChild({ managedChild: { index: "label", ...managedChild }, subInfo: { type: "label", setHidden, subInfo } });
+    const { useLabelLabelProps } = useLabelLabel();
+    return { progress: { busy: !hidden }, useProgressLabelProps: (props: h.JSX.HTMLAttributes<LabelElement>) => useLabelLabelProps(useMergedProps<LabelElement>(props, { "aria-hidden": (hidden ? "true" : undefined) })) }
+};
+
+export function useProgressRegion({ managedChild, subInfo }: UseProgressRegionParameters<C, K, C>) {
+    const [busy, setBusy] = useState(false);
+    const _: void = useManagedChild({ managedChild: { index: "region", ...managedChild }, subInfo: { type: "region", setBusy, subInfo } });
+    return { progress: { busy }, useProgressRegionProps: (props: h.JSX.HTMLAttributes<any>) => { return useMergedProps(props, { "aria-busy": busy.toString() }) } }
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 export interface UseProgressWithHandlerParameters<IndicatorElement extends Element, LabelElement extends Element, EventType extends Event, CaptureType> extends UseProgressParameters<IndicatorElement, LabelElement> {
     asyncHandler: UseAsyncHandlerParameters<EventType, CaptureType>;
