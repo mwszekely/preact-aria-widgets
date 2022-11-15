@@ -174,8 +174,8 @@ export function useAccordionSection<HeaderElement extends HTMLElement, BodyEleme
     type M = UseAccordionSectionInfo;
 
 
-    const { randomIdReturn: bodyIdReturn, propsSource: propsBodySource, propsReferencer: propsBodyReferencer } = useRandomId<BodyElement>({ randomIdParameters: { prefix: "aria-accordion-section-body-", referencerProp: "aria-controls" } });
-    const { randomIdReturn: headIdReturn, propsSource: propsHeadSource, propsReferencer: propsHeadReferencer } = useRandomId<HeaderElement>({ randomIdParameters: { prefix: "aria-accordion-section-header-", referencerProp: "aria-labelledby" } });
+    const { randomIdReturn: _bodyIdReturn, propsSource: propsBodySource, propsReferencer: propsBodyReferencer } = useRandomId<BodyElement>({ randomIdParameters: { prefix: "aria-accordion-section-body-", referencerProp: "aria-controls" } });
+    const { randomIdReturn: _headIdReturn, propsSource: propsHeadSource, propsReferencer: propsHeadReferencer } = useRandomId<HeaderElement>({ randomIdParameters: { prefix: "aria-accordion-section-header-", referencerProp: "aria-labelledby" } });
     //const { randomIdSourceReturn: { propsStable: useBodyAsSourceIdProps } } = useBodyAsSourceId();
     //const { randomIdReferencerReturn: { propsStable: useBodyAsReferencerIdProps } } = useBodyAsReferencerId<BodyElement>({ randomIdReferencerParameters: { referencerProp: "aria-controls" as never } });
     //const { randomIdSourceReturn: { propsStable: useHeaderAsSourceIdProps } } = useHeaderAsSourceId();

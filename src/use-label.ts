@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { useEnsureStability, useMergedProps, usePress, UsePressReturnType, useRandomDualIds, UseRandomDualIdsParameters, UseRandomDualIdsReturnType, UseRefElementReturnType } from "preact-prop-helpers";
+import { useMergedProps, usePress, UsePressReturnType, useRandomDualIds, UseRandomDualIdsParameters, UseRandomDualIdsReturnType, UseRefElementReturnType } from "preact-prop-helpers";
 import { useCallback, useEffect } from "preact/hooks";
 import { DisabledType, ElementToTag } from "./props";
 /*
@@ -137,7 +137,7 @@ export function useLabel<InputElement extends Element, LabelElement extends Elem
     randomIdLabelParameters,
     labelParameters: { tagInput, tagLabel, ariaLabel, labelPosition }
 }: UseLabelParameters<InputElement, LabelElement>): UseLabelReturnType<InputElement, LabelElement> {
-    useEnsureStability("useLabel", tagInput, tagLabel, labelPosition);
+    //useEnsureStability("useLabel", tagInput, tagLabel, labelPosition);
     const synthetic = !(tagInput == "input" && tagLabel == "label");
 
     /**
@@ -162,6 +162,9 @@ export function useLabel<InputElement extends Element, LabelElement extends Elem
         /*randomIdReferencerElementInputParameters: { ...randomIdReferencerElementInputParameters, referencerProp: synthetic? "aria-labelledby" : null },
         randomIdReferencerElementLabelParameters: { ...randomIdReferencerElementLabelParameters, referencerProp: !synthetic && labelPosition === "separate"? "for" : null },*/
     });
+
+    if (labelPosition == 'none')
+        propsInput["aria-label"] = (ariaLabel!);
 
     return {
         propsInput,

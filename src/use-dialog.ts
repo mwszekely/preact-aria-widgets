@@ -2,25 +2,25 @@
 import { h } from "preact";
 import { useCallback } from "preact/hooks";
 import { debugLog } from "./props";
-import { useModal, UseModalParameters, UseSoftDismissReturnTypeInfo, UseModalReturnTypeWithHooks, UseModalReturnTypeInfo } from "./use-modal";
+import { UseModalParameters, useModal } from "preact-prop-helpers"
 
 export interface UseDialogReturnTypeInfo extends UseSoftDismissReturnTypeInfo {
 
 }
 
-export interface UseDialogReturnTypeWithHooks<ModalElement extends Element, TitleElement extends Element, BodyElement extends Element, BackdropElement extends Element> extends UseDialogReturnTypeInfo {
+/*export interface UseDialogReturnTypeWithHooks<ModalElement extends Element, TitleElement extends Element, BodyElement extends Element, BackdropElement extends Element> extends UseDialogReturnTypeInfo {
     useDialogProps: (props: h.JSX.HTMLAttributes<ModalElement>) => h.JSX.HTMLAttributes<ModalElement>;
     useDialogTitle: UseDialogTitle<TitleElement>;
     useDialogBody: UseDialogBody<BodyElement>
     useDialogBackdrop: UseDialogBackdrop<BackdropElement>;
-}
+}*/
 
 export type UseDialogTitle<TitleElement extends Element> = () => { useDialogTitleProps: (props: h.JSX.HTMLAttributes<TitleElement>) => h.JSX.HTMLAttributes<TitleElement>; };
 export type UseDialogBody<BodyElement extends Element> = () => { useDialogBodyProps: (props: h.JSX.HTMLAttributes<BodyElement>) => h.JSX.HTMLAttributes<BodyElement>; };
 export type UseDialogBackdrop<BackdropElement extends Element> = () => { useDialogBackdropProps: (props: h.JSX.HTMLAttributes<BackdropElement>) => h.JSX.HTMLAttributes<BackdropElement>; };
 
 
-export interface UseDialogReturnType<FocusContainerElement extends HTMLElement, DialogElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement> extends UseModalReturnTypeInfo {
+export interface UseDialogReturnType<FocusContainerElement extends HTMLElement, DialogElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement> extends UseModalReturnType {
     useDialogProps: UseModalReturnTypeWithHooks<FocusContainerElement, DialogElement, TitleElement, BodyElement, BackdropElement>["useModalProps"];
     useDialogTitle: UseDialogTitle<TitleElement>;
     useDialogBody: UseDialogBody<BodyElement>;
