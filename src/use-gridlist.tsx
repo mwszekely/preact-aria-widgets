@@ -1,10 +1,10 @@
 import { h } from "preact";
-import { ManagedChildInfo, ManagedChildren, useGridNavigation, UseGridNavigationParameters, UseGridNavigationRowSubInfo, UseListNavigationSubInfo, useMergedProps, UseRovingTabIndexSubInfo, UseSingleSelectionChildParameters, UseSingleSelectionParameters, UseSingleSelectionReturnTypeInfo, useSortableChildren, UseSortableChildrenParameters, useStableCallback } from "preact-prop-helpers";
-import { UseGridNavigationCellParameters, UseGridNavigationCellReturnTypeInfo, UseGridNavigationCellSubInfo, UseGridNavigationReturnTypeInfo, UseGridNavigationRowParameters, UseGridNavigationRowReturnTypeInfo, useSingleSelection } from "preact-prop-helpers";
-import { UseSortableChildrenReturnTypeInfo } from "preact-prop-helpers";
+import { ManagedChildInfo, ManagedChildren, useGridNavigation, UseGridNavigationParameters,  useMergedProps,  UseSingleSelectionChildParameters, UseSingleSelectionParameters,  useSortableChildren, UseSortableChildrenParameters, useStableCallback } from "preact-prop-helpers";
+import { UseGridNavigationCellParameters,  UseGridNavigationRowParameters,  useSingleSelection } from "preact-prop-helpers";
 import { useCallback, useRef } from "preact/hooks";
 import { debugLog, overwriteWithWarning } from "./props";
 
+/*
 export interface UseGridlistParameters<RowElement extends Element, CellElement extends Element, CR, CC, KR extends string> extends
     Omit<UseGridNavigationParameters<"indexMangler" | "indexDemangler", never, never, never, never>, "gridNavigation">,
     UseSingleSelectionParameters<RowElement, UseRovingTabIndexSubInfo<RowElement, UseListNavigationSubInfo<UseGridlistRowSubInfo<CellElement, CR, CC>>>, KR | "tabbable", "children" | "setTabbableIndex" | "selectedIndex"> {
@@ -224,4 +224,4 @@ export function useGridlist<
     }
 }
 
-
+*/

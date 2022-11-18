@@ -2,18 +2,12 @@
 import { h } from "preact";
 import { useCallback } from "preact/hooks";
 import { debugLog } from "./props";
-import { UseModalParameters, useModal } from "preact-prop-helpers"
+import { UseModalParameters, useModal, UseModalReturnType } from "preact-prop-helpers"
 
+/*
 export interface UseDialogReturnTypeInfo extends UseSoftDismissReturnTypeInfo {
 
 }
-
-/*export interface UseDialogReturnTypeWithHooks<ModalElement extends Element, TitleElement extends Element, BodyElement extends Element, BackdropElement extends Element> extends UseDialogReturnTypeInfo {
-    useDialogProps: (props: h.JSX.HTMLAttributes<ModalElement>) => h.JSX.HTMLAttributes<ModalElement>;
-    useDialogTitle: UseDialogTitle<TitleElement>;
-    useDialogBody: UseDialogBody<BodyElement>
-    useDialogBackdrop: UseDialogBackdrop<BackdropElement>;
-}*/
 
 export type UseDialogTitle<TitleElement extends Element> = () => { useDialogTitleProps: (props: h.JSX.HTMLAttributes<TitleElement>) => h.JSX.HTMLAttributes<TitleElement>; };
 export type UseDialogBody<BodyElement extends Element> = () => { useDialogBodyProps: (props: h.JSX.HTMLAttributes<BodyElement>) => h.JSX.HTMLAttributes<BodyElement>; };
@@ -28,17 +22,31 @@ export interface UseDialogReturnType<FocusContainerElement extends HTMLElement, 
     useDialogFocusContainerProps(props: h.JSX.HTMLAttributes<FocusContainerElement>): h.JSX.HTMLAttributes<FocusContainerElement>;
 }
 
-export interface UseDialogParameters extends UseModalParameters<never, "onClose"> {
-    dialog: { onClose: (reason: "escape" | "backdrop") => void; }
+export interface UseDialogParameters extends UseModalParameters<"backdrop" | "escape"> {
+    //dialog: { onClose: (reason: "escape" | "backdrop") => void; }
 }
 
-export function useDialog<FocusContainerElement extends HTMLElement, DialogElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement>({ softDismiss: { open }, modal: { bodyIsOnlySemantic, focusSelf }, dialog: { onClose }, activeElement }: UseDialogParameters): UseDialogReturnType<FocusContainerElement, DialogElement, TitleElement, BodyElement, BackdropElement> {
-    
+export function useDialog<FocusContainerElement extends HTMLElement, DialogElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement>({
+    dismissParameters,
+    escapeDismissParameters,
+    focusTrapParameters
+}: UseDialogParameters): UseDialogReturnType<FocusContainerElement, DialogElement, TitleElement, BodyElement, BackdropElement> {
+
     debugLog("useDialog");
 
     // TODO: Differences between dialog and modal go here, presumably.
     // Non-modal dialogs need to be able to be repositioned, etc.
-    const { useModalBackdrop, useModalBody, useModalProps, useModalTitle, softDismiss: { onBackdropClick }, useModalFocusContainerProps } = useModal<FocusContainerElement, DialogElement, TitleElement, BodyElement, BackdropElement>({ modal: { bodyIsOnlySemantic, focusSelf }, softDismiss: { onClose, open }, activeElement });
+    const {
+        focusTrapReturn,
+        propsPopup,
+        propsSource,
+        refElementPopupReturn,
+        refElementSourceReturn
+    } = useModal<"backdrop" | "escape", FocusContainerElement, DialogElement>({
+        dismissParameters,
+        escapeDismissParameters,
+        focusTrapParameters
+    });
     type R = UseDialogReturnType<FocusContainerElement, DialogElement, TitleElement, BodyElement, BackdropElement>;
     const useDialogBackdrop = useCallback<R["useDialogBackdrop"]>(() => {
         const { useModalBackdropProps } = useModalBackdrop();
@@ -63,5 +71,38 @@ export function useDialog<FocusContainerElement extends HTMLElement, DialogEleme
         useDialogBackdrop,
         useDialogFocusContainerProps: useModalFocusContainerProps,
         softDismiss: { onBackdropClick },
+    }
+}*/
+
+export interface UseDialogParameters extends Omit<UseModalParameters<"escape" | "backdrop">, "focusTrapParameters" | "dismissParameters"> {
+    focusTrapParameters: Omit<UseModalParameters<"escape" | "backdrop">["focusTrapParameters"], "trapActive">;
+    dismissParameters: Omit<UseModalParameters<"escape" | "backdrop">["dismissParameters"], "closeOnLostFocus">;
+}
+
+export interface UseDialogReturnType<FocusContainerElement extends Element, PopupElement extends Element> extends UseModalReturnType<FocusContainerElement, null, PopupElement> {
+
+}
+
+export function useDialog<FocusContainerElement extends Element, PopupElement extends Element>({ dismissParameters, escapeDismissParameters, focusTrapParameters }: UseDialogParameters): UseDialogReturnType<FocusContainerElement, PopupElement> {
+    const {
+        focusTrapReturn,
+        propsFocusContainer,
+        propsPopup,
+        propsSource,
+        refElementPopupReturn,
+        refElementSourceReturn
+    } = useModal<"escape" | "backdrop", FocusContainerElement, null, PopupElement>({
+        dismissParameters: { closeOnLostFocus: false, ...dismissParameters },
+        escapeDismissParameters,
+        focusTrapParameters: { trapActive: true, ...focusTrapParameters }
+    });
+
+    return {
+        focusTrapReturn,
+        propsFocusContainer,
+        propsPopup,
+        propsSource,
+        refElementPopupReturn,
+        refElementSourceReturn
     }
 }

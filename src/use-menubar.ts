@@ -1,6 +1,6 @@
 import { h } from "preact";
 import { debugLog, DisabledType, EnhancedEvent, enhanceEvent } from "./props";
-import { useToolbar, useToolbarChild, UseToolbarChildParameters, UseToolbarChildReturnTypeInfo, UseToolbarParameters, UseToolbarReturnType, UseToolbarSubInfo } from "./use-toolbar";
+import { useToolbar, useToolbarChild, UseToolbarChildParameters, UseToolbarChildReturnType, UseToolbarParameters, UseToolbarReturnType, UseToolbarSubInfo } from "./use-toolbar";
 
 
 export interface MenuItemSubInfo<C> {
@@ -17,7 +17,7 @@ export interface UseMenubarSubInfo<ChildElement extends Element> extends UseTool
 export interface UseMenubarParameters<MenuParentElement extends Element, MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseToolbarParameters<MenuParentElement, MenuItemElement, M> {
 }
 
-export interface UseMenuItemParameters<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends Omit<UseToolbarChildParameters<MenuItemElement, M>, "pressParameters"> {
+export interface UseMenubarItemParameters<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends Omit<UseToolbarChildParameters<MenuItemElement, M>, "pressParameters"> {
     //hasFocus: UseHasFocusParameters<MenuItemElement>;
     pressParameters: Omit<UseToolbarChildParameters<MenuItemElement, M>["pressParameters"], "onPressSync">;
     menuItemParameters: {
@@ -28,14 +28,13 @@ export interface UseMenuItemParameters<MenuItemElement extends Element, M extend
 }
 
 export interface UseMenubarReturnType<MenuParentElement extends Element, MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseToolbarReturnType<MenuParentElement, MenuItemElement, M> { }
-export interface UseMenuItemReturnType<MenuItemElement extends Element> extends UseToolbarChildReturnTypeInfo<MenuItemElement> { }
+export interface UseMenubarItemReturnType<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseToolbarChildReturnType<MenuItemElement, M> { }
 
 
 
 
-export type UseMenuItemProps<MenuItemElement extends Element> = (props: h.JSX.HTMLAttributes<MenuItemElement>) => h.JSX.HTMLAttributes<MenuItemElement>;
-
-export type UseMenuItem<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> = (args: UseMenuItemParameters<MenuItemElement, M>) => UseMenuItemReturnType<MenuItemElement>;
+//export type UseMenuItemProps<MenuItemElement extends Element> = (props: h.JSX.HTMLAttributes<MenuItemElement>) => h.JSX.HTMLAttributes<MenuItemElement>;
+//export type UseMenuItem<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> = (args: UseMenuItemParameters<MenuItemElement, M>) => UseMenuItemReturnType<MenuItemElement, M>;
 
 
 
@@ -102,7 +101,7 @@ export function useMenubarChild<MenuItemElement extends Element, M extends UseMe
     singleSelectionContext,
     typeaheadNavigationChildContext,
     menuItemParameters: { disabled, onPress, role }
-}: UseMenuItemParameters<MenuItemElement, M>): UseMenuItemReturnType<MenuItemElement> {
+}: UseMenubarItemParameters<MenuItemElement, M>): UseMenubarItemReturnType<MenuItemElement, M> {
     debugLog("useMenuItem", managedChildParameters.index);
 
 
@@ -111,8 +110,9 @@ export function useMenubarChild<MenuItemElement extends Element, M extends UseMe
         pressReturn,
         props,
         singleSelectionChildReturn,
-        rovingTabIndexChildReturn
-    } = useToolbarChild<MenuItemElement>({
+        rovingTabIndexChildReturn,
+        managedChildReturn
+    } = useToolbarChild<MenuItemElement, M>({
         childrenHaveFocusChildContext,
         completeListNavigationChildParameters,
         managedChildContext,
@@ -154,5 +154,6 @@ export function useMenubarChild<MenuItemElement extends Element, M extends UseMe
         props,
         singleSelectionChildReturn,
         rovingTabIndexChildReturn,
+        managedChildReturn
     };
 }

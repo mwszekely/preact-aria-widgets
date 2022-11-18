@@ -49,12 +49,14 @@ export function Demo() {
             <DemoButton disabled="soft" tag="div" />
             <DemoButton disabled="hard" tag="div" />
             <Button
-                getDocument={getDocument}
+                exclude={undefined}
+                onPseudoActiveStart={null}
+                onPseudoActiveStop={null}
                 disabled={false}
                 tagButton="button"
                 pressed={pressed}
                 onPress={e => setPressed(e[EventDetail].pressed ?? false)}
-                render={defaultRenderButton({ tagButton: "button", makePropsButton: () => ({ children: `Toggle button (${pressed ? "pressed" : "unpressed"})` }) })}
+                render={defaultRenderButton({ tagButton: "button", propsButton: { children: `Toggle button (${pressed ? "pressed" : "unpressed"})` } })}
             />
         </>
     )
@@ -65,12 +67,16 @@ function DemoButton({ tag, disabled }: { tag: string, disabled: boolean | "soft"
 
     return (
         <Button
-            getDocument={getDocument}
+            disabled={disabled}
+            exclude={undefined}
+            onPseudoActiveStart={null}
+            onPseudoActiveStop={null}
+            pressed={null}
             tagButton={tag as any}
             onPress={onPress}
             render={defaultRenderButton({
                 tagButton: tag as any,
-                makePropsButton: () => ({ class: "btn", children: `${tag} ${disabled ? ` disabled (${disabled == "soft" ? "soft" : "hard"})` : ""}` })
+                propsButton: ({ class: "btn", children: `${tag} ${disabled ? ` disabled (${disabled == "soft" ? "soft" : "hard"})` : ""}` })
             })}
         />
     )

@@ -26,9 +26,9 @@ export type UseToolbarContext<ContainerElement extends Element, ChildElement ext
 
 //export type UseToolbarChild<ChildElement extends Element, C, K extends string> = (i: UseToolbarChildParameters<ChildElement, C, K, C>) => UseToolbarChildReturnTypeWithHooks<ChildElement>;
 export interface UseToolbarChildParameters<E extends Element, M extends UseToolbarSubInfo<E>> extends UseCompleteListNavigationChildParameters<E, M> { }
-export interface UseToolbarChildReturnTypeInfo<ChildElement extends Element> extends UseCompleteListNavigationChildReturnType<ChildElement> { }
-export interface UseToolbarChildReturnTypeWithHooks<ChildElement extends Element> extends UseToolbarChildReturnTypeInfo<ChildElement> {
-}
+export interface UseToolbarChildReturnType<ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends UseCompleteListNavigationChildReturnType<ChildElement, M> { }
+//export interface UseToolbarChildReturnTypeWithHooks<ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends UseToolbarChildReturnTypeInfo<ChildElement, M> {
+//}
 
 /**
  * A toolbar is just a collection of widgets in an expected order and with the usual keyboard navigation stuff.
@@ -66,10 +66,10 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
 }
 
 
-export function useToolbarChild<ChildElement extends Element>({
+export function useToolbarChild<ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>>({
     ...listNavChildParameters
-}: UseToolbarChildParameters<ChildElement, UseToolbarSubInfo<ChildElement>>): UseToolbarChildReturnTypeInfo<ChildElement> {
-    return useCompleteListNavigationChild<ChildElement, UseToolbarSubInfo<ChildElement>>({
+}: UseToolbarChildParameters<ChildElement, M>): UseToolbarChildReturnType<ChildElement, M> {
+    return useCompleteListNavigationChild<ChildElement, M>({
         ...listNavChildParameters
     });
 }

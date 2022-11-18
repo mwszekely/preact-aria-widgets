@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { useGlobalHandler, UseHasCurrentFocusParameters, useMergedProps, usePassiveState, useRandomId, UseRefElementReturnType, UseRefElementParameters, useStableCallback, useState, useTimeout } from "preact-prop-helpers";
+import { useGlobalHandler, UseHasCurrentFocusParameters, useMergedProps, usePassiveState, useRandomId, UseRefElementReturnType, UseRefElementParameters, useStableCallback, useState, useTimeout, useRefElement, returnFalse, useHasCurrentFocus } from "preact-prop-helpers";
 import { useCallback, useEffect } from "preact/hooks";
 import { debugLog } from "./props";
 
@@ -12,24 +12,19 @@ export type UseTooltipTrigger<TriggerType extends Element> = (args: UseTooltipTr
     useTooltipTriggerProps: ({ ...props }: h.JSX.HTMLAttributes<TriggerType>) => h.JSX.HTMLAttributes<TriggerType>
 };
 export interface UseTooltipParameters { mouseoverDelay?: number, mouseoutToleranceDelay?: number, focusDelay?: number }
-export type UseTooltip<TriggerType extends HTMLElement | SVGElement, TooltipType extends Element> = (args: UseTooltipParameters) => UseTooltipReturnTypeWithHooks<TriggerType, TooltipType>;
-export interface UseTooltipReturnTypeInfo {
-    isOpen: boolean;
-    getIsOpen: () => boolean;
+export type UseTooltip<TriggerType extends HTMLElement | SVGElement, TooltipType extends Element> = (args: UseTooltipParameters) => UseTooltipReturnType<TriggerType, TooltipType>;
+export interface UseTooltipReturnType<TriggerType extends Element, PopupType extends Element> {
+    tooltipReturn: {
+        isOpen: boolean;
+        getIsOpen: () => boolean;
+    }
+    propsPopup: h.JSX.HTMLAttributes<PopupType>;
+    propsTrigger: h.JSX.HTMLAttributes<TriggerType>;
 }
 
-export interface UseTooltipReturnTypeWithHooks<TriggerType extends Element, PopupType extends Element> extends UseTooltipReturnTypeInfo {
-    useTooltipPopup: (args: UseTooltipPopupParameters<PopupType>) => UseTooltipPopupReturnTypeWithHooks<PopupType>;
-    useTooltipTrigger: UseTooltipTrigger<TriggerType>;
-}
 
-export interface UseTooltipPopupReturnTypeWithHooks<PopupType extends Element> {
-    useTooltipPopupProps: ({ ...props }: h.JSX.HTMLAttributes<PopupType>) => h.JSX.HTMLAttributes<PopupType>;
-}
 
-function returnFalse() { return false; }
-
-export function useTooltip<TriggerType extends Element, PopupType extends Element>({ mouseoverDelay, mouseoutToleranceDelay, focusDelay }: UseTooltipParameters): UseTooltipReturnTypeWithHooks<TriggerType, PopupType> {
+export function useTooltip<TriggerType extends Element, PopupType extends Element>({ mouseoverDelay, mouseoutToleranceDelay, focusDelay }: UseTooltipParameters): UseTooltipReturnType<TriggerType, PopupType> {
     debugLog("useTooltip");
 
     mouseoverDelay ??= 400;
@@ -55,10 +50,14 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
 
     const [open, setOpen, getOpen] = useState(false);
 
-    const {
-        useRandomIdSourceElement,//: useTooltipIdProps, 
-        useRandomIdReferencerElement,//: useTooltipIdReferencingProps 
-    } = useRandomId<PopupType, TriggerType>({ randomId: { prefix: "aria-tooltip-", referencerProp: "aria-describedby" as never } });
+    let {
+        propsReferencer: propsTrigger,
+        propsSource: propsPopup,
+        randomIdReturn
+    } = useRandomId<PopupType, TriggerType>({ randomIdParameters: { prefix: "aria-tooltip-", referencerProp: "aria-describedby" as never } });
+
+    const { refElementReturn: { getElement: getTriggerElement, propsStable: triggerRefProps } } = useRefElement<TriggerType>({ refElementParameters: {} });
+    const { refElementReturn: { getElement: getPopupElement, propsStable: popupRefProps } } = useRefElement<PopupType>({ refElementParameters: {} });
 
     const [, setTriggerFocused] = usePassiveState(useStableCallback((focused: boolean) => {
         const delay = focused ? focusDelay : 1;
@@ -148,67 +147,69 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
     const hoverDelayCorrected = (hoverState == "shown");
     useEffect(() => {
         setOpen(triggerFocusedDelayCorrected || hoverDelayCorrected || tooltipFocusedDelayCorrected);
-    }, [triggerFocusedDelayCorrected || hoverDelayCorrected || tooltipFocusedDelayCorrected])
+    }, [triggerFocusedDelayCorrected || hoverDelayCorrected || tooltipFocusedDelayCorrected]);
 
-    const useTooltipTrigger: UseTooltipTrigger<TriggerType> = useCallback(function useTooltipTrigger({
-        refElementReturn
-    }): ReturnType<UseTooltipTrigger<TriggerType>> {
-        debugLog("useTooltipTrigger");
-        const { getElement } = refElementReturn;
 
-        useGlobalHandler(document, "pointermove", e => {
-            const target = (e.target as HTMLElement);
-            setTriggerHover(target == getElement() as Node || !!getElement()?.contains(target));
-        }, { capture: true });
 
-        function onTouchEnd(e: TouchEvent) {
-            (e.target as any).focus?.();
-        }
+    //const useTooltipTrigger: UseTooltipTrigger<TriggerType> = useCallback(function useTooltipTrigger({
+    //    refElementReturn
+    //}): ReturnType<UseTooltipTrigger<TriggerType>> {
+    debugLog("useTooltipTrigger");
+    //const { getElement } = refElementReturn;
 
-        function useTooltipTriggerProps({ ...props }: h.JSX.HTMLAttributes<TriggerType>): h.JSX.HTMLAttributes<TriggerType> {
-            const { propsStable } = useRandomIdReferencerElement();
-            // Note: Though it's important to make sure that focusing activates a tooltip,
-            // it's perfectly reasonable that a child element will be the one that's focused,
-            // not this one, so we don't set tabIndex=0
-            props.tabIndex ??= -1;
-            return useMergedProps(
-                propsStable,
-                { onTouchEnd },
-                (props as any) as unknown as h.JSX.HTMLAttributes<TriggerType>
+    useGlobalHandler(document, "pointermove", e => {
+        const target = (e.target as HTMLElement);
+        setTriggerHover(target == getTriggerElement() as Node || !!getTriggerElement()?.contains(target));
+    }, { capture: true });
 
-            );
-        }
+    function onTouchEnd(e: TouchEvent) {
+        (e.target as any).focus?.();
+    }
 
-        return {
-            useTooltipTriggerProps,
-            hasCurrentFocusReturnType: { onCurrentFocusedInnerChanged: setTriggerFocused }
-        };
+    //function useTooltipTriggerProps({ ...props }: h.JSX.HTMLAttributes<TriggerType>): h.JSX.HTMLAttributes<TriggerType> {
+    //const { propsStable } = useRandomIdReferencerElement();
+    // Note: Though it's important to make sure that focusing activates a tooltip,
+    // it's perfectly reasonable that a child element will be the one that's focused,
+    // not this one, so we don't set tabIndex=0
+    propsTrigger.tabIndex ??= -1;
+    propsTrigger = useMergedProps(propsTrigger, { onTouchEnd });
+    //}
 
-    }, []);
+    //return {
+    //    useTooltipTriggerProps,
+    //    hasCurrentFocusReturnType: { onCurrentFocusedInnerChanged: setTriggerFocused }
+    //};
 
-    const useTooltipPopup = useCallback(function useTooltip({ refElementReturn }: UseTooltipPopupParameters<PopupType>) {
-        debugLog("useTooltipTooltip");
-        const { getElement } = refElementReturn;
-        const { propsStable } = useRandomIdSourceElement();
-        //const { props: hasFocusProps, getElement } = useHasCFocus<PopupType>({ onFocusedInnerChanged: useStableCallback((focused: boolean, prev: boolean | undefined) => { onFocusedInnerChanged?.(focused, prev); setTooltipFocused(focused); }), ...hasFocus })
+    //}, []);
 
-        useGlobalHandler(document, "pointermove", e => {
-            const target = (e.target as HTMLElement);
-            setTooltipHover(target == getElement() as Node || !!getElement()?.contains(target));
-        }, { capture: true });
+    //const useTooltipPopup = useCallback(function useTooltip({ refElementReturn }: UseTooltipPopupParameters<PopupType>) {
+    debugLog("useTooltipTooltip");
+    //const { getElement } = refElementReturn;
+    //const { propsStable } = useRandomIdSourceElement();
+    const { hasCurrentFocusReturn: { propsStable: propsFocusPopup } } = useHasCurrentFocus<PopupType>({
+        hasCurrentFocusParameters: { onCurrentFocusedChanged: null, onCurrentFocusedInnerChanged: useStableCallback((focused: boolean, prev: boolean | undefined) => { setTooltipFocused(focused); }) },
+        refElementReturn: { getElement: getPopupElement }
+    })
 
-        function useTooltipPopupProps(props: h.JSX.HTMLAttributes<PopupType>): h.JSX.HTMLAttributes<PopupType> {
-            return useMergedProps(propsStable, props);
-        }
+    useGlobalHandler(document, "pointermove", e => {
+        const target = (e.target as HTMLElement);
+        setTooltipHover(target == getPopupElement() as Node || !!getPopupElement()?.contains(target));
+    }, { capture: true });
 
-        return { useTooltipPopupProps };
-    }, []);
+    //function useTooltipPopupProps(props: h.JSX.HTMLAttributes<PopupType>): h.JSX.HTMLAttributes<PopupType> {
+    //    return useMergedProps(propsStable, props);
+    // }
+
+    //return { useTooltipPopupProps };
+    //}, []);
 
     return {
-        useTooltipPopup,
-        useTooltipTrigger,
-        isOpen: open,
-        getIsOpen: getOpen
+        propsPopup: useMergedProps(propsPopup, propsFocusPopup),
+        propsTrigger: propsTrigger,
+        tooltipReturn: {
+            isOpen: open,
+            getIsOpen: getOpen
+        }
     }
 }
 

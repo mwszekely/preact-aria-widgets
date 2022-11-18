@@ -219,7 +219,7 @@ export function useToast<E extends Element>({ toastParameters: { politeness, tim
         }
     }, []);
 
-    const __: void = useManagedChild<ToastInfo>({ managedChildParameters: { index, focus, setNumberAheadOfMe: setNumberOfToastsAheadOfUs, show }, managedChildContext });
+    const { managedChildReturn: { getChildren: _getToasts } } = useManagedChild<ToastInfo>({ managedChildParameters: { index, focus, setNumberAheadOfMe: setNumberOfToastsAheadOfUs, show }, managedChildContext });
 
     //const isActive = (status === "active");
     const [triggerIndex, setTriggerIndex] = useState(1);

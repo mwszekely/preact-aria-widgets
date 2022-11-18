@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { generateRandomId, ManagedChildInfo, OnPassiveStateChange, PassiveStateUpdater, returnTrue, useCompleteGridNavigationRow, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useListNavigationSingleSelection, UseListNavigationSingleSelectionSortableChildInfo, useManagedChild, useManagedChildren, UseManagedChildrenReturnType, useMergedProps, usePress, useStableCallback, useStableObject, useState } from "preact-prop-helpers";
+import { generateRandomId, ManagedChildInfo, OnPassiveStateChange, PassiveStateUpdater, returnTrue, useCompleteGridNavigationRow, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useListNavigationSingleSelection, UseListNavigationSingleSelectionSortableChildInfo, useManagedChild, useManagedChildren, UseManagedChildrenReturnType, useMergedProps, usePress, UseSortableChildrenParameters, useStableCallback, useStableObject, useState } from "preact-prop-helpers";
 import { ChildFlagOperations, OnChildrenMountChange, useChildrenFlag, UseManagedChildParameters, UseManagedChildrenParameters } from "preact-prop-helpers";
 import { UseListNavigationSingleSelectionChildParameters, UseListNavigationSingleSelectionParameters } from "preact-prop-helpers";
 import { StateUpdater, useCallback, useEffect, useRef } from "preact/hooks";
@@ -37,7 +37,7 @@ export interface UseTabPanelParameters extends Omit<UseManagedChildParameters<Ta
     panelsContext: TabPanelContext;
 }
 
-export interface UseTabReturnType<TabElement extends Element> extends UseCompleteListNavigationChildReturnType<TabElement> { }
+export interface UseTabReturnType<TabElement extends Element> extends UseCompleteListNavigationChildReturnType<TabElement, TabInfo<TabElement>> { }
 
 
 export interface UseTabLabelParameters { }
@@ -167,8 +167,6 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
         onIndexChange: null
     });
 
-    //const { useRandomIdReferencerElement, useRandomIdSourceElement } = useRandomId({ randomId: { prefix: "aria-tabs-" }, managedChildren: { onAfterChildLayoutEffect: null, onChildrenMountChange: null } });
-
     const {
         propsInput,
         propsLabel,
@@ -181,27 +179,18 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
     });
 
 
-    /*const useTabListLabel = useCallback(() => {
-        const { useLabelLabelProps } = useLabelLabel();
-        function useTabListLabelProps(props: h.JSX.HTMLAttributes<LabelElement>) { return useLabelLabelProps(props); }
-        return { useTabListLabelProps };
-    }, [useLabelLabel]);*/
     const {
         props: listNavigationSingleSelectionProps,
         context,
         ...listNavRet1
     } = useCompleteListNavigation<TabListElement, TabElement, TabInfo<TabElement>>({
         linearNavigationParameters,
-        rearrangeableChildrenParameters,
         rovingTabIndexParameters,
         singleSelectionParameters: { ...singleSelectionParameters, onSelectedIndexChange: useStableCallback<OnPassiveStateChange<number | null>>((i, p) => { osic?.(i, p); changeVisiblePanel(i); }) },
-        sortableChildrenParameters,
-        typeaheadNavigationParameters
+        typeaheadNavigationParameters,
+        rearrangeableChildrenParameters,
+        sortableChildrenParameters
     });
-
-    /*useEffect(() => {
-        changeVisiblePanel(singleSelectionParameters.se);
-    }, [singleSelectionParameters.selectedIndex]);*/
 
 
     const { singleSelectionReturn: { setSelectedIndex } } = listNavRet1;

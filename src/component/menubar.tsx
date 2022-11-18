@@ -2,7 +2,7 @@ import { createContext, createElement, h, Ref, VNode } from "preact";
 import { useContext, useImperativeHandle } from "preact/hooks";
 import { ElementToTag, PropModifier } from "../props";
 //import { ElementToTag } from "../props";
-import { useMenubar, UseMenubarParameters, UseMenubarReturnTypeInfo, UseMenuItem, UseMenuItemParameters, UseMenuItemReturnTypeInfo } from "../use-menubar";
+import { useMenubar, UseMenubarParameters, UseMenubarReturnTypeInfo, UseMenuItem, UseMenubarItemParameters, UseMenuItemReturnTypeInfo } from "../use-menubar";
 import { memoForwardRef } from "./util";
 
 type Get<T, K extends keyof T> = T[K];
@@ -25,13 +25,13 @@ export interface MenubarProps<MenubarContainerElement extends Element, MenuItemE
 
 
 export interface MenuItemProps<MenuItemElement extends Element, C, K extends string> extends
-    Get<UseMenuItemParameters<MenuItemElement, C, K, C>, "managedChild">,
-    Get<UseMenuItemParameters<MenuItemElement, C, K, C>, "rovingTabIndex">,
-    Get<UseMenuItemParameters<MenuItemElement, C, K, C>, "listNavigation">,
-    Get<UseMenuItemParameters<MenuItemElement, C, K, C>, "hasFocus">,
-    Get<UseMenuItemParameters<MenuItemElement, C, K, C>, "menuItem"> {
+    Get<UseMenubarItemParameters<MenuItemElement, C, K, C>, "managedChild">,
+    Get<UseMenubarItemParameters<MenuItemElement, C, K, C>, "rovingTabIndex">,
+    Get<UseMenubarItemParameters<MenuItemElement, C, K, C>, "listNavigation">,
+    Get<UseMenubarItemParameters<MenuItemElement, C, K, C>, "hasFocus">,
+    Get<UseMenubarItemParameters<MenuItemElement, C, K, C>, "menuItem"> {
     //tagListItem: ElementToTag<ListboxItemElement>;
-    subInfo: Get<UseMenuItemParameters<MenuItemElement, C, K, C>, "subInfo">;
+    subInfo: Get<UseMenubarItemParameters<MenuItemElement, C, K, C>, "subInfo">;
     ref?: Ref<UseMenuItemReturnTypeInfo<MenuItemElement>>;
     render(info: UseMenuItemReturnTypeInfo<MenuItemElement>, modifyPropsMenuItem: PropModifier<MenuItemElement>): VNode<any>;
 }

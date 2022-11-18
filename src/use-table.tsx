@@ -1,13 +1,13 @@
 import { h } from "preact";
-import { ManagedChildren, returnNull, useGridNavigation, UseGridNavigationParameters, UseHasFocusParameters, UseListNavigationSubInfo, useMergedProps, usePassiveState, UseRovingTabIndexSubInfo, useSortableChildren, useStableCallback, useState } from "preact-prop-helpers";
-import { UseGridNavigationCellParameters, UseGridNavigationCellReturnTypeInfo, UseGridNavigationCellSubInfo, UseGridNavigationReturnTypeInfo, UseGridNavigationRowParameters, UseGridNavigationRowReturnTypeInfo, UseGridNavigationRowSubInfo } from "preact-prop-helpers";
+import { ManagedChildren, returnNull, useGridNavigation, UseGridNavigationParameters, useMergedProps, usePassiveState, useSortableChildren, useStableCallback, useState } from "preact-prop-helpers";
+import { UseGridNavigationCellParameters, UseGridNavigationRowParameters } from "preact-prop-helpers";
 import { PassiveStateUpdater } from "preact-prop-helpers";
-import { GetIndex, UseSortableChildrenReturnTypeInfo } from "preact-prop-helpers";
+import { GetIndex } from "preact-prop-helpers";
 import { useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
 import { debugLog, ElementToTag, overwriteWithWarning } from "./props";
 
 export type TableValueType = string | number | null | boolean | Date;
-
+/*
 export interface UseTableParameters extends Omit<UseGridNavigationParameters<"indexMangler" | "indexDemangler", never, never, never, never>, "gridNavigation"> { }
 export interface UseTableBodyParameters { }
 export interface UseTableRowParameters<RowElement extends Element, CellElement extends Element, CR, CC, KR extends string, SubbestInfoR> extends UseGridNavigationRowParameters<RowElement, UseTableRowSubInfo<CellElement, CR, CC>, KR, never, never, never, never, never, never, never, never, SubbestInfoR> {
@@ -283,3 +283,4 @@ export function useTable<
         ...gridNavRet1
     }
 }
+*/

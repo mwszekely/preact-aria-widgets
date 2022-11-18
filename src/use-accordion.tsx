@@ -1,30 +1,21 @@
 import { h } from "preact";
-import { ManagedChildInfo, OnChildrenMountChange, useChildrenFlag, useLinearNavigation, UseLinearNavigationParameters, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenParameters, UseManagedChildrenReturnType, useMergedProps, UsePressReturnType, useRandomId, useRefElement, UseRefElementParameters, UseRefElementReturnType, useStableCallback, useStableGetter, useStableObject, useState } from "preact-prop-helpers";
+import { ManagedChildInfo, OnChildrenMountChange, useChildrenFlag, useLinearNavigation, UseLinearNavigationParameters, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, useMergedProps, UsePressReturnType, useRandomId, useRefElement, UseRefElementParameters, UseRefElementReturnType, useStableCallback, useStableGetter, useStableObject, useState } from "preact-prop-helpers";
 import { StateUpdater, useCallback } from "preact/hooks";
 import { debugLog, DisabledType } from "./props";
 import { useButton, UseButtonParameters } from "./use-button";
 
 export type UseAccordion<M extends UseAccordionSectionInfo> = (args: UseAccordionParameters<M>) => UseAccordionReturnType<M>;
-export type UseAccordionSection<HeaderElement extends Element, BodyElement extends Element, M extends UseAccordionSectionInfo> = (args: UseAccordionSectionParameters<HeaderElement, M>) => UseAccordionSectionReturnType<HeaderElement, BodyElement>;
+//export type UseAccordionSection<HeaderElement extends Element, BodyElement extends Element, M extends UseAccordionSectionInfo> = (args: UseAccordionSectionParameters<HeaderElement, M>) => UseAccordionSectionReturnType<HeaderElement, BodyElement>;
 
 export interface UseAccordionParameters<M extends UseAccordionSectionInfo> extends UseManagedChildrenParameters<M> {
     accordionParameters: { initialIndex?: number | null; }
-    linearNavigationParameters: Omit<UseLinearNavigationParameters["linearNavigationParameters"], "navigateRelative" | "navigateAbsolute">;
+    linearNavigationParameters: Omit<UseLinearNavigationParameters["linearNavigationParameters"], "navigateRelative" | "navigateAbsolute" | "getHighestIndex" | "isValid" | "indexDemangler" | "indexMangler">;
 }
 
 export interface UseAccordionReturnType<M extends UseAccordionSectionInfo> extends UseManagedChildrenReturnType<M> {
     /** **STABLE** */
     accordionReturn: { changeExpandedIndex: (arg: number | ((prevState: number | null) => number | null) | null) => number | null; }
-    accordionSectionContext: {
-        accordionSectionParameters: {
-            changeTabbedIndex: StateUpdater<number | null>;
-            changeExpandedIndex: StateUpdater<number | null>;
-            getExpandedIndex: () => (number | null);
-            getTabbedIndex: () => (number | null);
-        }
-        linearNavigationParameters: UseLinearNavigationParameters["linearNavigationParameters"];
-        rovingTabIndexReturn: UseLinearNavigationParameters["rovingTabIndexReturn"];
-    }
+    context: UseAccordionContext<M>;
 }
 
 
@@ -40,9 +31,9 @@ export interface UseAccordionSectionInfo extends ManagedChildInfo<number> {
 
 export interface UseAccordionSectionParameters<HeaderElement extends Element, M extends UseAccordionSectionInfo> extends
     UseRefElementParameters<HeaderElement> {
-    managedChildContext: UseManagedChildParameters<M>["managedChildContext"];
+    //managedChildContext: UseManagedChildParameters<M>["managedChildContext"];
     managedChildParameters: Omit<UseManagedChildParameters<M>["managedChildParameters"], "setOpenFromParent" | "getOpenFromParent" | "setMostRecentlyTabbed" | "getMostRecentlyTabbed" | "focusSelf" | "disabled">;
-    accordionSectionContext: UseAccordionReturnType<M>["accordionSectionContext"];
+    context: UseAccordionContext<M>;
     accordionSectionParameters: {
         open: boolean | undefined;
         /** Generally `"region"` */
@@ -54,7 +45,7 @@ export interface UseAccordionSectionParameters<HeaderElement extends Element, M 
          */
         //hidden: boolean;
     }
-    buttonParameters: Omit<UseButtonParameters<HeaderElement>["buttonParameters"], "pressed" | "onPress">;
+    buttonParameters: Omit<UseButtonParameters<HeaderElement>["buttonParameters"], "pressed" | "onPress" | "role">;
     pressParameters: Omit<UseButtonParameters<HeaderElement>["pressParameters"], "onPressSync">;
 
 }
@@ -70,9 +61,20 @@ export interface UseAccordionSectionReturnType<HeaderElement extends Element, Bo
     propsBody: h.JSX.HTMLAttributes<BodyElement>
 }
 
+export interface UseAccordionContext<M extends UseAccordionSectionInfo> extends UseManagedChildrenContext<M> {
+    accordionSectionParameters: {
+        changeTabbedIndex: StateUpdater<number | null>;
+        changeExpandedIndex: StateUpdater<number | null>;
+        getExpandedIndex: () => (number | null);
+        getTabbedIndex: () => (number | null);
+    }
+    linearNavigationParameters: UseLinearNavigationParameters["linearNavigationParameters"];
+    rovingTabIndexReturn: UseLinearNavigationParameters["rovingTabIndexReturn"];
+}
+
 export function useAccordion<M extends UseAccordionSectionInfo>({
     accordionParameters: { initialIndex },
-    linearNavigationParameters: { disableArrowKeys, disableHomeEndKeys, navigationDirection },
+    linearNavigationParameters: { disableArrowKeys, disableHomeEndKeys, navigationDirection, navigatePastEnd, navigatePastStart, pageNavigationSize },
     managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange }
 }: UseAccordionParameters<M>): UseAccordionReturnType<M> {
     debugLog("useAccordian");
@@ -85,9 +87,16 @@ export function useAccordion<M extends UseAccordionSectionInfo>({
         }
     });
 
-    const { managedChildrenReturn: { getChildren }, managedChildContext } = mcReturnType;
+    const { managedChildrenReturn: { getChildren }, context } = mcReturnType;
 
-
+    const isValid = useCallback((c: M) => (!c.disabled && !c.hidden), []);
+    const isValid2 = useCallback((c: number): boolean => {
+        const child = getChildren().getAt(c);
+        if (child) {
+            return isValid(child);
+        }
+        return false;
+    }, []);
 
 
     const { changeIndex: changeExpandedIndex, getCurrentIndex: _getCurrentExpandedIndex } = useChildrenFlag({
@@ -95,7 +104,7 @@ export function useAccordion<M extends UseAccordionSectionInfo>({
         getChildren,
         getAt: useCallback((child) => { return child.getOpenFromParent(); }, []),
         setAt: useCallback((child, open) => { return child.setOpenFromParent(open); }, []),
-        isValid: useCallback(c => (!c.disabled && !c.hidden), []),
+        isValid,
         onIndexChange: null,
         //key: "open",
         closestFit: false
@@ -106,7 +115,7 @@ export function useAccordion<M extends UseAccordionSectionInfo>({
         getChildren,
         getAt: useCallback((child) => { return child.getMostRecentlyTabbed(); }, []),
         setAt: useCallback((child, tabbed) => { return child.setMostRecentlyTabbed(tabbed); }, []),
-        isValid: useCallback(c => (!c.disabled && !c.hidden), []),
+        isValid,
         closestFit: true,
         onIndexChange: useCallback((i: number | null) => {
             if (i != null) {
@@ -119,12 +128,9 @@ export function useAccordion<M extends UseAccordionSectionInfo>({
     const navigateRelative = useCallback((s: number, o: number) => { return changeTabbedIndex(o + s); }, []);
 
 
-
     return {
-        managedChildrenReturn: mcReturnType.managedChildrenReturn,
-        accordionReturn: { changeExpandedIndex },
-        managedChildContext,
-        accordionSectionContext: useStableObject({
+        context: useStableObject<UseAccordionContext<M>>({
+            ...context, 
             accordionSectionParameters: useStableObject({
                 changeExpandedIndex,
                 changeTabbedIndex,
@@ -135,18 +141,25 @@ export function useAccordion<M extends UseAccordionSectionInfo>({
                 disableArrowKeys,
                 disableHomeEndKeys,
                 getHighestIndex: useCallback(() => getChildren().getHighestIndex(), []),
-                navigateAbsolute,
-                navigateRelative,
+                indexMangler: identity,
+                indexDemangler: identity,
                 navigationDirection,
+                isValid: isValid2,
+                navigatePastEnd,
+                navigatePastStart,
+                pageNavigationSize
             }),
             rovingTabIndexReturn: useStableObject({
                 getTabbableIndex: _getCurrentExpandedIndex,
                 setTabbableIndex: changeTabbedIndex
             })
-        })
+        }),
+        managedChildrenReturn: mcReturnType.managedChildrenReturn,
+        accordionReturn: { changeExpandedIndex }
     };
 }
 
+function identity<T>(t: T) { return t; }
 
 
 
@@ -156,8 +169,10 @@ export function useAccordionSection<HeaderElement extends HTMLElement, BodyEleme
     pressParameters: { exclude, onPseudoActiveStart, onPseudoActiveStop },
     accordionSectionParameters: { open: openFromUser, bodyRole },
     managedChildParameters: { index, hidden },
-    managedChildContext,
-    accordionSectionContext: {
+    //managedChildContext,
+    context,
+    context: {
+        managedChildContext,
         accordionSectionParameters: { changeExpandedIndex, changeTabbedIndex: _setCurrentFocusedIndex, getTabbedIndex: getCurrentFocusedIndex },
         linearNavigationParameters,
         rovingTabIndexReturn
@@ -174,8 +189,8 @@ export function useAccordionSection<HeaderElement extends HTMLElement, BodyEleme
     type M = UseAccordionSectionInfo;
 
 
-    const { randomIdReturn: _bodyIdReturn, propsSource: propsBodySource, propsReferencer: propsBodyReferencer } = useRandomId<BodyElement>({ randomIdParameters: { prefix: "aria-accordion-section-body-", referencerProp: "aria-controls" } });
-    const { randomIdReturn: _headIdReturn, propsSource: propsHeadSource, propsReferencer: propsHeadReferencer } = useRandomId<HeaderElement>({ randomIdParameters: { prefix: "aria-accordion-section-header-", referencerProp: "aria-labelledby" } });
+    const { randomIdReturn: _bodyIdReturn, propsSource: propsBodySource, propsReferencer: propsHeadReferencer } = useRandomId<BodyElement, HeaderElement>({ randomIdParameters: { prefix: "aria-accordion-section-body-", referencerProp: "aria-controls" } });
+    const { randomIdReturn: _headIdReturn, propsSource: propsHeadSource, propsReferencer: propsBodyReferencer } = useRandomId<HeaderElement, BodyElement>({ randomIdParameters: { prefix: "aria-accordion-section-header-", referencerProp: "aria-labelledby" } });
     //const { randomIdSourceReturn: { propsStable: useBodyAsSourceIdProps } } = useBodyAsSourceId();
     //const { randomIdReferencerReturn: { propsStable: useBodyAsReferencerIdProps } } = useBodyAsReferencerId<BodyElement>({ randomIdReferencerParameters: { referencerProp: "aria-controls" as never } });
     //const { randomIdSourceReturn: { propsStable: useHeaderAsSourceIdProps } } = useHeaderAsSourceId();
@@ -214,8 +229,8 @@ export function useAccordionSection<HeaderElement extends HTMLElement, BodyEleme
             },
             isValid: returnTrue
     });*/
-    const __: void = useManagedChild<M>({
-        managedChildContext,
+    const { managedChildReturn: { getChildren: _getSections } } = useManagedChild<M>({
+        context,
         managedChildParameters: {
             index: index,
             disabled,
@@ -237,7 +252,7 @@ export function useAccordionSection<HeaderElement extends HTMLElement, BodyEleme
     };
 
     const { pressReturn, props: buttonProps, refElementReturn } = useButton<HeaderElement>({
-        buttonParameters: {...buttonParameters, pressed: null, onPress },
+        buttonParameters: { ...buttonParameters, pressed: null, onPress, role: "button" },
         pressParameters: { exclude, onPseudoActiveStart, onPseudoActiveStop },
         refElementParameters
     });

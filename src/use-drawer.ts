@@ -1,7 +1,9 @@
 import { h } from "preact";
+import { useModal, UseModalParameters, UseModalReturnType } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { debugLog } from "./props";
-import { useModal, UseModalParameters, UseSoftDismissReturnTypeInfo } from "./use-modal";
+/*import { useModal, UseModalParameters, UseSoftDismissReturnTypeInfo } from "./use-modal";
+
 
 export interface UseDrawerReturnTypeInfo extends UseSoftDismissReturnTypeInfo {
 
@@ -62,4 +64,39 @@ export function useDrawer<FocusContainerElement extends HTMLElement, DrawerEleme
         useDrawerFocusContainerProps: useModalFocusContainerProps,
         softDismiss: { onBackdropClick }
     }
+}*/
+
+
+
+export interface UseDrawerParameters extends UseModalParameters<"escape" | "backdrop" | "lost-focus"> {
 }
+
+export interface UseDrawerReturnType<FocusContainerElement extends Element, PopupElement extends Element> extends UseModalReturnType<FocusContainerElement, null, PopupElement> {
+
+}
+
+export function useDrawer<FocusContainerElement extends Element, PopupElement extends Element>({ dismissParameters, escapeDismissParameters, focusTrapParameters }: UseDrawerParameters): UseDrawerReturnType<FocusContainerElement, PopupElement> {
+    const {
+        focusTrapReturn,
+        propsFocusContainer,
+        propsPopup,
+        propsSource,
+        refElementPopupReturn,
+        refElementSourceReturn
+    } = useModal<"escape" | "backdrop" | "lost-focus", FocusContainerElement, null, PopupElement>({
+        dismissParameters,
+        escapeDismissParameters,
+        focusTrapParameters
+    });
+
+    return {
+        focusTrapReturn,
+        propsFocusContainer,
+        propsPopup,
+        propsSource,
+        refElementPopupReturn,
+        refElementSourceReturn
+    }
+}
+
+
