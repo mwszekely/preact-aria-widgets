@@ -5,10 +5,10 @@ import {
     UseCompleteListNavigationChildParameters,
     UseCompleteListNavigationChildReturnType,
     UseCompleteListNavigationParameters,
-    UseCompleteListNavigationReturnType, UseListNavigationSingleSelectionSortableChildInfo, useMergedProps, useRandomId, useStableObject
+    UseCompleteListNavigationReturnType, UseListNavigationSingleSelectionSortableChildInfo, useMergedProps, useStableObject
 } from "preact-prop-helpers";
 import { EventDetail } from "./props";
-import { useLabel, UseLabelParameters } from "./use-label";
+import { LabelPosition, useLabel, UseLabelParameters } from "./use-label";
 
 export type ListboxSingleSelectEvent<E extends EventTarget> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 
@@ -17,7 +17,7 @@ export interface UseListboxContext<ListElement extends Element, ListItemElement 
 }
 
 export interface UseListboxParameters<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends UseCompleteListNavigationParameters<ListElement, ListItemElement, M> {
-    labelParameters: UseLabelParameters<ListElement, LabelElement>["labelParameters"];
+    labelParameters: UseLabelParameters<LabelPosition, ListElement, LabelElement>["labelParameters"];
     listboxParameters: {
         /**
          * When `"single"`, the selected item is controlled
@@ -66,13 +66,13 @@ export function useListbox<ListElement extends Element, ListItemElement extends 
     labelParameters,
     listboxParameters: { selectionLimit, type }
 }: UseListboxParameters<ListElement, ListItemElement, LabelElement, M>): UseListboxReturnType<ListElement, ListItemElement, LabelElement, M> {
-    
+
     const {
         propsInput: propsLabelList,
         propsLabel: propsLabelLabel,
-        randomIdInputReturn,
-        randomIdLabelReturn
-    } = useLabel<ListElement, LabelElement>({
+        randomIdInputReturn: { id: _inputId },
+        randomIdLabelReturn: { id: _labelId }
+    } = useLabel<LabelPosition, ListElement, LabelElement>({
         labelParameters,
         randomIdInputParameters: { prefix: `aria-listbox-input-${type}-` },
         randomIdLabelParameters: { prefix: `aria-listbox-label-${type}-` }
@@ -127,21 +127,17 @@ export function useListbox<ListElement extends Element, ListItemElement extends 
         singleSelectionReturn,
         sortableChildrenReturn,
         typeaheadNavigationReturn,
-        propsListbox: useMergedProps(props, propsLabelList, { "aria-multiselectable": (selectionLimit == "multi"? "true" : undefined) }),
+        propsListbox: useMergedProps(props, propsLabelList, { "aria-multiselectable": (selectionLimit == "multi" ? "true" : undefined) }),
         propsListboxLabel: propsLabelLabel
     }
 }
 
 export function useListboxItem<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>>({
-    childrenHaveFocusChildContext,
     completeListNavigationChildParameters,
-    managedChildContext,
-    managedChildParameters,
     pressParameters,
-    rovingTabIndexChildContext,
+    context,
+    managedChildParameters,
     singleSelectionChildParameters,
-    singleSelectionContext,
-    typeaheadNavigationChildContext,
     typeaheadNavigationChildParameters,
     listboxParameters: { selected },
     listboxContext: { selectionLimit }
@@ -154,16 +150,12 @@ export function useListboxItem<ListItemElement extends Element, M extends Listbo
         rovingTabIndexChildReturn,
         singleSelectionChildReturn
     } = useCompleteListNavigationChild<ListItemElement, M>({
-        childrenHaveFocusChildContext,
         completeListNavigationChildParameters,
-        managedChildContext,
         managedChildParameters,
         pressParameters,
-        rovingTabIndexChildContext,
         singleSelectionChildParameters,
-        singleSelectionContext,
-        typeaheadNavigationChildContext,
-        typeaheadNavigationChildParameters
+        typeaheadNavigationChildParameters,
+        context
     });
 
     if (selectionLimit == "single")
@@ -180,7 +172,7 @@ export function useListboxItem<ListItemElement extends Element, M extends Listbo
         singleSelectionChildReturn
     }
 }
-
+/*
 export function useListboxGroup<ContainerElement extends Element, HeadingElement extends Element>() {
     const {
         propsReferencer,
@@ -194,4 +186,4 @@ export function useListboxGroup<ContainerElement extends Element, HeadingElement
         propsHeading: propsSource,
         propsContainer: propsReferencer
     }
-}
+}*/

@@ -1,12 +1,10 @@
 import { h } from "preact";
-import { ManagedChildInfo, useAsyncHandler, UseAsyncHandlerParameters, UseAsyncHandlerReturnType, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenParameters, UseManagedChildrenReturnType, useMergedProps, useState } from "preact-prop-helpers";
-import { StateUpdater, useCallback, useEffect } from "preact/hooks";
+import { useMergedProps } from "preact-prop-helpers";
 import { ElementToTag } from "./props";
-import { useLabel, UseLabelParameters, UseLabelReturnType } from "./use-label";
+import { LabelPosition, useLabel, UseLabelParameters, UseLabelReturnType } from "./use-label";
 
-type T = "indicator" | "region" | "label";
 
-export interface UseProgressParameters<IndicatorElement extends Element, LabelElement extends Element> extends Omit<UseLabelParameters<IndicatorElement, LabelElement>, "randomIdLabelParameters" | "randomIdInputParameters"> {
+export interface UseProgressParameters<IndicatorElement extends Element, LabelElement extends Element> extends Omit<UseLabelParameters<LabelPosition, IndicatorElement, LabelElement>, "randomIdLabelParameters" | "randomIdInputParameters"> {
     /*progressParameters: {
         tagProgress: ElementToTag<IndicatorElement>;
         tagLabel: ElementToTag<LabelElement>;
@@ -18,32 +16,6 @@ export interface UseProgressParameters<IndicatorElement extends Element, LabelEl
         tagIndicator: ElementToTag<IndicatorElement>;
     }
 }
-
-interface PSI_Base extends ManagedChildInfo<T> {
-}
-
-interface PSI_I extends PSI_Base {
-    index: "indicator";
-}
-
-interface PSI_R extends PSI_Base {
-    index: "region";
-    setBusy: StateUpdater<boolean>;
-}
-
-
-interface PSI_L extends PSI_Base {
-    index: "label";
-    setHidden: StateUpdater<boolean>;
-}
-
-type ProgressSubInfo = (PSI_I | PSI_R | PSI_L);
-
-interface UseProgressIndicatorParameters extends Omit<UseManagedChildParameters<PSI_I>, "managedChildParameters"> {
-    managedChildParameters: Omit<UseManagedChildParameters<PSI_I>["managedChildParameters"], "index">;
-}
-interface UseProgressLabelParameters extends UseManagedChildParameters<PSI_L> { }
-interface UseProgressRegionParameters extends UseManagedChildParameters<PSI_R> { }
 
 export interface UseProgressReturnType<ProgressElement extends Element, ProgressLabelElement extends Element> extends Omit<UseLabelReturnType<ProgressElement, ProgressLabelElement>, "propsInput" | "propsLabel"> {
     propsIndicator: h.JSX.HTMLAttributes<ProgressElement>;
@@ -85,7 +57,7 @@ export function useProgress<ProgressElement extends Element, LabelElement extend
 
 
     const busy = (!!value);
-    let disabled = (value == "disabled");
+    const disabled = (value == "disabled");
     if (typeof value != "number") {
         value = null!;
         max ??= 100;

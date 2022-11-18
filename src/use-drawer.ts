@@ -1,7 +1,4 @@
-import { h } from "preact";
 import { useModal, UseModalParameters, UseModalReturnType } from "preact-prop-helpers";
-import { useCallback } from "preact/hooks";
-import { debugLog } from "./props";
 /*import { useModal, UseModalParameters, UseSoftDismissReturnTypeInfo } from "./use-modal";
 
 

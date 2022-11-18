@@ -20,6 +20,7 @@ module.exports = {
         "@typescript-eslint/no-explicit-any": 0,
         "@typescript-eslint/no-empty-function": 0,
         "no-unused-vars": 0,
+        "prefer-const": 0,
         "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "(^h$)|(^_.*)", "varsIgnorePattern": "(^h$)|(^_.*)" }]
     }
 }

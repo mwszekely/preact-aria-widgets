@@ -95,11 +95,7 @@ export function useMenubarChild<MenuItemElement extends Element, M extends UseMe
     singleSelectionChildParameters,
     typeaheadNavigationChildParameters,
     completeListNavigationChildParameters,
-    childrenHaveFocusChildContext,
-    managedChildContext,
-    rovingTabIndexChildContext,
-    singleSelectionContext,
-    typeaheadNavigationChildContext,
+    context,
     menuItemParameters: { disabled, onPress, role }
 }: UseMenubarItemParameters<MenuItemElement, M>): UseMenubarItemReturnType<MenuItemElement, M> {
     debugLog("useMenuItem", managedChildParameters.index);
@@ -113,18 +109,14 @@ export function useMenubarChild<MenuItemElement extends Element, M extends UseMe
         rovingTabIndexChildReturn,
         managedChildReturn
     } = useToolbarChild<MenuItemElement, M>({
-        childrenHaveFocusChildContext,
         completeListNavigationChildParameters,
-        managedChildContext,
+        context,
         managedChildParameters,
         pressParameters: {
             onPressSync: (e) => (disabled ? null : onPress)?.(enhanceEvent(e, { index: managedChildParameters.index })),
             ...pressParameters
         },
-        rovingTabIndexChildContext,
         singleSelectionChildParameters,
-        singleSelectionContext,
-        typeaheadNavigationChildContext,
         typeaheadNavigationChildParameters
         /*listNavigationChildParameters,
         pressParameters: {

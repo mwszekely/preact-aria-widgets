@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { findFirstFocusable, ManagedChildInfo, useGlobalHandler, useManagedChild, useManagedChildren, useMergedProps, useRefElement, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
+import { findFirstFocusable, ManagedChildInfo, useGlobalHandler, useManagedChild, useManagedChildren, UseManagedChildrenContext, useMergedProps, useRefElement, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
 import { UseManagedChildParameters, UseManagedChildrenParameters, UseManagedChildrenReturnType } from "preact-prop-helpers";
 import { StateUpdater, useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
 import { debugLog } from "./props";
@@ -12,14 +12,12 @@ export interface UseToastsParameters extends UseManagedChildrenParameters<ToastI
     }
 }
 
-type Showing = never; //"showing";
-
 export interface UseToastParameters extends UseManagedChildParameters<ToastInfo> {
     toastParameters: {
         politeness?: "polite" | "assertive";
         timeout: number | null;
     }
-    toastContext: ToastContext;
+    context: UseManagedChildrenContext<ToastInfo> & { toastContext: ToastContext};
 }
 
 export interface ToastInfo extends ManagedChildInfo<number> {
@@ -43,7 +41,7 @@ export interface UseToastReturnTypeInfo<ToastType extends Element> {
 
 export interface UseToastsReturnType<ContainerType extends Element> extends UseManagedChildrenReturnType<ToastInfo> {
     toastsReturn: {};
-    toastContext: ToastContext;
+    context: UseManagedChildrenContext<ToastInfo> & { toastContext: ToastContext};
     props: h.JSX.HTMLAttributes<ContainerType>;
 }
 
@@ -64,7 +62,7 @@ export function useToasts<ContainerType extends Element>({ managedChildrenParame
     const getMaxVisibleCount = useStableGetter(visibleCount);
 
     const { refElementReturn: { getElement, propsStable } } = useRefElement<ContainerType>({ refElementParameters: {} });
-    const { managedChildContext, managedChildrenReturn, ...childInfo } = useManagedChildren<ToastInfo>({ managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange: ocmu } });
+    const { context, managedChildrenReturn, ..._childInfo } = useManagedChildren<ToastInfo>({ managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange: ocmu } });
 
     const { getChildren: getToastQueue } = managedChildrenReturn;
     const toastQueue = getToastQueue();
@@ -161,8 +159,10 @@ export function useToasts<ContainerType extends Element>({ managedChildrenParame
 
 
     return {
-        toastContext,
-        managedChildContext,
+        context: {
+            ...context,
+            toastContext
+        },
         managedChildrenReturn,
         toastsReturn: {},
         props
@@ -177,8 +177,8 @@ interface ToastContext {
     onAnyToastMounted: (toastIndex: number) => void;
 }
 
-export function useToast<E extends Element>({ toastParameters: { politeness, timeout }, managedChildParameters: { index, ...managedChildParameters }, managedChildContext, toastContext }: UseToastParameters): UseToastReturnTypeInfo<E> {
-    const { getMaxVisibleCount, onAnyToastDismissed, setPoliteness, onAnyToastMounted } = toastContext;
+export function useToast<E extends Element>({ toastParameters: { politeness, timeout }, managedChildParameters: { index, ..._managedChildParameters }, context }: UseToastParameters): UseToastReturnTypeInfo<E> {
+    const { getMaxVisibleCount, onAnyToastDismissed, setPoliteness, onAnyToastMounted } = context.toastContext;
     debugLog("useToast", index);
     const [numberOfToastsAheadOfUs, setNumberOfToastsAheadOfUs] = useState(Infinity);
     const getIndex = useStableGetter(index);
@@ -219,7 +219,7 @@ export function useToast<E extends Element>({ toastParameters: { politeness, tim
         }
     }, []);
 
-    const { managedChildReturn: { getChildren: _getToasts } } = useManagedChild<ToastInfo>({ managedChildParameters: { index, focus, setNumberAheadOfMe: setNumberOfToastsAheadOfUs, show }, managedChildContext });
+    const { managedChildReturn: { getChildren: _getToasts } } = useManagedChild<ToastInfo>({ managedChildParameters: { index, focus, setNumberAheadOfMe: setNumberOfToastsAheadOfUs, show }, context });
 
     //const isActive = (status === "active");
     const [triggerIndex, setTriggerIndex] = useState(1);

@@ -1,8 +1,5 @@
 
-import { h } from "preact";
-import { useCallback } from "preact/hooks";
-import { debugLog } from "./props";
-import { UseModalParameters, useModal, UseModalReturnType } from "preact-prop-helpers"
+import { useModal, UseModalParameters, UseModalReturnType } from "preact-prop-helpers";
 
 /*
 export interface UseDialogReturnTypeInfo extends UseSoftDismissReturnTypeInfo {

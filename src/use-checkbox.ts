@@ -1,14 +1,14 @@
 import { h } from "preact";
 import { useStableCallback } from "preact-prop-helpers";
 import { debugLog, EnhancedEvent, enhanceEvent } from "./props";
-import { useCheckboxLike, UseCheckboxLikeParameters, UseCheckboxLikeReturnType } from "./use-label";
+import { LabelPosition, useCheckboxLike, UseCheckboxLikeParameters, UseCheckboxLikeReturnType } from "./use-label";
 
 
 
 export type CheckboxChangeEvent<E extends EventTarget> = EnhancedEvent<E, Event, { checked: boolean }>;
 
-export interface UseCheckboxParameters<I extends Element, L extends Element> extends Omit<UseCheckboxLikeParameters<I, L>, "checkboxLikeParameters"> {
-    checkboxLikeParameters: Omit<UseCheckboxLikeParameters<I, L>["checkboxLikeParameters"], "onInput" | "role" | "prefix">;
+export interface UseCheckboxParameters<LP extends LabelPosition, I extends Element, L extends Element> extends Omit<UseCheckboxLikeParameters<LP, I, L>, "checkboxLikeParameters"> {
+    checkboxLikeParameters: Omit<UseCheckboxLikeParameters<LP, I, L>["checkboxLikeParameters"], "onInput" | "role" | "prefix">;
     checkboxParameters: {
         onCheckedChange(event: CheckboxChangeEvent<I>): void;
     }
@@ -18,7 +18,7 @@ export interface UseCheckboxReturnType<InputType extends Element, LabelType exte
     checkboxReturn: { propsUnstable: h.JSX.HTMLAttributes<InputType> }
 }
 
-export function useCheckbox<InputType extends Element, LabelType extends Element>({
+export function useCheckbox<LP extends LabelPosition, InputType extends Element, LabelType extends Element>({
     checkboxParameters: { onCheckedChange },
     checkboxLikeParameters,
     labelParameters,
@@ -26,7 +26,7 @@ export function useCheckbox<InputType extends Element, LabelType extends Element
     randomIdLabelParameters,
     refElementInputReturn,
     refElementLabelReturn
-}: UseCheckboxParameters<InputType, LabelType>): UseCheckboxReturnType<InputType, LabelType> {
+}: UseCheckboxParameters<LP, InputType, LabelType>): UseCheckboxReturnType<InputType, LabelType> {
     debugLog("useCheckbox");
 
     const { tagInput, labelPosition } = labelParameters;
@@ -42,7 +42,7 @@ export function useCheckbox<InputType extends Element, LabelType extends Element
         propsLabel,
         checkboxLikeInputReturn,
         checkboxLikeLabelReturn
-    } = useCheckboxLike<InputType, LabelType>({
+    } = useCheckboxLike<LP, InputType, LabelType>({
         randomIdInputParameters: { ...randomIdInputParameters, prefix: "checkbox-i-" },
         randomIdLabelParameters: { ...randomIdLabelParameters, prefix: "checkbox-l-" },
         refElementInputReturn,
