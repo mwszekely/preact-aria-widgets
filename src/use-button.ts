@@ -11,11 +11,10 @@ export interface UseButtonParameters<E extends Node> extends UseRefElementParame
         tagButton: ElementToTag<E>;
         disabled: DisabledType;
         pressed: boolean | null | undefined;
-        onPress(event: ButtonPressEvent<E>): void;
-        /** Generally just "button" */
+        onPress: null | ((event: ButtonPressEvent<E>) => void);
         role: string;
     }
-    pressParameters: Omit<UsePressParameters<E, never>["pressParameters"], "onPressSync" | "focusSelf">
+    pressParameters: Omit<UsePressParameters<E>["pressParameters"], "onPressSync" | "focusSelf">
 }
 
 export interface UseButtonReturnType<E extends Element> extends UsePressReturnType<E>, UseRefElementReturnType<E> {

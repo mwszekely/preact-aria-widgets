@@ -15,14 +15,14 @@ export interface ButtonProps<E extends Element> extends
     imperativeHandle?: Ref<UseButtonReturnType<E>>;
 }
 
-export function defaultRenderButton<E extends Element>({ tagButton, propsButton }: { tagButton: ElementToTag<E>, propsButton: h.JSX.HTMLAttributes<E> }) {
-    return function ({ props }: UseButtonReturnType<E>) {
-        return createElement(tagButton as any, useMergedProps(propsButton, props));
+export function defaultRenderButton<E extends Element>({ tagButton, propsButton }: { tagButton: ElementToTag<E>, propsButton: (info: UseButtonReturnType<E>) => h.JSX.HTMLAttributes<E> }) {
+    return function (info: UseButtonReturnType<E>) {
+        return createElement(tagButton as any, useMergedProps(propsButton(info), info.props));
     }
 }
 
-export const Button = memoForwardRef(function Button<E extends Element>({ imperativeHandle, tagButton, onPress, pressed, render, disabled, onElementChange, onMount, onUnmount, exclude, onPseudoActiveStart, onPseudoActiveStop }: ButtonProps<E>, ref: Ref<any>) {
-    const info = useButton<E>({ buttonParameters: { role: "button", tagButton, onPress, pressed, disabled }, pressParameters: { exclude, onPseudoActiveStart, onPseudoActiveStop }, refElementParameters: { onElementChange, onMount, onUnmount } });
+export const Button = memoForwardRef(function Button<E extends Element>({ imperativeHandle, tagButton, onPress, pressed, render, disabled, onElementChange, onMount, onUnmount, exclude }: ButtonProps<E>, ref: Ref<any>) {
+    const info = useButton<E>({ buttonParameters: { role: "button", tagButton, onPress, pressed, disabled }, pressParameters: { exclude }, refElementParameters: { onElementChange, onMount, onUnmount } });
     useImperativeHandle(imperativeHandle!, () => info);
     info.props = useMergedProps(info.props, { ref });
     return render(info);

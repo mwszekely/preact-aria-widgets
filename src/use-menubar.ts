@@ -3,7 +3,7 @@ import { debugLog, DisabledType, EnhancedEvent, enhanceEvent } from "./props";
 import { useToolbar, useToolbarChild, UseToolbarChildParameters, UseToolbarChildReturnType, UseToolbarParameters, UseToolbarReturnType, UseToolbarSubInfo } from "./use-toolbar";
 
 
-export interface MenuItemSubInfo<C> {
+interface MenuItemSubInfo<C> {
     subInfo: C;
 }
 
@@ -38,7 +38,7 @@ export interface UseMenubarItemReturnType<MenuItemElement extends Element, M ext
 
 
 
-export function useMenubar<MenuParentElement extends Element, MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>>({
+export function useMenubar<MenuParentElement extends Element, MenuItemElement extends Element>({
     linearNavigationParameters,
     rearrangeableChildrenParameters,
     singleSelectionParameters,
@@ -46,7 +46,7 @@ export function useMenubar<MenuParentElement extends Element, MenuItemElement ex
     rovingTabIndexParameters,
     typeaheadNavigationParameters,
     toolbarParameters
-}: UseMenubarParameters<MenuParentElement, MenuItemElement, M>): UseMenubarReturnType<MenuParentElement, MenuItemElement, M> {
+}: UseMenubarParameters<MenuParentElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenubarReturnType<MenuParentElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>> {
 
     debugLog("useMenubar");
 
@@ -63,7 +63,7 @@ export function useMenubar<MenuParentElement extends Element, MenuItemElement ex
         toolbarReturn,
         typeaheadNavigationReturn,
         ..._rest
-    } = useToolbar<MenuParentElement, MenuItemElement, M>({
+    } = useToolbar<MenuParentElement, MenuItemElement>({
         linearNavigationParameters,
         rovingTabIndexParameters,
         rearrangeableChildrenParameters,
@@ -89,7 +89,7 @@ export function useMenubar<MenuParentElement extends Element, MenuItemElement ex
 }
 
 
-export function useMenubarChild<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>>({
+export function useMenubarChild<MenuItemElement extends Element>({
     pressParameters: { ...pressParameters },
     managedChildParameters,
     singleSelectionChildParameters,
@@ -97,7 +97,7 @@ export function useMenubarChild<MenuItemElement extends Element, M extends UseMe
     completeListNavigationChildParameters,
     context,
     menuItemParameters: { disabled, onPress, role }
-}: UseMenubarItemParameters<MenuItemElement, M>): UseMenubarItemReturnType<MenuItemElement, M> {
+}: UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenubarItemReturnType<MenuItemElement, UseMenubarSubInfo<MenuItemElement>> {
     debugLog("useMenuItem", managedChildParameters.index);
 
 
@@ -108,7 +108,7 @@ export function useMenubarChild<MenuItemElement extends Element, M extends UseMe
         singleSelectionChildReturn,
         rovingTabIndexChildReturn,
         managedChildReturn
-    } = useToolbarChild<MenuItemElement, M>({
+    } = useToolbarChild<MenuItemElement>({
         completeListNavigationChildParameters,
         context,
         managedChildParameters,

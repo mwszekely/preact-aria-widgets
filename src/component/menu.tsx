@@ -1,111 +1,120 @@
 import { createElement, h, Ref, VNode } from "preact";
 import { UseActiveElementParameters, useStableCallback } from "preact-prop-helpers";
 import { useImperativeHandle } from "preact/compat";
+import { UseMenubarSubInfo } from "../use-menubar";
 import { ElementToTag, PropModifier } from "../props";
-import { useMenu, UseMenuParameters, UseMenuReturnTypeInfo } from "../use-menu";
+import { useMenu, UseMenuParameters, UseMenuReturnType } from "../use-menu";
 import { defaultRenderPortal } from "./dialog";
 import { MenuItemContext } from "./menubar";
 import { memoForwardRef } from "./util";
 
 type Get<T, K extends keyof T> = T[K];
 
-export interface MenuProps<SurfaceElement extends Element, MenuElement extends Element, SentinelElement extends Element, MenuItemElement extends Element, ButtonElement extends Element, C, K extends string> extends //Omit<UseMenuParameters<E, K, I>, "indexMangler" | "indexDemangler" | "onAfterChildLayoutEffect" | "onChildrenMountChange" | "onTabbableIndexChange" | "onTabbableRender" | "onTabbedInTo" | "onTabbedOutOf"> & {
-    Get<UseMenuParameters<SurfaceElement, ButtonElement, never>, "menu">,
-    Get<UseMenuParameters<SurfaceElement, ButtonElement, never>, "menuSurface">,
-    Get<UseMenuParameters<SurfaceElement, ButtonElement, never>, "softDismiss">,
-    Get<UseMenuParameters<SurfaceElement, ButtonElement, never>, "linearNavigation">,
-    Get<UseMenuParameters<SurfaceElement, ButtonElement, never>, "listNavigation">,
-    Get<UseMenuParameters<SurfaceElement, ButtonElement, never>, "rovingTabIndex">,
-    Get<UseMenuParameters<SurfaceElement, ButtonElement, never>, "typeaheadNavigation">,
-    Get<UseMenuParameters<SurfaceElement, ButtonElement, never>, "toolbar">,
+export interface MenuProps<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element> extends //Omit<UseMenuParameters<E, K, I>, "indexMangler" | "indexDemangler" | "onAfterChildLayoutEffect" | "onChildrenMountChange" | "onTabbableIndexChange" | "onTabbableRender" | "onTabbedInTo" | "onTabbedOutOf"> & {
+    Get<UseMenuParameters<MenuSurfaceElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "menuParameters">,
+    Get<UseMenuParameters<MenuSurfaceElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "menuSurfaceParameters">,
+    Get<UseMenuParameters<MenuSurfaceElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "linearNavigationParameters">,
+    Get<UseMenuParameters<MenuSurfaceElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "rovingTabIndexParameters">,
+    Get<UseMenuParameters<MenuSurfaceElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "typeaheadNavigationParameters">,
+    Get<UseMenuParameters<MenuSurfaceElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "dismissParameters">,
+    Get<UseMenuParameters<MenuSurfaceElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "escapeDismissParameters">,
+    Get<UseMenuParameters<MenuSurfaceElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "rearrangeableChildrenParameters">,
+    Get<UseMenuParameters<MenuSurfaceElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "sortableChildrenParameters">,
+    Get<UseMenuParameters<MenuSurfaceElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "singleSelectionParameters">,
+    Get<UseMenuParameters<MenuSurfaceElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "toolbarParameters"> {
 
-    Get<UseMenuParameters<SurfaceElement, ButtonElement, never>, "managedChildren"> {
+    //getDocument: UseActiveElementParameters["getDocument"];
+    //getWindow?: UseActiveElementParameters["getWindow"];
+    
 
-    getDocument: UseActiveElementParameters["getDocument"];
-    getWindow?: UseActiveElementParameters["getWindow"];
-    ref?: Ref<UseMenuReturnTypeInfo<SurfaceElement, MenuElement, MenuItemElement, ButtonElement, C, K>>;
-
-    render(menuInfo: UseMenuReturnTypeInfo<SurfaceElement, MenuElement, MenuItemElement, ButtonElement, C, K>, modifyMenuButtonProps: PropModifier<ButtonElement>, modifyMenuSurfaceProps: PropModifier<SurfaceElement>, modifyMenuProps: PropModifier<MenuElement>, modifyFirstSentinelProps: PropModifier<SentinelElement>, modifyLastSentinelProps: PropModifier<SentinelElement>): VNode;
+    render(menuInfo: UseMenuReturnType<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement,  UseMenubarSubInfo<MenuItemElement>>): VNode;
 }
 
 //const MenuItemContext = createContext<UseMenuItem<any, any, any>>(null!);
 
 export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element, ParentElement extends Element, SentinelElement extends Element, ChildElement extends Element, ButtonElement extends Element, C = undefined, K extends string = never>({
-    initialIndex,
+
+    
     collator,
     disableArrowKeys,
     disableHomeEndKeys,
     noTypeahead,
     typeaheadTimeout,
     orientation,
-    onOpen,
+    
     onClose,
     open,
 
     openDirection,
-    indexDemangler,
-    indexMangler,
-    onAfterChildLayoutEffect,
-    onChildrenMountChange,
+    
     onTabbableIndexChange,
-    onTabbableRender,
-
-    getDocument,
+    closeOnBackdrop,
+    closeOnEscape,
+    closeOnLostFocus,
+    compare,
+    getIndex,
+    initiallySelectedIndex,
+    initiallyTabbedIndex,
+    navigatePastEnd,
+    navigatePastStart,
+    navigationDirection,
+    onSelectedIndexChange,
+    pageNavigationSize,
+    parentDepth,
+    
     getWindow,
 
     render
 
-}: MenuProps<SurfaceElement, ParentElement, SentinelElement, ChildElement, ButtonElement, C, K>, ref?: Ref<any>) {
-    const {
-        useMenuButtonProps,
-        useMenuItem,
-        useMenuProps,
-        useMenuSentinel,
-        useMenuSurfaceProps,
-        ...menuReturn
-    } = useMenu<SurfaceElement, ParentElement, ChildElement, ButtonElement, C, K>({
-        linearNavigation: { disableArrowKeys, disableHomeEndKeys },
-        listNavigation: { indexDemangler, indexMangler },
-        managedChildren: { onAfterChildLayoutEffect, onChildrenMountChange },
-        menu: { onOpen: useStableCallback(onOpen), openDirection },
-        menuSurface: {},
-        rovingTabIndex: { initialIndex, onTabbableIndexChange, onTabbableRender },
-        softDismiss: { onClose: useStableCallback(onClose), open },
-        typeaheadNavigation: { collator, noTypeahead, typeaheadTimeout },
-        activeElement: { getDocument, getWindow },
-        menuButtonHasFocus: { getDocument, getWindow },
-        toolbar: { orientation }
+}: MenuProps<SurfaceElement, ParentElement, ChildElement, ButtonElement>, ref?: Ref<any>) {
+    const info = useMenu<SurfaceElement, ParentElement, ChildElement, ButtonElement>({
+        linearNavigationParameters: { disableArrowKeys, disableHomeEndKeys, navigatePastEnd, navigatePastStart, navigationDirection, pageNavigationSize },
+        dismissParameters: { closeOnBackdrop, closeOnEscape, closeOnLostFocus, onClose, open },
+        escapeDismissParameters: { getWindow, parentDepth },
+        rearrangeableChildrenParameters: { getIndex },
+        singleSelectionParameters: { initiallySelectedIndex, onSelectedIndexChange },
+        sortableChildrenParameters: { compare },
+       // listNavigationParameters: {  },
+       // managedChildrenParameters: {  },
+        menuParameters: { openDirection },
+        menuSurfaceParameters: {},
+        rovingTabIndexParameters: { initiallyTabbedIndex, onTabbableIndexChange },
+       // softDismissParameters: {  },
+        typeaheadNavigationParameters: { collator, noTypeahead, typeaheadTimeout },
+       // activeElementParameters: {  },
+       // menuButtonHasFocusParameters: {  },
+        toolbarParameters: { orientation }
     });
 
-    useImperativeHandle(ref!, () => menuReturn);
-
-    const { useMenuSentinelProps: useFirstSentinelProps } = useMenuSentinel<SentinelElement>();
-    const { useMenuSentinelProps: useLastSentinelProps } = useMenuSentinel<SentinelElement>();
+    useImperativeHandle(ref!, () => info);
+    
+    //const { useMenuSentinelProps: useFirstSentinelProps } = useMenuSentinel<SentinelElement>();
+    //const { useMenuSentinelProps: useLastSentinelProps } = useMenuSentinel<SentinelElement>();
     return (
-        <MenuItemContext.Provider value={useMenuItem}>
-            {render(menuReturn, useMenuButtonProps, useMenuSurfaceProps, useMenuProps, useFirstSentinelProps, useLastSentinelProps)}
+        <MenuItemContext.Provider value={info.context}>
+            {render(info)}
         </MenuItemContext.Provider>
     )
 
 })
 
-export function defaultRenderMenu<SurfaceElement extends Element, MenuElement extends Element, MenuItemElement extends Element, SentinelElement extends Element, ButtonElement extends Element, C = undefined, K extends string = never>({ portalId, tagButton, tagMenu, tagSurface, tagSentinel, makePropsButton, makePropsMenu, makePropsSurface, makePropsSentinel }: { portalId: string, tagSurface: ElementToTag<SurfaceElement>, tagMenu: ElementToTag<MenuElement>, tagButton: ElementToTag<ButtonElement>, tagSentinel: ElementToTag<SentinelElement>, makePropsSurface: (info: UseMenuReturnTypeInfo<SurfaceElement, MenuElement, MenuItemElement, ButtonElement, C, K>) => h.JSX.HTMLAttributes<SurfaceElement>, makePropsMenu: (info: UseMenuReturnTypeInfo<SurfaceElement, MenuElement, MenuItemElement, ButtonElement, C, K>) => h.JSX.HTMLAttributes<MenuElement>, makePropsButton: (info: UseMenuReturnTypeInfo<SurfaceElement, MenuElement, MenuItemElement, ButtonElement, C, K>) => h.JSX.HTMLAttributes<ButtonElement>, makePropsSentinel: (info: UseMenuReturnTypeInfo<SurfaceElement, MenuElement, MenuItemElement, ButtonElement, C, K>) => h.JSX.HTMLAttributes<SentinelElement> }) {
-    return function (menuInfo: UseMenuReturnTypeInfo<SurfaceElement, MenuElement, MenuItemElement, ButtonElement, C, K>, modifyMenuButtonProps: PropModifier<ButtonElement>, modifyMenuSurfaceProps: PropModifier<SurfaceElement>, modifyMenuProps: PropModifier<MenuElement>, modifyFirstSentinelProps: PropModifier<SentinelElement>, modifyLastSentinelProps: PropModifier<SentinelElement>) {
+export function defaultRenderMenu<SurfaceElement extends Element, MenuElement extends Element, MenuItemElement extends Element, SentinelElement extends Element, ButtonElement extends Element>({ portalId, tagButton, tagMenu, tagSurface, tagSentinel, makePropsButton, makePropsMenu, makePropsSurface, makePropsSentinel }: { portalId: string, tagSurface: ElementToTag<SurfaceElement>, tagMenu: ElementToTag<MenuElement>, tagButton: ElementToTag<ButtonElement>, tagSentinel: ElementToTag<SentinelElement>, makePropsSurface: (info: UseMenuReturnType<SurfaceElement, MenuElement, MenuItemElement, ButtonElement, UseMenubarSubInfo<MenuItemElement>>) => h.JSX.HTMLAttributes<SurfaceElement>, makePropsMenu: (info: UseMenuReturnType<SurfaceElement, MenuElement, MenuItemElement, ButtonElement, UseMenubarSubInfo<MenuItemElement>>) => h.JSX.HTMLAttributes<MenuElement>, makePropsButton: (info: UseMenuReturnType<SurfaceElement, MenuElement, MenuItemElement, ButtonElement, UseMenubarSubInfo<MenuItemElement>>) => h.JSX.HTMLAttributes<ButtonElement>, makePropsSentinel: (info: UseMenuReturnType<SurfaceElement, MenuElement, MenuItemElement, ButtonElement, UseMenubarSubInfo<MenuItemElement>>) => h.JSX.HTMLAttributes<SentinelElement> }) {
+    return function (menuInfo: UseMenuReturnType<SurfaceElement, MenuElement, MenuItemElement, ButtonElement, UseMenubarSubInfo<MenuItemElement>>) {
 
-        const { children: surfaceChildren, ...surfaceProps } = modifyMenuSurfaceProps(makePropsSurface(menuInfo));
-        const { children: menuChildren, ...menuProps } = modifyMenuProps(makePropsMenu(menuInfo));
+        const { children: surfaceChildren, ...surfaceProps } = (makePropsSurface(menuInfo));
+        const { children: menuChildren, ...menuProps } = (makePropsMenu(menuInfo));
         return (
             <>
-                {createElement(tagButton as never, modifyMenuButtonProps(makePropsButton(menuInfo)))}
+                {createElement(tagButton as never, (makePropsButton(menuInfo)))}
                 {defaultRenderPortal({
                     portalId,
                     children: createElement(tagSurface as never, {
                         ...surfaceProps,
                         children: (<>
-                            {createElement(tagSentinel as never, modifyFirstSentinelProps(makePropsSentinel(menuInfo)))}
+                            {createElement(tagSentinel as never, (makePropsSentinel(menuInfo)))}
                             {surfaceChildren}
                             {createElement(tagMenu as never, { ...menuProps, children: <>{menuChildren}</> })}
-                            {createElement(tagSentinel as never, modifyLastSentinelProps(makePropsSentinel(menuInfo)))}
+                            {createElement(tagSentinel as never, (makePropsSentinel(menuInfo)))}
                         </>)
                     })
                 })}

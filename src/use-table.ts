@@ -9,9 +9,9 @@ import {
 import { useCallback } from "preact/hooks";
 import { UseListboxParameters } from "./use-listbox";
 import { ElementToTag, EventDetail } from "./props";
-import { useLabel, UseLabelParameters } from "./use-label";
+import { LabelPosition, useLabel, UseLabelParameters } from "./use-label";
 
-export type ListboxSingleSelectEvent<E extends EventTarget> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
+//export type ListboxSingleSelectEvent<E extends EventTarget> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 
 export interface UseTableSectionContext<TableSectionElement extends Element, TableRowElement extends Element, M extends TableRowInfo<TableRowElement>> extends CompleteGridNavigationContext<TableSectionElement, TableRowElement, M> {
     //tableRowContext: { selectionLimit: "single" | "multi" }
@@ -49,7 +49,7 @@ export interface TableRowInfo<TableRowElement extends Element> extends GridSingl
 export interface TableCellInfo<TableCellElement extends Element> extends GridSingleSelectSortableChildCellInfo<TableCellElement> { }
 
 export interface TableParameters<TableElement extends Element, TableRowElement extends Element, LabelElement extends Element, RM extends TableRowInfo<TableRowElement>> {
-    labelParameters: UseLabelParameters<TableElement, LabelElement>["labelParameters"];
+    labelParameters: UseLabelParameters<LabelPosition, TableElement, LabelElement>["labelParameters"];
     tableParameters: {
         tagTable: ElementToTag<TableElement>;
     } & Omit<UseListboxParameters<TableElement, TableRowElement, LabelElement, RM>["listboxParameters"], "type">
@@ -65,7 +65,7 @@ export function useTable<TableElement extends Element, TableRowElement extends E
         propsLabel: propsLabelLabel,
         randomIdInputReturn,
         randomIdLabelReturn
-    } = useLabel<TableElement, LabelElement>({
+    } = useLabel<LabelPosition, TableElement, LabelElement>({
         labelParameters,
         randomIdInputParameters: { prefix: "aria-listbox-input-" },
         randomIdLabelParameters: { prefix: "aria-listbox-label-" }
@@ -129,15 +129,11 @@ export function useTableSection<TableSectionElement extends Element, TableRowEle
 
 export function useTableRow<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement>, CM extends TableCellInfo<TableCellElement>>({
     asChildRowParameters: {
-        managedChildContext,
         managedChildParameters,
-        rovingTabIndexChildContext,
         singleSelectionChildParameters,
-        singleSelectionContext,
-        typeaheadNavigationChildContext,
         typeaheadNavigationChildParameters,
         completeGridNavigationRowParameters,
-        gridNavigationRowContext
+        context: cx1
     },
     asParentRowParameters: {
         linearNavigationParameters,
@@ -149,20 +145,17 @@ export function useTableRow<TableRowElement extends Element, TableCellElement ex
     const {
         asChildRowReturn,
         asParentRowReturn,
-        context,
+        context: cx2,
         managedChildReturn,
+        hasCurrentFocusReturn,
         props
     } = useCompleteGridNavigationRow<TableRowElement, TableCellElement, RM, CM>({
         asChildRowParameters: {
-            managedChildContext,
+            context: cx1,
             managedChildParameters,
-            rovingTabIndexChildContext,
             singleSelectionChildParameters,
-            singleSelectionContext,
-            typeaheadNavigationChildContext,
             typeaheadNavigationChildParameters,
             completeGridNavigationRowParameters,
-            gridNavigationRowContext
         },
         asParentRowParameters: {
             linearNavigationParameters,
@@ -178,7 +171,8 @@ export function useTableRow<TableRowElement extends Element, TableCellElement ex
     return {
         asChildRowReturn,
         asParentRowReturn,
-        context,
+        context: cx2,
+        hasCurrentFocusReturn,
         managedChildReturn,
         props
     }

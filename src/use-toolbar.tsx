@@ -42,17 +42,17 @@ export interface UseToolbarChildReturnType<ChildElement extends Element, M exten
  * @param param0 
  * @returns 
  */
-export function useToolbar<ContainerElement extends Element, ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>>({
+export function useToolbar<ContainerElement extends Element, ChildElement extends Element>({
     linearNavigationParameters,
     toolbarParameters: { orientation, role },
     ...listNavParameters
-}: UseToolbarParameters<ContainerElement, ChildElement, M>): UseToolbarReturnType<ContainerElement, ChildElement, M> {
+}: UseToolbarParameters<ContainerElement, ChildElement, UseToolbarSubInfo<ChildElement>>): UseToolbarReturnType<ContainerElement, ChildElement, UseToolbarSubInfo<ChildElement>> {
     const {
         context,
         props,
         
         ...listNavReturn
-    } = useCompleteListNavigation<ContainerElement, ChildElement, M>({
+    } = useCompleteListNavigation<ContainerElement, ChildElement, UseToolbarSubInfo<ChildElement>>({
         ...listNavParameters,
         linearNavigationParameters: { ...linearNavigationParameters, navigationDirection: orientation },
     });
@@ -66,10 +66,10 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
 }
 
 
-export function useToolbarChild<ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>>({
+export function useToolbarChild<ChildElement extends Element>({
     ...listNavChildParameters
-}: UseToolbarChildParameters<ChildElement, M>): UseToolbarChildReturnType<ChildElement, M> {
-    return useCompleteListNavigationChild<ChildElement, M>({
+}: UseToolbarChildParameters<ChildElement, UseToolbarSubInfo<ChildElement>>): UseToolbarChildReturnType<ChildElement, UseToolbarSubInfo<ChildElement>> {
+    return useCompleteListNavigationChild<ChildElement, UseToolbarSubInfo<ChildElement>>({
         ...listNavChildParameters
     });
 }

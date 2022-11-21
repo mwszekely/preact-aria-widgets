@@ -87,8 +87,6 @@ export const Checkbox = memoForwardRef(function Checkbox<I extends Element, L ex
         checkboxLikeParameters: { checked, disabled },
         checkboxParameters: { onCheckedChange },
         labelParameters: { ariaLabel, labelPosition, tagInput, tagLabel },
-        randomIdInputParameters: { prefix: "checkbox-input-" },
-        randomIdLabelParameters: { prefix: "checkbox-label-" },
         refElementInputReturn,
         refElementLabelReturn
     });

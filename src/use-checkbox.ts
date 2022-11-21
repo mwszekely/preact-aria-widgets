@@ -7,7 +7,7 @@ import { LabelPosition, useCheckboxLike, UseCheckboxLikeParameters, UseCheckboxL
 
 export type CheckboxChangeEvent<E extends EventTarget> = EnhancedEvent<E, Event, { checked: boolean }>;
 
-export interface UseCheckboxParameters<LP extends LabelPosition, I extends Element, L extends Element> extends Omit<UseCheckboxLikeParameters<LP, I, L>, "checkboxLikeParameters"> {
+export interface UseCheckboxParameters<LP extends LabelPosition, I extends Element, L extends Element> extends Omit<UseCheckboxLikeParameters<LP, I, L>, "checkboxLikeParameters" | "randomIdInputParameters" | "randomIdLabelParameters"> {
     checkboxLikeParameters: Omit<UseCheckboxLikeParameters<LP, I, L>["checkboxLikeParameters"], "onInput" | "role" | "prefix">;
     checkboxParameters: {
         onCheckedChange(event: CheckboxChangeEvent<I>): void;
@@ -22,8 +22,6 @@ export function useCheckbox<LP extends LabelPosition, InputType extends Element,
     checkboxParameters: { onCheckedChange },
     checkboxLikeParameters,
     labelParameters,
-    randomIdInputParameters,
-    randomIdLabelParameters,
     refElementInputReturn,
     refElementLabelReturn
 }: UseCheckboxParameters<LP, InputType, LabelType>): UseCheckboxReturnType<InputType, LabelType> {
@@ -43,8 +41,8 @@ export function useCheckbox<LP extends LabelPosition, InputType extends Element,
         checkboxLikeInputReturn,
         checkboxLikeLabelReturn
     } = useCheckboxLike<LP, InputType, LabelType>({
-        randomIdInputParameters: { ...randomIdInputParameters, prefix: "checkbox-i-" },
-        randomIdLabelParameters: { ...randomIdLabelParameters, prefix: "checkbox-l-" },
+        randomIdInputParameters: { prefix: "checkbox-i-" },
+        randomIdLabelParameters: { prefix: "checkbox-l-" },
         refElementInputReturn,
         refElementLabelReturn,
         checkboxLikeParameters: { role: "checkbox", onInput: onInputEnhanced,  ...checkboxLikeParameters },

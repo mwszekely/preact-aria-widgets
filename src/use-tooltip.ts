@@ -172,8 +172,10 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
     // it's perfectly reasonable that a child element will be the one that's focused,
     // not this one, so we don't set tabIndex=0
     propsTrigger.tabIndex ??= -1;
-    propsTrigger = useMergedProps(propsTrigger, { onTouchEnd });
+    
     //}
+
+    const { hasCurrentFocusReturn } = useHasCurrentFocus<TriggerType>({ hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: setTriggerFocused, onCurrentFocusedChanged: null }, refElementReturn: { getElement: getTriggerElement } })
 
     //return {
     //    useTooltipTriggerProps,
@@ -205,7 +207,7 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
 
     return {
         propsPopup: useMergedProps(propsPopup, propsFocusPopup),
-        propsTrigger: propsTrigger,
+        propsTrigger: useMergedProps(propsTrigger, hasCurrentFocusReturn.propsStable, { onTouchEnd }),
         tooltipReturn: {
             isOpen: open,
             getIsOpen: getOpen

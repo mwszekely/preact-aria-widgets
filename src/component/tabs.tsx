@@ -1,12 +1,131 @@
-import { createContext, createElement, h, Ref, VNode } from "preact";
-import { UseHasFocusParameters } from "preact-prop-helpers";
+import { createContext, createElement, h, Ref, render, VNode } from "preact";
 import { useContext, useImperativeHandle } from "preact/hooks";
 import { ElementToTag, PropModifier } from "../props";
-import { UseTab, UseTabListParameters, UseTabListReturnTypeInfo, UseTabPanel, UseTabPanelParameters, UseTabPanelReturnTypeInfo, UseTabParameters, UseTabReturnTypeInfo, useTabs, UseTabsParameters, UseTabsReturnTypeInfo } from "../use-tabs";
+import { TabsContext, UseTab, UseTabPanel, UseTabPanelParameters, UseTabParameters, useTabs, UseTabsParameters, TabPanelsContext, UseTabsReturnType, useTab, UseTabReturnType, UseTabPanelReturnType, useTabPanel } from "../use-tabs";
 import { memoForwardRef } from "./util";
 
 type Get<T, K extends keyof T> = T[K];
 type Get2<T, K extends keyof T, K2 extends keyof T[K]> = T[K][K2];
+
+export interface TabsProps<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element> extends
+    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement>, "labelParameters">,
+    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement>, "linearNavigationParameters">,
+    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement>, "randomIdInputParameters">,
+    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement>, "randomIdLabelParameters">,
+    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement>, "rearrangeableChildrenParameters">,
+    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement>, "rovingTabIndexParameters">,
+    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement>, "singleSelectionParameters">,
+    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement>, "sortableChildrenParameters">,
+    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement>, "tabsParameters">,
+    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement>, "typeaheadNavigationParameters"> {
+    render(info: UseTabsReturnType<TabContainerElement, TabElement, TabLabelElement>): VNode<any>;
+}
+
+export interface TabProps<TabElement extends Element> extends
+    Get<UseTabParameters<TabElement>, "managedChildParameters">,
+    Get<UseTabParameters<TabElement>, "pressParameters">,
+    Get<UseTabParameters<TabElement>, "singleSelectionChildParameters">,
+    Get<UseTabParameters<TabElement>, "typeaheadNavigationChildParameters">,
+    Get<UseTabParameters<TabElement>, "completeListNavigationChildParameters"> {
+    render(info: UseTabReturnType<TabElement>): VNode<any>;
+}
+
+export interface TabPanelProps<PanelElement extends Element> extends
+    Get<UseTabPanelParameters, "managedChildParameters"> {
+    render(info: UseTabPanelReturnType<PanelElement>): VNode<any>;
+}
+
+const TabsContext = createContext<TabsContext<any, any, any>>(null!);
+const TabPanelsContext = createContext<TabPanelsContext<any>>(null!);
+
+export function Tabs<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element>({
+    ariaLabel,
+    collator,
+    compare,
+    disableArrowKeys,
+    disableHomeEndKeys,
+    getIndex,
+    initiallySelectedIndex,
+    initiallyTabbedIndex,
+    labelPosition,
+    navigatePastEnd,
+    navigatePastStart,
+    navigationDirection,
+    noTypeahead,
+    onSelectedIndexChange,
+    onTabbableIndexChange,
+    orientation,
+    pageNavigationSize,
+    prefix,
+    tagInput,
+    tagLabel,
+    type,
+    typeaheadTimeout,
+    role,
+    render
+}: TabsProps<TabContainerElement, TabElement, TabLabelElement>) {
+    const info = useTabs<TabContainerElement, TabElement, TabLabelElement>({
+        labelParameters: { ariaLabel, labelPosition, tagInput, tagLabel },
+        linearNavigationParameters: { disableArrowKeys, disableHomeEndKeys, navigatePastEnd, navigatePastStart, navigationDirection, pageNavigationSize },
+        randomIdInputParameters: { prefix },
+        randomIdLabelParameters: { prefix },
+        rearrangeableChildrenParameters: { getIndex },
+        rovingTabIndexParameters: { initiallyTabbedIndex, onTabbableIndexChange },
+        singleSelectionParameters: { initiallySelectedIndex, onSelectedIndexChange },
+        sortableChildrenParameters: { compare },
+        tabsParameters: { orientation, type, role },
+        typeaheadNavigationParameters: { collator, noTypeahead, typeaheadTimeout }
+    });
+
+    const { contextPanels, contextTabs } = info;
+
+
+    return (
+        <TabsContext.Provider value={contextTabs}>
+            <TabPanelsContext.Provider value={contextPanels}>
+                {render(info)}
+            </TabPanelsContext.Provider>
+        </TabsContext.Provider>
+    )
+}
+
+export function Tab<E extends Element>({
+    disabled,
+    exclude,
+    focusSelf,
+    hidden,
+    index,
+    onPressSync,
+    selectionMode,
+    text,
+    render
+}: TabProps<E>) {
+    const context = useContext(TabsContext);
+    const info = useTab<E>({
+        completeListNavigationChildParameters: {},
+        context,
+        managedChildParameters: { disabled, hidden, index },
+        pressParameters: { exclude, focusSelf, onPressSync },
+        singleSelectionChildParameters: { selectionMode },
+        typeaheadNavigationChildParameters: { text }
+    });
+    return render(info);
+}
+
+export function TabPanel<E extends Element>({
+    index,
+    render
+}: TabPanelProps<E>) {
+    const context = useContext(TabPanelsContext);
+    const info = useTabPanel<E>({
+        context,
+        managedChildParameters: { index }
+    });
+    return render(info);
+}
+
+
+/*
 
 export interface TabsProps<LabelElement extends Element, ListElement extends Element, TabElement extends Element, TC, PC, TK extends string> extends
     Get<UseTabListParameters<TabElement, TC, TK>, "linearNavigation">,
@@ -142,3 +261,4 @@ export function defaultRenderTabPanel<TabPanelElement extends Element>({ makePro
         return createElement(tagTabPanel as never, modifyTabPanelProps(makePropsTabPanel(tabPanelInfo)));
     }
 }
+*/

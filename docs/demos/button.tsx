@@ -69,8 +69,6 @@ function DemoButton({ tag, disabled }: { tag: string, disabled: boolean | "soft"
         <Button
             disabled={disabled}
             exclude={undefined}
-            onPseudoActiveStart={null}
-            onPseudoActiveStop={null}
             pressed={null}
             tagButton={tag as any}
             onPress={onPress}

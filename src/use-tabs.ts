@@ -14,8 +14,7 @@ interface TabPanelInfo extends ManagedChildInfo<number> {
     setVisible: StateUpdater<boolean>;
 }
 
-interface TabInfo<E extends Element> extends UseListNavigationSingleSelectionSortableChildInfo<E> {
-}
+interface TabInfo<E extends Element> extends UseListNavigationSingleSelectionSortableChildInfo<E> {}
 
 
 export type TabsChangeEvent<E extends Element> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
@@ -30,13 +29,28 @@ export interface UseTabsParameters<TabContainerElement extends Element, TabEleme
 }
 export interface UseTabParameters<TabElement extends Element> extends Omit<UseCompleteListNavigationChildParameters<TabElement, TabInfo<TabElement>>, "singleSelectionChildParameters"> {
     singleSelectionChildParameters: Omit<UseCompleteListNavigationChildParameters<TabElement, TabInfo<TabElement>>["singleSelectionChildParameters"], "ariaPropName">;
-    tabContext: TabContext;
+    context: TabsContext<any, TabElement, TabInfo<TabElement>>;
     // hasFocus: UseHasFocusParameters<E>;
 }
 
 export interface UseTabPanelParameters extends Omit<UseManagedChildParameters<TabPanelInfo>, "managedChildParameters"> {
     managedChildParameters: Omit<UseManagedChildParameters<TabPanelInfo>["managedChildParameters"], "getVisible" | "setVisible">
-    context: UseManagedChildrenContext<TabPanelInfo> & { tabPanelContext: TabPanelContext };
+    context: TabPanelsContext<TabPanelInfo>;
+}
+
+export interface TabsContext<ParentElement extends Element, ChildElement extends Element, M extends TabInfo<ChildElement>> extends CompleteListNavigationContext<ParentElement, ChildElement, M> {
+    tabsContext: TC;
+}
+
+export interface TabPanelsContext<M extends TabPanelInfo> extends UseManagedChildrenContext<M> {
+    tabPanelContext: TC;
+}
+
+interface TC {
+    getVisibleIndex: () => number | null;
+    getPanelId: (index: number) => string;
+    getTabId: (index: number) => string;
+    setSelectedIndex: PassiveStateUpdater<number | null>;
 }
 
 export interface UseTabReturnType<TabElement extends Element> extends UseCompleteListNavigationChildReturnType<TabElement, TabInfo<TabElement>> { }
@@ -61,7 +75,7 @@ export interface UseTabListReturnTypeWithHooks<TabContainerElement extends Eleme
 
 export interface UseTabPanelReturnType<E extends Element> {
     props: h.JSX.HTMLAttributes<E>;
-    tabPanelReturnType: { visible: boolean; getVisible: () => boolean; };
+    tabPanelReturn: { visible: boolean; getVisible: () => boolean; };
 }
 /*export interface UseTabPanelReturnTypeWithHooks<LabelElement extends Element> extends UseTabPanelReturnTypeInfo {
     useTabPanelProps: (props: h.JSX.HTMLAttributes<LabelElement>) => h.JSX.HTMLAttributes<LabelElement>;
@@ -76,8 +90,8 @@ export interface UseTabLabelReturnTypeWithHooks<LabelElement extends Element> ex
 export interface UseTabsReturnType<TabContainerElement extends Element, TabElement extends Element, LabelElement extends Element> {
     propsContainer: h.JSX.HTMLAttributes<TabContainerElement>;
     propsLabel: h.JSX.HTMLAttributes<LabelElement>;
-    contextPanels: { tabPanelContext: TabPanelContext } & UseManagedChildrenContext<TabPanelInfo>;
-    contextTabs: { tabContext: TabContext } & CompleteListNavigationContext<TabContainerElement, TabElement, TabInfo<TabElement>>;
+    contextPanels: TabPanelsContext<TabPanelInfo>; //{ tabPanelContext: TabPanelsContext<TabPanelInfo> } & UseManagedChildrenContext<TabPanelInfo>;
+    contextTabs: TabsContext<TabContainerElement, TabElement, TabInfo<TabElement>>; //{ tabContext: TabsContext<TabContainerElement, TabElement, TabInfo<TabElement>> } & CompleteListNavigationContext<TabContainerElement, TabElement, TabInfo<TabElement>>;
     //contextPanels: TabPanelContext;
     //contextTab: TabContext;
     // managedChildrenContextPanels: UseManagedChildrenReturnType<TabPanelInfo>["managedChildContext"];
@@ -88,17 +102,6 @@ export interface UseTabsReturnType<TabContainerElement extends Element, TabEleme
     useTabPanel: UseTabPanel<PanelElement, PC, PK>;
     useTabListLabel: UseTabListLabel<LabelElement>;
 }*/
-
-interface TabPanelContext {
-    getVisibleIndex: () => number | null;
-    getPanelId: (index: number) => string;
-    getTabId: (index: number) => string;
-    setSelectedIndex: PassiveStateUpdater<number | null>;
-}
-
-interface TabContext extends TabPanelContext {
-    //changeVisiblePanel: (arg: number | ((prevState: number | null) => number | null) | null) => number | null;
-}
 
 export type UseTab<_TabContainerElement extends Element, TabElement extends Element> = (args: UseTabParameters<TabElement>) => UseTabReturnType<TabElement>;
 export type UseTabList<TabContainerElement extends Element, TabElement extends Element> = (args: UseTabListParameters<TabContainerElement, TabElement>) => UseTabListReturnType<TabContainerElement, TabElement>;
@@ -130,7 +133,7 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
     
 }*/
 
-export function useTabs<TabListElement extends Element, TabElement extends Element, _PanelElement extends Element, LabelElement extends Element>({
+export function useTabs<TabListElement extends Element, TabElement extends Element, LabelElement extends Element>({
     labelParameters,
     randomIdInputParameters,
     randomIdLabelParameters,
@@ -211,7 +214,7 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
         }),
         contextTabs: useStableObject({
             ...context,
-            tabContext: useStableObject({ getTabId, getPanelId, getVisibleIndex, setSelectedIndex })
+            tabsContext: useStableObject({ getTabId, getPanelId, getVisibleIndex, setSelectedIndex })
         }),
         propsContainer: useMergedProps(listNavigationSingleSelectionProps, {
             role: (role ?? "tablist"),
@@ -223,7 +226,7 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
 }
 
 
-export function useTab<TabElement extends Element>({ completeListNavigationChildParameters, managedChildParameters, pressParameters: { onPressSync, ...pressParameters }, context, singleSelectionChildParameters, typeaheadNavigationChildParameters, tabContext }: UseTabParameters<TabElement>) {
+export function useTab<TabElement extends Element>({ completeListNavigationChildParameters, managedChildParameters, pressParameters: { onPressSync, ...pressParameters }, singleSelectionChildParameters, typeaheadNavigationChildParameters, context }: UseTabParameters<TabElement>) {
     debugLog("useTab", managedChildParameters.index);
     const { props: listNavigationSingleSelectionChildProps, ...listNavRet2 } = useCompleteListNavigationChild({
         completeListNavigationChildParameters,
@@ -237,7 +240,7 @@ export function useTab<TabElement extends Element>({ completeListNavigationChild
         typeaheadNavigationChildParameters,
     });
     const { singleSelectionChildReturn: { selected }, rovingTabIndexChildReturn: { tabbable } } = listNavRet2;
-    const { getPanelId, getTabId, setSelectedIndex } = tabContext;
+    const { getPanelId, getTabId, setSelectedIndex } = context.tabsContext;
 
     const panelId = getPanelId(managedChildParameters.index);
     const tabId = getTabId(managedChildParameters.index);
@@ -256,7 +259,7 @@ export function useTab<TabElement extends Element>({ completeListNavigationChild
 }
 
 
-export function useTabPanel<PanelElement extends Element>({ managedChildParameters, context }: UseTabPanelParameters) {
+export function useTabPanel<PanelElement extends Element>({ managedChildParameters, context }: UseTabPanelParameters): UseTabPanelReturnType<PanelElement> {
     debugLog("useTabPanel", managedChildParameters.index);
     const { tabPanelContext: { getVisibleIndex, getPanelId, getTabId } } = context;
     //const [correspondingTabId, setCorrespondingTabId] = useState<string | null>(null);
@@ -266,17 +269,15 @@ export function useTabPanel<PanelElement extends Element>({ managedChildParamete
     const panelId = getPanelId(managedChildParameters.index);
     const tabId = getTabId(managedChildParameters.index);
 
-    const useTabPanelProps = (props: h.JSX.HTMLAttributes<PanelElement>) => {
-        overwriteWithWarning("useTabPanelProps", props, "role", "tabpanel");
-        overwriteWithWarning("useTabPanelProps", props, "aria-labelledby", tabId);
-        overwriteWithWarning("useTabPanelProps", props, "id", panelId);
-        return useMergedProps({
-        } as {}, props);
-    }
 
     return {
-        useTabPanelProps,
-        tabPanel: {
+        props: useMergedProps<PanelElement>({
+            role: "tabpanel",
+            "aria-labelledby": tabId,
+            id: panelId,
+            inert: !isVisible
+        } as {}),
+        tabPanelReturn: {
             visible: isVisible,
             getVisible: getIsVisible
         }

@@ -52,7 +52,7 @@ export interface UseMenuSurfaceReturnTypeWithHooks<MenuSurfaceElement extends El
 /**
  * A menu surface is what handles user interaction with an interactive but transient surface (like a menu or a popup).
  * 
- * This isn't strictly an ARIA thing, but the keyboard (etc.) interactions are shared among a lot of widgets.
+ * The keyboard (etc.) interactions are shared among a lot of widgets, and the opening button has some ARIA properties that need setting.
  * 
  * Related to menus, which are a menu contained within a menu surface. Not related to menubars -- menus contain menubars, but not all menubars are contained within a menu or its surface.
  * 
@@ -65,33 +65,6 @@ export function useMenuSurface<MenuSurfaceElement extends Element, MenuTargetEle
     menuSurfaceParameters: { role }
 }: UseMenuSurfaceParameters<MenuSurfaceElement, MenuTriggerElement>): UseMenuSurfaceReturnType<MenuSurfaceElement, MenuTargetElement, MenuTriggerElement> {
     debugLog("useMenuSurface");
-    //const sendFocusWithinMenu = useStableCallback(sendFocusToMenu);
-    //const [focusTrapActive, setFocusTrapActive] = useState<null | boolean>(null);
-    //const { open, onClose: userOnClose } = softDismiss;
-    /*const onClose = useStableCallback<typeof userOnClose>((reason) => {
-        if (reason != "lost-focus") {
-            const opener = (getOpenerElement() as HTMLElement | null);
-            if (opener && "focus" in opener)
-                opener.focus({ preventScroll: true });
-        }
-        return userOnClose(reason);
-    })*/
-    //useEnsureStability("useMenuSurface", onClose, role, sendFocusToMenu);
-    /*
-
-    TODO: This needs to actually do something
-
-    const getIsOpen = useStableGetter(open);
-    const intersectionObserver = useRef<IntersectionObserver>(null!);
-    const [getSurfaceFullyVisible, setSurfaceFullyVisible] = usePassiveState(null, returnFalse);
-    intersectionObserver.current ??= new IntersectionObserver((entries, _observer) => {
-        for (const entry of entries) {
-            setSurfaceFullyVisible(entry.intersectionRatio >= 1);
-        }
-    }, { root: null, threshold: [0, 1] });
-    */
-
-    //const [, setOpenerElement, getOpenerElement] = useState<MenuTriggerElement | null>(null);
 
     const { propsReferencer: propsIdTrigger, propsSource: propsIdTarget, randomIdReturn } = useRandomId<MenuTargetElement, MenuTriggerElement>({ randomIdParameters: { prefix: "aria-menu-", referencerProp: "aria-controls" } });
 
@@ -118,27 +91,6 @@ export function useMenuSurface<MenuSurfaceElement extends Element, MenuTargetEle
         }
     });
 
-
-    /*const useMenuSurfaceProps = (props: h.JSX.HTMLAttributes<MenuSurfaceElement>): h.JSX.HTMLAttributes<MenuSurfaceElement> => {
-        function onKeyDown(e: KeyboardEvent) {
-            const open = getIsOpen();
-            if (e.key == "Escape" && open) {
-                onClose("escape");
-                e.stopPropagation();
-                e.stopImmediatePropagation();
-                e.preventDefault();
-            }
-        }
-
-        return useMergedProps(softDismissProps, useMergedProps(useMenuBaseRefElementProps, useMergedProps<MenuSurfaceElement>({ onKeyDown }, (props))));
-    };*/
-
-    /* const useMenuSurfaceButtonProps = (props: h.JSX.HTMLAttributes<MenuTriggerElement>): h.JSX.HTMLAttributes<MenuTriggerElement> => {
-         overwriteWithWarning("useMenuSurfaceButtonProps", props, "aria-expanded", open.toString());
-         overwriteWithWarning("useMenuSurfaceButtonProps", props, "aria-haspopup", role);
-         return useMergedProps(useButtonRefElementProps, useRandomIdReferencerElementProps(props));
-     };*/
-
     const propsSurface: h.JSX.HTMLAttributes<MenuSurfaceElement> = (propsPopup)
 
     const propsTarget: h.JSX.HTMLAttributes<MenuTargetElement> = useMergedProps({
@@ -156,25 +108,7 @@ export function useMenuSurface<MenuSurfaceElement extends Element, MenuTargetEle
             onClose: useCallback(() => { dismissParameters.onClose("lost-focus") }, [dismissParameters.onClose]),
             open: dismissParameters.open
         }
-    })
-
-
-    /*useEffect(() => {
-
-        if (open === true) {
-            sendFocusToMenu?.();
-            setTimeout(() => {
-                if (!getSurfaceFullyVisible()) {
-                    getMenuElement()?.scrollIntoView();
-                }
-            })
-        }
-    }, [open]);*/
-
-    /*function useMenuSurfaceChildProps(props: h.JSX.HTMLAttributes<MenuParentElement>): h.JSX.HTMLAttributes<MenuParentElement> {
-        props.role = role;
-        return useRandomIdSourceElementProps(props);
-    }*/
+    });
 
     return {
         focusTrapReturn,
@@ -184,24 +118,6 @@ export function useMenuSurface<MenuSurfaceElement extends Element, MenuTargetEle
         propsTrigger,
         refElementPopupReturn,
         refElementSourceReturn
-        /*useMenuSurfaceChildProps,
-        useMenuSurfaceSentinel: useCallback(<E extends Element>() => {
-            debugLog("useMenuSurfaceSentinel");
-            const {
-                useSentinelProps: useMenuSentinelProps,
-                ...rest
-            } = useFocusSentinel<E>({
-                focusSentinel: {
-                    open: open === true,
-                    onClose: () => onClose("escape"),
-                    sendFocusToMenu
-                }
-            });
-            return { useMenuSentinelProps, ...rest };
-        }, [open, onClose]),
-        useMenuSurfaceProps,
-        useMenuSurfaceButtonProps,
-        ...softDismissReturn*/
     }
 }
 

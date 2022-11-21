@@ -71,7 +71,7 @@ interface SliderContext {
 
 export function useSlider<ThumbElement extends Element, LabelElement extends Element>({ sliderParameters: { max, min }, managedChildrenParameters }: UseSliderParameters<SliderThumbInfo>): UseSliderReturnType<SliderThumbInfo> {
     debugLog("useSlider");
-    const { managedChildContext, managedChildrenReturn } = useManagedChildren<SliderThumbInfo>({ managedChildrenParameters });
+    const { context, managedChildrenReturn } = useManagedChildren<SliderThumbInfo>({ managedChildrenParameters });
 
     const { propsReferencer, propsSource, randomIdReturn: { id: baseId } } = useRandomId<LabelElement, ThumbElement>({ randomIdParameters: { prefix: "aria-thumb-", referencerProp: "aria-labelledby" } })
 
@@ -83,7 +83,7 @@ export function useSlider<ThumbElement extends Element, LabelElement extends Ele
     } = useLabel<ThumbElement, LabelElement>({ labelParameters: { ariaLabel: null }, randomIdInputParameters, randomIdLabelParameters });*/
 
     return {
-        managedChildContext,
+        context,
         managedChildrenReturn,
         sliderContext: useMemo(() => ({
             min,
@@ -96,12 +96,12 @@ export function useSlider<ThumbElement extends Element, LabelElement extends Ele
 
 export function useSliderThumb<ThumbElement extends Element, M extends SliderThumbInfo>({
     managedChildParameters,
-    managedChildContext,
+    context,
     sliderThumbContext: { max: maxParent, min: minParent },
     sliderThumbParameters
 }: UseSliderThumbParameters<ThumbElement, M>): UseSliderThumbReturnType<ThumbElement, SliderThumbInfo> {
     debugLog("useSliderThumb", managedChildParameters.index);
-    const { managedChildReturn } = useManagedChild<SliderThumbInfo>({ managedChildParameters, managedChildContext });
+    const { managedChildReturn } = useManagedChild<SliderThumbInfo>({ managedChildParameters, context });
     const { getChildren: _getThumbs } = managedChildReturn;
 
     const { tag, value, max: maxOverride, min: minOverride, onValueChange, valueText, label } = sliderThumbParameters;

@@ -3,18 +3,17 @@ import { UseActiveElementParameters } from "preact-prop-helpers";
 import { createPortal } from "preact/compat";
 import { useImperativeHandle, useRef } from "preact/hooks";
 import { ElementToTag, PropModifier } from "../props";
-import { useDialog, UseDialogParameters, UseDialogReturnTypeInfo } from "../use-dialog";
+import { useDialog, UseDialogParameters, UseDialogReturnType } from "../use-dialog";
 import { memoForwardRef } from "./util";
 
 type Get<T, K extends keyof T> = T[K];
 
 export interface DialogProps<FocusContainerElement extends HTMLElement, DialogElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement> extends
-    Get<UseDialogParameters, "softDismiss">,
-    Get<UseDialogParameters, "modal">,
-    UseActiveElementParameters,
-    Get<UseDialogParameters, "dialog"> {
-    ref?: Ref<UseDialogReturnTypeInfo>;
-    render(dialogInfo: UseDialogReturnTypeInfo, modifyFocusContainerProps: PropModifier<FocusContainerElement>, modifyDialogProps: PropModifier<DialogElement>, modifyTitleProps: PropModifier<TitleElement>, modifyBodyProps: PropModifier<BodyElement>, modifyBackdropProps: PropModifier<BackdropElement>): VNode<any>;
+    Get<UseDialogParameters, "dismissParameters">,
+    Get<UseDialogParameters, "escapeDismissParameters">,
+    Get<UseDialogParameters, "focusTrapParameters"> {
+    imperativeHandle?: Ref<UseDialogReturnType<FocusContainerElement, DialogElement>>;
+    render(dialogInfo: UseDialogReturnType<FocusContainerElement, DialogElement>): VNode<any>;
 }
 
 export function defaultRenderPortal({ portalId, children }: { portalId: string, children: VNode }) {
@@ -51,37 +50,30 @@ export function defaultRenderModal<FocusContainerElement extends HTMLElement, Di
 
 
 
-export function defaultRenderDialog<FocusContainerElement extends HTMLElement, DialogElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement>({ portalId, tagFocusContainer, tagBackdrop, tagBody, tagDialog, tagTitle, makePropsFocusContainer, makePropsBackdrop, makePropsBody, makePropsDialog, makePropsTitle }: { portalId: string, tagFocusContainer: ElementToTag<FocusContainerElement>, tagDialog: ElementToTag<DialogElement>; tagTitle: ElementToTag<TitleElement>; tagBody: ElementToTag<BodyElement>; tagBackdrop: ElementToTag<BackdropElement>, makePropsFocusContainer: (info: UseDialogReturnTypeInfo) => h.JSX.HTMLAttributes<FocusContainerElement>, makePropsDialog: (info: UseDialogReturnTypeInfo) => h.JSX.HTMLAttributes<DialogElement>, makePropsBody: (info: UseDialogReturnTypeInfo) => h.JSX.HTMLAttributes<BodyElement>, makePropsTitle: (info: UseDialogReturnTypeInfo) => h.JSX.HTMLAttributes<TitleElement>, makePropsBackdrop: (info: UseDialogReturnTypeInfo) => h.JSX.HTMLAttributes<BackdropElement> }) {
-    return defaultRenderModal<FocusContainerElement, DialogElement, TitleElement, BodyElement, BackdropElement, UseDialogReturnTypeInfo>({ portalId, tagFocusContainer, tagBackdrop, tagBody, tagDialog, tagTitle, makePropsFocusContainer, makePropsBackdrop, makePropsBody, makePropsDialog, makePropsTitle });
+export function defaultRenderDialog<FocusContainerElement extends HTMLElement, DialogElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement>({ portalId, tagFocusContainer, tagBackdrop, tagBody, tagDialog, tagTitle, makePropsFocusContainer, makePropsBackdrop, makePropsBody, makePropsDialog, makePropsTitle }: { portalId: string, tagFocusContainer: ElementToTag<FocusContainerElement>, tagDialog: ElementToTag<DialogElement>; tagTitle: ElementToTag<TitleElement>; tagBody: ElementToTag<BodyElement>; tagBackdrop: ElementToTag<BackdropElement>, makePropsFocusContainer: (info: UseDialogReturnType<FocusContainerElement, DialogElement>) => h.JSX.HTMLAttributes<FocusContainerElement>, makePropsDialog: (info: UseDialogReturnType<FocusContainerElement, DialogElement>) => h.JSX.HTMLAttributes<DialogElement>, makePropsBody: (info: UseDialogReturnType<FocusContainerElement, DialogElement>) => h.JSX.HTMLAttributes<BodyElement>, makePropsTitle: (info: UseDialogReturnType<FocusContainerElement, DialogElement>) => h.JSX.HTMLAttributes<TitleElement>, makePropsBackdrop: (info: UseDialogReturnType<FocusContainerElement, DialogElement>) => h.JSX.HTMLAttributes<BackdropElement> }) {
+    return defaultRenderModal<FocusContainerElement, DialogElement, TitleElement, BodyElement, BackdropElement, UseDialogReturnType<FocusContainerElement, DialogElement>>({ portalId, tagFocusContainer, tagBackdrop, tagBody, tagDialog, tagTitle, makePropsFocusContainer, makePropsBackdrop, makePropsBody, makePropsDialog, makePropsTitle });
 }
 
 export const Dialog = memoForwardRef(function Dialog<FocusContainerElement extends HTMLElement, DialogElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement>({
     onClose,
     open,
-    bodyIsOnlySemantic,
-    getDocument,
+    closeOnBackdrop,
+    closeOnEscape,
+    focusOpener,
     getWindow,
-    onActiveElementChange,
-    onLastActiveElementChange,
-    onWindowFocusedChange,
+    parentDepth,
+    imperativeHandle,
     focusSelf,
     render
 }: DialogProps<FocusContainerElement, DialogElement, TitleElement, BodyElement, BackdropElement>, ref?: Ref<any>) {
-    const {
-        useDialogBackdrop,
-        useDialogBody,
-        useDialogProps,
-        useDialogTitle,
-        useDialogFocusContainerProps,
-        ...r
-    } = useDialog<FocusContainerElement, DialogElement, TitleElement, BodyElement, BackdropElement>({ dialog: { onClose }, modal: { bodyIsOnlySemantic, focusSelf }, softDismiss: { open }, activeElement: { getDocument, getWindow, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange } });
+    const info = useDialog<FocusContainerElement, DialogElement>({ 
+        dismissParameters: { closeOnBackdrop, closeOnEscape, onClose, open },
+        escapeDismissParameters: { getWindow, parentDepth },
+        focusTrapParameters: { focusOpener, focusSelf }
+    });
 
-    useImperativeHandle(ref!, () => r);
+    useImperativeHandle(imperativeHandle!, () => info);
 
-    const { useDialogTitleProps } = useDialogTitle();
-    const { useDialogBodyProps } = useDialogBody();
-    const { useDialogBackdropProps } = useDialogBackdrop();
-
-    return render(r, useDialogFocusContainerProps, useDialogProps, useDialogTitleProps, useDialogBodyProps, useDialogBackdropProps);
+    return render(info);
 
 });

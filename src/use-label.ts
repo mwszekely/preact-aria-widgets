@@ -165,8 +165,8 @@ export function useCheckboxLike<LP extends LabelPosition, InputType extends Elem
     const focusLabel = useCallback(() => { (getLabel() as (HTMLElement | null))?.focus(); }, []);
     const onClickInputSync = (labelPosition == "wrapping"? undefined : onInputSync);
     const onClickLabelSync = (labelPosition == "none"? undefined : onInputSync);
-    const { pressReturn: pressInputReturn } = usePress<InputType>({ pressParameters: { exclude: {}, focusSelf: focusInput, onPressSync: (disabled)? undefined : onClickInputSync, onPseudoActiveStart: null, onPseudoActiveStop: null }, refElementReturn: refElementInputReturn });
-    const { pressReturn: pressLabelReturn } = usePress<LabelType>({ pressParameters: { exclude: {}, focusSelf: focusLabel, onPressSync: (disabled)? undefined : onClickLabelSync, onPseudoActiveStart: null, onPseudoActiveStop: null }, refElementReturn: refElementLabelReturn });
+    const { pressReturn: pressInputReturn } = usePress<InputType>({ pressParameters: { exclude: {}, focusSelf: focusInput, onPressSync: (disabled)? undefined : onClickInputSync }, refElementReturn: refElementInputReturn });
+    const { pressReturn: pressLabelReturn } = usePress<LabelType>({ pressParameters: { exclude: {}, focusSelf: focusLabel, onPressSync: (disabled)? undefined : onClickLabelSync }, refElementReturn: refElementLabelReturn });
     const propsUnstableInput: h.JSX.HTMLAttributes<InputType> = {};
     const propsUnstableLabel: h.JSX.HTMLAttributes<LabelType> = {};
     //const propsUnstableLabel = useRef<h.JSX.HTMLAttributes<LabelType>>({});

@@ -3,7 +3,7 @@ import { CompleteListNavigationContext, useCompleteListNavigation, useCompleteLi
 import { UseChildrenHaveFocusParameters } from "preact-prop-helpers";
 import { useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
 import { debugLog, ElementToTag, EnhancedEvent, enhanceEvent, TagSensitiveProps } from "./props";
-import { useCheckboxLike, UseCheckboxLikeParameters, UseCheckboxLikeReturnType, useLabel, UseLabelParameters } from "./use-label";
+import { LabelPosition, useCheckboxLike, UseCheckboxLikeParameters, UseCheckboxLikeReturnType, useLabel, UseLabelParameters } from "./use-label";
 
 //type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RadioChangeEvent<E extends EventTarget, V extends number | string> = EnhancedEvent<E, Event, { selectedValue: V | undefined }>;
@@ -17,22 +17,22 @@ export interface UseRadioGroupParameters<V extends string | number, GroupElement
         tagGroup: ElementToTag<GroupElement>;
         tagGroupLabel: ElementToTag<GroupLabelElement>;
     }
-    labelParameters: UseLabelParameters<GroupElement, GroupLabelElement>["labelParameters"];
+    labelParameters: UseLabelParameters<LabelPosition, GroupElement, GroupLabelElement>["labelParameters"];
 }
 
 
 
-export interface UseRadioParameters<TabbableChildElement extends Element, InputElement extends Element, LabelElement extends Element, V extends string | number, M extends RadioSubInfo<TabbableChildElement, V>> extends Omit<UseCompleteListNavigationChildParameters<TabbableChildElement, M>, "singleSelectionChildParameters"> {
+export interface UseRadioParameters<LP extends LabelPosition, V extends string | number, TabbableChildElement extends Element, InputElement extends Element, LabelElement extends Element, M extends RadioSubInfo<TabbableChildElement, V>> extends Omit<UseCompleteListNavigationChildParameters<TabbableChildElement, M>, "singleSelectionChildParameters"> {
     radioParameters: {
         value: V;
     }
-    radioContext: RadioContext<V, any, TabbableChildElement, M>["radioContext"];
-    checkboxLikeParameters: Omit<UseCheckboxLikeParameters<InputElement, LabelElement>["checkboxLikeParameters"], "checked" | "onInput" | "role">;
-    labelParameters: UseCheckboxLikeParameters<InputElement, LabelElement>["labelParameters"];
+    context: RadioContext<V, any, TabbableChildElement, M>;
+    checkboxLikeParameters: Omit<UseCheckboxLikeParameters<LP, InputElement, LabelElement>["checkboxLikeParameters"], "checked" | "onInput" | "role">;
+    labelParameters: UseCheckboxLikeParameters<LP, InputElement, LabelElement>["labelParameters"];
     singleSelectionChildParameters: Omit<UseCompleteListNavigationChildParameters<TabbableChildElement, M>["singleSelectionChildParameters"], "ariaPropName">
 }
 
-interface RadioContext<V extends number | string, ParentElement extends Element, ChildElement extends Element, M extends RadioSubInfo<ChildElement, V>> extends CompleteListNavigationContext<ParentElement, ChildElement, M> {
+export interface RadioContext<V extends number | string, ParentElement extends Element, ChildElement extends Element, M extends RadioSubInfo<ChildElement, V>> extends CompleteListNavigationContext<ParentElement, ChildElement, M> {
     radioContext: {
         onSelectedIndexChange: (e: Event, newIndex: number) => void;
         name: string;
@@ -40,7 +40,7 @@ interface RadioContext<V extends number | string, ParentElement extends Element,
     }
 }
 
-export interface UseRadioGroupReturnType<GroupElement extends Element, GroupLabelElement extends Element, TabbableChildElement extends Element, V extends string | number> extends UseCompleteListNavigationReturnType<GroupElement, TabbableChildElement, RadioSubInfo<TabbableChildElement, V>> {
+export interface UseRadioGroupReturnType<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, TabbableChildElement extends Element> extends UseCompleteListNavigationReturnType<GroupElement, TabbableChildElement, RadioSubInfo<TabbableChildElement, V>> {
     radioGroupReturn: {
         selectedIndex: number | null;
         selectedValue: V | null;
@@ -58,7 +58,7 @@ export interface UseRadioGroupReturnTypeWithHooks<V extends string | number, G e
     useRadio: UseRadio<V, I, IL, C, K>;
 }*/
 
-interface RadioSubInfo<TabbableChildElement extends Element, V extends string | number> extends UseListNavigationSingleSelectionSortableChildInfo<TabbableChildElement> {
+export interface RadioSubInfo<TabbableChildElement extends Element, V extends string | number> extends UseListNavigationSingleSelectionSortableChildInfo<TabbableChildElement> {
     getValue(): V;
 }
 
@@ -71,7 +71,7 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
     labelParameters,
     radioGroupParameters: { name, onSelectedValueChange, selectedValue, tagGroup, tagGroupLabel },
     singleSelectionParameters
-}: UseRadioGroupParameters<V, G, GL, TCE>): UseRadioGroupReturnType<G, GL, TCE, V> {
+}: UseRadioGroupParameters<V, G, GL, TCE>): UseRadioGroupReturnType<V, G, GL, TCE> {
 
     debugLog("useRadioGroup", selectedValue);
     //const { refElementReturn: { getElement: _getGroupElement, propsStable } } = useRefElement<G>({ refElementParameters: {} });
@@ -79,7 +79,7 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
     const [selectedIndex, setSelectedIndex] = useState<number | null>(0);
     const byName = useRef(new Map<V, number>());
 
-    const { propsInput: propsGroup, propsLabel, randomIdInputReturn, randomIdLabelReturn } = useLabel<G, GL>({
+    const { propsInput: propsGroup, propsLabel, randomIdInputReturn, randomIdLabelReturn } = useLabel<LabelPosition, G, GL>({
         labelParameters,
         randomIdLabelParameters: { prefix: "aria-radio-group-label-", },
         randomIdInputParameters: { prefix: "aria-radio-group-" }
@@ -164,23 +164,18 @@ export interface UseRadioReturnType<V extends string | number, I extends Element
 
 
 
-export function useRadio<InputElement extends Element, LabelElement extends Element, TabbableChildElement extends InputElement | LabelElement, V extends string | number>({
+export function useRadio<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element, TabbableChildElement extends InputElement | LabelElement, V extends string | number>({
     radioParameters: { value },
     checkboxLikeParameters: { disabled },
-    childrenHaveFocusChildContext,
     completeListNavigationChildParameters,
     labelParameters,
-    managedChildContext,
     managedChildParameters,
     pressParameters,
-    rovingTabIndexChildContext,
     singleSelectionChildParameters,
-    singleSelectionContext,
-    typeaheadNavigationChildContext,
-    typeaheadNavigationChildParameters,
-    radioContext: { onSelectedIndexChange, name, byName }
+    context,
+    typeaheadNavigationChildParameters
 
-}: UseRadioParameters<TabbableChildElement, InputElement, LabelElement, V, RadioSubInfo<TabbableChildElement, V>>): UseRadioReturnType<V, InputElement, LabelElement, TabbableChildElement, RadioSubInfo<TabbableChildElement, V>>  {
+}: UseRadioParameters<LP, V, TabbableChildElement, InputElement, LabelElement, RadioSubInfo<TabbableChildElement, V>>): UseRadioReturnType<V, InputElement, LabelElement, TabbableChildElement, RadioSubInfo<TabbableChildElement, V>> {
     const index = managedChildParameters.index;
     debugLog("useRadio", index);
     const onInput = useStableCallback((e: h.JSX.TargetedEvent<InputElement>) => {
@@ -188,25 +183,23 @@ export function useRadio<InputElement extends Element, LabelElement extends Elem
         onSelectedIndexChange(e, index);
     });
 
+    const { onSelectedIndexChange, name, byName } = context.radioContext
+
     const { tagInput, tagLabel, labelPosition } = labelParameters;
 
     const getValue = useStableGetter(value);
-    const { 
-        props: listNavigationSingleSelectionChildProps, 
-        hasCurrentFocusReturn, 
-        managedChildReturn, 
-        pressReturn, 
-        rovingTabIndexChildReturn, 
+    const {
+        props: listNavigationSingleSelectionChildProps,
+        hasCurrentFocusReturn,
+        managedChildReturn,
+        pressReturn,
+        rovingTabIndexChildReturn,
         singleSelectionChildReturn
-     } = useCompleteListNavigationChild<TabbableChildElement, RadioSubInfo<TabbableChildElement, V>>({
+    } = useCompleteListNavigationChild<TabbableChildElement, RadioSubInfo<TabbableChildElement, V>>({
         completeListNavigationChildParameters,
-        childrenHaveFocusChildContext,
-        managedChildContext,
         managedChildParameters,
         pressParameters,
-        rovingTabIndexChildContext,
-        singleSelectionContext,
-        typeaheadNavigationChildContext,
+        context,
         typeaheadNavigationChildParameters,
         /*rovingTabIndex,
         managedChild: {
@@ -223,7 +216,7 @@ export function useRadio<InputElement extends Element, LabelElement extends Elem
     const { refElementReturn: refElementInputReturn } = useRefElement<InputElement>({ refElementParameters: {} });
     const { refElementReturn: refElementLabelReturn } = useRefElement<LabelElement>({ refElementParameters: {} });
 
-    const { checkboxLikeInputReturn, checkboxLikeLabelReturn, pressInputReturn, pressLabelReturn, propsInput, propsLabel, randomIdInputReturn, randomIdLabelReturn } = useCheckboxLike<InputElement, LabelElement>({
+    const { checkboxLikeInputReturn, checkboxLikeLabelReturn, pressInputReturn, pressLabelReturn, propsInput, propsLabel, randomIdInputReturn, randomIdLabelReturn } = useCheckboxLike<LabelPosition, InputElement, LabelElement>({
         checkboxLikeParameters: {
             checked: (checked ?? false),
             disabled,
@@ -282,9 +275,9 @@ export function useRadio<InputElement extends Element, LabelElement extends Elem
         randomIdInputReturn,
         randomIdLabelReturn,
         hasCurrentFocusReturn,
-        rovingTabIndexChildReturn, 
+        rovingTabIndexChildReturn,
         pressReturn,
-        singleSelectionChildReturn   
+        singleSelectionChildReturn
     }
 
 }

@@ -1,6 +1,6 @@
 import { createContext, h, Ref, VNode } from "preact";
 import { useContext, useImperativeHandle } from "preact/hooks";
-import { UseToast, UseToastParameters, UseToastReturnTypeInfo, useToasts, UseToastsParameters, UseToastsReturnTypeInfo } from "../use-toasts";
+import { UseToast, UseToastParameters, UseToastReturnTypeInfo, useToasts, UseToastsParameters } from "../use-toasts";
 import { memoForwardRef } from "./util";
 
 type Get<T, K extends keyof T> = T[K];
