@@ -2,14 +2,11 @@ import { h } from "preact";
 import {
     CompleteGridNavigationContext,
     CompleteGridNavigationRowContext,
-    GetIndex,
-    GridSingleSelectSortableChildCellInfo, GridSingleSelectSortableChildRowInfo, ManagedChildInfo, useCompleteGridNavigation,
+    GridSingleSelectSortableChildCellInfo, GridSingleSelectSortableChildRowInfo, useCompleteGridNavigation,
     useCompleteGridNavigationCell, UseCompleteGridNavigationCellParameters, UseCompleteGridNavigationCellReturnType, UseCompleteGridNavigationParameters,
-    UseCompleteGridNavigationReturnType, useCompleteGridNavigationRow, UseCompleteGridNavigationRowParameters, UseCompleteGridNavigationRowReturnType, useMergedProps, useSortableChildren, useStableObject
+    UseCompleteGridNavigationReturnType, useCompleteGridNavigationRow, UseCompleteGridNavigationRowParameters, UseCompleteGridNavigationRowReturnType, useMergedProps, useStableObject
 } from "preact-prop-helpers";
-import { useCallback } from "preact/hooks";
 import { UseListboxParameters } from "./use-listbox";
-import { EventDetail } from "./props";
 import { LabelPosition, useLabel, UseLabelParameters } from "./use-label";
 
 //type ListboxSingleSelectEvent<E extends EventTarget> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
@@ -72,8 +69,8 @@ export function useGridlist<GridlistElement extends Element, GridlistRowElement 
     const {
         propsInput: propsLabelList,
         propsLabel: propsLabelLabel,
-        randomIdInputReturn,
-        randomIdLabelReturn
+        randomIdInputReturn: { id: _gridlistId },
+        randomIdLabelReturn: { id: _labelId }
     } = useLabel<LabelPosition, GridlistElement, LabelElement>({
         labelParameters,
         randomIdInputParameters: { prefix: "aria-listbox-input-" },

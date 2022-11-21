@@ -2,13 +2,6 @@ import { h } from "preact";
 import { debugLog, DisabledType, EnhancedEvent, enhanceEvent } from "./props";
 import { useToolbar, useToolbarChild, UseToolbarChildParameters, UseToolbarChildReturnType, UseToolbarParameters, UseToolbarReturnType, UseToolbarSubInfo } from "./use-toolbar";
 
-
-interface MenuItemSubInfo<C> {
-    subInfo: C;
-}
-
-
-
 export interface UseMenubarSubInfo<ChildElement extends Element> extends UseToolbarSubInfo<ChildElement> {
 
 }

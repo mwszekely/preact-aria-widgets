@@ -1,7 +1,7 @@
 import { h } from "preact";
-import { returnFalse, useEnsureStability, useMergedProps, useModal, UseModalParameters, UseModalReturnType, usePassiveState, useRandomId, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
-import { useCallback, useEffect, useRef } from "preact/hooks";
-import { debugLog, overwriteWithWarning } from "./props";
+import { assertEmptyObject, useMergedProps, useModal, UseModalParameters, UseModalReturnType, useRandomId, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
+import { useCallback } from "preact/hooks";
+import { debugLog } from "./props";
 
 interface MSP {
     /**
@@ -66,14 +66,15 @@ export function useMenuSurface<MenuSurfaceElement extends Element, MenuTargetEle
 }: UseMenuSurfaceParameters<MenuSurfaceElement, MenuTriggerElement>): UseMenuSurfaceReturnType<MenuSurfaceElement, MenuTargetElement, MenuTriggerElement> {
     debugLog("useMenuSurface");
 
-    const { propsReferencer: propsIdTrigger, propsSource: propsIdTarget, randomIdReturn } = useRandomId<MenuTargetElement, MenuTriggerElement>({ randomIdParameters: { prefix: "aria-menu-", referencerProp: "aria-controls" } });
+    const { propsReferencer: propsIdTrigger, propsSource: propsIdTarget } = useRandomId<MenuTargetElement, MenuTriggerElement>({ randomIdParameters: { prefix: "aria-menu-", referencerProp: "aria-controls" } });
 
     const { refElementReturn: { getElement: getButtonElement, propsStable: propsRefTrigger }, ...void4 } = useRefElement<MenuTriggerElement>({ refElementParameters: { onElementChange: undefined } });
 
     const { refElementReturn: { getElement: getMenuElement, propsStable: propsRefSurface, ...void5 }, ...void6 } = useRefElement<MenuSurfaceElement>({ refElementParameters: { onElementChange: undefined } });
     const {
         focusTrapReturn,
-        propsFocusContainer,
+        // Intentinally ignored for menus, since they don't trap focus like most modals.
+       // propsFocusContainer,
         propsPopup,
         propsSource: ps2,
         refElementPopupReturn,
@@ -91,7 +92,11 @@ export function useMenuSurface<MenuSurfaceElement extends Element, MenuTargetEle
         }
     });
 
-    const propsSurface: h.JSX.HTMLAttributes<MenuSurfaceElement> = (propsPopup)
+    assertEmptyObject(void4);
+    assertEmptyObject(void5);
+    assertEmptyObject(void6);
+
+    const propsSurface: h.JSX.HTMLAttributes<MenuSurfaceElement> = useMergedProps(propsRefSurface, propsPopup);
 
     const propsTarget: h.JSX.HTMLAttributes<MenuTargetElement> = useMergedProps({
         role

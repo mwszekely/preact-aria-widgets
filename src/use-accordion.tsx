@@ -165,7 +165,7 @@ function identity<T>(t: T) { return t; }
 
 
 
-export function useAccordionSection<HeaderContainerElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element>({
+export function useAccordionSection<_HeaderContainerElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element>({
     buttonParameters,
     pressParameters: { exclude },
     accordionSectionParameters: { open: openFromUser, bodyRole },

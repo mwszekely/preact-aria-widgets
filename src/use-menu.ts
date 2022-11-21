@@ -1,12 +1,9 @@
-import { h } from "preact";
-import { useListNavigation, UseListNavigationParameters, useMergedProps, usePress, useRandomId, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
-import { UseListNavigationChildParameters } from "preact-prop-helpers";
-import { returnFalse, useEnsureStability, usePassiveState } from "preact-prop-helpers";
-import { useCallback, useEffect, useRef } from "preact/hooks";
-import { MenuSurfaceOmits, useMenuSurface, UseMenuSurfaceParameters, UseMenuSurfaceReturnType } from "./use-menu-surface";
-import { debugLog, DisabledType, EnhancedEvent, enhanceEvent, overwriteWithWarning } from "./props";
-import { UseMenubarSubInfo, useMenubar, UseMenubarItemParameters, UseMenubarParameters, UseMenubarItemReturnType, UseMenubarReturnType, useMenubarChild } from "./use-menubar";
+import { useMergedProps, useStableCallback } from "preact-prop-helpers";
+import { useCallback } from "preact/hooks";
 import { UseToolbarContext } from "use-toolbar";
+import { debugLog } from "./props";
+import { useMenuSurface, UseMenuSurfaceParameters, UseMenuSurfaceReturnType } from "./use-menu-surface";
+import { useMenubar, useMenubarChild, UseMenubarItemParameters, UseMenubarItemReturnType, UseMenubarParameters, UseMenubarReturnType, UseMenubarSubInfo } from "./use-menubar";
 
 export interface UseMenuContext<ContainerElement extends Element, ChildElement extends Element, M extends UseMenubarSubInfo<ChildElement>> extends UseToolbarContext<ContainerElement, ChildElement, M> {
 
@@ -19,7 +16,8 @@ export interface UseMenuParameters<MenuSurfaceElement extends Element, MenuButto
     toolbarParameters: Omit<UseMenubarParameters<MenuSurfaceElement, MenuItemElement, M>["toolbarParameters"], "role">
 
     menuParameters: {
-        //onOpen(): void;
+        /** This is called whenever the corresponding arrow key is pressed on the triggering button. */
+        onOpen(): void;
 
         /**
          * This is the **physical** direction that is pressed
@@ -58,7 +56,7 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
     dismissParameters,
     escapeDismissParameters,
     linearNavigationParameters,
-    menuParameters: { openDirection },
+    menuParameters: { openDirection, onOpen },
     menuSurfaceParameters,
     rearrangeableChildrenParameters,
     rovingTabIndexParameters,
@@ -94,6 +92,33 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
 
     const { getChildren } = managedChildrenReturn;
 
+    const onKeyDown = useStableCallback((e: KeyboardEvent) => {
+        const isOpen = dismissParameters.open;
+        if (isOpen) {
+            switch (e.key) {
+                case "ArrowUp": {
+                    if (openDirection == 'up')
+                        onOpen();
+                    break;
+                }
+                case "ArrowDown": {
+                    if (openDirection == 'down')
+                        onOpen();
+                    break;
+                }
+                case "ArrowLeft": {
+                    if (openDirection == 'left')
+                        onOpen();
+                    break;
+                }
+                case "ArrowRight": {
+                    if (openDirection == 'right')
+                        onOpen();
+                    break;
+                }
+            }
+        }
+    });
 
 
     const {
@@ -132,7 +157,7 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
         propsSentinel,
         propsSurface,
         propsTarget: useMergedProps(propsTarget, propsMenubar),
-        propsTrigger,
+        propsTrigger: useMergedProps({ onKeyDown }, propsTrigger),
         rearrangeableChildrenReturn,
         refElementPopupReturn,
         refElementSourceReturn,
