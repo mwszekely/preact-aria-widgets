@@ -1,11 +1,53 @@
-import { createContext, Ref, VNode } from "preact";
-import { useContext, useImperativeHandle } from "preact/hooks";
-import { PropModifier } from "../props";
-import { UseProgressIndicator, UseProgressIndicatorParameters, UseProgressLabel, UseProgressLabelParameters, UseProgressRegion, UseProgressRegionParameters, useProgressWithHandler, UseProgressWithHandlerParameters, UseProgressWithHandlerReturnTypeInfo } from "../use-progress";
-import { memoForwardRef } from "./util";
+import { Ref, VNode } from "preact";
+import { useMergedProps } from "preact-prop-helpers";
+import { useImperativeHandle } from "preact/hooks";
+import { useProgress, UseProgressParameters, UseProgressReturnType } from "../use-progress";
 
 type Get<T, K extends keyof T> = T[K];
 
+export interface ProgressProps<IndicatorElement extends Element, LabelElement extends Element> extends Get<UseProgressParameters<IndicatorElement, LabelElement>, "labelParameters">, Get<UseProgressParameters<IndicatorElement, LabelElement>, "progressIndicatorParameters"> {
+    ref?: Ref<UseProgressReturnType<IndicatorElement, LabelElement>>;
+    render(info: UseProgressReturnType<IndicatorElement, LabelElement>): VNode<any>;
+}
+
+export function Progress<IndicatorElement extends Element, LabelElement extends Element>({ tagIndicator, ariaLabel, max, render, value, valueText }: ProgressProps<IndicatorElement, LabelElement>, ref?: Ref<any>) {
+    const info = useProgress<IndicatorElement, LabelElement>({
+        labelParameters: { ariaLabel }, 
+        progressIndicatorParameters: { max, value, valueText, tagIndicator }
+    });
+
+    useImperativeHandle(ref!, () => info);
+
+    return render(info);
+}
+
+export function DemoProgress() {
+    return (
+        <>
+            <Progress<HTMLProgressElement, HTMLLabelElement>
+                ariaLabel={null}
+                max={100}
+                tagIndicator={"progress"}
+                
+                value={50}
+                valueText={null}
+                render={info => {
+                    return (
+                        <>
+                        <label {...info.propsLabel}>Progress</label>
+                            <progress {...info.propsIndicator} />
+                            <button {...info.propsRegion}></button>
+                        </>
+                    )
+                }}
+
+
+            />
+        </>
+    )
+}
+
+/*
 export interface ProgressProps<ProgressElement extends Element, LabelElement extends Element, EventType extends Event, CaptureType, C, K extends string> extends
     Get<UseProgressWithHandlerParameters<ProgressElement, LabelElement, EventType, CaptureType>, "managedChildren">,
     Get<UseProgressWithHandlerParameters<ProgressElement, LabelElement, EventType, CaptureType>, "progress">,
@@ -118,3 +160,4 @@ export const ProgressRegion = memoForwardRef(function ProgressRegion<I extends E
 
     return render(info, useProgressRegionProps);
 })
+*/

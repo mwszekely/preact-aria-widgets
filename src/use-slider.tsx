@@ -1,7 +1,7 @@
 import { h } from "preact";
-import { ManagedChildInfo, useManagedChild, useManagedChildren, UseManagedChildrenReturnType, UseManagedChildReturnType, useMergedProps, useRandomId } from "preact-prop-helpers";
+import { generateRandomId, ManagedChildInfo, useManagedChild, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenReturnType, UseManagedChildReturnType, useMergedProps, useRandomId } from "preact-prop-helpers";
 import { UseManagedChildParameters, UseManagedChildrenParameters } from "preact-prop-helpers";
-import { StateUpdater, useCallback, useMemo, useState } from "preact/hooks";
+import { StateUpdater, useCallback, useMemo, useRef, useState } from "preact/hooks";
 import { useLabel } from "use-label";
 import { debugLog, EventDetail, TagSensitiveProps } from "./props";
 
@@ -15,7 +15,7 @@ export interface SliderThumbInfo extends ManagedChildInfo<number> {
     //setMax: StateUpdater<number>;
 }
 
-export interface UseSliderThumbParameters<E extends Element, M extends SliderThumbInfo> extends UseManagedChildParameters<M> {
+export interface UseSliderThumbParameters<E extends Element, M extends SliderThumbInfo> extends UseManagedChildParameters<M, never> {
     sliderThumbParameters: TagSensitiveProps<E> & {
         value: number;
         valueText?: string;
@@ -33,7 +33,7 @@ export interface UseSliderThumbParameters<E extends Element, M extends SliderThu
          */
         label: string;
     }
-    sliderThumbContext: SliderContext;
+    context: SliderContext<M>;
 }
 
 export interface UseSliderThumbProps<E extends Element> extends h.JSX.HTMLAttributes<E> {
@@ -59,13 +59,15 @@ export interface UseSliderThumbReturnType<E extends Element, M extends SliderThu
 export type UseSliderThumb<ThumbElement extends Element, M extends SliderThumbInfo> = (props: UseSliderThumbParameters<ThumbElement, M>) => UseSliderThumbReturnType<ThumbElement, M>;
 
 export interface UseSliderReturnType<M extends SliderThumbInfo> extends UseManagedChildrenReturnType<M> {
-    sliderContext: SliderContext;
+    context: SliderContext<M>;
 }
 
-interface SliderContext {
-    min: number;
-    max: number;
-    baseId: string;
+export interface SliderContext<M extends SliderThumbInfo> extends UseManagedChildrenContext<M> {
+    sliderContext: {
+        min: number;
+        max: number;
+        baseId: string;
+    }
 }
 
 
@@ -73,7 +75,10 @@ export function useSlider<ThumbElement extends Element, LabelElement extends Ele
     debugLog("useSlider");
     const { context, managedChildrenReturn } = useManagedChildren<SliderThumbInfo>({ managedChildrenParameters });
 
-    const { propsReferencer, propsSource, randomIdReturn: { id: baseId } } = useRandomId<LabelElement, ThumbElement>({ randomIdParameters: { prefix: "aria-thumb-", referencerProp: "aria-labelledby" } })
+    const baseIdRef = useRef<string>(null! as "");
+    if (baseIdRef.current === null)
+        baseIdRef.current = generateRandomId("aria-thumb-");
+    //const { propsReferencer, propsSource, randomIdReturn: { id: baseId } } = useRandomId<LabelElement, ThumbElement>({ randomIdParameters: { prefix: "aria-thumb-", referencerProp: "aria-labelledby" } })
 
     /*const {
         propsInput,
@@ -83,25 +88,27 @@ export function useSlider<ThumbElement extends Element, LabelElement extends Ele
     } = useLabel<ThumbElement, LabelElement>({ labelParameters: { ariaLabel: null }, randomIdInputParameters, randomIdLabelParameters });*/
 
     return {
-        context,
-        managedChildrenReturn,
-        sliderContext: useMemo(() => ({
-            min,
-            max,
-            baseId
-        }), [min, max, baseId])
+        context: useMemo(() => ({
+            ...context,
+            sliderContext: {
+                min,
+                max,
+                baseId: baseIdRef.current
+            }
+        }), [min, max]),
+        managedChildrenReturn
     };
 }
 
 
 export function useSliderThumb<ThumbElement extends Element, M extends SliderThumbInfo>({
     managedChildParameters,
-    context,
-    sliderThumbContext: { max: maxParent, min: minParent },
+    context: { sliderContext: { max: maxParent, min: minParent }, ...context },
     sliderThumbParameters
 }: UseSliderThumbParameters<ThumbElement, M>): UseSliderThumbReturnType<ThumbElement, SliderThumbInfo> {
+    const { index } = managedChildParameters;
     debugLog("useSliderThumb", managedChildParameters.index);
-    const { managedChildReturn } = useManagedChild<SliderThumbInfo>({ managedChildParameters, context });
+    const { managedChildReturn } = useManagedChild<SliderThumbInfo>({ managedChildParameters, context }, { index });
     const { getChildren: _getThumbs } = managedChildReturn;
 
     const { tag, value, max: maxOverride, min: minOverride, onValueChange, valueText, label } = sliderThumbParameters;

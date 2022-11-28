@@ -1,4 +1,6 @@
-import { useModal, UseModalParameters, UseModalReturnType } from "preact-prop-helpers";
+import { h } from "preact";
+import { useMergedProps, useModal, UseModalParameters, UseModalReturnType } from "preact-prop-helpers";
+import { LabelPosition, UseLabelSyntheticParameters, useLabel, useLabelSynthetic } from "./use-label";
 /*import { useModal, UseModalParameters, UseSoftDismissReturnTypeInfo } from "./use-modal";
 
 
@@ -65,14 +67,15 @@ export function useDrawer<FocusContainerElement extends HTMLElement, DrawerEleme
 
 
 
-export interface UseDrawerParameters extends UseModalParameters<"escape" | "backdrop" | "lost-focus"> {
+export interface UseDrawerParameters<DialogElement extends Element, TitleElement extends Element> extends UseModalParameters<"escape" | "backdrop" | "lost-focus">, Pick<UseLabelSyntheticParameters, "labelParameters">  {
 }
 
-export interface UseDrawerReturnType<FocusContainerElement extends Element, PopupElement extends Element> extends UseModalReturnType<FocusContainerElement, null, PopupElement> {
-
+export interface UseDrawerReturnType<FocusContainerElement extends Element, SourceElement extends Element, DrawerElement extends Element, TitleElement extends Element> extends Omit<UseModalReturnType<FocusContainerElement, SourceElement, DrawerElement>, "propsPopup"> {
+    propsDrawer: h.JSX.HTMLAttributes<DrawerElement>;
+    propsTitle: h.JSX.HTMLAttributes<TitleElement>;
 }
 
-export function useDrawer<FocusContainerElement extends Element, PopupElement extends Element>({ dismissParameters, escapeDismissParameters, focusTrapParameters }: UseDrawerParameters): UseDrawerReturnType<FocusContainerElement, PopupElement> {
+export function useDrawer<FocusContainerElement extends Element, SourceElement extends Element, PopupElement extends Element, TitleElement extends Element>({ dismissParameters, escapeDismissParameters, focusTrapParameters, labelParameters }: UseDrawerParameters<PopupElement, TitleElement>): UseDrawerReturnType<FocusContainerElement, SourceElement, PopupElement, TitleElement> {
     const {
         focusTrapReturn,
         propsFocusContainer,
@@ -80,16 +83,28 @@ export function useDrawer<FocusContainerElement extends Element, PopupElement ex
         propsSource,
         refElementPopupReturn,
         refElementSourceReturn
-    } = useModal<"escape" | "backdrop" | "lost-focus", FocusContainerElement, null, PopupElement>({
+    } = useModal<"escape" | "backdrop" | "lost-focus", FocusContainerElement, SourceElement, PopupElement>({
         dismissParameters,
         escapeDismissParameters,
         focusTrapParameters
     });
 
+    const { 
+        propsInput, 
+        propsLabel, 
+        randomIdInputReturn, 
+        randomIdLabelReturn
+     } = useLabelSynthetic<PopupElement, TitleElement>({ 
+        labelParameters, 
+        randomIdInputParameters: { prefix: "aria-dialog-" }, 
+        randomIdLabelParameters: { prefix: "aria-dialog-title-" }
+     });
+
     return {
         focusTrapReturn,
         propsFocusContainer,
-        propsPopup,
+        propsDrawer: useMergedProps<PopupElement>(propsPopup, propsInput),
+        propsTitle: propsLabel,
         propsSource,
         refElementPopupReturn,
         refElementSourceReturn

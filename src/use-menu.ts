@@ -9,11 +9,12 @@ export interface UseMenuContext<ContainerElement extends Element, ChildElement e
 
 }
 
-export interface UseMenuParameters<MenuSurfaceElement extends Element, MenuButtonElement extends Element, MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends Omit<UseMenubarParameters<MenuSurfaceElement, MenuItemElement, M>, "toolbarParameters"> {
+export interface UseMenuParameters<MenuSurfaceElement extends Element, MenuButtonElement extends Element, MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends Omit<UseMenubarParameters<MenuSurfaceElement, MenuItemElement, M>, "toolbarParameters" | "menubarParameters"> {
     dismissParameters: UseMenuSurfaceParameters<MenuSurfaceElement, MenuButtonElement>["dismissParameters"];
     escapeDismissParameters: UseMenuSurfaceParameters<MenuSurfaceElement, MenuButtonElement>["escapeDismissParameters"];
     menuSurfaceParameters: Omit<UseMenuSurfaceParameters<MenuSurfaceElement, MenuButtonElement>["menuSurfaceParameters"], "role">;
     toolbarParameters: Omit<UseMenubarParameters<MenuSurfaceElement, MenuItemElement, M>["toolbarParameters"], "role">
+    menubarParameters: Omit<UseMenubarParameters<MenuSurfaceElement, MenuItemElement, M>["menubarParameters"], "role">
 
     menuParameters: {
         /** This is called whenever the corresponding arrow key is pressed on the triggering button. */
@@ -87,7 +88,8 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
         singleSelectionParameters,
         sortableChildrenParameters,
         typeaheadNavigationParameters,
-        toolbarParameters: { role: null, ...toolbarParameters }
+        toolbarParameters: { ...toolbarParameters },
+        menubarParameters: { role: "menu" }
     });
 
     const { getChildren } = managedChildrenReturn;
@@ -137,13 +139,7 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
         dismissParameters,
         escapeDismissParameters,
         focusTrapParameters: {
-            focusSelf: useCallback((e) => {
-                const firstMenuItem = getChildren().getAt(0);
-                if (firstMenuItem)
-                    firstMenuItem.focusSelf(e);
-                else
-                    e?.focus?.();
-            }, [])
+            focusPopup: () => rovingTabIndexReturn.focusSelf()
         }
     });
 

@@ -2,10 +2,10 @@
 import { ComponentChildren, h, RenderableProps, VNode } from "preact";
 import { memo } from "preact/compat";
 import { useState } from "preact/hooks";
-import { Accordion, AccordionSection, defaultRenderAccordionSection } from "../../index";
+import { Accordion, AccordionSection, Heading } from "../../index";
 
 function DemoAccordion({ children, ...props }: RenderableProps<{}>) {
-    return <Accordion {...props} render={(_info): VNode<any> => { return <div id="accordion-demo">{children}</div> }} />
+    return <Accordion navigationDirection="vertical" render={(_info): VNode<any> => { return <div id="accordion-demo">{children}</div> }} />
 }
 
 function getDocument() {
@@ -13,20 +13,18 @@ function getDocument() {
 }
 
 const DemoAccordionSection = memo(function DemoAccordionSection({ index, body, heading, disabled, open }: { open?: boolean, disabled: boolean, index: number, heading: ComponentChildren, body: ComponentChildren }) {
-    return <AccordionSection<HTMLButtonElement, HTMLDivElement, undefined, never>
+    return <AccordionSection<HTMLDivElement, HTMLButtonElement, HTMLDivElement>
         index={index}
         tagButton="button"
         open={open}
         disabled={disabled}
-        getDocument={getDocument}
-        subInfo={undefined}
-        render={defaultRenderAccordionSection({
-            makePropsBody: (info) => { return { hidden: !info.accordionSection.expanded, children: body } },
-            makePropsHeadingButton: () => { return { children: heading } },
-            makePropsHeadingContainer: () => ({}),
-            tagBody: "div",
-            tagHeadingButton: "button"
-        })} />
+        render={info => (
+            <Heading<HTMLDivElement> tag="div" heading={<><span>Accordion section ${index}</span><button {...info.propsHeaderButton}>Toggle open</button></>}>
+                <p {...info.propsBody} hidden={info.accordionSectionReturn.expanded}>
+                    Accordion body content
+                </p>
+            </Heading>
+        )} />
 })
 
 export function Blurb() {

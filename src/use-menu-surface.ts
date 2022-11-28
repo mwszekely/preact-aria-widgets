@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { assertEmptyObject, useMergedProps, useModal, UseModalParameters, UseModalReturnType, useRandomId, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
+import { assertEmptyObject, findFirstFocusable, useMergedProps, useModal, UseModalParameters, UseModalReturnType, useRandomId, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { debugLog } from "./props";
 
@@ -109,7 +109,7 @@ export function useMenuSurface<MenuSurfaceElement extends Element, MenuTargetEle
 
     const propsSentinel: h.JSX.HTMLAttributes<any> = useFocusSentinel({
         focusSentinel: {
-            sendFocusToMenu: useCallback(() => { return focusTrapParameters.focusSelf(getMenuElement()) }, []),
+            sendFocusToMenu: useCallback(() => { return focusTrapParameters.focusPopup(getMenuElement(), () => findFirstFocusable(getMenuElement()!)) }, []),
             onClose: useCallback(() => { dismissParameters.onClose("lost-focus") }, [dismissParameters.onClose]),
             open: dismissParameters.open
         }

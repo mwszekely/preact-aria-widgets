@@ -1,7 +1,7 @@
 
 import { useState } from "preact-prop-helpers";
-import { defaultRenderDialog, Dialog } from "../../component/dialog";
-import { Button, defaultRenderButton } from "../../index";
+import { defaultRenderPortal, Dialog } from "../../component/dialog";
+import { Button } from "../../index";
 
 
 
@@ -48,25 +48,33 @@ export function Demo() {
             <Blurb />
             <Code />
             <div>
-                <Button tagButton="button" getDocument={getDocument} onPress={() => setOpen(true)} render={defaultRenderButton({ tagButton: "button", makePropsButton: () => ({ children: "Open dialog " + (open ? "(open)" : "(closed)") }) })} />
-                <Dialog
-                    getDocument={getDocument}
-                    onClose={() => setOpen(false)}
+                <Dialog<HTMLDivElement, HTMLButtonElement, HTMLDivElement, HTMLDivElement>
                     open={open}
-                    bodyIsOnlySemantic={true}
-                    render={defaultRenderDialog({
-                        portalId: "portal",
-                        makePropsBackdrop: () => ({ "data-type": "backdrop" } as {}),
-                        makePropsFocusContainer: () => ({ "data-type": "focus" } as {}),
-                        makePropsBody: () => ({ children: "Dialog body", "data-type": "body" } as {}),
-                        makePropsDialog: () => ({ style: { display: !open ? "none" : undefined }, "data-type": "dialog" } as {}),
-                        makePropsTitle: () => ({ children: "Dialog title", "data-type": "title" } as {}),
-                        tagBackdrop: "div",
-                        tagBody: "div",
-                        tagDialog: "div",
-                        tagTitle: "div",
-                        tagFocusContainer: "div"
-                    })}
+                    onClose={() => setOpen(false)}
+                    getWindow={() => globalThis.window}
+                    closeOnBackdrop={true}
+                    closeOnEscape={true}
+                    focusOpener={e => e.focus()}
+                    parentDepth={0}
+                    focusPopup={(e, f) => f()}
+                    ariaLabel={null}
+                    render={info => {
+                        return (
+                            <>
+                                <button {...info.propsSource}>Open dialog</button>
+                                {defaultRenderPortal({
+                                    portalId: "portal",
+                                    children: <div {...info.propsFocusContainer}>
+                                        <div {...info.propsDialog}>
+                                            <div {...info.propsTitle}>Dialog title</div>
+                                            <div>Dialog body</div>
+                                            <button onClick={() => setOpen(false)}>Close dialog</button>
+                                        </div>
+                                    </div>
+                                })}
+                            </>
+                        )
+                    }}
                 />
             </div>
         </>

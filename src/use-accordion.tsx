@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { ManagedChildInfo, OnChildrenMountChange, useChildrenFlag, useLinearNavigation, UseLinearNavigationParameters, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, useMergedProps, UsePressReturnType, useRandomId, useRefElement, UseRefElementParameters, UseRefElementReturnType, useStableCallback, useStableGetter, useStableObject, useState } from "preact-prop-helpers";
+import { ManagedChildInfo, OnChildrenMountChange, useChildrenFlag, useLinearNavigation, UseLinearNavigationParameters, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, useMergedProps, UsePressReturnType, useRandomId, useRefElement, UseRefElementParameters, UseRefElementReturnType, UseRovingTabIndexChildParameters, useStableCallback, useStableGetter, useStableObject, useState } from "preact-prop-helpers";
 import { StateUpdater, useCallback } from "preact/hooks";
 import { debugLog, DisabledType } from "./props";
 import { ButtonPressEvent, useButton, UseButtonParameters } from "./use-button";
@@ -31,8 +31,9 @@ export interface UseAccordionSectionInfo extends ManagedChildInfo<number> {
 
 export interface UseAccordionSectionParameters<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo> extends
     UseRefElementParameters<HeaderButtonElement> {
-    managedChildParameters: Omit<UseManagedChildParameters<M>["managedChildParameters"], "setOpenFromParent" | "getOpenFromParent" | "setMostRecentlyTabbed" | "getMostRecentlyTabbed" | "focusSelf" | "disabled">;
+    managedChildParameters: Omit<UseManagedChildParameters<M, never>["managedChildParameters"], "setOpenFromParent" | "getOpenFromParent" | "setMostRecentlyTabbed" | "getMostRecentlyTabbed" | "focusSelf" | "disabled">;
     context: UseAccordionContext<M>;
+    rovingTabIndexChildParameters: Pick<UseRovingTabIndexChildParameters<any>["rovingTabIndexChildParameters"], "hidden">;
     accordionSectionParameters: {
         /** 
          * If this prop is `true` or `false` isn't null, then this section
@@ -51,14 +52,15 @@ export interface UseAccordionSectionParameters<HeaderButtonElement extends Eleme
 
 }
 
-export interface UseAccordionSectionReturnType<HeaderElement extends Element, BodyElement extends Element> extends UsePressReturnType<HeaderElement>, UseRefElementReturnType<HeaderElement> {
+export interface UseAccordionSectionReturnType<HeaderElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element> extends UsePressReturnType<HeaderButtonElement>, UseRefElementReturnType<HeaderButtonElement> {
     accordionSectionReturn: {
         expanded: boolean;
         focused: boolean;
         mostRecentlyTabbed: boolean;
     }
 
-    propsHeaderButton: h.JSX.HTMLAttributes<HeaderElement>;
+    propsHeaderButton: h.JSX.HTMLAttributes<HeaderButtonElement>;
+    propsHeader: h.JSX.HTMLAttributes<HeaderElement>;
     propsBody: h.JSX.HTMLAttributes<BodyElement>
 }
 
@@ -169,7 +171,8 @@ export function useAccordionSection<_HeaderContainerElement extends Element, Hea
     buttonParameters,
     pressParameters: { exclude },
     accordionSectionParameters: { open: openFromUser, bodyRole },
-    managedChildParameters: { index, hidden },
+    managedChildParameters: { index },
+    rovingTabIndexChildParameters: { hidden },
     //managedChildContext,
     context,
     context: {
@@ -178,7 +181,7 @@ export function useAccordionSection<_HeaderContainerElement extends Element, Hea
         rovingTabIndexReturn
     },
     refElementParameters,
-}: UseAccordionSectionParameters<HeaderButtonElement, UseAccordionSectionInfo>): UseAccordionSectionReturnType<HeaderButtonElement, BodyElement> {
+}: UseAccordionSectionParameters<HeaderButtonElement, UseAccordionSectionInfo>): UseAccordionSectionReturnType<_HeaderContainerElement, HeaderButtonElement, BodyElement> {
 
     const { disabled, onPress: userOnPress } = buttonParameters;
 
@@ -233,14 +236,16 @@ export function useAccordionSection<_HeaderContainerElement extends Element, Hea
         context,
         managedChildParameters: {
             index: index,
-            disabled,
-            focusSelf,
-            getMostRecentlyTabbed,
-            getOpenFromParent,
-            hidden,
-            setMostRecentlyTabbed,
-            setOpenFromParent,
         }
+    }, {
+        index,
+        disabled,
+        focusSelf,
+        getMostRecentlyTabbed,
+        getOpenFromParent,
+        hidden,
+        setMostRecentlyTabbed,
+        setOpenFromParent,
     });
 
     //const onFocus = () => { changeTabbedIndex(index); }
@@ -297,7 +302,10 @@ export function useAccordionSection<_HeaderContainerElement extends Element, Hea
         bodyRefElementProps,
         propsBodyReferencer,
         propsBodySource,
-        { role: bodyRole, tabIndex: -1 }
+        {
+            role: bodyRole,
+            tabIndex: -1
+        }
     );
 
     return {
@@ -309,6 +317,7 @@ export function useAccordionSection<_HeaderContainerElement extends Element, Hea
             focused: (getCurrentFocusedIndex() == index)
         },
         propsHeaderButton: headerButtonProps,
+        propsHeader: {},    // This is intentionally empty, it's just a reminder that there *does* need to be a header that contains the button.
         propsBody: bodyProps
     };
 }

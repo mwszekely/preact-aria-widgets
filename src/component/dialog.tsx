@@ -1,22 +1,27 @@
-import { createElement, h, Ref, VNode } from "preact";
-import { UseActiveElementParameters } from "preact-prop-helpers";
+import { ComponentChildren, createElement, h, Ref, VNode } from "preact";
+import { findFirstFocusable, generateRandomId, UseActiveElementParameters, useForceUpdate, useState } from "preact-prop-helpers";
 import { createPortal } from "preact/compat";
-import { useImperativeHandle, useRef } from "preact/hooks";
+import { useCallback, useContext, useImperativeHandle, useRef } from "preact/hooks";
 import { ElementToTag, PropModifier } from "../props";
 import { useDialog, UseDialogParameters, UseDialogReturnType } from "../use-dialog";
-import { memoForwardRef } from "./util";
+import { memoForwardRef, ParentDepthContext, PartialExcept, useDefault } from "./util";
 
 type Get<T, K extends keyof T> = T[K];
 
-export interface DialogProps<FocusContainerElement extends HTMLElement, DialogElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement> extends
-    Get<UseDialogParameters, "dismissParameters">,
-    Get<UseDialogParameters, "escapeDismissParameters">,
-    Get<UseDialogParameters, "focusTrapParameters"> {
-    imperativeHandle?: Ref<UseDialogReturnType<FocusContainerElement, DialogElement>>;
-    render(dialogInfo: UseDialogReturnType<FocusContainerElement, DialogElement>): VNode<any>;
+interface DialogPropsBase<FocusContainerElement extends Element, SourceElement extends Element, DialogElement extends Element, TitleElement extends Element> extends
+    Get<UseDialogParameters<DialogElement, TitleElement>, "dismissParameters">,
+    Get<UseDialogParameters<DialogElement, TitleElement>, "escapeDismissParameters">,
+    Get<UseDialogParameters<DialogElement, TitleElement>, "labelParameters">,
+    Get<UseDialogParameters<DialogElement, TitleElement>, "focusTrapParameters"> {
+    ref?: Ref<UseDialogReturnType<FocusContainerElement, SourceElement, DialogElement, TitleElement>>;
 }
 
-export function defaultRenderPortal({ portalId, children }: { portalId: string, children: VNode }) {
+export interface DialogProps<FocusContainerElement extends Element, SourceElement extends Element, DialogElement extends Element, TitleElement extends Element> extends PartialExcept<DialogPropsBase<FocusContainerElement, SourceElement, DialogElement, TitleElement>, "ariaLabel" | "onClose" | "open" | "focusPopup"> {
+
+    render(dialogInfo: UseDialogReturnType<FocusContainerElement, SourceElement, DialogElement, TitleElement>): VNode<any>;
+}
+
+export function defaultRenderPortal({ portalId, children }: { portalId: string, children: VNode }): VNode {
     const portalRef = useRef<HTMLElement>(null!);
     portalRef.current ??= document.getElementById(portalId)!;
     if (portalRef.current)
@@ -24,15 +29,15 @@ export function defaultRenderPortal({ portalId, children }: { portalId: string, 
     else
         return children;
 }
-
+/*
 export function defaultRenderModal<FocusContainerElement extends HTMLElement, DialogElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement, InfoType>({ portalId, tagFocusContainer, tagBackdrop, tagBody, tagDialog, tagTitle, makePropsFocusContainer, makePropsBackdrop, makePropsBody, makePropsDialog, makePropsTitle }: { portalId: string, tagFocusContainer: ElementToTag<FocusContainerElement>, tagDialog: ElementToTag<DialogElement>; tagTitle: ElementToTag<TitleElement>; tagBody: ElementToTag<BodyElement>; tagBackdrop: ElementToTag<BackdropElement>, makePropsFocusContainer: (info: InfoType) => h.JSX.HTMLAttributes<FocusContainerElement>, makePropsDialog: (info: InfoType) => h.JSX.HTMLAttributes<DialogElement>, makePropsBody: (info: InfoType) => h.JSX.HTMLAttributes<BodyElement>, makePropsTitle: (info: InfoType) => h.JSX.HTMLAttributes<TitleElement>, makePropsBackdrop: (info: InfoType) => h.JSX.HTMLAttributes<BackdropElement> }) {
-    return function (dialogInfo: InfoType, modifyFocusContainerProps: PropModifier<FocusContainerElement>, modifyDialogProps: PropModifier<DialogElement>, modifyTitleProps: PropModifier<TitleElement>, modifyBodyProps: PropModifier<BodyElement>, modifyBackdropProps: PropModifier<BackdropElement>): VNode<any> {
+    return function (dialogInfo: InfoType): VNode<any> {
 
-        const { children: titleChildren, ...titleProps } = modifyTitleProps(makePropsTitle(dialogInfo));
-        const { children: bodyChildren, ...bodyProps } = modifyBodyProps(makePropsBody(dialogInfo));
-        const { children: dialogChildren, ...dialogProps } = modifyDialogProps(makePropsDialog(dialogInfo));
-        const { children: backdropChildren, ...backdropProps } = modifyBackdropProps(makePropsBackdrop(dialogInfo));
-        const { children: focusContainerChildren, ...focusContainerProps } = modifyFocusContainerProps(makePropsFocusContainer(dialogInfo));
+        const { children: titleChildren, ...titleProps } = (makePropsTitle(dialogInfo));
+        const { children: bodyChildren, ...bodyProps } = (makePropsBody(dialogInfo));
+        const { children: dialogChildren, ...dialogProps } = (makePropsDialog(dialogInfo));
+        const { children: backdropChildren, ...backdropProps } = (makePropsBackdrop(dialogInfo));
+        const { children: focusContainerChildren, ...focusContainerProps } = (makePropsFocusContainer(dialogInfo));
 
         const title = createElement(tagTitle as never, titleProps, titleChildren);
         const body = createElement(tagBody as never, bodyProps, bodyChildren);
@@ -46,15 +51,15 @@ export function defaultRenderModal<FocusContainerElement extends HTMLElement, Di
             children: focusContainer
         });
     }
-}
+}*/
 
 
-
+/*
 export function defaultRenderDialog<FocusContainerElement extends HTMLElement, DialogElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement>({ portalId, tagFocusContainer, tagBackdrop, tagBody, tagDialog, tagTitle, makePropsFocusContainer, makePropsBackdrop, makePropsBody, makePropsDialog, makePropsTitle }: { portalId: string, tagFocusContainer: ElementToTag<FocusContainerElement>, tagDialog: ElementToTag<DialogElement>; tagTitle: ElementToTag<TitleElement>; tagBody: ElementToTag<BodyElement>; tagBackdrop: ElementToTag<BackdropElement>, makePropsFocusContainer: (info: UseDialogReturnType<FocusContainerElement, DialogElement>) => h.JSX.HTMLAttributes<FocusContainerElement>, makePropsDialog: (info: UseDialogReturnType<FocusContainerElement, DialogElement>) => h.JSX.HTMLAttributes<DialogElement>, makePropsBody: (info: UseDialogReturnType<FocusContainerElement, DialogElement>) => h.JSX.HTMLAttributes<BodyElement>, makePropsTitle: (info: UseDialogReturnType<FocusContainerElement, DialogElement>) => h.JSX.HTMLAttributes<TitleElement>, makePropsBackdrop: (info: UseDialogReturnType<FocusContainerElement, DialogElement>) => h.JSX.HTMLAttributes<BackdropElement> }) {
     return defaultRenderModal<FocusContainerElement, DialogElement, TitleElement, BodyElement, BackdropElement, UseDialogReturnType<FocusContainerElement, DialogElement>>({ portalId, tagFocusContainer, tagBackdrop, tagBody, tagDialog, tagTitle, makePropsFocusContainer, makePropsBackdrop, makePropsBody, makePropsDialog, makePropsTitle });
-}
+}*/
 
-export const Dialog = memoForwardRef(function Dialog<FocusContainerElement extends HTMLElement, DialogElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement>({
+export const Dialog = memoForwardRef(function Dialog<FocusContainerElement extends Element, SourceElement extends Element, DialogElement extends Element, TitleElement extends Element>({
     onClose,
     open,
     closeOnBackdrop,
@@ -62,18 +67,71 @@ export const Dialog = memoForwardRef(function Dialog<FocusContainerElement exten
     focusOpener,
     getWindow,
     parentDepth,
-    imperativeHandle,
-    focusSelf,
+    focusPopup,
+    ariaLabel,
     render
-}: DialogProps<FocusContainerElement, DialogElement, TitleElement, BodyElement, BackdropElement>, ref?: Ref<any>) {
-    const info = useDialog<FocusContainerElement, DialogElement>({ 
-        dismissParameters: { closeOnBackdrop, closeOnEscape, onClose, open },
-        escapeDismissParameters: { getWindow, parentDepth },
-        focusTrapParameters: { focusOpener, focusSelf }
+}: DialogProps<FocusContainerElement, SourceElement, DialogElement, TitleElement>, ref?: Ref<any>) {
+    const defaultParentDepth = useContext(ParentDepthContext);
+    let myDepth = (parentDepth ?? defaultParentDepth) + 1;
+
+    const info = useDialog<FocusContainerElement, SourceElement, DialogElement, TitleElement>({
+        dismissParameters: {
+            closeOnBackdrop: closeOnBackdrop ?? true,
+            closeOnEscape: closeOnEscape ?? true,
+            onClose,
+            open
+        },
+        escapeDismissParameters: {
+            getWindow: useDefault("getWindow", getWindow),
+            parentDepth: parentDepth ?? defaultParentDepth
+        },
+        focusTrapParameters: {
+            focusOpener: useDefault("focusOpener", focusOpener),
+            focusPopup
+        },
+        labelParameters: { ariaLabel }
     });
 
-    useImperativeHandle(imperativeHandle!, () => info);
+    useImperativeHandle(ref!, () => info);
 
-    return render(info);
+    return (
+        <ParentDepthContext.Provider value={myDepth}>
+            {render(info)}
+        </ParentDepthContext.Provider>)
 
 });
+
+export function DialogDemo() {
+    const [open, setOpen] = useState(false);
+
+    return (
+        <Dialog<HTMLDivElement, HTMLButtonElement, HTMLDivElement, HTMLDivElement>
+            open={open}
+            onClose={() => setOpen(false)}
+            getWindow={() => globalThis.window}
+            closeOnBackdrop={true}
+            closeOnEscape={true}
+            focusOpener={e => e.focus()}
+            parentDepth={0}
+            focusPopup={(e, f) => f()}
+            ariaLabel={null}
+            render={info => {
+                return (
+                    <>
+                        <button {...info.propsSource}>Open dialog</button>
+                        {defaultRenderPortal({
+                            portalId: "portal",
+                            children: <div {...info.propsFocusContainer}>
+                                <div {...info.propsDialog}>
+                                    <div {...info.propsTitle}>Dialog title</div>
+                                    <div>Dialog body</div>
+                                    <button onClick={() => setOpen(false)}>Close dialog</button>
+                                </div>
+                            </div>
+                        })}
+                    </>
+                )
+            }}
+        />
+    )
+}

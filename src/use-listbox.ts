@@ -8,7 +8,7 @@ import {
     UseCompleteListNavigationReturnType, UseListNavigationSingleSelectionSortableChildInfo, useMergedProps, useStableObject
 } from "preact-prop-helpers";
 import { EventDetail } from "./props";
-import { LabelPosition, useLabel, UseLabelParameters } from "./use-label";
+import { LabelPosition, useLabel, useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
 
 export type ListboxSingleSelectEvent<E extends EventTarget> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 
@@ -17,7 +17,7 @@ export interface UseListboxContext<ListElement extends Element, ListItemElement 
 }
 
 export interface UseListboxParameters<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends UseCompleteListNavigationParameters<ListElement, ListItemElement, M> {
-    labelParameters: UseLabelParameters<LabelPosition, ListElement, LabelElement>["labelParameters"];
+    labelParameters: UseLabelSyntheticParameters["labelParameters"];
     listboxParameters: {
         /**
          * When `"single"`, the selected item is controlled
@@ -33,7 +33,7 @@ export interface UseListboxParameters<ListElement extends Element, ListItemEleme
          * 
          * There is currently no support for a mix of grouped and ungrouped options.
          */
-        type: "with-groups" | "without-groups" | "group";
+        groupingType: "with-groups" | "without-groups" | "group";
     }
 }
 export interface UseListboxReturnType<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends Omit<UseCompleteListNavigationReturnType<ListElement, ListItemElement, M>, "props"> {
@@ -42,14 +42,14 @@ export interface UseListboxReturnType<ListElement extends Element, ListItemEleme
     context: UseListboxContext<ListElement, ListItemElement, M>;
 }
 export interface UseListboxItemReturnType<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends UseCompleteListNavigationChildReturnType<ListItemElement, M> { }
-export interface UseListboxItemParameters<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends UseCompleteListNavigationChildParameters<ListItemElement, M> {
+export interface UseListboxItemParameters<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends UseCompleteListNavigationChildParameters<ListItemElement, M, never> {
     listboxParameters: {
         /**
          * When the `selectionLimit` is `"single"`, this must be `null`.
          */
         selected: boolean | null;
     }
-    listboxContext: UseListboxContext<any, ListItemElement, M>["listboxContext"];
+    context: UseListboxContext<any, ListItemElement, M>;
 }
 
 export interface ListboxInfo<ListItemElement extends Element> extends UseListNavigationSingleSelectionSortableChildInfo<ListItemElement> {
@@ -64,7 +64,7 @@ export function useListbox<ListElement extends Element, ListItemElement extends 
     sortableChildrenParameters,
     typeaheadNavigationParameters,
     labelParameters,
-    listboxParameters: { selectionLimit, type }
+    listboxParameters: { selectionLimit, groupingType }
 }: UseListboxParameters<ListElement, ListItemElement, LabelElement, M>): UseListboxReturnType<ListElement, ListItemElement, LabelElement, M> {
 
     const {
@@ -72,10 +72,10 @@ export function useListbox<ListElement extends Element, ListItemElement extends 
         propsLabel: propsLabelLabel,
         randomIdInputReturn: { id: _inputId },
         randomIdLabelReturn: { id: _labelId }
-    } = useLabel<LabelPosition, ListElement, LabelElement>({
+    } = useLabelSynthetic<ListElement, LabelElement>({
         labelParameters,
-        randomIdInputParameters: { prefix: `aria-listbox-input-${type}-` },
-        randomIdLabelParameters: { prefix: `aria-listbox-label-${type}-` }
+        randomIdInputParameters: { prefix: `aria-listbox-input-${groupingType}-` },
+        randomIdLabelParameters: { prefix: `aria-listbox-label-${groupingType}-` }
     });
     let {
         childrenHaveFocusReturn,
@@ -97,9 +97,9 @@ export function useListbox<ListElement extends Element, ListItemElement extends 
         typeaheadNavigationParameters
     });
 
-    if (type == "group")
+    if (groupingType == "group")
         props.role = "group";
-    else if (type == "with-groups") {
+    else if (groupingType == "with-groups") {
         // Intentionally clobbering all the list navigation stuff.
         props = { role: "listbox" };
         // ...actually, context too while we're at it.
@@ -135,12 +135,13 @@ export function useListbox<ListElement extends Element, ListItemElement extends 
 export function useListboxItem<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>>({
     completeListNavigationChildParameters,
     pressParameters,
-    context,
+    context: { listboxContext: { selectionLimit }, ...context },
     managedChildParameters,
     singleSelectionChildParameters,
-    typeaheadNavigationChildParameters,
-    listboxParameters: { selected },
-    listboxContext: { selectionLimit }
+    rovingTabIndexChildParameters,
+    sortableChildParameters,
+    textContentParameters,
+    listboxParameters: { selected }
 }: UseListboxItemParameters<ListItemElement, M>): UseListboxItemReturnType<ListItemElement, M> {
     const {
         hasCurrentFocusReturn,
@@ -149,12 +150,14 @@ export function useListboxItem<ListItemElement extends Element, M extends Listbo
         props,
         rovingTabIndexChildReturn,
         singleSelectionChildReturn
-    } = useCompleteListNavigationChild<ListItemElement, M>({
+    } = useCompleteListNavigationChild<ListItemElement, M, never>({
         completeListNavigationChildParameters,
+        textContentParameters,
         managedChildParameters,
         pressParameters,
         singleSelectionChildParameters,
-        typeaheadNavigationChildParameters,
+        rovingTabIndexChildParameters,
+        sortableChildParameters,
         context
     });
 

@@ -38,6 +38,7 @@ export function useCheckbox<LP extends LabelPosition, InputType extends Element,
         randomIdLabelReturn,
         propsInput,
         propsLabel,
+        checkboxLikeReturn,
         checkboxLikeInputReturn,
         checkboxLikeLabelReturn
     } = useCheckboxLike<LP, InputType, LabelType>({
@@ -52,6 +53,7 @@ export function useCheckbox<LP extends LabelPosition, InputType extends Element,
 
     return {
         checkboxReturn: { propsUnstable: { type: (tagInput == "input" && labelPosition != "wrapping" ? "checkbox" : undefined) } },
+        checkboxLikeReturn,
         pressInputReturn,
         pressLabelReturn,
         randomIdInputReturn,

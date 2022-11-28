@@ -1,43 +1,51 @@
 import { createContext, createElement, h, Ref, VNode } from "preact";
+import { returnNull } from "preact-prop-helpers";
 import { useContext, useImperativeHandle } from "preact/hooks";
 import { UseMenuContext, useMenuItem, UseMenuItemReturnType } from "use-menu";
 import { UseToolbarContext } from "use-toolbar";
 import { ElementToTag, PropModifier } from "../props";
 //import { ElementToTag } from "../props";
 import { useMenubar, UseMenubarParameters, UseMenubarItemParameters, UseMenubarSubInfo, UseMenubarReturnType } from "../use-menubar";
-import { memoForwardRef } from "./util";
+import { defaultRenderPortal } from "./dialog";
+import { memoForwardRef, PartialExcept, useDefault } from "./util";
 
 type Get<T, K extends keyof T> = T[K];
 
-export interface MenubarProps<MenuParentElement extends Element, MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends
+interface MenubarPropsBase<MenuParentElement extends Element, MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends
     Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "linearNavigationParameters">,
-    //    Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "listNavigationParameters">,
     Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "rovingTabIndexParameters">,
     Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "typeaheadNavigationParameters">,
     Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "singleSelectionParameters">,
     Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "rearrangeableChildrenParameters">,
     Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "sortableChildrenParameters">,
-    //    Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "managedChildrenParameters">,
+    Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "menubarParameters">,
     Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "toolbarParameters"> {
     //tagLabel: ElementToTag<LabelElement>;
     ref?: Ref<UseMenubarReturnType<MenuParentElement, MenuItemElement, M>>;
-    render(info: UseMenubarReturnType<MenuParentElement, MenuItemElement, M>): VNode<any>;
 }
 
 
 
 
 
-export interface MenuItemProps<MenuItemElement extends Element> extends
+interface MenuItemPropsBase<MenuItemElement extends Element> extends
     //Get<UseMenubarItemParameters<MenuItemElement, M>, "managedChildParameters">,
     Get<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "menuItemParameters">,
     Get<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "pressParameters">,
-    Pick<Get<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "managedChildParameters">, "index" | "hidden">,
+    Get<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "rovingTabIndexChildParameters">,
+    Get<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "sortableChildParameters">,
+    Get<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "managedChildParameters">,
     Get<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "singleSelectionChildParameters">,
     Get<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "typeaheadNavigationChildParameters"> {
     //tagListItem: ElementToTag<ListboxItemElement>;
-    subInfo: Get<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "completeListNavigationChildParameters">;
+    //subInfo: Get<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "completeListNavigationChildParameters">;
     ref?: Ref<UseMenuItemReturnType<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>>;
+}
+
+export interface MenubarProps<MenuParentElement extends Element, MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends PartialExcept<MenubarPropsBase<MenuParentElement, MenuItemElement, M>, "orientation"> {
+    render(info: UseMenubarReturnType<MenuParentElement, MenuItemElement, M>): VNode<any>;
+}
+export interface MenuItemProps<MenuItemElement extends Element> extends PartialExcept<MenuItemPropsBase<MenuItemElement>, "ariaPropName" | "index" | "selectionMode" | "getSortValue" | "text"> {
     render(info: UseMenuItemReturnType<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): VNode<any>;
 }
 
@@ -45,32 +53,42 @@ export const MenuItemContext = createContext<UseMenuContext<any, any, any>>(null
 
 export const Menubar = memoForwardRef(function MenubarU<ContainerElement extends Element, ChildElement extends Element>({
     render,
-    role,
     collator,
     disableArrowKeys,
     disableHomeEndKeys,
-    initiallyTabbedIndex,
     navigatePastEnd,
     navigatePastStart,
-    navigationDirection,
     pageNavigationSize,
     orientation,
     noTypeahead,
     onTabbableIndexChange,
     compare,
     getIndex,
+    untabbable,
     initiallySelectedIndex,
     onSelectedIndexChange,
     typeaheadTimeout,
+    role
 }: MenubarProps<ContainerElement, ChildElement, UseMenubarSubInfo<ChildElement>>, ref?: Ref<any>) {
     const info = useMenubar<ContainerElement, ChildElement>({
-        linearNavigationParameters: { disableArrowKeys, disableHomeEndKeys, navigatePastEnd, navigatePastStart, navigationDirection, pageNavigationSize },
-        toolbarParameters: { orientation, role },
-        rovingTabIndexParameters: { onTabbableIndexChange, initiallyTabbedIndex },
-        typeaheadNavigationParameters: { collator, noTypeahead, typeaheadTimeout },
-        rearrangeableChildrenParameters: { getIndex },
-        singleSelectionParameters: { initiallySelectedIndex, onSelectedIndexChange },
-        sortableChildrenParameters: { compare }
+        linearNavigationParameters: { 
+            disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys), 
+            disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys), 
+            navigatePastEnd: navigatePastEnd ?? "wrap",
+            navigatePastStart: navigatePastStart ?? "wrap",
+            pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
+         },
+        toolbarParameters: { orientation },
+        rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable: untabbable ?? false },
+        typeaheadNavigationParameters: { 
+            collator: useDefault("collator", collator), 
+            noTypeahead: useDefault("noTypeahead", noTypeahead), 
+            typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
+         },
+        rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
+        singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? null, onSelectedIndexChange: onSelectedIndexChange ?? noop },
+        sortableChildrenParameters: { compare: compare ?? null },
+        menubarParameters: { role: role ?? "menubar" }
     });
 
     useImperativeHandle(ref!, () => info)
@@ -89,12 +107,11 @@ export const MenuItem = memoForwardRef(function MenuItemU<MenuItemElement extend
     ariaPropName,
     exclude,
     selectionMode,
-    focusSelf,
     hidden,
     text,
-    subInfo,
     disabled,
     onPress,
+    getSortValue,
     role,
 }: MenuItemProps<MenuItemElement>, ref?: Ref<any>) {
     const context = (useContext(MenuItemContext)); /*<MenuItemElement, C, K>)({
@@ -109,10 +126,12 @@ export const MenuItem = memoForwardRef(function MenuItemU<MenuItemElement extend
     const info = useMenuItem({
         completeListNavigationChildParameters: {},
         context,
-        managedChildParameters: { disabled: !!disabled, hidden, index },
-        menuItemParameters: { disabled, onPress, role },
-        pressParameters: { exclude, focusSelf },
-        singleSelectionChildParameters: { ariaPropName, selectionMode },
+        managedChildParameters: { index },
+        rovingTabIndexChildParameters: { hidden: hidden ?? false },
+        sortableChildParameters: { getSortValue },
+        menuItemParameters: { onPress: onPress ?? null, role: role ?? "menuitem" },
+        pressParameters: { exclude },
+        singleSelectionChildParameters: { ariaPropName, selectionMode, disabled: disabled ?? false },
         typeaheadNavigationChildParameters: { text }
     });
 
@@ -123,6 +142,69 @@ export const MenuItem = memoForwardRef(function MenuItemU<MenuItemElement extend
     )
 })
 
+
+
+export function DemoMenubar() {
+
+    return (
+        <Menubar<HTMLUListElement, HTMLLIElement>
+            collator={null}
+            disableArrowKeys={false}
+            disableHomeEndKeys={false}
+            getIndex={v => v.props.index}
+            compare={(lhs, rhs) => lhs.index - rhs.index}
+            initiallySelectedIndex={null}
+            navigatePastEnd="wrap"
+            navigatePastStart="wrap"
+            noTypeahead={false}
+            onSelectedIndexChange={noop}
+            onTabbableIndexChange={null}
+            orientation="vertical"
+            pageNavigationSize={0.1}
+            typeaheadTimeout={1000}
+            role={"menu"}
+            render={info => {
+                return (
+                    <>
+                        <ul {...info.props}>
+
+                        </ul>
+                    </>
+                )
+            }}
+        />
+    )
+}
+
+export function DemoMenubarItem({ index }: { index: number }) {
+    return (
+        <MenuItem<HTMLLIElement>
+            exclude={undefined}
+            hidden={false}
+            index={index}
+            selectionMode="disabled"
+            text=""
+            onPress={noop}
+            getSortValue={returnNull}
+            render={info => {
+                return (
+                    <>
+                        <li {...info.props}>List item (index #{index})</li>
+                    </>
+                )
+            }}
+            role="menuitem"
+            ariaPropName="aria-selected"
+            disabled={false}
+
+        />
+    )
+}
+
+function noop() { }
+
+
+/*
 export function defaultRenderMenubar<ContainerElement extends Element, ChildElement extends Element>({ makePropsContainer, tagContainer }: { tagContainer: ElementToTag<ContainerElement>, makePropsContainer: (info: UseMenubarReturnType<ContainerElement, ChildElement, UseMenubarSubInfo<ChildElement>>) => h.JSX.HTMLAttributes<ContainerElement> }) {
     return function (info: UseMenubarReturnType<ContainerElement, ChildElement, UseMenubarSubInfo<ChildElement>>): VNode<any> {
         const list = createElement(tagContainer as never, makePropsContainer(info));
@@ -138,4 +220,5 @@ export function defaultRenderMenuItem<ChildElement extends Element>({ makePropsC
     return function (info: UseMenuItemReturnType<ChildElement, UseMenubarSubInfo<ChildElement>>, modifyPropsListItem: PropModifier<ChildElement>): VNode<any> {
         return createElement(tagChild as never, modifyPropsListItem(makePropsChild(info)));
     }
-}
+}*/
+

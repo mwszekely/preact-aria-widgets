@@ -1,4 +1,5 @@
 import { h } from "preact";
+import { useCallback } from "preact/hooks";
 import { debugLog, DisabledType, EnhancedEvent, enhanceEvent } from "./props";
 import { useToolbar, useToolbarChild, UseToolbarChildParameters, UseToolbarChildReturnType, UseToolbarParameters, UseToolbarReturnType, UseToolbarSubInfo } from "./use-toolbar";
 
@@ -7,16 +8,23 @@ export interface UseMenubarSubInfo<ChildElement extends Element> extends UseTool
 }
 
 
-export interface UseMenubarParameters<MenuParentElement extends Element, MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseToolbarParameters<MenuParentElement, MenuItemElement, M> {
+export interface UseMenubarParameters<MenuParentElement extends Element, MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends Omit<UseToolbarParameters<MenuParentElement, MenuItemElement, M>, "toolbarParameters"> {
+    toolbarParameters: Omit<UseToolbarParameters<MenuParentElement, MenuItemElement, M>["toolbarParameters"], "role">;
+    menubarParameters: {
+        /**
+         * Generally "menu". Can be null if the role is provided elsewhere.
+         */
+        role: string | null;
+    }
 }
 
 export interface UseMenubarItemParameters<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends Omit<UseToolbarChildParameters<MenuItemElement, M>, "pressParameters"> {
     //hasFocus: UseHasFocusParameters<MenuItemElement>;
-    pressParameters: Omit<UseToolbarChildParameters<MenuItemElement, M>["pressParameters"], "onPressSync">;
+    pressParameters: Omit<UseToolbarChildParameters<MenuItemElement, M>["pressParameters"], "onPressSync" | "focusSelf">;
     menuItemParameters: {
-        role: string;
-        disabled: DisabledType;
-        onPress: (e: EnhancedEvent<MenuItemElement, h.JSX.TargetedEvent<MenuItemElement>, { index: number }>) => void;
+        role: "menuitem" | "menuitemcheckbox" | "menuitemradio";
+        //disabled: DisabledType;
+        onPress: null | ((e: EnhancedEvent<MenuItemElement, h.JSX.TargetedEvent<MenuItemElement>, { index: number }>) => void);
     }
 }
 
@@ -38,7 +46,8 @@ export function useMenubar<MenuParentElement extends Element, MenuItemElement ex
     sortableChildrenParameters,
     rovingTabIndexParameters,
     typeaheadNavigationParameters,
-    toolbarParameters
+    toolbarParameters,
+    menubarParameters: { role }
 }: UseMenubarParameters<MenuParentElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenubarReturnType<MenuParentElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>> {
 
     debugLog("useMenubar");
@@ -63,7 +72,7 @@ export function useMenubar<MenuParentElement extends Element, MenuItemElement ex
         singleSelectionParameters,
         sortableChildrenParameters,
         typeaheadNavigationParameters,
-        toolbarParameters
+        toolbarParameters: { role, ...toolbarParameters }
     });
 
     return {
@@ -86,13 +95,17 @@ export function useMenubarChild<MenuItemElement extends Element>({
     pressParameters: { ...pressParameters },
     managedChildParameters,
     singleSelectionChildParameters,
-    typeaheadNavigationChildParameters,
     completeListNavigationChildParameters,
+    rovingTabIndexChildParameters,
+    sortableChildParameters,
     context,
-    menuItemParameters: { disabled, onPress, role }
+    textContentParameters,
+    menuItemParameters: { onPress, role }
 }: UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenubarItemReturnType<MenuItemElement, UseMenubarSubInfo<MenuItemElement>> {
     debugLog("useMenuItem", managedChildParameters.index);
+    const disabled = singleSelectionChildParameters.disabled;
 
+    const focusSelf = useCallback((e: any) => (e as Element as HTMLElement).focus?.(), [])
 
     const {
         hasCurrentFocusReturn,
@@ -105,12 +118,15 @@ export function useMenubarChild<MenuItemElement extends Element>({
         completeListNavigationChildParameters,
         context,
         managedChildParameters,
+        rovingTabIndexChildParameters,
+        sortableChildParameters,
+        textContentParameters,
         pressParameters: {
+            focusSelf,
             onPressSync: (e) => (disabled ? null : onPress)?.(enhanceEvent(e, { index: managedChildParameters.index })),
             ...pressParameters
         },
         singleSelectionChildParameters,
-        typeaheadNavigationChildParameters
         /*listNavigationChildParameters,
         pressParameters: {
             onClickSync: (e) => (disabled ? null : onPress)?.(enhanceEvent(e, { index: managedChildParameters.index })),

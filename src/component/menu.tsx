@@ -1,16 +1,17 @@
-import { createElement, h, Ref, VNode } from "preact";
-import { UseActiveElementParameters, useStableCallback } from "preact-prop-helpers";
-import { useImperativeHandle } from "preact/compat";
+import { Ref, VNode } from "preact";
+import { returnNull, useState } from "preact-prop-helpers";
+import { useContext, useImperativeHandle } from "preact/hooks";
+import { useMenu, useMenuItem, UseMenuParameters, UseMenuReturnType } from "../use-menu";
 import { UseMenubarSubInfo } from "../use-menubar";
-import { ElementToTag, PropModifier } from "../props";
-import { useMenu, UseMenuParameters, UseMenuReturnType } from "../use-menu";
 import { defaultRenderPortal } from "./dialog";
-import { MenuItemContext } from "./menubar";
-import { memoForwardRef } from "./util";
+import { MenuItem, MenuItemContext } from "./menubar";
+import { memoForwardRef, ParentDepthContext, PartialExcept, useDefault } from "./util";
+
 
 type Get<T, K extends keyof T> = T[K];
 
-export interface MenuProps<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element> extends //Omit<UseMenuParameters<E, K, I>, "indexMangler" | "indexDemangler" | "onAfterChildLayoutEffect" | "onChildrenMountChange" | "onTabbableIndexChange" | "onTabbableRender" | "onTabbedInTo" | "onTabbedOutOf"> & {
+
+interface MenuPropsBase<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element> extends //Omit<UseMenuParameters<E, K, I>, "indexMangler" | "indexDemangler" | "onAfterChildLayoutEffect" | "onChildrenMountChange" | "onTabbableIndexChange" | "onTabbableRender" | "onTabbedInTo" | "onTabbedOutOf"> & {
     Get<UseMenuParameters<MenuSurfaceElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "menuParameters">,
     Get<UseMenuParameters<MenuSurfaceElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "menuSurfaceParameters">,
     Get<UseMenuParameters<MenuSurfaceElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "linearNavigationParameters">,
@@ -22,31 +23,29 @@ export interface MenuProps<MenuSurfaceElement extends Element, MenuParentElement
     Get<UseMenuParameters<MenuSurfaceElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "sortableChildrenParameters">,
     Get<UseMenuParameters<MenuSurfaceElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "singleSelectionParameters">,
     Get<UseMenuParameters<MenuSurfaceElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "toolbarParameters"> {
+}
 
-    //getDocument: UseActiveElementParameters["getDocument"];
-    //getWindow?: UseActiveElementParameters["getWindow"];
-    
-
-    render(menuInfo: UseMenuReturnType<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement,  UseMenubarSubInfo<MenuItemElement>>): VNode;
+export interface MenuProps<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element> extends PartialExcept<MenuPropsBase<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement>, "open" | "onClose" | "onOpen" | "openDirection" | "orientation"> {
+    render(menuInfo: UseMenuReturnType<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement, UseMenubarSubInfo<MenuItemElement>>): VNode;
 }
 
 //const MenuItemContext = createContext<UseMenuItem<any, any, any>>(null!);
 
 export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element, ParentElement extends Element, SentinelElement extends Element, ChildElement extends Element, ButtonElement extends Element, C = undefined, K extends string = never>({
 
-    
+
     collator,
     disableArrowKeys,
     disableHomeEndKeys,
     noTypeahead,
     typeaheadTimeout,
     orientation,
-    
+
     onClose,
     open,
 
     openDirection,
-    
+
     onTabbableIndexChange,
     closeOnBackdrop,
     closeOnEscape,
@@ -54,50 +53,164 @@ export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element,
     compare,
     getIndex,
     initiallySelectedIndex,
-    initiallyTabbedIndex,
     navigatePastEnd,
     navigatePastStart,
-    navigationDirection,
     onSelectedIndexChange,
     pageNavigationSize,
     parentDepth,
-    
+    untabbable,
+    onOpen,
+
     getWindow,
 
     render
 
 }: MenuProps<SurfaceElement, ParentElement, ChildElement, ButtonElement>, ref?: Ref<any>) {
+
+    const defaultParentDepth = useContext(ParentDepthContext);
+    let myDepth = (parentDepth ?? defaultParentDepth) + 1;
+
     const info = useMenu<SurfaceElement, ParentElement, ChildElement, ButtonElement>({
-        linearNavigationParameters: { disableArrowKeys, disableHomeEndKeys, navigatePastEnd, navigatePastStart, navigationDirection, pageNavigationSize },
-        dismissParameters: { closeOnBackdrop, closeOnEscape, closeOnLostFocus, onClose, open },
-        escapeDismissParameters: { getWindow, parentDepth },
-        rearrangeableChildrenParameters: { getIndex },
-        singleSelectionParameters: { initiallySelectedIndex, onSelectedIndexChange },
-        sortableChildrenParameters: { compare },
-       // listNavigationParameters: {  },
-       // managedChildrenParameters: {  },
-        menuParameters: { openDirection },
+        linearNavigationParameters: {
+            disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys),
+            disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
+            pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize),
+            navigatePastEnd: "wrap",
+            navigatePastStart: "wrap"
+        },
+        dismissParameters: {
+            closeOnBackdrop: closeOnBackdrop ?? true,
+            closeOnEscape: closeOnEscape ?? true,
+            closeOnLostFocus: closeOnLostFocus ?? true,
+            onClose,
+            open
+        },
+        escapeDismissParameters: {
+            getWindow: useDefault("getWindow", getWindow),
+            parentDepth: parentDepth ?? defaultParentDepth
+        },
+        rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
+        singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? null, onSelectedIndexChange: onSelectedIndexChange ?? noop },
+        sortableChildrenParameters: { compare: compare ?? null },
+        menuParameters: { openDirection, onOpen },
         menuSurfaceParameters: {},
-        rovingTabIndexParameters: { initiallyTabbedIndex, onTabbableIndexChange },
-       // softDismissParameters: {  },
-        typeaheadNavigationParameters: { collator, noTypeahead, typeaheadTimeout },
-       // activeElementParameters: {  },
-       // menuButtonHasFocusParameters: {  },
-        toolbarParameters: { orientation }
+        rovingTabIndexParameters: {
+            onTabbableIndexChange: onTabbableIndexChange ?? null,
+            untabbable: untabbable ?? false
+        },
+        typeaheadNavigationParameters: {
+            collator: useDefault("collator", collator),
+            noTypeahead: useDefault("noTypeahead", noTypeahead),
+            typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
+        },
+        toolbarParameters: { orientation },
+        menubarParameters: {}
     });
 
     useImperativeHandle(ref!, () => info);
-    
+
     //const { useMenuSentinelProps: useFirstSentinelProps } = useMenuSentinel<SentinelElement>();
     //const { useMenuSentinelProps: useLastSentinelProps } = useMenuSentinel<SentinelElement>();
     return (
-        <MenuItemContext.Provider value={info.context}>
-            {render(info)}
-        </MenuItemContext.Provider>
+        <ParentDepthContext.Provider value={myDepth}>
+            <MenuItemContext.Provider value={info.context}>
+                {render(info)}
+            </MenuItemContext.Provider>
+        </ParentDepthContext.Provider>
     )
-
 })
 
+/*
+export function MenuItem<MenuItemElement extends Element>({}: MenuItemProps) {
+    const context = useContext(MenuItemContext);
+
+    const info = useMenuItem<MenuItemElement>({
+        completeListNavigationChildParameters: {},
+        context,
+        managedChildParameters: { disabled, hidden, index },
+        menuItemParameters: { disabled, onPress, role },
+        pressParameters: { exclude, focusSelf },
+        singleSelectionChildParameters: { ariaPropName, selectionMode },
+        typeaheadNavigationChildParameters: { text },
+    })
+}*/
+
+export function DemoMenu() {
+    const [open, setOpen] = useState(false);
+
+    return (
+        <Menu<HTMLDivElement, HTMLUListElement, HTMLLIElement, HTMLLIElement, HTMLButtonElement>
+            closeOnBackdrop={true}
+            closeOnEscape={true}
+            closeOnLostFocus={true}
+            collator={null}
+            disableArrowKeys={false}
+            disableHomeEndKeys={false}
+            getIndex={v => v.props.index}
+            compare={(lhs, rhs) => lhs.index - rhs.index}
+            getWindow={() => globalThis.window}
+            initiallySelectedIndex={null}
+            untabbable={false}
+            navigatePastEnd="wrap"
+            navigatePastStart="wrap"
+            noTypeahead={false}
+            open={open}
+            onClose={() => setOpen(false)}
+            onOpen={() => setOpen(true)}
+            onSelectedIndexChange={noop}
+            onTabbableIndexChange={null}
+            openDirection="down"
+            orientation="vertical"
+            pageNavigationSize={0.1}
+            parentDepth={0}
+            typeaheadTimeout={1000}
+            render={info => {
+                return (
+                    <>
+                        <button {...info.propsTrigger}>Open menu</button>
+                        {defaultRenderPortal({
+                            portalId: "portal",
+                            children: <>
+                                <ul {...info.propsTarget}>
+
+                                </ul>
+                            </>
+                        })}
+                    </>
+                )
+            }}
+        />
+    )
+}
+
+export function DemoMenuItem({ index }: { index: number }) {
+    return (
+        <MenuItem<HTMLLIElement>
+            exclude={undefined}
+            hidden={false}
+            index={index}
+            selectionMode="disabled"
+            text=""
+            onPress={noop}
+            getSortValue={returnNull}
+            render={info => {
+                return (
+                    <>
+                        <li {...info.props}>List item (index #{index})</li>
+                    </>
+                )
+            }}
+            role="menuitem"
+            ariaPropName="aria-selected"
+            disabled={false}
+
+        />
+    )
+}
+
+function noop() { }
+
+/*
 export function defaultRenderMenu<SurfaceElement extends Element, MenuElement extends Element, MenuItemElement extends Element, SentinelElement extends Element, ButtonElement extends Element>({ portalId, tagButton, tagMenu, tagSurface, tagSentinel, makePropsButton, makePropsMenu, makePropsSurface, makePropsSentinel }: { portalId: string, tagSurface: ElementToTag<SurfaceElement>, tagMenu: ElementToTag<MenuElement>, tagButton: ElementToTag<ButtonElement>, tagSentinel: ElementToTag<SentinelElement>, makePropsSurface: (info: UseMenuReturnType<SurfaceElement, MenuElement, MenuItemElement, ButtonElement, UseMenubarSubInfo<MenuItemElement>>) => h.JSX.HTMLAttributes<SurfaceElement>, makePropsMenu: (info: UseMenuReturnType<SurfaceElement, MenuElement, MenuItemElement, ButtonElement, UseMenubarSubInfo<MenuItemElement>>) => h.JSX.HTMLAttributes<MenuElement>, makePropsButton: (info: UseMenuReturnType<SurfaceElement, MenuElement, MenuItemElement, ButtonElement, UseMenubarSubInfo<MenuItemElement>>) => h.JSX.HTMLAttributes<ButtonElement>, makePropsSentinel: (info: UseMenuReturnType<SurfaceElement, MenuElement, MenuItemElement, ButtonElement, UseMenubarSubInfo<MenuItemElement>>) => h.JSX.HTMLAttributes<SentinelElement> }) {
     return function (menuInfo: UseMenuReturnType<SurfaceElement, MenuElement, MenuItemElement, ButtonElement, UseMenubarSubInfo<MenuItemElement>>) {
 
@@ -122,4 +235,4 @@ export function defaultRenderMenu<SurfaceElement extends Element, MenuElement ex
         )
 
     }
-}
+}*/

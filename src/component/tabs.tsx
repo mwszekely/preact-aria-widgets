@@ -1,37 +1,46 @@
 import { createContext, createElement, h, Ref, render, VNode } from "preact";
-import { useContext, useImperativeHandle } from "preact/hooks";
+import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
 import { ElementToTag, PropModifier } from "../props";
 import { TabsContext, UseTab, UseTabPanel, UseTabPanelParameters, UseTabParameters, useTabs, UseTabsParameters, TabPanelsContext, UseTabsReturnType, useTab, UseTabReturnType, UseTabPanelReturnType, useTabPanel } from "../use-tabs";
-import { memoForwardRef } from "./util";
+import { memoForwardRef, PartialExcept, useDefault } from "./util";
 
 type Get<T, K extends keyof T> = T[K];
 type Get2<T, K extends keyof T, K2 extends keyof T[K]> = T[K][K2];
 
-export interface TabsProps<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element> extends
+interface TabsPropsBase<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element> extends
     Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement>, "labelParameters">,
     Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement>, "linearNavigationParameters">,
-    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement>, "randomIdInputParameters">,
-    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement>, "randomIdLabelParameters">,
     Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement>, "rearrangeableChildrenParameters">,
     Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement>, "rovingTabIndexParameters">,
     Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement>, "singleSelectionParameters">,
     Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement>, "sortableChildrenParameters">,
     Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement>, "tabsParameters">,
     Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement>, "typeaheadNavigationParameters"> {
-    render(info: UseTabsReturnType<TabContainerElement, TabElement, TabLabelElement>): VNode<any>;
 }
 
-export interface TabProps<TabElement extends Element> extends
+interface TabPropsBase<TabElement extends Element> extends
     Get<UseTabParameters<TabElement>, "managedChildParameters">,
     Get<UseTabParameters<TabElement>, "pressParameters">,
     Get<UseTabParameters<TabElement>, "singleSelectionChildParameters">,
+    Get<UseTabParameters<TabElement>, "sortableChildParameters">,
+    Get<UseTabParameters<TabElement>, "rovingTabIndexChildParameters">,
     Get<UseTabParameters<TabElement>, "typeaheadNavigationChildParameters">,
     Get<UseTabParameters<TabElement>, "completeListNavigationChildParameters"> {
+}
+
+interface TabPanelPropsBase<PanelElement extends Element> extends
+    Get<UseTabPanelParameters, "managedChildParameters"> {
+}
+
+export interface TabsProps<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element> extends PartialExcept<TabsPropsBase<TabContainerElement, TabElement, TabLabelElement>, "orientation" | "groupingType" | "ariaLabel" | "initiallySelectedIndex" | "onSelectedIndexChange"> {
+    render(info: UseTabsReturnType<TabContainerElement, TabElement, TabLabelElement>): VNode<any>;
+}
+
+export interface TabProps<TabElement extends Element> extends PartialExcept<TabPropsBase<TabElement>, "index" | "text" | "getSortValue"> {
     render(info: UseTabReturnType<TabElement>): VNode<any>;
 }
 
-export interface TabPanelProps<PanelElement extends Element> extends
-    Get<UseTabPanelParameters, "managedChildParameters"> {
+export interface TabPanelProps<PanelElement extends Element> extends PartialExcept<TabPanelPropsBase<PanelElement>, "index"> {
     render(info: UseTabPanelReturnType<PanelElement>): VNode<any>;
 }
 
@@ -46,35 +55,41 @@ export function Tabs<TabContainerElement extends Element, TabElement extends Ele
     disableHomeEndKeys,
     getIndex,
     initiallySelectedIndex,
-    initiallyTabbedIndex,
-    labelPosition,
     navigatePastEnd,
     navigatePastStart,
-    navigationDirection,
     noTypeahead,
     onSelectedIndexChange,
     onTabbableIndexChange,
     orientation,
     pageNavigationSize,
-    prefix,
-    tagInput,
-    tagLabel,
-    type,
+    groupingType,
+    untabbable,
     typeaheadTimeout,
     role,
     render
 }: TabsProps<TabContainerElement, TabElement, TabLabelElement>) {
     const info = useTabs<TabContainerElement, TabElement, TabLabelElement>({
-        labelParameters: { ariaLabel, labelPosition, tagInput, tagLabel },
-        linearNavigationParameters: { disableArrowKeys, disableHomeEndKeys, navigatePastEnd, navigatePastStart, navigationDirection, pageNavigationSize },
-        randomIdInputParameters: { prefix },
-        randomIdLabelParameters: { prefix },
-        rearrangeableChildrenParameters: { getIndex },
-        rovingTabIndexParameters: { initiallyTabbedIndex, onTabbableIndexChange },
+        labelParameters: { ariaLabel },
+        linearNavigationParameters: {
+            disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys),
+            disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
+            navigatePastEnd: navigatePastEnd ?? "wrap",
+            navigatePastStart: navigatePastStart ?? "wrap",
+            pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
+        },
+        rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
+        rovingTabIndexParameters: {
+            onTabbableIndexChange: onTabbableIndexChange ?? null,
+            untabbable: untabbable ?? false
+        },
         singleSelectionParameters: { initiallySelectedIndex, onSelectedIndexChange },
-        sortableChildrenParameters: { compare },
-        tabsParameters: { orientation, type, role },
-        typeaheadNavigationParameters: { collator, noTypeahead, typeaheadTimeout }
+        sortableChildrenParameters: { compare: compare ?? null },
+        tabsParameters: { orientation, groupingType, role },
+        typeaheadNavigationParameters: {
+            collator: useDefault("collator", collator),
+            noTypeahead: useDefault("noTypeahead", noTypeahead),
+            typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
+        }
     });
 
     const { contextPanels, contextTabs } = info;
@@ -98,15 +113,19 @@ export function Tab<E extends Element>({
     onPressSync,
     selectionMode,
     text,
+    getSortValue,
     render
 }: TabProps<E>) {
     const context = useContext(TabsContext);
+    const focusSelfDefault = useCallback((e: any) => { e?.focus(); }, []);
     const info = useTab<E>({
         completeListNavigationChildParameters: {},
         context,
-        managedChildParameters: { disabled, hidden, index },
-        pressParameters: { exclude, focusSelf, onPressSync },
-        singleSelectionChildParameters: { selectionMode },
+        rovingTabIndexChildParameters: { hidden: hidden ?? false },
+        sortableChildParameters: { getSortValue },
+        managedChildParameters: { index },
+        pressParameters: { exclude, focusSelf: focusSelf ?? focusSelfDefault, onPressSync },
+        singleSelectionChildParameters: { disabled: disabled ?? false, selectionMode: useDefault("selectionMode", selectionMode) },
         typeaheadNavigationChildParameters: { text }
     });
     return render(info);

@@ -12,17 +12,21 @@ Overall goals:
 * Widgets are performant and queue as few updates as possible while in use
     * Changing a property of a composite widget (e.g. which listbox item is focused) is O(2), only updating the max two relevant children who need to re-render
     * Adding/deleting N children to/from an existing composite widget is O(N*log(N)) for composite widgets that support typeahead, which is most of them.
-    * Every attempt is made to avoid iterating over every child at any opportunity, so that extremely long lists of thousands of elements are limited by browser painting more than JavaScript (hopefully).
-* Widgets are *extremely* low level, effectively just trying to be glue between the final GUI interface code and ARIA as a whole.
-    * No assumptions are made about DOM structure &mdash; almost anything is allowable as long as you apply the props given
-    * No styling is provided, even in the case of E.G. hiding a menu. Attributes such as `inert` are used over `hidden`. You must use the `render` prop to set `display: none` or `hidden=true`. 
+    * Every attempt is made to avoid iterating over every child at any opportunity, so that extremely long lists of thousands of elements are (hopefully) limited by browser painting more than JavaScript.
 * Widgets' props are simplistic and based on primitive types (including functions); a multi-select list does not receive a prop containing an array of all the list data, rather, each child has a simple boolean `selected` prop and the parent finds a way to work with that efficiently.
     * In this way, the hooks/components are designed to work around the most comfortable way to provide these props in a real environment
+    * The tradeoff is that each child of any list-ish thing needs a 0-based numeric index in addition to the usual `key` prop that represents where in the list that child is when unsorted.
+* Widgets are *extremely* low level, effectively just trying to be glue between the final GUI interface code and ARIA as a whole.
+    * No assumptions are made about DOM structure &mdash; almost anything is allowable as long as you apply the props given.
+        * Checkboxes, for example, can be either `<input /><label />` or `<label><input /></label>`, and the correct event handlers and ARIA attributes will be applied no matter which way you need to structure things.
+    * Each component takes a `render` prop that takes the information returned by a hook and spits out a `<div>` or something. These `render` functions always take *one* argument, within which are properties called things like `propsButton` or `propsMenu`. It's up to you to spread these props to their relevant JSX that you return, and you can make use of any other information as well to add CSS class names in whatever way works for you.  E.G. a button could be `render={info => <button {...info.propsButon} class={info.pressReturn.pseudoActive ? "active" : ""}>Pressable</button>}`
+    * Beyond each component's `render` prop passing in all the information returned by its corresponding hook, each component's `ref` prop can also be used to retrieve this information with (e.g. for checkboxes) `const ref = useRef<UseCheckboxReturnTypeInfo>(null)`, then `<Checkbox ref={ref} />` lets you do things like `ref.current.checkboxLike.focusSelf()`, which (as an example) sends focus to whichever element is responsible (based on label position and element types, etc.). What's available is grouped by the hooks used so expect a lot of `listNavigationReturn` and related repeats throughout.
+    * No styling is provided, even in the case of E.G. hiding a menu. Attributes such as `inert` are used over `hidden`. You must use the `render` prop to set `display: none` or `hidden=true`. 
+    * It's assumed you'll create wrapper components around these with nicer interfaces.
 
 Other design decisions:
 * A lot of these hooks are composed of other hooks in deeply nested ways. To avoid confusion about who takes what parameter/who returns what info, hooks will generally just take one single object parameter where each entry contains the arguments passed to the hook used. Simiarly when returning information, each entry in the object will refer to the information returned specifically by that hook
-    * For example, `useListboxSingle` makes use of roving tabindex as well as a singular selection mechanic, so its call with its one argument looks like `useListboxSingle({ rovingTabIndex: { ... }, singleSelection: { ... }, listboxSingle: { ... } })`
-    * Beyond each component's `render` prop passing in all the information returned by its corresponding hook, each component's `ref` prop can also be used to retrieve this information with (e.g. for checkboxes) `const ref = useRef<UseCheckboxReturnTypeInfo>(null)`, then `<Checkbox ref={ref} />` lets you do things like `ref.current.checkboxLike.focusSelf()`, which (as an example) sends focus to whichever element is responsible (based on label position and element types, etc.). What's available is grouped by the hooks used so expect a lot of `listNavigation` and related repeats throughout.
+    * For example, `useListbox` makes use of roving tabindex as well as a singular selection mechanic, so its call with its one argument looks like `useListbox({ rovingTabIndexParameters: { ... }, singleSelectionParameters: { ... }, listboxSingleParameters: { ... } })`
 
 Documentation, testing, production-readiness are all TODO.
 

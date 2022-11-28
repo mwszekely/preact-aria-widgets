@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { useMergedProps, usePress, UsePressReturnType, useRandomDualIds, UseRandomDualIdsParameters, UseRandomDualIdsReturnType, UseRefElementReturnType } from "preact-prop-helpers";
+import { useMergedProps, usePress, UsePressReturnType, useRandomDualIds, UseRandomDualIdsParameters, UseRandomDualIdsReturnType, UseRefElementReturnType, useStableCallback } from "preact-prop-helpers";
 import { useCallback, useEffect } from "preact/hooks";
 import { DisabledType, ElementToTag } from "./props";
 
@@ -25,7 +25,11 @@ export interface UseLabelParameters<LP extends LabelPosition, InputElement exten
          */
         labelPosition: LP;
 
-        /** Only used when labelPosition is "none", but **must** be non-null in that case */
+        /** 
+         * When `null`, this corresponds to having a visible label (with `labelPosition` == `"separate"` or `"wrapping"`).
+         * 
+         * When a string, this corresponds to `labelPosition` == `"none"`; this label is only visible to assistive technologies and *not* visible otherwise.
+         */
         ariaLabel: LP extends "none"? string : null;
     }
 }
@@ -37,8 +41,8 @@ export function useLabel<LP extends LabelPosition, InputElement extends Element,
     randomIdLabelParameters,
     labelParameters: { tagInput, tagLabel, ariaLabel, labelPosition }
 }: UseLabelParameters<LP, InputElement, LabelElement>): UseLabelReturnType<InputElement, LabelElement> {
-    //useEnsureStability("useLabel", tagInput, tagLabel, labelPosition);
-    const synthetic = !(tagInput == "input" && tagLabel == "label");
+    const nativeHTMLBehavior = (tagInput == "input" && tagLabel == "label" && labelPosition != "wrapping");
+    const synthetic = !nativeHTMLBehavior;
 
     /**
      * |Synthetic?|Position    |Input Prop   |Label Prop|
@@ -70,6 +74,33 @@ export function useLabel<LP extends LabelPosition, InputElement extends Element,
         randomIdInputReturn,
         randomIdLabelReturn,
     }
+}
+
+export interface UseLabelSyntheticParameters {
+    randomIdInputParameters: Omit<UseRandomDualIdsParameters["randomIdInputParameters"], "referencerProp">;
+    randomIdLabelParameters: Omit<UseRandomDualIdsParameters["randomIdLabelParameters"], "referencerProp">;
+    labelParameters: Pick<UseLabelParameters<LabelPosition, any, any>["labelParameters"], "ariaLabel">
+}
+
+/**
+ * Shortcut for `useLabel` that assumes we're just never working with native HTML `input` and `label` elements. So for labelling guaranteably non-native elements.
+ */
+export function useLabelSynthetic<InputElement extends Element, LabelElement extends Element>({ 
+    labelParameters: { ariaLabel }, 
+    randomIdInputParameters, 
+    randomIdLabelParameters
+ }: UseLabelSyntheticParameters) {
+    return useLabel<LabelPosition, InputElement, LabelElement>({
+        randomIdLabelParameters,
+        randomIdInputParameters,
+        labelParameters: {
+            ariaLabel,
+            labelPosition: ariaLabel == null? "separate" : "none",
+            tagInput: "div" as never,
+            tagLabel: "div" as never
+        }
+    })
+
 }
 
 
@@ -111,6 +142,12 @@ export interface UseCheckboxLikeReturnType<InputType extends Element, LabelType 
     pressInputReturn: UsePressReturnType<InputType>["pressReturn"];
     checkboxLikeInputReturn: { propsUnstable: h.JSX.HTMLAttributes<InputType> }
     checkboxLikeLabelReturn: { propsUnstable: h.JSX.HTMLAttributes<LabelType> }
+    checkboxLikeReturn: { 
+        /**
+         * Call this to focus whichever element handles the focus based on `labelPosition`.
+         */
+        focusSelf(): void;
+     }
 }
 
 /**
@@ -164,7 +201,7 @@ export function useCheckboxLike<LP extends LabelPosition, InputType extends Elem
     const focusInput = useCallback(() => { (getInput() as (HTMLElement | null))?.focus(); }, []);
     const focusLabel = useCallback(() => { (getLabel() as (HTMLElement | null))?.focus(); }, []);
     const onClickInputSync = (labelPosition == "wrapping"? undefined : onInputSync);
-    const onClickLabelSync = (labelPosition == "none"? undefined : onInputSync);
+    const onClickLabelSync = (labelPosition != "separate"? undefined : onInputSync);
     const { pressReturn: pressInputReturn } = usePress<InputType>({ pressParameters: { exclude: {}, focusSelf: focusInput, onPressSync: (disabled)? undefined : onClickInputSync }, refElementReturn: refElementInputReturn });
     const { pressReturn: pressLabelReturn } = usePress<LabelType>({ pressParameters: { exclude: {}, focusSelf: focusLabel, onPressSync: (disabled)? undefined : onClickLabelSync }, refElementReturn: refElementLabelReturn });
     const propsUnstableInput: h.JSX.HTMLAttributes<InputType> = {};
@@ -176,7 +213,6 @@ export function useCheckboxLike<LP extends LabelPosition, InputType extends Elem
     propsUnstableLabel.onClick = disabled ? preventDefault : undefined;
 
     switch (labelPosition) {
-        case "none":
         case "separate": {
             if (tagInput == "input") {
                 // Even in the most default input behavior, we still need to handle
@@ -231,6 +267,16 @@ export function useCheckboxLike<LP extends LabelPosition, InputType extends Elem
         }
     }
 
+    const focusSelf = useStableCallback(() => {
+        let elementToFocus: HTMLElement | null = null;
+        if (labelPosition == "wrapping")
+            elementToFocus = getLabelElement() as Element as HTMLElement;
+        else
+            elementToFocus = getInputElement() as Element as HTMLElement;
+
+        elementToFocus?.focus();
+    })
+
     return {
         randomIdInputReturn,
         randomIdLabelReturn,
@@ -239,7 +285,8 @@ export function useCheckboxLike<LP extends LabelPosition, InputType extends Elem
         checkboxLikeInputReturn: { propsUnstable: propsUnstableInput },
         checkboxLikeLabelReturn: { propsUnstable: propsUnstableLabel },
         propsInput: useMergedProps(propsInput, propsUnstableInput),
-        propsLabel: useMergedProps(propsLabel, propsUnstableLabel)
+        propsLabel: useMergedProps(propsLabel, propsUnstableLabel),
+        checkboxLikeReturn: { focusSelf }
     }
 }
 

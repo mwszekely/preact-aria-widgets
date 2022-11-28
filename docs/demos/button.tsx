@@ -1,6 +1,6 @@
 
 import { useState } from "preact-prop-helpers";
-import { Button, defaultRenderButton, EventDetail } from "../../index";
+import { Button, EventDetail } from "../../index";
 
 function getDocument() {
     return window.document;
@@ -48,15 +48,12 @@ export function Demo() {
             <DemoButton disabled={false} tag="div" />
             <DemoButton disabled="soft" tag="div" />
             <DemoButton disabled="hard" tag="div" />
-            <Button
+            <Button<HTMLButtonElement>
                 exclude={undefined}
-                onPseudoActiveStart={null}
-                onPseudoActiveStop={null}
-                disabled={false}
                 tagButton="button"
                 pressed={pressed}
                 onPress={e => setPressed(e[EventDetail].pressed ?? false)}
-                render={defaultRenderButton({ tagButton: "button", propsButton: { children: `Toggle button (${pressed ? "pressed" : "unpressed"})` } })}
+                render={info => (<button {...info.props}>{`Toggle button (${pressed ? "pressed" : "unpressed"})`}</button>)}
             />
         </>
     )
@@ -66,16 +63,11 @@ function DemoButton({ tag, disabled }: { tag: string, disabled: boolean | "soft"
     const onPress = () => { alert("Button clicked") }
 
     return (
-        <Button
+        <Button<HTMLButtonElement>
             disabled={disabled}
-            exclude={undefined}
-            pressed={null}
             tagButton={tag as any}
             onPress={onPress}
-            render={defaultRenderButton({
-                tagButton: tag as any,
-                propsButton: ({ class: "btn", children: `${tag} ${disabled ? ` disabled (${disabled == "soft" ? "soft" : "hard"})` : ""}` })
-            })}
+            render={info => (<button {...info.props}>{`${tag} ${disabled ? ` disabled (${disabled == "soft" ? "soft" : "hard"})` : ""}` }</button>)}
         />
     )
 }

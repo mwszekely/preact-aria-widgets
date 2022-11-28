@@ -1,5 +1,8 @@
 
-import { useModal, UseModalParameters, UseModalReturnType } from "preact-prop-helpers";
+import { h } from "preact";
+import { useMergedProps, useModal, UseModalParameters, UseModalReturnType } from "preact-prop-helpers";
+import { PureComponent } from "preact/compat";
+import { LabelPosition, useLabel, useLabelSynthetic, UseLabelSyntheticParameters } from "use-label";
 
 /*
 export interface UseDialogReturnTypeInfo extends UseSoftDismissReturnTypeInfo {
@@ -71,16 +74,17 @@ export function useDialog<FocusContainerElement extends HTMLElement, DialogEleme
     }
 }*/
 
-export interface UseDialogParameters extends Omit<UseModalParameters<"escape" | "backdrop">, "focusTrapParameters" | "dismissParameters"> {
+export interface UseDialogParameters<DialogElement extends Element, TitleElement extends Element> extends Omit<UseModalParameters<"escape" | "backdrop">, "focusTrapParameters" | "dismissParameters">, Pick<UseLabelSyntheticParameters, "labelParameters"> {
     focusTrapParameters: Omit<UseModalParameters<"escape" | "backdrop">["focusTrapParameters"], "trapActive">;
     dismissParameters: Omit<UseModalParameters<"escape" | "backdrop">["dismissParameters"], "closeOnLostFocus">;
 }
 
-export interface UseDialogReturnType<FocusContainerElement extends Element, PopupElement extends Element> extends UseModalReturnType<FocusContainerElement, null, PopupElement> {
-
+export interface UseDialogReturnType<FocusContainerElement extends Element, SourceElement extends Element, PopupElement extends Element, TitleElement extends Element> extends Omit<UseModalReturnType<FocusContainerElement, SourceElement, PopupElement>, "propsPopup"> {
+    propsDialog: h.JSX.HTMLAttributes<PopupElement>;
+    propsTitle: h.JSX.HTMLAttributes<TitleElement>;
 }
 
-export function useDialog<FocusContainerElement extends Element, PopupElement extends Element>({ dismissParameters, escapeDismissParameters, focusTrapParameters }: UseDialogParameters): UseDialogReturnType<FocusContainerElement, PopupElement> {
+export function useDialog<FocusContainerElement extends Element,  SourceElement extends Element, DialogElement extends Element, TitleElement extends Element>({ dismissParameters, escapeDismissParameters, focusTrapParameters, labelParameters }: UseDialogParameters<DialogElement, TitleElement>): UseDialogReturnType<FocusContainerElement, SourceElement, DialogElement, TitleElement> {
     const {
         focusTrapReturn,
         propsFocusContainer,
@@ -88,17 +92,29 @@ export function useDialog<FocusContainerElement extends Element, PopupElement ex
         propsSource,
         refElementPopupReturn,
         refElementSourceReturn
-    } = useModal<"escape" | "backdrop", FocusContainerElement, null, PopupElement>({
+    } = useModal<"escape" | "backdrop", FocusContainerElement, SourceElement, DialogElement>({
         dismissParameters: { closeOnLostFocus: false, ...dismissParameters },
         escapeDismissParameters,
         focusTrapParameters: { trapActive: true, ...focusTrapParameters }
     });
 
+    const { 
+        propsInput, 
+        propsLabel, 
+        randomIdInputReturn, 
+        randomIdLabelReturn
+     } = useLabelSynthetic<DialogElement, TitleElement>({ 
+        labelParameters, 
+        randomIdInputParameters: { prefix: "aria-dialog-" }, 
+        randomIdLabelParameters: { prefix: "aria-dialog-title-" }
+     });
+
     return {
         focusTrapReturn,
         propsFocusContainer,
-        propsPopup,
+        propsDialog: useMergedProps<DialogElement>(propsPopup, propsInput),
         propsSource,
+        propsTitle: propsLabel,
         refElementPopupReturn,
         refElementSourceReturn
     }

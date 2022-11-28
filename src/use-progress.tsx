@@ -1,10 +1,10 @@
 import { h } from "preact";
 import { useMergedProps } from "preact-prop-helpers";
 import { ElementToTag } from "./props";
-import { LabelPosition, useLabel, UseLabelParameters, UseLabelReturnType } from "./use-label";
+import { LabelPosition, useLabel, UseLabelSyntheticParameters, UseLabelReturnType, useLabelSynthetic } from "./use-label";
 
 
-export interface UseProgressParameters<IndicatorElement extends Element, LabelElement extends Element> extends Omit<UseLabelParameters<LabelPosition, IndicatorElement, LabelElement>, "randomIdLabelParameters" | "randomIdInputParameters"> {
+export interface UseProgressParameters<IndicatorElement extends Element, LabelElement extends Element> extends Omit<UseLabelSyntheticParameters, "randomIdLabelParameters" | "randomIdInputParameters"> {
     /*progressParameters: {
         tagProgress: ElementToTag<IndicatorElement>;
         tagLabel: ElementToTag<LabelElement>;
@@ -12,7 +12,7 @@ export interface UseProgressParameters<IndicatorElement extends Element, LabelEl
     progressIndicatorParameters: {
         max: number;
         value: number | "indeterminate" | "disabled";
-        valueText: string;
+        valueText: string | null;
         tagIndicator: ElementToTag<IndicatorElement>;
     }
 }
@@ -43,12 +43,14 @@ export function useProgress<ProgressElement extends Element, LabelElement extend
     }
 }: UseProgressParameters<ProgressElement, LabelElement>): UseProgressReturnType<ProgressElement, LabelElement> {
 
+    //const { tagInput } = labelParameters
+
     const {
         propsInput,
         propsLabel,
         randomIdInputReturn,
         randomIdLabelReturn
-    } = useLabel({
+    } = useLabelSynthetic<ProgressElement, LabelElement>({
         labelParameters,
         randomIdInputParameters: { prefix: "progress-indicator-" },
         randomIdLabelParameters: { prefix: "progress-label-" }
@@ -87,7 +89,8 @@ export function useProgress<ProgressElement extends Element, LabelElement extend
     };
 
     const regionProps = {
-        "aria-busy": (busy).toString()
+        "aria-busy": (busy).toString(),
+        "aria-describedby": randomIdInputReturn.id
     }
 
 

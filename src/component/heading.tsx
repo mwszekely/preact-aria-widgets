@@ -1,20 +1,33 @@
-import { ComponentChildren, createContext, createElement, h } from "preact";
+import { ComponentChildren, createContext, createElement, h, RenderableProps } from "preact";
 import { memo } from "preact/compat";
 import { useContext } from "preact/hooks";
-import { overwriteWithWarning } from "../props";
+import { ElementToTag, overwriteWithWarning } from "../props";
 
 const HeadingLevelContext = createContext(0);
 
-export const Heading = memo(function Heading<T extends Element>({ children, heading, ...props }: { heading: ComponentChildren } & h.JSX.HTMLAttributes<T>) {
+export interface HeadingProps<T extends Element> extends RenderableProps<h.JSX.HTMLAttributes<T>> {
+    /**
+     * The contents of the heading.
+     * 
+     * Separate from the children, which become the content described by this heading.
+     */
+    heading: ComponentChildren;
+
+    tag?: ElementToTag<T>;
+}
+
+export const Heading = memo(function Heading<T extends Element>({ children, heading, tag, ...props }: HeadingProps<T>) {
     const headingLevelBeforeUs = useContext(HeadingLevelContext);
     const newHeadingLevel = headingLevelBeforeUs + 1;
-    let tag: string;
-    if (newHeadingLevel <= 6) {
-        tag = `h${newHeadingLevel}`;
-    }
-    else {
-        tag = 'div';
-        overwriteWithWarning("Heading", props, "aria-level", `${newHeadingLevel}`);
+
+    if (tag == null) {
+        if (newHeadingLevel <= 6) {
+            tag = `h${newHeadingLevel}` as never;
+        }
+        else {
+            tag = 'div' as never;
+            overwriteWithWarning("Heading", props, "aria-level", `${newHeadingLevel}`);
+        }
     }
 
     return (
