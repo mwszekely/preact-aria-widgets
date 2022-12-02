@@ -1,21 +1,21 @@
 import { h } from "preact";
-import { ManagedChildInfo, OnChildrenMountChange, useChildrenFlag, useLinearNavigation, UseLinearNavigationParameters, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, useMergedProps, UsePressReturnType, useRandomId, useRefElement, UseRefElementParameters, UseRefElementReturnType, UseRovingTabIndexChildParameters, useStableCallback, useStableGetter, useStableObject, useState } from "preact-prop-helpers";
-import { StateUpdater, useCallback } from "preact/hooks";
+import { ManagedChildInfo, OnChildrenMountChange, PassiveStateUpdater, useChildrenFlag, useLinearNavigation, UseLinearNavigationParameters, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, useMergedProps, UsePressReturnType, useRandomId, useRefElement, UseRefElementParameters, UseRefElementReturnType, UseRovingTabIndexChildParameters, useStableCallback, useStableGetter, useStableObject, useState } from "preact-prop-helpers";
+import { useCallback } from "preact/hooks";
 import { debugLog, DisabledType } from "./props";
 import { ButtonPressEvent, useButton, UseButtonParameters } from "./use-button";
 
-export type UseAccordion<M extends UseAccordionSectionInfo> = (args: UseAccordionParameters<M>) => UseAccordionReturnType<M>;
+//export type UseAccordion<M extends UseAccordionSectionInfo> = (args: UseAccordionParameters<M>) => UseAccordionReturnType<M>;
 //export type UseAccordionSection<HeaderElement extends Element, BodyElement extends Element, M extends UseAccordionSectionInfo> = (args: UseAccordionSectionParameters<HeaderElement, M>) => UseAccordionSectionReturnType<HeaderElement, BodyElement>;
 
-export interface UseAccordionParameters<M extends UseAccordionSectionInfo> extends UseManagedChildrenParameters<M> {
+export interface UseAccordionParameters<SectionElement extends Element, M extends UseAccordionSectionInfo> extends UseManagedChildrenParameters<M> {
     accordionParameters: { initialIndex?: number | null; }
-    linearNavigationParameters: Omit<UseLinearNavigationParameters["linearNavigationParameters"], "navigateRelative" | "navigateAbsolute" | "getHighestIndex" | "isValid" | "indexDemangler" | "indexMangler">;
+    linearNavigationParameters: Omit<UseLinearNavigationParameters<SectionElement, SectionElement>["linearNavigationParameters"], "navigateRelative" | "navigateAbsolute" | "getHighestIndex" | "isValid" | "indexDemangler" | "indexMangler">;
 }
 
-export interface UseAccordionReturnType<M extends UseAccordionSectionInfo> extends UseManagedChildrenReturnType<M> {
+export interface UseAccordionReturnType<SectionElement extends Element, M extends UseAccordionSectionInfo> extends UseManagedChildrenReturnType<M> {
     /** **STABLE** */
-    accordionReturn: { changeExpandedIndex: (arg: number | ((prevState: number | null) => number | null) | null) => number | null; }
-    context: UseAccordionContext<M>;
+    accordionReturn: { changeExpandedIndex: PassiveStateUpdater<number | null, Event> }
+    context: UseAccordionContext<SectionElement, M>;
 }
 
 
@@ -29,10 +29,10 @@ export interface UseAccordionSectionInfo extends ManagedChildInfo<number> {
     hidden: boolean;
 }
 
-export interface UseAccordionSectionParameters<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo> extends
+export interface UseAccordionSectionParameters<HeaderButtonElement extends Element, SectionElement extends Element,  M extends UseAccordionSectionInfo> extends
     UseRefElementParameters<HeaderButtonElement> {
-    managedChildParameters: Omit<UseManagedChildParameters<M, never>["managedChildParameters"], "setOpenFromParent" | "getOpenFromParent" | "setMostRecentlyTabbed" | "getMostRecentlyTabbed" | "focusSelf" | "disabled">;
-    context: UseAccordionContext<M>;
+    managedChildParameters: Omit<UseManagedChildParameters<M>["managedChildParameters"], "setOpenFromParent" | "getOpenFromParent" | "setMostRecentlyTabbed" | "getMostRecentlyTabbed" | "focusSelf" | "disabled">;
+    context: UseAccordionContext<SectionElement, M>;
     rovingTabIndexChildParameters: Pick<UseRovingTabIndexChildParameters<any>["rovingTabIndexChildParameters"], "hidden">;
     accordionSectionParameters: {
         /** 
@@ -64,22 +64,22 @@ export interface UseAccordionSectionReturnType<HeaderElement extends Element, He
     propsBody: h.JSX.HTMLAttributes<BodyElement>
 }
 
-export interface UseAccordionContext<M extends UseAccordionSectionInfo> extends UseManagedChildrenContext<M> {
+export interface UseAccordionContext<SectionElement extends Element, M extends UseAccordionSectionInfo> extends UseManagedChildrenContext<M> {
     accordionSectionParameters: {
-        changeTabbedIndex: StateUpdater<number | null>;
-        changeExpandedIndex: StateUpdater<number | null>;
+        changeTabbedIndex: PassiveStateUpdater<number | null, h.JSX.TargetedEvent<SectionElement>>;
+        changeExpandedIndex: PassiveStateUpdater<number | null, h.JSX.TargetedEvent<SectionElement>>;
         getExpandedIndex: () => (number | null);
         getTabbedIndex: () => (number | null);
     }
-    linearNavigationParameters: UseLinearNavigationParameters["linearNavigationParameters"];
-    rovingTabIndexReturn: UseLinearNavigationParameters["rovingTabIndexReturn"];
+    linearNavigationParameters: UseLinearNavigationParameters<SectionElement, SectionElement>["linearNavigationParameters"];
+    rovingTabIndexReturn: UseLinearNavigationParameters<SectionElement, SectionElement>["rovingTabIndexReturn"];
 }
 
-export function useAccordion<M extends UseAccordionSectionInfo>({
+export function useAccordion<SectionElement extends Element, M extends UseAccordionSectionInfo>({
     accordionParameters: { initialIndex },
     linearNavigationParameters: { disableArrowKeys, disableHomeEndKeys, navigationDirection, navigatePastEnd, navigatePastStart, pageNavigationSize },
     managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange }
-}: UseAccordionParameters<M>): UseAccordionReturnType<M> {
+}: UseAccordionParameters<SectionElement, M>): UseAccordionReturnType<SectionElement, M> {
     debugLog("useAccordian");
     //const [_currentFocusedIndex, setCurrentFocusedIndex, getCurrentFocusedIndex] = useState<number | null>(null);
 
@@ -102,10 +102,10 @@ export function useAccordion<M extends UseAccordionSectionInfo>({
     }, []);
 
 
-    const { changeIndex: changeExpandedIndex, getCurrentIndex: _getCurrentExpandedIndex } = useChildrenFlag({
+    const { changeIndex: changeExpandedIndex, getCurrentIndex: _getCurrentExpandedIndex } = useChildrenFlag<M, Event>({
         initialIndex,
         getChildren,
-        getAt: useCallback((child) => { return child.getOpenFromParent(); }, []),
+        getAt: useCallback((child) => { return child.getOpenFromParent() ?? false; }, []),
         setAt: useCallback((child, open) => { return child.setOpenFromParent(open); }, []),
         isValid,
         onIndexChange: null,
@@ -113,10 +113,10 @@ export function useAccordion<M extends UseAccordionSectionInfo>({
         closestFit: false
     });
 
-    const { changeIndex: changeTabbedIndex, getCurrentIndex: _getTabbedIndex, reevaluateClosestFit: ocmc2 } = useChildrenFlag({
+    const { changeIndex: changeTabbedIndex, getCurrentIndex: _getTabbedIndex, reevaluateClosestFit: ocmc2 } = useChildrenFlag<M, Event>({
         initialIndex,
         getChildren,
-        getAt: useCallback((child) => { return child.getMostRecentlyTabbed(); }, []),
+        getAt: useCallback((child) => { return child.getMostRecentlyTabbed() ?? false; }, []),
         setAt: useCallback((child, tabbed) => { return child.setMostRecentlyTabbed(tabbed); }, []),
         isValid,
         closestFit: true,
@@ -132,7 +132,7 @@ export function useAccordion<M extends UseAccordionSectionInfo>({
 
 
     return {
-        context: useStableObject<UseAccordionContext<M>>({
+        context: useStableObject<UseAccordionContext<SectionElement, M>>({
             ...context,
             accordionSectionParameters: useStableObject({
                 changeExpandedIndex,
@@ -152,7 +152,7 @@ export function useAccordion<M extends UseAccordionSectionInfo>({
                 navigatePastStart,
                 pageNavigationSize
             }),
-            rovingTabIndexReturn: useStableObject({
+            rovingTabIndexReturn: ({
                 getTabbableIndex: _getCurrentExpandedIndex,
                 setTabbableIndex: changeTabbedIndex
             })
@@ -181,7 +181,7 @@ export function useAccordionSection<_HeaderContainerElement extends Element, Hea
         rovingTabIndexReturn
     },
     refElementParameters,
-}: UseAccordionSectionParameters<HeaderButtonElement, UseAccordionSectionInfo>): UseAccordionSectionReturnType<_HeaderContainerElement, HeaderButtonElement, BodyElement> {
+}: UseAccordionSectionParameters<HeaderButtonElement, BodyElement, UseAccordionSectionInfo>): UseAccordionSectionReturnType<_HeaderContainerElement, HeaderButtonElement, BodyElement> {
 
     const { disabled, onPress: userOnPress } = buttonParameters;
 
@@ -265,7 +265,7 @@ export function useAccordionSection<_HeaderContainerElement extends Element, Hea
     });
 
 
-    const linearReturnType = useLinearNavigation<HeaderButtonElement>({ linearNavigationParameters, rovingTabIndexReturn });
+    const linearReturnType = useLinearNavigation<HeaderButtonElement, HeaderButtonElement>({ linearNavigationParameters, rovingTabIndexReturn });
 
     const { linearNavigationReturn: { propsStable } } = linearReturnType;
 

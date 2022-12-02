@@ -21,7 +21,7 @@ import { UseListboxParameters } from "./use-listbox";
 
 //type ListboxSingleSelectEvent<E extends EventTarget> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 
-export interface UseGridlistContext<GridlistElement extends Element, GridlistRowElement extends Element, M extends GridlistRowInfo<GridlistRowElement>> extends CompleteGridNavigationContext<GridlistElement, GridlistRowElement, M> {
+export interface UseGridlistContext<GridlistElement extends Element, GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends CompleteGridNavigationContext<GridlistElement, GridlistRowElement, GridlistCellElement, RM, CM> {
     gridlistRowContext: { selectionLimit: "single" | "multi" }
 }
 
@@ -29,20 +29,20 @@ export interface UseGridlistRowContext<ParentElement extends Element, ChildEleme
 
 }
 
-export interface UseGridlistParameters<GridlistElement extends Element, GridlistRowElement extends Element, LabelElement extends Element, M extends GridlistRowInfo<GridlistRowElement>> extends UseCompleteGridNavigationParameters<GridlistElement, GridlistRowElement, M> {
+export interface UseGridlistParameters<GridlistElement extends Element, GridlistRowElement extends Element, GridlistCellElement extends Element, LabelElement extends Element, M extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>> extends UseCompleteGridNavigationParameters<GridlistElement, GridlistRowElement, GridlistCellElement, M> {
     labelParameters: UseLabelSyntheticParameters["labelParameters"];
     gridlistParameters: UseListboxParameters<GridlistElement, GridlistRowElement, LabelElement, M>["listboxParameters"];
 }
-export interface UseGridlistReturnType<GridlistElement extends Element, GridlistRowElement extends Element, LabelElement extends Element, M extends GridlistRowInfo<GridlistRowElement>> extends Omit<UseCompleteGridNavigationReturnType<GridlistElement, GridlistRowElement, M>, "props"> {
+export interface UseGridlistReturnType<GridlistElement extends Element, GridlistRowElement extends Element, GridlistCellElement extends Element, LabelElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends Omit<UseCompleteGridNavigationReturnType<GridlistElement, GridlistRowElement, GridlistCellElement, RM, CM>, "props"> {
     propsGridlist: h.JSX.HTMLAttributes<GridlistElement>;
     propsGridlistLabel: h.JSX.HTMLAttributes<LabelElement>;
-    context: UseGridlistContext<GridlistElement, GridlistRowElement, M>;
+    context: UseGridlistContext<GridlistElement, GridlistRowElement, GridlistCellElement, RM, CM>;
 }
-export interface UseGridlistRowReturnType<GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends UseCompleteGridNavigationRowReturnType<GridlistRowElement, GridlistCellElement, RM, CM> { }
-export interface UseGridlistRowParameters<GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement>, CM extends GridlistCellInfo<GridlistCellElement>> {// extends UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM> {
+export interface UseGridlistRowReturnType<GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends UseCompleteGridNavigationRowReturnType<GridlistRowElement, GridlistCellElement, RM, CM> { }
+export interface UseGridlistRowParameters<GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>> {// extends UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM> {
 
     asChildRowParameters: UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>["asChildRowParameters"] & {
-        context: UseGridlistContext<any, GridlistRowElement, RM>;
+        context: UseGridlistContext<any, GridlistRowElement, GridlistCellElement, RM, CM>;
         gridlistRowParameters: {
             /**
              * When the `selectionLimit` is `"single"`, this must be `null`.
@@ -64,10 +64,10 @@ export interface UseGridlistRowParameters<GridlistRowElement extends Element, Gr
 export interface UseGridlistCellReturnType<GridlistCellElement extends Element, CM extends GridlistCellInfo<GridlistCellElement>> extends UseCompleteGridNavigationCellReturnType<GridlistCellElement, CM> { }
 export interface UseGridlistCellParameters<GridlistCellElement extends Element, CM extends GridlistCellInfo<GridlistCellElement>> extends UseCompleteGridNavigationCellParameters<GridlistCellElement, CM> { }
 
-export interface GridlistRowInfo<GridlistRowElement extends Element> extends GridSingleSelectSortableChildRowInfo<GridlistRowElement> { }
+export interface GridlistRowInfo<GridlistRowElement extends Element, GridlistCellElement extends Element> extends GridSingleSelectSortableChildRowInfo<GridlistRowElement, GridlistCellElement> { }
 export interface GridlistCellInfo<GridlistCellElement extends Element> extends GridSingleSelectSortableChildCellInfo<GridlistCellElement> { }
 
-export function useGridlist<GridlistElement extends Element, GridlistRowElement extends Element, LabelElement extends Element, M extends GridlistRowInfo<GridlistRowElement>>({
+export function useGridlist<GridlistElement extends Element, GridlistRowElement extends Element, GridlistCellElement extends Element, LabelElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>>({
     linearNavigationParameters,
     rovingTabIndexParameters,
     singleSelectionParameters,
@@ -77,7 +77,7 @@ export function useGridlist<GridlistElement extends Element, GridlistRowElement 
     gridNavigationParameters,
     rearrangeableChildrenParameters,
     sortableChildrenParameters
-}: UseGridlistParameters<GridlistElement, GridlistRowElement, LabelElement, M>): UseGridlistReturnType<GridlistElement, GridlistRowElement, LabelElement, M> {
+}: UseGridlistParameters<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM>): UseGridlistReturnType<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM, CM> {
 
     const {
         propsInput: propsLabelList,
@@ -100,7 +100,7 @@ export function useGridlist<GridlistElement extends Element, GridlistRowElement 
         typeaheadNavigationReturn,
         rearrangeableChildrenReturn,
         sortableChildrenReturn
-    } = useCompleteGridNavigation<GridlistElement, GridlistRowElement, M>({
+    } = useCompleteGridNavigation<GridlistElement, GridlistRowElement, GridlistCellElement, RM, CM>({
         linearNavigationParameters,
         rovingTabIndexParameters,
         singleSelectionParameters,
@@ -134,7 +134,7 @@ export function useGridlist<GridlistElement extends Element, GridlistRowElement 
     }
 }
 
-export function useGridlistRow<GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement>, CM extends GridlistCellInfo<GridlistCellElement>>({
+export function useGridlistRow<GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>>({
     asChildRowParameters: {
         managedChildParameters,
         singleSelectionChildParameters,
@@ -190,8 +190,6 @@ export function useGridlistRow<GridlistRowElement extends Element, GridlistCellE
         props
     }
 }
-
-function identity<T>(t: T) { return t; }
 
 export function useGridlistCell<GridlistCellElement extends Element, CM extends GridlistCellInfo<GridlistCellElement>>(p: UseGridlistCellParameters<GridlistCellElement, CM>): UseGridlistCellReturnType<GridlistCellElement, CM> {
     return useCompleteGridNavigationCell<GridlistCellElement, CM>(p);

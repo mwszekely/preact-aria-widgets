@@ -1,36 +1,33 @@
 import { h } from "preact";
 import {
     CompleteGridNavigationContext,
-    CompleteGridNavigationRowContext,
-    GetIndex,
-    GridSingleSelectSortableChildCellInfo, GridSingleSelectSortableChildRowInfo, ManagedChildInfo, useCompleteGridNavigation,
+    CompleteGridNavigationRowContext, GridSingleSelectSortableChildCellInfo, GridSingleSelectSortableChildRowInfo, useCompleteGridNavigation,
     useCompleteGridNavigationCell, UseCompleteGridNavigationCellParameters, UseCompleteGridNavigationCellReturnType, UseCompleteGridNavigationParameters,
-    UseCompleteGridNavigationReturnType, useCompleteGridNavigationRow, UseCompleteGridNavigationRowParameters, UseCompleteGridNavigationRowReturnType, useMergedProps, useSortableChildren, useStableObject
+    UseCompleteGridNavigationReturnType, useCompleteGridNavigationRow, UseCompleteGridNavigationRowParameters, UseCompleteGridNavigationRowReturnType, useMergedProps
 } from "preact-prop-helpers";
-import { useCallback } from "preact/hooks";
+import { ElementToTag } from "./props";
+import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
 import { UseListboxParameters } from "./use-listbox";
-import { ElementToTag, EventDetail } from "./props";
-import { LabelPosition, useLabel, useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
 
 //export type ListboxSingleSelectEvent<E extends EventTarget> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 
-export interface UseTableSectionContext<TableSectionElement extends Element, TableRowElement extends Element, M extends TableRowInfo<TableRowElement>> extends CompleteGridNavigationContext<TableSectionElement, TableRowElement, M> {}
+//export interface UseTableSectionContext<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement>, CM extends TableCellInfo<TableCellElement>> extends CompleteGridNavigationContext<TableSectionElement, TableRowElement, TableCellElement, M> {}
 
-export interface UseTableSectionParameters<TableSectionElement extends Element, TableRowElement extends Element, M extends TableRowInfo<TableRowElement>> extends UseCompleteGridNavigationParameters<TableSectionElement, TableRowElement, M> {
+export interface UseTableSectionParameters<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>> extends UseCompleteGridNavigationParameters<TableSectionElement, TableRowElement, TableCellElement, RM> {
     tableSectionParameters: {
         tagTableSection: ElementToTag<TableSectionElement>;
     }
 }
-export interface UseTableSectionReturnType<TableSectionElement extends Element, TableRowElement extends Element, M extends TableRowInfo<TableRowElement>> extends Omit<UseCompleteGridNavigationReturnType<TableSectionElement, TableRowElement, M>, "props"> {
+export interface UseTableSectionReturnType<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>> extends Omit<UseCompleteGridNavigationReturnType<TableSectionElement, TableRowElement, TableCellElement, RM, CM>, "props"> {
     propsTableSection: h.JSX.HTMLAttributes<TableSectionElement>;
-    context: UseTableSectionContext<TableSectionElement, TableRowElement, M>;
+    context: UseTableSectionContext<TableSectionElement, TableRowElement, TableCellElement, RM, CM>;
 }
-export interface UseTableRowReturnType<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement>, CM extends TableCellInfo<TableCellElement>> extends UseCompleteGridNavigationRowReturnType<TableRowElement, TableCellElement, RM, CM> {
+export interface UseTableRowReturnType<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>> extends UseCompleteGridNavigationRowReturnType<TableRowElement, TableCellElement, RM, CM> {
 
     context: UseTableRowContext<any, TableCellElement, CM>;
 
  }
-export interface UseTableRowParameters<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement>, CM extends TableCellInfo<TableCellElement>> extends UseCompleteGridNavigationRowParameters<TableRowElement, TableCellElement, RM, CM> {
+export interface UseTableRowParameters<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>> extends UseCompleteGridNavigationRowParameters<TableRowElement, TableCellElement, RM, CM> {
     tableRowParameters: {
         /**
          * When the `selectionLimit` is `"single"`, this must be `null`.
@@ -53,7 +50,7 @@ export interface UseTableCellParameters<TableCellElement extends Element, CM ext
     context: UseTableRowContext<any, TableCellElement, CM>;
 }
 
-export interface TableRowInfo<TableRowElement extends Element> extends GridSingleSelectSortableChildRowInfo<TableRowElement> {  }
+export interface TableRowInfo<TableRowElement extends Element, TableCellElement extends Element> extends GridSingleSelectSortableChildRowInfo<TableRowElement, TableCellElement> {  }
 export interface TableCellInfo<TableCellElement extends Element> extends GridSingleSelectSortableChildCellInfo<TableCellElement> { }
 
 export interface UseTableParameters<TableElement extends Element, LabelElement extends Element> {
@@ -68,9 +65,7 @@ export interface UseTableReturnType<TableElement extends Element, LabelElement e
     propsLabel: h.JSX.HTMLAttributes<LabelElement>;
  } 
 
- export interface UseTableSectionContext<TableSectionElement extends Element, TableRowElement extends Element, M extends TableRowInfo<TableRowElement>> extends CompleteGridNavigationContext<TableSectionElement, TableRowElement, M> {
-
- }
+ export interface UseTableSectionContext<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>> extends CompleteGridNavigationContext<TableSectionElement, TableRowElement, TableCellElement, RM, CM> {}
 
 export function useTable<TableElement extends Element, LabelElement extends Element>({
     labelParameters,
@@ -79,9 +74,7 @@ export function useTable<TableElement extends Element, LabelElement extends Elem
     //const { tagInput: tagTable } = labelParameters
     const {
         propsInput: propsLabelList,
-        propsLabel: propsLabelLabel,
-        randomIdInputReturn,
-        randomIdLabelReturn
+        propsLabel: propsLabelLabel
     } = useLabelSynthetic<TableElement, LabelElement>({
         labelParameters,
         randomIdInputParameters: { prefix: "aria-listbox-input-" },
@@ -94,7 +87,7 @@ export function useTable<TableElement extends Element, LabelElement extends Elem
     }
 }
 const naturalSectionTypes = new Set<keyof h.JSX.IntrinsicElements>(["thead", "tbody", "tfoot"]);
-export function useTableSection<TableSectionElement extends Element, TableRowElement extends Element, M extends TableRowInfo<TableRowElement>>({
+export function useTableSection<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>>({
     linearNavigationParameters,
     rovingTabIndexParameters,
     singleSelectionParameters,
@@ -103,7 +96,7 @@ export function useTableSection<TableSectionElement extends Element, TableRowEle
     rearrangeableChildrenParameters,
     sortableChildrenParameters,
     tableSectionParameters: { tagTableSection }
-}: UseTableSectionParameters<TableSectionElement, TableRowElement, M>): UseTableSectionReturnType<TableSectionElement, TableRowElement, M> {
+}: UseTableSectionParameters<TableSectionElement, TableRowElement, TableCellElement, RM>): UseTableSectionReturnType<TableSectionElement, TableRowElement, TableCellElement, RM, CM> {
 
     const {
         childrenHaveFocusReturn,
@@ -116,7 +109,7 @@ export function useTableSection<TableSectionElement extends Element, TableRowEle
         typeaheadNavigationReturn,
         rearrangeableChildrenReturn,
         sortableChildrenReturn
-    } = useCompleteGridNavigation<TableSectionElement, TableRowElement, M>({
+    } = useCompleteGridNavigation<TableSectionElement, TableRowElement, TableCellElement, RM, CM>({
         linearNavigationParameters,
         rovingTabIndexParameters,
         singleSelectionParameters,
@@ -144,7 +137,7 @@ export function useTableSection<TableSectionElement extends Element, TableRowEle
     }
 }
 
-export function useTableRow<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement>, CM extends TableCellInfo<TableCellElement>>({
+export function useTableRow<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>>({
     asChildRowParameters: {
         managedChildParameters,
         singleSelectionChildParameters,

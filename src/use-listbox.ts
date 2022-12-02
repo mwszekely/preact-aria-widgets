@@ -8,7 +8,7 @@ import {
     UseCompleteListNavigationReturnType, UseListNavigationSingleSelectionSortableChildInfo, useMergedProps, useStableObject
 } from "preact-prop-helpers";
 import { EventDetail } from "./props";
-import { LabelPosition, useLabel, useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
+import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
 
 export type ListboxSingleSelectEvent<E extends EventTarget> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 
@@ -16,7 +16,7 @@ export interface UseListboxContext<ListElement extends Element, ListItemElement 
     listboxContext: { selectionLimit: "single" | "multi" }
 }
 
-export interface UseListboxParameters<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends UseCompleteListNavigationParameters<ListElement, ListItemElement, M> {
+export interface UseListboxParameters<ListElement extends Element, ListItemElement extends Element, _LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends UseCompleteListNavigationParameters<ListElement, ListItemElement, M> {
     labelParameters: UseLabelSyntheticParameters["labelParameters"];
     listboxParameters: {
         /**

@@ -1,6 +1,6 @@
 import { h } from "preact";
 import { useMergedProps, useModal, UseModalParameters, UseModalReturnType } from "preact-prop-helpers";
-import { LabelPosition, UseLabelSyntheticParameters, useLabel, useLabelSynthetic } from "./use-label";
+import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
 /*import { useModal, UseModalParameters, UseSoftDismissReturnTypeInfo } from "./use-modal";
 
 
@@ -67,7 +67,7 @@ export function useDrawer<FocusContainerElement extends HTMLElement, DrawerEleme
 
 
 
-export interface UseDrawerParameters<DialogElement extends Element, TitleElement extends Element> extends UseModalParameters<"escape" | "backdrop" | "lost-focus">, Pick<UseLabelSyntheticParameters, "labelParameters">  {
+export interface UseDrawerParameters<_DialogElement extends Element, _TitleElement extends Element> extends UseModalParameters<"escape" | "backdrop" | "lost-focus">, Pick<UseLabelSyntheticParameters, "labelParameters">  {
 }
 
 export interface UseDrawerReturnType<FocusContainerElement extends Element, SourceElement extends Element, DrawerElement extends Element, TitleElement extends Element> extends Omit<UseModalReturnType<FocusContainerElement, SourceElement, DrawerElement>, "propsPopup"> {
@@ -91,9 +91,7 @@ export function useDrawer<FocusContainerElement extends Element, SourceElement e
 
     const { 
         propsInput, 
-        propsLabel, 
-        randomIdInputReturn, 
-        randomIdLabelReturn
+        propsLabel,
      } = useLabelSynthetic<PopupElement, TitleElement>({ 
         labelParameters, 
         randomIdInputParameters: { prefix: "aria-dialog-" }, 

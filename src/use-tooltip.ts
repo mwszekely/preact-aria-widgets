@@ -1,6 +1,6 @@
 import { h } from "preact";
-import { useGlobalHandler, UseHasCurrentFocusParameters, useMergedProps, usePassiveState, useRandomId, UseRefElementReturnType, UseRefElementParameters, useStableCallback, useState, useTimeout, useRefElement, returnFalse, useHasCurrentFocus } from "preact-prop-helpers";
-import { useCallback, useEffect } from "preact/hooks";
+import { returnFalse, useGlobalHandler, useHasCurrentFocus, UseHasCurrentFocusParameters, useMergedProps, usePassiveState, useRandomId, useRefElement, UseRefElementReturnType, useStableCallback, useState, useTimeout } from "preact-prop-helpers";
+import { useEffect } from "preact/hooks";
 import { debugLog } from "./props";
 
 export interface UseTooltipTriggerParameters<TriggerType extends Element> {
@@ -52,8 +52,7 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
 
     let {
         propsReferencer: propsTrigger,
-        propsSource: propsPopup,
-        randomIdReturn
+        propsSource: propsPopup
     } = useRandomId<PopupType, TriggerType>({ randomIdParameters: { prefix: "aria-tooltip-", referencerProp: "aria-describedby" as never } });
 
     const { refElementReturn: { getElement: getTriggerElement, propsStable: triggerRefProps } } = useRefElement<TriggerType>({ refElementParameters: {} });
@@ -189,7 +188,7 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
     //const { getElement } = refElementReturn;
     //const { propsStable } = useRandomIdSourceElement();
     const { hasCurrentFocusReturn: { propsStable: propsFocusPopup } } = useHasCurrentFocus<PopupType>({
-        hasCurrentFocusParameters: { onCurrentFocusedChanged: null, onCurrentFocusedInnerChanged: useStableCallback((focused: boolean, prev: boolean | undefined) => { setTooltipFocused(focused); }) },
+        hasCurrentFocusParameters: { onCurrentFocusedChanged: null, onCurrentFocusedInnerChanged: useStableCallback((focused) => { setTooltipFocused(focused); }) },
         refElementReturn: { getElement: getPopupElement }
     })
 
@@ -206,8 +205,8 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
     //}, []);
 
     return {
-        propsPopup: useMergedProps(propsPopup, propsFocusPopup),
-        propsTrigger: useMergedProps(propsTrigger, hasCurrentFocusReturn.propsStable, { onTouchEnd }),
+        propsPopup: useMergedProps(popupRefProps, propsPopup, propsFocusPopup),
+        propsTrigger: useMergedProps(triggerRefProps, propsTrigger, hasCurrentFocusReturn.propsStable, { onTouchEnd }),
         tooltipReturn: {
             isOpen: open,
             getIsOpen: getOpen

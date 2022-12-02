@@ -1,8 +1,6 @@
 import { h } from "preact";
-import { generateRandomId, ManagedChildInfo, useManagedChild, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenReturnType, UseManagedChildReturnType, useMergedProps, useRandomId } from "preact-prop-helpers";
-import { UseManagedChildParameters, UseManagedChildrenParameters } from "preact-prop-helpers";
-import { StateUpdater, useCallback, useMemo, useRef, useState } from "preact/hooks";
-import { useLabel } from "use-label";
+import { generateRandomId, ManagedChildInfo, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, UseManagedChildReturnType } from "preact-prop-helpers";
+import { useMemo, useRef } from "preact/hooks";
 import { debugLog, EventDetail, TagSensitiveProps } from "./props";
 
 
@@ -15,7 +13,7 @@ export interface SliderThumbInfo extends ManagedChildInfo<number> {
     //setMax: StateUpdater<number>;
 }
 
-export interface UseSliderThumbParameters<E extends Element, M extends SliderThumbInfo> extends UseManagedChildParameters<M, never> {
+export interface UseSliderThumbParameters<E extends Element, M extends SliderThumbInfo> extends UseManagedChildParameters<M> {
     sliderThumbParameters: TagSensitiveProps<E> & {
         value: number;
         valueText?: string;
@@ -71,7 +69,7 @@ export interface SliderContext<M extends SliderThumbInfo> extends UseManagedChil
 }
 
 
-export function useSlider<ThumbElement extends Element, LabelElement extends Element>({ sliderParameters: { max, min }, managedChildrenParameters }: UseSliderParameters<SliderThumbInfo>): UseSliderReturnType<SliderThumbInfo> {
+export function useSlider({ sliderParameters: { max, min }, managedChildrenParameters }: UseSliderParameters<SliderThumbInfo>): UseSliderReturnType<SliderThumbInfo> {
     debugLog("useSlider");
     const { context, managedChildrenReturn } = useManagedChildren<SliderThumbInfo>({ managedChildrenParameters });
 

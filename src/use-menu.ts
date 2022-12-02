@@ -1,5 +1,4 @@
 import { useMergedProps, useStableCallback } from "preact-prop-helpers";
-import { useCallback } from "preact/hooks";
 import { UseToolbarContext } from "use-toolbar";
 import { debugLog } from "./props";
 import { useMenuSurface, UseMenuSurfaceParameters, UseMenuSurfaceReturnType } from "./use-menu-surface";
@@ -91,8 +90,6 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
         toolbarParameters: { ...toolbarParameters },
         menubarParameters: { role: "menu" }
     });
-
-    const { getChildren } = managedChildrenReturn;
 
     const onKeyDown = useStableCallback((e: KeyboardEvent) => {
         const isOpen = dismissParameters.open;

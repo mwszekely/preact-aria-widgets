@@ -1,8 +1,7 @@
 
 import { h } from "preact";
 import { useMergedProps, useModal, UseModalParameters, UseModalReturnType } from "preact-prop-helpers";
-import { PureComponent } from "preact/compat";
-import { LabelPosition, useLabel, useLabelSynthetic, UseLabelSyntheticParameters } from "use-label";
+import { useLabelSynthetic, UseLabelSyntheticParameters } from "use-label";
 
 /*
 export interface UseDialogReturnTypeInfo extends UseSoftDismissReturnTypeInfo {
@@ -74,7 +73,7 @@ export function useDialog<FocusContainerElement extends HTMLElement, DialogEleme
     }
 }*/
 
-export interface UseDialogParameters<DialogElement extends Element, TitleElement extends Element> extends Omit<UseModalParameters<"escape" | "backdrop">, "focusTrapParameters" | "dismissParameters">, Pick<UseLabelSyntheticParameters, "labelParameters"> {
+export interface UseDialogParameters<_DialogElement extends Element, _TitleElement extends Element> extends Omit<UseModalParameters<"escape" | "backdrop">, "focusTrapParameters" | "dismissParameters">, Pick<UseLabelSyntheticParameters, "labelParameters"> {
     focusTrapParameters: Omit<UseModalParameters<"escape" | "backdrop">["focusTrapParameters"], "trapActive">;
     dismissParameters: Omit<UseModalParameters<"escape" | "backdrop">["dismissParameters"], "closeOnLostFocus">;
 }
@@ -100,9 +99,7 @@ export function useDialog<FocusContainerElement extends Element,  SourceElement 
 
     const { 
         propsInput, 
-        propsLabel, 
-        randomIdInputReturn, 
-        randomIdLabelReturn
+        propsLabel
      } = useLabelSynthetic<DialogElement, TitleElement>({ 
         labelParameters, 
         randomIdInputParameters: { prefix: "aria-dialog-" }, 

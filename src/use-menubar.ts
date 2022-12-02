@@ -1,6 +1,6 @@
 import { h } from "preact";
 import { useCallback } from "preact/hooks";
-import { debugLog, DisabledType, EnhancedEvent, enhanceEvent } from "./props";
+import { debugLog, EnhancedEvent, enhanceEvent } from "./props";
 import { useToolbar, useToolbarChild, UseToolbarChildParameters, UseToolbarChildReturnType, UseToolbarParameters, UseToolbarReturnType, UseToolbarSubInfo } from "./use-toolbar";
 
 export interface UseMenubarSubInfo<ChildElement extends Element> extends UseToolbarSubInfo<ChildElement> {

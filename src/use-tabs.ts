@@ -1,11 +1,8 @@
 import { h } from "preact";
-import { CompleteListNavigationContext, generateRandomId, ManagedChildInfo, OnPassiveStateChange, PassiveStateUpdater, returnTrue, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useListNavigationSingleSelection, UseListNavigationSingleSelectionSortableChildInfo, useManagedChild, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenReturnType, useMergedProps, usePress, UseSortableChildrenParameters, useStableCallback, useStableObject, useState } from "preact-prop-helpers";
-import { OnChildrenMountChange, useChildrenFlag, UseManagedChildParameters } from "preact-prop-helpers";
-import { } from "preact-prop-helpers";
+import { CompleteListNavigationContext, generateRandomId, ManagedChildInfo, OnChildrenMountChange, OnPassiveStateChange, PassiveStateUpdater, returnTrue, useChildrenFlag, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseListNavigationSingleSelectionSortableChildInfo, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, useMergedProps, useStableCallback, useStableObject, useState } from "preact-prop-helpers";
 import { StateUpdater, useCallback } from "preact/hooks";
-import { LabelPosition, useLabel, useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
-import { debugLog, EventDetail, overwriteWithWarning } from "./props";
-import { } from "preact-prop-helpers";
+import { debugLog, EventDetail } from "./props";
+import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
 import { UseListboxParameters } from "./use-listbox";
 
 
@@ -33,8 +30,8 @@ export interface UseTabParameters<TabElement extends Element> extends Omit<UseCo
     // hasFocus: UseHasFocusParameters<E>;
 }
 
-export interface UseTabPanelParameters extends Omit<UseManagedChildParameters<TabPanelInfo, never>, "managedChildParameters"> {
-    managedChildParameters: Omit<UseManagedChildParameters<TabPanelInfo, never>["managedChildParameters"], "getVisible" | "setVisible">
+export interface UseTabPanelParameters extends Omit<UseManagedChildParameters<TabPanelInfo>, "managedChildParameters"> {
+    managedChildParameters: Omit<UseManagedChildParameters<TabPanelInfo>["managedChildParameters"], "getVisible" | "setVisible">
     context: TabPanelsContext<TabPanelInfo>;
 }
 
@@ -50,7 +47,7 @@ interface TC {
     getVisibleIndex: () => number | null;
     getPanelId: (index: number) => string;
     getTabId: (index: number) => string;
-    setSelectedIndex: PassiveStateUpdater<number | null>;
+    setSelectedIndex: PassiveStateUpdater<number | null, Event>;
 }
 
 export interface UseTabReturnType<TabElement extends Element> extends UseCompleteListNavigationChildReturnType<TabElement, TabInfo<TabElement>> { }
@@ -192,7 +189,7 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
     } = useCompleteListNavigation<TabListElement, TabElement, TabInfo<TabElement>>({
         linearNavigationParameters: { navigationDirection: orientation, ...linearNavigationParameters },
         rovingTabIndexParameters,
-        singleSelectionParameters: { onSelectedIndexChange: useStableCallback<OnPassiveStateChange<number | null>>((i, p) => { osic?.(i, p); changeVisiblePanel(i); }), ...singleSelectionParameters },
+        singleSelectionParameters: { onSelectedIndexChange: useStableCallback<OnPassiveStateChange<number | null, Event>>((i, p, r) => { osic?.(i, p, r); changeVisiblePanel(i); }), ...singleSelectionParameters },
         typeaheadNavigationParameters,
         rearrangeableChildrenParameters,
         sortableChildrenParameters

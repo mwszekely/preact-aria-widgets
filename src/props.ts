@@ -86,3 +86,4 @@ export function debugLog(who: DebugLogTypes, ...args: Parameters<(typeof console
 
 export type PropModifier<T extends EventTarget> = (props: h.JSX.HTMLAttributes<T>) => h.JSX.HTMLAttributes<T>;
 export type PropModifier2<P> = (props: P) => P;
+export function noop(): void { return; }

@@ -1,13 +1,13 @@
 import { h } from "preact";
 import { CompleteListNavigationContext, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseListNavigationSingleSelectionSortableChildInfo, useMergedProps, useRefElement, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
-import { useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
-import { debugLog, ElementToTag, EnhancedEvent, enhanceEvent } from "./props";
-import { LabelPosition, useCheckboxLike, UseCheckboxLikeParameters, UseCheckboxLikeReturnType, useLabel, useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
+import { useCallback, useLayoutEffect, useRef } from "preact/hooks";
+import { debugLog, EnhancedEvent } from "./props";
+import { LabelPosition, useCheckboxLike, UseCheckboxLikeParameters, UseCheckboxLikeReturnType, useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
 
 //type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RadioChangeEvent<E extends EventTarget, V extends number | string> = EnhancedEvent<E, Event, { selectedValue: V | undefined }>;
 
-export interface UseRadioGroupParameters<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, TabbableChildElement extends Element> extends Omit<UseCompleteListNavigationParameters<GroupElement, TabbableChildElement, RadioSubInfo<TabbableChildElement, V>>, "props" | "singleSelectionParameters"> {
+export interface UseRadioGroupParameters<V extends string | number, GroupElement extends Element, _GroupLabelElement extends Element, TabbableChildElement extends Element> extends Omit<UseCompleteListNavigationParameters<GroupElement, TabbableChildElement, RadioSubInfo<TabbableChildElement, V>>, "props" | "singleSelectionParameters"> {
     radioGroupParameters: {
         name: string;
 
@@ -64,7 +64,7 @@ export interface RadioSubInfo<TabbableChildElement extends Element, V extends st
     getValue2(): V;
 }
 
-export function useRadioGroup<V extends string | number, G extends Element, GL extends Element, I extends Element, IL extends Element, TCE extends Element>({
+export function useRadioGroup<V extends string | number, G extends Element, GL extends Element, TCE extends Element>({
     linearNavigationParameters,
     rearrangeableChildrenParameters,
     rovingTabIndexParameters,
@@ -88,7 +88,7 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
         setSelectedIndex(newIndex ?? null);
     }, [])
 
-    const { propsInput: propsGroup1, propsLabel, randomIdInputReturn, randomIdLabelReturn } = useLabelSynthetic<G, GL>({
+    const { propsInput: propsGroup1, propsLabel } = useLabelSynthetic<G, GL>({
         labelParameters,
         randomIdLabelParameters: { prefix: "aria-radio-group-label-", },
         randomIdInputParameters: { prefix: "aria-radio-group-" }
@@ -181,7 +181,7 @@ export interface UseRadioReturnType<V extends string | number, I extends Element
 export function useRadio<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element, TabbableChildElement extends InputElement | LabelElement, V extends string | number>({
     radioParameters: { value },
     checkboxLikeParameters: { disabled },
-    completeListNavigationChildParameters: { },
+    completeListNavigationChildParameters,
     labelParameters,
     managedChildParameters,
     pressParameters,

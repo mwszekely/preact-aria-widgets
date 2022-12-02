@@ -12,7 +12,7 @@ export interface UseToastsParameters extends UseManagedChildrenParameters<ToastI
     }
 }
 
-export interface UseToastParameters<M extends ToastInfo> extends UseManagedChildParameters<M, "focus" | "setNumberAheadOfMe" | "show"> {
+export interface UseToastParameters<M extends ToastInfo> extends UseManagedChildParameters<M/*, "focus" | "setNumberAheadOfMe" | "show"*/> {
     toastParameters: {
         politeness?: "polite" | "assertive";
         timeout: number | null;
