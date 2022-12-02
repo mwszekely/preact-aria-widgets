@@ -6,7 +6,7 @@ import { useRef } from "preact/hooks";
 import { ListboxInfo, UseListboxReturnType } from "use-listbox";
 import { getDefaultClass, StandardProps } from "./util";
 
-export interface Listbox2Props extends Pick<ListboxProps<HTMLDivElement, HTMLButtonElement, HTMLLabelElement, ListboxInfo<HTMLButtonElement>>, "selectionLimit" | "onSelectedIndexChange" | "groupingType" | "ariaLabel" | "untabbable">, Pick<h.JSX.HTMLAttributes<HTMLDivElement>, StandardProps> {
+export interface Listbox2Props extends Pick<ListboxProps<HTMLDivElement, HTMLButtonElement, HTMLLabelElement, ListboxInfo<HTMLButtonElement>>, "selectionLimit" | "setSelectedIndex" | "groupingType" | "ariaLabel" | "untabbable">, Pick<h.JSX.HTMLAttributes<HTMLDivElement>, StandardProps> {
     selectedIndex: number;
 }
 
@@ -14,8 +14,8 @@ export interface ListboxItem2Props extends Pick<ListboxItemProps<HTMLButtonEleme
     selectedIndex: number;
 }
 
-
-export function Listbox2({ ariaLabel, groupingType, selectedIndex, onSelectedIndexChange, untabbable, selectionLimit, children, ...props }: Listbox2Props, ref: Ref<HTMLDivElement>) {
+/*
+export function Listbox2({ ariaLabel, groupingType, selectedIndex, setSelectedIndex, untabbable, selectionLimit, children, ...props }: Listbox2Props, ref: Ref<HTMLDivElement>) {
     const imperativeHandle = useRef<UseListboxReturnType<HTMLDivElement, HTMLButtonElement, HTMLLabelElement, any>>(null);
     return (
         <Listbox<HTMLDivElement, HTMLButtonElement, HTMLLabelElement>
@@ -25,7 +25,7 @@ export function Listbox2({ ariaLabel, groupingType, selectedIndex, onSelectedInd
             navigationDirection="vertical"
             selectionLimit={selectionLimit}
             untabbable={untabbable}
-            onSelectedIndexChange={onSelectedIndexChange}
+            setSelectedIndex={setSelectedIndex}
             render={info => {
                 const cls = clsx();
                 return (
@@ -63,4 +63,4 @@ export function ListboxItem2({ index, getSortValue, selectedIndex, disabled, chi
 
         />
     )
-}
+}*/

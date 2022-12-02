@@ -3,7 +3,7 @@ import { Checkbox, CheckboxProps } from "component/checkbox";
 import { h, Ref } from "preact";
 import { useMergedProps } from "preact-prop-helpers";
 import { getDefaultClass, StandardProps } from "./util";
-
+/*
 export interface Checkbox2Props extends Pick<CheckboxProps<HTMLInputElement, HTMLLabelElement>, "ariaLabel" | "checked" | "onCheckedChange" | "disabled">, Pick<h.JSX.HTMLAttributes<HTMLInputElement>, StandardProps> {
 
 }
@@ -32,4 +32,4 @@ export function Checkbox2({ ariaLabel, checked, onCheckedChange, disabled, child
             }}
         />
     )
-}
+}*/

@@ -1,9 +1,9 @@
 import { createElement, h, Ref, VNode } from "preact";
-import { useMergedProps, useRefElement } from "preact-prop-helpers";
+import { useRefElement } from "preact-prop-helpers";
 import { useImperativeHandle, useState } from "preact/hooks";
-import { LabelPosition } from "../use-label";
 import { ElementToTag, EventDetail } from "../props";
 import { useCheckbox, UseCheckboxParameters, UseCheckboxReturnType } from "../use-checkbox";
+import { LabelPosition } from "../use-label";
 import { memoForwardRef, PartialExcept } from "./util";
 
 type Get<T, K extends keyof T> = T[K];

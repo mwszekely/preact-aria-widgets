@@ -7,11 +7,11 @@ import { useMergedProps } from "preact-prop-helpers"
 import { Accordion, AccordionDemo, AccordionProps, AccordionSection, AccordionSectionDemo, AccordionSectionProps } from "../accordion"
 import { getDefaultClass, StandardProps } from "./util"
 
-export interface Accordion2Props extends Pick<h.JSX.HTMLAttributes<HTMLDivElement>, StandardProps>, Omit<AccordionProps, "render" | "ref"> { }
+export interface Accordion2Props extends Pick<h.JSX.HTMLAttributes<HTMLDivElement>, StandardProps>, Omit<AccordionProps<HTMLButtonElement>, "render" | "ref"> { }
 export interface AccordionSection2Props extends Pick<h.JSX.HTMLAttributes<HTMLDivElement>, StandardProps>, Pick<AccordionSectionProps<HTMLDivElement, HTMLButtonElement, HTMLDivElement>, "disabled" | "index" | "hidden" | "open"> {
     heading: ComponentChildren;
 }
-
+/*
 export const Accordion2 = memoForwardRef(function Accordion2({ children, navigationDirection, disableArrowKeys, disableHomeEndKeys, initialIndex, navigatePastEnd, navigatePastStart, onAfterChildLayoutEffect, onChildrenMountChange, pageNavigationSize, ...props }: Accordion2Props, ref?: Ref<HTMLDivElement>) {
     return (<Accordion
         navigationDirection="vertical"
@@ -48,4 +48,4 @@ export const AccordionSection2 = memoForwardRef(function AccordionSection2({ ind
             }}
         />
     )
-})
+})*/

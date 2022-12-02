@@ -69,7 +69,7 @@ export function SimpleDrawersProvider({ portalId }: { portalId: string }) {
 function useCloseSimpleDrawer() {
 
 }*/
-
+/*
 export interface Drawer2Props extends Pick<DrawerProps<HTMLDivElement, any, HTMLDivElement, HTMLDivElement>, "closeOnLostFocus" | "closeOnBackdrop" | "closeOnEscape" | "focusPopup" | "open" | "onClose" | "ariaLabel">, Pick<h.JSX.HTMLAttributes<HTMLDivElement>, StandardProps> {
     portalId: string;
     opener: VNode | null;
@@ -106,3 +106,4 @@ export function Drawer2({ portalId, opener, ariaLabel, focusPopup, onClose, open
     )
 }
 
+*/

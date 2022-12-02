@@ -24,7 +24,7 @@ interface TabPropsBase<TabElement extends Element> extends
     Get<UseTabParameters<TabElement>, "singleSelectionChildParameters">,
     Get<UseTabParameters<TabElement>, "sortableChildParameters">,
     Get<UseTabParameters<TabElement>, "rovingTabIndexChildParameters">,
-    Get<UseTabParameters<TabElement>, "typeaheadNavigationChildParameters">,
+    Get<UseTabParameters<TabElement>, "textContentParameters">,
     Get<UseTabParameters<TabElement>, "completeListNavigationChildParameters"> {
 }
 
@@ -32,11 +32,11 @@ interface TabPanelPropsBase<PanelElement extends Element> extends
     Get<UseTabPanelParameters, "managedChildParameters"> {
 }
 
-export interface TabsProps<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element> extends PartialExcept<TabsPropsBase<TabContainerElement, TabElement, TabLabelElement>, "orientation" | "groupingType" | "ariaLabel" | "initiallySelectedIndex" | "onSelectedIndexChange"> {
+export interface TabsProps<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element> extends PartialExcept<TabsPropsBase<TabContainerElement, TabElement, TabLabelElement>, "orientation" | "groupingType" | "ariaLabel"> {
     render(info: UseTabsReturnType<TabContainerElement, TabElement, TabLabelElement>): VNode<any>;
 }
 
-export interface TabProps<TabElement extends Element> extends PartialExcept<TabPropsBase<TabElement>, "index" | "text" | "getSortValue"> {
+export interface TabProps<TabElement extends Element> extends PartialExcept<TabPropsBase<TabElement>, "index" | "getSortValue"> {
     render(info: UseTabReturnType<TabElement>): VNode<any>;
 }
 
@@ -58,7 +58,7 @@ export function Tabs<TabContainerElement extends Element, TabElement extends Ele
     navigatePastEnd,
     navigatePastStart,
     noTypeahead,
-    onSelectedIndexChange,
+    setSelectedIndex,
     onTabbableIndexChange,
     orientation,
     pageNavigationSize,
@@ -82,7 +82,7 @@ export function Tabs<TabContainerElement extends Element, TabElement extends Ele
             onTabbableIndexChange: onTabbableIndexChange ?? null,
             untabbable: untabbable ?? false
         },
-        singleSelectionParameters: { initiallySelectedIndex, onSelectedIndexChange },
+        singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? 0, setSelectedIndex: setSelectedIndex ?? null },
         sortableChildrenParameters: { compare: compare ?? null },
         tabsParameters: { orientation, groupingType, role },
         typeaheadNavigationParameters: {
@@ -112,7 +112,7 @@ export function Tab<E extends Element>({
     index,
     onPressSync,
     selectionMode,
-    text,
+    getText,
     getSortValue,
     render
 }: TabProps<E>) {
@@ -126,7 +126,7 @@ export function Tab<E extends Element>({
         managedChildParameters: { index },
         pressParameters: { exclude, focusSelf: focusSelf ?? focusSelfDefault, onPressSync },
         singleSelectionChildParameters: { disabled: disabled ?? false, selectionMode: useDefault("selectionMode", selectionMode) },
-        typeaheadNavigationChildParameters: { text }
+        textContentParameters: { getText: useDefault("getText", getText) }
     });
     return render(info);
 }

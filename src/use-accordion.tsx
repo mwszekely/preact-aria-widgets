@@ -1,21 +1,21 @@
 import { h } from "preact";
 import { ManagedChildInfo, OnChildrenMountChange, PassiveStateUpdater, useChildrenFlag, useLinearNavigation, UseLinearNavigationParameters, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, useMergedProps, UsePressReturnType, useRandomId, useRefElement, UseRefElementParameters, UseRefElementReturnType, UseRovingTabIndexChildParameters, useStableCallback, useStableGetter, useStableObject, useState } from "preact-prop-helpers";
-import { useCallback } from "preact/hooks";
+import { StateUpdater, useCallback } from "preact/hooks";
 import { debugLog, DisabledType } from "./props";
 import { ButtonPressEvent, useButton, UseButtonParameters } from "./use-button";
 
 //export type UseAccordion<M extends UseAccordionSectionInfo> = (args: UseAccordionParameters<M>) => UseAccordionReturnType<M>;
 //export type UseAccordionSection<HeaderElement extends Element, BodyElement extends Element, M extends UseAccordionSectionInfo> = (args: UseAccordionSectionParameters<HeaderElement, M>) => UseAccordionSectionReturnType<HeaderElement, BodyElement>;
 
-export interface UseAccordionParameters<SectionElement extends Element, M extends UseAccordionSectionInfo> extends UseManagedChildrenParameters<M> {
+export interface UseAccordionParameters<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo> extends UseManagedChildrenParameters<M> {
     accordionParameters: { initialIndex?: number | null; }
-    linearNavigationParameters: Omit<UseLinearNavigationParameters<SectionElement, SectionElement>["linearNavigationParameters"], "navigateRelative" | "navigateAbsolute" | "getHighestIndex" | "isValid" | "indexDemangler" | "indexMangler">;
+    linearNavigationParameters: Omit<UseLinearNavigationParameters<HeaderButtonElement, HeaderButtonElement>["linearNavigationParameters"], "navigateRelative" | "navigateAbsolute" | "getHighestIndex" | "isValid" | "indexDemangler" | "indexMangler">;
 }
 
-export interface UseAccordionReturnType<SectionElement extends Element, M extends UseAccordionSectionInfo> extends UseManagedChildrenReturnType<M> {
+export interface UseAccordionReturnType<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo> extends UseManagedChildrenReturnType<M> {
     /** **STABLE** */
     accordionReturn: { changeExpandedIndex: PassiveStateUpdater<number | null, Event> }
-    context: UseAccordionContext<SectionElement, M>;
+    context: UseAccordionContext<HeaderButtonElement, M>;
 }
 
 
@@ -32,7 +32,7 @@ export interface UseAccordionSectionInfo extends ManagedChildInfo<number> {
 export interface UseAccordionSectionParameters<HeaderButtonElement extends Element, SectionElement extends Element,  M extends UseAccordionSectionInfo> extends
     UseRefElementParameters<HeaderButtonElement> {
     managedChildParameters: Omit<UseManagedChildParameters<M>["managedChildParameters"], "setOpenFromParent" | "getOpenFromParent" | "setMostRecentlyTabbed" | "getMostRecentlyTabbed" | "focusSelf" | "disabled">;
-    context: UseAccordionContext<SectionElement, M>;
+    context: UseAccordionContext<HeaderButtonElement, M>;
     rovingTabIndexChildParameters: Pick<UseRovingTabIndexChildParameters<any>["rovingTabIndexChildParameters"], "hidden">;
     accordionSectionParameters: {
         /** 
@@ -64,22 +64,22 @@ export interface UseAccordionSectionReturnType<HeaderElement extends Element, He
     propsBody: h.JSX.HTMLAttributes<BodyElement>
 }
 
-export interface UseAccordionContext<SectionElement extends Element, M extends UseAccordionSectionInfo> extends UseManagedChildrenContext<M> {
+export interface UseAccordionContext<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo> extends UseManagedChildrenContext<M> {
     accordionSectionParameters: {
-        changeTabbedIndex: PassiveStateUpdater<number | null, h.JSX.TargetedEvent<SectionElement>>;
-        changeExpandedIndex: PassiveStateUpdater<number | null, h.JSX.TargetedEvent<SectionElement>>;
+        changeTabbedIndex: PassiveStateUpdater<number | null, Event>;
+        changeExpandedIndex: PassiveStateUpdater<number | null, Event>;
         getExpandedIndex: () => (number | null);
         getTabbedIndex: () => (number | null);
     }
-    linearNavigationParameters: UseLinearNavigationParameters<SectionElement, SectionElement>["linearNavigationParameters"];
-    rovingTabIndexReturn: UseLinearNavigationParameters<SectionElement, SectionElement>["rovingTabIndexReturn"];
+    linearNavigationParameters: UseLinearNavigationParameters<HeaderButtonElement, HeaderButtonElement>["linearNavigationParameters"];
+    rovingTabIndexReturn: UseLinearNavigationParameters<HeaderButtonElement, HeaderButtonElement>["rovingTabIndexReturn"];
 }
 
-export function useAccordion<SectionElement extends Element, M extends UseAccordionSectionInfo>({
+export function useAccordion<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo>({
     accordionParameters: { initialIndex },
     linearNavigationParameters: { disableArrowKeys, disableHomeEndKeys, navigationDirection, navigatePastEnd, navigatePastStart, pageNavigationSize },
     managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange }
-}: UseAccordionParameters<SectionElement, M>): UseAccordionReturnType<SectionElement, M> {
+}: UseAccordionParameters<HeaderButtonElement, M>): UseAccordionReturnType<HeaderButtonElement, M> {
     debugLog("useAccordian");
     //const [_currentFocusedIndex, setCurrentFocusedIndex, getCurrentFocusedIndex] = useState<number | null>(null);
 
@@ -132,15 +132,15 @@ export function useAccordion<SectionElement extends Element, M extends UseAccord
 
 
     return {
-        context: useStableObject<UseAccordionContext<SectionElement, M>>({
+        context: useStableObject<UseAccordionContext<HeaderButtonElement, M>>({
             ...context,
-            accordionSectionParameters: useStableObject({
+            accordionSectionParameters: ({
                 changeExpandedIndex,
                 changeTabbedIndex,
                 getExpandedIndex: _getCurrentExpandedIndex,
                 getTabbedIndex: _getTabbedIndex
             }),
-            linearNavigationParameters: useStableObject({
+            linearNavigationParameters: ({
                 disableArrowKeys,
                 disableHomeEndKeys,
                 getHighestIndex: useCallback(() => getChildren().getHighestIndex(), []),

@@ -1,11 +1,11 @@
-export { useAccordion, UseAccordion, UseAccordionContext, UseAccordionParameters, UseAccordionReturnType, useAccordionSection, UseAccordionSectionInfo, UseAccordionSectionParameters, UseAccordionSectionReturnType } from "./use-accordion";
+export { useAccordion, UseAccordionContext, UseAccordionParameters, UseAccordionReturnType, useAccordionSection, UseAccordionSectionInfo, UseAccordionSectionParameters, UseAccordionSectionReturnType } from "./use-accordion";
 export { ButtonPressEvent, useButton, UseButtonParameters, UseButtonReturnType } from "./use-button";
 export { CheckboxChangeEvent, useCheckbox, UseCheckboxParameters, UseCheckboxReturnType } from "./use-checkbox";
-export { CheckboxGroupChangeEvent, useCheckboxGroup, UseCheckboxGroupChild, useCheckboxGroupChild, UseCheckboxGroupChildParameters, UseCheckboxGroupChildReturnType, UseCheckboxGroupParameters, useCheckboxGroupParent, UseCheckboxGroupParentParameters, UseCheckboxGroupParentReturnType, UseCheckboxGroupReturnType } from "./use-checkbox-group";
+export { CheckboxGroupChangeEvent, CheckboxGroupContext, CheckboxGroupInfo, useCheckboxGroup, UseCheckboxGroupChild, useCheckboxGroupChild, UseCheckboxGroupChildParameters, UseCheckboxGroupChildReturnType, UseCheckboxGroupParameters, useCheckboxGroupParent, UseCheckboxGroupParentParameters, UseCheckboxGroupParentReturnType, UseCheckboxGroupReturnType } from "./use-checkbox-group";
 export { useDialog, UseDialogParameters, UseDialogReturnType } from "./use-dialog";
 export { useDrawer, UseDrawerParameters, UseDrawerReturnType } from "./use-drawer";
 export { GridlistCellInfo, GridlistRowInfo, useGridlist, useGridlistCell, UseGridlistCellParameters, UseGridlistCellReturnType, UseGridlistContext, UseGridlistParameters, UseGridlistReturnType, useGridlistRow, UseGridlistRowContext, UseGridlistRowParameters, UseGridlistRowReturnType, UseGridlistSectionParameters } from "./use-gridlist";
-export { CheckboxCheckedType, FocusableLabelElement, LabelPosition, useCheckboxLike, UseCheckboxLikeParameters, UseCheckboxLikeReturnType, useLabel, UseLabelParameters, UseLabelReturnType } from "./use-label";
+export { CheckboxCheckedType, FocusableLabelElement, LabelPosition, useCheckboxLike, UseLabelSyntheticParameters, useLabelSynthetic, UseCheckboxLikeParameters, UseCheckboxLikeReturnType, useLabel, UseLabelParameters, UseLabelReturnType } from "./use-label";
 export { useMenu, UseMenuContext, useMenuItem, UseMenuItemParameters, UseMenuItemReturnType, UseMenuParameters, UseMenuReturnType } from "./use-menu";
 export { useMenubar, useMenubarChild, UseMenubarItemParameters, UseMenubarItemReturnType, UseMenubarParameters, UseMenubarReturnType, UseMenubarSubInfo } from "./use-menubar";
 export { useProgress, UseProgressParameters, UseProgressReturnType } from "./use-progress";

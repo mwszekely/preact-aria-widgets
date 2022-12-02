@@ -136,7 +136,7 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
     linearNavigationParameters,
     rearrangeableChildrenParameters,
     rovingTabIndexParameters,
-    singleSelectionParameters: { onSelectedIndexChange: osic, ...singleSelectionParameters },
+    singleSelectionParameters: { setSelectedIndex: ssi, ...singleSelectionParameters },
     sortableChildrenParameters,
     typeaheadNavigationParameters,
     tabsParameters: { orientation, role }
@@ -189,7 +189,7 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
     } = useCompleteListNavigation<TabListElement, TabElement, TabInfo<TabElement>>({
         linearNavigationParameters: { navigationDirection: orientation, ...linearNavigationParameters },
         rovingTabIndexParameters,
-        singleSelectionParameters: { onSelectedIndexChange: useStableCallback<OnPassiveStateChange<number | null, Event>>((i, p, r) => { osic?.(i, p, r); changeVisiblePanel(i); }), ...singleSelectionParameters },
+        singleSelectionParameters: { setSelectedIndex: useStableCallback<PassiveStateUpdater<number | null, Event>>((i, p) => { ssi?.(i, p); changeVisiblePanel(i); }), ...singleSelectionParameters },
         typeaheadNavigationParameters,
         rearrangeableChildrenParameters,
         sortableChildrenParameters

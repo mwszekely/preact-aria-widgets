@@ -55,7 +55,7 @@ export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element,
     initiallySelectedIndex,
     navigatePastEnd,
     navigatePastStart,
-    onSelectedIndexChange,
+    setSelectedIndex,
     pageNavigationSize,
     parentDepth,
     untabbable,
@@ -90,7 +90,7 @@ export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element,
             parentDepth: parentDepth ?? defaultParentDepth
         },
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
-        singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? null, onSelectedIndexChange: onSelectedIndexChange ?? noop },
+        singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? null, setSelectedIndex: setSelectedIndex ?? null },
         sortableChildrenParameters: { compare: compare ?? null },
         menuParameters: { openDirection, onOpen },
         menuSurfaceParameters: {},
@@ -157,7 +157,7 @@ export function DemoMenu() {
             open={open}
             onClose={() => setOpen(false)}
             onOpen={() => setOpen(true)}
-            onSelectedIndexChange={noop}
+            setSelectedIndex={null}
             onTabbableIndexChange={null}
             openDirection="down"
             orientation="vertical"
@@ -190,7 +190,6 @@ export function DemoMenuItem({ index }: { index: number }) {
             hidden={false}
             index={index}
             selectionMode="disabled"
-            text=""
             onPress={noop}
             getSortValue={returnNull}
             render={info => {

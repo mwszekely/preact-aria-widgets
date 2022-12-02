@@ -1,7 +1,6 @@
-import { h, Ref, VNode } from "preact";
-import { findFirstFocusable, UseActiveElementParameters, useState } from "preact-prop-helpers";
-import { useImperativeHandle, useContext } from "preact/hooks";
-import { ElementToTag, PropModifier } from "../props";
+import { Ref, VNode } from "preact";
+import { useState } from "preact-prop-helpers";
+import { useContext, useImperativeHandle } from "preact/hooks";
 import { useDrawer, UseDrawerParameters, UseDrawerReturnType } from "../use-drawer";
 import { defaultRenderPortal } from "./dialog";
 import { memoForwardRef, ParentDepthContext, PartialExcept, useDefault } from "./util";

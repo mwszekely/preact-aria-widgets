@@ -1,18 +1,16 @@
-import { createContext, createElement, h, Ref, VNode } from "preact";
-import { useMergedProps } from "preact-prop-helpers";
-import { useContext, useEffect, useImperativeHandle } from "preact/hooks";
-import { ElementToTag, PropModifier } from "../props";
-import { useAccordion, UseAccordionParameters, UseAccordionReturnType, UseAccordionSectionInfo, UseAccordionSectionParameters, UseAccordionSectionReturnType, UseAccordionContext, useAccordionSection } from "../use-accordion";
+import { createContext, Ref, VNode } from "preact";
+import { useContext, useImperativeHandle } from "preact/hooks";
+import { useAccordion, UseAccordionContext, UseAccordionParameters, UseAccordionReturnType, useAccordionSection, UseAccordionSectionInfo, UseAccordionSectionParameters, UseAccordionSectionReturnType } from "../use-accordion";
 import { Heading } from "./heading";
 import { memoForwardRef, PartialExcept, useDefault } from "./util";
 
 type Get<T, K extends keyof T> = T[K];
 
-interface AccordionPropsBase extends
-    Get<UseAccordionParameters<UseAccordionSectionInfo>, "accordionParameters">,
-    Get<UseAccordionParameters<UseAccordionSectionInfo>, "linearNavigationParameters">,
-    Get<UseAccordionParameters<UseAccordionSectionInfo>, "managedChildrenParameters"> {
-    ref?: Ref<UseAccordionReturnType<UseAccordionSectionInfo>>;
+interface AccordionPropsBase<HeaderButtonElement extends Element> extends
+    Get<UseAccordionParameters<HeaderButtonElement, UseAccordionSectionInfo>, "accordionParameters">,
+    Get<UseAccordionParameters<HeaderButtonElement, UseAccordionSectionInfo>, "linearNavigationParameters">,
+    Get<UseAccordionParameters<HeaderButtonElement, UseAccordionSectionInfo>, "managedChildrenParameters"> {
+    ref?: Ref<UseAccordionReturnType<HeaderButtonElement, UseAccordionSectionInfo>>;
 }
 
 interface AccordionSectionPropsBase<HeaderElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element> extends
@@ -25,8 +23,8 @@ interface AccordionSectionPropsBase<HeaderElement extends Element, HeaderButtonE
 }
 
 
-export interface AccordionProps extends PartialExcept<AccordionPropsBase, "navigationDirection"> {
-    render(info: UseAccordionReturnType<UseAccordionSectionInfo>): VNode<any>;
+export interface AccordionProps<HeaderButtonElement extends Element> extends PartialExcept<AccordionPropsBase<HeaderButtonElement>, "navigationDirection"> {
+    render(info: UseAccordionReturnType<HeaderButtonElement, UseAccordionSectionInfo>): VNode<any>;
 }
 
 export interface AccordionSectionProps<HeaderElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element> extends PartialExcept<AccordionSectionPropsBase<HeaderElement, HeaderButtonElement, BodyElement>, "index" | "tagButton"> {
@@ -34,8 +32,8 @@ export interface AccordionSectionProps<HeaderElement extends Element, HeaderButt
 }
 
 
-const AccordionSectionContext = createContext<UseAccordionContext<any>>(null!);
-export const Accordion = memoForwardRef(function Accordion({
+const AccordionSectionContext = createContext<UseAccordionContext<any, any>>(null!);
+export const Accordion = memoForwardRef(function Accordion<HeaderButtonElement extends Element>({
     disableArrowKeys,
     disableHomeEndKeys,
     initialIndex,
@@ -47,9 +45,9 @@ export const Accordion = memoForwardRef(function Accordion({
     pageNavigationSize,
     render,
     ..._rest
-}: AccordionProps, ref?: Ref<any>) {
+}: AccordionProps<HeaderButtonElement>, ref?: Ref<any>) {
 
-    const info = useAccordion<UseAccordionSectionInfo>({
+    const info = useAccordion<HeaderButtonElement, UseAccordionSectionInfo>({
         accordionParameters: { initialIndex },
         linearNavigationParameters: {
             disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys),
@@ -91,7 +89,7 @@ export const AccordionSection = memoForwardRef(function AccordionSection<HeaderC
     hidden,
     render,
 }: AccordionSectionProps<HeaderContainerElement, HeaderButtonElement, BodyElement>, ref?: Ref<any>) {
-    const context = useContext(AccordionSectionContext) as UseAccordionContext<UseAccordionSectionInfo>;
+    const context = useContext(AccordionSectionContext) as UseAccordionContext<HeaderButtonElement, UseAccordionSectionInfo>;
     const info = useAccordionSection<HeaderContainerElement, HeaderButtonElement, BodyElement>({
         buttonParameters: { disabled: disabled ?? false, tagButton, onPress: onPress ?? null },
         accordionSectionParameters: { open, bodyRole: bodyRole ?? "region" },

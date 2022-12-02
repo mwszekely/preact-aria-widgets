@@ -52,7 +52,7 @@ export function Listbox<ListElement extends Element, ListItemElement extends Ele
     navigatePastStart,
     navigationDirection,
     noTypeahead,
-    onSelectedIndexChange,
+    setSelectedIndex,
     onTabbableIndexChange,
     pageNavigationSize,
     selectionLimit,
@@ -75,7 +75,7 @@ export function Listbox<ListElement extends Element, ListItemElement extends Ele
         listboxParameters: { selectionLimit, groupingType },
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
         rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable: untabbable ?? false },
-        singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? null, onSelectedIndexChange: onSelectedIndexChange ?? noop },
+        singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? null, setSelectedIndex: setSelectedIndex ?? null },
         sortableChildrenParameters: { compare: compare ?? null },
         typeaheadNavigationParameters: {
             collator: useDefault("collator", collator),
@@ -125,7 +125,7 @@ export function DemoListbox() {
             navigatePastEnd="wrap"
             navigatePastStart="wrap"
             initiallySelectedIndex={selectedIndex}
-            onSelectedIndexChange={e => setSelectedIndex(e)}
+            setSelectedIndex={e => setSelectedIndex(e)}
             getIndex={v => v.props.index}
             noTypeahead={false}
             navigationDirection="vertical"

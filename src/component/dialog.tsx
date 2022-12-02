@@ -1,8 +1,7 @@
-import { ComponentChildren, createElement, h, Ref, VNode } from "preact";
-import { findFirstFocusable, generateRandomId, UseActiveElementParameters, useForceUpdate, useState } from "preact-prop-helpers";
+import { Ref, VNode } from "preact";
+import { useState } from "preact-prop-helpers";
 import { createPortal } from "preact/compat";
-import { useCallback, useContext, useImperativeHandle, useRef } from "preact/hooks";
-import { ElementToTag, PropModifier } from "../props";
+import { useContext, useImperativeHandle, useRef } from "preact/hooks";
 import { useDialog, UseDialogParameters, UseDialogReturnType } from "../use-dialog";
 import { memoForwardRef, ParentDepthContext, PartialExcept, useDefault } from "./util";
 

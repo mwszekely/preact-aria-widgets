@@ -156,10 +156,10 @@ export interface CheckboxGroupContext<GroupElement extends Element, TCE extends 
     checkboxGroupParentContext: {
 
         // What a horrifying type.  Name this better please.
-        setSetter: PassiveStateUpdater<StateUpdater<string> | null>;
+        setSetter: PassiveStateUpdater<StateUpdater<string> | null, Event>;
 
         // whyyyyy
-        setSetParentCheckboxChecked: PassiveStateUpdater<StateUpdater<CheckboxCheckedType> | null>;
+        setSetParentCheckboxChecked: PassiveStateUpdater<StateUpdater<CheckboxCheckedType> | null, Event>;
 
         getPercentChecked: (totalChecked: number, totalChildren: number) => number;
 
@@ -171,10 +171,10 @@ export interface CheckboxGroupContext<GroupElement extends Element, TCE extends 
     checkboxGroupChildrenContext: {
 
         // children
-        setUpdateIndex: PassiveStateUpdater<number>;
+        setUpdateIndex: PassiveStateUpdater<number, Event>;
         allIds: Set<string>;
-        setTotalChildren: PassiveStateUpdater<number>;
-        setTotalChecked: PassiveStateUpdater<number>;
+        setTotalChildren: PassiveStateUpdater<number, Event>;
+        setTotalChecked: PassiveStateUpdater<number, Event>;
     }
 
 }
@@ -209,7 +209,7 @@ export function useCheckboxGroup<GroupElement extends Element, TCE extends Eleme
         linearNavigationParameters,
         rearrangeableChildrenParameters,
         rovingTabIndexParameters,
-        singleSelectionParameters: { initiallySelectedIndex: null, onSelectedIndexChange: noop },
+        singleSelectionParameters: { initiallySelectedIndex: null, setSelectedIndex: null },
         sortableChildrenParameters,
         typeaheadNavigationParameters
     });
@@ -225,8 +225,8 @@ export function useCheckboxGroup<GroupElement extends Element, TCE extends Eleme
     // (but only once per render);
     const allIds = useRef(new Set<string>());
     const updateParentControlIds = useStableCallback((setter: StateUpdater<string> | null) => { setter?.(Array.from(allIds.current).join(" ")) });
-    const [getSetter, setSetter] = usePassiveState<StateUpdater<string> | null>(updateParentControlIds, returnNull);
-    const [_getUpdateIndex, setUpdateIndex] = usePassiveState<number>(useStableCallback(() => { updateParentControlIds(getSetter()) }), returnZero);
+    const [getSetter, setSetter] = usePassiveState<StateUpdater<string> | null, Event>(updateParentControlIds, returnNull);
+    const [_getUpdateIndex, setUpdateIndex] = usePassiveState<number, Event>(useStableCallback(() => { updateParentControlIds(getSetter()) }), returnZero);
 
     // Lots of machenery to track what total percentage of all checkboxes are checked,
     // and notifying the parent checkbox of this information (while re-rendering as little as possible)
@@ -241,7 +241,7 @@ export function useCheckboxGroup<GroupElement extends Element, TCE extends Eleme
             return (totalChecked == 0 ? 0 : 1);
     }, []);
 
-    const [getSetParentCheckboxChecked, setSetParentCheckboxChecked] = usePassiveState<StateUpdater<CheckboxCheckedType> | null>(useStableCallback((setter: StateUpdater<CheckboxCheckedType> | null) => {
+    const [getSetParentCheckboxChecked, setSetParentCheckboxChecked] = usePassiveState<StateUpdater<CheckboxCheckedType> | null, Event>(useStableCallback((setter: StateUpdater<CheckboxCheckedType> | null) => {
         onAnyChildCheckedUpdate(setter, getPercentChecked(getTotalChecked(), getTotalChildren()))
     }));
 
@@ -401,7 +401,7 @@ export function useCheckboxGroupChild<TCE extends Element>({
     const { checked, onChangeFromParent } = checkboxGroupChild;
     const getChecked = useStableGetter(checked);
     //labelPosition ??= "separate";
-    const [getLastUserChecked, setLastUserChecked] = usePassiveState<boolean | "mixed">(null, returnFalse);
+    const [getLastUserChecked, setLastUserChecked] = usePassiveState<boolean | "mixed", Event>(null, returnFalse);
     const onChildCheckedChange = useStableCallback((checked: CheckboxCheckedType) => {
         setLastUserChecked(checked);
     });

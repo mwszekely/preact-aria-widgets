@@ -28,7 +28,7 @@ interface RadioPropsBase<LP extends LabelPosition, TabbableChildElement extends 
     Get<UseRadioParameters<LP, V, TabbableChildElement, InputElement, LabelElement, RadioSubInfo<TabbableChildElement, V>>, "rovingTabIndexChildParameters">,
     Get<UseRadioParameters<LP, V, TabbableChildElement, InputElement, LabelElement, RadioSubInfo<TabbableChildElement, V>>, "pressParameters">,
     Omit<Get<UseRadioParameters<LP, V, TabbableChildElement, InputElement, LabelElement, RadioSubInfo<TabbableChildElement, V>>, "singleSelectionChildParameters">, "disabled">,
-    Get<UseRadioParameters<LP, V, TabbableChildElement, InputElement, LabelElement, RadioSubInfo<TabbableChildElement, V>>, "typeaheadNavigationChildParameters">,
+    Get<UseRadioParameters<LP, V, TabbableChildElement, InputElement, LabelElement, RadioSubInfo<TabbableChildElement, V>>, "textContentParameters">,
     Omit<Get<UseRadioParameters<LP, V, TabbableChildElement, InputElement, LabelElement, RadioSubInfo<TabbableChildElement, V>>, "managedChildParameters">, "disabled" | "getSortValue"> {
     //ref?: Ref<UseRadioReturnTypeInfo<InputElement, LabelElement>>;
     //subInfo: C;
@@ -38,7 +38,7 @@ interface RadioPropsBase<LP extends LabelPosition, TabbableChildElement extends 
 interface RadioGroupProps<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, TabbableChildElement extends Element> extends PartialExcept<RadioGroupPropsBase<V, GroupElement, GroupLabelElement, TabbableChildElement>, "navigationDirection" | "ariaLabel" | "name" | "initiallySelectedValue" | "onSelectedValueChange"> {
     render(info: UseRadioGroupReturnType<V, GroupElement, GroupLabelElement, TabbableChildElement>): VNode<any>;
 }
-interface RadioProps<LP extends LabelPosition, TabbableChildElement extends Element, InputElement extends Element, LabelElement extends Element, V extends string | number> extends PartialExcept<RadioPropsBase<LP, TabbableChildElement, InputElement, LabelElement, V>, "index" | "value" | "ariaLabel" | "text" | "selectionMode" | "labelPosition" | "tagInput" | "tagLabel"> {
+interface RadioProps<LP extends LabelPosition, TabbableChildElement extends Element, InputElement extends Element, LabelElement extends Element, V extends string | number> extends PartialExcept<RadioPropsBase<LP, TabbableChildElement, InputElement, LabelElement, V>, "index" | "value" | "ariaLabel" | "selectionMode" | "labelPosition" | "tagInput" | "tagLabel"> {
     render(info: UseRadioReturnType<V, InputElement, LabelElement, TabbableChildElement, RadioSubInfo<TabbableChildElement, V>>): VNode<any>;
 }
 
@@ -132,7 +132,7 @@ export const Radio = memoForwardRef(function Radio<LP extends LabelPosition, V e
     hidden,
     tagInput,
     tagLabel,
-    text
+    getText
 }: RadioProps<LP, TabbableChildElement, InputElement, LabelElement, V>, ref?: Ref<any>) {
     const context = useContext(RadioContext);
     const getValue = useStableGetter(value);
@@ -149,7 +149,7 @@ export const Radio = memoForwardRef(function Radio<LP extends LabelPosition, V e
         labelParameters: { ariaLabel, labelPosition, tagInput, tagLabel },
         pressParameters: { exclude, focusSelf: focusSelf ?? defaultFocusSelf, onPressSync },
         singleSelectionChildParameters: { selectionMode: useDefault("selectionMode", selectionMode), disabled: !!disabled },
-        typeaheadNavigationChildParameters: { text }
+        textContentParameters: { getText: useDefault("getText", getText) }
         //rovingTabIndexParameters: { hidden, focusSelf, noModifyTabIndex },
         //hasFocusParameters: { getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange },
         //subInfoParameters: {  },

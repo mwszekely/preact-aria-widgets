@@ -11,7 +11,7 @@ import { UseListboxParameters } from "./use-listbox";
 
 //export type ListboxSingleSelectEvent<E extends EventTarget> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 
-//export interface UseTableSectionContext<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement>, CM extends TableCellInfo<TableCellElement>> extends CompleteGridNavigationContext<TableSectionElement, TableRowElement, TableCellElement, M> {}
+export interface UseTableSectionContext<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>> extends CompleteGridNavigationContext<TableSectionElement, TableRowElement, TableCellElement, RM, CM> {}
 
 export interface UseTableSectionParameters<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>> extends UseCompleteGridNavigationParameters<TableSectionElement, TableRowElement, TableCellElement, RM> {
     tableSectionParameters: {
@@ -65,7 +65,7 @@ export interface UseTableReturnType<TableElement extends Element, LabelElement e
     propsLabel: h.JSX.HTMLAttributes<LabelElement>;
  } 
 
- export interface UseTableSectionContext<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>> extends CompleteGridNavigationContext<TableSectionElement, TableRowElement, TableCellElement, RM, CM> {}
+// export interface UseTableSectionContext<TableSectionElement extends Element, TableRowElement extends Element, M extends TableRowInfo<TableRowElement>> extends CompleteGridNavigationContext<TableSectionElement, TableRowElement, M> { }
 
 export function useTable<TableElement extends Element, LabelElement extends Element>({
     labelParameters,

@@ -36,7 +36,7 @@ interface MenuItemPropsBase<MenuItemElement extends Element> extends
     Get<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "sortableChildParameters">,
     Get<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "managedChildParameters">,
     Get<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "singleSelectionChildParameters">,
-    Get<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "typeaheadNavigationChildParameters"> {
+    Get<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "textContentParameters"> {
     //tagListItem: ElementToTag<ListboxItemElement>;
     //subInfo: Get<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "completeListNavigationChildParameters">;
     ref?: Ref<UseMenuItemReturnType<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>>;
@@ -45,7 +45,7 @@ interface MenuItemPropsBase<MenuItemElement extends Element> extends
 export interface MenubarProps<MenuParentElement extends Element, MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends PartialExcept<MenubarPropsBase<MenuParentElement, MenuItemElement, M>, "orientation"> {
     render(info: UseMenubarReturnType<MenuParentElement, MenuItemElement, M>): VNode<any>;
 }
-export interface MenuItemProps<MenuItemElement extends Element> extends PartialExcept<MenuItemPropsBase<MenuItemElement>, "ariaPropName" | "index" | "selectionMode" | "getSortValue" | "text"> {
+export interface MenuItemProps<MenuItemElement extends Element> extends PartialExcept<MenuItemPropsBase<MenuItemElement>, "ariaPropName" | "index" | "selectionMode" | "getSortValue"> {
     render(info: UseMenuItemReturnType<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): VNode<any>;
 }
 
@@ -66,7 +66,7 @@ export const Menubar = memoForwardRef(function MenubarU<ContainerElement extends
     getIndex,
     untabbable,
     initiallySelectedIndex,
-    onSelectedIndexChange,
+    setSelectedIndex,
     typeaheadTimeout,
     role
 }: MenubarProps<ContainerElement, ChildElement, UseMenubarSubInfo<ChildElement>>, ref?: Ref<any>) {
@@ -86,7 +86,7 @@ export const Menubar = memoForwardRef(function MenubarU<ContainerElement extends
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
          },
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
-        singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? null, onSelectedIndexChange: onSelectedIndexChange ?? noop },
+        singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? null, setSelectedIndex: setSelectedIndex ?? null },
         sortableChildrenParameters: { compare: compare ?? null },
         menubarParameters: { role: role ?? "menubar" }
     });
@@ -108,7 +108,7 @@ export const MenuItem = memoForwardRef(function MenuItemU<MenuItemElement extend
     exclude,
     selectionMode,
     hidden,
-    text,
+    getText,
     disabled,
     onPress,
     getSortValue,
@@ -129,10 +129,10 @@ export const MenuItem = memoForwardRef(function MenuItemU<MenuItemElement extend
         managedChildParameters: { index },
         rovingTabIndexChildParameters: { hidden: hidden ?? false },
         sortableChildParameters: { getSortValue },
+        textContentParameters: { getText: useDefault("getText", getText) },
         menuItemParameters: { onPress: onPress ?? null, role: role ?? "menuitem" },
         pressParameters: { exclude },
-        singleSelectionChildParameters: { ariaPropName, selectionMode, disabled: disabled ?? false },
-        typeaheadNavigationChildParameters: { text }
+        singleSelectionChildParameters: { ariaPropName, selectionMode, disabled: disabled ?? false }
     });
 
     useImperativeHandle(ref!, () => info);
@@ -157,7 +157,7 @@ export function DemoMenubar() {
             navigatePastEnd="wrap"
             navigatePastStart="wrap"
             noTypeahead={false}
-            onSelectedIndexChange={noop}
+            setSelectedIndex={null}
             onTabbableIndexChange={null}
             orientation="vertical"
             pageNavigationSize={0.1}
@@ -183,7 +183,6 @@ export function DemoMenubarItem({ index }: { index: number }) {
             hidden={false}
             index={index}
             selectionMode="disabled"
-            text=""
             onPress={noop}
             getSortValue={returnNull}
             render={info => {

@@ -28,7 +28,7 @@ export interface ToolbarChildPropsBase<ToolbarChildElement extends Element, M ex
     Get<UseToolbarChildParameters<ToolbarChildElement, M>, "singleSelectionChildParameters">,
     Get<UseToolbarChildParameters<ToolbarChildElement, M>, "rovingTabIndexChildParameters">,
     Get<UseToolbarChildParameters<ToolbarChildElement, M>, "sortableChildParameters">,
-    Get<UseToolbarChildParameters<ToolbarChildElement, M>, "typeaheadNavigationChildParameters">,
+    Get<UseToolbarChildParameters<ToolbarChildElement, M>, "textContentParameters">,
     Pick<Get<UseToolbarChildParameters<any, any>, "managedChildParameters">, "index"> {
 //    subInfo: UseToolbarChildParameters<ToolbarChildElement, M>["completeListNavigationChildParameters"];
     ref?: Ref<UseToolbarChildReturnType<ToolbarChildElement, M>>;
@@ -38,7 +38,7 @@ export interface ToolbarProps<ToolbarContainerElement extends Element, ToolbarCh
     render(info: UseToolbarReturnType<ToolbarContainerElement, ToolbarChildElement, M>): VNode<any>;
 }
 
-export interface ToolbarChildProps<ToolbarChildElement extends Element, M extends UseToolbarSubInfo<ToolbarChildElement>> extends PartialExcept<ToolbarChildPropsBase<ToolbarChildElement, M>, "getSortValue" | "ariaPropName" | "index" | "text" | "selectionMode"> {
+export interface ToolbarChildProps<ToolbarChildElement extends Element, M extends UseToolbarSubInfo<ToolbarChildElement>> extends PartialExcept<ToolbarChildPropsBase<ToolbarChildElement, M>, "getSortValue" | "ariaPropName" | "index" | "selectionMode"> {
     render(info: UseToolbarChildReturnType<ToolbarChildElement, M>): VNode<any>;
 }
 
@@ -57,7 +57,7 @@ export const Toolbar = memoForwardRef(function ToolbarU<ContainerElement extends
     navigatePastStart,
     pageNavigationSize,
     initiallySelectedIndex,
-    onSelectedIndexChange,
+    setSelectedIndex,
     orientation,
     noTypeahead,
     onTabbableIndexChange,
@@ -65,7 +65,7 @@ export const Toolbar = memoForwardRef(function ToolbarU<ContainerElement extends
 }: ToolbarProps<ContainerElement, ChildElement, UseToolbarSubInfo<ChildElement>>, ref?: Ref<any>) {
     const listboxReturnType = useToolbar<ContainerElement, ChildElement>({
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
-        singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? null, onSelectedIndexChange: onSelectedIndexChange ?? null },
+        singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? null, setSelectedIndex: setSelectedIndex ?? null },
         sortableChildrenParameters: { compare: compare ?? null },
         linearNavigationParameters: {
             disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys),
@@ -107,7 +107,7 @@ export const ToolbarChild = memoForwardRef(function ToolbarChildU<ToolbarChildEl
     focusSelf,
     getSortValue,
     hidden,
-    text
+    getText
 }: ToolbarChildProps<ToolbarChildElement, UseToolbarSubInfo<ToolbarChildElement>>, ref?: Ref<any>) {
     const context = (useContext(ToolbarContext) as UseToolbarContext<any, ToolbarChildElement, UseToolbarSubInfo<ToolbarChildElement>>);
     const focusSelfDefault = useCallback((e: any) => { e?.focus(); }, []);
@@ -121,7 +121,7 @@ export const ToolbarChild = memoForwardRef(function ToolbarChildU<ToolbarChildEl
         rovingTabIndexChildParameters: { hidden: hidden ?? false },
         sortableChildParameters: { getSortValue },
         singleSelectionChildParameters: { ariaPropName, selectionMode, disabled: disabled ?? false },
-        typeaheadNavigationChildParameters: { text },
+        textContentParameters: { getText: useDefault("getText", getText) },
     });
 
     useImperativeHandle(ref!, () => info);

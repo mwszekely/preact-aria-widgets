@@ -1,7 +1,5 @@
-import { createElement, h, Ref, VNode } from "preact";
-import { useMergedProps } from "preact-prop-helpers";
+import { Ref, VNode } from "preact";
 import { useImperativeHandle } from "preact/hooks";
-import { ElementToTag } from "../props";
 import { useButton, UseButtonParameters, UseButtonReturnType } from "../use-button";
 import { memoForwardRef, PartialExcept } from "./util";
 

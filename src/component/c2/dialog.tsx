@@ -68,7 +68,7 @@ export function SimpleDialogsProvider({ portalId }: { portalId: string }) {
 function useCloseSimpleDialog() {
 
 }*/
-
+/*
 export interface Dialog2Props extends Pick<DialogProps<HTMLDivElement, any, HTMLDivElement, HTMLDivElement>, "closeOnBackdrop" | "closeOnEscape" | "focusPopup" | "open" | "onClose" | "ariaLabel">, Pick<h.JSX.HTMLAttributes<HTMLDivElement>, StandardProps> {
     portalId: string;
     opener: VNode | null;
@@ -103,4 +103,4 @@ export function Dialog2({ portalId, opener, ariaLabel, focusPopup, onClose, open
         />
     )
 }
-
+*/

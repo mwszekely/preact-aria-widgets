@@ -29,9 +29,9 @@ export interface UseGridlistRowContext<ParentElement extends Element, ChildEleme
 
 }
 
-export interface UseGridlistParameters<GridlistElement extends Element, GridlistRowElement extends Element, GridlistCellElement extends Element, LabelElement extends Element, M extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>> extends UseCompleteGridNavigationParameters<GridlistElement, GridlistRowElement, GridlistCellElement, M> {
+export interface UseGridlistParameters<GridlistElement extends Element, GridlistRowElement extends Element, GridlistCellElement extends Element, LabelElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>> extends UseCompleteGridNavigationParameters<GridlistElement, GridlistRowElement, GridlistCellElement, RM> {
     labelParameters: UseLabelSyntheticParameters["labelParameters"];
-    gridlistParameters: UseListboxParameters<GridlistElement, GridlistRowElement, LabelElement, M>["listboxParameters"];
+    gridlistParameters: UseListboxParameters<GridlistElement, GridlistRowElement, LabelElement, RM>["listboxParameters"];
 }
 export interface UseGridlistReturnType<GridlistElement extends Element, GridlistRowElement extends Element, GridlistCellElement extends Element, LabelElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends Omit<UseCompleteGridNavigationReturnType<GridlistElement, GridlistRowElement, GridlistCellElement, RM, CM>, "props"> {
     propsGridlist: h.JSX.HTMLAttributes<GridlistElement>;

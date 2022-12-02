@@ -122,7 +122,7 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
         linearNavigationParameters,
         rearrangeableChildrenParameters,
         rovingTabIndexParameters,
-        singleSelectionParameters: { initiallySelectedIndex: selectedIndex, onSelectedIndexChange },
+        singleSelectionParameters: { initiallySelectedIndex: selectedIndex, setSelectedIndex },
         sortableChildrenParameters,
         typeaheadNavigationParameters
     });
