@@ -1,7 +1,7 @@
 
-import { useState } from "preact-prop-helpers";
-import { defaultRenderMenu, Menu } from "../../component/menu";
-import { defaultRenderMenuItem, MenuItem } from "../../component/menubar";
+import { returnZero, useState } from "preact-prop-helpers";
+import { Menu } from "../../component/menu";
+import { MenuItem } from "../../component/menubar";
 import { EventDetail } from "../../props";
 
 function DemoListItem({ index }: { index: number }) {
@@ -9,14 +9,13 @@ function DemoListItem({ index }: { index: number }) {
     return (
         <MenuItem<HTMLLIElement>
             index={index}
-            focusSelf={e => e.focus()}
+            ariaPropName={null}
+            getSortValue={returnZero}
+            selectionMode="disabled"
             role="menuitem"
-            text={`List item #${index}`}
-            subInfo={undefined}
             onPress={e => alert(`Menu item #${e[EventDetail].index} pressed`)}
             disabled={false}
-            getDocument={getDocument}
-            render={defaultRenderMenuItem({ tagChild: "li", makePropsChild: () => ({ children: `Menu item #${index}` }) })}
+            render={info => <li {...info.props}>{`Menu item #${index}`}</li>}
         />
     )
 }
@@ -57,7 +56,6 @@ export function Demo() {
             <div>
                 <Menu<HTMLDivElement, HTMLUListElement, HTMLDivElement, HTMLLIElement, HTMLButtonElement>
                     orientation="vertical"
-                    getDocument={getDocument}
                     onOpen={() => setOpen(true)}
                     onClose={() => setOpen(false)}
                     open={open}

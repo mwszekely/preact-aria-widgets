@@ -1,24 +1,26 @@
 
-import { useState } from "preact-prop-helpers";
+import { returnZero, useState } from "preact-prop-helpers";
 import { memo } from "preact/compat";
-import { defaultRenderListboxSingleItem, ListboxSingleItem } from "../../component/listbox-single";
-import { EventDetail, ListboxSingle, defaultRenderListboxSingle } from "../../index";
+import { EventDetail, Listbox, ListboxItem } from "../../index";
 
 function getDocument() { return window.document; }
 
 const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
 
     return (
-        <ListboxSingleItem<HTMLLIElement>
+        <ListboxItem<HTMLLIElement>
             index={index}
             focusSelf={e => e.focus()}
             ariaPropName="aria-selected"
-            unselectable={false}
-            getDocument={getDocument}
+            getSortValue={returnZero}
             disabled={false}
-            text={`List item #${index}`}
-            render={defaultRenderListboxSingleItem({ tagListItem: "li", makePropsListItem: ({ singleSelection: { selected } }) => ({ children: `List item #${index}${selected ? " (selected)" : ""}` }) })}
-            subInfo={undefined}
+            render={info => {
+                const selected = info.singleSelectionChildReturn.selected;
+                // defaultRenderListboxSingleItem({ tagListItem: "li", makePropsListItem: ({ singleSelection: { selected } }) => ({ children: `List item #${index}${selected ? " (selected)" : ""}` }) })
+                return (
+                    <li {...info.props}>{`List item #${index}${selected ? " (selected)" : ""}`}</li>
+                )
+            }}
         />
     )
 })
@@ -68,8 +70,10 @@ export function Demo() {
             <Code />
             <label><input type="number" min={0} value={count} onInput={e => setCount(e.currentTarget.valueAsNumber)} /> # of list items</label>
             <div>
-                <ListboxSingle
-                    render={defaultRenderListboxSingle({
+                <Listbox<HTMLOListElement, HTMLLIElement, HTMLLabelElement>
+                    render={info => {
+                        /*
+                        defaultRenderListboxSingle({
                         tagLabel: "label", tagList: "ol", makePropsLabel: () => ({}), makePropsList: () => ({
                             children: <>{Array.from((function* () {
                                 for (let i = 0; i < count; ++i) {
@@ -77,12 +81,27 @@ export function Demo() {
                                 }
                             })())}</>
                         })
-                    })}
-                    selectionMode="activation"
-                    tagLabel="label"
-                    tagList="ol"
-                    selectedIndex={selectedIndex}
-                    onSelect={e => setSelectedIndex(e[EventDetail].selectedIndex)} />
+                    })
+                     */
+                        return (
+                            <>
+                                <label {...info.propsListboxLabel}>Single-select listbox demo</label>
+                                <ol>
+                                    {Array.from((function* () {
+                                        for (let i = 0; i < count; ++i) {
+                                            yield <DemoListItem index={i} key={i} />
+                                        }
+                                    })())}
+                                </ol>
+                            </>
+                        )
+                    }}
+                    ariaLabel={null}
+                    groupingType="without-groups"
+                    navigationDirection="vertical"
+                    selectionLimit="single"
+                    
+                    setSelectedIndex={e => setSelectedIndex(e)} />
             </div>
         </>
     )

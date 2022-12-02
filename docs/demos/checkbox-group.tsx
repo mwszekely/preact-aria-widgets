@@ -17,7 +17,6 @@ function DemoCheckbox({ index }: { index: number }) {
         <CheckboxGroupChild<HTMLInputElement>
             checked={checked}
             index={index}
-            text={labelText}
             focusSelf={() => ref.current?.checkboxLikeReturn.focusSelf()}
             onChangeFromParent={async (checked) => { await new Promise(resolve => setTimeout(resolve, Math.random() * 2000)); setChecked(checked); }}
             getSortValue={returnNull}
@@ -99,7 +98,6 @@ export function Demo() {
                                             index={0}
                                             focusSelf={() => ref.current?.checkboxLikeReturn.focusSelf()}
                                             getSortValue={returnNull}
-                                            text="Parent checkbox"
                                             render={info => (<Checkbox
                                                 ref={ref}
                                                 checked={info.checkboxGroupParentReturn.checked}

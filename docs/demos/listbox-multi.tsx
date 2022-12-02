@@ -1,8 +1,7 @@
 
-import { useState } from "preact-prop-helpers";
+import { returnZero, useState } from "preact-prop-helpers";
 import { memo } from "preact/compat";
-import { ListboxMultiItem } from "../../component/listbox-multi";
-import { EventDetail, ListboxMulti, defaultRenderListboxMulti, defaultRenderListboxMultiItem } from "../../index";
+import { EventDetail, Listbox, ListboxItem, ListboxItemProps, ListboxProps } from "../../index";
 
 function getDocument() {
     return window.document;
@@ -15,16 +14,19 @@ const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
 
 
     return (
-        <ListboxMultiItem<HTMLLIElement>
-            getDocument={getDocument}
-            focusSelf={e => e.focus()}
+        <ListboxItem<HTMLLIElement>
             selected={selected}
             index={index}
             disabled={false}
-            text={labelText}
-            onSelectedChange={e => { setSelected(e[EventDetail].selected) }}
-            render={defaultRenderListboxMultiItem({ tagListItem: "li", makePropsListItem: () => ({ children: labelText }) })}
-            subInfo={undefined}
+            ariaPropName="aria-selected"
+            getSortValue={returnZero}
+
+            onPressSync={e => { setSelected(p => !p) }}
+            render={info => {
+                return (
+                    <li {...info.props}>{labelText}</li>
+                )
+            }}
         />
     )
 })
@@ -66,15 +68,18 @@ export function Demo() {
             <Code />
             <label><input type="number" min={0} value={count} onInput={e => setCount(e.currentTarget.valueAsNumber)} /> # of list items</label>
             <div>
-                <ListboxMulti tagLabel="label" tagList="ul" render={defaultRenderListboxMulti({
-                    tagLabel: "label", tagList: "ul", makePropsLabel: () => ({}), makePropsList: () => ({
-                        children: Array.from((function* () {
+                <Listbox<HTMLUListElement, HTMLLIElement, HTMLLabelElement> ariaLabel={null} groupingType="without-groups" navigationDirection="vertical" selectionLimit="single" render={info => {
+                    return (
+                        <>
+                        <label {...info.propsListboxLabel}></label>
+                        <ul {...info.propsListbox}>{Array.from((function* () {
                             for (let i = 0; i < count; ++i) {
                                 yield <DemoListItem index={i} key={i} />
                             }
-                        })())
-                    })
-                })} />
+                        })())}</ul>
+                        </>
+                    )
+                }} />
             </div>
         </>
     )
