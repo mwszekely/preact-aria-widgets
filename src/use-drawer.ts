@@ -1,5 +1,6 @@
 import { h } from "preact";
-import { useMergedProps, useModal, UseModalParameters, UseModalReturnType } from "preact-prop-helpers";
+import { findFirstFocusable, useMergedProps, useModal, UseModalParameters, UseModalReturnType, useStableCallback } from "preact-prop-helpers";
+import { Prefices } from "./props";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
 /*import { useModal, UseModalParameters, UseSoftDismissReturnTypeInfo } from "./use-modal";
 
@@ -67,7 +68,9 @@ export function useDrawer<FocusContainerElement extends HTMLElement, DrawerEleme
 
 
 
-export interface UseDrawerParameters<_DialogElement extends Element, _TitleElement extends Element> extends UseModalParameters<"escape" | "backdrop" | "lost-focus">, Pick<UseLabelSyntheticParameters, "labelParameters">  {
+export interface UseDrawerParameters<_DialogElement extends Element, _TitleElement extends Element> extends Omit<UseModalParameters<"escape" | "backdrop" | "lost-focus">, "focusTrapParameters"> {
+    labelParameters: Omit<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
+    focusTrapParameters: Omit<UseModalParameters<"escape" | "backdrop" | "lost-focus">["focusTrapParameters"], "onlyMoveFocus">
 }
 
 export interface UseDrawerReturnType<FocusContainerElement extends Element, SourceElement extends Element, DrawerElement extends Element, TitleElement extends Element> extends Omit<UseModalReturnType<FocusContainerElement, SourceElement, DrawerElement>, "propsPopup"> {
@@ -86,17 +89,23 @@ export function useDrawer<FocusContainerElement extends Element, SourceElement e
     } = useModal<"escape" | "backdrop" | "lost-focus", FocusContainerElement, SourceElement, PopupElement>({
         dismissParameters,
         escapeDismissParameters,
-        focusTrapParameters
+        focusTrapParameters: { onlyMoveFocus: false,  ...focusTrapParameters }
     });
 
-    const { 
-        propsInput, 
+    const {
+        propsInput,
         propsLabel,
-     } = useLabelSynthetic<PopupElement, TitleElement>({ 
-        labelParameters, 
-        randomIdInputParameters: { prefix: "aria-dialog-" }, 
-        randomIdLabelParameters: { prefix: "aria-dialog-title-" }
-     });
+    } = useLabelSynthetic<PopupElement, TitleElement>({
+        labelParameters: {
+            ...labelParameters, onLabelClick: useStableCallback(() => {
+                const e = refElementPopupReturn.getElement();
+                focusTrapParameters.focusPopup(e, () => findFirstFocusable(e!));
+
+            })
+        },
+        randomIdInputParameters: { prefix: Prefices.drawer },
+        randomIdLabelParameters: { prefix: Prefices.drawerTitle }
+    });
 
     return {
         focusTrapReturn,

@@ -1,5 +1,5 @@
 import { useMergedProps, useStableCallback } from "preact-prop-helpers";
-import { UseToolbarContext } from "use-toolbar";
+import { UseToolbarContext } from "./use-toolbar";
 import { debugLog } from "./props";
 import { useMenuSurface, UseMenuSurfaceParameters, UseMenuSurfaceReturnType } from "./use-menu-surface";
 import { useMenubar, useMenubarChild, UseMenubarItemParameters, UseMenubarItemReturnType, UseMenubarParameters, UseMenubarReturnType, UseMenubarSubInfo } from "./use-menubar";
@@ -93,26 +93,34 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
 
     const onKeyDown = useStableCallback((e: KeyboardEvent) => {
         const isOpen = dismissParameters.open;
-        if (isOpen) {
+        if (!isOpen) {
             switch (e.key) {
                 case "ArrowUp": {
-                    if (openDirection == 'up')
+                    if (openDirection == 'up') {
                         onOpen();
+                        e.preventDefault();
+                    }
                     break;
                 }
                 case "ArrowDown": {
-                    if (openDirection == 'down')
+                    if (openDirection == 'down') {
                         onOpen();
+                        e.preventDefault();
+                    }
                     break;
                 }
                 case "ArrowLeft": {
-                    if (openDirection == 'left')
+                    if (openDirection == 'left') {
                         onOpen();
+                        e.preventDefault();
+                    }
                     break;
                 }
                 case "ArrowRight": {
-                    if (openDirection == 'right')
+                    if (openDirection == 'right') {
                         onOpen();
+                        e.preventDefault();
+                    }
                     break;
                 }
             }
@@ -136,7 +144,7 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
         dismissParameters,
         escapeDismissParameters,
         focusTrapParameters: {
-            focusPopup: () => rovingTabIndexReturn.focusSelf()
+            focusPopup: () => { debugger; rovingTabIndexReturn.focusSelf() }
         }
     });
 

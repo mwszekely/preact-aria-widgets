@@ -19,9 +19,9 @@ const DemoAccordionSection = memo(function DemoAccordionSection({ index, body, h
         open={open}
         disabled={disabled}
         render={info => (
-            <Heading<HTMLDivElement> tag="div" heading={<><span>Accordion section ${index}</span><button {...info.propsHeaderButton}>Toggle open</button></>}>
-                <p {...info.propsBody} hidden={info.accordionSectionReturn.expanded}>
-                    Accordion body content
+            <Heading<HTMLDivElement> {...info.propsHeader} tag="div" heading={<><span>{heading}</span><button {...info.propsHeaderButton}>Toggle open</button></>}>
+                <p {...info.propsBody} hidden={!info.accordionSectionReturn.expanded}>
+                    {body}
                 </p>
             </Heading>
         )} />

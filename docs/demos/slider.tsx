@@ -1,6 +1,6 @@
 
 import { useState } from "preact-prop-helpers";
-import { defaultRenderSliderThumb, Slider, SliderThumb } from "../../component/slider";
+import { Slider, SliderThumb } from "../../component/slider";
 import { EventDetail } from "../../index";
 
 function DemoSliderThumb({ index }: { index: number }) {
@@ -15,8 +15,11 @@ function DemoSliderThumb({ index }: { index: number }) {
             onValueChange={e => setValue(e[EventDetail].value)}
             min={0}
             max={10}
-            subInfo={undefined}
-            render={defaultRenderSliderThumb({ tagThumb: "input", makePropsThumb: () => ({}) })} />
+            render={info => {
+                return (
+                    <input {...info.propsSliderThumb} />
+                )
+            }}/>
     )
 }
 

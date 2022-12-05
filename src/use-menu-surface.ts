@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { assertEmptyObject, findFirstFocusable, useMergedProps, useModal, UseModalParameters, UseModalReturnType, useRandomId, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
-import { debugLog } from "./props";
+import { debugLog, Prefices } from "./props";
 
 interface MSP {
     /**
@@ -22,7 +22,7 @@ interface MSP {
 export type MenuSurfaceOmits = keyof MSP;
 
 export interface UseMenuSurfaceParameters<_S extends Element, _B extends Element> extends Omit<UseModalParameters<"escape" | "lost-focus" | "backdrop">, "focusTrapParameters"> {
-    focusTrapParameters: Omit<UseModalParameters<"escape" | "lost-focus" | "backdrop">["focusTrapParameters"], "trapActive" | "focusOpener">
+    focusTrapParameters: Omit<UseModalParameters<"escape" | "lost-focus" | "backdrop">["focusTrapParameters"], "trapActive" | "focusOpener" | "onlyMoveFocus">
     menuSurfaceParameters: MSP;
 }
 
@@ -66,7 +66,7 @@ export function useMenuSurface<MenuSurfaceElement extends Element, MenuTargetEle
 }: UseMenuSurfaceParameters<MenuSurfaceElement, MenuTriggerElement>): UseMenuSurfaceReturnType<MenuSurfaceElement, MenuTargetElement, MenuTriggerElement> {
     debugLog("useMenuSurface");
 
-    const { propsReferencer: propsIdTrigger, propsSource: propsIdTarget } = useRandomId<MenuTargetElement, MenuTriggerElement>({ randomIdParameters: { prefix: "aria-menu-", referencerProp: "aria-controls" } });
+    const { propsReferencer: propsIdTrigger, propsSource: propsIdTarget } = useRandomId<MenuTargetElement, MenuTriggerElement>({ randomIdParameters: { prefix: Prefices.menu, otherReferencerProp: "aria-controls" } });
 
     const { refElementReturn: { getElement: getButtonElement, propsStable: propsRefTrigger }, ...void4 } = useRefElement<MenuTriggerElement>({ refElementParameters: { onElementChange: undefined } });
 
@@ -84,7 +84,8 @@ export function useMenuSurface<MenuSurfaceElement extends Element, MenuTargetEle
         escapeDismissParameters,
         focusTrapParameters: {
             ...focusTrapParameters,
-            trapActive: false,
+            onlyMoveFocus: true,
+            trapActive: true,
             focusOpener: useStableCallback(() => {
                 const buttonElement = getButtonElement() as HTMLElement | null;
                 buttonElement?.focus();

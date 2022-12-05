@@ -3,9 +3,9 @@ import {
     CompleteGridNavigationContext,
     CompleteGridNavigationRowContext, GridSingleSelectSortableChildCellInfo, GridSingleSelectSortableChildRowInfo, useCompleteGridNavigation,
     useCompleteGridNavigationCell, UseCompleteGridNavigationCellParameters, UseCompleteGridNavigationCellReturnType, UseCompleteGridNavigationParameters,
-    UseCompleteGridNavigationReturnType, useCompleteGridNavigationRow, UseCompleteGridNavigationRowParameters, UseCompleteGridNavigationRowReturnType, useMergedProps
+    UseCompleteGridNavigationReturnType, useCompleteGridNavigationRow, UseCompleteGridNavigationRowParameters, UseCompleteGridNavigationRowReturnType, useMergedProps, useStableCallback
 } from "preact-prop-helpers";
-import { ElementToTag } from "./props";
+import { ElementToTag, Prefices } from "./props";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
 import { UseListboxParameters } from "./use-listbox";
 
@@ -54,7 +54,7 @@ export interface TableRowInfo<TableRowElement extends Element, TableCellElement 
 export interface TableCellInfo<TableCellElement extends Element> extends GridSingleSelectSortableChildCellInfo<TableCellElement> { }
 
 export interface UseTableParameters<TableElement extends Element, LabelElement extends Element> {
-    labelParameters: UseLabelSyntheticParameters["labelParameters"];
+    labelParameters: Omit<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
     tableParameters: Pick<UseListboxParameters<TableElement, any, LabelElement, any>["listboxParameters"], "selectionLimit"> & {
        tagTable: ElementToTag<TableElement>;
     };
@@ -76,9 +76,9 @@ export function useTable<TableElement extends Element, LabelElement extends Elem
         propsInput: propsLabelList,
         propsLabel: propsLabelLabel
     } = useLabelSynthetic<TableElement, LabelElement>({
-        labelParameters,
-        randomIdInputParameters: { prefix: "aria-listbox-input-" },
-        randomIdLabelParameters: { prefix: "aria-listbox-label-" }
+        labelParameters: { ...labelParameters, onLabelClick: null },
+        randomIdInputParameters: { prefix: Prefices.table },
+        randomIdLabelParameters: { prefix: Prefices.tableLabel }
     });
 
     return {

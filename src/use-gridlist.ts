@@ -14,8 +14,11 @@ import {
     UseCompleteGridNavigationRowParameters,
     UseCompleteGridNavigationRowReturnType,
     useMergedProps,
+    useSingleSelectionDeclarative,
+    useStableCallback,
     useStableObject
 } from "preact-prop-helpers";
+import { Prefices } from "./props";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
 import { UseListboxParameters } from "./use-listbox";
 
@@ -29,8 +32,8 @@ export interface UseGridlistRowContext<ParentElement extends Element, ChildEleme
 
 }
 
-export interface UseGridlistParameters<GridlistElement extends Element, GridlistRowElement extends Element, GridlistCellElement extends Element, LabelElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>> extends UseCompleteGridNavigationParameters<GridlistElement, GridlistRowElement, GridlistCellElement, RM> {
-    labelParameters: UseLabelSyntheticParameters["labelParameters"];
+export interface UseGridlistParameters<GridlistElement extends Element, GridlistRowElement extends Element, GridlistCellElement extends Element, LabelElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>> extends Omit<UseCompleteGridNavigationParameters<GridlistElement, GridlistRowElement, GridlistCellElement, RM>, "singleSelectionParameters"> {
+    labelParameters: Omit<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
     gridlistParameters: UseListboxParameters<GridlistElement, GridlistRowElement, LabelElement, RM>["listboxParameters"];
 }
 export interface UseGridlistReturnType<GridlistElement extends Element, GridlistRowElement extends Element, GridlistCellElement extends Element, LabelElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends Omit<UseCompleteGridNavigationReturnType<GridlistElement, GridlistRowElement, GridlistCellElement, RM, CM>, "props"> {
@@ -70,10 +73,9 @@ export interface GridlistCellInfo<GridlistCellElement extends Element> extends G
 export function useGridlist<GridlistElement extends Element, GridlistRowElement extends Element, GridlistCellElement extends Element, LabelElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>>({
     linearNavigationParameters,
     rovingTabIndexParameters,
-    singleSelectionParameters,
     typeaheadNavigationParameters,
     labelParameters,
-    gridlistParameters: { selectionLimit },
+    gridlistParameters: { selectionLimit, groupingType, selectedIndex, setSelectedIndex },
     gridNavigationParameters,
     rearrangeableChildrenParameters,
     sortableChildrenParameters
@@ -85,9 +87,14 @@ export function useGridlist<GridlistElement extends Element, GridlistRowElement 
         randomIdInputReturn: { id: _gridlistId },
         randomIdLabelReturn: { id: _labelId }
     } = useLabelSynthetic<GridlistElement, LabelElement>({
-        labelParameters,
-        randomIdInputParameters: { prefix: "aria-listbox-input-" },
-        randomIdLabelParameters: { prefix: "aria-listbox-label-" }
+        labelParameters: {
+            ...labelParameters,
+            onLabelClick: useStableCallback(() => {
+                rovingTabIndexReturn.focusSelf();
+            })
+        },
+        randomIdInputParameters: { prefix: Prefices.gridlist },
+        randomIdLabelParameters: { prefix: Prefices.gridlistLabel }
     });
     const {
         childrenHaveFocusReturn,
@@ -103,25 +110,42 @@ export function useGridlist<GridlistElement extends Element, GridlistRowElement 
     } = useCompleteGridNavigation<GridlistElement, GridlistRowElement, GridlistCellElement, RM, CM>({
         linearNavigationParameters,
         rovingTabIndexParameters,
-        singleSelectionParameters,
+        singleSelectionParameters: { initiallySelectedIndex: selectedIndex, setSelectedIndex },
         sortableChildrenParameters,
         typeaheadNavigationParameters,
         gridNavigationParameters,
         rearrangeableChildrenParameters
     });
 
+    const _v: void = useSingleSelectionDeclarative({ singleSelectionReturn, singleSelectionDeclarativeParameters: { selectedIndex } });
+
+    let propsGridlist = useMergedProps(props, propsLabelList, { "aria-multiselectable": (selectionLimit == "multi" ? "true" : undefined) });
+
+
+    let fullContext = useStableObject({
+        ...context,
+        gridlistRowContext: useStableObject({
+            selectionLimit
+        })
+    });
+    if (groupingType == "group")
+        propsGridlist.role = "group";
+    else if (groupingType == "with-groups") {
+        // Intentionally clobbering all the list navigation stuff.
+        propsGridlist = { role: "grid" };
+        // ...actually, context too while we're at it.
+        fullContext = null!
+    }
+    else {
+        propsGridlist.role = "grid";
+    }
 
     if (selectionLimit == "multi")
         console.assert(singleSelectionReturn.getSelectedIndex() == null)
 
     return {
         childrenHaveFocusReturn,
-        context: useStableObject({
-            ...context,
-            gridlistRowContext: useStableObject({
-                selectionLimit
-            })
-        }),
+        context: fullContext,
         linearNavigationReturn,
         managedChildrenReturn,
         rovingTabIndexReturn,
@@ -129,7 +153,7 @@ export function useGridlist<GridlistElement extends Element, GridlistRowElement 
         rearrangeableChildrenReturn,
         sortableChildrenReturn,
         typeaheadNavigationReturn,
-        propsGridlist: useMergedProps(props, propsLabelList, { "aria-multiselectable": (selectionLimit == "multi" ? "true" : undefined) }),
+        propsGridlist,
         propsGridlistLabel: propsLabelLabel
     }
 }

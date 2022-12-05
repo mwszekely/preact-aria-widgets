@@ -27,15 +27,8 @@ import * as Toolbar from "./demos/toolbar"
 const Component = () => {
     return (
         <Heading heading="Demos">
-            <Heading heading="Toolbar"><Toolbar.Demo /></Heading>
-            <Heading heading="Dialog"><Dialog.Demo /></Heading>
-            <Heading heading="Gridlist"><Gridlist.Demo /></Heading>
-            <Heading heading="Table"><Table.Demo /></Heading>
-            <Heading heading="Toast"><Toast.Demo /></Heading>
-            <Heading heading="Tooltip"><Tooltip.Demo /></Heading>
-            <Heading heading="Tabs"><Tabs.Demo /></Heading>
-            <Heading heading="Slider"><Slider.Demo /></Heading>
             <Heading heading="Single-select Listbox"><ListboxSingle.Demo /></Heading>
+            <Heading heading="Slider"><Slider.Demo /></Heading>
             <Heading heading="Accordion"><Accordion.Demo /></Heading>
             <Heading heading="Button"><Button.Demo /></Heading>
             <Heading heading="Checkbox"><Checkbox.Demo /></Heading>
@@ -43,6 +36,16 @@ const Component = () => {
             <Heading heading="Multi-select Listbox"><ListboxMulti.Demo /></Heading>
             <Heading heading="Menu"><Menu.Demo /></Heading>
             <Heading heading="Radio"><Radio.Demo /></Heading>
+            {/*
+            
+            <Heading heading="Dialog"><Dialog.Demo /></Heading>
+            <Heading heading="Toolbar"><Toolbar.Demo /></Heading>
+            <Heading heading="Gridlist"><Gridlist.Demo /></Heading>
+            <Heading heading="Table"><Table.Demo /></Heading>
+            <Heading heading="Toast"><Toast.Demo /></Heading>
+            <Heading heading="Tooltip"><Tooltip.Demo /></Heading>
+    <Heading heading="Tabs"><Tabs.Demo /></Heading>
+            */}
             {/*
        
         <DemoTable />

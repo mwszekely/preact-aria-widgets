@@ -1,10 +1,11 @@
 import { h } from "preact";
 import { useMergedProps } from "preact-prop-helpers";
-import { ElementToTag } from "./props";
+import { ElementToTag, Prefices } from "./props";
 import { UseLabelReturnType, useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
 
 
-export interface UseProgressParameters<IndicatorElement extends Element, _LabelElement extends Element> extends Omit<UseLabelSyntheticParameters, "randomIdLabelParameters" | "randomIdInputParameters"> {
+export interface UseProgressParameters<IndicatorElement extends Element, _LabelElement extends Element> {
+    labelParameters: Omit<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
     /*progressParameters: {
         tagProgress: ElementToTag<IndicatorElement>;
         tagLabel: ElementToTag<LabelElement>;
@@ -51,9 +52,9 @@ export function useProgress<ProgressElement extends Element, LabelElement extend
         randomIdInputReturn,
         randomIdLabelReturn
     } = useLabelSynthetic<ProgressElement, LabelElement>({
-        labelParameters,
-        randomIdInputParameters: { prefix: "progress-indicator-" },
-        randomIdLabelParameters: { prefix: "progress-label-" }
+        labelParameters: { ...labelParameters, onLabelClick: null },
+        randomIdInputParameters: { prefix: Prefices.progressIndicator },
+        randomIdLabelParameters: { prefix: Prefices.progressLabel }
     })
 
 

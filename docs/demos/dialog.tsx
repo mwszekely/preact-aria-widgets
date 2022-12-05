@@ -37,6 +37,8 @@ export function Code() {
     return (<code>{``}</code>)
 }
 
+function getWindow() { return globalThis.window }
+
 export function Demo() {
     const [open, setOpen] = useState(false);
 
@@ -51,20 +53,19 @@ export function Demo() {
                 <Dialog<HTMLDivElement, HTMLButtonElement, HTMLDivElement, HTMLDivElement>
                     open={open}
                     onClose={() => setOpen(false)}
-                    getWindow={() => globalThis.window}
                     closeOnBackdrop={true}
                     closeOnEscape={true}
-                    focusOpener={e => e.focus()}
+                    focusOpener={e => { e.focus() }}
                     parentDepth={0}
-                    focusPopup={(e, f) => f()}
+                    focusPopup={(e, f) => {  f()?.focus() }}
                     ariaLabel={null}
                     render={info => {
                         return (
                             <>
-                                <button {...info.propsSource}>Open dialog</button>
+                                <button {...info.propsSource} onClick={() => setOpen(o => !o)}>Open dialog</button>
                                 {defaultRenderPortal({
                                     portalId: "portal",
-                                    children: <div {...info.propsFocusContainer}>
+                                    children: <div {...info.propsFocusContainer} hidden={!open}>
                                         <div {...info.propsDialog}>
                                             <div {...info.propsTitle}>Dialog title</div>
                                             <div>Dialog body</div>

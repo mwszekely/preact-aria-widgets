@@ -148,7 +148,6 @@ export function DemoMenu() {
             disableHomeEndKeys={false}
             getIndex={v => v.props.index}
             compare={(lhs, rhs) => lhs.index - rhs.index}
-            getWindow={() => globalThis.window}
             initiallySelectedIndex={null}
             untabbable={false}
             navigatePastEnd="wrap"

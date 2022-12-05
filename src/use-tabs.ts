@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { CompleteListNavigationContext, generateRandomId, ManagedChildInfo, OnChildrenMountChange, OnPassiveStateChange, PassiveStateUpdater, returnTrue, useChildrenFlag, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseListNavigationSingleSelectionSortableChildInfo, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, useMergedProps, useStableCallback, useStableObject, useState } from "preact-prop-helpers";
 import { StateUpdater, useCallback } from "preact/hooks";
-import { debugLog, EventDetail } from "./props";
+import { debugLog, EventDetail, Prefices } from "./props";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
 import { UseListboxParameters } from "./use-listbox";
 
@@ -16,8 +16,9 @@ interface TabInfo<E extends Element> extends UseListNavigationSingleSelectionSor
 
 export type TabsChangeEvent<E extends Element> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 
-export interface UseTabsParameters<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element> extends Omit<UseLabelSyntheticParameters, "randomIdInputParameters" | "randomIdLabelParameters">, UseTabListParameters<TabContainerElement, TabElement> {
+export interface UseTabsParameters<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element> extends UseTabListParameters<TabContainerElement, TabElement> {
     //tabPanels: UseManagedChildrenParameters<TabPanelInfo>;
+    labelParameters: Omit<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
     tabsParameters: {
         orientation: "horizontal" | "vertical";
         role?: "tablist" | string;
@@ -176,9 +177,9 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
         randomIdInputReturn: { id: _inputId },
         randomIdLabelReturn: { id: _labelId },
     } = useLabelSynthetic<TabListElement, LabelElement>({
-        labelParameters,
-        randomIdInputParameters: { prefix: "aria-tablist" },
-        randomIdLabelParameters: { prefix: "aria-tablist-label" },
+        labelParameters: { ...labelParameters, onLabelClick: useStableCallback(() => listNavRet1.rovingTabIndexReturn.focusSelf()) },
+        randomIdInputParameters: { prefix: Prefices.tablist },
+        randomIdLabelParameters: { prefix: Prefices.tablistLabel },
     });
 
 

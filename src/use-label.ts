@@ -3,14 +3,15 @@ import { useMergedProps, usePress, UsePressReturnType, useRandomDualIds, UseRand
 import { useCallback, useEffect } from "preact/hooks";
 import { DisabledType, ElementToTag } from "./props";
 
-export type LabelPosition =  "separate" | "wrapping" | "none";
-export type FocusableLabelElement<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element> = LP extends "wrapping"? LabelElement : InputElement;
+export type LabelPosition = "separate" | "wrapping" | "none";
+export type FocusableLabelElement<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element> = LP extends "wrapping" ? LabelElement : InputElement;
 
 export interface UseLabelParameters<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element> {
-    randomIdInputParameters: Omit<UseRandomDualIdsParameters["randomIdInputParameters"], "referencerProp">;
-    randomIdLabelParameters: Omit<UseRandomDualIdsParameters["randomIdLabelParameters"], "referencerProp">;
+    randomIdInputParameters: Omit<UseRandomDualIdsParameters["randomIdInputParameters"], "otherReferencerProp">;
+    randomIdLabelParameters: Omit<UseRandomDualIdsParameters["randomIdLabelParameters"], "otherReferencerProp">;
 
     labelParameters: {
+        onLabelClick: null | ((e: Event) => void);
         tagInput: ElementToTag<InputElement>;
         tagLabel: ElementToTag<LabelElement>;
         /**
@@ -30,16 +31,16 @@ export interface UseLabelParameters<LP extends LabelPosition, InputElement exten
          * 
          * When a string, this corresponds to `labelPosition` == `"none"`; this label is only visible to assistive technologies and *not* visible otherwise.
          */
-        ariaLabel: LP extends "none"? string : null;
+        ariaLabel: LP extends "none" ? string : null;
     }
 }
 
-export interface UseLabelReturnType<InputElement extends Element, LabelElement extends Element> extends UseRandomDualIdsReturnType<InputElement, LabelElement> {}
+export interface UseLabelReturnType<InputElement extends Element, LabelElement extends Element> extends UseRandomDualIdsReturnType<InputElement, LabelElement> { }
 
 export function useLabel<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element>({
     randomIdInputParameters,
     randomIdLabelParameters,
-    labelParameters: { tagInput, tagLabel, ariaLabel, labelPosition }
+    labelParameters: { tagInput, tagLabel, ariaLabel, labelPosition, onLabelClick }
 }: UseLabelParameters<LP, InputElement, LabelElement>): UseLabelReturnType<InputElement, LabelElement> {
     const nativeHTMLBehavior = (tagInput == "input" && tagLabel == "label" && labelPosition != "wrapping");
     const synthetic = !nativeHTMLBehavior;
@@ -61,12 +62,14 @@ export function useLabel<LP extends LabelPosition, InputElement extends Element,
         randomIdInputReturn,
         randomIdLabelReturn
     } = useRandomDualIds<InputElement, LabelElement>({
-        randomIdInputParameters: { ...randomIdInputParameters, referencerProp: synthetic? "aria-labelledby" : null },
-        randomIdLabelParameters: { ...randomIdLabelParameters, referencerProp: !synthetic && labelPosition === "separate"? "for" : null },
+        randomIdInputParameters: { ...randomIdInputParameters, otherReferencerProp: !synthetic && labelPosition === "separate" ? "for" : null },
+        randomIdLabelParameters: { ...randomIdLabelParameters, otherReferencerProp: synthetic ? "aria-labelledby" : null },
     });
 
     if (labelPosition == 'none')
         propsInput["aria-label"] = (ariaLabel!);
+
+    propsLabel.onClick = onLabelClick ?? undefined;
 
     return {
         propsInput,
@@ -77,27 +80,28 @@ export function useLabel<LP extends LabelPosition, InputElement extends Element,
 }
 
 export interface UseLabelSyntheticParameters {
-    randomIdInputParameters: Omit<UseRandomDualIdsParameters["randomIdInputParameters"], "referencerProp">;
-    randomIdLabelParameters: Omit<UseRandomDualIdsParameters["randomIdLabelParameters"], "referencerProp">;
-    labelParameters: Pick<UseLabelParameters<LabelPosition, any, any>["labelParameters"], "ariaLabel">
+    randomIdInputParameters: Omit<UseRandomDualIdsParameters["randomIdInputParameters"], "otherReferencerProp">;
+    randomIdLabelParameters: Omit<UseRandomDualIdsParameters["randomIdLabelParameters"], "otherReferencerProp">;
+    labelParameters: Pick<UseLabelParameters<LabelPosition, any, any>["labelParameters"], "ariaLabel" | "onLabelClick">
 }
 
 /**
  * Shortcut for `useLabel` that assumes we're just never working with native HTML `input` and `label` elements. So for labelling guaranteably non-native elements.
  */
-export function useLabelSynthetic<InputElement extends Element, LabelElement extends Element>({ 
-    labelParameters: { ariaLabel }, 
-    randomIdInputParameters, 
+export function useLabelSynthetic<InputElement extends Element, LabelElement extends Element>({
+    labelParameters: { ariaLabel, onLabelClick },
+    randomIdInputParameters,
     randomIdLabelParameters
- }: UseLabelSyntheticParameters) {
+}: UseLabelSyntheticParameters) {
     return useLabel<LabelPosition, InputElement, LabelElement>({
         randomIdLabelParameters,
         randomIdInputParameters,
         labelParameters: {
             ariaLabel,
-            labelPosition: ariaLabel == null? "separate" : "none",
+            labelPosition: ariaLabel == null ? "separate" : "none",
             tagInput: "div" as never,
-            tagLabel: "div" as never
+            tagLabel: "div" as never,
+            onLabelClick
         }
     })
 
@@ -114,8 +118,8 @@ export type CheckboxCheckedType = boolean | "mixed";
 
 
 
-export interface UseCheckboxLikeParameters<LP extends LabelPosition, InputType extends Element, LabelType extends Element> extends UseLabelParameters<LP, InputType, LabelType> {
-    checkboxLikeParameters:{
+export interface UseCheckboxLikeParameters<LP extends LabelPosition, InputType extends Element, LabelType extends Element> extends Omit<UseLabelParameters<LP, InputType, LabelType>, "labelParameters"> {
+    checkboxLikeParameters: {
         /**
          * Where the label element is positioned relative to the input element.
          * * `wrapping`: The label wraps the input and no `id` or `for` props are needed, as in `<label><input /> label content</label>`
@@ -131,10 +135,13 @@ export interface UseCheckboxLikeParameters<LP extends LabelPosition, InputType e
         disabled: DisabledType;
         checked: CheckboxCheckedType;
         onInput(event: Event): void;
+        //type: "checkbox" | "radio";
     };
 
-    refElementLabelReturn: Required<Pick<UseRefElementReturnType<LabelType>["refElementReturn"], "getElement">>;
-    refElementInputReturn: Required<Pick<UseRefElementReturnType<InputType>["refElementReturn"], "getElement">>;
+    labelParameters: Omit<UseLabelParameters<LP, InputType, LabelType>["labelParameters"], "onLabelClick">;
+
+    refElementLabelReturn: UseRefElementReturnType<LabelType>["refElementReturn"];
+    refElementInputReturn: UseRefElementReturnType<InputType>["refElementReturn"];
 }
 
 export interface UseCheckboxLikeReturnType<InputType extends Element, LabelType extends Element> extends UseLabelReturnType<InputType, LabelType> {
@@ -142,12 +149,12 @@ export interface UseCheckboxLikeReturnType<InputType extends Element, LabelType 
     pressInputReturn: UsePressReturnType<InputType>["pressReturn"];
     checkboxLikeInputReturn: { propsUnstable: h.JSX.HTMLAttributes<InputType> }
     checkboxLikeLabelReturn: { propsUnstable: h.JSX.HTMLAttributes<LabelType> }
-    checkboxLikeReturn: { 
+    checkboxLikeReturn: {
         /**
          * Call this to focus whichever element handles the focus based on `labelPosition`.
          */
         focusSelf(): void;
-     }
+    }
 }
 
 /**
@@ -168,7 +175,7 @@ export function useCheckboxLike<LP extends LabelPosition, InputType extends Elem
     refElementInputReturn,
     refElementLabelReturn,
 }: UseCheckboxLikeParameters<LP, InputType, LabelType>): UseCheckboxLikeReturnType<InputType, LabelType> {
-    
+
     const { getElement: getInputElement } = refElementInputReturn;
     const { getElement: getLabelElement } = refElementLabelReturn;
     const { tagInput, tagLabel, labelPosition } = labelParameters;
@@ -192,7 +199,15 @@ export function useCheckboxLike<LP extends LabelPosition, InputType extends Elem
         propsInput,
         propsLabel
     } = useLabel<LP, InputType, LabelType>({
-        labelParameters,
+        labelParameters: {
+            ...labelParameters,
+            onLabelClick: useStableCallback((e) => {
+                if (!disabled && tagInput != "input" && tagLabel != "label" && labelPosition != "separate") {
+                    focusSelf();
+                    onInputSync(e);
+                }
+            })
+        },
         randomIdInputParameters,
         randomIdLabelParameters,
     });
@@ -200,17 +215,22 @@ export function useCheckboxLike<LP extends LabelPosition, InputType extends Elem
     const { getElement: getLabel } = refElementLabelReturn;
     const focusInput = useCallback(() => { (getInput() as (HTMLElement | null))?.focus(); }, []);
     const focusLabel = useCallback(() => { (getLabel() as (HTMLElement | null))?.focus(); }, []);
-    const onClickInputSync = (labelPosition == "wrapping"? undefined : onInputSync);
-    const onClickLabelSync = (labelPosition != "separate"? undefined : onInputSync);
-    const { pressReturn: pressInputReturn } = usePress<InputType>({ pressParameters: { exclude: {}, focusSelf: focusInput, onPressSync: (disabled)? undefined : onClickInputSync }, refElementReturn: refElementInputReturn });
-    const { pressReturn: pressLabelReturn } = usePress<LabelType>({ pressParameters: { exclude: {}, focusSelf: focusLabel, onPressSync: (disabled)? undefined : onClickLabelSync }, refElementReturn: refElementLabelReturn });
+    const onClickInputSync = (labelPosition == "wrapping" ? undefined : onInputSync);
+    const onClickLabelSync = onInputSync;//(labelPosition != "wrapping" ? undefined : onInputSync);
+    const { pressReturn: pressInputReturn } = usePress<InputType>({ pressParameters: { exclude: {}, focusSelf: useStableCallback(() => {debugger;focusSelf()}), onPressSync: (disabled) ? undefined : onClickInputSync }, refElementReturn: refElementInputReturn });
+    const { pressReturn: pressLabelReturn } = usePress<LabelType>({ pressParameters: { exclude: {}, focusSelf: useStableCallback(() => {debugger;focusSelf()}), onPressSync: (disabled) ? undefined : onClickLabelSync }, refElementReturn: refElementLabelReturn });
     const propsUnstableInput: h.JSX.HTMLAttributes<InputType> = {};
     const propsUnstableLabel: h.JSX.HTMLAttributes<LabelType> = {};
     //const propsUnstableLabel = useRef<h.JSX.HTMLAttributes<LabelType>>({});
 
-    // Make sure that label clicks can't affect the visual state of the checkbox while it's disabled
-    propsUnstableInput.onClick = disabled ? preventDefault : undefined;
-    propsUnstableLabel.onClick = disabled ? preventDefault : undefined;
+    // Make sure that label clicks can't affect the visual state of the checkbox
+    propsUnstableInput.onClick = preventDefault;
+    propsUnstableLabel.onClick = preventDefault;
+
+    propsUnstableInput.onInput = preventDefault;
+    propsUnstableInput.onChange = preventDefault;
+
+    propsUnstableInput.type = role == "radio" ? "radio" : "checkbox";
 
     switch (labelPosition) {
         case "separate": {
@@ -220,7 +240,7 @@ export function useCheckboxLike<LP extends LabelPosition, InputType extends Elem
                 propsUnstableInput.checked = (checked === true);
                 if (disabled === true || disabled === 'hard')
                     propsUnstableInput.disabled = true;
-                else
+                else if (disabled == "soft")
                     propsUnstableInput["aria-disabled"] = "true";
             }
             else {
@@ -241,6 +261,10 @@ export function useCheckboxLike<LP extends LabelPosition, InputType extends Elem
         }
         case "wrapping": {
             if (tagInput == "input") {
+                // For form submission and styling
+                propsUnstableInput.checked = (checked === true);
+                propsUnstableInput.disabled = (disabled === true);
+
                 // Because the wrapped label handles all interactions,
                 // we need to make sure this element can't be interacted with
                 // even if it's an input element.
@@ -255,14 +279,14 @@ export function useCheckboxLike<LP extends LabelPosition, InputType extends Elem
                 // With a div, we get that for free and don't need to do anything here.
             }
 
-            if (tagLabel == "label") {
-                // Wrapping labels are the actual inputs that are interacted with
-                // And are very similar conceptually to div inputs when separated
-                propsUnstableLabel.role = role;
-                propsUnstableLabel.tabIndex = 0;
-                propsUnstableLabel["aria-checked"] = (checked ?? false).toString();
-                propsUnstableLabel["aria-disabled"] = (!!disabled).toString();
-            }
+
+            // Wrapping labels are the actual inputs that are interacted with
+            // And are very similar conceptually to div inputs when separated
+            propsUnstableLabel.role = role;
+            propsUnstableLabel.tabIndex = 0;
+            propsUnstableLabel["aria-checked"] = (checked ?? false).toString();
+            propsUnstableLabel["aria-disabled"] = (!!disabled).toString();
+
             break;
         }
     }
@@ -284,8 +308,8 @@ export function useCheckboxLike<LP extends LabelPosition, InputType extends Elem
         pressLabelReturn,
         checkboxLikeInputReturn: { propsUnstable: propsUnstableInput },
         checkboxLikeLabelReturn: { propsUnstable: propsUnstableLabel },
-        propsInput: useMergedProps(propsInput, propsUnstableInput),
-        propsLabel: useMergedProps(propsLabel, propsUnstableLabel),
+        propsInput: useMergedProps(propsInput, propsUnstableInput, pressInputReturn.propsStable, refElementInputReturn.propsStable),
+        propsLabel: useMergedProps(propsLabel, propsUnstableLabel, pressLabelReturn.propsStable, refElementLabelReturn.propsStable),
         checkboxLikeReturn: { focusSelf }
     }
 }

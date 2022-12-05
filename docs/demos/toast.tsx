@@ -4,7 +4,7 @@ import { useState } from "preact-prop-helpers";
 import { useCallback } from "preact/compat";
 import { useRef } from "preact/hooks";
 import { Toast, Toasts } from "../../";
-
+/*
 export function Blurb() {
     return (
         <>
@@ -55,6 +55,6 @@ export function Demo() {
             </div>
         </>
     )
-}
+}*/
 
 

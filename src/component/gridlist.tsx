@@ -1,7 +1,7 @@
 import { createContext, createElement, h, Ref, VNode } from "preact";
 import { GridChildCellInfo } from "preact-prop-helpers";
 import { useContext, useImperativeHandle } from "preact/hooks";
-import { TableCellInfo } from "use-table";
+import { TableCellInfo } from "../use-table";
 import { ElementToTag } from "../props";
 import { GridlistCellInfo, GridlistRowInfo, useGridlist, useGridlistCell, UseGridlistCellParameters, UseGridlistCellReturnType, UseGridlistContext, UseGridlistParameters, UseGridlistReturnType, useGridlistRow, UseGridlistRowContext, UseGridlistRowParameters, UseGridlistRowReturnType } from "../use-gridlist";
 import { memoForwardRef, PartialExcept, useDefault } from "./util";
@@ -12,7 +12,6 @@ type Get2<T, K extends keyof T, K2 extends keyof T[K]> = T[K][K2];
 interface GridlistPropsBase<GridlistElement extends Element, GridlistRowElement extends Element, GridlistCellElement extends Element, LabelElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends
     Get<UseGridlistParameters<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM>, "linearNavigationParameters">,
     Get<UseGridlistParameters<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM>, "rovingTabIndexParameters">,
-    Get<UseGridlistParameters<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM>, "singleSelectionParameters">,
     Get<UseGridlistParameters<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM>, "typeaheadNavigationParameters">,
     Get<UseGridlistParameters<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM>, "gridNavigationParameters">,
     Get<UseGridlistParameters<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM>, "rearrangeableChildrenParameters">,
@@ -49,7 +48,7 @@ interface GridlistChildPropsBase<CellElement extends Element, M extends Gridlist
 
 
 
-export interface GridlistProps<GridlistElement extends Element, GridlistRowElement extends Element, GridlistCellElement extends Element, LabelElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends PartialExcept<GridlistPropsBase<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM, CM>, "selectionLimit" | "groupingType" | "ariaLabel"> {
+export interface GridlistProps<GridlistElement extends Element, GridlistRowElement extends Element, GridlistCellElement extends Element, LabelElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends PartialExcept<GridlistPropsBase<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM, CM>, "selectionLimit" | "groupingType" | "ariaLabel" | "selectedIndex"> {
     //ref?: Ref<UseGridlistReturnType<GridlistElement, GridlistRowElement, LabelElement, M>>;
     render(info: UseGridlistReturnType<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM, CM>): VNode;
 }
@@ -117,7 +116,7 @@ export const Gridlist = memoForwardRef(function GridlistU<GridlistElement extend
     onTabbableIndexChange,
     groupingType,
     typeaheadTimeout,
-    initiallySelectedIndex,
+    selectedIndex,
     navigatePastEnd,
     navigatePastStart,
     setSelectedIndex,
@@ -147,13 +146,15 @@ export const Gridlist = memoForwardRef(function GridlistU<GridlistElement extend
             noTypeahead: useDefault("noTypeahead", noTypeahead),
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout),
         },
-        singleSelectionParameters: {
+        /*singleSelectionParameters: {
             initiallySelectedIndex: initiallySelectedIndex ?? null,
             setSelectedIndex: setSelectedIndex ?? null
-        },
+        },*/
         gridlistParameters: {
             selectionLimit,
-            groupingType
+            groupingType,
+            selectedIndex,
+            setSelectedIndex: setSelectedIndex ?? noop
         },
         gridNavigationParameters: {
             onTabbableColumnChange: onTabbableColumnChange ?? noop

@@ -3,8 +3,8 @@ import { h } from "preact";
 import { useState } from "preact-prop-helpers";
 import { useRef } from "preact/compat";
 import { useCallback } from "preact/hooks";
-import { defaultRenderTable, defaultRenderTableBody, defaultRenderTableCell, defaultRenderTableHead, defaultRenderTableRow, Table, TableBody, TableCell, TableHead, TableRow } from "../../component/table";
-
+import { Table, TableSection, TableCell, TableRow } from "../../component/table";
+/*
 function getDocument() { return window.document; }
 
 
@@ -50,7 +50,7 @@ function DemoTableCell({ index, header }: { index: number, header?: boolean }) {
 
     if (header) {
         const text = `Header #${index}`;
-        return <TableCell<HTMLTableCellElement> focusSelf={e => e.focus()} location="head" headerType="column" tagTableCell="th" index={index} getDocument={getDocument} text={text} value={text} render={defaultRenderTableCell({ tagTableCell: "th", makePropsTableCell: (info) => ({ children: <button tabIndex={info.rovingTabIndex.tabbable ? 0 : -1} onClick={() => info.tableHeaderCell.sort()}>{text}</button> }) })}  subInfo={undefined} />
+        return <TableCell<HTMLTableCellElement> focusSelf={e => e.focus()}  tagTableCell="th" index={index} render={info => <button tabIndex={info.rovingTabIndexChildReturn.tabbable ? 0 : -1} onClick={() => info..sort()}>{text}</button>}  subInfo={undefined} />
     }
     else {
         //const text = `Cell in column #${index}`;
@@ -117,7 +117,7 @@ export function Demo() {
                                     }())
                                 })
                             })} />
-                            {/*<TableFoot render={defaultRenderTableFoot({ tagTableFoot: "tfoot", makePropsTableFoot: () => ({ children: null }) })} />*/}
+                            {/*<TableFoot render={defaultRenderTableFoot({ tagTableFoot: "tfoot", makePropsTableFoot: () => ({ children: null }) })} />*\/}
                         </>
                     })
                 })} />
@@ -125,4 +125,4 @@ export function Demo() {
             </div>
         </>
     )
-}
+}*/

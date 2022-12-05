@@ -37,8 +37,8 @@ function DemoCheckbox({ index }: { index: number }) {
                             labelPosition: "separate",
                             tagInput: "input",
                             tagLabel: "label",
-                            makePropsInput: info => ({}),
-                            makePropsLabel: info => ({ children: `Checkbox #${index}` })
+                            makePropsInput: info => (info.propsInput),
+                            makePropsLabel: info => ({ children: `Checkbox #${index}`, ...info.propsLabel })
                         })}
 
                     />)
@@ -106,13 +106,13 @@ export function Demo() {
                                                 labelPosition="separate"
                                                 tagInput="input"
                                                 tagLabel="label"
-                                                render={info => defaultRenderCheckboxLike({
+                                                render={defaultRenderCheckboxLike({
                                                     labelPosition: "separate",
-                                                    makePropsInput: info => ({}),
-                                                    makePropsLabel: info => ({ children: "Parent checkbox" }),
+                                                    makePropsInput: info => ({ ...info.propsInput }),
+                                                    makePropsLabel: info => ({ children: "Parent checkbox", ...info.propsLabel }),
                                                     tagInput: "input",
                                                     tagLabel: "label"
-                                                })(info)}
+                                                })}
                                             />)
                                             }
                                         />

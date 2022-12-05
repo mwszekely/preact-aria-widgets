@@ -100,6 +100,7 @@ export const Dialog = memoForwardRef(function Dialog<FocusContainerElement exten
 
 });
 
+function getWindow() { return globalThis.window }
 export function DialogDemo() {
     const [open, setOpen] = useState(false);
 
@@ -107,12 +108,11 @@ export function DialogDemo() {
         <Dialog<HTMLDivElement, HTMLButtonElement, HTMLDivElement, HTMLDivElement>
             open={open}
             onClose={() => setOpen(false)}
-            getWindow={() => globalThis.window}
             closeOnBackdrop={true}
             closeOnEscape={true}
             focusOpener={e => e.focus()}
             parentDepth={0}
-            focusPopup={(e, f) => f()}
+            focusPopup={(e, f) => {f()?.focus()}}
             ariaLabel={null}
             render={info => {
                 return (

@@ -1,7 +1,7 @@
 import { createContext, createElement, h, Ref, VNode } from "preact";
 import { useStableGetter } from "preact-prop-helpers";
 import { useContext, useImperativeHandle, useState } from "preact/hooks";
-import { LabelPosition } from "use-label";
+import { FocusableLabelElement, LabelPosition } from "use-label";
 import { ElementToTag } from "../props";
 import { RadioContext, RadioSubInfo, useRadio, useRadioGroup, UseRadioGroupParameters, UseRadioGroupReturnType, UseRadioParameters, UseRadioReturnType } from "../use-radio-group";
 import { DefaultRenderCheckboxLikeParameters } from "./checkbox";
@@ -21,25 +21,25 @@ interface RadioGroupPropsBase<V extends string | number, GroupElement extends El
     ref?: Ref<UseRadioGroupReturnType<V, GroupElement, GroupLabelElement, TabbableChildElement>>;
 }
 
-interface RadioPropsBase<LP extends LabelPosition, TabbableChildElement extends Element, InputElement extends Element, LabelElement extends Element, V extends string | number> extends
-    Get<UseRadioParameters<LP, V, TabbableChildElement, InputElement, LabelElement, RadioSubInfo<TabbableChildElement, V>>, "radioParameters">,
-    Get<UseRadioParameters<LP, V, TabbableChildElement, InputElement, LabelElement, RadioSubInfo<TabbableChildElement, V>>, "checkboxLikeParameters">,
-    Get<UseRadioParameters<LP, V, TabbableChildElement, InputElement, LabelElement, RadioSubInfo<TabbableChildElement, V>>, "labelParameters">,
-    Get<UseRadioParameters<LP, V, TabbableChildElement, InputElement, LabelElement, RadioSubInfo<TabbableChildElement, V>>, "rovingTabIndexChildParameters">,
-    Get<UseRadioParameters<LP, V, TabbableChildElement, InputElement, LabelElement, RadioSubInfo<TabbableChildElement, V>>, "pressParameters">,
-    Omit<Get<UseRadioParameters<LP, V, TabbableChildElement, InputElement, LabelElement, RadioSubInfo<TabbableChildElement, V>>, "singleSelectionChildParameters">, "disabled">,
-    Get<UseRadioParameters<LP, V, TabbableChildElement, InputElement, LabelElement, RadioSubInfo<TabbableChildElement, V>>, "textContentParameters">,
-    Omit<Get<UseRadioParameters<LP, V, TabbableChildElement, InputElement, LabelElement, RadioSubInfo<TabbableChildElement, V>>, "managedChildParameters">, "disabled" | "getSortValue"> {
+interface RadioPropsBase<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element, V extends string | number> extends
+    Get<UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>, "radioParameters">,
+    Get<UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>, "checkboxLikeParameters">,
+    Get<UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>, "labelParameters">,
+    Get<UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>, "rovingTabIndexChildParameters">,
+    Get<UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>, "pressParameters">,
+    Omit<Get<UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>, "singleSelectionChildParameters">, "disabled">,
+    Get<UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>, "textContentParameters">,
+    Omit<Get<UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>, "managedChildParameters">, "disabled" | "getSortValue"> {
     //ref?: Ref<UseRadioReturnTypeInfo<InputElement, LabelElement>>;
     //subInfo: C;
 
 }
 
-interface RadioGroupProps<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, TabbableChildElement extends Element> extends PartialExcept<RadioGroupPropsBase<V, GroupElement, GroupLabelElement, TabbableChildElement>, "navigationDirection" | "ariaLabel" | "name" | "initiallySelectedValue" | "onSelectedValueChange"> {
+interface RadioGroupProps<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, TabbableChildElement extends Element> extends PartialExcept<RadioGroupPropsBase<V, GroupElement, GroupLabelElement, TabbableChildElement>, "navigationDirection" | "ariaLabel" | "name" | "selectedValue" | "setSelectedValue"> {
     render(info: UseRadioGroupReturnType<V, GroupElement, GroupLabelElement, TabbableChildElement>): VNode<any>;
 }
-interface RadioProps<LP extends LabelPosition, TabbableChildElement extends Element, InputElement extends Element, LabelElement extends Element, V extends string | number> extends PartialExcept<RadioPropsBase<LP, TabbableChildElement, InputElement, LabelElement, V>, "index" | "value" | "ariaLabel" | "selectionMode" | "labelPosition" | "tagInput" | "tagLabel"> {
-    render(info: UseRadioReturnType<V, InputElement, LabelElement, TabbableChildElement, RadioSubInfo<TabbableChildElement, V>>): VNode<any>;
+interface RadioProps<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element, V extends string | number> extends PartialExcept<RadioPropsBase<LP, InputElement, LabelElement, V>, "index" | "value" | "ariaLabel" | "selectionMode" | "labelPosition" | "tagInput" | "tagLabel"> {
+    render(info: UseRadioReturnType<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>): VNode<any>;
 }
 
 function defaultRenderRadioGroup<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, TabbableChildElement extends Element>({ tagGroup, tagLabel, makePropsGroup, makePropsLabel }: { tagLabel: ElementToTag<GroupLabelElement>, tagGroup: ElementToTag<GroupElement>, makePropsLabel: (info: UseRadioGroupReturnType<V, GroupElement, GroupLabelElement, TabbableChildElement>) => h.JSX.HTMLAttributes<GroupLabelElement>, makePropsGroup: (info: UseRadioGroupReturnType<V, GroupElement, GroupLabelElement, TabbableChildElement>) => h.JSX.HTMLAttributes<GroupElement> }) {
@@ -54,10 +54,10 @@ function defaultRenderRadioGroup<V extends string | number, GroupElement extends
 }
 
 const RadioContext = createContext<RadioContext<any, any, any, any>>(null!);
-export const RadioGroup = memoForwardRef(function RadioGroup<V extends string | number, GroupElement extends HTMLElement, GroupLabelElement extends HTMLElement, InputElement extends HTMLElement, LabelElement extends HTMLElement, TabbableChildElement extends InputElement | LabelElement>({
+export const RadioGroup = memoForwardRef(function RadioGroup<V extends string | number, GroupElement extends HTMLElement, GroupLabelElement extends HTMLElement, TabbableChildElement extends HTMLElement>({
     render,
     name,
-    onSelectedValueChange,
+    setSelectedValue,
     collator,
     disableArrowKeys,
     disableHomeEndKeys,
@@ -69,12 +69,12 @@ export const RadioGroup = memoForwardRef(function RadioGroup<V extends string | 
     getIndex,
     navigatePastEnd,
     navigatePastStart,
-    initiallySelectedValue,
+    selectedValue,
     untabbable,
     onTabbableIndexChange,
     pageNavigationSize,
 }: RadioGroupProps<V, GroupElement, GroupLabelElement, TabbableChildElement>, ref?: Ref<any>) {
-    const info = useRadioGroup<V, GroupElement, GroupLabelElement, InputElement, LabelElement, TabbableChildElement>({
+    const info = useRadioGroup<V, GroupElement, GroupLabelElement, TabbableChildElement>({
         linearNavigationParameters: {
             navigationDirection,
             navigatePastEnd: navigatePastEnd ?? "wrap",
@@ -86,7 +86,7 @@ export const RadioGroup = memoForwardRef(function RadioGroup<V extends string | 
         labelParameters: { ariaLabel },
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
         sortableChildrenParameters: { compare: compare ?? null },
-        radioGroupParameters: { name, onSelectedValueChange, initiallySelectedValue },
+        radioGroupParameters: { name, setSelectedValue, selectedValue },
         rovingTabIndexParameters: {
             onTabbableIndexChange: onTabbableIndexChange ?? null,
             untabbable: untabbable ?? false
@@ -109,16 +109,16 @@ export const RadioGroup = memoForwardRef(function RadioGroup<V extends string | 
     )
 })
 
-export interface DefaultRenderRadioParameters<V extends string | number, I extends Element, IL extends Element, TCE extends Element> extends DefaultRenderCheckboxLikeParameters<I, IL, UseRadioReturnType<V, I, IL, TCE, RadioSubInfo<TCE, V>>> {
+/*export interface DefaultRenderRadioParameters<LP extends LabelPosition, V extends string | number, I extends Element, IL extends Element, TCE extends Element> extends DefaultRenderCheckboxLikeParameters<I, IL, UseRadioReturnType<LP, V, I, IL, TCE, RadioSubInfo<TCE, V>>> {
 
-}
+}*/
 /*
 export function defaultRenderRadio<V extends string | number, I extends HTMLElement, IL extends HTMLElement, TCE extends I | IL>({ tagInput, tagLabel, makePropsInput, makePropsLabel, labelPosition }: DefaultRenderRadioParameters<V, I, IL, TCE>) {
     return defaultRenderCheckboxLike<I, IL, UseRadioReturnType<V, I, IL, TCE, RadioSubInfo<TCE, V>>>({ labelPosition, tagInput, tagLabel, makePropsInput, makePropsLabel });
 }
 */
 
-export const Radio = memoForwardRef(function Radio<LP extends LabelPosition, V extends string | number, InputElement extends Element, LabelElement extends Element, TabbableChildElement extends InputElement | LabelElement>({
+export const Radio = memoForwardRef(function Radio<LP extends LabelPosition, V extends string | number, InputElement extends Element, LabelElement extends Element>({
     disabled,
     index,
     render,
@@ -133,11 +133,11 @@ export const Radio = memoForwardRef(function Radio<LP extends LabelPosition, V e
     tagInput,
     tagLabel,
     getText
-}: RadioProps<LP, TabbableChildElement, InputElement, LabelElement, V>, ref?: Ref<any>) {
+}: RadioProps<LP, InputElement, LabelElement, V>, ref?: Ref<any>) {
     const context = useContext(RadioContext);
     const getValue = useStableGetter(value);
     const defaultFocusSelf = () => info.checkboxLikeReturn.focusSelf();
-    const info = useRadio<LP, InputElement, LabelElement, TabbableChildElement, V>({
+    const info = useRadio<LP, InputElement, LabelElement, V>({
         //listNavigationParameters: { text },
         managedChildParameters: { index },
         rovingTabIndexChildParameters: { hidden: hidden ?? false },
@@ -167,7 +167,7 @@ export const Radio = memoForwardRef(function Radio<LP extends LabelPosition, V e
 export function DemoRadioGroup({ name }: { name: string }) {
     const [selectedValue, setSelectedValue] = useState<string | null>(null)
     return (
-        <RadioGroup<string, HTMLDivElement, HTMLLabelElement, HTMLInputElement, HTMLLabelElement, HTMLInputElement>
+        <RadioGroup<string, HTMLDivElement, HTMLLabelElement, HTMLInputElement>
 
             ariaLabel={null}
             collator={null}
@@ -179,9 +179,9 @@ export function DemoRadioGroup({ name }: { name: string }) {
             disableHomeEndKeys={false}
             navigatePastEnd="wrap"
             navigatePastStart="wrap"
-            initiallySelectedValue="a"
+            selectedValue="a"
             navigationDirection="vertical"
-            onSelectedValueChange={e => setSelectedValue(e)}
+            setSelectedValue={e => setSelectedValue(e)}
             render={info => {
                 return (
                     <>

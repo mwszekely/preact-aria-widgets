@@ -71,6 +71,9 @@ export function Demo() {
             <label><input type="number" min={0} value={count} onInput={e => setCount(e.currentTarget.valueAsNumber)} /> # of list items</label>
             <div>
                 <Listbox<HTMLOListElement, HTMLLIElement, HTMLLabelElement>
+                    selectedIndex={selectedIndex}
+                    setSelectedIndex={setSelectedIndex}
+                    
                     render={info => {
                         /*
                         defaultRenderListboxSingle({
@@ -86,7 +89,7 @@ export function Demo() {
                         return (
                             <>
                                 <label {...info.propsListboxLabel}>Single-select listbox demo</label>
-                                <ol>
+                                <ol {...info.propsListbox}>
                                     {Array.from((function* () {
                                         for (let i = 0; i < count; ++i) {
                                             yield <DemoListItem index={i} key={i} />
@@ -100,8 +103,7 @@ export function Demo() {
                     groupingType="without-groups"
                     navigationDirection="vertical"
                     selectionLimit="single"
-                    
-                    setSelectedIndex={e => setSelectedIndex(e)} />
+                     />
             </div>
         </>
     )

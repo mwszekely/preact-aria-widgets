@@ -3,7 +3,7 @@ import { Listbox, ListboxItem, ListboxItemProps, ListboxProps } from "component/
 import { h, Ref } from "preact";
 import { useMergedProps } from "preact-prop-helpers";
 import { useRef } from "preact/hooks";
-import { ListboxInfo, UseListboxReturnType } from "use-listbox";
+import { ListboxInfo, UseListboxReturnType } from "../../use-listbox";
 import { getDefaultClass, StandardProps } from "./util";
 
 export interface Listbox2Props extends Pick<ListboxProps<HTMLDivElement, HTMLButtonElement, HTMLLabelElement, ListboxInfo<HTMLButtonElement>>, "selectionLimit" | "setSelectedIndex" | "groupingType" | "ariaLabel" | "untabbable">, Pick<h.JSX.HTMLAttributes<HTMLDivElement>, StandardProps> {

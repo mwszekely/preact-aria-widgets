@@ -87,3 +87,32 @@ export function debugLog(who: DebugLogTypes, ...args: Parameters<(typeof console
 export type PropModifier<T extends EventTarget> = (props: h.JSX.HTMLAttributes<T>) => h.JSX.HTMLAttributes<T>;
 export type PropModifier2<P> = (props: P) => P;
 export function noop(): void { return; }
+
+// (These do not need to be unique)
+export const Prefices = {
+    accordionSectionHeaderButton: "ashb-",
+    accordionSectionBody: "asb-",
+    checkboxLikeInput: "cbli-",
+    checkboxLikeLabel: "cbll-",
+    dialog: "mdl-",
+    dialogTitle: "mdlt-",
+    drawer: "mdw-",
+    drawerTitle: "mdwt-",
+    gridlist: "gl-",
+    gridlistLabel: "gll-",
+    listbox: "lb-",
+    listboxLabel: "lbl-",
+    menu: "menu-",
+    progressIndicator: "pi-",
+    progressLabel: "pl-",
+    radioGroup: "rg-",
+    radioGroupLabel: "rgl-",
+    radio: "rb-",
+    radioLabel: "rbl-",
+    sliderThumb: "st-",
+    table: "tb-",
+    tableLabel: "tbl-",
+    tablist: "tl-",
+    tablistLabel: "tll-",
+    tooltip: "tt-"
+} as const

@@ -1,7 +1,8 @@
 
 import { h } from "preact";
-import { useMergedProps, useModal, UseModalParameters, UseModalReturnType } from "preact-prop-helpers";
-import { useLabelSynthetic, UseLabelSyntheticParameters } from "use-label";
+import { findFirstFocusable, useMergedProps, useModal, UseModalParameters, UseModalReturnType, useStableCallback } from "preact-prop-helpers";
+import { Prefices } from "./props";
+import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
 
 /*
 export interface UseDialogReturnTypeInfo extends UseSoftDismissReturnTypeInfo {
@@ -73,9 +74,10 @@ export function useDialog<FocusContainerElement extends HTMLElement, DialogEleme
     }
 }*/
 
-export interface UseDialogParameters<_DialogElement extends Element, _TitleElement extends Element> extends Omit<UseModalParameters<"escape" | "backdrop">, "focusTrapParameters" | "dismissParameters">, Pick<UseLabelSyntheticParameters, "labelParameters"> {
-    focusTrapParameters: Omit<UseModalParameters<"escape" | "backdrop">["focusTrapParameters"], "trapActive">;
+export interface UseDialogParameters<_DialogElement extends Element, _TitleElement extends Element> extends Omit<UseModalParameters<"escape" | "backdrop">, "focusTrapParameters" | "dismissParameters"> {
+    focusTrapParameters: Omit<UseModalParameters<"escape" | "backdrop">["focusTrapParameters"], "trapActive" | "onlyMoveFocus">;
     dismissParameters: Omit<UseModalParameters<"escape" | "backdrop">["dismissParameters"], "closeOnLostFocus">;
+    labelParameters: Omit<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
 }
 
 export interface UseDialogReturnType<FocusContainerElement extends Element, SourceElement extends Element, PopupElement extends Element, TitleElement extends Element> extends Omit<UseModalReturnType<FocusContainerElement, SourceElement, PopupElement>, "propsPopup"> {
@@ -83,7 +85,7 @@ export interface UseDialogReturnType<FocusContainerElement extends Element, Sour
     propsTitle: h.JSX.HTMLAttributes<TitleElement>;
 }
 
-export function useDialog<FocusContainerElement extends Element,  SourceElement extends Element, DialogElement extends Element, TitleElement extends Element>({ dismissParameters, escapeDismissParameters, focusTrapParameters, labelParameters }: UseDialogParameters<DialogElement, TitleElement>): UseDialogReturnType<FocusContainerElement, SourceElement, DialogElement, TitleElement> {
+export function useDialog<FocusContainerElement extends Element, SourceElement extends Element, DialogElement extends Element, TitleElement extends Element>({ dismissParameters, escapeDismissParameters, focusTrapParameters, labelParameters }: UseDialogParameters<DialogElement, TitleElement>): UseDialogReturnType<FocusContainerElement, SourceElement, DialogElement, TitleElement> {
     const {
         focusTrapReturn,
         propsFocusContainer,
@@ -94,17 +96,23 @@ export function useDialog<FocusContainerElement extends Element,  SourceElement 
     } = useModal<"escape" | "backdrop", FocusContainerElement, SourceElement, DialogElement>({
         dismissParameters: { closeOnLostFocus: false, ...dismissParameters },
         escapeDismissParameters,
-        focusTrapParameters: { trapActive: true, ...focusTrapParameters }
+        focusTrapParameters: { trapActive: true, onlyMoveFocus: false, ...focusTrapParameters }
     });
 
-    const { 
-        propsInput, 
+    const {
+        propsInput,
         propsLabel
-     } = useLabelSynthetic<DialogElement, TitleElement>({ 
-        labelParameters, 
-        randomIdInputParameters: { prefix: "aria-dialog-" }, 
-        randomIdLabelParameters: { prefix: "aria-dialog-title-" }
-     });
+    } = useLabelSynthetic<DialogElement, TitleElement>({
+        labelParameters: {
+            ...labelParameters, onLabelClick: useStableCallback(() => {
+                const e = refElementPopupReturn.getElement();
+                focusTrapParameters.focusPopup(e, () => findFirstFocusable(e!));
+
+            })
+        },
+        randomIdInputParameters: { prefix: Prefices.dialog },
+        randomIdLabelParameters: { prefix: Prefices.dialogTitle }
+    });
 
     return {
         focusTrapReturn,

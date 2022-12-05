@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { returnFalse, useGlobalHandler, useHasCurrentFocus, UseHasCurrentFocusParameters, useMergedProps, usePassiveState, useRandomId, useRefElement, UseRefElementReturnType, useStableCallback, useState, useTimeout } from "preact-prop-helpers";
 import { useEffect } from "preact/hooks";
-import { debugLog } from "./props";
+import { debugLog, Prefices } from "./props";
 
 export interface UseTooltipTriggerParameters<TriggerType extends Element> {
     refElementReturn: Required<Pick<UseRefElementReturnType<TriggerType>["refElementReturn"], "getElement">>
@@ -53,7 +53,7 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
     let {
         propsReferencer: propsTrigger,
         propsSource: propsPopup
-    } = useRandomId<PopupType, TriggerType>({ randomIdParameters: { prefix: "aria-tooltip-", referencerProp: "aria-describedby" as never } });
+    } = useRandomId<PopupType, TriggerType>({ randomIdParameters: { prefix: Prefices.tooltip, otherReferencerProp: "aria-describedby" as never } });
 
     const { refElementReturn: { getElement: getTriggerElement, propsStable: triggerRefProps } } = useRefElement<TriggerType>({ refElementParameters: {} });
     const { refElementReturn: { getElement: getPopupElement, propsStable: popupRefProps } } = useRefElement<PopupType>({ refElementParameters: {} });

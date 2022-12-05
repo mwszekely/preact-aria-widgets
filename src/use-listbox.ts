@@ -1,13 +1,13 @@
 import { h } from "preact";
 import {
-    CompleteListNavigationContext, useCompleteListNavigation,
+    CompleteListNavigationContext, PassiveStateUpdater, useCompleteListNavigation,
     useCompleteListNavigationChild,
     UseCompleteListNavigationChildParameters,
     UseCompleteListNavigationChildReturnType,
     UseCompleteListNavigationParameters,
-    UseCompleteListNavigationReturnType, UseListNavigationSingleSelectionSortableChildInfo, useMergedProps, useStableObject
+    UseCompleteListNavigationReturnType, UseListNavigationSingleSelectionSortableChildInfo, useMergedProps, useSingleSelectionDeclarative, useStableCallback, useStableObject
 } from "preact-prop-helpers";
-import { EventDetail } from "./props";
+import { EventDetail, Prefices } from "./props";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
 
 export type ListboxSingleSelectEvent<E extends EventTarget> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
@@ -16,8 +16,8 @@ export interface UseListboxContext<ListElement extends Element, ListItemElement 
     listboxContext: { selectionLimit: "single" | "multi" }
 }
 
-export interface UseListboxParameters<ListElement extends Element, ListItemElement extends Element, _LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends UseCompleteListNavigationParameters<ListElement, ListItemElement, M> {
-    labelParameters: UseLabelSyntheticParameters["labelParameters"];
+export interface UseListboxParameters<ListElement extends Element, ListItemElement extends Element, _LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends Omit<UseCompleteListNavigationParameters<ListElement, ListItemElement, M>, "singleSelectionParameters"> {
+    labelParameters: Omit<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
     listboxParameters: {
         /**
          * When `"single"`, the selected item is controlled
@@ -25,6 +25,12 @@ export interface UseListboxParameters<ListElement extends Element, ListItemEleme
          * items are controlled by their individual `selected` props.
          */
         selectionLimit: "single" | "multi";
+
+        /**
+         * Only used when `groupingType` is `"without-groups"` or `"group"`
+         */
+        selectedIndex: number | null;
+        setSelectedIndex: PassiveStateUpdater<number | null, Event>;
 
         /**
          * * `"without-groups"`: This is a listbox with no groups
@@ -60,11 +66,10 @@ export function useListbox<ListElement extends Element, ListItemElement extends 
     linearNavigationParameters,
     rearrangeableChildrenParameters,
     rovingTabIndexParameters,
-    singleSelectionParameters,
     sortableChildrenParameters,
     typeaheadNavigationParameters,
     labelParameters,
-    listboxParameters: { selectionLimit, groupingType }
+    listboxParameters: { selectionLimit, groupingType, selectedIndex, setSelectedIndex }
 }: UseListboxParameters<ListElement, ListItemElement, LabelElement, M>): UseListboxReturnType<ListElement, ListItemElement, LabelElement, M> {
 
     const {
@@ -73,9 +78,14 @@ export function useListbox<ListElement extends Element, ListItemElement extends 
         randomIdInputReturn: { id: _inputId },
         randomIdLabelReturn: { id: _labelId }
     } = useLabelSynthetic<ListElement, LabelElement>({
-        labelParameters,
-        randomIdInputParameters: { prefix: `aria-listbox-input-${groupingType}-` },
-        randomIdLabelParameters: { prefix: `aria-listbox-label-${groupingType}-` }
+        labelParameters: {
+            ...labelParameters,
+            onLabelClick: useStableCallback(() => {
+                rovingTabIndexReturn.focusSelf();
+            })
+        },
+        randomIdInputParameters: { prefix: Prefices.listbox },
+        randomIdLabelParameters: { prefix: Prefices.listboxLabel }
     });
     let {
         childrenHaveFocusReturn,
@@ -92,10 +102,15 @@ export function useListbox<ListElement extends Element, ListItemElement extends 
         linearNavigationParameters,
         rearrangeableChildrenParameters,
         rovingTabIndexParameters,
-        singleSelectionParameters,
+        singleSelectionParameters: { initiallySelectedIndex: selectedIndex, setSelectedIndex },
         sortableChildrenParameters,
         typeaheadNavigationParameters
     });
+
+    const _v: void = useSingleSelectionDeclarative({ 
+        singleSelectionDeclarativeParameters: { selectedIndex }, 
+        singleSelectionReturn: { setSelectedIndex: singleSelectionReturn.setSelectedIndex }
+     })
 
     if (groupingType == "group")
         props.role = "group";
@@ -161,6 +176,7 @@ export function useListboxItem<ListItemElement extends Element, M extends Listbo
         context
     });
 
+
     if (selectionLimit == "single")
         console.assert(selected == null);
 
@@ -181,7 +197,7 @@ export function useListboxGroup<ContainerElement extends Element, HeadingElement
         propsReferencer,
         propsSource,
         randomIdReturn
-    } = useRandomId<HeadingElement, ContainerElement>({ randomIdParameters: { prefix: "listbox-multi-group-", referencerProp: "aria-labelledby" } });
+    } = useRandomId<HeadingElement, ContainerElement>({ randomIdParameters: { prefix: "listbox-multi-group-", otherReferencerProp: "aria-labelledby" } });
 
     propsReferencer.role = "group";
 

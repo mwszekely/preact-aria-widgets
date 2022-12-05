@@ -1,8 +1,8 @@
 
 import { useState } from "preact-prop-helpers";
 import { memo } from "preact/compat";
-import { defaultRenderRadio, Radio, RadioGroup } from "../../component/radio-group";
-import { EventDetail, defaultRenderRadioGroup } from "../../index";
+import { Radio, RadioGroup } from "../../component/radio-group";
+import { EventDetail, RadioSubInfo } from "../../index";
 
 function getDocument() {
     return window.document;
@@ -14,25 +14,22 @@ const DemoRadioButton = memo(function DemoRadioButton({ index }: { index: number
 
     return (
         <div>
-            <Radio<number, HTMLInputElement, HTMLLabelElement>
+            <Radio<"separate", number, HTMLInputElement, HTMLLabelElement>
                 index={index}
                 focusSelf={e => e.focus()}
-                subInfo={undefined}
-                getDocument={getDocument}
                 disabled={false}
                 labelPosition="separate"
-                text={value}
                 value={index}
-                unselectable={false}
                 tagInput="input"
                 tagLabel="label"
-                render={defaultRenderRadio({
-                    labelPosition: "separate",
-                    tagInput: "input",
-                    tagLabel: "label",
-                    makeInputProps: () => ({ name: "radio-demo" }),
-                    makeLabelProps: () => ({ children: value })
-                })} />
+                ariaLabel={null}
+                selectionMode="activation"
+                render={(info) => {
+                    return <>
+                        <input {...info.propsInput} name="radio-demo" />
+                        <label {...info.propsLabel}>Radio #{index}</label>
+                    </>
+                }} />
         </div>
     )
 })
@@ -72,9 +69,27 @@ export function Demo() {
             <Code />
             <label><input type="number" min={0} value={count} onInput={e => setCount(e.currentTarget.valueAsNumber)} /> # of radio buttons</label>
             <div>
-                <RadioGroup<number, HTMLDivElement, HTMLLabelElement, HTMLInputElement, HTMLLabelElement>
+                <RadioGroup<number, HTMLDivElement, HTMLLabelElement, HTMLInputElement>
                     name="radio-demo"
-                    onSelectedValueChange={e => setSelectedIndex(e[EventDetail].selectedValue ?? 0)}
+                    ariaLabel={null}
+                    selectedValue={selectedIndex}
+                    navigationDirection="vertical"
+                    setSelectedValue={setSelectedIndex}
+                    render={info => {
+                        return (
+                            <>
+                                <label {...info.propsRadioGroupLabel}>Radio group demo</label>
+                                <div {...info.propsRadioGroup}>
+                                    {Array.from((function* () {
+                                        for (let i = 0; i < count; ++i) {
+                                            yield <DemoRadioButton index={i} key={i} />
+                                        }
+                                    })())}
+                                </div>
+                            </>
+                        )
+                    }}
+                    /*onSelectedValueChange={e => setSelectedIndex(e[EventDetail].selectedValue ?? 0)}
                     selectedValue={selectedIndex}
                     tagGroupLabel="label"
                     tagGroup="div"
@@ -92,7 +107,7 @@ export function Demo() {
                                 </div>
                         }),
                         makePropsLabel: (info) => ({ children: "Radio group example " + "(" + (info.radioGroup.selectedIndex ?? "null").toString() + ")" })
-                    })} />
+                    })}*/ />
             </div>
         </>
     )

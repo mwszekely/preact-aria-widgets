@@ -20,7 +20,7 @@ export interface SliderThumbProps<ThumbElement extends Element> extends Get<UseS
 const SliderThumbContext = createContext<SliderContext<any>>(null!);
 
 export const Slider = memoForwardRef(function Slider<SliderElement extends Element, LabelElement extends Element>({ max, min, onAfterChildLayoutEffect, onChildrenMountChange, children }: SliderProps, ref?: Ref<any>) {
-    const info = useSlider<SliderElement, LabelElement>({
+    const info = useSlider({
         managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange },
         sliderParameters: { max, min }
     });

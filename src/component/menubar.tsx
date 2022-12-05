@@ -1,8 +1,8 @@
 import { createContext, createElement, h, Ref, VNode } from "preact";
 import { returnNull } from "preact-prop-helpers";
 import { useContext, useImperativeHandle } from "preact/hooks";
-import { UseMenuContext, useMenuItem, UseMenuItemReturnType } from "use-menu";
-import { UseToolbarContext } from "use-toolbar";
+import { UseMenuContext, useMenuItem, UseMenuItemReturnType } from "../use-menu";
+import { UseToolbarContext } from "../use-toolbar";
 import { ElementToTag, PropModifier } from "../props";
 //import { ElementToTag } from "../props";
 import { useMenubar, UseMenubarParameters, UseMenubarItemParameters, UseMenubarSubInfo, UseMenubarReturnType } from "../use-menubar";

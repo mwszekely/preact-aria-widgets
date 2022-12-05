@@ -1,5 +1,6 @@
 
-import { returnZero, useState } from "preact-prop-helpers";
+import { returnZero, useMergedProps, useState } from "preact-prop-helpers";
+import { defaultRenderPortal } from "../../component/dialog";
 import { Menu } from "../../component/menu";
 import { MenuItem } from "../../component/menubar";
 import { EventDetail } from "../../props";
@@ -60,7 +61,24 @@ export function Demo() {
                     onClose={() => setOpen(false)}
                     open={open}
                     openDirection="down"
-                    render={defaultRenderMenu({
+                    render={info => {
+                        return (
+                            <>
+                                <button {...info.propsTrigger} onClick={() => setOpen(o => !o)}>Menu trigger</button>
+                                {defaultRenderPortal({
+                                    portalId: "portal", children: (
+                                        <div {...info.propsSurface} hidden={!open}>
+                                            <ul {...info.propsTarget}>{Array.from((function* () {
+                                                for (let i = 0; i < count; ++i) {
+                                                    yield <div><DemoListItem index={i} key={i} /></div>
+                                                }
+                                            })())}</ul>
+                                        </div>
+                                    )
+                                })}
+                            </>
+                        )
+                    }/*defaultRenderMenu({
                         tagButton: "button",
                         tagMenu: "ul",
                         tagSentinel: "div",
@@ -76,7 +94,7 @@ export function Demo() {
                         }),
                         makePropsSurface: () => ({ style: { display: !open ? "none" : undefined } }),
                         makePropsSentinel: () => ({}),
-                    })} />
+                    })*/} />
             </div>
         </>
     )

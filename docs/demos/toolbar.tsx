@@ -2,6 +2,7 @@
 import { useMergedProps, useState } from "preact-prop-helpers";
 import { memo } from "preact/compat";
 import { ToolbarChild } from "../../component/toolbar";
+/*
 import { Button, defaultRenderButton, defaultRenderToolbar, Toolbar } from "../../index";
 
 function getDocument() { return window.document; }
@@ -78,4 +79,4 @@ export function Demo() {
             </div>
         </>
     )
-}
+}*/

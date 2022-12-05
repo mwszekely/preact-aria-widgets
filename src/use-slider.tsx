@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { generateRandomId, ManagedChildInfo, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, UseManagedChildReturnType } from "preact-prop-helpers";
 import { useMemo, useRef } from "preact/hooks";
-import { debugLog, EventDetail, TagSensitiveProps } from "./props";
+import { debugLog, EventDetail, Prefices, TagSensitiveProps } from "./props";
 
 
 
@@ -75,8 +75,8 @@ export function useSlider({ sliderParameters: { max, min }, managedChildrenParam
 
     const baseIdRef = useRef<string>(null! as "");
     if (baseIdRef.current === null)
-        baseIdRef.current = generateRandomId("aria-thumb-");
-    //const { propsReferencer, propsSource, randomIdReturn: { id: baseId } } = useRandomId<LabelElement, ThumbElement>({ randomIdParameters: { prefix: "aria-thumb-", referencerProp: "aria-labelledby" } })
+        baseIdRef.current = generateRandomId(Prefices.sliderThumb);
+    //const { propsReferencer, propsSource, randomIdReturn: { id: baseId } } = useRandomId<LabelElement, ThumbElement>({ randomIdParameters: { prefix: "aria-thumb-", otherReferencerProp: "aria-labelledby" } })
 
     /*const {
         propsInput,

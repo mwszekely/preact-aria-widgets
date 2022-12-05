@@ -1,7 +1,7 @@
 import { createContext, Ref, VNode } from "preact";
 import { returnNull } from "preact-prop-helpers";
 import { useCallback, useContext, useState } from "preact/hooks";
-import { EventDetail } from "props";
+import { EventDetail } from "../props";
 import { ListboxInfo, useListbox, UseListboxParameters, UseListboxContext, UseListboxReturnType, UseListboxItemParameters, ListboxSingleSelectEvent, UseListboxItemReturnType, useListboxItem } from "../use-listbox";
 import { PartialExcept, useDefault } from "./util";
 
@@ -14,7 +14,6 @@ interface ListboxPropsBase<ListElement extends Element, ListItemElement extends 
     Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "listboxParameters">,
     Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "rearrangeableChildrenParameters">,
     Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "rovingTabIndexParameters">,
-    Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "singleSelectionParameters">,
     Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "sortableChildrenParameters">,
     Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "typeaheadNavigationParameters"> {
     ref?: Ref<UseListboxReturnType<ListElement, ListItemElement, LabelElement, M>>;
@@ -31,7 +30,7 @@ interface ListboxItemPropsBase<ListItemElement extends Element, M extends Listbo
     ref?: Ref<UseListboxItemReturnType<ListItemElement, M>>;
 }
 
-export interface ListboxProps<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends PartialExcept<ListboxPropsBase<ListElement, ListItemElement, LabelElement, M>, "ariaLabel" | "groupingType" | "navigationDirection" | "selectionLimit"> {
+export interface ListboxProps<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends PartialExcept<ListboxPropsBase<ListElement, ListItemElement, LabelElement, M>, "ariaLabel" | "groupingType" | "navigationDirection" | "selectionLimit" | "selectedIndex"> {
     render(info: UseListboxReturnType<ListElement, ListItemElement, LabelElement, M>): VNode;
 }
 export interface ListboxItemProps<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends PartialExcept<ListboxItemPropsBase<ListItemElement, M>, "ariaPropName" | "index" | "getSortValue"> {
@@ -47,7 +46,7 @@ export function Listbox<ListElement extends Element, ListItemElement extends Ele
     disableArrowKeys,
     disableHomeEndKeys,
     getIndex,
-    initiallySelectedIndex,
+    selectedIndex,
     navigatePastEnd,
     navigatePastStart,
     navigationDirection,
@@ -72,10 +71,10 @@ export function Listbox<ListElement extends Element, ListItemElement extends Ele
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
             pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
         },
-        listboxParameters: { selectionLimit, groupingType },
+        listboxParameters: { selectionLimit, groupingType, selectedIndex, setSelectedIndex: setSelectedIndex ?? noop },
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
         rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable: untabbable ?? false },
-        singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? null, setSelectedIndex: setSelectedIndex ?? null },
+        //singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? null, setSelectedIndex: setSelectedIndex ?? null },
         sortableChildrenParameters: { compare: compare ?? null },
         typeaheadNavigationParameters: {
             collator: useDefault("collator", collator),
@@ -124,7 +123,7 @@ export function DemoListbox() {
             disableHomeEndKeys={false}
             navigatePastEnd="wrap"
             navigatePastStart="wrap"
-            initiallySelectedIndex={selectedIndex}
+            selectedIndex={selectedIndex}
             setSelectedIndex={e => setSelectedIndex(e)}
             getIndex={v => v.props.index}
             noTypeahead={false}

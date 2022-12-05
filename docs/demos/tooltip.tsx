@@ -1,7 +1,7 @@
 
-import { defaultRenderTooltip, Tooltip } from "../../";
+import { Tooltip } from "../../";
 
-
+/*
 function getDocument() { return window.document; }
 
 export function Blurb() {
@@ -49,4 +49,4 @@ export function Demo() {
     )
 }
 
-
+*/

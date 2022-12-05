@@ -1,6 +1,7 @@
 
 import { useState } from "preact-prop-helpers";
 import { memo } from "preact/compat";
+/*
 import { defaultRenderTab, defaultRenderTabPanel, defaultRenderTabs, Tabs } from "../../";
 import { Tab, TabPanel } from "../../component/tabs";
 import { EventDetail } from "../../index";
@@ -77,3 +78,4 @@ const DemoTabPanel = memo(function DemoTabPanel({ i }: { i: number }) {
     return <TabPanel index={i} key={i} render={defaultRenderTabPanel({ tagTabPanel: "div", makePropsTabPanel: ({ tabPanel: { visible } }) => ({ hidden: !visible, children: label }) })} subInfo={undefined} />
 })
 
+*/

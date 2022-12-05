@@ -38,22 +38,27 @@ export function Code() {
 export function Demo() {
 
     const [checked, setChecked] = useState(false as boolean | "mixed");
+    const [disabled, setDisabled] = useState(false);
 
 
     return (
         <>
             <Blurb />
             <Code />
+            <Checkbox<HTMLInputElement, HTMLLabelElement> checked={disabled} onCheckedChange={e => setDisabled(e[EventDetail].checked)} ariaLabel={null} labelPosition="separate" tagInput="input" tagLabel="label" render={info => <>
+                <input {...info.propsInput} />
+                <label {...info.propsLabel}>Disabled</label>
+            </>} />
             <Button<HTMLButtonElement> tagButton="button" onPress={() => { setChecked("mixed" as any); }} render={info => (<button {...info.props}>{"Change to mixed"}</button>)} />
-            <DemoCheckbox checked={checked} setChecked={setChecked} labelPosition="separate" disabled={false} tagInput="input" tagLabel="label" />
-            <DemoCheckbox checked={checked} setChecked={setChecked} labelPosition="wrapping" disabled={false} tagInput="input" tagLabel="label" />
-            <DemoCheckbox checked={checked} setChecked={setChecked} labelPosition="separate" disabled={false} tagInput="div" tagLabel="label" />
-            <DemoCheckbox checked={checked} setChecked={setChecked} labelPosition="wrapping" disabled={false} tagInput="div" tagLabel="label" />
-            <DemoCheckbox checked={checked} setChecked={setChecked} labelPosition="separate" disabled={false} tagInput="input" tagLabel="div" />
-            <DemoCheckbox checked={checked} setChecked={setChecked} labelPosition="wrapping" disabled={false} tagInput="input" tagLabel="div" />
-            <DemoCheckbox checked={checked} setChecked={setChecked} labelPosition="separate" disabled={false} tagInput="div" tagLabel="div" />
-            <DemoCheckbox checked={checked} setChecked={setChecked} labelPosition="wrapping" disabled={false} tagInput="div" tagLabel="div" />
-            <DemoCheckbox checked={checked} setChecked={setChecked} labelPosition="hidden" disabled={false} tagInput="input" tagLabel="label" />
+            <DemoCheckbox checked={checked} setChecked={setChecked} labelPosition="separate" disabled={disabled} tagInput="input" tagLabel="label" />
+            <DemoCheckbox checked={checked} setChecked={setChecked} labelPosition="wrapping" disabled={disabled} tagInput="input" tagLabel="label" />
+            <DemoCheckbox checked={checked} setChecked={setChecked} labelPosition="separate" disabled={disabled} tagInput="div" tagLabel="label" />
+            <DemoCheckbox checked={checked} setChecked={setChecked} labelPosition="wrapping" disabled={disabled} tagInput="div" tagLabel="label" />
+            <DemoCheckbox checked={checked} setChecked={setChecked} labelPosition="separate" disabled={disabled} tagInput="input" tagLabel="div" />
+            <DemoCheckbox checked={checked} setChecked={setChecked} labelPosition="wrapping" disabled={disabled} tagInput="input" tagLabel="div" />
+            <DemoCheckbox checked={checked} setChecked={setChecked} labelPosition="separate" disabled={disabled} tagInput="div" tagLabel="div" />
+            <DemoCheckbox checked={checked} setChecked={setChecked} labelPosition="wrapping" disabled={disabled} tagInput="div" tagLabel="div" />
+            <DemoCheckbox checked={checked} setChecked={setChecked} labelPosition="hidden" disabled={disabled} tagInput="input" tagLabel="label" />
         </>
     )
 }

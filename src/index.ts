@@ -29,7 +29,7 @@ export { Listbox, ListboxItem, ListboxItemProps, ListboxProps } from "./componen
 export { Menu, MenuProps } from "./component/menu";
 export { Menubar, MenubarProps, MenuItem, MenuItemProps } from "./component/menubar";
 export { Progress, ProgressProps } from "./component/progress";
-export { DefaultRenderRadioParameters, Radio, RadioGroup } from "./component/radio-group";
+export { Radio, RadioGroup } from "./component/radio-group";
 export { Slider, SliderProps, SliderThumb, SliderThumbProps } from "./component/slider";
 export { Table, TableCell, TableCellProps, TableProps, TableRow, TableRowProps, TableSection, TableSectionProps } from "./component/table";
 export { Tab, TabPanel, TabPanelProps, TabProps, Tabs, TabsProps } from "./component/tabs";

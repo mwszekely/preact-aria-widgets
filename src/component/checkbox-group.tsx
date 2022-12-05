@@ -1,7 +1,7 @@
 import { createContext, Ref, RenderableProps, VNode } from "preact";
 import { returnNull, useMergedProps } from "preact-prop-helpers";
 import { useContext, useImperativeHandle, useRef, useState } from "preact/hooks";
-import { UseCheckboxReturnType } from "use-checkbox";
+import { UseCheckboxReturnType } from "../use-checkbox";
 import { EventDetail } from "../props";
 import { CheckboxGroupContext, CheckboxGroupInfo, useCheckboxGroup, useCheckboxGroupChild, UseCheckboxGroupChildParameters, UseCheckboxGroupChildReturnType, UseCheckboxGroupParameters, useCheckboxGroupParent, UseCheckboxGroupParentParameters, UseCheckboxGroupParentReturnType, UseCheckboxGroupReturnType } from "../use-checkbox-group";
 import { Checkbox, CheckboxProps, defaultRenderCheckboxLike } from "./checkbox";

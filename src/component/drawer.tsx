@@ -75,14 +75,13 @@ export function DrawerDemo() {
         <Drawer<HTMLDivElement, HTMLButtonElement, HTMLDivElement, HTMLDivElement>
             open={open}
             onClose={() => setOpen(false)}
-            getWindow={() => globalThis.window}
             closeOnBackdrop={true}
             closeOnEscape={true}
             focusOpener={e => e.focus()}
             parentDepth={0}
             closeOnLostFocus={true}
             trapActive={true}
-            focusPopup={(e, f) => f()}
+            focusPopup={(e, f) => f()?.focus()}
             ariaLabel={null}
             render={info => {
                 return (
