@@ -5,9 +5,6 @@ import { useRef } from "preact/compat";
 import { useCallback } from "preact/hooks";
 import { Table, TableSection, TableCell, TableRow } from "../../component/table";
 
-function getDocument() { return window.document; }
-
-
 export function Blurb() {
     return (
         <>
@@ -43,7 +40,6 @@ function DemoInput({ index }: { index: number }) {
             return (
                 <td {...info.props}>
                     <input type="text" tabIndex={info.rovingTabIndexChildReturn.tabbable ? 0 : -1} onInput={useCallback((e: h.JSX.TargetedEvent<HTMLInputElement>) => {
-                        debugger;
                         setV(e.currentTarget.value);
                         e.preventDefault();
                     }, [])} value={v} />

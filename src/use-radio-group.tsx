@@ -1,6 +1,6 @@
 import { h } from "preact";
 import { CompleteListNavigationContext, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseListNavigationSingleSelectionSortableChildInfo, useMergedProps, useRefElement, useSingleSelectionDeclarative, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
-import { useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
+import { useEffect, useLayoutEffect, useRef } from "preact/hooks";
 import { debugLog, EnhancedEvent, Prefices } from "./props";
 import { FocusableLabelElement, LabelPosition, useCheckboxLike, UseCheckboxLikeParameters, UseCheckboxLikeReturnType, useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
 
@@ -228,7 +228,7 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
 
     const { name, byName } = context.radioContext
 
-    const { tagInput, tagLabel, labelPosition } = labelParameters;
+    const { tagInput, labelPosition } = labelParameters;
 
     const getValue = useStableGetter(value);
     const {
@@ -239,7 +239,7 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
         rovingTabIndexChildReturn,
         singleSelectionChildReturn
     } = useCompleteListNavigationChild<TabbableChildElement, RadioSubInfo<TabbableChildElement, V>, never>({
-        completeListNavigationChildParameters: { getValue2: getValue },
+        completeListNavigationChildParameters: { getValue2: getValue, ...completeListNavigationChildParameters },
         managedChildParameters,
         pressParameters,
         context,

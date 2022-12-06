@@ -1,9 +1,7 @@
 
 import { returnZero, useState } from "preact-prop-helpers";
 import { memo } from "preact/compat";
-import { EventDetail, Listbox, ListboxItem } from "../../index";
-
-function getDocument() { return window.document; }
+import { Listbox, ListboxItem } from "../../index";
 
 const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
 

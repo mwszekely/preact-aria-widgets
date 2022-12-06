@@ -1,9 +1,7 @@
-import { createContext, createElement, h, Ref, VNode } from "preact";
-import { useMergedProps } from "preact-prop-helpers";
+import { createContext, Ref, VNode } from "preact";
 import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
-import { ElementToTag, PropModifier } from "../props";
 //import { ElementToTag } from "../props";
-import { useToolbar, useToolbarChild, UseToolbarReturnType, UseToolbarChildReturnType, UseToolbarChildParameters, UseToolbarParameters, UseToolbarSubInfo, UseToolbarContext } from "../use-toolbar";
+import { useToolbar, useToolbarChild, UseToolbarChildParameters, UseToolbarChildReturnType, UseToolbarContext, UseToolbarParameters, UseToolbarReturnType, UseToolbarSubInfo } from "../use-toolbar";
 import { memoForwardRef, PartialExcept, useDefault } from "./util";
 
 type Get<T, K extends keyof T> = T[K];
@@ -130,7 +128,7 @@ export const ToolbarChild = memoForwardRef(function ToolbarChildU<ToolbarChildEl
         <>{render(info)}</>
     )
 })
-
+/*
 function defaultRenderToolbar<ContainerElement extends Element, ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>>({ makePropsContainer, tagContainer }: { tagContainer: ElementToTag<ContainerElement>, makePropsContainer: (info: UseToolbarReturnType<ContainerElement, ChildElement, M>) => h.JSX.HTMLAttributes<ContainerElement> }) {
     return function (info: UseToolbarReturnType<ContainerElement, ChildElement, M>): VNode<any> {
         const list = createElement(tagContainer as never, makePropsContainer(info));
@@ -146,4 +144,4 @@ function defaultRenderToolbarChild<ChildElement extends Element, M extends UseTo
     return function (info: UseToolbarChildReturnType<ChildElement, M>): VNode<any> {
         return createElement(tagChild as never, makePropsChild(info));
     }
-}
+}*/

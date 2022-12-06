@@ -1,9 +1,6 @@
 
 import { defaultRenderPortal, Tooltip } from "../../";
 
-
-function getDocument() { return window.document; }
-
 export function Blurb() {
     return (
         <>

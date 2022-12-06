@@ -1,7 +1,6 @@
-import { createContext, createElement, h, Ref, VNode } from "preact";
-import { useCallback, useContext, useEffect, useImperativeHandle } from "preact/hooks";
-import { ElementToTag, PropModifier } from "../props";
-import { useTable, UseTableCellParameters, UseTableRowParameters, UseTableSectionContext, useTableCell, useTableRow, useTableSection, UseTableSectionParameters, UseTableParameters, TableRowInfo, UseTableRowReturnType, UseTableCellReturnType, UseTableSectionReturnType, UseTableReturnType, TableCellInfo, UseTableRowContext, UseTableContext } from "../use-table";
+import { createContext, Ref, VNode } from "preact";
+import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
+import { TableCellInfo, TableRowInfo, useTable, useTableCell, UseTableCellParameters, UseTableCellReturnType, UseTableContext, UseTableParameters, UseTableReturnType, useTableRow, UseTableRowContext, UseTableRowParameters, UseTableRowReturnType, useTableSection, UseTableSectionContext, UseTableSectionParameters, UseTableSectionReturnType } from "../use-table";
 import { memoForwardRef, PartialExcept, useDefault } from "./util";
 
 type Get<T, K extends keyof T> = T[K];
@@ -72,7 +71,7 @@ const TableSectionContext = createContext<UseTableSectionContext<any, any, any, 
 const TableRowContext = createContext<UseTableRowContext<any, any, TableCellInfo<any>>>(null!);
 //const TableRowContext = createContext<UseTableRow<any, any, any, any, any, any>>(null!);
 //const TableCellContext = createContext<UseTableCell<any, any, any>>(null!);
-
+/*
 function defaultRenderTable<TableElement extends Element, LabelElement extends Element>({ tagTable, makePropsTable }: { tagTable: ElementToTag<TableElement>, makePropsTable: (info: UseTableReturnType<TableElement, LabelElement>) => h.JSX.HTMLAttributes<TableElement> }) {
     return function (info: UseTableReturnType<TableElement, LabelElement>) {
         return createElement(tagTable as never, (makePropsTable(info)));
@@ -83,7 +82,7 @@ function defaultRenderTableSection<TableBodyElement extends Element, RowElement 
     return function (info: UseTableSectionReturnType<TableBodyElement, RowElement, CellElement, RM, CM>, modifyPropsTableBody: PropModifier<TableBodyElement>) {
         return createElement(tagTableBody as never, modifyPropsTableBody(makePropsTableBody(info)));
     }
-}
+}*/
 /*
 export function defaultRenderTableHead<TableHeadElement extends Element>({ tagTableHead, makePropsTableHead }: { tagTableHead: ElementToTag<TableHeadElement>, makePropsTableHead: () => h.JSX.HTMLAttributes<TableHeadElement> }) {
     return function (modifyPropsTableHead: PropModifier<TableHeadElement>) {
@@ -96,7 +95,7 @@ export function defaultRenderTableFoot<TableFootElement extends Element>({ tagTa
         return createElement(tagTableFoot as never, modifyPropsTableFoot(makePropsTableFoot()));
     }
 }*/
-
+/*
 function defaultRenderTableRow<RowElement extends Element, CellElement extends Element, RM extends TableRowInfo<RowElement, CellElement>, CM extends TableCellInfo<CellElement>>({ tagTableRow, makePropsTableRow }: { tagTableRow: ElementToTag<RowElement>, makePropsTableRow: (info: UseTableRowReturnType<RowElement, CellElement, RM, CM>) => h.JSX.HTMLAttributes<RowElement> }) {
     return function (info: UseTableRowReturnType<RowElement, CellElement, RM, CM>, modifyPropsTableRow: PropModifier<RowElement>) {
         return createElement(tagTableRow as never, modifyPropsTableRow(makePropsTableRow(info)));
@@ -107,7 +106,7 @@ function defaultRenderTableCell<CellElement extends Element, CM extends TableCel
     return function (info: UseTableCellReturnType<CellElement, CM>) {
         return createElement(tagTableCell as never, (makePropsTableCell(info)));
     }
-}
+}*/
 
 export const Table = memoForwardRef(function TableU<TableElement extends Element, LabelElement extends Element>({
     ariaLabel,
@@ -193,7 +192,6 @@ export const TableRow = memoForwardRef(function TableRowU<RowElement extends Ele
     onTabbableIndexChange,
     ariaPropName,
     disabled,
-    untabbable,
     navigatePastEnd,
     navigatePastStart,
     selected,
@@ -225,7 +223,7 @@ export const TableRow = memoForwardRef(function TableRowU<RowElement extends Ele
                 navigatePastEnd: navigatePastEnd ?? "wrap",
                 navigatePastStart: navigatePastStart ?? "wrap"
             },
-            rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable: untabbable ?? false }
+            rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null }
         },
         tableRowParameters: {
             selected: selected ?? null,

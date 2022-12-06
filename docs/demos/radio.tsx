@@ -2,15 +2,9 @@
 import { useState } from "preact-prop-helpers";
 import { memo } from "preact/compat";
 import { Radio, RadioGroup } from "../../component/radio-group";
-import { EventDetail, RadioSubInfo } from "../../index";
 
-function getDocument() {
-    return window.document;
-}
 
 const DemoRadioButton = memo(function DemoRadioButton({ index }: { index: number }) {
-
-    const value = `Radio button #${index}`;
 
     return (
         <div>

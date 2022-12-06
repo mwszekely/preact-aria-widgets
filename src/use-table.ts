@@ -4,7 +4,7 @@ import {
     CompleteGridNavigationContext,
     CompleteGridNavigationRowContext, GridSingleSelectSortableChildCellInfo, GridSingleSelectSortableChildRowInfo, PassiveStateUpdater, returnNull, useCompleteGridNavigation,
     useCompleteGridNavigationCell, UseCompleteGridNavigationCellParameters, UseCompleteGridNavigationCellReturnType, UseCompleteGridNavigationParameters,
-    UseCompleteGridNavigationReturnType, useCompleteGridNavigationRow, UseCompleteGridNavigationRowParameters, UseCompleteGridNavigationRowReturnType, useMergedProps, usePassiveState, useStableCallback, useStableObject
+    UseCompleteGridNavigationReturnType, useCompleteGridNavigationRow, UseCompleteGridNavigationRowParameters, UseCompleteGridNavigationRowReturnType, useMergedProps, usePassiveState, useStableCallback
 } from "preact-prop-helpers";
 import { useCallback, useEffect, useRef } from "preact/hooks";
 import { ElementToTag, Prefices } from "./props";
@@ -77,7 +77,7 @@ export interface UseTableCellParameters<TableCellElement extends Element, CM ext
 export interface TableRowInfo<TableRowElement extends Element, TableCellElement extends Element> extends GridSingleSelectSortableChildRowInfo<TableRowElement, TableCellElement> { }
 export interface TableCellInfo<TableCellElement extends Element> extends GridSingleSelectSortableChildCellInfo<TableCellElement> {
     getSortValue(): unknown;
- }
+}
 
 export interface UseTableParameters<TableElement extends Element, LabelElement extends Element> {
     labelParameters: Omit<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
@@ -130,6 +130,31 @@ export function useTable<TableElement extends Element, LabelElement extends Elem
         context: ({ tableContext: ({ sortByColumn, setSortBodyFunction: setSortBody, getCurrentSortColumn: getSortColumn }) })
     }
 }
+function fuzzyCompare(lhs: any, rhs: any): number {
+    if (lhs === rhs)
+        return 0;
+
+    if (lhs == null || rhs == null) {
+        if (lhs == null && rhs != null)
+            return -1;
+        if (lhs != null && rhs == null)
+            return 1;
+        if (lhs === null && rhs === undefined)
+            return 1;
+        if (lhs === undefined && rhs === null)
+            return -1;
+    }
+    else {
+        if (lhs == rhs)
+            return 0;
+        if (lhs < rhs)
+            return -1;
+        return 1;
+    }
+
+    return 0;
+
+}
 const naturalSectionTypes = new Set<keyof h.JSX.IntrinsicElements>(["thead", "tbody", "tfoot"]);
 export function useTableSection<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>>({
     linearNavigationParameters,
@@ -157,7 +182,7 @@ export function useTableSection<TableSectionElement extends Element, TableRowEle
         singleSelectionParameters,
         sortableChildrenParameters: {
             compare: useCallback<Compare<RM>>((lhs, rhs) => {
-                return +(lhs.getSortValue() as number) - +(rhs.getSortValue() as number);
+                return fuzzyCompare(lhs?.getSortValue?.(), rhs?.getSortValue?.());
             }, [])
         },
         typeaheadNavigationParameters: { noTypeahead: true, collator: null, typeaheadTimeout: Infinity },
@@ -233,12 +258,13 @@ export function useTableRow<TableRowElement extends Element, TableCellElement ex
             completeGridNavigationRowParameters,
             rovingTabIndexChildParameters,
             sortableChildParameters: {
-                getSortValue: useCallback((): unknown => {
+                getSortValue: useStableCallback((): unknown => {
                     const currentColumn = cx1.tableContext.getCurrentSortColumn().column;
                     const currentChild = rowAsParentOfCellsReturn.managedChildrenReturn.getChildren().getAt(currentColumn ?? 0)
                     const sortValue = currentChild?.getSortValue();
+
                     return sortValue;
-                }, [])
+                })
             }
         },
         rowAsParentOfCellsParameters: {

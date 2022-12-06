@@ -1,6 +1,6 @@
 import { h } from "preact";
-import { CompleteListNavigationContext, generateRandomId, ManagedChildInfo, OnChildrenMountChange, OnPassiveStateChange, PassiveStateUpdater, returnTrue, useChildrenFlag, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseListNavigationSingleSelectionSortableChildInfo, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, useMergedProps, useStableCallback, useStableObject, useState } from "preact-prop-helpers";
-import { StateUpdater, useCallback, useEffect, useLayoutEffect } from "preact/hooks";
+import { CompleteListNavigationContext, generateRandomId, ManagedChildInfo, OnChildrenMountChange, PassiveStateUpdater, returnTrue, useChildrenFlag, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseListNavigationSingleSelectionSortableChildInfo, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, useMergedProps, useStableCallback, useStableObject, useState } from "preact-prop-helpers";
+import { StateUpdater, useCallback, useLayoutEffect } from "preact/hooks";
 import { debugLog, EventDetail, Prefices } from "./props";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
 import { UseListboxParameters } from "./use-listbox";
@@ -48,7 +48,7 @@ interface TC {
     getVisibleIndex: () => number | null;
     getPanelId: (index: number) => string;
     getTabId: (index: number) => string;
-    setSelectedIndex: PassiveStateUpdater<number | null, Event>;
+    //setSelectedIndex: PassiveStateUpdater<number | null, Event>;
 }
 
 export interface UseTabReturnType<TabElement extends Element> extends UseCompleteListNavigationChildReturnType<TabElement, TabInfo<TabElement>> { }
@@ -245,7 +245,7 @@ export function useTab<TabElement extends Element>({ completeListNavigationChild
         singleSelectionChildParameters: { ariaPropName: "aria-selected", selectionMode: selectionMode ?? "foucs", ...singleSelectionChildParameters },
     });
     const { singleSelectionChildReturn: { selected }, rovingTabIndexChildReturn: { tabbable } } = listNavRet2;
-    const { getPanelId, getTabId, setSelectedIndex } = context.tabsContext;
+    const { getPanelId, getTabId } = context.tabsContext;
 
     const panelId = getPanelId(managedChildParameters.index);
     const tabId = getTabId(managedChildParameters.index);

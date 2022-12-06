@@ -1,6 +1,6 @@
 import { h } from "preact";
 import { ManagedChildInfo, OnChildrenMountChange, PassiveStateUpdater, useChildrenFlag, useLinearNavigation, UseLinearNavigationParameters, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, useMergedProps, UsePressReturnType, useRandomId, useRefElement, UseRefElementParameters, UseRefElementReturnType, UseRovingTabIndexChildParameters, useStableCallback, useStableGetter, useStableObject, useState } from "preact-prop-helpers";
-import { StateUpdater, useCallback } from "preact/hooks";
+import { useCallback } from "preact/hooks";
 import { debugLog, DisabledType, Prefices } from "./props";
 import { ButtonPressEvent, useButton, UseButtonParameters } from "./use-button";
 

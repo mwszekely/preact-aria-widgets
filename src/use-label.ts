@@ -1,6 +1,6 @@
 import { h } from "preact";
 import { useMergedProps, usePress, UsePressReturnType, useRandomDualIds, UseRandomDualIdsParameters, UseRandomDualIdsReturnType, useRefElement, UseRefElementReturnType, useStableCallback } from "preact-prop-helpers";
-import { useCallback, useEffect } from "preact/hooks";
+import { useEffect } from "preact/hooks";
 import { DisabledType, ElementToTag, noop } from "./props";
 
 export type LabelPosition = "separate" | "wrapping" | "none";
@@ -213,17 +213,23 @@ export function useCheckboxLike<LP extends LabelPosition, InputType extends Elem
         randomIdInputParameters,
         randomIdLabelParameters,
     });
-    const { getElement: getInput } = refElementInputReturn;
-    const { getElement: getLabel } = refElementLabelReturn;
-    const focusInput = useCallback(() => { (getInput() as (HTMLElement | null))?.focus(); }, []);
-    const focusLabel = useCallback(() => { (getLabel() as (HTMLElement | null))?.focus(); }, []);
+
+    const focusSelf = useStableCallback(() => {
+        let elementToFocus: HTMLElement | null = null;
+        if (labelPosition == "wrapping")
+            elementToFocus = getLabelElement() as Element as HTMLElement;
+        else
+            elementToFocus = getInputElement() as Element as HTMLElement;
+
+        elementToFocus?.focus();
+    })
+
     const onClickInputSync = (labelPosition == "wrapping" ? undefined : onInputSync);
     const onClickLabelSync = onInputSync;//(labelPosition != "wrapping" ? undefined : onInputSync);
-    const { pressReturn: pressInputReturn } = usePress<InputType>({ pressParameters: { exclude: {}, focusSelf: useStableCallback(() => {debugger;focusSelf()}), onPressSync: (disabled) ? undefined : onClickInputSync }, refElementReturn: refElementInputReturn });
-    const { pressReturn: pressLabelReturn } = usePress<LabelType>({ pressParameters: { exclude: {}, focusSelf: useStableCallback(() => {debugger;focusSelf()}), onPressSync: (disabled) ? undefined : onClickLabelSync }, refElementReturn: refElementLabelReturn });
+    const { pressReturn: pressInputReturn } = usePress<InputType>({ pressParameters: { exclude: {}, focusSelf, onPressSync: (disabled) ? undefined : onClickInputSync }, refElementReturn: refElementInputReturn });
+    const { pressReturn: pressLabelReturn } = usePress<LabelType>({ pressParameters: { exclude: {}, focusSelf, onPressSync: (disabled) ? undefined : onClickLabelSync }, refElementReturn: refElementLabelReturn });
     const propsUnstableInput: h.JSX.HTMLAttributes<InputType> = {};
     const propsUnstableLabel: h.JSX.HTMLAttributes<LabelType> = {};
-    //const propsUnstableLabel = useRef<h.JSX.HTMLAttributes<LabelType>>({});
 
     // Make sure that label clicks can't affect the visual state of the checkbox
     propsUnstableInput.onClick = preventDefault;
@@ -292,16 +298,6 @@ export function useCheckboxLike<LP extends LabelPosition, InputType extends Elem
             break;
         }
     }
-
-    const focusSelf = useStableCallback(() => {
-        let elementToFocus: HTMLElement | null = null;
-        if (labelPosition == "wrapping")
-            elementToFocus = getLabelElement() as Element as HTMLElement;
-        else
-            elementToFocus = getInputElement() as Element as HTMLElement;
-
-        elementToFocus?.focus();
-    })
 
     return {
         randomIdInputReturn,

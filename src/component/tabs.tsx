@@ -1,11 +1,10 @@
-import { createContext, createElement, h, Ref, render, VNode } from "preact";
-import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
-import { ElementToTag, PropModifier } from "../props";
-import { TabsContext, UseTab, UseTabPanel, UseTabPanelParameters, UseTabParameters, useTabs, UseTabsParameters, TabPanelsContext, UseTabsReturnType, useTab, UseTabReturnType, UseTabPanelReturnType, useTabPanel } from "../use-tabs";
-import { memoForwardRef, PartialExcept, useDefault } from "./util";
+import { createContext, VNode } from "preact";
+import { useCallback, useContext } from "preact/hooks";
+import { TabPanelsContext, TabsContext, useTab, useTabPanel, UseTabPanelParameters, UseTabPanelReturnType, UseTabParameters, UseTabReturnType, useTabs, UseTabsParameters, UseTabsReturnType } from "../use-tabs";
+import { PartialExcept, useDefault } from "./util";
 
 type Get<T, K extends keyof T> = T[K];
-type Get2<T, K extends keyof T, K2 extends keyof T[K]> = T[K][K2];
+//type Get2<T, K extends keyof T, K2 extends keyof T[K]> = T[K][K2];
 
 interface TabsPropsBase<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element> extends
     Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement>, "labelParameters">,
@@ -28,7 +27,7 @@ interface TabPropsBase<TabElement extends Element> extends
     Get<UseTabParameters<TabElement>, "completeListNavigationChildParameters"> {
 }
 
-interface TabPanelPropsBase<PanelElement extends Element> extends
+interface TabPanelPropsBase extends
     Get<UseTabPanelParameters, "managedChildParameters"> {
 }
 
@@ -40,7 +39,7 @@ export interface TabProps<TabElement extends Element> extends PartialExcept<TabP
     render(info: UseTabReturnType<TabElement>): VNode<any>;
 }
 
-export interface TabPanelProps<PanelElement extends Element> extends PartialExcept<TabPanelPropsBase<PanelElement>, "index"> {
+export interface TabPanelProps<PanelElement extends Element> extends PartialExcept<TabPanelPropsBase, "index"> {
     render(info: UseTabPanelReturnType<PanelElement>): VNode<any>;
 }
 
@@ -111,7 +110,6 @@ export function Tab<E extends Element>({
     hidden,
     index,
     onPressSync,
-    selectionMode,
     getText,
     getSortValue,
     render

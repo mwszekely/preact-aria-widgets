@@ -88,7 +88,3 @@ function DemoCheckbox({ labelPosition, tagInput, tagLabel, disabled, checked, se
     )
 }
 
-
-function getDocument() {
-    return window.document;
-}

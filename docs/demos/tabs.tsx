@@ -1,13 +1,8 @@
 
-import { returnZero, useMergedProps, useState } from "preact-prop-helpers";
+import { returnZero, useState } from "preact-prop-helpers";
 import { memo } from "preact/compat";
-
 import { Tabs } from "../../";
 import { Tab, TabPanel } from "../../component/tabs";
-import { EventDetail } from "../../index";
-
-
-function getDocument() { return window.document; }
 
 export function Blurb() {
     return (

@@ -2,10 +2,6 @@
 import { useState } from "preact-prop-helpers";
 import { Button, EventDetail } from "../../index";
 
-function getDocument() {
-    return window.document;
-}
-
 export function Blurb() {
     return (
         <>

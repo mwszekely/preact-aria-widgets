@@ -1,17 +1,11 @@
 
-import { returnNull, returnUndefined, useMergedProps, usePassiveState, useStableCallback, useState } from "preact-prop-helpers";
-import { useEffect, useRef } from "preact/hooks";
+import { returnNull, useMergedProps, useStableCallback, useState } from "preact-prop-helpers";
+import { useRef } from "preact/hooks";
 import { CheckboxGroupParent } from "../../component/checkbox-group";
 import { Checkbox, CheckboxCheckedType, CheckboxGroup, CheckboxGroupChild, defaultRenderCheckboxLike, EventDetail, UseCheckboxReturnType } from "../../index";
 
-
-function getDocument() {
-    return window.document;
-}
-
 function DemoCheckbox({ index }: { index: number }) {
     const [checked, setChecked] = useState<CheckboxCheckedType>(false);
-    const labelText = `Checkbox #${index}`;
     const ref = useRef<UseCheckboxReturnType<any, any>>(null);
     return (
         <CheckboxGroupChild<HTMLInputElement>
@@ -86,7 +80,7 @@ export function Demo() {
             <Code />
             <label><input type="number" min={0} value={count} onInput={e => setCount(e.currentTarget.valueAsNumber)} /> # of checkboxes</label>
             <div>
-                <p><strong>Note:</strong> Each checkbox takes a random amount of time to update when modified via the parent checkbox to test async handling.</p>
+                <p><strong>Note:</strong> Each checkbox (in this demo only!) takes a random amount of time to update when modified via the parent checkbox to test async handling.</p>
                 <CheckboxGroup<HTMLDivElement, HTMLInputElement>
                     navigationDirection="vertical"
                     render={

@@ -4,12 +4,8 @@ import { memo } from "preact/compat";
 import { useState } from "preact/hooks";
 import { Accordion, AccordionSection, Heading } from "../../index";
 
-function DemoAccordion({ children, ...props }: RenderableProps<{}>) {
+function DemoAccordion({ children }: RenderableProps<{}>) {
     return <Accordion navigationDirection="vertical" render={(_info): VNode<any> => { return <div id="accordion-demo">{children}</div> }} />
-}
-
-function getDocument() {
-    return window.document;
 }
 
 const DemoAccordionSection = memo(function DemoAccordionSection({ index, body, heading, disabled, open }: { open?: boolean, disabled: boolean, index: number, heading: ComponentChildren, body: ComponentChildren }) {

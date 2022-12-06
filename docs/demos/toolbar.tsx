@@ -2,10 +2,7 @@
 import { returnZero, useMergedProps, useState } from "preact-prop-helpers";
 import { memo } from "preact/compat";
 import { ToolbarChild } from "../../component/toolbar";
-
 import { Button, Toolbar } from "../../index";
-
-function getDocument() { return window.document; }
 
 const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
 

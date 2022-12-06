@@ -1,6 +1,5 @@
 import { h } from "preact";
-import { findFirstFocusable, ManagedChildInfo, useGlobalHandler, useManagedChild, useManagedChildren, UseManagedChildrenContext, useMergedProps, useRefElement, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
-import { UseManagedChildParameters, UseManagedChildrenParameters, UseManagedChildrenReturnType } from "preact-prop-helpers";
+import { findFirstFocusable, ManagedChildInfo, useGlobalHandler, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, useMergedProps, useRefElement, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
 import { StateUpdater, useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
 import { debugLog } from "./props";
 

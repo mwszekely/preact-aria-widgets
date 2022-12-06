@@ -5,7 +5,6 @@ import { getBabelOutputPlugin } from '@rollup/plugin-babel';
 import sourcemaps from 'rollup-plugin-sourcemaps';
 import path from "path";
 
-
 export default {
     input: "index.tsx",
     output: {
@@ -14,12 +13,12 @@ export default {
         name: "bundle",
         sourcemap: "inline"
     },
-    plugins: [,
+    plugins: [
         typescript({  }),
         commonjs({ sourceMap: true }),
         resolve({ dedupe: ['preact', "preact/compat", "preact/hooks", "preact-prop-helpers"] }),
         getBabelOutputPlugin({
-            configFile: path.resolve(__dirname, ".babelrc"),
+            configFile: path.resolve(".babelrc"),
             sourceMaps: true,
             allowAllFormats: true
         }),

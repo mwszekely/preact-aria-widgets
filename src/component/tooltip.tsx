@@ -1,16 +1,13 @@
-import { createElement, h, Ref, VNode } from "preact";
-import { UseActiveElementParameters } from "preact-prop-helpers";
+import { Ref, VNode } from "preact";
 import { useImperativeHandle } from "preact/compat";
-import { ElementToTag, PropModifier } from "../props";
 import { useTooltip, UseTooltipParameters, UseTooltipReturnType } from "../use-tooltip";
-import { defaultRenderPortal } from "./dialog";
 import { memoForwardRef } from "./util";
 
 export interface TooltipProps<TriggerType extends Element, PopupType extends Element> extends UseTooltipParameters {
     render(info: UseTooltipReturnType<TriggerType, PopupType>): VNode;
     ref?: Ref<UseTooltipReturnType<TriggerType, PopupType>>;
 }
-
+/*
 export function defaultRenderTooltip<TriggerType extends Element, PopupType extends Element>({ tagTooltip, tagTrigger, makeTooltipProps, makeTriggerProps, portalId }: { portalId: string, tagTrigger: ElementToTag<TriggerType>, tagTooltip: ElementToTag<PopupType>, makeTriggerProps: (info: UseTooltipReturnType<TriggerType, PopupType>) => h.JSX.HTMLAttributes<TriggerType>, makeTooltipProps: (info: UseTooltipReturnType<TriggerType, PopupType>) => h.JSX.HTMLAttributes<PopupType> }) {
     return function (info: UseTooltipReturnType<TriggerType, PopupType>) {
         return (
@@ -23,7 +20,7 @@ export function defaultRenderTooltip<TriggerType extends Element, PopupType exte
             </>
         )
     }
-}
+}*/
 
 export const Tooltip = memoForwardRef(function TooltipU<TriggerType extends Element, PopupType extends Element>({ focusDelay, mouseoutToleranceDelay, mouseoverDelay, render }: TooltipProps<TriggerType, PopupType>, ref?: Ref<any>) {
     const info = useTooltip<TriggerType, PopupType>({ focusDelay, mouseoutToleranceDelay, mouseoverDelay });

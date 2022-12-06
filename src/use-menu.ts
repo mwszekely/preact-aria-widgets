@@ -1,8 +1,8 @@
 import { useMergedProps, useStableCallback } from "preact-prop-helpers";
-import { UseToolbarContext } from "./use-toolbar";
 import { debugLog } from "./props";
 import { useMenuSurface, UseMenuSurfaceParameters, UseMenuSurfaceReturnType } from "./use-menu-surface";
 import { useMenubar, useMenubarChild, UseMenubarItemParameters, UseMenubarItemReturnType, UseMenubarParameters, UseMenubarReturnType, UseMenubarSubInfo } from "./use-menubar";
+import { UseToolbarContext } from "./use-toolbar";
 
 export interface UseMenuContext<ContainerElement extends Element, ChildElement extends Element, M extends UseMenubarSubInfo<ChildElement>> extends UseToolbarContext<ContainerElement, ChildElement, M> {
 
@@ -144,7 +144,7 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
         dismissParameters,
         escapeDismissParameters,
         focusTrapParameters: {
-            focusPopup: () => { debugger; rovingTabIndexReturn.focusSelf() }
+            focusPopup: () => { rovingTabIndexReturn.focusSelf() }
         }
     });
 

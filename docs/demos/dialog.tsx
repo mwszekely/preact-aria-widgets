@@ -1,11 +1,7 @@
 
 import { useState } from "preact-prop-helpers";
 import { defaultRenderPortal, Dialog } from "../../component/dialog";
-import { Button } from "../../index";
 
-
-
-function getDocument() { return window.document; }
 
 export function Blurb() {
     return (
@@ -36,8 +32,6 @@ export function Blurb() {
 export function Code() {
     return (<code>{``}</code>)
 }
-
-function getWindow() { return globalThis.window }
 
 export function Demo() {
     const [open, setOpen] = useState(false);

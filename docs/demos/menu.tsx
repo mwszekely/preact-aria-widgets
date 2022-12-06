@@ -1,5 +1,5 @@
 
-import { returnZero, useMergedProps, useState } from "preact-prop-helpers";
+import { returnZero, useState } from "preact-prop-helpers";
 import { defaultRenderPortal } from "../../component/dialog";
 import { Menu } from "../../component/menu";
 import { MenuItem } from "../../component/menubar";
@@ -20,8 +20,6 @@ function DemoListItem({ index }: { index: number }) {
         />
     )
 }
-
-function getDocument() { return window.document; }
 
 export function Blurb() {
     return (

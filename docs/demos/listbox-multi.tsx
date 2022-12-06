@@ -1,11 +1,7 @@
 
 import { returnZero, useState } from "preact-prop-helpers";
 import { memo } from "preact/compat";
-import { EventDetail, Listbox, ListboxItem, ListboxItemProps, ListboxProps } from "../../index";
-
-function getDocument() {
-    return window.document;
-}
+import { Listbox, ListboxItem } from "../../index";
 
 const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
     const [selected, setSelected] = useState(false);
@@ -21,7 +17,7 @@ const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
             ariaPropName="aria-selected"
             getSortValue={returnZero}
 
-            onPressSync={e => { setSelected(p => !p) }}
+            onPressSync={() => { setSelected(p => !p) }}
             render={info => {
                 return (
                     <li {...info.props}>{labelText}</li>

@@ -1,7 +1,5 @@
 import { createContext, createElement, h, Ref, VNode } from "preact";
-import { GridChildCellInfo } from "preact-prop-helpers";
 import { useContext, useImperativeHandle } from "preact/hooks";
-import { TableCellInfo } from "../use-table";
 import { ElementToTag } from "../props";
 import { GridlistCellInfo, GridlistRowInfo, useGridlist, useGridlistCell, UseGridlistCellParameters, UseGridlistCellReturnType, UseGridlistContext, UseGridlistParameters, UseGridlistReturnType, useGridlistRow, UseGridlistRowContext, UseGridlistRowParameters, UseGridlistRowReturnType } from "../use-gridlist";
 import { memoForwardRef, PartialExcept, useDefault } from "./util";
@@ -203,7 +201,6 @@ export const GridlistRow = memoForwardRef(function GridlistRowU<RowElement exten
     selected,
     selectionMode,
     typeaheadTimeout,
-    untabbable,
     getSortValue,
     getText,
     render
@@ -229,8 +226,7 @@ export const GridlistRow = memoForwardRef(function GridlistRowU<RowElement exten
                 navigatePastStart: navigatePastStart ?? "wrap"
             },
             rovingTabIndexParameters: {
-                onTabbableIndexChange: onTabbableIndexChange ?? null,
-                untabbable: untabbable ?? false,
+                onTabbableIndexChange: onTabbableIndexChange ?? null
             },
             typeaheadNavigationParameters: {
                 collator: useDefault("collator", collator),
