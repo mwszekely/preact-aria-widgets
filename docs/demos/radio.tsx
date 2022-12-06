@@ -23,7 +23,6 @@ const DemoRadioButton = memo(function DemoRadioButton({ index }: { index: number
                 tagInput="input"
                 tagLabel="label"
                 ariaLabel={null}
-                selectionMode="activation"
                 render={(info) => {
                     return <>
                         <input {...info.propsInput} name="radio-demo" />

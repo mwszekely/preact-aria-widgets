@@ -38,7 +38,7 @@ interface RadioPropsBase<LP extends LabelPosition, InputElement extends Element,
 interface RadioGroupProps<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, TabbableChildElement extends Element> extends PartialExcept<RadioGroupPropsBase<V, GroupElement, GroupLabelElement, TabbableChildElement>, "navigationDirection" | "ariaLabel" | "name" | "selectedValue" | "setSelectedValue"> {
     render(info: UseRadioGroupReturnType<V, GroupElement, GroupLabelElement, TabbableChildElement>): VNode<any>;
 }
-interface RadioProps<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element, V extends string | number> extends PartialExcept<RadioPropsBase<LP, InputElement, LabelElement, V>, "index" | "value" | "ariaLabel" | "selectionMode" | "labelPosition" | "tagInput" | "tagLabel"> {
+interface RadioProps<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element, V extends string | number> extends PartialExcept<RadioPropsBase<LP, InputElement, LabelElement, V>, "index" | "value" | "ariaLabel" | "labelPosition" | "tagInput" | "tagLabel"> {
     render(info: UseRadioReturnType<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>): VNode<any>;
 }
 
@@ -128,7 +128,6 @@ export const Radio = memoForwardRef(function Radio<LP extends LabelPosition, V e
     focusSelf,
     labelPosition,
     onPressSync,
-    selectionMode,
     hidden,
     tagInput,
     tagLabel,
@@ -148,7 +147,7 @@ export const Radio = memoForwardRef(function Radio<LP extends LabelPosition, V e
         context,
         labelParameters: { ariaLabel, labelPosition, tagInput, tagLabel },
         pressParameters: { exclude, focusSelf: focusSelf ?? defaultFocusSelf, onPressSync },
-        singleSelectionChildParameters: { selectionMode: useDefault("selectionMode", selectionMode), disabled: !!disabled },
+        singleSelectionChildParameters: { disabled: !!disabled },
         textContentParameters: { getText: useDefault("getText", getText) }
         //rovingTabIndexParameters: { hidden, focusSelf, noModifyTabIndex },
         //hasFocusParameters: { getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange },

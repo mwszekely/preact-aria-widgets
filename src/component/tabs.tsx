@@ -125,7 +125,7 @@ export function Tab<E extends Element>({
         sortableChildParameters: { getSortValue },
         managedChildParameters: { index },
         pressParameters: { exclude, focusSelf: focusSelf ?? focusSelfDefault, onPressSync },
-        singleSelectionChildParameters: { disabled: disabled ?? false, selectionMode: useDefault("selectionMode", selectionMode) },
+        singleSelectionChildParameters: { disabled: disabled ?? false, selectionMode: "focus" },
         textContentParameters: { getText: useDefault("getText", getText) }
     });
     return render(info);

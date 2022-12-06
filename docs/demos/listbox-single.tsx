@@ -14,6 +14,7 @@ const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
             ariaPropName="aria-selected"
             getSortValue={returnZero}
             disabled={false}
+            selected={null}
             render={info => {
                 const selected = info.singleSelectionChildReturn.selected;
                 // defaultRenderListboxSingleItem({ tagListItem: "li", makePropsListItem: ({ singleSelection: { selected } }) => ({ children: `List item #${index}${selected ? " (selected)" : ""}` }) })

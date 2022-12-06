@@ -1,6 +1,6 @@
 import { h } from "preact";
 import { CompleteListNavigationContext, generateRandomId, ManagedChildInfo, OnChildrenMountChange, OnPassiveStateChange, PassiveStateUpdater, returnTrue, useChildrenFlag, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseListNavigationSingleSelectionSortableChildInfo, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, useMergedProps, useStableCallback, useStableObject, useState } from "preact-prop-helpers";
-import { StateUpdater, useCallback } from "preact/hooks";
+import { StateUpdater, useCallback, useEffect, useLayoutEffect } from "preact/hooks";
 import { debugLog, EventDetail, Prefices } from "./props";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
 import { UseListboxParameters } from "./use-listbox";
@@ -160,16 +160,20 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
             onChildrenMountChange: useStableCallback<OnChildrenMountChange<number>>((_m, _u) => { reevaluateClosestFit(); })
         }
     });
-    const { getChildren: getPanels } = panelChildrenReturn;
-    const { changeIndex: changeVisiblePanel, getCurrentIndex: getVisibleIndex, reevaluateClosestFit } = useChildrenFlag({
+
+    const { changeIndex: changeVisiblePanel, getCurrentIndex: getVisibleIndex, reevaluateClosestFit } = useChildrenFlag<TabPanelInfo, Event>({
         getChildren: panelChildrenReturn.getChildren,
         closestFit: false,
         initialIndex: null,
-        getAt: useStableCallback((i) => { return (getPanels().getAt(i)?.getVisible() ?? false) }, []),
-        setAt: useStableCallback((i, b) => { (getPanels().getAt(i)?.setVisible(b)); }, []),
+        getAt: useStableCallback((i) => { return i.getVisible() ?? false; /*getPanels().getAt(i)?.getVisible() ?? false)*/ }, []),
+        setAt: useStableCallback((i, b) => { return i.setVisible(b); /*(getPanels().getAt(i)?.setVisible(b));*/ }, []),
         isValid: returnTrue,
         onIndexChange: null
     });
+
+    useLayoutEffect(() => {
+        changeVisiblePanel(singleSelectionParameters.initiallySelectedIndex);
+    }, [])
 
     const {
         propsInput,
@@ -190,7 +194,10 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
     } = useCompleteListNavigation<TabListElement, TabElement, TabInfo<TabElement>>({
         linearNavigationParameters: { navigationDirection: orientation, ...linearNavigationParameters },
         rovingTabIndexParameters,
-        singleSelectionParameters: { setSelectedIndex: useStableCallback<PassiveStateUpdater<number | null, Event>>((i, p) => { ssi?.(i, p); changeVisiblePanel(i); }), ...singleSelectionParameters },
+        singleSelectionParameters: {
+            setSelectedIndex: useStableCallback<PassiveStateUpdater<number | null, Event>>((i, p) => { ssi?.(i, p); changeVisiblePanel(i); listNavRet1.singleSelectionReturn.setSelectedIndex(i, p); }),
+            ...singleSelectionParameters
+        },
         typeaheadNavigationParameters,
         rearrangeableChildrenParameters,
         sortableChildrenParameters
@@ -213,18 +220,20 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
             ...context,
             tabsContext: useStableObject({ getTabId, getPanelId, getVisibleIndex, setSelectedIndex })
         }),
-        propsContainer: useMergedProps(listNavigationSingleSelectionProps, {
-            role: (role ?? "tablist"),
+        propsContainer: useMergedProps(
+            listNavigationSingleSelectionProps,
             propsInput,
-            "aria-orientation": orientation ?? "horizontal",
-        } as {}),
+            {
+                role: (role ?? "tablist"),
+                "aria-orientation": orientation ?? "horizontal",
+            } as {}),
         propsLabel
     }
 }
 
 
-export function useTab<TabElement extends Element>({ completeListNavigationChildParameters, managedChildParameters, pressParameters: { onPressSync, ...pressParameters }, textContentParameters, singleSelectionChildParameters, rovingTabIndexChildParameters, sortableChildParameters, context }: UseTabParameters<TabElement>) {
-    debugLog("useTab", managedChildParameters.index);
+export function useTab<TabElement extends Element>({ completeListNavigationChildParameters, managedChildParameters, pressParameters, textContentParameters, singleSelectionChildParameters: { selectionMode, ...singleSelectionChildParameters }, rovingTabIndexChildParameters, sortableChildParameters, context }: UseTabParameters<TabElement>) {
+
     const { props: listNavigationSingleSelectionChildProps, ...listNavRet2 } = useCompleteListNavigationChild({
         completeListNavigationChildParameters,
         context,
@@ -232,11 +241,8 @@ export function useTab<TabElement extends Element>({ completeListNavigationChild
         rovingTabIndexChildParameters,
         sortableChildParameters,
         textContentParameters,
-        pressParameters: {
-            onPressSync: (e) => { onPressSync?.(e); setSelectedIndex(managedChildParameters.index) },
-            ...pressParameters
-        },
-        singleSelectionChildParameters: { ariaPropName: "aria-selected", ...singleSelectionChildParameters },
+        pressParameters,
+        singleSelectionChildParameters: { ariaPropName: "aria-selected", selectionMode: selectionMode ?? "foucs", ...singleSelectionChildParameters },
     });
     const { singleSelectionChildReturn: { selected }, rovingTabIndexChildReturn: { tabbable } } = listNavRet2;
     const { getPanelId, getTabId, setSelectedIndex } = context.tabsContext;
@@ -244,7 +250,7 @@ export function useTab<TabElement extends Element>({ completeListNavigationChild
     const panelId = getPanelId(managedChildParameters.index);
     const tabId = getTabId(managedChildParameters.index);
 
-
+    debugLog("useTab", managedChildParameters.index, selected.toString());
     return {
         props: useMergedProps(listNavigationSingleSelectionChildProps, {
             "data-tabbable": tabbable.toString(),

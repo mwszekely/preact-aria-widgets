@@ -29,7 +29,7 @@ export interface UseRadioParameters<LP extends LabelPosition, V extends string |
     context: RadioContext<V, any, FocusableLabelElement<LP, InputElement, LabelElement>, M>;
     checkboxLikeParameters: Omit<UseCheckboxLikeParameters<LP, InputElement, LabelElement>["checkboxLikeParameters"], "checked" | "onInput" | "role">;
     labelParameters: Omit<UseCheckboxLikeParameters<LP, InputElement, LabelElement>["labelParameters"], "onLabelClick">;
-    singleSelectionChildParameters: Omit<UseCompleteListNavigationChildParameters<FocusableLabelElement<LP, InputElement, LabelElement>, M, never>["singleSelectionChildParameters"], "ariaPropName">
+    singleSelectionChildParameters: Omit<UseCompleteListNavigationChildParameters<FocusableLabelElement<LP, InputElement, LabelElement>, M, never>["singleSelectionChildParameters"], "ariaPropName" | "selectionMode">
 }
 
 export interface RadioContext<V extends number | string, ParentElement extends Element, ChildElement extends Element, M extends RadioSubInfo<ChildElement, V>> extends CompleteListNavigationContext<ParentElement, ChildElement, M> {
@@ -142,7 +142,6 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
     const _v: void = useSingleSelectionDeclarative({
         singleSelectionReturn: {
             setSelectedIndex: useStableCallback((s) => {
-                debugger;
                 let next = typeof s == "function" ? s(selectedIndex) : s;
                 if (next != null) {
                     const nextValue = managedChildrenReturn.getChildren().getAt(next)?.getValue2();
@@ -224,7 +223,6 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
     const index = managedChildParameters.index;
     debugLog("useRadio", index);
     const onInput = useStableCallback((e: h.JSX.TargetedEvent<InputElement>) => {
-        debugger;
         singleSelectionChildReturn.setThisOneSelected(e);
     });
 
@@ -255,7 +253,7 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
         },
         hasFocus,
         subInfo: { getValue, subInfo },*/
-        singleSelectionChildParameters: { ariaPropName: tagInput == "input" && labelPosition == "separate" ? null : "aria-selected", ...singleSelectionChildParameters }
+        singleSelectionChildParameters: { selectionMode: "focus", ariaPropName: tagInput == "input" && labelPosition == "separate" ? null : "aria-selected", ...singleSelectionChildParameters }
     });
 
     const { selected: checked } = singleSelectionChildReturn;

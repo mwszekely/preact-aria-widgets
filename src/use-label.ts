@@ -1,7 +1,7 @@
 import { h } from "preact";
-import { useMergedProps, usePress, UsePressReturnType, useRandomDualIds, UseRandomDualIdsParameters, UseRandomDualIdsReturnType, UseRefElementReturnType, useStableCallback } from "preact-prop-helpers";
+import { useMergedProps, usePress, UsePressReturnType, useRandomDualIds, UseRandomDualIdsParameters, UseRandomDualIdsReturnType, useRefElement, UseRefElementReturnType, useStableCallback } from "preact-prop-helpers";
 import { useCallback, useEffect } from "preact/hooks";
-import { DisabledType, ElementToTag } from "./props";
+import { DisabledType, ElementToTag, noop } from "./props";
 
 export type LabelPosition = "separate" | "wrapping" | "none";
 export type FocusableLabelElement<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element> = LP extends "wrapping" ? LabelElement : InputElement;
@@ -65,15 +65,17 @@ export function useLabel<LP extends LabelPosition, InputElement extends Element,
         randomIdInputParameters: { ...randomIdInputParameters, otherReferencerProp: !synthetic && labelPosition === "separate" ? "for" : null },
         randomIdLabelParameters: { ...randomIdLabelParameters, otherReferencerProp: synthetic ? "aria-labelledby" : null },
     });
+    const { refElementReturn } = useRefElement<LabelElement>({ refElementParameters: {  } });
 
     if (labelPosition == 'none')
         propsInput["aria-label"] = (ariaLabel!);
 
-    propsLabel.onClick = onLabelClick ?? undefined;
+       const { pressReturn } = usePress({ pressParameters: { exclude: { enter: "exclude", space: "exclude", click: undefined }, onPressSync: onLabelClick, focusSelf: noop }, refElementReturn })
+    //propsLabel.onClick = onLabelClick ?? undefined;
 
     return {
         propsInput,
-        propsLabel,
+        propsLabel: useMergedProps(propsLabel, refElementReturn.propsStable, pressReturn.propsStable),
         randomIdInputReturn,
         randomIdLabelReturn,
     }

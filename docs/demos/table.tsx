@@ -1,10 +1,10 @@
 
 import { h } from "preact";
-import { useState } from "preact-prop-helpers";
+import { returnZero, useState } from "preact-prop-helpers";
 import { useRef } from "preact/compat";
 import { useCallback } from "preact/hooks";
 import { Table, TableSection, TableCell, TableRow } from "../../component/table";
-/*
+
 function getDocument() { return window.document; }
 
 
@@ -35,14 +35,38 @@ export function Code() {
 }
 
 
-function DemoInput({ tabbable }: { tabbable: boolean }) {
+function DemoInput({ index }: { index: number }) {
     const [v, setV] = useState("");
+
     return (
-        <input type="text" tabIndex={tabbable ? 0 : -1} onInput={useCallback((e: h.JSX.TargetedEvent<HTMLInputElement>) => {
+        <TableCell<HTMLTableCellElement> getSortValue={() => v} focusSelf={e => e.focus()} tagTableCell="td" index={index} render={info => {
+            return (
+                <td {...info.props}>
+                    <input type="text" tabIndex={info.rovingTabIndexChildReturn.tabbable ? 0 : -1} onInput={useCallback((e: h.JSX.TargetedEvent<HTMLInputElement>) => {
+                        debugger;
+                        setV(e.currentTarget.value);
+                        e.preventDefault();
+                    }, [])} value={v} />
+                </td>
+            )
+            /*
+
+            tagTableCell: "td", makePropsTableCell: (info) => ({
+                children: <DemoInput tabbable={info.rovingTabIndex.tabbable} />
+
+            })
+
+            */
+        }} />
+    )
+    /*
+    return (
+        <input {...props} type="text" tabIndex={tabbable ? 0 : -1} onInput={useCallback((e: h.JSX.TargetedEvent<HTMLInputElement>) => {
+            debugger;
             setV(e.currentTarget.value);
             e.preventDefault();
         }, [])} value={v} />
-    )
+    )*/
 }
 
 function DemoTableCell({ index, header }: { index: number, header?: boolean }) {
@@ -50,20 +74,21 @@ function DemoTableCell({ index, header }: { index: number, header?: boolean }) {
 
     if (header) {
         const text = `Header #${index}`;
-        return <TableCell<HTMLTableCellElement> focusSelf={e => e.focus()}  tagTableCell="th" index={index} render={info => <button tabIndex={info.rovingTabIndexChildReturn.tabbable ? 0 : -1} onClick={() => info..sort()}>{text}</button>}  subInfo={undefined} />
+        return <TableCell<HTMLTableCellElement> getSortValue={returnZero} focusSelf={e => e.focus()} tagTableCell="th" index={index} render={info => <th {...info.props}>{text}<button tabIndex={info.rovingTabIndexChildReturn.tabbable ? 0 : -1} onClick={() => info.tableCellReturn.sortByThisColumn()}>Sort</button></th>} />
     }
     else {
         //const text = `Cell in column #${index}`;
         switch (index) {
             case 0:
-                return <TableCell<HTMLTableCellElement> focusSelf={e => e.focus()} location="body" headerType={null} tagTableCell="td" index={index} getDocument={getDocument} text={""} value={""} render={defaultRenderTableCell({
-                    tagTableCell: "td", makePropsTableCell: (info) => ({
-                        children: <DemoInput tabbable={info.rovingTabIndex.tabbable} />
-
-                    })
-                })}  subInfo={undefined} />
+                return (
+                    <DemoInput index={index} />
+                );
             default:
-                return <TableCell<HTMLTableCellElement> focusSelf={e => e.focus()} location="body" headerType={null} tagTableCell="td" index={index} getDocument={getDocument} text={r.current.toString()} value={r.current.toString()} render={defaultRenderTableCell({ tagTableCell: "td", makePropsTableCell: () => ({ children: r.current.toString() }) })}  subInfo={undefined} />
+                return <TableCell<HTMLTableCellElement> getSortValue={() => r.current} focusSelf={e => e.focus()} tagTableCell="td" index={index} render={info => {
+                    return (
+                        <td {...info.props}>{r.current.toString()}</td>
+                    )
+                }} />
         }
     }
 }
@@ -78,51 +103,88 @@ export function Demo() {
             <Code />
             <label><input type="number" min={0} value={count} onInput={e => setCount(e.currentTarget.valueAsNumber)} /> # of table rows</label>
             <div>
-                <Table noTypeahead={true} render={defaultRenderTable({
-                    tagTable: "table", 
-                    makePropsTable: () => ({
+                <Table<HTMLTableElement, HTMLLabelElement>
+                    ariaLabel={null}
+                    selectionLimit="multi"
+                    tagTable="table"
+                    render={infoTable => {
+                        return (
+                            <>
+                                <label {...infoTable.propsLabel}>Table demo</label>
+                                <table {...infoTable.propsTable}>
+                                    <TableSection<HTMLTableSectionElement, HTMLTableRowElement, HTMLTableCellElement>
+                                        tagTableSection="thead"
+                                        location="head"
+                                        render={infoSection => {
+                                            return (
+                                                <thead {...infoSection.propsTableSection}>
+                                                    <TableRow<HTMLTableRowElement, HTMLTableCellElement>
+                                                        index={0}
+                                                        ariaPropName="aria-selected"
+                                                        tagTableRow="tr"
+                                                        render={info => {
+                                                            return (
+                                                                <tr {...info.props}>
+                                                                    <DemoTableCell header={true} key={0} index={0} />
+                                                                    <DemoTableCell header={true} key={1} index={1} />
+                                                                    <DemoTableCell header={true} key={2} index={2} />
+                                                                </tr>
+                                                            )
+                                                        }} />
+                                                </thead>
+                                            )
+                                        }} />
+                                    <TableSection<HTMLTableSectionElement, HTMLTableRowElement, HTMLTableCellElement>
+                                        tagTableSection="tbody"
+                                        location="body"
+                                        render={infoSection => {
+                                            return (
+                                                <tbody {...infoSection.propsTableSection}>
+                                                    {infoSection.rearrangeableChildrenReturn.useRearrangedChildren(Array.from(function* () {
+                                                        for (let i = 0; i < count; ++i) {
+                                                            yield (
+                                                                <TableRow<HTMLTableRowElement, HTMLTableCellElement>
+                                                                    ariaPropName="aria-selected"
+                                                                    tagTableRow="tr"
+                                                                    key={i}
+                                                                    index={i}
+                                                                    render={infoRow => {
+                                                                        return (
+                                                                            <tr {...infoRow.props}>
+                                                                                <DemoTableCell key={0} index={0} />
+                                                                                <DemoTableCell key={1} index={1} />
+                                                                                <DemoTableCell key={2} index={2} />
+                                                                            </tr>
+                                                                        );
 
-                        children: <>
-                            <TableHead tagTableHead="thead" render={defaultRenderTableHead({
-                                tagTableHead: "thead",
-                                makePropsTableHead: () => ({
-                                    children: <TableRow tagTableRow="tr" noTypeahead={true} index={0} text={""} render={defaultRenderTableRow({
-                                        tagTableRow: "tr",
-                                        makePropsTableRow: () => ({
-                                            children: <>
-                                                <DemoTableCell key={0} index={0} header={true} />
-                                                <DemoTableCell key={1} index={1} header={true} />
-                                                <DemoTableCell key={2} index={2} header={true} />
-                                            </>
-                                        })
-                                    })}  subInfo={undefined} />
-                                })
-                            })} />
-                            <TableBody render={defaultRenderTableBody({
-                                tagTableBody: "tbody",
-                                makePropsTableBody: () => ({
-                                    children: Array.from(function* () {
-                                        for (let i = 0; i < count; ++i) {
-                                            yield <TableRow tagTableRow="tr" noTypeahead={true} key={i} index={i + 1} text={""} render={defaultRenderTableRow({
-                                                tagTableRow: "tr",
-                                                makePropsTableRow: () => ({
-                                                    children: <>
-                                                        <DemoTableCell key={0} index={0} />
-                                                        <DemoTableCell key={1} index={1} />
-                                                        <DemoTableCell key={2} index={2} />
-                                                    </>
-                                                })
-                                            })}  subInfo={undefined} />
-                                        }
-                                    }())
-                                })
-                            })} />
-                            {/*<TableFoot render={defaultRenderTableFoot({ tagTableFoot: "tfoot", makePropsTableFoot: () => ({ children: null }) })} />*\/}
-                        </>
-                    })
-                })} />
-
+                                                                        /*
+        
+        
+                                                                        tagTableRow: "tr",
+                                                                        makePropsTableRow: () => ({
+                                                                            children: <>
+                                                                                <DemoTableCell key={0} index={0} />
+                                                                                <DemoTableCell key={1} index={1} />
+                                                                                <DemoTableCell key={2} index={2} />
+                                                                            </>
+                                                                        })
+                                                                    })
+        
+                                                                        */
+                                                                    }} />
+                                                            )
+                                                        }
+                                                    }()))}
+                                                </tbody>
+                                            )
+                                        }} />
+                                </table>
+                            </>
+                        )
+                    }
+                    } />
             </div>
         </>
     )
-}*/
+}
+

@@ -68,7 +68,7 @@ export function Demo() {
             <Code />
             <label><input type="number" min={0} value={count} onInput={e => setCount(e.currentTarget.valueAsNumber)} /> # of list items</label>
             <div>
-                <Listbox<HTMLUListElement, HTMLLIElement, HTMLLabelElement> selectedIndex={null} ariaLabel={null} groupingType="without-groups" navigationDirection="vertical" selectionLimit="single" render={info => {
+                <Listbox<HTMLUListElement, HTMLLIElement, HTMLLabelElement> selectedIndex={null} ariaLabel={null} groupingType="without-groups" navigationDirection="vertical" selectionLimit="multi" render={info => {
                     return (
                         <>
                         <label {...info.propsListboxLabel}></label>

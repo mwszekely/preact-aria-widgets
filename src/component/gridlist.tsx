@@ -22,16 +22,16 @@ interface GridlistPropsBase<GridlistElement extends Element, GridlistRowElement 
 }
 
 interface GridlistRowPropsBase<GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends
-    Get2<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "asChildRowParameters", "managedChildParameters">,
-    Get2<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "asChildRowParameters", "singleSelectionChildParameters">,
-    Get2<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "asChildRowParameters", "textContentParameters">,
-    Get2<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "asChildRowParameters", "rovingTabIndexChildParameters">,
-    Get2<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "asChildRowParameters", "sortableChildParameters">,
-    Get2<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "asParentRowParameters", "linearNavigationParameters">,
-    Get2<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "asParentRowParameters", "rovingTabIndexParameters">,
-    Get2<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "asParentRowParameters", "typeaheadNavigationParameters">,
-    Get2<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "asChildRowParameters", "gridlistRowParameters"> {
-    //    subInfo: Get2<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "asChildRowParameters", "completeGridNavigationRowParameters">;
+    Get2<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "rowAsChildOfGridParameters", "managedChildParameters">,
+    Get2<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "rowAsChildOfGridParameters", "singleSelectionChildParameters">,
+    Get2<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "rowAsChildOfGridParameters", "textContentParameters">,
+    Get2<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "rowAsChildOfGridParameters", "rovingTabIndexChildParameters">,
+    Get2<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "rowAsChildOfGridParameters", "sortableChildParameters">,
+    Get2<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "rowAsParentOfCellsParameters", "linearNavigationParameters">,
+    Get2<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "rowAsParentOfCellsParameters", "rovingTabIndexParameters">,
+    Get2<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "rowAsParentOfCellsParameters", "typeaheadNavigationParameters">,
+    Get2<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "rowAsChildOfGridParameters", "gridlistRowParameters"> {
+    //    subInfo: Get2<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "rowAsChildOfGridParameters", "completeGridNavigationRowParameters">;
     ref?: Ref<UseGridlistRowReturnType<GridlistRowElement, GridlistCellElement, RM, CM>>;
 }
 
@@ -53,8 +53,8 @@ export interface GridlistProps<GridlistElement extends Element, GridlistRowEleme
     render(info: UseGridlistReturnType<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM, CM>): VNode;
 }
 
-export interface GridlistRowProps<GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends PartialExcept<GridlistRowPropsBase<GridlistRowElement, GridlistCellElement, RM, CM>, "index" | "ariaPropName"> {
-    //subInfo: Get2<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "asChildRowParameters", "completeGridNavigationRowParameters">;
+export interface GridlistRowProps<GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends PartialExcept<GridlistRowPropsBase<GridlistRowElement, GridlistCellElement, RM, CM>, "index" | "ariaPropName" | "getSortValue"> {
+    //subInfo: Get2<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "rowAsChildOfGridParameters", "completeGridNavigationRowParameters">;
     //ref?: Ref<UseGridlistRowReturnType<GridlistRowElement, GridlistCellElement, RM, CM>>;
     render(info: UseGridlistRowReturnType<GridlistRowElement, GridlistCellElement, RM, CM>): VNode;
 }
@@ -210,7 +210,7 @@ export const GridlistRow = memoForwardRef(function GridlistRowU<RowElement exten
 }: GridlistRowProps<RowElement, Cellement, GridlistRowInfo<RowElement, Cellement>, GridlistCellInfo<Cellement>>, ref?: Ref<any>) {
     const context = (useContext(GridlistContext) as UseGridlistContext<any, RowElement, Cellement, GridlistRowInfo<RowElement, Cellement>, GridlistCellInfo<Cellement>>);
     const info = useGridlistRow<RowElement, Cellement, GridlistRowInfo<RowElement, Cellement>, GridlistCellInfo<Cellement>>({
-        asChildRowParameters: {
+        rowAsChildOfGridParameters: {
             completeGridNavigationRowParameters: {},
             context,
             managedChildParameters: { index },
@@ -220,7 +220,7 @@ export const GridlistRow = memoForwardRef(function GridlistRowU<RowElement exten
             singleSelectionChildParameters: { disabled: disabled ?? false, ariaPropName, selectionMode: useDefault("selectionMode", selectionMode) },
             textContentParameters: { getText: useDefault("getText", getText) }
         },
-        asParentRowParameters: {
+        rowAsParentOfCellsParameters: {
             linearNavigationParameters: {
                 disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys),
                 disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
@@ -255,10 +255,9 @@ export const GridlistChild = memoForwardRef(function GridlistChild<CellElement e
     onPressSync,
     getText,
     render,
-
-}: GridlistChildProps<CellElement, TableCellInfo<CellElement>>, ref?: Ref<any>) {
-    const context = (useContext(GridlistRowContext) as UseGridlistRowContext<any, CellElement, GridChildCellInfo<CellElement>>);
-    const info = useGridlistCell<CellElement, GridChildCellInfo<CellElement>>({
+}: GridlistChildProps<CellElement, GridlistCellInfo<CellElement>>, ref?: Ref<any>) {
+    const context = (useContext(GridlistRowContext) as UseGridlistRowContext<any, CellElement, GridlistCellInfo<CellElement>>);
+    const info = useGridlistCell<CellElement, GridlistCellInfo<CellElement>>({
         completeGridNavigationCellParameters: {},
         context,
         gridNavigationCellParameters: { colSpan: colSpan ?? 1 },

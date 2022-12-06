@@ -1,7 +1,7 @@
 
-import { Tooltip } from "../../";
+import { defaultRenderPortal, Tooltip } from "../../";
 
-/*
+
 function getDocument() { return window.document; }
 
 export function Blurb() {
@@ -35,18 +35,17 @@ export function Demo() {
             <Blurb />
             <Code />
             <div>
-                The following text triggers a tooltip: <Tooltip getDocument={getDocument} render={defaultRenderTooltip({
-
-                    portalId: "portal",
-
-                    makeTooltipProps: ({ isOpen }) => ({ children: "This text describes the triggering text in more detail.", style: { opacity: +isOpen } }),
-                    makeTriggerProps: () => ({ children: "Tooltip-triggering text that is hoverable and focusable:", tabIndex: 0 }),
-                    tagTooltip: "div",
-                    tagTrigger: "span"
-                })} />
+                The following text triggers a tooltip: <Tooltip<HTMLSpanElement, HTMLDivElement> render={info => {
+                    return <>
+                        <span tabIndex={0} {...info.propsTrigger}>Tooltip-triggering text that is hoverable and focusable: </span>
+                        {defaultRenderPortal({
+                            portalId: "portal",
+                            children: <div {...info.propsPopup} hidden={!info.tooltipReturn.isOpen}>This text describes the triggering text in more detail.</div>
+                        })}</>
+                }} />
             </div>
         </>
     )
 }
 
-*/
+

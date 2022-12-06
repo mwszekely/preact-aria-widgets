@@ -170,7 +170,7 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
     // Note: Though it's important to make sure that focusing activates a tooltip,
     // it's perfectly reasonable that a child element will be the one that's focused,
     // not this one, so we don't set tabIndex=0
-    propsTrigger.tabIndex ??= -1;
+    //propsTrigger.tabIndex ??= -1;
     
     //}
 

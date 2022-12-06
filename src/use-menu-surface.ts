@@ -73,13 +73,12 @@ export function useMenuSurface<MenuSurfaceElement extends Element, MenuTargetEle
     const { refElementReturn: { getElement: getMenuElement, propsStable: propsRefSurface, ...void5 }, ...void6 } = useRefElement<MenuSurfaceElement>({ refElementParameters: { onElementChange: undefined } });
     const {
         focusTrapReturn,
-        // Intentinally ignored for menus, since they don't trap focus like most modals.
-       // propsFocusContainer,
+        propsFocusContainer,
         propsPopup,
         propsSource: ps2,
         refElementPopupReturn,
         refElementSourceReturn
-    } = useModal<"escape" | "lost-focus" | "backdrop", null, MenuTriggerElement, MenuSurfaceElement>({
+    } = useModal<"escape" | "lost-focus" | "backdrop", MenuSurfaceElement, MenuTriggerElement, MenuSurfaceElement>({
         dismissParameters,
         escapeDismissParameters,
         focusTrapParameters: {
@@ -97,7 +96,7 @@ export function useMenuSurface<MenuSurfaceElement extends Element, MenuTargetEle
     assertEmptyObject(void5);
     assertEmptyObject(void6);
 
-    const propsSurface: h.JSX.HTMLAttributes<MenuSurfaceElement> = useMergedProps(propsRefSurface, propsPopup);
+    const propsSurface: h.JSX.HTMLAttributes<MenuSurfaceElement> = useMergedProps(propsRefSurface, propsPopup, propsFocusContainer);
 
     const propsTarget: h.JSX.HTMLAttributes<MenuTargetElement> = useMergedProps({
         role

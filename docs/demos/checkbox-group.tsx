@@ -24,24 +24,26 @@ function DemoCheckbox({ index }: { index: number }) {
             render={(info) => {
 
                 return (
-                    <Checkbox<HTMLInputElement, HTMLLabelElement>
-                        ref={ref}
-                        checked={checked}
-                        disabled={false}
-                        ariaLabel={null}
-                        onCheckedChange={e => { setChecked(e[EventDetail].checked); info.checkboxGroupChild.onChildCheckedChange(e[EventDetail].checked); }}
-                        labelPosition={"separate"}
-                        tagInput={"input"}
-                        tagLabel={"label"}
-                        render={defaultRenderCheckboxLike({
-                            labelPosition: "separate",
-                            tagInput: "input",
-                            tagLabel: "label",
-                            makePropsInput: info => (info.propsInput),
-                            makePropsLabel: info => ({ children: `Checkbox #${index}`, ...info.propsLabel })
-                        })}
+                    <div>
+                        <Checkbox<HTMLInputElement, HTMLLabelElement>
+                            ref={ref}
+                            checked={checked}
+                            disabled={false}
+                            ariaLabel={null}
+                            onCheckedChange={e => { setChecked(e[EventDetail].checked); info.checkboxGroupChild.onChildCheckedChange(e[EventDetail].checked); }}
+                            labelPosition={"separate"}
+                            tagInput={"input"}
+                            tagLabel={"label"}
+                            render={defaultRenderCheckboxLike({
+                                labelPosition: "separate",
+                                tagInput: "input",
+                                tagLabel: "label",
+                                makePropsInput: info2 => useMergedProps(info.props, info2.propsInput),
+                                makePropsLabel: info2 => ({ children: `Checkbox #${index}`, ...info2.propsLabel })
+                            })}
 
-                    />)
+                        />
+                    </div>)
             }}
         />
     )
@@ -88,35 +90,38 @@ export function Demo() {
                 <CheckboxGroup<HTMLDivElement, HTMLInputElement>
                     navigationDirection="vertical"
                     render={
-                        (info) => {
+                        (info2) => {
                             const ref = useRef<UseCheckboxReturnType<any, any>>(null);
-
-                            return <div {...info.props} {...({
+                            return <div {...info2.props} {...({
                                 children: (
                                     <>
                                         <CheckboxGroupParent<HTMLInputElement>
                                             index={0}
                                             focusSelf={() => ref.current?.checkboxLikeReturn.focusSelf()}
                                             getSortValue={returnNull}
-                                            render={info => (<Checkbox
+                                            render={info3 => (<Checkbox
                                                 ref={ref}
-                                                checked={info.checkboxGroupParentReturn.checked}
-                                                onCheckedChange={info.checkboxGroupParentReturn.onParentCheckedChange}
+                                                disabled={pending}
+                                                checked={info3.checkboxGroupParentReturn.checked}
+                                                onCheckedChange={useStableCallback((e) => {
+                                                    setPending(true);
+                                                    info3.checkboxGroupParentReturn.onParentCheckedChange(e).finally(() => setPending(false))
+                                                })}
                                                 ariaLabel="Parent checkbox"
                                                 labelPosition="separate"
                                                 tagInput="input"
                                                 tagLabel="label"
                                                 render={defaultRenderCheckboxLike({
                                                     labelPosition: "separate",
-                                                    makePropsInput: info => ({ ...info.propsInput }),
-                                                    makePropsLabel: info => ({ children: "Parent checkbox", ...info.propsLabel }),
+                                                    makePropsInput: info4 => useMergedProps(info4.propsInput, info3.props),
+                                                    makePropsLabel: info4 => ({ children: "Parent checkbox", ...info4.propsLabel }),
                                                     tagInput: "input",
                                                     tagLabel: "label"
                                                 })}
                                             />)
                                             }
                                         />
-                                        <div style={{ display: "flex" }}>
+                                        <div style={{ display: "flex", flexDirection: "column" }}>
                                             <>{Array.from((function* () {
                                                 for (let i = 0; i < count; ++i) {
                                                     yield <DemoCheckbox index={i + 1} key={i} />

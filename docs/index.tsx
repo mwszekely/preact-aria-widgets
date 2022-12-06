@@ -17,34 +17,37 @@ import * as Toast from "./demos/toast"
 import * as Table from "./demos/table"
 import * as Gridlist from "./demos/gridlist"
 import * as Toolbar from "./demos/toolbar"
+import { setDebugLogging } from "../props";
 
 //import { options } from "preact";
 //options.debounceRendering = queueMicrotask;
 
 //const RandomWords = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.".split(" ");
 
+setDebugLogging(true)
 
 const Component = () => {
+    
     return (
         <Heading heading="Demos">
-            <Heading heading="Single-select Listbox"><ListboxSingle.Demo /></Heading>
-            <Heading heading="Slider"><Slider.Demo /></Heading>
             <Heading heading="Accordion"><Accordion.Demo /></Heading>
             <Heading heading="Button"><Button.Demo /></Heading>
             <Heading heading="Checkbox"><Checkbox.Demo /></Heading>
             <Heading heading="Checkbox Group"><CheckboxGroup.Demo /></Heading>
+            <Heading heading="Dialog"><Dialog.Demo /></Heading>
+            <Heading heading="Single-select Listbox"><ListboxSingle.Demo /></Heading>
             <Heading heading="Multi-select Listbox"><ListboxMulti.Demo /></Heading>
             <Heading heading="Menu"><Menu.Demo /></Heading>
             <Heading heading="Radio"><Radio.Demo /></Heading>
-            {/*
-            
-            <Heading heading="Dialog"><Dialog.Demo /></Heading>
+            <Heading heading="Slider"><Slider.Demo /></Heading>
             <Heading heading="Toolbar"><Toolbar.Demo /></Heading>
-            <Heading heading="Gridlist"><Gridlist.Demo /></Heading>
-            <Heading heading="Table"><Table.Demo /></Heading>
             <Heading heading="Toast"><Toast.Demo /></Heading>
             <Heading heading="Tooltip"><Tooltip.Demo /></Heading>
-    <Heading heading="Tabs"><Tabs.Demo /></Heading>
+            <Heading heading="Tabs"><Tabs.Demo /></Heading>
+            <Heading heading="Table"><Table.Demo /></Heading>
+            {/*
+            
+            <Heading heading="Gridlist"><Gridlist.Demo /></Heading>
             */}
             {/*
        

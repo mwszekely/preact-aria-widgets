@@ -44,7 +44,7 @@ export interface UseGridlistReturnType<GridlistElement extends Element, Gridlist
 export interface UseGridlistRowReturnType<GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends UseCompleteGridNavigationRowReturnType<GridlistRowElement, GridlistCellElement, RM, CM> { }
 export interface UseGridlistRowParameters<GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>> {// extends UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM> {
 
-    asChildRowParameters: UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>["asChildRowParameters"] & {
+    rowAsChildOfGridParameters: UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>["rowAsChildOfGridParameters"] & {
         context: UseGridlistContext<any, GridlistRowElement, GridlistCellElement, RM, CM>;
         gridlistRowParameters: {
             /**
@@ -53,10 +53,10 @@ export interface UseGridlistRowParameters<GridlistRowElement extends Element, Gr
             selected: boolean | null;
         }
     }
-    asParentRowParameters: Omit<UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>["asParentRowParameters"], "linearNavigationParameters"> & {
-        linearNavigationParameters: Omit<UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>["asParentRowParameters"]["linearNavigationParameters"], "indexMangler" | "indexDemangler" | "isValid">
-        //typeaheadNavigationParameters: Omit<UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>["asParentRowParameters"]["typeaheadNavigationParameters"], "isValid">
-        //rovingTabIndexParameters: Omit<UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>["asParentRowParameters"]["rovingTabIndexParameters"], "initiallyTabbedIndex">;
+    rowAsParentOfCellsParameters: Omit<UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>["rowAsParentOfCellsParameters"], "linearNavigationParameters"> & {
+        linearNavigationParameters: Omit<UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>["rowAsParentOfCellsParameters"]["linearNavigationParameters"], "indexMangler" | "indexDemangler" | "isValid">
+        //typeaheadNavigationParameters: Omit<UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>["rowAsParentOfCellsParameters"]["typeaheadNavigationParameters"], "isValid">
+        //rovingTabIndexParameters: Omit<UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>["rowAsParentOfCellsParameters"]["rovingTabIndexParameters"], "initiallyTabbedIndex">;
     }
     //context:  UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>[""]
     //context: UseGridlistContext<any, GridlistRowElement, RM>;
@@ -159,7 +159,7 @@ export function useGridlist<GridlistElement extends Element, GridlistRowElement 
 }
 
 export function useGridlistRow<GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>>({
-    asChildRowParameters: {
+    rowAsChildOfGridParameters: {
         managedChildParameters,
         singleSelectionChildParameters,
         completeGridNavigationRowParameters,
@@ -169,7 +169,7 @@ export function useGridlistRow<GridlistRowElement extends Element, GridlistCellE
         context: cx1,
         gridlistRowParameters: { selected }
     },
-    asParentRowParameters: {
+    rowAsParentOfCellsParameters: {
         linearNavigationParameters,
         rovingTabIndexParameters,
         typeaheadNavigationParameters
@@ -177,14 +177,13 @@ export function useGridlistRow<GridlistRowElement extends Element, GridlistCellE
 }: UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>): UseGridlistRowReturnType<GridlistRowElement, GridlistCellElement, RM, CM> {
     const { gridlistRowContext: { selectionLimit } } = cx1;
     const {
-        asChildRowReturn,
-        asParentRowReturn,
+        rowAsChildOfGridReturn,
+        rowAsParentOfCellsReturn,
         context: cx2,
-        managedChildReturn,
         hasCurrentFocusReturn,
         props
     } = useCompleteGridNavigationRow<GridlistRowElement, GridlistCellElement, RM, CM>({
-        asChildRowParameters: {
+        rowAsChildOfGridParameters: {
             managedChildParameters,
             textContentParameters,
             singleSelectionChildParameters,
@@ -193,7 +192,7 @@ export function useGridlistRow<GridlistRowElement extends Element, GridlistCellE
             sortableChildParameters,
             context: cx1
         },
-        asParentRowParameters: {
+        rowAsParentOfCellsParameters: {
             linearNavigationParameters: { ...linearNavigationParameters },
             rovingTabIndexParameters,
             typeaheadNavigationParameters: { ...typeaheadNavigationParameters }
@@ -206,10 +205,9 @@ export function useGridlistRow<GridlistRowElement extends Element, GridlistCellE
     props.role = "option";
 
     return {
-        asChildRowReturn,
-        asParentRowReturn,
+        rowAsChildOfGridReturn,
+        rowAsParentOfCellsReturn,
         context: cx2,
-        managedChildReturn,
         hasCurrentFocusReturn,
         props
     }

@@ -1,7 +1,7 @@
 import { createContext, createElement, h, Ref, VNode } from "preact";
-import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
+import { useCallback, useContext, useEffect, useImperativeHandle } from "preact/hooks";
 import { ElementToTag, PropModifier } from "../props";
-import { useTable, UseTableCellParameters, UseTableRowParameters, UseTableSectionContext, useTableCell, useTableRow, useTableSection, UseTableSectionParameters, UseTableParameters, TableRowInfo, UseTableRowReturnType, UseTableCellReturnType, UseTableSectionReturnType, UseTableReturnType, TableCellInfo, UseTableRowContext } from "../use-table";
+import { useTable, UseTableCellParameters, UseTableRowParameters, UseTableSectionContext, useTableCell, useTableRow, useTableSection, UseTableSectionParameters, UseTableParameters, TableRowInfo, UseTableRowReturnType, UseTableCellReturnType, UseTableSectionReturnType, UseTableReturnType, TableCellInfo, UseTableRowContext, UseTableContext } from "../use-table";
 import { memoForwardRef, PartialExcept, useDefault } from "./util";
 
 type Get<T, K extends keyof T> = T[K];
@@ -19,22 +19,18 @@ interface TableSectionPropsBase<SectionElement extends Element, RowElement exten
     Get<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "rearrangeableChildrenParameters">,
     Get<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "rovingTabIndexParameters">,
     Get<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "singleSelectionParameters">,
-    Get<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "sortableChildrenParameters">,
-    Get<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "tableSectionParameters">,
-    Get<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "typeaheadNavigationParameters"> {
+    Get<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "tableSectionParameters"> {
     ref?: Ref<UseTableSectionReturnType<SectionElement, RowElement, CellElement, RM, CM>>;
 }
 
 interface TableRowPropsBase<RowElement extends Element, CellElement extends Element, RM extends TableRowInfo<RowElement, CellElement>, CM extends TableCellInfo<CellElement>> extends
     Omit<Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "tableRowParameters">, "location">,
-    Get2<UseTableRowParameters<RowElement, CellElement, RM, CM>, "asChildRowParameters", "singleSelectionChildParameters">,
-    Get2<UseTableRowParameters<RowElement, CellElement, RM, CM>, "asChildRowParameters", "managedChildParameters">,
-    Get2<UseTableRowParameters<RowElement, CellElement, RM, CM>, "asChildRowParameters", "sortableChildParameters">,
-    Get2<UseTableRowParameters<RowElement, CellElement, RM, CM>, "asChildRowParameters", "rovingTabIndexChildParameters">,
-    Get2<UseTableRowParameters<RowElement, CellElement, RM, CM>, "asChildRowParameters", "textContentParameters">,
-    Get2<UseTableRowParameters<RowElement, CellElement, RM, CM>, "asParentRowParameters", "linearNavigationParameters">,
-    Get2<UseTableRowParameters<RowElement, CellElement, RM, CM>, "asParentRowParameters", "rovingTabIndexParameters">,
-    Get2<UseTableRowParameters<RowElement, CellElement, RM, CM>, "asParentRowParameters", "typeaheadNavigationParameters"> {
+    Get2<UseTableRowParameters<RowElement, CellElement, RM, CM>, "rowAsChildOfGridParameters", "singleSelectionChildParameters">,
+    Get2<UseTableRowParameters<RowElement, CellElement, RM, CM>, "rowAsChildOfGridParameters", "managedChildParameters">,
+    Get2<UseTableRowParameters<RowElement, CellElement, RM, CM>, "rowAsChildOfGridParameters", "rovingTabIndexChildParameters">,
+    Get2<UseTableRowParameters<RowElement, CellElement, RM, CM>, "rowAsChildOfGridParameters", "textContentParameters">,
+    Get2<UseTableRowParameters<RowElement, CellElement, RM, CM>, "rowAsParentOfCellsParameters", "linearNavigationParameters">,
+    Get2<UseTableRowParameters<RowElement, CellElement, RM, CM>, "rowAsParentOfCellsParameters", "rovingTabIndexParameters"> {
     ref?: Ref<UseTableRowReturnType<RowElement, CellElement, RM, CM>>;
 }
 
@@ -45,6 +41,7 @@ interface TableCellPropsBase<CellElement extends Element, CM extends TableCellIn
     Get<UseTableCellParameters<CellElement, CM>, "rovingTabIndexChildParameters">,
     Get<UseTableCellParameters<CellElement, CM>, "pressParameters">,
     Get<UseTableCellParameters<CellElement, CM>, "textContentParameters"> {
+    getSortValue: CM["getSortValue"];
     ref?: Ref<UseTableCellReturnType<CellElement, CM>>;
 }
 
@@ -52,24 +49,25 @@ interface TableCellPropsBase<CellElement extends Element, CM extends TableCellIn
 
 
 
-export interface TableProps<TableElement extends Element, LabelElement extends Element> extends TablePropsBase<TableElement, LabelElement> {
+export interface TableProps<TableElement extends Element, LabelElement extends Element> extends PartialExcept<TablePropsBase<TableElement, LabelElement>, "tagTable" | "selectionLimit" | "ariaLabel"> {
     render(info: UseTableReturnType<TableElement, LabelElement>): VNode;
 }
 
-export interface TableSectionProps<SectionElement extends Element, RowElement extends Element, CellElement extends Element, RM extends TableRowInfo<RowElement, CellElement>, CM extends TableCellInfo<CellElement>> extends TableSectionPropsBase<SectionElement, RowElement, CellElement, RM, CM> {
+export interface TableSectionProps<SectionElement extends Element, RowElement extends Element, CellElement extends Element, RM extends TableRowInfo<RowElement, CellElement>, CM extends TableCellInfo<CellElement>> extends PartialExcept<TableSectionPropsBase<SectionElement, RowElement, CellElement, RM, CM>, "tagTableSection" | "location"> {
     render(info: UseTableSectionReturnType<SectionElement, RowElement, CellElement, RM, CM>): VNode;
 }
 
-export interface TableRowProps<RowElement extends Element, CellElement extends Element, RM extends TableRowInfo<RowElement, CellElement>, CM extends TableCellInfo<CellElement>> extends TableRowPropsBase<RowElement, CellElement, RM, CM> {
+export interface TableRowProps<RowElement extends Element, CellElement extends Element, RM extends TableRowInfo<RowElement, CellElement>, CM extends TableCellInfo<CellElement>> extends PartialExcept<TableRowPropsBase<RowElement, CellElement, RM, CM>, "index" | "tagTableRow" | "ariaPropName"> {
     render(info: UseTableRowReturnType<RowElement, CellElement, RM, CM>): VNode;
 }
 
-export interface TableCellProps<CellElement extends Element, CM extends TableCellInfo<CellElement>> extends PartialExcept<TableCellPropsBase<CellElement, CM>, "tagTableCell" | "index"> {
+export interface TableCellProps<CellElement extends Element, CM extends TableCellInfo<CellElement>> extends PartialExcept<TableCellPropsBase<CellElement, CM>, "tagTableCell" | "index" | "getSortValue"> {
     render(info: UseTableCellReturnType<CellElement, CM>): VNode;
 }
 
 //const LocationContext = createContext<"head" | "body" | "foot">(null!);
 
+const TableContext = createContext<UseTableContext>(null!);
 const TableSectionContext = createContext<UseTableSectionContext<any, any, any, TableRowInfo<any, any>, TableCellInfo<any>>>(null!);
 const TableRowContext = createContext<UseTableRowContext<any, any, TableCellInfo<any>>>(null!);
 //const TableRowContext = createContext<UseTableRow<any, any, any, any, any, any>>(null!);
@@ -124,12 +122,10 @@ export const Table = memoForwardRef(function TableU<TableElement extends Element
 
     useImperativeHandle(ref!, () => info);
 
-    return (render(info))
+    return <TableContext.Provider value={info.context}>{render(info)}</TableContext.Provider>
 })
 
 export const TableSection = memoForwardRef(function TableSection<SectionElement extends Element, RowElement extends Element, CellElement extends Element>({
-    collator,
-    compare,
     disableArrowKeys,
     disableHomeEndKeys,
     getIndex,
@@ -137,24 +133,28 @@ export const TableSection = memoForwardRef(function TableSection<SectionElement 
     untabbable,
     navigatePastEnd,
     navigatePastStart,
-    noTypeahead,
     setSelectedIndex,
     onTabbableColumnChange,
     onTabbableIndexChange,
     pageNavigationSize,
     render,
-    tagTableSection,
-    typeaheadTimeout
+    location,
+    tagTableSection
 }: TableSectionProps<SectionElement, RowElement, CellElement, TableRowInfo<RowElement, CellElement>, TableCellInfo<CellElement>>) {
     const info = useTableSection<SectionElement, RowElement, CellElement, TableRowInfo<RowElement, CellElement>, TableCellInfo<CellElement>>({
-        gridNavigationParameters: { onTabbableColumnChange },
-        linearNavigationParameters: { disableArrowKeys, disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize },
-        rearrangeableChildrenParameters: { getIndex },
-        rovingTabIndexParameters: { onTabbableIndexChange, untabbable },
-        singleSelectionParameters: { initiallySelectedIndex, setSelectedIndex },
-        sortableChildrenParameters: { compare },
-        tableSectionParameters: { tagTableSection },
-        typeaheadNavigationParameters: { collator, noTypeahead, typeaheadTimeout }
+        gridNavigationParameters: { onTabbableColumnChange: onTabbableColumnChange ?? null },
+        linearNavigationParameters: {
+            disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys),
+            disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
+            navigatePastEnd: navigatePastEnd ?? "wrap",
+            navigatePastStart: navigatePastStart ?? "wrap",
+            pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
+        },
+        rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
+        rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable: untabbable ?? false },
+        singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? null, setSelectedIndex: setSelectedIndex ?? null },
+        context: useContext(TableContext),
+        tableSectionParameters: { tagTableSection, location },
     })
 
     return (
@@ -188,12 +188,9 @@ export const TableRow = memoForwardRef(function TableRowU<RowElement extends Ele
     index,
     getText,
     tagTableRow,
-    collator,
     disableArrowKeys,
     disableHomeEndKeys,
-    noTypeahead,
     onTabbableIndexChange,
-    typeaheadTimeout,
     ariaPropName,
     disabled,
     untabbable,
@@ -201,28 +198,39 @@ export const TableRow = memoForwardRef(function TableRowU<RowElement extends Ele
     navigatePastStart,
     selected,
     selectionMode,
-    getSortValue,
     hidden,
 
     render
 }: TableRowProps<RowElement, Cellement, TableRowInfo<RowElement, Cellement>, TableCellInfo<Cellement>>, ref?: Ref<any>) {
     const cx1 = useContext(TableSectionContext);
     const info = useTableRow<RowElement, Cellement, TableRowInfo<RowElement, Cellement>, TableCellInfo<Cellement>>({
-        asChildRowParameters: {
+        rowAsChildOfGridParameters: {
             completeGridNavigationRowParameters: {},
             context: cx1,
             managedChildParameters: { index },
             rovingTabIndexChildParameters: { hidden: hidden ?? false },
-            sortableChildParameters: { getSortValue },
-            singleSelectionChildParameters: { ariaPropName, selectionMode, disabled },
-            textContentParameters: { getText }
+            singleSelectionChildParameters: {
+                ariaPropName,
+                selectionMode: useDefault("selectionMode", selectionMode),
+                disabled: disabled ?? false
+            },
+            textContentParameters: {
+                getText: useDefault("getText", getText)
+            }
         },
-        asParentRowParameters: {
-            linearNavigationParameters: { disableArrowKeys, disableHomeEndKeys, navigatePastEnd, navigatePastStart },
-            rovingTabIndexParameters: { onTabbableIndexChange, untabbable },
-            typeaheadNavigationParameters: { collator, noTypeahead, typeaheadTimeout }
+        rowAsParentOfCellsParameters: {
+            linearNavigationParameters: {
+                disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys),
+                disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
+                navigatePastEnd: navigatePastEnd ?? "wrap",
+                navigatePastStart: navigatePastStart ?? "wrap"
+            },
+            rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable: untabbable ?? false }
         },
-        tableRowParameters: { selected, tagTableRow }
+        tableRowParameters: {
+            selected: selected ?? null,
+            tagTableRow
+        }
     });
 
     useImperativeHandle(ref!, () => info);
@@ -240,18 +248,19 @@ export const TableCell = memoForwardRef(function TableCell<CellElement extends E
     colSpan,
     exclude,
     onPressSync,
+    getSortValue
 }: TableCellProps<CellElement, TableCellInfo<CellElement>>, ref?: Ref<any>) {
     const context = (useContext(TableRowContext) as UseTableRowContext<any, CellElement, TableCellInfo<CellElement>>);
     const focusSelfDefault = useCallback((e: any) => { e?.focus(); }, []);
     const info = useTableCell<CellElement, TableCellInfo<CellElement>>({
-        completeGridNavigationCellParameters: {},
+        completeGridNavigationCellParameters: { getSortValue },
         context,
         gridNavigationCellParameters: { colSpan: colSpan ?? 1 },
         managedChildParameters: { index },
         rovingTabIndexChildParameters: { hidden: hidden ?? false },
         pressParameters: { exclude, focusSelf: focusSelf ?? focusSelfDefault, onPressSync },
         tableCellParameters: { tagTableCell },
-        textContentParameters: { getText: useDefault("getText", getText) },
+        textContentParameters: { getText: useDefault("getText", getText) }
         /* listNavigation: { text },
          managedChild: { index, flags },
          rovingTabIndex: { focusSelf, hidden, noModifyTabIndex },

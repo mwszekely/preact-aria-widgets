@@ -1,9 +1,9 @@
 
-import { useMergedProps, useState } from "preact-prop-helpers";
+import { returnZero, useMergedProps, useState } from "preact-prop-helpers";
 import { memo } from "preact/compat";
 import { ToolbarChild } from "../../component/toolbar";
-/*
-import { Button, defaultRenderButton, defaultRenderToolbar, Toolbar } from "../../index";
+
+import { Button, Toolbar } from "../../index";
 
 function getDocument() { return window.document; }
 
@@ -12,15 +12,16 @@ const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
     return (
         <ToolbarChild<HTMLButtonElement>
             index={index}
-            subInfo={undefined}
             focusSelf={e => e.focus()}
-            text={`List item #${index}`}
-            render={({ rovingTabIndex: { tabbable } }, toolbarChildProps) => {
+            ariaPropName="aria-pressed"
+            selectionMode="activation"
+            getSortValue={returnZero}
+            render={info2 => {
                 return (
-                    <Button
-                        getDocument={getDocument}
+                    <Button<HTMLButtonElement>
                         tagButton="button"
-                        render={defaultRenderButton({ tagButton: "button", makePropsButton: () => useMergedProps(toolbarChildProps, { ...({ "data-tabbable": tabbable.toString() } as {}), children: `Button #${index}` }) })} />
+                        pressed={false}
+                        render={info3 => <button {...useMergedProps(info2.props, info3.props)}>Toolbar child #{index}</button>} />
                 );
             }}
         />
@@ -62,21 +63,19 @@ export function Demo() {
             <Code />
             <label><input type="number" min={0} value={count} onInput={e => setCount(e.currentTarget.valueAsNumber)} /> # of list items</label>
             <div>
-                <Toolbar
+                <Toolbar<HTMLDivElement, HTMLButtonElement>
                     orientation="horizontal"
                     role="toolbar"
-                    render={defaultRenderToolbar({
-                        tagContainer: "div",
-                        makePropsContainer: () => ({
-                            children: <>{Array.from((function* () {
-                                for (let i = 0; i < count; ++i) {
-                                    yield <DemoListItem index={i} key={i} />
-                                }
-                            })())}</>
-                        })
-                    })}
+                    render={(info) => <div {...info.props}>
+                        {Array.from((function* () {
+                            for (let i = 0; i < count; ++i) {
+                                yield <DemoListItem index={i} key={i} />
+                            }
+                        })())}
+                    </div>
+                    }
                 />
             </div>
         </>
     )
-}*/
+}

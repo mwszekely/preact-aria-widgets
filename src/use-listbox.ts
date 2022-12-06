@@ -5,7 +5,7 @@ import {
     UseCompleteListNavigationChildParameters,
     UseCompleteListNavigationChildReturnType,
     UseCompleteListNavigationParameters,
-    UseCompleteListNavigationReturnType, UseListNavigationSingleSelectionSortableChildInfo, useMergedProps, useSingleSelectionDeclarative, useStableCallback, useStableObject
+    UseCompleteListNavigationReturnType, useEnsureStability, UseListNavigationSingleSelectionSortableChildInfo, useMergedProps, useSingleSelectionDeclarative, useStableCallback, useStableObject
 } from "preact-prop-helpers";
 import { EventDetail, Prefices } from "./props";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
@@ -71,7 +71,7 @@ export function useListbox<ListElement extends Element, ListItemElement extends 
     labelParameters,
     listboxParameters: { selectionLimit, groupingType, selectedIndex, setSelectedIndex }
 }: UseListboxParameters<ListElement, ListItemElement, LabelElement, M>): UseListboxReturnType<ListElement, ListItemElement, LabelElement, M> {
-
+    useEnsureStability("useListbox", selectionLimit);
     const {
         propsInput: propsLabelList,
         propsLabel: propsLabelLabel,

@@ -1,8 +1,8 @@
 
-import { useState } from "preact-prop-helpers";
+import { returnZero, useMergedProps, useState } from "preact-prop-helpers";
 import { memo } from "preact/compat";
-/*
-import { defaultRenderTab, defaultRenderTabPanel, defaultRenderTabs, Tabs } from "../../";
+
+import { Tabs } from "../../";
 import { Tab, TabPanel } from "../../component/tabs";
 import { EventDetail } from "../../index";
 
@@ -30,7 +30,7 @@ export function Code() {
 
 export function Demo() {
     const [count, setCount] = useState(5);
-    const [selectedIndex, setSelectedIndex] = useState(0);
+    //const [selectedIndex, setSelectedIndex] = useState(0 as number | null);
 
 
     return (
@@ -39,12 +39,14 @@ export function Demo() {
             <Code />
             <label><input type="number" min={0} value={count} onInput={e => setCount(e.currentTarget.valueAsNumber)} /> # of tabs</label>
             <div>
-                <Tabs
-                    selectedIndex={selectedIndex}
-                    selectionMode="focus"
-                    setSelectedIndex={setSelectedIndex}
+                <Tabs<HTMLUListElement, HTMLLIElement, HTMLLabelElement>
+                    ariaLabel={null}
+                    groupingType="without-groups"
+                    orientation="horizontal"
 
-                    render={defaultRenderTabs({
+                    render={info => {
+                        /* 
+                        defaultRenderTabs({
                         panels: Array.from((function* () {
                             for (let i = 0; i < count; ++i) {
                                 yield <DemoTabPanel i={i} />
@@ -62,20 +64,38 @@ export function Demo() {
                                 })())}
                             </>
                         })
-                    })} />
+                    })
+                        
+                        */
+
+                        return (
+                            <>
+                                <label {...info.propsLabel}>Tabs example</label>
+                                <ul {...info.propsContainer} style={{display: "flex"}}>{Array.from((function* () {
+                                    for (let i = 0; i < count; ++i) {
+                                        yield <DemoTab i={i} />
+                                    }
+                                })())}</ul>
+                                <div>
+                                    {Array.from((function* () {
+                                        for (let i = 0; i < count; ++i) {
+                                            yield <DemoTabPanel i={i} />
+                                        }
+                                    })())}
+                                </div>
+                            </>
+                        )
+                    }} />
             </div>
         </>
     )
 }
 
 const DemoTab = memo(function DemoTab({ i }: { i: number }) {
-    const label = `Tab #${i}`;
-    return <Tab<HTMLLIElement> focusSelf={e => e.focus()} key={i} index={i} getDocument={getDocument} render={defaultRenderTab({ tagTab: "li", makePropsTab: () => ({ children: label }) })} text={label} subInfo={undefined} unselectable={false} />
+    return <Tab<HTMLLIElement> focusSelf={e => e.focus()} key={i} index={i} render={info => <li {...info.props} style={{marginLeft: "2em"}}>Tab #{i} {info.singleSelectionChildReturn.selected && "(visible)"}</li>} getSortValue={returnZero} />
 })
 
 const DemoTabPanel = memo(function DemoTabPanel({ i }: { i: number }) {
-    const label = `Tab panel #${i}`;
-    return <TabPanel index={i} key={i} render={defaultRenderTabPanel({ tagTabPanel: "div", makePropsTabPanel: ({ tabPanel: { visible } }) => ({ hidden: !visible, children: label }) })} subInfo={undefined} />
+    return <TabPanel<HTMLDivElement> index={i} key={i} render={info => <div {...info.props} hidden={!info.tabPanelReturn.visible}>Tab panel #{i}</div>} />
 })
 
-*/
