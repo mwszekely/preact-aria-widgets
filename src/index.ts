@@ -5,10 +5,10 @@ export { CheckboxGroupChangeEvent, CheckboxGroupContext, CheckboxGroupInfo, useC
 export { useDialog, UseDialogParameters, UseDialogReturnType } from "./use-dialog";
 export { useDrawer, UseDrawerParameters, UseDrawerReturnType } from "./use-drawer";
 export { GridlistCellInfo, GridlistRowInfo, useGridlist, useGridlistCell, UseGridlistCellParameters, UseGridlistCellReturnType, UseGridlistContext, UseGridlistParameters, UseGridlistReturnType, useGridlistRow, UseGridlistRowContext, UseGridlistRowParameters, UseGridlistRowReturnType, UseGridlistSectionParameters } from "./use-gridlist";
-export { CheckboxCheckedType, FocusableLabelElement, LabelPosition, useCheckboxLike, UseLabelSyntheticParameters, useLabelSynthetic, UseCheckboxLikeParameters, UseCheckboxLikeReturnType, useLabel, UseLabelParameters, UseLabelReturnType } from "./use-label";
+export { CheckboxCheckedType, FocusableLabelElement, LabelPosition, useCheckboxLike, UseCheckboxLikeParameters, UseCheckboxLikeReturnType, useLabel, UseLabelParameters, UseLabelReturnType, useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
 export { useMenu, UseMenuContext, useMenuItem, UseMenuItemParameters, UseMenuItemReturnType, UseMenuParameters, UseMenuReturnType } from "./use-menu";
 export { useMenubar, useMenubarChild, UseMenubarItemParameters, UseMenubarItemReturnType, UseMenubarParameters, UseMenubarReturnType, UseMenubarSubInfo } from "./use-menubar";
-export { useProgress, UseProgressParameters, UseProgressReturnType } from "./use-progress";
+export { useProgress, UseProgressParameters, UseProgressReturnType, useProgressWithHandler, UseProgressWithHandlerParameters, UseProgressWithHandlerReturnType } from "./use-progress";
 export { RadioChangeEvent, RadioContext, RadioSubInfo, useRadio, useRadioGroup, UseRadioGroupParameters, UseRadioGroupReturnType, UseRadioParameters, UseRadioReturnType } from "./use-radio-group";
 export { RangeChangeEvent, SliderContext, SliderThumbInfo, useSlider, UseSliderParameters, UseSliderReturnType, UseSliderThumb, useSliderThumb, UseSliderThumbParameters, UseSliderThumbProps, UseSliderThumbReturnType } from "./use-slider";
 export { TableCellInfo, TableRowInfo, useTable, useTableCell, UseTableCellParameters, UseTableCellReturnType, UseTableParameters, UseTableReturnType, useTableRow, UseTableRowContext, UseTableRowParameters, UseTableRowReturnType, useTableSection, UseTableSectionContext, UseTableSectionParameters, UseTableSectionReturnType } from "./use-table";
@@ -19,7 +19,7 @@ export { useTooltip, UseTooltip, UseTooltipParameters, UseTooltipPopupParameters
 
 export { Accordion, AccordionProps, AccordionSection, AccordionSectionProps } from "./component/accordion";
 export { Button, ButtonProps } from "./component/button";
-export { Checkbox, defaultRenderCheckboxLike, CheckboxProps } from "./component/checkbox";
+export { Checkbox, CheckboxProps, defaultRenderCheckboxLike } from "./component/checkbox";
 export { CheckboxGroup, CheckboxGroupChild, CheckboxGroupChildProps, CheckboxGroupParent, CheckboxGroupParentProps, CheckboxGroupProps } from "./component/checkbox-group";
 export { defaultRenderPortal, Dialog, DialogProps } from "./component/dialog";
 export { Drawer, DrawerProps } from "./component/drawer";
@@ -28,7 +28,7 @@ export { Heading, HeadingReset } from "./component/heading";
 export { Listbox, ListboxItem, ListboxItemProps, ListboxProps } from "./component/listbox";
 export { Menu, MenuProps } from "./component/menu";
 export { Menubar, MenubarProps, MenuItem, MenuItemProps } from "./component/menubar";
-export { Progress, ProgressProps } from "./component/progress";
+export { Progress, ProgressProps, ProgressWithHandler, ProgressWithHandlerProps } from "./component/progress";
 export { Radio, RadioGroup } from "./component/radio-group";
 export { Slider, SliderProps, SliderThumb, SliderThumbProps } from "./component/slider";
 export { Table, TableCell, TableCellProps, TableProps, TableRow, TableRowProps, TableSection, TableSectionProps } from "./component/table";
@@ -39,7 +39,6 @@ export { Tooltip, TooltipProps } from "./component/tooltip";
 
 export { EventDetail } from "./props";
 export type { TagSensitiveProps } from "./props";
-
 
 declare module 'preact' {
     /* eslint-disable @typescript-eslint/no-namespace */
