@@ -60,16 +60,19 @@ export function Demo() {
             <Code />
             <label><input type="number" min={0} value={count} onInput={e => setCount(e.currentTarget.valueAsNumber)} /> # of list items</label>
             <div>
-                <Toolbar<HTMLDivElement, HTMLButtonElement>
+                <Toolbar<HTMLDivElement, HTMLButtonElement, HTMLLabelElement>
                     orientation="horizontal"
                     role="toolbar"
-                    render={(info) => <div {...info.props}>
-                        {Array.from((function* () {
-                            for (let i = 0; i < count; ++i) {
-                                yield <DemoListItem index={i} key={i} />
-                            }
-                        })())}
-                    </div>
+                    ariaLabel={null}
+                    render={(info) => <>
+                        <label {...info.propsLabel}>Toolbar demo</label>
+                        <div {...info.propsToolbar}>
+                            {Array.from((function* () {
+                                for (let i = 0; i < count; ++i) {
+                                    yield <DemoListItem index={i} key={i} />
+                                }
+                            })())}
+                        </div></>
                     }
                 />
             </div>

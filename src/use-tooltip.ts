@@ -205,7 +205,7 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
     //}, []);
 
     return {
-        propsPopup: useMergedProps(popupRefProps, propsPopup, propsFocusPopup),
+        propsPopup: useMergedProps(popupRefProps, propsPopup, propsFocusPopup, { role: "tooltip" }),
         propsTrigger: useMergedProps(triggerRefProps, propsTrigger, hasCurrentFocusReturn.propsStable, { onTouchEnd }),
         tooltipReturn: {
             isOpen: open,

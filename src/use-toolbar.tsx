@@ -1,5 +1,7 @@
 import { h } from "preact";
-import { CompleteListNavigationContext, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseListNavigationSingleSelectionSortableChildInfo } from "preact-prop-helpers";
+import { CompleteListNavigationContext, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseListNavigationSingleSelectionSortableChildInfo, useMergedProps } from "preact-prop-helpers";
+import { Prefices } from "./props";
+import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
 
 
 
@@ -10,12 +12,15 @@ export interface UseToolbarParameters<ContainerElement extends Element, ChildEle
 
         // Should be "toolbar" for toolbars, null if someone else takes care of the role, and whatever string is applicable otherwise
         role: string | null;
-    };
+    };    
+    labelParameters: Omit<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
     linearNavigationParameters: Omit<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>["linearNavigationParameters"], "navigationDirection">
 }
 
-export interface UseToolbarReturnType<ContainerElement extends Element, ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends UseCompleteListNavigationReturnType<ContainerElement, ChildElement, M> {
+export interface UseToolbarReturnType<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends Omit<UseCompleteListNavigationReturnType<ContainerElement, ChildElement, M>, "props"> {
     toolbarReturn: { propsUnstable: h.JSX.HTMLAttributes<ContainerElement> };
+    propsToolbar: h.JSX.HTMLAttributes<ContainerElement>;
+    propsLabel: h.JSX.HTMLAttributes<LabelElement>
 }
 
 export interface UseToolbarSubInfo<ChildElement extends Element> extends UseListNavigationSingleSelectionSortableChildInfo<ChildElement> {
@@ -43,11 +48,12 @@ export interface UseToolbarChildReturnType<ChildElement extends Element, M exten
  * @param param0 
  * @returns 
  */
-export function useToolbar<ContainerElement extends Element, ChildElement extends Element>({
+export function useToolbar<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({
     linearNavigationParameters,
     toolbarParameters: { orientation, role },
+    labelParameters,
     ...listNavParameters
-}: UseToolbarParameters<ContainerElement, ChildElement, UseToolbarSubInfo<ChildElement>>): UseToolbarReturnType<ContainerElement, ChildElement, UseToolbarSubInfo<ChildElement>> {
+}: UseToolbarParameters<ContainerElement, ChildElement, UseToolbarSubInfo<ChildElement>>): UseToolbarReturnType<ContainerElement, ChildElement, LabelElement, UseToolbarSubInfo<ChildElement>> {
     const {
         context,
         props,
@@ -58,10 +64,17 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
         linearNavigationParameters: { ...linearNavigationParameters, navigationDirection: orientation },
     });
 
+    const { propsInput: propsToolbar, propsLabel } = useLabelSynthetic<ContainerElement, LabelElement>({ 
+        labelParameters: { ...labelParameters, onLabelClick: listNavReturn.rovingTabIndexReturn.focusSelf },
+        randomIdInputParameters: { prefix: Prefices.table },
+        randomIdLabelParameters: { prefix: Prefices.tableLabel }
+    });
+
     return {
-        toolbarReturn: { propsUnstable: { role: role ?? undefined } },
+        toolbarReturn: { propsUnstable: { ...propsToolbar, role: role ?? undefined } },
         context,
-        props,
+        propsLabel,
+        propsToolbar: useMergedProps(propsToolbar, props),
         ...listNavReturn
     }
 }

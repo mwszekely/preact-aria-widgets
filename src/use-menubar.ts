@@ -28,7 +28,9 @@ export interface UseMenubarItemParameters<MenuItemElement extends Element, M ext
     }
 }
 
-export interface UseMenubarReturnType<MenuParentElement extends Element, MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseToolbarReturnType<MenuParentElement, MenuItemElement, M> { }
+export interface UseMenubarReturnType<MenuParentElement extends Element, MenuItemElement extends Element, LabelElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends Omit<UseToolbarReturnType<MenuParentElement, MenuItemElement, LabelElement, M>, "propsToolbar"> {
+    propsMenubar: h.JSX.HTMLAttributes<MenuParentElement>;
+}
 export interface UseMenubarItemReturnType<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseToolbarChildReturnType<MenuItemElement, M> { }
 
 
@@ -39,7 +41,7 @@ export interface UseMenubarItemReturnType<MenuItemElement extends Element, M ext
 
 
 
-export function useMenubar<MenuParentElement extends Element, MenuItemElement extends Element>({
+export function useMenubar<MenuParentElement extends Element, MenuItemElement extends Element, LabelElement extends Element>({
     linearNavigationParameters,
     rearrangeableChildrenParameters,
     singleSelectionParameters,
@@ -47,8 +49,9 @@ export function useMenubar<MenuParentElement extends Element, MenuItemElement ex
     rovingTabIndexParameters,
     typeaheadNavigationParameters,
     toolbarParameters,
-    menubarParameters: { role }
-}: UseMenubarParameters<MenuParentElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenubarReturnType<MenuParentElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>> {
+    menubarParameters: { role },
+    labelParameters
+}: UseMenubarParameters<MenuParentElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenubarReturnType<MenuParentElement, MenuItemElement, LabelElement, UseMenubarSubInfo<MenuItemElement>> {
 
     debugLog("useMenubar");
 
@@ -56,7 +59,8 @@ export function useMenubar<MenuParentElement extends Element, MenuItemElement ex
         linearNavigationReturn,
         childrenHaveFocusReturn,
         context,
-        props,
+        propsLabel,
+        propsToolbar: propsMenubar,
         rearrangeableChildrenReturn,
         singleSelectionReturn,
         sortableChildrenReturn,
@@ -65,20 +69,22 @@ export function useMenubar<MenuParentElement extends Element, MenuItemElement ex
         toolbarReturn,
         typeaheadNavigationReturn,
         ..._rest
-    } = useToolbar<MenuParentElement, MenuItemElement>({
+    } = useToolbar<MenuParentElement, MenuItemElement, LabelElement>({
         linearNavigationParameters,
         rovingTabIndexParameters,
         rearrangeableChildrenParameters,
         singleSelectionParameters,
         sortableChildrenParameters,
         typeaheadNavigationParameters,
-        toolbarParameters: { role, ...toolbarParameters }
+        toolbarParameters: { role, ...toolbarParameters },
+        labelParameters
     });
 
     return {
         childrenHaveFocusReturn,
         context,
-        props,
+        propsLabel,
+        propsMenubar,
         rearrangeableChildrenReturn,
         singleSelectionReturn,
         sortableChildrenReturn,

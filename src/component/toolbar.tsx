@@ -6,15 +6,16 @@ import { memoForwardRef, PartialExcept, useDefault } from "./util";
 
 type Get<T, K extends keyof T> = T[K];
 
-export interface ToolbarPropsBase<ToolbarContainerElement extends Element, ToolbarChildElement extends Element, M extends UseToolbarSubInfo<ToolbarChildElement>> extends
+export interface ToolbarPropsBase<ToolbarContainerElement extends Element, ToolbarChildElement extends Element, LabelElement extends Element, M extends UseToolbarSubInfo<ToolbarChildElement>> extends
     Get<UseToolbarParameters<ToolbarContainerElement, ToolbarChildElement, M>, "linearNavigationParameters">,
     Get<UseToolbarParameters<ToolbarContainerElement, ToolbarChildElement, M>, "singleSelectionParameters">,
     Get<UseToolbarParameters<ToolbarContainerElement, ToolbarChildElement, M>, "rovingTabIndexParameters">,
     Get<UseToolbarParameters<ToolbarContainerElement, ToolbarChildElement, M>, "typeaheadNavigationParameters">,
     Get<UseToolbarParameters<ToolbarContainerElement, ToolbarChildElement, M>, "sortableChildrenParameters">,
     Get<UseToolbarParameters<ToolbarContainerElement, ToolbarChildElement, M>, "rearrangeableChildrenParameters">,
+    Get<UseToolbarParameters<ToolbarContainerElement, ToolbarChildElement, M>, "labelParameters">,
     Get<UseToolbarParameters<ToolbarContainerElement, ToolbarChildElement, M>, "toolbarParameters"> {
-    ref?: Ref<UseToolbarReturnType<ToolbarContainerElement, ToolbarChildElement, M>>;
+    ref?: Ref<UseToolbarReturnType<ToolbarContainerElement, ToolbarChildElement, LabelElement, M>>;
 }
 
 
@@ -32,8 +33,8 @@ export interface ToolbarChildPropsBase<ToolbarChildElement extends Element, M ex
     ref?: Ref<UseToolbarChildReturnType<ToolbarChildElement, M>>;
 }
 
-export interface ToolbarProps<ToolbarContainerElement extends Element, ToolbarChildElement extends Element, M extends UseToolbarSubInfo<ToolbarChildElement>> extends PartialExcept<ToolbarPropsBase<ToolbarContainerElement, ToolbarChildElement, M>, "orientation"> {
-    render(info: UseToolbarReturnType<ToolbarContainerElement, ToolbarChildElement, M>): VNode<any>;
+export interface ToolbarProps<ToolbarContainerElement extends Element, ToolbarChildElement extends Element, LabelElement extends Element, M extends UseToolbarSubInfo<ToolbarChildElement>> extends PartialExcept<ToolbarPropsBase<ToolbarContainerElement, ToolbarChildElement, LabelElement, M>, "orientation" | "ariaLabel"> {
+    render(info: UseToolbarReturnType<ToolbarContainerElement, ToolbarChildElement, LabelElement, M>): VNode<any>;
 }
 
 export interface ToolbarChildProps<ToolbarChildElement extends Element, M extends UseToolbarSubInfo<ToolbarChildElement>> extends PartialExcept<ToolbarChildPropsBase<ToolbarChildElement, M>, "getSortValue" | "ariaPropName" | "index" | "selectionMode"> {
@@ -42,7 +43,7 @@ export interface ToolbarChildProps<ToolbarChildElement extends Element, M extend
 
 const ToolbarContext = createContext<UseToolbarContext<any, any, any>>(null!);
 
-export const Toolbar = memoForwardRef(function ToolbarU<ContainerElement extends Element, ChildElement extends Element>({
+export const Toolbar = memoForwardRef(function ToolbarU<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({
     render,
     role,
     collator,
@@ -59,9 +60,10 @@ export const Toolbar = memoForwardRef(function ToolbarU<ContainerElement extends
     orientation,
     noTypeahead,
     onTabbableIndexChange,
-    typeaheadTimeout
-}: ToolbarProps<ContainerElement, ChildElement, UseToolbarSubInfo<ChildElement>>, ref?: Ref<any>) {
-    const listboxReturnType = useToolbar<ContainerElement, ChildElement>({
+    typeaheadTimeout,
+    ariaLabel
+}: ToolbarProps<ContainerElement, ChildElement, LabelElement, UseToolbarSubInfo<ChildElement>>, ref?: Ref<any>) {
+    const listboxReturnType = useToolbar<ContainerElement, ChildElement, LabelElement>({
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
         singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? null, setSelectedIndex: setSelectedIndex ?? null },
         sortableChildrenParameters: { compare: compare ?? null },
@@ -82,6 +84,7 @@ export const Toolbar = memoForwardRef(function ToolbarU<ContainerElement extends
             noTypeahead: useDefault("noTypeahead", noTypeahead), 
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
          },
+         labelParameters: { ariaLabel }
     });
 
     useImperativeHandle(ref!, () => listboxReturnType);

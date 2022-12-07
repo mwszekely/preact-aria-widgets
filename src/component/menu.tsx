@@ -1,7 +1,7 @@
 import { Ref, VNode } from "preact";
 import { returnNull, useState } from "preact-prop-helpers";
 import { useContext, useImperativeHandle } from "preact/hooks";
-import { useMenu, useMenuItem, UseMenuParameters, UseMenuReturnType } from "../use-menu";
+import { useMenu, UseMenuParameters, UseMenuReturnType } from "../use-menu";
 import { UseMenubarSubInfo } from "../use-menubar";
 import { defaultRenderPortal } from "./dialog";
 import { MenuItem, MenuItemContext } from "./menubar";
@@ -12,26 +12,27 @@ type Get<T, K extends keyof T> = T[K];
 
 
 interface MenuPropsBase<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element> extends //Omit<UseMenuParameters<E, K, I>, "indexMangler" | "indexDemangler" | "onAfterChildLayoutEffect" | "onChildrenMountChange" | "onTabbableIndexChange" | "onTabbableRender" | "onTabbedInTo" | "onTabbedOutOf"> & {
-    Get<UseMenuParameters<MenuSurfaceElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "menuParameters">,
-    Get<UseMenuParameters<MenuSurfaceElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "menuSurfaceParameters">,
-    Get<UseMenuParameters<MenuSurfaceElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "linearNavigationParameters">,
-    Get<UseMenuParameters<MenuSurfaceElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "rovingTabIndexParameters">,
-    Get<UseMenuParameters<MenuSurfaceElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "typeaheadNavigationParameters">,
-    Get<UseMenuParameters<MenuSurfaceElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "dismissParameters">,
-    Get<UseMenuParameters<MenuSurfaceElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "escapeDismissParameters">,
-    Get<UseMenuParameters<MenuSurfaceElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "rearrangeableChildrenParameters">,
-    Get<UseMenuParameters<MenuSurfaceElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "sortableChildrenParameters">,
-    Get<UseMenuParameters<MenuSurfaceElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "singleSelectionParameters">,
-    Get<UseMenuParameters<MenuSurfaceElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "toolbarParameters"> {
+    Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "menuParameters">,
+    Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "menuSurfaceParameters">,
+    Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "linearNavigationParameters">,
+    Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "rovingTabIndexParameters">,
+    Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "typeaheadNavigationParameters">,
+    Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "dismissParameters">,
+    Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "escapeDismissParameters">,
+    Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "rearrangeableChildrenParameters">,
+    Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "sortableChildrenParameters">,
+    Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "singleSelectionParameters">,
+    Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "labelParameters">,
+    Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "toolbarParameters"> {
 }
 
-export interface MenuProps<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element> extends PartialExcept<MenuPropsBase<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement>, "open" | "onClose" | "onOpen" | "openDirection" | "orientation"> {
+export interface MenuProps<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element> extends PartialExcept<MenuPropsBase<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement>, "open" | "onClose" | "onOpen" | "openDirection" | "orientation" | "ariaLabel"> {
     render(menuInfo: UseMenuReturnType<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement, UseMenubarSubInfo<MenuItemElement>>): VNode;
 }
 
 //const MenuItemContext = createContext<UseMenuItem<any, any, any>>(null!);
 
-export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element, ParentElement extends Element, SentinelElement extends Element, ChildElement extends Element, ButtonElement extends Element, C = undefined, K extends string = never>({
+export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element, ParentElement extends Element, ChildElement extends Element, ButtonElement extends Element>({
 
 
     collator,
@@ -63,7 +64,8 @@ export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element,
 
     getWindow,
 
-    render
+    render,
+    ariaLabel
 
 }: MenuProps<SurfaceElement, ParentElement, ChildElement, ButtonElement>, ref?: Ref<any>) {
 
@@ -75,8 +77,8 @@ export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element,
             disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys),
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
             pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize),
-            navigatePastEnd: "wrap",
-            navigatePastStart: "wrap"
+            navigatePastEnd: navigatePastEnd ?? "wrap",
+            navigatePastStart: navigatePastStart ?? "wrap"
         },
         dismissParameters: {
             closeOnBackdrop: closeOnBackdrop ?? true,
@@ -104,7 +106,8 @@ export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element,
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
         },
         toolbarParameters: { orientation },
-        menubarParameters: {}
+        menubarParameters: {},
+        labelParameters: { ariaLabel }
     });
 
     useImperativeHandle(ref!, () => info);
@@ -139,7 +142,8 @@ export function DemoMenu() {
     const [open, setOpen] = useState(false);
 
     return (
-        <Menu<HTMLDivElement, HTMLUListElement, HTMLLIElement, HTMLLIElement, HTMLButtonElement>
+        <Menu<HTMLDivElement, HTMLUListElement, HTMLLIElement, HTMLButtonElement>
+            ariaLabel={null}
             closeOnBackdrop={true}
             closeOnEscape={true}
             closeOnLostFocus={true}

@@ -65,12 +65,16 @@ export function useLabel<LP extends LabelPosition, InputElement extends Element,
         randomIdInputParameters: { ...randomIdInputParameters, otherReferencerProp: !synthetic && labelPosition === "separate" ? "for" : null },
         randomIdLabelParameters: { ...randomIdLabelParameters, otherReferencerProp: synthetic ? "aria-labelledby" : null },
     });
-    const { refElementReturn } = useRefElement<LabelElement>({ refElementParameters: {  } });
+    const { refElementReturn } = useRefElement<LabelElement>({ refElementParameters: {} });
 
-    if (labelPosition == 'none')
+    if (labelPosition == 'none') {
+        // When we set the aria-label, intentionally clobber element-based labels (for example, in case they don't exist).
         propsInput["aria-label"] = (ariaLabel!);
+        propsInput["aria-labelledby"] = undefined;
+        propsLabel["for"] = undefined;
+    }
 
-       const { pressReturn } = usePress({ pressParameters: { exclude: { enter: "exclude", space: "exclude", click: undefined }, onPressSync: onLabelClick, focusSelf: noop }, refElementReturn })
+    const { pressReturn } = usePress({ pressParameters: { exclude: { enter: "exclude", space: "exclude", click: undefined }, onPressSync: onLabelClick, focusSelf: noop }, refElementReturn })
     //propsLabel.onClick = onLabelClick ?? undefined;
 
     return {

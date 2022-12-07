@@ -1,17 +1,14 @@
-import { createContext, createElement, h, Ref, VNode } from "preact";
+import { createContext, Ref, VNode } from "preact";
 import { returnNull } from "preact-prop-helpers";
 import { useContext, useImperativeHandle } from "preact/hooks";
 import { UseMenuContext, useMenuItem, UseMenuItemReturnType } from "../use-menu";
-import { UseToolbarContext } from "../use-toolbar";
-import { ElementToTag, PropModifier } from "../props";
 //import { ElementToTag } from "../props";
-import { useMenubar, UseMenubarParameters, UseMenubarItemParameters, UseMenubarSubInfo, UseMenubarReturnType } from "../use-menubar";
-import { defaultRenderPortal } from "./dialog";
+import { useMenubar, UseMenubarItemParameters, UseMenubarParameters, UseMenubarReturnType, UseMenubarSubInfo } from "../use-menubar";
 import { memoForwardRef, PartialExcept, useDefault } from "./util";
 
 type Get<T, K extends keyof T> = T[K];
 
-interface MenubarPropsBase<MenuParentElement extends Element, MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends
+interface MenubarPropsBase<MenuParentElement extends Element, MenuItemElement extends Element, LabelElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends
     Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "linearNavigationParameters">,
     Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "rovingTabIndexParameters">,
     Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "typeaheadNavigationParameters">,
@@ -19,9 +16,10 @@ interface MenubarPropsBase<MenuParentElement extends Element, MenuItemElement ex
     Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "rearrangeableChildrenParameters">,
     Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "sortableChildrenParameters">,
     Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "menubarParameters">,
+    Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "labelParameters">,
     Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "toolbarParameters"> {
     //tagLabel: ElementToTag<LabelElement>;
-    ref?: Ref<UseMenubarReturnType<MenuParentElement, MenuItemElement, M>>;
+    ref?: Ref<UseMenubarReturnType<MenuParentElement, MenuItemElement, LabelElement, M>>;
 }
 
 
@@ -42,8 +40,8 @@ interface MenuItemPropsBase<MenuItemElement extends Element> extends
     ref?: Ref<UseMenuItemReturnType<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>>;
 }
 
-export interface MenubarProps<MenuParentElement extends Element, MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends PartialExcept<MenubarPropsBase<MenuParentElement, MenuItemElement, M>, "orientation"> {
-    render(info: UseMenubarReturnType<MenuParentElement, MenuItemElement, M>): VNode<any>;
+export interface MenubarProps<MenuParentElement extends Element, MenuItemElement extends Element, LabelElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends PartialExcept<MenubarPropsBase<MenuParentElement, MenuItemElement, LabelElement, M>, "orientation" | "ariaLabel"> {
+    render(info: UseMenubarReturnType<MenuParentElement, MenuItemElement, LabelElement, M>): VNode<any>;
 }
 export interface MenuItemProps<MenuItemElement extends Element> extends PartialExcept<MenuItemPropsBase<MenuItemElement>, "ariaPropName" | "index" | "selectionMode" | "getSortValue"> {
     render(info: UseMenuItemReturnType<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): VNode<any>;
@@ -51,7 +49,7 @@ export interface MenuItemProps<MenuItemElement extends Element> extends PartialE
 
 export const MenuItemContext = createContext<UseMenuContext<any, any, any>>(null!);
 
-export const Menubar = memoForwardRef(function MenubarU<ContainerElement extends Element, ChildElement extends Element>({
+export const Menubar = memoForwardRef(function MenubarU<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({
     render,
     collator,
     disableArrowKeys,
@@ -68,9 +66,10 @@ export const Menubar = memoForwardRef(function MenubarU<ContainerElement extends
     initiallySelectedIndex,
     setSelectedIndex,
     typeaheadTimeout,
-    role
-}: MenubarProps<ContainerElement, ChildElement, UseMenubarSubInfo<ChildElement>>, ref?: Ref<any>) {
-    const info = useMenubar<ContainerElement, ChildElement>({
+    role,
+    ariaLabel
+}: MenubarProps<ContainerElement, ChildElement, LabelElement, UseMenubarSubInfo<ChildElement>>, ref?: Ref<any>) {
+    const info = useMenubar<ContainerElement, ChildElement, LabelElement>({
         linearNavigationParameters: { 
             disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys), 
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys), 
@@ -88,7 +87,8 @@ export const Menubar = memoForwardRef(function MenubarU<ContainerElement extends
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
         singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? null, setSelectedIndex: setSelectedIndex ?? null },
         sortableChildrenParameters: { compare: compare ?? null },
-        menubarParameters: { role: role ?? "menubar" }
+        menubarParameters: { role: role ?? "menubar" },
+        labelParameters: { ariaLabel }
     });
 
     useImperativeHandle(ref!, () => info)
@@ -147,7 +147,8 @@ export const MenuItem = memoForwardRef(function MenuItemU<MenuItemElement extend
 export function DemoMenubar() {
 
     return (
-        <Menubar<HTMLUListElement, HTMLLIElement>
+        <Menubar<HTMLUListElement, HTMLLIElement, HTMLLabelElement>
+            ariaLabel={null}
             collator={null}
             disableArrowKeys={false}
             disableHomeEndKeys={false}
@@ -166,7 +167,7 @@ export function DemoMenubar() {
             render={info => {
                 return (
                     <>
-                        <ul {...info.props}>
+                        <ul {...info.propsMenubar}>
 
                         </ul>
                     </>

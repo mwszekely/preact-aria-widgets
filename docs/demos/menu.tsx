@@ -32,7 +32,7 @@ export function Blurb() {
             </ul>
             <p><strong>Things <em>not</em> handled:</strong></p>
             <ul>
-                <li>TODO</li>
+                <li>Unlike most components, the label of a menu is implicitly the button that opens it and is not a separate, standalone element. If this button doesn't label the menu well, you must use the <code>ariaLabel</code> prop to compensate.</li>
             </ul>
         </>
     )
@@ -53,7 +53,8 @@ export function Demo() {
             <Code />
             <label><input type="number" min={0} value={count} onInput={e => setCount(e.currentTarget.valueAsNumber)} /> # of menu items</label>
             <div>
-                <Menu<HTMLDivElement, HTMLUListElement, HTMLDivElement, HTMLLIElement, HTMLButtonElement>
+                <Menu<HTMLDivElement, HTMLUListElement, HTMLLIElement, HTMLButtonElement>
+                    ariaLabel={"test menu label"}
                     orientation="vertical"
                     onOpen={() => setOpen(true)}
                     onClose={() => setOpen(false)}

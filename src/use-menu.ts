@@ -8,12 +8,12 @@ export interface UseMenuContext<ContainerElement extends Element, ChildElement e
 
 }
 
-export interface UseMenuParameters<MenuSurfaceElement extends Element, MenuButtonElement extends Element, MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends Omit<UseMenubarParameters<MenuSurfaceElement, MenuItemElement, M>, "toolbarParameters" | "menubarParameters"> {
+export interface UseMenuParameters<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuButtonElement extends Element, MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends Omit<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "toolbarParameters" | "menubarParameters"> {
     dismissParameters: UseMenuSurfaceParameters<MenuSurfaceElement, MenuButtonElement>["dismissParameters"];
     escapeDismissParameters: UseMenuSurfaceParameters<MenuSurfaceElement, MenuButtonElement>["escapeDismissParameters"];
     menuSurfaceParameters: Omit<UseMenuSurfaceParameters<MenuSurfaceElement, MenuButtonElement>["menuSurfaceParameters"], "role">;
-    toolbarParameters: Omit<UseMenubarParameters<MenuSurfaceElement, MenuItemElement, M>["toolbarParameters"], "role">
-    menubarParameters: Omit<UseMenubarParameters<MenuSurfaceElement, MenuItemElement, M>["menubarParameters"], "role">
+    toolbarParameters: Omit<UseMenubarParameters<MenuParentElement, MenuItemElement, M>["toolbarParameters"], "role">
+    menubarParameters: Omit<UseMenubarParameters<MenuParentElement, MenuItemElement, M>["menubarParameters"], "role">
 
     menuParameters: {
         /** This is called whenever the corresponding arrow key is pressed on the triggering button. */
@@ -35,7 +35,7 @@ export interface UseMenuItemParameters<MenuItemElement extends Element, M extend
     //menuItem: { disabled: DisabledType; onPress: (e: EnhancedEvent<MenuItemElement, h.JSX.TargetedEvent<MenuItemElement>, { index: number }>) => void; }
 }
 
-export interface UseMenuReturnType<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseMenuSurfaceReturnType<MenuSurfaceElement, MenuParentElement, MenuButtonElement>, Omit<UseMenubarReturnType<MenuParentElement, MenuItemElement, M>, "props"> {
+export interface UseMenuReturnType<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseMenuSurfaceReturnType<MenuSurfaceElement, MenuParentElement, MenuButtonElement>, Omit<UseMenubarReturnType<MenuParentElement, MenuItemElement, MenuButtonElement, M>, "propsMenubar" | "propsLabel"> {
 
 }
 
@@ -63,8 +63,10 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
     singleSelectionParameters,
     sortableChildrenParameters,
     toolbarParameters,
-    typeaheadNavigationParameters
-}: UseMenuParameters<MenuSurfaceElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenuReturnType<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement, UseMenubarSubInfo<MenuItemElement>> {
+    typeaheadNavigationParameters,
+    labelParameters,
+    menubarParameters
+}: UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenuReturnType<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement, UseMenubarSubInfo<MenuItemElement>> {
 
     debugLog("useMenu");
 
@@ -73,14 +75,15 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
         context,
         linearNavigationReturn,
         managedChildrenReturn,
-        props: propsMenubar,
+        propsLabel: propsButtonAsMenuLabel,
+        propsMenubar,
         rearrangeableChildrenReturn,
         rovingTabIndexReturn,
         singleSelectionReturn,
         sortableChildrenReturn,
         toolbarReturn,
         typeaheadNavigationReturn
-    } = useMenubar<MenuParentElement, MenuItemElement>({
+    } = useMenubar<MenuParentElement, MenuItemElement, MenuButtonElement>({
         linearNavigationParameters,
         rearrangeableChildrenParameters,
         rovingTabIndexParameters,
@@ -88,7 +91,8 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
         sortableChildrenParameters,
         typeaheadNavigationParameters,
         toolbarParameters: { ...toolbarParameters },
-        menubarParameters: { role: "menu" }
+        menubarParameters: { role: "menu", ...menubarParameters },
+        labelParameters
     });
 
     const onKeyDown = useStableCallback((e: KeyboardEvent) => {
@@ -158,7 +162,7 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
         propsSentinel,
         propsSurface,
         propsTarget: useMergedProps(propsTarget, propsMenubar),
-        propsTrigger: useMergedProps({ onKeyDown }, propsTrigger),
+        propsTrigger: useMergedProps({ onKeyDown }, propsTrigger, propsButtonAsMenuLabel),
         rearrangeableChildrenReturn,
         refElementPopupReturn,
         refElementSourceReturn,
@@ -166,7 +170,7 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
         singleSelectionReturn,
         sortableChildrenReturn,
         toolbarReturn,
-        typeaheadNavigationReturn
+        typeaheadNavigationReturn,
 
         /*focusMenu,
 
