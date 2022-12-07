@@ -1,24 +1,56 @@
 import { Ref, VNode } from "preact";
-import { useMergedProps } from "preact-prop-helpers";
+import { UseAsyncHandlerParameters } from "preact-prop-helpers";
 import { useImperativeHandle } from "preact/hooks";
-import { useProgress, UseProgressParameters, UseProgressReturnType } from "../use-progress";
+import { useProgress, UseProgressParameters, UseProgressReturnType, useProgressWithHandler, UseProgressWithHandlerParameters, UseProgressWithHandlerReturnType } from "../use-progress";
+import { PartialExcept } from "./util";
 
 type Get<T, K extends keyof T> = T[K];
 
-export interface ProgressProps<IndicatorElement extends Element, LabelElement extends Element> extends Get<UseProgressParameters<IndicatorElement, LabelElement>, "labelParameters">, Get<UseProgressParameters<IndicatorElement, LabelElement>, "progressIndicatorParameters"> {
+interface ProgressPropsBase<IndicatorElement extends Element, LabelElement extends Element> extends Get<UseProgressParameters<IndicatorElement, LabelElement>, "labelParameters">, Get<UseProgressParameters<IndicatorElement, LabelElement>, "progressIndicatorParameters"> {
     ref?: Ref<UseProgressReturnType<IndicatorElement, LabelElement>>;
+}
+
+interface ProgressWithHandlerPropsBase<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element> extends
+    Get<UseProgressWithHandlerParameters<EventType, CaptureType, IndicatorElement, LabelElement>, "labelParameters">,
+    Get<UseProgressWithHandlerParameters<EventType, CaptureType, IndicatorElement, LabelElement>, "progressIndicatorParameters">,
+    UseAsyncHandlerParameters<EventType, CaptureType> {
+    ref?: Ref<UseProgressReturnType<IndicatorElement, LabelElement>>;
+}
+
+export interface ProgressProps<IndicatorElement extends Element, LabelElement extends Element> extends PartialExcept<ProgressPropsBase<IndicatorElement, LabelElement>, "tagIndicator" | "ariaLabel"> {
     render(info: UseProgressReturnType<IndicatorElement, LabelElement>): VNode<any>;
+}
+
+export interface ProgressWithHandlerProps<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element> extends PartialExcept<ProgressWithHandlerPropsBase<EventType, CaptureType, IndicatorElement, LabelElement>, "capture" | "tagIndicator" | "ariaLabel" | "asyncHandler"> {
+    render(info: UseProgressWithHandlerReturnType<EventType, CaptureType, IndicatorElement, LabelElement>): VNode<any>;
 }
 
 export function Progress<IndicatorElement extends Element, LabelElement extends Element>({ tagIndicator, ariaLabel, max, render, value, valueText }: ProgressProps<IndicatorElement, LabelElement>, ref?: Ref<any>) {
     const info = useProgress<IndicatorElement, LabelElement>({
-        labelParameters: { ariaLabel }, 
-        progressIndicatorParameters: { max, value, valueText, tagIndicator }
+        labelParameters: { ariaLabel },
+        progressIndicatorParameters: {
+            max: max ?? 100,
+            value: value ?? "indeterminate",
+            valueText: valueText ?? null,
+            tagIndicator
+        }
     });
 
     useImperativeHandle(ref!, () => info);
 
     return render(info);
+}
+
+export function ProgressWithHandler<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element>({ ariaLabel, render, tagIndicator, asyncHandler, capture, debounce, throttle }: ProgressWithHandlerProps<EventType, CaptureType, IndicatorElement, LabelElement>, ref?: Ref<any>) {
+    const info = useProgressWithHandler<EventType, CaptureType, IndicatorElement, LabelElement>({
+        asyncHandlerParameters: { asyncHandler, capture, debounce, throttle },
+        labelParameters: { ariaLabel },
+        progressIndicatorParameters: { tagIndicator },
+    })
+
+    useImperativeHandle(ref!, () => info);
+
+    return (render(info))
 }
 
 export function DemoProgress() {
@@ -28,13 +60,13 @@ export function DemoProgress() {
                 ariaLabel={null}
                 max={100}
                 tagIndicator={"progress"}
-                
+
                 value={50}
                 valueText={null}
                 render={info => {
                     return (
                         <>
-                        <label {...info.propsLabel}>Progress</label>
+                            <label {...info.propsLabel}>Progress</label>
                             <progress {...info.propsIndicator} />
                             <button {...info.propsRegion}></button>
                         </>
