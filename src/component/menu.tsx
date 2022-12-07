@@ -21,7 +21,7 @@ interface MenuPropsBase<MenuSurfaceElement extends Element, MenuParentElement ex
     Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "escapeDismissParameters">,
     Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "rearrangeableChildrenParameters">,
     Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "sortableChildrenParameters">,
-    Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "singleSelectionParameters">,
+    Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "singleSelectionDeclarativeParameters">,
     Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "labelParameters">,
     Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "toolbarParameters"> {
 }
@@ -53,7 +53,7 @@ export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element,
     closeOnLostFocus,
     compare,
     getIndex,
-    initiallySelectedIndex,
+    selectedIndex,
     navigatePastEnd,
     navigatePastStart,
     setSelectedIndex,
@@ -92,7 +92,7 @@ export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element,
             parentDepth: parentDepth ?? defaultParentDepth
         },
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
-        singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? null, setSelectedIndex: setSelectedIndex ?? null },
+
         sortableChildrenParameters: { compare: compare ?? null },
         menuParameters: { openDirection, onOpen },
         menuSurfaceParameters: {},
@@ -105,7 +105,8 @@ export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element,
             noTypeahead: useDefault("noTypeahead", noTypeahead),
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
         },
-        toolbarParameters: { orientation },
+        singleSelectionDeclarativeParameters: { selectedIndex: selectedIndex ?? null },
+        toolbarParameters: { orientation, setSelectedIndex: setSelectedIndex ?? null },
         menubarParameters: {},
         labelParameters: { ariaLabel }
     });
@@ -152,7 +153,7 @@ export function DemoMenu() {
             disableHomeEndKeys={false}
             getIndex={v => v.props.index}
             compare={(lhs, rhs) => lhs.index - rhs.index}
-            initiallySelectedIndex={null}
+            selectedIndex={null}
             untabbable={false}
             navigatePastEnd="wrap"
             navigatePastStart="wrap"

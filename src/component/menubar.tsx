@@ -12,7 +12,7 @@ interface MenubarPropsBase<MenuParentElement extends Element, MenuItemElement ex
     Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "linearNavigationParameters">,
     Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "rovingTabIndexParameters">,
     Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "typeaheadNavigationParameters">,
-    Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "singleSelectionParameters">,
+    Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "singleSelectionDeclarativeParameters">,
     Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "rearrangeableChildrenParameters">,
     Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "sortableChildrenParameters">,
     Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "menubarParameters">,
@@ -63,29 +63,29 @@ export const Menubar = memoForwardRef(function MenubarU<ContainerElement extends
     compare,
     getIndex,
     untabbable,
-    initiallySelectedIndex,
+    selectedIndex,
     setSelectedIndex,
     typeaheadTimeout,
     role,
     ariaLabel
 }: MenubarProps<ContainerElement, ChildElement, LabelElement, UseMenubarSubInfo<ChildElement>>, ref?: Ref<any>) {
     const info = useMenubar<ContainerElement, ChildElement, LabelElement>({
-        linearNavigationParameters: { 
-            disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys), 
-            disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys), 
+        linearNavigationParameters: {
+            disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys),
+            disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap",
             pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
-         },
-        toolbarParameters: { orientation },
+        },
+        toolbarParameters: { orientation, setSelectedIndex: setSelectedIndex ?? null },
         rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable: untabbable ?? false },
-        typeaheadNavigationParameters: { 
-            collator: useDefault("collator", collator), 
-            noTypeahead: useDefault("noTypeahead", noTypeahead), 
+        typeaheadNavigationParameters: {
+            collator: useDefault("collator", collator),
+            noTypeahead: useDefault("noTypeahead", noTypeahead),
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
-         },
+        },
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
-        singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? null, setSelectedIndex: setSelectedIndex ?? null },
+        singleSelectionDeclarativeParameters: { selectedIndex: selectedIndex ?? null },
         sortableChildrenParameters: { compare: compare ?? null },
         menubarParameters: { role: role ?? "menubar" },
         labelParameters: { ariaLabel }
@@ -154,7 +154,7 @@ export function DemoMenubar() {
             disableHomeEndKeys={false}
             getIndex={v => v.props.index}
             compare={(lhs, rhs) => lhs.index - rhs.index}
-            initiallySelectedIndex={null}
+            selectedIndex={null}
             navigatePastEnd="wrap"
             navigatePastStart="wrap"
             noTypeahead={false}

@@ -8,7 +8,7 @@ type Get<T, K extends keyof T> = T[K];
 
 export interface ToolbarPropsBase<ToolbarContainerElement extends Element, ToolbarChildElement extends Element, LabelElement extends Element, M extends UseToolbarSubInfo<ToolbarChildElement>> extends
     Get<UseToolbarParameters<ToolbarContainerElement, ToolbarChildElement, M>, "linearNavigationParameters">,
-    Get<UseToolbarParameters<ToolbarContainerElement, ToolbarChildElement, M>, "singleSelectionParameters">,
+    Get<UseToolbarParameters<ToolbarContainerElement, ToolbarChildElement, M>, "singleSelectionDeclarativeParameters">,
     Get<UseToolbarParameters<ToolbarContainerElement, ToolbarChildElement, M>, "rovingTabIndexParameters">,
     Get<UseToolbarParameters<ToolbarContainerElement, ToolbarChildElement, M>, "typeaheadNavigationParameters">,
     Get<UseToolbarParameters<ToolbarContainerElement, ToolbarChildElement, M>, "sortableChildrenParameters">,
@@ -55,7 +55,7 @@ export const Toolbar = memoForwardRef(function ToolbarU<ContainerElement extends
     navigatePastEnd,
     navigatePastStart,
     pageNavigationSize,
-    initiallySelectedIndex,
+    selectedIndex,
     setSelectedIndex,
     orientation,
     noTypeahead,
@@ -65,7 +65,7 @@ export const Toolbar = memoForwardRef(function ToolbarU<ContainerElement extends
 }: ToolbarProps<ContainerElement, ChildElement, LabelElement, UseToolbarSubInfo<ChildElement>>, ref?: Ref<any>) {
     const listboxReturnType = useToolbar<ContainerElement, ChildElement, LabelElement>({
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
-        singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? null, setSelectedIndex: setSelectedIndex ?? null },
+        singleSelectionDeclarativeParameters: { selectedIndex: selectedIndex ?? null },
         sortableChildrenParameters: { compare: compare ?? null },
         linearNavigationParameters: {
             disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys),
@@ -76,7 +76,8 @@ export const Toolbar = memoForwardRef(function ToolbarU<ContainerElement extends
         },
         toolbarParameters: {
             orientation,
-            role: role ?? "toolbar"
+            role: role ?? "toolbar",
+            setSelectedIndex: setSelectedIndex ?? null
         },
         rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable: untabbable ?? false },
         typeaheadNavigationParameters: { 

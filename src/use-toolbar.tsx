@@ -1,23 +1,29 @@
 import { h } from "preact";
-import { CompleteListNavigationContext, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseListNavigationSingleSelectionSortableChildInfo, useMergedProps } from "preact-prop-helpers";
+import { CompleteListNavigationContext, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildParameters, MakeSingleSelectionDeclarativeParameters, MakeSingleSelectionDeclarativeReturnType, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseListNavigationSingleSelectionSortableChildInfo, useMergedProps, useSingleSelectionDeclarative, PassiveStateUpdater } from "preact-prop-helpers";
 import { Prefices } from "./props";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
 
 
 
 
-export interface UseToolbarParameters<ContainerElement extends Element, ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends Omit<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>, "linearNavigationParameters"> {
+export interface UseToolbarParameters<ContainerElement extends Element, ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends Omit<MakeSingleSelectionDeclarativeParameters<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>>, "linearNavigationParameters" | "singleSelectionReturn"> {
     toolbarParameters: {
         orientation: "horizontal" | "vertical";
 
         // Should be "toolbar" for toolbars, null if someone else takes care of the role, and whatever string is applicable otherwise
         role: string | null;
-    };    
+
+        
+        /**
+         * Optional.
+         */
+        setSelectedIndex: null | PassiveStateUpdater<number | null, Event>;
+    };
     labelParameters: Omit<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
     linearNavigationParameters: Omit<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>["linearNavigationParameters"], "navigationDirection">
 }
 
-export interface UseToolbarReturnType<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends Omit<UseCompleteListNavigationReturnType<ContainerElement, ChildElement, M>, "props"> {
+export interface UseToolbarReturnType<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends Omit<MakeSingleSelectionDeclarativeReturnType<UseCompleteListNavigationReturnType<ContainerElement, ChildElement, M>>, "props"> {
     toolbarReturn: { propsUnstable: h.JSX.HTMLAttributes<ContainerElement> };
     propsToolbar: h.JSX.HTMLAttributes<ContainerElement>;
     propsLabel: h.JSX.HTMLAttributes<LabelElement>
@@ -50,21 +56,35 @@ export interface UseToolbarChildReturnType<ChildElement extends Element, M exten
  */
 export function useToolbar<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({
     linearNavigationParameters,
-    toolbarParameters: { orientation, role },
+    toolbarParameters: { orientation, role, setSelectedIndex },
     labelParameters,
+    rearrangeableChildrenParameters,
+    rovingTabIndexParameters,
+    sortableChildrenParameters,
+    typeaheadNavigationParameters,
+    singleSelectionDeclarativeParameters: { selectedIndex },
     ...listNavParameters
 }: UseToolbarParameters<ContainerElement, ChildElement, UseToolbarSubInfo<ChildElement>>): UseToolbarReturnType<ContainerElement, ChildElement, LabelElement, UseToolbarSubInfo<ChildElement>> {
     const {
         context,
         props,
-        
         ...listNavReturn
     } = useCompleteListNavigation<ContainerElement, ChildElement, UseToolbarSubInfo<ChildElement>>({
         ...listNavParameters,
+        rearrangeableChildrenParameters,
+        rovingTabIndexParameters,
+        singleSelectionParameters: { initiallySelectedIndex: selectedIndex, setSelectedIndex: setSelectedIndex ?? null },
+        sortableChildrenParameters,
+        typeaheadNavigationParameters,
         linearNavigationParameters: { ...linearNavigationParameters, navigationDirection: orientation },
     });
 
-    const { propsInput: propsToolbar, propsLabel } = useLabelSynthetic<ContainerElement, LabelElement>({ 
+    const _v: void = useSingleSelectionDeclarative({ 
+        singleSelectionDeclarativeParameters: { selectedIndex }, 
+        singleSelectionReturn: { setSelectedIndex: listNavReturn.singleSelectionReturn.setSelectedIndex }
+     })
+
+    const { propsInput: propsToolbar, propsLabel } = useLabelSynthetic<ContainerElement, LabelElement>({
         labelParameters: { ...labelParameters, onLabelClick: listNavReturn.rovingTabIndexReturn.focusSelf },
         randomIdInputParameters: { prefix: Prefices.table },
         randomIdLabelParameters: { prefix: Prefices.tableLabel }
