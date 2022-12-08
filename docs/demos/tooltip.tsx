@@ -32,7 +32,8 @@ export function Demo() {
             <Blurb />
             <Code />
             <div>
-                The following text triggers a tooltip: <Tooltip<HTMLSpanElement, HTMLDivElement> render={info => {
+                The following text triggers a tooltip: <Tooltip<HTMLSpanElement, HTMLDivElement> 
+                render={info => {
                     return <>
                         <span tabIndex={0} {...info.propsTrigger}>Tooltip-triggering text that is hoverable and focusable: </span>
                         {defaultRenderPortal({

@@ -1,4 +1,5 @@
 import { createContext, Ref, VNode } from "preact";
+import { useStableCallback } from "preact-prop-helpers";
 import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
 import { TableCellInfo, TableRowInfo, useTable, useTableCell, UseTableCellParameters, UseTableCellReturnType, UseTableContext, UseTableParameters, UseTableReturnType, useTableRow, UseTableRowContext, UseTableRowParameters, UseTableRowReturnType, useTableSection, UseTableSectionContext, UseTableSectionParameters, UseTableSectionReturnType } from "../use-table";
 import { memoForwardRef, PartialExcept, useDefault } from "./util";
@@ -38,9 +39,9 @@ interface TableCellPropsBase<CellElement extends Element, CM extends TableCellIn
     Get<UseTableCellParameters<CellElement, CM>, "managedChildParameters">,
     Get<UseTableCellParameters<CellElement, CM>, "gridNavigationCellParameters">,
     Get<UseTableCellParameters<CellElement, CM>, "rovingTabIndexChildParameters">,
-    Get<UseTableCellParameters<CellElement, CM>, "pressParameters">,
     Get<UseTableCellParameters<CellElement, CM>, "textContentParameters"> {
     getSortValue: CM["getSortValue"];
+    focusSelf?: CM["focusSelf"];
     ref?: Ref<UseTableCellReturnType<CellElement, CM>>;
 }
 
@@ -132,7 +133,7 @@ export const TableSection = memoForwardRef(function TableSection<SectionElement 
     untabbable,
     navigatePastEnd,
     navigatePastStart,
-    setSelectedIndex,
+    onSelectedIndexChange,
     onTabbableColumnChange,
     onTabbableIndexChange,
     pageNavigationSize,
@@ -151,7 +152,7 @@ export const TableSection = memoForwardRef(function TableSection<SectionElement 
         },
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
         rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable: untabbable ?? false },
-        singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? null, setSelectedIndex: setSelectedIndex ?? null },
+        singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? null, onSelectedIndexChange: onSelectedIndexChange ?? null },
         context: useContext(TableContext),
         tableSectionParameters: { tagTableSection, location },
     })
@@ -244,19 +245,16 @@ export const TableCell = memoForwardRef(function TableCell<CellElement extends E
     tagTableCell,
     render,
     colSpan,
-    exclude,
-    onPressSync,
     getSortValue
 }: TableCellProps<CellElement, TableCellInfo<CellElement>>, ref?: Ref<any>) {
     const context = (useContext(TableRowContext) as UseTableRowContext<any, CellElement, TableCellInfo<CellElement>>);
-    const focusSelfDefault = useCallback((e: any) => { e?.focus(); }, []);
+    const defaultFocusSelf = useStableCallback((e: CellElement) => { (e as Element as HTMLElement).focus?.() }, []);
     const info = useTableCell<CellElement, TableCellInfo<CellElement>>({
-        completeGridNavigationCellParameters: { getSortValue },
+        completeGridNavigationCellParameters: { getSortValue, focusSelf: focusSelf ?? defaultFocusSelf },
         context,
         gridNavigationCellParameters: { colSpan: colSpan ?? 1 },
         managedChildParameters: { index },
         rovingTabIndexChildParameters: { hidden: hidden ?? false },
-        pressParameters: { exclude, focusSelf: focusSelf ?? focusSelfDefault, onPressSync },
         tableCellParameters: { tagTableCell },
         textContentParameters: { getText: useDefault("getText", getText) }
         /* listNavigation: { text },

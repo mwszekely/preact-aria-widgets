@@ -214,7 +214,7 @@ export function useToast<E extends Element>({ toastParameters: { politeness, tim
     const focus = useCallback(() => {
         const element = getElement();
         if (element) {
-            const firstFocusable = findFirstFocusable(element);
+            const firstFocusable = findFirstFocusable(element as Element as HTMLElement);
             firstFocusable?.focus?.();
         }
     }, []);

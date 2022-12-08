@@ -5,7 +5,7 @@ import {
     UseCompleteListNavigationChildParameters,
     UseCompleteListNavigationChildReturnType,
     UseCompleteListNavigationParameters,
-    UseCompleteListNavigationReturnType, useEnsureStability, UseListNavigationSingleSelectionSortableChildInfo, useMergedProps, useSingleSelectionDeclarative, useStableCallback, useStableObject
+    UseCompleteListNavigationReturnType, useEnsureStability, UseListNavigationSingleSelectionSortableChildInfo, useMergedProps, useSingleSelectionDeclarative, UseSingleSelectionParameters, useStableCallback, useStableObject
 } from "preact-prop-helpers";
 import { EventDetail, Prefices } from "./props";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
@@ -30,7 +30,7 @@ export interface UseListboxParameters<ListElement extends Element, ListItemEleme
          * Only used when `groupingType` is `"without-groups"` or `"group"`
          */
         selectedIndex: number | null;
-        setSelectedIndex: PassiveStateUpdater<number | null, Event>;
+        onSelectedIndexChange: UseSingleSelectionParameters<ListItemElement>["singleSelectionParameters"]["onSelectedIndexChange"] //PassiveStateUpdater<number | null, Event> | null;
 
         /**
          * * `"without-groups"`: This is a listbox with no groups
@@ -69,7 +69,7 @@ export function useListbox<ListElement extends Element, ListItemElement extends 
     sortableChildrenParameters,
     typeaheadNavigationParameters,
     labelParameters,
-    listboxParameters: { selectionLimit, groupingType, selectedIndex, setSelectedIndex }
+    listboxParameters: { selectionLimit, groupingType, selectedIndex, onSelectedIndexChange }
 }: UseListboxParameters<ListElement, ListItemElement, LabelElement, M>): UseListboxReturnType<ListElement, ListItemElement, LabelElement, M> {
     useEnsureStability("useListbox", selectionLimit);
     const {
@@ -102,14 +102,14 @@ export function useListbox<ListElement extends Element, ListItemElement extends 
         linearNavigationParameters,
         rearrangeableChildrenParameters,
         rovingTabIndexParameters,
-        singleSelectionParameters: { initiallySelectedIndex: selectedIndex, setSelectedIndex },
+        singleSelectionParameters: { initiallySelectedIndex: selectedIndex, onSelectedIndexChange },
         sortableChildrenParameters,
         typeaheadNavigationParameters
     });
 
     const _v: void = useSingleSelectionDeclarative({ 
         singleSelectionDeclarativeParameters: { selectedIndex }, 
-        singleSelectionReturn: { setSelectedIndex: singleSelectionReturn.setSelectedIndex }
+        singleSelectionReturn: { changeSelectedIndex: singleSelectionReturn.changeSelectedIndex }
      })
 
     if (groupingType == "group")

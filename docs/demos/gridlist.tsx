@@ -1,11 +1,10 @@
 
-import { usePassiveState, useState } from "preact-prop-helpers";
-/*
+import { returnZero, useState } from "preact-prop-helpers";
 import { useRef } from "preact/compat";
-import { Checkbox, defaultRenderCheckbox } from "../../component/checkbox";
-import { defaultRenderGridlist, defaultRenderGridlistChild, defaultRenderGridlistRow, defaultRenderGridlistSection, Gridlist, GridlistChild, GridlistRow, GridlistSection } from "../../component/gridlist";
+import { Checkbox } from "../../component/checkbox";
+import { Gridlist, GridlistChild, GridlistRow } from "../../component/gridlist";
 import { EventDetail } from "../../props";
-import { UseCheckboxReturnTypeInfo } from "../../use-checkbox";
+import { UseCheckboxReturnType } from "../../use-checkbox";
 
 function getDocument() { return window.document; }
 
@@ -34,13 +33,61 @@ export function Code() {
 
 function DemoGridlistChild1({ row }: { row: number }) {
     const text = "Gridlist child " + row;
-    return <GridlistChild<HTMLDivElement> getDocument={getDocument} focusSelf={e => e.focus()} index={0} text={text} render={defaultRenderGridlistChild({ tagGridlistChild: "div", makePropsGridlistChild: (_info) => ({ children: text }) })} subInfo={undefined} />
+    return (
+        <GridlistChild<HTMLDivElement> focusSelf={e => e.focus()} index={0} render={info => {
+            return (
+                <div {...info.props}>{text}</div>
+            );
+            /*
+            
+            defaultRenderGridlistChild({ tagGridlistChild: "div", makePropsGridlistChild: (_info) => ({ children: text }) })
+    
+            */
+        }} />
+    )
 }
 
-function DemoGridlistChild2() {
-    const cb = useRef<UseCheckboxReturnTypeInfo<HTMLInputElement, HTMLLabelElement>>(null);
+function DemoGridlistChild2({ tabbable }:{tabbable:boolean}) {
+    const cb = useRef<UseCheckboxReturnType<HTMLInputElement, HTMLLabelElement>>(null);
     const [b, setB] = useState(false);
-    return <GridlistChild<HTMLDivElement> noModifyTabIndex={true} focusSelf={e => { debugger; cb.current?.checkboxLike.focusSelf() }} getDocument={getDocument} index={1} text={b.toString()} render={defaultRenderGridlistChild<HTMLDivElement>({ tagGridlistChild: "div", makePropsGridlistChild: (info) => ({ children: <Checkbox ref={cb} labelPosition={"separate"} tagInput="input" tagLabel="label" checked={b} disabled={false} getDocument={getDocument} onCheckedChange={e => setB(e[EventDetail].checked)} render={defaultRenderCheckbox({ labelPosition: "separate", tagInput: "input", tagLabel: "label", makeInputProps: () => ({ tabIndex: info.rovingTabIndex.tabbable? 0 : -1 }), makeLabelProps: () => ({ children: "Checkbox" }) })} /> }) })} subInfo={undefined} />
+    return (
+        <GridlistChild<HTMLDivElement>
+            focusSelf={e => { debugger; cb.current?.checkboxLikeReturn.focusSelf() }}
+            index={1}
+            render={info => {
+
+                return (
+                    <div {...info.props}>
+                        <Checkbox<HTMLInputElement, HTMLLabelElement>
+                            ariaLabel={"Whether this item is selected"}
+                            ref={cb}
+                            labelPosition={"separate"}
+                            tagInput="input"
+                            tagLabel="label"
+                            checked={b}
+                            disabled={false}
+                            onCheckedChange={e => setB(e[EventDetail].checked)}
+                            render={infoCheckbox => {
+                                return (
+                                    <>
+                                        <input tabIndex={tabbable? 0 : -1} {...infoCheckbox.propsInput} />
+                                    </>
+                                )
+
+                                /*
+                                defaultRenderCheckbox({ labelPosition: "separate", tagInput: "input", tagLabel: "label", makeInputProps: () => ({ tabIndex: info.rovingTabIndex.tabbable ? 0 : -1 }), makeLabelProps: () => ({ children: "Checkbox" }) })
+                                */
+                            }} />
+                    </div>
+                )
+
+                /*
+                
+                defaultRenderGridlistChild<HTMLDivElement>({ tagGridlistChild: "div", makePropsGridlistChild: (info) => ({ children: <Checkbox ref={cb} labelPosition={"separate"} tagInput="input" tagLabel="label" checked={b} disabled={false} getDocument={getDocument} onCheckedChange={e => setB(e[EventDetail].checked)} render={defaultRenderCheckbox({ labelPosition: "separate", tagInput: "input", tagLabel: "label", makeInputProps: () => ({ tabIndex: info.rovingTabIndex.tabbable ? 0 : -1 }), makeLabelProps: () => ({ children: "Checkbox" }) })} /> }) })
+        
+                */
+            }}
+        />)
 }
 
 export function Demo() {
@@ -53,12 +100,47 @@ export function Demo() {
             <Code />
             <label><input type="number" min={0} value={count} onInput={e => setCount(e.currentTarget.valueAsNumber)} /> # of table rows</label>
             <div>
-                <Gridlist
-                    initialIndex={0}
+                <Gridlist<HTMLUListElement, HTMLLIElement, HTMLDivElement, HTMLLabelElement>
+                    ariaLabel={null}
+                    groupingType="without-groups"
+                    selectionLimit="single"
                     selectedIndex={selectedIndex}
-                    selectionMode="activation"
-                    setSelectedIndex={setSelectedIndex}
-                    render={defaultRenderGridlist({
+                    onSelectedIndexChange={setSelectedIndex}
+                    render={infoGridlist => {
+                        return (
+                            <>
+                                <label {...infoGridlist.propsGridlistLabel}>Gridlist demo</label>
+                                <ul {...infoGridlist.propsGridlist}>{infoGridlist.rearrangeableChildrenReturn.useRearrangedChildren(Array.from(function* () {
+                                    for (let i = 0; i < count; ++i) {
+                                        yield (
+                                            <GridlistRow<HTMLLIElement, HTMLDivElement>
+                                                ariaPropName="aria-selected"
+                                                selected={null}
+                                                index={i}
+                                                getSortValue={returnZero}
+                                                render={info => {
+                                                    return (
+                                                        <li {...info.props}><DemoGridlistChild1 row={i} /><DemoGridlistChild2 tabbable={info.rowAsChildOfGridReturn.rovingTabIndexChildReturn.tabbable} /></li>
+                                                    )
+
+                                                    /*
+
+                                                    defaultRenderGridlistRow({
+                                                    tagGridlistRow: "div", makePropsGridlistRow: (_info) => ({
+                                                        children: [<DemoGridlistChild1 row={i} />, <DemoGridlistChild2 />]
+                                                    })
+                                                })
+                                                
+                                                    */
+                                                }} />
+                                        )
+                                    }
+                                }()))}</ul>
+                            </>
+                        )
+                        /*
+                        
+                        defaultRenderGridlist({
                         tagGridlist: "div", makePropsGridlist: (_info) => ({
                             children: <GridlistSection index={0} compareRows={(lhs, rhs) => lhs - rhs} render={defaultRenderGridlistSection({
                                 tagGridlistSection: "div", makePropsGridlistSection: (_info) => ({
@@ -84,10 +166,13 @@ export function Demo() {
                                 })
                             })} />
                         })
-                    })} />
+                    })
+                        
+                        */
+                    }} />
 
 
             </div>
         </>
     )
-}*/
+}

@@ -109,7 +109,7 @@ export function useMenuSurface<MenuSurfaceElement extends Element, MenuTargetEle
 
     const propsSentinel: h.JSX.HTMLAttributes<any> = useFocusSentinel({
         focusSentinel: {
-            sendFocusToMenu: useCallback(() => { return focusTrapParameters.focusPopup(getMenuElement(), () => findFirstFocusable(getMenuElement()!)) }, []),
+            sendFocusToMenu: useCallback(() => { return focusTrapParameters.focusPopup(getMenuElement(), () => findFirstFocusable(getMenuElement() as Element | null as HTMLElement)) }, []),
             onClose: useCallback(() => { dismissParameters.onClose("lost-focus") }, [dismissParameters.onClose]),
             open: dismissParameters.open
         }

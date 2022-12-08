@@ -75,7 +75,7 @@ export function useGridlist<GridlistElement extends Element, GridlistRowElement 
     rovingTabIndexParameters,
     typeaheadNavigationParameters,
     labelParameters,
-    gridlistParameters: { selectionLimit, groupingType, selectedIndex, setSelectedIndex },
+    gridlistParameters: { selectionLimit, groupingType, selectedIndex, onSelectedIndexChange },
     gridNavigationParameters,
     rearrangeableChildrenParameters,
     sortableChildrenParameters
@@ -110,7 +110,7 @@ export function useGridlist<GridlistElement extends Element, GridlistRowElement 
     } = useCompleteGridNavigation<GridlistElement, GridlistRowElement, GridlistCellElement, RM, CM>({
         linearNavigationParameters,
         rovingTabIndexParameters,
-        singleSelectionParameters: { initiallySelectedIndex: selectedIndex, setSelectedIndex },
+        singleSelectionParameters: { initiallySelectedIndex: selectedIndex, onSelectedIndexChange },
         sortableChildrenParameters,
         typeaheadNavigationParameters,
         gridNavigationParameters,
@@ -199,7 +199,8 @@ export function useGridlistRow<GridlistRowElement extends Element, GridlistCellE
         }
     });
 
-    if (selectionLimit == "single")
+    // `selected` should only be true/false for multi-selection
+    if (selectionLimit != "multi")
         console.assert(selected == null);
 
     props.role = "option";

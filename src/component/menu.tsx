@@ -56,7 +56,7 @@ export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element,
     selectedIndex,
     navigatePastEnd,
     navigatePastStart,
-    setSelectedIndex,
+    onSelectedIndexChange,
     pageNavigationSize,
     parentDepth,
     untabbable,
@@ -106,7 +106,7 @@ export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element,
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
         },
         singleSelectionDeclarativeParameters: { selectedIndex: selectedIndex ?? null },
-        toolbarParameters: { orientation, setSelectedIndex: setSelectedIndex ?? null },
+        toolbarParameters: { orientation, onSelectedIndexChange: onSelectedIndexChange ?? null },
         menubarParameters: {},
         labelParameters: { ariaLabel }
     });
@@ -161,7 +161,7 @@ export function DemoMenu() {
             open={open}
             onClose={() => setOpen(false)}
             onOpen={() => setOpen(true)}
-            setSelectedIndex={null}
+            onSelectedIndexChange={null}
             onTabbableIndexChange={null}
             openDirection="down"
             orientation="vertical"
@@ -194,7 +194,7 @@ export function DemoMenuItem({ index }: { index: number }) {
             hidden={false}
             index={index}
             selectionMode="disabled"
-            onPress={noop}
+            onPress={null}
             getSortValue={returnNull}
             render={info => {
                 return (
@@ -210,8 +210,6 @@ export function DemoMenuItem({ index }: { index: number }) {
         />
     )
 }
-
-function noop() { }
 
 /*
 export function defaultRenderMenu<SurfaceElement extends Element, MenuElement extends Element, MenuItemElement extends Element, SentinelElement extends Element, ButtonElement extends Element>({ portalId, tagButton, tagMenu, tagSurface, tagSentinel, makePropsButton, makePropsMenu, makePropsSurface, makePropsSentinel }: { portalId: string, tagSurface: ElementToTag<SurfaceElement>, tagMenu: ElementToTag<MenuElement>, tagButton: ElementToTag<ButtonElement>, tagSentinel: ElementToTag<SentinelElement>, makePropsSurface: (info: UseMenuReturnType<SurfaceElement, MenuElement, MenuItemElement, ButtonElement, UseMenubarSubInfo<MenuItemElement>>) => h.JSX.HTMLAttributes<SurfaceElement>, makePropsMenu: (info: UseMenuReturnType<SurfaceElement, MenuElement, MenuItemElement, ButtonElement, UseMenubarSubInfo<MenuItemElement>>) => h.JSX.HTMLAttributes<MenuElement>, makePropsButton: (info: UseMenuReturnType<SurfaceElement, MenuElement, MenuItemElement, ButtonElement, UseMenubarSubInfo<MenuItemElement>>) => h.JSX.HTMLAttributes<ButtonElement>, makePropsSentinel: (info: UseMenuReturnType<SurfaceElement, MenuElement, MenuItemElement, ButtonElement, UseMenubarSubInfo<MenuItemElement>>) => h.JSX.HTMLAttributes<SentinelElement> }) {

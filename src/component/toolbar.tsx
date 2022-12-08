@@ -56,7 +56,7 @@ export const Toolbar = memoForwardRef(function ToolbarU<ContainerElement extends
     navigatePastStart,
     pageNavigationSize,
     selectedIndex,
-    setSelectedIndex,
+    onSelectedIndexChange,
     orientation,
     noTypeahead,
     onTabbableIndexChange,
@@ -77,7 +77,7 @@ export const Toolbar = memoForwardRef(function ToolbarU<ContainerElement extends
         toolbarParameters: {
             orientation,
             role: role ?? "toolbar",
-            setSelectedIndex: setSelectedIndex ?? null
+            onSelectedIndexChange: onSelectedIndexChange ?? null
         },
         rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable: untabbable ?? false },
         typeaheadNavigationParameters: { 

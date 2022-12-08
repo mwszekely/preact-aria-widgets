@@ -209,7 +209,7 @@ export function useCheckboxGroup<GroupElement extends Element, TCE extends Eleme
         linearNavigationParameters,
         rearrangeableChildrenParameters,
         rovingTabIndexParameters,
-        singleSelectionParameters: { initiallySelectedIndex: null, setSelectedIndex: null },
+        singleSelectionParameters: { initiallySelectedIndex: null, onSelectedIndexChange: null },
         sortableChildrenParameters,
         typeaheadNavigationParameters
     });

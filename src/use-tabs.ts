@@ -137,7 +137,7 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
     linearNavigationParameters,
     rearrangeableChildrenParameters,
     rovingTabIndexParameters,
-    singleSelectionParameters: { setSelectedIndex: ssi, ...singleSelectionParameters },
+    singleSelectionParameters: { onSelectedIndexChange: ssi, ...singleSelectionParameters },
     sortableChildrenParameters,
     typeaheadNavigationParameters,
     tabsParameters: { orientation, role }
@@ -195,7 +195,7 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
         linearNavigationParameters: { navigationDirection: orientation, ...linearNavigationParameters },
         rovingTabIndexParameters,
         singleSelectionParameters: {
-            setSelectedIndex: useStableCallback<PassiveStateUpdater<number | null, Event>>((i, p) => { ssi?.(i, p); changeVisiblePanel(i); listNavRet1.singleSelectionReturn.setSelectedIndex(i, p); }),
+            onSelectedIndexChange: useStableCallback<NonNullable<typeof ssi>>((i, p) => { ssi?.(i, p); changeVisiblePanel(i); listNavRet1.singleSelectionReturn.changeSelectedIndex(i, p); }),
             ...singleSelectionParameters
         },
         typeaheadNavigationParameters,
@@ -204,7 +204,7 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
     });
 
 
-    const { singleSelectionReturn: { setSelectedIndex } } = listNavRet1;
+    const { singleSelectionReturn: { changeSelectedIndex } } = listNavRet1;
 
     return {
         contextPanels: useStableObject({
@@ -213,12 +213,12 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
                 getPanelId,
                 getTabId,
                 getVisibleIndex,
-                setSelectedIndex
+                setSelectedIndex: changeSelectedIndex
             })
         }),
         contextTabs: useStableObject({
             ...context,
-            tabsContext: useStableObject({ getTabId, getPanelId, getVisibleIndex, setSelectedIndex })
+            tabsContext: useStableObject({ getTabId, getPanelId, getVisibleIndex, setSelectedIndex: changeSelectedIndex })
         }),
         propsContainer: useMergedProps(
             listNavigationSingleSelectionProps,

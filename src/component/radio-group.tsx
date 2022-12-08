@@ -35,7 +35,7 @@ interface RadioPropsBase<LP extends LabelPosition, InputElement extends Element,
 
 }
 
-interface RadioGroupProps<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, TabbableChildElement extends Element> extends PartialExcept<RadioGroupPropsBase<V, GroupElement, GroupLabelElement, TabbableChildElement>, "navigationDirection" | "ariaLabel" | "name" | "selectedValue" | "setSelectedValue"> {
+interface RadioGroupProps<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, TabbableChildElement extends Element> extends PartialExcept<RadioGroupPropsBase<V, GroupElement, GroupLabelElement, TabbableChildElement>, "navigationDirection" | "ariaLabel" | "name" | "selectedValue" | "onSelectedValueChange"> {
     render(info: UseRadioGroupReturnType<V, GroupElement, GroupLabelElement, TabbableChildElement>): VNode<any>;
 }
 interface RadioProps<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element, V extends string | number> extends PartialExcept<RadioPropsBase<LP, InputElement, LabelElement, V>, "index" | "value" | "ariaLabel" | "labelPosition" | "tagInput" | "tagLabel"> {
@@ -57,7 +57,7 @@ const RadioContext = createContext<RadioContext<any, any, any, any>>(null!);
 export const RadioGroup = memoForwardRef(function RadioGroup<V extends string | number, GroupElement extends HTMLElement, GroupLabelElement extends HTMLElement, TabbableChildElement extends HTMLElement>({
     render,
     name,
-    setSelectedValue,
+    onSelectedValueChange,
     collator,
     disableArrowKeys,
     disableHomeEndKeys,
@@ -86,7 +86,7 @@ export const RadioGroup = memoForwardRef(function RadioGroup<V extends string | 
         labelParameters: { ariaLabel },
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
         sortableChildrenParameters: { compare: compare ?? null },
-        radioGroupParameters: { name, setSelectedValue, selectedValue },
+        radioGroupParameters: { name, onSelectedValueChange, selectedValue },
         rovingTabIndexParameters: {
             onTabbableIndexChange: onTabbableIndexChange ?? null,
             untabbable: untabbable ?? false
@@ -180,7 +180,7 @@ export function DemoRadioGroup({ name }: { name: string }) {
             navigatePastStart="wrap"
             selectedValue="a"
             navigationDirection="vertical"
-            setSelectedValue={e => setSelectedValue(e)}
+            onSelectedValueChange={e => setSelectedValue(e)}
             render={info => {
                 return (
                     <>

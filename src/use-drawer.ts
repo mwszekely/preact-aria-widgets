@@ -89,7 +89,7 @@ export function useDrawer<FocusContainerElement extends Element, SourceElement e
     } = useModal<"escape" | "backdrop" | "lost-focus", FocusContainerElement, SourceElement, PopupElement>({
         dismissParameters,
         escapeDismissParameters,
-        focusTrapParameters: { onlyMoveFocus: false,  ...focusTrapParameters }
+        focusTrapParameters: { onlyMoveFocus: false, ...focusTrapParameters }
     });
 
     const {
@@ -99,7 +99,7 @@ export function useDrawer<FocusContainerElement extends Element, SourceElement e
         labelParameters: {
             ...labelParameters, onLabelClick: useStableCallback(() => {
                 const e = refElementPopupReturn.getElement();
-                focusTrapParameters.focusPopup(e, () => findFirstFocusable(e!));
+                focusTrapParameters.focusPopup(e, () => findFirstFocusable(e as Element) as HTMLOrSVGElement | null);
 
             })
         },

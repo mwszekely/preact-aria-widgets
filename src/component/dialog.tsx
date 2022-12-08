@@ -96,7 +96,8 @@ export const Dialog = memoForwardRef(function Dialog<FocusContainerElement exten
     return (
         <ParentDepthContext.Provider value={myDepth}>
             {render(info)}
-        </ParentDepthContext.Provider>)
+        </ParentDepthContext.Provider>
+    );
 
 });
 
@@ -112,7 +113,7 @@ export function DialogDemo() {
             closeOnEscape={true}
             focusOpener={e => e.focus()}
             parentDepth={0}
-            focusPopup={(e, f) => {f()?.focus()}}
+            focusPopup={(e, f) => { f()?.focus() }}
             ariaLabel={null}
             render={info => {
                 return (

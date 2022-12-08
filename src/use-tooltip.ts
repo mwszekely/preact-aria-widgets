@@ -1,6 +1,6 @@
 import { h } from "preact";
-import { returnFalse, useGlobalHandler, useHasCurrentFocus, UseHasCurrentFocusParameters, useMergedProps, usePassiveState, useRandomId, useRefElement, UseRefElementReturnType, useStableCallback, useState, useTimeout } from "preact-prop-helpers";
-import { useEffect } from "preact/hooks";
+import { DismissListenerTypes, findFirstFocusable, findFirstTabbable, returnFalse, useDismiss, UseEscapeDismissParameters, useGlobalHandler, useHasCurrentFocus, UseHasCurrentFocusParameters, useMergedProps, usePassiveState, useRandomId, useRefElement, UseRefElementReturnType, useStableCallback, useState, useTimeout } from "preact-prop-helpers";
+import { useEffect, useRef } from "preact/hooks";
 import { debugLog, Prefices } from "./props";
 
 export interface UseTooltipTriggerParameters<TriggerType extends Element> {
@@ -11,8 +11,8 @@ export type UseTooltipTrigger<TriggerType extends Element> = (args: UseTooltipTr
 
     useTooltipTriggerProps: ({ ...props }: h.JSX.HTMLAttributes<TriggerType>) => h.JSX.HTMLAttributes<TriggerType>
 };
-export interface UseTooltipParameters { mouseoverDelay?: number, mouseoutToleranceDelay?: number, focusDelay?: number }
-export type UseTooltip<TriggerType extends HTMLElement | SVGElement, TooltipType extends Element> = (args: UseTooltipParameters) => UseTooltipReturnType<TriggerType, TooltipType>;
+export interface UseTooltipParameters<TooltipType extends Element> { tooltipParameters: { mouseoverDelay?: number, mouseoutToleranceDelay?: number, focusDelay?: number }, escapeDismissParameters: Pick<UseEscapeDismissParameters<TooltipType>["escapeDismissParameters"], "getWindow" | "parentDepth"> }
+export type UseTooltip<TriggerType extends HTMLElement | SVGElement, TooltipType extends Element> = (args: UseTooltipParameters<TooltipType>) => UseTooltipReturnType<TriggerType, TooltipType>;
 export interface UseTooltipReturnType<TriggerType extends Element, PopupType extends Element> {
     tooltipReturn: {
         isOpen: boolean;
@@ -24,7 +24,7 @@ export interface UseTooltipReturnType<TriggerType extends Element, PopupType ext
 
 
 
-export function useTooltip<TriggerType extends Element, PopupType extends Element>({ mouseoverDelay, mouseoutToleranceDelay, focusDelay }: UseTooltipParameters): UseTooltipReturnType<TriggerType, PopupType> {
+export function useTooltip<TriggerType extends Element, PopupType extends Element>({ tooltipParameters: { mouseoverDelay, mouseoutToleranceDelay, focusDelay }, escapeDismissParameters }: UseTooltipParameters<PopupType>): UseTooltipReturnType<TriggerType, PopupType> {
     debugLog("useTooltip");
 
     mouseoverDelay ??= 400;
@@ -171,10 +171,43 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
     // it's perfectly reasonable that a child element will be the one that's focused,
     // not this one, so we don't set tabIndex=0
     //propsTrigger.tabIndex ??= -1;
-    
+
     //}
 
-    const { hasCurrentFocusReturn } = useHasCurrentFocus<TriggerType>({ hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: setTriggerFocused, onCurrentFocusedChanged: null }, refElementReturn: { getElement: getTriggerElement } })
+    const { hasCurrentFocusReturn } = useHasCurrentFocus<TriggerType>({ hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: setTriggerFocused, onCurrentFocusedChanged: null }, refElementReturn: { getElement: getTriggerElement } });
+
+    const {
+        refElementPopupReturn,
+        refElementSourceReturn
+    } = useDismiss<DismissListenerTypes, TriggerType, PopupType>({
+        dismissParameters: {
+            closeOnBackdrop: true,
+            closeOnEscape: true,
+            closeOnLostFocus: true,
+            open,
+            onClose: useStableCallback(() => setHoverState("hidden")),
+        },
+        escapeDismissParameters,
+    });
+
+    const debugHasFoundFocusable = useRef(false);
+    useEffect(() => {
+        if (debugHasFoundFocusable.current == true)
+            return;
+
+        if (open) {
+            const element = getTriggerElement();
+            if (element) {
+                const firstTabbable = findFirstTabbable(element);
+                if (firstTabbable) {
+                    debugHasFoundFocusable.current = true;
+                }
+                else {
+                    console.error(`The following tooltip source is not focusable/does not contain a focusable element. If there isn't a button or other focusable element within this one, add tabIndex=0.`, element);
+                }
+            }
+        }
+    }, [open])
 
     //return {
     //    useTooltipTriggerProps,
@@ -205,8 +238,8 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
     //}, []);
 
     return {
-        propsPopup: useMergedProps(popupRefProps, propsPopup, propsFocusPopup, { role: "tooltip" }),
-        propsTrigger: useMergedProps(triggerRefProps, propsTrigger, hasCurrentFocusReturn.propsStable, { onTouchEnd }),
+        propsPopup: useMergedProps<PopupType>(popupRefProps, propsPopup, propsFocusPopup, { role: "tooltip" }, refElementPopupReturn.propsStable),
+        propsTrigger: useMergedProps<TriggerType>(triggerRefProps, propsTrigger, hasCurrentFocusReturn.propsStable, { onTouchEnd }, refElementSourceReturn.propsStable),
         tooltipReturn: {
             isOpen: open,
             getIsOpen: getOpen

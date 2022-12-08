@@ -106,7 +106,7 @@ export function useDialog<FocusContainerElement extends Element, SourceElement e
         labelParameters: {
             ...labelParameters, onLabelClick: useStableCallback(() => {
                 const e = refElementPopupReturn.getElement();
-                focusTrapParameters.focusPopup(e, () => findFirstFocusable(e!));
+                focusTrapParameters.focusPopup(e, () => findFirstFocusable(e as Element) as HTMLOrSVGElement | null);
 
             })
         },

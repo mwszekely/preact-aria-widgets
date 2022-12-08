@@ -11,7 +11,7 @@ type Get2<T, K extends keyof T, K2 extends keyof T[K]> = T[K][K2];
 interface ListboxPropsBase<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends
     Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "labelParameters">,
     Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "linearNavigationParameters">,
-    Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "listboxParameters">,
+    Omit<Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "listboxParameters">, "groupingType">,
     Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "rearrangeableChildrenParameters">,
     Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "rovingTabIndexParameters">,
     Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "sortableChildrenParameters">,
@@ -30,7 +30,7 @@ interface ListboxItemPropsBase<ListItemElement extends Element, M extends Listbo
     ref?: Ref<UseListboxItemReturnType<ListItemElement, M>>;
 }
 
-export interface ListboxProps<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends PartialExcept<ListboxPropsBase<ListElement, ListItemElement, LabelElement, M>, "ariaLabel" | "groupingType" | "navigationDirection" | "selectionLimit" | "selectedIndex"> {
+export interface ListboxProps<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends PartialExcept<ListboxPropsBase<ListElement, ListItemElement, LabelElement, M>, "ariaLabel" | "navigationDirection" | "selectionLimit" | "selectedIndex"> {
     render(info: UseListboxReturnType<ListElement, ListItemElement, LabelElement, M>): VNode;
 }
 export interface ListboxItemProps<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends PartialExcept<ListboxItemPropsBase<ListItemElement, M>, "ariaPropName" | "index" | "getSortValue"> {
@@ -38,6 +38,38 @@ export interface ListboxItemProps<ListItemElement extends Element, M extends Lis
 }
 
 const ListboxContext = createContext<UseListboxContext<any, any, any>>(null!);
+
+const ListboxGroupContext = createContext<null | UseListboxReturnType<any, any, any, any>>(null);
+export function GroupedListbox<LabelElement extends Element>({ ariaLabel, selectionLimit, navigationDirection, render }: Pick<ListboxProps<any, any, LabelElement, any>, "ariaLabel" | "selectionLimit" | "navigationDirection" | "render">) {
+
+    const info = useListbox<any, any, LabelElement, any>({
+        labelParameters: { ariaLabel },
+        linearNavigationParameters: {
+            navigatePastEnd: "passthrough",
+            navigatePastStart: "passthrough",
+            navigationDirection,
+
+            disableArrowKeys: false,
+            disableHomeEndKeys: true,
+            pageNavigationSize: 1
+        },
+        listboxParameters: { selectionLimit, groupingType: "with-groups", selectedIndex: null, onSelectedIndexChange: null },
+        rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", undefined) },
+        rovingTabIndexParameters: { onTabbableIndexChange: null, untabbable: false },
+        //singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? null, setSelectedIndex: setSelectedIndex ?? null },
+        sortableChildrenParameters: { compare: null },
+        typeaheadNavigationParameters: {
+            collator: null,
+            noTypeahead: true,
+            typeaheadTimeout: Infinity
+        }
+    });
+    info.context;
+    return (
+        <ListboxGroupContext.Provider value={info}>{render(info)}</ListboxGroupContext.Provider>
+    );
+
+}
 
 export function Listbox<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element>({
     ariaLabel,
@@ -51,15 +83,15 @@ export function Listbox<ListElement extends Element, ListItemElement extends Ele
     navigatePastStart,
     navigationDirection,
     noTypeahead,
-    setSelectedIndex,
+    onSelectedIndexChange,
     onTabbableIndexChange,
     pageNavigationSize,
     selectionLimit,
-    groupingType,
     untabbable,
     typeaheadTimeout,
     render
 }: ListboxProps<ListElement, ListItemElement, LabelElement, ListboxInfo<ListItemElement>>) {
+    const listboxGroupInfo = useContext(ListboxGroupContext);
     const info = useListbox<ListElement, ListItemElement, LabelElement, ListboxInfo<ListItemElement>>({
         labelParameters: { ariaLabel },
         linearNavigationParameters: {
@@ -71,7 +103,7 @@ export function Listbox<ListElement extends Element, ListItemElement extends Ele
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
             pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
         },
-        listboxParameters: { selectionLimit, groupingType, selectedIndex, setSelectedIndex: setSelectedIndex ?? noop },
+        listboxParameters: { selectionLimit, groupingType: listboxGroupInfo == null? "without-groups" : "group", selectedIndex, onSelectedIndexChange: onSelectedIndexChange ?? null },
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
         rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable: untabbable ?? false },
         //singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? null, setSelectedIndex: setSelectedIndex ?? null },
@@ -87,8 +119,6 @@ export function Listbox<ListElement extends Element, ListItemElement extends Ele
         <ListboxContext.Provider value={info.context}>{render(info)}</ListboxContext.Provider>
     );
 }
-
-function noop() { }
 
 export function ListboxItem<ListboxItemElement extends Element>({ ariaPropName, disabled, exclude, focusSelf, getText, hidden, index, onPressSync, render, selected, selectionMode, getSortValue }: ListboxItemProps<ListboxItemElement, ListboxInfo<ListboxItemElement>>) {
     const context = useContext(ListboxContext) as UseListboxContext<any, ListboxItemElement, ListboxInfo<ListboxItemElement>>;
@@ -124,14 +154,13 @@ export function DemoListbox() {
             navigatePastEnd="wrap"
             navigatePastStart="wrap"
             selectedIndex={selectedIndex}
-            setSelectedIndex={e => setSelectedIndex(e)}
+            onSelectedIndexChange={e => setSelectedIndex(e)}
             getIndex={v => v.props.index}
             noTypeahead={false}
             navigationDirection="vertical"
             selectionLimit="single"
             onTabbableIndexChange={null}
             pageNavigationSize={0.1}
-            groupingType="without-groups"
             typeaheadTimeout={1000}
             compare={((lhs, rhs) => lhs.index - rhs.index)}
             render={info => {
