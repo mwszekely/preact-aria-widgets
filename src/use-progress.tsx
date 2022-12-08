@@ -55,7 +55,7 @@ export function useProgress<ProgressElement extends Element, LabelElement extend
         randomIdLabelParameters: { prefix: Prefices.progressLabel }
     })
 
-    const busy = (!!value);
+    const busy = value && value != "disabled"; //value == "disabled" || !value? false : true;// (!!value);
     const disabled = (value == "disabled");
     if (typeof value != "number") {
         value = null!;
@@ -107,10 +107,10 @@ export interface UseProgressWithHandlerParameters<EventType, CaptureType, Indica
     asyncHandlerParameters: UseAsyncHandlerParameters<EventType, CaptureType>
 }
 
-export interface UseProgressWithHandlerReturnType<EventType, CaptureType, IndicatorElement extends Element, _LabelElement extends Element> {
-    propsIndicator: UseProgressReturnType<IndicatorElement, _LabelElement>["propsIndicator"];
-    propsLabel: UseProgressReturnType<IndicatorElement, _LabelElement>["propsLabel"];
-    propsRegion: UseProgressReturnType<IndicatorElement, _LabelElement>["propsRegion"];
+export interface UseProgressWithHandlerReturnType<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element> {
+    propsIndicator: UseProgressReturnType<IndicatorElement, LabelElement>["propsIndicator"];
+    propsLabel: UseProgressReturnType<IndicatorElement, LabelElement>["propsLabel"];
+    propsRegion: UseProgressReturnType<IndicatorElement, LabelElement>["propsRegion"];
     asyncHandlerReturn: UseAsyncHandlerReturnType<EventType, CaptureType>
 }
 
@@ -129,7 +129,7 @@ export function useProgressWithHandler<EventType, CaptureType, IndicatorElement 
         labelParameters,
         progressIndicatorParameters: {
             max: 1,
-            value: "indeterminate",
+            value: asyncInfo.pending? "indeterminate" : "disabled",
             valueText: null,
             ...progressIndicatorParameters
         },
