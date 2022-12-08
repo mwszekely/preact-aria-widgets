@@ -38,7 +38,7 @@ export { Toolbar, ToolbarChild, ToolbarChildProps, ToolbarProps } from "./compon
 export { Tooltip, TooltipProps } from "./component/tooltip";
 
 export { EventDetail } from "./props";
-export type { TagSensitiveProps } from "./props";
+export type { TagSensitiveProps, DisabledType, ElementFromTag, ElementToTag, PickByType } from "./props";
 
 declare module 'preact' {
     /* eslint-disable @typescript-eslint/no-namespace */
