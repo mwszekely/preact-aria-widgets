@@ -114,7 +114,9 @@ export const MenuItem = memoForwardRef(function MenuItemU<MenuItemElement extend
     getSortValue,
     role,
 }: MenuItemProps<MenuItemElement>, ref?: Ref<any>) {
-    const context = (useContext(MenuItemContext)); /*<MenuItemElement, C, K>)({
+    const context = (useContext(MenuItemContext));
+    console.assert(context != null, `This MenuItem is not contained within a Menubar/Menu`);
+     /*<MenuItemElement, C, K>)({
         managedChild: { index, flags },
         rovingTabIndex: { focusSelf, hidden, noModifyTabIndex },
         listNavigation: { text },

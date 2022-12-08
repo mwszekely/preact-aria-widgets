@@ -134,6 +134,7 @@ export const Radio = memoForwardRef(function Radio<LP extends LabelPosition, V e
     getText
 }: RadioProps<LP, InputElement, LabelElement, V>, ref?: Ref<any>) {
     const context = useContext(RadioContext);
+    console.assert(context != null, `This Radio is not contained within a RadioGroup`);
     const getValue = useStableGetter(value);
     const defaultFocusSelf = () => info.checkboxLikeReturn.focusSelf();
     const info = useRadio<LP, InputElement, LabelElement, V>({

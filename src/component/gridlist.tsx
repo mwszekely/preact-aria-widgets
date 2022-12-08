@@ -205,6 +205,7 @@ export const GridlistRow = memoForwardRef(function GridlistRowU<RowElement exten
     render
 }: GridlistRowProps<RowElement, Cellement, GridlistRowInfo<RowElement, Cellement>, GridlistCellInfo<Cellement>>, ref?: Ref<any>) {
     const context = (useContext(GridlistContext) as UseGridlistContext<any, RowElement, Cellement, GridlistRowInfo<RowElement, Cellement>, GridlistCellInfo<Cellement>>);
+    console.assert(context != null, `This GridlistRow is not contained within a Gridlist`);
     const info = useGridlistRow<RowElement, Cellement, GridlistRowInfo<RowElement, Cellement>, GridlistCellInfo<Cellement>>({
         rowAsChildOfGridParameters: {
             completeGridNavigationRowParameters: {},
@@ -250,6 +251,7 @@ export const GridlistChild = memoForwardRef(function GridlistChild<CellElement e
     render,
 }: GridlistChildProps<CellElement, GridlistCellInfo<CellElement>>, ref?: Ref<any>) {
     const context = (useContext(GridlistRowContext) as UseGridlistRowContext<any, CellElement, GridlistCellInfo<CellElement>>);
+    console.assert(context != null, `This GridlistChild is not contained within a GridlistRow that is contained within a Gridlist`);
     const defaultFocusSelf = useStableCallback((e: CellElement) => { (e as Element as HTMLElement).focus?.() }, []);
     const info = useGridlistCell<CellElement, GridlistCellInfo<CellElement>>({
         completeGridNavigationCellParameters: { focusSelf: (focusSelf ?? defaultFocusSelf) },

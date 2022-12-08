@@ -44,6 +44,7 @@ export const Toasts = memoForwardRef(function Toasts<ContainerType extends Eleme
 
 export const Toast = memoForwardRef(function Toast<E extends Element>({ render, index, timeout, politeness }: ToastProps<E>, ref?: Ref<any>) {
     const context = (useContext(ToastContext) as ToastsContext<ToastInfo>)
+    console.assert(context != null, `This Toast was not rendered within a Toasts provider`);
     const info = useToast<E>({
         managedChildParameters: { index },
         toastParameters: { timeout, politeness },

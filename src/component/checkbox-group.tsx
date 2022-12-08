@@ -186,6 +186,7 @@ export const CheckboxGroup = memoForwardRef(function CheckboxGroup<ParentElement
 
 export const CheckboxGroupParent = memoForwardRef(function CheckboxGroupParent<TCE extends Element>({ render,  index, focusSelf, exclude, hidden, getText, onPressSync, getSortValue, ..._rest }: CheckboxGroupParentProps<TCE>, ref?: Ref<any>) {
     const context = (useContext(UseCheckboxGroupChildContext) as CheckboxGroupContext<any, TCE, CheckboxGroupInfo<TCE>>);
+    console.assert(context != null, `This CheckboxGroupParent is not contained within a CheckboxGroup`);
 
     const info = useCheckboxGroupParent<TCE>({
 
@@ -215,6 +216,7 @@ export const CheckboxGroupChild = memoForwardRef(function CheckboxGroupChild<TCE
     ..._rest
 }: CheckboxGroupChildProps<TCE>, ref?: Ref<any>) {
     const context = (useContext(UseCheckboxGroupChildContext) as CheckboxGroupContext<any, TCE, CheckboxGroupInfo<TCE>>);
+    console.assert(context != null, `This CheckboxGroupChild is not contained within a CheckboxGroup`);
     const info = useCheckboxGroupChild({
         checkboxGroupChild: { checked, onChangeFromParent },
         completeListNavigationChildParameters: {},

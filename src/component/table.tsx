@@ -202,6 +202,7 @@ export const TableRow = memoForwardRef(function TableRowU<RowElement extends Ele
     render
 }: TableRowProps<RowElement, Cellement, TableRowInfo<RowElement, Cellement>, TableCellInfo<Cellement>>, ref?: Ref<any>) {
     const cx1 = useContext(TableSectionContext);
+    console.assert(cx1 != null, `This TableRow is not contained within a TableSection`);
     const info = useTableRow<RowElement, Cellement, TableRowInfo<RowElement, Cellement>, TableCellInfo<Cellement>>({
         rowAsChildOfGridParameters: {
             completeGridNavigationRowParameters: {},
@@ -248,6 +249,7 @@ export const TableCell = memoForwardRef(function TableCell<CellElement extends E
     getSortValue
 }: TableCellProps<CellElement, TableCellInfo<CellElement>>, ref?: Ref<any>) {
     const context = (useContext(TableRowContext) as UseTableRowContext<any, CellElement, TableCellInfo<CellElement>>);
+    console.assert(context != null, `This TableCell is not contained within a TableRow`);
     const defaultFocusSelf = useStableCallback((e: CellElement) => { (e as Element as HTMLElement).focus?.() }, []);
     const info = useTableCell<CellElement, TableCellInfo<CellElement>>({
         completeGridNavigationCellParameters: { getSortValue, focusSelf: focusSelf ?? defaultFocusSelf },
