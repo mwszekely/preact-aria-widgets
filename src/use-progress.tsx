@@ -104,7 +104,8 @@ export function useProgress<ProgressElement extends Element, LabelElement extend
 export interface UseProgressWithHandlerParameters<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element> {
     labelParameters: UseProgressParameters<IndicatorElement, LabelElement>["labelParameters"];
     progressIndicatorParameters: Pick<UseProgressParameters<IndicatorElement, LabelElement>["progressIndicatorParameters"], "tagIndicator">;
-    asyncHandlerParameters: UseAsyncHandlerParameters<EventType, CaptureType>
+    progressWithHandlerParameters: { forciblyPending: boolean | null };
+    asyncHandlerParameters: UseAsyncHandlerParameters<EventType, CaptureType>;
 }
 
 export interface UseProgressWithHandlerReturnType<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element> {
@@ -117,7 +118,8 @@ export interface UseProgressWithHandlerReturnType<EventType, CaptureType, Indica
 export function useProgressWithHandler<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element>({
     labelParameters,
     progressIndicatorParameters,
-    asyncHandlerParameters
+    asyncHandlerParameters,
+    progressWithHandlerParameters: { forciblyPending }
 }: UseProgressWithHandlerParameters<EventType, CaptureType, IndicatorElement, LabelElement>): UseProgressWithHandlerReturnType<EventType, CaptureType, IndicatorElement, LabelElement> {
     const asyncInfo = useAsyncHandler(asyncHandlerParameters);
 
@@ -129,7 +131,7 @@ export function useProgressWithHandler<EventType, CaptureType, IndicatorElement 
         labelParameters,
         progressIndicatorParameters: {
             max: 1,
-            value: asyncInfo.pending? "indeterminate" : "disabled",
+            value: (forciblyPending || asyncInfo.pending)? "indeterminate" : "disabled",
             valueText: null,
             ...progressIndicatorParameters
         },
