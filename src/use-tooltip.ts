@@ -11,7 +11,20 @@ export type UseTooltipTrigger<TriggerType extends Element> = (args: UseTooltipTr
 
     useTooltipTriggerProps: ({ ...props }: h.JSX.HTMLAttributes<TriggerType>) => h.JSX.HTMLAttributes<TriggerType>
 };
-export interface UseTooltipParameters<TooltipType extends Element> { tooltipParameters: { mouseoverDelay?: number, mouseoutToleranceDelay?: number, focusDelay?: number }, escapeDismissParameters: Pick<UseEscapeDismissParameters<TooltipType>["escapeDismissParameters"], "getWindow" | "parentDepth"> }
+export interface UseTooltipParameters<TooltipType extends Element> {
+    tooltipParameters: {
+        mouseoverDelay?: number;
+        mouseoutToleranceDelay?: number;
+        focusDelay?: number;
+        /**
+         * This is whether `aria-describedby` or `aria-labelledby` is used.
+         * 
+         * Certain situations require one or the other, so you need to specify for each circumstance. 
+         */
+        tooltipSemanticType: "label" | "description";
+    },
+    escapeDismissParameters: Pick<UseEscapeDismissParameters<TooltipType>["escapeDismissParameters"], "getWindow" | "parentDepth">
+}
 export type UseTooltip<TriggerType extends HTMLElement | SVGElement, TooltipType extends Element> = (args: UseTooltipParameters<TooltipType>) => UseTooltipReturnType<TriggerType, TooltipType>;
 export interface UseTooltipReturnType<TriggerType extends Element, PopupType extends Element> {
     tooltipReturn: {
@@ -24,7 +37,7 @@ export interface UseTooltipReturnType<TriggerType extends Element, PopupType ext
 
 
 
-export function useTooltip<TriggerType extends Element, PopupType extends Element>({ tooltipParameters: { mouseoverDelay, mouseoutToleranceDelay, focusDelay }, escapeDismissParameters }: UseTooltipParameters<PopupType>): UseTooltipReturnType<TriggerType, PopupType> {
+export function useTooltip<TriggerType extends Element, PopupType extends Element>({ tooltipParameters: { mouseoverDelay, mouseoutToleranceDelay, focusDelay, tooltipSemanticType }, escapeDismissParameters }: UseTooltipParameters<PopupType>): UseTooltipReturnType<TriggerType, PopupType> {
     debugLog("useTooltip");
 
     mouseoverDelay ??= 400;
@@ -43,6 +56,8 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
             e.stopImmediatePropagation();
             setOpen(false);
             setHoverState("hidden");
+            setTriggerFocused(false);
+            setTooltipFocused(false);
             setTriggerFocusedDelayCorrected(false);
             setTooltipFocusedDelayCorrected(false);
         }
@@ -53,7 +68,7 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
     let {
         propsReferencer: propsTrigger,
         propsSource: propsPopup
-    } = useRandomId<PopupType, TriggerType>({ randomIdParameters: { prefix: Prefices.tooltip, otherReferencerProp: "aria-describedby" as never } });
+    } = useRandomId<PopupType, TriggerType>({ randomIdParameters: { prefix: Prefices.tooltip, otherReferencerProp: (tooltipSemanticType == "description"?  "aria-describedby" : "aria-labelledby")  } });
 
     const { refElementReturn: { getElement: getTriggerElement, propsStable: triggerRefProps } } = useRefElement<TriggerType>({ refElementParameters: {} });
     const { refElementReturn: { getElement: getPopupElement, propsStable: popupRefProps } } = useRefElement<PopupType>({ refElementParameters: {} });
@@ -164,15 +179,7 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
     function onTouchEnd(e: TouchEvent) {
         (e.target as any).focus?.();
     }
-
-    //function useTooltipTriggerProps({ ...props }: h.JSX.HTMLAttributes<TriggerType>): h.JSX.HTMLAttributes<TriggerType> {
-    //const { propsStable } = useRandomIdReferencerElement();
-    // Note: Though it's important to make sure that focusing activates a tooltip,
-    // it's perfectly reasonable that a child element will be the one that's focused,
-    // not this one, so we don't set tabIndex=0
-    //propsTrigger.tabIndex ??= -1;
-
-    //}
+    
 
     const { hasCurrentFocusReturn } = useHasCurrentFocus<TriggerType>({ hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: setTriggerFocused, onCurrentFocusedChanged: null }, refElementReturn: { getElement: getTriggerElement } });
 
@@ -208,18 +215,9 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
             }
         }
     }, [open])
-
-    //return {
-    //    useTooltipTriggerProps,
-    //    hasCurrentFocusReturnType: { onCurrentFocusedInnerChanged: setTriggerFocused }
-    //};
-
-    //}, []);
-
-    //const useTooltipPopup = useCallback(function useTooltip({ refElementReturn }: UseTooltipPopupParameters<PopupType>) {
+    
     debugLog("useTooltipTooltip");
-    //const { getElement } = refElementReturn;
-    //const { propsStable } = useRandomIdSourceElement();
+    
     const { hasCurrentFocusReturn: { propsStable: propsFocusPopup } } = useHasCurrentFocus<PopupType>({
         hasCurrentFocusParameters: { onCurrentFocusedChanged: null, onCurrentFocusedInnerChanged: useStableCallback((focused) => { setTooltipFocused(focused); }) },
         refElementReturn: { getElement: getPopupElement }
@@ -229,13 +227,6 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
         const target = (e.target as HTMLElement);
         setTooltipHover(target == getPopupElement() as Node || !!getPopupElement()?.contains(target));
     }, { capture: true });
-
-    //function useTooltipPopupProps(props: h.JSX.HTMLAttributes<PopupType>): h.JSX.HTMLAttributes<PopupType> {
-    //    return useMergedProps(propsStable, props);
-    // }
-
-    //return { useTooltipPopupProps };
-    //}, []);
 
     return {
         propsPopup: useMergedProps<PopupType>(popupRefProps, propsPopup, propsFocusPopup, { role: "tooltip" }, refElementPopupReturn.propsStable),
