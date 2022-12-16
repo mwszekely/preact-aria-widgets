@@ -67,7 +67,7 @@ export function Demo() {
                     ariaLabel={null}
                     selectedValue={selectedIndex}
                     navigationDirection="vertical"
-                    setSelectedValue={setSelectedIndex}
+                    onSelectedValueChange={setSelectedIndex}
                     render={info => {
                         return (
                             <>

@@ -115,6 +115,7 @@ export function Tab<E extends Element>({
     render
 }: TabProps<E>) {
     const context = useContext(TabsContext);
+    console.assert(context != null, `This Tab is not contained within a Tabs component`);
     const focusSelfDefault = useCallback((e: any) => { e?.focus(); }, []);
     const info = useTab<E>({
         completeListNavigationChildParameters: {},

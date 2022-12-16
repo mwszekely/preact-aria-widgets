@@ -1,4 +1,5 @@
 import { createContext, createElement, h, Ref, VNode } from "preact";
+import { useStableCallback } from "preact-prop-helpers";
 import { useContext, useImperativeHandle } from "preact/hooks";
 import { ElementToTag } from "../props";
 import { GridlistCellInfo, GridlistRowInfo, useGridlist, useGridlistCell, UseGridlistCellParameters, UseGridlistCellReturnType, UseGridlistContext, UseGridlistParameters, UseGridlistReturnType, useGridlistRow, UseGridlistRowContext, UseGridlistRowParameters, UseGridlistRowReturnType } from "../use-gridlist";
@@ -36,7 +37,6 @@ interface GridlistRowPropsBase<GridlistRowElement extends Element, GridlistCellE
 interface GridlistChildPropsBase<CellElement extends Element, M extends GridlistCellInfo<CellElement>> extends
     Get<UseGridlistCellParameters<CellElement, M>, "gridNavigationCellParameters">,
     Get<UseGridlistCellParameters<CellElement, M>, "textContentParameters">,
-    // Get<UseGridlistCellParameters<CellElement, M>, "pressParameters">,
     Get<UseGridlistCellParameters<CellElement, M>, "rovingTabIndexChildParameters">,
     Get<UseGridlistCellParameters<CellElement, M>, "managedChildParameters"> {
     focusSelf: M["focusSelf"];
@@ -118,7 +118,7 @@ export const Gridlist = memoForwardRef(function GridlistU<GridlistElement extend
     selectedIndex,
     navigatePastEnd,
     navigatePastStart,
-    setSelectedIndex,
+    onSelectedIndexChange,
     pageNavigationSize,
     selectionLimit,
     untabbable,
@@ -153,10 +153,10 @@ export const Gridlist = memoForwardRef(function GridlistU<GridlistElement extend
             selectionLimit,
             groupingType,
             selectedIndex,
-            setSelectedIndex: setSelectedIndex ?? noop
+            onSelectedIndexChange: onSelectedIndexChange ?? null
         },
         gridNavigationParameters: {
-            onTabbableColumnChange: onTabbableColumnChange ?? noop
+            onTabbableColumnChange: onTabbableColumnChange ?? null
         },
         labelParameters: {
             ariaLabel
@@ -176,9 +176,7 @@ export const Gridlist = memoForwardRef(function GridlistU<GridlistElement extend
             {render(info)}
         </GridlistContext.Provider>
     )
-})
-
-function noop() { }
+});
 
 /*
 export const GridlistSection = memoForwardRef(function GridlistSectionU<SectionElement extends Element, RowElement extends Element, Cellement extends Element, CR = undefined, CC = undefined, KR extends string = never>({ render, compareRows, index }: GridlistSectionProps<SectionElement, RowElement, Cellement, CR, CC, KR>, ref?: Ref<any>) {
@@ -207,6 +205,7 @@ export const GridlistRow = memoForwardRef(function GridlistRowU<RowElement exten
     render
 }: GridlistRowProps<RowElement, Cellement, GridlistRowInfo<RowElement, Cellement>, GridlistCellInfo<Cellement>>, ref?: Ref<any>) {
     const context = (useContext(GridlistContext) as UseGridlistContext<any, RowElement, Cellement, GridlistRowInfo<RowElement, Cellement>, GridlistCellInfo<Cellement>>);
+    console.assert(context != null, `This GridlistRow is not contained within a Gridlist`);
     const info = useGridlistRow<RowElement, Cellement, GridlistRowInfo<RowElement, Cellement>, GridlistCellInfo<Cellement>>({
         rowAsChildOfGridParameters: {
             completeGridNavigationRowParameters: {},
@@ -252,11 +251,12 @@ export const GridlistChild = memoForwardRef(function GridlistChild<CellElement e
     render,
 }: GridlistChildProps<CellElement, GridlistCellInfo<CellElement>>, ref?: Ref<any>) {
     const context = (useContext(GridlistRowContext) as UseGridlistRowContext<any, CellElement, GridlistCellInfo<CellElement>>);
+    console.assert(context != null, `This GridlistChild is not contained within a GridlistRow that is contained within a Gridlist`);
+    const defaultFocusSelf = useStableCallback((e: CellElement) => { (e as Element as HTMLElement).focus?.() }, []);
     const info = useGridlistCell<CellElement, GridlistCellInfo<CellElement>>({
-        completeGridNavigationCellParameters: { focusSelf },
+        completeGridNavigationCellParameters: { focusSelf: (focusSelf ?? defaultFocusSelf) },
         context,
         gridNavigationCellParameters: { colSpan: colSpan ?? 1 },
-        // pressParameters: { exclude, focusSelf, onPressSync },
         textContentParameters: { getText: useDefault("getText", getText) },
         managedChildParameters: { index },
         rovingTabIndexChildParameters: { hidden: hidden ?? false }

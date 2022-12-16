@@ -55,7 +55,7 @@ export function useProgress<ProgressElement extends Element, LabelElement extend
         randomIdLabelParameters: { prefix: Prefices.progressLabel }
     })
 
-    const busy = (!!value);
+    const busy = value && value != "disabled"; //value == "disabled" || !value? false : true;// (!!value);
     const disabled = (value == "disabled");
     if (typeof value != "number") {
         value = null!;
@@ -104,20 +104,22 @@ export function useProgress<ProgressElement extends Element, LabelElement extend
 export interface UseProgressWithHandlerParameters<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element> {
     labelParameters: UseProgressParameters<IndicatorElement, LabelElement>["labelParameters"];
     progressIndicatorParameters: Pick<UseProgressParameters<IndicatorElement, LabelElement>["progressIndicatorParameters"], "tagIndicator">;
-    asyncHandlerParameters: UseAsyncHandlerParameters<EventType, CaptureType>
+    progressWithHandlerParameters: { forciblyPending: boolean | null };
+    asyncHandlerParameters: UseAsyncHandlerParameters<EventType, CaptureType>;
 }
 
-export interface UseProgressWithHandlerReturnType<EventType, CaptureType, IndicatorElement extends Element, _LabelElement extends Element> {
-    propsIndicator: UseProgressReturnType<IndicatorElement, _LabelElement>["propsIndicator"];
-    propsLabel: UseProgressReturnType<IndicatorElement, _LabelElement>["propsLabel"];
-    propsRegion: UseProgressReturnType<IndicatorElement, _LabelElement>["propsRegion"];
+export interface UseProgressWithHandlerReturnType<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element> {
+    propsIndicator: UseProgressReturnType<IndicatorElement, LabelElement>["propsIndicator"];
+    propsLabel: UseProgressReturnType<IndicatorElement, LabelElement>["propsLabel"];
+    propsRegion: UseProgressReturnType<IndicatorElement, LabelElement>["propsRegion"];
     asyncHandlerReturn: UseAsyncHandlerReturnType<EventType, CaptureType>
 }
 
 export function useProgressWithHandler<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element>({
     labelParameters,
     progressIndicatorParameters,
-    asyncHandlerParameters
+    asyncHandlerParameters,
+    progressWithHandlerParameters: { forciblyPending }
 }: UseProgressWithHandlerParameters<EventType, CaptureType, IndicatorElement, LabelElement>): UseProgressWithHandlerReturnType<EventType, CaptureType, IndicatorElement, LabelElement> {
     const asyncInfo = useAsyncHandler(asyncHandlerParameters);
 
@@ -129,7 +131,7 @@ export function useProgressWithHandler<EventType, CaptureType, IndicatorElement 
         labelParameters,
         progressIndicatorParameters: {
             max: 1,
-            value: "indeterminate",
+            value: (forciblyPending || asyncInfo.pending)? "indeterminate" : "disabled",
             valueText: null,
             ...progressIndicatorParameters
         },

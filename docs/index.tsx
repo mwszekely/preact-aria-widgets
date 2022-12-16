@@ -35,6 +35,7 @@ const Component = () => {
             <Heading heading="Checkbox"><Checkbox.Demo /></Heading>
             <Heading heading="Checkbox Group"><CheckboxGroup.Demo /></Heading>
             <Heading heading="Dialog"><Dialog.Demo /></Heading>
+            <Heading heading="Gridlist"><Gridlist.Demo /></Heading>
             <Heading heading="Single-select Listbox"><ListboxSingle.Demo /></Heading>
             <Heading heading="Multi-select Listbox"><ListboxMulti.Demo /></Heading>
             <Heading heading="Menu"><Menu.Demo /></Heading>
@@ -47,7 +48,6 @@ const Component = () => {
             <Heading heading="Table"><Table.Demo /></Heading>
             {/*
             
-            <Heading heading="Gridlist"><Gridlist.Demo /></Heading>
             */}
             {/*
        

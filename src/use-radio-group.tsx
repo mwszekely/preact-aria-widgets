@@ -12,7 +12,7 @@ export interface UseRadioGroupParameters<V extends string | number, GroupElement
         name: string;
 
         selectedValue: V | null;
-        setSelectedValue(value: V | null /*event: RadioChangeEvent<TabbableChildElement, V>*/): void;
+        onSelectedValueChange(value: V | null, event: Event | undefined): void;
         //tagGroup: ElementToTag<GroupElement>;
         //tagGroupLabel: ElementToTag<GroupLabelElement>;
     }
@@ -71,7 +71,7 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
     sortableChildrenParameters,
     typeaheadNavigationParameters,
     labelParameters,
-    radioGroupParameters: { name, setSelectedValue: setSelectedValueExternal, selectedValue },
+    radioGroupParameters: { name, onSelectedValueChange, selectedValue },
 }: UseRadioGroupParameters<V, G, GL, TCE>): UseRadioGroupReturnType<V, G, GL, TCE> {
 
     //debugLog("useRadioGroup", selectedValue);
@@ -116,7 +116,7 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
         if (selectedValue != null)
             singleSelectionReturn.changeSelectedIndex(byName.current.get(selectedValue) ?? null);
         else
-        singleSelectionReturn.changeSelectedIndex(null);
+            singleSelectionReturn.changeSelectedIndex(null);
     }, [selectedValue])
 
     const {
@@ -141,14 +141,14 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
 
     const _v: void = useSingleSelectionDeclarative({
         singleSelectionReturn: {
-            changeSelectedIndex: useStableCallback((s) => {
+            changeSelectedIndex: useStableCallback((s, r) => {
                 let next = typeof s == "function" ? s(selectedIndex) : s;
                 if (next != null) {
                     const nextValue = managedChildrenReturn.getChildren().getAt(next)?.getValue2();
-                    setSelectedValueExternal(nextValue as V);
+                    onSelectedValueChange(nextValue as V, r);
                 }
                 else {
-                    setSelectedValueExternal(null);
+                    onSelectedValueChange(null, r);
                 }
             })
         }, singleSelectionDeclarativeParameters: { selectedIndex }

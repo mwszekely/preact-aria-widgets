@@ -32,7 +32,8 @@ export const Slider = memoForwardRef(function Slider({ max, min, onAfterChildLay
 })
 
 export const SliderThumb = memoForwardRef(function SliderThumbU<ThumbElement extends Element>({ label, tag, value, max, min, onValueChange, index, render, valueText }: SliderThumbProps<ThumbElement>, ref?: Ref<any>) {
-    const context = (useContext(SliderThumbContext) as SliderContext<SliderThumbInfo>)
+    const context = (useContext(SliderThumbContext) as SliderContext<SliderThumbInfo>);
+    console.assert(context != null, `This SliderThumb is not contained within a Slider`);
     
     const info = useSliderThumb({
         context,

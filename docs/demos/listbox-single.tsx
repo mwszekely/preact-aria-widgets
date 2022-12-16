@@ -1,6 +1,8 @@
 
+import { ComponentChildren } from "preact";
 import { returnZero, useState } from "preact-prop-helpers";
 import { memo } from "preact/compat";
+import { GroupedListbox } from "../../component/listbox";
 import { Listbox, ListboxItem } from "../../index";
 
 const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
@@ -44,7 +46,7 @@ export function Blurb() {
                 </li>
                 <li>Rather than each individual list item knowing whether it is selected or not (as with multi-select lists), here the parent knows the <code>selectedIndex</code> and simply notifies the (max two) relevant children any time it changes.</li>
                 <li>Grouping is supported</li>
-                <li>Sorting/reordering is supported, though not provided by default, as it's mutually exclusive with grouping.</li>
+                <li>Sorting/reordering is supported. Each group is sorted independently.</li>
             </ul>
             <p><strong>Things <em>not</em> handled:</strong></p>
             <ul>
@@ -58,8 +60,35 @@ export function Code() {
     return (<code>{``}</code>)
 }
 
-export function Demo() {
+function ListboxDemo({ count, label }: { count: number, label: ComponentChildren }) {
     const [selectedIndex, setSelectedIndex] = useState<null | number>(null);
+    return (
+        <Listbox<HTMLOListElement, HTMLLIElement, HTMLLabelElement>
+            selectedIndex={selectedIndex}
+            onSelectedIndexChange={setSelectedIndex}
+
+            render={info => {
+                return (
+                    <>
+                        <label {...info.propsListboxLabel}>{label}</label>
+                        <ol {...info.propsListbox}>
+                            {Array.from((function* () {
+                                for (let i = 0; i < count; ++i) {
+                                    yield <DemoListItem index={i} key={i} />
+                                }
+                            })())}
+                        </ol>
+                    </>
+                )
+            }}
+            ariaLabel={null}
+            navigationDirection="vertical"
+            selectionLimit="single"
+        />
+    )
+}
+
+export function Demo() {
     const [count, setCount] = useState(5);
 
 
@@ -69,40 +98,25 @@ export function Demo() {
             <Code />
             <label><input type="number" min={0} value={count} onInput={e => setCount(e.currentTarget.valueAsNumber)} /> # of list items</label>
             <div>
-                <Listbox<HTMLOListElement, HTMLLIElement, HTMLLabelElement>
-                    selectedIndex={selectedIndex}
-                    setSelectedIndex={setSelectedIndex}
-                    
-                    render={info => {
-                        /*
-                        defaultRenderListboxSingle({
-                        tagLabel: "label", tagList: "ol", makePropsLabel: () => ({}), makePropsList: () => ({
-                            children: <>{Array.from((function* () {
-                                for (let i = 0; i < count; ++i) {
-                                    yield <DemoListItem index={i} key={i} />
-                                }
-                            })())}</>
-                        })
-                    })
-                     */
-                        return (
-                            <>
-                                <label {...info.propsListboxLabel}>Single-select listbox demo</label>
-                                <ol {...info.propsListbox}>
-                                    {Array.from((function* () {
-                                        for (let i = 0; i < count; ++i) {
-                                            yield <DemoListItem index={i} key={i} />
-                                        }
-                                    })())}
-                                </ol>
-                            </>
-                        )
-                    }}
-                    ariaLabel={null}
-                    groupingType="without-groups"
+                <ListboxDemo count={count} label="Single-select listbox demo without groups" />
+            </div>
+            <div>
+                <GroupedListbox<HTMLLabelElement>
                     navigationDirection="vertical"
                     selectionLimit="single"
-                     />
+                    ariaLabel={null}
+                    render={info => {
+                        return (
+                            <>
+                                <label {...info.propsListboxLabel}>Single-select listbox demo with groups</label>
+                                <div {...info.propsListbox}>
+                                    <ListboxDemo count={count} label="Group #0" />
+                                    <ListboxDemo count={count} label="Group #1" />
+                                    <ListboxDemo count={count} label="Group #2" />
+                                </div>
+                            </>
+                        )
+                    }} />
             </div>
         </>
     )

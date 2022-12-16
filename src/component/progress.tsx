@@ -13,6 +13,7 @@ interface ProgressPropsBase<IndicatorElement extends Element, LabelElement exten
 interface ProgressWithHandlerPropsBase<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element> extends
     Get<UseProgressWithHandlerParameters<EventType, CaptureType, IndicatorElement, LabelElement>, "labelParameters">,
     Get<UseProgressWithHandlerParameters<EventType, CaptureType, IndicatorElement, LabelElement>, "progressIndicatorParameters">,
+    Get<UseProgressWithHandlerParameters<EventType, CaptureType, IndicatorElement, LabelElement>, "progressWithHandlerParameters">,
     UseAsyncHandlerParameters<EventType, CaptureType> {
     ref?: Ref<UseProgressReturnType<IndicatorElement, LabelElement>>;
 }
@@ -41,11 +42,12 @@ export function Progress<IndicatorElement extends Element, LabelElement extends 
     return render(info);
 }
 
-export function ProgressWithHandler<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element>({ ariaLabel, render, tagIndicator, asyncHandler, capture, debounce, throttle }: ProgressWithHandlerProps<EventType, CaptureType, IndicatorElement, LabelElement>, ref?: Ref<any>) {
+export function ProgressWithHandler<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element>({ ariaLabel, forciblyPending, render, tagIndicator, asyncHandler, capture, debounce, throttle }: ProgressWithHandlerProps<EventType, CaptureType, IndicatorElement, LabelElement>, ref?: Ref<any>) {
     const info = useProgressWithHandler<EventType, CaptureType, IndicatorElement, LabelElement>({
         asyncHandlerParameters: { asyncHandler, capture, debounce, throttle },
         labelParameters: { ariaLabel },
         progressIndicatorParameters: { tagIndicator },
+        progressWithHandlerParameters: { forciblyPending: forciblyPending ?? false }
     })
 
     useImperativeHandle(ref!, () => info);

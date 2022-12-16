@@ -1,4 +1,5 @@
 import { createContext, Ref, VNode } from "preact";
+import { useStableCallback } from "preact-prop-helpers";
 import { useContext, useImperativeHandle } from "preact/hooks";
 import { OmitStrong } from "../props";
 import { TableCellInfo, TableRowInfo, useTable, useTableCell, UseTableCellParameters, UseTableCellReturnType, UseTableContext, UseTableParameters, UseTableReturnType, useTableRow, UseTableRowContext, UseTableRowParameters, UseTableRowReturnType, useTableSection, UseTableSectionContext, UseTableSectionParameters, UseTableSectionReturnType } from "../use-table";
@@ -39,7 +40,6 @@ interface TableCellPropsBase<CellElement extends Element, CM extends TableCellIn
     Get<UseTableCellParameters<CellElement, CM>, "managedChildParameters">,
     Get<UseTableCellParameters<CellElement, CM>, "gridNavigationCellParameters">,
     Get<UseTableCellParameters<CellElement, CM>, "rovingTabIndexChildParameters">,
-    // Get<UseTableCellParameters<CellElement, CM>, "pressParameters">,
     Get<UseTableCellParameters<CellElement, CM>, "textContentParameters"> {
     focusSelf: CM["focusSelf"];
     getSortValue: CM["getSortValue"];
@@ -203,6 +203,7 @@ export const TableRow = memoForwardRef(function TableRowU<RowElement extends Ele
     render
 }: TableRowProps<RowElement, Cellement, TableRowInfo<RowElement, Cellement>, TableCellInfo<Cellement>>, ref?: Ref<any>) {
     const cx1 = useContext(TableSectionContext);
+    console.assert(cx1 != null, `This TableRow is not contained within a TableSection`);
     const info = useTableRow<RowElement, Cellement, TableRowInfo<RowElement, Cellement>, TableCellInfo<Cellement>>({
         rowAsChildOfGridParameters: {
             completeGridNavigationRowParameters: {},
@@ -246,19 +247,17 @@ export const TableCell = memoForwardRef(function TableCell<CellElement extends E
     tagTableCell,
     render,
     colSpan,
-    //exclude,
-    //onPressSync,
     getSortValue
 }: TableCellProps<CellElement, TableCellInfo<CellElement>>, ref?: Ref<any>) {
     const context = (useContext(TableRowContext) as UseTableRowContext<any, CellElement, TableCellInfo<CellElement>>);
-    //const focusSelfDefault = useCallback((e: any) => { e?.focus(); }, []);
+    console.assert(context != null, `This TableCell is not contained within a TableRow`);
+    const defaultFocusSelf = useStableCallback((e: CellElement) => { (e as Element as HTMLElement).focus?.() }, []);
     const info = useTableCell<CellElement, TableCellInfo<CellElement>>({
-        completeGridNavigationCellParameters: { getSortValue, focusSelf },
+        completeGridNavigationCellParameters: { getSortValue, focusSelf: focusSelf ?? defaultFocusSelf },
         context,
         gridNavigationCellParameters: { colSpan: colSpan ?? 1 },
         managedChildParameters: { index },
         rovingTabIndexChildParameters: { hidden: hidden ?? false },
-        //pressParameters: { exclude, focusSelf: focusSelf ?? focusSelfDefault, onPressSync },
         tableCellParameters: { tagTableCell },
         textContentParameters: { getText: useDefault("getText", getText) }
         /* listNavigation: { text },

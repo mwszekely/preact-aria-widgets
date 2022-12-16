@@ -4,11 +4,26 @@ export type RefFromTag<T extends keyof h.JSX.IntrinsicElements> = NonNullable<h.
 export type ElementFromRef<R extends Ref<any>> = R extends Ref<infer E> ? E : EventTarget;
 export type ElementFromTag<T extends keyof h.JSX.IntrinsicElements> = ElementFromRef<RefFromTag<T>>;
 
-export type ElementToTag<E extends EventTarget> = (keyof SubType<HTMLElementTagNameMap, E>);// & (keyof h.JSX.IntrinsicElements);
-type SubType<Base, Condition> = Pick<Base, {
-    [Key in keyof Base]: Base[Key] extends Condition ? Key : never
-}[keyof Base]>;
 
+
+// https://stackoverflow.com/questions/46583883/typescript-pick-properties-with-a-defined-type
+export type PickByType<Obj, WantedType> = {
+    // For each property in Obj, get the type on that property, 
+    // and if it extends our WantedType, then we DO include that property.
+    // Imagine, like, invisible paranthesis:
+    // (P in keyof Obj as Obj[P] extends WantedType | undefined)? P : never
+    // Because we can't use a type as a key, but we can use it as an intermediary step!
+    [P in keyof Obj as Obj[P] extends WantedType | undefined ? P : never]: Obj[P]
+  }
+  
+export type ElementToTag<E> = keyof PickByType<HTMLElementTagNameMap, E>;
+
+/**
+ * * `false`: This component is not disabled.
+ * * `"soft"`: This component is disabled, but is still focusable and visible to *all* users.
+ * * `"hard"`: This component is disabled, and generally hidden to all but sighted users, using the HTML `disabled` attribute.
+ * * `true`: This component is disabled. Whether "hard" or "soft" is chosen is usually chosen based on a `Context`.
+ */
 export type DisabledType = boolean | "soft" | "hard";
 
 export type OmitStrong<T, K extends keyof T> = Omit<T, K>;

@@ -64,7 +64,7 @@ export const Menubar = memoForwardRef(function MenubarU<ContainerElement extends
     getIndex,
     untabbable,
     selectedIndex,
-    setSelectedIndex,
+    onSelectedIndexChange,
     typeaheadTimeout,
     role,
     ariaLabel
@@ -77,7 +77,7 @@ export const Menubar = memoForwardRef(function MenubarU<ContainerElement extends
             navigatePastStart: navigatePastStart ?? "wrap",
             pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
         },
-        toolbarParameters: { orientation, setSelectedIndex: setSelectedIndex ?? null },
+        toolbarParameters: { orientation, onSelectedIndexChange: onSelectedIndexChange ?? null },
         rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable: untabbable ?? false },
         typeaheadNavigationParameters: {
             collator: useDefault("collator", collator),
@@ -114,7 +114,9 @@ export const MenuItem = memoForwardRef(function MenuItemU<MenuItemElement extend
     getSortValue,
     role,
 }: MenuItemProps<MenuItemElement>, ref?: Ref<any>) {
-    const context = (useContext(MenuItemContext)); /*<MenuItemElement, C, K>)({
+    const context = (useContext(MenuItemContext));
+    console.assert(context != null, `This MenuItem is not contained within a Menubar/Menu`);
+     /*<MenuItemElement, C, K>)({
         managedChild: { index, flags },
         rovingTabIndex: { focusSelf, hidden, noModifyTabIndex },
         listNavigation: { text },
@@ -158,7 +160,7 @@ export function DemoMenubar() {
             navigatePastEnd="wrap"
             navigatePastStart="wrap"
             noTypeahead={false}
-            setSelectedIndex={null}
+            onSelectedIndexChange={null}
             onTabbableIndexChange={null}
             orientation="vertical"
             pageNavigationSize={0.1}
@@ -184,7 +186,7 @@ export function DemoMenubarItem({ index }: { index: number }) {
             hidden={false}
             index={index}
             selectionMode="disabled"
-            onPress={noop}
+            onPress={null}
             getSortValue={returnNull}
             render={info => {
                 return (
@@ -200,8 +202,6 @@ export function DemoMenubarItem({ index }: { index: number }) {
         />
     )
 }
-
-function noop() { }
 
 
 /*

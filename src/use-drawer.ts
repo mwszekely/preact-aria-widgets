@@ -89,7 +89,7 @@ export function useDrawer<FocusContainerElement extends Element, SourceElement e
     } = useModal<"escape" | "backdrop" | "lost-focus", FocusContainerElement, SourceElement, PopupElement>({
         dismissParameters,
         escapeDismissParameters,
-        focusTrapParameters: { onlyMoveFocus: false,  ...focusTrapParameters }
+        focusTrapParameters: { onlyMoveFocus: false, ...focusTrapParameters }
     });
 
     const {

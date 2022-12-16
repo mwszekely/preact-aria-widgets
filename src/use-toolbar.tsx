@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { CompleteListNavigationContext, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildParameters, MakeSingleSelectionDeclarativeParameters, MakeSingleSelectionDeclarativeReturnType, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseListNavigationSingleSelectionSortableChildInfo, useMergedProps, useSingleSelectionDeclarative, PassiveStateUpdater } from "preact-prop-helpers";
+import { CompleteListNavigationContext, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildParameters, MakeSingleSelectionDeclarativeParameters, MakeSingleSelectionDeclarativeReturnType, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseListNavigationSingleSelectionSortableChildInfo, useMergedProps, useSingleSelectionDeclarative, PassiveStateUpdater, UseSingleSelectionParameters } from "preact-prop-helpers";
 import { OmitStrong, Prefices } from "./props";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
 
@@ -15,9 +15,9 @@ export interface UseToolbarParameters<ContainerElement extends Element, ChildEle
 
         
         /**
-         * Optional.
+         * Optional; Only used if you need single selection logic.
          */
-        setSelectedIndex: null | PassiveStateUpdater<number | null, Event>;
+         onSelectedIndexChange: UseSingleSelectionParameters<ChildElement>["singleSelectionParameters"]["onSelectedIndexChange"] //null | PassiveStateUpdater<number | null, Event>;
     };
     labelParameters: OmitStrong<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
     linearNavigationParameters: OmitStrong<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>["linearNavigationParameters"], "navigationDirection">
@@ -56,7 +56,7 @@ export interface UseToolbarChildReturnType<ChildElement extends Element, M exten
  */
 export function useToolbar<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({
     linearNavigationParameters,
-    toolbarParameters: { orientation, role, setSelectedIndex },
+    toolbarParameters: { orientation, role, onSelectedIndexChange },
     labelParameters,
     rearrangeableChildrenParameters,
     rovingTabIndexParameters,
@@ -73,7 +73,7 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
         ...listNavParameters,
         rearrangeableChildrenParameters,
         rovingTabIndexParameters,
-        singleSelectionParameters: { initiallySelectedIndex: selectedIndex, onSelectedIndexChange: setSelectedIndex ?? null },
+        singleSelectionParameters: { initiallySelectedIndex: selectedIndex, onSelectedIndexChange: onSelectedIndexChange ?? null },
         sortableChildrenParameters,
         typeaheadNavigationParameters,
         linearNavigationParameters: { ...linearNavigationParameters, navigationDirection: orientation },

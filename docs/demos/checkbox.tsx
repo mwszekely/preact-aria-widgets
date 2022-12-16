@@ -52,6 +52,7 @@ export function Demo() {
             <Button<HTMLButtonElement> tagButton="button" onPress={() => { setChecked("mixed" as any); }} render={info => (<button {...info.props}>{"Change to mixed"}</button>)} />
             <DemoCheckbox checked={checked} setChecked={setChecked} labelPosition="separate" disabled={disabled} tagInput="input" tagLabel="label" />
             <DemoCheckbox checked={checked} setChecked={setChecked} labelPosition="wrapping" disabled={disabled} tagInput="input" tagLabel="label" />
+            <DemoCheckbox checked={checked} setChecked={setChecked} labelPosition="wrapping2" disabled={disabled} tagInput="input" tagLabel="label" />
             <DemoCheckbox checked={checked} setChecked={setChecked} labelPosition="separate" disabled={disabled} tagInput="div" tagLabel="label" />
             <DemoCheckbox checked={checked} setChecked={setChecked} labelPosition="wrapping" disabled={disabled} tagInput="div" tagLabel="label" />
             <DemoCheckbox checked={checked} setChecked={setChecked} labelPosition="separate" disabled={disabled} tagInput="input" tagLabel="div" />
@@ -63,7 +64,7 @@ export function Demo() {
     )
 }
 
-function DemoCheckbox({ labelPosition, tagInput, tagLabel, disabled, checked, setChecked }: { disabled: boolean, labelPosition: "separate" | "wrapping" | "hidden", tagInput: string, tagLabel: string, checked: boolean | "mixed", setChecked: StateUpdater<boolean | "mixed"> }) {
+function DemoCheckbox({ labelPosition, tagInput, tagLabel, disabled, checked, setChecked }: { disabled: boolean, labelPosition: "separate" | "wrapping" | "hidden" | "wrapping2", tagInput: string, tagLabel: string, checked: boolean | "mixed", setChecked: StateUpdater<boolean | "mixed"> }) {
     //const [checked, setChecked] = useState(false);
     return (
         <div style={{ border: "1px solid black" }}>
@@ -72,11 +73,11 @@ function DemoCheckbox({ labelPosition, tagInput, tagLabel, disabled, checked, se
                 disabled={disabled}
                 checked={checked}
                 onCheckedChange={e => setChecked(e[EventDetail].checked)}
-                labelPosition={labelPosition == "hidden" ? "separate" : labelPosition}
+                labelPosition={labelPosition == "hidden" ? "separate" : labelPosition == "wrapping2"? "separate" : labelPosition}
                 tagInput={tagInput as never}
                 tagLabel={tagLabel as never}
                 render={defaultRenderCheckboxLike({
-                    labelPosition,
+                    labelPosition: labelPosition == "wrapping2"? "separate" : labelPosition,
                     tagInput: tagInput as any,
                     tagLabel: tagLabel as any,
                     makePropsInput: (info) => useMergedProps<HTMLInputElement>(info.propsInput, { "aria-label": labelPosition == "hidden" ? `Hidden label (technically separate), ${tagInput} and ${tagLabel} ${checked ? "checked" : "not checked"}` : undefined, }),
