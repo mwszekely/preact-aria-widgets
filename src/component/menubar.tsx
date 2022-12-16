@@ -1,9 +1,7 @@
 import { createContext, Ref, VNode } from "preact";
-import { returnNull } from "preact-prop-helpers";
 import { useContext, useImperativeHandle } from "preact/hooks";
-import { UseMenuContext, useMenuItem, UseMenuItemReturnType } from "../use-menu";
 //import { ElementToTag } from "../props";
-import { useMenubar, UseMenubarItemParameters, UseMenubarParameters, UseMenubarReturnType, UseMenubarSubInfo } from "../use-menubar";
+import { useMenubar, useMenubarChild, UseMenubarContext, UseMenubarItemParameters, UseMenubarItemReturnType, UseMenubarParameters, UseMenubarReturnType, UseMenubarSubInfo } from "../use-menubar";
 import { memoForwardRef, PartialExcept, useDefault } from "./util";
 
 type Get<T, K extends keyof T> = T[K];
@@ -26,7 +24,7 @@ interface MenubarPropsBase<MenuParentElement extends Element, MenuItemElement ex
 
 
 
-interface MenuItemPropsBase<MenuItemElement extends Element> extends
+interface MenubarItemPropsBase<MenuItemElement extends Element> extends
     //Get<UseMenubarItemParameters<MenuItemElement, M>, "managedChildParameters">,
     Get<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "menuItemParameters">,
     Get<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "pressParameters">,
@@ -37,17 +35,17 @@ interface MenuItemPropsBase<MenuItemElement extends Element> extends
     Get<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "textContentParameters"> {
     //tagListItem: ElementToTag<ListboxItemElement>;
     //subInfo: Get<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "completeListNavigationChildParameters">;
-    ref?: Ref<UseMenuItemReturnType<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>>;
+    ref?: Ref<UseMenubarItemReturnType<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>>;
 }
 
 export interface MenubarProps<MenuParentElement extends Element, MenuItemElement extends Element, LabelElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends PartialExcept<MenubarPropsBase<MenuParentElement, MenuItemElement, LabelElement, M>, "orientation" | "ariaLabel"> {
     render(info: UseMenubarReturnType<MenuParentElement, MenuItemElement, LabelElement, M>): VNode<any>;
 }
-export interface MenuItemProps<MenuItemElement extends Element> extends PartialExcept<MenuItemPropsBase<MenuItemElement>, "ariaPropName" | "index" | "selectionMode" | "getSortValue"> {
-    render(info: UseMenuItemReturnType<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): VNode<any>;
+export interface MenubarItemProps<MenuItemElement extends Element> extends PartialExcept<MenubarItemPropsBase<MenuItemElement>, "ariaPropName" | "index" | "selectionMode" | "getSortValue"> {
+    render(info: UseMenubarItemReturnType<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): VNode<any>;
 }
 
-export const MenuItemContext = createContext<UseMenuContext<any, any, any>>(null!);
+export const MenubarItemContext = createContext<UseMenubarContext<any, any, any>>(null!);
 
 export const Menubar = memoForwardRef(function MenubarU<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({
     render,
@@ -94,14 +92,14 @@ export const Menubar = memoForwardRef(function MenubarU<ContainerElement extends
     useImperativeHandle(ref!, () => info)
 
     return (
-        <MenuItemContext.Provider value={info.context}>
+        <MenubarItemContext.Provider value={info.context}>
             {render(info)}
-        </MenuItemContext.Provider>
+        </MenubarItemContext.Provider>
     )
 })
 
 
-export const MenuItem = memoForwardRef(function MenuItemU<MenuItemElement extends Element>({
+export const MenubarItem = memoForwardRef(function MenuItemU<MenuItemElement extends Element>({
     index,
     render,
     ariaPropName,
@@ -113,19 +111,11 @@ export const MenuItem = memoForwardRef(function MenuItemU<MenuItemElement extend
     onPress,
     getSortValue,
     role,
-}: MenuItemProps<MenuItemElement>, ref?: Ref<any>) {
-    const context = (useContext(MenuItemContext));
+}: MenubarItemProps<MenuItemElement>, ref?: Ref<any>) {
+    const context = (useContext(MenubarItemContext));
     console.assert(context != null, `This MenuItem is not contained within a Menubar/Menu`);
-     /*<MenuItemElement, C, K>)({
-        managedChild: { index, flags },
-        rovingTabIndex: { focusSelf, hidden, noModifyTabIndex },
-        listNavigation: { text },
-        hasFocus: { getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange },
-        menuItem: { disabled, onPress, role },
-        subInfo
-    });*/
 
-    const info = useMenuItem({
+    const info = useMenubarChild({
         completeListNavigationChildParameters: {},
         context,
         managedChildParameters: { index },
@@ -145,7 +135,7 @@ export const MenuItem = memoForwardRef(function MenuItemU<MenuItemElement extend
 })
 
 
-
+/*
 export function DemoMenubar() {
 
     return (

@@ -2,7 +2,7 @@
 import { returnZero, useState } from "preact-prop-helpers";
 import { defaultRenderPortal } from "../../component/dialog";
 import { Menu } from "../../component/menu";
-import { MenuItem } from "../../component/menubar";
+import { MenuItem } from "../../component/menu";
 import { EventDetail } from "../../props";
 
 function DemoListItem({ index }: { index: number }) {

@@ -1,8 +1,8 @@
-import { Ref, VNode } from "preact";
+import { createContext, Ref, VNode } from "preact";
 import { useContext, useImperativeHandle } from "preact/hooks";
-import { useMenu, UseMenuParameters, UseMenuReturnType } from "../use-menu";
+import { useMenu, UseMenuParameters, UseMenuReturnType, UseMenuContext, useMenuItem } from "../use-menu";
 import { UseMenubarSubInfo } from "../use-menubar";
-import { MenuItemContext } from "./menubar";
+import { MenubarItemProps } from "./menubar";
 import { memoForwardRef, ParentDepthContext, PartialExcept, useDefault } from "./util";
 
 
@@ -27,7 +27,11 @@ export interface MenuProps<MenuSurfaceElement extends Element, MenuParentElement
     render(menuInfo: UseMenuReturnType<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement, UseMenubarSubInfo<MenuItemElement>>): VNode;
 }
 
-//const MenuItemContext = createContext<UseMenuItem<any, any, any>>(null!);
+export interface MenuItemProps<MenuItemElement extends Element>  extends MenubarItemProps<MenuItemElement> {
+    //context: UseMenuContext<any, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>;
+}
+
+const MenuItemContext = createContext<UseMenuContext<any, any, any>>(null!);
 
 export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element, ParentElement extends Element, ChildElement extends Element, ButtonElement extends Element>({
 
@@ -119,21 +123,29 @@ export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element,
     )
 })
 
-/*
-export function MenuItem<MenuItemElement extends Element>({}: MenuItemProps) {
-    const context = useContext(MenuItemContext);
 
-    const info = useMenuItem<MenuItemElement>({
+export function MenuItem<MenuItemElement extends Element>({ index, hidden, getSortValue, onPress, getText, role, exclude, ariaPropName, selectionMode, disabled, render }: MenuItemProps<MenuItemElement>, ref?: Ref<any>) {
+    const context = useContext(MenuItemContext);
+    console.assert(context != null, `This MenuItem is not contained within a Menubar/Menu`);
+    const info = useMenuItem({
         completeListNavigationChildParameters: {},
         context,
-        managedChildParameters: { disabled, hidden, index },
-        menuItemParameters: { disabled, onPress, role },
-        pressParameters: { exclude, focusSelf },
-        singleSelectionChildParameters: { ariaPropName, selectionMode },
-        typeaheadNavigationChildParameters: { text },
-    })
-}
+        managedChildParameters: { index },
+        rovingTabIndexChildParameters: { hidden: hidden ?? false },
+        sortableChildParameters: { getSortValue },
+        textContentParameters: { getText: useDefault("getText", getText) },
+        menuItemParameters: { onPress: onPress ?? null, role: role ?? "menuitem" },
+        pressParameters: { exclude },
+        singleSelectionChildParameters: { ariaPropName, selectionMode, disabled: disabled ?? false }
+    });
 
+    useImperativeHandle(ref!, () => info);
+
+    return (
+        <>{render(info)}</>
+    )
+}
+/*
 export function DemoMenu() {
     const [open, setOpen] = useState(false);
 

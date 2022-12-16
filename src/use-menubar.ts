@@ -1,7 +1,12 @@
 import { h } from "preact";
 import { useCallback } from "preact/hooks";
 import { debugLog, EnhancedEvent, enhanceEvent, OmitStrong } from "./props";
-import { useToolbar, useToolbarChild, UseToolbarChildParameters, UseToolbarChildReturnType, UseToolbarParameters, UseToolbarReturnType, UseToolbarSubInfo } from "./use-toolbar";
+import { useToolbar, useToolbarChild, UseToolbarChildParameters, UseToolbarChildReturnType, UseToolbarContext, UseToolbarParameters, UseToolbarReturnType, UseToolbarSubInfo } from "./use-toolbar";
+
+
+export interface UseMenubarContext<ContainerElement extends Element, ChildElement extends Element, M extends UseMenubarSubInfo<ChildElement>> extends UseToolbarContext<ContainerElement, ChildElement, M> {
+
+}
 
 export interface UseMenubarSubInfo<ChildElement extends Element> extends UseToolbarSubInfo<ChildElement> {
 
@@ -30,6 +35,7 @@ export interface UseMenubarItemParameters<MenuItemElement extends Element, M ext
 
 export interface UseMenubarReturnType<MenuParentElement extends Element, MenuItemElement extends Element, LabelElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseToolbarReturnType<MenuParentElement, MenuItemElement, LabelElement, M>, "propsToolbar"> {
     propsMenubar: h.JSX.HTMLAttributes<MenuParentElement>;
+    context: UseMenubarContext<MenuParentElement, MenuItemElement, M>;
 }
 export interface UseMenubarItemReturnType<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseToolbarChildReturnType<MenuItemElement, M> { }
 
