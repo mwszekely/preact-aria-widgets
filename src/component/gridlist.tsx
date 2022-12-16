@@ -39,7 +39,7 @@ interface GridlistChildPropsBase<CellElement extends Element, M extends Gridlist
     Get<UseGridlistCellParameters<CellElement, M>, "textContentParameters">,
     Get<UseGridlistCellParameters<CellElement, M>, "rovingTabIndexChildParameters">,
     Get<UseGridlistCellParameters<CellElement, M>, "managedChildParameters"> {
-    focusSelf: M["focusSelf"];
+    focusSelf?: M["focusSelf"];
     ref?: Ref<UseGridlistCellReturnType<CellElement, M>>;
     //    subInfo: Get<UseGridlistCellParameters<CellElement, M>, "completeGridNavigationCellParameters">;
 }
