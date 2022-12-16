@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { CompleteListNavigationContext, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildParameters, MakeSingleSelectionDeclarativeParameters, MakeSingleSelectionDeclarativeReturnType, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseListNavigationSingleSelectionSortableChildInfo, useMergedProps, useSingleSelectionDeclarative, PassiveStateUpdater, UseSingleSelectionParameters } from "preact-prop-helpers";
+import { CompleteListNavigationContext, MakeSingleSelectionDeclarativeParameters, MakeSingleSelectionDeclarativeReturnType, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseListNavigationSingleSelectionSortableChildInfo, useMergedProps, UseRandomIdReturnType, useSingleSelectionDeclarative, UseSingleSelectionParameters } from "preact-prop-helpers";
 import { OmitStrong, Prefices } from "./props";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
 
@@ -26,7 +26,9 @@ export interface UseToolbarParameters<ContainerElement extends Element, ChildEle
 export interface UseToolbarReturnType<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends OmitStrong<MakeSingleSelectionDeclarativeReturnType<UseCompleteListNavigationReturnType<ContainerElement, ChildElement, M>>, "props"> {
     toolbarReturn: { propsUnstable: h.JSX.HTMLAttributes<ContainerElement> };
     propsToolbar: h.JSX.HTMLAttributes<ContainerElement>;
-    propsLabel: h.JSX.HTMLAttributes<LabelElement>
+    propsLabel: h.JSX.HTMLAttributes<LabelElement>;
+    randomIdInputReturn: UseRandomIdReturnType<ContainerElement, LabelElement>["randomIdReturn"]; 
+    randomIdLabelReturn: UseRandomIdReturnType<LabelElement, ContainerElement>["randomIdReturn"];
 }
 
 export interface UseToolbarSubInfo<ChildElement extends Element> extends UseListNavigationSingleSelectionSortableChildInfo<ChildElement> {
@@ -84,10 +86,10 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
         singleSelectionReturn: { changeSelectedIndex: listNavReturn.singleSelectionReturn.changeSelectedIndex }
      })
 
-    const { propsInput: propsToolbar, propsLabel } = useLabelSynthetic<ContainerElement, LabelElement>({
+    const { propsInput: propsToolbar, propsLabel, randomIdInputReturn, randomIdLabelReturn } = useLabelSynthetic<ContainerElement, LabelElement>({
         labelParameters: { ...labelParameters, onLabelClick: listNavReturn.rovingTabIndexReturn.focusSelf },
-        randomIdInputParameters: { prefix: Prefices.table },
-        randomIdLabelParameters: { prefix: Prefices.tableLabel }
+        randomIdInputParameters: { prefix: Prefices.toolbar },
+        randomIdLabelParameters: { prefix: Prefices.toolbarLabel }
     });
 
     return {
@@ -95,6 +97,8 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
         context,
         propsLabel,
         propsToolbar: useMergedProps(propsToolbar, props),
+        randomIdInputReturn, 
+        randomIdLabelReturn,
         ...listNavReturn
     }
 }

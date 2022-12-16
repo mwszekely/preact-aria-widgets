@@ -11,7 +11,7 @@ export interface UseMenuContext<ContainerElement extends Element, ChildElement e
 export interface UseMenuParameters<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuButtonElement extends Element, MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "toolbarParameters" | "menubarParameters" | "labelParameters"> {
     dismissParameters: UseMenuSurfaceParameters<MenuSurfaceElement, MenuButtonElement>["dismissParameters"];
     escapeDismissParameters: UseMenuSurfaceParameters<MenuSurfaceElement, MenuButtonElement>["escapeDismissParameters"];
-    menuSurfaceParameters: OmitStrong<UseMenuSurfaceParameters<MenuSurfaceElement, MenuButtonElement>["menuSurfaceParameters"], "role">;
+    menuSurfaceParameters: OmitStrong<UseMenuSurfaceParameters<MenuSurfaceElement, MenuButtonElement>["menuSurfaceParameters"], "role" | "surfaceId">;
     toolbarParameters: OmitStrong<UseMenubarParameters<MenuParentElement, MenuItemElement, M>["toolbarParameters"], never>
     menubarParameters: OmitStrong<UseMenubarParameters<MenuParentElement, MenuItemElement, M>["menubarParameters"], "role">
 
@@ -80,7 +80,9 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
         rovingTabIndexReturn,
         sortableChildrenReturn,
         toolbarReturn,
-        typeaheadNavigationReturn
+        typeaheadNavigationReturn,
+        randomIdInputReturn,
+        randomIdLabelReturn,
     } = useMenubar<MenuParentElement, MenuItemElement, MenuButtonElement>({
         linearNavigationParameters,
         rearrangeableChildrenParameters,
@@ -141,6 +143,7 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
     } = useMenuSurface<MenuSurfaceElement, MenuParentElement, MenuButtonElement>({
         menuSurfaceParameters: {
             ...menuSurfaceParameters,
+            surfaceId: randomIdInputReturn.id,
             role: "menu",
         },
         dismissParameters,
@@ -168,6 +171,8 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
         sortableChildrenReturn,
         toolbarReturn,
         typeaheadNavigationReturn,
+        randomIdInputReturn,
+        randomIdLabelReturn,
 
         /*focusMenu,
 

@@ -131,5 +131,7 @@ export const Prefices = {
     tableLabel: "tbl-",
     tablist: "tl-",
     tablistLabel: "tll-",
-    tooltip: "tt-"
+    tooltip: "tt-",
+    toolbar: "tlb-",
+    toolbarLabel: "tlbl-"
 } as const

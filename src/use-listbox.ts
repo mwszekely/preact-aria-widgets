@@ -1,6 +1,6 @@
 import { h } from "preact";
 import {
-    CompleteListNavigationContext, PassiveStateUpdater, useCompleteListNavigation,
+    CompleteListNavigationContext, useCompleteListNavigation,
     useCompleteListNavigationChild,
     UseCompleteListNavigationChildParameters,
     UseCompleteListNavigationChildReturnType,

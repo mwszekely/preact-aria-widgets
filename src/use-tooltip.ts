@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { DismissListenerTypes, findFirstFocusable, findFirstTabbable, returnFalse, useDismiss, UseEscapeDismissParameters, useGlobalHandler, useHasCurrentFocus, UseHasCurrentFocusParameters, useMergedProps, usePassiveState, useRandomId, useRefElement, UseRefElementReturnType, useStableCallback, useState, useTimeout } from "preact-prop-helpers";
+import { DismissListenerTypes, findFirstTabbable, returnFalse, useDismiss, UseEscapeDismissParameters, useGlobalHandler, useHasCurrentFocus, UseHasCurrentFocusParameters, useMergedProps, usePassiveState, useRandomId, useRefElement, UseRefElementReturnType, useStableCallback, useState, useTimeout } from "preact-prop-helpers";
 import { useEffect, useRef } from "preact/hooks";
 import { debugLog, Prefices } from "./props";
 

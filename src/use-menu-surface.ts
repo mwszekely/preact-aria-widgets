@@ -1,7 +1,7 @@
 import { h } from "preact";
-import { assertEmptyObject, findFirstFocusable, useMergedProps, useModal, UseModalParameters, UseModalReturnType, useRandomId, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
+import { assertEmptyObject, findFirstFocusable, useMergedProps, useModal, UseModalParameters, UseModalReturnType, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
-import { debugLog, OmitStrong, Prefices } from "./props";
+import { debugLog, OmitStrong } from "./props";
 
 interface MSP {
     /**
@@ -10,6 +10,8 @@ interface MSP {
      * General menus should use "menu". "dialog" can be used for generic pop-up things.
      */
     role: "dialog" | "menu" | "tree" | "grid" | "listbox";
+
+    surfaceId: string;
 
     /**
      * When this menu surface is opened, at least one element in it must be focused.
@@ -62,11 +64,11 @@ export function useMenuSurface<MenuSurfaceElement extends Element, MenuTargetEle
     dismissParameters,
     escapeDismissParameters,
     focusTrapParameters,
-    menuSurfaceParameters: { role }
+    menuSurfaceParameters: { role, surfaceId }
 }: UseMenuSurfaceParameters<MenuSurfaceElement, MenuTriggerElement>): UseMenuSurfaceReturnType<MenuSurfaceElement, MenuTargetElement, MenuTriggerElement> {
     debugLog("useMenuSurface");
 
-    const { propsReferencer: propsIdTrigger, propsSource: propsIdTarget } = useRandomId<MenuTargetElement, MenuTriggerElement>({ randomIdParameters: { prefix: Prefices.menu, otherReferencerProp: "aria-controls" } });
+    //const { propsReferencer: propsIdTrigger, propsSource: propsIdTarget } = useRandomId<MenuTargetElement, MenuTriggerElement>({ randomIdParameters: { prefix: Prefices.menu, otherReferencerProp: "aria-controls" } });
 
     const { refElementReturn: { getElement: getButtonElement, propsStable: propsRefTrigger }, ...void4 } = useRefElement<MenuTriggerElement>({ refElementParameters: { onElementChange: undefined } });
 
@@ -99,13 +101,14 @@ export function useMenuSurface<MenuSurfaceElement extends Element, MenuTargetEle
     const propsSurface: h.JSX.HTMLAttributes<MenuSurfaceElement> = useMergedProps(propsRefSurface, propsPopup, propsFocusContainer);
 
     const propsTarget: h.JSX.HTMLAttributes<MenuTargetElement> = useMergedProps({
-        role
-    }, propsIdTarget);
+        role,
+        id: surfaceId
+    });
 
     const propsTrigger: h.JSX.HTMLAttributes<MenuTriggerElement> = useMergedProps({
         "aria-expanded": (dismissParameters.open).toString(),
         "aria-haspopup": role,
-    }, propsRefTrigger, ps2, propsIdTrigger);
+    }, propsRefTrigger, ps2, { "aria-controls": surfaceId });
 
     const propsSentinel: h.JSX.HTMLAttributes<any> = useFocusSentinel({
         focusSentinel: {

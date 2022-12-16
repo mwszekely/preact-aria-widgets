@@ -67,6 +67,8 @@ export function useMenubar<MenuParentElement extends Element, MenuItemElement ex
         rovingTabIndexReturn,
         toolbarReturn,
         typeaheadNavigationReturn,
+        randomIdInputReturn,
+        randomIdLabelReturn,
         ..._rest
     } = useToolbar<MenuParentElement, MenuItemElement, LabelElement>({
         linearNavigationParameters,
@@ -90,7 +92,9 @@ export function useMenubar<MenuParentElement extends Element, MenuItemElement ex
         managedChildrenReturn,
         rovingTabIndexReturn,
         toolbarReturn,
-        typeaheadNavigationReturn
+        typeaheadNavigationReturn,
+        randomIdInputReturn,
+        randomIdLabelReturn
     }
 }
 
