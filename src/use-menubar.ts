@@ -1,6 +1,6 @@
 import { h } from "preact";
 import { useCallback } from "preact/hooks";
-import { debugLog, EnhancedEvent, enhanceEvent } from "./props";
+import { debugLog, EnhancedEvent, enhanceEvent, OmitStrong } from "./props";
 import { useToolbar, useToolbarChild, UseToolbarChildParameters, UseToolbarChildReturnType, UseToolbarParameters, UseToolbarReturnType, UseToolbarSubInfo } from "./use-toolbar";
 
 export interface UseMenubarSubInfo<ChildElement extends Element> extends UseToolbarSubInfo<ChildElement> {
@@ -8,8 +8,8 @@ export interface UseMenubarSubInfo<ChildElement extends Element> extends UseTool
 }
 
 
-export interface UseMenubarParameters<MenuParentElement extends Element, MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends Omit<UseToolbarParameters<MenuParentElement, MenuItemElement, M>, "toolbarParameters"> {
-    toolbarParameters: Omit<UseToolbarParameters<MenuParentElement, MenuItemElement, M>["toolbarParameters"], "role">;
+export interface UseMenubarParameters<MenuParentElement extends Element, MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseToolbarParameters<MenuParentElement, MenuItemElement, M>, "toolbarParameters"> {
+    toolbarParameters: OmitStrong<UseToolbarParameters<MenuParentElement, MenuItemElement, M>["toolbarParameters"], "role">;
     menubarParameters: {
         /**
          * Generally "menu". Can be null if the role is provided elsewhere.
@@ -18,9 +18,9 @@ export interface UseMenubarParameters<MenuParentElement extends Element, MenuIte
     }
 }
 
-export interface UseMenubarItemParameters<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends Omit<UseToolbarChildParameters<MenuItemElement, M>, "pressParameters"> {
+export interface UseMenubarItemParameters<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseToolbarChildParameters<MenuItemElement, M>, "pressParameters"> {
     //hasFocus: UseHasFocusParameters<MenuItemElement>;
-    pressParameters: Omit<UseToolbarChildParameters<MenuItemElement, M>["pressParameters"], "onPressSync" | "focusSelf">;
+    pressParameters: OmitStrong<UseToolbarChildParameters<MenuItemElement, M>["pressParameters"], "onPressSync" | "focusSelf">;
     menuItemParameters: {
         role: "menuitem" | "menuitemcheckbox" | "menuitemradio";
         //disabled: DisabledType;
@@ -28,7 +28,7 @@ export interface UseMenubarItemParameters<MenuItemElement extends Element, M ext
     }
 }
 
-export interface UseMenubarReturnType<MenuParentElement extends Element, MenuItemElement extends Element, LabelElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends Omit<UseToolbarReturnType<MenuParentElement, MenuItemElement, LabelElement, M>, "propsToolbar"> {
+export interface UseMenubarReturnType<MenuParentElement extends Element, MenuItemElement extends Element, LabelElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseToolbarReturnType<MenuParentElement, MenuItemElement, LabelElement, M>, "propsToolbar"> {
     propsMenubar: h.JSX.HTMLAttributes<MenuParentElement>;
 }
 export interface UseMenubarItemReturnType<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseToolbarChildReturnType<MenuItemElement, M> { }

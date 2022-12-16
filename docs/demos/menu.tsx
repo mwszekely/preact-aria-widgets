@@ -54,7 +54,6 @@ export function Demo() {
             <label><input type="number" min={0} value={count} onInput={e => setCount(e.currentTarget.valueAsNumber)} /> # of menu items</label>
             <div>
                 <Menu<HTMLDivElement, HTMLUListElement, HTMLLIElement, HTMLButtonElement>
-                    ariaLabel={"test menu label"}
                     orientation="vertical"
                     onOpen={() => setOpen(true)}
                     onClose={() => setOpen(false)}

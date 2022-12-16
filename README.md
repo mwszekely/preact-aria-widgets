@@ -2,13 +2,19 @@
 
 Preact props that implement ARIA-compliant widgets in the style of `preact-prop-helpers` (i.e. hooks that swizzle parameters and returns back and forth).  **No CSS is provided*** &ndash; this library is intended for wiring up event handlers, `aria` attributes, labels, and so on, but each hook gives you the information you need to create appropriate e.g. `class` values to style your own components.
 
-This library is split into two parts: hook implementations and component implementations. Both are very low level; the components expect you to pass in a `render` function that takes all the information and props that the hook as prepared for you and returns the actual markup used by that component.  For example, `Checkbox` components can be rendered as `<label /><input />` or  `<label><input /></label>` based on how you handle that `render` prop.
+This library is split into two parts: hook implementations and component implementations. They are near identical, with the components providing a nicer user interface. When using a component, you must specify a `render` prop that takes all the information the hook version returns and gives back the markup to use.  As an example, `Checkbox` components can be rendered as `<label /><input />` or  `<label><input /></label>` based on the function you pass to that `render` prop.
 
 The intent is to help ensure that individual widgets on a given page are accessible, but it is still up to you to ensure that the page as a whole is too, and that things *actually make sense* in practice. Don't forget to do lots of testing.
 
 Overall goals:
-* Widgets should all be equally accessible no matter the input method
-* Widgets are, in terms of event handlers and DOM attributes, compliant with ARIA specifications
+* Widgets are, in terms of event handlers and DOM attributes, compliant with ARIA specifications and meet all appropriate WCAGuidelines. The particular focus of this library includes things like
+    * [2.1.1](https://wcag.com/developers/2-1-1-keyboard/), [2.1.2](https://wcag.com/developers/2-1-2-no-keyboard-trap/): All widgets are keyboard-operable, even when nested within each other, or when rendered within a portal to an unrelated part of the DOM.
+    * [2.5.2](https://wcag.com/developers/2-5-2-pointer-cancellation/): All pressable widgets (from buttons to checkboxes) are cancellable if mouseup happens outside the element.
+    * [3.3.2](https://wcag.com/developers/3-3-2-labels-instructions/): All widgets are labelled appropriately either with visible DOM elements or the `aria-label` prop.
+    * [4.1.2](https://wcag.com/developers/4-1-2-name-role-value/): Roles, states, values, and names are all applied appropriately
+    * [4.1.3](https://wcag.com/developers/4-1-3-status-messages/): Status messages are relayed to screen readers via Toasts, if used.
+    * TODO:
+        * [3.3.1](https://wcag.com/developers/3-3-1-error-identification/): Error identification, e.g. when a widget's change handler throws an error, is currently out of scope but should be handled regardless so it's not duplicated downstream. However, it can be simulated with status messages (Toasts).
 * Widgets are performant and queue as few updates as possible while in use
     * Changing a property of a composite widget (e.g. which listbox item is focused) is O(2), only updating the max two relevant children who need to re-render
     * Adding/deleting N children to/from an existing composite widget is O(N*log(N)) for composite widgets that support typeahead, which is most of them.

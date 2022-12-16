@@ -1,6 +1,6 @@
 import { h } from "preact";
 import { findFirstFocusable, useMergedProps, useModal, UseModalParameters, UseModalReturnType, useStableCallback } from "preact-prop-helpers";
-import { Prefices } from "./props";
+import { OmitStrong, Prefices } from "./props";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
 /*import { useModal, UseModalParameters, UseSoftDismissReturnTypeInfo } from "./use-modal";
 
@@ -68,12 +68,12 @@ export function useDrawer<FocusContainerElement extends HTMLElement, DrawerEleme
 
 
 
-export interface UseDrawerParameters<_DialogElement extends Element, _TitleElement extends Element> extends Omit<UseModalParameters<"escape" | "backdrop" | "lost-focus">, "focusTrapParameters"> {
-    labelParameters: Omit<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
-    focusTrapParameters: Omit<UseModalParameters<"escape" | "backdrop" | "lost-focus">["focusTrapParameters"], "onlyMoveFocus">
+export interface UseDrawerParameters<_DialogElement extends Element, _TitleElement extends Element> extends OmitStrong<UseModalParameters<"escape" | "backdrop" | "lost-focus">, "focusTrapParameters"> {
+    labelParameters: OmitStrong<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
+    focusTrapParameters: OmitStrong<UseModalParameters<"escape" | "backdrop" | "lost-focus">["focusTrapParameters"], "onlyMoveFocus">
 }
 
-export interface UseDrawerReturnType<FocusContainerElement extends Element, SourceElement extends Element, DrawerElement extends Element, TitleElement extends Element> extends Omit<UseModalReturnType<FocusContainerElement, SourceElement, DrawerElement>, "propsPopup"> {
+export interface UseDrawerReturnType<FocusContainerElement extends Element, SourceElement extends Element, DrawerElement extends Element, TitleElement extends Element> extends OmitStrong<UseModalReturnType<FocusContainerElement, SourceElement, DrawerElement>, "propsPopup"> {
     propsDrawer: h.JSX.HTMLAttributes<DrawerElement>;
     propsTitle: h.JSX.HTMLAttributes<TitleElement>;
 }
@@ -99,7 +99,7 @@ export function useDrawer<FocusContainerElement extends Element, SourceElement e
         labelParameters: {
             ...labelParameters, onLabelClick: useStableCallback(() => {
                 const e = refElementPopupReturn.getElement();
-                focusTrapParameters.focusPopup(e, () => findFirstFocusable(e!));
+                focusTrapParameters.focusPopup(e, () => (findFirstFocusable(e!) as HTMLElement | null));
 
             })
         },

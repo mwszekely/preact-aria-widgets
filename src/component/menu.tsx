@@ -1,10 +1,8 @@
 import { Ref, VNode } from "preact";
-import { returnNull, useState } from "preact-prop-helpers";
 import { useContext, useImperativeHandle } from "preact/hooks";
 import { useMenu, UseMenuParameters, UseMenuReturnType } from "../use-menu";
 import { UseMenubarSubInfo } from "../use-menubar";
-import { defaultRenderPortal } from "./dialog";
-import { MenuItem, MenuItemContext } from "./menubar";
+import { MenuItemContext } from "./menubar";
 import { memoForwardRef, ParentDepthContext, PartialExcept, useDefault } from "./util";
 
 
@@ -22,11 +20,10 @@ interface MenuPropsBase<MenuSurfaceElement extends Element, MenuParentElement ex
     Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "rearrangeableChildrenParameters">,
     Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "sortableChildrenParameters">,
     Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "singleSelectionDeclarativeParameters">,
-    Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "labelParameters">,
     Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "toolbarParameters"> {
 }
 
-export interface MenuProps<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element> extends PartialExcept<MenuPropsBase<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement>, "open" | "onClose" | "onOpen" | "openDirection" | "orientation" | "ariaLabel"> {
+export interface MenuProps<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element> extends PartialExcept<MenuPropsBase<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement>, "open" | "onClose" | "onOpen" | "openDirection" | "orientation"> {
     render(menuInfo: UseMenuReturnType<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement, UseMenubarSubInfo<MenuItemElement>>): VNode;
 }
 
@@ -64,8 +61,7 @@ export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element,
 
     getWindow,
 
-    render,
-    ariaLabel
+    render
 
 }: MenuProps<SurfaceElement, ParentElement, ChildElement, ButtonElement>, ref?: Ref<any>) {
 
@@ -107,8 +103,7 @@ export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element,
         },
         singleSelectionDeclarativeParameters: { selectedIndex: selectedIndex ?? null },
         toolbarParameters: { orientation, setSelectedIndex: setSelectedIndex ?? null },
-        menubarParameters: {},
-        labelParameters: { ariaLabel }
+        menubarParameters: {}
     });
 
     useImperativeHandle(ref!, () => info);
@@ -137,7 +132,7 @@ export function MenuItem<MenuItemElement extends Element>({}: MenuItemProps) {
         singleSelectionChildParameters: { ariaPropName, selectionMode },
         typeaheadNavigationChildParameters: { text },
     })
-}*/
+}
 
 export function DemoMenu() {
     const [open, setOpen] = useState(false);

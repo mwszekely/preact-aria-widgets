@@ -1,11 +1,11 @@
 import { h } from "preact";
 import { useAsyncHandler, UseAsyncHandlerParameters, UseAsyncHandlerReturnType, useMergedProps } from "preact-prop-helpers";
-import { ElementToTag, Prefices } from "./props";
+import { ElementToTag, OmitStrong, Prefices } from "./props";
 import { UseLabelReturnType, useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
 
 
 export interface UseProgressParameters<IndicatorElement extends Element, _LabelElement extends Element> {
-    labelParameters: Omit<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
+    labelParameters: OmitStrong<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
     /*progressParameters: {
         tagProgress: ElementToTag<IndicatorElement>;
         tagLabel: ElementToTag<LabelElement>;
@@ -18,7 +18,7 @@ export interface UseProgressParameters<IndicatorElement extends Element, _LabelE
     }
 }
 
-export interface UseProgressReturnType<ProgressElement extends Element, ProgressLabelElement extends Element> extends Omit<UseLabelReturnType<ProgressElement, ProgressLabelElement>, "propsInput" | "propsLabel"> {
+export interface UseProgressReturnType<ProgressElement extends Element, ProgressLabelElement extends Element> extends OmitStrong<UseLabelReturnType<ProgressElement, ProgressLabelElement>, "propsInput" | "propsLabel"> {
     propsIndicator: h.JSX.HTMLAttributes<ProgressElement>;
     propsLabel: h.JSX.HTMLAttributes<ProgressLabelElement>;
     propsRegion: h.JSX.HTMLAttributes<any>;

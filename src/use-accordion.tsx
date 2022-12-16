@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { ManagedChildInfo, OnChildrenMountChange, PassiveStateUpdater, useChildrenFlag, useLinearNavigation, UseLinearNavigationParameters, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, useMergedProps, UsePressReturnType, useRandomId, useRefElement, UseRefElementParameters, UseRefElementReturnType, UseRovingTabIndexChildParameters, useStableCallback, useStableGetter, useStableObject, useState } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
-import { debugLog, DisabledType, Prefices } from "./props";
+import { debugLog, DisabledType, OmitStrong, Prefices } from "./props";
 import { ButtonPressEvent, useButton, UseButtonParameters } from "./use-button";
 
 //export type UseAccordion<M extends UseAccordionSectionInfo> = (args: UseAccordionParameters<M>) => UseAccordionReturnType<M>;
@@ -9,7 +9,7 @@ import { ButtonPressEvent, useButton, UseButtonParameters } from "./use-button";
 
 export interface UseAccordionParameters<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo> extends UseManagedChildrenParameters<M> {
     accordionParameters: { initialIndex?: number | null; }
-    linearNavigationParameters: Omit<UseLinearNavigationParameters<HeaderButtonElement, HeaderButtonElement>["linearNavigationParameters"], "navigateRelative" | "navigateAbsolute" | "getHighestIndex" | "isValid" | "indexDemangler" | "indexMangler">;
+    linearNavigationParameters: OmitStrong<UseLinearNavigationParameters<HeaderButtonElement, HeaderButtonElement>["linearNavigationParameters"], "getHighestIndex" | "isValid" | "indexDemangler" | "indexMangler">;
 }
 
 export interface UseAccordionReturnType<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo> extends UseManagedChildrenReturnType<M> {
@@ -31,7 +31,7 @@ export interface UseAccordionSectionInfo extends ManagedChildInfo<number> {
 
 export interface UseAccordionSectionParameters<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo> extends
     UseRefElementParameters<HeaderButtonElement> {
-    managedChildParameters: Omit<UseManagedChildParameters<M>["managedChildParameters"], "setOpenFromParent" | "getOpenFromParent" | "setMostRecentlyTabbed" | "getMostRecentlyTabbed" | "focusSelf" | "disabled">;
+    managedChildParameters: OmitStrong<UseManagedChildParameters<M>["managedChildParameters"], never>;
     context: UseAccordionContext<HeaderButtonElement, M>;
     rovingTabIndexChildParameters: Pick<UseRovingTabIndexChildParameters<any>["rovingTabIndexChildParameters"], "hidden">;
     accordionSectionParameters: {
@@ -47,8 +47,8 @@ export interface UseAccordionSectionParameters<HeaderButtonElement extends Eleme
         /** Generally `"region"` */
         bodyRole: string;
     }
-    buttonParameters: Omit<UseButtonParameters<HeaderButtonElement>["buttonParameters"], "pressed" | "role">;
-    pressParameters: Omit<UseButtonParameters<HeaderButtonElement>["pressParameters"], "onPressSync">;
+    buttonParameters: OmitStrong<UseButtonParameters<HeaderButtonElement>["buttonParameters"], "pressed" | "role">;
+    pressParameters: OmitStrong<UseButtonParameters<HeaderButtonElement>["pressParameters"], never>;
 
 }
 

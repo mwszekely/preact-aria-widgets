@@ -1,7 +1,7 @@
 
 import { h } from "preact";
 import { findFirstFocusable, useMergedProps, useModal, UseModalParameters, UseModalReturnType, useStableCallback } from "preact-prop-helpers";
-import { Prefices } from "./props";
+import { OmitStrong, Prefices } from "./props";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
 
 /*
@@ -74,13 +74,13 @@ export function useDialog<FocusContainerElement extends HTMLElement, DialogEleme
     }
 }*/
 
-export interface UseDialogParameters<_DialogElement extends Element, _TitleElement extends Element> extends Omit<UseModalParameters<"escape" | "backdrop">, "focusTrapParameters" | "dismissParameters"> {
-    focusTrapParameters: Omit<UseModalParameters<"escape" | "backdrop">["focusTrapParameters"], "trapActive" | "onlyMoveFocus">;
-    dismissParameters: Omit<UseModalParameters<"escape" | "backdrop">["dismissParameters"], "closeOnLostFocus">;
-    labelParameters: Omit<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
+export interface UseDialogParameters<_DialogElement extends Element, _TitleElement extends Element> extends OmitStrong<UseModalParameters<"escape" | "backdrop">, "focusTrapParameters" | "dismissParameters"> {
+    focusTrapParameters: OmitStrong<UseModalParameters<"escape" | "backdrop">["focusTrapParameters"], "trapActive" | "onlyMoveFocus">;
+    dismissParameters: OmitStrong<UseModalParameters<"escape" | "backdrop">["dismissParameters"], "closeOnLostFocus">;
+    labelParameters: OmitStrong<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
 }
 
-export interface UseDialogReturnType<FocusContainerElement extends Element, SourceElement extends Element, PopupElement extends Element, TitleElement extends Element> extends Omit<UseModalReturnType<FocusContainerElement, SourceElement, PopupElement>, "propsPopup"> {
+export interface UseDialogReturnType<FocusContainerElement extends Element, SourceElement extends Element, PopupElement extends Element, TitleElement extends Element> extends OmitStrong<UseModalReturnType<FocusContainerElement, SourceElement, PopupElement>, "propsPopup"> {
     propsDialog: h.JSX.HTMLAttributes<PopupElement>;
     propsTitle: h.JSX.HTMLAttributes<TitleElement>;
 }
@@ -106,7 +106,7 @@ export function useDialog<FocusContainerElement extends Element, SourceElement e
         labelParameters: {
             ...labelParameters, onLabelClick: useStableCallback(() => {
                 const e = refElementPopupReturn.getElement();
-                focusTrapParameters.focusPopup(e, () => findFirstFocusable(e!));
+                focusTrapParameters.focusPopup(e, () => (findFirstFocusable(e!) as HTMLElement | null));
 
             })
         },

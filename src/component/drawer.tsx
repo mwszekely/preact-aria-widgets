@@ -1,8 +1,6 @@
 import { Ref, VNode } from "preact";
-import { useState } from "preact-prop-helpers";
 import { useContext, useImperativeHandle } from "preact/hooks";
 import { useDrawer, UseDrawerParameters, UseDrawerReturnType } from "../use-drawer";
-import { defaultRenderPortal } from "./dialog";
 import { memoForwardRef, ParentDepthContext, PartialExcept, useDefault } from "./util";
 
 type Get<T, K extends keyof T> = T[K];
@@ -42,7 +40,7 @@ export const Drawer = memoForwardRef(function Drawer<FocusContainerElement exten
 }: DrawerProps<FocusContainerElement, SourceElement, DrawerElement, TitleElement>, ref: Ref<any>) {
     const defaultParentDepth = useContext(ParentDepthContext);
     let myDepth = (parentDepth ?? defaultParentDepth) + 1;
-    
+
     const info = useDrawer<FocusContainerElement, SourceElement, DrawerElement, TitleElement>({
         dismissParameters: {
             closeOnBackdrop: closeOnBackdrop ?? true,
@@ -64,10 +62,14 @@ export const Drawer = memoForwardRef(function Drawer<FocusContainerElement exten
     });
     useImperativeHandle(ref!, () => info);
 
-    return render(info);
+    return (
+        <ParentDepthContext.Provider value={myDepth}>
+            {render(info)}
+        </ParentDepthContext.Provider>
+    )
 
 })
-
+/*
 export function DrawerDemo() {
     const [open, setOpen] = useState(false);
 
@@ -103,3 +105,4 @@ export function DrawerDemo() {
         />
     )
 }
+*/

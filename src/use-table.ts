@@ -7,7 +7,7 @@ import {
     UseCompleteGridNavigationReturnType, useCompleteGridNavigationRow, UseCompleteGridNavigationRowParameters, UseCompleteGridNavigationRowReturnType, useMergedProps, usePassiveState, useStableCallback
 } from "preact-prop-helpers";
 import { useCallback, useEffect, useRef } from "preact/hooks";
-import { ElementToTag, Prefices } from "./props";
+import { ElementToTag, OmitStrong, Prefices } from "./props";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
 import { UseListboxParameters } from "./use-listbox";
 
@@ -26,14 +26,14 @@ export interface UseTableSectionContext<TableSectionElement extends Element, Tab
     //tableSectionContext: { sort: (column: number) => SortInfo; }
 }
 
-export interface UseTableSectionParameters<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>> extends Omit<UseCompleteGridNavigationParameters<TableSectionElement, TableRowElement, TableCellElement, RM>, "typeaheadNavigationParameters" | "sortableChildrenParameters"> {
+export interface UseTableSectionParameters<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>> extends OmitStrong<UseCompleteGridNavigationParameters<TableSectionElement, TableRowElement, TableCellElement, RM>, "typeaheadNavigationParameters" | "sortableChildrenParameters"> {
     tableSectionParameters: {
         location: "head" | "body" | "foot";
         tagTableSection: ElementToTag<TableSectionElement>;
     }
     context: UseTableContext;
 }
-export interface UseTableSectionReturnType<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>> extends Omit<UseCompleteGridNavigationReturnType<TableSectionElement, TableRowElement, TableCellElement, RM, CM>, "props"> {
+export interface UseTableSectionReturnType<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>> extends OmitStrong<UseCompleteGridNavigationReturnType<TableSectionElement, TableRowElement, TableCellElement, RM, CM>, "props"> {
     propsTableSection: h.JSX.HTMLAttributes<TableSectionElement>;
     context: UseTableSectionContext<TableSectionElement, TableRowElement, TableCellElement, RM, CM>;
 }
@@ -43,10 +43,10 @@ export interface UseTableRowReturnType<TableRowElement extends Element, TableCel
 
 }
 export interface UseTableRowParameters<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>> {
-    rowAsChildOfGridParameters: Omit<UseCompleteGridNavigationRowParameters<TableRowElement, TableCellElement, RM, CM>["rowAsChildOfGridParameters"], "sortableChildParameters" | "context"> & {
+    rowAsChildOfGridParameters: OmitStrong<UseCompleteGridNavigationRowParameters<TableRowElement, TableCellElement, RM, CM>["rowAsChildOfGridParameters"], "sortableChildParameters" | "context"> & {
         context: UseTableSectionContext<any, TableRowElement, TableCellElement, RM, CM>;
     };
-    rowAsParentOfCellsParameters: Omit<UseCompleteGridNavigationRowParameters<TableRowElement, TableCellElement, RM, CM>["rowAsParentOfCellsParameters"], "typeaheadNavigationParameters">;
+    rowAsParentOfCellsParameters: OmitStrong<UseCompleteGridNavigationRowParameters<TableRowElement, TableCellElement, RM, CM>["rowAsParentOfCellsParameters"], "typeaheadNavigationParameters">;
     tableRowParameters: {
         /**
          * When the `selectionLimit` is `"single"`, this must be `null`.
@@ -80,7 +80,7 @@ export interface TableCellInfo<TableCellElement extends Element> extends GridSin
 }
 
 export interface UseTableParameters<TableElement extends Element, LabelElement extends Element> {
-    labelParameters: Omit<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
+    labelParameters: OmitStrong<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
     tableParameters: Pick<UseListboxParameters<TableElement, any, LabelElement, any>["listboxParameters"], "selectionLimit"> & {
         tagTable: ElementToTag<TableElement>;
     };

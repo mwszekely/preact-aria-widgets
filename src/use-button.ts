@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { useMergedProps, usePress, UsePressParameters, UsePressReturnType, useRefElement, UseRefElementParameters, UseRefElementReturnType } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
-import { debugLog, DisabledType, ElementToTag, EnhancedEvent, enhanceEvent } from "./props";
+import { debugLog, DisabledType, ElementToTag, EnhancedEvent, enhanceEvent, OmitStrong } from "./props";
 
 
 export type ButtonPressEvent<E extends EventTarget> = EnhancedEvent<E, Event | Event, { pressed: boolean | null }>;
@@ -14,7 +14,7 @@ export interface UseButtonParameters<E extends Node> extends UseRefElementParame
         onPress: null | ((event: ButtonPressEvent<E>) => void);
         role: string;
     }
-    pressParameters: Omit<UsePressParameters<E>["pressParameters"], "onPressSync" | "focusSelf">
+    pressParameters: OmitStrong<UsePressParameters<E>["pressParameters"], "onPressSync" | "focusSelf">
 }
 
 export interface UseButtonReturnType<E extends Element> extends UsePressReturnType<E>, UseRefElementReturnType<E> {

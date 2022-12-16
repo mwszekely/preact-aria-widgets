@@ -1,10 +1,7 @@
 import { createContext, Ref, RenderableProps, VNode } from "preact";
-import { returnNull, useMergedProps } from "preact-prop-helpers";
-import { useContext, useImperativeHandle, useRef, useState } from "preact/hooks";
-import { UseCheckboxReturnType } from "../use-checkbox";
-import { EventDetail } from "../props";
+import { useContext, useImperativeHandle } from "preact/hooks";
+import { OmitStrong } from "../props";
 import { CheckboxGroupContext, CheckboxGroupInfo, useCheckboxGroup, useCheckboxGroupChild, UseCheckboxGroupChildParameters, UseCheckboxGroupChildReturnType, UseCheckboxGroupParameters, useCheckboxGroupParent, UseCheckboxGroupParentParameters, UseCheckboxGroupParentReturnType, UseCheckboxGroupReturnType } from "../use-checkbox-group";
-import { Checkbox, CheckboxProps, defaultRenderCheckboxLike } from "./checkbox";
 import { memoForwardRef, PartialExcept, useDefault } from "./util";
 
 type Get<T, K extends keyof T> = T[K];
@@ -26,7 +23,7 @@ export interface CheckboxGroupParentPropsBase<TCE extends Element> extends
     Get<UseCheckboxGroupParentParameters<TCE, CheckboxGroupInfo<TCE>>, "rovingTabIndexChildParameters">,
     Get<UseCheckboxGroupParentParameters<TCE, CheckboxGroupInfo<TCE>>, "sortableChildParameters">,
     Get<UseCheckboxGroupParentParameters<TCE, CheckboxGroupInfo<TCE>>, "textContentParameters">,
-    Omit<Get<UseCheckboxGroupParentParameters<TCE, CheckboxGroupInfo<TCE>>, "completeListNavigationChildParameters">, "checkboxInfo"> {
+    OmitStrong<Get<UseCheckboxGroupParentParameters<TCE, CheckboxGroupInfo<TCE>>, "completeListNavigationChildParameters">, "checkboxInfo"> {
     //subInfo: Get<UseCheckboxGroupParentParameters<InputElement, C, K, C>, "subInfo">;
     ref?: Ref<UseCheckboxGroupParentReturnType<TCE, CheckboxGroupInfo<TCE>>>;
 }
@@ -67,12 +64,12 @@ export function defaultRenderCheckboxGroupChild<InputType extends Element, Label
         return defaultRenderCheckboxLike<InputType, LabelType, UseCheckboxGroupChildReturnType<TCE, CheckboxGroupInfo<TCE>>>({ labelPosition, tagInput, tagLabel, makePropsInput, makePropsLabel })(groupInfo);
     }
 }*/
-
-interface Foo<InputType extends Element, LabelType extends Element> extends Omit<CheckboxProps<InputType, LabelType>, "checked" | "onCheckedChange"> {
+/*
+interface Foo<InputType extends Element, LabelType extends Element> extends OmitStrong<CheckboxProps<InputType, LabelType>, "checked" | "onCheckedChange"> {
     onCheckedChangeStart(): void;
     onCheckedChangeEnd(ex?: any): void;
 }
-/*
+
 export function defaultRenderCheckboxGroupParent<InputType extends Element, LabelType extends Element>({ render, disabled, getDocument, labelPosition, tagInput, tagLabel, getWindow, onActiveElementChange, onCheckedChangeStart, onCheckedChangeEnd, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange }: Foo<InputType, LabelType>) {
     return function (parentInfo: UseCheckboxGroupParentReturnTypeInfo, modifyControlProps: PropModifier<any>) {
         const { checkboxGroupParent: { checked, onParentCheckedChange } } = parentInfo;
@@ -153,7 +150,6 @@ export const CheckboxGroup = memoForwardRef(function CheckboxGroup<ParentElement
     navigatePastEnd,
     navigatePastStart,
     pageNavigationSize,
-    children,
     ..._rest
 }: CheckboxGroupProps<ParentElement, TabbableChildElement, CheckboxGroupInfo<TabbableChildElement>>, ref?: Ref<any>) {
     const info = useCheckboxGroup<ParentElement, TabbableChildElement>({
@@ -230,7 +226,7 @@ export const CheckboxGroupChild = memoForwardRef(function CheckboxGroupChild<TCE
 
     return render(info);
 });
-
+/*
 export function CheckboxGroupDemo() {
     return (
         <CheckboxGroup<HTMLDivElement, HTMLInputElement>
@@ -302,9 +298,9 @@ export function CheckboxGroupChildDemo({ index }: { index: number }) {
             exclude={undefined}
             onPressSync={null}
             checked={checked}
-            focusSelf={e => ref.current?.checkboxLikeReturn.focusSelf()}
+            focusSelf={_e => ref.current?.checkboxLikeReturn.focusSelf()}
             getSortValue={returnNull}
-            render={i => {
+            render={_i => {
                 return (
                     <Checkbox<HTMLInputElement, HTMLLabelElement>
                         ariaLabel={null}
@@ -327,4 +323,4 @@ export function CheckboxGroupChildDemo({ index }: { index: number }) {
             }}
         />
     )
-}
+}*/

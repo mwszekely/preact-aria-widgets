@@ -7,7 +7,7 @@ import {
     UseCompleteListNavigationParameters,
     UseCompleteListNavigationReturnType, useEnsureStability, UseListNavigationSingleSelectionSortableChildInfo, useMergedProps, useSingleSelectionDeclarative, useStableCallback, useStableObject
 } from "preact-prop-helpers";
-import { EventDetail, Prefices } from "./props";
+import { EventDetail, OmitStrong, Prefices } from "./props";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
 
 export type ListboxSingleSelectEvent<E extends EventTarget> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
@@ -16,8 +16,8 @@ export interface UseListboxContext<ListElement extends Element, ListItemElement 
     listboxContext: { selectionLimit: "single" | "multi" }
 }
 
-export interface UseListboxParameters<ListElement extends Element, ListItemElement extends Element, _LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends Omit<UseCompleteListNavigationParameters<ListElement, ListItemElement, M>, "singleSelectionParameters"> {
-    labelParameters: Omit<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
+export interface UseListboxParameters<ListElement extends Element, ListItemElement extends Element, _LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationParameters<ListElement, ListItemElement, M>, "singleSelectionParameters"> {
+    labelParameters: OmitStrong<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
     listboxParameters: {
         /**
          * When `"single"`, the selected item is controlled
@@ -42,7 +42,7 @@ export interface UseListboxParameters<ListElement extends Element, ListItemEleme
         groupingType: "with-groups" | "without-groups" | "group";
     }
 }
-export interface UseListboxReturnType<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends Omit<UseCompleteListNavigationReturnType<ListElement, ListItemElement, M>, "props"> {
+export interface UseListboxReturnType<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationReturnType<ListElement, ListItemElement, M>, "props"> {
     propsListbox: h.JSX.HTMLAttributes<ListElement>;
     propsListboxLabel: h.JSX.HTMLAttributes<LabelElement>;
     context: UseListboxContext<ListElement, ListItemElement, M>;
@@ -102,14 +102,14 @@ export function useListbox<ListElement extends Element, ListItemElement extends 
         linearNavigationParameters,
         rearrangeableChildrenParameters,
         rovingTabIndexParameters,
-        singleSelectionParameters: { initiallySelectedIndex: selectedIndex, setSelectedIndex },
+        singleSelectionParameters: { initiallySelectedIndex: selectedIndex, onSelectedIndexChange: setSelectedIndex },
         sortableChildrenParameters,
         typeaheadNavigationParameters
     });
 
     const _v: void = useSingleSelectionDeclarative({ 
         singleSelectionDeclarativeParameters: { selectedIndex }, 
-        singleSelectionReturn: { setSelectedIndex: singleSelectionReturn.setSelectedIndex }
+        singleSelectionReturn: { changeSelectedIndex: singleSelectionReturn.changeSelectedIndex }
      })
 
     if (groupingType == "group")

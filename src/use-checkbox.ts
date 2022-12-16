@@ -1,14 +1,14 @@
 import { h } from "preact";
 import { useStableCallback } from "preact-prop-helpers";
-import { debugLog, EnhancedEvent, enhanceEvent, Prefices } from "./props";
+import { debugLog, EnhancedEvent, enhanceEvent, OmitStrong, Prefices } from "./props";
 import { LabelPosition, useCheckboxLike, UseCheckboxLikeParameters, UseCheckboxLikeReturnType } from "./use-label";
 
 
 
 export type CheckboxChangeEvent<E extends EventTarget> = EnhancedEvent<E, Event, { checked: boolean }>;
 
-export interface UseCheckboxParameters<LP extends LabelPosition, I extends Element, L extends Element> extends Omit<UseCheckboxLikeParameters<LP, I, L>, "checkboxLikeParameters" | "randomIdInputParameters" | "randomIdLabelParameters"> {
-    checkboxLikeParameters: Omit<UseCheckboxLikeParameters<LP, I, L>["checkboxLikeParameters"], "onInput" | "role" | "prefix">;
+export interface UseCheckboxParameters<LP extends LabelPosition, I extends Element, L extends Element> extends OmitStrong<UseCheckboxLikeParameters<LP, I, L>, "checkboxLikeParameters" | "randomIdInputParameters" | "randomIdLabelParameters"> {
+    checkboxLikeParameters: OmitStrong<UseCheckboxLikeParameters<LP, I, L>["checkboxLikeParameters"], "onInput" | "role">;
     checkboxParameters: {
         onCheckedChange(event: CheckboxChangeEvent<I>): void;
     }

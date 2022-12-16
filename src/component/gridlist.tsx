@@ -36,9 +36,10 @@ interface GridlistRowPropsBase<GridlistRowElement extends Element, GridlistCellE
 interface GridlistChildPropsBase<CellElement extends Element, M extends GridlistCellInfo<CellElement>> extends
     Get<UseGridlistCellParameters<CellElement, M>, "gridNavigationCellParameters">,
     Get<UseGridlistCellParameters<CellElement, M>, "textContentParameters">,
-    Get<UseGridlistCellParameters<CellElement, M>, "pressParameters">,
+    // Get<UseGridlistCellParameters<CellElement, M>, "pressParameters">,
     Get<UseGridlistCellParameters<CellElement, M>, "rovingTabIndexChildParameters">,
     Get<UseGridlistCellParameters<CellElement, M>, "managedChildParameters"> {
+    focusSelf: M["focusSelf"];
     ref?: Ref<UseGridlistCellReturnType<CellElement, M>>;
     //    subInfo: Get<UseGridlistCellParameters<CellElement, M>, "completeGridNavigationCellParameters">;
 }
@@ -57,7 +58,7 @@ export interface GridlistRowProps<GridlistRowElement extends Element, GridlistCe
     render(info: UseGridlistRowReturnType<GridlistRowElement, GridlistCellElement, RM, CM>): VNode;
 }
 
-export interface GridlistChildProps<CellElement extends Element, M extends GridlistCellInfo<CellElement>> extends PartialExcept<GridlistChildPropsBase<CellElement, M>,  "index" | "focusSelf"> {
+export interface GridlistChildProps<CellElement extends Element, M extends GridlistCellInfo<CellElement>> extends PartialExcept<GridlistChildPropsBase<CellElement, M>, "index" | "focusSelf"> {
     //ref?: Ref<UseGridlistCellReturnType<CellElement, M>>;
     //subInfo: Get<UseGridlistCellParameters<CellElement, M>, "completeGridNavigationCellParameters">;
     render(info: UseGridlistCellReturnType<CellElement, M>): VNode;
@@ -245,19 +246,17 @@ export const GridlistRow = memoForwardRef(function GridlistRowU<RowElement exten
 export const GridlistChild = memoForwardRef(function GridlistChild<CellElement extends Element>({
     index,
     colSpan,
-    exclude,
     focusSelf,
     hidden,
-    onPressSync,
     getText,
     render,
 }: GridlistChildProps<CellElement, GridlistCellInfo<CellElement>>, ref?: Ref<any>) {
     const context = (useContext(GridlistRowContext) as UseGridlistRowContext<any, CellElement, GridlistCellInfo<CellElement>>);
     const info = useGridlistCell<CellElement, GridlistCellInfo<CellElement>>({
-        completeGridNavigationCellParameters: {},
+        completeGridNavigationCellParameters: { focusSelf },
         context,
         gridNavigationCellParameters: { colSpan: colSpan ?? 1 },
-        pressParameters: { exclude, focusSelf, onPressSync },
+        // pressParameters: { exclude, focusSelf, onPressSync },
         textContentParameters: { getText: useDefault("getText", getText) },
         managedChildParameters: { index },
         rovingTabIndexChildParameters: { hidden: hidden ?? false }

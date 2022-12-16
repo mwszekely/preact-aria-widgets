@@ -1,10 +1,9 @@
-import { createContext, createElement, h, Ref, VNode } from "preact";
+import { createContext, Ref, VNode } from "preact";
 import { useStableGetter } from "preact-prop-helpers";
-import { useContext, useImperativeHandle, useState } from "preact/hooks";
+import { useContext, useImperativeHandle } from "preact/hooks";
 import { FocusableLabelElement, LabelPosition } from "use-label";
-import { ElementToTag } from "../props";
+import { OmitStrong } from "../props";
 import { RadioContext, RadioSubInfo, useRadio, useRadioGroup, UseRadioGroupParameters, UseRadioGroupReturnType, UseRadioParameters, UseRadioReturnType } from "../use-radio-group";
-import { DefaultRenderCheckboxLikeParameters } from "./checkbox";
 import { memoForwardRef, PartialExcept, useDefault } from "./util";
 
 type Get<T, K extends keyof T> = T[K];
@@ -27,9 +26,9 @@ interface RadioPropsBase<LP extends LabelPosition, InputElement extends Element,
     Get<UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>, "labelParameters">,
     Get<UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>, "rovingTabIndexChildParameters">,
     Get<UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>, "pressParameters">,
-    Omit<Get<UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>, "singleSelectionChildParameters">, "disabled">,
+    OmitStrong<Get<UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>, "singleSelectionChildParameters">, "disabled">,
     Get<UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>, "textContentParameters">,
-    Omit<Get<UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>, "managedChildParameters">, "disabled" | "getSortValue"> {
+    OmitStrong<Get<UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>, "managedChildParameters">, never> {
     //ref?: Ref<UseRadioReturnTypeInfo<InputElement, LabelElement>>;
     //subInfo: C;
 
@@ -41,7 +40,7 @@ interface RadioGroupProps<V extends string | number, GroupElement extends Elemen
 interface RadioProps<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element, V extends string | number> extends PartialExcept<RadioPropsBase<LP, InputElement, LabelElement, V>, "index" | "value" | "ariaLabel" | "labelPosition" | "tagInput" | "tagLabel"> {
     render(info: UseRadioReturnType<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>): VNode<any>;
 }
-
+/*
 function defaultRenderRadioGroup<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, TabbableChildElement extends Element>({ tagGroup, tagLabel, makePropsGroup, makePropsLabel }: { tagLabel: ElementToTag<GroupLabelElement>, tagGroup: ElementToTag<GroupElement>, makePropsLabel: (info: UseRadioGroupReturnType<V, GroupElement, GroupLabelElement, TabbableChildElement>) => h.JSX.HTMLAttributes<GroupLabelElement>, makePropsGroup: (info: UseRadioGroupReturnType<V, GroupElement, GroupLabelElement, TabbableChildElement>) => h.JSX.HTMLAttributes<GroupElement> }) {
     return function (info: UseRadioGroupReturnType<V, GroupElement, GroupLabelElement, TabbableChildElement>) {
         return (
@@ -51,7 +50,7 @@ function defaultRenderRadioGroup<V extends string | number, GroupElement extends
             </>
         )
     }
-}
+}*/
 
 const RadioContext = createContext<RadioContext<any, any, any, any>>(null!);
 export const RadioGroup = memoForwardRef(function RadioGroup<V extends string | number, GroupElement extends HTMLElement, GroupLabelElement extends HTMLElement, TabbableChildElement extends HTMLElement>({
@@ -162,7 +161,7 @@ export const Radio = memoForwardRef(function Radio<LP extends LabelPosition, V e
 
     return render(info);
 })
-
+/*
 export function DemoRadioGroup({ name }: { name: string }) {
     const [selectedValue, setSelectedValue] = useState<string | null>(null)
     return (
@@ -197,4 +196,4 @@ export function DemoRadioGroup({ name }: { name: string }) {
 
         />
     )
-}
+}*/

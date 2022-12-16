@@ -1,12 +1,12 @@
 import { h } from "preact";
 import { CompleteListNavigationContext, PassiveStateUpdater, returnFalse, returnNull, returnZero, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseListNavigationSingleSelectionSortableChildInfo, useMergedProps, usePassiveState, useStableCallback, useStableGetter, useStableObject, useState } from "preact-prop-helpers";
 import { StateUpdater, useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
-import { debugLog, EnhancedEvent } from "./props";
+import { debugLog, EnhancedEvent, OmitStrong } from "./props";
 import { CheckboxCheckedType } from "./use-label";
 
 export type CheckboxGroupChangeEvent<E extends EventTarget> = EnhancedEvent<E, Event, { childrenChecked: boolean | Map<number, boolean | "mixed"> }>;
 
-export interface UseCheckboxGroupParameters<ParentElement extends Element, TabbableChildElement extends Element, M extends CheckboxGroupInfo<TabbableChildElement>> extends Omit<UseCompleteListNavigationParameters<ParentElement, TabbableChildElement, M>, "singleSelectionParameters"> {
+export interface UseCheckboxGroupParameters<ParentElement extends Element, TabbableChildElement extends Element, M extends CheckboxGroupInfo<TabbableChildElement>> extends OmitStrong<UseCompleteListNavigationParameters<ParentElement, TabbableChildElement, M>, "singleSelectionParameters"> {
     /**
      * This is called whenever the parent checkbox is changed and an update of
      * all the children needs to occur.
@@ -73,17 +73,17 @@ export interface CheckboxGroupInfo<TCE extends Element> extends UseListNavigatio
 }
 
 
-export interface UseCheckboxGroupChildParameters<TCE extends Element, M extends CheckboxGroupInfo<TCE>> extends Omit<UseCompleteListNavigationChildParameters<TCE, M, "checkboxInfo">, "managedChildParameters" | "pressParameters" | "singleSelectionChildParameters"> {
+export interface UseCheckboxGroupChildParameters<TCE extends Element, M extends CheckboxGroupInfo<TCE>> extends OmitStrong<UseCompleteListNavigationChildParameters<TCE, M, "checkboxInfo">, "managedChildParameters" | "pressParameters" | "singleSelectionChildParameters"> {
     context: CheckboxGroupContext<any, TCE, M>;
     checkboxGroupChild: {
         //focusSelf(e: TCE): void;
         checked: CheckboxCheckedType;
         onChangeFromParent(checked: CheckboxCheckedType, e: Event): void | Promise<void>;
     }
-    managedChildParameters: Omit<UseCompleteListNavigationChildParameters<TCE, M, never>["managedChildParameters"], "checkboxChildType">
+    managedChildParameters: OmitStrong<UseCompleteListNavigationChildParameters<TCE, M, never>["managedChildParameters"], never>
     pressParameters: UseCompleteListNavigationChildParameters<TCE, M, never>["pressParameters"];
 }
-export interface UseCheckboxGroupChildReturnType<TCE extends Element, M extends CheckboxGroupInfo<TCE>> extends Omit<UseCompleteListNavigationChildReturnType<TCE, M>, "singleSelectionChildParameters"> {
+export interface UseCheckboxGroupChildReturnType<TCE extends Element, M extends CheckboxGroupInfo<TCE>> extends OmitStrong<UseCompleteListNavigationChildReturnType<TCE, M>, "singleSelectionChildReturn"> {
     checkboxGroupChild: {
         onControlIdChanged: (next: string | undefined, prev: string | undefined) => void;
         onChildCheckedChange: (checked: CheckboxCheckedType) => void;
@@ -131,9 +131,9 @@ export interface UseCheckboxGroupReturnType<GroupElement extends Element, TCE ex
 //}
 
 /* eslint-disable @typescript-eslint/no-empty-interface */
-export interface UseCheckboxGroupParentParameters<TCE extends Element, M extends CheckboxGroupInfo<TCE>> extends Omit<UseCompleteListNavigationChildParameters<TCE, M, never>, "managedChildParameters" | "pressParameters" | "singleSelectionChildParameters"> {
+export interface UseCheckboxGroupParentParameters<TCE extends Element, M extends CheckboxGroupInfo<TCE>> extends OmitStrong<UseCompleteListNavigationChildParameters<TCE, M, never>, "managedChildParameters" | "pressParameters" | "singleSelectionChildParameters"> {
     context: CheckboxGroupContext<any, TCE, M>;
-    managedChildParameters: Omit<UseCompleteListNavigationChildParameters<TCE, CheckboxGroupInfo<TCE>, never>["managedChildParameters"], "getChecked" | "getLastUserChecked" | "setCheckedFromParentInput" | "checkboxChildType">
+    managedChildParameters: OmitStrong<UseCompleteListNavigationChildParameters<TCE, CheckboxGroupInfo<TCE>, never>["managedChildParameters"], never>
     pressParameters: UseCompleteListNavigationChildParameters<TCE, CheckboxGroupInfo<TCE>, never>["pressParameters"];
 }
 
@@ -209,7 +209,7 @@ export function useCheckboxGroup<GroupElement extends Element, TCE extends Eleme
         linearNavigationParameters,
         rearrangeableChildrenParameters,
         rovingTabIndexParameters,
-        singleSelectionParameters: { initiallySelectedIndex: null, setSelectedIndex: null },
+        singleSelectionParameters: { initiallySelectedIndex: null, onSelectedIndexChange: null },
         sortableChildrenParameters,
         typeaheadNavigationParameters
     });
@@ -437,7 +437,6 @@ export function useCheckboxGroupChild<TCE extends Element>({
         pressReturn,
         props,
         rovingTabIndexChildReturn,
-        singleSelectionChildReturn
     } = useCompleteListNavigationChild<TCE, CheckboxGroupInfo<TCE>, never>({
         completeListNavigationChildParameters: { checkboxInfo: { checkboxChildType: "child", getLastUserChecked, getChecked, setCheckedFromParentInput: onChangeFromParent }, ...completeListNavigationChildParameters },
         context,
@@ -464,7 +463,7 @@ export function useCheckboxGroupChild<TCE extends Element>({
         pressReturn,
         props,
         rovingTabIndexChildReturn,
-        singleSelectionChildReturn
+        //singleSelectionChildReturn
 
     }
 

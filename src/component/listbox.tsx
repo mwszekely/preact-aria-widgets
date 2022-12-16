@@ -1,12 +1,11 @@
 import { createContext, Ref, VNode } from "preact";
 import { returnNull } from "preact-prop-helpers";
 import { useCallback, useContext, useState } from "preact/hooks";
-import { EventDetail } from "../props";
-import { ListboxInfo, useListbox, UseListboxParameters, UseListboxContext, UseListboxReturnType, UseListboxItemParameters, ListboxSingleSelectEvent, UseListboxItemReturnType, useListboxItem } from "../use-listbox";
+import { ListboxInfo, useListbox, UseListboxContext, useListboxItem, UseListboxItemParameters, UseListboxItemReturnType, UseListboxParameters, UseListboxReturnType } from "../use-listbox";
 import { PartialExcept, useDefault } from "./util";
 
 type Get<T, K extends keyof T> = T[K];
-type Get2<T, K extends keyof T, K2 extends keyof T[K]> = T[K][K2];
+//type Get2<T, K extends keyof T, K2 extends keyof T[K]> = T[K][K2];
 
 interface ListboxPropsBase<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends
     Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "labelParameters">,

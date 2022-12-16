@@ -1,14 +1,14 @@
 import { h } from "preact";
 import { useMergedProps, usePress, UsePressReturnType, useRandomDualIds, UseRandomDualIdsParameters, UseRandomDualIdsReturnType, useRefElement, UseRefElementReturnType, useStableCallback } from "preact-prop-helpers";
 import { useEffect } from "preact/hooks";
-import { DisabledType, ElementToTag, noop } from "./props";
+import { DisabledType, ElementToTag, noop, OmitStrong } from "./props";
 
 export type LabelPosition = "separate" | "wrapping" | "none";
 export type FocusableLabelElement<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element> = LP extends "wrapping" ? LabelElement : InputElement;
 
 export interface UseLabelParameters<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element> {
-    randomIdInputParameters: Omit<UseRandomDualIdsParameters["randomIdInputParameters"], "otherReferencerProp">;
-    randomIdLabelParameters: Omit<UseRandomDualIdsParameters["randomIdLabelParameters"], "otherReferencerProp">;
+    randomIdInputParameters: OmitStrong<UseRandomDualIdsParameters["randomIdInputParameters"], "otherReferencerProp">;
+    randomIdLabelParameters: OmitStrong<UseRandomDualIdsParameters["randomIdLabelParameters"], "otherReferencerProp">;
 
     labelParameters: {
         onLabelClick: null | ((e: Event) => void);
@@ -86,8 +86,8 @@ export function useLabel<LP extends LabelPosition, InputElement extends Element,
 }
 
 export interface UseLabelSyntheticParameters {
-    randomIdInputParameters: Omit<UseRandomDualIdsParameters["randomIdInputParameters"], "otherReferencerProp">;
-    randomIdLabelParameters: Omit<UseRandomDualIdsParameters["randomIdLabelParameters"], "otherReferencerProp">;
+    randomIdInputParameters: OmitStrong<UseRandomDualIdsParameters["randomIdInputParameters"], "otherReferencerProp">;
+    randomIdLabelParameters: OmitStrong<UseRandomDualIdsParameters["randomIdLabelParameters"], "otherReferencerProp">;
     labelParameters: Pick<UseLabelParameters<LabelPosition, any, any>["labelParameters"], "ariaLabel" | "onLabelClick">
 }
 
@@ -124,7 +124,7 @@ export type CheckboxCheckedType = boolean | "mixed";
 
 
 
-export interface UseCheckboxLikeParameters<LP extends LabelPosition, InputType extends Element, LabelType extends Element> extends Omit<UseLabelParameters<LP, InputType, LabelType>, "labelParameters"> {
+export interface UseCheckboxLikeParameters<LP extends LabelPosition, InputType extends Element, LabelType extends Element> extends OmitStrong<UseLabelParameters<LP, InputType, LabelType>, "labelParameters"> {
     checkboxLikeParameters: {
         /**
          * Where the label element is positioned relative to the input element.
@@ -144,7 +144,7 @@ export interface UseCheckboxLikeParameters<LP extends LabelPosition, InputType e
         //type: "checkbox" | "radio";
     };
 
-    labelParameters: Omit<UseLabelParameters<LP, InputType, LabelType>["labelParameters"], "onLabelClick">;
+    labelParameters: OmitStrong<UseLabelParameters<LP, InputType, LabelType>["labelParameters"], "onLabelClick">;
 
     refElementLabelReturn: UseRefElementReturnType<LabelType>["refElementReturn"];
     refElementInputReturn: UseRefElementReturnType<InputType>["refElementReturn"];

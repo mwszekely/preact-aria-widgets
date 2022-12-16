@@ -57,7 +57,7 @@ export function Tabs<TabContainerElement extends Element, TabElement extends Ele
     navigatePastEnd,
     navigatePastStart,
     noTypeahead,
-    setSelectedIndex,
+    onSelectedIndexChange,
     onTabbableIndexChange,
     orientation,
     pageNavigationSize,
@@ -81,7 +81,7 @@ export function Tabs<TabContainerElement extends Element, TabElement extends Ele
             onTabbableIndexChange: onTabbableIndexChange ?? null,
             untabbable: untabbable ?? false
         },
-        singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? 0, setSelectedIndex: setSelectedIndex ?? null },
+        singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? 0, onSelectedIndexChange: onSelectedIndexChange ?? null },
         sortableChildrenParameters: { compare: compare ?? null },
         tabsParameters: { orientation, groupingType, role },
         typeaheadNavigationParameters: {

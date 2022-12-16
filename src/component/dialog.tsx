@@ -1,5 +1,4 @@
 import { Ref, VNode } from "preact";
-import { useState } from "preact-prop-helpers";
 import { createPortal } from "preact/compat";
 import { useContext, useImperativeHandle, useRef } from "preact/hooks";
 import { useDialog, UseDialogParameters, UseDialogReturnType } from "../use-dialog";
@@ -96,11 +95,11 @@ export const Dialog = memoForwardRef(function Dialog<FocusContainerElement exten
     return (
         <ParentDepthContext.Provider value={myDepth}>
             {render(info)}
-        </ParentDepthContext.Provider>)
+        </ParentDepthContext.Provider>
+    )
 
 });
-
-function getWindow() { return globalThis.window }
+/*
 export function DialogDemo() {
     const [open, setOpen] = useState(false);
 
@@ -134,3 +133,4 @@ export function DialogDemo() {
         />
     )
 }
+*/

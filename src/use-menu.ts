@@ -1,5 +1,5 @@
 import { useMergedProps, useStableCallback } from "preact-prop-helpers";
-import { debugLog } from "./props";
+import { debugLog, OmitStrong } from "./props";
 import { useMenuSurface, UseMenuSurfaceParameters, UseMenuSurfaceReturnType } from "./use-menu-surface";
 import { useMenubar, useMenubarChild, UseMenubarItemParameters, UseMenubarItemReturnType, UseMenubarParameters, UseMenubarReturnType, UseMenubarSubInfo } from "./use-menubar";
 import { UseToolbarContext } from "./use-toolbar";
@@ -8,12 +8,12 @@ export interface UseMenuContext<ContainerElement extends Element, ChildElement e
 
 }
 
-export interface UseMenuParameters<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuButtonElement extends Element, MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends Omit<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "toolbarParameters" | "menubarParameters"> {
+export interface UseMenuParameters<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuButtonElement extends Element, MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "toolbarParameters" | "menubarParameters" | "labelParameters"> {
     dismissParameters: UseMenuSurfaceParameters<MenuSurfaceElement, MenuButtonElement>["dismissParameters"];
     escapeDismissParameters: UseMenuSurfaceParameters<MenuSurfaceElement, MenuButtonElement>["escapeDismissParameters"];
-    menuSurfaceParameters: Omit<UseMenuSurfaceParameters<MenuSurfaceElement, MenuButtonElement>["menuSurfaceParameters"], "role">;
-    toolbarParameters: Omit<UseMenubarParameters<MenuParentElement, MenuItemElement, M>["toolbarParameters"], "role">
-    menubarParameters: Omit<UseMenubarParameters<MenuParentElement, MenuItemElement, M>["menubarParameters"], "role">
+    menuSurfaceParameters: OmitStrong<UseMenuSurfaceParameters<MenuSurfaceElement, MenuButtonElement>["menuSurfaceParameters"], "role">;
+    toolbarParameters: OmitStrong<UseMenubarParameters<MenuParentElement, MenuItemElement, M>["toolbarParameters"], never>
+    menubarParameters: OmitStrong<UseMenubarParameters<MenuParentElement, MenuItemElement, M>["menubarParameters"], "role">
 
     menuParameters: {
         /** This is called whenever the corresponding arrow key is pressed on the triggering button. */
@@ -35,7 +35,7 @@ export interface UseMenuItemParameters<MenuItemElement extends Element, M extend
     //menuItem: { disabled: DisabledType; onPress: (e: EnhancedEvent<MenuItemElement, h.JSX.TargetedEvent<MenuItemElement>, { index: number }>) => void; }
 }
 
-export interface UseMenuReturnType<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseMenuSurfaceReturnType<MenuSurfaceElement, MenuParentElement, MenuButtonElement>, Omit<UseMenubarReturnType<MenuParentElement, MenuItemElement, MenuButtonElement, M>, "propsMenubar" | "propsLabel"> {
+export interface UseMenuReturnType<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseMenuSurfaceReturnType<MenuSurfaceElement, MenuParentElement, MenuButtonElement>, OmitStrong<UseMenubarReturnType<MenuParentElement, MenuItemElement, MenuButtonElement, M>, "propsMenubar" | "propsLabel"> {
 
 }
 
@@ -64,7 +64,6 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
     sortableChildrenParameters,
     toolbarParameters,
     typeaheadNavigationParameters,
-    labelParameters,
     menubarParameters
 }: UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenuReturnType<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement, UseMenubarSubInfo<MenuItemElement>> {
 
@@ -91,7 +90,7 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
         typeaheadNavigationParameters,
         toolbarParameters: { ...toolbarParameters },
         menubarParameters: { role: "menu", ...menubarParameters },
-        labelParameters
+        labelParameters: { ariaLabel: null }
     });
 
     const onKeyDown = useStableCallback((e: KeyboardEvent) => {

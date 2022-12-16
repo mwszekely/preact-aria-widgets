@@ -11,6 +11,8 @@ type SubType<Base, Condition> = Pick<Base, {
 
 export type DisabledType = boolean | "soft" | "hard";
 
+export type OmitStrong<T, K extends keyof T> = Omit<T, K>;
+
 export type PropsOfType<T> =
     T extends keyof h.JSX.IntrinsicElements ? h.JSX.IntrinsicElements[T] : 
     T extends ComponentType<infer P>? P : never;

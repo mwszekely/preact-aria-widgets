@@ -1,7 +1,6 @@
-import { ComponentChildren, createContext, createElement, h, Ref, VNode } from "preact";
+import { ComponentChildren, createContext, Ref, VNode } from "preact";
 import { useContext, useImperativeHandle } from "preact/hooks";
-import { ElementToTag, PropModifier } from "../props";
-import { SliderContext, SliderThumbInfo, useSlider, UseSliderParameters, UseSliderReturnType, useSliderThumb, UseSliderThumb, UseSliderThumbParameters, UseSliderThumbReturnType } from "../use-slider";
+import { SliderContext, SliderThumbInfo, useSlider, UseSliderParameters, UseSliderReturnType, useSliderThumb, UseSliderThumbParameters, UseSliderThumbReturnType } from "../use-slider";
 import { memoForwardRef } from "./util";
 
 type Get<T, K extends keyof T> = T[K];
@@ -19,7 +18,7 @@ export interface SliderThumbProps<ThumbElement extends Element> extends Get<UseS
 
 const SliderThumbContext = createContext<SliderContext<any>>(null!);
 
-export const Slider = memoForwardRef(function Slider<SliderElement extends Element, LabelElement extends Element>({ max, min, onAfterChildLayoutEffect, onChildrenMountChange, children }: SliderProps, ref?: Ref<any>) {
+export const Slider = memoForwardRef(function Slider({ max, min, onAfterChildLayoutEffect, onChildrenMountChange, children }: SliderProps, ref?: Ref<any>) {
     const info = useSlider({
         managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange },
         sliderParameters: { max, min }
@@ -46,9 +45,9 @@ export const SliderThumb = memoForwardRef(function SliderThumbU<ThumbElement ext
 
     return render(info);
 })
-
+/*
 function defaultRenderSliderThumb<E extends Element>({ tagThumb, makePropsThumb }: { tagThumb: ElementToTag<E>, makePropsThumb: (info: UseSliderThumbReturnType<E, SliderThumbInfo>) => h.JSX.HTMLAttributes<E> }) {
     return function (info: UseSliderThumbReturnType<E, SliderThumbInfo>) {
         return createElement(tagThumb as never, (makePropsThumb(info)))
     }
-}
+}*/
