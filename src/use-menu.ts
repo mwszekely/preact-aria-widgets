@@ -169,11 +169,11 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
         childrenHaveFocusReturn,
         context: useStableObject({
             ...context,
-            menu: {
+            menu: useStableObject({
                 closeFromMenuItemClicked: useStableCallback(() => {
                     dismissParameters.onClose("item-clicked");
                 })
-            }
+            })
         }),
         focusTrapReturn,
         linearNavigationReturn,
