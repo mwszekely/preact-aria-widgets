@@ -1,7 +1,7 @@
-import { createContext, VNode } from "preact";
-import { useCallback, useContext } from "preact/hooks";
+import { createContext, Ref, VNode } from "preact";
+import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
 import { TabPanelsContext, TabsContext, useTab, useTabPanel, UseTabPanelParameters, UseTabPanelReturnType, UseTabParameters, UseTabReturnType, useTabs, UseTabsParameters, UseTabsReturnType } from "../use-tabs";
-import { PartialExcept, useDefault } from "./util";
+import { memoForwardRef, PartialExcept, useDefault } from "./util";
 
 type Get<T, K extends keyof T> = T[K];
 //type Get2<T, K extends keyof T, K2 extends keyof T[K]> = T[K][K2];
@@ -46,7 +46,7 @@ export interface TabPanelProps<PanelElement extends Element> extends PartialExce
 const TabsContext = createContext<TabsContext<any, any, any>>(null!);
 const TabPanelsContext = createContext<TabPanelsContext<any>>(null!);
 
-export function Tabs<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element>({
+export const Tabs = memoForwardRef(function Tabs<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element>({
     ariaLabel,
     collator,
     compare,
@@ -66,7 +66,7 @@ export function Tabs<TabContainerElement extends Element, TabElement extends Ele
     typeaheadTimeout,
     role,
     render
-}: TabsProps<TabContainerElement, TabElement, TabLabelElement>) {
+}: TabsProps<TabContainerElement, TabElement, TabLabelElement>, ref?: Ref<any>) {
     const info = useTabs<TabContainerElement, TabElement, TabLabelElement>({
         labelParameters: { ariaLabel },
         linearNavigationParameters: {
@@ -93,6 +93,8 @@ export function Tabs<TabContainerElement extends Element, TabElement extends Ele
 
     const { contextPanels, contextTabs } = info;
 
+    useImperativeHandle(ref!, () => info);
+
 
     return (
         <TabsContext.Provider value={contextTabs}>
@@ -101,9 +103,9 @@ export function Tabs<TabContainerElement extends Element, TabElement extends Ele
             </TabPanelsContext.Provider>
         </TabsContext.Provider>
     )
-}
+})
 
-export function Tab<E extends Element>({
+export const Tab = memoForwardRef(function Tab<E extends Element>({
     disabled,
     exclude,
     focusSelf,
@@ -113,7 +115,7 @@ export function Tab<E extends Element>({
     getText,
     getSortValue,
     render
-}: TabProps<E>) {
+}: TabProps<E>, ref?: Ref<any>) {
     const context = useContext(TabsContext);
     console.assert(context != null, `This Tab is not contained within a Tabs component`);
     const focusSelfDefault = useCallback((e: any) => { e?.focus(); }, []);
@@ -127,8 +129,9 @@ export function Tab<E extends Element>({
         singleSelectionChildParameters: { disabled: disabled ?? false, selectionMode: "focus" },
         textContentParameters: { getText: useDefault("getText", getText) }
     });
+    useImperativeHandle(ref!, () => info);
     return render(info);
-}
+})
 
 export function TabPanel<E extends Element>({
     index,

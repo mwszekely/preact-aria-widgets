@@ -1,8 +1,9 @@
 import { createContext, Ref, VNode } from "preact";
 import { returnNull } from "preact-prop-helpers";
+import { memo } from "preact/compat";
 import { useCallback, useContext, useState } from "preact/hooks";
 import { ListboxInfo, useListbox, UseListboxContext, useListboxItem, UseListboxItemParameters, UseListboxItemReturnType, UseListboxParameters, UseListboxReturnType } from "../use-listbox";
-import { PartialExcept, useDefault } from "./util";
+import { memoForwardRef, PartialExcept, useDefault } from "./util";
 
 type Get<T, K extends keyof T> = T[K];
 //type Get2<T, K extends keyof T, K2 extends keyof T[K]> = T[K][K2];
@@ -39,7 +40,7 @@ export interface ListboxItemProps<ListItemElement extends Element, M extends Lis
 const ListboxContext = createContext<UseListboxContext<any, any, any>>(null!);
 
 const ListboxGroupContext = createContext<null | UseListboxReturnType<any, any, any, any>>(null);
-export function GroupedListbox<LabelElement extends Element>({ ariaLabel, selectionLimit, navigationDirection, render }: Pick<ListboxProps<any, any, LabelElement, any>, "ariaLabel" | "selectionLimit" | "navigationDirection" | "render">) {
+export const GroupedListbox = memo(function GroupedListbox<LabelElement extends Element>({ ariaLabel, selectionLimit, navigationDirection, render }: Pick<ListboxProps<any, any, LabelElement, any>, "ariaLabel" | "selectionLimit" | "navigationDirection" | "render">) {
 
     const info = useListbox<any, any, LabelElement, any>({
         labelParameters: { ariaLabel },
@@ -68,9 +69,9 @@ export function GroupedListbox<LabelElement extends Element>({ ariaLabel, select
         <ListboxGroupContext.Provider value={info}>{render(info)}</ListboxGroupContext.Provider>
     );
 
-}
+})
 
-export function Listbox<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element>({
+export const Listbox = memoForwardRef(function Listbox<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element>({
     ariaLabel,
     collator,
     compare,
@@ -102,7 +103,7 @@ export function Listbox<ListElement extends Element, ListItemElement extends Ele
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
             pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
         },
-        listboxParameters: { selectionLimit, groupingType: listboxGroupInfo == null? "without-groups" : "group", selectedIndex, onSelectedIndexChange: onSelectedIndexChange ?? null },
+        listboxParameters: { selectionLimit, groupingType: listboxGroupInfo == null ? "without-groups" : "group", selectedIndex, onSelectedIndexChange: onSelectedIndexChange ?? null },
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
         rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable: untabbable ?? false },
         //singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? null, setSelectedIndex: setSelectedIndex ?? null },
@@ -117,9 +118,9 @@ export function Listbox<ListElement extends Element, ListItemElement extends Ele
     return (
         <ListboxContext.Provider value={info.context}>{render(info)}</ListboxContext.Provider>
     );
-}
+})
 
-export function ListboxItem<ListboxItemElement extends Element>({ ariaPropName, disabled, exclude, focusSelf, getText, hidden, index, onPressSync, render, selected, selectionMode, getSortValue }: ListboxItemProps<ListboxItemElement, ListboxInfo<ListboxItemElement>>) {
+export const ListboxItem = memoForwardRef(function ListboxItem<ListboxItemElement extends Element>({ ariaPropName, disabled, exclude, focusSelf, getText, hidden, index, onPressSync, render, selected, selectionMode, getSortValue }: ListboxItemProps<ListboxItemElement, ListboxInfo<ListboxItemElement>>) {
     const context = useContext(ListboxContext) as UseListboxContext<any, ListboxItemElement, ListboxInfo<ListboxItemElement>>;
     console.assert(context != null, `This ListboxItem is not contained within a Listbox`);
     const focusSelfDefault = useCallback((e: any) => { e?.focus(); }, []);
@@ -140,8 +141,9 @@ export function ListboxItem<ListboxItemElement extends Element>({ ariaPropName, 
     });
 
     return render(info);
-}
+})
 
+/*
 export function DemoListbox() {
     const [selectedIndex, setSelectedIndex] = useState<number | null>(0);
 
@@ -196,3 +198,4 @@ export function DemoListboxItem({ index }: { index: number }) {
         />
     )
 }
+*/

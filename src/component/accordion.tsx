@@ -104,7 +104,7 @@ export const AccordionSection = memoForwardRef(function AccordionSection<HeaderC
 
     return render(info);
 })
-
+/*
 export function AccordionDemo() {
     return (
         <Accordion
@@ -147,3 +147,4 @@ export function AccordionSectionDemo({ index }: { index: number }) {
         />
     )
 }
+*/

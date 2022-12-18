@@ -27,7 +27,7 @@ export interface MenuProps<MenuSurfaceElement extends Element, MenuParentElement
     render(menuInfo: UseMenuReturnType<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement, UseMenubarSubInfo<MenuItemElement>>): VNode;
 }
 
-export interface MenuItemProps<MenuItemElement extends Element>  extends MenubarItemProps<MenuItemElement> {
+export interface MenuItemProps<MenuItemElement extends Element> extends MenubarItemProps<MenuItemElement> {
     render(info: UseMenuItemReturnType<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): VNode<any>;
 }
 
@@ -124,7 +124,7 @@ export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element,
 })
 
 
-export function MenuItem<MenuItemElement extends Element>({ index, hidden, getSortValue, onPress, getText, role, exclude, ariaPropName, selectionMode, disabled, render }: MenuItemProps<MenuItemElement>, ref?: Ref<any>) {
+export const MenuItem = memoForwardRef(function MenuItem<MenuItemElement extends Element>({ index, hidden, getSortValue, onPress, getText, role, exclude, ariaPropName, selectionMode, disabled, render }: MenuItemProps<MenuItemElement>, ref?: Ref<any>) {
     const context = useContext(MenuItemContext);
     console.assert(context != null, `This MenuItem is not contained within a Menubar/Menu`);
     const info = useMenuItem({
@@ -144,7 +144,7 @@ export function MenuItem<MenuItemElement extends Element>({ index, hidden, getSo
     return (
         <>{render(info)}</>
     )
-}
+})
 /*
 export function DemoMenu() {
     const [open, setOpen] = useState(false);

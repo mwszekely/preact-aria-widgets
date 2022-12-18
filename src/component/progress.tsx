@@ -2,7 +2,7 @@ import { Ref, VNode } from "preact";
 import { UseAsyncHandlerParameters } from "preact-prop-helpers";
 import { useImperativeHandle } from "preact/hooks";
 import { useProgress, UseProgressParameters, UseProgressReturnType, useProgressWithHandler, UseProgressWithHandlerParameters, UseProgressWithHandlerReturnType } from "../use-progress";
-import { PartialExcept } from "./util";
+import { memoForwardRef, PartialExcept } from "./util";
 
 type Get<T, K extends keyof T> = T[K];
 
@@ -26,7 +26,7 @@ export interface ProgressWithHandlerProps<EventType, CaptureType, IndicatorEleme
     render(info: UseProgressWithHandlerReturnType<EventType, CaptureType, IndicatorElement, LabelElement>): VNode<any>;
 }
 
-export function Progress<IndicatorElement extends Element, LabelElement extends Element>({ tagIndicator, ariaLabel, max, render, value, valueText }: ProgressProps<IndicatorElement, LabelElement>, ref?: Ref<any>) {
+export const Progress = memoForwardRef(function Progress<IndicatorElement extends Element, LabelElement extends Element>({ tagIndicator, ariaLabel, max, render, value, valueText }: ProgressProps<IndicatorElement, LabelElement>, ref?: Ref<any>) {
     const info = useProgress<IndicatorElement, LabelElement>({
         labelParameters: { ariaLabel },
         progressIndicatorParameters: {
@@ -40,9 +40,9 @@ export function Progress<IndicatorElement extends Element, LabelElement extends 
     useImperativeHandle(ref!, () => info);
 
     return render(info);
-}
+})
 
-export function ProgressWithHandler<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element>({ ariaLabel, forciblyPending, render, tagIndicator, asyncHandler, capture, debounce, throttle }: ProgressWithHandlerProps<EventType, CaptureType, IndicatorElement, LabelElement>, ref?: Ref<any>) {
+export const ProgressWithHandler = memoForwardRef(function ProgressWithHandler<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element>({ ariaLabel, forciblyPending, render, tagIndicator, asyncHandler, capture, debounce, throttle }: ProgressWithHandlerProps<EventType, CaptureType, IndicatorElement, LabelElement>, ref?: Ref<any>) {
     const info = useProgressWithHandler<EventType, CaptureType, IndicatorElement, LabelElement>({
         asyncHandlerParameters: { asyncHandler, capture, debounce, throttle },
         labelParameters: { ariaLabel },
@@ -53,8 +53,8 @@ export function ProgressWithHandler<EventType, CaptureType, IndicatorElement ext
     useImperativeHandle(ref!, () => info);
 
     return (render(info))
-}
-
+})
+/*
 export function DemoProgress() {
     return (
         <>
@@ -80,7 +80,7 @@ export function DemoProgress() {
         </>
     )
 }
-
+*/
 /*
 export interface ProgressProps<ProgressElement extends Element, LabelElement extends Element, EventType extends Event, CaptureType, C, K extends string> extends
     Get<UseProgressWithHandlerParameters<ProgressElement, LabelElement, EventType, CaptureType>, "managedChildren">,

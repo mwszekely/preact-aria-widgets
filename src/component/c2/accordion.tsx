@@ -1,12 +1,8 @@
 
-import clsx from "clsx"
-import { Heading } from "component/heading"
-import { memoForwardRef, PartialExcept } from "component/util"
-import { ComponentChildren, h, Ref } from "preact"
-import { useMergedProps } from "preact-prop-helpers"
+import { ComponentChildren, h } from "preact"
 import { OmitStrong } from "../../props"
-import { Accordion, AccordionDemo, AccordionProps, AccordionSection, AccordionSectionDemo, AccordionSectionProps } from "../accordion"
-import { getDefaultClass, StandardProps } from "./util"
+import { AccordionProps, AccordionSectionProps } from "../accordion"
+import { StandardProps } from "./util"
 
 export interface Accordion2Props extends Pick<h.JSX.HTMLAttributes<HTMLDivElement>, StandardProps>, OmitStrong<AccordionProps<HTMLButtonElement>, "render" | "ref"> { }
 export interface AccordionSection2Props extends Pick<h.JSX.HTMLAttributes<HTMLDivElement>, StandardProps>, Pick<AccordionSectionProps<HTMLDivElement, HTMLButtonElement, HTMLDivElement>, "disabled" | "index" | "hidden" | "open"> {
