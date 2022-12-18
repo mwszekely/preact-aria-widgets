@@ -8,7 +8,7 @@ import { UseListboxParameters } from "./use-listbox";
 
 interface TabPanelInfo extends ManagedChildInfo<number> {
     getVisible(): boolean;
-    setVisibleIndex: (newIndex: number | null) => void; //StateUpdater<number | null>;
+    setVisibleIndex: (newIndex: number | null, previousIndex: number | null) => void; //StateUpdater<number | null>;
 }
 
 interface TabInfo<E extends Element> extends UseListNavigationSingleSelectionSortableChildInfo<E> { }
@@ -166,7 +166,7 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
         closestFit: false,
         initialIndex: null,
         getAt: useStableCallback((i) => { return i.getVisible() ?? false; /*getPanels().getAt(i)?.getVisible() ?? false)*/ }, []),
-        setAt: useStableCallback((i, b, n) => { return i.setVisibleIndex(n); /*(getPanels().getAt(i)?.setVisible(b));*/ }, []),
+        setAt: useStableCallback((i, b, n, p) => { return i.setVisibleIndex(n, p); /*(getPanels().getAt(i)?.setVisible(b));*/ }, []),
         isValid: returnTrue,
         onIndexChange: null
     });
@@ -274,16 +274,28 @@ export function useTabPanel<PanelElement extends Element>({ managedChildParamete
     const { tabPanelContext: { getVisibleIndex: g, getPanelId, getTabId } } = context;
     //const [correspondingTabId, setCorrespondingTabId] = useState<string | null>(null);
     const [lastKnownVisibleIndex, setLastKnownVisibleIndex, getLastKnownVisibleIndex] = useState(g());
-    //const [isVisible, setIsVisible, getIsVisible] = useState(getVisibleIndex() == managedChildParameters.index);
+    const [isVisible, setIsVisible, getIsVisible] = useState(g() == index);
     //const visibleRef = useRef<ChildFlagOperations>({ get: getIsVisible, set: setIsVisible, isValid: returnTrue });
     useManagedChild<TabPanelInfo>({ context, managedChildParameters: { index } }, {
         getVisible: useStableCallback(() => { return getLastKnownVisibleIndex() == index }),
-        setVisibleIndex: setLastKnownVisibleIndex,
+        setVisibleIndex: useStableCallback((newIndex, prevIndex) => {
+            // Similar logic is in singleSelection, but we need to duplicate it here
+            let changeIndex = (newIndex == index ? prevIndex : newIndex);
+            if (changeIndex != null)
+                setLastKnownVisibleIndex(changeIndex);
+
+            if (newIndex == index) {
+                setIsVisible(true);
+            }
+            else {
+                setIsVisible(false);
+            }
+        }),
         ...managedChildParameters
     });
     const panelId = getPanelId(managedChildParameters.index);
     const tabId = getTabId(managedChildParameters.index);
-    const isVisible = (lastKnownVisibleIndex === index);
+    //const isVisible = (lastKnownVisibleIndex === index);
 
 
     return {
