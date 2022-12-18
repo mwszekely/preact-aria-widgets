@@ -253,7 +253,7 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
         },
         hasFocus,
         subInfo: { getValue, subInfo },*/
-        singleSelectionChildParameters: { selectionMode: "focus", ariaPropName: tagInput == "input" && labelPosition == "separate" ? null : "aria-selected", ...singleSelectionChildParameters }
+        singleSelectionChildParameters: { selectionMode: "focus", ariaPropName: tagInput == "input" && labelPosition != "wrapping" ? null : "aria-selected", ...singleSelectionChildParameters }
     });
 
     const { selected: checked } = singleSelectionChildReturn;
@@ -302,22 +302,10 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
     }
 
     const propsIfInputHandlesFocus = useMergedProps<InputElement>(listNavigationSingleSelectionChildProps as h.JSX.HTMLAttributes<any>, propsInput);
-    const propsInput2: h.JSX.HTMLAttributes<InputElement> = labelPosition == "separate" ? propsIfInputHandlesFocus : propsInput;
-
-    // };
-
-    //const useRadioLabel: UseRadioLabel<IL> = useCallback(() => {
-    //const tag = tagLabel;
-    //const useRadioLabelProps = (propsLabel: h.JSX.HTMLAttributes<IL>): h.JSX.HTMLAttributes<IL> => {
-    //const { useCheckboxLikeLabelElementProps } = useCheckboxLikeLabelElement();
+    const propsInput2: h.JSX.HTMLAttributes<InputElement> = labelPosition != "wrapping" ? propsIfInputHandlesFocus : propsInput;
+    
     const propsIfLabelHandlesFocus = useMergedProps<LabelElement>(listNavigationSingleSelectionChildProps as h.JSX.HTMLAttributes<any>, propsLabel);
     const propsLabel2: h.JSX.HTMLAttributes<LabelElement> = labelPosition == "wrapping" ? propsIfLabelHandlesFocus as any : propsLabel as any
-    //};
-
-    //return {
-    //    useRadioLabelProps
-    //}
-    //}, [useCheckboxLikeLabelElement]);
 
     return {
         checkboxLikeInputReturn,

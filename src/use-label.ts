@@ -245,6 +245,7 @@ export function useCheckboxLike<LP extends LabelPosition, InputType extends Elem
     propsUnstableInput.type = role == "radio" ? "radio" : "checkbox";
 
     switch (labelPosition) {
+        case "none":
         case "separate": {
             if (tagInput == "input") {
                 // Even in the most default input behavior, we still need to handle
