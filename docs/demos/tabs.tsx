@@ -87,10 +87,10 @@ export function Demo() {
 }
 
 const DemoTab = memo(function DemoTab({ i }: { i: number }) {
-    return <Tab<HTMLLIElement> focusSelf={e => e.focus()} key={i} index={i} render={info => <li {...info.props} style={{marginLeft: "2em"}}>Tab #{i} {info.singleSelectionChildReturn.selected && "(visible)"}</li>} getSortValue={returnZero} />
+    return <Tab<HTMLLIElement> focusSelf={e => e.focus()} key={i} index={i} render={info => <li {...info.props} style={{marginLeft: "2em"}}>Tab #{i} (offset: {info.singleSelectionChildReturn.selectedOffset ?? "null"}) {info.singleSelectionChildReturn.selected && "(visible)"}</li>} getSortValue={returnZero} />
 })
 
 const DemoTabPanel = memo(function DemoTabPanel({ i }: { i: number }) {
-    return <TabPanel<HTMLDivElement> index={i} key={i} render={info => <div {...info.props} hidden={!info.tabPanelReturn.visible}>Tab panel #{i}</div>} />
+    return <TabPanel<HTMLDivElement> index={i} key={i} render={info => <div {...info.props} hidden={!info.tabPanelReturn.visible}>Tab panel #{i} (offset: {info.tabPanelReturn.visibleOffset ?? "null"})</div>} />
 })
 

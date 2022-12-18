@@ -8,7 +8,7 @@ import { UseListboxParameters } from "./use-listbox";
 
 interface TabPanelInfo extends ManagedChildInfo<number> {
     getVisible(): boolean;
-    setVisible: StateUpdater<boolean>;
+    setVisibleIndex: (newIndex: number | null) => void; //StateUpdater<number | null>;
 }
 
 interface TabInfo<E extends Element> extends UseListNavigationSingleSelectionSortableChildInfo<E> { }
@@ -74,7 +74,7 @@ export interface UseTabListReturnTypeWithHooks<TabContainerElement extends Eleme
 
 export interface UseTabPanelReturnType<E extends Element> {
     props: h.JSX.HTMLAttributes<E>;
-    tabPanelReturn: { visible: boolean; getVisible: () => boolean; };
+    tabPanelReturn: { visibleOffset: number | null; visible: boolean; getVisible: () => boolean; };
 }
 /*export interface UseTabPanelReturnTypeWithHooks<LabelElement extends Element> extends UseTabPanelReturnTypeInfo {
     useTabPanelProps: (props: h.JSX.HTMLAttributes<LabelElement>) => h.JSX.HTMLAttributes<LabelElement>;
@@ -166,7 +166,7 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
         closestFit: false,
         initialIndex: null,
         getAt: useStableCallback((i) => { return i.getVisible() ?? false; /*getPanels().getAt(i)?.getVisible() ?? false)*/ }, []),
-        setAt: useStableCallback((i, b) => { return i.setVisible(b); /*(getPanels().getAt(i)?.setVisible(b));*/ }, []),
+        setAt: useStableCallback((i, b, n) => { return i.setVisibleIndex(n); /*(getPanels().getAt(i)?.setVisible(b));*/ }, []),
         isValid: returnTrue,
         onIndexChange: null
     });
@@ -195,7 +195,11 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
         linearNavigationParameters: { navigationDirection: orientation, ...linearNavigationParameters },
         rovingTabIndexParameters,
         singleSelectionParameters: {
-            onSelectedIndexChange: useStableCallback((i, p) => { ssi?.(i, p); changeVisiblePanel(i); listNavRet1.singleSelectionReturn.changeSelectedIndex(i, p); }),
+            onSelectedIndexChange: useStableCallback((i, p) => {
+                ssi?.(i, p);
+                changeVisiblePanel(i);
+                listNavRet1.singleSelectionReturn.changeSelectedIndex(i, p);
+            }),
             ...singleSelectionParameters
         },
         typeaheadNavigationParameters,
@@ -267,13 +271,19 @@ export function useTab<TabElement extends Element>({ completeListNavigationChild
 export function useTabPanel<PanelElement extends Element>({ managedChildParameters, context }: UseTabPanelParameters): UseTabPanelReturnType<PanelElement> {
     const { index } = managedChildParameters;
     debugLog("useTabPanel", index);
-    const { tabPanelContext: { getVisibleIndex, getPanelId, getTabId } } = context;
+    const { tabPanelContext: { getVisibleIndex: g, getPanelId, getTabId } } = context;
     //const [correspondingTabId, setCorrespondingTabId] = useState<string | null>(null);
-    const [isVisible, setIsVisible, getIsVisible] = useState(getVisibleIndex() == managedChildParameters.index);
+    const [lastKnownVisibleIndex, setLastKnownVisibleIndex, getLastKnownVisibleIndex] = useState(g());
+    //const [isVisible, setIsVisible, getIsVisible] = useState(getVisibleIndex() == managedChildParameters.index);
     //const visibleRef = useRef<ChildFlagOperations>({ get: getIsVisible, set: setIsVisible, isValid: returnTrue });
-    useManagedChild<TabPanelInfo>({ context, managedChildParameters: { index } }, { getVisible: getIsVisible, setVisible: setIsVisible, ...managedChildParameters });
+    useManagedChild<TabPanelInfo>({ context, managedChildParameters: { index } }, {
+        getVisible: useStableCallback(() => { return getLastKnownVisibleIndex() == index }),
+        setVisibleIndex: setLastKnownVisibleIndex,
+        ...managedChildParameters
+    });
     const panelId = getPanelId(managedChildParameters.index);
     const tabId = getTabId(managedChildParameters.index);
+    const isVisible = (lastKnownVisibleIndex === index);
 
 
     return {
@@ -284,8 +294,9 @@ export function useTabPanel<PanelElement extends Element>({ managedChildParamete
             inert: !isVisible
         } as {}),
         tabPanelReturn: {
+            visibleOffset: lastKnownVisibleIndex == null ? null : (index - lastKnownVisibleIndex),
             visible: isVisible,
-            getVisible: getIsVisible
+            getVisible: useStableCallback(() => { return getLastKnownVisibleIndex() === index; })
         }
     }
 }
