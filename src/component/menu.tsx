@@ -1,6 +1,6 @@
 import { createContext, Ref, VNode } from "preact";
 import { useContext, useImperativeHandle } from "preact/hooks";
-import { useMenu, UseMenuParameters, UseMenuReturnType, UseMenuContext, useMenuItem } from "../use-menu";
+import { useMenu, UseMenuParameters, UseMenuReturnType, UseMenuContext, useMenuItem, UseMenuItemReturnType } from "../use-menu";
 import { UseMenubarSubInfo } from "../use-menubar";
 import { MenubarItemProps } from "./menubar";
 import { memoForwardRef, ParentDepthContext, PartialExcept, useDefault } from "./util";
@@ -28,7 +28,7 @@ export interface MenuProps<MenuSurfaceElement extends Element, MenuParentElement
 }
 
 export interface MenuItemProps<MenuItemElement extends Element>  extends MenubarItemProps<MenuItemElement> {
-    //context: UseMenuContext<any, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>;
+    render(info: UseMenuItemReturnType<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): VNode<any>;
 }
 
 const MenuItemContext = createContext<UseMenuContext<any, any, any>>(null!);
