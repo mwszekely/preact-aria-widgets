@@ -114,6 +114,7 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
                     if (openDirection == 'up') {
                         onOpen();
                         e.preventDefault();
+                        e.stopPropagation();
                     }
                     break;
                 }
@@ -121,6 +122,7 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
                     if (openDirection == 'down') {
                         onOpen();
                         e.preventDefault();
+                        e.stopPropagation();
                     }
                     break;
                 }
@@ -128,6 +130,7 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
                     if (openDirection == 'left') {
                         onOpen();
                         e.preventDefault();
+                        e.stopPropagation();
                     }
                     break;
                 }
@@ -135,6 +138,7 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
                     if (openDirection == 'right') {
                         onOpen();
                         e.preventDefault();
+                        e.stopPropagation();
                     }
                     break;
                 }
