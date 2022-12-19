@@ -53,7 +53,11 @@ export function useProgress<ProgressElement extends Element, LabelElement extend
         labelParameters: { ...labelParameters, onLabelClick: null },
         randomIdInputParameters: { prefix: Prefices.progressIndicator },
         randomIdLabelParameters: { prefix: Prefices.progressLabel }
-    })
+    });
+
+    // This isn't an input in the usual sense -- it's not tabbable.
+    // TODO: Make this an option in the hook itself
+    propsInput.tabIndex = -1;
 
     const busy = value && value != "disabled"; //value == "disabled" || !value? false : true;// (!!value);
     const disabled = (value == "disabled");
