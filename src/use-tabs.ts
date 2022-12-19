@@ -74,7 +74,7 @@ export interface UseTabListReturnTypeWithHooks<TabContainerElement extends Eleme
 
 export interface UseTabPanelReturnType<E extends Element> {
     props: h.JSX.HTMLAttributes<E>;
-    tabPanelReturn: { visibleOffset: number | null; visible: boolean; getVisible: () => boolean; };
+    tabPanelReturn: { visibleOffset: number | null; visible: boolean | null; getVisible: () => boolean; };
 }
 /*export interface UseTabPanelReturnTypeWithHooks<LabelElement extends Element> extends UseTabPanelReturnTypeInfo {
     useTabPanelProps: (props: h.JSX.HTMLAttributes<LabelElement>) => h.JSX.HTMLAttributes<LabelElement>;
@@ -274,7 +274,7 @@ export function useTabPanel<PanelElement extends Element>({ managedChildParamete
     const { tabPanelContext: { getVisibleIndex: g, getPanelId, getTabId } } = context;
     //const [correspondingTabId, setCorrespondingTabId] = useState<string | null>(null);
     const [lastKnownVisibleIndex, setLastKnownVisibleIndex, getLastKnownVisibleIndex] = useState(g());
-    const [isVisible, setIsVisible, getIsVisible] = useState(g() == index);
+    const [isVisible, setIsVisible, getIsVisible] = useState(null as boolean | null);
     //const visibleRef = useRef<ChildFlagOperations>({ get: getIsVisible, set: setIsVisible, isValid: returnTrue });
     useManagedChild<TabPanelInfo>({ context, managedChildParameters: { index } }, {
         getVisible: useStableCallback(() => { return getLastKnownVisibleIndex() == index }),
