@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { DismissListenerTypes, findFirstTabbable, returnFalse, useDismiss, UseEscapeDismissParameters, useGlobalHandler, useHasCurrentFocus, UseHasCurrentFocusParameters, useMergedProps, usePassiveState, useRandomId, useRefElement, UseRefElementReturnType, useStableCallback, useState, useTimeout } from "preact-prop-helpers";
+import { DismissListenerTypes, findFirstFocusable, findFirstTabbable, returnFalse, useDismiss, UseEscapeDismissParameters, useGlobalHandler, useHasCurrentFocus, UseHasCurrentFocusParameters, useMergedProps, usePassiveState, useRandomId, useRefElement, UseRefElementReturnType, useStableCallback, useState, useTimeout } from "preact-prop-helpers";
 import { useEffect, useRef } from "preact/hooks";
 import { debugLog, Prefices } from "./props";
 
@@ -68,7 +68,7 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
     let {
         propsReferencer: propsTrigger,
         propsSource: propsPopup
-    } = useRandomId<PopupType, TriggerType>({ randomIdParameters: { prefix: Prefices.tooltip, otherReferencerProp: (tooltipSemanticType == "description"?  "aria-describedby" : "aria-labelledby")  } });
+    } = useRandomId<PopupType, TriggerType>({ randomIdParameters: { prefix: Prefices.tooltip, otherReferencerProp: (tooltipSemanticType == "description" ? "aria-describedby" : "aria-labelledby") } });
 
     const { refElementReturn: { getElement: getTriggerElement, propsStable: triggerRefProps } } = useRefElement<TriggerType>({ refElementParameters: {} });
     const { refElementReturn: { getElement: getPopupElement, propsStable: popupRefProps } } = useRefElement<PopupType>({ refElementParameters: {} });
@@ -179,7 +179,7 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
     function onTouchEnd(e: TouchEvent) {
         (e.target as any).focus?.();
     }
-    
+
 
     const { hasCurrentFocusReturn } = useHasCurrentFocus<TriggerType>({ hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: setTriggerFocused, onCurrentFocusedChanged: null }, refElementReturn: { getElement: getTriggerElement } });
 
@@ -210,14 +210,16 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
                     debugHasFoundFocusable.current = true;
                 }
                 else {
-                    console.error(`The following tooltip source is not focusable/does not contain a focusable element. If there isn't a button or other focusable element within this one, add tabIndex=0.`, element);
+                    const firstFocusable = findFirstFocusable(element);
+                    if (!firstFocusable)
+                        console.error(`The following tooltip source is not focusable/does not contain a focusable element. If there isn't a button or other focusable element within this one, add tabIndex=0.`, element);
                 }
             }
         }
     }, [open])
-    
+
     debugLog("useTooltipTooltip");
-    
+
     const { hasCurrentFocusReturn: { propsStable: propsFocusPopup } } = useHasCurrentFocus<PopupType>({
         hasCurrentFocusParameters: { onCurrentFocusedChanged: null, onCurrentFocusedInnerChanged: useStableCallback((focused) => { setTooltipFocused(focused); }) },
         refElementReturn: { getElement: getPopupElement }
