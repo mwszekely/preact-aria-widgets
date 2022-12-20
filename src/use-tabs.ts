@@ -86,7 +86,7 @@ export interface UseTabLabelReturnTypeWithHooks<LabelElement extends Element> ex
     useTabListLabelProps: (props: h.JSX.HTMLAttributes<LabelElement>) => h.JSX.HTMLAttributes<LabelElement>;
 }
 
-export interface UseTabsReturnType<TabContainerElement extends Element, TabElement extends Element, LabelElement extends Element> {
+export interface UseTabsReturnType<TabContainerElement extends Element, TabElement extends Element, LabelElement extends Element> extends Omit<UseCompleteListNavigationReturnType<TabContainerElement, TabElement, TabInfo<TabElement>>, "props" | "context"> {
     propsContainer: h.JSX.HTMLAttributes<TabContainerElement>;
     propsLabel: h.JSX.HTMLAttributes<LabelElement>;
     contextPanels: TabPanelsContext<TabPanelInfo>; //{ tabPanelContext: TabPanelsContext<TabPanelInfo> } & UseManagedChildrenContext<TabPanelInfo>;
@@ -231,7 +231,8 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
                 role: (role ?? "tablist"),
                 "aria-orientation": orientation ?? "horizontal",
             } as {}),
-        propsLabel
+        propsLabel,
+        ...listNavRet1
     }
 }
 
