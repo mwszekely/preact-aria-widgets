@@ -1,6 +1,6 @@
 import { h } from "preact";
 import { DismissListenerTypes, findFirstFocusable, findFirstTabbable, returnFalse, useDismiss, UseEscapeDismissParameters, useGlobalHandler, useHasCurrentFocus, UseHasCurrentFocusParameters, useMergedProps, usePassiveState, useRandomId, useRefElement, UseRefElementReturnType, useStableCallback, useState, useTimeout } from "preact-prop-helpers";
-import { useEffect, useRef } from "preact/hooks";
+import { useCallback, useEffect, useRef } from "preact/hooks";
 import { debugLog, Prefices } from "./props";
 
 export interface UseTooltipTriggerParameters<TriggerType extends Element> {
@@ -89,6 +89,24 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
     }), returnFalse);
     const onHoverChange = useStableCallback(function onHoverChange(hovering: boolean) {
         if (hovering) {
+            // When we're hovering, we want to make sure, at all costs, that we
+            // DO NOT SHOW THE TOOLTIP WHEN NOT HOVERING.  We need to make sure that
+            // even when mouseleave doesn't fire for whatever dumb reason that
+            // the tooltip still goes away.  To do this, we use a global event handler
+            // that just checks for global mouse move events and sets hover from that.
+            const H = (e: Event) => {
+                let t = e.target;
+                if (t && t instanceof Node) {
+                    if (!(getTriggerElement()?.contains(t))) {
+                        setTriggerHover(false);
+                    }
+                    if (!(getPopupElement()?.contains(t))) {
+                        setTooltipHover(false);
+                    }
+                }
+            };
+            document.addEventListener("pointermove", H, { passive: true });
+
             switch (hoverState) {
                 case "hiding": {
                     // We're hoving over the tooltip right after hovering away from it.
@@ -105,6 +123,8 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
                     //return () => clearTimeout(handle);
                 }
             }
+
+            return () => document.removeEventListener("pointermove", H);
         }
         else {
             switch (hoverState) {
@@ -165,16 +185,17 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
 
 
 
-    //const useTooltipTrigger: UseTooltipTrigger<TriggerType> = useCallback(function useTooltipTrigger({
-    //    refElementReturn
-    //}): ReturnType<UseTooltipTrigger<TriggerType>> {
     debugLog("useTooltipTrigger");
-    //const { getElement } = refElementReturn;
 
-    useGlobalHandler(document, "pointermove", e => {
+    /*useGlobalHandler(document, "pointermove", e => {
         const target = (e.target as HTMLElement);
         setTriggerHover(target == getTriggerElement() as Node || !!getTriggerElement()?.contains(target));
     }, { capture: true });
+
+    useGlobalHandler(document, "pointermove", e => {
+        const target = (e.target as HTMLElement);
+        setTooltipHover(target == getPopupElement() as Node || !!getPopupElement()?.contains(target));
+    }, { capture: true });*/
 
     function onTouchEnd(e: TouchEvent) {
         (e.target as any).focus?.();
@@ -223,16 +244,20 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
     const { hasCurrentFocusReturn: { propsStable: propsFocusPopup } } = useHasCurrentFocus<PopupType>({
         hasCurrentFocusParameters: { onCurrentFocusedChanged: null, onCurrentFocusedInnerChanged: useStableCallback((focused) => { setTooltipFocused(focused); }) },
         refElementReturn: { getElement: getPopupElement }
-    })
+    });
 
-    useGlobalHandler(document, "pointermove", e => {
-        const target = (e.target as HTMLElement);
-        setTooltipHover(target == getPopupElement() as Node || !!getPopupElement()?.contains(target));
-    }, { capture: true });
+    const otherPopupProps = {
+        onPointerEnter: useCallback(() => { setTooltipHover(true) }, []),
+        onPointerLeave: useCallback(() => { setTooltipHover(false) }, [])
+    }
+    const otherTriggerProps = {
+        onPointerEnter: useCallback(() => { setTriggerHover(true) }, []),
+        onPointerLeave: useCallback(() => { setTriggerHover(false) }, [])
+    }
 
     return {
-        propsPopup: useMergedProps<PopupType>(popupRefProps, propsPopup, propsFocusPopup, { role: "tooltip" }, refElementPopupReturn.propsStable),
-        propsTrigger: useMergedProps<TriggerType>(triggerRefProps, propsTrigger, hasCurrentFocusReturn.propsStable, { onTouchEnd }, refElementSourceReturn.propsStable),
+        propsPopup: useMergedProps<PopupType>(popupRefProps, propsPopup, propsFocusPopup, { role: "tooltip" }, otherPopupProps, refElementPopupReturn.propsStable),
+        propsTrigger: useMergedProps<TriggerType>(triggerRefProps, propsTrigger, hasCurrentFocusReturn.propsStable, { onTouchEnd }, otherTriggerProps, refElementSourceReturn.propsStable),
         tooltipReturn: {
             isOpen: open,
             getIsOpen: getOpen

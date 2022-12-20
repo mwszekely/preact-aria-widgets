@@ -79,7 +79,7 @@ export function useLabel<LP extends LabelPosition, InputElement extends Element,
 
     return {
         propsInput,
-        propsLabel: useMergedProps(propsLabel, refElementReturn.propsStable, pressReturn.propsStable),
+        propsLabel: useMergedProps(propsLabel, refElementReturn.propsStable, pressReturn.propsUnstable),
         randomIdInputReturn,
         randomIdLabelReturn,
     }
@@ -311,8 +311,8 @@ export function useCheckboxLike<LP extends LabelPosition, InputType extends Elem
         pressLabelReturn,
         checkboxLikeInputReturn: { propsUnstable: propsUnstableInput },
         checkboxLikeLabelReturn: { propsUnstable: propsUnstableLabel },
-        propsInput: useMergedProps(propsInput, propsUnstableInput, pressInputReturn.propsStable, refElementInputReturn.propsStable),
-        propsLabel: useMergedProps(propsLabel, propsUnstableLabel, pressLabelReturn.propsStable, refElementLabelReturn.propsStable),
+        propsInput: useMergedProps(propsInput, propsUnstableInput, pressInputReturn.propsUnstable, refElementInputReturn.propsStable),
+        propsLabel: useMergedProps(propsLabel, propsUnstableLabel, pressLabelReturn.propsUnstable, refElementLabelReturn.propsStable),
         checkboxLikeReturn: { focusSelf }
     }
 }

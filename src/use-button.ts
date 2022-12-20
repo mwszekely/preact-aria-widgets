@@ -37,7 +37,7 @@ export function useButton<E extends Element>({ buttonParameters: { tagButton, di
         },
     });
 
-    const { pressReturn: { propsStable: pressProps } } = pressReturn;
+    const { pressReturn: { propsUnstable: pressProps } } = pressReturn;
     const { refElementReturn: { propsStable: refProps } } = refElementReturn;
 
     const baseProps = { "aria-pressed": (pressed === true ? "true" : pressed === false ? "false" : undefined) };
