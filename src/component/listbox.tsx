@@ -15,6 +15,7 @@ interface ListboxPropsBase<ListElement extends Element, ListItemElement extends 
     Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "rearrangeableChildrenParameters">,
     Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "rovingTabIndexParameters">,
     Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "sortableChildrenParameters">,
+    Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "paginatedChildrenParameters">,
     Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "typeaheadNavigationParameters"> {
     ref?: Ref<UseListboxReturnType<ListElement, ListItemElement, LabelElement, M>>;
 }
@@ -53,6 +54,7 @@ export const GroupedListbox = memo(function GroupedListbox<LabelElement extends 
             disableHomeEndKeys: true,
             pageNavigationSize: 1
         },
+        paginatedChildrenParameters: { paginationMax: null, paginationMin: null },
         listboxParameters: { selectionLimit, groupingType: "with-groups", selectedIndex: null, onSelectedIndexChange: null },
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", undefined) },
         rovingTabIndexParameters: { onTabbableIndexChange: null, untabbable: false },
@@ -86,6 +88,8 @@ export const Listbox = memoForwardRef(function Listbox<ListElement extends Eleme
     onSelectedIndexChange,
     onTabbableIndexChange,
     pageNavigationSize,
+    paginationMax,
+    paginationMin,
     selectionLimit,
     untabbable,
     typeaheadTimeout,
@@ -102,6 +106,10 @@ export const Listbox = memoForwardRef(function Listbox<ListElement extends Eleme
             disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys),
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
             pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
+        },
+        paginatedChildrenParameters: {
+            paginationMax: paginationMax ?? null,
+            paginationMin: paginationMin ?? null
         },
         listboxParameters: { selectionLimit, groupingType: listboxGroupInfo == null ? "without-groups" : "group", selectedIndex, onSelectedIndexChange: onSelectedIndexChange ?? null },
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },

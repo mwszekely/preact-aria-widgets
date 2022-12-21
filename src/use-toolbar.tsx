@@ -1,23 +1,23 @@
 import { h } from "preact";
-import { CompleteListNavigationContext, MakeSingleSelectionDeclarativeParameters, MakeSingleSelectionDeclarativeReturnType, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseListNavigationSingleSelectionSortableChildInfo, useMergedProps, UseRandomIdReturnType, useSingleSelectionDeclarative, UseSingleSelectionParameters } from "preact-prop-helpers";
+import { CompleteListNavigationContext, MakeSingleSelectionDeclarativeParameters, MakeSingleSelectionDeclarativeReturnType, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseListNavigationSingleSelectionSortableChildInfo, useMergedProps, UseRandomIdReturnType, useSingleSelectionDeclarative, UseSingleSelectionParameters } from "preact-prop-helpers";
 import { OmitStrong, Prefices } from "./props";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
 
 
 
 
-export interface UseToolbarParameters<ContainerElement extends Element, ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends OmitStrong<MakeSingleSelectionDeclarativeParameters<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>>, "linearNavigationParameters" | "singleSelectionReturn"> {
+export interface UseToolbarParameters<ContainerElement extends Element, ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends OmitStrong<MakeSingleSelectionDeclarativeParameters<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>>, "paginatedChildrenParameters" | "linearNavigationParameters" | "singleSelectionReturn"> {
     toolbarParameters: {
         orientation: "horizontal" | "vertical";
 
         // Should be "toolbar" for toolbars, null if someone else takes care of the role, and whatever string is applicable otherwise
         role: string | null;
 
-        
+
         /**
          * Optional; Only used if you need single selection logic.
          */
-         onSelectedIndexChange: UseSingleSelectionParameters<ChildElement>["singleSelectionParameters"]["onSelectedIndexChange"] //null | PassiveStateUpdater<number | null, Event>;
+        onSelectedIndexChange: UseSingleSelectionParameters<ChildElement>["singleSelectionParameters"]["onSelectedIndexChange"] //null | PassiveStateUpdater<number | null, Event>;
     };
     labelParameters: OmitStrong<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
     linearNavigationParameters: OmitStrong<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>["linearNavigationParameters"], "navigationDirection">
@@ -27,11 +27,11 @@ export interface UseToolbarReturnType<ContainerElement extends Element, ChildEle
     toolbarReturn: { propsUnstable: h.JSX.HTMLAttributes<ContainerElement> };
     propsToolbar: h.JSX.HTMLAttributes<ContainerElement>;
     propsLabel: h.JSX.HTMLAttributes<LabelElement>;
-    randomIdInputReturn: UseRandomIdReturnType<ContainerElement, LabelElement>["randomIdReturn"]; 
+    randomIdInputReturn: UseRandomIdReturnType<ContainerElement, LabelElement>["randomIdReturn"];
     randomIdLabelReturn: UseRandomIdReturnType<LabelElement, ContainerElement>["randomIdReturn"];
 }
 
-export interface UseToolbarSubInfo<ChildElement extends Element> extends UseListNavigationSingleSelectionSortableChildInfo<ChildElement> {
+export interface UseToolbarSubInfo<ChildElement extends Element> extends UseCompleteListNavigationChildInfo<ChildElement> {
 
 }
 
@@ -77,14 +77,15 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
         rovingTabIndexParameters,
         singleSelectionParameters: { initiallySelectedIndex: selectedIndex, onSelectedIndexChange: onSelectedIndexChange ?? null },
         sortableChildrenParameters,
+        paginatedChildrenParameters: { paginationMax: null, paginationMin: null },
         typeaheadNavigationParameters,
         linearNavigationParameters: { ...linearNavigationParameters, navigationDirection: orientation },
     });
 
-    const _v: void = useSingleSelectionDeclarative({ 
-        singleSelectionDeclarativeParameters: { selectedIndex }, 
+    const _v: void = useSingleSelectionDeclarative({
+        singleSelectionDeclarativeParameters: { selectedIndex },
         singleSelectionReturn: { changeSelectedIndex: listNavReturn.singleSelectionReturn.changeSelectedIndex }
-     })
+    })
 
     const { propsInput: propsToolbar, propsLabel, randomIdInputReturn, randomIdLabelReturn } = useLabelSynthetic<ContainerElement, LabelElement>({
         labelParameters: { ...labelParameters, onLabelClick: listNavReturn.rovingTabIndexReturn.focusSelf },
@@ -97,7 +98,7 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
         context,
         propsLabel,
         propsToolbar: useMergedProps(propsToolbar, props),
-        randomIdInputReturn, 
+        randomIdInputReturn,
         randomIdLabelReturn,
         ...listNavReturn
     }

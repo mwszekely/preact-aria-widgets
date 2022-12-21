@@ -38,6 +38,32 @@ Other design decisions:
 
 Documentation, testing, production-readiness are all TODO. See the demos for how to use.
 
+````tsx
+function YourCheckboxWithANicerInterface({ checked, onChange }: { checked: boolean, onChange: (next: boolean) => void }) {
+
+    // The components provided are intentionally extremely verbose,
+    // but in a way that can be used to create easy-to-use interfaces.
+    return (
+        <Checkbox<HTMLInputElement, HTMLLabelElement>
+                ariaLabel={null}
+                disabled={disabled}
+                checked={checked}
+                onCheckedChange={(e) => setChecked(e[EventDetail].checked)}
+                labelPosition={"separate"}
+                tagInput="input"
+                tagLabel="label"
+                render={defaultRenderCheckboxLike({
+                    labelPosition: "separate",
+                    tagInput: "input",
+                    tagLabel: "label",
+                    makePropsInput: (info) => useMergedProps<HTMLInputElement>(info.propsInput, { className: "checkbox-input" }),
+                    makePropsLabel: (info) => useMergedProps<HTMLLabelElement>(info.propsLabel, { className: "checkbox-label", children: `Demo checkbox` })
+                })}
+            />
+    );
+}
+````
+
 Current components:
 
 1. Accordion

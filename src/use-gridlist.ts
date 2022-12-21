@@ -6,11 +6,13 @@ import {
     GridSingleSelectSortableChildRowInfo,
     useCompleteGridNavigation,
     useCompleteGridNavigationCell,
+    UseCompleteGridNavigationCellInfo,
     UseCompleteGridNavigationCellParameters,
     UseCompleteGridNavigationCellReturnType,
     UseCompleteGridNavigationParameters,
     UseCompleteGridNavigationReturnType,
     useCompleteGridNavigationRow,
+    UseCompleteGridNavigationRowInfo,
     UseCompleteGridNavigationRowParameters,
     UseCompleteGridNavigationRowReturnType,
     useMergedProps,
@@ -67,8 +69,8 @@ export interface UseGridlistRowParameters<GridlistRowElement extends Element, Gr
 export interface UseGridlistCellReturnType<GridlistCellElement extends Element, CM extends GridlistCellInfo<GridlistCellElement>> extends UseCompleteGridNavigationCellReturnType<GridlistCellElement, CM> { }
 export interface UseGridlistCellParameters<GridlistCellElement extends Element, CM extends GridlistCellInfo<GridlistCellElement>> extends UseCompleteGridNavigationCellParameters<GridlistCellElement, CM> { }
 
-export interface GridlistRowInfo<GridlistRowElement extends Element, GridlistCellElement extends Element> extends GridSingleSelectSortableChildRowInfo<GridlistRowElement, GridlistCellElement> { }
-export interface GridlistCellInfo<GridlistCellElement extends Element> extends GridSingleSelectSortableChildCellInfo<GridlistCellElement> { }
+export interface GridlistRowInfo<GridlistRowElement extends Element, GridlistCellElement extends Element> extends UseCompleteGridNavigationRowInfo<GridlistRowElement, GridlistCellElement> { }
+export interface GridlistCellInfo<GridlistCellElement extends Element> extends UseCompleteGridNavigationCellInfo<GridlistCellElement> { }
 
 export function useGridlist<GridlistElement extends Element, GridlistRowElement extends Element, GridlistCellElement extends Element, LabelElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>>({
     linearNavigationParameters,
@@ -77,6 +79,7 @@ export function useGridlist<GridlistElement extends Element, GridlistRowElement 
     labelParameters,
     gridlistParameters: { selectionLimit, groupingType, selectedIndex, onSelectedIndexChange },
     gridNavigationParameters,
+    paginatedChildrenParameters,
     rearrangeableChildrenParameters,
     sortableChildrenParameters
 }: UseGridlistParameters<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM>): UseGridlistReturnType<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM, CM> {
@@ -114,6 +117,7 @@ export function useGridlist<GridlistElement extends Element, GridlistRowElement 
         sortableChildrenParameters,
         typeaheadNavigationParameters,
         gridNavigationParameters,
+        paginatedChildrenParameters,
         rearrangeableChildrenParameters
     });
 

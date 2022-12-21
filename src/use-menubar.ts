@@ -127,7 +127,8 @@ export function useMenubarChild<MenuItemElement extends Element>({
         props,
         singleSelectionChildReturn,
         rovingTabIndexChildReturn,
-        managedChildReturn
+        managedChildReturn,
+        paginatedChildReturn
     } = useToolbarChild<MenuItemElement>({
         completeListNavigationChildParameters,
         context,
@@ -166,6 +167,7 @@ export function useMenubarChild<MenuItemElement extends Element>({
     return {
         hasCurrentFocusReturn,
         pressReturn,
+        paginatedChildReturn,
         props,
         singleSelectionChildReturn,
         rovingTabIndexChildReturn,

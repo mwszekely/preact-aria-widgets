@@ -2,6 +2,7 @@ import { h } from "preact";
 import {
     CompleteListNavigationContext, useCompleteListNavigation,
     useCompleteListNavigationChild,
+    UseCompleteListNavigationChildInfo,
     UseCompleteListNavigationChildParameters,
     UseCompleteListNavigationChildReturnType,
     UseCompleteListNavigationParameters,
@@ -58,7 +59,7 @@ export interface UseListboxItemParameters<ListItemElement extends Element, M ext
     context: UseListboxContext<any, ListItemElement, M>;
 }
 
-export interface ListboxInfo<ListItemElement extends Element> extends UseListNavigationSingleSelectionSortableChildInfo<ListItemElement> {
+export interface ListboxInfo<ListItemElement extends Element> extends UseCompleteListNavigationChildInfo<ListItemElement> {
 
 }
 
@@ -68,6 +69,7 @@ export function useListbox<ListElement extends Element, ListItemElement extends 
     rovingTabIndexParameters,
     sortableChildrenParameters,
     typeaheadNavigationParameters,
+    paginatedChildrenParameters,
     labelParameters,
     listboxParameters: { selectionLimit, groupingType, selectedIndex, onSelectedIndexChange }
 }: UseListboxParameters<ListElement, ListItemElement, LabelElement, M>): UseListboxReturnType<ListElement, ListItemElement, LabelElement, M> {
@@ -104,6 +106,7 @@ export function useListbox<ListElement extends Element, ListItemElement extends 
         rovingTabIndexParameters,
         singleSelectionParameters: { initiallySelectedIndex: selectedIndex, onSelectedIndexChange },
         sortableChildrenParameters,
+        paginatedChildrenParameters,
         typeaheadNavigationParameters
     });
 
@@ -163,6 +166,7 @@ export function useListboxItem<ListItemElement extends Element, M extends Listbo
         managedChildReturn,
         pressReturn,
         props,
+        paginatedChildReturn,
         rovingTabIndexChildReturn,
         singleSelectionChildReturn
     } = useCompleteListNavigationChild<ListItemElement, M, never>({
@@ -187,6 +191,7 @@ export function useListboxItem<ListItemElement extends Element, M extends Listbo
         managedChildReturn,
         pressReturn,
         props,
+        paginatedChildReturn,
         rovingTabIndexChildReturn,
         singleSelectionChildReturn
     }

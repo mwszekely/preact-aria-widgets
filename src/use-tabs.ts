@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { CompleteListNavigationContext, generateRandomId, ManagedChildInfo, OnChildrenMountChange, returnTrue, useChildrenFlag, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseListNavigationSingleSelectionSortableChildInfo, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, useMergedProps, useStableCallback, useStableObject, useState } from "preact-prop-helpers";
+import { CompleteListNavigationContext, generateRandomId, ManagedChildInfo, OnChildrenMountChange, returnTrue, useChildrenFlag, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseListNavigationSingleSelectionSortableChildInfo, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, useMergedProps, useStableCallback, useStableObject, useState } from "preact-prop-helpers";
 import { StateUpdater, useCallback, useLayoutEffect } from "preact/hooks";
 import { debugLog, EventDetail, OmitStrong, Prefices } from "./props";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
@@ -11,7 +11,7 @@ interface TabPanelInfo extends ManagedChildInfo<number> {
     setVisibleIndex: (newIndex: number | null, previousIndex: number | null) => void; //StateUpdater<number | null>;
 }
 
-interface TabInfo<E extends Element> extends UseListNavigationSingleSelectionSortableChildInfo<E> { }
+interface TabInfo<E extends Element> extends UseCompleteListNavigationChildInfo<E> { }
 
 
 export type TabsChangeEvent<E extends Element> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
@@ -55,7 +55,7 @@ export interface UseTabReturnType<TabElement extends Element> extends UseComplet
 
 
 export interface UseTabLabelParameters { }
-interface UseTabListParameters<TabContainerElement extends Element, TabElement extends Element> extends OmitStrong<UseCompleteListNavigationParameters<TabContainerElement, TabElement, TabInfo<TabElement>>, "linearNavigationParameters"> {
+interface UseTabListParameters<TabContainerElement extends Element, TabElement extends Element> extends OmitStrong<UseCompleteListNavigationParameters<TabContainerElement, TabElement, TabInfo<TabElement>>, "paginatedChildrenParameters" | "linearNavigationParameters"> {
     linearNavigationParameters: OmitStrong<UseCompleteListNavigationParameters<TabContainerElement, TabElement, TabInfo<TabElement>>["linearNavigationParameters"], "navigationDirection">;
     //tabs: { onSelectedIndexChange(e: EnhancedEvent<TabElement, Event, { selectedIndex: number }>): void; };
     //childrenHaveFocus: UseChildrenHaveFocusParameters["childrenHaveFocus"];
@@ -204,7 +204,8 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
         },
         typeaheadNavigationParameters,
         rearrangeableChildrenParameters,
-        sortableChildrenParameters
+        sortableChildrenParameters,
+        paginatedChildrenParameters: { paginationMax: null, paginationMin: null }
     });
 
 

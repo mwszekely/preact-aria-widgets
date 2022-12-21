@@ -15,6 +15,7 @@ interface GridlistPropsBase<GridlistElement extends Element, GridlistRowElement 
     Get<UseGridlistParameters<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM>, "gridNavigationParameters">,
     Get<UseGridlistParameters<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM>, "rearrangeableChildrenParameters">,
     Get<UseGridlistParameters<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM>, "sortableChildrenParameters">,
+    Get<UseGridlistParameters<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM>, "paginatedChildrenParameters">,
     Get<UseGridlistParameters<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM>, "labelParameters">,
     Get<UseGridlistParameters<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM>, "gridlistParameters"> {
     ref?: Ref<UseGridlistReturnType<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM, CM>>;
@@ -122,6 +123,8 @@ export const Gridlist = memoForwardRef(function GridlistU<GridlistElement extend
     pageNavigationSize,
     selectionLimit,
     untabbable,
+    paginationMax,
+    paginationMin,
     compare,
     getIndex,
     onTabbableColumnChange,
@@ -166,6 +169,10 @@ export const Gridlist = memoForwardRef(function GridlistU<GridlistElement extend
         },
         sortableChildrenParameters: {
             compare: compare ?? null
+        },
+        paginatedChildrenParameters: {
+            paginationMax: paginationMax ?? null,
+            paginationMin: paginationMin ?? null
         }
     });
 

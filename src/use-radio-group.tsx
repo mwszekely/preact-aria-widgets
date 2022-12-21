@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { CompleteListNavigationContext, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseListNavigationSingleSelectionSortableChildInfo, useMergedProps, useRefElement, useSingleSelectionDeclarative, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
+import { CompleteListNavigationContext, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseListNavigationSingleSelectionSortableChildInfo, useMergedProps, useRefElement, useSingleSelectionDeclarative, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
 import { useEffect, useLayoutEffect, useRef } from "preact/hooks";
 import { debugLog, EnhancedEvent, OmitStrong, Prefices } from "./props";
 import { FocusableLabelElement, LabelPosition, useCheckboxLike, UseCheckboxLikeParameters, UseCheckboxLikeReturnType, useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
@@ -7,7 +7,7 @@ import { FocusableLabelElement, LabelPosition, useCheckboxLike, UseCheckboxLikeP
 //type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RadioChangeEvent<E extends EventTarget, V extends number | string> = EnhancedEvent<E, Event, { selectedValue: V | undefined }>;
 
-export interface UseRadioGroupParameters<V extends string | number, GroupElement extends Element, _GroupLabelElement extends Element, TabbableChildElement extends Element> extends OmitStrong<UseCompleteListNavigationParameters<GroupElement, TabbableChildElement, RadioSubInfo<TabbableChildElement, V>>, "singleSelectionParameters"> {
+export interface UseRadioGroupParameters<V extends string | number, GroupElement extends Element, _GroupLabelElement extends Element, TabbableChildElement extends Element> extends OmitStrong<UseCompleteListNavigationParameters<GroupElement, TabbableChildElement, RadioSubInfo<TabbableChildElement, V>>, "paginatedChildrenParameters" | "singleSelectionParameters"> {
     radioGroupParameters: {
         name: string;
 
@@ -60,7 +60,7 @@ export interface UseRadioGroupReturnTypeWithHooks<V extends string | number, G e
     useRadio: UseRadio<V, I, IL, C, K>;
 }*/
 
-export interface RadioSubInfo<TabbableChildElement extends Element, V extends string | number> extends UseListNavigationSingleSelectionSortableChildInfo<TabbableChildElement> {
+export interface RadioSubInfo<TabbableChildElement extends Element, V extends string | number> extends UseCompleteListNavigationChildInfo<TabbableChildElement> {
     getValue2(): V;
 }
 
@@ -136,7 +136,8 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
         rovingTabIndexParameters,
         singleSelectionParameters: { initiallySelectedIndex: selectedIndex, onSelectedIndexChange: setSelectedIndex },
         sortableChildrenParameters,
-        typeaheadNavigationParameters
+        typeaheadNavigationParameters,
+        paginatedChildrenParameters: { paginationMin: null, paginationMax: null }
     });
 
     const _v: void = useSingleSelectionDeclarative({
@@ -237,7 +238,8 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
         managedChildReturn,
         pressReturn,
         rovingTabIndexChildReturn,
-        singleSelectionChildReturn
+        singleSelectionChildReturn,
+        paginatedChildReturn
     } = useCompleteListNavigationChild<TabbableChildElement, RadioSubInfo<TabbableChildElement, V>, never>({
         completeListNavigationChildParameters: { getValue2: getValue, ...completeListNavigationChildParameters },
         managedChildParameters,
@@ -321,7 +323,8 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
         rovingTabIndexChildReturn,
         pressReturn,
         singleSelectionChildReturn,
-        checkboxLikeReturn
+        checkboxLikeReturn,
+        paginatedChildReturn
     }
 
 }

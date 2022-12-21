@@ -20,6 +20,7 @@ interface TableSectionPropsBase<SectionElement extends Element, RowElement exten
     Get<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "rearrangeableChildrenParameters">,
     Get<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "rovingTabIndexParameters">,
     Get<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "singleSelectionParameters">,
+    Get<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "paginatedChildrenParameters">,
     Get<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "tableSectionParameters"> {
     ref?: Ref<UseTableSectionReturnType<SectionElement, RowElement, CellElement, RM, CM>>;
 }
@@ -138,6 +139,8 @@ export const TableSection = memoForwardRef(function TableSection<SectionElement 
     onTabbableColumnChange,
     onTabbableIndexChange,
     pageNavigationSize,
+    paginationMax,
+    paginationMin,
     render,
     location,
     tagTableSection
@@ -151,6 +154,10 @@ export const TableSection = memoForwardRef(function TableSection<SectionElement 
             navigatePastStart: navigatePastStart ?? "wrap",
             pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
         },
+        paginatedChildrenParameters: { 
+            paginationMax: paginationMax ?? null, 
+            paginationMin: paginationMin ?? null
+         },
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
         rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable: untabbable ?? false },
         singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? null, onSelectedIndexChange: onSelectedIndexChange ?? null },

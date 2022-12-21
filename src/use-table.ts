@@ -3,8 +3,8 @@ import {
     Compare,
     CompleteGridNavigationContext,
     CompleteGridNavigationRowContext, GridSingleSelectSortableChildCellInfo, GridSingleSelectSortableChildRowInfo, PassiveStateUpdater, returnNull, useCompleteGridNavigation,
-    useCompleteGridNavigationCell, UseCompleteGridNavigationCellParameters, UseCompleteGridNavigationCellReturnType, UseCompleteGridNavigationParameters,
-    UseCompleteGridNavigationReturnType, useCompleteGridNavigationRow, UseCompleteGridNavigationRowParameters, UseCompleteGridNavigationRowReturnType, useMergedProps, usePassiveState, useStableCallback
+    useCompleteGridNavigationCell, UseCompleteGridNavigationCellInfo, UseCompleteGridNavigationCellParameters, UseCompleteGridNavigationCellReturnType, UseCompleteGridNavigationParameters,
+    UseCompleteGridNavigationReturnType, useCompleteGridNavigationRow, UseCompleteGridNavigationRowInfo, UseCompleteGridNavigationRowParameters, UseCompleteGridNavigationRowReturnType, useMergedProps, usePassiveState, useStableCallback
 } from "preact-prop-helpers";
 import { useCallback, useEffect, useRef } from "preact/hooks";
 import { ElementToTag, OmitStrong, Prefices } from "./props";
@@ -74,8 +74,8 @@ export interface UseTableCellParameters<TableCellElement extends Element, CM ext
     context: UseTableRowContext<any, TableCellElement, CM>;
 }
 
-export interface TableRowInfo<TableRowElement extends Element, TableCellElement extends Element> extends GridSingleSelectSortableChildRowInfo<TableRowElement, TableCellElement> { }
-export interface TableCellInfo<TableCellElement extends Element> extends GridSingleSelectSortableChildCellInfo<TableCellElement> {
+export interface TableRowInfo<TableRowElement extends Element, TableCellElement extends Element> extends UseCompleteGridNavigationRowInfo<TableRowElement, TableCellElement> { }
+export interface TableCellInfo<TableCellElement extends Element> extends UseCompleteGridNavigationCellInfo<TableCellElement> {
     getSortValue(): unknown;
 }
 
@@ -162,6 +162,7 @@ export function useTableSection<TableSectionElement extends Element, TableRowEle
     singleSelectionParameters,
     gridNavigationParameters,
     rearrangeableChildrenParameters,
+    paginatedChildrenParameters,
     tableSectionParameters: { tagTableSection, location },
     context: { tableContext }
 }: UseTableSectionParameters<TableSectionElement, TableRowElement, TableCellElement, RM>): UseTableSectionReturnType<TableSectionElement, TableRowElement, TableCellElement, RM, CM> {
@@ -180,6 +181,7 @@ export function useTableSection<TableSectionElement extends Element, TableRowEle
         linearNavigationParameters,
         rovingTabIndexParameters,
         singleSelectionParameters,
+        paginatedChildrenParameters,
         sortableChildrenParameters: {
             compare: useCallback<Compare<RM>>((lhs, rhs) => {
                 return fuzzyCompare(lhs?.getSortValue?.(), rhs?.getSortValue?.());
