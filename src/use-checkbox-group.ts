@@ -203,6 +203,7 @@ export function useCheckboxGroup<GroupElement extends Element, TCE extends Eleme
         rearrangeableChildrenReturn,
         rovingTabIndexReturn,
         singleSelectionReturn,
+        paginatedChildrenReturn,
         sortableChildrenReturn,
         typeaheadNavigationReturn
     } = useCompleteListNavigation<GroupElement, TCE, CheckboxGroupInfo<TCE>>({
@@ -305,6 +306,7 @@ export function useCheckboxGroup<GroupElement extends Element, TCE extends Eleme
         }),
         childrenHaveFocusReturn,
         props,
+        paginatedChildrenReturn,
         rearrangeableChildrenReturn,
         singleSelectionReturn,
         sortableChildrenReturn,

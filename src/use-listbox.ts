@@ -95,6 +95,7 @@ export function useListbox<ListElement extends Element, ListItemElement extends 
         linearNavigationReturn,
         managedChildrenReturn,
         props,
+        paginatedChildrenReturn,
         rearrangeableChildrenReturn,
         rovingTabIndexReturn,
         singleSelectionReturn,
@@ -139,6 +140,7 @@ export function useListbox<ListElement extends Element, ListItemElement extends 
             })
         }),
         linearNavigationReturn,
+        paginatedChildrenReturn,
         managedChildrenReturn,
         rearrangeableChildrenReturn,
         rovingTabIndexReturn,

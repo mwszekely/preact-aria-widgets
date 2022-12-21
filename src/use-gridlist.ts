@@ -109,6 +109,7 @@ export function useGridlist<GridlistElement extends Element, GridlistRowElement 
         singleSelectionReturn,
         typeaheadNavigationReturn,
         rearrangeableChildrenReturn,
+        paginatedChildrenReturn,
         sortableChildrenReturn
     } = useCompleteGridNavigation<GridlistElement, GridlistRowElement, GridlistCellElement, RM, CM>({
         linearNavigationParameters,
@@ -157,6 +158,7 @@ export function useGridlist<GridlistElement extends Element, GridlistRowElement 
         rearrangeableChildrenReturn,
         sortableChildrenReturn,
         typeaheadNavigationReturn,
+        paginatedChildrenReturn,
         propsGridlist,
         propsGridlistLabel: propsLabelLabel
     }

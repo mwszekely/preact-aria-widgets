@@ -176,6 +176,7 @@ export function useTableSection<TableSectionElement extends Element, TableRowEle
         singleSelectionReturn,
         typeaheadNavigationReturn,
         rearrangeableChildrenReturn,
+        paginatedChildrenReturn,
         sortableChildrenReturn
     } = useCompleteGridNavigation<TableSectionElement, TableRowElement, TableCellElement, RM, CM>({
         linearNavigationParameters,
@@ -226,6 +227,7 @@ export function useTableSection<TableSectionElement extends Element, TableRowEle
         rearrangeableChildrenReturn,
         sortableChildrenReturn,
         typeaheadNavigationReturn,
+        paginatedChildrenReturn,
         propsTableSection: props
     }
 }
