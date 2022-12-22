@@ -130,6 +130,7 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
         rovingTabIndexReturn,
         singleSelectionReturn,
         paginatedChildrenReturn,
+        staggeredChildrenReturn,
         sortableChildrenReturn,
         typeaheadNavigationReturn
     } = useCompleteListNavigation<G, TCE, RadioSubInfo<TCE, V>>({
@@ -180,6 +181,7 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
             ...context,
             radioContext: { name, byName: byName.current }
         },
+        staggeredChildrenReturn,
         linearNavigationReturn,
         managedChildrenReturn,
         radioGroupReturn: { selectedIndex },

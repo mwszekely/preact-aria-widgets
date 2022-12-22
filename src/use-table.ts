@@ -176,6 +176,7 @@ export function useTableSection<TableSectionElement extends Element, TableRowEle
         rovingTabIndexReturn,
         singleSelectionReturn,
         typeaheadNavigationReturn,
+        staggeredChildrenReturn,
         rearrangeableChildrenReturn,
         paginatedChildrenReturn,
         sortableChildrenReturn
@@ -222,6 +223,7 @@ export function useTableSection<TableSectionElement extends Element, TableRowEle
             ...context,
             tableContext
         },
+        staggeredChildrenReturn,
         linearNavigationReturn,
         managedChildrenReturn,
         rovingTabIndexReturn,

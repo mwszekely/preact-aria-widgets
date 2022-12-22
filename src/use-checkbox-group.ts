@@ -204,6 +204,7 @@ export function useCheckboxGroup<GroupElement extends Element, TCE extends Eleme
         rearrangeableChildrenReturn,
         rovingTabIndexReturn,
         singleSelectionReturn,
+        staggeredChildrenReturn,
         paginatedChildrenReturn,
         sortableChildrenReturn,
         typeaheadNavigationReturn
@@ -308,6 +309,7 @@ export function useCheckboxGroup<GroupElement extends Element, TCE extends Eleme
         }),
         childrenHaveFocusReturn,
         props,
+        staggeredChildrenReturn,
         paginatedChildrenReturn,
         rearrangeableChildrenReturn,
         singleSelectionReturn,
