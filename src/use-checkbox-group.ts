@@ -190,7 +190,8 @@ export function useCheckboxGroup<GroupElement extends Element, TCE extends Eleme
     rearrangeableChildrenParameters,
     sortableChildrenParameters,
     rovingTabIndexParameters,
-    typeaheadNavigationParameters
+    typeaheadNavigationParameters,
+    staggeredChildrenParameters
 }: UseCheckboxGroupParameters<GroupElement, TCE, CheckboxGroupInfo<TCE>>): UseCheckboxGroupReturnType<GroupElement, TCE, CheckboxGroupInfo<TCE>> {
     debugLog("useCheckboxGroup");
     //const onUpdateChildren = useStableCallback(onUpdateChildrenUnstable ?? (() => {}));
@@ -208,6 +209,7 @@ export function useCheckboxGroup<GroupElement extends Element, TCE extends Eleme
         typeaheadNavigationReturn
     } = useCompleteListNavigation<GroupElement, TCE, CheckboxGroupInfo<TCE>>({
         linearNavigationParameters,
+        staggeredChildrenParameters,
         rearrangeableChildrenParameters,
         rovingTabIndexParameters,
         singleSelectionParameters: { initiallySelectedIndex: null, onSelectedIndexChange: null },
@@ -342,6 +344,7 @@ export function useCheckboxGroupParent<TCE extends Element>({
         props,
         paginatedChildReturn,
         rovingTabIndexChildReturn,
+        staggeredChildReturn,
         singleSelectionChildReturn,
     } = useCompleteListNavigationChild<TCE, CheckboxGroupInfo<TCE>, never>({
         completeListNavigationChildParameters,
@@ -371,6 +374,7 @@ export function useCheckboxGroupParent<TCE extends Element>({
         checkboxGroupParentReturn,
         hasCurrentFocusReturn,
         managedChildReturn,
+        staggeredChildReturn,
         pressReturn,
         props: useMergedProps({ "aria-controls": ariaControls } as h.JSX.HTMLAttributes<TCE>, props),
         rovingTabIndexChildReturn,
@@ -441,6 +445,8 @@ export function useCheckboxGroupChild<TCE extends Element>({
         managedChildReturn,
         pressReturn,
         props,
+        singleSelectionChildReturn: _singleSelectionChildReturn,
+        staggeredChildReturn,
         paginatedChildReturn,
         rovingTabIndexChildReturn,
     } = useCompleteListNavigationChild<TCE, CheckboxGroupInfo<TCE>, never>({
@@ -466,6 +472,7 @@ export function useCheckboxGroupChild<TCE extends Element>({
         },
         hasCurrentFocusReturn,
         managedChildReturn,
+        staggeredChildReturn,
         paginatedChildReturn,
         pressReturn,
         props,

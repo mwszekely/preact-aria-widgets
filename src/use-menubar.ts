@@ -54,6 +54,7 @@ export function useMenubar<MenuParentElement extends Element, MenuItemElement ex
     sortableChildrenParameters,
     rovingTabIndexParameters,
     typeaheadNavigationParameters,
+    staggeredChildrenParameters,
     toolbarParameters,
     menubarParameters: { role },
     labelParameters
@@ -84,6 +85,7 @@ export function useMenubar<MenuParentElement extends Element, MenuItemElement ex
         sortableChildrenParameters,
         singleSelectionDeclarativeParameters,
         typeaheadNavigationParameters,
+        staggeredChildrenParameters,
         toolbarParameters: { role, ...toolbarParameters },
         labelParameters
     });
@@ -130,6 +132,7 @@ export function useMenubarChild<MenuItemElement extends Element>({
         singleSelectionChildReturn,
         rovingTabIndexChildReturn,
         managedChildReturn,
+        staggeredChildReturn,
         paginatedChildReturn
     } = useToolbarChild<MenuItemElement>({
         completeListNavigationChildParameters,
@@ -173,6 +176,7 @@ export function useMenubarChild<MenuItemElement extends Element>({
         props,
         singleSelectionChildReturn,
         rovingTabIndexChildReturn,
+        staggeredChildReturn,
         managedChildReturn
     };
 }

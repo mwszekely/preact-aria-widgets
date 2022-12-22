@@ -16,6 +16,7 @@ interface MenuPropsBase<MenuSurfaceElement extends Element, MenuParentElement ex
     Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "rovingTabIndexParameters">,
     Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "typeaheadNavigationParameters">,
     Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "dismissParameters">,
+    Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "staggeredChildrenParameters">,
     Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "escapeDismissParameters">,
     Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "rearrangeableChildrenParameters">,
     Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "sortableChildrenParameters">,
@@ -61,6 +62,7 @@ export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element,
     pageNavigationSize,
     parentDepth,
     untabbable,
+    staggered,
     onOpen,
 
     getWindow,
@@ -79,6 +81,9 @@ export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element,
             pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize),
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap"
+        },
+        staggeredChildrenParameters: {
+            staggered: staggered || false
         },
         dismissParameters: {
             closeOnBackdrop: closeOnBackdrop ?? true,

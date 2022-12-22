@@ -15,6 +15,7 @@ interface ListboxPropsBase<ListElement extends Element, ListItemElement extends 
     Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "rearrangeableChildrenParameters">,
     Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "rovingTabIndexParameters">,
     Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "sortableChildrenParameters">,
+    Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "staggeredChildrenParameters">,
     Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "paginatedChildrenParameters">,
     Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "typeaheadNavigationParameters"> {
     ref?: Ref<UseListboxReturnType<ListElement, ListItemElement, LabelElement, M>>;
@@ -54,6 +55,7 @@ export const GroupedListbox = memo(function GroupedListbox<LabelElement extends 
             disableHomeEndKeys: true,
             pageNavigationSize: 1
         },
+        staggeredChildrenParameters: { staggered: false },
         paginatedChildrenParameters: { paginationMax: null, paginationMin: null },
         listboxParameters: { selectionLimit, groupingType: "with-groups", selectedIndex: null, onSelectedIndexChange: null },
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", undefined) },
@@ -87,6 +89,7 @@ export const Listbox = memoForwardRef(function Listbox<ListElement extends Eleme
     noTypeahead,
     onSelectedIndexChange,
     onTabbableIndexChange,
+    staggered,
     pageNavigationSize,
     paginationMax,
     paginationMin,
@@ -98,6 +101,9 @@ export const Listbox = memoForwardRef(function Listbox<ListElement extends Eleme
     const listboxGroupInfo = useContext(ListboxGroupContext);
     const info = useListbox<ListElement, ListItemElement, LabelElement, ListboxInfo<ListItemElement>>({
         labelParameters: { ariaLabel },
+        staggeredChildrenParameters: {
+            staggered: staggered || false
+        },
         linearNavigationParameters: {
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap",

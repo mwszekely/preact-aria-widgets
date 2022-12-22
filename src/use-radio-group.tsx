@@ -70,6 +70,7 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
     rovingTabIndexParameters,
     sortableChildrenParameters,
     typeaheadNavigationParameters,
+    staggeredChildrenParameters,
     labelParameters,
     radioGroupParameters: { name, onSelectedValueChange, selectedValue },
 }: UseRadioGroupParameters<V, G, GL, TCE>): UseRadioGroupReturnType<V, G, GL, TCE> {
@@ -138,6 +139,7 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
         singleSelectionParameters: { initiallySelectedIndex: selectedIndex, onSelectedIndexChange: setSelectedIndex },
         sortableChildrenParameters,
         typeaheadNavigationParameters,
+        staggeredChildrenParameters,
         paginatedChildrenParameters: { paginationMin: null, paginationMax: null }
     });
 
@@ -240,6 +242,7 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
         managedChildReturn,
         pressReturn,
         rovingTabIndexChildReturn,
+        staggeredChildReturn,
         singleSelectionChildReturn,
         paginatedChildReturn
     } = useCompleteListNavigationChild<TabbableChildElement, RadioSubInfo<TabbableChildElement, V>, never>({
@@ -322,6 +325,7 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
         randomIdInputReturn,
         randomIdLabelReturn,
         hasCurrentFocusReturn,
+        staggeredChildReturn,
         rovingTabIndexChildReturn,
         pressReturn,
         singleSelectionChildReturn,

@@ -21,6 +21,7 @@ interface TableSectionPropsBase<SectionElement extends Element, RowElement exten
     Get<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "rovingTabIndexParameters">,
     Get<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "singleSelectionParameters">,
     Get<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "paginatedChildrenParameters">,
+    Get<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "staggeredChildrenParameters">,
     Get<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "tableSectionParameters"> {
     ref?: Ref<UseTableSectionReturnType<SectionElement, RowElement, CellElement, RM, CM>>;
 }
@@ -141,12 +142,14 @@ export const TableSection = memoForwardRef(function TableSection<SectionElement 
     pageNavigationSize,
     paginationMax,
     paginationMin,
+    staggered,
     render,
     location,
     tagTableSection
 }: TableSectionProps<SectionElement, RowElement, CellElement, TableRowInfo<RowElement, CellElement>, TableCellInfo<CellElement>>) {
     const info = useTableSection<SectionElement, RowElement, CellElement, TableRowInfo<RowElement, CellElement>, TableCellInfo<CellElement>>({
         gridNavigationParameters: { onTabbableColumnChange: onTabbableColumnChange ?? null },
+        staggeredChildrenParameters: { staggered: staggered || false },
         linearNavigationParameters: {
             disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys),
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),

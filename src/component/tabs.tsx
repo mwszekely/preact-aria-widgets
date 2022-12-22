@@ -13,6 +13,7 @@ interface TabsPropsBase<TabContainerElement extends Element, TabElement extends 
     Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement>, "rovingTabIndexParameters">,
     Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement>, "singleSelectionParameters">,
     Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement>, "sortableChildrenParameters">,
+    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement>, "staggeredChildrenParameters">,
     Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement>, "tabsParameters">,
     Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement>, "typeaheadNavigationParameters"> {
 }
@@ -60,6 +61,7 @@ export const Tabs = memoForwardRef(function Tabs<TabContainerElement extends Ele
     onSelectedIndexChange,
     onTabbableIndexChange,
     orientation,
+    staggered,
     pageNavigationSize,
     groupingType,
     untabbable,
@@ -69,6 +71,7 @@ export const Tabs = memoForwardRef(function Tabs<TabContainerElement extends Ele
 }: TabsProps<TabContainerElement, TabElement, TabLabelElement>, ref?: Ref<any>) {
     const info = useTabs<TabContainerElement, TabElement, TabLabelElement>({
         labelParameters: { ariaLabel },
+        staggeredChildrenParameters: { staggered: staggered || false },
         linearNavigationParameters: {
             disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys),
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),

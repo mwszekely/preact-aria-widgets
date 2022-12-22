@@ -163,6 +163,7 @@ export function useTableSection<TableSectionElement extends Element, TableRowEle
     gridNavigationParameters,
     rearrangeableChildrenParameters,
     paginatedChildrenParameters,
+    staggeredChildrenParameters,
     tableSectionParameters: { tagTableSection, location },
     context: { tableContext }
 }: UseTableSectionParameters<TableSectionElement, TableRowElement, TableCellElement, RM>): UseTableSectionReturnType<TableSectionElement, TableRowElement, TableCellElement, RM, CM> {
@@ -183,6 +184,7 @@ export function useTableSection<TableSectionElement extends Element, TableRowEle
         rovingTabIndexParameters,
         singleSelectionParameters,
         paginatedChildrenParameters,
+        staggeredChildrenParameters,
         sortableChildrenParameters: {
             compare: useCallback<Compare<RM>>((lhs, rhs) => {
                 return fuzzyCompare(lhs?.getSortValue?.(), rhs?.getSortValue?.());

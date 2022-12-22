@@ -16,6 +16,7 @@ interface GridlistPropsBase<GridlistElement extends Element, GridlistRowElement 
     Get<UseGridlistParameters<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM>, "rearrangeableChildrenParameters">,
     Get<UseGridlistParameters<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM>, "sortableChildrenParameters">,
     Get<UseGridlistParameters<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM>, "paginatedChildrenParameters">,
+    Get<UseGridlistParameters<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM>, "staggeredChildrenParameters">,
     Get<UseGridlistParameters<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM>, "labelParameters">,
     Get<UseGridlistParameters<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM>, "gridlistParameters"> {
     ref?: Ref<UseGridlistReturnType<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM, CM>>;
@@ -125,6 +126,7 @@ export const Gridlist = memoForwardRef(function GridlistU<GridlistElement extend
     untabbable,
     paginationMax,
     paginationMin,
+    staggered,
     compare,
     getIndex,
     onTabbableColumnChange,
@@ -143,6 +145,7 @@ export const Gridlist = memoForwardRef(function GridlistU<GridlistElement extend
             onTabbableIndexChange: onTabbableIndexChange ?? null,
             untabbable: untabbable ?? false
         },
+        staggeredChildrenParameters: {  staggered: staggered || false },
         typeaheadNavigationParameters: {
             collator: useDefault("collator", collator),
             noTypeahead: useDefault("noTypeahead", noTypeahead),

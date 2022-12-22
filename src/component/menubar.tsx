@@ -14,6 +14,7 @@ interface MenubarPropsBase<MenuParentElement extends Element, MenuItemElement ex
     Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "rearrangeableChildrenParameters">,
     Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "sortableChildrenParameters">,
     Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "menubarParameters">,
+    Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "staggeredChildrenParameters">,
     Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "labelParameters">,
     Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "toolbarParameters"> {
     //tagLabel: ElementToTag<LabelElement>;
@@ -56,6 +57,7 @@ export const Menubar = memoForwardRef(function MenubarU<ContainerElement extends
     navigatePastStart,
     pageNavigationSize,
     orientation,
+    staggered,
     noTypeahead,
     onTabbableIndexChange,
     compare,
@@ -83,6 +85,7 @@ export const Menubar = memoForwardRef(function MenubarU<ContainerElement extends
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
         },
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
+        staggeredChildrenParameters: { staggered: staggered || false },
         singleSelectionDeclarativeParameters: { selectedIndex: selectedIndex ?? null },
         sortableChildrenParameters: { compare: compare ?? null },
         menubarParameters: { role: role ?? "menubar" },

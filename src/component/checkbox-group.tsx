@@ -13,6 +13,7 @@ export interface CheckboxGroupPropsBase<ParentElement extends Element, TabbableC
     Get<UseCheckboxGroupParameters<ParentElement, TabbableChildElement, M>, "rearrangeableChildrenParameters">,
     Get<UseCheckboxGroupParameters<ParentElement, TabbableChildElement, M>, "sortableChildrenParameters">,
     Get<UseCheckboxGroupParameters<ParentElement, TabbableChildElement, M>, "typeaheadNavigationParameters">,
+    Get<UseCheckboxGroupParameters<ParentElement, TabbableChildElement, M>, "staggeredChildrenParameters">,
     Get<UseCheckboxGroupParameters<ParentElement, TabbableChildElement, M>, "rovingTabIndexParameters"> {
     ref?: Ref<UseCheckboxGroupReturnType<ParentElement, TabbableChildElement, M>>;
 }
@@ -145,6 +146,7 @@ export const CheckboxGroup = memoForwardRef(function CheckboxGroup<ParentElement
     typeaheadTimeout,
     onTabbableIndexChange,
     compare,
+    staggered,
     getIndex,
     untabbable,
     navigatePastEnd,
@@ -161,6 +163,7 @@ export const CheckboxGroup = memoForwardRef(function CheckboxGroup<ParentElement
             navigationDirection,
             pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
         },
+        staggeredChildrenParameters: { staggered: staggered || false },
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
         rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable: untabbable ?? false },
         sortableChildrenParameters: { compare: compare ?? null },

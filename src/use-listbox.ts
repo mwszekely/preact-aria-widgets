@@ -71,6 +71,7 @@ export function useListbox<ListElement extends Element, ListItemElement extends 
     typeaheadNavigationParameters,
     paginatedChildrenParameters,
     labelParameters,
+    staggeredChildrenParameters,
     listboxParameters: { selectionLimit, groupingType, selectedIndex, onSelectedIndexChange }
 }: UseListboxParameters<ListElement, ListItemElement, LabelElement, M>): UseListboxReturnType<ListElement, ListItemElement, LabelElement, M> {
     useEnsureStability("useListbox", selectionLimit);
@@ -108,7 +109,8 @@ export function useListbox<ListElement extends Element, ListItemElement extends 
         singleSelectionParameters: { initiallySelectedIndex: selectedIndex, onSelectedIndexChange },
         sortableChildrenParameters,
         paginatedChildrenParameters,
-        typeaheadNavigationParameters
+        typeaheadNavigationParameters,
+        staggeredChildrenParameters
     });
 
     const _v: void = useSingleSelectionDeclarative({ 
@@ -170,6 +172,7 @@ export function useListboxItem<ListItemElement extends Element, M extends Listbo
         props,
         paginatedChildReturn,
         rovingTabIndexChildReturn,
+        staggeredChildReturn,
         singleSelectionChildReturn
     } = useCompleteListNavigationChild<ListItemElement, M, never>({
         completeListNavigationChildParameters,
@@ -195,7 +198,8 @@ export function useListboxItem<ListItemElement extends Element, M extends Listbo
         props,
         paginatedChildReturn,
         rovingTabIndexChildReturn,
-        singleSelectionChildReturn
+        singleSelectionChildReturn,
+        staggeredChildReturn
     }
 }
 /*

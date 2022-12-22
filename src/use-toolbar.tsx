@@ -60,10 +60,6 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
     linearNavigationParameters,
     toolbarParameters: { orientation, role, onSelectedIndexChange },
     labelParameters,
-    rearrangeableChildrenParameters,
-    rovingTabIndexParameters,
-    sortableChildrenParameters,
-    typeaheadNavigationParameters,
     singleSelectionDeclarativeParameters: { selectedIndex },
     ...listNavParameters
 }: UseToolbarParameters<ContainerElement, ChildElement, UseToolbarSubInfo<ChildElement>>): UseToolbarReturnType<ContainerElement, ChildElement, LabelElement, UseToolbarSubInfo<ChildElement>> {
@@ -73,12 +69,8 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
         ...listNavReturn
     } = useCompleteListNavigation<ContainerElement, ChildElement, UseToolbarSubInfo<ChildElement>>({
         ...listNavParameters,
-        rearrangeableChildrenParameters,
-        rovingTabIndexParameters,
         singleSelectionParameters: { initiallySelectedIndex: selectedIndex, onSelectedIndexChange: onSelectedIndexChange ?? null },
-        sortableChildrenParameters,
         paginatedChildrenParameters: { paginationMax: null, paginationMin: null },
-        typeaheadNavigationParameters,
         linearNavigationParameters: { ...linearNavigationParameters, navigationDirection: orientation },
     });
 

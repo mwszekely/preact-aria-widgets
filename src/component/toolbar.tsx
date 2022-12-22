@@ -14,6 +14,7 @@ export interface ToolbarPropsBase<ToolbarContainerElement extends Element, Toolb
     Get<UseToolbarParameters<ToolbarContainerElement, ToolbarChildElement, M>, "sortableChildrenParameters">,
     Get<UseToolbarParameters<ToolbarContainerElement, ToolbarChildElement, M>, "rearrangeableChildrenParameters">,
     Get<UseToolbarParameters<ToolbarContainerElement, ToolbarChildElement, M>, "labelParameters">,
+    Get<UseToolbarParameters<ToolbarContainerElement, ToolbarChildElement, M>, "staggeredChildrenParameters">,
     Get<UseToolbarParameters<ToolbarContainerElement, ToolbarChildElement, M>, "toolbarParameters"> {
     ref?: Ref<UseToolbarReturnType<ToolbarContainerElement, ToolbarChildElement, LabelElement, M>>;
 }
@@ -61,6 +62,7 @@ export const Toolbar = memoForwardRef(function ToolbarU<ContainerElement extends
     noTypeahead,
     onTabbableIndexChange,
     typeaheadTimeout,
+    staggered,
     ariaLabel
 }: ToolbarProps<ContainerElement, ChildElement, LabelElement, UseToolbarSubInfo<ChildElement>>, ref?: Ref<any>) {
     const listboxReturnType = useToolbar<ContainerElement, ChildElement, LabelElement>({
@@ -79,7 +81,8 @@ export const Toolbar = memoForwardRef(function ToolbarU<ContainerElement extends
             role: role ?? "toolbar",
             onSelectedIndexChange: onSelectedIndexChange ?? null
         },
-        rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable: untabbable ?? false },
+        staggeredChildrenParameters: { staggered: staggered || false },
+        rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable: untabbable || false },
         typeaheadNavigationParameters: { 
             collator: useDefault("collator", collator), 
             noTypeahead: useDefault("noTypeahead", noTypeahead), 

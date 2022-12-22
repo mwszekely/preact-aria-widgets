@@ -139,6 +139,7 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
     rovingTabIndexParameters,
     singleSelectionParameters: { onSelectedIndexChange: ssi, ...singleSelectionParameters },
     sortableChildrenParameters,
+    staggeredChildrenParameters,
     typeaheadNavigationParameters,
     tabsParameters: { orientation, role }
     // tabPanels: { managedChildren: { onChildrenMountChange: ocmc, ...tabPanelsManagedChildren } } 
@@ -204,6 +205,7 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
         },
         typeaheadNavigationParameters,
         rearrangeableChildrenParameters,
+        staggeredChildrenParameters,
         sortableChildrenParameters,
         paginatedChildrenParameters: { paginationMax: null, paginationMin: null }
     });

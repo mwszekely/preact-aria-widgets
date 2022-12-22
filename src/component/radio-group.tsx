@@ -14,6 +14,7 @@ interface RadioGroupPropsBase<V extends string | number, GroupElement extends El
     Get<UseRadioGroupParameters<V, GroupElement, GroupLabelElement, TabbableChildElement>, "labelParameters">,
     Get<UseRadioGroupParameters<V, GroupElement, GroupLabelElement, TabbableChildElement>, "radioGroupParameters">,
     Get<UseRadioGroupParameters<V, GroupElement, GroupLabelElement, TabbableChildElement>, "rearrangeableChildrenParameters">,
+    Get<UseRadioGroupParameters<V, GroupElement, GroupLabelElement, TabbableChildElement>, "staggeredChildrenParameters">,
     Get<UseRadioGroupParameters<V, GroupElement, GroupLabelElement, TabbableChildElement>, "sortableChildrenParameters">,
     Get<UseRadioGroupParameters<V, GroupElement, GroupLabelElement, TabbableChildElement>, "rovingTabIndexParameters">,
     Get<UseRadioGroupParameters<V, GroupElement, GroupLabelElement, TabbableChildElement>, "typeaheadNavigationParameters"> {
@@ -65,6 +66,7 @@ export const RadioGroup = memoForwardRef(function RadioGroup<V extends string | 
     typeaheadTimeout,
     ariaLabel,
     compare,
+    staggered,
     getIndex,
     navigatePastEnd,
     navigatePastStart,
@@ -82,6 +84,7 @@ export const RadioGroup = memoForwardRef(function RadioGroup<V extends string | 
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
             pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
         },
+        staggeredChildrenParameters: { staggered: staggered || false },
         labelParameters: { ariaLabel },
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
         sortableChildrenParameters: { compare: compare ?? null },

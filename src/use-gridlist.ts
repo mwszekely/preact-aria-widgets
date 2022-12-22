@@ -77,6 +77,7 @@ export function useGridlist<GridlistElement extends Element, GridlistRowElement 
     rovingTabIndexParameters,
     typeaheadNavigationParameters,
     labelParameters,
+    staggeredChildrenParameters,
     gridlistParameters: { selectionLimit, groupingType, selectedIndex, onSelectedIndexChange },
     gridNavigationParameters,
     paginatedChildrenParameters,
@@ -114,6 +115,7 @@ export function useGridlist<GridlistElement extends Element, GridlistRowElement 
     } = useCompleteGridNavigation<GridlistElement, GridlistRowElement, GridlistCellElement, RM, CM>({
         linearNavigationParameters,
         rovingTabIndexParameters,
+        staggeredChildrenParameters,
         singleSelectionParameters: { initiallySelectedIndex: selectedIndex, onSelectedIndexChange },
         sortableChildrenParameters,
         typeaheadNavigationParameters,

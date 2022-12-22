@@ -74,6 +74,7 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
     singleSelectionDeclarativeParameters,
     sortableChildrenParameters,
     toolbarParameters,
+    staggeredChildrenParameters,
     typeaheadNavigationParameters,
     menubarParameters
 }: UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenuReturnType<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement, UseMenubarSubInfo<MenuItemElement>> {
@@ -100,6 +101,7 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
         rearrangeableChildrenParameters,
         rovingTabIndexParameters,
         singleSelectionDeclarativeParameters,
+        staggeredChildrenParameters,
         sortableChildrenParameters,
         typeaheadNavigationParameters,
         toolbarParameters: { ...toolbarParameters },
