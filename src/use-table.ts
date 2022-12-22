@@ -279,8 +279,9 @@ export function useTableRow<TableRowElement extends Element, TableCellElement ex
     });
 
     props.role = "gridrow";
-    if (selected)
-        props[singleSelectionChildParameters.ariaPropName ?? "aria-selected"] = "true";
+    // TODO: Unneeded?
+    //if (selected)
+    //    props[singleSelectionChildParameters.ariaPropName ?? "aria-selected"] = "true";
 
     return {
         rowAsChildOfGridReturn,
