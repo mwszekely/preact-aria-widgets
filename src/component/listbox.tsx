@@ -1,7 +1,7 @@
 import { createContext, Ref, VNode } from "preact";
 import { returnNull } from "preact-prop-helpers";
 import { memo } from "preact/compat";
-import { useCallback, useContext, useState } from "preact/hooks";
+import { useCallback, useContext } from "preact/hooks";
 import { ListboxInfo, useListbox, UseListboxContext, useListboxItem, UseListboxItemParameters, UseListboxItemReturnType, UseListboxParameters, UseListboxReturnType } from "../use-listbox";
 import { memoForwardRef, PartialExcept, useDefault } from "./util";
 

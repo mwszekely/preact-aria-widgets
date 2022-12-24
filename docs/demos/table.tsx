@@ -38,8 +38,8 @@ function DemoInput({ index }: { index: number }) {
     return (
         <TableCell<HTMLTableCellElement> getSortValue={() => v} focusSelf={e => {debugger; e.focus()}} tagTableCell="td" index={index} render={info => {
             return (
-                <td {...info.props}>
-                    <input type="text" tabIndex={info.rovingTabIndexChildReturn.tabbable ? 0 : -1} onInput={useCallback((e: h.JSX.TargetedEvent<HTMLInputElement>) => {
+                <td {...info.propsCell}>
+                    <input {...info.propsFocus} type="text" onInput={useCallback((e: h.JSX.TargetedEvent<HTMLInputElement>) => {
                         setV(e.currentTarget.value);
                         e.preventDefault();
                     }, [])} value={v} />
@@ -70,7 +70,7 @@ function DemoTableCell({ index, header }: { index: number, header?: boolean }) {
 
     if (header) {
         const text = `Header #${index}`;
-        return <TableCell<HTMLTableCellElement> getSortValue={returnZero} focusSelf={e => e.focus()} tagTableCell="th" index={index} render={info => <th {...info.props}>{text}<button tabIndex={info.rovingTabIndexChildReturn.tabbable ? 0 : -1} onClick={() => info.tableCellReturn.sortByThisColumn()}>Sort</button></th>} />
+        return <TableCell<HTMLTableCellElement> getSortValue={returnZero} focusSelf={e => e.focus()} tagTableCell="th" index={index} render={info => <th {...info.propsFocus} {...info.propsCell}>{text}<button tabIndex={info.rovingTabIndexChildReturn.tabbable ? 0 : -1} onClick={() => info.tableCellReturn.sortByThisColumn()}>Sort</button></th>} />
     }
     else {
         //const text = `Cell in column #${index}`;
@@ -82,7 +82,7 @@ function DemoTableCell({ index, header }: { index: number, header?: boolean }) {
             default:
                 return <TableCell<HTMLTableCellElement> getSortValue={() => r.current} focusSelf={e => e.focus()} tagTableCell="td" index={index} render={info => {
                     return (
-                        <td {...info.props}>{r.current.toString()}</td>
+                        <td {...info.propsFocus} {...info.propsCell}>{r.current.toString()}</td>
                     )
                 }} />
         }

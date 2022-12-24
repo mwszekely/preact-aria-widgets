@@ -62,7 +62,9 @@ export interface UseTableRowContext<TableRowElement extends Element, TableCellEl
 }
 
 
-export interface UseTableCellReturnType<TableCellElement extends Element, CM extends TableCellInfo<TableCellElement>> extends UseCompleteGridNavigationCellReturnType<TableCellElement, CM> {
+export interface UseTableCellReturnType<TableCellElement extends Element, CM extends TableCellInfo<TableCellElement>> extends Omit<UseCompleteGridNavigationCellReturnType<TableCellElement, CM>, "props"> {
+    propsCell: h.JSX.HTMLAttributes<TableCellElement>;
+    propsFocus: h.JSX.HTMLAttributes<any>;
     tableCellReturn: {
         sortByThisColumn(): SortInfo;
     }
@@ -300,11 +302,10 @@ export function useTableRow<TableRowElement extends Element, TableCellElement ex
 }
 
 export function useTableCell<TableCellElement extends Element, CM extends TableCellInfo<TableCellElement>>({ tableCellParameters: { tagTableCell }, ...p }: UseTableCellParameters<TableCellElement, CM>): UseTableCellReturnType<TableCellElement, CM> {
-    const ret = useCompleteGridNavigationCell<TableCellElement, CM>(p);
-    if (!(tagTableCell == "th" || tagTableCell == "td")) {
-        ret.props.role = "gridcell"
-    }
+    const { props, ...ret } = useCompleteGridNavigationCell<TableCellElement, CM>(p);
     return {
+        propsFocus: props,
+        propsCell: { role: (tagTableCell != "th" && tagTableCell != "td")? "gridcell" : undefined },
         ...ret,
         tableCellReturn: {
             sortByThisColumn: useStableCallback(() => {

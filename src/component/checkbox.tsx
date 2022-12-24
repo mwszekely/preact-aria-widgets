@@ -1,6 +1,6 @@
 import { createElement, h, Ref, VNode } from "preact";
 import { useRefElement } from "preact-prop-helpers";
-import { useImperativeHandle, useState } from "preact/hooks";
+import { useImperativeHandle } from "preact/hooks";
 import { ElementToTag, EventDetail } from "../props";
 import { useCheckbox, UseCheckboxParameters, UseCheckboxReturnType } from "../use-checkbox";
 import { LabelPosition } from "../use-label";
@@ -98,7 +98,7 @@ export const Checkbox = memoForwardRef(function Checkbox<I extends Element, L ex
 
     return render(checkbox);
 });
-
+/*
 export function DemoCheckbox() {
     const [checked, setChecked] = useState(false);
     return (
@@ -113,4 +113,4 @@ export function DemoCheckbox() {
             ariaLabel={null}
         />
     )
-}
+}*/

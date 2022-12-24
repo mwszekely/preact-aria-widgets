@@ -1,7 +1,7 @@
 import { defaultRenderPortal, Dialog, DialogProps } from "../dialog";
 import { cloneElement, ComponentChildren, h, Ref, VNode } from "preact";
 import { generateRandomId, useForceUpdate, useMergedProps } from "preact-prop-helpers";
-import { useCallback, useRef, useState } from "preact/hooks";
+import { useCallback, useRef } from "preact/hooks";
 import { PartialExcept } from "component/util";
 import { getDefaultClass, StandardProps } from "./util";
 /*
