@@ -43,12 +43,13 @@ export const Accordion = memoForwardRef(function Accordion<HeaderButtonElement e
     navigatePastEnd,
     navigatePastStart,
     pageNavigationSize,
+    localStorageKey,
     render,
     ..._rest
 }: AccordionProps<HeaderButtonElement>, ref?: Ref<any>) {
 
     const info = useAccordion<HeaderButtonElement, UseAccordionSectionInfo>({
-        accordionParameters: { initialIndex },
+        accordionParameters: { initialIndex, localStorageKey: localStorageKey ?? null },
         linearNavigationParameters: {
             disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys),
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),

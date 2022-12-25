@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { ManagedChildInfo, OnChildrenMountChange, PassiveStateUpdater, useChildrenFlag, useLinearNavigation, UseLinearNavigationParameters, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, useMergedProps, UsePressReturnType, useRandomId, useRefElement, UseRefElementParameters, UseRefElementReturnType, UseRovingTabIndexChildParameters, useStableCallback, useStableGetter, useStableObject, useState } from "preact-prop-helpers";
+import { ManagedChildInfo, OnChildrenMountChange, PassiveStateUpdater, PersistentStates, useChildrenFlag, useLinearNavigation, UseLinearNavigationParameters, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, useMergedProps, usePersistentState, UsePressReturnType, useRandomId, useRefElement, UseRefElementParameters, UseRefElementReturnType, UseRovingTabIndexChildParameters, useStableCallback, useStableGetter, useStableObject, useState } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { debugLog, DisabledType, OmitStrong, Prefices } from "./props";
 import { ButtonPressEvent, useButton, UseButtonParameters } from "./use-button";
@@ -8,7 +8,7 @@ import { ButtonPressEvent, useButton, UseButtonParameters } from "./use-button";
 //export type UseAccordionSection<HeaderElement extends Element, BodyElement extends Element, M extends UseAccordionSectionInfo> = (args: UseAccordionSectionParameters<HeaderElement, M>) => UseAccordionSectionReturnType<HeaderElement, BodyElement>;
 
 export interface UseAccordionParameters<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo> extends UseManagedChildrenParameters<M> {
-    accordionParameters: { initialIndex?: number | null; }
+    accordionParameters: { initialIndex?: number | null; localStorageKey: keyof PersistentStates | null; }
     linearNavigationParameters: OmitStrong<UseLinearNavigationParameters<HeaderButtonElement, HeaderButtonElement>["linearNavigationParameters"], "getHighestIndex" | "isValid" | "indexDemangler" | "indexMangler">;
 }
 
@@ -76,12 +76,16 @@ export interface UseAccordionContext<HeaderButtonElement extends Element, M exte
 }
 
 export function useAccordion<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo>({
-    accordionParameters: { initialIndex },
+    accordionParameters: { initialIndex, localStorageKey },
     linearNavigationParameters: { disableArrowKeys, disableHomeEndKeys, navigationDirection, navigatePastEnd, navigatePastStart, pageNavigationSize },
     managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange }
 }: UseAccordionParameters<HeaderButtonElement, M>): UseAccordionReturnType<HeaderButtonElement, M> {
     debugLog("useAccordian");
     //const [_currentFocusedIndex, setCurrentFocusedIndex, getCurrentFocusedIndex] = useState<number | null>(null);
+
+    const [localStorageIndex, setLocalStorageIndex] = usePersistentState<never, number | null>(localStorageKey ?? null, initialIndex ?? null);
+    if (localStorageIndex != null)
+        initialIndex = localStorageIndex;
 
     const mcReturnType = useManagedChildren<M>({
         managedChildrenParameters: {
@@ -102,7 +106,7 @@ export function useAccordion<HeaderButtonElement extends Element, M extends UseA
     }, []);
 
 
-    const { changeIndex: changeExpandedIndex, getCurrentIndex: getCurrentExpandedIndex } = useChildrenFlag<M, Event>({
+    const { changeIndex: changeExpandedIndexLocalOnly, getCurrentIndex: getCurrentExpandedIndex } = useChildrenFlag<M, Event>({
         initialIndex,
         getChildren,
         getAt: useCallback((child) => { return child.getOpenFromParent() ?? false; }, []),
@@ -125,6 +129,11 @@ export function useAccordion<HeaderButtonElement extends Element, M extends UseA
                 getChildren().getAt(i)?.focusSelf();
             }
         }, [])
+    });
+
+    const changeExpandedIndex = useStableCallback<typeof changeExpandedIndexLocalOnly>((value) => {
+        changeExpandedIndexLocalOnly(value);
+        setLocalStorageIndex(value);
     })
 
     //const navigateAbsolute = useCallback((i: number) => { return changeTabbedIndex(i); }, []);

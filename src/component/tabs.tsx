@@ -32,7 +32,7 @@ interface TabPanelPropsBase extends
     Get<UseTabPanelParameters, "managedChildParameters"> {
 }
 
-export interface TabsProps<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element> extends PartialExcept<TabsPropsBase<TabContainerElement, TabElement, TabLabelElement>, "orientation" | "groupingType" | "ariaLabel"> {
+export interface TabsProps<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element> extends PartialExcept<TabsPropsBase<TabContainerElement, TabElement, TabLabelElement>, "orientation" | "ariaLabel"> {
     render(info: UseTabsReturnType<TabContainerElement, TabElement, TabLabelElement>): VNode<any>;
 }
 
@@ -63,7 +63,8 @@ export const Tabs = memoForwardRef(function Tabs<TabContainerElement extends Ele
     orientation,
     staggered,
     pageNavigationSize,
-    groupingType,
+    localStorageKey,
+    //groupingType,
     untabbable,
     typeaheadTimeout,
     role,
@@ -86,7 +87,7 @@ export const Tabs = memoForwardRef(function Tabs<TabContainerElement extends Ele
         },
         singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? 0, onSelectedIndexChange: onSelectedIndexChange ?? null },
         sortableChildrenParameters: { compare: compare ?? null },
-        tabsParameters: { orientation, groupingType, role },
+        tabsParameters: { orientation, role, localStorageKey: localStorageKey ?? null },
         typeaheadNavigationParameters: {
             collator: useDefault("collator", collator),
             noTypeahead: useDefault("noTypeahead", noTypeahead),

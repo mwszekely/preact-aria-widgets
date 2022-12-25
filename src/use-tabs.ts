@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { CompleteListNavigationContext, generateRandomId, ManagedChildInfo, OnChildrenMountChange, returnTrue, useChildrenFlag, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseListNavigationSingleSelectionSortableChildInfo, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, useMergedProps, useStableCallback, useStableObject, useState } from "preact-prop-helpers";
+import { CompleteListNavigationContext, generateRandomId, ManagedChildInfo, OnChildrenMountChange, PersistentStates, returnTrue, useChildrenFlag, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseListNavigationSingleSelectionSortableChildInfo, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, useMergedProps, usePersistentState, useStableCallback, useStableObject, useState } from "preact-prop-helpers";
 import { StateUpdater, useCallback, useLayoutEffect } from "preact/hooks";
 import { debugLog, EventDetail, OmitStrong, Prefices } from "./props";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
@@ -20,9 +20,10 @@ export interface UseTabsParameters<TabContainerElement extends Element, TabEleme
     //tabPanels: UseManagedChildrenParameters<TabPanelInfo>;
     labelParameters: OmitStrong<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
     tabsParameters: {
+        localStorageKey: keyof PersistentStates | null;
         orientation: "horizontal" | "vertical";
         role?: "tablist" | string;
-        groupingType: Pick<UseListboxParameters<TabContainerElement, TabElement, TabLabelElement, TabInfo<TabElement>>["listboxParameters"], "groupingType">["groupingType"]
+        //groupingType: Pick<UseListboxParameters<TabContainerElement, TabElement, TabLabelElement, TabInfo<TabElement>>["listboxParameters"], "groupingType">["groupingType"]
     }
 }
 export interface UseTabParameters<TabElement extends Element> extends OmitStrong<UseCompleteListNavigationChildParameters<TabElement, TabInfo<TabElement>, never>, "singleSelectionChildParameters"> {
@@ -141,12 +142,15 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
     sortableChildrenParameters,
     staggeredChildrenParameters,
     typeaheadNavigationParameters,
-    tabsParameters: { orientation, role }
+    tabsParameters: { orientation, role, localStorageKey }
     // tabPanels: { managedChildren: { onChildrenMountChange: ocmc, ...tabPanelsManagedChildren } } 
 }: UseTabsParameters<TabListElement, TabElement, LabelElement>): UseTabsReturnType<TabListElement, TabElement, LabelElement> {
 
     debugLog("useTabs");
 
+    const [localStorageIndex, setLocalStorageIndex] = usePersistentState<never, number | null>(localStorageKey ?? null, 0);
+    if (localStorageIndex != null)
+        singleSelectionParameters.initiallySelectedIndex = localStorageIndex;
 
     const baseId = generateRandomId("aria-tabs-");
     //const getTabListId = useCallback(() => { return baseId + "-tab-list"; }, []);
@@ -211,7 +215,12 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
     });
 
 
-    const { singleSelectionReturn: { changeSelectedIndex } } = listNavRet1;
+    const { singleSelectionReturn: { changeSelectedIndex: changeSelectedIndexLocalOnly } } = listNavRet1;
+
+    const changeSelectedIndex = useStableCallback<typeof changeSelectedIndexLocalOnly>((index) => {
+        changeSelectedIndexLocalOnly(index);
+        setLocalStorageIndex(index);
+    })
 
     return {
         contextPanels: useStableObject({

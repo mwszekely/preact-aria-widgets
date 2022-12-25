@@ -36,7 +36,6 @@ export function Demo() {
             <div>
                 <Tabs<HTMLUListElement, HTMLLIElement, HTMLLabelElement>
                     ariaLabel={null}
-                    groupingType="without-groups"
                     orientation="horizontal"
 
                     render={info => {
