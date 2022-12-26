@@ -203,7 +203,8 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
             onSelectedIndexChange: useStableCallback((i, p) => {
                 ssi?.(i, p);
                 changeVisiblePanel(i);
-                listNavRet1.singleSelectionReturn.changeSelectedIndex(i, p);
+                setLocalStorageIndex(i);
+                changeSelectedIndex(i, p);
             }),
             ...singleSelectionParameters
         },
@@ -215,12 +216,7 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
     });
 
 
-    const { singleSelectionReturn: { changeSelectedIndex: changeSelectedIndexLocalOnly } } = listNavRet1;
-
-    const changeSelectedIndex = useStableCallback<typeof changeSelectedIndexLocalOnly>((index) => {
-        changeSelectedIndexLocalOnly(index);
-        setLocalStorageIndex(index);
-    })
+    const { singleSelectionReturn: { changeSelectedIndex } } = listNavRet1;
 
     return {
         contextPanels: useStableObject({
