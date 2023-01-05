@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "clsx": "^1.2.1",
-    "preact-prop-helpers": "github:mwszekely/preact-prop-helpers#children-changes"
+    "preact-prop-helpers": "github:mwszekely/preact-prop-helpers"
   },
   "main": "index.js",
   "directories": {
