@@ -1,163 +1,332 @@
 import { h } from "preact";
-import { ManagedChildInfo, useChildFlag, useChildManager, useHasFocus, useLinearNavigation, useMergedProps, useRandomId, UseRandomIdPropsReturnType, UseRefElementPropsReturnType, UseReferencedIdPropsReturnType, useStableCallback, useState } from "preact-prop-helpers";
+import { ManagedChildInfo, OnChildrenMountChange, PassiveStateUpdater, PersistentStates, useChildrenFlag, useLinearNavigation, UseLinearNavigationParameters, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, useMergedProps, usePersistentState, UsePressReturnType, useRandomId, useRefElement, UseRefElementParameters, UseRefElementReturnType, UseRovingTabIndexChildParameters, useStableCallback, useStableGetter, useStableObject, useState } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
-import { TagSensitiveProps } from "./props";
-import { usePressEventHandlers } from "./use-button";
+import { debugLog, DisabledType, OmitStrong, Prefices } from "./props";
+import { ButtonPressEvent, useButton, UseButtonParameters } from "./use-button";
 
-export type UseAriaAccordion<ParentElement extends Element, ChildElement extends Element> = (args: UseAriaAccordionParameters) => UseAriaAccordionReturnType<ParentElement, ChildElement>;
-export type UseAriaAccordionSection<E extends Element> = (args: UseAriaAccordionSectionParameters) => UseAriaAccordionSectionReturnType<E>;
-export type UseAriaAccordionSectionHeaderProps<E extends Element> = <P extends h.JSX.HTMLAttributes<E>>(props: P) => UseAriaAccordionSectionHeaderPropsReturnType<E, P>;
-export type UseAriaAccordionSectionBodyProps<E extends Element> = <P extends h.JSX.HTMLAttributes<E>>(props: P) => UseAriaAccordionSectionBodyPropsReturnType<E, P>;
+//export type UseAccordion<M extends UseAccordionSectionInfo> = (args: UseAccordionParameters<M>) => UseAccordionReturnType<M>;
+//export type UseAccordionSection<HeaderElement extends Element, BodyElement extends Element, M extends UseAccordionSectionInfo> = (args: UseAccordionSectionParameters<HeaderElement, M>) => UseAccordionSectionReturnType<HeaderElement, BodyElement>;
 
-
-export interface UseAriaAccordionParameters {
-    expandedIndex?: number | null;
-    setExpandedIndex?(i: number | null): void;
+export interface UseAccordionParameters<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo> extends UseManagedChildrenParameters<M> {
+    accordionParameters: { initialIndex?: number | null; localStorageKey: keyof PersistentStates | null; }
+    linearNavigationParameters: OmitStrong<UseLinearNavigationParameters<HeaderButtonElement, HeaderButtonElement>["linearNavigationParameters"], "getHighestIndex" | "isValid" | "indexDemangler" | "indexMangler">;
 }
 
-export interface UseAriaAccordionReturnType<_ParentElement extends Element, ChildElement extends Element> {
-    useAriaAccordionSection: UseAriaAccordionSection<ChildElement>;
-    managedChildren: UseAriaAccordionSectionInfo[];
+export interface UseAccordionReturnType<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo> extends UseManagedChildrenReturnType<M> {
+    /** **STABLE** */
+    accordionReturn: { changeExpandedIndex: PassiveStateUpdater<number | null, Event> }
+    context: UseAccordionContext<HeaderButtonElement, M>;
 }
 
-export interface UseAriaAccordionSectionInfo extends ManagedChildInfo<number> {
-    open?: boolean | undefined | null;
+
+export interface UseAccordionSectionInfo extends ManagedChildInfo<number> {
     setOpenFromParent(open: boolean): void;
     getOpenFromParent(): boolean | null;
-    focus(): void;
+    setMostRecentlyTabbed(tabbed: boolean): void;
+    getMostRecentlyTabbed(): boolean | null;
+    focusSelf(): void;
+    disabled: DisabledType;
+    hidden: boolean;
 }
 
-export interface UseAriaAccordionSectionParameters extends Omit<UseAriaAccordionSectionInfo, "setOpenFromParent" | "getOpenFromParent" | "focus"> {
-    open?: boolean | undefined;
+export interface UseAccordionSectionParameters<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo> extends
+    UseRefElementParameters<HeaderButtonElement> {
+    managedChildParameters: OmitStrong<UseManagedChildParameters<M>["managedChildParameters"], never>;
+    context: UseAccordionContext<HeaderButtonElement, M>;
+    rovingTabIndexChildParameters: Pick<UseRovingTabIndexChildParameters<any>["rovingTabIndexChildParameters"], "hidden">;
+    accordionSectionParameters: {
+        /** 
+         * If this prop is `true` or `false` isn't null, then this section
+         * will be open/closed regardless of what the parent's singular open index is.
+         * 
+         * In other words, leave null to only allow one section to be open at a time,
+         * or to allow multiple sections to be open at once, 
+         * set the parent's index to null and toggle this `true`/`false` when the button's pressed
+         */
+        open: boolean | undefined;
+        /** Generally `"region"` */
+        bodyRole: string;
+    }
+    buttonParameters: OmitStrong<UseButtonParameters<HeaderButtonElement>["buttonParameters"], "pressed" | "role">;
+    pressParameters: OmitStrong<UseButtonParameters<HeaderButtonElement>["pressParameters"], never>;
+
 }
 
-export interface UseAriaAccordionSectionReturnType<ChildElement extends Element> {
-    expanded: boolean | null;
-    useAriaAccordionSectionHeader: UseAriaAccordionSectionHeader<ChildElement>;
-    useAriaAccordionSectionBody: UseAriaAccordionSectionBody;
+export interface UseAccordionSectionReturnType<HeaderElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element> extends UsePressReturnType<HeaderButtonElement>, UseRefElementReturnType<HeaderButtonElement> {
+    accordionSectionReturn: {
+        expanded: boolean;
+        focused: boolean;
+        mostRecentlyTabbed: boolean;
+    }
+
+    propsHeaderButton: h.JSX.HTMLAttributes<HeaderButtonElement>;
+    propsHeader: h.JSX.HTMLAttributes<HeaderElement>;
+    propsBody: h.JSX.HTMLAttributes<BodyElement>
 }
 
-export type UseAriaAccordionSectionHeaderPropsReturnType<E extends Element, P extends h.JSX.HTMLAttributes<E>> = UseRefElementPropsReturnType<E, P>;
-export type UseAriaAccordionSectionBodyPropsReturnType<E extends Element, P extends h.JSX.HTMLAttributes<E>> = UseRandomIdPropsReturnType<UseReferencedIdPropsReturnType<{ role: string; } & Omit<P, "role">, "aria-labelledby">>;
+export interface UseAccordionContext<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo> extends UseManagedChildrenContext<M> {
+    accordionSectionParameters: {
+        changeTabbedIndex: PassiveStateUpdater<number | null, Event>;
+        changeExpandedIndex: PassiveStateUpdater<number | null, Event>;
+        getExpandedIndex: () => (number | null);
+        getTabbedIndex: () => (number | null);
+    }
+    linearNavigationParameters: UseLinearNavigationParameters<HeaderButtonElement, HeaderButtonElement>["linearNavigationParameters"];
+    rovingTabIndexReturn: UseLinearNavigationParameters<HeaderButtonElement, HeaderButtonElement>["rovingTabIndexReturn"];
+}
 
-export type UseAriaAccordionSectionHeader<E extends Element> = ({ tag }: TagSensitiveProps<E>) => UseAriaAccordionSectionHeaderReturnType<E>;
-export interface UseAriaAccordionSectionHeaderReturnType<E extends Element> { useAriaAccordionSectionHeaderProps: UseAriaAccordionSectionHeaderProps<E>; }
-export type UseAriaAccordionSectionBody = <E extends Element>() => UseAriaAccordionSectionBodyReturnType<E>;
-export interface UseAriaAccordionSectionBodyReturnType<E extends Element> { useAriaAccordionSectionBodyProps: UseAriaAccordionSectionBodyProps<E>; }
+export function useAccordion<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo>({
+    accordionParameters: { initialIndex, localStorageKey },
+    linearNavigationParameters: { disableArrowKeys, disableHomeEndKeys, navigationDirection, navigatePastEnd, navigatePastStart, pageNavigationSize },
+    managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange }
+}: UseAccordionParameters<HeaderButtonElement, M>): UseAccordionReturnType<HeaderButtonElement, M> {
+    debugLog("useAccordian");
+    //const [_currentFocusedIndex, setCurrentFocusedIndex, getCurrentFocusedIndex] = useState<number | null>(null);
 
+    const [localStorageIndex, setLocalStorageIndex] = usePersistentState<never, number | null>(localStorageKey ?? null, initialIndex ?? null);
+    if (localStorageIndex != null)
+        initialIndex = localStorageIndex;
 
-export interface UseAriaAccordionPropsParameters<E extends Element> extends h.JSX.HTMLAttributes<E> { }
-
-export function useAriaAccordion<ParentElement extends Element, ChildElement extends Element>({ expandedIndex, setExpandedIndex }: UseAriaAccordionParameters): UseAriaAccordionReturnType<ParentElement, ChildElement> {
-
-    const [lastFocusedIndex, setLastFocusedIndex, _getLastFocusedIndex] = useState<number | null>(null);
-    const [_currentFocusedIndex, setCurrentFocusedIndex, getCurrentFocusedIndex] = useState<number | null>(null);
-    const stableSetExpandedIndex = useStableCallback(setExpandedIndex ?? (() => { }));
-
-    const { managedChildren: managedAccordionSections, useManagedChild: useManagedChildSection } = useChildManager<UseAriaAccordionSectionInfo>();
-
-    const navigateToFirst = useCallback(() => { setLastFocusedIndex((0)); }, []);
-    const navigateToLast = useCallback(() => { setLastFocusedIndex((managedAccordionSections.length - 1)); }, []);
-    const navigateToPrev = useCallback(() => { setLastFocusedIndex(i => ((i ?? 0) - 1)) }, []);
-    const navigateToNext = useCallback(() => { setLastFocusedIndex(i => ((i ?? 0) + 1)) }, []);
-    const { useLinearNavigationProps } = useLinearNavigation<ChildElement>({ managedChildren: managedAccordionSections, navigationDirection: "block", index: lastFocusedIndex ?? 0, navigateToFirst, navigateToLast, navigateToPrev, navigateToNext });
-
-    useChildFlag({
-        activatedIndex: expandedIndex,
-        managedChildren: managedAccordionSections,
-        setChildFlag: (i, open) => managedAccordionSections[i]?.setOpenFromParent(open),
-        getChildFlag: (i) => (managedAccordionSections[i]?.getOpenFromParent() ?? null)
+    const mcReturnType = useManagedChildren<M>({
+        managedChildrenParameters: {
+            onChildrenMountChange: useStableCallback<OnChildrenMountChange<number>>((m, u) => { ocmc2(); onChildrenMountChange?.(m, u); }),
+            onAfterChildLayoutEffect
+        }
     });
 
-    useChildFlag({
-        activatedIndex: lastFocusedIndex,
-        managedChildren: managedAccordionSections,
-        setChildFlag: (i, open) => open && managedAccordionSections[i].focus(),
-        getChildFlag: (_) => false
+    const { managedChildrenReturn: { getChildren }, context } = mcReturnType;
+
+    const isValid = useCallback((c: M) => (!c.disabled && !c.hidden), []);
+    const isValid2 = useCallback((c: number): boolean => {
+        const child = getChildren().getAt(c);
+        if (child) {
+            return isValid(child);
+        }
+        return false;
+    }, []);
+
+
+    const { changeIndex: changeExpandedIndexLocalOnly, getCurrentIndex: getCurrentExpandedIndex } = useChildrenFlag<M, Event>({
+        initialIndex,
+        getChildren,
+        getAt: useCallback((child) => { return child.getOpenFromParent() ?? false; }, []),
+        setAt: useCallback((child, open) => { return child.setOpenFromParent(open); }, []),
+        isValid,
+        onIndexChange: null,
+        //key: "open",
+        closestFit: false
+    });
+
+    const { changeIndex: changeTabbedIndex, getCurrentIndex: getTabbedIndex, reevaluateClosestFit: ocmc2 } = useChildrenFlag<M, Event>({
+        initialIndex,
+        getChildren,
+        getAt: useCallback((child) => { return child.getMostRecentlyTabbed() ?? false; }, []),
+        setAt: useCallback((child, tabbed) => { return child.setMostRecentlyTabbed(tabbed); }, []),
+        isValid,
+        closestFit: true,
+        onIndexChange: useCallback((i: number | null) => {
+            if (i != null) {
+                getChildren().getAt(i)?.focusSelf();
+            }
+        }, [])
+    });
+
+    const changeExpandedIndex = useStableCallback<typeof changeExpandedIndexLocalOnly>((value) => {
+        changeExpandedIndexLocalOnly(value);
+        setLocalStorageIndex(value);
     })
 
-    const useAriaAccordionSection = useCallback<UseAriaAccordionSection<ChildElement>>((args: UseAriaAccordionSectionParameters): UseAriaAccordionSectionReturnType<ChildElement> => {
+    //const navigateAbsolute = useCallback((i: number) => { return changeTabbedIndex(i); }, []);
+    //const navigateRelative = useCallback((s: number, o: number) => { return changeTabbedIndex(o + s); }, []);
 
-        const index = args.index;
-
-        const [openFromParent, setOpenFromParent, getOpenFromParent] = useState<boolean | null>(null);
-
-
-
-        const { useRandomIdProps: useBodyRandomIdProps, useReferencedIdProps: useReferencedBodyIdProps } = useRandomId({ prefix: "aria-accordion-section-body-" });
-        const { useRandomIdProps: useHeadRandomIdProps, useReferencedIdProps: useReferencedHeadIdProps } = useRandomId({ prefix: "aria-accordion-section-header-" });
-
-        const open = ((args.open ?? openFromParent) ?? null);
-
-        // TODO: Convert to use useManagedChild so that this hook 
-        // is stable without (directly) depending on the open state.
-        const useAriaAccordionSectionHeader = useCallback<UseAriaAccordionSectionHeader<ChildElement>>(function useAriaAccordionSectionHeader({ ..._ }) {
-
-            const { getElement, useHasFocusProps } = useHasFocus<ChildElement>({
-                onFocusedChanged: useCallback((focused: boolean) => {
-                    if (focused)
-                        setCurrentFocusedIndex(index);
-                    else
-                        setCurrentFocusedIndex(oldIndex => oldIndex === index ? null : index);
-
-                }, [])
-            });
-            const focus = useCallback(() => {
-                if (getCurrentFocusedIndex() != null)
-                    (getElement() as Element as HTMLElement | undefined)?.focus();
-            }, []);
-            const { useManagedChildProps } = useManagedChildSection<ChildElement>({ index, open, setOpenFromParent, getOpenFromParent, focus });
-
-            function useAriaAccordionSectionHeaderProps<P extends h.JSX.HTMLAttributes<ChildElement>>({ ["aria-expanded"]: ariaExpanded, ["aria-disabled"]: ariaDisabled, ...props }: P): UseAriaAccordionSectionHeaderPropsReturnType<ChildElement, P> {
-
-                const onFocus = () => { setLastFocusedIndex(args.index); }
-                const onClick = () => {
-                    if (getOpenFromParent())
-                        stableSetExpandedIndex(null);
-                    else
-                        stableSetExpandedIndex(args.index);
-                };
-
-                const retB = useMergedProps<ChildElement>()({ tabIndex: 0 }, usePressEventHandlers<ChildElement>(onClick, undefined)(props));
-
-                const ret3: h.JSX.HTMLAttributes<ChildElement>
-                    = useMergedProps<ChildElement>()(useHeadRandomIdProps(useReferencedBodyIdProps("aria-controls")({
-                        "aria-expanded": (ariaExpanded ?? (!!open).toString()),
-                        "aria-disabled": (ariaDisabled ?? (open ? "true" : undefined)),
-                        ...useHasFocusProps(useManagedChildProps(retB))
-                    } as h.JSX.HTMLAttributes<ChildElement>)), { onFocus });
-
-
-                return useLinearNavigationProps(ret3) as UseAriaAccordionSectionHeaderPropsReturnType<ChildElement, P>;
-            }
-
-            return { useAriaAccordionSectionHeaderProps };
-        }, [useLinearNavigationProps, index, open]);
-
-
-        const useAriaAccordionSectionBody = useCallback(function useAriaAccordionSectionBody<E extends Element>() {
-            function useAriaAccordionSectionBodyProps<P extends h.JSX.HTMLAttributes<E>>({ role, ...props }: P): UseAriaAccordionSectionBodyPropsReturnType<E, P> {
-                const ret1 = useReferencedHeadIdProps("aria-labelledby")({ role: role ?? "region", ...props });
-                const ret2 = useBodyRandomIdProps(ret1);
-                return ret2;
-            }
-            return {
-                useAriaAccordionSectionBodyProps
-            }
-        }, []);
-
-        return {
-            expanded: open,
-            useAriaAccordionSectionHeader,
-            useAriaAccordionSectionBody,
-        }
-    }, [useLinearNavigationProps]);
 
     return {
-        useAriaAccordionSection,
-        managedChildren: managedAccordionSections
-    }
+        context: useStableObject<UseAccordionContext<HeaderButtonElement, M>>({
+            ...context,
+            accordionSectionParameters: useStableObject({
+                changeExpandedIndex,
+                changeTabbedIndex,
+                getExpandedIndex: getCurrentExpandedIndex,
+                getTabbedIndex: getTabbedIndex
+            }),
+            linearNavigationParameters: useStableObject({
+                disableArrowKeys,
+                disableHomeEndKeys,
+                getHighestIndex: useCallback(() => getChildren().getHighestIndex(), []),
+                indexMangler: identity,
+                indexDemangler: identity,
+                navigationDirection,
+                isValid: isValid2,
+                navigatePastEnd,
+                navigatePastStart,
+                pageNavigationSize
+            }),
+            rovingTabIndexReturn: useStableObject({
+                getTabbableIndex: getTabbedIndex,
+                setTabbableIndex: changeTabbedIndex
+            })
+        }),
+        managedChildrenReturn: mcReturnType.managedChildrenReturn,
+        accordionReturn: useStableObject({ changeExpandedIndex })
+    };
 }
 
+function identity<T>(t: T) { return t; }
 
 
+
+
+export function useAccordionSection<_HeaderContainerElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element>({
+    buttonParameters,
+    pressParameters: { exclude },
+    accordionSectionParameters: { open: openFromUser, bodyRole },
+    managedChildParameters: { index },
+    rovingTabIndexChildParameters: { hidden },
+    //managedChildContext,
+    context,
+    context: {
+        accordionSectionParameters: { changeExpandedIndex, changeTabbedIndex: _setCurrentFocusedIndex, getTabbedIndex: getCurrentFocusedIndex },
+        linearNavigationParameters,
+        rovingTabIndexReturn
+    },
+    refElementParameters,
+}: UseAccordionSectionParameters<HeaderButtonElement, UseAccordionSectionInfo>): UseAccordionSectionReturnType<_HeaderContainerElement, HeaderButtonElement, BodyElement> {
+
+    const { disabled, onPress: userOnPress } = buttonParameters;
+
+    debugLog("useAccordianSection");
+    const [openFromParent, setOpenFromParent, getOpenFromParent] = useState<boolean | null>(null);
+    const [mostRecentlyTabbed, setMostRecentlyTabbed, getMostRecentlyTabbed] = useState<boolean | null>(null);
+
+    type M = UseAccordionSectionInfo;
+
+
+    const { randomIdReturn: _bodyIdReturn, propsSource: propsBodySource, propsReferencer: propsHeadReferencer } = useRandomId<BodyElement, HeaderButtonElement>({ randomIdParameters: { prefix: Prefices.accordionSectionHeaderButton, otherReferencerProp: "aria-controls" } });
+    const { randomIdReturn: _headIdReturn, propsSource: propsHeadSource, propsReferencer: propsBodyReferencer } = useRandomId<HeaderButtonElement, BodyElement>({ randomIdParameters: { prefix: Prefices.accordionSectionBody, otherReferencerProp: "aria-labelledby" } });
+    //const { randomIdSourceReturn: { propsStable: useBodyAsSourceIdProps } } = useBodyAsSourceId();
+    //const { randomIdReferencerReturn: { propsStable: useBodyAsReferencerIdProps } } = useBodyAsReferencerId<BodyElement>({ randomIdReferencerParameters: { otherReferencerProp: "aria-controls" as never } });
+    //const { randomIdSourceReturn: { propsStable: useHeaderAsSourceIdProps } } = useHeaderAsSourceId();
+    //const { randomIdReferencerReturn: { propsStable: useHeaderAsReferencerIdProps } } = useHeaderAsReferencerId<HeaderElement>({ randomIdReferencerParameters: { otherReferencerProp: "aria-labelledby" as never } });
+
+    const open = ((openFromUser ?? openFromParent) ?? false);
+    //const getOpen = useStableGetter(!!open);
+    const _getIndex = useStableGetter(index);
+
+    const { refElementReturn: { getElement: getHeaderElement, propsStable: headerRefElementProps } } = useRefElement<HeaderButtonElement>({ refElementParameters: {} });
+    const { refElementReturn: { getElement: _getBodyElement, propsStable: bodyRefElementProps } } = useRefElement<BodyElement>({ refElementParameters: {} });
+    const focusSelf = useCallback(() => {
+        //if (getCurrentFocusedIndex() != null)
+            (getHeaderElement() as Element as HTMLElement | undefined)?.focus();
+    }, []);
+    /*const openRef = useRef({
+            get: () => !!getOpenFromParent(),
+            set: (open: boolean) => {
+                setOpenFromParent(open);
+
+                if (open) {
+                    const bodyElement = getBodyElement();
+                    setCurrentFocusedIndex(getIndex());
+                    if (bodyElement) {
+                        queueMicrotask(() => bodyElement.focus());
+                }
+            }
+            },
+            isValid: returnTrue
+        });
+        const tabbedRef = useRef({
+            get: () => (getCurrentFocusedIndex() == getIndex()),
+            set: (open: boolean) => {
+                if (open)
+                    setCurrentFocusedIndex(getIndex());
+            },
+            isValid: returnTrue
+    });*/
+    const { managedChildReturn: { getChildren: _getSections } } = useManagedChild<M>({
+        context,
+        managedChildParameters: {
+            index: index,
+        }
+    }, {
+        index,
+        disabled,
+        focusSelf,
+        getMostRecentlyTabbed,
+        getOpenFromParent,
+        hidden,
+        setMostRecentlyTabbed,
+        setOpenFromParent,
+    });
+
+    //const onFocus = () => { changeTabbedIndex(index); }
+    const onPress = (e: ButtonPressEvent<HeaderButtonElement>) => {
+        if (getOpenFromParent())
+            changeExpandedIndex(null);
+        else
+            changeExpandedIndex(index);
+
+        userOnPress?.(e);
+    };
+
+    const { pressReturn, props: buttonProps, refElementReturn } = useButton<HeaderButtonElement>({
+        buttonParameters: { ...buttonParameters, pressed: null, onPress, role: "button" },
+        pressParameters: { exclude },
+        refElementParameters
+    });
+
+
+    const linearReturnType = useLinearNavigation<HeaderButtonElement, HeaderButtonElement>({ linearNavigationParameters, rovingTabIndexReturn });
+
+    const { linearNavigationReturn: { propsStable } } = linearReturnType;
+
+    /*function useAccordionSectionHeaderProps({ ["aria-expanded"]: ariaExpanded, ["aria-disabled"]: ariaDisabled, ...props }: h.JSX.HTMLAttributes<HeaderElement>): h.JSX.HTMLAttributes<HeaderElement> {
+
+            props.tabIndex = 0;
+
+
+            return useMergedProps(useHeaderAsSourceIdProps, useHeaderAsReferencerIdProps, propsStable, {
+                "aria-expanded": (ariaExpanded ?? open ?? false).toString(),
+                "aria-disabled": (ariaDisabled ?? (open ? "true" : undefined)),
+                ...useMergedProps(headerRefElementProps, useButtonProps(props))
+            } as h.JSX.HTMLAttributes<HeaderElement>);
+        }
+
+
+        function useAccordionSectionBodyProps({ role, ...props }: h.JSX.HTMLAttributes<BodyElement>): h.JSX.HTMLAttributes<BodyElement> {
+            const ret1 = useMergedProps(useBodyAsReferencerIdProps, { role: role ?? "region", ...props });
+            const ret2 = useMergedProps(useBodyAsSourceIdProps, ret1);
+            ret2.tabIndex ??= -1;
+            return useMergedProps(bodyRefElementProps, ret2);
+    }*/
+
+    const headerButtonProps = useMergedProps<HeaderButtonElement>(
+        buttonProps,
+        headerRefElementProps,
+        propsHeadReferencer,
+        propsHeadSource,
+        propsStable,
+        { "aria-expanded": (open ?? false).toString(), }
+    );
+
+    const bodyProps = useMergedProps<BodyElement>(
+        bodyRefElementProps,
+        propsBodyReferencer,
+        propsBodySource,
+        {
+            role: bodyRole,
+            tabIndex: -1
+        }
+    );
+
+    return {
+        pressReturn,
+        refElementReturn,
+        accordionSectionReturn: {
+            mostRecentlyTabbed: !!mostRecentlyTabbed,
+            expanded: open,
+            focused: (getCurrentFocusedIndex() == index)
+        },
+        propsHeaderButton: headerButtonProps,
+        propsHeader: {},    // This is intentionally empty, it's just a reminder that there *does* need to be a header that contains the button.
+        propsBody: bodyProps
+    };
+}

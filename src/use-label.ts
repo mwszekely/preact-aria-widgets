@@ -1,276 +1,321 @@
 import { h } from "preact";
-import { MergedProps, useMergedProps, useRandomId, UseRandomIdPropsReturnType, useRefElement, UseRefElementPropsReturnType, UseReferencedIdPropsReturnType, useStableCallback } from "preact-prop-helpers";
-import { useCallback, useEffect, useState } from "preact/hooks";
-import { ElementToTag, TagSensitiveProps } from "./props";
-import { usePressEventHandlers } from "./use-button";
+import { useMergedProps, usePress, UsePressReturnType, useRandomDualIds, UseRandomDualIdsParameters, UseRandomDualIdsReturnType, useRefElement, UseRefElementReturnType, useStableCallback } from "preact-prop-helpers";
+import { useEffect } from "preact/hooks";
+import { DisabledType, ElementToTag, noop, OmitStrong } from "./props";
 
-export interface UseGenericLabelParameters {
-    labelPrefix: string;
-    inputPrefix: string;
-    backupText?: string
+export type LabelPosition = "separate" | "wrapping" | "none";
+export type FocusableLabelElement<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element> = LP extends "wrapping" ? LabelElement : InputElement;
+
+export interface UseLabelParameters<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element> {
+    randomIdInputParameters: OmitStrong<UseRandomDualIdsParameters["randomIdInputParameters"], "otherReferencerProp">;
+    randomIdLabelParameters: OmitStrong<UseRandomDualIdsParameters["randomIdLabelParameters"], "otherReferencerProp">;
+
+    labelParameters: {
+        onLabelClick: null | ((e: Event) => void);
+        tagInput: ElementToTag<InputElement>;
+        tagLabel: ElementToTag<LabelElement>;
+        /**
+         * Where is this component's label relative to the component itself?
+         * 
+         * * `"separate"`: `<label /><input />`
+         * * `"wrapping"`: `<label><input /></label>`
+         * * `"none"`: `<input aria-label="..." />`
+         * 
+         * In cases where you're using non-`input` and `label` elements, `"separate"` and `"wrapping"` are identical; 
+         * this is most important for native `label` and `input` elements, as they only need a `for` prop when the label doesn't wrap the input.
+         */
+        labelPosition: LP;
+
+        /** 
+         * When `null`, this corresponds to having a visible label (with `labelPosition` == `"separate"` or `"wrapping"`).
+         * 
+         * When a string, this corresponds to `labelPosition` == `"none"`; this label is only visible to assistive technologies and *not* visible otherwise.
+         */
+        ariaLabel: LP extends "none" ? string : null;
+    }
 }
 
-/**
- * Adds an ID and "aria-labelledby" for two elements, an "input" element and a "label" element.
- * 
- * Returns the `useReferencedIdProps` hooks if you need to also add other ID-referencing attributes, like `for`
- * 
- * @see useInputLabel
- */
-export function useGenericLabel({ labelPrefix, inputPrefix, backupText }: UseGenericLabelParameters = { labelPrefix: "label-", inputPrefix: "input-" }) {
+export interface UseLabelReturnType<InputElement extends Element, LabelElement extends Element> extends UseRandomDualIdsReturnType<InputElement, LabelElement> { }
 
-    const [labelElement, setLabelElement] = useState<Element | null>(null);
-    const [inputElement, setInputElement] = useState<Element | null>(null);
-    const { getElement: getLabelElement, useRefElementProps: useLabelRefElementProps } = useRefElement<any>({ onElementChange: setLabelElement });
-    const { getElement: getInputElement, useRefElementProps: useInputRefElementProps } = useRefElement<any>({ onElementChange: setInputElement });
-    const { useRandomIdProps: useLabelRandomIdProps, id: labelId, useReferencedIdProps: useReferencedLabelIdProps } = useRandomId({ prefix: labelPrefix });
-    const { useRandomIdProps: useInputRandomIdProps, id: inputId, useReferencedIdProps: useReferencedInputIdProps } = useRandomId({ prefix: inputPrefix });
+export function useLabel<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element>({
+    randomIdInputParameters,
+    randomIdLabelParameters,
+    labelParameters: { tagInput, tagLabel, ariaLabel, labelPosition, onLabelClick }
+}: UseLabelParameters<LP, InputElement, LabelElement>): UseLabelReturnType<InputElement, LabelElement> {
+    const nativeHTMLBehavior = (tagInput == "input" && tagLabel == "label" && labelPosition != "wrapping");
+    const synthetic = !nativeHTMLBehavior;
 
-    const labelHasMounted = !!(labelElement);
+    /**
+     * |Synthetic?|Position    |Input Prop   |Label Prop|
+     * |----------|------------|-------------|----------|
+     * |N         |`"separate"`|-            |`for`     |
+     * |N         |`"wrapping"`|-            |-         |
+     * |Y         |`"separate"`|`labelled-by`|-         |
+     * |Y         |`"wrapping"`|`labelled-by`|-         |
+     * 
+     */
+    let _comment: any;
 
-    const useGenericLabelLabel = useCallback(function useGenericLabelLabel<E extends Element>() {
-        return {
-            useGenericLabelLabelProps: <P extends h.JSX.HTMLAttributes<E>>(props: P) => { return useLabelRandomIdProps(useLabelRefElementProps(props)); }
-        }
-    }, []);
+    const {
+        propsInput,
+        propsLabel,
+        randomIdInputReturn,
+        randomIdLabelReturn
+    } = useRandomDualIds<InputElement, LabelElement>({
+        randomIdInputParameters: { ...randomIdInputParameters, otherReferencerProp: !synthetic && labelPosition === "separate" ? "for" : null },
+        randomIdLabelParameters: { ...randomIdLabelParameters, otherReferencerProp: synthetic ? "aria-labelledby" : null },
+    });
+    const { refElementReturn } = useRefElement<LabelElement>({ refElementParameters: {} });
 
-    const useGenericLabelInput = useCallback(function useGenericLabelInput<E extends Element>() {
-        return {
-            useGenericLabelInputProps: <P extends h.JSX.HTMLAttributes<E>>({ "aria-labelledby": ariaLabelledby, "aria-label": ariaLabel, ...props }: P) => {
-                console.assert(!ariaLabelledby);
+    if (labelPosition == 'none') {
+        // When we set the aria-label, intentionally clobber element-based labels (for example, in case they don't exist).
+        propsInput["aria-label"] = (ariaLabel!);
+        propsInput["aria-labelledby"] = undefined;
+        propsLabel["for"] = undefined;
+    }
 
-                return (useInputRandomIdProps(
-                    useReferencedLabelIdProps("aria-labelledby")(
-                        useInputRefElementProps(
-                            useMergedProps<E>()({ "aria-label": (!labelHasMounted ? backupText : ariaLabel) ?? ariaLabel }, props)
-                        )
-                    )
-                ));
-            }
-        }
-    }, [labelHasMounted])
+    const { pressReturn } = usePress({ pressParameters: { exclude: { enter: "exclude", space: "exclude", click: undefined }, onPressSync: onLabelClick, focusSelf: noop }, refElementReturn })
+    //propsLabel.onClick = onLabelClick ?? undefined;
 
     return {
-        useGenericLabelInput,
-        useGenericLabelLabel,
-        useReferencedLabelIdProps,
-        useReferencedInputIdProps,
-        labelId,
-        inputId,
-        labelElement,
-        inputElement,
-        getLabelElement,
-        getInputElement,
+        propsInput,
+        propsLabel: useMergedProps(propsLabel, refElementReturn.propsStable, pressReturn.propsUnstable),
+        randomIdInputReturn,
+        randomIdLabelReturn,
     }
-
 }
 
-export type UseInputLabelLabel = <E extends Element>({ tag }: TagSensitiveProps<E>) => {
-    useInputLabelLabelProps<P extends h.JSX.HTMLAttributes<E>>(props: P): UseRandomIdPropsReturnType<UseRefElementPropsReturnType<any, P | UseReferencedIdPropsReturnType<P, "for">>>;
-};
-
-export type UseInputLabelInput = <E extends Element>() => {
-    useInputLabelInputProps<P extends h.JSX.HTMLAttributes<E>>(props: P): UseRandomIdPropsReturnType<UseReferencedIdPropsReturnType<UseRefElementPropsReturnType<any, MergedProps<E, {
-        "aria-label": string | undefined;
-    }, Omit<P, "aria-labelledby" | "aria-label">>>, "aria-labelledby">>;
+export interface UseLabelSyntheticParameters {
+    randomIdInputParameters: OmitStrong<UseRandomDualIdsParameters["randomIdInputParameters"], "otherReferencerProp">;
+    randomIdLabelParameters: OmitStrong<UseRandomDualIdsParameters["randomIdLabelParameters"], "otherReferencerProp">;
+    labelParameters: Pick<UseLabelParameters<LabelPosition, any, any>["labelParameters"], "ariaLabel" | "onLabelClick">
 }
 
 /**
- * Handles the attributes `id`, `for`, and `aria-labelledby` for to related elements.
- * 
- * It's assumed that the label is an `HTMLLabelElement`, and the input is something for which
- * the `for` attribute can reference.
- * 
+ * Shortcut for `useLabel` that assumes we're just never working with native HTML `input` and `label` elements. So for labelling guaranteably non-native elements.
  */
-export function useInputLabel({ labelPrefix, inputPrefix } = { labelPrefix: "label-", inputPrefix: "input-" }) {
-
-    const { useGenericLabelInput, useGenericLabelLabel, useReferencedInputIdProps, inputId, labelId, inputElement, getInputElement, labelElement, getLabelElement } = useGenericLabel({ labelPrefix, inputPrefix });
-
-    const useInputLabelLabel: UseInputLabelLabel = useCallback(function useInputLabelLabel<E extends Element>({ tag }: TagSensitiveProps<E>) {
-        const { useGenericLabelLabelProps } = useGenericLabelLabel<E>();
-
-        return {
-            useInputLabelLabelProps<P extends h.JSX.HTMLAttributes<E>>(props: P) {
-                const withFor = useReferencedInputIdProps("for")(props);
-                const withoutFor = props;
-
-                return useGenericLabelLabelProps(tag == "label" ? withFor : withoutFor);
-            }
+export function useLabelSynthetic<InputElement extends Element, LabelElement extends Element>({
+    labelParameters: { ariaLabel, onLabelClick },
+    randomIdInputParameters,
+    randomIdLabelParameters
+}: UseLabelSyntheticParameters) {
+    return useLabel<LabelPosition, InputElement, LabelElement>({
+        randomIdLabelParameters,
+        randomIdInputParameters,
+        labelParameters: {
+            ariaLabel,
+            labelPosition: ariaLabel == null ? "separate" : "none",
+            tagInput: "div" as never,
+            tagLabel: "div" as never,
+            onLabelClick
         }
-    }, [useGenericLabelInput]);
+    })
 
-    const useInputLabelInput: UseInputLabelInput = useCallback(function useInputLabelInput<E extends Element>() {
-        const { useGenericLabelInputProps } = useGenericLabelInput<E>();
-
-        return {
-            useInputLabelInputProps<P extends h.JSX.HTMLAttributes<E>>(props: P) {
-                return useGenericLabelInputProps(props);
-            }
-        }
-    }, [useGenericLabelLabel]);
-
-    return {
-        useInputLabelLabel,
-        useInputLabelInput,
-        labelId,
-        inputId,
-        inputElement,
-        labelElement,
-        getInputElement,
-        getLabelElement
-    }
 }
 
 
-
-
-
-
-export interface UseCheckboxLikeParameters<InputType extends Element, LabelType extends Element> {
-    labelPosition: "wrapping" | "separate";
-    role: string;
-    disabled: boolean;
-    checked: boolean;
-    onInput?(event: h.JSX.TargetedEvent<InputType>): void;
-    onInput?(event: h.JSX.TargetedEvent<LabelType>): void;
+function preventDefault(e: Event) {
+    e.preventDefault();
 }
 
-const handlesInput = <E extends Element>(tag: ElementToTag<E>, labelPosition: "wrapping" | "separate", which: "input-element" | "label-element") => {
-    if (labelPosition === "separate") {
-        if (which === "input-element")
-            return true;
-        else if (which === "label-element")
-            return tag != "input";
-    }
-    else if (labelPosition === "wrapping") {
-        if (which === "input-element")
-            return false;
-        if (which == "label-element")
-            return true;
-    }
-};
 
-export type UseCheckboxLikeInputElement<InputType extends Element> = ({ tag }: TagSensitiveProps<InputType>) => {
-    getInputElement: () => InputType | null;
-    useCheckboxLikeInputElementProps: <P extends h.JSX.HTMLAttributes<InputType>>({ ...p0 }: P) => MergedProps<InputType, P, h.JSX.HTMLAttributes<InputType>>;
+export type CheckboxCheckedType = boolean | "mixed";
+//export type LabelPosition = "wrapping" | "separate" | "dual" | "none";
+
+
+
+export interface UseCheckboxLikeParameters<LP extends LabelPosition, InputType extends Element, LabelType extends Element> extends OmitStrong<UseLabelParameters<LP, InputType, LabelType>, "labelParameters"> {
+    checkboxLikeParameters: {
+        /**
+         * Where the label element is positioned relative to the input element.
+         * * `wrapping`: The label wraps the input and no `id` or `for` props are needed, as in `<label><input /> label content</label>`
+         * * `separate`: The label and input are in separate branches, as in `<input /><label>label content</label>`
+         * * `dual`: One element serves in both roles at once, as in `<div role="checkbox">label content</div> `
+         * * `none`: There is no visible label element, as in `<input aria-label="label content" />`
+         * 
+         * In combination with `tagInput` and `tagLabel`, `labelPosition` determines which element receives which props and event handlers.
+         */
+        //labelPosition: LabelPosition;
+        /** The role attribute to use, when applicable */
+        role: string;
+        disabled: DisabledType;
+        checked: CheckboxCheckedType;
+        onInput(event: Event): void;
+        //type: "checkbox" | "radio";
+    };
+
+    labelParameters: OmitStrong<UseLabelParameters<LP, InputType, LabelType>["labelParameters"], "onLabelClick">;
+
+    refElementLabelReturn: UseRefElementReturnType<LabelType>["refElementReturn"];
+    refElementInputReturn: UseRefElementReturnType<InputType>["refElementReturn"];
 }
 
-export type UseCheckboxLikeLabelElement<LabelType extends Element> = ({ tag }: TagSensitiveProps<LabelType>) => {
-    useCheckboxLikeLabelElementProps: <P extends h.JSX.HTMLAttributes<LabelType>>({ ...p0 }: P) => h.JSX.HTMLAttributes<LabelType>;
+export interface UseCheckboxLikeReturnType<InputType extends Element, LabelType extends Element> extends UseLabelReturnType<InputType, LabelType> {
+    pressLabelReturn: UsePressReturnType<LabelType>["pressReturn"];
+    pressInputReturn: UsePressReturnType<InputType>["pressReturn"];
+    checkboxLikeInputReturn: { propsUnstable: h.JSX.HTMLAttributes<InputType> }
+    checkboxLikeLabelReturn: { propsUnstable: h.JSX.HTMLAttributes<LabelType> }
+    checkboxLikeReturn: {
+        /**
+         * Call this to focus whichever element handles the focus based on `labelPosition`.
+         */
+        focusSelf(): void;
+    }
 }
 
 /**
- * Handles label type (wrapping or separate) for checkboxes, radios, switches, etc.
+ * Handles any component where there's:
+ * 1. Some kind of an on/off binary/trinary input element that needs event handlers
+ * 2. Some kind of label for that input element
+ * 
+ * See also `useLabel` for when there's a label for a non-checkbox-like component.
+ * 
  * @param param0 
  * @returns 
  */
-export function useCheckboxLike<InputType extends Element, LabelType extends Element>({ checked, disabled, labelPosition, onInput, role }: UseCheckboxLikeParameters<InputType, LabelType>) {
+export function useCheckboxLike<LP extends LabelPosition, InputType extends Element, LabelType extends Element>({
+    labelParameters,
+    randomIdInputParameters,
+    randomIdLabelParameters,
+    checkboxLikeParameters: { checked, disabled, onInput: onInputSync, role },
+    refElementInputReturn,
+    refElementLabelReturn,
+}: UseCheckboxLikeParameters<LP, InputType, LabelType>): UseCheckboxLikeReturnType<InputType, LabelType> {
 
-    const stableOnInput = useStableCallback((e: h.JSX.TargetedEvent<InputType> | h.JSX.TargetedEvent<LabelType>) => { e.preventDefault(); onInput?.(e as h.JSX.TargetedEvent<InputType>); });
+    const { getElement: getInputElement } = refElementInputReturn;
+    const { getElement: getLabelElement } = refElementLabelReturn;
+    const { tagInput, tagLabel, labelPosition } = labelParameters;
 
-    const { useInputLabelInput: useILInput, useInputLabelLabel: useILLabel, getLabelElement, getInputElement } = useInputLabel({ labelPrefix: "aria-checkbox-label-", inputPrefix: "aria-checkbox-input-" });
+    // onClick and onChange are a bit messy, so we need to
+    // *always* make sure that the visible state is correct
+    // after all the event dust settles.
+    // See https://github.com/preactjs/preact/issues/2745,
+    // and https://github.com/preactjs/preact/issues/1899#issuecomment-525690194
+    useEffect(() => {
+        const element = getInputElement!();
+        if (element && tagInput == "input") {
+            (element as Element as HTMLInputElement).indeterminate = (checked === "mixed");
+            (element as Element as HTMLInputElement).checked = (checked === true)
+        }
+    }, [tagInput, (checked ?? false)])
 
+    const {
+        randomIdInputReturn,
+        randomIdLabelReturn,
+        propsInput,
+        propsLabel
+    } = useLabel<LP, InputType, LabelType>({
+        labelParameters: {
+            ...labelParameters,
+            onLabelClick: useStableCallback((e) => {
+                if (!disabled && tagInput != "input" && tagLabel != "label" && labelPosition != "separate") {
+                    focusSelf();
+                    onInputSync(e);
+                }
+            })
+        },
+        randomIdInputParameters,
+        randomIdLabelParameters,
+    });
 
+    const focusSelf = useStableCallback(() => {
+        let elementToFocus: HTMLElement | null = null;
+        if (labelPosition == "wrapping")
+            elementToFocus = getLabelElement() as Element as HTMLElement;
+        else
+            elementToFocus = getInputElement() as Element as HTMLElement;
 
+        elementToFocus?.focus();
+    })
 
-    const useCheckboxLikeInputElement: UseCheckboxLikeInputElement<InputType> = useCallback(function useCheckboxInputElement({ tag }: TagSensitiveProps<InputType>) {
-        const { useInputLabelInputProps: useILInputProps } = useILInput<InputType>();
-        const { useRefElementProps, getElement } = useRefElement<InputType>({});
+    const onClickInputSync = (labelPosition == "wrapping" ? undefined : onInputSync);
+    const onClickLabelSync = onInputSync;//(labelPosition != "wrapping" ? undefined : onInputSync);
+    const { pressReturn: pressInputReturn } = usePress<InputType>({ pressParameters: { exclude: {}, focusSelf, onPressSync: (disabled) ? undefined : onClickInputSync }, refElementReturn: refElementInputReturn });
+    const { pressReturn: pressLabelReturn } = usePress<LabelType>({ pressParameters: { exclude: {}, focusSelf, onPressSync: (disabled) ? undefined : onClickLabelSync }, refElementReturn: refElementLabelReturn });
+    const propsUnstableInput: h.JSX.HTMLAttributes<InputType> = {};
+    const propsUnstableLabel: h.JSX.HTMLAttributes<LabelType> = {};
 
-        // onClick and onChange are a bit messy, so we need to
-        // *always* make sure that the visible state is correct
-        // after all the event dust settles.
-        // See https://github.com/preactjs/preact/issues/2745,
-        // and https://github.com/preactjs/preact/issues/1899#issuecomment-525690194
-        useEffect(() => {
-            const element = getElement();
-            if (element && tag == "input") {
-                (element as Element as HTMLInputElement).checked = checked
+    // Make sure that label clicks can't affect the visual state of the checkbox
+    propsUnstableInput.onClick = preventDefault;
+    propsUnstableLabel.onClick = preventDefault;
+
+    propsUnstableInput.onInput = preventDefault;
+    propsUnstableInput.onChange = preventDefault;
+
+    propsUnstableInput.type = role == "radio" ? "radio" : "checkbox";
+
+    switch (labelPosition) {
+        case "none":
+        case "separate": {
+            if (tagInput == "input") {
+                // Even in the most default input behavior, we still need to handle
+                // special abstraction over checked="mixed" and disabled="soft"
+                propsUnstableInput.checked = (checked === true);
+                if (disabled === true || disabled === 'hard')
+                    propsUnstableInput.disabled = true;
+                else if (disabled == "soft")
+                    propsUnstableInput["aria-disabled"] = "true";
             }
-        }, [tag, checked])
+            else {
+                // div inputs need their various ARIA roles and properties
+                propsUnstableInput.role = role;
+                propsUnstableInput.tabIndex = 0;
+                propsUnstableInput["aria-checked"] = (checked ?? false).toString();
+                propsUnstableInput["aria-disabled"] = (!!disabled).toString();
+            }
 
-        return { getInputElement: getElement, useCheckboxLikeInputElementProps };
+            if (tagLabel != "label") {
+                // We don't need to do anything special for regular labels
+            }
+            else {
+                // The special handling for div labels is already covered by useLabel
+            }
+            break;
+        }
+        case "wrapping": {
+            if (tagInput == "input") {
+                // For form submission and styling
+                propsUnstableInput.checked = (checked === true);
+                propsUnstableInput.disabled = (disabled === true);
 
-
-        function useCheckboxLikeInputElementProps<P extends h.JSX.HTMLAttributes<InputType>>({ ...p0 }: P) {
-
-            // For some reason, Chrome won't fire onInput events for radio buttons that are tabIndex=-1??
-            // Needs investigating, but onInput works fine in Firefox
-            // TODO
-            let props: h.JSX.HTMLAttributes<InputType> = usePressEventHandlers<InputType>(disabled || !handlesInput(tag, labelPosition, "input-element") ? undefined : stableOnInput, undefined)({});
-
-            if (tag == "input")
-                props.onInput = (e: Event) => e.preventDefault();
-
-            props = useRefElementProps(useILInputProps(props));
-
-
-            if (labelPosition == "wrapping") {
                 // Because the wrapped label handles all interactions,
                 // we need to make sure this element can't be interacted with
                 // even if it's an input element.
-                props.inert = true;
-                props.tabIndex = -1;
-                props.onFocus = _ => getLabelElement().focus();
+                propsUnstableInput.inert = true;
+                propsUnstableInput.tabIndex = -1;
+                propsUnstableInput.role = "presentation";
+                propsUnstableInput["aria-hidden"] = "true";
+                propsUnstableInput.onFocus = _ => (getLabelElement?.() as HTMLElement | null)?.focus?.();
             }
             else {
-                if (tag === "input") {
-                    props.checked = checked;
-                }
-                else {
-                    props.role = role;
-                    props.tabIndex = 0;
-                    props["aria-checked"] = checked ? "true" : undefined;
-                }
-                props["aria-disabled"] = disabled.toString();
-
+                // With a wrapping label, we're just using the input for visual styling and ignoring all interaction.
+                // With a div, we get that for free and don't need to do anything here.
             }
 
-            // Make sure that label clicks can't affect the checkbox while it's disabled
-            props.onClick = disabled ? ((e) => { e.preventDefault() }) : props.onClick;
 
-            return useMergedProps<InputType>()(p0, props);
+            // Wrapping labels are the actual inputs that are interacted with
+            // And are very similar conceptually to div inputs when separated
+            propsUnstableLabel.role = role;
+            propsUnstableLabel.tabIndex = 0;
+            propsUnstableLabel["aria-checked"] = (checked ?? false).toString();
+            propsUnstableLabel["aria-disabled"] = (!!disabled).toString();
+
+            break;
         }
-    }, [useILInput, role, labelPosition, disabled, checked]);
-
-    const useCheckboxLikeLabelElement = useCallback(function useCheckboxLabelElement({ tag }: TagSensitiveProps<LabelType>) {
-        const { useInputLabelLabelProps: useILLabelProps } = useILLabel<LabelType>({ tag });
-
-        function useCheckboxLikeLabelElementProps<P extends h.JSX.HTMLAttributes<LabelType>>({ ...p0 }: P) {
-
-            const newProps: h.JSX.HTMLAttributes<LabelType> = usePressEventHandlers<LabelType>(disabled || !handlesInput(tag, labelPosition, "label-element") ? undefined : stableOnInput, undefined)({});
-
-            if (labelPosition == "wrapping") {
-                if (p0.tabIndex == null)
-                    newProps.tabIndex = 0;
-                if (p0.role == null)
-                    newProps.role = role;
-                newProps["aria-disabled"] = disabled.toString();
-                newProps["aria-checked"] = checked.toString();
-            }
-            else {
-                // The one case where there's almost nothing to do
-                // The most normal case where everything acts according normal HTML mechanics.
-
-            }
-
-            // Just make sure that label clicks can't affect the checkbox while it's disabled
-            newProps.onClick = disabled ? ((e) => { e.preventDefault() }) : newProps.onClick;
-
-            return useMergedProps<LabelType>()(newProps, useILLabelProps(p0));
-        }
-
-        return { useCheckboxLikeLabelElementProps };
-
-    }, [useILLabel, disabled, checked, role, labelPosition]);
-
+    }
 
     return {
-        useCheckboxLikeInputElement,
-        useCheckboxLikeLabelElement,
-        getLabelElement,
-        getInputElement
-    };
-
-
+        randomIdInputReturn,
+        randomIdLabelReturn,
+        pressInputReturn,
+        pressLabelReturn,
+        checkboxLikeInputReturn: { propsUnstable: propsUnstableInput },
+        checkboxLikeLabelReturn: { propsUnstable: propsUnstableLabel },
+        propsInput: useMergedProps(propsInput, propsUnstableInput, pressInputReturn.propsUnstable, refElementInputReturn.propsStable),
+        propsLabel: useMergedProps(propsLabel, propsUnstableLabel, pressLabelReturn.propsUnstable, refElementLabelReturn.propsStable),
+        checkboxLikeReturn: { focusSelf }
+    }
 }
+
+
+

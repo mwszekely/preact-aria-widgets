@@ -1,31 +1,58 @@
-import { useCallback } from "preact/hooks";
-import { useModal } from "./use-modal";
+import { h } from "preact";
+import { findFirstFocusable, useMergedProps, useModal, UseModalParameters, UseModalReturnType, useStableCallback } from "preact-prop-helpers";
+import { OmitStrong, Prefices } from "./props";
+import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
+/*import { useModal, UseModalParameters, UseSoftDismissReturnTypeInfo } from "./use-modal";
 
 
-export interface UseDrawerParameters {
-    open: boolean;
-    onClose(reason: "backdrop" | "escape" | "lost-focus" | undefined): void;
+export interface UseDrawerReturnTypeInfo extends UseSoftDismissReturnTypeInfo {
+
 }
 
-export function useDrawer<DrawerElement extends HTMLElement>({ open, onClose }: UseDrawerParameters) {
+export interface UseDrawerReturnTypeWithHooks<FocusContainerElement extends Element, ModalElement extends Element, TitleElement extends Element, BodyElement extends Element, BackdropElement extends Element> extends UseDrawerReturnTypeInfo {
+    useDrawerProps: (props: h.JSX.HTMLAttributes<ModalElement>) => h.JSX.HTMLAttributes<ModalElement>;
+    useDrawerTitle: UseDrawerTitle<TitleElement>;
+    useDrawerBody: UseDrawerBody<BodyElement>
+    useDrawerBackdrop: UseDrawerBackdrop<BackdropElement>;
+    useDrawerFocusContainerProps(props: h.JSX.HTMLAttributes<FocusContainerElement>): h.JSX.HTMLAttributes<FocusContainerElement>;
+}
+
+export type UseDrawerTitle<TitleElement extends Element> = () => { useDrawerTitleProps: (props: h.JSX.HTMLAttributes<TitleElement>) => h.JSX.HTMLAttributes<TitleElement>; };
+export type UseDrawerBody<BodyElement extends Element> = () => { useDrawerBodyProps: (props: h.JSX.HTMLAttributes<BodyElement>) => h.JSX.HTMLAttributes<BodyElement>; };
+export type UseDrawerBackdrop<BackdropElement extends Element> = () => { useDrawerBackdropProps: (props: h.JSX.HTMLAttributes<BackdropElement>) => h.JSX.HTMLAttributes<BackdropElement>; };
+
+
+export interface UseDrawerParameters extends UseModalParameters<never, never> {
+}
+
+export function useDrawer<FocusContainerElement extends HTMLElement, DrawerElement extends HTMLElement, TitleElement extends HTMLElement, BodyElement extends HTMLElement, BackdropElement extends HTMLElement>({ softDismiss: { open, onClose }, activeElement, modal: { bodyIsOnlySemantic, focusSelf } }: UseDrawerParameters): UseDrawerReturnTypeWithHooks<FocusContainerElement, DrawerElement, TitleElement, BodyElement, BackdropElement> {
+
+    debugLog("useDrawer");
 
     // TODO: Drawers are not always modal.
 
-    const { useModalBackdrop, useModalBody, useModalProps, useModalTitle } = useModal<DrawerElement>({ open, onClose });
+    const {
+        useModalBackdrop,
+        useModalBody,
+        useModalProps,
+        useModalTitle,
+        useModalFocusContainerProps,
+        softDismiss: { onBackdropClick }
+    } = useModal<FocusContainerElement, DrawerElement, TitleElement, BodyElement, BackdropElement>({ modal: { bodyIsOnlySemantic: (bodyIsOnlySemantic ?? false), focusSelf }, softDismiss: { onClose, open }, activeElement });
 
-    const useDrawerBackdrop = useCallback(<E extends HTMLElement>() => {
-        const { useModalBackdropProps } = useModalBackdrop<E>();
+    const useDrawerBackdrop = useCallback(() => {
+        const { useModalBackdropProps } = useModalBackdrop();
         return { useDrawerBackdropProps: useModalBackdropProps };
     }, [useModalBackdrop]);
 
-    const useDrawerBody = useCallback(<E extends Element>({ descriptive }: { descriptive: boolean }) => {
-        const { useModalBodyProps } = useModalBody<E>({ descriptive });
+    const useDrawerBody = useCallback(() => {
+        const { useModalBodyProps } = useModalBody();
         return { useDrawerBodyProps: useModalBodyProps };
     }, [useModalBackdrop]);
     const useDrawerProps = useModalProps;
 
-    const useDrawerTitle = useCallback(<E extends Element>() => {
-        const { useModalTitleProps } = useModalTitle<E>();
+    const useDrawerTitle = useCallback(() => {
+        const { useModalTitleProps } = useModalTitle();
         return { useDrawerTitleProps: useModalTitleProps };
     }, [useModalTitle]);
 
@@ -33,6 +60,62 @@ export function useDrawer<DrawerElement extends HTMLElement>({ open, onClose }: 
         useDrawerProps,
         useDrawerTitle,
         useDrawerBody,
-        useDrawerBackdrop
+        useDrawerBackdrop,
+        useDrawerFocusContainerProps: useModalFocusContainerProps,
+        softDismiss: { onBackdropClick }
+    }
+}*/
+
+
+
+export interface UseDrawerParameters<_DialogElement extends Element, _TitleElement extends Element> extends OmitStrong<UseModalParameters<"escape" | "backdrop" | "lost-focus">, "focusTrapParameters"> {
+    labelParameters: OmitStrong<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
+    focusTrapParameters: OmitStrong<UseModalParameters<"escape" | "backdrop" | "lost-focus">["focusTrapParameters"], "onlyMoveFocus">
+}
+
+export interface UseDrawerReturnType<FocusContainerElement extends Element, SourceElement extends Element, DrawerElement extends Element, TitleElement extends Element> extends OmitStrong<UseModalReturnType<FocusContainerElement, SourceElement, DrawerElement>, "propsPopup"> {
+    propsDrawer: h.JSX.HTMLAttributes<DrawerElement>;
+    propsTitle: h.JSX.HTMLAttributes<TitleElement>;
+}
+
+export function useDrawer<FocusContainerElement extends Element, SourceElement extends Element, PopupElement extends Element, TitleElement extends Element>({ dismissParameters, escapeDismissParameters, focusTrapParameters, labelParameters }: UseDrawerParameters<PopupElement, TitleElement>): UseDrawerReturnType<FocusContainerElement, SourceElement, PopupElement, TitleElement> {
+    const {
+        focusTrapReturn,
+        propsFocusContainer,
+        propsPopup,
+        propsSource,
+        refElementPopupReturn,
+        refElementSourceReturn
+    } = useModal<"escape" | "backdrop" | "lost-focus", FocusContainerElement, SourceElement, PopupElement>({
+        dismissParameters,
+        escapeDismissParameters,
+        focusTrapParameters: { onlyMoveFocus: false, ...focusTrapParameters }
+    });
+
+    const {
+        propsInput,
+        propsLabel,
+    } = useLabelSynthetic<PopupElement, TitleElement>({
+        labelParameters: {
+            ...labelParameters, onLabelClick: useStableCallback(() => {
+                const e = refElementPopupReturn.getElement();
+                focusTrapParameters.focusPopup(e, () => (findFirstFocusable(e!) as HTMLElement | null));
+
+            })
+        },
+        randomIdInputParameters: { prefix: Prefices.drawer },
+        randomIdLabelParameters: { prefix: Prefices.drawerTitle }
+    });
+
+    return {
+        focusTrapReturn,
+        propsFocusContainer,
+        propsDrawer: useMergedProps<PopupElement>(propsPopup, propsInput),
+        propsTitle: propsLabel,
+        propsSource,
+        refElementPopupReturn,
+        refElementSourceReturn
     }
 }
+
+

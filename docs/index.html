@@ -3,22 +3,44 @@
 
 <head>
     <meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <style>
-	* {
-	touch-action: manipulation;
-	}
-        html, body, #root {
+        *:focus {
+            outline: 2px solid rgb(0, 0, 128);
+        }
+
+        * {
+            touch-action: manipulation;
+        }
+
+        code {
+            white-space: pre;
+        }
+
+        html,
+        body,
+        #root {
             height: 100%;
             width: 100%;
-            max-width: 30em;
+            max-width: 40em;
+            margin-left: auto;
+            margin-right: auto;
         }
+
         .demo {
             display: flex;
             flex-direction: column;
             gap: 0.5em;
             width: 100%;
+        }
+
+        div[role=checkbox],
+        [role=checkbox]>[role=presentation] {
+            position: relative;
+            min-width: 0.75em;
+            min-height: 0.75em;
+            background-color: "#ddd"
         }
 
         .flex {
@@ -38,23 +60,55 @@
             pointer-events: none;
         }
 
-        .demo > hr {
+        .demo>hr {
             width: 100%;
+        }
+
+        #portal {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            display: grid;
+            justify-content: center;
+            justify-items: center;
+            align-items: center;
+            align-content: center;
+        }
+
+        #portal>* {
+            grid-row: 1 / span 1;
+            grid-column: 1 / span 1;
+            pointer-events: all;
+            background: white;
+            border: 2px solid black;
+            border-radius: 2px;
+        }
+
+
+        div[role=rowgroup] {
+            display: flex;
+            flex-direction: column;
+        }
+
+        div[role=rowgroup]>div[role=row] {
+            display: flex;
         }
     </style>
     <script>
-    
+
         window.onerror = function (e) {
             debugger;
             for (let p of arguments) {
-            alert(p);
+                alert(p);
             }
         }
-        </script>
+    </script>
 </head>
 
 <body>
     <div id="root"></div>
+    <div id="portal"></div>
     <script src="./bundle.js"></script>
 </body>
 

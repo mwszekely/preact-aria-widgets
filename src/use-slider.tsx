@@ -1,81 +1,140 @@
 import { h } from "preact";
-import { ManagedChildInfo, MergedProps, useChildManager, useMergedProps, UseRefElementPropsReturnType } from "preact-prop-helpers";
-import { StateUpdater, useCallback, useState } from "preact/hooks";
-import { EventDetail, TagSensitiveProps } from "./props";
+import { generateRandomId, ManagedChildInfo, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, UseManagedChildReturnType } from "preact-prop-helpers";
+import { useMemo, useRef } from "preact/hooks";
+import { debugLog, EventDetail, Prefices, TagSensitiveProps } from "./props";
 
 
 
 
 export type RangeChangeEvent<E extends EventTarget> = { [EventDetail]: { value: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 
-export interface AriaSliderThumbInfo extends ManagedChildInfo<number> {
-    setMin: StateUpdater<number>;
-    setMax: StateUpdater<number>;
+export interface SliderThumbInfo extends ManagedChildInfo<number> {
+    //setMin: StateUpdater<number>;
+    //setMax: StateUpdater<number>;
 }
 
-export interface UseAriaSliderThumbArguments<E extends Element> extends Omit<AriaSliderThumbInfo, "setMin" | "setMax">, TagSensitiveProps<E> {
-    value: number;
-    valueText?: string;
-    onValueChange?: (e: RangeChangeEvent<E>) => void;
-    min?: number;
-    max?: number;
+export interface UseSliderThumbParameters<E extends Element, M extends SliderThumbInfo> extends UseManagedChildParameters<M> {
+    sliderThumbParameters: TagSensitiveProps<E> & {
+        value: number;
+        valueText?: string;
+        onValueChange?: (e: RangeChangeEvent<E>) => void;
+        min?: number;
+        max?: number;
+
+        /**
+         * There's no, like, "slider container" for multi-thumb sliders defined,
+         * so each individual slider needs its own label.
+         * TODO: This is like a tab/tabpanel linking thing where each label is outside
+         * of the container. For now, it's easier to just 
+         * assume a string-based label instead of an element-based one.
+         * 
+         */
+        label: string;
+    }
+    context: SliderContext<M>;
 }
 
-export interface UseAriaSliderThumbProps<E extends HTMLElement> extends h.JSX.HTMLAttributes<E> {
+export interface UseSliderThumbProps<E extends Element> extends h.JSX.HTMLAttributes<E> {
 
 }
 
-export interface UseAriaSliderArguments {
-    min: number;
-    max: number;
+export interface UseSliderParameters<M extends SliderThumbInfo> extends UseManagedChildrenParameters<M> {
+    sliderParameters: {
+        min: number;
+        max: number;
+    }
 }
 
-export interface UseAriaSliderThumbReturnType<E extends HTMLElement> {
-    getElement: () => E | null;
-    useAriaSliderThumbProps: <P extends UseAriaSliderThumbProps<E>>(props: P) => UseRefElementPropsReturnType<E, MergedProps<E, h.JSX.HTMLAttributes<E>, P>>;
-    min: number;
-    max: number;
+export interface UseSliderThumbReturnType<E extends Element, M extends SliderThumbInfo> extends UseManagedChildReturnType<M> {
+    sliderThumbReturn: {
+        min: number;
+        max: number;
+    }
+    propsSliderThumb: h.JSX.HTMLAttributes<E>;
 }
 
-export type UseAriaSliderThumb = <E extends HTMLElement>(props: UseAriaSliderThumbArguments<E>) => UseAriaSliderThumbReturnType<E>;
 
-export function useAriaSlider({ max: maxParent, min: minParent }: UseAriaSliderArguments) {
-    const { useManagedChild } = useChildManager<AriaSliderThumbInfo>();
+export type UseSliderThumb<ThumbElement extends Element, M extends SliderThumbInfo> = (props: UseSliderThumbParameters<ThumbElement, M>) => UseSliderThumbReturnType<ThumbElement, M>;
 
-    const useAriaSliderThumb = useCallback(function useAriaSliderThumb<E extends HTMLElement>({ index, onValueChange, value, valueText, tag, min: minOverride, max: maxOverride, ..._ }: UseAriaSliderThumbArguments<E>): UseAriaSliderThumbReturnType<E> {
-        const [minParentCopy, setMinParentCopy] = useState(minParent);
-        const [maxParentCopy, setMaxParentCopy] = useState(maxParent);
-        const { getElement, useManagedChildProps } = useManagedChild<E>({ index, setMin: setMinParentCopy, setMax: setMaxParentCopy });
+export interface UseSliderReturnType<M extends SliderThumbInfo> extends UseManagedChildrenReturnType<M> {
+    context: SliderContext<M>;
+}
 
-        const min = (minOverride ?? minParentCopy);
-        const max = (maxOverride ?? maxParentCopy);
+export interface SliderContext<M extends SliderThumbInfo> extends UseManagedChildrenContext<M> {
+    sliderContext: {
+        min: number;
+        max: number;
+        baseId: string;
+    }
+}
 
-        return {
-            getElement,
-            useAriaSliderThumbProps,
-            min, 
+
+export function useSlider({ sliderParameters: { max, min }, managedChildrenParameters }: UseSliderParameters<SliderThumbInfo>): UseSliderReturnType<SliderThumbInfo> {
+    debugLog("useSlider");
+    const { context, managedChildrenReturn } = useManagedChildren<SliderThumbInfo>({ managedChildrenParameters });
+
+    const baseIdRef = useRef<string>(null! as "");
+    if (baseIdRef.current === null)
+        baseIdRef.current = generateRandomId(Prefices.sliderThumb);
+    //const { propsReferencer, propsSource, randomIdReturn: { id: baseId } } = useRandomId<LabelElement, ThumbElement>({ randomIdParameters: { prefix: "aria-thumb-", otherReferencerProp: "aria-labelledby" } })
+
+    /*const {
+        propsInput,
+        propsLabel,
+        randomIdInputReturn,
+        randomIdLabelReturn
+    } = useLabel<ThumbElement, LabelElement>({ labelParameters: { ariaLabel: null }, randomIdInputParameters, randomIdLabelParameters });*/
+
+    return {
+        context: useMemo(() => ({
+            ...context,
+            sliderContext: {
+                min,
+                max,
+                baseId: baseIdRef.current
+            }
+        }), [min, max]),
+        managedChildrenReturn
+    };
+}
+
+
+export function useSliderThumb<ThumbElement extends Element, M extends SliderThumbInfo>({
+    managedChildParameters,
+    context: { sliderContext: { max: maxParent, min: minParent }, ...context },
+    sliderThumbParameters
+}: UseSliderThumbParameters<ThumbElement, M>): UseSliderThumbReturnType<ThumbElement, SliderThumbInfo> {
+    const { index } = managedChildParameters;
+    debugLog("useSliderThumb", managedChildParameters.index);
+    const { managedChildReturn } = useManagedChild<SliderThumbInfo>({ managedChildParameters, context }, { index });
+    const { getChildren: _getThumbs } = managedChildReturn;
+
+    const { tag, value, max: maxOverride, min: minOverride, onValueChange, valueText, label } = sliderThumbParameters;
+
+    const min = (minOverride ?? minParent);
+    const max = (maxOverride ?? maxParent);
+
+    let newProps: h.JSX.HTMLAttributes<ThumbElement> = (
+        tag == "input" ?
+            { min, max, value, type: "range" } :
+            { "aria-valuemax": `${max}`, "aria-valuemin": `${min}`, "aria-valuenow": `${value}` }
+    );
+    newProps = { ...newProps, "aria-label": label, "aria-valuetext": valueText, style: { "--range-value": `${value}`, "--range-value-text": `${valueText}` } };
+    if (tag == "input") {
+        newProps.onInput = e => {
+            onValueChange?.({ currentTarget: e.currentTarget, target: e.target, [EventDetail]: { value: (e.currentTarget as Element as HTMLInputElement).valueAsNumber } })
+        }
+    }
+    else {
+        throw new Error("Unimplemented");
+    }
+
+    return {
+        sliderThumbReturn: {
+            min,
             max
-        }
-
-        function useAriaSliderThumbProps<P extends UseAriaSliderThumbProps<E>>(props: P) {
-            let newProps: h.JSX.HTMLAttributes<E> = (
-                tag == "input" ?
-                    { min, max, value, type: "range" } :
-                    { "aria-valuemax": `${max}`, "aria-valuemin": `${min}` }
-            );
-            newProps = { ...newProps, "aria-valuetext": valueText, style: { "--range-value": `${value}`, "--range-value-text": `${valueText}` } };
-            if (tag == "input") {
-                newProps.onInput = e => {
-                    onValueChange?.({ currentTarget: e.currentTarget, target: e.target, [EventDetail]: { value: (e.currentTarget as HTMLElement as HTMLInputElement).valueAsNumber } })
-                }
-            }
-            else {
-                throw new Error("Unimplemented");
-            }
-            return useManagedChildProps(useMergedProps<E>()(newProps, props));
-        }
-    }, []);
-
-    return { useAriaSliderThumb };
+        },
+        managedChildReturn,
+        propsSliderThumb: newProps
+    }
 }
-
