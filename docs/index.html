@@ -94,6 +94,18 @@
         div[role=rowgroup]>div[role=row] {
             display: flex;
         }
+
+        /* From Bootstrap*/
+        .visually-hidden {
+            width: 1px !important;
+            height: 1px !important;
+            padding: 0 !important;
+            margin: -1px !important;
+            overflow: hidden !important;
+            clip: rect(0, 0, 0, 0) !important;
+            white-space: nowrap !important;
+            border: 0 !important;
+        }
     </style>
     <script>
 
@@ -109,6 +121,8 @@
 <body>
     <div id="root"></div>
     <div id="portal"></div>
+    <div id="aria-notifications-polite" class="visually-hidden" aria-live="polite"></div>
+    <div id="aria-notifications-assertive" class="visually-hidden" aria-live="assertive"></div>
     <script src="./bundle.js"></script>
 </body>
 

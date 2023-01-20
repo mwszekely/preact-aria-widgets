@@ -18,6 +18,7 @@ import * as Table from "./demos/table"
 import * as Gridlist from "./demos/gridlist"
 import * as Toolbar from "./demos/toolbar"
 import { setDebugLogging } from "../props";
+import { useNotify, useNotificationProvider, NotificationProviderContext } from "../use-notify"
 
 //import { options } from "preact";
 //options.debounceRendering = queueMicrotask;
@@ -27,29 +28,31 @@ import { setDebugLogging } from "../props";
 setDebugLogging(true)
 
 const Component = () => {
-    
+    const { children, context } = useNotificationProvider({ targetAssertive: "aria-notifications-assertive", targetPolite: "aria-notifications-polite" })
     return (
-        <Heading heading="Demos">
-            <Heading heading="Accordion"><Accordion.Demo /></Heading>
-            <Heading heading="Button"><Button.Demo /></Heading>
-            <Heading heading="Checkbox"><Checkbox.Demo /></Heading>
-            <Heading heading="Checkbox Group"><CheckboxGroup.Demo /></Heading>
-            <Heading heading="Dialog"><Dialog.Demo /></Heading>
-            <Heading heading="Gridlist"><Gridlist.Demo /></Heading>
-            <Heading heading="Single-select Listbox"><ListboxSingle.Demo /></Heading>
-            <Heading heading="Multi-select Listbox"><ListboxMulti.Demo /></Heading>
-            <Heading heading="Menu"><Menu.Demo /></Heading>
-            <Heading heading="Radio"><Radio.Demo /></Heading>
-            <Heading heading="Slider"><Slider.Demo /></Heading>
-            <Heading heading="Toolbar"><Toolbar.Demo /></Heading>
-            <Heading heading="Toast"><Toast.Demo /></Heading>
-            <Heading heading="Tooltip"><Tooltip.Demo /></Heading>
-            <Heading heading="Tabs"><Tabs.Demo /></Heading>
-            <Heading heading="Table"><Table.Demo /></Heading>
-            {/*
+        <NotificationProviderContext.Provider value={context}>
+            {children}
+            <Heading heading="Demos">
+                <Heading heading="Accordion"><Accordion.Demo /></Heading>
+                <Heading heading="Button"><Button.Demo /></Heading>
+                <Heading heading="Checkbox"><Checkbox.Demo /></Heading>
+                <Heading heading="Checkbox Group"><CheckboxGroup.Demo /></Heading>
+                <Heading heading="Dialog"><Dialog.Demo /></Heading>
+                <Heading heading="Gridlist"><Gridlist.Demo /></Heading>
+                <Heading heading="Single-select Listbox"><ListboxSingle.Demo /></Heading>
+                <Heading heading="Multi-select Listbox"><ListboxMulti.Demo /></Heading>
+                <Heading heading="Menu"><Menu.Demo /></Heading>
+                <Heading heading="Radio"><Radio.Demo /></Heading>
+                <Heading heading="Slider"><Slider.Demo /></Heading>
+                <Heading heading="Toolbar"><Toolbar.Demo /></Heading>
+                <Heading heading="Toast"><Toast.Demo /></Heading>
+                <Heading heading="Tooltip"><Tooltip.Demo /></Heading>
+                <Heading heading="Tabs"><Tabs.Demo /></Heading>
+                <Heading heading="Table"><Table.Demo /></Heading>
+                {/*
             
             */}
-            {/*
+                {/*
        
         <DemoTable />
 
@@ -58,7 +61,8 @@ const Component = () => {
         <DemoUseDroppable />
         <DemoUseDraggable />
         <input />*/}
-        </Heading>)
+            </Heading>
+        </NotificationProviderContext.Provider>)
 }
 
 requestAnimationFrame(() => {
