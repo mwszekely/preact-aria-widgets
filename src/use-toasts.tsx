@@ -1,8 +1,8 @@
-import { h, VNode } from "preact";
+import { ComponentChildren, h } from "preact";
 import { findFirstFocusable, ManagedChildInfo, useGlobalHandler, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, useMergedProps, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
-import { StateUpdater, useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
-import { useNotify } from "./use-notify";
+import { StateUpdater, useCallback, useEffect, useRef } from "preact/hooks";
 import { debugLog } from "./props";
+import { useNotify } from "./use-notify";
 
 
 
@@ -17,7 +17,7 @@ export interface UseToastParameters<M extends ToastInfo> extends UseManagedChild
     toastParameters: {
         politeness?: "polite" | "assertive";
         timeout: number | null;
-        children: VNode;
+        children: ComponentChildren;
     }
     context: ToastsContext<M>;
 }
