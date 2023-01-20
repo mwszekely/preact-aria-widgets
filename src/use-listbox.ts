@@ -6,7 +6,7 @@ import {
     UseCompleteListNavigationChildParameters,
     UseCompleteListNavigationChildReturnType,
     UseCompleteListNavigationParameters,
-    UseCompleteListNavigationReturnType, useEnsureStability, UseListNavigationSingleSelectionSortableChildInfo, useMergedProps, useSingleSelectionDeclarative, UseSingleSelectionParameters, useStableCallback, useStableObject
+    UseCompleteListNavigationReturnType, useEnsureStability, UseListNavigationSingleSelectionSortableChildInfo, useMergedProps, usePress, UsePressParameters, UsePressReturnType, useSingleSelectionDeclarative, UseSingleSelectionParameters, useStableCallback, useStableObject
 } from "preact-prop-helpers";
 import { EventDetail, OmitStrong, Prefices } from "./props";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
@@ -14,7 +14,7 @@ import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
 export type ListboxSingleSelectEvent<E extends EventTarget> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 
 export interface UseListboxContext<ListElement extends Element, ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends CompleteListNavigationContext<ListElement, ListItemElement, M> {
-    listboxContext: { selectionLimit: "single" | "multi" }
+    listboxContext: { selectionLimit: "single" | "multi" | "none" }
 }
 
 export interface UseListboxParameters<ListElement extends Element, ListItemElement extends Element, _LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationParameters<ListElement, ListItemElement, M>, "singleSelectionParameters"> {
@@ -25,7 +25,7 @@ export interface UseListboxParameters<ListElement extends Element, ListItemEleme
          * via `selectedIndex`. When `"multi"`, the selected
          * items are controlled by their individual `selected` props.
          */
-        selectionLimit: "single" | "multi";
+        selectionLimit: "single" | "multi" | "none";
 
         /**
          * Only used when `groupingType` is `"without-groups"` or `"group"`
@@ -48,8 +48,8 @@ export interface UseListboxReturnType<ListElement extends Element, ListItemEleme
     propsListboxLabel: h.JSX.HTMLAttributes<LabelElement>;
     context: UseListboxContext<ListElement, ListItemElement, M>;
 }
-export interface UseListboxItemReturnType<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends UseCompleteListNavigationChildReturnType<ListItemElement, M> { }
-export interface UseListboxItemParameters<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends UseCompleteListNavigationChildParameters<ListItemElement, M, never> {
+export interface UseListboxItemReturnType<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends Omit<UseCompleteListNavigationChildReturnType<ListItemElement, M>, "pressParameters">, UsePressReturnType<ListItemElement> { }
+export interface UseListboxItemParameters<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends UseCompleteListNavigationChildParameters<ListItemElement, M, never>, UsePressParameters<ListItemElement> {
     listboxParameters: {
         /**
          * When the `selectionLimit` is `"single"`, this must be `null`.
@@ -114,10 +114,10 @@ export function useListbox<ListElement extends Element, ListItemElement extends 
         staggeredChildrenParameters
     });
 
-    const _v: void = useSingleSelectionDeclarative({ 
-        singleSelectionDeclarativeParameters: { selectedIndex }, 
+    const _v: void = useSingleSelectionDeclarative({
+        singleSelectionDeclarativeParameters: { selectedIndex },
         singleSelectionReturn: { changeSelectedIndex: singleSelectionReturn.changeSelectedIndex }
-     })
+    })
 
     if (groupingType == "group")
         props.role = "group";
@@ -158,7 +158,7 @@ export function useListbox<ListElement extends Element, ListItemElement extends 
 
 export function useListboxItem<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>>({
     completeListNavigationChildParameters,
-    pressParameters,
+    pressParameters: { exclude, focusSelf, onPressSync: opsUser, allowRepeatPresses, longPressThreshold },
     context: { listboxContext: { selectionLimit }, ...context },
     managedChildParameters,
     singleSelectionChildParameters,
@@ -170,22 +170,39 @@ export function useListboxItem<ListItemElement extends Element, M extends Listbo
     const {
         hasCurrentFocusReturn,
         managedChildReturn,
-        pressReturn,
+        pressParameters: { onPressSync: opsSingleSelect },
         props,
         paginatedChildReturn,
         rovingTabIndexChildReturn,
         staggeredChildReturn,
-        singleSelectionChildReturn
+        singleSelectionChildReturn,
+        refElementReturn
     } = useCompleteListNavigationChild<ListItemElement, M, never>({
         completeListNavigationChildParameters,
         textContentParameters,
         managedChildParameters,
-        pressParameters,
         singleSelectionChildParameters,
         rovingTabIndexChildParameters,
         sortableChildParameters,
         context
     });
+
+    const { pressReturn } = usePress<ListItemElement>({
+        refElementReturn,
+        pressParameters:
+        {
+            exclude,
+            focusSelf,
+            allowRepeatPresses,
+            longPressThreshold,
+            onPressSync: useStableCallback(e => {
+                if (selectionLimit == 'single')
+                    opsSingleSelect?.(e);
+                opsUser?.(e);
+
+            })
+        }
+    })
 
 
     if (selectionLimit == "single")
@@ -197,7 +214,8 @@ export function useListboxItem<ListItemElement extends Element, M extends Listbo
         hasCurrentFocusReturn,
         managedChildReturn,
         pressReturn,
-        props,
+        refElementReturn,
+        props: useMergedProps(props, pressReturn.propsUnstable),
         paginatedChildReturn,
         rovingTabIndexChildReturn,
         singleSelectionChildReturn,
