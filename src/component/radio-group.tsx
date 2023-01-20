@@ -1,7 +1,7 @@
 import { createContext, Ref, VNode } from "preact";
 import { useStableGetter } from "preact-prop-helpers";
 import { useContext, useImperativeHandle } from "preact/hooks";
-import { FocusableLabelElement, LabelPosition } from "use-label";
+import { FocusableLabelElement, LabelPosition } from "../use-label";
 import { OmitStrong } from "../props";
 import { RadioContext, RadioSubInfo, useRadio, useRadioGroup, UseRadioGroupParameters, UseRadioGroupReturnType, UseRadioParameters, UseRadioReturnType } from "../use-radio-group";
 import { memoForwardRef, PartialExcept, useDefault } from "./util";

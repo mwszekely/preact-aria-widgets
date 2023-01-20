@@ -1,6 +1,7 @@
-import { h } from "preact";
-import { findFirstFocusable, ManagedChildInfo, useGlobalHandler, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, useMergedProps, useRefElement, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
+import { h, VNode } from "preact";
+import { findFirstFocusable, ManagedChildInfo, useGlobalHandler, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, useMergedProps, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
 import { StateUpdater, useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
+import { useNotify } from "./use-notify";
 import { debugLog } from "./props";
 
 
@@ -16,6 +17,7 @@ export interface UseToastParameters<M extends ToastInfo> extends UseManagedChild
     toastParameters: {
         politeness?: "polite" | "assertive";
         timeout: number | null;
+        children: VNode;
     }
     context: ToastsContext<M>;
 }
@@ -48,7 +50,7 @@ export interface ToastsContext<M extends ToastInfo> extends UseManagedChildrenCo
     toastContext: {
         onAnyToastDismissed: (_index: number) => void;
         getMaxVisibleCount: () => number;
-        setPoliteness: StateUpdater<"polite" | "assertive">;
+        //setPoliteness: StateUpdater<"polite" | "assertive">;
         onAnyToastMounted: (toastIndex: number) => void;
     };
 }
@@ -65,9 +67,10 @@ export function useToasts<ContainerType extends Element>({ managedChildrenParame
     // and if you're pusing 10000 toasts at once an Array<number> isn't going to be your bottleneck.
     const currentIndexQueue = useRef<number[]>([]);
 
-    const [politeness, setPoliteness] = useState<"polite" | "assertive">("polite");
+    //const [politeness, setPoliteness] = useState<"polite" | "assertive">("polite");
 
     const getMaxVisibleCount = useStableGetter(visibleCount);
+    const nextIndexToStartAt = useRef(0);
 
     const { refElementReturn: { getElement, propsStable } } = useRefElement<ContainerType>({ refElementParameters: {} });
     const { context, managedChildrenReturn, ..._childInfo } = useManagedChildren<ToastInfo>({ managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange: ocmu } });
@@ -77,13 +80,15 @@ export function useToasts<ContainerType extends Element>({ managedChildrenParame
 
     // When a toast is shown or hidden, always make sure that we're showing all the toasts that we should be.
     const showHighestPriorityToast = useCallback(() => {
-        const max = Math.min(getMaxVisibleCount(), currentIndexQueue.current.length)
-        for (let i = 0; i < max; ++i) {
+        const max = Math.min(getMaxVisibleCount(), currentIndexQueue.current.length);
+        let start = nextIndexToStartAt.current;
+        for (let i = start; i < max; ++i) {
 
             const highestPriorityToast = toastQueue.getAt(currentIndexQueue.current[i]);
             console.assert(!!highestPriorityToast);
             highestPriorityToast?.show();
         }
+        nextIndexToStartAt.current = max;
     }, [])
 
     // Any time a new toast mounts, update our bottommostToastIndex to point to it if necessary
@@ -157,12 +162,11 @@ export function useToasts<ContainerType extends Element>({ managedChildrenParame
     const toastContext = {
         onAnyToastDismissed,
         getMaxVisibleCount,
-        setPoliteness,
         onAnyToastMounted
     }
     
     //function useToastContainerProps({ role, "aria-live": ariaLive, "aria-relevant": ariaRelevant, ...props }: h.JSX.HTMLAttributes<ContainerType>): h.JSX.HTMLAttributes<ContainerType> {
-    const props = useMergedProps<ContainerType>(useMergedProps(propsStable, { class: "toasts-container", role: "status", "aria-live": politeness ?? "polite", "aria-relevant": "additions" } as h.JSX.HTMLAttributes<ContainerType>));
+    const props = useMergedProps<ContainerType>(useMergedProps(propsStable, { class: "toasts-container" } as h.JSX.HTMLAttributes<ContainerType>));
     //}
 
 
@@ -177,13 +181,16 @@ export function useToasts<ContainerType extends Element>({ managedChildrenParame
     };
 }
 
-export function useToast<E extends Element>({ toastParameters: { politeness, timeout }, managedChildParameters: { index, ..._managedChildParameters }, context }: UseToastParameters<ToastInfo>): UseToastReturnType<E> {
-    const { getMaxVisibleCount, onAnyToastDismissed, setPoliteness, onAnyToastMounted } = context.toastContext;
+export function useToast<E extends Element>({ toastParameters: { politeness, timeout, children }, managedChildParameters: { index, ..._managedChildParameters }, context }: UseToastParameters<ToastInfo>): UseToastReturnType<E> {
+    const { getMaxVisibleCount, onAnyToastDismissed, onAnyToastMounted } = context.toastContext;
     debugLog("useToast", index);
     const [numberOfToastsAheadOfUs, setNumberOfToastsAheadOfUs] = useState(Infinity);
     const getIndex = useStableGetter(index);
     const [dismissed2, setDismissed2, getDismissed2] = useState(false);
     const [showing2, setShowing2, getShowing2] = useState(false);
+
+    const notify = useNotify();
+
     //const [dismissed, setDismissed] = useState(false);
     //const [status, setStatus, getStatus] = useState<"pending" | "active" | "dismissed">("pending");
     //const dismissed = (status === "dismissed");
@@ -195,9 +202,11 @@ export function useToast<E extends Element>({ toastParameters: { politeness, tim
         setShowing2(false);
     }, []);
 
-    const show = useCallback(() => {
+    const show = useStableCallback(() => {
+        debugger;
+        notify("polite", <p>{children}</p>);
         setShowing2(true);
-    }, [])
+    })
 
     useEffect(() => {
         if (!getDismissed2() && !getShowing2()) {
@@ -208,7 +217,7 @@ export function useToast<E extends Element>({ toastParameters: { politeness, tim
     }, [numberOfToastsAheadOfUs])
 
     //const toastId = generateRandomId("toast-");
-    useLayoutEffect(() => { setPoliteness(politeness ?? "polite"); }, [politeness]);
+   // useLayoutEffect(() => { setPoliteness(politeness ?? "polite"); }, [politeness]);
 
 
     const focus = useCallback(() => {

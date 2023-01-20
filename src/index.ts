@@ -8,6 +8,7 @@ export { GridlistCellInfo, GridlistRowInfo, useGridlist, useGridlistCell, UseGri
 export { CheckboxCheckedType, FocusableLabelElement, LabelPosition, useCheckboxLike, UseCheckboxLikeParameters, UseCheckboxLikeReturnType, useLabel, UseLabelParameters, UseLabelReturnType, useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
 export { useMenu, UseMenuContext, useMenuItem, UseMenuItemParameters, UseMenuItemReturnType, UseMenuParameters, UseMenuReturnType } from "./use-menu";
 export { useMenubar, useMenubarChild, UseMenubarItemParameters, UseMenubarItemReturnType, UseMenubarParameters, UseMenubarReturnType, UseMenubarSubInfo } from "./use-menubar";
+export { NotificationProviderContext, NotificationProviderProps, NotificationProviderReturnType, useNotificationProvider, useNotify } from "./use-notify";
 export { useProgress, UseProgressParameters, UseProgressReturnType, useProgressWithHandler, UseProgressWithHandlerParameters, UseProgressWithHandlerReturnType } from "./use-progress";
 export { RadioChangeEvent, RadioContext, RadioSubInfo, useRadio, useRadioGroup, UseRadioGroupParameters, UseRadioGroupReturnType, UseRadioParameters, UseRadioReturnType } from "./use-radio-group";
 export { RangeChangeEvent, SliderContext, SliderThumbInfo, useSlider, UseSliderParameters, UseSliderReturnType, UseSliderThumb, useSliderThumb, UseSliderThumbParameters, UseSliderThumbProps, UseSliderThumbReturnType } from "./use-slider";

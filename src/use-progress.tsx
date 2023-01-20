@@ -108,7 +108,9 @@ export function useProgress<ProgressElement extends Element, LabelElement extend
 export interface UseProgressWithHandlerParameters<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element> {
     labelParameters: UseProgressParameters<IndicatorElement, LabelElement>["labelParameters"];
     progressIndicatorParameters: Pick<UseProgressParameters<IndicatorElement, LabelElement>["progressIndicatorParameters"], "tagIndicator">;
-    progressWithHandlerParameters: { forciblyPending: boolean | null };
+    progressWithHandlerParameters: {
+        forciblyPending: boolean | null;
+    };
     asyncHandlerParameters: UseAsyncHandlerParameters<EventType, CaptureType>;
 }
 
@@ -135,7 +137,7 @@ export function useProgressWithHandler<EventType, CaptureType, IndicatorElement 
         labelParameters,
         progressIndicatorParameters: {
             max: 1,
-            value: (forciblyPending || asyncInfo.pending)? "indeterminate" : "disabled",
+            value: (forciblyPending || asyncInfo.pending) ? "indeterminate" : "disabled",
             valueText: null,
             ...progressIndicatorParameters
         },
