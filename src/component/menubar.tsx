@@ -1,5 +1,5 @@
 import { createContext, Ref, VNode } from "preact";
-import { useContext, useImperativeHandle } from "preact/hooks";
+import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
 //import { ElementToTag } from "../props";
 import { useMenubar, useMenubarChild, UseMenubarContext, UseMenubarItemParameters, UseMenubarItemReturnType, UseMenubarParameters, UseMenubarReturnType, UseMenubarSubInfo } from "../use-menubar";
 import { memoForwardRef, PartialExcept, useDefault } from "./util";
@@ -28,7 +28,6 @@ interface MenubarPropsBase<MenuParentElement extends Element, MenuItemElement ex
 interface MenubarItemPropsBase<MenuItemElement extends Element> extends
     //Get<UseMenubarItemParameters<MenuItemElement, M>, "managedChildParameters">,
     Get<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "menuItemParameters">,
-    Get<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "pressParameters">,
     Get<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "rovingTabIndexChildParameters">,
     Get<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "sortableChildParameters">,
     Get<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "managedChildParameters">,
@@ -36,6 +35,7 @@ interface MenubarItemPropsBase<MenuItemElement extends Element> extends
     Get<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "textContentParameters"> {
     //tagListItem: ElementToTag<ListboxItemElement>;
     //subInfo: Get<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "completeListNavigationChildParameters">;
+    focusSelf?: UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>["completeListNavigationChildParameters"]["focusSelf"];
     ref?: Ref<UseMenubarItemReturnType<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>>;
 }
 
@@ -106,7 +106,7 @@ export const MenubarItem = memoForwardRef(function MenuItemU<MenuItemElement ext
     index,
     render,
     ariaPropName,
-    exclude,
+    focusSelf,
     selectionMode,
     hidden,
     getText,
@@ -117,16 +117,16 @@ export const MenubarItem = memoForwardRef(function MenuItemU<MenuItemElement ext
 }: MenubarItemProps<MenuItemElement>, ref?: Ref<any>) {
     const context = (useContext(MenubarItemContext));
     console.assert(context != null, `This MenuItem is not contained within a Menubar/Menu`);
+    const defaultFocusSelf = useCallback((e: MenuItemElement | null) => (e as Element as HTMLElement)?.focus?.(), [])
 
-    const info = useMenubarChild({
-        completeListNavigationChildParameters: {},
+    const info = useMenubarChild<MenuItemElement>({
+        completeListNavigationChildParameters: { focusSelf: focusSelf ?? defaultFocusSelf },
         context,
         managedChildParameters: { index },
         rovingTabIndexChildParameters: { hidden: hidden ?? false },
         sortableChildParameters: { getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },
         menuItemParameters: { onPress: onPress ?? null, role: role ?? "menuitem" },
-        pressParameters: { exclude },
         singleSelectionChildParameters: { ariaPropName, selectionMode, disabled: disabled ?? false }
     });
 

@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { useStableCallback } from "preact-prop-helpers";
+import { returnFalse, useStableCallback } from "preact-prop-helpers";
 import { debugLog, EnhancedEvent, enhanceEvent, OmitStrong, Prefices } from "./props";
 import { LabelPosition, useCheckboxLike, UseCheckboxLikeParameters, UseCheckboxLikeReturnType } from "./use-label";
 
@@ -47,6 +47,7 @@ export function useCheckbox<LP extends LabelPosition, InputType extends Element,
         refElementInputReturn,
         refElementLabelReturn,
         checkboxLikeParameters: { role: "checkbox", onInput: onInputEnhanced,  ...checkboxLikeParameters },
+        pressParameters: { excludeSpace: returnFalse },
         labelParameters
     });
 

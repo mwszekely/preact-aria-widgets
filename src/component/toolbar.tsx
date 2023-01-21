@@ -24,13 +24,13 @@ export interface ToolbarPropsBase<ToolbarContainerElement extends Element, Toolb
 
 
 export interface ToolbarChildPropsBase<ToolbarChildElement extends Element, M extends UseToolbarSubInfo<ToolbarChildElement>> extends
-    Get<UseToolbarChildParameters<ToolbarChildElement, M>, "pressParameters">,
     Get<UseToolbarChildParameters<ToolbarChildElement, M>, "singleSelectionChildParameters">,
     Get<UseToolbarChildParameters<ToolbarChildElement, M>, "rovingTabIndexChildParameters">,
     Get<UseToolbarChildParameters<ToolbarChildElement, M>, "sortableChildParameters">,
     Get<UseToolbarChildParameters<ToolbarChildElement, M>, "textContentParameters">,
     Pick<Get<UseToolbarChildParameters<any, any>, "managedChildParameters">, "index"> {
-//    subInfo: UseToolbarChildParameters<ToolbarChildElement, M>["completeListNavigationChildParameters"];
+    //    subInfo: UseToolbarChildParameters<ToolbarChildElement, M>["completeListNavigationChildParameters"];
+    focusSelf?: UseToolbarChildParameters<ToolbarChildElement, M>["completeListNavigationChildParameters"]["focusSelf"]
     ref?: Ref<UseToolbarChildReturnType<ToolbarChildElement, M>>;
 }
 
@@ -83,12 +83,12 @@ export const Toolbar = memoForwardRef(function ToolbarU<ContainerElement extends
         },
         staggeredChildrenParameters: { staggered: staggered || false },
         rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable: untabbable || false },
-        typeaheadNavigationParameters: { 
-            collator: useDefault("collator", collator), 
-            noTypeahead: useDefault("noTypeahead", noTypeahead), 
+        typeaheadNavigationParameters: {
+            collator: useDefault("collator", collator),
+            noTypeahead: useDefault("noTypeahead", noTypeahead),
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
-         },
-         labelParameters: { ariaLabel }
+        },
+        labelParameters: { ariaLabel }
     });
 
     useImperativeHandle(ref!, () => listboxReturnType);
@@ -106,8 +106,6 @@ export const ToolbarChild = memoForwardRef(function ToolbarChildU<ToolbarChildEl
     render,
     ariaPropName,
     disabled,
-    exclude,
-    onPressSync,
     selectionMode,
     focusSelf,
     getSortValue,
@@ -121,8 +119,7 @@ export const ToolbarChild = memoForwardRef(function ToolbarChildU<ToolbarChildEl
     const info = useToolbarChild<ToolbarChildElement>({
         context,
         //completeListNavigationChildParameters: subInfo,
-        completeListNavigationChildParameters: {},
-        pressParameters: { exclude, focusSelf: focusSelf ?? focusSelfDefault, onPressSync },
+        completeListNavigationChildParameters: { focusSelf: focusSelf ?? focusSelfDefault },
         managedChildParameters: { index },
         rovingTabIndexChildParameters: { hidden: hidden ?? false },
         sortableChildParameters: { getSortValue },

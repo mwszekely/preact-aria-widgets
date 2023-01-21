@@ -243,20 +243,29 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
         ...listNavRet1
     }
 }
+import { usePress } from "preact-prop-helpers"
 
-
-export function useTab<TabElement extends Element>({ completeListNavigationChildParameters, managedChildParameters, pressParameters, textContentParameters, singleSelectionChildParameters: { selectionMode, ...singleSelectionChildParameters }, rovingTabIndexChildParameters, sortableChildParameters, context }: UseTabParameters<TabElement>) {
+export function useTab<TabElement extends Element>({
+    completeListNavigationChildParameters: { focusSelf, ...completeListNavigationChildParameters },
+    managedChildParameters,
+    textContentParameters,
+    singleSelectionChildParameters: { selectionMode, ...singleSelectionChildParameters },
+    rovingTabIndexChildParameters,
+    sortableChildParameters,
+    context
+}: UseTabParameters<TabElement>) {
 
     const { props: listNavigationSingleSelectionChildProps, ...listNavRet2 } = useCompleteListNavigationChild({
-        completeListNavigationChildParameters,
+        completeListNavigationChildParameters: { focusSelf, ...completeListNavigationChildParameters },
         context,
         managedChildParameters,
         rovingTabIndexChildParameters,
         sortableChildParameters,
         textContentParameters,
-        pressParameters,
         singleSelectionChildParameters: { ariaPropName: "aria-selected", selectionMode: selectionMode ?? "foucs", ...singleSelectionChildParameters },
     });
+    const { pressParameters, refElementReturn } = listNavRet2
+    const { pressReturn } = usePress<TabElement>({ pressParameters: { ...pressParameters, focusSelf }, refElementReturn })
     const { singleSelectionChildReturn: { selected }, rovingTabIndexChildReturn: { tabbable } } = listNavRet2;
     const { getPanelId, getTabId } = context.tabsContext;
 
@@ -265,13 +274,17 @@ export function useTab<TabElement extends Element>({ completeListNavigationChild
 
     debugLog("useTab", managedChildParameters.index, selected.toString());
     return {
-        props: useMergedProps(listNavigationSingleSelectionChildProps, {
-            "data-tabbable": tabbable.toString(),
-            "data-selected": selected.toString(),
-            role: "tab",
-            "aria-controls": panelId,
-            id: tabId
-        } as {}),
+        props: useMergedProps(
+            pressReturn.propsUnstable,
+            listNavigationSingleSelectionChildProps,
+            {
+                "data-tabbable": tabbable.toString(),
+                "data-selected": selected.toString(),
+                role: "tab",
+                "aria-controls": panelId,
+                id: tabId
+            } as {}),
+        pressReturn,
         ...listNavRet2
     }
 }

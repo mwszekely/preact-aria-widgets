@@ -45,7 +45,6 @@ export function Demo() {
             <DemoButton disabled="soft" tag="div" />
             <DemoButton disabled="hard" tag="div" />
             <Button<HTMLButtonElement>
-                exclude={undefined}
                 tagButton="button"
                 pressed={pressed}
                 onPress={e => setPressed(e[EventDetail].pressed ?? false)}

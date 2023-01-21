@@ -39,7 +39,8 @@ export type UseToolbarContext<ContainerElement extends Element, ChildElement ext
 
 
 //export type UseToolbarChild<ChildElement extends Element, C, K extends string> = (i: UseToolbarChildParameters<ChildElement, C, K, C>) => UseToolbarChildReturnTypeWithHooks<ChildElement>;
-export interface UseToolbarChildParameters<E extends Element, M extends UseToolbarSubInfo<E>> extends UseCompleteListNavigationChildParameters<E, M, never> { }
+export interface UseToolbarChildParameters<E extends Element, M extends UseToolbarSubInfo<E>> extends OmitStrong<UseCompleteListNavigationChildParameters<E, M, never>, never> {
+ }
 export interface UseToolbarChildReturnType<ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends UseCompleteListNavigationChildReturnType<ChildElement, M> { }
 //export interface UseToolbarChildReturnTypeWithHooks<ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends UseToolbarChildReturnTypeInfo<ChildElement, M> {
 //}
@@ -98,6 +99,7 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
 
 
 export function useToolbarChild<ChildElement extends Element>({
+
     ...listNavChildParameters
 }: UseToolbarChildParameters<ChildElement, UseToolbarSubInfo<ChildElement>>): UseToolbarChildReturnType<ChildElement, UseToolbarSubInfo<ChildElement>> {
     return useCompleteListNavigationChild<ChildElement, UseToolbarSubInfo<ChildElement>, never>({

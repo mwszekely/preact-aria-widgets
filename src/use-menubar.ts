@@ -1,4 +1,5 @@
 import { h } from "preact";
+import { useMergedProps, usePress, UsePressReturnType } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { debugLog, EnhancedEvent, enhanceEvent, OmitStrong } from "./props";
 import { useToolbar, useToolbarChild, UseToolbarChildParameters, UseToolbarChildReturnType, UseToolbarContext, UseToolbarParameters, UseToolbarReturnType, UseToolbarSubInfo } from "./use-toolbar";
@@ -23,9 +24,9 @@ export interface UseMenubarParameters<MenuParentElement extends Element, MenuIte
     }
 }
 
-export interface UseMenubarItemParameters<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseToolbarChildParameters<MenuItemElement, M>, "pressParameters"> {
+export interface UseMenubarItemParameters<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseToolbarChildParameters<MenuItemElement, M> {
     //hasFocus: UseHasFocusParameters<MenuItemElement>;
-    pressParameters: OmitStrong<UseToolbarChildParameters<MenuItemElement, M>["pressParameters"], "onPressSync" | "focusSelf">;
+    //pressParameters: OmitStrong<UseToolbarChildParameters<MenuItemElement, M>["pressParameters"], "onPressSync" | "focusSelf">;
     menuItemParameters: {
         role: "menuitem" | "menuitemcheckbox" | "menuitemradio";
         //disabled: DisabledType;
@@ -37,7 +38,7 @@ export interface UseMenubarReturnType<MenuParentElement extends Element, MenuIte
     propsMenubar: h.JSX.HTMLAttributes<MenuParentElement>;
     context: UseMenubarContext<MenuParentElement, MenuItemElement, M>;
 }
-export interface UseMenubarItemReturnType<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseToolbarChildReturnType<MenuItemElement, M> { }
+export interface UseMenubarItemReturnType<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseToolbarChildReturnType<MenuItemElement, M>, "pressParameters">, UsePressReturnType<MenuItemElement> { }
 
 
 
@@ -112,7 +113,6 @@ export function useMenubar<MenuParentElement extends Element, MenuItemElement ex
 
 
 export function useMenubarChild<MenuItemElement extends Element>({
-    pressParameters: { ...pressParameters },
     managedChildParameters,
     singleSelectionChildParameters,
     completeListNavigationChildParameters,
@@ -129,8 +129,9 @@ export function useMenubarChild<MenuItemElement extends Element>({
 
     const {
         hasCurrentFocusReturn,
-        pressReturn,
+        pressParameters,
         props,
+        refElementReturn,
         singleSelectionChildReturn,
         rovingTabIndexChildReturn,
         managedChildReturn,
@@ -143,26 +144,10 @@ export function useMenubarChild<MenuItemElement extends Element>({
         rovingTabIndexChildParameters,
         sortableChildParameters,
         textContentParameters,
-        pressParameters: {
-            focusSelf,
-            onPressSync: (e) => (disabled ? null : onPress)?.(enhanceEvent(e, { index: managedChildParameters.index })),
-            ...pressParameters
-        },
         singleSelectionChildParameters,
-        /*listNavigationChildParameters,
-        pressParameters: {
-            onClickSync: (e) => (disabled ? null : onPress)?.(enhanceEvent(e, { index: managedChildParameters.index })),
-            exclude: undefined,
-            focusSelf: rovingTabIndexChildParameters.focusSelf
-        },
-        singleSelectionChildParameters,
-        typeaheadNavigationChildParameters,
-        completeListNavigationChildParameters,
-        managedChildParameters,
-        rovingTabIndexChildParameters,
-        refElementReturn,
-        subInfo: { subInfo }*/
     });
+    
+    const { pressReturn } = usePress<MenuItemElement>({ pressParameters: { ...pressParameters, focusSelf }, refElementReturn })
 
     /*function useMenuItemProps(props: h.JSX.HTMLAttributes<MenuItemElement>) {
         overwriteWithWarning("useMenuItem", props, "role", role);
@@ -175,7 +160,8 @@ export function useMenubarChild<MenuItemElement extends Element>({
         hasCurrentFocusReturn,
         pressReturn,
         paginatedChildReturn,
-        props,
+        refElementReturn,
+        props: useMergedProps(props, pressReturn.propsUnstable),
         singleSelectionChildReturn,
         rovingTabIndexChildReturn,
         staggeredChildReturn,

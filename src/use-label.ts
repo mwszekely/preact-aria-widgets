@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { useMergedProps, usePress, UsePressReturnType, useRandomDualIds, UseRandomDualIdsParameters, UseRandomDualIdsReturnType, useRefElement, UseRefElementReturnType, useStableCallback } from "preact-prop-helpers";
+import { returnTrue, useMergedProps, usePress, UsePressParameters, UsePressReturnType, useRandomDualIds, UseRandomDualIdsParameters, UseRandomDualIdsReturnType, useRefElement, UseRefElementReturnType, useStableCallback } from "preact-prop-helpers";
 import { useEffect } from "preact/hooks";
 import { DisabledType, ElementToTag, noop, OmitStrong } from "./props";
 
@@ -74,7 +74,7 @@ export function useLabel<LP extends LabelPosition, InputElement extends Element,
         propsLabel["for"] = undefined;
     }
 
-    const { pressReturn } = usePress({ pressParameters: { exclude: { enter: "exclude", space: "exclude", click: undefined }, onPressSync: onLabelClick, focusSelf: noop }, refElementReturn })
+    const { pressReturn } = usePress({ pressParameters: { excludeEnter: returnTrue, excludeSpace: returnTrue, onPressSync: onLabelClick, focusSelf: noop }, refElementReturn })
     //propsLabel.onClick = onLabelClick ?? undefined;
 
     return {
@@ -143,6 +143,7 @@ export interface UseCheckboxLikeParameters<LP extends LabelPosition, InputType e
         onInput(event: Event): void;
         //type: "checkbox" | "radio";
     };
+    pressParameters: Pick<UsePressParameters<any>["pressParameters"], "excludeSpace">;
 
     labelParameters: OmitStrong<UseLabelParameters<LP, InputType, LabelType>["labelParameters"], "onLabelClick">;
 
@@ -180,6 +181,7 @@ export function useCheckboxLike<LP extends LabelPosition, InputType extends Elem
     checkboxLikeParameters: { checked, disabled, onInput: onInputSync, role },
     refElementInputReturn,
     refElementLabelReturn,
+    pressParameters: { excludeSpace }
 }: UseCheckboxLikeParameters<LP, InputType, LabelType>): UseCheckboxLikeReturnType<InputType, LabelType> {
 
     const { getElement: getInputElement } = refElementInputReturn;
@@ -230,8 +232,8 @@ export function useCheckboxLike<LP extends LabelPosition, InputType extends Elem
 
     const onClickInputSync = (labelPosition == "wrapping" ? undefined : onInputSync);
     const onClickLabelSync = onInputSync;//(labelPosition != "wrapping" ? undefined : onInputSync);
-    const { pressReturn: pressInputReturn } = usePress<InputType>({ pressParameters: { exclude: {}, focusSelf, onPressSync: (disabled) ? undefined : onClickInputSync }, refElementReturn: refElementInputReturn });
-    const { pressReturn: pressLabelReturn } = usePress<LabelType>({ pressParameters: { exclude: {}, focusSelf, onPressSync: (disabled) ? undefined : onClickLabelSync }, refElementReturn: refElementLabelReturn });
+    const { pressReturn: pressInputReturn } = usePress<InputType>({ pressParameters: { excludeSpace, focusSelf, onPressSync: (disabled) ? undefined : onClickInputSync }, refElementReturn: refElementInputReturn });
+    const { pressReturn: pressLabelReturn } = usePress<LabelType>({ pressParameters: { excludeSpace, focusSelf, onPressSync: (disabled) ? undefined : onClickLabelSync }, refElementReturn: refElementLabelReturn });
     const propsUnstableInput: h.JSX.HTMLAttributes<InputType> = {};
     const propsUnstableLabel: h.JSX.HTMLAttributes<LabelType> = {};
 

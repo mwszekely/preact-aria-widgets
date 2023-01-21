@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { CompleteListNavigationContext, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseListNavigationSingleSelectionSortableChildInfo, useMergedProps, useRefElement, useSingleSelectionDeclarative, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
+import { CompleteListNavigationContext, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseListNavigationSingleSelectionSortableChildInfo, useMergedProps, usePress, UsePressReturnType, useRefElement, useSingleSelectionDeclarative, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
 import { useEffect, useLayoutEffect, useRef } from "preact/hooks";
 import { debugLog, EnhancedEvent, OmitStrong, Prefices } from "./props";
 import { FocusableLabelElement, LabelPosition, useCheckboxLike, UseCheckboxLikeParameters, UseCheckboxLikeReturnType, useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
@@ -194,7 +194,7 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
     }
 }
 
-export interface UseRadioReturnType<LP extends LabelPosition, V extends string | number, I extends Element, IL extends Element, M extends RadioSubInfo<FocusableLabelElement<LP, I, IL>, V>> extends OmitStrong<UseCompleteListNavigationChildReturnType<FocusableLabelElement<LP, I, IL>, M>, "props">, UseCheckboxLikeReturnType<I, IL> {
+export interface UseRadioReturnType<LP extends LabelPosition, V extends string | number, I extends Element, IL extends Element, M extends RadioSubInfo<FocusableLabelElement<LP, I, IL>, V>> extends OmitStrong<UseCompleteListNavigationChildReturnType<FocusableLabelElement<LP, I, IL>, M>, "pressParameters" | "props">, UseCheckboxLikeReturnType<I, IL> {
     propsInput: h.JSX.HTMLAttributes<I>;
     propsLabel: h.JSX.HTMLAttributes<IL>;
 }
@@ -218,7 +218,6 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
     completeListNavigationChildParameters,
     labelParameters,
     managedChildParameters,
-    pressParameters,
     singleSelectionChildParameters,
     context,
     textContentParameters,
@@ -242,15 +241,15 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
         props: listNavigationSingleSelectionChildProps,
         hasCurrentFocusReturn,
         managedChildReturn,
-        pressReturn,
+        pressParameters,
         rovingTabIndexChildReturn,
         staggeredChildReturn,
         singleSelectionChildReturn,
+        refElementReturn,
         paginatedChildReturn
     } = useCompleteListNavigationChild<TabbableChildElement, RadioSubInfo<TabbableChildElement, V>, never>({
         completeListNavigationChildParameters: { getValue2: getValue, ...completeListNavigationChildParameters },
         managedChildParameters,
-        pressParameters,
         context,
         rovingTabIndexChildParameters,
         sortableChildParameters,
@@ -264,6 +263,7 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
         subInfo: { getValue, subInfo },*/
         singleSelectionChildParameters: { selectionMode: "focus", ariaPropName: tagInput == "input" && labelPosition != "wrapping" ? null : "aria-selected", ...singleSelectionChildParameters }
     });
+
 
     const { selected: checked } = singleSelectionChildReturn;
 
@@ -287,6 +287,7 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
             onInput: onInput,
             role: "radio"
         },
+        pressParameters,
         labelParameters,
         randomIdInputParameters: { prefix: Prefices.radio },
         randomIdLabelParameters: { prefix: Prefices.radioLabel },
@@ -294,6 +295,7 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
         refElementLabelReturn
     });
 
+    //const { pressReturn } = usePress({ refElementReturn, pressParameters: { ...pressParameters, focusSelf: checkboxLikeReturn.focusSelf } });
 
     useLayoutEffect(() => {
         byName.set(value, index);
@@ -329,7 +331,7 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
         hasCurrentFocusReturn,
         staggeredChildReturn,
         rovingTabIndexChildReturn,
-        pressReturn,
+        refElementReturn,
         singleSelectionChildReturn,
         checkboxLikeReturn,
         paginatedChildReturn

@@ -48,8 +48,9 @@ export interface UseListboxReturnType<ListElement extends Element, ListItemEleme
     propsListboxLabel: h.JSX.HTMLAttributes<LabelElement>;
     context: UseListboxContext<ListElement, ListItemElement, M>;
 }
-export interface UseListboxItemReturnType<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends Omit<UseCompleteListNavigationChildReturnType<ListItemElement, M>, "pressParameters">, UsePressReturnType<ListItemElement> { }
-export interface UseListboxItemParameters<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends UseCompleteListNavigationChildParameters<ListItemElement, M, never>, UsePressParameters<ListItemElement> {
+export interface UseListboxItemReturnType<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationChildReturnType<ListItemElement, M>, "pressParameters">, UsePressReturnType<ListItemElement> { }
+export interface UseListboxItemParameters<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends UseCompleteListNavigationChildParameters<ListItemElement, M, never> {
+    pressParameters: Pick<UsePressParameters<ListItemElement>["pressParameters"], "onPressSync">;
     listboxParameters: {
         /**
          * When the `selectionLimit` is `"single"`, this must be `null`.
@@ -158,19 +159,19 @@ export function useListbox<ListElement extends Element, ListItemElement extends 
 
 export function useListboxItem<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>>({
     completeListNavigationChildParameters,
-    pressParameters: { exclude, focusSelf, onPressSync: opsUser, allowRepeatPresses, longPressThreshold },
     context: { listboxContext: { selectionLimit }, ...context },
     managedChildParameters,
     singleSelectionChildParameters,
     rovingTabIndexChildParameters,
     sortableChildParameters,
     textContentParameters,
-    listboxParameters: { selected }
+    listboxParameters: { selected },
+    pressParameters: { onPressSync: opsu },
 }: UseListboxItemParameters<ListItemElement, M>): UseListboxItemReturnType<ListItemElement, M> {
     const {
         hasCurrentFocusReturn,
         managedChildReturn,
-        pressParameters: { onPressSync: opsSingleSelect },
+        pressParameters: { excludeSpace, onPressSync: opsss },
         props,
         paginatedChildReturn,
         rovingTabIndexChildReturn,
@@ -188,19 +189,14 @@ export function useListboxItem<ListItemElement extends Element, M extends Listbo
     });
 
     const { pressReturn } = usePress<ListItemElement>({
-        refElementReturn,
-        pressParameters:
-        {
-            exclude,
-            focusSelf,
-            allowRepeatPresses,
-            longPressThreshold,
-            onPressSync: useStableCallback(e => {
-                if (selectionLimit == 'single')
-                    opsSingleSelect?.(e);
-                opsUser?.(e);
-
-            })
+        refElementReturn, pressParameters: {
+            onPressSync: useStableCallback((e) => {
+                if (selectionLimit == "single")
+                    opsss?.(e);
+                opsu?.(e);
+            }),
+            excludeSpace,
+            focusSelf: e => (e as Element as HTMLElement)?.focus?.()
         }
     })
 

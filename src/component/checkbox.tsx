@@ -1,5 +1,5 @@
 import { createElement, h, Ref, VNode } from "preact";
-import { useRefElement } from "preact-prop-helpers";
+import { returnFalse, useRefElement } from "preact-prop-helpers";
 import { useImperativeHandle } from "preact/hooks";
 import { ElementToTag, EventDetail } from "../props";
 import { useCheckbox, UseCheckboxParameters, UseCheckboxReturnType } from "../use-checkbox";
@@ -90,7 +90,8 @@ export const Checkbox = memoForwardRef(function Checkbox<I extends Element, L ex
         checkboxParameters: { onCheckedChange },
         labelParameters: { ariaLabel: ariaLabel, labelPosition, tagInput, tagLabel },
         refElementInputReturn,
-        refElementLabelReturn
+        refElementLabelReturn,
+        pressParameters: { excludeSpace: returnFalse }
     });
 
     useImperativeHandle(ref!, () => checkbox);

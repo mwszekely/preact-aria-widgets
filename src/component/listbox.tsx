@@ -24,11 +24,12 @@ interface ListboxPropsBase<ListElement extends Element, ListItemElement extends 
 interface ListboxItemPropsBase<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends
     Get<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "listboxParameters">,
     Get<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "managedChildParameters">,
-    Get<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "pressParameters">,
     Get<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "sortableChildParameters">,
     Get<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "rovingTabIndexChildParameters">,
     Get<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "singleSelectionChildParameters">,
+    Get<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "pressParameters">,
     Get<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "textContentParameters"> {
+    focusSelf?: UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>["completeListNavigationChildParameters"]["focusSelf"];
     ref?: Ref<UseListboxItemReturnType<ListItemElement, M>>;
 }
 
@@ -134,18 +135,18 @@ export const Listbox = memoForwardRef(function Listbox<ListElement extends Eleme
     );
 })
 
-export const ListboxItem = memoForwardRef(function ListboxItem<ListboxItemElement extends Element>({ ariaPropName, disabled, exclude, focusSelf, getText, hidden, index, onPressSync, render, selected, selectionMode, getSortValue }: ListboxItemProps<ListboxItemElement, ListboxInfo<ListboxItemElement>>) {
+export const ListboxItem = memoForwardRef(function ListboxItem<ListboxItemElement extends Element>({ ariaPropName, disabled, focusSelf, onPressSync, getText, hidden, index, render, selected, selectionMode, getSortValue }: ListboxItemProps<ListboxItemElement, ListboxInfo<ListboxItemElement>>) {
     const context = useContext(ListboxContext) as UseListboxContext<any, ListboxItemElement, ListboxInfo<ListboxItemElement>>;
     console.assert(context != null, `This ListboxItem is not contained within a Listbox`);
     const focusSelfDefault = useCallback((e: any) => { e?.focus(); }, []);
     const info = useListboxItem({
-        completeListNavigationChildParameters: {},
+        completeListNavigationChildParameters: { focusSelf: focusSelf ?? focusSelfDefault },
         context,
         listboxParameters: { selected: selected ?? null, },
+        pressParameters: { onPressSync },
         managedChildParameters: { index },
         rovingTabIndexChildParameters: { hidden: hidden ?? false },
         sortableChildParameters: { getSortValue: getSortValue },
-        pressParameters: { exclude, focusSelf: focusSelf ?? focusSelfDefault, onPressSync },
         textContentParameters: { getText: useDefault("getText", getText) },
         singleSelectionChildParameters: {
             disabled: disabled ?? false,

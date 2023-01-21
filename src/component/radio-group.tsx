@@ -26,10 +26,10 @@ interface RadioPropsBase<LP extends LabelPosition, InputElement extends Element,
     Get<UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>, "checkboxLikeParameters">,
     Get<UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>, "labelParameters">,
     Get<UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>, "rovingTabIndexChildParameters">,
-    Get<UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>, "pressParameters">,
     OmitStrong<Get<UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>, "singleSelectionChildParameters">, "disabled">,
     Get<UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>, "textContentParameters">,
     OmitStrong<Get<UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>, "managedChildParameters">, never> {
+    focusSelf?: UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>["completeListNavigationChildParameters"]["focusSelf"];
     //ref?: Ref<UseRadioReturnTypeInfo<InputElement, LabelElement>>;
     //subInfo: C;
 
@@ -126,10 +126,8 @@ export const Radio = memoForwardRef(function Radio<LP extends LabelPosition, V e
     render,
     value,
     ariaLabel,
-    exclude,
     focusSelf,
     labelPosition,
-    onPressSync,
     hidden,
     tagInput,
     tagLabel,
@@ -146,10 +144,9 @@ export const Radio = memoForwardRef(function Radio<LP extends LabelPosition, V e
         sortableChildParameters: { getSortValue: getValue },
         radioParameters: { value },
         checkboxLikeParameters: { disabled: disabled ?? false },
-        completeListNavigationChildParameters: { getValue },
+        completeListNavigationChildParameters: { focusSelf: focusSelf ?? defaultFocusSelf },
         context,
         labelParameters: { ariaLabel, labelPosition, tagInput, tagLabel },
-        pressParameters: { exclude, focusSelf: focusSelf ?? defaultFocusSelf, onPressSync },
         singleSelectionChildParameters: { disabled: !!disabled },
         textContentParameters: { getText: useDefault("getText", getText) }
         //rovingTabIndexParameters: { hidden, focusSelf, noModifyTabIndex },

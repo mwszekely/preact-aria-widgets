@@ -65,12 +65,17 @@ export function Demo() {
                                 <button {...info.propsTrigger} onClick={() => setOpen(o => !o)}>Menu trigger</button>
                                 {defaultRenderPortal({
                                     portalId: "portal", children: (
+
                                         <div {...info.propsSurface} hidden={!open}>
-                                            <ul {...info.propsTarget}>{Array.from((function* () {
-                                                for (let i = 0; i < count; ++i) {
-                                                    yield <div><DemoListItem index={i} key={i} /></div>
-                                                }
-                                            })())}</ul>
+                                            <div {...info.propsSentinel} />
+                                            <ul {...info.propsTarget}>
+                                                {Array.from((function* () {
+                                                    for (let i = 0; i < count; ++i) {
+                                                        yield <div><DemoListItem index={i} key={i} /></div>
+                                                    }
+                                                })())}
+                                            </ul>
+                                            <div {...info.propsSentinel} />
                                         </div>
                                     )
                                 })}

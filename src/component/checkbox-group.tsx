@@ -20,7 +20,6 @@ export interface CheckboxGroupPropsBase<ParentElement extends Element, TabbableC
 
 export interface CheckboxGroupParentPropsBase<TCE extends Element> extends
     Get<UseCheckboxGroupParentParameters<TCE, CheckboxGroupInfo<TCE>>, "managedChildParameters">,
-    Get<UseCheckboxGroupParentParameters<TCE, CheckboxGroupInfo<TCE>>, "pressParameters">,
     Get<UseCheckboxGroupParentParameters<TCE, CheckboxGroupInfo<TCE>>, "rovingTabIndexChildParameters">,
     Get<UseCheckboxGroupParentParameters<TCE, CheckboxGroupInfo<TCE>>, "sortableChildParameters">,
     Get<UseCheckboxGroupParentParameters<TCE, CheckboxGroupInfo<TCE>>, "textContentParameters">,
@@ -37,9 +36,9 @@ export interface CheckboxGroupChildPropsBase<TCE extends Element> extends
     Get<UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>, "managedChildParameters">,
     Get<UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>, "rovingTabIndexChildParameters">,
     Get<UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>, "sortableChildParameters">,
-    Get<UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>, "textContentParameters">,
-    Get<UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>, "pressParameters"> {
+    Get<UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>, "textContentParameters"> {
     //subInfo: Get<UseCheckboxGroupChildParameters<InputType, CBGSubInfo, K, CBGSubInfo>, "subInfo">;
+    focusSelf: UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>["completeListNavigationChildParameters"]["focusSelf"];
     ref?: Ref<UseCheckboxGroupChildReturnType<TCE, CheckboxGroupInfo<TCE>>>;
 }
 
@@ -183,28 +182,26 @@ export const CheckboxGroup = memoForwardRef(function CheckboxGroup<ParentElement
     )
 });
 
-export const CheckboxGroupParent = memoForwardRef(function CheckboxGroupParent<TCE extends Element>({ render,  index, focusSelf, exclude, hidden, getText, onPressSync, getSortValue, ..._rest }: CheckboxGroupParentProps<TCE>, ref?: Ref<any>) {
+export const CheckboxGroupParent = memoForwardRef(function CheckboxGroupParent<TCE extends Element>({ render,  index, focusSelf, hidden, getText, getSortValue, ..._rest }: CheckboxGroupParentProps<TCE>, ref?: Ref<any>) {
     const context = (useContext(UseCheckboxGroupChildContext) as CheckboxGroupContext<any, TCE, CheckboxGroupInfo<TCE>>);
     console.assert(context != null, `This CheckboxGroupParent is not contained within a CheckboxGroup`);
 
     const info = useCheckboxGroupParent<TCE>({
 
-        completeListNavigationChildParameters: { checkboxInfo: { checkboxChildType: "parent" } },
+        completeListNavigationChildParameters: { focusSelf, checkboxInfo: { checkboxChildType: "parent" } },
         context,
         managedChildParameters: { index },
         rovingTabIndexChildParameters: { hidden: hidden ?? false },
         sortableChildParameters: { getSortValue },
-        pressParameters: { exclude, onPressSync, focusSelf },
         textContentParameters: { getText: useDefault("getText", getText) }
     });
+    
     useImperativeHandle(ref!, () => info);
     return render(info);
 })
 
 export const CheckboxGroupChild = memoForwardRef(function CheckboxGroupChild<TCE extends Element>({
     index,
-    exclude,
-    onPressSync,
     render,
     checked,
     onChangeFromParent,
@@ -218,13 +215,12 @@ export const CheckboxGroupChild = memoForwardRef(function CheckboxGroupChild<TCE
     console.assert(context != null, `This CheckboxGroupChild is not contained within a CheckboxGroup`);
     const info = useCheckboxGroupChild({
         checkboxGroupChild: { checked, onChangeFromParent },
-        completeListNavigationChildParameters: {},
+        completeListNavigationChildParameters: { focusSelf },
         textContentParameters: { getText: useDefault("getText", getText) },
         context,
         managedChildParameters: { index },
         rovingTabIndexChildParameters: { hidden: hidden ?? false },
         sortableChildParameters: { getSortValue },
-        pressParameters: { exclude, onPressSync, focusSelf }
     });
 
     useImperativeHandle(ref!, () => info);

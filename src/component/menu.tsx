@@ -1,5 +1,5 @@
 import { createContext, Ref, VNode } from "preact";
-import { useContext, useImperativeHandle } from "preact/hooks";
+import { useContext, useImperativeHandle, useCallback } from "preact/hooks";
 import { useMenu, UseMenuParameters, UseMenuReturnType, UseMenuContext, useMenuItem, UseMenuItemReturnType } from "../use-menu";
 import { UseMenubarSubInfo } from "../use-menubar";
 import { MenubarItemProps } from "./menubar";
@@ -129,18 +129,18 @@ export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element,
 })
 
 
-export const MenuItem = memoForwardRef(function MenuItem<MenuItemElement extends Element>({ index, hidden, getSortValue, onPress, getText, role, exclude, ariaPropName, selectionMode, disabled, render }: MenuItemProps<MenuItemElement>, ref?: Ref<any>) {
+export const MenuItem = memoForwardRef(function MenuItem<MenuItemElement extends Element>({ index, hidden, getSortValue, onPress, getText, role, focusSelf, ariaPropName, selectionMode, disabled, render }: MenuItemProps<MenuItemElement>, ref?: Ref<any>) {
     const context = useContext(MenuItemContext);
     console.assert(context != null, `This MenuItem is not contained within a Menubar/Menu`);
-    const info = useMenuItem({
-        completeListNavigationChildParameters: {},
+    const defaultFocusSelf = useCallback((e: MenuItemElement | null) => (e as Element as HTMLElement)?.focus?.(), []);
+    const info = useMenuItem<MenuItemElement>({
+        completeListNavigationChildParameters: { focusSelf: focusSelf ?? defaultFocusSelf },
         context,
         managedChildParameters: { index },
         rovingTabIndexChildParameters: { hidden: hidden ?? false },
         sortableChildParameters: { getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },
         menuItemParameters: { onPress: onPress ?? null, role: role ?? "menuitem" },
-        pressParameters: { exclude },
         singleSelectionChildParameters: { ariaPropName, selectionMode, disabled: disabled ?? false }
     });
 
