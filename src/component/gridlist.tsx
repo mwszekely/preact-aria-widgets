@@ -40,6 +40,7 @@ interface GridlistChildPropsBase<CellElement extends Element, M extends Gridlist
     Get<UseGridlistCellParameters<CellElement, M>, "gridNavigationCellParameters">,
     Get<UseGridlistCellParameters<CellElement, M>, "textContentParameters">,
     Get<UseGridlistCellParameters<CellElement, M>, "rovingTabIndexChildParameters">,
+    Get<UseGridlistCellParameters<CellElement, M>, "pressParameters">,
     Get<UseGridlistCellParameters<CellElement, M>, "managedChildParameters"> {
     focusSelf?: M["focusSelf"];
     ref?: Ref<UseGridlistCellReturnType<CellElement, M>>;
@@ -258,6 +259,7 @@ export const GridlistChild = memoForwardRef(function GridlistChild<CellElement e
     focusSelf,
     hidden,
     getText,
+    onPressSync,
     render,
 }: GridlistChildProps<CellElement, GridlistCellInfo<CellElement>>, ref?: Ref<any>) {
     const context = (useContext(GridlistRowContext) as UseGridlistRowContext<any, CellElement, GridlistCellInfo<CellElement>>);
@@ -269,6 +271,7 @@ export const GridlistChild = memoForwardRef(function GridlistChild<CellElement e
         gridNavigationCellParameters: { colSpan: colSpan ?? 1 },
         textContentParameters: { getText: useDefault("getText", getText) },
         managedChildParameters: { index },
+        pressParameters: { onPressSync },
         rovingTabIndexChildParameters: { hidden: hidden ?? false }
     });
 
