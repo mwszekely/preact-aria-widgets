@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { useMergedProps, usePress, UsePressReturnType } from "preact-prop-helpers";
+import { useMergedProps, usePress, UsePressReturnType, useStableCallback } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { debugLog, EnhancedEvent, enhanceEvent, OmitStrong } from "./props";
 import { useToolbar, useToolbarChild, UseToolbarChildParameters, UseToolbarChildReturnType, UseToolbarContext, UseToolbarParameters, UseToolbarReturnType, UseToolbarSubInfo } from "./use-toolbar";
@@ -30,7 +30,7 @@ export interface UseMenubarItemParameters<MenuItemElement extends Element, M ext
     menuItemParameters: {
         role: "menuitem" | "menuitemcheckbox" | "menuitemradio";
         //disabled: DisabledType;
-        onPress: null | ((e: EnhancedEvent<MenuItemElement, h.JSX.TargetedEvent<MenuItemElement>, { index: number }>) => void);
+        onPress: null | ((e: h.JSX.TargetedEvent<MenuItemElement>) => void);
     }
 }
 
@@ -120,7 +120,7 @@ export function useMenubarChild<MenuItemElement extends Element>({
     sortableChildParameters,
     context,
     textContentParameters,
-    menuItemParameters: { onPress, role }
+    menuItemParameters: { onPress: opu, role }
 }: UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenubarItemReturnType<MenuItemElement, UseMenubarSubInfo<MenuItemElement>> {
     debugLog("useMenuItem", managedChildParameters.index);
     const disabled = singleSelectionChildParameters.disabled;
@@ -129,7 +129,7 @@ export function useMenubarChild<MenuItemElement extends Element>({
 
     const {
         hasCurrentFocusReturn,
-        pressParameters,
+        pressParameters: { excludeSpace, onPressSync: ops },
         props,
         refElementReturn,
         singleSelectionChildReturn,
@@ -146,8 +146,17 @@ export function useMenubarChild<MenuItemElement extends Element>({
         textContentParameters,
         singleSelectionChildParameters,
     });
-    
-    const { pressReturn } = usePress<MenuItemElement>({ pressParameters: { ...pressParameters, focusSelf }, refElementReturn })
+
+    const { pressReturn } = usePress<MenuItemElement>({
+        pressParameters: {
+            focusSelf,
+            excludeSpace,
+            onPressSync: useStableCallback((e) => {
+                ops?.(e);
+                opu?.(e);
+            })
+        }, refElementReturn
+    })
 
     /*function useMenuItemProps(props: h.JSX.HTMLAttributes<MenuItemElement>) {
         overwriteWithWarning("useMenuItem", props, "role", role);

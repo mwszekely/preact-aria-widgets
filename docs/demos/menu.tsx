@@ -1,9 +1,7 @@
 
 import { returnZero, useState } from "preact-prop-helpers";
 import { defaultRenderPortal } from "../../component/dialog";
-import { Menu } from "../../component/menu";
-import { MenuItem } from "../../component/menu";
-import { EventDetail } from "../../props";
+import { Menu, MenuItem } from "../../component/menu";
 
 function DemoListItem({ index }: { index: number }) {
 
@@ -14,7 +12,7 @@ function DemoListItem({ index }: { index: number }) {
             getSortValue={returnZero}
             selectionMode="disabled"
             role="menuitem"
-            onPress={e => alert(`Menu item #${e[EventDetail].index} pressed`)}
+            onPress={e => alert(`Menu item #${index} pressed`)}
             disabled={false}
             render={info => <li {...info.props}>{`Menu item #${index}`}</li>}
         />
