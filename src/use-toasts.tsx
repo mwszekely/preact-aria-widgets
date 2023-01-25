@@ -203,7 +203,6 @@ export function useToast<E extends Element>({ toastParameters: { politeness, tim
     }, []);
 
     const show = useStableCallback(() => {
-        debugger;
         notify("polite", <p>{children}</p>);
         setShowing2(true);
     })
