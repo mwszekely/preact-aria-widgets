@@ -50,7 +50,7 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
     // so we can just have them listen to and swallow all "Escape"
     // key presses before anyone else. For a more general popup,
     // or a tooltip in a tooltip (!!) a different solution would be needed.
-    useGlobalHandler(document, "keydown", (e: KeyboardEvent) => {
+    /*useGlobalHandler(document, "keydown", (e: KeyboardEvent) => {
         if (getOpen() && e.key === "Escape" && !e.defaultPrevented) {
             e.preventDefault();
             e.stopImmediatePropagation();
@@ -61,7 +61,7 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
             setTriggerFocusedDelayCorrected(false);
             setTooltipFocusedDelayCorrected(false);
         }
-    }, { capture: true });
+    }, { capture: true });*/
 
     const [open, setOpen, getOpen] = useState(false);
 
@@ -186,6 +186,18 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
 
 
     debugLog("useTooltipTrigger");
+
+    useGlobalHandler(document, "pointermove", e => {
+        const popupElement = getPopupElement();
+        const triggerElement = getTriggerElement();
+        const mouseElement = e.target as Node | null;
+        if (!(popupElement?.contains(mouseElement))) {
+            setTooltipHover(false);
+        }
+        if (!(triggerElement?.contains(mouseElement))) {
+            setTriggerHover(false);
+        }
+    }, { capture: true, passive: true })
 
     /*useGlobalHandler(document, "pointermove", e => {
         const target = (e.target as HTMLElement);
