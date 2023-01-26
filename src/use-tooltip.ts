@@ -29,6 +29,7 @@ export type UseTooltip<TriggerType extends HTMLElement | SVGElement, TooltipType
 export interface UseTooltipReturnType<TriggerType extends Element, PopupType extends Element> {
     tooltipReturn: {
         isOpen: boolean;
+        displayReason: null | "hover" | "focus";
         getIsOpen: () => boolean;
     }
     propsPopup: h.JSX.HTMLAttributes<PopupType>;
@@ -43,6 +44,8 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
     mouseoverDelay ??= 400;
     mouseoutToleranceDelay ??= 500;
     focusDelay ??= 1;
+
+    const [displayReason, setDisplayReason] = useState<null | "hover" | "focus">(null);
 
     // The escape key should close tooltips, but do nothing else.
     // (i.e. closing a tooltip in a dialog MUST NOT close the dialog too)
@@ -74,6 +77,9 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
     const { refElementReturn: { getElement: getPopupElement, propsStable: popupRefProps } } = useRefElement<PopupType>({ refElementParameters: {} });
 
     const [, setTriggerFocused] = usePassiveState(useStableCallback((focused: boolean) => {
+        if (focused) {
+            setDisplayReason("focus");
+        }
         const delay = focused ? focusDelay : 1;
         if (delay != null && isFinite(delay)) {
             const handle = setTimeout(() => setTriggerFocusedDelayCorrected(focused), focused ? focusDelay : 1);
@@ -89,12 +95,14 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
     }), returnFalse);
     const onHoverChange = useStableCallback(function onHoverChange(hovering: boolean) {
         if (hovering) {
+
+            setDisplayReason("hover");
             // When we're hovering, we want to make sure, at all costs, that we
             // DO NOT SHOW THE TOOLTIP WHEN NOT HOVERING.  We need to make sure that
             // even when mouseleave doesn't fire for whatever dumb reason that
             // the tooltip still goes away.  To do this, we use a global event handler
             // that just checks for global mouse move events and sets hover from that.
-            const H = (e: Event) => {
+            /*const H = (e: Event) => {
                 let t = e.target;
                 if (t && t instanceof Node) {
                     if (!(getTriggerElement()?.contains(t))) {
@@ -124,7 +132,7 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
                 }
             }
 
-            return () => document.removeEventListener("pointermove", H);
+            return () => document.removeEventListener("pointermove", H);*/
         }
         else {
             switch (hoverState) {
@@ -149,7 +157,6 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
     const [, setTooltipHover] = usePassiveState(onHoverChange, returnFalse);
     const [triggerFocusedDelayCorrected, setTriggerFocusedDelayCorrected] = useState(false);
     const [hoverState, setHoverState] = useState<"hidden" | "showing2" | "shown" | "hiding">("hidden");
-
 
 
     useTimeout({
@@ -272,6 +279,7 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
         propsTrigger: useMergedProps<TriggerType>(triggerRefProps, propsTrigger, hasCurrentFocusReturn.propsStable, { onTouchEnd }, otherTriggerProps, refElementSourceReturn.propsStable),
         tooltipReturn: {
             isOpen: open,
+            displayReason,
             getIsOpen: getOpen
         }
     }
