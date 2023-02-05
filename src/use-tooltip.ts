@@ -87,7 +87,6 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
     }, [])
 
     const onCurrentFocusedInnerChanged = useCallback((focused: boolean, which: "popup" | "trigger") => {
-        debugger;
         if (!stateIsMouse()) {
             if (focused) {
                 setState(`focused-${which}`);
