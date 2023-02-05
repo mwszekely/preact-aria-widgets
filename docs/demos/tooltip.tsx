@@ -1,5 +1,7 @@
 
+import { useState } from "preact/hooks";
 import { defaultRenderPortal, Tooltip } from "../../";
+import { TooltipStatus } from "../../use-tooltip";
 
 export function Blurb() {
     return (
@@ -26,6 +28,7 @@ export function Code() {
 
 export function Demo() {
 
+    const [tooltipStatus, setTooltipStatus] = useState<TooltipStatus>(null);
 
     return (
         <>
@@ -34,12 +37,13 @@ export function Demo() {
             <div>
                 The following text triggers a tooltip: <Tooltip<HTMLSpanElement, HTMLDivElement> 
                 tooltipSemanticType="description"
+                onStatus={setTooltipStatus}
                 render={info => {
                     return <>
                         <span tabIndex={0} {...info.propsTrigger}>Tooltip-triggering text that is hoverable and focusable: </span>
                         {defaultRenderPortal({
                             portalId: "portal",
-                            children: <div {...info.propsPopup} hidden={!info.tooltipReturn.isOpen}>This text describes the triggering text in more detail.</div>
+                            children: <div {...info.propsPopup} hidden={!tooltipStatus}>This text describes the triggering text in more detail.</div>
                         })}</>
                 }} />
             </div>

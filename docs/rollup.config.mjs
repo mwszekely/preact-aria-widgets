@@ -19,11 +19,11 @@ export default {
         typescript({ sourceMap: true }), 
         commonjs({ sourceMap: true, extensions }), 
         resolve({ extensions, dedupe: ['preact', "preact/compat", "preact/hooks"] }),   // TODO: Why, exactly, is dedupe needed? It doesn't not make sense, but could the Preact error be avoided?
-        getBabelOutputPlugin({
+        /*getBabelOutputPlugin({
             configFile: path.resolve(".babelrc"),
             sourceMaps: true,
             allowAllFormats: true
-        }),
+        }),*/
         sourcemaps()    // TODO: This is deprecated but needed for TS source maps
     ],
 };

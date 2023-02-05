@@ -16,7 +16,7 @@ export { TableCellInfo, TableRowInfo, useTable, useTableCell, UseTableCellParame
 export { TabPanelsContext, TabsChangeEvent, TabsContext, UseTab, useTab, UseTabLabelParameters, UseTabLabelReturnTypeWithHooks, UseTabList, UseTabListLabel, UseTabListLabelReturnTypeInfo, UseTabListReturnType, useTabPanel, UseTabPanel, UseTabPanelParameters, UseTabPanelReturnType, UseTabParameters, UseTabReturnType, useTabs, UseTabsParameters, UseTabsReturnType } from "./use-tabs";
 export { ToastInfo, ToastsContext, useToast, UseToastParameters, UseToastReturnType, useToasts, UseToastsParameters, UseToastsReturnType } from "./use-toasts";
 export { useToolbar, useToolbarChild, UseToolbarChildParameters, UseToolbarChildReturnType, UseToolbarContext, UseToolbarParameters, UseToolbarReturnType, UseToolbarSubInfo } from "./use-toolbar";
-export { useTooltip, UseTooltip, UseTooltipParameters, UseTooltipPopupParameters, UseTooltipReturnType, UseTooltipTrigger, UseTooltipTriggerParameters } from "./use-tooltip";
+export { useTooltip, TooltipState, UseTooltipParameters, UseTooltipReturnType, TooltipStatus } from "./use-tooltip";
 
 export { Accordion, AccordionProps, AccordionSection, AccordionSectionProps } from "./component/accordion";
 export { Button, ButtonProps } from "./component/button";

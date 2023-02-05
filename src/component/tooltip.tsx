@@ -1,4 +1,5 @@
 import { Ref, VNode } from "preact";
+import { useStableCallback, useState } from "preact-prop-helpers";
 import { useContext, useImperativeHandle } from "preact/compat";
 import { useTooltip, UseTooltipParameters, UseTooltipReturnType } from "../use-tooltip";
 import { memoForwardRef, ParentDepthContext, PartialExcept, useDefault } from "./util";
@@ -6,12 +7,12 @@ import { memoForwardRef, ParentDepthContext, PartialExcept, useDefault } from ".
 
 type Get<T, K extends keyof T> = T[K];
 
-interface TooltipPropsBase<TriggerType extends Element, PopupType extends Element> extends Get<UseTooltipParameters<PopupType>, "escapeDismissParameters">, Get<UseTooltipParameters<PopupType>, "tooltipParameters"> {
+interface TooltipPropsBase<TriggerType extends Element, PopupType extends Element> extends Get<UseTooltipParameters<TriggerType, PopupType>, "escapeDismissParameters">, Get<UseTooltipParameters<TriggerType, PopupType>, "tooltipParameters"> {
     render(info: UseTooltipReturnType<TriggerType, PopupType>): VNode;
     ref?: Ref<UseTooltipReturnType<TriggerType, PopupType>>;
 }
 
-export type TooltipProps<TriggerType extends Element, PopupType extends Element> = PartialExcept<TooltipPropsBase<TriggerType, PopupType>, "render" | "tooltipSemanticType">
+export type TooltipProps<TriggerType extends Element, PopupType extends Element> = PartialExcept<TooltipPropsBase<TriggerType, PopupType>, "render" | "tooltipSemanticType" | "onStatus">
 /*
 export function defaultRenderTooltip<TriggerType extends Element, PopupType extends Element>({ tagTooltip, tagTrigger, makeTooltipProps, makeTriggerProps, portalId }: { portalId: string, tagTrigger: ElementToTag<TriggerType>, tagTooltip: ElementToTag<PopupType>, makeTriggerProps: (info: UseTooltipReturnType<TriggerType, PopupType>) => h.JSX.HTMLAttributes<TriggerType>, makeTooltipProps: (info: UseTooltipReturnType<TriggerType, PopupType>) => h.JSX.HTMLAttributes<PopupType> }) {
     return function (info: UseTooltipReturnType<TriggerType, PopupType>) {
@@ -27,7 +28,7 @@ export function defaultRenderTooltip<TriggerType extends Element, PopupType exte
     }
 }*/
 
-export const Tooltip = memoForwardRef(function TooltipU<TriggerType extends Element, PopupType extends Element>({ focusDelay, mouseoutToleranceDelay, mouseoverDelay, getWindow, parentDepth, render, tooltipSemanticType }: TooltipProps<TriggerType, PopupType>, ref?: Ref<any>) {
+export const Tooltip = memoForwardRef(function TooltipU<TriggerType extends Element, PopupType extends Element>({ onStatus, getWindow, parentDepth, render, tooltipSemanticType }: TooltipProps<TriggerType, PopupType>, ref?: Ref<any>) {
 
     const defaultParentDepth = useContext(ParentDepthContext);
     let myDepth = (parentDepth ?? defaultParentDepth) + 1;
@@ -38,9 +39,7 @@ export const Tooltip = memoForwardRef(function TooltipU<TriggerType extends Elem
             parentDepth: parentDepth ?? defaultParentDepth
         },
         tooltipParameters: {
-            focusDelay,
-            mouseoutToleranceDelay,
-            mouseoverDelay,
+            onStatus,
             tooltipSemanticType
         }
     });
