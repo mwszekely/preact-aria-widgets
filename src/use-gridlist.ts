@@ -59,7 +59,7 @@ export interface UseGridlistRowParameters<GridlistRowElement extends Element, Gr
         }
     }
     rowAsParentOfCellsParameters: OmitStrong<UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>["rowAsParentOfCellsParameters"], "linearNavigationParameters"> & {
-        linearNavigationParameters: OmitStrong<UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>["rowAsParentOfCellsParameters"]["linearNavigationParameters"], never>
+        linearNavigationParameters: OmitStrong<UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>["rowAsParentOfCellsParameters"]["linearNavigationParameters"], "disableHomeEndKeys">
         //typeaheadNavigationParameters: OmitStrong<UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>["rowAsParentOfCellsParameters"]["typeaheadNavigationParameters"], "isValid">
         //rovingTabIndexParameters: OmitStrong<UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>["rowAsParentOfCellsParameters"]["rovingTabIndexParameters"], "initiallyTabbedIndex">;
     }
@@ -208,7 +208,7 @@ export function useGridlistRow<GridlistRowElement extends Element, GridlistCellE
             context: cx1
         },
         rowAsParentOfCellsParameters: {
-            linearNavigationParameters: { ...linearNavigationParameters },
+            linearNavigationParameters: { disableHomeEndKeys: true, ...linearNavigationParameters },
             rovingTabIndexParameters,
             typeaheadNavigationParameters: { ...typeaheadNavigationParameters }
         }

@@ -200,7 +200,6 @@ export const GridlistRow = memoForwardRef(function GridlistRowU<RowElement exten
     index,
     collator,
     disableArrowKeys,
-    disableHomeEndKeys,
     ariaPropName,
     disabled,
     hidden,
@@ -231,7 +230,6 @@ export const GridlistRow = memoForwardRef(function GridlistRowU<RowElement exten
         rowAsParentOfCellsParameters: {
             linearNavigationParameters: {
                 disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys),
-                disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
 
                 navigatePastEnd: navigatePastEnd ?? "wrap",
                 navigatePastStart: navigatePastStart ?? "wrap"
