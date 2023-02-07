@@ -3,7 +3,7 @@ import { useImperativeHandle } from "preact/hooks";
 import { useButton, UseButtonParameters, UseButtonReturnType } from "../use-button";
 import { memoForwardRef, PartialExcept } from "./util";
 
-type Get<T, K extends keyof T> = T[K];
+type Get<T, K extends keyof T> = NonNullable<T[K]>;
 
 interface ButtonPropsBase<E extends Element> extends
     Omit<Get<UseButtonParameters<E>, "buttonParameters">, "role">,
