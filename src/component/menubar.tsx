@@ -1,6 +1,5 @@
 import { createContext, Ref, VNode } from "preact";
 import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
-//import { ElementToTag } from "../props";
 import { useMenubar, useMenubarChild, UseMenubarContext, UseMenubarItemParameters, UseMenubarItemReturnType, UseMenubarParameters, UseMenubarReturnType, UseMenubarSubInfo } from "../use-menubar";
 import { memoForwardRef, PartialExcept, useDefault } from "./util";
 
@@ -17,7 +16,6 @@ interface MenubarPropsBase<MenuParentElement extends Element, MenuItemElement ex
     Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "staggeredChildrenParameters">,
     Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "labelParameters">,
     Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "toolbarParameters"> {
-    //tagLabel: ElementToTag<LabelElement>;
     ref?: Ref<UseMenubarReturnType<MenuParentElement, MenuItemElement, LabelElement, M>>;
 }
 
@@ -33,8 +31,6 @@ interface MenubarItemPropsBase<MenuItemElement extends Element> extends
     Get<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "managedChildParameters">,
     Get<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "singleSelectionChildParameters">,
     Get<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "textContentParameters"> {
-    //tagListItem: ElementToTag<ListboxItemElement>;
-    //subInfo: Get<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "completeListNavigationChildParameters">;
     focusSelf?: UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>["completeListNavigationChildParameters"]["focusSelf"];
     ref?: Ref<UseMenubarItemReturnType<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>>;
 }
@@ -135,83 +131,4 @@ export const MenubarItem = memoForwardRef(function MenuItemU<MenuItemElement ext
     return (
         <>{render(info)}</>
     )
-})
-
-
-/*
-export function DemoMenubar() {
-
-    return (
-        <Menubar<HTMLUListElement, HTMLLIElement, HTMLLabelElement>
-            ariaLabel={null}
-            collator={null}
-            disableArrowKeys={false}
-            disableHomeEndKeys={false}
-            getIndex={v => v.props.index}
-            compare={(lhs, rhs) => lhs.index - rhs.index}
-            selectedIndex={null}
-            navigatePastEnd="wrap"
-            navigatePastStart="wrap"
-            noTypeahead={false}
-            onSelectedIndexChange={null}
-            onTabbableIndexChange={null}
-            orientation="vertical"
-            pageNavigationSize={0.1}
-            typeaheadTimeout={1000}
-            role={"menu"}
-            render={info => {
-                return (
-                    <>
-                        <ul {...info.propsMenubar}>
-
-                        </ul>
-                    </>
-                )
-            }}
-        />
-    )
-}
-
-export function DemoMenubarItem({ index }: { index: number }) {
-    return (
-        <MenuItem<HTMLLIElement>
-            exclude={undefined}
-            hidden={false}
-            index={index}
-            selectionMode="disabled"
-            onPress={null}
-            getSortValue={returnNull}
-            render={info => {
-                return (
-                    <>
-                        <li {...info.props}>List item (index #{index})</li>
-                    </>
-                )
-            }}
-            role="menuitem"
-            ariaPropName="aria-selected"
-            disabled={false}
-
-        />
-    )
-}
-
-
-/*
-export function defaultRenderMenubar<ContainerElement extends Element, ChildElement extends Element>({ makePropsContainer, tagContainer }: { tagContainer: ElementToTag<ContainerElement>, makePropsContainer: (info: UseMenubarReturnType<ContainerElement, ChildElement, UseMenubarSubInfo<ChildElement>>) => h.JSX.HTMLAttributes<ContainerElement> }) {
-    return function (info: UseMenubarReturnType<ContainerElement, ChildElement, UseMenubarSubInfo<ChildElement>>): VNode<any> {
-        const list = createElement(tagContainer as never, makePropsContainer(info));
-        return (
-            <>
-                {list}
-            </>
-        )
-    }
-}
-
-export function defaultRenderMenuItem<ChildElement extends Element>({ makePropsChild, tagChild }: { tagChild: ElementToTag<ChildElement>, makePropsChild: (info: UseMenuItemReturnType<ChildElement, UseMenubarSubInfo<ChildElement>>) => h.JSX.HTMLAttributes<ChildElement> }) {
-    return function (info: UseMenuItemReturnType<ChildElement, UseMenubarSubInfo<ChildElement>>, modifyPropsListItem: PropModifier<ChildElement>): VNode<any> {
-        return createElement(tagChild as never, modifyPropsListItem(makePropsChild(info)));
-    }
-}*/
-
+});

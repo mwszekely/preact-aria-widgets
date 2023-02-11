@@ -2,7 +2,6 @@ import { useMergedProps, useStableCallback, useStableObject } from "preact-prop-
 import { debugLog, OmitStrong } from "./props";
 import { useMenuSurface, UseMenuSurfaceParameters, UseMenuSurfaceReturnType } from "./use-menu-surface";
 import { useMenubar, useMenubarChild, UseMenubarContext, UseMenubarItemParameters, UseMenubarItemReturnType, UseMenubarParameters, UseMenubarReturnType, UseMenubarSubInfo } from "./use-menubar";
-import { UseToolbarContext } from "./use-toolbar";
 
 export interface UseMenuContext<ContainerElement extends Element, ChildElement extends Element, M extends UseMenubarSubInfo<ChildElement>> extends UseMenubarContext<ContainerElement, ChildElement, M> {
     menu: { closeFromMenuItemClicked(): void; }
@@ -30,18 +29,15 @@ export interface UseMenuParameters<MenuSurfaceElement extends Element, MenuParen
          */
         openDirection: "down" | "up" | "left" | "right" | null;
     }
-    //menuButtonHasFocus: UseHasFocusParameters<MenuButtonElement>;
 }
 export interface UseMenuItemParameters<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseMenubarItemParameters<MenuItemElement, M> {
-    //hasFocus: UseHasFocusParameters<MenuItemElement>;
-    //menuItem: { disabled: DisabledType; onPress: (e: EnhancedEvent<MenuItemElement, h.JSX.TargetedEvent<MenuItemElement>, { index: number }>) => void; }
+
 }
 
 export interface UseMenuReturnType<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseMenuSurfaceReturnType<MenuSurfaceElement, MenuParentElement, MenuButtonElement>, OmitStrong<UseMenubarReturnType<MenuParentElement, MenuItemElement, MenuButtonElement, M>, "propsMenubar" | "propsLabel"> {
     context: UseMenuContext<MenuParentElement, MenuItemElement, M>;
 }
 
-//export interface UseMenuButtonReturnTypeInfo extends { }
 export interface UseMenuItemReturnType<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseMenubarItemReturnType<MenuItemElement, M> {
     menuItemReturn: {
         /**
@@ -51,17 +47,7 @@ export interface UseMenuItemReturnType<MenuItemElement extends Element, M extend
          */
         closeMenu(): void;
     }
- }
-
-/*
-export interface UseMenuReturnTypeWithHooks<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element, C, K extends string> extends UseMenuReturnTypeInfo<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement, C, K> {
-    useMenuSentinel: <E extends Element>() => { useMenuSentinelProps: (p: h.JSX.HTMLAttributes<E>) => h.JSX.HTMLAttributes<E>; };
-    useMenuProps: (props: h.JSX.HTMLAttributes<MenuParentElement>) => h.JSX.HTMLAttributes<MenuParentElement>;
-    useMenuSurfaceProps: (props: h.JSX.HTMLAttributes<MenuSurfaceElement>) => h.JSX.HTMLAttributes<MenuSurfaceElement>;
-    useMenuButtonProps: (props: h.JSX.HTMLAttributes<MenuButtonElement>) => h.JSX.HTMLAttributes<MenuButtonElement>;
-    useMenuItem: UseMenuItem<MenuItemElement, C, K>;
-}*/
-
+}
 
 export function useMenu<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element>({
     dismissParameters,
@@ -201,15 +187,6 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
         typeaheadNavigationReturn,
         randomIdInputReturn,
         randomIdLabelReturn,
-
-        /*focusMenu,
-
-        currentTypeahead,
-        invalidTypeahead,
-
-        managedChildren,*/
-
-
     }
 }
 

@@ -54,15 +54,15 @@ export function Demo() {
     )
 }
 
-function DemoButton({ tag, disabled }: { tag: string, disabled: boolean | "soft" | "hard" }) {
+function DemoButton({ tag: Tag, disabled }: { tag: string, disabled: boolean | "soft" | "hard" }) {
     const onPress = () => { alert("Button clicked") }
 
     return (
         <Button<HTMLButtonElement>
             disabled={disabled}
-            tagButton={tag as any}
+            tagButton={Tag as any}
             onPress={onPress}
-            render={info => (<button {...info.props}>{`${tag} ${disabled ? ` disabled (${disabled == "soft" ? "soft" : "hard"})` : ""}` }</button>)}
+            render={info => (<Tag {...info.props}>{`${Tag} ${disabled ? ` disabled (${disabled == "soft" ? "soft" : "hard"})` : ""}` }</Tag>)}
         />
     )
 }

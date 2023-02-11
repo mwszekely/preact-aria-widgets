@@ -1,17 +1,16 @@
 import { createContext, Ref, VNode } from "preact";
-import { returnNull } from "preact-prop-helpers";
 import { memo } from "preact/compat";
 import { useCallback, useContext } from "preact/hooks";
+import { OmitStrong } from "../props";
 import { ListboxInfo, useListbox, UseListboxContext, useListboxItem, UseListboxItemParameters, UseListboxItemReturnType, UseListboxParameters, UseListboxReturnType } from "../use-listbox";
 import { memoForwardRef, PartialExcept, useDefault } from "./util";
 
 type Get<T, K extends keyof T> = T[K];
-//type Get2<T, K extends keyof T, K2 extends keyof T[K]> = T[K][K2];
 
 interface ListboxPropsBase<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends
     Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "labelParameters">,
     Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "linearNavigationParameters">,
-    Omit<Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "listboxParameters">, "groupingType">,
+    OmitStrong<Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "listboxParameters">, "groupingType">,
     Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "rearrangeableChildrenParameters">,
     Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "rovingTabIndexParameters">,
     Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "sortableChildrenParameters">,
@@ -61,7 +60,6 @@ export const GroupedListbox = memo(function GroupedListbox<LabelElement extends 
         listboxParameters: { selectionLimit, groupingType: "with-groups", selectedIndex: null, onSelectedIndexChange: null },
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", undefined) },
         rovingTabIndexParameters: { onTabbableIndexChange: null, untabbable: false },
-        //singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? null, setSelectedIndex: setSelectedIndex ?? null },
         sortableChildrenParameters: { compare: null },
         typeaheadNavigationParameters: {
             collator: null,
@@ -121,7 +119,6 @@ export const Listbox = memoForwardRef(function Listbox<ListElement extends Eleme
         listboxParameters: { selectionLimit, groupingType: listboxGroupInfo == null ? "without-groups" : "group", selectedIndex, onSelectedIndexChange: onSelectedIndexChange ?? null },
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
         rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable: untabbable ?? false },
-        //singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? null, setSelectedIndex: setSelectedIndex ?? null },
         sortableChildrenParameters: { compare: compare ?? null },
         typeaheadNavigationParameters: {
             collator: useDefault("collator", collator),
@@ -157,60 +154,3 @@ export const ListboxItem = memoForwardRef(function ListboxItem<ListboxItemElemen
 
     return render(info);
 })
-
-/*
-export function DemoListbox() {
-    const [selectedIndex, setSelectedIndex] = useState<number | null>(0);
-
-    return (
-        <Listbox<HTMLOListElement, HTMLLIElement, HTMLLabelElement>
-            ariaLabel={null}
-            collator={null}
-            disableArrowKeys={false}
-            disableHomeEndKeys={false}
-            navigatePastEnd="wrap"
-            navigatePastStart="wrap"
-            selectedIndex={selectedIndex}
-            onSelectedIndexChange={e => setSelectedIndex(e)}
-            getIndex={v => v.props.index}
-            noTypeahead={false}
-            navigationDirection="vertical"
-            selectionLimit="single"
-            onTabbableIndexChange={null}
-            pageNavigationSize={0.1}
-            typeaheadTimeout={1000}
-            compare={((lhs, rhs) => lhs.index - rhs.index)}
-            render={info => {
-                return (
-                    <>
-                        <label {...info.propsListboxLabel}>Listbox</label>
-                        <ol {...info.propsListbox}></ol>
-                    </>
-                )
-            }}
-        />
-    )
-}
-
-export function DemoListboxItem({ index }: { index: number }) {
-    return (
-        <ListboxItem<HTMLLIElement>
-            ariaPropName="aria-selected"
-            disabled={false}
-            exclude={undefined}
-            getSortValue={returnNull}
-            focusSelf={e => e.focus()}
-            hidden={false}
-            index={index}
-            onPressSync={null}
-            selected={null}
-            selectionMode="activation"
-            render={info => {
-                return (
-                    <li {...info.props}>List item (index #{index})</li>
-                )
-            }}
-        />
-    )
-}
-*/

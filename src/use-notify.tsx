@@ -1,6 +1,6 @@
 
-import { Context, createContext, h, VNode } from "preact";
-import { usePortalChildren } from "preact-prop-helpers"
+import { createContext, h, VNode } from "preact";
+import { usePortalChildren } from "preact-prop-helpers";
 import { useCallback, useContext, useMemo } from "preact/hooks";
 
 export interface NotificationProviderProps {
@@ -38,7 +38,7 @@ export function useNotificationProvider({ targetAssertive, targetPolite }: Notif
     console.assert(assertiveElement?.getAttribute("aria-live") == "assertive");
 
     const notify = useCallback((mode: "polite" | "assertive", child: h.JSX.Element) => {
-        return mode == "assertive"? notifyAssertive(child) : notifyPolite(child);
+        return mode == "assertive" ? notifyAssertive(child) : notifyPolite(child);
     }, [notifyAssertive, notifyPolite])
 
     return {

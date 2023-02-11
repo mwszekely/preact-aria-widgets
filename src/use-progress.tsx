@@ -6,10 +6,6 @@ import { UseLabelReturnType, useLabelSynthetic, UseLabelSyntheticParameters } fr
 
 export interface UseProgressParameters<IndicatorElement extends Element, _LabelElement extends Element> {
     labelParameters: OmitStrong<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
-    /*progressParameters: {
-        tagProgress: ElementToTag<IndicatorElement>;
-        tagLabel: ElementToTag<LabelElement>;
-    }*/
     progressIndicatorParameters: {
         max: number;
         value: number | "indeterminate" | "disabled";
@@ -23,16 +19,6 @@ export interface UseProgressReturnType<ProgressElement extends Element, Progress
     propsLabel: h.JSX.HTMLAttributes<ProgressLabelElement>;
     propsRegion: h.JSX.HTMLAttributes<any>;
 }
-
-/*export interface UseProgressReturnTypeInfoWithHooks<I extends Element, L extends Element, C, K extends string> extends UseProgressReturnTypeInfo<C, K> {
-    useProgressIndicator: UseProgressIndicator<I, C, K>;
-    useProgressLabel: UseProgressLabel<L, C, K>;
-    useProgressRegion: UseProgressRegion<any, C, K>;
-}*/
-
-//type UseProgressIndicator<I extends Element> = (a: UseProgressIndicatorParameters) => { progress: { busy: boolean; }; useProgressIndicatorProps: (props: h.JSX.HTMLAttributes<I>) => h.JSX.HTMLAttributes<I> };
-//type UseProgressRegion<R extends Element> = (a: UseProgressRegionParameters) => { progress: { busy: boolean; }; useProgressRegionProps: (props: h.JSX.HTMLAttributes<R>) => h.JSX.HTMLAttributes<R> };
-//type UseProgressLabel<L extends Element> = (a: UseProgressLabelParameters) => { progress: { busy: boolean; }; useProgressLabelProps: (props: h.JSX.HTMLAttributes<L>) => h.JSX.HTMLAttributes<L> };
 
 export function useProgress<ProgressElement extends Element, LabelElement extends Element>({
     labelParameters,

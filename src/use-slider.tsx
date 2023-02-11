@@ -9,8 +9,6 @@ import { debugLog, EventDetail, Prefices, TagSensitiveProps } from "./props";
 export type RangeChangeEvent<E extends EventTarget> = { [EventDetail]: { value: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 
 export interface SliderThumbInfo extends ManagedChildInfo<number> {
-    //setMin: StateUpdater<number>;
-    //setMax: StateUpdater<number>;
 }
 
 export interface UseSliderThumbParameters<E extends Element, M extends SliderThumbInfo> extends UseManagedChildParameters<M> {
@@ -76,14 +74,6 @@ export function useSlider({ sliderParameters: { max, min }, managedChildrenParam
     const baseIdRef = useRef<string>(null! as "");
     if (baseIdRef.current === null)
         baseIdRef.current = generateRandomId(Prefices.sliderThumb);
-    //const { propsReferencer, propsSource, randomIdReturn: { id: baseId } } = useRandomId<LabelElement, ThumbElement>({ randomIdParameters: { prefix: "aria-thumb-", otherReferencerProp: "aria-labelledby" } })
-
-    /*const {
-        propsInput,
-        propsLabel,
-        randomIdInputReturn,
-        randomIdLabelReturn
-    } = useLabel<ThumbElement, LabelElement>({ labelParameters: { ariaLabel: null }, randomIdInputParameters, randomIdLabelParameters });*/
 
     return {
         context: useMemo(() => ({

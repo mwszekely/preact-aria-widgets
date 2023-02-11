@@ -1,8 +1,7 @@
 import { createContext, Ref, VNode } from "preact";
-import { returnTrue, useStableCallback } from "preact-prop-helpers";
+import { returnTrue } from "preact-prop-helpers";
 import { useContext, useImperativeHandle } from "preact/hooks";
 import { useAccordion, UseAccordionContext, UseAccordionParameters, UseAccordionReturnType, useAccordionSection, UseAccordionSectionInfo, UseAccordionSectionParameters, UseAccordionSectionReturnType } from "../use-accordion";
-import { Heading } from "./heading";
 import { memoForwardRef, PartialExcept, useDefault } from "./util";
 
 type Get<T, K extends keyof T> = T[K];
@@ -79,18 +78,6 @@ export const Accordion = memoForwardRef(function Accordion<HeaderButtonElement e
         <AccordionSectionContext.Provider value={info.context}>{render(info)}</AccordionSectionContext.Provider>
     )
 })
-/*
-export function defaultRenderAccordionSection<HeaderContainerElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element>({ makePropsHeadingContainer, makePropsHeadingButton, makePropsBody, tagBody, tagHeadingButton }: { tagHeadingButton: ElementToTag<HeaderButtonElement>; tagBody: ElementToTag<BodyElement>; makePropsHeadingContainer(info: UseAccordionSectionReturnType<HeaderButtonElement, BodyElement>): h.JSX.HTMLAttributes<HeaderContainerElement>, makePropsHeadingButton(info: UseAccordionSectionReturnType<HeaderButtonElement, BodyElement>): h.JSX.HTMLAttributes<HeaderButtonElement>, makePropsBody(info: UseAccordionSectionReturnType<HeaderButtonElement, BodyElement>): h.JSX.HTMLAttributes<BodyElement> }) {
-    return function (info: UseAccordionSectionReturnType<HeaderButtonElement, BodyElement>): VNode<any> {
-        return (
-            <>
-                <Heading<HeaderContainerElement> {...makePropsHeadingContainer(info)} heading={createElement(tagHeadingButton as never, (makePropsHeadingButton(info)))}>
-                    {createElement(tagBody as never, (makePropsBody(info)))}
-                </Heading>
-            </>
-        )
-    }
-}*/
 
 export const AccordionSection = memoForwardRef(function AccordionSection<HeaderContainerElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element>({
     open,
@@ -122,48 +109,4 @@ export const AccordionSection = memoForwardRef(function AccordionSection<HeaderC
     useImperativeHandle(ref!, () => info);
 
     return render(info);
-})
-/*
-export function AccordionDemo() {
-    return (
-        <Accordion
-            disableArrowKeys={false}
-            disableHomeEndKeys={false}
-            navigationDirection="vertical"
-            pageNavigationSize={0.1}
-            render={info =>
-                <div>
-                    {Array.from((function* () {
-                        for (let i = 0; i < 10; ++i) {
-                            yield <AccordionSectionDemo index={0} />;
-                        }
-                    })())}
-                </div>
-            }
-            navigatePastEnd="wrap"
-            navigatePastStart="wrap" />
-    );
-}
-
-export function AccordionSectionDemo({ index }: { index: number }) {
-    return (
-        <AccordionSection<any, HTMLButtonElement, HTMLParagraphElement>
-            bodyRole="region"
-            disabled={false}
-            exclude={undefined}
-            hidden={false}
-            index={index}
-            onPress={null}
-            open={undefined}
-            render={info => (
-                <Heading heading={<><span>Accordion section ${index}</span><button {...info.propsHeaderButton}>Toggle open</button></>}>
-                    <p {...info.propsBody} hidden={info.accordionSectionReturn.expanded}>
-                        Accordion body content
-                    </p>
-                </Heading>
-            )}
-            tagButton="button"
-        />
-    )
-}
-*/
+});

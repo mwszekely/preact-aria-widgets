@@ -12,7 +12,6 @@ export interface UseToastsParameters extends UseManagedChildrenParameters<ToastI
     }
 }
 
-// "focus" | "setNumberAheadOfMe" | "show"
 export interface UseToastParameters<M extends ToastInfo> extends UseManagedChildParameters<M> {
     toastParameters: {
         politeness?: "polite" | "assertive";
@@ -27,8 +26,6 @@ export interface ToastInfo extends ManagedChildInfo<number> {
     focus(): void;
     show(): void;
 }
-
-//export type UseToast<E extends Element> = (args: UseToastParameters) => UseToastReturnType<E>;
 
 export interface UseToastReturnType<ToastType extends Element> {
     toastReturn: {
@@ -50,7 +47,6 @@ export interface ToastsContext<M extends ToastInfo> extends UseManagedChildrenCo
     toastContext: {
         onAnyToastDismissed: (_index: number) => void;
         getMaxVisibleCount: () => number;
-        //setPoliteness: StateUpdater<"polite" | "assertive">;
         onAnyToastMounted: (toastIndex: number) => void;
     };
 }
@@ -66,8 +62,6 @@ export function useToasts<ContainerType extends Element>({ managedChildrenParame
     // So just keep track of it all in a big ol', there's only one of these on a page anyway,
     // and if you're pusing 10000 toasts at once an Array<number> isn't going to be your bottleneck.
     const currentIndexQueue = useRef<number[]>([]);
-
-    //const [politeness, setPoliteness] = useState<"polite" | "assertive">("polite");
 
     const getMaxVisibleCount = useStableGetter(visibleCount);
     const nextIndexToStartAt = useRef(0);
@@ -147,28 +141,13 @@ export function useToasts<ContainerType extends Element>({ managedChildrenParame
         setMouseOver(mouseOver);
     });
 
-    // Any time the index pointing to the currently-showing toast changes,
-    // update the relevant children and let them know that they're now either active or dismissed.
-    /*const { changeIndex, reevaluateClosestFit } = useChildrenFlag<ToastInfo, "showing">({
-        initialIndex: activeToastIndex,
-        children: toastQueue,
-        key: "showing",
-        closestFit: false,
-    });
-    useEffect(() => {
-        changeIndex(activeToastIndex);
-    }, [activeToastIndex]);*/
-
     const toastContext = {
         onAnyToastDismissed,
         getMaxVisibleCount,
         onAnyToastMounted
     }
-    
-    //function useToastContainerProps({ role, "aria-live": ariaLive, "aria-relevant": ariaRelevant, ...props }: h.JSX.HTMLAttributes<ContainerType>): h.JSX.HTMLAttributes<ContainerType> {
-    const props = useMergedProps<ContainerType>(useMergedProps(propsStable, { class: "toasts-container" } as h.JSX.HTMLAttributes<ContainerType>));
-    //}
 
+    const props = useMergedProps<ContainerType>(useMergedProps(propsStable, { class: "toasts-container" } as h.JSX.HTMLAttributes<ContainerType>));
 
     return {
         context: {
@@ -188,12 +167,10 @@ export function useToast<E extends Element>({ toastParameters: { politeness, tim
     const getIndex = useStableGetter(index);
     const [dismissed2, setDismissed2, getDismissed2] = useState(false);
     const [showing2, setShowing2, getShowing2] = useState(false);
+    const [triggerIndex, setTriggerIndex] = useState(1);
 
     const notify = useNotify();
 
-    //const [dismissed, setDismissed] = useState(false);
-    //const [status, setStatus, getStatus] = useState<"pending" | "active" | "dismissed">("pending");
-    //const dismissed = (status === "dismissed");
     const dismiss = useCallback(() => {
         if (!getDismissed2())
             onAnyToastDismissed(getIndex());
@@ -213,11 +190,7 @@ export function useToast<E extends Element>({ toastParameters: { politeness, tim
                 show();
             }
         }
-    }, [numberOfToastsAheadOfUs])
-
-    //const toastId = generateRandomId("toast-");
-   // useLayoutEffect(() => { setPoliteness(politeness ?? "polite"); }, [politeness]);
-
+    }, [numberOfToastsAheadOfUs]);
 
     const focus = useCallback(() => {
         const element = getElement();
@@ -229,9 +202,6 @@ export function useToast<E extends Element>({ toastParameters: { politeness, tim
 
     const { managedChildReturn: { getChildren: _getToasts } } = useManagedChild<ToastInfo>({ managedChildParameters: { index }, context }, { index, focus, setNumberAheadOfMe: setNumberOfToastsAheadOfUs, show });
 
-    //const isActive = (status === "active");
-    const [triggerIndex, setTriggerIndex] = useState(1);
-
     const resetDismissTimer = useCallback(() => {
         setTriggerIndex(i => ++i);
     }, [])
@@ -239,11 +209,6 @@ export function useToast<E extends Element>({ toastParameters: { politeness, tim
     useEffect(() => {
         onAnyToastMounted(index);
     }, []);
-
-    /*useEffect(() => {
-        if (!showing)
-            onAnyToastDismissed(index)
-    }, [showing]);*/
 
     const dismissTimeoutKey = (timeout == null || numberOfToastsAheadOfUs != 0) ? null : isFinite(timeout) ? timeout : timeout > 0 ? null : 0;
 

@@ -1,7 +1,8 @@
 import { h } from "preact";
 import { returnFalse, useStableCallback } from "preact-prop-helpers";
 import { debugLog, EnhancedEvent, enhanceEvent, OmitStrong, Prefices } from "./props";
-import { LabelPosition, useCheckboxLike, UseCheckboxLikeParameters, UseCheckboxLikeReturnType } from "./use-label";
+import { useCheckboxLike, UseCheckboxLikeParameters, UseCheckboxLikeReturnType } from "./use-checkbox-like";
+import { LabelPosition } from "./use-label";
 
 
 
@@ -46,7 +47,7 @@ export function useCheckbox<LP extends LabelPosition, InputType extends Element,
         randomIdLabelParameters: { prefix: Prefices.checkboxLikeLabel },
         refElementInputReturn,
         refElementLabelReturn,
-        checkboxLikeParameters: { role: "checkbox", onInput: onInputEnhanced,  ...checkboxLikeParameters },
+        checkboxLikeParameters: { role: "checkbox", onInput: onInputEnhanced, ...checkboxLikeParameters },
         pressParameters: { excludeSpace: returnFalse },
         labelParameters
     });

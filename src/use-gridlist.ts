@@ -2,8 +2,6 @@ import { h } from "preact";
 import {
     CompleteGridNavigationContext,
     CompleteGridNavigationRowContext,
-    GridSingleSelectSortableChildCellInfo,
-    GridSingleSelectSortableChildRowInfo,
     useCompleteGridNavigation,
     useCompleteGridNavigationCell,
     UseCompleteGridNavigationCellInfo,
@@ -26,8 +24,6 @@ import {
 import { OmitStrong, Prefices } from "./props";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
 import { UseListboxParameters } from "./use-listbox";
-
-//type ListboxSingleSelectEvent<E extends EventTarget> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 
 export interface UseGridlistContext<GridlistElement extends Element, GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends CompleteGridNavigationContext<GridlistElement, GridlistRowElement, GridlistCellElement, RM, CM> {
     gridlistRowContext: { selectionLimit: "single" | "multi" | "none" }
@@ -60,12 +56,7 @@ export interface UseGridlistRowParameters<GridlistRowElement extends Element, Gr
     }
     rowAsParentOfCellsParameters: OmitStrong<UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>["rowAsParentOfCellsParameters"], "linearNavigationParameters"> & {
         linearNavigationParameters: OmitStrong<UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>["rowAsParentOfCellsParameters"]["linearNavigationParameters"], "disableHomeEndKeys">
-        //typeaheadNavigationParameters: OmitStrong<UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>["rowAsParentOfCellsParameters"]["typeaheadNavigationParameters"], "isValid">
-        //rovingTabIndexParameters: OmitStrong<UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>["rowAsParentOfCellsParameters"]["rovingTabIndexParameters"], "initiallyTabbedIndex">;
     }
-    //context:  UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>[""]
-    //context: UseGridlistContext<any, GridlistRowElement, RM>;
-    //gridlistRowContext: UseGridlistContext<any, GridlistRowElement, RM>["gridlistRowContext"];
 }
 
 
@@ -231,7 +222,7 @@ export function useGridlistRow<GridlistRowElement extends Element, GridlistCellE
 
 export function useGridlistCell<GridlistCellElement extends Element, CM extends GridlistCellInfo<GridlistCellElement>>({ pressParameters, ...p }: UseGridlistCellParameters<GridlistCellElement, CM>): UseGridlistCellReturnType<GridlistCellElement, CM> {
 
-    const { props, ...info } =  useCompleteGridNavigationCell<GridlistCellElement, CM>(p);
+    const { props, ...info } = useCompleteGridNavigationCell<GridlistCellElement, CM>(p);
 
     const {
         pressReturn
@@ -256,40 +247,3 @@ export interface UseGridlistSectionParameters {
 
     }
 }
-/*
-export const useGridlistSection = <BodySectionElement extends Element, RowElement extends Element>({ compareRows }: UseGridlistSectionParameters) => {
-    //debugLog("useGridlistSection");
-    //type CRFull = UseRovingTabIndexSubInfo<RowElement, UseListNavigationSubInfo<UseGridlistRowSubInfo<CellElement, CR, CC>>>;
-    const getIndex = useCallback<GetIndex<any>>((i) => i.props.index, []);
-
-
-    const {
-        linearNavigationParameters,
-        rearrangeableChildrenReturn,
-        sortableChildrenReturn
-    } = useSortableChildren<BodySectionElement, GridlistRowInfo<RowElement>>({
-        rearrangeableChildrenParameters: {
-            getIndex,
-            getHighestChildIndex,
-            getValid
-        },
-        sortableChildrenParameters: {
-            compare: (lhs, rhs) => {
-                if (lhs.locationIndex === rhs.locationIndex)
-                    return compareRows(lhs.index, rhs.index);
-                return lhs.locationIndex - rhs.locationIndex;
-            }
-        }
-    });
-
-    const useGridlistSectionProps = (props: h.JSX.HTMLAttributes<BodySectionElement>) => {
-        console.assert(props.children != null);
-        overwriteWithWarning("useGridlistSection", props, "role", "rowgroup");
-        return useSortableProps(props as h.JSX.HTMLAttributes<BodySectionElement> & { children: any });
-    }
-
-    return {
-        useGridlistSectionProps,
-        ...sortableRet
-    }
-}*/

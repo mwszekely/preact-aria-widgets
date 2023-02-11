@@ -1,12 +1,8 @@
 import { h } from "preact";
-import { ManagedChildInfo, UseTextContentReturnType, OnChildrenMountChange, UseTypeaheadNavigationContext, PassiveStateUpdater, PersistentStates, useChildrenFlag, useLinearNavigation, UseLinearNavigationParameters, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, useMergedProps, usePersistentState, UsePressReturnType, useRandomId, useRefElement, UseRefElementParameters, UseRefElementReturnType, UseRovingTabIndexChildParameters, useStableCallback, useStableGetter, useStableObject, useState, useTypeaheadNavigation, UseTypeaheadNavigationParameters, useTypeaheadNavigationChild, UseTypeaheadNavigationChildParameters } from "preact-prop-helpers";
-import { UseTextContentParameters } from "preact-prop-helpers/dom-helpers/use-text-content";
+import { ManagedChildInfo, OnChildrenMountChange, PassiveStateUpdater, PersistentStates, useChildrenFlag, useLinearNavigation, UseLinearNavigationParameters, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, useMergedProps, usePersistentState, UsePressReturnType, useRandomId, useRefElement, UseRefElementParameters, UseRefElementReturnType, UseRovingTabIndexChildParameters, useStableCallback, useStableObject, useState, UseTextContentReturnType, useTypeaheadNavigation, useTypeaheadNavigationChild, UseTypeaheadNavigationChildParameters, UseTypeaheadNavigationContext, UseTypeaheadNavigationParameters } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { debugLog, DisabledType, OmitStrong, Prefices } from "./props";
 import { ButtonPressEvent, useButton, UseButtonParameters, UseButtonReturnType } from "./use-button";
-
-//export type UseAccordion<M extends UseAccordionSectionInfo> = (args: UseAccordionParameters<M>) => UseAccordionReturnType<M>;
-//export type UseAccordionSection<HeaderElement extends Element, BodyElement extends Element, M extends UseAccordionSectionInfo> = (args: UseAccordionSectionParameters<HeaderElement, M>) => UseAccordionSectionReturnType<HeaderElement, BodyElement>;
 
 export interface UseAccordionParameters<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo> extends
     UseManagedChildrenParameters<M>,
@@ -33,7 +29,7 @@ export interface UseAccordionSectionInfo extends ManagedChildInfo<number> {
 }
 
 export interface UseAccordionSectionParameters<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo> extends
-    Omit<UseTypeaheadNavigationChildParameters<HeaderButtonElement>, "refElementReturn" | "typeaheadNavigationChildContext">,
+    OmitStrong<UseTypeaheadNavigationChildParameters<HeaderButtonElement>, "refElementReturn" | "typeaheadNavigationChildContext">,
     UseRefElementParameters<HeaderButtonElement> {
     managedChildParameters: OmitStrong<UseManagedChildParameters<M>["managedChildParameters"], never>;
     context: UseAccordionContext<HeaderButtonElement, M>;
@@ -43,8 +39,8 @@ export interface UseAccordionSectionParameters<HeaderButtonElement extends Eleme
          * If this prop is `true` or `false` isn't null, then this section
          * will be open/closed regardless of what the parent's singular open index is.
          * 
-         * In other words, leave null to only allow one section to be open at a time,
-         * or to allow multiple sections to be open at once, 
+         * In other words, leave null to only allow one section to be open at a time.
+         * To allow multiple sections to be open at once, 
          * set the parent's index to null and toggle this `true`/`false` when the button's pressed
          */
         open: boolean | undefined;
@@ -52,7 +48,7 @@ export interface UseAccordionSectionParameters<HeaderButtonElement extends Eleme
         bodyRole: string;
     }
     buttonParameters: OmitStrong<UseButtonParameters<HeaderButtonElement>["buttonParameters"], "pressed" | "role">;
-    pressParameters: OmitStrong<UseButtonParameters<HeaderButtonElement>["pressParameters"], never>;
+    pressParameters: UseButtonParameters<HeaderButtonElement>["pressParameters"];
 
 }
 
@@ -90,50 +86,48 @@ export function useAccordion<HeaderButtonElement extends Element, M extends UseA
     managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange }
 }: UseAccordionParameters<HeaderButtonElement, M>): UseAccordionReturnType<HeaderButtonElement, M> {
     debugLog("useAccordian");
-    //const [_currentFocusedIndex, setCurrentFocusedIndex, getCurrentFocusedIndex] = useState<number | null>(null);
-
-
 
     const [localStorageIndex, setLocalStorageIndex] = usePersistentState<never, number | null>(localStorageKey ?? null, initialIndex ?? null);
     if (localStorageIndex != null)
         initialIndex = localStorageIndex;
 
-    const mcReturnType = useManagedChildren<M>({
+    const { managedChildrenReturn, context } = useManagedChildren<M>({
         managedChildrenParameters: {
             onChildrenMountChange: useStableCallback<OnChildrenMountChange<number>>((m, u) => { ocmc2(); onChildrenMountChange?.(m, u); }),
             onAfterChildLayoutEffect
         }
     });
+    const { getChildren } = managedChildrenReturn;
 
-    const { managedChildrenReturn: { getChildren }, context } = mcReturnType;
-
-    const isValid = useCallback((c: M) => (!c.disabled && !c.hidden), []);
-    const isValid2 = useCallback((c: number): boolean => {
+    const isValidByChild = useCallback((c: M) => (c && !c.disabled && !c.hidden), []);
+    const isValidByIndex = useCallback((c: number): boolean => {
         const child = getChildren().getAt(c);
         if (child) {
-            return isValid(child);
+            return isValidByChild(child);
         }
         return false;
     }, []);
 
 
+    // Keep track of the one expanded index (if there is only one expanded index)
     const { changeIndex: changeExpandedIndexLocalOnly, getCurrentIndex: getCurrentExpandedIndex } = useChildrenFlag<M, Event>({
         initialIndex,
         getChildren,
         getAt: useCallback((child) => { return child.getOpenFromParent() ?? false; }, []),
         setAt: useCallback((child, open) => { return child.setOpenFromParent(open); }, []),
-        isValid,
+        isValid: isValidByChild,
         onIndexChange: null,
-        //key: "open",
         closestFit: false
     });
 
+    // Also keep track of which button is currently tabbable.
+    // For some reason, Accordion buttons are both individually tabbable *and* arrow-key navigatable.
     const { changeIndex: changeTabbedIndex, getCurrentIndex: getTabbedIndex, reevaluateClosestFit: ocmc2 } = useChildrenFlag<M, Event>({
         initialIndex,
         getChildren,
         getAt: useCallback((child) => { return child.getMostRecentlyTabbed() ?? false; }, []),
         setAt: useCallback((child, tabbed) => { return child.setMostRecentlyTabbed(tabbed); }, []),
-        isValid,
+        isValid: isValidByChild,
         closestFit: true,
         onIndexChange: useCallback((i: number | null) => {
             if (i != null) {
@@ -145,10 +139,7 @@ export function useAccordion<HeaderButtonElement extends Element, M extends UseA
     const changeExpandedIndex = useStableCallback<typeof changeExpandedIndexLocalOnly>((value) => {
         changeExpandedIndexLocalOnly(value);
         setLocalStorageIndex(value);
-    })
-
-    //const navigateAbsolute = useCallback((i: number) => { return changeTabbedIndex(i); }, []);
-    //const navigateRelative = useCallback((s: number, o: number) => { return changeTabbedIndex(o + s); }, []);
+    });
 
     const rovingTabIndexReturn = useStableObject({
         getTabbableIndex: getTabbedIndex,
@@ -181,14 +172,14 @@ export function useAccordion<HeaderButtonElement extends Element, M extends UseA
                 indexMangler: identity,
                 indexDemangler: identity,
                 navigationDirection,
-                isValid: isValid2,
+                isValid: isValidByIndex,
                 navigatePastEnd,
                 navigatePastStart,
                 pageNavigationSize
             }),
             rovingTabIndexReturn
         }),
-        managedChildrenReturn: mcReturnType.managedChildrenReturn,
+        managedChildrenReturn,
         accordionReturn: useStableObject({ changeExpandedIndex })
     };
 }
@@ -205,7 +196,6 @@ export function useAccordionSection<_HeaderContainerElement extends Element, Hea
     managedChildParameters: { index },
     rovingTabIndexChildParameters: { hidden },
     textContentParameters,
-    //managedChildContext,
     context,
     context: {
         accordionSectionParameters: { changeExpandedIndex, changeTabbedIndex: _setCurrentFocusedIndex, getTabbedIndex: getCurrentFocusedIndex, stableTypeaheadProps },
@@ -227,19 +217,11 @@ export function useAccordionSection<_HeaderContainerElement extends Element, Hea
 
     const { randomIdReturn: _bodyIdReturn, propsSource: propsBodySource, propsReferencer: propsHeadReferencer } = useRandomId<BodyElement, HeaderButtonElement>({ randomIdParameters: { prefix: Prefices.accordionSectionHeaderButton, otherReferencerProp: "aria-controls" } });
     const { randomIdReturn: _headIdReturn, propsSource: propsHeadSource, propsReferencer: propsBodyReferencer } = useRandomId<HeaderButtonElement, BodyElement>({ randomIdParameters: { prefix: Prefices.accordionSectionBody, otherReferencerProp: "aria-labelledby" } });
-    //const { randomIdSourceReturn: { propsStable: useBodyAsSourceIdProps } } = useBodyAsSourceId();
-    //const { randomIdReferencerReturn: { propsStable: useBodyAsReferencerIdProps } } = useBodyAsReferencerId<BodyElement>({ randomIdReferencerParameters: { otherReferencerProp: "aria-controls" as never } });
-    //const { randomIdSourceReturn: { propsStable: useHeaderAsSourceIdProps } } = useHeaderAsSourceId();
-    //const { randomIdReferencerReturn: { propsStable: useHeaderAsReferencerIdProps } } = useHeaderAsReferencerId<HeaderElement>({ randomIdReferencerParameters: { otherReferencerProp: "aria-labelledby" as never } });
-
     const open = ((openFromUser ?? openFromParent) ?? false);
-    //const getOpen = useStableGetter(!!open);
-    const _getIndex = useStableGetter(index);
 
     const { refElementReturn: { getElement: getHeaderElement, propsStable: headerRefElementProps } } = useRefElement<HeaderButtonElement>({ refElementParameters: {} });
     const { refElementReturn: { getElement: _getBodyElement, propsStable: bodyRefElementProps } } = useRefElement<BodyElement>({ refElementParameters: {} });
     const focusSelf = useCallback(() => {
-        //if (getCurrentFocusedIndex() != null)
         (getHeaderElement() as Element as HTMLElement | undefined)?.focus();
     }, []);
 
@@ -259,7 +241,6 @@ export function useAccordionSection<_HeaderContainerElement extends Element, Hea
         setOpenFromParent,
     });
 
-    //const onFocus = () => { changeTabbedIndex(index); }
     const onPress = (e: ButtonPressEvent<HeaderButtonElement>) => {
         if (getOpenFromParent())
             changeExpandedIndex(null);
@@ -290,26 +271,6 @@ export function useAccordionSection<_HeaderContainerElement extends Element, Hea
     const { pressReturn, props: buttonProps, refElementReturn } = buttonReturn;
 
     const { linearNavigationReturn: { propsStable } } = linearReturnType;
-
-    /*function useAccordionSectionHeaderProps({ ["aria-expanded"]: ariaExpanded, ["aria-disabled"]: ariaDisabled, ...props }: h.JSX.HTMLAttributes<HeaderElement>): h.JSX.HTMLAttributes<HeaderElement> {
-
-            props.tabIndex = 0;
-
-
-            return useMergedProps(useHeaderAsSourceIdProps, useHeaderAsReferencerIdProps, propsStable, {
-                "aria-expanded": (ariaExpanded ?? open ?? false).toString(),
-                "aria-disabled": (ariaDisabled ?? (open ? "true" : undefined)),
-                ...useMergedProps(headerRefElementProps, useButtonProps(props))
-            } as h.JSX.HTMLAttributes<HeaderElement>);
-        }
-
-
-        function useAccordionSectionBodyProps({ role, ...props }: h.JSX.HTMLAttributes<BodyElement>): h.JSX.HTMLAttributes<BodyElement> {
-            const ret1 = useMergedProps(useBodyAsReferencerIdProps, { role: role ?? "region", ...props });
-            const ret2 = useMergedProps(useBodyAsSourceIdProps, ret1);
-            ret2.tabIndex ??= -1;
-            return useMergedProps(bodyRefElementProps, ret2);
-    }*/
 
     const headerButtonProps = useMergedProps<HeaderButtonElement>(
         buttonProps,

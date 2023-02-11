@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { useMergedProps, usePress, UsePressReturnType, useStableCallback } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
-import { debugLog, EnhancedEvent, enhanceEvent, OmitStrong } from "./props";
+import { debugLog, OmitStrong } from "./props";
 import { useToolbar, useToolbarChild, UseToolbarChildParameters, UseToolbarChildReturnType, UseToolbarContext, UseToolbarParameters, UseToolbarReturnType, UseToolbarSubInfo } from "./use-toolbar";
 
 
@@ -39,13 +39,6 @@ export interface UseMenubarReturnType<MenuParentElement extends Element, MenuIte
     context: UseMenubarContext<MenuParentElement, MenuItemElement, M>;
 }
 export interface UseMenubarItemReturnType<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseToolbarChildReturnType<MenuItemElement, M>, "pressParameters">, UsePressReturnType<MenuItemElement> { }
-
-
-
-
-//export type UseMenuItemProps<MenuItemElement extends Element> = (props: h.JSX.HTMLAttributes<MenuItemElement>) => h.JSX.HTMLAttributes<MenuItemElement>;
-//export type UseMenuItem<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> = (args: UseMenuItemParameters<MenuItemElement, M>) => UseMenuItemReturnType<MenuItemElement, M>;
-
 
 
 export function useMenubar<MenuParentElement extends Element, MenuItemElement extends Element, LabelElement extends Element>({
@@ -123,7 +116,6 @@ export function useMenubarChild<MenuItemElement extends Element>({
     menuItemParameters: { onPress: opu, role }
 }: UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenubarItemReturnType<MenuItemElement, UseMenubarSubInfo<MenuItemElement>> {
     debugLog("useMenuItem", managedChildParameters.index);
-    const disabled = singleSelectionChildParameters.disabled;
 
     const focusSelf = useCallback((e: any) => (e as Element as HTMLElement).focus?.(), [])
 
@@ -156,12 +148,7 @@ export function useMenubarChild<MenuItemElement extends Element>({
                 opu?.(e);
             })
         }, refElementReturn
-    })
-
-    /*function useMenuItemProps(props: h.JSX.HTMLAttributes<MenuItemElement>) {
-        overwriteWithWarning("useMenuItem", props, "role", role);
-        return useMergedProps(pressReturn.propsStable, pressReturn.propsUnstable, props);
-    }*/
+    });
 
     props.role = role;
 

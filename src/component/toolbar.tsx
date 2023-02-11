@@ -1,6 +1,5 @@
 import { createContext, Ref, VNode } from "preact";
 import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
-//import { ElementToTag } from "../props";
 import { useToolbar, useToolbarChild, UseToolbarChildParameters, UseToolbarChildReturnType, UseToolbarContext, UseToolbarParameters, UseToolbarReturnType, UseToolbarSubInfo } from "../use-toolbar";
 import { memoForwardRef, PartialExcept, useDefault } from "./util";
 
@@ -29,7 +28,6 @@ export interface ToolbarChildPropsBase<ToolbarChildElement extends Element, M ex
     Get<UseToolbarChildParameters<ToolbarChildElement, M>, "sortableChildParameters">,
     Get<UseToolbarChildParameters<ToolbarChildElement, M>, "textContentParameters">,
     Pick<Get<UseToolbarChildParameters<any, any>, "managedChildParameters">, "index"> {
-    //    subInfo: UseToolbarChildParameters<ToolbarChildElement, M>["completeListNavigationChildParameters"];
     focusSelf?: UseToolbarChildParameters<ToolbarChildElement, M>["completeListNavigationChildParameters"]["focusSelf"]
     ref?: Ref<UseToolbarChildReturnType<ToolbarChildElement, M>>;
 }
@@ -118,7 +116,6 @@ export const ToolbarChild = memoForwardRef(function ToolbarChildU<ToolbarChildEl
 
     const info = useToolbarChild<ToolbarChildElement>({
         context,
-        //completeListNavigationChildParameters: subInfo,
         completeListNavigationChildParameters: { focusSelf: focusSelf ?? focusSelfDefault },
         managedChildParameters: { index },
         rovingTabIndexChildParameters: { hidden: hidden ?? false },
@@ -132,21 +129,4 @@ export const ToolbarChild = memoForwardRef(function ToolbarChildU<ToolbarChildEl
     return (
         <>{render(info)}</>
     )
-})
-/*
-function defaultRenderToolbar<ContainerElement extends Element, ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>>({ makePropsContainer, tagContainer }: { tagContainer: ElementToTag<ContainerElement>, makePropsContainer: (info: UseToolbarReturnType<ContainerElement, ChildElement, M>) => h.JSX.HTMLAttributes<ContainerElement> }) {
-    return function (info: UseToolbarReturnType<ContainerElement, ChildElement, M>): VNode<any> {
-        const list = createElement(tagContainer as never, makePropsContainer(info));
-        return (
-            <>
-                {list}
-            </>
-        )
-    }
-}
-
-function defaultRenderToolbarChild<ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>>({ makePropsChild, tagChild }: { tagChild: ElementToTag<ChildElement>, makePropsChild: (info: UseToolbarChildReturnType<ChildElement, M>) => h.JSX.HTMLAttributes<ChildElement> }) {
-    return function (info: UseToolbarChildReturnType<ChildElement, M>): VNode<any> {
-        return createElement(tagChild as never, makePropsChild(info));
-    }
-}*/
+});

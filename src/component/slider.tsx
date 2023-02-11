@@ -11,8 +11,6 @@ export interface SliderProps extends Get<UseSliderParameters<SliderThumbInfo>, "
 }
 
 export interface SliderThumbProps<ThumbElement extends Element> extends Get<UseSliderThumbParameters<ThumbElement, SliderThumbInfo>, "managedChildParameters">, Get<UseSliderThumbParameters<ThumbElement, SliderThumbInfo>, "sliderThumbParameters"> {
-    //subInfo: Get<UseSliderThumbParameters<ThumbElement, SliderThumbInfo>, "subInfo">;
-    //ref?: Ref<UseSliderThumbReturnType<ThumbElement, SliderThumbInfo>>;
     render(info: UseSliderThumbReturnType<ThumbElement, SliderThumbInfo>): VNode;
 }
 
@@ -34,21 +32,14 @@ export const Slider = memoForwardRef(function Slider({ max, min, onAfterChildLay
 export const SliderThumb = memoForwardRef(function SliderThumbU<ThumbElement extends Element>({ label, tag, value, max, min, onValueChange, index, render, valueText }: SliderThumbProps<ThumbElement>, ref?: Ref<any>) {
     const context = (useContext(SliderThumbContext) as SliderContext<SliderThumbInfo>);
     console.assert(context != null, `This SliderThumb is not contained within a Slider`);
-    
+
     const info = useSliderThumb({
         context,
         managedChildParameters: { index },
         sliderThumbParameters: { label, tag, value, max, min, onValueChange, valueText },
-        //subInfo
     });
 
     useImperativeHandle(ref!, () => info);
 
     return render(info);
-})
-/*
-function defaultRenderSliderThumb<E extends Element>({ tagThumb, makePropsThumb }: { tagThumb: ElementToTag<E>, makePropsThumb: (info: UseSliderThumbReturnType<E, SliderThumbInfo>) => h.JSX.HTMLAttributes<E> }) {
-    return function (info: UseSliderThumbReturnType<E, SliderThumbInfo>) {
-        return createElement(tagThumb as never, (makePropsThumb(info)))
-    }
-}*/
+});

@@ -1,9 +1,7 @@
 import { Ref, VNode } from "preact";
-import { useStableCallback, useState } from "preact-prop-helpers";
 import { useContext, useImperativeHandle } from "preact/compat";
 import { useTooltip, UseTooltipParameters, UseTooltipReturnType } from "../use-tooltip";
 import { memoForwardRef, ParentDepthContext, PartialExcept, useDefault } from "./util";
-
 
 type Get<T, K extends keyof T> = T[K];
 
@@ -13,20 +11,6 @@ interface TooltipPropsBase<TriggerType extends Element, PopupType extends Elemen
 }
 
 export type TooltipProps<TriggerType extends Element, PopupType extends Element> = PartialExcept<TooltipPropsBase<TriggerType, PopupType>, "render" | "tooltipSemanticType" | "onStatus">
-/*
-export function defaultRenderTooltip<TriggerType extends Element, PopupType extends Element>({ tagTooltip, tagTrigger, makeTooltipProps, makeTriggerProps, portalId }: { portalId: string, tagTrigger: ElementToTag<TriggerType>, tagTooltip: ElementToTag<PopupType>, makeTriggerProps: (info: UseTooltipReturnType<TriggerType, PopupType>) => h.JSX.HTMLAttributes<TriggerType>, makeTooltipProps: (info: UseTooltipReturnType<TriggerType, PopupType>) => h.JSX.HTMLAttributes<PopupType> }) {
-    return function (info: UseTooltipReturnType<TriggerType, PopupType>) {
-        return (
-            <>
-                {createElement(tagTrigger as never, makeTriggerProps(info))}
-                {defaultRenderPortal({
-                    portalId,
-                    children: createElement(tagTooltip as never, makeTooltipProps(info))
-                })}
-            </>
-        )
-    }
-}*/
 
 export const Tooltip = memoForwardRef(function TooltipU<TriggerType extends Element, PopupType extends Element>({ onStatus, getWindow, parentDepth, render, tooltipSemanticType }: TooltipProps<TriggerType, PopupType>, ref?: Ref<any>) {
 

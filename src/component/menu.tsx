@@ -1,6 +1,6 @@
 import { createContext, Ref, VNode } from "preact";
-import { useContext, useImperativeHandle, useCallback } from "preact/hooks";
-import { useMenu, UseMenuParameters, UseMenuReturnType, UseMenuContext, useMenuItem, UseMenuItemReturnType } from "../use-menu";
+import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
+import { useMenu, UseMenuContext, useMenuItem, UseMenuItemReturnType, UseMenuParameters, UseMenuReturnType } from "../use-menu";
 import { UseMenubarSubInfo } from "../use-menubar";
 import { MenubarItemProps } from "./menubar";
 import { memoForwardRef, ParentDepthContext, PartialExcept, useDefault } from "./util";
@@ -117,8 +117,6 @@ export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element,
 
     useImperativeHandle(ref!, () => info);
 
-    //const { useMenuSentinelProps: useFirstSentinelProps } = useMenuSentinel<SentinelElement>();
-    //const { useMenuSentinelProps: useLastSentinelProps } = useMenuSentinel<SentinelElement>();
     return (
         <ParentDepthContext.Provider value={myDepth}>
             <MenuItemContext.Provider value={info.context}>
@@ -149,103 +147,4 @@ export const MenuItem = memoForwardRef(function MenuItem<MenuItemElement extends
     return (
         <>{render(info)}</>
     )
-})
-/*
-export function DemoMenu() {
-    const [open, setOpen] = useState(false);
-
-    return (
-        <Menu<HTMLDivElement, HTMLUListElement, HTMLLIElement, HTMLButtonElement>
-            ariaLabel={null}
-            closeOnBackdrop={true}
-            closeOnEscape={true}
-            closeOnLostFocus={true}
-            collator={null}
-            disableArrowKeys={false}
-            disableHomeEndKeys={false}
-            getIndex={v => v.props.index}
-            compare={(lhs, rhs) => lhs.index - rhs.index}
-            selectedIndex={null}
-            untabbable={false}
-            navigatePastEnd="wrap"
-            navigatePastStart="wrap"
-            noTypeahead={false}
-            open={open}
-            onClose={() => setOpen(false)}
-            onOpen={() => setOpen(true)}
-            onSelectedIndexChange={null}
-            onTabbableIndexChange={null}
-            openDirection="down"
-            orientation="vertical"
-            pageNavigationSize={0.1}
-            parentDepth={0}
-            typeaheadTimeout={1000}
-            render={info => {
-                return (
-                    <>
-                        <button {...info.propsTrigger}>Open menu</button>
-                        {defaultRenderPortal({
-                            portalId: "portal",
-                            children: <>
-                                <ul {...info.propsTarget}>
-
-                                </ul>
-                            </>
-                        })}
-                    </>
-                )
-            }}
-        />
-    )
-}
-
-export function DemoMenuItem({ index }: { index: number }) {
-    return (
-        <MenuItem<HTMLLIElement>
-            exclude={undefined}
-            hidden={false}
-            index={index}
-            selectionMode="disabled"
-            onPress={null}
-            getSortValue={returnNull}
-            render={info => {
-                return (
-                    <>
-                        <li {...info.props}>List item (index #{index})</li>
-                    </>
-                )
-            }}
-            role="menuitem"
-            ariaPropName="aria-selected"
-            disabled={false}
-
-        />
-    )
-}
-
-/*
-export function defaultRenderMenu<SurfaceElement extends Element, MenuElement extends Element, MenuItemElement extends Element, SentinelElement extends Element, ButtonElement extends Element>({ portalId, tagButton, tagMenu, tagSurface, tagSentinel, makePropsButton, makePropsMenu, makePropsSurface, makePropsSentinel }: { portalId: string, tagSurface: ElementToTag<SurfaceElement>, tagMenu: ElementToTag<MenuElement>, tagButton: ElementToTag<ButtonElement>, tagSentinel: ElementToTag<SentinelElement>, makePropsSurface: (info: UseMenuReturnType<SurfaceElement, MenuElement, MenuItemElement, ButtonElement, UseMenubarSubInfo<MenuItemElement>>) => h.JSX.HTMLAttributes<SurfaceElement>, makePropsMenu: (info: UseMenuReturnType<SurfaceElement, MenuElement, MenuItemElement, ButtonElement, UseMenubarSubInfo<MenuItemElement>>) => h.JSX.HTMLAttributes<MenuElement>, makePropsButton: (info: UseMenuReturnType<SurfaceElement, MenuElement, MenuItemElement, ButtonElement, UseMenubarSubInfo<MenuItemElement>>) => h.JSX.HTMLAttributes<ButtonElement>, makePropsSentinel: (info: UseMenuReturnType<SurfaceElement, MenuElement, MenuItemElement, ButtonElement, UseMenubarSubInfo<MenuItemElement>>) => h.JSX.HTMLAttributes<SentinelElement> }) {
-    return function (menuInfo: UseMenuReturnType<SurfaceElement, MenuElement, MenuItemElement, ButtonElement, UseMenubarSubInfo<MenuItemElement>>) {
-
-        const { children: surfaceChildren, ...surfaceProps } = (makePropsSurface(menuInfo));
-        const { children: menuChildren, ...menuProps } = (makePropsMenu(menuInfo));
-        return (
-            <>
-                {createElement(tagButton as never, (makePropsButton(menuInfo)))}
-                {defaultRenderPortal({
-                    portalId,
-                    children: createElement(tagSurface as never, {
-                        ...surfaceProps,
-                        children: (<>
-                            {createElement(tagSentinel as never, (makePropsSentinel(menuInfo)))}
-                            {surfaceChildren}
-                            {createElement(tagMenu as never, { ...menuProps, children: <>{menuChildren}</> })}
-                            {createElement(tagSentinel as never, (makePropsSentinel(menuInfo)))}
-                        </>)
-                    })
-                })}
-            </>
-        )
-
-    }
-}*/
+});

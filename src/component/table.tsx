@@ -68,49 +68,10 @@ export interface TableCellProps<CellElement extends Element, CM extends TableCel
     render(info: UseTableCellReturnType<CellElement, CM>): VNode;
 }
 
-//const LocationContext = createContext<"head" | "body" | "foot">(null!);
 
 const TableContext = createContext<UseTableContext>(null!);
 const TableSectionContext = createContext<UseTableSectionContext<any, any, any, TableRowInfo<any, any>, TableCellInfo<any>>>(null!);
 const TableRowContext = createContext<UseTableRowContext<any, any, TableCellInfo<any>>>(null!);
-//const TableRowContext = createContext<UseTableRow<any, any, any, any, any, any>>(null!);
-//const TableCellContext = createContext<UseTableCell<any, any, any>>(null!);
-/*
-function defaultRenderTable<TableElement extends Element, LabelElement extends Element>({ tagTable, makePropsTable }: { tagTable: ElementToTag<TableElement>, makePropsTable: (info: UseTableReturnType<TableElement, LabelElement>) => h.JSX.HTMLAttributes<TableElement> }) {
-    return function (info: UseTableReturnType<TableElement, LabelElement>) {
-        return createElement(tagTable as never, (makePropsTable(info)));
-    }
-}
-
-function defaultRenderTableSection<TableBodyElement extends Element, RowElement extends Element, CellElement extends Element, RM extends TableRowInfo<RowElement, CellElement>, CM extends TableCellInfo<CellElement>>({ tagTableBody, makePropsTableBody }: { tagTableBody: ElementToTag<TableBodyElement>, makePropsTableBody: (info: UseTableSectionReturnType<TableBodyElement, RowElement, CellElement, RM, CM>) => h.JSX.HTMLAttributes<TableBodyElement> }) {
-    return function (info: UseTableSectionReturnType<TableBodyElement, RowElement, CellElement, RM, CM>, modifyPropsTableBody: PropModifier<TableBodyElement>) {
-        return createElement(tagTableBody as never, modifyPropsTableBody(makePropsTableBody(info)));
-    }
-}*/
-/*
-export function defaultRenderTableHead<TableHeadElement extends Element>({ tagTableHead, makePropsTableHead }: { tagTableHead: ElementToTag<TableHeadElement>, makePropsTableHead: () => h.JSX.HTMLAttributes<TableHeadElement> }) {
-    return function (modifyPropsTableHead: PropModifier<TableHeadElement>) {
-        return createElement(tagTableHead as never, modifyPropsTableHead(makePropsTableHead()));
-    }
-}
-
-export function defaultRenderTableFoot<TableFootElement extends Element>({ tagTableFoot, makePropsTableFoot }: { tagTableFoot: ElementToTag<TableFootElement>, makePropsTableFoot: () => h.JSX.HTMLAttributes<TableFootElement> }) {
-    return function (modifyPropsTableFoot: PropModifier<TableFootElement>) {
-        return createElement(tagTableFoot as never, modifyPropsTableFoot(makePropsTableFoot()));
-    }
-}*/
-/*
-function defaultRenderTableRow<RowElement extends Element, CellElement extends Element, RM extends TableRowInfo<RowElement, CellElement>, CM extends TableCellInfo<CellElement>>({ tagTableRow, makePropsTableRow }: { tagTableRow: ElementToTag<RowElement>, makePropsTableRow: (info: UseTableRowReturnType<RowElement, CellElement, RM, CM>) => h.JSX.HTMLAttributes<RowElement> }) {
-    return function (info: UseTableRowReturnType<RowElement, CellElement, RM, CM>, modifyPropsTableRow: PropModifier<RowElement>) {
-        return createElement(tagTableRow as never, modifyPropsTableRow(makePropsTableRow(info)));
-    }
-}
-
-function defaultRenderTableCell<CellElement extends Element, CM extends TableCellInfo<CellElement>>({ tagTableCell, makePropsTableCell }: { tagTableCell: ElementToTag<CellElement>, makePropsTableCell: (info: UseTableCellReturnType<CellElement, CM>) => h.JSX.HTMLAttributes<CellElement> }) {
-    return function (info: UseTableCellReturnType<CellElement, CM>) {
-        return createElement(tagTableCell as never, (makePropsTableCell(info)));
-    }
-}*/
 
 export const Table = memoForwardRef(function TableU<TableElement extends Element, LabelElement extends Element>({
     ariaLabel,
@@ -157,10 +118,10 @@ export const TableSection = memoForwardRef(function TableSection<SectionElement 
             navigatePastStart: navigatePastStart ?? "wrap",
             pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
         },
-        paginatedChildrenParameters: { 
-            paginationMax: paginationMax ?? null, 
+        paginatedChildrenParameters: {
+            paginationMax: paginationMax ?? null,
             paginationMin: paginationMin ?? null
-         },
+        },
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
         rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable: untabbable ?? false },
         singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? null, onSelectedIndexChange: onSelectedIndexChange ?? null },
@@ -174,26 +135,6 @@ export const TableSection = memoForwardRef(function TableSection<SectionElement 
         </TableSectionContext.Provider>
     )
 });
-/*
-export const TableBody = memoForwardRef(function TableBodyU<SectionElement extends Element, RowElement extends Element, Cellement extends Element, CR = undefined, CC = undefined, KR extends string = never>({ render }: TableBodyProps<SectionElement, RowElement, Cellement, CR, CC, KR>, ref?: Ref<any>) {
-    const { useTableBodyProps, ...sectionInfo } = useContext(TableBodyContext)({});
-
-    useImperativeHandle(ref!, () => sectionInfo);
-
-    return <LocationContext.Provider value="body">{render(sectionInfo, useTableBodyProps)}</LocationContext.Provider>
-})
-
-export const TableHead = memoForwardRef(function TableHeadU<T extends Element>({ render, tagTableHead }: TableHeadProps<T>) {
-    const useTableSectionPropsBase = useContext(TableSectionContext);
-    const useTableSectionProps: PropModifier<T> = (props) => useTableSectionPropsBase(tagTableHead, "head", props);
-    return <LocationContext.Provider value="head">{(render(useTableSectionProps))}</LocationContext.Provider>
-})
-
-export const TableFoot = memoForwardRef(function TableFootU<T extends Element>({ render, tagTableFoot }: TableFootProps<T>) {
-    const useTableSectionPropsBase = useContext(TableSectionContext);
-    const useTableSectionProps: PropModifier<T> = (props) => useTableSectionPropsBase(tagTableFoot, "foot", props);
-    return <LocationContext.Provider value="foot">{(render(useTableSectionProps))}</LocationContext.Provider>
-})*/
 
 export const TableRow = memoForwardRef(function TableRowU<RowElement extends Element, Cellement extends Element>({
     index,
@@ -270,17 +211,6 @@ export const TableCell = memoForwardRef(function TableCell<CellElement extends E
         rovingTabIndexChildParameters: { hidden: hidden ?? false },
         tableCellParameters: { tagTableCell },
         textContentParameters: { getText: useDefault("getText", getText) }
-        /* listNavigation: { text },
-         managedChild: { index, flags },
-         rovingTabIndex: { focusSelf, hidden, noModifyTabIndex },
-         hasFocus: { getDocument, getWindow, onActiveElementChange, onElementChange, onFocusedChanged, onFocusedInnerChanged, onLastActiveElementChange, onLastFocusedChanged, onLastFocusedInnerChanged, onMount, onUnmount, onWindowFocusedChange },
-         subInfo,
-         tableCell: {
-             value,
-             headerType,
-             tagTableCell,
-             location: useContext(LocationContext)
-         }*/
     });
 
     useImperativeHandle(ref!, () => info);

@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { CompleteListNavigationContext, MakeSingleSelectionDeclarativeParameters, MakeSingleSelectionDeclarativeReturnType, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseListNavigationSingleSelectionSortableChildInfo, useMergedProps, UseRandomIdReturnType, useSingleSelectionDeclarative, UseSingleSelectionParameters } from "preact-prop-helpers";
+import { CompleteListNavigationContext, MakeSingleSelectionDeclarativeParameters, MakeSingleSelectionDeclarativeReturnType, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useMergedProps, UseRandomIdReturnType, useSingleSelectionDeclarative, UseSingleSelectionParameters } from "preact-prop-helpers";
 import { OmitStrong, Prefices } from "./props";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
 
@@ -40,7 +40,7 @@ export type UseToolbarContext<ContainerElement extends Element, ChildElement ext
 
 //export type UseToolbarChild<ChildElement extends Element, C, K extends string> = (i: UseToolbarChildParameters<ChildElement, C, K, C>) => UseToolbarChildReturnTypeWithHooks<ChildElement>;
 export interface UseToolbarChildParameters<E extends Element, M extends UseToolbarSubInfo<E>> extends OmitStrong<UseCompleteListNavigationChildParameters<E, M, never>, never> {
- }
+}
 export interface UseToolbarChildReturnType<ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends UseCompleteListNavigationChildReturnType<ChildElement, M> { }
 //export interface UseToolbarChildReturnTypeWithHooks<ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends UseToolbarChildReturnTypeInfo<ChildElement, M> {
 //}

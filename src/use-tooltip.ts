@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { DismissListenerTypes, returnFalse, returnNull, useDismiss, useMergedProps, UseEscapeDismissParameters, useGlobalHandler, useHasCurrentFocus, usePassiveState, useRandomId, useRefElement, useStableCallback, useState } from "preact-prop-helpers"
+import { DismissListenerTypes, returnNull, useDismiss, UseEscapeDismissParameters, useGlobalHandler, useHasCurrentFocus, useMergedProps, usePassiveState, useRandomId, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { Prefices } from "./props";
 
@@ -19,11 +19,6 @@ export interface UseTooltipParameters<TriggerType extends Element, PopupType ext
          * @param status C
          */
         onStatus(status: TooltipStatus): void;
-
-        /*delayMouseIn?: number;
-        delayMouseOut?: number;
-        delayFocusIn?: number;
-        delayFocusOut?: number;*/
 
         /**
          * This is whether `aria-describedby` or `aria-labelledby` is used.

@@ -6,7 +6,7 @@ import {
     UseCompleteListNavigationChildParameters,
     UseCompleteListNavigationChildReturnType,
     UseCompleteListNavigationParameters,
-    UseCompleteListNavigationReturnType, useEnsureStability, UseListNavigationSingleSelectionSortableChildInfo, useMergedProps, usePress, UsePressParameters, UsePressReturnType, useSingleSelectionDeclarative, UseSingleSelectionParameters, useStableCallback, useStableObject
+    UseCompleteListNavigationReturnType, useEnsureStability, useMergedProps, usePress, UsePressParameters, UsePressReturnType, useSingleSelectionDeclarative, UseSingleSelectionParameters, useStableCallback, useStableObject
 } from "preact-prop-helpers";
 import { EventDetail, OmitStrong, Prefices } from "./props";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
@@ -218,18 +218,3 @@ export function useListboxItem<ListItemElement extends Element, M extends Listbo
         staggeredChildReturn
     }
 }
-/*
-export function useListboxGroup<ContainerElement extends Element, HeadingElement extends Element>() {
-    const {
-        propsReferencer,
-        propsSource,
-        randomIdReturn
-    } = useRandomId<HeadingElement, ContainerElement>({ randomIdParameters: { prefix: "listbox-multi-group-", otherReferencerProp: "aria-labelledby" } });
-
-    propsReferencer.role = "group";
-
-    return {
-        propsHeading: propsSource,
-        propsContainer: propsReferencer
-    }
-}*/

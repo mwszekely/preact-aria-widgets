@@ -38,17 +38,6 @@ export interface UseMenuSurfaceReturnType<MenuSurfaceElement extends Element, Me
     refElementPopupReturn: UseModalReturnType<null, MenuTriggerElement, MenuSurfaceElement>["refElementPopupReturn"];
     refElementSourceReturn: UseModalReturnType<null, MenuTriggerElement, MenuSurfaceElement>["refElementSourceReturn"];
 }
-//export interface UseMenuButtonReturnTypeInfo extends UseListNavigationChildReturnTypeInfo<never> { }
-/*
-export interface UseMenuSurfaceReturnTypeWithHooks<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuButtonElement extends Element> extends UseMenuSurfaceReturnTypeInfo<MenuSurfaceElement, MenuButtonElement> {
-    useMenuSurfaceSentinel: <E extends Element>() => { useMenuSentinelProps: (p: h.JSX.HTMLAttributes<E>) => h.JSX.HTMLAttributes<E>; };
-    useMenuSurfaceProps: (props: h.JSX.HTMLAttributes<MenuSurfaceElement>) => h.JSX.HTMLAttributes<MenuSurfaceElement>;
-    useMenuSurfaceChildProps: (props: h.JSX.HTMLAttributes<MenuParentElement>) => h.JSX.HTMLAttributes<MenuParentElement>;  // NOT a menu item! This is the menu, dialog, popup, whatever actually gets the role, as opposed to the surface that listens to mouse and keyboard events
-    useMenuSurfaceButtonProps: (props: h.JSX.HTMLAttributes<MenuButtonElement>) => h.JSX.HTMLAttributes<any>;
-
-}*/
-
-//export interface UseMenuButtonReturnTypeWithHooks extends UseMenuButtonReturnTypeInfo { }
 
 
 /**
@@ -67,8 +56,6 @@ export function useMenuSurface<MenuSurfaceElement extends Element, MenuTargetEle
     menuSurfaceParameters: { role, surfaceId }
 }: UseMenuSurfaceParameters<MenuSurfaceElement, MenuTriggerElement>): UseMenuSurfaceReturnType<MenuSurfaceElement, MenuTargetElement, MenuTriggerElement> {
     debugLog("useMenuSurface");
-
-    //const { propsReferencer: propsIdTrigger, propsSource: propsIdTarget } = useRandomId<MenuTargetElement, MenuTriggerElement>({ randomIdParameters: { prefix: Prefices.menu, otherReferencerProp: "aria-controls" } });
 
     const { refElementReturn: { getElement: getButtonElement, propsStable: propsRefTrigger }, ...void4 } = useRefElement<MenuTriggerElement>({ refElementParameters: { onElementChange: undefined } });
 

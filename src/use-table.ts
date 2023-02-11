@@ -2,7 +2,7 @@ import { h } from "preact";
 import {
     Compare,
     CompleteGridNavigationContext,
-    CompleteGridNavigationRowContext, GridSingleSelectSortableChildCellInfo, GridSingleSelectSortableChildRowInfo, PassiveStateUpdater, returnNull, useCompleteGridNavigation,
+    CompleteGridNavigationRowContext, PassiveStateUpdater, returnNull, useCompleteGridNavigation,
     useCompleteGridNavigationCell, UseCompleteGridNavigationCellInfo, UseCompleteGridNavigationCellParameters, UseCompleteGridNavigationCellReturnType, UseCompleteGridNavigationParameters,
     UseCompleteGridNavigationReturnType, useCompleteGridNavigationRow, UseCompleteGridNavigationRowInfo, UseCompleteGridNavigationRowParameters, UseCompleteGridNavigationRowReturnType, useMergedProps, usePassiveState, useStableCallback
 } from "preact-prop-helpers";
@@ -62,7 +62,7 @@ export interface UseTableRowContext<TableRowElement extends Element, TableCellEl
 }
 
 
-export interface UseTableCellReturnType<TableCellElement extends Element, CM extends TableCellInfo<TableCellElement>> extends Omit<UseCompleteGridNavigationCellReturnType<TableCellElement, CM>, "props"> {
+export interface UseTableCellReturnType<TableCellElement extends Element, CM extends TableCellInfo<TableCellElement>> extends OmitStrong<UseCompleteGridNavigationCellReturnType<TableCellElement, CM>, "props"> {
     propsCell: h.JSX.HTMLAttributes<TableCellElement>;
     propsFocus: h.JSX.HTMLAttributes<any>;
     tableCellReturn: {
@@ -305,7 +305,7 @@ export function useTableCell<TableCellElement extends Element, CM extends TableC
     const { props, ...ret } = useCompleteGridNavigationCell<TableCellElement, CM>(p);
     return {
         propsFocus: props,
-        propsCell: { role: (tagTableCell != "th" && tagTableCell != "td")? "gridcell" : undefined },
+        propsCell: { role: (tagTableCell != "th" && tagTableCell != "td") ? "gridcell" : undefined },
         ...ret,
         tableCellReturn: {
             sortByThisColumn: useStableCallback(() => {
