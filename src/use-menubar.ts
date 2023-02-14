@@ -68,7 +68,6 @@ export function useMenubar<MenuParentElement extends Element, MenuItemElement ex
         sortableChildrenReturn,
         managedChildrenReturn,
         rovingTabIndexReturn,
-        toolbarReturn,
         typeaheadNavigationReturn,
         randomIdInputReturn,
         randomIdLabelReturn,
@@ -97,7 +96,6 @@ export function useMenubar<MenuParentElement extends Element, MenuItemElement ex
         linearNavigationReturn,
         managedChildrenReturn,
         rovingTabIndexReturn,
-        toolbarReturn,
         typeaheadNavigationReturn,
         randomIdInputReturn,
         randomIdLabelReturn

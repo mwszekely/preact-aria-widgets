@@ -201,7 +201,7 @@ export function useGridlistRow<GridlistRowElement extends Element, GridlistCellE
         rowAsParentOfCellsParameters: {
             linearNavigationParameters: { disableHomeEndKeys: true, ...linearNavigationParameters },
             rovingTabIndexParameters,
-            typeaheadNavigationParameters: { ...typeaheadNavigationParameters }
+            typeaheadNavigationParameters
         }
     });
 

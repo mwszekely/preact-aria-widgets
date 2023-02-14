@@ -24,7 +24,6 @@ export interface UseToolbarParameters<ContainerElement extends Element, ChildEle
 }
 
 export interface UseToolbarReturnType<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends OmitStrong<MakeSingleSelectionDeclarativeReturnType<UseCompleteListNavigationReturnType<ContainerElement, ChildElement, M>>, "props"> {
-    toolbarReturn: { propsUnstable: h.JSX.HTMLAttributes<ContainerElement> };
     propsToolbar: h.JSX.HTMLAttributes<ContainerElement>;
     propsLabel: h.JSX.HTMLAttributes<LabelElement>;
     randomIdInputReturn: UseRandomIdReturnType<ContainerElement, LabelElement>["randomIdReturn"];
@@ -87,10 +86,9 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
     });
 
     return {
-        toolbarReturn: { propsUnstable: { ...propsToolbar, role: role ?? undefined } },
         context,
         propsLabel,
-        propsToolbar: useMergedProps(propsToolbar, props),
+        propsToolbar: useMergedProps({ ...propsToolbar, role: role ?? undefined }, props),
         randomIdInputReturn,
         randomIdLabelReturn,
         ...listNavReturn
