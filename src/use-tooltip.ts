@@ -105,11 +105,11 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
         refElementSourceReturn
     } = useDismiss<DismissListenerTypes, TriggerType, PopupType>({
         dismissParameters: {
-            closeOnBackdrop: false,     // we handle this ourselves  
+            closeOnBackdrop: true,     // we handle this ourselves, but for mobile devices with a sorta virtualish cursor this helps. 
             closeOnLostFocus: false,    // and it interferes with our own focus logic (or, our onClose there does)
             closeOnEscape: true,
             open: openLocal,
-            onClose: useStableCallback(() => {
+            onClose: useStableCallback((reason) => {
                 setState(null);
             }),
         },
@@ -124,6 +124,7 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
     }
     const otherTriggerProps = {
         onPointerEnter: useCallback(() => { onHoverChanged(true, "trigger") }, []),
+        onClick: useCallback((e: MouseEvent) => { if (e.currentTarget && "focus" in e.currentTarget) (e.currentTarget as HTMLElement).focus(); }, []),
         //onPointerLeave: useCallback(() => { onHoverChanged(false, "trigger") }, [])
     }
 
