@@ -29,6 +29,7 @@ interface ListboxItemPropsBase<ListItemElement extends Element, M extends Listbo
     Get<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "pressParameters">,
     Get<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "textContentParameters"> {
     focusSelf?: UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>["completeListNavigationChildParameters"]["focusSelf"];
+    subInfo?: OmitStrong<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>["completeListNavigationChildParameters"], "focusSelf">;
     ref?: Ref<UseListboxItemReturnType<ListItemElement, M>>;
 }
 
@@ -74,7 +75,7 @@ export const GroupedListbox = memo(function GroupedListbox<LabelElement extends 
 
 })
 
-export const Listbox = memoForwardRef(function Listbox<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element>({
+export const Listbox = memoForwardRef(function Listbox<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement> = ListboxInfo<ListItemElement>>({
     ariaLabel,
     collator,
     compare,
@@ -96,9 +97,9 @@ export const Listbox = memoForwardRef(function Listbox<ListElement extends Eleme
     untabbable,
     typeaheadTimeout,
     render
-}: ListboxProps<ListElement, ListItemElement, LabelElement, ListboxInfo<ListItemElement>>) {
+}: ListboxProps<ListElement, ListItemElement, LabelElement, M>) {
     const listboxGroupInfo = useContext(ListboxGroupContext);
-    const info = useListbox<ListElement, ListItemElement, LabelElement, ListboxInfo<ListItemElement>>({
+    const info = useListbox<ListElement, ListItemElement, LabelElement, M>({
         labelParameters: { ariaLabel },
         staggeredChildrenParameters: {
             staggered: staggered || false
@@ -132,12 +133,25 @@ export const Listbox = memoForwardRef(function Listbox<ListElement extends Eleme
     );
 })
 
-export const ListboxItem = memoForwardRef(function ListboxItem<ListboxItemElement extends Element>({ ariaPropName, disabled, focusSelf, onPressSync, getText, hidden, index, render, selected, selectionMode, getSortValue }: ListboxItemProps<ListboxItemElement, ListboxInfo<ListboxItemElement>>) {
-    const context = useContext(ListboxContext) as UseListboxContext<any, ListboxItemElement, ListboxInfo<ListboxItemElement>>;
+export const ListboxItem = memoForwardRef(function ListboxItem<ListboxItemElement extends Element, M extends ListboxInfo<ListboxItemElement> = ListboxInfo<ListboxItemElement>>({
+    ariaPropName,
+    disabled,
+    focusSelf,
+    onPressSync,
+    getText,
+    hidden,
+    index,
+    render,
+    selected,
+    selectionMode,
+    getSortValue,
+    ...subInfo
+}: ListboxItemProps<ListboxItemElement, M>) {
+    const context = useContext(ListboxContext) as UseListboxContext<any, ListboxItemElement, M>;
     console.assert(context != null, `This ListboxItem is not contained within a Listbox`);
     const focusSelfDefault = useCallback((e: any) => { e?.focus(); }, []);
     const info = useListboxItem({
-        completeListNavigationChildParameters: { focusSelf: focusSelf ?? focusSelfDefault },
+        completeListNavigationChildParameters: { focusSelf: focusSelf ?? focusSelfDefault, ...subInfo } as M,
         context,
         listboxParameters: { selected: selected ?? null, },
         pressParameters: { onPressSync },

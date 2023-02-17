@@ -65,15 +65,9 @@ export interface ListboxInfo<ListItemElement extends Element> extends UseComplet
 }
 
 export function useListbox<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement>>({
-    linearNavigationParameters,
-    rearrangeableChildrenParameters,
-    rovingTabIndexParameters,
-    sortableChildrenParameters,
-    typeaheadNavigationParameters,
-    paginatedChildrenParameters,
     labelParameters,
-    staggeredChildrenParameters,
-    listboxParameters: { selectionLimit, groupingType, selectedIndex, onSelectedIndexChange }
+    listboxParameters: { selectionLimit, groupingType, selectedIndex, onSelectedIndexChange },
+    ...restParams
 }: UseListboxParameters<ListElement, ListItemElement, LabelElement, M>): UseListboxReturnType<ListElement, ListItemElement, LabelElement, M> {
     useEnsureStability("useListbox", selectionLimit);
     const {
@@ -92,27 +86,14 @@ export function useListbox<ListElement extends Element, ListItemElement extends 
         randomIdLabelParameters: { prefix: Prefices.listboxLabel }
     });
     let {
-        childrenHaveFocusReturn,
         context,
-        linearNavigationReturn,
-        managedChildrenReturn,
         props,
-        paginatedChildrenReturn,
-        rearrangeableChildrenReturn,
         rovingTabIndexReturn,
-        staggeredChildrenReturn,
         singleSelectionReturn,
-        sortableChildrenReturn,
-        typeaheadNavigationReturn
+        ...restRet
     } = useCompleteListNavigation<ListElement, ListItemElement, M>({
-        linearNavigationParameters,
-        rearrangeableChildrenParameters,
-        rovingTabIndexParameters,
         singleSelectionParameters: { initiallySelectedIndex: selectedIndex, onSelectedIndexChange },
-        sortableChildrenParameters,
-        paginatedChildrenParameters,
-        typeaheadNavigationParameters,
-        staggeredChildrenParameters
+        ...restParams
     });
 
     const _v: void = useSingleSelectionDeclarative({
@@ -136,60 +117,39 @@ export function useListbox<ListElement extends Element, ListItemElement extends 
         console.assert(singleSelectionReturn.getSelectedIndex() == null)
 
     return {
-        childrenHaveFocusReturn,
+        ...restRet,
         context: useStableObject({
             ...context,
             listboxContext: useStableObject({
                 selectionLimit
             })
         }),
-        linearNavigationReturn,
-        paginatedChildrenReturn,
-        managedChildrenReturn,
-        rearrangeableChildrenReturn,
-        staggeredChildrenReturn,
         rovingTabIndexReturn,
         singleSelectionReturn,
-        sortableChildrenReturn,
-        typeaheadNavigationReturn,
         propsListbox: useMergedProps(props, propsLabelList, { "aria-multiselectable": (selectionLimit == "multi" ? "true" : undefined) }),
         propsListboxLabel: propsLabelLabel
     }
 }
 
 export function useListboxItem<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>>({
-    completeListNavigationChildParameters,
     context: { listboxContext: { selectionLimit }, ...context },
-    managedChildParameters,
-    singleSelectionChildParameters,
-    rovingTabIndexChildParameters,
-    sortableChildParameters,
-    textContentParameters,
     listboxParameters: { selected },
     pressParameters: { onPressSync: opsu },
+    ...restParams
 }: UseListboxItemParameters<ListItemElement, M>): UseListboxItemReturnType<ListItemElement, M> {
     const {
-        hasCurrentFocusReturn,
-        managedChildReturn,
         pressParameters: { excludeSpace, onPressSync: opsss },
         props,
-        paginatedChildReturn,
-        rovingTabIndexChildReturn,
-        staggeredChildReturn,
-        singleSelectionChildReturn,
-        refElementReturn
+        refElementReturn,
+        ...restRet
     } = useCompleteListNavigationChild<ListItemElement, M, never>({
-        completeListNavigationChildParameters,
-        textContentParameters,
-        managedChildParameters,
-        singleSelectionChildParameters,
-        rovingTabIndexChildParameters,
-        sortableChildParameters,
-        context
+        context,
+        ...restParams
     });
 
     const { pressReturn } = usePress<ListItemElement>({
-        refElementReturn, pressParameters: {
+        refElementReturn, 
+        pressParameters: {
             onPressSync: useStableCallback((e) => {
                 if (selectionLimit == "single")
                     opsss?.(e);
@@ -207,14 +167,9 @@ export function useListboxItem<ListItemElement extends Element, M extends Listbo
     props.role = "option";
 
     return {
-        hasCurrentFocusReturn,
-        managedChildReturn,
         pressReturn,
         refElementReturn,
         props: useMergedProps(props, pressReturn.propsUnstable),
-        paginatedChildReturn,
-        rovingTabIndexChildReturn,
-        singleSelectionChildReturn,
-        staggeredChildReturn
+        ...restRet
     }
 }

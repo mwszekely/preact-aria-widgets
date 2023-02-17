@@ -1,51 +1,53 @@
 import { createContext, Ref, VNode } from "preact";
 import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
-import { TabPanelsContext, TabsContext, useTab, useTabPanel, UseTabPanelParameters, UseTabPanelReturnType, UseTabParameters, UseTabReturnType, useTabs, UseTabsParameters, UseTabsReturnType } from "../use-tabs";
+import { OmitStrong } from "../props";
+import { TabPanelsContext, TabsContext, useTab, useTabPanel, UseTabPanelParameters, TabInfo, TabPanelInfo, UseTabPanelReturnType, UseTabParameters, UseTabReturnType, useTabs, UseTabsParameters, UseTabsReturnType } from "../use-tabs";
 import { memoForwardRef, PartialExcept, useDefault } from "./util";
 
 type Get<T, K extends keyof T> = T[K];
 
-interface TabsPropsBase<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element> extends
-    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement>, "labelParameters">,
-    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement>, "linearNavigationParameters">,
-    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement>, "rearrangeableChildrenParameters">,
-    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement>, "rovingTabIndexParameters">,
-    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement>, "singleSelectionParameters">,
-    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement>, "sortableChildrenParameters">,
-    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement>, "staggeredChildrenParameters">,
-    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement>, "tabsParameters">,
-    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement>, "typeaheadNavigationParameters"> {
+interface TabsPropsBase<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element, M extends TabInfo<TabElement>> extends
+    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement, M>, "labelParameters">,
+    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement, M>, "linearNavigationParameters">,
+    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement, M>, "rearrangeableChildrenParameters">,
+    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement, M>, "rovingTabIndexParameters">,
+    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement, M>, "singleSelectionParameters">,
+    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement, M>, "sortableChildrenParameters">,
+    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement, M>, "staggeredChildrenParameters">,
+    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement, M>, "tabsParameters">,
+    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement, M>, "typeaheadNavigationParameters"> {
 }
 
-interface TabPropsBase<TabElement extends Element> extends
-    Get<UseTabParameters<TabElement>, "managedChildParameters">,
-    Get<UseTabParameters<TabElement>, "singleSelectionChildParameters">,
-    Get<UseTabParameters<TabElement>, "sortableChildParameters">,
-    Get<UseTabParameters<TabElement>, "rovingTabIndexChildParameters">,
-    Get<UseTabParameters<TabElement>, "textContentParameters">,
-    Get<UseTabParameters<TabElement>, "completeListNavigationChildParameters"> {
+interface TabPropsBase<TabElement extends Element, M extends TabInfo<TabElement>> extends
+    Get<UseTabParameters<TabElement, M>, "managedChildParameters">,
+    Get<UseTabParameters<TabElement, M>, "singleSelectionChildParameters">,
+    Get<UseTabParameters<TabElement, M>, "sortableChildParameters">,
+    Get<UseTabParameters<TabElement, M>, "rovingTabIndexChildParameters">,
+    Get<UseTabParameters<TabElement, M>, "textContentParameters"> {
+    focusSelf: Get<UseTabParameters<TabElement, M>, "completeListNavigationChildParameters">["focusSelf"];
+    subInfo?: OmitStrong<Get<UseTabParameters<TabElement, M>, "completeListNavigationChildParameters">, "focusSelf">
 }
 
-interface TabPanelPropsBase extends
-    Get<UseTabPanelParameters, "managedChildParameters"> {
+interface TabPanelPropsBase<M extends TabPanelInfo> extends
+    Get<UseTabPanelParameters<M>, "managedChildParameters"> {
 }
 
-export interface TabsProps<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element> extends PartialExcept<TabsPropsBase<TabContainerElement, TabElement, TabLabelElement>, "orientation" | "ariaLabel"> {
-    render(info: UseTabsReturnType<TabContainerElement, TabElement, TabLabelElement>): VNode<any>;
+export interface TabsProps<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element, M extends TabInfo<TabElement>> extends PartialExcept<TabsPropsBase<TabContainerElement, TabElement, TabLabelElement, M>, "orientation" | "ariaLabel"> {
+    render(info: UseTabsReturnType<TabContainerElement, TabElement, TabLabelElement, M>): VNode<any>;
 }
 
-export interface TabProps<TabElement extends Element> extends PartialExcept<TabPropsBase<TabElement>, "index" | "getSortValue"> {
-    render(info: UseTabReturnType<TabElement>): VNode<any>;
+export interface TabProps<TabElement extends Element, M extends TabInfo<TabElement>> extends PartialExcept<TabPropsBase<TabElement, M>, "index" | "getSortValue"> {
+    render(info: UseTabReturnType<TabElement, M>): VNode<any>;
 }
 
-export interface TabPanelProps<PanelElement extends Element> extends PartialExcept<TabPanelPropsBase, "index"> {
+export interface TabPanelProps<PanelElement extends Element, M extends TabPanelInfo> extends PartialExcept<TabPanelPropsBase<M>, "index"> {
     render(info: UseTabPanelReturnType<PanelElement>): VNode<any>;
 }
 
 const TabsContext = createContext<TabsContext<any, any, any>>(null!);
 const TabPanelsContext = createContext<TabPanelsContext<any>>(null!);
 
-export const Tabs = memoForwardRef(function Tabs<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element>({
+export const Tabs = memoForwardRef(function Tabs<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element, M extends TabInfo<TabElement> = TabInfo<TabElement>>({
     ariaLabel,
     collator,
     compare,
@@ -67,8 +69,8 @@ export const Tabs = memoForwardRef(function Tabs<TabContainerElement extends Ele
     typeaheadTimeout,
     role,
     render
-}: TabsProps<TabContainerElement, TabElement, TabLabelElement>, ref?: Ref<any>) {
-    const info = useTabs<TabContainerElement, TabElement, TabLabelElement>({
+}: TabsProps<TabContainerElement, TabElement, TabLabelElement, M>, ref?: Ref<any>) {
+    const info = useTabs<TabContainerElement, TabElement, TabLabelElement, M>({
         labelParameters: { ariaLabel },
         staggeredChildrenParameters: { staggered: staggered || false },
         linearNavigationParameters: {
@@ -107,37 +109,39 @@ export const Tabs = memoForwardRef(function Tabs<TabContainerElement extends Ele
     )
 })
 
-export const Tab = memoForwardRef(function Tab<E extends Element>({
+export const Tab = memoForwardRef(function Tab<E extends Element, M extends TabInfo<E> = TabInfo<E>>({
     disabled,
     focusSelf,
     hidden,
     index,
     getText,
     getSortValue,
-    render
-}: TabProps<E>, ref?: Ref<any>) {
+    render,
+    selectionMode,
+    subInfo
+}: TabProps<E, M>, ref?: Ref<any>) {
     const context = useContext(TabsContext);
     console.assert(context != null, `This Tab is not contained within a Tabs component`);
     const focusSelfDefault = useCallback((e: any) => { e?.focus(); }, []);
-    const info = useTab<E>({
-        completeListNavigationChildParameters: { focusSelf: focusSelf ?? focusSelfDefault },
+    const info = useTab<E, M>({
+        completeListNavigationChildParameters: { focusSelf: focusSelf ?? focusSelfDefault, ...subInfo } as M,
         context,
         rovingTabIndexChildParameters: { hidden: hidden ?? false },
         sortableChildParameters: { getSortValue },
         managedChildParameters: { index },
-        singleSelectionChildParameters: { disabled: disabled ?? false, selectionMode: "focus" },
+        singleSelectionChildParameters: { disabled: disabled ?? false, selectionMode: selectionMode ?? "focus" },
         textContentParameters: { getText: useDefault("getText", getText) }
     });
     useImperativeHandle(ref!, () => info);
     return render(info);
 })
 
-export function TabPanel<E extends Element>({
+export function TabPanel<E extends Element, M extends TabPanelInfo = TabPanelInfo>({
     index,
     render
-}: TabPanelProps<E>) {
+}: TabPanelProps<E, M>) {
     const context = useContext(TabPanelsContext);
-    const info = useTabPanel<E>({
+    const info = useTabPanel<E, M>({
         context,
         managedChildParameters: { index }
     });

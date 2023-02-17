@@ -128,29 +128,34 @@ export interface UseFocusSentinelParameters {
 }
 
 
-// A focus sentinal is a hidden but focusable element that comes at the start or end 
-// of the out-of-place-focusable component that, when activated or focused over, closes the component
-// (if focused within 100ms of the open prop changing, instead of
-// closing, focusing the sentinel immediately asks it to focus itself).
-// This exists for things like menus which can have focus but also need a way to return
-// to whatever out-of-place parent they came from when naturally tabbed out of (as opposed
-// to dialogs which loop back around when tabbed out of). While mouse users can click out of a menu
-// and keyboard users can escape to close a menu, screen readers and other input methods 
-// that don't use those two would become stuck.
+/**
+ * A focus sentinal is a hidden but focusable element that comes at the start or end 
+ * of the out-of-place-focusable component that, when activated or focused over, closes the component
+ * (if focused within 100ms of the open prop changing, instead of
+ * closing, focusing the sentinel immediately asks it to focus itself).
+ * This exists for things like menus which can have focus but also need a way to return
+ * to whatever out-of-place parent they came from when naturally tabbed out of (as opposed
+ * to dialogs which loop back around when tabbed out of). While mouse users can click out of a menu
+ * and keyboard users can escape to close a menu, screen readers and other input methods 
+ * that don't use those two would become stuck.
+ * 
+ * @param param0 
+ * @returns 
+ */
 export function useFocusSentinel<E extends Element>({ focusSentinel: { open, onClose, sendFocusToMenu } }: UseFocusSentinelParameters): h.JSX.HTMLAttributes<E> {
     debugLog("useFocusSentinel");
     const getSendFocusWithinMenu = useStableGetter(sendFocusToMenu);
     const stableOnClose = useStableCallback(onClose);
 
-    const [firstSentinelIsActive, setFirstSentinelIsActive] = useState(false);
-    useTimeout({ callback: () => { setFirstSentinelIsActive(open); }, timeout: 100, triggerIndex: `${open}-${firstSentinelIsActive}` });
+    const [sentinelIsActive, setSentinelIsActive] = useState(false);
+    useTimeout({ callback: () => { setSentinelIsActive(open); }, timeout: 100, triggerIndex: `${open}-${sentinelIsActive}` });
 
 
-    const onFocus = firstSentinelIsActive ? (() => stableOnClose()) : (() => getSendFocusWithinMenu()?.());
+    const onFocus = sentinelIsActive ? (() => stableOnClose()) : (() => getSendFocusWithinMenu()?.());
     const onClick = () => stableOnClose();
 
     return {
-        tabIndex: firstSentinelIsActive ? 0 : -1,
+        tabIndex: sentinelIsActive ? 0 : -1,
         onFocus,
         onClick
     };

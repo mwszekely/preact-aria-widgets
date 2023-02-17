@@ -5,6 +5,7 @@ export type ElementFromRef<R extends Ref<any>> = R extends Ref<infer E> ? E : Ev
 export type ElementFromTag<T extends keyof h.JSX.IntrinsicElements> = ElementFromRef<RefFromTag<T>>;
 
 
+export type Get<T, K extends keyof T> = T[K];
 
 // https://stackoverflow.com/questions/46583883/typescript-pick-properties-with-a-defined-type
 export type PickByType<Obj, WantedType> = {

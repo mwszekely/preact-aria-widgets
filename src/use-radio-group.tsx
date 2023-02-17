@@ -1,6 +1,6 @@
 import { h } from "preact";
 import { CompleteListNavigationContext, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useMergedProps, useRefElement, useSingleSelectionDeclarative, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
-import { useEffect, useLayoutEffect, useRef } from "preact/hooks";
+import { useEffect, useLayoutEffect, useMemo, useRef } from "preact/hooks";
 import { debugLog, EnhancedEvent, OmitStrong, Prefices } from "./props";
 import { useCheckboxLike, UseCheckboxLikeParameters, UseCheckboxLikeReturnType } from "./use-checkbox-like";
 import { FocusableLabelElement, LabelPosition, useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
@@ -52,14 +52,9 @@ export interface RadioSubInfo<TabbableChildElement extends Element, V extends st
 }
 
 export function useRadioGroup<V extends string | number, G extends Element, GL extends Element, TCE extends Element>({
-    linearNavigationParameters,
-    rearrangeableChildrenParameters,
-    rovingTabIndexParameters,
-    sortableChildrenParameters,
-    typeaheadNavigationParameters,
-    staggeredChildrenParameters,
     labelParameters,
     radioGroupParameters: { name, onSelectedValueChange, selectedValue },
+    ...restParams
 }: UseRadioGroupParameters<V, G, GL, TCE>): UseRadioGroupReturnType<V, G, GL, TCE> {
 
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
@@ -84,27 +79,16 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
     }, [selectedValue])
 
     const {
-        childrenHaveFocusReturn,
         context,
         props: propsGroup2,
-        linearNavigationReturn,
-        managedChildrenReturn,
-        rearrangeableChildrenReturn,
-        rovingTabIndexReturn,
         singleSelectionReturn,
-        paginatedChildrenReturn,
-        staggeredChildrenReturn,
-        sortableChildrenReturn,
-        typeaheadNavigationReturn
+        managedChildrenReturn,
+        rovingTabIndexReturn,
+        ...restRet
     } = useCompleteListNavigation<G, TCE, RadioSubInfo<TCE, V>>({
-        linearNavigationParameters,
-        rearrangeableChildrenParameters,
-        rovingTabIndexParameters,
         singleSelectionParameters: { initiallySelectedIndex: selectedIndex, onSelectedIndexChange: setSelectedIndex },
-        sortableChildrenParameters,
-        typeaheadNavigationParameters,
-        staggeredChildrenParameters,
-        paginatedChildrenParameters: { paginationMin: null, paginationMax: null }
+        paginatedChildrenParameters: { paginationMin: null, paginationMax: null },
+        ...restParams
     });
 
     const _v: void = useSingleSelectionDeclarative({
@@ -128,22 +112,15 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
     return {
         propsRadioGroup,
         propsRadioGroupLabel: propsLabel,
-
-        childrenHaveFocusReturn,
-        context: {
+        rovingTabIndexReturn,
+        context: useMemo(() => ({
             ...context,
             radioContext: { name, byName: byName.current }
-        },
-        staggeredChildrenReturn,
-        linearNavigationReturn,
+        }), [name]),
         managedChildrenReturn,
         radioGroupReturn: { selectedIndex },
-        rearrangeableChildrenReturn,
-        paginatedChildrenReturn,
-        rovingTabIndexReturn,
         singleSelectionReturn,
-        sortableChildrenReturn,
-        typeaheadNavigationReturn
+        ...restRet,
     }
 }
 

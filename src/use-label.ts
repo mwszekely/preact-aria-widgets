@@ -93,19 +93,17 @@ export interface UseLabelSyntheticParameters {
  */
 export function useLabelSynthetic<InputElement extends Element, LabelElement extends Element>({
     labelParameters: { ariaLabel, onLabelClick },
-    randomIdInputParameters,
-    randomIdLabelParameters
+    ...rest
 }: UseLabelSyntheticParameters) {
     return useLabel<LabelPosition, InputElement, LabelElement>({
-        randomIdLabelParameters,
-        randomIdInputParameters,
         labelParameters: {
             ariaLabel,
             labelPosition: ariaLabel == null ? "separate" : "none",
             tagInput: "div" as never,
             tagLabel: "div" as never,
             onLabelClick
-        }
+        },
+        ...rest
     })
 
 }

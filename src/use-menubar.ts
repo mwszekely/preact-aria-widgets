@@ -5,31 +5,17 @@ import { debugLog, OmitStrong } from "./props";
 import { useToolbar, useToolbarChild, UseToolbarChildParameters, UseToolbarChildReturnType, UseToolbarContext, UseToolbarParameters, UseToolbarReturnType, UseToolbarSubInfo } from "./use-toolbar";
 
 
-export interface UseMenubarContext<ContainerElement extends Element, ChildElement extends Element, M extends UseMenubarSubInfo<ChildElement>> extends UseToolbarContext<ContainerElement, ChildElement, M> {
-
-}
-
-export interface UseMenubarSubInfo<ChildElement extends Element> extends UseToolbarSubInfo<ChildElement> {
-
-}
-
-
-export interface UseMenubarParameters<MenuParentElement extends Element, MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseToolbarParameters<MenuParentElement, MenuItemElement, M>, "toolbarParameters"> {
-    toolbarParameters: OmitStrong<UseToolbarParameters<MenuParentElement, MenuItemElement, M>["toolbarParameters"], "role">;
-    menubarParameters: {
-        /**
-         * Generally "menu". Can be null if the role is provided elsewhere.
-         */
-        role: string | null;
-    }
-}
+export interface UseMenubarContext<ContainerElement extends Element, ChildElement extends Element, M extends UseMenubarSubInfo<ChildElement>> extends UseToolbarContext<ContainerElement, ChildElement, M> { }
+export interface UseMenubarSubInfo<ChildElement extends Element> extends UseToolbarSubInfo<ChildElement> { }
+export interface UseMenubarParameters<MenuParentElement extends Element, MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseToolbarParameters<MenuParentElement, MenuItemElement, M> {}
 
 export interface UseMenubarItemParameters<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseToolbarChildParameters<MenuItemElement, M> {
-    //hasFocus: UseHasFocusParameters<MenuItemElement>;
-    //pressParameters: OmitStrong<UseToolbarChildParameters<MenuItemElement, M>["pressParameters"], "onPressSync" | "focusSelf">;
     menuItemParameters: {
         role: "menuitem" | "menuitemcheckbox" | "menuitemradio";
-        //disabled: DisabledType;
+
+        /**
+         * Optional. Applies in addition to any single-selection behavior.
+         */
         onPress: null | ((e: h.JSX.TargetedEvent<MenuItemElement>) => void);
     }
 }
@@ -40,101 +26,46 @@ export interface UseMenubarReturnType<MenuParentElement extends Element, MenuIte
 }
 export interface UseMenubarItemReturnType<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseToolbarChildReturnType<MenuItemElement, M>, "pressParameters">, UsePressReturnType<MenuItemElement> { }
 
-
-export function useMenubar<MenuParentElement extends Element, MenuItemElement extends Element, LabelElement extends Element>({
-    linearNavigationParameters,
-    rearrangeableChildrenParameters,
-    singleSelectionDeclarativeParameters,
-    sortableChildrenParameters,
-    rovingTabIndexParameters,
-    typeaheadNavigationParameters,
-    staggeredChildrenParameters,
-    toolbarParameters,
-    menubarParameters: { role },
-    labelParameters
-}: UseMenubarParameters<MenuParentElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenubarReturnType<MenuParentElement, MenuItemElement, LabelElement, UseMenubarSubInfo<MenuItemElement>> {
+/**
+ * A menubar is identical to a toolbar, except that every item 
+ * in a menubar is a menuitem (or similar) and has some sort of 
+ * role and action when pressed besides just single selection (if applicable).
+ * 
+ * (A toolbar child won't have a defined role, but every menubar child will)
+ * 
+ * @param args 
+ * @returns 
+ */
+export function useMenubar<MenuParentElement extends Element, MenuItemElement extends Element, LabelElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>>(args: UseMenubarParameters<MenuParentElement, MenuItemElement, M>): UseMenubarReturnType<MenuParentElement, MenuItemElement, LabelElement, M> {
 
     debugLog("useMenubar");
 
     const {
-        linearNavigationReturn,
-        childrenHaveFocusReturn,
-        context,
-        propsLabel,
         propsToolbar: propsMenubar,
-        paginatedChildrenReturn,
-        staggeredChildrenReturn,
-        rearrangeableChildrenReturn,
-        sortableChildrenReturn,
-        managedChildrenReturn,
-        rovingTabIndexReturn,
-        typeaheadNavigationReturn,
-        randomIdInputReturn,
-        randomIdLabelReturn,
-        ..._rest
-    } = useToolbar<MenuParentElement, MenuItemElement, LabelElement>({
-        linearNavigationParameters,
-        rovingTabIndexParameters,
-        rearrangeableChildrenParameters,
-        sortableChildrenParameters,
-        singleSelectionDeclarativeParameters,
-        typeaheadNavigationParameters,
-        staggeredChildrenParameters,
-        toolbarParameters: { role, ...toolbarParameters },
-        labelParameters
-    });
+        ...restReturn
+    } = useToolbar<MenuParentElement, MenuItemElement, LabelElement, M>(args);
 
     return {
-        childrenHaveFocusReturn,
-        context,
-        propsLabel,
         propsMenubar,
-        staggeredChildrenReturn,
-        paginatedChildrenReturn,
-        rearrangeableChildrenReturn,
-        sortableChildrenReturn,
-        linearNavigationReturn,
-        managedChildrenReturn,
-        rovingTabIndexReturn,
-        typeaheadNavigationReturn,
-        randomIdInputReturn,
-        randomIdLabelReturn
+        ...restReturn
     }
 }
 
 
-export function useMenubarChild<MenuItemElement extends Element>({
-    managedChildParameters,
-    singleSelectionChildParameters,
-    completeListNavigationChildParameters,
-    rovingTabIndexChildParameters,
-    sortableChildParameters,
-    context,
-    textContentParameters,
-    menuItemParameters: { onPress: opu, role }
-}: UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenubarItemReturnType<MenuItemElement, UseMenubarSubInfo<MenuItemElement>> {
-    debugLog("useMenuItem", managedChildParameters.index);
+export function useMenubarChild<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>>({
+    menuItemParameters: { onPress: opu, role },
+   ...restParams
+}: UseMenubarItemParameters<MenuItemElement, M>): UseMenubarItemReturnType<MenuItemElement, M> {
+    debugLog("useMenuItem", restParams.managedChildParameters.index);
 
     const focusSelf = useCallback((e: any) => (e as Element as HTMLElement).focus?.(), [])
 
     const {
-        hasCurrentFocusReturn,
         pressParameters: { excludeSpace, onPressSync: ops },
         props,
-        refElementReturn,
-        singleSelectionChildReturn,
-        rovingTabIndexChildReturn,
-        managedChildReturn,
-        staggeredChildReturn,
-        paginatedChildReturn
-    } = useToolbarChild<MenuItemElement>({
-        completeListNavigationChildParameters,
-        context,
-        managedChildParameters,
-        rovingTabIndexChildParameters,
-        sortableChildParameters,
-        textContentParameters,
-        singleSelectionChildParameters,
+        ...restRet
+    } = useToolbarChild<MenuItemElement, M>({
+        ...restParams
     });
 
     const { pressReturn } = usePress<MenuItemElement>({
@@ -145,20 +76,14 @@ export function useMenubarChild<MenuItemElement extends Element>({
                 ops?.(e);
                 opu?.(e);
             })
-        }, refElementReturn
+        }, refElementReturn: restRet.refElementReturn
     });
 
     props.role = role;
 
     return {
-        hasCurrentFocusReturn,
         pressReturn,
-        paginatedChildReturn,
-        refElementReturn,
         props: useMergedProps(props, pressReturn.propsUnstable),
-        singleSelectionChildReturn,
-        rovingTabIndexChildReturn,
-        staggeredChildReturn,
-        managedChildReturn
+        ...restRet
     };
 }

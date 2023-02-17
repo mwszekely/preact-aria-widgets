@@ -73,15 +73,10 @@ export const Checkbox = memoForwardRef(function Checkbox<I extends Element, L ex
     render
 }: CheckboxProps<I, L>, ref: Ref<any>) {
 
-    const { refElementReturn: refElementInputReturn } = useRefElement<I>({ refElementParameters: {} });
-    const { refElementReturn: refElementLabelReturn } = useRefElement<L>({ refElementParameters: {} });
-
     const checkbox = useCheckbox<LabelPosition, I, L>({
         checkboxLikeParameters: { checked: checked ?? false, disabled: disabled ?? false },
         checkboxParameters: { onCheckedChange },
         labelParameters: { ariaLabel: ariaLabel, labelPosition, tagInput, tagLabel },
-        refElementInputReturn,
-        refElementLabelReturn,
         pressParameters: { excludeSpace: returnFalse }
     });
 

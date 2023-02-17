@@ -5,7 +5,7 @@ export { CheckboxGroupChangeEvent, CheckboxGroupContext, CheckboxGroupInfo, useC
 export { CheckboxCheckedType, useCheckboxLike, UseCheckboxLikeParameters, UseCheckboxLikeReturnType } from "./use-checkbox-like";
 export { useDialog, UseDialogParameters, UseDialogReturnType } from "./use-dialog";
 export { useDrawer, UseDrawerParameters, UseDrawerReturnType } from "./use-drawer";
-export { GridlistCellInfo, GridlistRowInfo, useGridlist, useGridlistCell, UseGridlistCellParameters, UseGridlistCellReturnType, UseGridlistContext, UseGridlistParameters, UseGridlistReturnType, useGridlistRow, UseGridlistRowContext, UseGridlistRowParameters, UseGridlistRowReturnType, UseGridlistSectionParameters } from "./use-gridlist";
+export { GridlistCellInfo, GridlistRowInfo, useGridlist, useGridlistCell, UseGridlistCellParameters, UseGridlistCellReturnType, UseGridlistContext, UseGridlistParameters, UseGridlistReturnType, useGridlistRow, UseGridlistRowContext, UseGridlistRowParameters, UseGridlistRowReturnType } from "./use-gridlist";
 export { FocusableLabelElement, LabelPosition, useLabel, UseLabelParameters, UseLabelReturnType, useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
 export { useMenu, UseMenuContext, useMenuItem, UseMenuItemParameters, UseMenuItemReturnType, UseMenuParameters, UseMenuReturnType } from "./use-menu";
 export { useMenubar, useMenubarChild, UseMenubarItemParameters, UseMenubarItemReturnType, UseMenubarParameters, UseMenubarReturnType, UseMenubarSubInfo } from "./use-menubar";

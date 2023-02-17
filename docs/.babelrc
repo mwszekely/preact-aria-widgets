@@ -1,13 +1,16 @@
 {
+    "comments": false,
     "presets": [
         [
-        "@babel/preset-env",
-        {
+            "@babel/preset-env",
+            {
                 "targets": {
-                    "browsers": "iOS 10"
+                    "browsers": "iOS 12"
                 }
             }
         ]
     ],
-    "plugins": ["@babel/plugin-proposal-nullish-coalescing-operator"]
+    "plugins": [
+        "@babel/plugin-proposal-nullish-coalescing-operator"
+    ]
 }

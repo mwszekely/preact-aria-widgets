@@ -7,14 +7,13 @@ export interface UseMenuContext<ContainerElement extends Element, ChildElement e
     menu: { closeFromMenuItemClicked(): void; }
 }
 
-export interface UseMenuParameters<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuButtonElement extends Element, MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "toolbarParameters" | "menubarParameters" | "labelParameters"> {
+export interface UseMenuParameters<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuButtonElement extends Element, MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "toolbarParameters" | "labelParameters"> {
     dismissParameters: UseMenuSurfaceParameters<MenuSurfaceElement, MenuButtonElement>["dismissParameters"] & {
         onClose(reason: "escape" | "backdrop" | "lost-focus" | "item-clicked"): void;
     }
     escapeDismissParameters: UseMenuSurfaceParameters<MenuSurfaceElement, MenuButtonElement>["escapeDismissParameters"];
     menuSurfaceParameters: OmitStrong<UseMenuSurfaceParameters<MenuSurfaceElement, MenuButtonElement>["menuSurfaceParameters"], "role" | "surfaceId">;
-    toolbarParameters: OmitStrong<UseMenubarParameters<MenuParentElement, MenuItemElement, M>["toolbarParameters"], never>
-    menubarParameters: OmitStrong<UseMenubarParameters<MenuParentElement, MenuItemElement, M>["menubarParameters"], "role">
+    toolbarParameters: OmitStrong<UseMenubarParameters<MenuParentElement, MenuItemElement, M>["toolbarParameters"], "role">;
 
     menuParameters: {
         /** This is called whenever the corresponding arrow key is pressed on the triggering button. */
@@ -49,50 +48,38 @@ export interface UseMenuItemReturnType<MenuItemElement extends Element, M extend
     }
 }
 
-export function useMenu<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element>({
+/**
+ * A menu is a specialization of a menubar (something that handles navigation among a set of menuitems) 
+ * and a menu surface (something that handles moving focus to/from an unrelated area of the page).
+ * 
+ * Additionally, pressing the arrow key that corresponds to the direction that the menu opens
+ * in will open it.
+ * 
+ * @param param0 
+ * @returns 
+ */
+export function useMenu<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>>({
     dismissParameters,
     escapeDismissParameters,
-    linearNavigationParameters,
     menuParameters: { openDirection, onOpen },
     menuSurfaceParameters,
-    rearrangeableChildrenParameters,
-    rovingTabIndexParameters,
-    singleSelectionDeclarativeParameters,
-    sortableChildrenParameters,
     toolbarParameters,
-    staggeredChildrenParameters,
-    typeaheadNavigationParameters,
-    menubarParameters
-}: UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenuReturnType<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement, UseMenubarSubInfo<MenuItemElement>> {
+    ...restParams
+}: UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, M>): UseMenuReturnType<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement, M> {
 
     debugLog("useMenu");
 
     const {
-        childrenHaveFocusReturn,
         context,
-        linearNavigationReturn,
-        managedChildrenReturn,
         propsLabel: propsButtonAsMenuLabel,
         propsMenubar,
-        rearrangeableChildrenReturn,
-        rovingTabIndexReturn,
-        sortableChildrenReturn,
-        paginatedChildrenReturn,
-        staggeredChildrenReturn,
-        typeaheadNavigationReturn,
         randomIdInputReturn,
-        randomIdLabelReturn,
-    } = useMenubar<MenuParentElement, MenuItemElement, MenuButtonElement>({
-        linearNavigationParameters,
-        rearrangeableChildrenParameters,
-        rovingTabIndexParameters,
-        singleSelectionDeclarativeParameters,
-        staggeredChildrenParameters,
-        sortableChildrenParameters,
-        typeaheadNavigationParameters,
-        toolbarParameters: { ...toolbarParameters },
-        menubarParameters: { role: "menu", ...menubarParameters },
-        labelParameters: { ariaLabel: null }
+        rovingTabIndexReturn,
+        ...restRet
+    } = useMenubar<MenuParentElement, MenuItemElement, MenuButtonElement, M>({
+        toolbarParameters: { role: "menu", ...toolbarParameters },
+        labelParameters: { ariaLabel: null },
+        ...restParams
     });
 
     const onKeyDown = useStableCallback((e: KeyboardEvent) => {
@@ -137,13 +124,10 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
 
 
     const {
-        focusTrapReturn,
-        propsSentinel,
-        propsSurface,
         propsTarget,
         propsTrigger,
-        refElementPopupReturn,
-        refElementSourceReturn
+        refElementSourceReturn,
+        ...restRet2
     } = useMenuSurface<MenuSurfaceElement, MenuParentElement, MenuButtonElement>({
         menuSurfaceParameters: {
             ...menuSurfaceParameters,
@@ -159,7 +143,8 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
 
 
     return {
-        childrenHaveFocusReturn,
+        ...restRet,
+        ...restRet2,
         context: useStableObject({
             ...context,
             menu: useStableObject({
@@ -168,23 +153,11 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
                 })
             })
         }),
-        focusTrapReturn,
-        linearNavigationReturn,
-        managedChildrenReturn,
-        staggeredChildrenReturn,
-        paginatedChildrenReturn,
-        propsSentinel,
-        propsSurface,
-        propsTarget: useMergedProps(propsTarget, propsMenubar),
-        propsTrigger: useMergedProps({ onKeyDown }, propsTrigger, propsButtonAsMenuLabel),
-        rearrangeableChildrenReturn,
-        refElementPopupReturn,
         refElementSourceReturn,
         rovingTabIndexReturn,
-        sortableChildrenReturn,
-        typeaheadNavigationReturn,
         randomIdInputReturn,
-        randomIdLabelReturn,
+        propsTarget: useMergedProps(propsTarget, propsMenubar),
+        propsTrigger: useMergedProps({ onKeyDown }, propsTrigger, propsButtonAsMenuLabel),
     }
 }
 
@@ -192,8 +165,8 @@ export interface UseMenuItemParameters<MenuItemElement extends Element, M extend
     context: UseMenuContext<any, MenuItemElement, M>;
 }
 
-export function useMenuItem<MenuItemElement extends Element>(p: UseMenuItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenuItemReturnType<MenuItemElement, UseMenubarSubInfo<MenuItemElement>> {
-    const ret = useMenubarChild<MenuItemElement>(p);
+export function useMenuItem<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>>(p: UseMenuItemParameters<MenuItemElement, M>): UseMenuItemReturnType<MenuItemElement, M> {
+    const ret = useMenubarChild<MenuItemElement, M>(p);
 
     return {
         ...ret,

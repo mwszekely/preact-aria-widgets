@@ -1,9 +1,9 @@
 import { createContext, Ref, VNode } from "preact";
 import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
+import { OmitStrong, Get } from "../props";
 import { useToolbar, useToolbarChild, UseToolbarChildParameters, UseToolbarChildReturnType, UseToolbarContext, UseToolbarParameters, UseToolbarReturnType, UseToolbarSubInfo } from "../use-toolbar";
 import { memoForwardRef, PartialExcept, useDefault } from "./util";
 
-type Get<T, K extends keyof T> = T[K];
 
 export interface ToolbarPropsBase<ToolbarContainerElement extends Element, ToolbarChildElement extends Element, LabelElement extends Element, M extends UseToolbarSubInfo<ToolbarChildElement>> extends
     Get<UseToolbarParameters<ToolbarContainerElement, ToolbarChildElement, M>, "linearNavigationParameters">,
@@ -28,7 +28,8 @@ export interface ToolbarChildPropsBase<ToolbarChildElement extends Element, M ex
     Get<UseToolbarChildParameters<ToolbarChildElement, M>, "sortableChildParameters">,
     Get<UseToolbarChildParameters<ToolbarChildElement, M>, "textContentParameters">,
     Pick<Get<UseToolbarChildParameters<any, any>, "managedChildParameters">, "index"> {
-    focusSelf?: UseToolbarChildParameters<ToolbarChildElement, M>["completeListNavigationChildParameters"]["focusSelf"]
+    focusSelf?: UseToolbarChildParameters<ToolbarChildElement, M>["completeListNavigationChildParameters"]["focusSelf"];
+    subInfo?: OmitStrong<Get<UseToolbarChildParameters<ToolbarChildElement, M>, "completeListNavigationChildParameters">, "focusSelf">
     ref?: Ref<UseToolbarChildReturnType<ToolbarChildElement, M>>;
 }
 
@@ -42,7 +43,7 @@ export interface ToolbarChildProps<ToolbarChildElement extends Element, M extend
 
 const ToolbarContext = createContext<UseToolbarContext<any, any, any>>(null!);
 
-export const Toolbar = memoForwardRef(function ToolbarU<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({
+export const Toolbar = memoForwardRef(function ToolbarU<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element, M extends UseToolbarSubInfo<ChildElement> = UseToolbarSubInfo<ChildElement>>({
     render,
     role,
     collator,
@@ -62,8 +63,8 @@ export const Toolbar = memoForwardRef(function ToolbarU<ContainerElement extends
     typeaheadTimeout,
     staggered,
     ariaLabel
-}: ToolbarProps<ContainerElement, ChildElement, LabelElement, UseToolbarSubInfo<ChildElement>>, ref?: Ref<any>) {
-    const listboxReturnType = useToolbar<ContainerElement, ChildElement, LabelElement>({
+}: ToolbarProps<ContainerElement, ChildElement, LabelElement, M>, ref?: Ref<any>) {
+    const listboxReturnType = useToolbar<ContainerElement, ChildElement, LabelElement, M>({
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
         singleSelectionDeclarativeParameters: { selectedIndex: selectedIndex ?? null },
         sortableChildrenParameters: { compare: compare ?? null },
@@ -99,7 +100,7 @@ export const Toolbar = memoForwardRef(function ToolbarU<ContainerElement extends
 })
 
 
-export const ToolbarChild = memoForwardRef(function ToolbarChildU<ToolbarChildElement extends Element>({
+export const ToolbarChild = memoForwardRef(function ToolbarChildU<ToolbarChildElement extends Element, M extends UseToolbarSubInfo<ToolbarChildElement> = UseToolbarSubInfo<ToolbarChildElement>>({
     index,
     render,
     ariaPropName,
@@ -108,15 +109,16 @@ export const ToolbarChild = memoForwardRef(function ToolbarChildU<ToolbarChildEl
     focusSelf,
     getSortValue,
     hidden,
-    getText
-}: ToolbarChildProps<ToolbarChildElement, UseToolbarSubInfo<ToolbarChildElement>>, ref?: Ref<any>) {
-    const context = (useContext(ToolbarContext) as UseToolbarContext<any, ToolbarChildElement, UseToolbarSubInfo<ToolbarChildElement>>);
+    getText,
+    subInfo
+}: ToolbarChildProps<ToolbarChildElement, M>, ref?: Ref<any>) {
+    const context = (useContext(ToolbarContext) as UseToolbarContext<any, ToolbarChildElement, M>);
     console.assert(context != null, `This ToolbarChild is not contained within a Toolbar`);
     const focusSelfDefault = useCallback((e: any) => { e?.focus(); }, []);
 
-    const info = useToolbarChild<ToolbarChildElement>({
+    const info = useToolbarChild<ToolbarChildElement, M>({
         context,
-        completeListNavigationChildParameters: { focusSelf: focusSelf ?? focusSelfDefault },
+        completeListNavigationChildParameters: { focusSelf: focusSelf ?? focusSelfDefault, ...subInfo } as M,
         managedChildParameters: { index },
         rovingTabIndexChildParameters: { hidden: hidden ?? false },
         sortableChildParameters: { getSortValue },

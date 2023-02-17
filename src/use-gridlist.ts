@@ -69,16 +69,9 @@ export interface GridlistRowInfo<GridlistRowElement extends Element, GridlistCel
 export interface GridlistCellInfo<GridlistCellElement extends Element> extends UseCompleteGridNavigationCellInfo<GridlistCellElement> { }
 
 export function useGridlist<GridlistElement extends Element, GridlistRowElement extends Element, GridlistCellElement extends Element, LabelElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>>({
-    linearNavigationParameters,
-    rovingTabIndexParameters,
-    typeaheadNavigationParameters,
     labelParameters,
-    staggeredChildrenParameters,
     gridlistParameters: { selectionLimit, groupingType, selectedIndex, onSelectedIndexChange },
-    gridNavigationParameters,
-    paginatedChildrenParameters,
-    rearrangeableChildrenParameters,
-    sortableChildrenParameters
+    ...restParams
 }: UseGridlistParameters<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM>): UseGridlistReturnType<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM, CM> {
 
     const {
@@ -97,28 +90,14 @@ export function useGridlist<GridlistElement extends Element, GridlistRowElement 
         randomIdLabelParameters: { prefix: Prefices.gridlistLabel }
     });
     const {
-        childrenHaveFocusReturn,
         context,
-        linearNavigationReturn,
-        managedChildrenReturn,
         props,
         rovingTabIndexReturn,
-        staggeredChildrenReturn,
         singleSelectionReturn,
-        typeaheadNavigationReturn,
-        rearrangeableChildrenReturn,
-        paginatedChildrenReturn,
-        sortableChildrenReturn
+        ...restRet
     } = useCompleteGridNavigation<GridlistElement, GridlistRowElement, GridlistCellElement, RM, CM>({
-        linearNavigationParameters,
-        rovingTabIndexParameters,
-        staggeredChildrenParameters,
         singleSelectionParameters: { initiallySelectedIndex: selectedIndex, onSelectedIndexChange },
-        sortableChildrenParameters,
-        typeaheadNavigationParameters,
-        gridNavigationParameters,
-        paginatedChildrenParameters,
-        rearrangeableChildrenParameters
+        ...restParams
     });
 
     const _v: void = useSingleSelectionDeclarative({ singleSelectionReturn, singleSelectionDeclarativeParameters: { selectedIndex } });
@@ -148,40 +127,26 @@ export function useGridlist<GridlistElement extends Element, GridlistRowElement 
         console.assert(singleSelectionReturn.getSelectedIndex() == null)
 
     return {
-        childrenHaveFocusReturn,
         context: fullContext,
-        linearNavigationReturn,
-        managedChildrenReturn,
-        staggeredChildrenReturn,
         rovingTabIndexReturn,
         singleSelectionReturn,
-        rearrangeableChildrenReturn,
-        sortableChildrenReturn,
-        typeaheadNavigationReturn,
-        paginatedChildrenReturn,
         propsGridlist,
-        propsGridlistLabel: propsLabelLabel
+        propsGridlistLabel: propsLabelLabel,
+        ...restRet
     }
 }
 
 export function useGridlistRow<GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>>({
     rowAsChildOfGridParameters: {
-        managedChildParameters,
-        singleSelectionChildParameters,
-        completeGridNavigationRowParameters,
-        textContentParameters,
-        rovingTabIndexChildParameters,
-        sortableChildParameters,
-        context: cx1,
-        gridlistRowParameters: { selected }
+        gridlistRowParameters: { selected },
+        ...rowAsChildOfGridParameters
     },
     rowAsParentOfCellsParameters: {
         linearNavigationParameters,
-        rovingTabIndexParameters,
-        typeaheadNavigationParameters
+        ...rowAsParentOfCellsParameters
     }
 }: UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>): UseGridlistRowReturnType<GridlistRowElement, GridlistCellElement, RM, CM> {
-    const { gridlistRowContext: { selectionLimit } } = cx1;
+    const { gridlistRowContext: { selectionLimit } } = rowAsChildOfGridParameters.context;
     const {
         rowAsChildOfGridReturn,
         rowAsParentOfCellsReturn,
@@ -189,19 +154,10 @@ export function useGridlistRow<GridlistRowElement extends Element, GridlistCellE
         hasCurrentFocusReturn,
         props
     } = useCompleteGridNavigationRow<GridlistRowElement, GridlistCellElement, RM, CM>({
-        rowAsChildOfGridParameters: {
-            managedChildParameters,
-            textContentParameters,
-            singleSelectionChildParameters,
-            completeGridNavigationRowParameters,
-            rovingTabIndexChildParameters,
-            sortableChildParameters,
-            context: cx1
-        },
+        rowAsChildOfGridParameters,
         rowAsParentOfCellsParameters: {
             linearNavigationParameters: { disableHomeEndKeys: true, ...linearNavigationParameters },
-            rovingTabIndexParameters,
-            typeaheadNavigationParameters
+            ...rowAsParentOfCellsParameters
         }
     });
 
@@ -239,11 +195,11 @@ export function useGridlistCell<GridlistCellElement extends Element, CM extends 
 
 }
 
-export interface UseGridlistSectionParameters {
+/*interface UseGridlistSectionParameters {
     gridlistSectionParameters: {
         compareRows: (lhsIndex: number, rhsIndex: number) => number;
     }
     gridlistSectionContext: {
 
     }
-}
+}*/
