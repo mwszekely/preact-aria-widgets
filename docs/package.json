@@ -3,7 +3,7 @@
     "version": "0.0.1",
     "description": "A small set of hooks and other functions related to modifying Preact props.",
     "main": "index.tsx",
-    "packageManager": "pnpm@7.26.2",
+    "packageManager": "pnpm@7.27.1",
     "scripts": {
         "watch": "rollup --config rollup.config.mjs --watch --no-watch.clearScreen",
         "build": "rollup --config rollup.config.mjs",
