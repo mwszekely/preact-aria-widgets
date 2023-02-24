@@ -12,7 +12,7 @@ export interface UseButtonParameters<E extends Node> extends UseRefElementParame
         disabled: DisabledType;
         pressed: boolean | null | undefined;
         onPress: null | ((event: ButtonPressEvent<E>) => void);
-        role: string;
+        role: h.JSX.AriaRole;
     }
     pressParameters: OmitStrong<UsePressParameters<E>["pressParameters"], "onPressSync" | "focusSelf">
 }

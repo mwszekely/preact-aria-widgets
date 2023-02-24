@@ -16,7 +16,7 @@ export interface UseToolbarParameters<ContainerElement extends Element, ChildEle
          * `null` if someone else takes care of the role (TODO: it's still labelled in this case, what does this mean?), 
          * and whatever string is applicable otherwise.
          */
-        role: string | null;
+        role: h.JSX.AriaRole | null;
 
 
         /**

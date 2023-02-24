@@ -45,7 +45,7 @@ export interface UseAccordionSectionParameters<HeaderButtonElement extends Eleme
          */
         open: boolean | undefined;
         /** Generally `"region"` */
-        bodyRole: string;
+        bodyRole: h.JSX.AriaRole;
     }
     buttonParameters: OmitStrong<UseButtonParameters<HeaderButtonElement>["buttonParameters"], "pressed" | "role">;
     pressParameters: UseButtonParameters<HeaderButtonElement>["pressParameters"];

@@ -18,7 +18,7 @@ export interface UseCheckboxLikeParameters<LP extends LabelPosition, InputType e
     checkboxLikeParameters: {
 
         /** The role attribute to use, when applicable */
-        role: string;
+        role: h.JSX.AriaRole;
         disabled: DisabledType;
         checked: CheckboxCheckedType;
         onInput(event: Event): void;

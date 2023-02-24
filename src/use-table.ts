@@ -284,7 +284,7 @@ export function useTableRow<TableRowElement extends Element, TableCellElement ex
         }
     });
 
-    props.role = "gridrow";
+    props.role = "row";
     // TODO: Unneeded?
     //if (selected)
     //    props[singleSelectionChildParameters.ariaPropName ?? "aria-selected"] = "true";
