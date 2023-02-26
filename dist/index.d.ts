@@ -1,13 +1,13 @@
-export declare const dummy = 0;
 export { useAccordion, UseAccordionContext, UseAccordionParameters, UseAccordionReturnType, useAccordionSection, UseAccordionSectionInfo, UseAccordionSectionParameters, UseAccordionSectionReturnType } from "./use-accordion.js";
 export { ButtonPressEvent, useButton, UseButtonParameters, UseButtonReturnType } from "./use-button.js";
-export { CheckboxChangeEvent, useCheckbox, UseCheckboxParameters, UseCheckboxReturnType } from "./use-checkbox.js";
 export { CheckboxGroupChangeEvent, CheckboxGroupContext, CheckboxGroupInfo, useCheckboxGroup, UseCheckboxGroupChild, useCheckboxGroupChild, UseCheckboxGroupChildParameters, UseCheckboxGroupChildReturnType, UseCheckboxGroupParameters, useCheckboxGroupParent, UseCheckboxGroupParentParameters, UseCheckboxGroupParentReturnType, UseCheckboxGroupReturnType } from "./use-checkbox-group.js";
 export { CheckboxCheckedType, useCheckboxLike, UseCheckboxLikeParameters, UseCheckboxLikeReturnType } from "./use-checkbox-like.js";
+export { CheckboxChangeEvent, useCheckbox, UseCheckboxParameters, UseCheckboxReturnType } from "./use-checkbox.js";
 export { useDialog, UseDialogParameters, UseDialogReturnType } from "./use-dialog.js";
 export { useDrawer, UseDrawerParameters, UseDrawerReturnType } from "./use-drawer.js";
 export { GridlistCellInfo, GridlistRowInfo, useGridlist, useGridlistCell, UseGridlistCellParameters, UseGridlistCellReturnType, UseGridlistContext, UseGridlistParameters, UseGridlistReturnType, useGridlistRow, UseGridlistRowContext, UseGridlistRowParameters, UseGridlistRowReturnType } from "./use-gridlist.js";
 export { FocusableLabelElement, LabelPosition, useLabel, UseLabelParameters, UseLabelReturnType, useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
+export { FocusSentinelOmits, MenuSurfaceOmits, useFocusSentinel, UseFocusSentinelParameters, useMenuSurface, UseMenuSurfaceParameters, UseMenuSurfaceReturnType } from "./use-menu-surface.js";
 export { useMenu, UseMenuContext, useMenuItem, UseMenuItemParameters, UseMenuItemReturnType, UseMenuParameters, UseMenuReturnType } from "./use-menu.js";
 export { useMenubar, useMenubarChild, UseMenubarItemParameters, UseMenubarItemReturnType, UseMenubarParameters, UseMenubarReturnType, UseMenubarSubInfo } from "./use-menubar.js";
 export { NotificationProviderContext, NotificationProviderProps, NotificationProviderReturnType, useNotificationProvider, useNotify } from "./use-notify.js";
@@ -38,6 +38,7 @@ export { Tab, TabPanel, TabPanelProps, TabProps, Tabs, TabsProps } from "./compo
 export { Toast, ToastProps, Toasts, ToastsProps } from "./component/toasts.js";
 export { Toolbar, ToolbarChild, ToolbarChildProps, ToolbarProps } from "./component/toolbar.js";
 export { Tooltip, TooltipProps } from "./component/tooltip.js";
+export { ParentDepthContext, useDefault } from "./component/util.js";
 export { EventDetail, setDebugLogging } from "./props.js";
 export type { DisabledType, ElementFromTag, ElementToTag, PickByType, TagSensitiveProps } from "./props.js";
 declare module 'preact' {
