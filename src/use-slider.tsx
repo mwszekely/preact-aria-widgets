@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { generateRandomId, ManagedChildInfo, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, UseManagedChildReturnType } from "preact-prop-helpers";
 import { useMemo, useRef } from "preact/hooks";
-import { debugLog, EventDetail, Prefices, TagSensitiveProps } from "./props";
+import { debugLog, EventDetail, Prefices, TagSensitiveProps } from "./props.js";
 
 
 

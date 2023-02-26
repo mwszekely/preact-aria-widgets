@@ -7,9 +7,9 @@ import {
     UseCompleteGridNavigationReturnType, useCompleteGridNavigationRow, UseCompleteGridNavigationRowInfo, UseCompleteGridNavigationRowParameters, UseCompleteGridNavigationRowReturnType, useMergedProps, usePassiveState, useStableCallback
 } from "preact-prop-helpers";
 import { useCallback, useEffect, useRef } from "preact/hooks";
-import { ElementToTag, OmitStrong, Prefices } from "./props";
-import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
-import { UseListboxParameters } from "./use-listbox";
+import { ElementToTag, OmitStrong, Prefices } from "./props.js";
+import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
+import { UseListboxParameters } from "./use-listbox.js";
 
 //export type ListboxSingleSelectEvent<E extends EventTarget> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 

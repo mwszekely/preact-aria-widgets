@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { useAsyncHandler, UseAsyncHandlerParameters, UseAsyncHandlerReturnType, useMergedProps } from "preact-prop-helpers";
-import { ElementToTag, OmitStrong, Prefices } from "./props";
-import { UseLabelReturnType, useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
+import { ElementToTag, OmitStrong, Prefices } from "./props.js";
+import { UseLabelReturnType, useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
 
 
 export interface UseProgressParameters<IndicatorElement extends Element, _LabelElement extends Element> {

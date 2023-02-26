@@ -1,8 +1,8 @@
 import { createContext, Ref, VNode } from "preact";
 import { returnTrue } from "preact-prop-helpers";
 import { useContext, useImperativeHandle } from "preact/hooks";
-import { useAccordion, UseAccordionContext, UseAccordionParameters, UseAccordionReturnType, useAccordionSection, UseAccordionSectionInfo, UseAccordionSectionParameters, UseAccordionSectionReturnType } from "../use-accordion";
-import { memoForwardRef, PartialExcept, useDefault } from "./util";
+import { useAccordion, UseAccordionContext, UseAccordionParameters, UseAccordionReturnType, useAccordionSection, UseAccordionSectionInfo, UseAccordionSectionParameters, UseAccordionSectionReturnType } from "../use-accordion.js";
+import { memoForwardRef, PartialExcept, useDefault } from "./util.js";
 
 type Get<T, K extends keyof T> = T[K];
 

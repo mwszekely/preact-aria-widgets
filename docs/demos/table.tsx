@@ -3,7 +3,7 @@ import { h } from "preact";
 import { returnZero, useState } from "preact-prop-helpers";
 import { useRef } from "preact/compat";
 import { useCallback } from "preact/hooks";
-import { Table, TableSection, TableCell, TableRow } from "../../component/table";
+import { Table, TableCell, TableRow, TableSection } from "../../dist/index.js";
 
 export function Blurb() {
     return (

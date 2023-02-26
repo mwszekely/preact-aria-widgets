@@ -1,24 +1,22 @@
 
-import { render, h } from "preact";
-import { Heading } from "../component/heading";
-import * as Accordion from "./demos/accordion"
-import * as Button from "./demos/button"
-import * as Checkbox from "./demos/checkbox"
-import * as CheckboxGroup from "./demos/checkbox-group"
-import * as ListboxMulti from "./demos/listbox-multi"
-import * as ListboxSingle from "./demos/listbox-single"
-import * as Menu from "./demos/menu"
-import * as Radio from "./demos/radio"
-import * as Slider from "./demos/slider"
-import * as Dialog from "./demos/dialog"
-import * as Tabs from "./demos/tabs"
-import * as Tooltip from "./demos/tooltip"
-import * as Toast from "./demos/toast"
-import * as Table from "./demos/table"
-import * as Gridlist from "./demos/gridlist"
-import * as Toolbar from "./demos/toolbar"
-import { setDebugLogging } from "../props";
-import { useNotify, useNotificationProvider, NotificationProviderContext } from "../use-notify"
+import { render } from "preact";
+import { NotificationProviderContext, setDebugLogging, useNotificationProvider, Heading } from "../dist/index.js";
+import * as Accordion from "./demos/accordion.js";
+import * as Button from "./demos/button.js";
+import * as CheckboxGroup from "./demos/checkbox-group.js";
+import * as Checkbox from "./demos/checkbox.js";
+import * as Dialog from "./demos/dialog.js";
+import * as Gridlist from "./demos/gridlist.js";
+import * as ListboxMulti from "./demos/listbox-multi.js";
+import * as ListboxSingle from "./demos/listbox-single.js";
+import * as Menu from "./demos/menu.js";
+import * as Radio from "./demos/radio.js";
+import * as Slider from "./demos/slider.js";
+import * as Table from "./demos/table.js";
+import * as Tabs from "./demos/tabs.js";
+import * as Toast from "./demos/toast.js";
+import * as Toolbar from "./demos/toolbar.js";
+import * as Tooltip from "./demos/tooltip.js";
 
 //import { options } from "preact";
 //options.debounceRendering = queueMicrotask;

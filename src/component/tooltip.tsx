@@ -1,7 +1,7 @@
 import { Ref, VNode } from "preact";
 import { useContext, useImperativeHandle } from "preact/compat";
-import { useTooltip, UseTooltipParameters, UseTooltipReturnType } from "../use-tooltip";
-import { memoForwardRef, ParentDepthContext, PartialExcept, useDefault } from "./util";
+import { useTooltip, UseTooltipParameters, UseTooltipReturnType } from "../use-tooltip.js";
+import { memoForwardRef, ParentDepthContext, PartialExcept, useDefault } from "./util.js";
 
 type Get<T, K extends keyof T> = T[K];
 

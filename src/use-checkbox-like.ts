@@ -1,8 +1,8 @@
 import { h } from "preact";
 import { useMergedProps, usePress, UsePressParameters, UsePressReturnType, UseRefElementReturnType, useStableCallback } from "preact-prop-helpers";
 import { useEffect } from "preact/hooks";
-import { DisabledType, OmitStrong } from "./props";
-import { LabelPosition, useLabel, UseLabelParameters, UseLabelReturnType } from "./use-label";
+import { DisabledType, OmitStrong } from "./props.js";
+import { LabelPosition, useLabel, UseLabelParameters, UseLabelReturnType } from "./use-label.js";
 
 
 function preventDefault(e: Event) {

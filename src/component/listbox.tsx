@@ -1,9 +1,9 @@
 import { createContext, Ref, VNode } from "preact";
 import { memo } from "preact/compat";
 import { useCallback, useContext } from "preact/hooks";
-import { OmitStrong } from "../props";
-import { ListboxInfo, useListbox, UseListboxContext, useListboxItem, UseListboxItemParameters, UseListboxItemReturnType, UseListboxParameters, UseListboxReturnType } from "../use-listbox";
-import { memoForwardRef, PartialExcept, useDefault } from "./util";
+import { OmitStrong } from "../props.js";
+import { ListboxInfo, useListbox, UseListboxContext, useListboxItem, UseListboxItemParameters, UseListboxItemReturnType, UseListboxParameters, UseListboxReturnType } from "../use-listbox.js";
+import { memoForwardRef, PartialExcept, useDefault } from "./util.js";
 
 type Get<T, K extends keyof T> = T[K];
 

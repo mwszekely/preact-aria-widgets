@@ -1,8 +1,8 @@
 import { ComponentChildren, h } from "preact";
 import { findFirstFocusable, ManagedChildInfo, useGlobalHandler, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, useMergedProps, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
 import { StateUpdater, useCallback, useEffect, useRef } from "preact/hooks";
-import { debugLog } from "./props";
-import { useNotify } from "./use-notify";
+import { debugLog } from "./props.js";
+import { useNotify } from "./use-notify.js";
 
 
 

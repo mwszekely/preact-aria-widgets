@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { DismissListenerTypes, returnNull, useDismiss, UseEscapeDismissParameters, useGlobalHandler, useHasCurrentFocus, useMergedProps, usePassiveState, useRandomId, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
-import { Prefices } from "./props";
+import { Prefices } from "./props.js";
 
 export type TooltipStatus = "hover" | "focus" | null;
 

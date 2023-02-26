@@ -2,7 +2,7 @@
 import { ComponentChildren, h, RenderableProps, VNode } from "preact";
 import { memo } from "preact/compat";
 import { useState } from "preact/hooks";
-import { Accordion, AccordionSection, Heading } from "../../index";
+import { Accordion, AccordionSection, Heading } from "../../dist/index.js";
 
 function DemoAccordion({ children }: RenderableProps<{}>) {
     return <Accordion navigationDirection="vertical" render={(_info): VNode<any> => { return <div id="accordion-demo">{children}</div> }} />

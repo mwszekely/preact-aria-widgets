@@ -1,8 +1,8 @@
 import { h } from "preact";
 import { ManagedChildInfo, OnChildrenMountChange, PassiveStateUpdater, PersistentStates, useChildrenFlag, useLinearNavigation, UseLinearNavigationParameters, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, useMergedProps, usePersistentState, UsePressReturnType, useRandomId, useRefElement, UseRefElementParameters, UseRefElementReturnType, UseRovingTabIndexChildParameters, useStableCallback, useStableObject, useState, UseTextContentReturnType, useTypeaheadNavigation, useTypeaheadNavigationChild, UseTypeaheadNavigationChildParameters, UseTypeaheadNavigationContext, UseTypeaheadNavigationParameters } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
-import { debugLog, DisabledType, OmitStrong, Prefices } from "./props";
-import { ButtonPressEvent, useButton, UseButtonParameters, UseButtonReturnType } from "./use-button";
+import { debugLog, DisabledType, OmitStrong, Prefices } from "./props.js";
+import { ButtonPressEvent, useButton, UseButtonParameters, UseButtonReturnType } from "./use-button.js";
 
 export interface UseAccordionParameters<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo> extends
     UseManagedChildrenParameters<M>,

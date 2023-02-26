@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { assertEmptyObject, findFirstFocusable, useMergedProps, useModal, UseModalParameters, UseModalReturnType, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
-import { debugLog, OmitStrong } from "./props";
+import { debugLog, OmitStrong } from "./props.js";
 
 interface MSP {
     /**

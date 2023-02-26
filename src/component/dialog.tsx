@@ -1,8 +1,8 @@
 import { Ref, VNode } from "preact";
 import { createPortal } from "preact/compat";
 import { useContext, useImperativeHandle, useRef } from "preact/hooks";
-import { useDialog, UseDialogParameters, UseDialogReturnType } from "../use-dialog";
-import { memoForwardRef, ParentDepthContext, PartialExcept, useDefault } from "./util";
+import { useDialog, UseDialogParameters, UseDialogReturnType } from "../use-dialog.js";
+import { memoForwardRef, ParentDepthContext, PartialExcept, useDefault } from "./util.js";
 
 type Get<T, K extends keyof T> = T[K];
 

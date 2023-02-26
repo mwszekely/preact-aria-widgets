@@ -1,7 +1,7 @@
 import { Ref, VNode } from "preact";
 import { useContext, useImperativeHandle } from "preact/hooks";
-import { useDrawer, UseDrawerParameters, UseDrawerReturnType } from "../use-drawer";
-import { memoForwardRef, ParentDepthContext, PartialExcept, useDefault } from "./util";
+import { useDrawer, UseDrawerParameters, UseDrawerReturnType } from "../use-drawer.js";
+import { memoForwardRef, ParentDepthContext, PartialExcept, useDefault } from "./util.js";
 
 type Get<T, K extends keyof T> = T[K];
 

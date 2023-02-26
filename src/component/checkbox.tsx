@@ -1,10 +1,10 @@
 import { createElement, h, Ref, VNode } from "preact";
-import { returnFalse, useRefElement } from "preact-prop-helpers";
+import { returnFalse } from "preact-prop-helpers";
 import { useImperativeHandle } from "preact/hooks";
-import { ElementToTag } from "../props";
-import { useCheckbox, UseCheckboxParameters, UseCheckboxReturnType } from "../use-checkbox";
-import { LabelPosition } from "../use-label";
-import { memoForwardRef, PartialExcept } from "./util";
+import { ElementToTag } from "../props.js";
+import { useCheckbox, UseCheckboxParameters, UseCheckboxReturnType } from "../use-checkbox.js";
+import { LabelPosition } from "../use-label.js";
+import { memoForwardRef, PartialExcept } from "./util.js";
 
 type Get<T, K extends keyof T> = T[K];
 

@@ -1,7 +1,9 @@
 import { ComponentChildren, createContext, createElement, h, RenderableProps } from "preact";
 import { memo } from "preact/compat";
 import { useContext } from "preact/hooks";
-import { ElementToTag, overwriteWithWarning } from "../props";
+//import { ElementToTag, overwriteWithWarning } from "../props.js";
+type ElementToTag<A> = any;
+function overwriteWithWarning(a: any, ...t: any[]) { return a; }
 
 const HeadingLevelContext = createContext(0);
 

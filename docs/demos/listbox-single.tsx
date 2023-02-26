@@ -2,8 +2,7 @@
 import { ComponentChildren } from "preact";
 import { returnZero, useState } from "preact-prop-helpers";
 import { memo } from "preact/compat";
-import { GroupedListbox } from "../../component/listbox";
-import { Listbox, ListboxItem } from "../../index";
+import { GroupedListbox, Listbox, ListboxItem } from "../../dist/index.js";
 
 const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
 

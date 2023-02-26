@@ -1,8 +1,7 @@
 
 import { returnZero, useState } from "preact-prop-helpers";
 import { memo } from "preact/compat";
-import { Tabs } from "../../";
-import { Tab, TabPanel } from "../../component/tabs";
+import { Tab, TabPanel, Tabs } from "../../dist/index.js";
 
 export function Blurb() {
     return (
