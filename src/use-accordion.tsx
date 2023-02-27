@@ -1,5 +1,6 @@
+import { identity } from "lodash-es"
 import { h } from "preact";
-import { ManagedChildInfo, OnChildrenMountChange, PassiveStateUpdater, PersistentStates, useChildrenFlag, useLinearNavigation, UseLinearNavigationParameters, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, useMergedProps, usePersistentState, UsePressReturnType, useRandomId, useRefElement, UseRefElementParameters, UseRefElementReturnType, UseRovingTabIndexChildParameters, useStableCallback, useStableObject, useState, UseTextContentReturnType, useTypeaheadNavigation, useTypeaheadNavigationChild, UseTypeaheadNavigationChildParameters, UseTypeaheadNavigationContext, UseTypeaheadNavigationParameters } from "preact-prop-helpers";
+import { assertEmptyObject, ManagedChildInfo, OnChildrenMountChange, PassiveStateUpdater, PersistentStates, useChildrenFlag, useLinearNavigation, UseLinearNavigationParameters, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, useMergedProps, usePersistentState, UsePressReturnType, useRandomId, useRefElement, UseRefElementParameters, UseRefElementReturnType, UseRovingTabIndexChildParameters, useStableCallback, useStableObject, useState, UseTextContentReturnType, useTypeaheadNavigation, useTypeaheadNavigationChild, UseTypeaheadNavigationChildParameters, UseTypeaheadNavigationContext, UseTypeaheadNavigationParameters } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { debugLog, DisabledType, OmitStrong, Prefices } from "./props.js";
 import { ButtonPressEvent, useButton, UseButtonParameters, UseButtonReturnType } from "./use-button.js";
@@ -48,7 +49,7 @@ export interface UseAccordionSectionParameters<HeaderButtonElement extends Eleme
         bodyRole: h.JSX.AriaRole;
     }
     buttonParameters: OmitStrong<UseButtonParameters<HeaderButtonElement>["buttonParameters"], "pressed" | "role">;
-    pressParameters: UseButtonParameters<HeaderButtonElement>["pressParameters"];
+    //pressParameters: UseButtonParameters<HeaderButtonElement>["pressParameters"];
 
 }
 
@@ -83,9 +84,11 @@ export function useAccordion<HeaderButtonElement extends Element, M extends UseA
     accordionParameters: { initialIndex, localStorageKey },
     typeaheadNavigationParameters,
     linearNavigationParameters: { disableArrowKeys, disableHomeEndKeys, navigationDirection, navigatePastEnd, navigatePastStart, pageNavigationSize },
-    managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange }
+    managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange },
+    ...rest
 }: UseAccordionParameters<HeaderButtonElement, M>): UseAccordionReturnType<HeaderButtonElement, M> {
-    debugLog("useAccordian");
+    assertEmptyObject(rest);
+    debugLog("useAccordion");
 
     const [localStorageIndex, setLocalStorageIndex] = usePersistentState<never, number | null>(localStorageKey ?? null, initialIndex ?? null);
     if (localStorageIndex != null)
@@ -184,21 +187,15 @@ export function useAccordion<HeaderButtonElement extends Element, M extends UseA
     };
 }
 
-function identity<T>(t: T) { return t; }
-
-
-
-
 export function useAccordionSection<_HeaderContainerElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element>({
     buttonParameters,
-    pressParameters: { },
     accordionSectionParameters: { open: openFromUser, bodyRole },
     managedChildParameters: { index },
     rovingTabIndexChildParameters: { hidden },
     textContentParameters,
     context,
     context: {
-        accordionSectionParameters: { changeExpandedIndex, changeTabbedIndex: _setCurrentFocusedIndex, getTabbedIndex: getCurrentFocusedIndex, stableTypeaheadProps },
+        accordionSectionParameters: { changeExpandedIndex, changeTabbedIndex: setCurrentFocusedIndex, getTabbedIndex: getCurrentFocusedIndex, stableTypeaheadProps },
         linearNavigationParameters,
         rovingTabIndexReturn,
         typeaheadNavigationChildParameters,
@@ -208,7 +205,7 @@ export function useAccordionSection<_HeaderContainerElement extends Element, Hea
 
     const { disabled, onPress: userOnPress } = buttonParameters;
 
-    debugLog("useAccordianSection");
+    debugLog("useAccordionSection");
     const [openFromParent, setOpenFromParent, getOpenFromParent] = useState<boolean | null>(null);
     const [mostRecentlyTabbed, setMostRecentlyTabbed, getMostRecentlyTabbed] = useState<boolean | null>(null);
 
@@ -221,9 +218,9 @@ export function useAccordionSection<_HeaderContainerElement extends Element, Hea
 
     const { refElementReturn: { getElement: getHeaderElement, propsStable: headerRefElementProps } } = useRefElement<HeaderButtonElement>({ refElementParameters: {} });
     const { refElementReturn: { getElement: _getBodyElement, propsStable: bodyRefElementProps } } = useRefElement<BodyElement>({ refElementParameters: {} });
-    const focusSelf = useCallback(() => {
+    const focusSelf = useStableCallback(() => {
         (getHeaderElement() as Element as HTMLElement | undefined)?.focus();
-    }, []);
+    });
 
     const { managedChildReturn: { getChildren: _getSections } } = useManagedChild<M>({
         context,
@@ -242,6 +239,7 @@ export function useAccordionSection<_HeaderContainerElement extends Element, Hea
     });
 
     const onPress = (e: ButtonPressEvent<HeaderButtonElement>) => {
+        setCurrentFocusedIndex(index);
         if (getOpenFromParent())
             changeExpandedIndex(null);
         else
@@ -249,7 +247,6 @@ export function useAccordionSection<_HeaderContainerElement extends Element, Hea
 
         userOnPress?.(e);
     };
-
 
     const linearReturnType = useLinearNavigation<HeaderButtonElement, HeaderButtonElement>({ linearNavigationParameters, rovingTabIndexReturn });
     const {
@@ -263,8 +260,8 @@ export function useAccordionSection<_HeaderContainerElement extends Element, Hea
     })
 
     const buttonReturn: UseButtonReturnType<HeaderButtonElement> = useButton<HeaderButtonElement>({
-        buttonParameters: { ...buttonParameters, pressed: null, onPress, role: "button" },
-        pressParameters: { excludeSpace },
+        buttonParameters: { ...buttonParameters, pressed: null, onPress, role: "button",  },
+        pressParameters: { excludeSpace, allowRepeatPresses: false },
         refElementParameters
     });
 

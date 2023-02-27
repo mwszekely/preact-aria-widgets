@@ -81,7 +81,7 @@ export function setDebugLogging(logging: boolean) {
 }
 
 export type DebugLogTypes =
-    "useAccordian" | "useAccordianSection" |
+    "useAccordion" | "useAccordionSection" |
     "useButton" |
     "useCheckbox" |
     "useCheckboxGroup" | "useCheckboxGroupParent" | "useCheckboxGroupChild" |

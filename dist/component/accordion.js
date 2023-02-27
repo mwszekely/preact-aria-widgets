@@ -1,11 +1,13 @@
 import { jsx as _jsx } from "preact/jsx-runtime";
 import { createContext } from "preact";
-import { returnTrue } from "preact-prop-helpers";
+import { assertEmptyObject, returnTrue } from "preact-prop-helpers";
+import { memo } from "preact/compat";
 import { useContext, useImperativeHandle } from "preact/hooks";
 import { useAccordion, useAccordionSection } from "../use-accordion.js";
-import { memoForwardRef, useDefault } from "./util.js";
+import { useDefault } from "./util.js";
 const AccordionSectionContext = createContext(null);
-export const Accordion = memoForwardRef(function Accordion({ disableArrowKeys, disableHomeEndKeys, initialIndex, navigationDirection, onAfterChildLayoutEffect, onChildrenMountChange, navigatePastEnd, navigatePastStart, pageNavigationSize, localStorageKey, collator, noTypeahead, typeaheadTimeout, isValid, render, ..._rest }, ref) {
+export const Accordion = memo(function Accordion({ disableArrowKeys, disableHomeEndKeys, initialIndex, navigationDirection, onAfterChildLayoutEffect, onChildrenMountChange, navigatePastEnd, navigatePastStart, pageNavigationSize, localStorageKey, collator, noTypeahead, typeaheadTimeout, onChildCountChange, isValid, render, imperativeHandle, ...rest }) {
+    assertEmptyObject(rest);
     const info = useAccordion({
         accordionParameters: { initialIndex, localStorageKey: localStorageKey ?? null },
         typeaheadNavigationParameters: {
@@ -24,17 +26,17 @@ export const Accordion = memoForwardRef(function Accordion({ disableArrowKeys, d
         },
         managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange }
     });
-    useImperativeHandle(ref, () => info);
+    useImperativeHandle(imperativeHandle, () => info);
     return (_jsx(AccordionSectionContext.Provider, { value: info.context, children: render(info) }));
 });
-export const AccordionSection = memoForwardRef(function AccordionSection({ open, index, tagButton, disabled, bodyRole, onPress, hidden, getText, render, }, ref) {
+export const AccordionSection = memo(function AccordionSection({ open, index, tagButton, disabled, bodyRole, onPress, hidden, getText, imperativeHandle, render, ...rest }) {
+    assertEmptyObject(rest);
     const context = useContext(AccordionSectionContext);
     const info = useAccordionSection({
         buttonParameters: { disabled: disabled ?? false, tagButton, onPress: onPress ?? null },
         accordionSectionParameters: { open, bodyRole: bodyRole ?? "region" },
         managedChildParameters: { index, },
         rovingTabIndexChildParameters: { hidden: hidden ?? false },
-        pressParameters: { allowRepeatPresses: false },
         refElementParameters: {},
         context,
         textContentParameters: {
@@ -42,7 +44,7 @@ export const AccordionSection = memoForwardRef(function AccordionSection({ open,
             getText: useDefault("getText", getText)
         },
     });
-    useImperativeHandle(ref, () => info);
+    useImperativeHandle(imperativeHandle, () => info);
     return render(info);
 });
 //# sourceMappingURL=accordion.js.map

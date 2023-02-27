@@ -111,7 +111,7 @@ export function useCheckboxLike<LP extends LabelPosition, InputType extends Elem
     })
 
     const onClickInputSync = (labelPosition == "wrapping" ? undefined : onInputSync);
-    const onClickLabelSync = onInputSync;//(labelPosition != "wrapping" ? undefined : onInputSync);
+    const onClickLabelSync = onInputSync;
     const { pressReturn: pressInputReturn } = usePress<InputType>({ pressParameters: { excludeSpace, focusSelf, onPressSync: (disabled) ? undefined : onClickInputSync }, refElementReturn: refElementInputReturn });
     const { pressReturn: pressLabelReturn } = usePress<LabelType>({ pressParameters: { excludeSpace, focusSelf, onPressSync: (disabled) ? undefined : onClickLabelSync }, refElementReturn: refElementLabelReturn });
     const propsUnstableInput: h.JSX.HTMLAttributes<InputType> = {};

@@ -1,6 +1,6 @@
 import { generateRandomId, useManagedChild, useManagedChildren } from "preact-prop-helpers";
 import { useMemo, useRef } from "preact/hooks";
-import { debugLog, EventDetail, Prefices } from "./props.js";
+import { debugLog, enhanceEvent, EventDetail, Prefices } from "./props.js";
 export function useSlider({ sliderParameters: { max, min }, managedChildrenParameters }) {
     debugLog("useSlider");
     const { context, managedChildrenReturn } = useManagedChildren({ managedChildrenParameters });
@@ -33,7 +33,7 @@ export function useSliderThumb({ managedChildParameters, context: { sliderContex
     newProps = { ...newProps, "aria-label": label, "aria-valuetext": valueText, style: { "--range-value": `${value}`, "--range-value-text": `${valueText}` } };
     if (tag == "input") {
         newProps.onInput = e => {
-            onValueChange?.({ currentTarget: e.currentTarget, target: e.target, [EventDetail]: { value: e.currentTarget.valueAsNumber } });
+            onValueChange?.(enhanceEvent(e, { value: e.currentTarget.valueAsNumber }));
         };
     }
     else {

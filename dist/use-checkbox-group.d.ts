@@ -36,7 +36,6 @@ export interface UseCheckboxGroupChildReturnType<TCE extends Element, M extends 
         onChildCheckedChange: (checked: CheckboxCheckedType) => void;
     };
 }
-export type UseCheckboxGroupChild<InputElement extends Element, LabelElement extends Element, TCE extends InputElement | LabelElement, M extends CheckboxGroupInfo<TCE>> = (args: UseCheckboxGroupChildParameters<TCE, M>) => UseCheckboxGroupChildReturnType<TCE, M>;
 export interface UseCheckboxGroupReturnType<GroupElement extends Element, TCE extends Element, M extends CheckboxGroupInfo<TCE>> extends UseCompleteListNavigationReturnType<GroupElement, TCE, M> {
     context: CheckboxGroupContext<GroupElement, TCE, M>;
 }

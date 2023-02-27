@@ -1,11 +1,8 @@
 import { h } from "preact";
 import { CompleteListNavigationContext, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType } from "preact-prop-helpers";
-import { EnhancedEvent, OmitStrong } from "./props.js";
+import { OmitStrong } from "./props.js";
 import { UseCheckboxLikeParameters, UseCheckboxLikeReturnType } from "./use-checkbox-like.js";
 import { FocusableLabelElement, LabelPosition, UseLabelSyntheticParameters } from "./use-label.js";
-export type RadioChangeEvent<E extends EventTarget, V extends number | string> = EnhancedEvent<E, Event, {
-    selectedValue: V | undefined;
-}>;
 export interface UseRadioGroupParameters<V extends string | number, GroupElement extends Element, _GroupLabelElement extends Element, TabbableChildElement extends Element> extends OmitStrong<UseCompleteListNavigationParameters<GroupElement, TabbableChildElement, RadioSubInfo<TabbableChildElement, V>>, "paginatedChildrenParameters" | "singleSelectionParameters"> {
     radioGroupParameters: {
         name: string;

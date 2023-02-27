@@ -52,7 +52,7 @@ export function useCheckboxLike({ labelParameters, randomIdInputParameters, rand
         elementToFocus?.focus();
     });
     const onClickInputSync = (labelPosition == "wrapping" ? undefined : onInputSync);
-    const onClickLabelSync = onInputSync; //(labelPosition != "wrapping" ? undefined : onInputSync);
+    const onClickLabelSync = onInputSync;
     const { pressReturn: pressInputReturn } = usePress({ pressParameters: { excludeSpace, focusSelf, onPressSync: (disabled) ? undefined : onClickInputSync }, refElementReturn: refElementInputReturn });
     const { pressReturn: pressLabelReturn } = usePress({ pressParameters: { excludeSpace, focusSelf, onPressSync: (disabled) ? undefined : onClickLabelSync }, refElementReturn: refElementLabelReturn });
     const propsUnstableInput = {};

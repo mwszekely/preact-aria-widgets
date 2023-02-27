@@ -17,7 +17,6 @@ export function useTable({ labelParameters, tableParameters: { selectionLimit, t
         getSortBody()?.();
         return next;
     }, []);
-    //const { tagInput: tagTable } = labelParameters
     const { propsInput: propsLabelList, propsLabel: propsLabelLabel } = useLabelSynthetic({
         labelParameters: { ...labelParameters, onLabelClick: null },
         randomIdInputParameters: { prefix: Prefices.table },
@@ -79,11 +78,6 @@ export function useTableSection({ linearNavigationParameters, rovingTabIndexPara
             });
         }
     });
-    /*const sort = useCallback((column: number) => {
-        const ret = tableContext.updateSortDirection(column)
-        sortableChildrenReturn.sort(managedChildrenReturn.getChildren(), ret.direction);
-        return ret;
-    }, [])*/
     return {
         childrenHaveFocusReturn,
         context: {
@@ -154,50 +148,4 @@ export function useTableCell({ tableCellParameters: { tagTableCell }, ...p }) {
         }
     };
 }
-/*
-export interface UseTableSectionSectionParameters {
-    gridlistSectionParameters: {
-        compareRows: (lhsIndex: number, rhsIndex: number) => number;
-    }
-    gridlistSectionContext: {
-
-    }
-}*/
-/*
-export const useTableSectionSection = <BodySectionElement extends Element, RowElement extends Element>({ compareRows }: UseTableSectionSectionParameters) => {
-    //debugLog("useTableSectionSection");
-    //type CRFull = UseRovingTabIndexSubInfo<RowElement, UseListNavigationSubInfo<UseTableRowSubInfo<CellElement, CR, CC>>>;
-    const getIndex = useCallback<GetIndex<any>>((i) => i.props.index, []);
-
-
-    const {
-        linearNavigationParameters,
-        rearrangeableChildrenReturn,
-        sortableChildrenReturn
-    } = useSortableChildren<BodySectionElement, TableRowInfo<RowElement>>({
-        rearrangeableChildrenParameters: {
-            getIndex,
-            getHighestChildIndex,
-            getValid
-        },
-        sortableChildrenParameters: {
-            compare: (lhs, rhs) => {
-                if (lhs.locationIndex === rhs.locationIndex)
-                    return compareRows(lhs.index, rhs.index);
-                return lhs.locationIndex - rhs.locationIndex;
-            }
-        }
-    });
-
-    const useTableSectionSectionProps = (props: h.JSX.HTMLAttributes<BodySectionElement>) => {
-        console.assert(props.children != null);
-        overwriteWithWarning("useTableSectionSection", props, "role", "rowgroup");
-        return useSortableProps(props as h.JSX.HTMLAttributes<BodySectionElement> & { children: any });
-    }
-
-    return {
-        useTableSectionSectionProps,
-        ...sortableRet
-    }
-}*/
 //# sourceMappingURL=use-table.js.map
