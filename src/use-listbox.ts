@@ -8,8 +8,8 @@ import {
     UseCompleteListNavigationParameters,
     UseCompleteListNavigationReturnType, useEnsureStability, useMergedProps, usePress, UsePressParameters, UsePressReturnType, useSingleSelectionDeclarative, UseSingleSelectionParameters, useStableCallback, useStableObject
 } from "preact-prop-helpers";
-import { EventDetail, OmitStrong, Prefices } from "./props";
-import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
+import { EventDetail, OmitStrong, Prefices } from "./props.js";
+import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
 
 export type ListboxSingleSelectEvent<E extends EventTarget> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 

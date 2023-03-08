@@ -1,8 +1,9 @@
 import { createContext, Ref, VNode } from "preact";
-import { returnTrue } from "preact-prop-helpers";
+import { assertEmptyObject, returnTrue } from "preact-prop-helpers";
+import { memo } from "preact/compat";
 import { useContext, useImperativeHandle } from "preact/hooks";
-import { useAccordion, UseAccordionContext, UseAccordionParameters, UseAccordionReturnType, useAccordionSection, UseAccordionSectionInfo, UseAccordionSectionParameters, UseAccordionSectionReturnType } from "../use-accordion";
-import { memoForwardRef, PartialExcept, useDefault } from "./util";
+import { useAccordion, UseAccordionContext, UseAccordionParameters, UseAccordionReturnType, useAccordionSection, UseAccordionSectionInfo, UseAccordionSectionParameters, UseAccordionSectionReturnType } from "../use-accordion.js";
+import { PartialExcept, useDefault } from "./util.js";
 
 type Get<T, K extends keyof T> = T[K];
 
@@ -11,7 +12,7 @@ interface AccordionPropsBase<HeaderButtonElement extends Element> extends
     Get<UseAccordionParameters<HeaderButtonElement, UseAccordionSectionInfo>, "typeaheadNavigationParameters">,
     Get<UseAccordionParameters<HeaderButtonElement, UseAccordionSectionInfo>, "linearNavigationParameters">,
     Get<UseAccordionParameters<HeaderButtonElement, UseAccordionSectionInfo>, "managedChildrenParameters"> {
-    ref?: Ref<UseAccordionReturnType<HeaderButtonElement, UseAccordionSectionInfo>>;
+    imperativeHandle?: Ref<UseAccordionReturnType<HeaderButtonElement, UseAccordionSectionInfo>>;
 }
 
 interface AccordionSectionPropsBase<HeaderElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element> extends
@@ -19,9 +20,8 @@ interface AccordionSectionPropsBase<HeaderElement extends Element, HeaderButtonE
     Get<UseAccordionSectionParameters<HeaderButtonElement, UseAccordionSectionInfo>, "managedChildParameters">,
     Get<UseAccordionSectionParameters<HeaderButtonElement, UseAccordionSectionInfo>, "buttonParameters">,
     Get<UseAccordionSectionParameters<HeaderButtonElement, UseAccordionSectionInfo>, "rovingTabIndexChildParameters">,
-    Get<UseAccordionSectionParameters<HeaderButtonElement, UseAccordionSectionInfo>, "textContentParameters">,
-    Get<UseAccordionSectionParameters<HeaderButtonElement, UseAccordionSectionInfo>, "pressParameters"> {
-    ref?: Ref<UseAccordionSectionReturnType<HeaderElement, HeaderButtonElement, BodyElement>>;
+    Get<UseAccordionSectionParameters<HeaderButtonElement, UseAccordionSectionInfo>, "textContentParameters"> {
+    imperativeHandle?: Ref<UseAccordionSectionReturnType<HeaderElement, HeaderButtonElement, BodyElement>>;
 }
 
 
@@ -35,7 +35,7 @@ export interface AccordionSectionProps<HeaderElement extends Element, HeaderButt
 
 
 const AccordionSectionContext = createContext<UseAccordionContext<any, any>>(null!);
-export const Accordion = memoForwardRef(function Accordion<HeaderButtonElement extends Element>({
+export const Accordion = memo(function Accordion<HeaderButtonElement extends Element>({
     disableArrowKeys,
     disableHomeEndKeys,
     initialIndex,
@@ -49,10 +49,13 @@ export const Accordion = memoForwardRef(function Accordion<HeaderButtonElement e
     collator,
     noTypeahead,
     typeaheadTimeout,
+    onChildCountChange,
     isValid,
     render,
-    ..._rest
-}: AccordionProps<HeaderButtonElement>, ref?: Ref<any>) {
+    imperativeHandle,
+    ...rest
+}: AccordionProps<HeaderButtonElement>) {
+    assertEmptyObject(rest);
 
     const info = useAccordion<HeaderButtonElement, UseAccordionSectionInfo>({
         accordionParameters: { initialIndex, localStorageKey: localStorageKey ?? null },
@@ -72,14 +75,14 @@ export const Accordion = memoForwardRef(function Accordion<HeaderButtonElement e
         },
         managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange }
     });
-    useImperativeHandle(ref!, () => info);
+    useImperativeHandle(imperativeHandle!, () => info);
 
     return (
         <AccordionSectionContext.Provider value={info.context}>{render(info)}</AccordionSectionContext.Provider>
     )
 })
 
-export const AccordionSection = memoForwardRef(function AccordionSection<HeaderContainerElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element>({
+export const AccordionSection = memo(function AccordionSection<HeaderContainerElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element>({
     open,
     index,
     tagButton,
@@ -88,15 +91,17 @@ export const AccordionSection = memoForwardRef(function AccordionSection<HeaderC
     onPress,
     hidden,
     getText,
+    imperativeHandle,
     render,
-}: AccordionSectionProps<HeaderContainerElement, HeaderButtonElement, BodyElement>, ref?: Ref<any>) {
+    ...rest
+}: AccordionSectionProps<HeaderContainerElement, HeaderButtonElement, BodyElement>) {
+    assertEmptyObject(rest);
     const context = useContext(AccordionSectionContext) as UseAccordionContext<HeaderButtonElement, UseAccordionSectionInfo>;
     const info = useAccordionSection<HeaderContainerElement, HeaderButtonElement, BodyElement>({
         buttonParameters: { disabled: disabled ?? false, tagButton, onPress: onPress ?? null },
         accordionSectionParameters: { open, bodyRole: bodyRole ?? "region" },
         managedChildParameters: { index, },
         rovingTabIndexChildParameters: { hidden: hidden ?? false },
-        pressParameters: { allowRepeatPresses: false },
 
         refElementParameters: {},
         context,
@@ -106,7 +111,7 @@ export const AccordionSection = memoForwardRef(function AccordionSection<HeaderC
         },
     });
 
-    useImperativeHandle(ref!, () => info);
+    useImperativeHandle(imperativeHandle!, () => info);
 
     return render(info);
 });

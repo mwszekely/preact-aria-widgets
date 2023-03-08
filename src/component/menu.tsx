@@ -1,9 +1,9 @@
 import { createContext, Ref, VNode } from "preact";
 import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
-import { useMenu, UseMenuContext, useMenuItem, UseMenuItemReturnType, UseMenuParameters, UseMenuReturnType } from "../use-menu";
-import { UseMenubarSubInfo } from "../use-menubar";
-import { MenubarItemProps } from "./menubar";
-import { memoForwardRef, ParentDepthContext, PartialExcept, useDefault } from "./util";
+import { useMenu, UseMenuContext, useMenuItem, UseMenuItemReturnType, UseMenuParameters, UseMenuReturnType } from "../use-menu.js";
+import { UseMenubarSubInfo } from "../use-menubar.js";
+import { MenubarItemProps } from "./menubar.js";
+import { memoForwardRef, ParentDepthContext, PartialExcept, useDefault } from "./util.js";
 
 
 type Get<T, K extends keyof T> = T[K];

@@ -1,10 +1,10 @@
 import { createContext, Ref, VNode } from "preact";
 import { useStableGetter } from "preact-prop-helpers";
 import { useContext, useImperativeHandle } from "preact/hooks";
-import { OmitStrong } from "../props";
-import { FocusableLabelElement, LabelPosition } from "../use-label";
-import { RadioContext, RadioSubInfo, useRadio, useRadioGroup, UseRadioGroupParameters, UseRadioGroupReturnType, UseRadioParameters, UseRadioReturnType } from "../use-radio-group";
-import { memoForwardRef, PartialExcept, useDefault } from "./util";
+import { OmitStrong } from "../props.js";
+import { FocusableLabelElement, LabelPosition } from "../use-label.js";
+import { RadioContext, RadioSubInfo, useRadio, useRadioGroup, UseRadioGroupParameters, UseRadioGroupReturnType, UseRadioParameters, UseRadioReturnType } from "../use-radio-group.js";
+import { memoForwardRef, PartialExcept, useDefault } from "./util.js";
 
 type Get<T, K extends keyof T> = T[K];
 

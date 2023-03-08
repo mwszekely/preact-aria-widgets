@@ -1,31 +1,20 @@
 import { h } from "preact";
 import { assertEmptyObject, findFirstFocusable, useMergedProps, useModal, UseModalParameters, UseModalReturnType, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
-import { debugLog, OmitStrong } from "./props";
-
-interface MSP {
-    /**
-     * What role the surface fulfills.
-     * 
-     * General menus should use "menu". "dialog" can be used for generic pop-up things.
-     */
-    role: "dialog" | "menu" | "tree" | "grid" | "listbox";
-
-    surfaceId: string;
-
-    /**
-     * When this menu surface is opened, at least one element in it must be focused.
-     * 
-     * This controls what is focused (e.g. the first menu item, the whole surface itself, etc.)
-     */
-    //sendFocusToMenu(): void;
-}
-
-export type MenuSurfaceOmits = keyof MSP;
+import { debugLog, OmitStrong } from "./props.js";
 
 export interface UseMenuSurfaceParameters<_S extends Element, _B extends Element> extends OmitStrong<UseModalParameters<"escape" | "lost-focus" | "backdrop">, "focusTrapParameters"> {
     focusTrapParameters: OmitStrong<UseModalParameters<"escape" | "lost-focus" | "backdrop">["focusTrapParameters"], "trapActive" | "focusOpener" | "onlyMoveFocus">
-    menuSurfaceParameters: MSP;
+    menuSurfaceParameters: {
+        /**
+         * What role the surface fulfills.
+         * 
+         * General menus should use "menu". "dialog" can be used for generic pop-up things.
+         */
+        role: "dialog" | "menu" | "tree" | "grid" | "listbox";
+
+        surfaceId: string;
+    };
 }
 
 
@@ -115,13 +104,6 @@ export function useMenuSurface<MenuSurfaceElement extends Element, MenuTargetEle
         refElementSourceReturn
     }
 }
-
-interface FSP extends MSP {
-    open: boolean;
-    onClose(): void;
-}
-
-export type FocusSentinelOmits = keyof FSP;
 
 export interface UseFocusSentinelParameters {
     focusSentinel: { sendFocusToMenu: () => void; open: boolean; onClose(): void; };

@@ -1,7 +1,6 @@
 
 import { useState } from "preact-prop-helpers";
-import { Slider, SliderThumb } from "../../component/slider";
-import { EventDetail } from "../../index";
+import { EventDetail, Slider, SliderThumb } from "../../dist/index.js";
 
 function DemoSliderThumb({ index }: { index: number }) {
     const [value, setValue] = useState(0);

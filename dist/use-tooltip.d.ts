@@ -1,0 +1,37 @@
+import { h } from "preact";
+import { UseEscapeDismissParameters } from "preact-prop-helpers";
+export type TooltipStatus = "hover" | "focus" | null;
+export interface UseTooltipParameters<TriggerType extends Element, PopupType extends Element> {
+    tooltipParameters: {
+        /**
+         * Called when the tooltip's content should be shown or hidden
+         * or when the manner in which it's shown should be changed.
+         *
+         * This can change from `"hover"` to `"mouse"`, but never the other way around.
+         *
+         * `"null"` means the tooltip should be hidden
+         *
+         * @param status C
+         */
+        onStatus(status: TooltipStatus): void;
+        /**
+         * This is whether `aria-describedby` or `aria-labelledby` is used.
+         *
+         * Certain situations require one or the other, so you need to specify for each circumstance.
+         */
+        tooltipSemanticType: "label" | "description";
+    };
+    escapeDismissParameters: Pick<UseEscapeDismissParameters<PopupType>["escapeDismissParameters"], "getWindow" | "parentDepth">;
+}
+export type TooltipState = `${"hovering" | "focused"}-${"popup" | "trigger"}` | null;
+export declare function useTooltip<TriggerType extends Element, PopupType extends Element>({ tooltipParameters: { onStatus, tooltipSemanticType }, escapeDismissParameters }: UseTooltipParameters<TriggerType, PopupType>): UseTooltipReturnType<TriggerType, PopupType>;
+export interface UseTooltipReturnType<TriggerType extends Element, PopupType extends Element> {
+    propsPopup: h.JSX.HTMLAttributes<PopupType>;
+    propsTrigger: h.JSX.HTMLAttributes<TriggerType>;
+    tooltipReturn: {
+        getState(): TooltipState;
+        stateIsFocus(): boolean;
+        stateIsMouse(): boolean;
+    };
+}
+//# sourceMappingURL=use-tooltip.d.ts.map

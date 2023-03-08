@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { useMergedProps, usePress, UsePressParameters, UsePressReturnType, useRefElement, UseRefElementParameters, UseRefElementReturnType } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
-import { debugLog, DisabledType, ElementToTag, EnhancedEvent, enhanceEvent, OmitStrong } from "./props";
+import { debugLog, DisabledType, ElementToTag, EnhancedEvent, enhanceEvent, OmitStrong } from "./props.js";
 
 
 export type ButtonPressEvent<E extends EventTarget> = EnhancedEvent<E, Event | Event, { pressed: boolean | null }>;

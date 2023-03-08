@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { generateRandomId, ManagedChildInfo, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, UseManagedChildReturnType } from "preact-prop-helpers";
 import { useMemo, useRef } from "preact/hooks";
-import { debugLog, EventDetail, Prefices, TagSensitiveProps } from "./props";
+import { debugLog, enhanceEvent, EventDetail, Prefices, TagSensitiveProps } from "./props.js";
 
 
 
@@ -112,7 +112,7 @@ export function useSliderThumb<ThumbElement extends Element, M extends SliderThu
     newProps = { ...newProps, "aria-label": label, "aria-valuetext": valueText, style: { "--range-value": `${value}`, "--range-value-text": `${valueText}` } };
     if (tag == "input") {
         newProps.onInput = e => {
-            onValueChange?.({ currentTarget: e.currentTarget, target: e.target, [EventDetail]: { value: (e.currentTarget as Element as HTMLInputElement).valueAsNumber } })
+            onValueChange?.(enhanceEvent(e, { value: (e.currentTarget as Element as HTMLInputElement).valueAsNumber } ));
         }
     }
     else {

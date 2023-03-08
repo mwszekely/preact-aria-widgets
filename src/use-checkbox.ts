@@ -1,8 +1,8 @@
 import { h } from "preact";
 import { returnFalse, useRefElement, useStableCallback } from "preact-prop-helpers";
-import { debugLog, EnhancedEvent, enhanceEvent, OmitStrong, Prefices } from "./props";
-import { useCheckboxLike, UseCheckboxLikeParameters, UseCheckboxLikeReturnType } from "./use-checkbox-like";
-import { LabelPosition } from "./use-label";
+import { debugLog, EnhancedEvent, enhanceEvent, OmitStrong, Prefices } from "./props.js";
+import { useCheckboxLike, UseCheckboxLikeParameters, UseCheckboxLikeReturnType } from "./use-checkbox-like.js";
+import { LabelPosition } from "./use-label.js";
 
 
 

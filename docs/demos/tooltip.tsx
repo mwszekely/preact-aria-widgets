@@ -1,7 +1,6 @@
 
 import { useState } from "preact/hooks";
-import { defaultRenderPortal, Tooltip } from "../../";
-import { TooltipStatus } from "../../use-tooltip";
+import { defaultRenderPortal, Tooltip, TooltipStatus } from "../../dist/index.js";
 
 export function Blurb() {
     return (

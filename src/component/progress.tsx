@@ -1,8 +1,8 @@
 import { Ref, VNode } from "preact";
 import { UseAsyncHandlerParameters } from "preact-prop-helpers";
 import { useImperativeHandle } from "preact/hooks";
-import { useProgress, UseProgressParameters, UseProgressReturnType, useProgressWithHandler, UseProgressWithHandlerParameters, UseProgressWithHandlerReturnType } from "../use-progress";
-import { memoForwardRef, PartialExcept } from "./util";
+import { useProgress, UseProgressParameters, UseProgressReturnType, useProgressWithHandler, UseProgressWithHandlerParameters, UseProgressWithHandlerReturnType } from "../use-progress.js";
+import { memoForwardRef, PartialExcept } from "./util.js";
 
 type Get<T, K extends keyof T> = T[K];
 

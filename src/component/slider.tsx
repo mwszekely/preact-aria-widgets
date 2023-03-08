@@ -1,7 +1,7 @@
 import { ComponentChildren, createContext, Ref, VNode } from "preact";
 import { useContext, useImperativeHandle } from "preact/hooks";
-import { SliderContext, SliderThumbInfo, useSlider, UseSliderParameters, UseSliderReturnType, useSliderThumb, UseSliderThumbParameters, UseSliderThumbReturnType } from "../use-slider";
-import { memoForwardRef } from "./util";
+import { SliderContext, SliderThumbInfo, useSlider, UseSliderParameters, UseSliderReturnType, useSliderThumb, UseSliderThumbParameters, UseSliderThumbReturnType } from "../use-slider.js";
+import { memoForwardRef } from "./util.js";
 
 type Get<T, K extends keyof T> = T[K];
 

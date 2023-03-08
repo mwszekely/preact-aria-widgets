@@ -1,8 +1,8 @@
 import { h } from "preact";
 import { CompleteListNavigationContext, generateRandomId, ManagedChildInfo, OnChildrenMountChange, PersistentStates, returnTrue, useChildrenFlag, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, useMergedProps, usePersistentState, usePress, useStableCallback, useStableObject, useState } from "preact-prop-helpers";
 import { useCallback, useLayoutEffect } from "preact/hooks";
-import { debugLog, EventDetail, OmitStrong, Prefices } from "./props";
-import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
+import { debugLog, EventDetail, OmitStrong, Prefices } from "./props.js";
+import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
 
 
 export interface TabPanelInfo extends ManagedChildInfo<number> {

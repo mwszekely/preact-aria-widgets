@@ -1,6 +1,6 @@
 
 import { useState } from "preact-prop-helpers";
-import { Button, EventDetail } from "../../index";
+import { Button, EventDetail } from "../../dist/index.js";
 
 export function Blurb() {
     return (

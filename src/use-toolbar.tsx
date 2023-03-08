@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { CompleteListNavigationContext, MakeSingleSelectionDeclarativeParameters, MakeSingleSelectionDeclarativeReturnType, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useMergedProps, UseRandomIdReturnType, useSingleSelectionDeclarative, UseSingleSelectionParameters } from "preact-prop-helpers";
-import { OmitStrong, Prefices } from "./props";
-import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
+import { OmitStrong, Prefices } from "./props.js";
+import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
 
 
 

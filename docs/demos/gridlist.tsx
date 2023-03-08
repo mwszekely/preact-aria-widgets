@@ -1,10 +1,7 @@
 
 import { returnZero, useState } from "preact-prop-helpers";
 import { useRef } from "preact/compat";
-import { Checkbox } from "../../component/checkbox";
-import { Gridlist, GridlistChild, GridlistRow } from "../../component/gridlist";
-import { EventDetail } from "../../props";
-import { UseCheckboxReturnType } from "../../use-checkbox";
+import { Checkbox, EventDetail, Gridlist, GridlistChild, GridlistRow, UseCheckboxReturnType } from "../../dist/index.js";
 
 function getDocument() { return window.document; }
 

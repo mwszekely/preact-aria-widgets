@@ -21,9 +21,9 @@ import {
     useStableCallback,
     useStableObject
 } from "preact-prop-helpers";
-import { OmitStrong, Prefices } from "./props";
-import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label";
-import { UseListboxParameters } from "./use-listbox";
+import { OmitStrong, Prefices } from "./props.js";
+import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
+import { UseListboxParameters } from "./use-listbox.js";
 
 export interface UseGridlistContext<GridlistElement extends Element, GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends CompleteGridNavigationContext<GridlistElement, GridlistRowElement, GridlistCellElement, RM, CM> {
     gridlistRowContext: { selectionLimit: "single" | "multi" | "none" }
