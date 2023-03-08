@@ -89,10 +89,10 @@ export declare function useTab<TabElement extends Element, M extends TabInfo<Tab
     };
     staggeredChildReturn: {
         isStaggered: boolean;
-        staggeredVisible: boolean;
         hideBecauseStaggered: boolean;
     };
     pressParameters: Pick<{
+        onPressingChange?: import("preact-prop-helpers").OnPassiveStateChange<boolean, import("preact").JSX.TargetedEvent<any, Event>> | undefined;
         onPressSync: ((e: import("preact").JSX.TargetedEvent<any, Event>) => void) | null | undefined;
         excludeSpace?(): boolean;
         excludeEnter?(): boolean;
@@ -101,6 +101,7 @@ export declare function useTab<TabElement extends Element, M extends TabInfo<Tab
         allowRepeatPresses?: boolean | undefined;
         longPressThreshold?: number | null | undefined;
     }, "excludeSpace"> & Pick<{
+        onPressingChange?: import("preact-prop-helpers").OnPassiveStateChange<boolean, import("preact").JSX.TargetedEvent<TabElement, Event>> | undefined;
         onPressSync: ((e: import("preact").JSX.TargetedEvent<TabElement, Event>) => void) | null | undefined;
         excludeSpace?(): boolean;
         excludeEnter?(): boolean;
@@ -129,7 +130,8 @@ export declare function useTab<TabElement extends Element, M extends TabInfo<Tab
     };
     props: import("preact").JSX.HTMLAttributes<TabElement>;
     pressReturn: {
-        pseudoActive: boolean;
+        pressing: boolean;
+        getIsPressing(): boolean;
         longPress: boolean | null;
         propsUnstable: import("preact").JSX.HTMLAttributes<TabElement>;
     };

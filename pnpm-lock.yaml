@@ -6,14 +6,14 @@ specifiers:
   lodash-es: ^4.17.21
   npm-run-all: ^4.1.5
   preact: ^10.13.0
-  preact-prop-helpers: github:mwszekely/preact-prop-helpers#nodenext
+  preact-prop-helpers: github:mwszekely/preact-prop-helpers
   typescript: ^4.9.5
 
 dependencies:
   clsx: 1.2.1
   lodash-es: 4.17.21
   preact: 10.13.0
-  preact-prop-helpers: github.com/mwszekely/preact-prop-helpers/8645878aa28ade308a83ed21e85aee308d38ba12_preact@10.13.0
+  preact-prop-helpers: github.com/mwszekely/preact-prop-helpers/1a65f1dfaee0be7969fa71f8eaed52382c7c2058_preact@10.13.0
 
 devDependencies:
   '@types/lodash-es': 4.17.6
@@ -138,7 +138,7 @@ packages:
       has-proto: 1.0.1
       has-symbols: 1.0.3
       internal-slot: 1.0.5
-      is-array-buffer: 3.0.1
+      is-array-buffer: 3.0.2
       is-callable: 1.2.7
       is-negative-zero: 2.0.2
       is-regex: 1.1.4
@@ -290,8 +290,8 @@ packages:
       side-channel: 1.0.4
     dev: true
 
-  /is-array-buffer/3.0.1:
-    resolution: {integrity: sha512-ASfLknmY8Xa2XtB4wmbz13Wu202baeA18cJBCeCy0wXUHZF0IPyVEXqKEcd+t2fNSLLL1vC6k7lxZEojNbISXQ==}
+  /is-array-buffer/3.0.2:
+    resolution: {integrity: sha512-y+FyyR/w8vfIRq4eQcM1EYgSTnmHXPqaF+IgzgraytCFq5Xh8lllDVmAZolPJiZttZLeFSINPYMaEJ7/vWUa1w==}
     dependencies:
       call-bind: 1.0.2
       get-intrinsic: 1.2.0
@@ -575,8 +575,8 @@ packages:
       object-inspect: 1.12.3
     dev: true
 
-  /spdx-correct/3.1.1:
-    resolution: {integrity: sha512-cOYcUWwhCuHCXi49RhFRCyJEK3iPj1Ziz9DpViV3tbZOwXD49QzIN3MpOLJNxh2qwq2lJJZaKMVw9qNi4jTC0w==}
+  /spdx-correct/3.2.0:
+    resolution: {integrity: sha512-kN9dJbvnySHULIluDHy32WHRUu3Og7B9sbY7tsFLctQkIqnMh3hErYgdMjTYuqmcXX+lK5T1lnUt3G7zNswmZA==}
     dependencies:
       spdx-expression-parse: 3.0.1
       spdx-license-ids: 3.0.12
@@ -669,7 +669,7 @@ packages:
   /validate-npm-package-license/3.0.4:
     resolution: {integrity: sha512-DpKm2Ui/xN7/HQKCtpZxoRWBhZ9Z0kqtygG8XCgNQ8ZlDnxuQmWhj566j8fN4Cu3/JmbhsDo7fcAJq4s9h27Ew==}
     dependencies:
-      spdx-correct: 3.1.1
+      spdx-correct: 3.2.0
       spdx-expression-parse: 3.0.1
     dev: true
 
@@ -706,9 +706,9 @@ packages:
     resolution: {integrity: sha512-Ba9tGNYxXwaqKEi9sJJvPMKuo063umUPsHN0JJsjrs2j8KDSzkWLMZGZ+MH1Jf1Fq4OWZ5HsESJID6nRza2ang==}
     dev: false
 
-  github.com/mwszekely/preact-prop-helpers/8645878aa28ade308a83ed21e85aee308d38ba12_preact@10.13.0:
-    resolution: {tarball: https://codeload.github.com/mwszekely/preact-prop-helpers/tar.gz/8645878aa28ade308a83ed21e85aee308d38ba12}
-    id: github.com/mwszekely/preact-prop-helpers/8645878aa28ade308a83ed21e85aee308d38ba12
+  github.com/mwszekely/preact-prop-helpers/1a65f1dfaee0be7969fa71f8eaed52382c7c2058_preact@10.13.0:
+    resolution: {tarball: https://codeload.github.com/mwszekely/preact-prop-helpers/tar.gz/1a65f1dfaee0be7969fa71f8eaed52382c7c2058}
+    id: github.com/mwszekely/preact-prop-helpers/1a65f1dfaee0be7969fa71f8eaed52382c7c2058
     name: preact-prop-helpers
     version: 0.0.1
     peerDependencies:

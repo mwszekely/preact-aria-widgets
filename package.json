@@ -21,7 +21,8 @@
     "watch:ts": "tsc --watch",
     "build:ts": "tsc --build",
     "test": "jest",
-    "clean": "tsc --build --clean"
+    "clean": "tsc --build --clean",
+    "rebuild": "rm \"./pnpm-lock.yaml\" && rm -R \"./node_modules\" && pnpm install && pnpm run build"
   },
   "author": "",
   "license": "ISC",
@@ -37,6 +38,6 @@
   "dependencies": {
     "clsx": "^1.2.1",
     "lodash-es": "^4.17.21",
-    "preact-prop-helpers": "github:mwszekely/preact-prop-helpers#nodenext"
+    "preact-prop-helpers": "github:mwszekely/preact-prop-helpers"
   }
 }
