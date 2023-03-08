@@ -7,6 +7,6 @@ interface TooltipPropsBase<TriggerType extends Element, PopupType extends Elemen
     ref?: Ref<UseTooltipReturnType<TriggerType, PopupType>>;
 }
 export type TooltipProps<TriggerType extends Element, PopupType extends Element> = PartialExcept<TooltipPropsBase<TriggerType, PopupType>, "render" | "tooltipSemanticType" | "onStatus">;
-export declare const Tooltip: <TriggerType extends Element, PopupType extends Element>({ onStatus, getWindow, parentDepth, render, tooltipSemanticType }: TooltipProps<TriggerType, PopupType>, ref?: Ref<any>) => import("preact").JSX.Element;
+export declare const Tooltip: <TriggerType extends Element, PopupType extends Element>({ onStatus, getWindow, parentDepth, hoverDelay, render, tooltipSemanticType }: TooltipProps<TriggerType, PopupType>, ref?: Ref<any>) => import("preact").JSX.Element;
 export {};
 //# sourceMappingURL=tooltip.d.ts.map

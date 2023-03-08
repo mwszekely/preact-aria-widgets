@@ -20,11 +20,17 @@ export interface UseTooltipParameters<TriggerType extends Element, PopupType ext
          * Certain situations require one or the other, so you need to specify for each circumstance.
          */
         tooltipSemanticType: "label" | "description";
+        /**
+         * How long should the tooltip wait to show itself if it was shown via hover?
+         *
+         * Default is 0.
+         */
+        hoverDelay: number | null;
     };
     escapeDismissParameters: Pick<UseEscapeDismissParameters<PopupType>["escapeDismissParameters"], "getWindow" | "parentDepth">;
 }
 export type TooltipState = `${"hovering" | "focused"}-${"popup" | "trigger"}` | null;
-export declare function useTooltip<TriggerType extends Element, PopupType extends Element>({ tooltipParameters: { onStatus, tooltipSemanticType }, escapeDismissParameters }: UseTooltipParameters<TriggerType, PopupType>): UseTooltipReturnType<TriggerType, PopupType>;
+export declare function useTooltip<TriggerType extends Element, PopupType extends Element>({ tooltipParameters: { onStatus, tooltipSemanticType, hoverDelay }, escapeDismissParameters }: UseTooltipParameters<TriggerType, PopupType>): UseTooltipReturnType<TriggerType, PopupType>;
 export interface UseTooltipReturnType<TriggerType extends Element, PopupType extends Element> {
     propsPopup: h.JSX.HTMLAttributes<PopupType>;
     propsTrigger: h.JSX.HTMLAttributes<TriggerType>;

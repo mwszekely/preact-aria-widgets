@@ -1,7 +1,7 @@
 import { returnNull, useDismiss, useGlobalHandler, useHasCurrentFocus, useMergedProps, usePassiveState, useRandomId, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
-import { useCallback } from "preact/hooks";
+import { useCallback, useRef } from "preact/hooks";
 import { Prefices } from "./props.js";
-export function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType }, escapeDismissParameters }) {
+export function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType, hoverDelay }, escapeDismissParameters }) {
     /**
      * Whether the hover/focus-popup/trigger state we have results in us showing this tooltip.
      *
@@ -29,14 +29,19 @@ export function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType 
     const { refElementReturn: { getElement: getPopupElement, propsStable: popupRefProps } } = useRefElement({ refElementParameters: {} });
     const stateIsMouse = useCallback(() => (getState()?.startsWith("h") || false), []);
     const stateIsFocus = useCallback(() => (getState()?.startsWith("f") || false), []);
-    const onHoverChanged = useCallback((hovering, which) => {
+    let hoverTimeoutHandle = useRef(null);
+    const onHoverChanged = useStableCallback((hovering, which) => {
+        if (hoverTimeoutHandle.current)
+            clearTimeout(hoverTimeoutHandle.current);
         if (hovering) {
-            setState(`hovering-${which}`);
+            hoverTimeoutHandle.current = setTimeout(() => {
+                setState(`hovering-${which}`);
+            }, hoverDelay || 0);
         }
         else {
             setState(null);
         }
-    }, []);
+    });
     const onCurrentFocusedInnerChanged = useCallback((focused, which) => {
         if (!stateIsMouse()) {
             if (focused) {

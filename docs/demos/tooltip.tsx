@@ -37,6 +37,7 @@ export function Demo() {
                 The following text triggers a tooltip: <Tooltip<HTMLSpanElement, HTMLDivElement> 
                 tooltipSemanticType="description"
                 onStatus={setTooltipStatus}
+                hoverDelay={500}
                 render={info => {
                     return <>
                         <span tabIndex={0} {...info.propsTrigger}>Tooltip-triggering text that is hoverable and focusable: </span>

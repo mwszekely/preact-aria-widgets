@@ -12,7 +12,7 @@ interface TooltipPropsBase<TriggerType extends Element, PopupType extends Elemen
 
 export type TooltipProps<TriggerType extends Element, PopupType extends Element> = PartialExcept<TooltipPropsBase<TriggerType, PopupType>, "render" | "tooltipSemanticType" | "onStatus">
 
-export const Tooltip = memoForwardRef(function TooltipU<TriggerType extends Element, PopupType extends Element>({ onStatus, getWindow, parentDepth, render, tooltipSemanticType }: TooltipProps<TriggerType, PopupType>, ref?: Ref<any>) {
+export const Tooltip = memoForwardRef(function TooltipU<TriggerType extends Element, PopupType extends Element>({ onStatus, getWindow, parentDepth, hoverDelay, render, tooltipSemanticType }: TooltipProps<TriggerType, PopupType>, ref?: Ref<any>) {
 
     const defaultParentDepth = useContext(ParentDepthContext);
     let myDepth = (parentDepth ?? defaultParentDepth) + 1;
@@ -24,7 +24,8 @@ export const Tooltip = memoForwardRef(function TooltipU<TriggerType extends Elem
         },
         tooltipParameters: {
             onStatus,
-            tooltipSemanticType
+            tooltipSemanticType,
+            hoverDelay: hoverDelay ?? null
         }
     });
 

@@ -2,7 +2,7 @@ import { jsx as _jsx } from "preact/jsx-runtime";
 import { useContext, useImperativeHandle } from "preact/compat";
 import { useTooltip } from "../use-tooltip.js";
 import { memoForwardRef, ParentDepthContext, useDefault } from "./util.js";
-export const Tooltip = memoForwardRef(function TooltipU({ onStatus, getWindow, parentDepth, render, tooltipSemanticType }, ref) {
+export const Tooltip = memoForwardRef(function TooltipU({ onStatus, getWindow, parentDepth, hoverDelay, render, tooltipSemanticType }, ref) {
     const defaultParentDepth = useContext(ParentDepthContext);
     let myDepth = (parentDepth ?? defaultParentDepth) + 1;
     const info = useTooltip({
@@ -12,7 +12,8 @@ export const Tooltip = memoForwardRef(function TooltipU({ onStatus, getWindow, p
         },
         tooltipParameters: {
             onStatus,
-            tooltipSemanticType
+            tooltipSemanticType,
+            hoverDelay: hoverDelay ?? null
         }
     });
     useImperativeHandle(ref, () => info);

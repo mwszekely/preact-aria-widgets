@@ -1,6 +1,6 @@
 import { h } from "preact";
 import { DismissListenerTypes, returnNull, useDismiss, UseEscapeDismissParameters, useGlobalHandler, useHasCurrentFocus, useMergedProps, usePassiveState, useRandomId, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
-import { useCallback } from "preact/hooks";
+import { useCallback, useRef } from "preact/hooks";
 import { Prefices } from "./props.js";
 
 export type TooltipStatus = "hover" | "focus" | null;
@@ -26,13 +26,20 @@ export interface UseTooltipParameters<TriggerType extends Element, PopupType ext
          * Certain situations require one or the other, so you need to specify for each circumstance. 
          */
         tooltipSemanticType: "label" | "description";
+
+        /**
+         * How long should the tooltip wait to show itself if it was shown via hover?
+         * 
+         * Default is 0.
+         */
+        hoverDelay: number | null;
     }
     escapeDismissParameters: Pick<UseEscapeDismissParameters<PopupType>["escapeDismissParameters"], "getWindow" | "parentDepth">
 }
 
 export type TooltipState = `${"hovering" | "focused"}-${"popup" | "trigger"}` | null;
 
-export function useTooltip<TriggerType extends Element, PopupType extends Element>({ tooltipParameters: { onStatus, tooltipSemanticType }, escapeDismissParameters }: UseTooltipParameters<TriggerType, PopupType>): UseTooltipReturnType<TriggerType, PopupType> {
+export function useTooltip<TriggerType extends Element, PopupType extends Element>({ tooltipParameters: { onStatus, tooltipSemanticType, hoverDelay }, escapeDismissParameters }: UseTooltipParameters<TriggerType, PopupType>): UseTooltipReturnType<TriggerType, PopupType> {
 
     /**
      * Whether the hover/focus-popup/trigger state we have results in us showing this tooltip.
@@ -72,14 +79,20 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
     const stateIsMouse = useCallback(() => (getState()?.startsWith("h") || false), []);
     const stateIsFocus = useCallback(() => (getState()?.startsWith("f") || false), []);
 
-    const onHoverChanged = useCallback((hovering: boolean, which: "popup" | "trigger") => {
+    let hoverTimeoutHandle = useRef(null as number | null);
+    const onHoverChanged = useStableCallback((hovering: boolean, which: "popup" | "trigger") => {
+        if (hoverTimeoutHandle.current)
+            clearTimeout(hoverTimeoutHandle.current);
+
         if (hovering) {
-            setState(`hovering-${which}`);
+            hoverTimeoutHandle.current = setTimeout(() => {
+                setState(`hovering-${which}`);
+            }, hoverDelay || 0)
         }
         else {
             setState(null);
         }
-    }, [])
+    })
 
     const onCurrentFocusedInnerChanged = useCallback((focused: boolean, which: "popup" | "trigger") => {
         if (!stateIsMouse()) {

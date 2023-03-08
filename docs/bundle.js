@@ -32668,7 +32668,8 @@
 	  let {
 	    tooltipParameters: {
 	      onStatus,
-	      tooltipSemanticType
+	      tooltipSemanticType,
+	      hoverDelay
 	    },
 	    escapeDismissParameters
 	  } = _ref;
@@ -32727,13 +32728,17 @@
 	    var _getState2;
 	    return ((_getState2 = getState()) === null || _getState2 === void 0 ? void 0 : _getState2.startsWith("f")) || false;
 	  }, []);
-	  const onHoverChanged = T$1((hovering, which) => {
+	  let hoverTimeoutHandle = _(null);
+	  const onHoverChanged = useStableCallback((hovering, which) => {
+	    if (hoverTimeoutHandle.current) clearTimeout(hoverTimeoutHandle.current);
 	    if (hovering) {
-	      setState("hovering-".concat(which));
+	      hoverTimeoutHandle.current = setTimeout(() => {
+	        setState("hovering-".concat(which));
+	      }, hoverDelay || 0);
 	    } else {
 	      setState(null);
 	    }
-	  }, []);
+	  });
 	  const onCurrentFocusedInnerChanged = T$1((focused, which) => {
 	    if (!stateIsMouse()) {
 	      if (focused) {
@@ -34837,6 +34842,7 @@
 	    onStatus,
 	    getWindow,
 	    parentDepth,
+	    hoverDelay,
 	    render,
 	    tooltipSemanticType
 	  } = _ref;
@@ -34849,7 +34855,8 @@
 	    },
 	    tooltipParameters: {
 	      onStatus,
-	      tooltipSemanticType
+	      tooltipSemanticType,
+	      hoverDelay: hoverDelay !== null && hoverDelay !== void 0 ? hoverDelay : null
 	    }
 	  });
 	  A(ref, () => info);
@@ -37021,6 +37028,7 @@
 	      children: ["The following text triggers a tooltip: ", o$1(Tooltip, {
 	        tooltipSemanticType: "description",
 	        onStatus: setTooltipStatus,
+	        hoverDelay: 500,
 	        render: info => {
 	          return o$1(d$1, {
 	            children: [o$1("span", {
