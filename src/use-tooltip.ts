@@ -49,6 +49,11 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
     const [openLocal, setOpenLocal] = useState(false);
 
     const [getState, setState] = usePassiveState<TooltipState, never>(useStableCallback((nextState, prevState) => {
+        if (hoverTimeoutHandle.current) {
+            clearTimeout(hoverTimeoutHandle.current);
+            hoverTimeoutHandle.current = null;
+        }
+
         switch (nextState) {
             case "focused-popup":
             case "focused-trigger":
@@ -87,6 +92,7 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
         if (hovering) {
             hoverTimeoutHandle.current = setTimeout(() => {
                 setState(`hovering-${which}`);
+                hoverTimeoutHandle.current = null;
             }, hoverDelay || 0)
         }
         else {

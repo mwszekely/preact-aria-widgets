@@ -9,6 +9,10 @@ export function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType,
      */
     const [openLocal, setOpenLocal] = useState(false);
     const [getState, setState] = usePassiveState(useStableCallback((nextState, prevState) => {
+        if (hoverTimeoutHandle.current) {
+            clearTimeout(hoverTimeoutHandle.current);
+            hoverTimeoutHandle.current = null;
+        }
         switch (nextState) {
             case "focused-popup":
             case "focused-trigger":
@@ -36,6 +40,7 @@ export function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType,
         if (hovering) {
             hoverTimeoutHandle.current = setTimeout(() => {
                 setState(`hovering-${which}`);
+                hoverTimeoutHandle.current = null;
             }, hoverDelay || 0);
         }
         else {

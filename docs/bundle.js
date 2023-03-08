@@ -32680,6 +32680,10 @@
 	   */
 	  const [openLocal, setOpenLocal] = useState(false);
 	  const [getState, setState] = usePassiveState(useStableCallback((nextState, prevState) => {
+	    if (hoverTimeoutHandle.current) {
+	      clearTimeout(hoverTimeoutHandle.current);
+	      hoverTimeoutHandle.current = null;
+	    }
 	    switch (nextState) {
 	      case "focused-popup":
 	      case "focused-trigger":
@@ -32734,6 +32738,7 @@
 	    if (hovering) {
 	      hoverTimeoutHandle.current = setTimeout(() => {
 	        setState("hovering-".concat(which));
+	        hoverTimeoutHandle.current = null;
 	      }, hoverDelay || 0);
 	    } else {
 	      setState(null);
