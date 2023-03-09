@@ -65,31 +65,27 @@ export const GridlistRow = memoForwardRef(function GridlistRowU({ index, collato
     const context = useContext(GridlistContext);
     console.assert(context != null, `This GridlistRow is not contained within a Gridlist`);
     const info = useGridlistRow({
-        rowAsChildOfGridParameters: {
-            completeGridNavigationRowParameters: { ...subInfo },
-            context,
-            managedChildParameters: { index },
-            gridlistRowParameters: { selected: selected ?? null },
-            rovingTabIndexChildParameters: { hidden: hidden ?? false },
-            sortableChildParameters: { getSortValue },
-            singleSelectionChildParameters: { disabled: disabled ?? false, ariaPropName, selectionMode: useDefault("selectionMode", selectionMode) },
-            textContentParameters: { getText: useDefault("getText", getText) }
+        completeGridNavigationRowParameters: { ...subInfo },
+        context,
+        managedChildParameters: { index },
+        gridlistRowParameters: { selected: selected ?? null },
+        rovingTabIndexChildParameters: { hidden: hidden ?? false },
+        sortableChildParameters: { getSortValue },
+        singleSelectionChildParameters: { disabled: disabled ?? false, ariaPropName, selectionMode: useDefault("selectionMode", selectionMode) },
+        textContentParameters: { getText: useDefault("getText", getText) },
+        linearNavigationParameters: {
+            disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys),
+            navigatePastEnd: navigatePastEnd ?? "wrap",
+            navigatePastStart: navigatePastStart ?? "wrap"
         },
-        rowAsParentOfCellsParameters: {
-            linearNavigationParameters: {
-                disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys),
-                navigatePastEnd: navigatePastEnd ?? "wrap",
-                navigatePastStart: navigatePastStart ?? "wrap"
-            },
-            rovingTabIndexParameters: {
-                onTabbableIndexChange: onTabbableIndexChange ?? null
-            },
-            typeaheadNavigationParameters: {
-                collator: useDefault("collator", collator),
-                noTypeahead: useDefault("noTypeahead", noTypeahead),
-                typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
-            }
+        rovingTabIndexParameters: {
+            onTabbableIndexChange: onTabbableIndexChange ?? null
         },
+        typeaheadNavigationParameters: {
+            collator: useDefault("collator", collator),
+            noTypeahead: useDefault("noTypeahead", noTypeahead),
+            typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
+        }
     });
     useImperativeHandle(ref, () => info);
     return _jsx(GridlistRowContext.Provider, { value: info.context, children: render(info) });

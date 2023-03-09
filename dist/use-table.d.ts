@@ -19,18 +19,15 @@ export interface UseTableSectionParameters<TableSectionElement extends Element, 
     };
     context: UseTableContext;
 }
-export interface UseTableSectionReturnType<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>> extends OmitStrong<UseCompleteGridNavigationReturnType<TableSectionElement, TableRowElement, TableCellElement, RM, CM>, "props"> {
+export interface UseTableSectionReturnType<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>> extends OmitStrong<UseCompleteGridNavigationReturnType<TableSectionElement, TableRowElement, TableCellElement, RM, CM>, "propsStable"> {
     propsTableSection: h.JSX.HTMLAttributes<TableSectionElement>;
     context: UseTableSectionContext<TableSectionElement, TableRowElement, TableCellElement, RM, CM>;
 }
-export interface UseTableRowReturnType<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>> extends UseCompleteGridNavigationRowReturnType<TableRowElement, TableCellElement, RM, CM> {
+export interface UseTableRowReturnType<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>> extends OmitStrong<UseCompleteGridNavigationRowReturnType<TableRowElement, TableCellElement, RM, CM>, "context"> {
     context: UseTableRowContext<any, TableCellElement, CM>;
 }
-export interface UseTableRowParameters<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>> {
-    rowAsChildOfGridParameters: OmitStrong<UseCompleteGridNavigationRowParameters<TableRowElement, TableCellElement, RM, CM>["rowAsChildOfGridParameters"], "sortableChildParameters" | "context"> & {
-        context: UseTableSectionContext<any, TableRowElement, TableCellElement, RM, CM>;
-    };
-    rowAsParentOfCellsParameters: OmitStrong<UseCompleteGridNavigationRowParameters<TableRowElement, TableCellElement, RM, CM>["rowAsParentOfCellsParameters"], "typeaheadNavigationParameters">;
+export interface UseTableRowParameters<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>> extends OmitStrong<UseCompleteGridNavigationRowParameters<TableRowElement, TableCellElement, RM, CM>, "typeaheadNavigationParameters" | "sortableChildParameters" | "context"> {
+    context: UseTableSectionContext<any, TableRowElement, TableCellElement, RM, CM>;
     tableRowParameters: {
         /**
          * When the `selectionLimit` is `"single"`, this must be `null`.
@@ -77,7 +74,7 @@ interface SortInfo {
 }
 export declare function useTable<TableElement extends Element, LabelElement extends Element>({ labelParameters, tableParameters: { selectionLimit, tagTable }, }: UseTableParameters<TableElement, LabelElement>): UseTableReturnType<TableElement, LabelElement>;
 export declare function useTableSection<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>>({ linearNavigationParameters, rovingTabIndexParameters, singleSelectionParameters, gridNavigationParameters, rearrangeableChildrenParameters, paginatedChildrenParameters, staggeredChildrenParameters, tableSectionParameters: { tagTableSection, location }, context: { tableContext } }: UseTableSectionParameters<TableSectionElement, TableRowElement, TableCellElement, RM>): UseTableSectionReturnType<TableSectionElement, TableRowElement, TableCellElement, RM, CM>;
-export declare function useTableRow<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>>({ rowAsChildOfGridParameters: { managedChildParameters, singleSelectionChildParameters, completeGridNavigationRowParameters, rovingTabIndexChildParameters, textContentParameters, context: cx1 }, rowAsParentOfCellsParameters: { linearNavigationParameters, rovingTabIndexParameters }, tableRowParameters: { selected } }: UseTableRowParameters<TableRowElement, TableCellElement, RM, CM>): UseTableRowReturnType<TableRowElement, TableCellElement, RM, CM>;
+export declare function useTableRow<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>>({ managedChildParameters, singleSelectionChildParameters, completeGridNavigationRowParameters, rovingTabIndexChildParameters, textContentParameters, context: cx1, tableRowParameters: { selected }, linearNavigationParameters, rovingTabIndexParameters, }: UseTableRowParameters<TableRowElement, TableCellElement, RM, CM>): UseTableRowReturnType<TableRowElement, TableCellElement, RM, CM>;
 export declare function useTableCell<TableCellElement extends Element, CM extends TableCellInfo<TableCellElement>>({ tableCellParameters: { tagTableCell }, ...p }: UseTableCellParameters<TableCellElement, CM>): UseTableCellReturnType<TableCellElement, CM>;
 export {};
 //# sourceMappingURL=use-table.d.ts.map

@@ -23,16 +23,16 @@ interface GridlistPropsBase<GridlistElement extends Element, GridlistRowElement 
 }
 
 interface GridlistRowPropsBase<GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends
-    Get2<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "rowAsChildOfGridParameters", "managedChildParameters">,
-    Get2<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "rowAsChildOfGridParameters", "singleSelectionChildParameters">,
-    Get2<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "rowAsChildOfGridParameters", "textContentParameters">,
-    Get2<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "rowAsChildOfGridParameters", "rovingTabIndexChildParameters">,
-    Get2<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "rowAsChildOfGridParameters", "sortableChildParameters">,
-    Get2<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "rowAsParentOfCellsParameters", "linearNavigationParameters">,
-    Get2<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "rowAsParentOfCellsParameters", "rovingTabIndexParameters">,
-    Get2<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "rowAsParentOfCellsParameters", "typeaheadNavigationParameters">,
-    Get2<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "rowAsChildOfGridParameters", "gridlistRowParameters"> {
-    subInfo?: Get2<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "rowAsChildOfGridParameters", "completeGridNavigationRowParameters">
+    Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "managedChildParameters">,
+    Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "singleSelectionChildParameters">,
+    Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "textContentParameters">,
+    Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "rovingTabIndexChildParameters">,
+    Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "sortableChildParameters">,
+    Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "linearNavigationParameters">,
+    Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "rovingTabIndexParameters">,
+    Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "typeaheadNavigationParameters">,
+    Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "gridlistRowParameters"> {
+    subInfo?: Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "completeGridNavigationRowParameters">
     ref?: Ref<UseGridlistRowReturnType<GridlistRowElement, GridlistCellElement, RM, CM>>;
 }
 
@@ -175,32 +175,28 @@ export const GridlistRow = memoForwardRef(function GridlistRowU<RowElement exten
     const context = (useContext(GridlistContext) as UseGridlistContext<any, RowElement, Cellement, RM, CM>);
     console.assert(context != null, `This GridlistRow is not contained within a Gridlist`);
     const info = useGridlistRow<RowElement, Cellement, RM, CM>({
-        rowAsChildOfGridParameters: {
-            completeGridNavigationRowParameters: { ...subInfo } as RM,
-            context,
-            managedChildParameters: { index },
-            gridlistRowParameters: { selected: selected ?? null },
-            rovingTabIndexChildParameters: { hidden: hidden ?? false },
-            sortableChildParameters: { getSortValue },
-            singleSelectionChildParameters: { disabled: disabled ?? false, ariaPropName, selectionMode: useDefault("selectionMode", selectionMode) },
-            textContentParameters: { getText: useDefault("getText", getText) }
-        },
-        rowAsParentOfCellsParameters: {
-            linearNavigationParameters: {
-                disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys),
+        completeGridNavigationRowParameters: { ...subInfo } as RM,
+        context,
+        managedChildParameters: { index },
+        gridlistRowParameters: { selected: selected ?? null },
+        rovingTabIndexChildParameters: { hidden: hidden ?? false },
+        sortableChildParameters: { getSortValue },
+        singleSelectionChildParameters: { disabled: disabled ?? false, ariaPropName, selectionMode: useDefault("selectionMode", selectionMode) },
+        textContentParameters: { getText: useDefault("getText", getText) },
+        linearNavigationParameters: {
+            disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys),
 
-                navigatePastEnd: navigatePastEnd ?? "wrap",
-                navigatePastStart: navigatePastStart ?? "wrap"
-            },
-            rovingTabIndexParameters: {
-                onTabbableIndexChange: onTabbableIndexChange ?? null
-            },
-            typeaheadNavigationParameters: {
-                collator: useDefault("collator", collator),
-                noTypeahead: useDefault("noTypeahead", noTypeahead),
-                typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
-            }
+            navigatePastEnd: navigatePastEnd ?? "wrap",
+            navigatePastStart: navigatePastStart ?? "wrap"
         },
+        rovingTabIndexParameters: {
+            onTabbableIndexChange: onTabbableIndexChange ?? null
+        },
+        typeaheadNavigationParameters: {
+            collator: useDefault("collator", collator),
+            noTypeahead: useDefault("noTypeahead", noTypeahead),
+            typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
+        }
     });
 
     useImperativeHandle(ref!, () => info);

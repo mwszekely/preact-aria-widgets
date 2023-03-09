@@ -9,7 +9,7 @@ export function useAccordion({ accordionParameters: { initialIndex, localStorage
     const [localStorageIndex, setLocalStorageIndex] = usePersistentState(localStorageKey ?? null, initialIndex ?? null);
     if (localStorageIndex != null)
         initialIndex = localStorageIndex;
-    const { managedChildrenReturn, context } = useManagedChildren({
+    const { managedChildrenReturn, context: { managedChildContext } } = useManagedChildren({
         managedChildrenParameters: {
             onChildrenMountChange: useStableCallback((m, u) => { ocmc2(); onChildrenMountChange?.(m, u); }),
             onAfterChildLayoutEffect
@@ -57,20 +57,20 @@ export function useAccordion({ accordionParameters: { initialIndex, localStorage
         getTabbableIndex: getTabbedIndex,
         setTabbableIndex: changeTabbedIndex
     });
-    const { typeaheadNavigationChildContext, typeaheadNavigationReturn } = useTypeaheadNavigation({
+    const { context: { typeaheadNavigationContext }, typeaheadNavigationReturn, propsStable: propsTN } = useTypeaheadNavigation({
         rovingTabIndexReturn,
         typeaheadNavigationParameters
     });
     return {
         context: useStableObject({
-            ...context,
-            ...typeaheadNavigationChildContext,
+            managedChildContext,
+            typeaheadNavigationContext,
             accordionSectionParameters: useStableObject({
                 changeExpandedIndex,
                 changeTabbedIndex,
                 getExpandedIndex: getCurrentExpandedIndex,
                 getTabbedIndex: getTabbedIndex,
-                stableTypeaheadProps: typeaheadNavigationReturn.propsStable,
+                stableTypeaheadProps: propsTN,
             }),
             linearNavigationParameters: useStableObject({
                 disableArrowKeys,
@@ -90,7 +90,7 @@ export function useAccordion({ accordionParameters: { initialIndex, localStorage
         accordionReturn: useStableObject({ changeExpandedIndex })
     };
 }
-export function useAccordionSection({ buttonParameters, accordionSectionParameters: { open: openFromUser, bodyRole }, managedChildParameters: { index }, rovingTabIndexChildParameters: { hidden }, textContentParameters, context, context: { accordionSectionParameters: { changeExpandedIndex, changeTabbedIndex: setCurrentFocusedIndex, getTabbedIndex: getCurrentFocusedIndex, stableTypeaheadProps }, linearNavigationParameters, rovingTabIndexReturn, typeaheadNavigationChildParameters, }, refElementParameters, }) {
+export function useAccordionSection({ buttonParameters, accordionSectionParameters: { open: openFromUser, bodyRole }, managedChildParameters: { index }, rovingTabIndexChildParameters: { hidden }, textContentParameters, context: { accordionSectionParameters: { changeExpandedIndex, changeTabbedIndex: setCurrentFocusedIndex, getTabbedIndex: getCurrentFocusedIndex, stableTypeaheadProps }, linearNavigationParameters, rovingTabIndexReturn, managedChildContext, typeaheadNavigationContext }, refElementParameters, }) {
     const { disabled, onPress: userOnPress } = buttonParameters;
     debugLog("useAccordionSection");
     const [openFromParent, setOpenFromParent, getOpenFromParent] = useState(null);
@@ -98,13 +98,15 @@ export function useAccordionSection({ buttonParameters, accordionSectionParamete
     const { randomIdReturn: _bodyIdReturn, propsSource: propsBodySource, propsReferencer: propsHeadReferencer } = useRandomId({ randomIdParameters: { prefix: Prefices.accordionSectionHeaderButton, otherReferencerProp: "aria-controls" } });
     const { randomIdReturn: _headIdReturn, propsSource: propsHeadSource, propsReferencer: propsBodyReferencer } = useRandomId({ randomIdParameters: { prefix: Prefices.accordionSectionBody, otherReferencerProp: "aria-labelledby" } });
     const open = ((openFromUser ?? openFromParent) ?? false);
-    const { refElementReturn: { getElement: getHeaderElement, propsStable: headerRefElementProps } } = useRefElement({ refElementParameters: {} });
-    const { refElementReturn: { getElement: _getBodyElement, propsStable: bodyRefElementProps } } = useRefElement({ refElementParameters: {} });
+    const { refElementReturn: { getElement: getHeaderElement }, propsStable: headerRefElementProps } = useRefElement({ refElementParameters: {} });
+    const { refElementReturn: { getElement: _getBodyElement }, propsStable: bodyRefElementProps } = useRefElement({ refElementParameters: {} });
     const focusSelf = useStableCallback(() => {
         getHeaderElement()?.focus();
     });
     const { managedChildReturn: { getChildren: _getSections } } = useManagedChild({
-        context,
+        context: {
+            managedChildContext
+        },
         managedChildParameters: {
             index: index,
         }
@@ -126,12 +128,12 @@ export function useAccordionSection({ buttonParameters, accordionSectionParamete
             changeExpandedIndex(index);
         userOnPress?.(e);
     };
-    const linearReturnType = useLinearNavigation({ linearNavigationParameters, rovingTabIndexReturn });
+    const { propsStable: propsLN, ...linearReturnType } = useLinearNavigation({ linearNavigationParameters, rovingTabIndexReturn });
     const { pressParameters: { excludeSpace }, textContentReturn } = useTypeaheadNavigationChild({
         managedChildParameters: { index },
         refElementReturn: { getElement: useStableCallback(() => refElementReturn.getElement()) },
         textContentParameters,
-        typeaheadNavigationChildContext: { typeaheadNavigationChildParameters }
+        context: { typeaheadNavigationContext }
     });
     const buttonReturn = useButton({
         buttonParameters: { ...buttonParameters, pressed: null, onPress, role: "button", },
@@ -139,8 +141,8 @@ export function useAccordionSection({ buttonParameters, accordionSectionParamete
         refElementParameters
     });
     const { pressReturn, props: buttonProps, refElementReturn } = buttonReturn;
-    const { linearNavigationReturn: { propsStable } } = linearReturnType;
-    const headerButtonProps = useMergedProps(buttonProps, headerRefElementProps, propsHeadReferencer, propsHeadSource, propsStable, stableTypeaheadProps, { "aria-expanded": (open ?? false).toString(), });
+    //const { linearNavigationReturn: { propsStable } } = linearReturnType;
+    const headerButtonProps = useMergedProps(buttonProps, headerRefElementProps, propsHeadReferencer, propsHeadSource, propsLN, stableTypeaheadProps, { "aria-expanded": (open ?? false).toString(), });
     const bodyProps = useMergedProps(bodyRefElementProps, propsBodyReferencer, propsBodySource, {
         role: bodyRole,
         tabIndex: -1
@@ -156,7 +158,7 @@ export function useAccordionSection({ buttonParameters, accordionSectionParamete
         },
         propsHeaderButton: headerButtonProps,
         propsHeader: {},
-        propsBody: bodyProps
+        propsBody: bodyProps,
     };
 }
 //# sourceMappingURL=use-accordion.js.map

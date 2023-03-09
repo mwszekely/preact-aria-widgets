@@ -66,7 +66,7 @@ export function useToasts<ContainerType extends Element>({ managedChildrenParame
     const getMaxVisibleCount = useStableGetter(visibleCount);
     const nextIndexToStartAt = useRef(0);
 
-    const { refElementReturn: { getElement, propsStable } } = useRefElement<ContainerType>({ refElementParameters: {} });
+    const { refElementReturn: { getElement }, propsStable } = useRefElement<ContainerType>({ refElementParameters: {} });
     const { context, managedChildrenReturn, ..._childInfo } = useManagedChildren<ToastInfo>({ managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange: ocmu } });
 
     const { getChildren: getToastQueue } = managedChildrenReturn;
@@ -221,7 +221,7 @@ export function useToast<E extends Element>({ toastParameters: { politeness, tim
         triggerIndex: showing2 ? triggerIndex : false
     });
 
-    const { refElementReturn: { getElement, propsStable } } = useRefElement<E>({ refElementParameters: {} })
+    const { refElementReturn: { getElement }, propsStable } = useRefElement<E>({ refElementParameters: {} })
 
     return {
         toastReturn: {

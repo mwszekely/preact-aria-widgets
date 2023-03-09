@@ -22,7 +22,7 @@ export function useRadioGroup({ labelParameters, radioGroupParameters: { name, o
         else
             singleSelectionReturn.changeSelectedIndex(null);
     }, [selectedValue]);
-    const { context, props: propsGroup2, singleSelectionReturn, managedChildrenReturn, rovingTabIndexReturn, ...restRet } = useCompleteListNavigation({
+    const { context, propsStable: propsGroup2, singleSelectionReturn, managedChildrenReturn, rovingTabIndexReturn, ...restRet } = useCompleteListNavigation({
         singleSelectionParameters: { initiallySelectedIndex: selectedIndex, onSelectedIndexChange: setSelectedIndex },
         paginatedChildrenParameters: { paginationMin: null, paginationMax: null },
         ...restParams
@@ -65,7 +65,7 @@ export function useRadio({ radioParameters: { value }, checkboxLikeParameters: {
     const { name, byName } = context.radioContext;
     const { tagInput, labelPosition } = labelParameters;
     const getValue = useStableGetter(value);
-    const { props: listNavigationSingleSelectionChildProps, hasCurrentFocusReturn, managedChildReturn, pressParameters, rovingTabIndexChildReturn, staggeredChildReturn, singleSelectionChildReturn, refElementReturn, paginatedChildReturn } = useCompleteListNavigationChild({
+    const { props: listNavigationSingleSelectionChildProps, singleSelectionChildReturn, pressParameters, ...listNavRet } = useCompleteListNavigationChild({
         completeListNavigationChildParameters: { getValue2: getValue, ...completeListNavigationChildParameters },
         managedChildParameters,
         context,
@@ -75,9 +75,9 @@ export function useRadio({ radioParameters: { value }, checkboxLikeParameters: {
         singleSelectionChildParameters: { selectionMode: "focus", ariaPropName: tagInput == "input" && labelPosition != "wrapping" ? null : "aria-selected", ...singleSelectionChildParameters }
     });
     const { selected: checked } = singleSelectionChildReturn;
-    const { refElementReturn: refElementInputReturn } = useRefElement({ refElementParameters: {} });
-    const { refElementReturn: refElementLabelReturn } = useRefElement({ refElementParameters: {} });
-    const { checkboxLikeInputReturn, checkboxLikeLabelReturn, pressInputReturn, pressLabelReturn, propsInput, propsLabel, randomIdInputReturn, randomIdLabelReturn, checkboxLikeReturn } = useCheckboxLike({
+    const { refElementReturn: refElementInputReturn, propsStable: propsRefInput } = useRefElement({ refElementParameters: {} });
+    const { refElementReturn: refElementLabelReturn, propsStable: propsRefLabel } = useRefElement({ refElementParameters: {} });
+    const { propsInput, propsLabel, ...checkboxLikeRet } = useCheckboxLike({
         checkboxLikeParameters: {
             checked: (checked ?? false),
             disabled,
@@ -104,26 +104,15 @@ export function useRadio({ radioParameters: { value }, checkboxLikeParameters: {
         propsInput["aria-checked"] = (checked ?? false).toString();
     }
     const propsIfInputHandlesFocus = useMergedProps(listNavigationSingleSelectionChildProps, propsInput);
-    const propsInput2 = labelPosition != "wrapping" ? propsIfInputHandlesFocus : propsInput;
+    const propsInput2 = useMergedProps(propsRefInput, labelPosition != "wrapping" ? propsIfInputHandlesFocus : propsInput);
     const propsIfLabelHandlesFocus = useMergedProps(listNavigationSingleSelectionChildProps, propsLabel);
-    const propsLabel2 = labelPosition == "wrapping" ? propsIfLabelHandlesFocus : propsLabel;
+    const propsLabel2 = useMergedProps(propsRefLabel, labelPosition == "wrapping" ? propsIfLabelHandlesFocus : propsLabel);
     return {
-        checkboxLikeInputReturn,
-        checkboxLikeLabelReturn,
-        managedChildReturn,
-        pressInputReturn,
-        pressLabelReturn,
         propsInput: propsInput2,
         propsLabel: propsLabel2,
-        randomIdInputReturn,
-        randomIdLabelReturn,
-        hasCurrentFocusReturn,
-        staggeredChildReturn,
-        rovingTabIndexChildReturn,
-        refElementReturn,
         singleSelectionChildReturn,
-        checkboxLikeReturn,
-        paginatedChildReturn
+        ...checkboxLikeRet,
+        ...listNavRet
     };
 }
 //# sourceMappingURL=use-radio-group.js.map

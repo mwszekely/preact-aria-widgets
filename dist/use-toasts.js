@@ -13,7 +13,7 @@ export function useToasts({ managedChildrenParameters: { onChildrenMountChange: 
     const currentIndexQueue = useRef([]);
     const getMaxVisibleCount = useStableGetter(visibleCount);
     const nextIndexToStartAt = useRef(0);
-    const { refElementReturn: { getElement, propsStable } } = useRefElement({ refElementParameters: {} });
+    const { refElementReturn: { getElement }, propsStable } = useRefElement({ refElementParameters: {} });
     const { context, managedChildrenReturn, ..._childInfo } = useManagedChildren({ managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange: ocmu } });
     const { getChildren: getToastQueue } = managedChildrenReturn;
     const toastQueue = getToastQueue();
@@ -136,7 +136,7 @@ export function useToast({ toastParameters: { politeness, timeout, children }, m
         },
         triggerIndex: showing2 ? triggerIndex : false
     });
-    const { refElementReturn: { getElement, propsStable } } = useRefElement({ refElementParameters: {} });
+    const { refElementReturn: { getElement }, propsStable } = useRefElement({ refElementParameters: {} });
     return {
         toastReturn: {
             dismissed: dismissed2,

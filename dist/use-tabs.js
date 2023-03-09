@@ -34,7 +34,7 @@ export function useTabs({ labelParameters, linearNavigationParameters, singleSel
         randomIdInputParameters: { prefix: Prefices.tablist },
         randomIdLabelParameters: { prefix: Prefices.tablistLabel },
     });
-    const { props: listNavigationSingleSelectionProps, context, ...listNavRet1 } = useCompleteListNavigation({
+    const { propsStable: listNavigationSingleSelectionProps, context, ...listNavRet1 } = useCompleteListNavigation({
         linearNavigationParameters: { navigationDirection: orientation, ...linearNavigationParameters },
         singleSelectionParameters: {
             onSelectedIndexChange: useStableCallback((i, p) => {
@@ -82,14 +82,14 @@ export function useTab({ completeListNavigationChildParameters: { focusSelf, ...
         singleSelectionChildParameters: { ariaPropName: "aria-selected", selectionMode: selectionMode ?? "foucs", ...singleSelectionChildParameters },
     });
     const { pressParameters, refElementReturn } = listNavRet2;
-    const { pressReturn } = usePress({ pressParameters: { ...pressParameters, focusSelf }, refElementReturn });
+    const { pressReturn, props: propsPress } = usePress({ pressParameters: { ...pressParameters, onPressSync: useStableCallback((e) => listNavRet2.singleSelectionChildReturn.setThisOneSelected(e)), focusSelf }, refElementReturn });
     const { singleSelectionChildReturn: { selected }, rovingTabIndexChildReturn: { tabbable } } = listNavRet2;
     const { getPanelId, getTabId } = context.tabsContext;
     const panelId = getPanelId(managedChildParameters.index);
     const tabId = getTabId(managedChildParameters.index);
     debugLog("useTab", managedChildParameters.index, selected.toString());
     return {
-        props: useMergedProps(pressReturn.propsUnstable, listNavigationSingleSelectionChildProps, {
+        props: useMergedProps(propsPress, listNavigationSingleSelectionChildProps, {
             "data-tabbable": tabbable.toString(),
             "data-selected": selected.toString(),
             role: "tab",

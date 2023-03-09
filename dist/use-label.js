@@ -17,17 +17,18 @@ export function useLabel({ randomIdInputParameters, randomIdLabelParameters, lab
         randomIdInputParameters: { ...randomIdInputParameters, otherReferencerProp: !synthetic && labelPosition === "separate" ? "for" : null },
         randomIdLabelParameters: { ...randomIdLabelParameters, otherReferencerProp: synthetic ? "aria-labelledby" : null },
     });
-    const { refElementReturn } = useRefElement({ refElementParameters: {} });
+    const { refElementReturn, propsStable: propsRef } = useRefElement({ refElementParameters: {} });
     if (labelPosition == 'none') {
         // When we set the aria-label, intentionally clobber element-based labels (for example, in case they don't exist).
         propsInput["aria-label"] = (ariaLabel);
         propsInput["aria-labelledby"] = undefined;
         propsLabel["for"] = undefined;
     }
-    const { pressReturn } = usePress({ pressParameters: { excludeEnter: returnTrue, excludeSpace: returnTrue, onPressSync: onLabelClick, focusSelf: noop }, refElementReturn });
+    const { pressReturn, props: propsPress } = usePress({ pressParameters: { excludeEnter: returnTrue, excludeSpace: returnTrue, onPressSync: onLabelClick, focusSelf: noop }, refElementReturn });
     return {
+        pressReturn,
         propsInput,
-        propsLabel: useMergedProps(propsLabel, refElementReturn.propsStable, pressReturn.propsUnstable),
+        propsLabel: useMergedProps(propsLabel, propsRef, propsPress),
         randomIdInputReturn,
         randomIdLabelReturn,
     };

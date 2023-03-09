@@ -1,4 +1,4 @@
-import { returnNull, useCompleteGridNavigation, useCompleteGridNavigationCell, useCompleteGridNavigationRow, useMergedProps, usePassiveState, useStableCallback } from "preact-prop-helpers";
+import { returnNull, useCompleteGridNavigation, useCompleteGridNavigationCell, useCompleteGridNavigationRow, useMergedProps, usePassiveState, useStableCallback, useStableObject } from "preact-prop-helpers";
 import { useCallback, useEffect, useRef } from "preact/hooks";
 import { Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
@@ -52,7 +52,7 @@ function fuzzyCompare(lhs, rhs) {
 }
 const naturalSectionTypes = new Set(["thead", "tbody", "tfoot"]);
 export function useTableSection({ linearNavigationParameters, rovingTabIndexParameters, singleSelectionParameters, gridNavigationParameters, rearrangeableChildrenParameters, paginatedChildrenParameters, staggeredChildrenParameters, tableSectionParameters: { tagTableSection, location }, context: { tableContext } }) {
-    const { childrenHaveFocusReturn, context, linearNavigationReturn, managedChildrenReturn, props, rovingTabIndexReturn, singleSelectionReturn, typeaheadNavigationReturn, staggeredChildrenReturn, rearrangeableChildrenReturn, paginatedChildrenReturn, sortableChildrenReturn } = useCompleteGridNavigation({
+    const { childrenHaveFocusReturn, context, linearNavigationReturn, managedChildrenReturn, propsStable: { ...props }, rovingTabIndexReturn, singleSelectionReturn, typeaheadNavigationReturn, staggeredChildrenReturn, rearrangeableChildrenReturn, paginatedChildrenReturn, sortableChildrenReturn } = useCompleteGridNavigation({
         linearNavigationParameters,
         rovingTabIndexParameters,
         singleSelectionParameters,
@@ -96,43 +96,40 @@ export function useTableSection({ linearNavigationParameters, rovingTabIndexPara
         propsTableSection: props
     };
 }
-export function useTableRow({ rowAsChildOfGridParameters: { managedChildParameters, singleSelectionChildParameters, completeGridNavigationRowParameters, rovingTabIndexChildParameters, textContentParameters, context: cx1 }, rowAsParentOfCellsParameters: { linearNavigationParameters, rovingTabIndexParameters }, tableRowParameters: { selected } }) {
-    const { context: cx2, hasCurrentFocusReturn, rowAsChildOfGridReturn, rowAsParentOfCellsReturn, props } = useCompleteGridNavigationRow({
-        rowAsChildOfGridParameters: {
-            textContentParameters,
-            context: { ...cx1 },
-            managedChildParameters,
-            singleSelectionChildParameters,
-            completeGridNavigationRowParameters,
-            rovingTabIndexChildParameters,
-            sortableChildParameters: {
-                getSortValue: useStableCallback(() => {
-                    const currentColumn = cx1.tableContext.getCurrentSortColumn().column;
-                    const currentChild = rowAsParentOfCellsReturn.managedChildrenReturn.getChildren().getAt(currentColumn ?? 0);
-                    const sortValue = currentChild?.getSortValue();
-                    return sortValue;
-                })
-            }
+export function useTableRow({ managedChildParameters, singleSelectionChildParameters, completeGridNavigationRowParameters, rovingTabIndexChildParameters, textContentParameters, context: cx1, tableRowParameters: { selected }, linearNavigationParameters, rovingTabIndexParameters, }) {
+    const { context: cx2, managedChildrenReturn, props: { ...props }, ...restRet
+    // props
+     } = useCompleteGridNavigationRow({
+        textContentParameters,
+        context: { ...cx1 },
+        managedChildParameters,
+        singleSelectionChildParameters,
+        completeGridNavigationRowParameters,
+        rovingTabIndexChildParameters,
+        sortableChildParameters: {
+            getSortValue: useStableCallback(() => {
+                const currentColumn = cx1.tableContext.getCurrentSortColumn().column;
+                const currentChild = managedChildrenReturn.getChildren().getAt(currentColumn ?? 0);
+                const sortValue = currentChild?.getSortValue();
+                return sortValue;
+            })
         },
-        rowAsParentOfCellsParameters: {
-            linearNavigationParameters,
-            rovingTabIndexParameters,
-            typeaheadNavigationParameters: { noTypeahead: true, collator: null, typeaheadTimeout: Infinity }
-        }
+        linearNavigationParameters,
+        rovingTabIndexParameters,
+        typeaheadNavigationParameters: { noTypeahead: true, collator: null, typeaheadTimeout: Infinity }
     });
     props.role = "row";
     // TODO: Unneeded?
     //if (selected)
     //    props[singleSelectionChildParameters.ariaPropName ?? "aria-selected"] = "true";
     return {
-        rowAsChildOfGridReturn,
-        rowAsParentOfCellsReturn,
-        context: {
+        context: useStableObject({
             ...cx2,
             tableContext: cx1.tableContext
-        },
-        hasCurrentFocusReturn,
-        props
+        }),
+        props,
+        managedChildrenReturn,
+        ...restRet
     };
 }
 export function useTableCell({ tableCellParameters: { tagTableCell }, ...p }) {

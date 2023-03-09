@@ -8,8 +8,9 @@ export interface UseDrawerParameters<_DialogElement extends Element, _TitleEleme
     focusTrapParameters: OmitStrong<UseModalParameters<"escape" | "backdrop" | "lost-focus">["focusTrapParameters"], "onlyMoveFocus">
 }
 
-export interface UseDrawerReturnType<FocusContainerElement extends Element, SourceElement extends Element, DrawerElement extends Element, TitleElement extends Element> extends OmitStrong<UseModalReturnType<FocusContainerElement, SourceElement, DrawerElement>, "propsPopup"> {
+export interface UseDrawerReturnType<FocusContainerElement extends Element, SourceElement extends Element, DrawerElement extends Element, TitleElement extends Element> extends OmitStrong<UseModalReturnType<FocusContainerElement, SourceElement, DrawerElement>, "propsStableSource" | "propsStablePopup"> {
     propsDrawer: h.JSX.HTMLAttributes<DrawerElement>;
+    propsSource: h.JSX.HTMLAttributes<SourceElement>;
     propsTitle: h.JSX.HTMLAttributes<TitleElement>;
 }
 
@@ -17,8 +18,8 @@ export function useDrawer<FocusContainerElement extends Element, SourceElement e
     const {
         focusTrapReturn,
         propsFocusContainer,
-        propsPopup,
-        propsSource,
+        propsStablePopup,
+        propsStableSource,
         refElementPopupReturn,
         refElementSourceReturn
     } = useModal<"escape" | "backdrop" | "lost-focus", FocusContainerElement, SourceElement, PopupElement>({
@@ -45,9 +46,9 @@ export function useDrawer<FocusContainerElement extends Element, SourceElement e
     return {
         focusTrapReturn,
         propsFocusContainer,
-        propsDrawer: useMergedProps<PopupElement>(propsPopup, propsInput),
+        propsDrawer: useMergedProps<PopupElement>(propsStablePopup, propsInput),
         propsTitle: propsLabel,
-        propsSource,
+        propsSource: { ...propsStableSource },
         refElementPopupReturn,
         refElementSourceReturn
     }

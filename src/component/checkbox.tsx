@@ -82,6 +82,5 @@ export const Checkbox = memoForwardRef(function Checkbox<I extends Element, L ex
 
     useImperativeHandle(ref!, () => checkbox);
 
-
     return render(checkbox);
 });

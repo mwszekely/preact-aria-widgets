@@ -42,33 +42,29 @@ export const TableRow = memoForwardRef(function TableRowU({ index, getText, tagT
     const cx1 = useContext(TableSectionContext);
     console.assert(cx1 != null, `This TableRow is not contained within a TableSection`);
     const info = useTableRow({
-        rowAsChildOfGridParameters: {
-            completeGridNavigationRowParameters: {},
-            context: cx1,
-            managedChildParameters: { index },
-            rovingTabIndexChildParameters: { hidden: hidden ?? false },
-            singleSelectionChildParameters: {
-                ariaPropName,
-                selectionMode: useDefault("selectionMode", selectionMode),
-                disabled: disabled ?? false
-            },
-            textContentParameters: {
-                getText: useDefault("getText", getText)
-            }
+        completeGridNavigationRowParameters: {},
+        context: cx1,
+        managedChildParameters: { index },
+        rovingTabIndexChildParameters: { hidden: hidden ?? false },
+        singleSelectionChildParameters: {
+            ariaPropName,
+            selectionMode: useDefault("selectionMode", selectionMode),
+            disabled: disabled ?? false
         },
-        rowAsParentOfCellsParameters: {
-            linearNavigationParameters: {
-                disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys),
-                disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
-                navigatePastEnd: navigatePastEnd ?? "wrap",
-                navigatePastStart: navigatePastStart ?? "wrap"
-            },
-            rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null }
+        textContentParameters: {
+            getText: useDefault("getText", getText)
         },
         tableRowParameters: {
             selected: selected ?? null,
             tagTableRow
-        }
+        },
+        linearNavigationParameters: {
+            disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys),
+            disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
+            navigatePastEnd: navigatePastEnd ?? "wrap",
+            navigatePastStart: navigatePastStart ?? "wrap"
+        },
+        rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null },
     });
     useImperativeHandle(ref, () => info);
     return _jsx(TableRowContext.Provider, { value: info.context, children: render(info) });

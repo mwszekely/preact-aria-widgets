@@ -37,26 +37,27 @@ export interface UseGridlistParameters<GridlistElement extends Element, Gridlist
     labelParameters: OmitStrong<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
     gridlistParameters: UseListboxParameters<GridlistElement, GridlistRowElement, LabelElement, RM>["listboxParameters"];
 }
-export interface UseGridlistReturnType<GridlistElement extends Element, GridlistRowElement extends Element, GridlistCellElement extends Element, LabelElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends OmitStrong<UseCompleteGridNavigationReturnType<GridlistElement, GridlistRowElement, GridlistCellElement, RM, CM>, "props"> {
+export interface UseGridlistReturnType<GridlistElement extends Element, GridlistRowElement extends Element, GridlistCellElement extends Element, LabelElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends OmitStrong<UseCompleteGridNavigationReturnType<GridlistElement, GridlistRowElement, GridlistCellElement, RM, CM>, "propsStable"> {
     propsGridlist: h.JSX.HTMLAttributes<GridlistElement>;
     propsGridlistLabel: h.JSX.HTMLAttributes<LabelElement>;
     context: UseGridlistContext<GridlistElement, GridlistRowElement, GridlistCellElement, RM, CM>;
 }
-export interface UseGridlistRowReturnType<GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends UseCompleteGridNavigationRowReturnType<GridlistRowElement, GridlistCellElement, RM, CM> { }
-export interface UseGridlistRowParameters<GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>> {// extends UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM> {
+export interface UseGridlistRowReturnType<GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends OmitStrong<UseCompleteGridNavigationRowReturnType<GridlistRowElement, GridlistCellElement, RM, CM>, never> {
+    /*rowAsChildOfGridReturn: UseCompleteGridNavigationRowReturnType<GridlistRowElement, GridlistCellElement, RM, CM>["rowAsChildOfGridReturn"];
+    rowAsParentOfCellsReturn: OmitStrong<UseCompleteGridNavigationRowReturnType<GridlistRowElement, GridlistCellElement, RM, CM>["rowAsParentOfCellsReturn"], "propsStable"> & {
+        props: h.JSX.HTMLAttributes<GridlistRowElement>;
+    };*/
+}
+export interface UseGridlistRowParameters<GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends OmitStrong<UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "linearNavigationParameters"> {// extends UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM> {
+    context: UseGridlistContext<any, GridlistRowElement, GridlistCellElement, RM, CM>;
+    gridlistRowParameters: {
+        /**
+         * When the `selectionLimit` is `"single"`, this must be `null`.
+         */
+        selected: boolean | null;
+    }
 
-    rowAsChildOfGridParameters: UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>["rowAsChildOfGridParameters"] & {
-        context: UseGridlistContext<any, GridlistRowElement, GridlistCellElement, RM, CM>;
-        gridlistRowParameters: {
-            /**
-             * When the `selectionLimit` is `"single"`, this must be `null`.
-             */
-            selected: boolean | null;
-        }
-    }
-    rowAsParentOfCellsParameters: OmitStrong<UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>["rowAsParentOfCellsParameters"], "linearNavigationParameters"> & {
-        linearNavigationParameters: OmitStrong<UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>["rowAsParentOfCellsParameters"]["linearNavigationParameters"], "disableHomeEndKeys">
-    }
+    linearNavigationParameters: OmitStrong<UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>["linearNavigationParameters"], "disableHomeEndKeys">
 }
 
 
@@ -91,7 +92,7 @@ export function useGridlist<GridlistElement extends Element, GridlistRowElement 
     });
     const {
         context,
-        props,
+        propsStable,
         rovingTabIndexReturn,
         singleSelectionReturn,
         ...restRet
@@ -102,7 +103,7 @@ export function useGridlist<GridlistElement extends Element, GridlistRowElement 
 
     const _v: void = useSingleSelectionDeclarative({ singleSelectionReturn, singleSelectionDeclarativeParameters: { selectedIndex } });
 
-    let propsGridlist = useMergedProps(props, propsLabelList, { "aria-multiselectable": (selectionLimit == "multi" ? "true" : undefined) });
+    let propsGridlist = useMergedProps(propsStable, propsLabelList, { "aria-multiselectable": (selectionLimit == "multi" ? "true" : undefined) });
 
 
     let fullContext = useStableObject({
@@ -137,28 +138,46 @@ export function useGridlist<GridlistElement extends Element, GridlistRowElement 
 }
 
 export function useGridlistRow<GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>>({
-    rowAsChildOfGridParameters: {
-        gridlistRowParameters: { selected },
-        ...rowAsChildOfGridParameters
-    },
-    rowAsParentOfCellsParameters: {
-        linearNavigationParameters,
-        ...rowAsParentOfCellsParameters
-    }
+    gridlistRowParameters: { selected },
+    linearNavigationParameters,
+    completeGridNavigationRowParameters,
+    context: cx1,
+    managedChildParameters,
+    rovingTabIndexChildParameters,
+    rovingTabIndexParameters,
+    singleSelectionChildParameters,
+    sortableChildParameters,
+    textContentParameters,
+    typeaheadNavigationParameters
 }: UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>): UseGridlistRowReturnType<GridlistRowElement, GridlistCellElement, RM, CM> {
-    const { gridlistRowContext: { selectionLimit } } = rowAsChildOfGridParameters.context;
+    const { gridlistRowContext: { selectionLimit } } = cx1;
     const {
-        rowAsChildOfGridReturn,
-        rowAsParentOfCellsReturn,
         context: cx2,
+        hasCurrentFocusParameters,
         hasCurrentFocusReturn,
-        props
+        linearNavigationReturn,
+        managedChildReturn,
+        managedChildrenReturn,
+        paginatedChildReturn,
+        props,
+        rovingTabIndexChildReturn,
+        rovingTabIndexReturn,
+        singleSelectionChildReturn,
+        staggeredChildReturn,
+        textContentReturn,
+        typeaheadNavigationReturn
+
     } = useCompleteGridNavigationRow<GridlistRowElement, GridlistCellElement, RM, CM>({
-        rowAsChildOfGridParameters,
-        rowAsParentOfCellsParameters: {
-            linearNavigationParameters: { disableHomeEndKeys: true, ...linearNavigationParameters },
-            ...rowAsParentOfCellsParameters
-        }
+        linearNavigationParameters: { disableHomeEndKeys: true, ...linearNavigationParameters },
+        completeGridNavigationRowParameters,
+        context: cx1,
+        managedChildParameters,
+        rovingTabIndexChildParameters,
+        rovingTabIndexParameters,
+        singleSelectionChildParameters,
+        sortableChildParameters,
+        textContentParameters,
+        typeaheadNavigationParameters
     });
 
     // `selected` should only be true/false for multi-selection
@@ -168,11 +187,22 @@ export function useGridlistRow<GridlistRowElement extends Element, GridlistCellE
     props.role = "option";
 
     return {
-        rowAsChildOfGridReturn,
-        rowAsParentOfCellsReturn,
+
+        hasCurrentFocusParameters,
+        linearNavigationReturn,
+        managedChildrenReturn,
+        managedChildReturn,
+        paginatedChildReturn,
+        rovingTabIndexChildReturn,
+        rovingTabIndexReturn,
+        singleSelectionChildReturn,
+        staggeredChildReturn,
+        textContentReturn,
+        typeaheadNavigationReturn,
         context: cx2,
         hasCurrentFocusReturn,
         props
+
     }
 }
 
@@ -181,7 +211,8 @@ export function useGridlistCell<GridlistCellElement extends Element, CM extends 
     const { props, ...info } = useCompleteGridNavigationCell<GridlistCellElement, CM>(p);
 
     const {
-        pressReturn
+        pressReturn,
+        props: propsPress
     } = usePress({
         pressParameters: { ...pressParameters, focusSelf: p.completeGridNavigationCellParameters.focusSelf },
         refElementReturn: info.refElementReturn
@@ -189,7 +220,7 @@ export function useGridlistCell<GridlistCellElement extends Element, CM extends 
 
     return {
         ...info,
-        props: useMergedProps(props, pressReturn.propsUnstable),
+        props: useMergedProps(props, propsPress),
         pressReturn
     }
 

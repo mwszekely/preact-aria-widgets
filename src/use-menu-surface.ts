@@ -46,14 +46,14 @@ export function useMenuSurface<MenuSurfaceElement extends Element, MenuTargetEle
 }: UseMenuSurfaceParameters<MenuSurfaceElement, MenuTriggerElement>): UseMenuSurfaceReturnType<MenuSurfaceElement, MenuTargetElement, MenuTriggerElement> {
     debugLog("useMenuSurface");
 
-    const { refElementReturn: { getElement: getButtonElement, propsStable: propsRefTrigger }, ...void4 } = useRefElement<MenuTriggerElement>({ refElementParameters: { onElementChange: undefined } });
+    const { refElementReturn: { getElement: getButtonElement }, propsStable: propsRefTrigger, ...void4 } = useRefElement<MenuTriggerElement>({ refElementParameters: { onElementChange: undefined } });
 
-    const { refElementReturn: { getElement: getMenuElement, propsStable: propsRefSurface, ...void5 }, ...void6 } = useRefElement<MenuSurfaceElement>({ refElementParameters: { onElementChange: undefined } });
+    const { refElementReturn: { getElement: getMenuElement, ...void5 }, propsStable: propsRefSurface, ...void6 } = useRefElement<MenuSurfaceElement>({ refElementParameters: { onElementChange: undefined } });
     const {
         focusTrapReturn,
         propsFocusContainer,
-        propsPopup,
-        propsSource: ps2,
+        propsStablePopup: propsPopup,
+        propsStableSource: ps2,
         refElementPopupReturn,
         refElementSourceReturn
     } = useModal<"escape" | "lost-focus" | "backdrop", MenuSurfaceElement, MenuTriggerElement, MenuSurfaceElement>({

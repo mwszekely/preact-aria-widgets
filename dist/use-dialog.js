@@ -2,7 +2,7 @@ import { findFirstFocusable, useMergedProps, useModal, useStableCallback } from 
 import { Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
 export function useDialog({ dismissParameters, escapeDismissParameters, focusTrapParameters, labelParameters }) {
-    const { focusTrapReturn, propsFocusContainer, propsPopup, propsSource, refElementPopupReturn, refElementSourceReturn } = useModal({
+    const { focusTrapReturn, propsFocusContainer, propsStablePopup, propsStableSource, refElementPopupReturn, refElementSourceReturn } = useModal({
         dismissParameters: { closeOnLostFocus: false, ...dismissParameters },
         escapeDismissParameters,
         focusTrapParameters: { trapActive: true, onlyMoveFocus: false, ...focusTrapParameters }
@@ -20,8 +20,8 @@ export function useDialog({ dismissParameters, escapeDismissParameters, focusTra
     return {
         focusTrapReturn,
         propsFocusContainer,
-        propsDialog: useMergedProps(propsPopup, propsInput),
-        propsSource,
+        propsDialog: useMergedProps(propsStablePopup, propsInput),
+        propsSource: { ...propsStableSource },
         propsTitle: propsLabel,
         refElementPopupReturn,
         refElementSourceReturn

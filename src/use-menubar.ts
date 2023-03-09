@@ -61,19 +61,19 @@ export function useMenubarChild<MenuItemElement extends Element, M extends UseMe
     const focusSelf = useCallback((e: any) => (e as Element as HTMLElement).focus?.(), [])
 
     const {
-        pressParameters: { excludeSpace, onPressSync: ops },
+        pressParameters: { excludeSpace },
         props,
         ...restRet
     } = useToolbarChild<MenuItemElement, M>({
         ...restParams
     });
 
-    const { pressReturn } = usePress<MenuItemElement>({
+    const { pressReturn, props: propsPress } = usePress<MenuItemElement>({
         pressParameters: {
             focusSelf,
             excludeSpace,
             onPressSync: useStableCallback((e) => {
-                ops?.(e);
+                restRet.singleSelectionChildReturn.setThisOneSelected?.(e);
                 opu?.(e);
             })
         }, refElementReturn: restRet.refElementReturn
@@ -83,7 +83,7 @@ export function useMenubarChild<MenuItemElement extends Element, M extends UseMe
 
     return {
         pressReturn,
-        props: useMergedProps(props, pressReturn.propsUnstable),
+        props: useMergedProps(props, propsPress),
         ...restRet
     };
 }

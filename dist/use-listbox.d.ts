@@ -36,7 +36,7 @@ export interface UseListboxParameters<ListElement extends Element, ListItemEleme
         groupingType: "with-groups" | "without-groups" | "group";
     };
 }
-export interface UseListboxReturnType<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationReturnType<ListElement, ListItemElement, M>, "props"> {
+export interface UseListboxReturnType<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationReturnType<ListElement, ListItemElement, M>, "propsStable"> {
     propsListbox: h.JSX.HTMLAttributes<ListElement>;
     propsListboxLabel: h.JSX.HTMLAttributes<LabelElement>;
     context: UseListboxContext<ListElement, ListItemElement, M>;

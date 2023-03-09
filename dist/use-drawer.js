@@ -2,7 +2,7 @@ import { findFirstFocusable, useMergedProps, useModal, useStableCallback } from 
 import { Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
 export function useDrawer({ dismissParameters, escapeDismissParameters, focusTrapParameters, labelParameters }) {
-    const { focusTrapReturn, propsFocusContainer, propsPopup, propsSource, refElementPopupReturn, refElementSourceReturn } = useModal({
+    const { focusTrapReturn, propsFocusContainer, propsStablePopup, propsStableSource, refElementPopupReturn, refElementSourceReturn } = useModal({
         dismissParameters,
         escapeDismissParameters,
         focusTrapParameters: { onlyMoveFocus: false, ...focusTrapParameters }
@@ -20,9 +20,9 @@ export function useDrawer({ dismissParameters, escapeDismissParameters, focusTra
     return {
         focusTrapReturn,
         propsFocusContainer,
-        propsDrawer: useMergedProps(propsPopup, propsInput),
+        propsDrawer: useMergedProps(propsStablePopup, propsInput),
         propsTitle: propsLabel,
-        propsSource,
+        propsSource: { ...propsStableSource },
         refElementPopupReturn,
         refElementSourceReturn
     };

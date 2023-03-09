@@ -12,12 +12,12 @@ export function useGridlist({ labelParameters, gridlistParameters: { selectionLi
         randomIdInputParameters: { prefix: Prefices.gridlist },
         randomIdLabelParameters: { prefix: Prefices.gridlistLabel }
     });
-    const { context, props, rovingTabIndexReturn, singleSelectionReturn, ...restRet } = useCompleteGridNavigation({
+    const { context, propsStable, rovingTabIndexReturn, singleSelectionReturn, ...restRet } = useCompleteGridNavigation({
         singleSelectionParameters: { initiallySelectedIndex: selectedIndex, onSelectedIndexChange },
         ...restParams
     });
     const _v = useSingleSelectionDeclarative({ singleSelectionReturn, singleSelectionDeclarativeParameters: { selectedIndex } });
-    let propsGridlist = useMergedProps(props, propsLabelList, { "aria-multiselectable": (selectionLimit == "multi" ? "true" : undefined) });
+    let propsGridlist = useMergedProps(propsStable, propsLabelList, { "aria-multiselectable": (selectionLimit == "multi" ? "true" : undefined) });
     let fullContext = useStableObject({
         ...context,
         gridlistRowContext: useStableObject({
@@ -46,22 +46,36 @@ export function useGridlist({ labelParameters, gridlistParameters: { selectionLi
         ...restRet
     };
 }
-export function useGridlistRow({ rowAsChildOfGridParameters: { gridlistRowParameters: { selected }, ...rowAsChildOfGridParameters }, rowAsParentOfCellsParameters: { linearNavigationParameters, ...rowAsParentOfCellsParameters } }) {
-    const { gridlistRowContext: { selectionLimit } } = rowAsChildOfGridParameters.context;
-    const { rowAsChildOfGridReturn, rowAsParentOfCellsReturn, context: cx2, hasCurrentFocusReturn, props } = useCompleteGridNavigationRow({
-        rowAsChildOfGridParameters,
-        rowAsParentOfCellsParameters: {
-            linearNavigationParameters: { disableHomeEndKeys: true, ...linearNavigationParameters },
-            ...rowAsParentOfCellsParameters
-        }
+export function useGridlistRow({ gridlistRowParameters: { selected }, linearNavigationParameters, completeGridNavigationRowParameters, context: cx1, managedChildParameters, rovingTabIndexChildParameters, rovingTabIndexParameters, singleSelectionChildParameters, sortableChildParameters, textContentParameters, typeaheadNavigationParameters }) {
+    const { gridlistRowContext: { selectionLimit } } = cx1;
+    const { context: cx2, hasCurrentFocusParameters, hasCurrentFocusReturn, linearNavigationReturn, managedChildReturn, managedChildrenReturn, paginatedChildReturn, props, rovingTabIndexChildReturn, rovingTabIndexReturn, singleSelectionChildReturn, staggeredChildReturn, textContentReturn, typeaheadNavigationReturn } = useCompleteGridNavigationRow({
+        linearNavigationParameters: { disableHomeEndKeys: true, ...linearNavigationParameters },
+        completeGridNavigationRowParameters,
+        context: cx1,
+        managedChildParameters,
+        rovingTabIndexChildParameters,
+        rovingTabIndexParameters,
+        singleSelectionChildParameters,
+        sortableChildParameters,
+        textContentParameters,
+        typeaheadNavigationParameters
     });
     // `selected` should only be true/false for multi-selection
     if (selectionLimit != "multi")
         console.assert(selected == null);
     props.role = "option";
     return {
-        rowAsChildOfGridReturn,
-        rowAsParentOfCellsReturn,
+        hasCurrentFocusParameters,
+        linearNavigationReturn,
+        managedChildrenReturn,
+        managedChildReturn,
+        paginatedChildReturn,
+        rovingTabIndexChildReturn,
+        rovingTabIndexReturn,
+        singleSelectionChildReturn,
+        staggeredChildReturn,
+        textContentReturn,
+        typeaheadNavigationReturn,
         context: cx2,
         hasCurrentFocusReturn,
         props
@@ -69,13 +83,13 @@ export function useGridlistRow({ rowAsChildOfGridParameters: { gridlistRowParame
 }
 export function useGridlistCell({ pressParameters, ...p }) {
     const { props, ...info } = useCompleteGridNavigationCell(p);
-    const { pressReturn } = usePress({
+    const { pressReturn, props: propsPress } = usePress({
         pressParameters: { ...pressParameters, focusSelf: p.completeGridNavigationCellParameters.focusSelf },
         refElementReturn: info.refElementReturn
     });
     return {
         ...info,
-        props: useMergedProps(props, pressReturn.propsUnstable),
+        props: useMergedProps(props, propsPress),
         pressReturn
     };
 }

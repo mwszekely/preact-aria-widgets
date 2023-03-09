@@ -68,7 +68,7 @@ export interface UseTabLabelReturnTypeWithHooks<LabelElement extends Element> ex
     useTabListLabelProps: (props: h.JSX.HTMLAttributes<LabelElement>) => h.JSX.HTMLAttributes<LabelElement>;
 }
 
-export interface UseTabsReturnType<TabContainerElement extends Element, TabElement extends Element, LabelElement extends Element, M extends TabInfo<TabElement>> extends OmitStrong<UseCompleteListNavigationReturnType<TabContainerElement, TabElement, M>, "props" | "context"> {
+export interface UseTabsReturnType<TabContainerElement extends Element, TabElement extends Element, LabelElement extends Element, M extends TabInfo<TabElement>> extends OmitStrong<UseCompleteListNavigationReturnType<TabContainerElement, TabElement, M>, "propsStable" | "context"> {
     propsContainer: h.JSX.HTMLAttributes<TabContainerElement>;
     propsLabel: h.JSX.HTMLAttributes<LabelElement>;
     contextPanels: TabPanelsContext<TabPanelInfo>;
@@ -134,7 +134,7 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
 
 
     const {
-        props: listNavigationSingleSelectionProps,
+        propsStable: listNavigationSingleSelectionProps,
         context,
         ...listNavRet1
     } = useCompleteListNavigation<TabListElement, TabElement, M>({
@@ -201,7 +201,7 @@ export function useTab<TabElement extends Element, M extends TabInfo<TabElement>
         singleSelectionChildParameters: { ariaPropName: "aria-selected", selectionMode: selectionMode ?? "foucs", ...singleSelectionChildParameters },
     });
     const { pressParameters, refElementReturn } = listNavRet2
-    const { pressReturn } = usePress<TabElement>({ pressParameters: { ...pressParameters, focusSelf }, refElementReturn })
+    const { pressReturn, props: propsPress } = usePress<TabElement>({ pressParameters: { ...pressParameters, onPressSync: useStableCallback((e) => listNavRet2.singleSelectionChildReturn.setThisOneSelected(e)), focusSelf }, refElementReturn })
     const { singleSelectionChildReturn: { selected }, rovingTabIndexChildReturn: { tabbable } } = listNavRet2;
     const { getPanelId, getTabId } = context.tabsContext;
 
@@ -211,7 +211,7 @@ export function useTab<TabElement extends Element, M extends TabInfo<TabElement>
     debugLog("useTab", managedChildParameters.index, selected.toString());
     return {
         props: useMergedProps(
-            pressReturn.propsUnstable,
+            propsPress,
             listNavigationSingleSelectionChildProps,
             {
                 "data-tabbable": tabbable.toString(),

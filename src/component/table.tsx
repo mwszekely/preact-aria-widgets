@@ -27,13 +27,14 @@ interface TableSectionPropsBase<SectionElement extends Element, RowElement exten
 }
 
 interface TableRowPropsBase<RowElement extends Element, CellElement extends Element, RM extends TableRowInfo<RowElement, CellElement>, CM extends TableCellInfo<CellElement>> extends
-    OmitStrong<Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "tableRowParameters">, never>,
-    Get2<UseTableRowParameters<RowElement, CellElement, RM, CM>, "rowAsChildOfGridParameters", "singleSelectionChildParameters">,
-    Get2<UseTableRowParameters<RowElement, CellElement, RM, CM>, "rowAsChildOfGridParameters", "managedChildParameters">,
-    Get2<UseTableRowParameters<RowElement, CellElement, RM, CM>, "rowAsChildOfGridParameters", "rovingTabIndexChildParameters">,
-    Get2<UseTableRowParameters<RowElement, CellElement, RM, CM>, "rowAsChildOfGridParameters", "textContentParameters">,
-    Get2<UseTableRowParameters<RowElement, CellElement, RM, CM>, "rowAsParentOfCellsParameters", "linearNavigationParameters">,
-    Get2<UseTableRowParameters<RowElement, CellElement, RM, CM>, "rowAsParentOfCellsParameters", "rovingTabIndexParameters"> {
+    //OmitStrong<Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "tableRowParameters">, never>,
+    Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "singleSelectionChildParameters">,
+    Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "managedChildParameters">,
+    Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "rovingTabIndexChildParameters">,
+    Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "textContentParameters">,
+    Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "tableRowParameters">,
+    Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "linearNavigationParameters">,
+    Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "rovingTabIndexParameters"> {
     ref?: Ref<UseTableRowReturnType<RowElement, CellElement, RM, CM>>;
 }
 
@@ -156,33 +157,30 @@ export const TableRow = memoForwardRef(function TableRowU<RowElement extends Ele
     const cx1 = useContext(TableSectionContext);
     console.assert(cx1 != null, `This TableRow is not contained within a TableSection`);
     const info = useTableRow<RowElement, Cellement, TableRowInfo<RowElement, Cellement>, TableCellInfo<Cellement>>({
-        rowAsChildOfGridParameters: {
-            completeGridNavigationRowParameters: {},
-            context: cx1,
-            managedChildParameters: { index },
-            rovingTabIndexChildParameters: { hidden: hidden ?? false },
-            singleSelectionChildParameters: {
-                ariaPropName,
-                selectionMode: useDefault("selectionMode", selectionMode),
-                disabled: disabled ?? false
-            },
-            textContentParameters: {
-                getText: useDefault("getText", getText)
-            }
+        completeGridNavigationRowParameters: {},
+        context: cx1,
+        managedChildParameters: { index },
+        rovingTabIndexChildParameters: { hidden: hidden ?? false },
+        singleSelectionChildParameters: {
+            ariaPropName,
+            selectionMode: useDefault("selectionMode", selectionMode),
+            disabled: disabled ?? false
         },
-        rowAsParentOfCellsParameters: {
-            linearNavigationParameters: {
-                disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys),
-                disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
-                navigatePastEnd: navigatePastEnd ?? "wrap",
-                navigatePastStart: navigatePastStart ?? "wrap"
-            },
-            rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null }
+        textContentParameters: {
+            getText: useDefault("getText", getText)
         },
         tableRowParameters: {
             selected: selected ?? null,
             tagTableRow
-        }
+        },
+            linearNavigationParameters: {
+            disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys),
+            disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
+            navigatePastEnd: navigatePastEnd ?? "wrap",
+            navigatePastStart: navigatePastStart ?? "wrap"
+        },
+        rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null },
+
     });
 
     useImperativeHandle(ref!, () => info);

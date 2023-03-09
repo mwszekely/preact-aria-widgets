@@ -30,7 +30,7 @@ export interface UseAccordionSectionInfo extends ManagedChildInfo<number> {
 }
 
 export interface UseAccordionSectionParameters<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo> extends
-    OmitStrong<UseTypeaheadNavigationChildParameters<HeaderButtonElement>, "refElementReturn" | "typeaheadNavigationChildContext">,
+    OmitStrong<UseTypeaheadNavigationChildParameters<HeaderButtonElement>, "refElementReturn" | "context">,
     UseRefElementParameters<HeaderButtonElement> {
     managedChildParameters: OmitStrong<UseManagedChildParameters<M>["managedChildParameters"], never>;
     context: UseAccordionContext<HeaderButtonElement, M>;
@@ -54,8 +54,8 @@ export interface UseAccordionSectionParameters<HeaderButtonElement extends Eleme
 }
 
 export interface UseAccordionSectionReturnType<HeaderElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element> extends
-    UsePressReturnType<HeaderButtonElement>,
-    UseRefElementReturnType<HeaderButtonElement>,
+    OmitStrong<UsePressReturnType<HeaderButtonElement>, "props">,
+    OmitStrong<UseRefElementReturnType<HeaderButtonElement>, "propsStable">,
     UseTextContentReturnType {
     accordionSectionReturn: {
         expanded: boolean;
@@ -94,7 +94,7 @@ export function useAccordion<HeaderButtonElement extends Element, M extends UseA
     if (localStorageIndex != null)
         initialIndex = localStorageIndex;
 
-    const { managedChildrenReturn, context } = useManagedChildren<M>({
+    const { managedChildrenReturn, context: { managedChildContext } } = useManagedChildren<M>({
         managedChildrenParameters: {
             onChildrenMountChange: useStableCallback<OnChildrenMountChange<number>>((m, u) => { ocmc2(); onChildrenMountChange?.(m, u); }),
             onAfterChildLayoutEffect
@@ -150,8 +150,9 @@ export function useAccordion<HeaderButtonElement extends Element, M extends UseA
     })
 
     const {
-        typeaheadNavigationChildContext,
-        typeaheadNavigationReturn
+        context: { typeaheadNavigationContext },
+        typeaheadNavigationReturn,
+        propsStable: propsTN
     } = useTypeaheadNavigation<HeaderButtonElement, HeaderButtonElement>({
         rovingTabIndexReturn,
         typeaheadNavigationParameters
@@ -159,14 +160,15 @@ export function useAccordion<HeaderButtonElement extends Element, M extends UseA
 
     return {
         context: useStableObject<UseAccordionContext<HeaderButtonElement, M>>({
-            ...context,
-            ...typeaheadNavigationChildContext,
+            
+            managedChildContext,
+            typeaheadNavigationContext,
             accordionSectionParameters: useStableObject({
                 changeExpandedIndex,
                 changeTabbedIndex,
                 getExpandedIndex: getCurrentExpandedIndex,
                 getTabbedIndex: getTabbedIndex,
-                stableTypeaheadProps: typeaheadNavigationReturn.propsStable,
+                stableTypeaheadProps: propsTN,
             }),
             linearNavigationParameters: useStableObject({
                 disableArrowKeys,
@@ -193,12 +195,12 @@ export function useAccordionSection<_HeaderContainerElement extends Element, Hea
     managedChildParameters: { index },
     rovingTabIndexChildParameters: { hidden },
     textContentParameters,
-    context,
     context: {
         accordionSectionParameters: { changeExpandedIndex, changeTabbedIndex: setCurrentFocusedIndex, getTabbedIndex: getCurrentFocusedIndex, stableTypeaheadProps },
         linearNavigationParameters,
         rovingTabIndexReturn,
-        typeaheadNavigationChildParameters,
+        managedChildContext,
+        typeaheadNavigationContext
     },
     refElementParameters,
 }: UseAccordionSectionParameters<HeaderButtonElement, UseAccordionSectionInfo>): UseAccordionSectionReturnType<_HeaderContainerElement, HeaderButtonElement, BodyElement> {
@@ -216,14 +218,16 @@ export function useAccordionSection<_HeaderContainerElement extends Element, Hea
     const { randomIdReturn: _headIdReturn, propsSource: propsHeadSource, propsReferencer: propsBodyReferencer } = useRandomId<HeaderButtonElement, BodyElement>({ randomIdParameters: { prefix: Prefices.accordionSectionBody, otherReferencerProp: "aria-labelledby" } });
     const open = ((openFromUser ?? openFromParent) ?? false);
 
-    const { refElementReturn: { getElement: getHeaderElement, propsStable: headerRefElementProps } } = useRefElement<HeaderButtonElement>({ refElementParameters: {} });
-    const { refElementReturn: { getElement: _getBodyElement, propsStable: bodyRefElementProps } } = useRefElement<BodyElement>({ refElementParameters: {} });
+    const { refElementReturn: { getElement: getHeaderElement }, propsStable: headerRefElementProps } = useRefElement<HeaderButtonElement>({ refElementParameters: {} });
+    const { refElementReturn: { getElement: _getBodyElement }, propsStable: bodyRefElementProps } = useRefElement<BodyElement>({ refElementParameters: {} });
     const focusSelf = useStableCallback(() => {
         (getHeaderElement() as Element as HTMLElement | undefined)?.focus();
     });
 
     const { managedChildReturn: { getChildren: _getSections } } = useManagedChild<M>({
-        context,
+        context: {
+            managedChildContext
+        },
         managedChildParameters: {
             index: index,
         }
@@ -248,7 +252,7 @@ export function useAccordionSection<_HeaderContainerElement extends Element, Hea
         userOnPress?.(e);
     };
 
-    const linearReturnType = useLinearNavigation<HeaderButtonElement, HeaderButtonElement>({ linearNavigationParameters, rovingTabIndexReturn });
+    const { propsStable: propsLN, ...linearReturnType } = useLinearNavigation<HeaderButtonElement, HeaderButtonElement>({ linearNavigationParameters, rovingTabIndexReturn });
     const {
         pressParameters: { excludeSpace },
         textContentReturn
@@ -256,7 +260,7 @@ export function useAccordionSection<_HeaderContainerElement extends Element, Hea
         managedChildParameters: { index },
         refElementReturn: { getElement: useStableCallback(() => refElementReturn.getElement()) },
         textContentParameters,
-        typeaheadNavigationChildContext: { typeaheadNavigationChildParameters }
+        context: { typeaheadNavigationContext }
     })
 
     const buttonReturn: UseButtonReturnType<HeaderButtonElement> = useButton<HeaderButtonElement>({
@@ -267,14 +271,14 @@ export function useAccordionSection<_HeaderContainerElement extends Element, Hea
 
     const { pressReturn, props: buttonProps, refElementReturn } = buttonReturn;
 
-    const { linearNavigationReturn: { propsStable } } = linearReturnType;
+    //const { linearNavigationReturn: { propsStable } } = linearReturnType;
 
     const headerButtonProps = useMergedProps<HeaderButtonElement>(
         buttonProps,
         headerRefElementProps,
         propsHeadReferencer,
         propsHeadSource,
-        propsStable,
+        propsLN,
         stableTypeaheadProps,
         { "aria-expanded": (open ?? false).toString(), }
     );
@@ -300,6 +304,6 @@ export function useAccordionSection<_HeaderContainerElement extends Element, Hea
         },
         propsHeaderButton: headerButtonProps,
         propsHeader: {},    // This is intentionally empty, it's just a reminder that there *does* need to be a header that contains the button.
-        propsBody: bodyProps
+        propsBody: bodyProps,
     };
 }

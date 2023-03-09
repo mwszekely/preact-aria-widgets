@@ -13,7 +13,7 @@ export function useListbox({ labelParameters, listboxParameters: { selectionLimi
         randomIdInputParameters: { prefix: Prefices.listbox },
         randomIdLabelParameters: { prefix: Prefices.listboxLabel }
     });
-    let { context, props, rovingTabIndexReturn, singleSelectionReturn, ...restRet } = useCompleteListNavigation({
+    let { context, propsStable: { ...props }, rovingTabIndexReturn, singleSelectionReturn, ...restRet } = useCompleteListNavigation({
         singleSelectionParameters: { initiallySelectedIndex: selectedIndex, onSelectedIndexChange },
         ...restParams
     });
@@ -49,16 +49,16 @@ export function useListbox({ labelParameters, listboxParameters: { selectionLimi
     };
 }
 export function useListboxItem({ context: { listboxContext: { selectionLimit }, ...context }, listboxParameters: { selected }, pressParameters: { onPressSync: opsu }, ...restParams }) {
-    const { pressParameters: { excludeSpace, onPressSync: opsss }, props, refElementReturn, ...restRet } = useCompleteListNavigationChild({
+    const { pressParameters: { excludeSpace }, props, refElementReturn, ...restRet } = useCompleteListNavigationChild({
         context,
         ...restParams
     });
-    const { pressReturn } = usePress({
+    const { pressReturn, props: propsPress } = usePress({
         refElementReturn,
         pressParameters: {
             onPressSync: useStableCallback((e) => {
                 if (selectionLimit == "single")
-                    opsss?.(e);
+                    restRet.singleSelectionChildReturn.setThisOneSelected?.(e);
                 opsu?.(e);
             }),
             excludeSpace,
@@ -71,7 +71,7 @@ export function useListboxItem({ context: { listboxContext: { selectionLimit }, 
     return {
         pressReturn,
         refElementReturn,
-        props: useMergedProps(props, pressReturn.propsUnstable),
+        props: useMergedProps(props, propsPress),
         ...restRet
     };
 }

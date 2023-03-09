@@ -1,4 +1,4 @@
-import { UseRandomDualIdsParameters, UseRandomDualIdsReturnType } from "preact-prop-helpers";
+import { UsePressReturnType, UseRandomDualIdsParameters, UseRandomDualIdsReturnType } from "preact-prop-helpers";
 import { ElementToTag, OmitStrong } from "./props.js";
 export type LabelPosition = "separate" | "wrapping" | "none";
 export type FocusableLabelElement<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element> = LP extends "wrapping" ? LabelElement : InputElement;
@@ -28,7 +28,7 @@ export interface UseLabelParameters<LP extends LabelPosition, InputElement exten
         ariaLabel: LP extends "none" ? string : null;
     };
 }
-export interface UseLabelReturnType<InputElement extends Element, LabelElement extends Element> extends UseRandomDualIdsReturnType<InputElement, LabelElement> {
+export interface UseLabelReturnType<InputElement extends Element, LabelElement extends Element> extends UseRandomDualIdsReturnType<InputElement, LabelElement>, OmitStrong<UsePressReturnType<LabelElement>, "props"> {
 }
 export declare function useLabel<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element>({ randomIdInputParameters, randomIdLabelParameters, labelParameters: { tagInput, tagLabel, ariaLabel, labelPosition, onLabelClick } }: UseLabelParameters<LP, InputElement, LabelElement>): UseLabelReturnType<InputElement, LabelElement>;
 export interface UseLabelSyntheticParameters {

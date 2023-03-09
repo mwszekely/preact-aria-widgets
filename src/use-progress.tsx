@@ -34,7 +34,8 @@ export function useProgress<ProgressElement extends Element, LabelElement extend
         propsInput,
         propsLabel,
         randomIdInputReturn,
-        randomIdLabelReturn
+        randomIdLabelReturn,
+        pressReturn
     } = useLabelSynthetic<ProgressElement, LabelElement>({
         labelParameters: { ...labelParameters, onLabelClick: null },
         randomIdInputParameters: { prefix: Prefices.progressIndicator },
@@ -87,7 +88,7 @@ export function useProgress<ProgressElement extends Element, LabelElement extend
         propsRegion: regionProps,
         randomIdInputReturn,
         randomIdLabelReturn,
-
+        pressReturn,
     }
 }
 

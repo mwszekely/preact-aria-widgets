@@ -29,8 +29,8 @@ export function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType,
         setOpenLocal(!!nextState);
     }), returnNull);
     let { propsReferencer: propsTrigger, propsSource: propsPopup } = useRandomId({ randomIdParameters: { prefix: Prefices.tooltip, otherReferencerProp: (tooltipSemanticType == "description" ? "aria-describedby" : "aria-labelledby") } });
-    const { refElementReturn: { getElement: getTriggerElement, propsStable: triggerRefProps } } = useRefElement({ refElementParameters: {} });
-    const { refElementReturn: { getElement: getPopupElement, propsStable: popupRefProps } } = useRefElement({ refElementParameters: {} });
+    const { refElementReturn: { getElement: getTriggerElement }, propsStable: triggerRefProps } = useRefElement({ refElementParameters: {} });
+    const { refElementReturn: { getElement: getPopupElement }, propsStable: popupRefProps } = useRefElement({ refElementParameters: {} });
     const stateIsMouse = useCallback(() => (getState()?.startsWith("h") || false), []);
     const stateIsFocus = useCallback(() => (getState()?.startsWith("f") || false), []);
     let hoverTimeoutHandle = useRef(null);
@@ -64,7 +64,7 @@ export function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType,
     const onPopupCurrentFocusedInnerChanged = useCallback((focused) => onCurrentFocusedInnerChanged(focused, "popup"), [onCurrentFocusedInnerChanged]);
     const { hasCurrentFocusReturn: triggerFocusReturn } = useHasCurrentFocus({ hasCurrentFocusParameters: { onCurrentFocusedChanged: null, onCurrentFocusedInnerChanged: onTriggerCurrentFocusedInnerChanged }, refElementReturn: { getElement: getTriggerElement } });
     const { hasCurrentFocusReturn: popupFocusReturn } = useHasCurrentFocus({ hasCurrentFocusParameters: { onCurrentFocusedChanged: null, onCurrentFocusedInnerChanged: onPopupCurrentFocusedInnerChanged }, refElementReturn: { getElement: getPopupElement } });
-    const { refElementPopupReturn, refElementSourceReturn } = useDismiss({
+    const { refElementPopupReturn, refElementSourceReturn, propsStablePopup, propsStableSource } = useDismiss({
         dismissParameters: {
             closeOnBackdrop: true,
             closeOnLostFocus: false,
@@ -97,8 +97,8 @@ export function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType,
         }
     }), { capture: true, passive: true });
     return {
-        propsPopup: useMergedProps(popupRefProps, propsPopup, popupFocusReturn.propsStable, { role: "tooltip" }, otherPopupProps, refElementPopupReturn.propsStable),
-        propsTrigger: useMergedProps(triggerRefProps, propsTrigger, triggerFocusReturn.propsStable, { onClick: useStableCallback(e => e.currentTarget?.focus?.()) }, otherTriggerProps, refElementSourceReturn.propsStable),
+        propsPopup: useMergedProps(popupRefProps, propsPopup, popupFocusReturn.propsStable, { role: "tooltip" }, otherPopupProps, propsStablePopup),
+        propsTrigger: useMergedProps(triggerRefProps, propsTrigger, triggerFocusReturn.propsStable, { onClick: useStableCallback(e => e.currentTarget?.focus?.()) }, otherTriggerProps, propsStableSource),
         tooltipReturn: {
             getState,
             stateIsFocus,

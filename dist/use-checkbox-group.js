@@ -9,7 +9,7 @@ import { debugLog } from "./props.js";
  */
 export function useCheckboxGroup({ linearNavigationParameters, rearrangeableChildrenParameters, sortableChildrenParameters, rovingTabIndexParameters, typeaheadNavigationParameters, staggeredChildrenParameters }) {
     debugLog("useCheckboxGroup");
-    const { childrenHaveFocusReturn, context, linearNavigationReturn, managedChildrenReturn, props, rearrangeableChildrenReturn, rovingTabIndexReturn, singleSelectionReturn, staggeredChildrenReturn, paginatedChildrenReturn, sortableChildrenReturn, typeaheadNavigationReturn } = useCompleteListNavigation({
+    const { childrenHaveFocusReturn, context, linearNavigationReturn, managedChildrenReturn, propsStable, rearrangeableChildrenReturn, rovingTabIndexReturn, singleSelectionReturn, staggeredChildrenReturn, paginatedChildrenReturn, sortableChildrenReturn, typeaheadNavigationReturn } = useCompleteListNavigation({
         linearNavigationParameters,
         staggeredChildrenParameters,
         rearrangeableChildrenParameters,
@@ -96,7 +96,7 @@ export function useCheckboxGroup({ linearNavigationParameters, rearrangeableChil
             })
         }),
         childrenHaveFocusReturn,
-        props,
+        propsStable,
         staggeredChildrenReturn,
         paginatedChildrenReturn,
         rearrangeableChildrenReturn,

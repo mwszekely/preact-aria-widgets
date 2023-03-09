@@ -117,7 +117,7 @@ export function Demo() {
                                                 getSortValue={returnZero}
                                                 render={info => {
                                                     return (
-                                                        <li {...info.props}><DemoGridlistChild1 row={i} /><DemoGridlistChild2 tabbable={info.rowAsChildOfGridReturn.rovingTabIndexChildReturn.tabbable} /></li>
+                                                        <li {...info.props}><DemoGridlistChild1 row={i} /><DemoGridlistChild2 tabbable={info.rovingTabIndexChildReturn.tabbable} /></li>
                                                     )
 
                                                     /*

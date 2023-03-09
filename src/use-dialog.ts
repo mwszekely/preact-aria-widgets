@@ -10,8 +10,9 @@ export interface UseDialogParameters<_DialogElement extends Element, _TitleEleme
     labelParameters: OmitStrong<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
 }
 
-export interface UseDialogReturnType<FocusContainerElement extends Element, SourceElement extends Element, PopupElement extends Element, TitleElement extends Element> extends OmitStrong<UseModalReturnType<FocusContainerElement, SourceElement, PopupElement>, "propsPopup"> {
+export interface UseDialogReturnType<FocusContainerElement extends Element, SourceElement extends Element, PopupElement extends Element, TitleElement extends Element> extends OmitStrong<UseModalReturnType<FocusContainerElement, SourceElement, PopupElement>, "propsStableSource" | "propsStablePopup"> {
     propsDialog: h.JSX.HTMLAttributes<PopupElement>;
+    propsSource: h.JSX.HTMLAttributes<SourceElement>;
     propsTitle: h.JSX.HTMLAttributes<TitleElement>;
 }
 
@@ -19,8 +20,8 @@ export function useDialog<FocusContainerElement extends Element, SourceElement e
     const {
         focusTrapReturn,
         propsFocusContainer,
-        propsPopup,
-        propsSource,
+        propsStablePopup,
+        propsStableSource,
         refElementPopupReturn,
         refElementSourceReturn
     } = useModal<"escape" | "backdrop", FocusContainerElement, SourceElement, DialogElement>({
@@ -47,8 +48,8 @@ export function useDialog<FocusContainerElement extends Element, SourceElement e
     return {
         focusTrapReturn,
         propsFocusContainer,
-        propsDialog: useMergedProps<DialogElement>(propsPopup, propsInput),
-        propsSource,
+        propsDialog: useMergedProps<DialogElement>(propsStablePopup, propsInput),
+        propsSource: { ...propsStableSource },
         propsTitle: propsLabel,
         refElementPopupReturn,
         refElementSourceReturn

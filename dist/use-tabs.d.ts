@@ -62,7 +62,7 @@ export interface UseTabListLabelReturnTypeInfo {
 export interface UseTabLabelReturnTypeWithHooks<LabelElement extends Element> extends UseTabListLabelReturnTypeInfo {
     useTabListLabelProps: (props: h.JSX.HTMLAttributes<LabelElement>) => h.JSX.HTMLAttributes<LabelElement>;
 }
-export interface UseTabsReturnType<TabContainerElement extends Element, TabElement extends Element, LabelElement extends Element, M extends TabInfo<TabElement>> extends OmitStrong<UseCompleteListNavigationReturnType<TabContainerElement, TabElement, M>, "props" | "context"> {
+export interface UseTabsReturnType<TabContainerElement extends Element, TabElement extends Element, LabelElement extends Element, M extends TabInfo<TabElement>> extends OmitStrong<UseCompleteListNavigationReturnType<TabContainerElement, TabElement, M>, "propsStable" | "context"> {
     propsContainer: h.JSX.HTMLAttributes<TabContainerElement>;
     propsLabel: h.JSX.HTMLAttributes<LabelElement>;
     contextPanels: TabPanelsContext<TabPanelInfo>;
@@ -100,40 +100,27 @@ export declare function useTab<TabElement extends Element, M extends TabInfo<Tab
         focusSelf(element: any): void;
         allowRepeatPresses?: boolean | undefined;
         longPressThreshold?: number | null | undefined;
-    }, "excludeSpace"> & Pick<{
-        onPressingChange?: import("preact-prop-helpers").OnPassiveStateChange<boolean, import("preact").JSX.TargetedEvent<TabElement, Event>> | undefined;
-        onPressSync: ((e: import("preact").JSX.TargetedEvent<TabElement, Event>) => void) | null | undefined;
-        excludeSpace?(): boolean;
-        excludeEnter?(): boolean;
-        excludePointer?(): boolean;
-        focusSelf(element: TabElement): void;
-        allowRepeatPresses?: boolean | undefined;
-        longPressThreshold?: number | null | undefined;
-    }, "onPressSync">;
+    }, "excludeSpace">;
     singleSelectionChildReturn: {
         selected: boolean;
         getSelected(): boolean;
         selectedOffset: number | null;
         getSelectedOffset: () => number | null;
         setThisOneSelected: (event: Event) => void;
-        propsUnstable: import("preact").JSX.HTMLAttributes<TabElement>;
     };
     rovingTabIndexChildReturn: {
         tabbable: boolean;
         getTabbable(): boolean;
         setTabbable: import("preact/hooks").StateUpdater<boolean>;
-        propsUnstable: import("preact").JSX.HTMLAttributes<TabElement>;
     };
     refElementReturn: {
         getElement(): TabElement | null;
-        propsStable: import("preact").JSX.HTMLAttributes<TabElement>;
     };
     props: import("preact").JSX.HTMLAttributes<TabElement>;
     pressReturn: {
         pressing: boolean;
         getIsPressing(): boolean;
         longPress: boolean | null;
-        propsUnstable: import("preact").JSX.HTMLAttributes<TabElement>;
     };
 };
 export declare function useTabPanel<PanelElement extends Element, M extends TabPanelInfo>({ managedChildParameters, context }: UseTabPanelParameters<M>): UseTabPanelReturnType<PanelElement>;

@@ -43,7 +43,7 @@ export interface UseListboxParameters<ListElement extends Element, ListItemEleme
         groupingType: "with-groups" | "without-groups" | "group";
     }
 }
-export interface UseListboxReturnType<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationReturnType<ListElement, ListItemElement, M>, "props"> {
+export interface UseListboxReturnType<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationReturnType<ListElement, ListItemElement, M>, "propsStable"> {
     propsListbox: h.JSX.HTMLAttributes<ListElement>;
     propsListboxLabel: h.JSX.HTMLAttributes<LabelElement>;
     context: UseListboxContext<ListElement, ListItemElement, M>;
@@ -87,7 +87,7 @@ export function useListbox<ListElement extends Element, ListItemElement extends 
     });
     let {
         context,
-        props,
+        propsStable: { ...props },
         rovingTabIndexReturn,
         singleSelectionReturn,
         ...restRet
@@ -138,7 +138,7 @@ export function useListboxItem<ListItemElement extends Element, M extends Listbo
     ...restParams
 }: UseListboxItemParameters<ListItemElement, M>): UseListboxItemReturnType<ListItemElement, M> {
     const {
-        pressParameters: { excludeSpace, onPressSync: opsss },
+        pressParameters: { excludeSpace },
         props,
         refElementReturn,
         ...restRet
@@ -147,12 +147,12 @@ export function useListboxItem<ListItemElement extends Element, M extends Listbo
         ...restParams
     });
 
-    const { pressReturn } = usePress<ListItemElement>({
-        refElementReturn, 
+    const { pressReturn, props: propsPress } = usePress<ListItemElement>({
+        refElementReturn,
         pressParameters: {
             onPressSync: useStableCallback((e) => {
                 if (selectionLimit == "single")
-                    opsss?.(e);
+                    restRet.singleSelectionChildReturn.setThisOneSelected?.(e);
                 opsu?.(e);
             }),
             excludeSpace,
@@ -169,7 +169,7 @@ export function useListboxItem<ListItemElement extends Element, M extends Listbo
     return {
         pressReturn,
         refElementReturn,
-        props: useMergedProps(props, pressReturn.propsUnstable),
+        props: useMergedProps(props, propsPress),
         ...restRet
     }
 }

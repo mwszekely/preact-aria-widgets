@@ -36,7 +36,7 @@ export interface RadioContext<V extends number | string, ParentElement extends E
     }
 }
 
-export interface UseRadioGroupReturnType<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, TabbableChildElement extends Element> extends OmitStrong<UseCompleteListNavigationReturnType<GroupElement, TabbableChildElement, RadioSubInfo<TabbableChildElement, V>>, "props"> {
+export interface UseRadioGroupReturnType<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, TabbableChildElement extends Element> extends OmitStrong<UseCompleteListNavigationReturnType<GroupElement, TabbableChildElement, RadioSubInfo<TabbableChildElement, V>>, "propsStable"> {
     radioGroupReturn: {
         selectedIndex: number | null;
     }
@@ -80,7 +80,7 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
 
     const {
         context,
-        props: propsGroup2,
+        propsStable: propsGroup2,
         singleSelectionReturn,
         managedChildrenReturn,
         rovingTabIndexReturn,
@@ -158,14 +158,9 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
     const getValue = useStableGetter(value);
     const {
         props: listNavigationSingleSelectionChildProps,
-        hasCurrentFocusReturn,
-        managedChildReturn,
-        pressParameters,
-        rovingTabIndexChildReturn,
-        staggeredChildReturn,
         singleSelectionChildReturn,
-        refElementReturn,
-        paginatedChildReturn
+        pressParameters,
+        ...listNavRet
     } = useCompleteListNavigationChild<TabbableChildElement, RadioSubInfo<TabbableChildElement, V>, never>({
         completeListNavigationChildParameters: { getValue2: getValue, ...completeListNavigationChildParameters },
         managedChildParameters,
@@ -179,19 +174,13 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
 
     const { selected: checked } = singleSelectionChildReturn;
 
-    const { refElementReturn: refElementInputReturn } = useRefElement<InputElement>({ refElementParameters: {} });
-    const { refElementReturn: refElementLabelReturn } = useRefElement<LabelElement>({ refElementParameters: {} });
+    const { refElementReturn: refElementInputReturn, propsStable: propsRefInput } = useRefElement<InputElement>({ refElementParameters: {} });
+    const { refElementReturn: refElementLabelReturn, propsStable: propsRefLabel } = useRefElement<LabelElement>({ refElementParameters: {} });
 
     const {
-        checkboxLikeInputReturn,
-        checkboxLikeLabelReturn,
-        pressInputReturn,
-        pressLabelReturn,
         propsInput,
         propsLabel,
-        randomIdInputReturn,
-        randomIdLabelReturn,
-        checkboxLikeReturn
+        ...checkboxLikeRet
     } = useCheckboxLike<LabelPosition, InputElement, LabelElement>({
         checkboxLikeParameters: {
             checked: (checked ?? false),
@@ -221,28 +210,17 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
     }
 
     const propsIfInputHandlesFocus = useMergedProps<InputElement>(listNavigationSingleSelectionChildProps as h.JSX.HTMLAttributes<any>, propsInput);
-    const propsInput2: h.JSX.HTMLAttributes<InputElement> = labelPosition != "wrapping" ? propsIfInputHandlesFocus : propsInput;
+    const propsInput2: h.JSX.HTMLAttributes<InputElement> = useMergedProps(propsRefInput, labelPosition != "wrapping" ? propsIfInputHandlesFocus : propsInput);
 
     const propsIfLabelHandlesFocus = useMergedProps<LabelElement>(listNavigationSingleSelectionChildProps as h.JSX.HTMLAttributes<any>, propsLabel);
-    const propsLabel2: h.JSX.HTMLAttributes<LabelElement> = labelPosition == "wrapping" ? propsIfLabelHandlesFocus as any : propsLabel as any
+    const propsLabel2: h.JSX.HTMLAttributes<LabelElement> = useMergedProps(propsRefLabel, labelPosition == "wrapping" ? propsIfLabelHandlesFocus as any : propsLabel as any);
 
     return {
-        checkboxLikeInputReturn,
-        checkboxLikeLabelReturn,
-        managedChildReturn,
-        pressInputReturn,
-        pressLabelReturn,
         propsInput: propsInput2,
         propsLabel: propsLabel2,
-        randomIdInputReturn,
-        randomIdLabelReturn,
-        hasCurrentFocusReturn,
-        staggeredChildReturn,
-        rovingTabIndexChildReturn,
-        refElementReturn,
         singleSelectionChildReturn,
-        checkboxLikeReturn,
-        paginatedChildReturn
+        ...checkboxLikeRet,
+        ...listNavRet
     }
 
 }

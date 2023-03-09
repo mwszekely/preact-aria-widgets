@@ -14,7 +14,7 @@ export interface UseButtonParameters<E extends Node> extends UseRefElementParame
     };
     pressParameters: OmitStrong<UsePressParameters<E>["pressParameters"], "onPressSync" | "focusSelf">;
 }
-export interface UseButtonReturnType<E extends Element> extends UsePressReturnType<E>, UseRefElementReturnType<E> {
+export interface UseButtonReturnType<E extends Element> extends UsePressReturnType<E>, OmitStrong<UseRefElementReturnType<E>, "propsStable"> {
     props: h.JSX.HTMLAttributes<E>;
 }
 export declare function useButton<E extends Element>({ buttonParameters: { tagButton, disabled, onPress, pressed, role }, pressParameters, refElementParameters }: UseButtonParameters<E>): UseButtonReturnType<E>;

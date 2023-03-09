@@ -116,7 +116,7 @@ export function useCheckboxGroup<GroupElement extends Element, TCE extends Eleme
         context,
         linearNavigationReturn,
         managedChildrenReturn,
-        props,
+        propsStable,
         rearrangeableChildrenReturn,
         rovingTabIndexReturn,
         singleSelectionReturn,
@@ -222,7 +222,7 @@ export function useCheckboxGroup<GroupElement extends Element, TCE extends Eleme
             })
         }),
         childrenHaveFocusReturn,
-        props,
+        propsStable,
         staggeredChildrenReturn,
         paginatedChildrenReturn,
         rearrangeableChildrenReturn,

@@ -23,15 +23,15 @@ export function useMenubar(args) {
 export function useMenubarChild({ menuItemParameters: { onPress: opu, role }, ...restParams }) {
     debugLog("useMenuItem", restParams.managedChildParameters.index);
     const focusSelf = useCallback((e) => e.focus?.(), []);
-    const { pressParameters: { excludeSpace, onPressSync: ops }, props, ...restRet } = useToolbarChild({
+    const { pressParameters: { excludeSpace }, props, ...restRet } = useToolbarChild({
         ...restParams
     });
-    const { pressReturn } = usePress({
+    const { pressReturn, props: propsPress } = usePress({
         pressParameters: {
             focusSelf,
             excludeSpace,
             onPressSync: useStableCallback((e) => {
-                ops?.(e);
+                restRet.singleSelectionChildReturn.setThisOneSelected?.(e);
                 opu?.(e);
             })
         }, refElementReturn: restRet.refElementReturn
@@ -39,7 +39,7 @@ export function useMenubarChild({ menuItemParameters: { onPress: opu, role }, ..
     props.role = role;
     return {
         pressReturn,
-        props: useMergedProps(props, pressReturn.propsUnstable),
+        props: useMergedProps(props, propsPress),
         ...restRet
     };
 }

@@ -17,7 +17,7 @@ export interface UseButtonParameters<E extends Node> extends UseRefElementParame
     pressParameters: OmitStrong<UsePressParameters<E>["pressParameters"], "onPressSync" | "focusSelf">
 }
 
-export interface UseButtonReturnType<E extends Element> extends UsePressReturnType<E>, UseRefElementReturnType<E> {
+export interface UseButtonReturnType<E extends Element> extends UsePressReturnType<E>, OmitStrong<UseRefElementReturnType<E>, "propsStable"> {
     props: h.JSX.HTMLAttributes<E>;
 }
 
@@ -26,10 +26,10 @@ export interface UseButtonReturnType<E extends Element> extends UsePressReturnTy
 export function useButton<E extends Element>({ buttonParameters: { tagButton, disabled, onPress, pressed, role }, pressParameters, refElementParameters }: UseButtonParameters<E>): UseButtonReturnType<E> {
     debugLog("useButton");
 
-    const refElementReturn = useRefElement<E>({ refElementParameters });
+    const { refElementReturn, propsStable: propsRef } = useRefElement<E>({ refElementParameters });
     const focusSelf = useCallback((e: any) => (e as Element as HTMLElement).focus?.(), [])
-    const pressReturn = usePress<E>({
-        ...refElementReturn,
+    const { pressReturn, props: propsPress } = usePress<E>({
+        refElementReturn,
         pressParameters: {
             onPressSync: (e) => (disabled ? null : onPress)?.(enhanceEvent(e, { pressed: pressed == null ? null : !pressed })),
             focusSelf,
@@ -37,8 +37,8 @@ export function useButton<E extends Element>({ buttonParameters: { tagButton, di
         },
     });
 
-    const { pressReturn: { propsUnstable: pressProps } } = pressReturn;
-    const { refElementReturn: { propsStable: refProps } } = refElementReturn;
+    //const { pressReturn: { propsUnstable: pressProps } } = pressReturn;
+    //const { refElementReturn: { propsStable: refProps } } = refElementReturn;
 
     const baseProps = { "aria-pressed": (pressed === true ? "true" : pressed === false ? "false" : undefined) };
     const buttonProps = { ...baseProps, disabled: (disabled && disabled != "soft") ? true : false, "aria-disabled": (disabled === 'soft' ? 'true' : undefined), role: role == "button" ? undefined : role };
@@ -46,9 +46,9 @@ export function useButton<E extends Element>({ buttonParameters: { tagButton, di
 
 
     return {
-        ...refElementReturn,
-        ...pressReturn,
-        props: useMergedProps<E>(pressProps, refProps, (tagButton == 'button' ? buttonProps : divProps)),
+        pressReturn,
+        props: useMergedProps<E>(propsPress, propsRef, (tagButton == 'button' ? buttonProps : divProps)),
+        refElementReturn,
     }
 }
 

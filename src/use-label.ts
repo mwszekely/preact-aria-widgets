@@ -1,4 +1,4 @@
-import { returnTrue, useMergedProps, usePress, useRandomDualIds, UseRandomDualIdsParameters, UseRandomDualIdsReturnType, useRefElement } from "preact-prop-helpers";
+import { returnTrue, useMergedProps, usePress, UsePressReturnType, useRandomDualIds, UseRandomDualIdsParameters, UseRandomDualIdsReturnType, useRefElement } from "preact-prop-helpers";
 import { ElementToTag, noop, OmitStrong } from "./props.js";
 
 export type LabelPosition = "separate" | "wrapping" | "none";
@@ -33,7 +33,7 @@ export interface UseLabelParameters<LP extends LabelPosition, InputElement exten
     }
 }
 
-export interface UseLabelReturnType<InputElement extends Element, LabelElement extends Element> extends UseRandomDualIdsReturnType<InputElement, LabelElement> { }
+export interface UseLabelReturnType<InputElement extends Element, LabelElement extends Element> extends UseRandomDualIdsReturnType<InputElement, LabelElement>, OmitStrong<UsePressReturnType<LabelElement>, "props"> { }
 
 export function useLabel<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element>({
     randomIdInputParameters,
@@ -63,7 +63,7 @@ export function useLabel<LP extends LabelPosition, InputElement extends Element,
         randomIdInputParameters: { ...randomIdInputParameters, otherReferencerProp: !synthetic && labelPosition === "separate" ? "for" : null },
         randomIdLabelParameters: { ...randomIdLabelParameters, otherReferencerProp: synthetic ? "aria-labelledby" : null },
     });
-    const { refElementReturn } = useRefElement<LabelElement>({ refElementParameters: {} });
+    const { refElementReturn, propsStable: propsRef } = useRefElement<LabelElement>({ refElementParameters: {} });
 
     if (labelPosition == 'none') {
         // When we set the aria-label, intentionally clobber element-based labels (for example, in case they don't exist).
@@ -72,11 +72,12 @@ export function useLabel<LP extends LabelPosition, InputElement extends Element,
         propsLabel["for"] = undefined;
     }
 
-    const { pressReturn } = usePress({ pressParameters: { excludeEnter: returnTrue, excludeSpace: returnTrue, onPressSync: onLabelClick, focusSelf: noop }, refElementReturn });
+    const { pressReturn, props: propsPress } = usePress({ pressParameters: { excludeEnter: returnTrue, excludeSpace: returnTrue, onPressSync: onLabelClick, focusSelf: noop }, refElementReturn });
 
     return {
+        pressReturn,
         propsInput,
-        propsLabel: useMergedProps(propsLabel, refElementReturn.propsStable, pressReturn.propsUnstable),
+        propsLabel: useMergedProps(propsLabel, propsRef, propsPress),
         randomIdInputReturn,
         randomIdLabelReturn,
     }

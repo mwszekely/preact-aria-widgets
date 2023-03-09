@@ -28,7 +28,7 @@ export interface UseToolbarParameters<ContainerElement extends Element, ChildEle
     linearNavigationParameters: OmitStrong<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>["linearNavigationParameters"], "navigationDirection">
 }
 
-export interface UseToolbarReturnType<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends OmitStrong<MakeSingleSelectionDeclarativeReturnType<UseCompleteListNavigationReturnType<ContainerElement, ChildElement, M>>, "props"> {
+export interface UseToolbarReturnType<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends OmitStrong<MakeSingleSelectionDeclarativeReturnType<UseCompleteListNavigationReturnType<ContainerElement, ChildElement, M>>, "propsStable"> {
     propsToolbar: h.JSX.HTMLAttributes<ContainerElement>;
     propsLabel: h.JSX.HTMLAttributes<LabelElement>;
     randomIdInputReturn: UseRandomIdReturnType<ContainerElement, LabelElement>["randomIdReturn"];
@@ -66,7 +66,7 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
 }: UseToolbarParameters<ContainerElement, ChildElement, M>): UseToolbarReturnType<ContainerElement, ChildElement, LabelElement, M> {
     const {
         context,
-        props,
+        propsStable,
         ...listNavReturn
     } = useCompleteListNavigation<ContainerElement, ChildElement, M>({
         ...listNavParameters,
@@ -89,7 +89,7 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
     return {
         context,
         propsLabel,
-        propsToolbar: useMergedProps({ ...propsToolbar, role: role ?? undefined }, props),
+        propsToolbar: useMergedProps({ ...propsToolbar, role: role ?? undefined }, propsStable),
         randomIdInputReturn,
         randomIdLabelReturn,
         ...listNavReturn

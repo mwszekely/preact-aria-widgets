@@ -78,8 +78,8 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
         propsSource: propsPopup
     } = useRandomId<PopupType, TriggerType>({ randomIdParameters: { prefix: Prefices.tooltip, otherReferencerProp: (tooltipSemanticType == "description" ? "aria-describedby" : "aria-labelledby") } });
 
-    const { refElementReturn: { getElement: getTriggerElement, propsStable: triggerRefProps } } = useRefElement<TriggerType>({ refElementParameters: {} });
-    const { refElementReturn: { getElement: getPopupElement, propsStable: popupRefProps } } = useRefElement<PopupType>({ refElementParameters: {} });
+    const { refElementReturn: { getElement: getTriggerElement }, propsStable: triggerRefProps } = useRefElement<TriggerType>({ refElementParameters: {} });
+    const { refElementReturn: { getElement: getPopupElement }, propsStable: popupRefProps } = useRefElement<PopupType>({ refElementParameters: {} });
 
     const stateIsMouse = useCallback(() => (getState()?.startsWith("h") || false), []);
     const stateIsFocus = useCallback(() => (getState()?.startsWith("f") || false), []);
@@ -121,7 +121,9 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
 
     const {
         refElementPopupReturn,
-        refElementSourceReturn
+        refElementSourceReturn,
+        propsStablePopup,
+        propsStableSource
     } = useDismiss<DismissListenerTypes, TriggerType, PopupType>({
         dismissParameters: {
             closeOnBackdrop: true,     // we handle this ourselves, but for mobile devices with a sorta virtualish cursor this helps. 
@@ -160,8 +162,8 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
 
 
     return {
-        propsPopup: useMergedProps<PopupType>(popupRefProps, propsPopup, popupFocusReturn.propsStable, { role: "tooltip" }, otherPopupProps, refElementPopupReturn.propsStable),
-        propsTrigger: useMergedProps<TriggerType>(triggerRefProps, propsTrigger, triggerFocusReturn.propsStable, { onClick: useStableCallback(e => (e.currentTarget as Element as HTMLElement)?.focus?.()) }, otherTriggerProps, refElementSourceReturn.propsStable),
+        propsPopup: useMergedProps<PopupType>(popupRefProps, propsPopup, popupFocusReturn.propsStable, { role: "tooltip" }, otherPopupProps, propsStablePopup),
+        propsTrigger: useMergedProps<TriggerType>(triggerRefProps, propsTrigger, triggerFocusReturn.propsStable, { onClick: useStableCallback(e => (e.currentTarget as Element as HTMLElement)?.focus?.()) }, otherTriggerProps, propsStableSource),
         tooltipReturn: {
             getState,
             stateIsFocus,

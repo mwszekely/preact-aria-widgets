@@ -14,7 +14,7 @@ import { useLabelSynthetic } from "./use-label.js";
  * @returns
  */
 export function useToolbar({ linearNavigationParameters, toolbarParameters: { orientation, role, onSelectedIndexChange }, labelParameters, singleSelectionDeclarativeParameters: { selectedIndex }, ...listNavParameters }) {
-    const { context, props, ...listNavReturn } = useCompleteListNavigation({
+    const { context, propsStable, ...listNavReturn } = useCompleteListNavigation({
         ...listNavParameters,
         singleSelectionParameters: { initiallySelectedIndex: selectedIndex, onSelectedIndexChange: onSelectedIndexChange ?? null },
         paginatedChildrenParameters: { paginationMax: null, paginationMin: null },
@@ -32,7 +32,7 @@ export function useToolbar({ linearNavigationParameters, toolbarParameters: { or
     return {
         context,
         propsLabel,
-        propsToolbar: useMergedProps({ ...propsToolbar, role: role ?? undefined }, props),
+        propsToolbar: useMergedProps({ ...propsToolbar, role: role ?? undefined }, propsStable),
         randomIdInputReturn,
         randomIdLabelReturn,
         ...listNavReturn

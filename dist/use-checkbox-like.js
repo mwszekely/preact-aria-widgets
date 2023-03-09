@@ -30,7 +30,7 @@ export function useCheckboxLike({ labelParameters, randomIdInputParameters, rand
             element.checked = (checked === true);
         }
     }, [tagInput, (checked ?? false)]);
-    const { randomIdInputReturn, randomIdLabelReturn, propsInput, propsLabel } = useLabel({
+    const { randomIdInputReturn, randomIdLabelReturn, propsInput, propsLabel, pressReturn } = useLabel({
         labelParameters: {
             ...labelParameters,
             onLabelClick: useStableCallback((e) => {
@@ -53,8 +53,8 @@ export function useCheckboxLike({ labelParameters, randomIdInputParameters, rand
     });
     const onClickInputSync = (labelPosition == "wrapping" ? undefined : onInputSync);
     const onClickLabelSync = onInputSync;
-    const { pressReturn: pressInputReturn } = usePress({ pressParameters: { excludeSpace, focusSelf, onPressSync: (disabled) ? undefined : onClickInputSync }, refElementReturn: refElementInputReturn });
-    const { pressReturn: pressLabelReturn } = usePress({ pressParameters: { excludeSpace, focusSelf, onPressSync: (disabled) ? undefined : onClickLabelSync }, refElementReturn: refElementLabelReturn });
+    const { pressReturn: pressInputReturn, props: propsPressInput } = usePress({ pressParameters: { excludeSpace, focusSelf, onPressSync: (disabled) ? undefined : onClickInputSync }, refElementReturn: refElementInputReturn });
+    const { pressReturn: pressLabelReturn, props: propsPressLabel } = usePress({ pressParameters: { excludeSpace, focusSelf, onPressSync: (disabled) ? undefined : onClickLabelSync }, refElementReturn: refElementLabelReturn });
     const propsUnstableInput = {};
     const propsUnstableLabel = {};
     // Make sure that label clicks can't affect the visual state of the checkbox
@@ -124,9 +124,10 @@ export function useCheckboxLike({ labelParameters, randomIdInputParameters, rand
         pressLabelReturn,
         checkboxLikeInputReturn: { propsUnstable: propsUnstableInput },
         checkboxLikeLabelReturn: { propsUnstable: propsUnstableLabel },
-        propsInput: useMergedProps(propsInput, propsUnstableInput, pressInputReturn.propsUnstable, refElementInputReturn.propsStable),
-        propsLabel: useMergedProps(propsLabel, propsUnstableLabel, pressLabelReturn.propsUnstable, refElementLabelReturn.propsStable),
-        checkboxLikeReturn: { focusSelf }
+        propsInput: useMergedProps(propsInput, propsUnstableInput, propsPressInput),
+        propsLabel: useMergedProps(propsLabel, propsUnstableLabel, propsPressLabel),
+        checkboxLikeReturn: { focusSelf },
+        pressReturn
     };
 }
 //# sourceMappingURL=use-checkbox-like.js.map
