@@ -11,7 +11,7 @@ specifiers:
   '@rollup/plugin-typescript': ^11.0.0
   clsx: ^1.2.1
   core-js: ^3.28.0
-  preact: ^10.12.1
+  preact: ^10.13.1
   rollup: ^3.17.2
   rollup-plugin-sourcemaps: ^0.6.3
   serve: ^14.2.0
@@ -21,7 +21,7 @@ specifiers:
 dependencies:
   clsx: 1.2.1
   core-js: 3.29.0
-  preact: 10.13.0
+  preact: 10.13.1
   tslib: 2.5.0
 
 devDependencies:
@@ -2067,8 +2067,8 @@ packages:
     engines: {node: '>=8.6'}
     dev: true
 
-  /preact/10.13.0:
-    resolution: {integrity: sha512-ERdIdUpR6doqdaSIh80hvzebHB7O6JxycOhyzAeLEchqOq/4yueslQbfnPwXaNhAYacFTyCclhwkEbOumT0tHw==}
+  /preact/10.13.1:
+    resolution: {integrity: sha512-KyoXVDU5OqTpG9LXlB3+y639JAGzl8JSBXLn1J9HTSB3gbKcuInga7bZnXLlxmK94ntTs1EFeZp0lrja2AuBYQ==}
     dev: false
 
   /punycode/1.4.1:
