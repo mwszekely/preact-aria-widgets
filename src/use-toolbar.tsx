@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { CompleteListNavigationContext, MakeSingleSelectionDeclarativeParameters, MakeSingleSelectionDeclarativeReturnType, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useMergedProps, UseRandomIdReturnType, useSingleSelectionDeclarative, UseSingleSelectionParameters } from "preact-prop-helpers";
+import { CompleteListNavigationContext, MakeSingleSelectionDeclarativeParameters, MakeSingleSelectionDeclarativeReturnType, monitorCallCount, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useMergedProps, UseRandomIdReturnType, useSingleSelectionDeclarative, UseSingleSelectionParameters } from "preact-prop-helpers";
 import { OmitStrong, Prefices } from "./props.js";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
 
@@ -64,6 +64,8 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
     singleSelectionDeclarativeParameters: { selectedIndex },
     ...listNavParameters
 }: UseToolbarParameters<ContainerElement, ChildElement, M>): UseToolbarReturnType<ContainerElement, ChildElement, LabelElement, M> {
+    monitorCallCount(useToolbar);
+    
     const {
         context,
         propsStable,
@@ -98,5 +100,6 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
 
 
 export function useToolbarChild<ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>>(args: UseToolbarChildParameters<ChildElement, M>): UseToolbarChildReturnType<ChildElement, M> {
+    monitorCallCount(useToolbarChild);
     return useCompleteListNavigationChild<ChildElement, M, never>(args);
 }

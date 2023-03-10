@@ -1,7 +1,6 @@
 import { ComponentChildren, h } from "preact";
-import { findFirstFocusable, ManagedChildInfo, useGlobalHandler, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, useMergedProps, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
+import { findFirstFocusable, ManagedChildInfo, monitorCallCount, useGlobalHandler, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, useMergedProps, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
 import { StateUpdater, useCallback, useEffect, useRef } from "preact/hooks";
-import { debugLog } from "./props.js";
 import { useNotify } from "./use-notify.js";
 
 
@@ -54,7 +53,7 @@ export interface ToastsContext<M extends ToastInfo> extends UseManagedChildrenCo
 
 
 export function useToasts<ContainerType extends Element>({ managedChildrenParameters: { onChildrenMountChange: ocmu, onAfterChildLayoutEffect }, toastsParameters: { visibleCount } }: UseToastsParameters): UseToastsReturnType<ContainerType, ToastInfo> {
-    debugLog("useToasts");
+    monitorCallCount(useToasts);
 
     // Normally, this does just look like [0, 1, 2, 3], etc
     // so it could be just an index to the current toast,
@@ -162,7 +161,7 @@ export function useToasts<ContainerType extends Element>({ managedChildrenParame
 
 export function useToast<E extends Element>({ toastParameters: { politeness, timeout, children }, managedChildParameters: { index, ..._managedChildParameters }, context }: UseToastParameters<ToastInfo>): UseToastReturnType<E> {
     const { getMaxVisibleCount, onAnyToastDismissed, onAnyToastMounted } = context.toastContext;
-    debugLog("useToast", index);
+    monitorCallCount(useToast);
     const [numberOfToastsAheadOfUs, setNumberOfToastsAheadOfUs] = useState(Infinity);
     const getIndex = useStableGetter(index);
     const [dismissed2, setDismissed2, getDismissed2] = useState(false);

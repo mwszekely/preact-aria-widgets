@@ -1,8 +1,9 @@
-import { returnNull, useCompleteGridNavigation, useCompleteGridNavigationCell, useCompleteGridNavigationRow, useMergedProps, usePassiveState, useStableCallback, useStableObject } from "preact-prop-helpers";
+import { monitorCallCount, returnNull, useCompleteGridNavigation, useCompleteGridNavigationCell, useCompleteGridNavigationRow, useMergedProps, usePassiveState, useStableCallback, useStableObject } from "preact-prop-helpers";
 import { useCallback, useEffect, useRef } from "preact/hooks";
 import { Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
 export function useTable({ labelParameters, tableParameters: { selectionLimit, tagTable }, }) {
+    monitorCallCount(useTable);
     const [getSortBody, setSortBody] = usePassiveState(null, returnNull);
     const sortQueue = useRef([]);
     const [getSortColumn, setSortColumn] = usePassiveState(useCallback((a) => { sortQueue.current.push(a.column); }, []), useCallback(() => { return { column: 0, direction: "ascending" }; }, []));
@@ -52,6 +53,7 @@ function fuzzyCompare(lhs, rhs) {
 }
 const naturalSectionTypes = new Set(["thead", "tbody", "tfoot"]);
 export function useTableSection({ linearNavigationParameters, rovingTabIndexParameters, singleSelectionParameters, gridNavigationParameters, rearrangeableChildrenParameters, paginatedChildrenParameters, staggeredChildrenParameters, tableSectionParameters: { tagTableSection, location }, context: { tableContext } }) {
+    monitorCallCount(useTableSection);
     const { childrenHaveFocusReturn, context, linearNavigationReturn, managedChildrenReturn, propsStable: { ...props }, rovingTabIndexReturn, singleSelectionReturn, typeaheadNavigationReturn, staggeredChildrenReturn, rearrangeableChildrenReturn, paginatedChildrenReturn, sortableChildrenReturn } = useCompleteGridNavigation({
         linearNavigationParameters,
         rovingTabIndexParameters,
@@ -97,6 +99,7 @@ export function useTableSection({ linearNavigationParameters, rovingTabIndexPara
     };
 }
 export function useTableRow({ managedChildParameters, singleSelectionChildParameters, completeGridNavigationRowParameters, rovingTabIndexChildParameters, textContentParameters, context: cx1, tableRowParameters: { selected }, linearNavigationParameters, rovingTabIndexParameters, }) {
+    monitorCallCount(useTableRow);
     const { context: cx2, managedChildrenReturn, props: { ...props }, ...restRet
     // props
      } = useCompleteGridNavigationRow({
@@ -133,6 +136,7 @@ export function useTableRow({ managedChildParameters, singleSelectionChildParame
     };
 }
 export function useTableCell({ tableCellParameters: { tagTableCell }, ...p }) {
+    monitorCallCount(useTableCell);
     const { props, ...ret } = useCompleteGridNavigationCell(p);
     return {
         propsFocus: props,

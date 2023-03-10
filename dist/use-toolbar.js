@@ -1,4 +1,4 @@
-import { useCompleteListNavigation, useCompleteListNavigationChild, useMergedProps, useSingleSelectionDeclarative } from "preact-prop-helpers";
+import { monitorCallCount, useCompleteListNavigation, useCompleteListNavigationChild, useMergedProps, useSingleSelectionDeclarative } from "preact-prop-helpers";
 import { Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
 /**
@@ -14,6 +14,7 @@ import { useLabelSynthetic } from "./use-label.js";
  * @returns
  */
 export function useToolbar({ linearNavigationParameters, toolbarParameters: { orientation, role, onSelectedIndexChange }, labelParameters, singleSelectionDeclarativeParameters: { selectedIndex }, ...listNavParameters }) {
+    monitorCallCount(useToolbar);
     const { context, propsStable, ...listNavReturn } = useCompleteListNavigation({
         ...listNavParameters,
         singleSelectionParameters: { initiallySelectedIndex: selectedIndex, onSelectedIndexChange: onSelectedIndexChange ?? null },
@@ -39,6 +40,7 @@ export function useToolbar({ linearNavigationParameters, toolbarParameters: { or
     };
 }
 export function useToolbarChild(args) {
+    monitorCallCount(useToolbarChild);
     return useCompleteListNavigationChild(args);
 }
 //# sourceMappingURL=use-toolbar.js.map

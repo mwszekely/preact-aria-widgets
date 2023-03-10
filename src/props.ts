@@ -79,7 +79,7 @@ let debug = false;
 export function setDebugLogging(logging: boolean) {
     debug = logging;
 }
-
+/*
 export type DebugLogTypes =
     "useAccordion" | "useAccordionSection" |
     "useButton" |
@@ -100,7 +100,7 @@ export type DebugLogTypes =
 export function debugLog(who: DebugLogTypes, ...args: Parameters<(typeof console)["log"]>) {
     if (debug)
         console.debug(who + ":", ...args);
-}
+}*/
 
 export type PropModifier<T extends EventTarget> = (props: h.JSX.HTMLAttributes<T>) => h.JSX.HTMLAttributes<T>;
 export type PropModifier2<P> = (props: P) => P;

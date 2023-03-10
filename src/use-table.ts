@@ -2,7 +2,7 @@ import { h } from "preact";
 import {
     Compare,
     CompleteGridNavigationContext,
-    CompleteGridNavigationRowContext, PassiveStateUpdater, returnNull, useCompleteGridNavigation,
+    CompleteGridNavigationRowContext, monitorCallCount, PassiveStateUpdater, returnNull, useCompleteGridNavigation,
     useCompleteGridNavigationCell, UseCompleteGridNavigationCellInfo, UseCompleteGridNavigationCellParameters, UseCompleteGridNavigationCellReturnType, UseCompleteGridNavigationParameters,
     UseCompleteGridNavigationReturnType, useCompleteGridNavigationRow, UseCompleteGridNavigationRowInfo, UseCompleteGridNavigationRowParameters, UseCompleteGridNavigationRowReturnType, useMergedProps, usePassiveState, useStableCallback, useStableObject
 } from "preact-prop-helpers";
@@ -90,6 +90,8 @@ export function useTable<TableElement extends Element, LabelElement extends Elem
     labelParameters,
     tableParameters: { selectionLimit, tagTable },
 }: UseTableParameters<TableElement, LabelElement>): UseTableReturnType<TableElement, LabelElement> {
+    monitorCallCount(useTable);
+    
     const [getSortBody, setSortBody] = usePassiveState<() => void, never>(null, returnNull as (() => never));
     const sortQueue = useRef<number[]>([]);
     const [getSortColumn, setSortColumn] = usePassiveState<SortInfo, Event>(useCallback((a: SortInfo) => { sortQueue.current.push(a.column); }, []), useCallback(() => { return { column: 0, direction: "ascending" } as const }, []))
@@ -157,6 +159,8 @@ export function useTableSection<TableSectionElement extends Element, TableRowEle
     tableSectionParameters: { tagTableSection, location },
     context: { tableContext }
 }: UseTableSectionParameters<TableSectionElement, TableRowElement, TableCellElement, RM>): UseTableSectionReturnType<TableSectionElement, TableRowElement, TableCellElement, RM, CM> {
+    monitorCallCount(useTableSection);
+
     const {
         childrenHaveFocusReturn,
         context,
@@ -233,6 +237,8 @@ export function useTableRow<TableRowElement extends Element, TableCellElement ex
     rovingTabIndexParameters,
 
 }: UseTableRowParameters<TableRowElement, TableCellElement, RM, CM>): UseTableRowReturnType<TableRowElement, TableCellElement, RM, CM> {
+    monitorCallCount(useTableRow);
+
     const {
         context: cx2,
         managedChildrenReturn,
@@ -281,6 +287,8 @@ export function useTableRow<TableRowElement extends Element, TableCellElement ex
 }
 
 export function useTableCell<TableCellElement extends Element, CM extends TableCellInfo<TableCellElement>>({ tableCellParameters: { tagTableCell }, ...p }: UseTableCellParameters<TableCellElement, CM>): UseTableCellReturnType<TableCellElement, CM> {
+    monitorCallCount(useTableCell);
+
     const { props, ...ret } = useCompleteGridNavigationCell<TableCellElement, CM>(p);
     return {
         propsFocus: props,

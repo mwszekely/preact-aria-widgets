@@ -1,6 +1,5 @@
-import { returnFalse, returnNull, returnZero, useCompleteListNavigation, useCompleteListNavigationChild, useMergedProps, usePassiveState, useStableCallback, useStableGetter, useStableObject, useState } from "preact-prop-helpers";
+import { monitorCallCount, returnFalse, returnNull, returnZero, useCompleteListNavigation, useCompleteListNavigationChild, useMergedProps, usePassiveState, useStableCallback, useStableGetter, useStableObject, useState } from "preact-prop-helpers";
 import { useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
-import { debugLog } from "./props.js";
 /**
  *
  *
@@ -8,7 +7,7 @@ import { debugLog } from "./props.js";
  * @returns
  */
 export function useCheckboxGroup({ linearNavigationParameters, rearrangeableChildrenParameters, sortableChildrenParameters, rovingTabIndexParameters, typeaheadNavigationParameters, staggeredChildrenParameters }) {
-    debugLog("useCheckboxGroup");
+    monitorCallCount(useCheckboxGroup);
     const { childrenHaveFocusReturn, context, linearNavigationReturn, managedChildrenReturn, propsStable, rearrangeableChildrenReturn, rovingTabIndexReturn, singleSelectionReturn, staggeredChildrenReturn, paginatedChildrenReturn, sortableChildrenReturn, typeaheadNavigationReturn } = useCompleteListNavigation({
         linearNavigationParameters,
         staggeredChildrenParameters,
@@ -123,7 +122,7 @@ export function useCheckboxGroupParent({ completeListNavigationChildParameters, 
     useLayoutEffect(() => {
         setSetter(() => setControls);
     }, [setControls]);
-    debugLog("useCheckboxGroupParent");
+    monitorCallCount(useCheckboxGroupParent);
     const [checked, setChecked] = useState(false);
     useEffect(() => {
         setSetParentCheckboxChecked(() => setChecked);
@@ -157,7 +156,7 @@ export function useCheckboxGroupParent({ completeListNavigationChildParameters, 
  */
 export function useCheckboxGroupChild({ checkboxGroupChild, completeListNavigationChildParameters, context, managedChildParameters, textContentParameters, rovingTabIndexChildParameters, sortableChildParameters, }) {
     const { checkboxGroupChildrenContext: { allIds, setUpdateIndex, setTotalChildren, setTotalChecked, } } = context;
-    debugLog("useCheckboxGroupChild", managedChildParameters.index);
+    monitorCallCount(useCheckboxGroupChild);
     const { checked, onChangeFromParent } = checkboxGroupChild;
     const getChecked = useStableGetter(checked);
     const [getLastUserChecked, setLastUserChecked] = usePassiveState(null, returnFalse);

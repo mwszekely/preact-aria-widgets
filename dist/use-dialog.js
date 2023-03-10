@@ -1,7 +1,8 @@
-import { findFirstFocusable, useMergedProps, useModal, useStableCallback } from "preact-prop-helpers";
+import { findFirstFocusable, monitorCallCount, useMergedProps, useModal, useStableCallback } from "preact-prop-helpers";
 import { Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
 export function useDialog({ dismissParameters, escapeDismissParameters, focusTrapParameters, labelParameters }) {
+    monitorCallCount(useDialog);
     const { focusTrapReturn, propsFocusContainer, propsStablePopup, propsStableSource, refElementPopupReturn, refElementSourceReturn } = useModal({
         dismissParameters: { closeOnLostFocus: false, ...dismissParameters },
         escapeDismissParameters,

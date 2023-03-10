@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { useAsyncHandler, UseAsyncHandlerParameters, UseAsyncHandlerReturnType, useMergedProps } from "preact-prop-helpers";
+import { monitorCallCount, useAsyncHandler, UseAsyncHandlerParameters, UseAsyncHandlerReturnType, useMergedProps } from "preact-prop-helpers";
 import { ElementToTag, OmitStrong, Prefices } from "./props.js";
 import { UseLabelReturnType, useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
 
@@ -29,6 +29,8 @@ export function useProgress<ProgressElement extends Element, LabelElement extend
         tagIndicator
     }
 }: UseProgressParameters<ProgressElement, LabelElement>): UseProgressReturnType<ProgressElement, LabelElement> {
+
+    monitorCallCount(useProgress);
 
     const {
         propsInput,
@@ -114,6 +116,8 @@ export function useProgressWithHandler<EventType, CaptureType, IndicatorElement 
     asyncHandlerParameters,
     progressWithHandlerParameters: { forciblyPending }
 }: UseProgressWithHandlerParameters<EventType, CaptureType, IndicatorElement, LabelElement>): UseProgressWithHandlerReturnType<EventType, CaptureType, IndicatorElement, LabelElement> {
+    monitorCallCount(useProgressWithHandler);
+    
     const asyncInfo = useAsyncHandler(asyncHandlerParameters);
 
     const {

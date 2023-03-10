@@ -1,7 +1,7 @@
 import { h } from "preact";
-import { CompleteListNavigationContext, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useMergedProps, useRefElement, useSingleSelectionDeclarative, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
+import { CompleteListNavigationContext, monitorCallCount, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useMergedProps, useRefElement, useSingleSelectionDeclarative, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
 import { useEffect, useLayoutEffect, useMemo, useRef } from "preact/hooks";
-import { debugLog, OmitStrong, Prefices } from "./props.js";
+import { OmitStrong, Prefices } from "./props.js";
 import { useCheckboxLike, UseCheckboxLikeParameters, UseCheckboxLikeReturnType } from "./use-checkbox-like.js";
 import { FocusableLabelElement, LabelPosition, useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
 
@@ -56,6 +56,7 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
     radioGroupParameters: { name, onSelectedValueChange, selectedValue },
     ...restParams
 }: UseRadioGroupParameters<V, G, GL, TCE>): UseRadioGroupReturnType<V, G, GL, TCE> {
+    monitorCallCount(useRadioGroup);
 
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
     const byName = useRef(new Map<V, number>());
@@ -144,9 +145,9 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
     sortableChildParameters
 
 }: UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>): UseRadioReturnType<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>> {
+    monitorCallCount(useRadio);
     type TabbableChildElement = FocusableLabelElement<LP, InputElement, LabelElement>;
     const index = managedChildParameters.index;
-    debugLog("useRadio", index);
     const onInput = useStableCallback((e: h.JSX.TargetedEvent<InputElement>) => {
         singleSelectionChildReturn.setThisOneSelected(e);
     });

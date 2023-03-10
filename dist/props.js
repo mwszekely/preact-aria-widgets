@@ -20,10 +20,6 @@ let debug = false;
 export function setDebugLogging(logging) {
     debug = logging;
 }
-export function debugLog(who, ...args) {
-    if (debug)
-        console.debug(who + ":", ...args);
-}
 export function noop() { return; }
 // (These do not need to be unique)
 export const Prefices = {

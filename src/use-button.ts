@@ -1,7 +1,7 @@
 import { h } from "preact";
-import { useMergedProps, usePress, UsePressParameters, UsePressReturnType, useRefElement, UseRefElementParameters, UseRefElementReturnType } from "preact-prop-helpers";
+import { monitorCallCount, useMergedProps, usePress, UsePressParameters, UsePressReturnType, useRefElement, UseRefElementParameters, UseRefElementReturnType } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
-import { debugLog, DisabledType, ElementToTag, EnhancedEvent, enhanceEvent, OmitStrong } from "./props.js";
+import { DisabledType, ElementToTag, EnhancedEvent, enhanceEvent, OmitStrong } from "./props.js";
 
 
 export type ButtonPressEvent<E extends EventTarget> = EnhancedEvent<E, Event | Event, { pressed: boolean | null }>;
@@ -24,7 +24,7 @@ export interface UseButtonReturnType<E extends Element> extends UsePressReturnTy
 
 
 export function useButton<E extends Element>({ buttonParameters: { tagButton, disabled, onPress, pressed, role }, pressParameters, refElementParameters }: UseButtonParameters<E>): UseButtonReturnType<E> {
-    debugLog("useButton");
+    monitorCallCount(useButton);
 
     const { refElementReturn, propsStable: propsRef } = useRefElement<E>({ refElementParameters });
     const focusSelf = useCallback((e: any) => (e as Element as HTMLElement).focus?.(), [])

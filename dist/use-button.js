@@ -1,8 +1,8 @@
-import { useMergedProps, usePress, useRefElement } from "preact-prop-helpers";
+import { monitorCallCount, useMergedProps, usePress, useRefElement } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
-import { debugLog, enhanceEvent } from "./props.js";
+import { enhanceEvent } from "./props.js";
 export function useButton({ buttonParameters: { tagButton, disabled, onPress, pressed, role }, pressParameters, refElementParameters }) {
-    debugLog("useButton");
+    monitorCallCount(useButton);
     const { refElementReturn, propsStable: propsRef } = useRefElement({ refElementParameters });
     const focusSelf = useCallback((e) => e.focus?.(), []);
     const { pressReturn, props: propsPress } = usePress({

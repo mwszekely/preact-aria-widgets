@@ -1,7 +1,7 @@
 import { h } from "preact";
-import { CompleteListNavigationContext, generateRandomId, ManagedChildInfo, OnChildrenMountChange, PersistentStates, returnTrue, useChildrenFlag, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, useMergedProps, usePersistentState, usePress, useStableCallback, useStableObject, useState } from "preact-prop-helpers";
+import { CompleteListNavigationContext, generateRandomId, ManagedChildInfo, monitorCallCount, OnChildrenMountChange, PersistentStates, returnTrue, useChildrenFlag, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, useMergedProps, usePersistentState, usePress, useStableCallback, useStableObject, useState } from "preact-prop-helpers";
 import { useCallback, useLayoutEffect } from "preact/hooks";
-import { debugLog, EventDetail, OmitStrong, Prefices } from "./props.js";
+import { EventDetail, OmitStrong, Prefices } from "./props.js";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
 
 
@@ -88,7 +88,7 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
     ...restParams
 }: UseTabsParameters<TabListElement, TabElement, LabelElement, M>): UseTabsReturnType<TabListElement, TabElement, LabelElement, M> {
 
-    debugLog("useTabs");
+    monitorCallCount(useTabs);
 
     const [localStorageIndex, setLocalStorageIndex] = usePersistentState<never, number | null>(localStorageKey ?? null, 0);
     if (localStorageIndex != null)
@@ -208,7 +208,7 @@ export function useTab<TabElement extends Element, M extends TabInfo<TabElement>
     const panelId = getPanelId(managedChildParameters.index);
     const tabId = getTabId(managedChildParameters.index);
 
-    debugLog("useTab", managedChildParameters.index, selected.toString());
+    monitorCallCount(useTab);
     return {
         props: useMergedProps(
             propsPress,
@@ -228,7 +228,7 @@ export function useTab<TabElement extends Element, M extends TabInfo<TabElement>
 
 export function useTabPanel<PanelElement extends Element, M extends TabPanelInfo>({ managedChildParameters, context }: UseTabPanelParameters<M>): UseTabPanelReturnType<PanelElement> {
     const { index } = managedChildParameters;
-    debugLog("useTabPanel", index);
+    monitorCallCount(useTabPanel);
     const { tabPanelContext: { getVisibleIndex: g, getPanelId, getTabId } } = context;
     //const [correspondingTabId, setCorrespondingTabId] = useState<string | null>(null);
     const [lastKnownVisibleIndex, setLastKnownVisibleIndex, getLastKnownVisibleIndex] = useState(g());

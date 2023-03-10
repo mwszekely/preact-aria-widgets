@@ -1,6 +1,5 @@
-import { assertEmptyObject, findFirstFocusable, useMergedProps, useModal, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
+import { assertEmptyObject, findFirstFocusable, monitorCallCount, useMergedProps, useModal, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
-import { debugLog } from "./props.js";
 /**
  * A menu surface is what handles user interaction with an interactive but transient surface (like a menu or a popup).
  *
@@ -12,7 +11,7 @@ import { debugLog } from "./props.js";
 export function useMenuSurface({ 
 //menuSurface: { sendFocusToMenu, role }, 
 dismissParameters, escapeDismissParameters, focusTrapParameters, menuSurfaceParameters: { role, surfaceId } }) {
-    debugLog("useMenuSurface");
+    monitorCallCount(useMenuSurface);
     const { refElementReturn: { getElement: getButtonElement }, propsStable: propsRefTrigger, ...void4 } = useRefElement({ refElementParameters: { onElementChange: undefined } });
     const { refElementReturn: { getElement: getMenuElement, ...void5 }, propsStable: propsRefSurface, ...void6 } = useRefElement({ refElementParameters: { onElementChange: undefined } });
     const { focusTrapReturn, propsFocusContainer, propsStablePopup: propsPopup, propsStableSource: ps2, refElementPopupReturn, refElementSourceReturn } = useModal({
@@ -72,7 +71,7 @@ dismissParameters, escapeDismissParameters, focusTrapParameters, menuSurfacePara
  * @returns
  */
 export function useFocusSentinel({ focusSentinel: { open, onClose, sendFocusToMenu } }) {
-    debugLog("useFocusSentinel");
+    monitorCallCount(useFocusSentinel);
     const getSendFocusWithinMenu = useStableGetter(sendFocusToMenu);
     const stableOnClose = useStableCallback(onClose);
     const [sentinelIsActive, setSentinelIsActive] = useState(false);

@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { findFirstFocusable, useMergedProps, useModal, UseModalParameters, UseModalReturnType, useStableCallback } from "preact-prop-helpers";
+import { findFirstFocusable, monitorCallCount, useMergedProps, useModal, UseModalParameters, UseModalReturnType, useStableCallback } from "preact-prop-helpers";
 import { OmitStrong, Prefices } from "./props.js";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
 
@@ -15,6 +15,8 @@ export interface UseDrawerReturnType<FocusContainerElement extends Element, Sour
 }
 
 export function useDrawer<FocusContainerElement extends Element, SourceElement extends Element, PopupElement extends Element, TitleElement extends Element>({ dismissParameters, escapeDismissParameters, focusTrapParameters, labelParameters }: UseDrawerParameters<PopupElement, TitleElement>): UseDrawerReturnType<FocusContainerElement, SourceElement, PopupElement, TitleElement> {
+    monitorCallCount(useDrawer);
+    
     const {
         focusTrapReturn,
         propsFocusContainer,

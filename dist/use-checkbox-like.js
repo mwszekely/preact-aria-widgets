@@ -1,4 +1,4 @@
-import { useMergedProps, usePress, useStableCallback } from "preact-prop-helpers";
+import { monitorCallCount, useMergedProps, usePress, useStableCallback } from "preact-prop-helpers";
 import { useEffect } from "preact/hooks";
 import { useLabel } from "./use-label.js";
 function preventDefault(e) {
@@ -15,6 +15,7 @@ function preventDefault(e) {
  * @returns
  */
 export function useCheckboxLike({ labelParameters, randomIdInputParameters, randomIdLabelParameters, checkboxLikeParameters: { checked, disabled, onInput: onInputSync, role }, refElementInputReturn, refElementLabelReturn, pressParameters: { excludeSpace } }) {
+    monitorCallCount(useCheckboxLike);
     const { getElement: getInputElement } = refElementInputReturn;
     const { getElement: getLabelElement } = refElementLabelReturn;
     const { tagInput, tagLabel, labelPosition } = labelParameters;

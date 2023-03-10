@@ -1,7 +1,8 @@
-import { returnNull, useDismiss, useGlobalHandler, useHasCurrentFocus, useMergedProps, usePassiveState, useRandomId, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
+import { monitorCallCount, returnNull, useDismiss, useGlobalHandler, useHasCurrentFocus, useMergedProps, usePassiveState, useRandomId, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
 import { useCallback, useRef } from "preact/hooks";
 import { Prefices } from "./props.js";
 export function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType, hoverDelay }, escapeDismissParameters }) {
+    monitorCallCount(useTooltip);
     /**
      * Whether the hover/focus-popup/trigger state we have results in us showing this tooltip.
      *

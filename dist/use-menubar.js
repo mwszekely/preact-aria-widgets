@@ -1,6 +1,5 @@
-import { useMergedProps, usePress, useStableCallback } from "preact-prop-helpers";
+import { monitorCallCount, useMergedProps, usePress, useStableCallback } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
-import { debugLog } from "./props.js";
 import { useToolbar, useToolbarChild } from "./use-toolbar.js";
 /**
  * A menubar is identical to a toolbar, except that every item
@@ -13,7 +12,7 @@ import { useToolbar, useToolbarChild } from "./use-toolbar.js";
  * @returns
  */
 export function useMenubar(args) {
-    debugLog("useMenubar");
+    monitorCallCount(useMenubar);
     const { propsToolbar: propsMenubar, ...restReturn } = useToolbar(args);
     return {
         propsMenubar,
@@ -21,7 +20,7 @@ export function useMenubar(args) {
     };
 }
 export function useMenubarChild({ menuItemParameters: { onPress: opu, role }, ...restParams }) {
-    debugLog("useMenuItem", restParams.managedChildParameters.index);
+    monitorCallCount(useMenubarChild);
     const focusSelf = useCallback((e) => e.focus?.(), []);
     const { pressParameters: { excludeSpace }, props, ...restRet } = useToolbarChild({
         ...restParams

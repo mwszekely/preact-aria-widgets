@@ -1,6 +1,6 @@
 import { h } from "preact";
 import {
-    CompleteListNavigationContext, useCompleteListNavigation,
+    CompleteListNavigationContext, monitorCallCount, useCompleteListNavigation,
     useCompleteListNavigationChild,
     UseCompleteListNavigationChildInfo,
     UseCompleteListNavigationChildParameters,
@@ -69,7 +69,9 @@ export function useListbox<ListElement extends Element, ListItemElement extends 
     listboxParameters: { selectionLimit, groupingType, selectedIndex, onSelectedIndexChange },
     ...restParams
 }: UseListboxParameters<ListElement, ListItemElement, LabelElement, M>): UseListboxReturnType<ListElement, ListItemElement, LabelElement, M> {
+    monitorCallCount(useListbox);
     useEnsureStability("useListbox", selectionLimit);
+    
     const {
         propsInput: propsLabelList,
         propsLabel: propsLabelLabel,
@@ -137,6 +139,8 @@ export function useListboxItem<ListItemElement extends Element, M extends Listbo
     pressParameters: { onPressSync: opsu },
     ...restParams
 }: UseListboxItemParameters<ListItemElement, M>): UseListboxItemReturnType<ListItemElement, M> {
+    monitorCallCount(useListboxItem);
+    
     const {
         pressParameters: { excludeSpace },
         props,

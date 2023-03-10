@@ -1,7 +1,8 @@
-import { findFirstFocusable, useMergedProps, useModal, useStableCallback } from "preact-prop-helpers";
+import { findFirstFocusable, monitorCallCount, useMergedProps, useModal, useStableCallback } from "preact-prop-helpers";
 import { Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
 export function useDrawer({ dismissParameters, escapeDismissParameters, focusTrapParameters, labelParameters }) {
+    monitorCallCount(useDrawer);
     const { focusTrapReturn, propsFocusContainer, propsStablePopup, propsStableSource, refElementPopupReturn, refElementSourceReturn } = useModal({
         dismissParameters,
         escapeDismissParameters,

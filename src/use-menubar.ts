@@ -1,7 +1,7 @@
 import { h } from "preact";
-import { useMergedProps, usePress, UsePressReturnType, useStableCallback } from "preact-prop-helpers";
+import { monitorCallCount, useMergedProps, usePress, UsePressReturnType, useStableCallback } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
-import { debugLog, OmitStrong } from "./props.js";
+import { OmitStrong } from "./props.js";
 import { useToolbar, useToolbarChild, UseToolbarChildParameters, UseToolbarChildReturnType, UseToolbarContext, UseToolbarParameters, UseToolbarReturnType, UseToolbarSubInfo } from "./use-toolbar.js";
 
 
@@ -38,7 +38,7 @@ export interface UseMenubarItemReturnType<MenuItemElement extends Element, M ext
  */
 export function useMenubar<MenuParentElement extends Element, MenuItemElement extends Element, LabelElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>>(args: UseMenubarParameters<MenuParentElement, MenuItemElement, M>): UseMenubarReturnType<MenuParentElement, MenuItemElement, LabelElement, M> {
 
-    debugLog("useMenubar");
+    monitorCallCount(useMenubar);
 
     const {
         propsToolbar: propsMenubar,
@@ -56,7 +56,7 @@ export function useMenubarChild<MenuItemElement extends Element, M extends UseMe
     menuItemParameters: { onPress: opu, role },
    ...restParams
 }: UseMenubarItemParameters<MenuItemElement, M>): UseMenubarItemReturnType<MenuItemElement, M> {
-    debugLog("useMenuItem", restParams.managedChildParameters.index);
+    monitorCallCount(useMenubarChild);
 
     const focusSelf = useCallback((e: any) => (e as Element as HTMLElement).focus?.(), [])
 

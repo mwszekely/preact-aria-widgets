@@ -1,7 +1,8 @@
-import { useAsyncHandler, useMergedProps } from "preact-prop-helpers";
+import { monitorCallCount, useAsyncHandler, useMergedProps } from "preact-prop-helpers";
 import { Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
 export function useProgress({ labelParameters, progressIndicatorParameters: { max, value, valueText, tagIndicator } }) {
+    monitorCallCount(useProgress);
     const { propsInput, propsLabel, randomIdInputReturn, randomIdLabelReturn, pressReturn } = useLabelSynthetic({
         labelParameters: { ...labelParameters, onLabelClick: null },
         randomIdInputParameters: { prefix: Prefices.progressIndicator },
@@ -51,6 +52,7 @@ export function useProgress({ labelParameters, progressIndicatorParameters: { ma
     };
 }
 export function useProgressWithHandler({ labelParameters, progressIndicatorParameters, asyncHandlerParameters, progressWithHandlerParameters: { forciblyPending } }) {
+    monitorCallCount(useProgressWithHandler);
     const asyncInfo = useAsyncHandler(asyncHandlerParameters);
     const { propsIndicator, propsLabel, propsRegion } = useProgress({
         labelParameters,

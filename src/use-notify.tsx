@@ -1,6 +1,6 @@
 
 import { createContext, h, VNode } from "preact";
-import { usePortalChildren } from "preact-prop-helpers";
+import { monitorCallCount, usePortalChildren } from "preact-prop-helpers";
 import { useCallback, useContext, useMemo } from "preact/hooks";
 
 export interface NotificationProviderProps {
@@ -32,6 +32,8 @@ export const NotificationProviderContext = createContext<NotificationProviderCon
  * @returns 
  */
 export function useNotificationProvider({ targetAssertive, targetPolite }: NotificationProviderProps) {
+    monitorCallCount(useNotificationProvider);
+    
     const { children: childrenPolite, pushChild: notifyPolite, portalElement: politeElement } = usePortalChildren({ target: targetPolite });
     const { children: childrenAssertive, pushChild: notifyAssertive, portalElement: assertiveElement } = usePortalChildren({ target: targetAssertive });
     console.assert(politeElement?.getAttribute("aria-live") == "polite");
@@ -54,5 +56,7 @@ export function useNotificationProvider({ targetAssertive, targetPolite }: Notif
 }
 
 export function useNotify() {
+    monitorCallCount(useNotify);
+
     return useContext(NotificationProviderContext).notify;
 }

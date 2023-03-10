@@ -1,6 +1,6 @@
 import { h } from "preact";
-import { returnFalse, useMergedProps, useRefElement, useStableCallback } from "preact-prop-helpers";
-import { debugLog, EnhancedEvent, enhanceEvent, OmitStrong, Prefices } from "./props.js";
+import { monitorCallCount, returnFalse, useMergedProps, useRefElement, useStableCallback } from "preact-prop-helpers";
+import { EnhancedEvent, enhanceEvent, OmitStrong, Prefices } from "./props.js";
 import { useCheckboxLike, UseCheckboxLikeParameters, UseCheckboxLikeReturnType } from "./use-checkbox-like.js";
 import { LabelPosition } from "./use-label.js";
 
@@ -24,7 +24,7 @@ export function useCheckbox<LP extends LabelPosition, InputType extends Element,
     checkboxLikeParameters,
     labelParameters,
 }: UseCheckboxParameters<LP, InputType, LabelType>): UseCheckboxReturnType<InputType, LabelType> {
-    debugLog("useCheckbox");
+    monitorCallCount(useCheckbox);
 
     const { tagInput, labelPosition } = labelParameters;
     const { checked } = checkboxLikeParameters;

@@ -1,7 +1,7 @@
 import { h } from "preact";
-import { generateRandomId, ManagedChildInfo, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, UseManagedChildReturnType } from "preact-prop-helpers";
+import { generateRandomId, ManagedChildInfo, monitorCallCount, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, UseManagedChildReturnType } from "preact-prop-helpers";
 import { useMemo, useRef } from "preact/hooks";
-import { debugLog, enhanceEvent, EventDetail, Prefices, TagSensitiveProps } from "./props.js";
+import { enhanceEvent, EventDetail, Prefices, TagSensitiveProps } from "./props.js";
 
 
 
@@ -68,7 +68,7 @@ export interface SliderContext<M extends SliderThumbInfo> extends UseManagedChil
 
 
 export function useSlider({ sliderParameters: { max, min }, managedChildrenParameters }: UseSliderParameters<SliderThumbInfo>): UseSliderReturnType<SliderThumbInfo> {
-    debugLog("useSlider");
+    monitorCallCount(useSlider);
     const { context, managedChildrenReturn } = useManagedChildren<SliderThumbInfo>({ managedChildrenParameters });
 
     const baseIdRef = useRef<string>(null! as "");
@@ -95,7 +95,7 @@ export function useSliderThumb<ThumbElement extends Element, M extends SliderThu
     sliderThumbParameters
 }: UseSliderThumbParameters<ThumbElement, M>): UseSliderThumbReturnType<ThumbElement, SliderThumbInfo> {
     const { index } = managedChildParameters;
-    debugLog("useSliderThumb", managedChildParameters.index);
+    monitorCallCount(useSliderThumb);
     const { managedChildReturn } = useManagedChild<SliderThumbInfo>({ managedChildParameters, context }, { index });
     const { getChildren: _getThumbs } = managedChildReturn;
 

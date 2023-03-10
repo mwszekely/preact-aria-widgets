@@ -1,7 +1,7 @@
 import { h } from "preact";
-import { assertEmptyObject, findFirstFocusable, useMergedProps, useModal, UseModalParameters, UseModalReturnType, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
+import { assertEmptyObject, findFirstFocusable, monitorCallCount, useMergedProps, useModal, UseModalParameters, UseModalReturnType, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
-import { debugLog, OmitStrong } from "./props.js";
+import { OmitStrong } from "./props.js";
 
 export interface UseMenuSurfaceParameters<_S extends Element, _B extends Element> extends OmitStrong<UseModalParameters<"escape" | "lost-focus" | "backdrop">, "focusTrapParameters"> {
     focusTrapParameters: OmitStrong<UseModalParameters<"escape" | "lost-focus" | "backdrop">["focusTrapParameters"], "trapActive" | "focusOpener" | "onlyMoveFocus">
@@ -44,7 +44,7 @@ export function useMenuSurface<MenuSurfaceElement extends Element, MenuTargetEle
     focusTrapParameters,
     menuSurfaceParameters: { role, surfaceId }
 }: UseMenuSurfaceParameters<MenuSurfaceElement, MenuTriggerElement>): UseMenuSurfaceReturnType<MenuSurfaceElement, MenuTargetElement, MenuTriggerElement> {
-    debugLog("useMenuSurface");
+    monitorCallCount(useMenuSurface);
 
     const { refElementReturn: { getElement: getButtonElement }, propsStable: propsRefTrigger, ...void4 } = useRefElement<MenuTriggerElement>({ refElementParameters: { onElementChange: undefined } });
 
@@ -125,7 +125,7 @@ export interface UseFocusSentinelParameters {
  * @returns 
  */
 export function useFocusSentinel<E extends Element>({ focusSentinel: { open, onClose, sendFocusToMenu } }: UseFocusSentinelParameters): h.JSX.HTMLAttributes<E> {
-    debugLog("useFocusSentinel");
+    monitorCallCount(useFocusSentinel);
     const getSendFocusWithinMenu = useStableGetter(sendFocusToMenu);
     const stableOnClose = useStableCallback(onClose);
 

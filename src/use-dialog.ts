@@ -1,6 +1,6 @@
 
 import { h } from "preact";
-import { findFirstFocusable, useMergedProps, useModal, UseModalParameters, UseModalReturnType, useStableCallback } from "preact-prop-helpers";
+import { findFirstFocusable, monitorCallCount, useMergedProps, useModal, UseModalParameters, UseModalReturnType, useStableCallback } from "preact-prop-helpers";
 import { OmitStrong, Prefices } from "./props.js";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
 
@@ -17,6 +17,8 @@ export interface UseDialogReturnType<FocusContainerElement extends Element, Sour
 }
 
 export function useDialog<FocusContainerElement extends Element, SourceElement extends Element, DialogElement extends Element, TitleElement extends Element>({ dismissParameters, escapeDismissParameters, focusTrapParameters, labelParameters }: UseDialogParameters<DialogElement, TitleElement>): UseDialogReturnType<FocusContainerElement, SourceElement, DialogElement, TitleElement> {
+    monitorCallCount(useDialog);
+    
     const {
         focusTrapReturn,
         propsFocusContainer,

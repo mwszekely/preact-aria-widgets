@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { useMergedProps, usePress, UsePressParameters, UsePressReturnType, UseRefElementReturnType, useStableCallback } from "preact-prop-helpers";
+import { monitorCallCount, useMergedProps, usePress, UsePressParameters, UsePressReturnType, UseRefElementReturnType, useStableCallback } from "preact-prop-helpers";
 import { useEffect } from "preact/hooks";
 import { DisabledType, OmitStrong } from "./props.js";
 import { LabelPosition, useLabel, UseLabelParameters, UseLabelReturnType } from "./use-label.js";
@@ -63,7 +63,8 @@ export function useCheckboxLike<LP extends LabelPosition, InputType extends Elem
     refElementLabelReturn,
     pressParameters: { excludeSpace }
 }: UseCheckboxLikeParameters<LP, InputType, LabelType>): UseCheckboxLikeReturnType<InputType, LabelType> {
-
+    monitorCallCount(useCheckboxLike);
+    
     const { getElement: getInputElement } = refElementInputReturn;
     const { getElement: getLabelElement } = refElementLabelReturn;
     const { tagInput, tagLabel, labelPosition } = labelParameters;

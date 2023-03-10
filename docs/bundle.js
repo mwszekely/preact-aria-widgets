@@ -354,13 +354,13 @@
 
 	var uncurryThis$1J = functionUncurryThis;
 	var toObject$C = toObject$D;
-	var hasOwnProperty$7 = uncurryThis$1J({}.hasOwnProperty);
+	var hasOwnProperty$4 = uncurryThis$1J({}.hasOwnProperty);
 
 	// `HasOwnProperty` abstract operation
 	// https://tc39.es/ecma262/#sec-hasownproperty
 	// eslint-disable-next-line es/no-object-hasown -- safe
 	var hasOwnProperty_1 = Object.hasOwn || function hasOwn(it, key) {
-	  return hasOwnProperty$7(toObject$C(it), key);
+	  return hasOwnProperty$4(toObject$C(it), key);
 	};
 
 	var uncurryThis$1I = functionUncurryThis;
@@ -11779,7 +11779,7 @@
 	var internalStateGetterFor = InternalStateModule$d.getterFor;
 	var find$1 = ArrayIterationModule.find;
 	var findIndex = ArrayIterationModule.findIndex;
-	var splice$2 = uncurryThis$D([].splice);
+	var splice$1 = uncurryThis$D([].splice);
 	var id = 0;
 
 	// fallback for uncaught frozen keys
@@ -11810,7 +11810,7 @@
 	    var index = findIndex(this.entries, function (it) {
 	      return it[0] === key;
 	    });
-	    if (~index) splice$2(this.entries, index, 1);
+	    if (~index) splice$1(this.entries, index, 1);
 	    return !!~index;
 	  }
 	};
@@ -12441,7 +12441,7 @@
 	var toObject$7 = toObject$D;
 	var lengthOfArrayLike$8 = lengthOfArrayLike$C;
 	var MapHelpers$8 = mapHelpers;
-	var Map$d = MapHelpers$8.Map;
+	var Map$b = MapHelpers$8.Map;
 	var mapGet$1 = MapHelpers$8.get;
 	var mapHas$2 = MapHelpers$8.has;
 	var mapSet$2 = MapHelpers$8.set;
@@ -12453,7 +12453,7 @@
 	  var O = toObject$7(this);
 	  var self = IndexedObject(O);
 	  var boundFunction = bind$g(callbackfn, arguments.length > 1 ? arguments[1] : undefined);
-	  var map = new Map$d();
+	  var map = new Map$b();
 	  var length = lengthOfArrayLike$8(self);
 	  var index = 0;
 	  var key, value;
@@ -12594,11 +12594,11 @@
 	var uncurryThis$x = functionUncurryThis;
 	var iterateSimple$7 = iterateSimple$8;
 	var MapHelpers$7 = mapHelpers;
-	var Map$c = MapHelpers$7.Map;
+	var Map$a = MapHelpers$7.Map;
 	var MapPrototype = MapHelpers$7.proto;
 	var forEach$3 = uncurryThis$x(MapPrototype.forEach);
 	var entries = uncurryThis$x(MapPrototype.entries);
-	var next$1 = entries(new Map$c()).next;
+	var next$1 = entries(new Map$a()).next;
 	var mapIterate = function (map, fn, interruptible) {
 	  return interruptible ? iterateSimple$7(entries(map), function (entry) {
 	    return fn(entry[1], entry[0]);
@@ -12612,7 +12612,7 @@
 	var toObject$4 = toObject$D;
 	var MapHelpers$6 = mapHelpers;
 	var iterate$v = mapIterate;
-	var Map$b = MapHelpers$6.Map;
+	var Map$9 = MapHelpers$6.Map;
 	var mapHas$1 = MapHelpers$6.has;
 	var mapSet$1 = MapHelpers$6.set;
 	var push$d = uncurryThis$w([].push);
@@ -12623,7 +12623,7 @@
 	  var that = toObject$4(this);
 	  var length = lengthOfArrayLike$5(that);
 	  var result = [];
-	  var map = new Map$b();
+	  var map = new Map$9();
 	  var resolverFunction = !isNullOrUndefined$6(resolver) ? aCallable$p(resolver) : function (value) {
 	    return value;
 	  };
@@ -13790,7 +13790,7 @@
 	var isObject$7 = isObject$L;
 	var $Object$2 = Object;
 	var $TypeError$c = TypeError;
-	var Map$a = getBuiltIn$k('Map');
+	var Map$8 = getBuiltIn$k('Map');
 	var WeakMap$3 = getBuiltIn$k('WeakMap');
 	var Node$2 = function () {
 	  // keys
@@ -13804,7 +13804,7 @@
 	  return this[key] || (this[key] = initializer());
 	};
 	Node$2.prototype.next = function (i, it, IS_OBJECT) {
-	  var store = IS_OBJECT ? this.objectsByIndex[i] || (this.objectsByIndex[i] = new WeakMap$3()) : this.primitives || (this.primitives = new Map$a());
+	  var store = IS_OBJECT ? this.objectsByIndex[i] || (this.objectsByIndex[i] = new WeakMap$3()) : this.primitives || (this.primitives = new Map$8());
 	  var entry = store.get(it);
 	  if (!entry) store.set(it, entry = new Node$2());
 	  return entry;
@@ -15136,7 +15136,7 @@
 	var aMap$a = aMap$e;
 	var MapHelpers$4 = mapHelpers;
 	var iterate$n = mapIterate;
-	var Map$9 = MapHelpers$4.Map;
+	var Map$7 = MapHelpers$4.Map;
 	var set$5 = MapHelpers$4.set;
 
 	// `Map.prototype.filter` method
@@ -15150,7 +15150,7 @@
 	  filter: function filter(callbackfn /* , thisArg */) {
 	    var map = aMap$a(this);
 	    var boundFunction = bind$d(callbackfn, arguments.length > 1 ? arguments[1] : undefined);
-	    var newMap = new Map$9();
+	    var newMap = new Map$7();
 	    iterate$n(map, function (value, key) {
 	      if (boundFunction(value, key, map)) set$5(newMap, key, value);
 	    });
@@ -15258,7 +15258,7 @@
 	var isCallable$9 = isCallable$M;
 	var aCallable$8 = aCallable$M;
 	var iterate$j = iterate$F;
-	var Map$8 = mapHelpers.Map;
+	var Map$6 = mapHelpers.Map;
 	var push$7 = uncurryThis$n([].push);
 
 	// `Map.groupBy` method
@@ -15269,7 +15269,7 @@
 	  forced: true
 	}, {
 	  groupBy: function groupBy(iterable, keyDerivative) {
-	    var C = isCallable$9(this) ? this : Map$8;
+	    var C = isCallable$9(this) ? this : Map$6;
 	    var newMap = new C();
 	    aCallable$8(keyDerivative);
 	    var has = aCallable$8(newMap.has);
@@ -15315,7 +15315,7 @@
 	var iterate$h = iterate$F;
 	var isCallable$8 = isCallable$M;
 	var aCallable$7 = aCallable$M;
-	var Map$7 = mapHelpers.Map;
+	var Map$5 = mapHelpers.Map;
 
 	// `Map.keyBy` method
 	// https://github.com/tc39/proposal-collection-methods
@@ -15325,7 +15325,7 @@
 	  forced: true
 	}, {
 	  keyBy: function keyBy(iterable, keyDerivative) {
-	    var C = isCallable$8(this) ? this : Map$7;
+	    var C = isCallable$8(this) ? this : Map$5;
 	    var newMap = new C();
 	    aCallable$7(keyDerivative);
 	    var setter = aCallable$7(newMap.set);
@@ -15363,7 +15363,7 @@
 	var aMap$5 = aMap$e;
 	var MapHelpers$3 = mapHelpers;
 	var iterate$f = mapIterate;
-	var Map$6 = MapHelpers$3.Map;
+	var Map$4 = MapHelpers$3.Map;
 	var set$4 = MapHelpers$3.set;
 
 	// `Map.prototype.mapKeys` method
@@ -15377,7 +15377,7 @@
 	  mapKeys: function mapKeys(callbackfn /* , thisArg */) {
 	    var map = aMap$5(this);
 	    var boundFunction = bind$9(callbackfn, arguments.length > 1 ? arguments[1] : undefined);
-	    var newMap = new Map$6();
+	    var newMap = new Map$4();
 	    iterate$f(map, function (value, key) {
 	      set$4(newMap, boundFunction(value, key, map), value);
 	    });
@@ -15390,7 +15390,7 @@
 	var aMap$4 = aMap$e;
 	var MapHelpers$2 = mapHelpers;
 	var iterate$e = mapIterate;
-	var Map$5 = MapHelpers$2.Map;
+	var Map$3 = MapHelpers$2.Map;
 	var set$3 = MapHelpers$2.set;
 
 	// `Map.prototype.mapValues` method
@@ -15404,7 +15404,7 @@
 	  mapValues: function mapValues(callbackfn /* , thisArg */) {
 	    var map = aMap$4(this);
 	    var boundFunction = bind$8(callbackfn, arguments.length > 1 ? arguments[1] : undefined);
-	    var newMap = new Map$5();
+	    var newMap = new Map$3();
 	    iterate$e(map, function (value, key) {
 	      set$3(newMap, key, boundFunction(value, key, map));
 	    });
@@ -16290,7 +16290,7 @@
 	var getBuiltIn$c = getBuiltIn$K;
 	var uncurryThis$l = functionUncurryThis;
 	var shared$2 = sharedExports;
-	var Map$4 = getBuiltIn$c('Map');
+	var Map$2 = getBuiltIn$c('Map');
 	var WeakMap$2 = getBuiltIn$c('WeakMap');
 	var push$6 = uncurryThis$l([].push);
 	var metadata = shared$2('metadata');
@@ -16299,12 +16299,12 @@
 	  var targetMetadata = store$1.get(target);
 	  if (!targetMetadata) {
 	    if (!create) return;
-	    store$1.set(target, targetMetadata = new Map$4());
+	    store$1.set(target, targetMetadata = new Map$2());
 	  }
 	  var keyMetadata = targetMetadata.get(targetKey);
 	  if (!keyMetadata) {
 	    if (!create) return;
-	    targetMetadata.set(targetKey, keyMetadata = new Map$4());
+	    targetMetadata.set(targetKey, keyMetadata = new Map$2());
 	  }
 	  return keyMetadata;
 	};
@@ -18973,7 +18973,7 @@
 	var LinkError = WebAssembly && WebAssembly.LinkError || Error$1;
 	var RuntimeError = WebAssembly && WebAssembly.RuntimeError || Error$1;
 	var DOMException = getBuiltin('DOMException');
-	var Map$3 = MapHelpers.Map;
+	var Map$1 = MapHelpers.Map;
 	var mapHas = MapHelpers.has;
 	var mapGet = MapHelpers.get;
 	var mapSet = MapHelpers.set;
@@ -19072,7 +19072,7 @@
 	  // effectively preserves circular references
 	  if (map) {
 	    if (mapHas(map, value)) return mapGet(map, value);
-	  } else map = new Map$3();
+	  } else map = new Map$1();
 	  var type = classof$1(value);
 	  var deep = false;
 	  var C, name, cloned, dataTransfer, i, length, keys, key, source, target, options;
@@ -19086,7 +19086,7 @@
 	      deep = true;
 	      break;
 	    case 'Map':
-	      cloned = new Map$3();
+	      cloned = new Map$1();
 	      deep = true;
 	      break;
 	    case 'Set':
@@ -19410,7 +19410,7 @@
 	    var transfer = options ? options.transfer : undefined;
 	    var map;
 	    if (transfer !== undefined) {
-	      map = new Map$3();
+	      map = new Map$1();
 	      tryToTransfer(transfer, map);
 	    }
 	    return structuredCloneInternal(value, map);
@@ -19707,7 +19707,7 @@
 	var push$1 = uncurryThis$2([].push);
 	var replace$1 = uncurryThis$2(''.replace);
 	var shift$1 = uncurryThis$2([].shift);
-	var splice$1 = uncurryThis$2([].splice);
+	var splice = uncurryThis$2([].splice);
 	var split$1 = uncurryThis$2(''.split);
 	var stringSlice$1 = uncurryThis$2(''.slice);
 	var plus = /\+/g;
@@ -19869,7 +19869,7 @@
 	    var key = $toString$1(name);
 	    var index = 0;
 	    while (index < entries.length) {
-	      if (entries[index].key === key) splice$1(entries, index, 1);else index++;
+	      if (entries[index].key === key) splice(entries, index, 1);else index++;
 	    }
 	    if (!DESCRIPTORS$2) this.length = entries.length;
 	    state.updateURL();
@@ -19925,7 +19925,7 @@
 	    for (; index < entries.length; index++) {
 	      entry = entries[index];
 	      if (entry.key === key) {
-	        if (found) splice$1(entries, index--, 1);else {
+	        if (found) splice(entries, index--, 1);else {
 	          found = true;
 	          entry.value = val;
 	        }
@@ -21132,17 +21132,17 @@
 	var Symbol$2 = Symbol$1;
 
 	/** Used for built-in method references. */
-	var objectProto$8 = Object.prototype;
+	var objectProto$5 = Object.prototype;
 
 	/** Used to check objects for own properties. */
-	var hasOwnProperty$6 = objectProto$8.hasOwnProperty;
+	var hasOwnProperty$3 = objectProto$5.hasOwnProperty;
 
 	/**
 	 * Used to resolve the
 	 * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
 	 * of values.
 	 */
-	var nativeObjectToString$1 = objectProto$8.toString;
+	var nativeObjectToString$1 = objectProto$5.toString;
 
 	/** Built-in value references. */
 	var symToStringTag$1 = Symbol$2 ? Symbol$2.toStringTag : undefined;
@@ -21155,7 +21155,7 @@
 	 * @returns {string} Returns the raw `toStringTag`.
 	 */
 	function getRawTag(value) {
-	  var isOwn = hasOwnProperty$6.call(value, symToStringTag$1),
+	  var isOwn = hasOwnProperty$3.call(value, symToStringTag$1),
 	    tag = value[symToStringTag$1];
 	  try {
 	    value[symToStringTag$1] = undefined;
@@ -21173,14 +21173,14 @@
 	}
 
 	/** Used for built-in method references. */
-	var objectProto$7 = Object.prototype;
+	var objectProto$4 = Object.prototype;
 
 	/**
 	 * Used to resolve the
 	 * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
 	 * of values.
 	 */
-	var nativeObjectToString = objectProto$7.toString;
+	var nativeObjectToString = objectProto$4.toString;
 
 	/**
 	 * Converts `value` to a string using `Object.prototype.toString`.
@@ -21482,115 +21482,6 @@
 	  return tag == funcTag$1 || tag == genTag || tag == asyncTag || tag == proxyTag;
 	}
 
-	/** Used to detect overreaching core-js shims. */
-	var coreJsData = root$1['__core-js_shared__'];
-	var coreJsData$1 = coreJsData;
-
-	/** Used to detect methods masquerading as native. */
-	var maskSrcKey = function () {
-	  var uid = /[^.]+$/.exec(coreJsData$1 && coreJsData$1.keys && coreJsData$1.keys.IE_PROTO || '');
-	  return uid ? 'Symbol(src)_1.' + uid : '';
-	}();
-
-	/**
-	 * Checks if `func` has its source masked.
-	 *
-	 * @private
-	 * @param {Function} func The function to check.
-	 * @returns {boolean} Returns `true` if `func` is masked, else `false`.
-	 */
-	function isMasked(func) {
-	  return !!maskSrcKey && maskSrcKey in func;
-	}
-
-	/** Used for built-in method references. */
-	var funcProto$1 = Function.prototype;
-
-	/** Used to resolve the decompiled source of functions. */
-	var funcToString$1 = funcProto$1.toString;
-
-	/**
-	 * Converts `func` to its source code.
-	 *
-	 * @private
-	 * @param {Function} func The function to convert.
-	 * @returns {string} Returns the source code.
-	 */
-	function toSource(func) {
-	  if (func != null) {
-	    try {
-	      return funcToString$1.call(func);
-	    } catch (e) {}
-	    try {
-	      return func + '';
-	    } catch (e) {}
-	  }
-	  return '';
-	}
-
-	/**
-	 * Used to match `RegExp`
-	 * [syntax characters](http://ecma-international.org/ecma-262/7.0/#sec-patterns).
-	 */
-	var reRegExpChar = /[\\^$.*+?()[\]{}|]/g;
-
-	/** Used to detect host constructors (Safari). */
-	var reIsHostCtor = /^\[object .+?Constructor\]$/;
-
-	/** Used for built-in method references. */
-	var funcProto = Function.prototype,
-	  objectProto$6 = Object.prototype;
-
-	/** Used to resolve the decompiled source of functions. */
-	var funcToString = funcProto.toString;
-
-	/** Used to check objects for own properties. */
-	var hasOwnProperty$5 = objectProto$6.hasOwnProperty;
-
-	/** Used to detect if a method is native. */
-	var reIsNative = RegExp('^' + funcToString.call(hasOwnProperty$5).replace(reRegExpChar, '\\$&').replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$');
-
-	/**
-	 * The base implementation of `_.isNative` without bad shim checks.
-	 *
-	 * @private
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is a native function,
-	 *  else `false`.
-	 */
-	function baseIsNative(value) {
-	  if (!isObject(value) || isMasked(value)) {
-	    return false;
-	  }
-	  var pattern = isFunction(value) ? reIsNative : reIsHostCtor;
-	  return pattern.test(toSource(value));
-	}
-
-	/**
-	 * Gets the value at `key` of `object`.
-	 *
-	 * @private
-	 * @param {Object} [object] The object to query.
-	 * @param {string} key The key of the property to get.
-	 * @returns {*} Returns the property value.
-	 */
-	function getValue(object, key) {
-	  return object == null ? undefined : object[key];
-	}
-
-	/**
-	 * Gets the native function at `key` of `object`.
-	 *
-	 * @private
-	 * @param {Object} object The object to query.
-	 * @param {string} key The key of the method to get.
-	 * @returns {*} Returns the function if it's native, else `undefined`.
-	 */
-	function getNative(object, key) {
-	  var value = getValue(object, key);
-	  return baseIsNative(value) ? value : undefined;
-	}
-
 	/**
 	 * This method returns `undefined`.
 	 *
@@ -21643,42 +21534,6 @@
 	  var type = typeof value;
 	  length = length == null ? MAX_SAFE_INTEGER$1 : length;
 	  return !!length && (type == 'number' || type != 'symbol' && reIsUint.test(value)) && value > -1 && value % 1 == 0 && value < length;
-	}
-
-	/**
-	 * Performs a
-	 * [`SameValueZero`](http://ecma-international.org/ecma-262/7.0/#sec-samevaluezero)
-	 * comparison between two values to determine if they are equivalent.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @since 4.0.0
-	 * @category Lang
-	 * @param {*} value The value to compare.
-	 * @param {*} other The other value to compare.
-	 * @returns {boolean} Returns `true` if the values are equivalent, else `false`.
-	 * @example
-	 *
-	 * var object = { 'a': 1 };
-	 * var other = { 'a': 1 };
-	 *
-	 * _.eq(object, object);
-	 * // => true
-	 *
-	 * _.eq(object, other);
-	 * // => false
-	 *
-	 * _.eq('a', 'a');
-	 * // => true
-	 *
-	 * _.eq('a', Object('a'));
-	 * // => false
-	 *
-	 * _.eq(NaN, NaN);
-	 * // => true
-	 */
-	function eq(value, other) {
-	  return value === other || value !== value && other !== other;
 	}
 
 	/** Used as references for various `Number` constants. */
@@ -21744,7 +21599,7 @@
 	}
 
 	/** Used for built-in method references. */
-	var objectProto$5 = Object.prototype;
+	var objectProto$3 = Object.prototype;
 
 	/**
 	 * Checks if `value` is likely a prototype object.
@@ -21755,7 +21610,7 @@
 	 */
 	function isPrototype(value) {
 	  var Ctor = value && value.constructor,
-	    proto = typeof Ctor == 'function' && Ctor.prototype || objectProto$5;
+	    proto = typeof Ctor == 'function' && Ctor.prototype || objectProto$3;
 	  return value === proto;
 	}
 
@@ -21792,13 +21647,13 @@
 	}
 
 	/** Used for built-in method references. */
-	var objectProto$4 = Object.prototype;
+	var objectProto$2 = Object.prototype;
 
 	/** Used to check objects for own properties. */
-	var hasOwnProperty$4 = objectProto$4.hasOwnProperty;
+	var hasOwnProperty$2 = objectProto$2.hasOwnProperty;
 
 	/** Built-in value references. */
-	var propertyIsEnumerable = objectProto$4.propertyIsEnumerable;
+	var propertyIsEnumerable = objectProto$2.propertyIsEnumerable;
 
 	/**
 	 * Checks if `value` is likely an `arguments` object.
@@ -21821,7 +21676,7 @@
 	var isArguments = baseIsArguments(function () {
 	  return arguments;
 	}()) ? baseIsArguments : function (value) {
-	  return isObjectLike(value) && hasOwnProperty$4.call(value, 'callee') && !propertyIsEnumerable.call(value, 'callee');
+	  return isObjectLike(value) && hasOwnProperty$2.call(value, 'callee') && !propertyIsEnumerable.call(value, 'callee');
 	};
 	var isArguments$1 = isArguments;
 
@@ -21983,10 +21838,10 @@
 	var isTypedArray$1 = isTypedArray;
 
 	/** Used for built-in method references. */
-	var objectProto$3 = Object.prototype;
+	var objectProto$1 = Object.prototype;
 
 	/** Used to check objects for own properties. */
-	var hasOwnProperty$3 = objectProto$3.hasOwnProperty;
+	var hasOwnProperty$1 = objectProto$1.hasOwnProperty;
 
 	/**
 	 * Creates an array of the enumerable property names of the array-like `value`.
@@ -22005,7 +21860,7 @@
 	    result = skipIndexes ? baseTimes(value.length, String) : [],
 	    length = result.length;
 	  for (var key in value) {
-	    if ((inherited || hasOwnProperty$3.call(value, key)) && !(skipIndexes && (
+	    if ((inherited || hasOwnProperty$1.call(value, key)) && !(skipIndexes && (
 	    // Safari 9 has enumerable `arguments.length` in strict mode.
 	    key == 'length' ||
 	    // Node.js 0.10 has enumerable non-index properties on buffers.
@@ -22039,10 +21894,10 @@
 	var nativeKeys$1 = nativeKeys;
 
 	/** Used for built-in method references. */
-	var objectProto$2 = Object.prototype;
+	var objectProto = Object.prototype;
 
 	/** Used to check objects for own properties. */
-	var hasOwnProperty$2 = objectProto$2.hasOwnProperty;
+	var hasOwnProperty = objectProto.hasOwnProperty;
 
 	/**
 	 * The base implementation of `_.keys` which doesn't treat sparse arrays as dense.
@@ -22057,7 +21912,7 @@
 	  }
 	  var result = [];
 	  for (var key in Object(object)) {
-	    if (hasOwnProperty$2.call(object, key) && key != 'constructor') {
+	    if (hasOwnProperty.call(object, key) && key != 'constructor') {
 	      result.push(key);
 	    }
 	  }
@@ -22095,461 +21950,6 @@
 	function keys(object) {
 	  return isArrayLike(object) ? arrayLikeKeys(object) : baseKeys(object);
 	}
-
-	/* Built-in method references that are verified to be native. */
-	var nativeCreate = getNative(Object, 'create');
-	var nativeCreate$1 = nativeCreate;
-
-	/**
-	 * Removes all key-value entries from the hash.
-	 *
-	 * @private
-	 * @name clear
-	 * @memberOf Hash
-	 */
-	function hashClear() {
-	  this.__data__ = nativeCreate$1 ? nativeCreate$1(null) : {};
-	  this.size = 0;
-	}
-
-	/**
-	 * Removes `key` and its value from the hash.
-	 *
-	 * @private
-	 * @name delete
-	 * @memberOf Hash
-	 * @param {Object} hash The hash to modify.
-	 * @param {string} key The key of the value to remove.
-	 * @returns {boolean} Returns `true` if the entry was removed, else `false`.
-	 */
-	function hashDelete(key) {
-	  var result = this.has(key) && delete this.__data__[key];
-	  this.size -= result ? 1 : 0;
-	  return result;
-	}
-
-	/** Used to stand-in for `undefined` hash values. */
-	var HASH_UNDEFINED$1 = '__lodash_hash_undefined__';
-
-	/** Used for built-in method references. */
-	var objectProto$1 = Object.prototype;
-
-	/** Used to check objects for own properties. */
-	var hasOwnProperty$1 = objectProto$1.hasOwnProperty;
-
-	/**
-	 * Gets the hash value for `key`.
-	 *
-	 * @private
-	 * @name get
-	 * @memberOf Hash
-	 * @param {string} key The key of the value to get.
-	 * @returns {*} Returns the entry value.
-	 */
-	function hashGet(key) {
-	  var data = this.__data__;
-	  if (nativeCreate$1) {
-	    var result = data[key];
-	    return result === HASH_UNDEFINED$1 ? undefined : result;
-	  }
-	  return hasOwnProperty$1.call(data, key) ? data[key] : undefined;
-	}
-
-	/** Used for built-in method references. */
-	var objectProto = Object.prototype;
-
-	/** Used to check objects for own properties. */
-	var hasOwnProperty = objectProto.hasOwnProperty;
-
-	/**
-	 * Checks if a hash value for `key` exists.
-	 *
-	 * @private
-	 * @name has
-	 * @memberOf Hash
-	 * @param {string} key The key of the entry to check.
-	 * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
-	 */
-	function hashHas(key) {
-	  var data = this.__data__;
-	  return nativeCreate$1 ? data[key] !== undefined : hasOwnProperty.call(data, key);
-	}
-
-	/** Used to stand-in for `undefined` hash values. */
-	var HASH_UNDEFINED = '__lodash_hash_undefined__';
-
-	/**
-	 * Sets the hash `key` to `value`.
-	 *
-	 * @private
-	 * @name set
-	 * @memberOf Hash
-	 * @param {string} key The key of the value to set.
-	 * @param {*} value The value to set.
-	 * @returns {Object} Returns the hash instance.
-	 */
-	function hashSet(key, value) {
-	  var data = this.__data__;
-	  this.size += this.has(key) ? 0 : 1;
-	  data[key] = nativeCreate$1 && value === undefined ? HASH_UNDEFINED : value;
-	  return this;
-	}
-
-	/**
-	 * Creates a hash object.
-	 *
-	 * @private
-	 * @constructor
-	 * @param {Array} [entries] The key-value pairs to cache.
-	 */
-	function Hash(entries) {
-	  var index = -1,
-	    length = entries == null ? 0 : entries.length;
-	  this.clear();
-	  while (++index < length) {
-	    var entry = entries[index];
-	    this.set(entry[0], entry[1]);
-	  }
-	}
-
-	// Add methods to `Hash`.
-	Hash.prototype.clear = hashClear;
-	Hash.prototype['delete'] = hashDelete;
-	Hash.prototype.get = hashGet;
-	Hash.prototype.has = hashHas;
-	Hash.prototype.set = hashSet;
-
-	/**
-	 * Removes all key-value entries from the list cache.
-	 *
-	 * @private
-	 * @name clear
-	 * @memberOf ListCache
-	 */
-	function listCacheClear() {
-	  this.__data__ = [];
-	  this.size = 0;
-	}
-
-	/**
-	 * Gets the index at which the `key` is found in `array` of key-value pairs.
-	 *
-	 * @private
-	 * @param {Array} array The array to inspect.
-	 * @param {*} key The key to search for.
-	 * @returns {number} Returns the index of the matched value, else `-1`.
-	 */
-	function assocIndexOf(array, key) {
-	  var length = array.length;
-	  while (length--) {
-	    if (eq(array[length][0], key)) {
-	      return length;
-	    }
-	  }
-	  return -1;
-	}
-
-	/** Used for built-in method references. */
-	var arrayProto = Array.prototype;
-
-	/** Built-in value references. */
-	var splice = arrayProto.splice;
-
-	/**
-	 * Removes `key` and its value from the list cache.
-	 *
-	 * @private
-	 * @name delete
-	 * @memberOf ListCache
-	 * @param {string} key The key of the value to remove.
-	 * @returns {boolean} Returns `true` if the entry was removed, else `false`.
-	 */
-	function listCacheDelete(key) {
-	  var data = this.__data__,
-	    index = assocIndexOf(data, key);
-	  if (index < 0) {
-	    return false;
-	  }
-	  var lastIndex = data.length - 1;
-	  if (index == lastIndex) {
-	    data.pop();
-	  } else {
-	    splice.call(data, index, 1);
-	  }
-	  --this.size;
-	  return true;
-	}
-
-	/**
-	 * Gets the list cache value for `key`.
-	 *
-	 * @private
-	 * @name get
-	 * @memberOf ListCache
-	 * @param {string} key The key of the value to get.
-	 * @returns {*} Returns the entry value.
-	 */
-	function listCacheGet(key) {
-	  var data = this.__data__,
-	    index = assocIndexOf(data, key);
-	  return index < 0 ? undefined : data[index][1];
-	}
-
-	/**
-	 * Checks if a list cache value for `key` exists.
-	 *
-	 * @private
-	 * @name has
-	 * @memberOf ListCache
-	 * @param {string} key The key of the entry to check.
-	 * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
-	 */
-	function listCacheHas(key) {
-	  return assocIndexOf(this.__data__, key) > -1;
-	}
-
-	/**
-	 * Sets the list cache `key` to `value`.
-	 *
-	 * @private
-	 * @name set
-	 * @memberOf ListCache
-	 * @param {string} key The key of the value to set.
-	 * @param {*} value The value to set.
-	 * @returns {Object} Returns the list cache instance.
-	 */
-	function listCacheSet(key, value) {
-	  var data = this.__data__,
-	    index = assocIndexOf(data, key);
-	  if (index < 0) {
-	    ++this.size;
-	    data.push([key, value]);
-	  } else {
-	    data[index][1] = value;
-	  }
-	  return this;
-	}
-
-	/**
-	 * Creates an list cache object.
-	 *
-	 * @private
-	 * @constructor
-	 * @param {Array} [entries] The key-value pairs to cache.
-	 */
-	function ListCache(entries) {
-	  var index = -1,
-	    length = entries == null ? 0 : entries.length;
-	  this.clear();
-	  while (++index < length) {
-	    var entry = entries[index];
-	    this.set(entry[0], entry[1]);
-	  }
-	}
-
-	// Add methods to `ListCache`.
-	ListCache.prototype.clear = listCacheClear;
-	ListCache.prototype['delete'] = listCacheDelete;
-	ListCache.prototype.get = listCacheGet;
-	ListCache.prototype.has = listCacheHas;
-	ListCache.prototype.set = listCacheSet;
-
-	/* Built-in method references that are verified to be native. */
-	var Map$1 = getNative(root$1, 'Map');
-	var Map$2 = Map$1;
-
-	/**
-	 * Removes all key-value entries from the map.
-	 *
-	 * @private
-	 * @name clear
-	 * @memberOf MapCache
-	 */
-	function mapCacheClear() {
-	  this.size = 0;
-	  this.__data__ = {
-	    'hash': new Hash(),
-	    'map': new (Map$2 || ListCache)(),
-	    'string': new Hash()
-	  };
-	}
-
-	/**
-	 * Checks if `value` is suitable for use as unique object key.
-	 *
-	 * @private
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is suitable, else `false`.
-	 */
-	function isKeyable(value) {
-	  var type = typeof value;
-	  return type == 'string' || type == 'number' || type == 'symbol' || type == 'boolean' ? value !== '__proto__' : value === null;
-	}
-
-	/**
-	 * Gets the data for `map`.
-	 *
-	 * @private
-	 * @param {Object} map The map to query.
-	 * @param {string} key The reference key.
-	 * @returns {*} Returns the map data.
-	 */
-	function getMapData(map, key) {
-	  var data = map.__data__;
-	  return isKeyable(key) ? data[typeof key == 'string' ? 'string' : 'hash'] : data.map;
-	}
-
-	/**
-	 * Removes `key` and its value from the map.
-	 *
-	 * @private
-	 * @name delete
-	 * @memberOf MapCache
-	 * @param {string} key The key of the value to remove.
-	 * @returns {boolean} Returns `true` if the entry was removed, else `false`.
-	 */
-	function mapCacheDelete(key) {
-	  var result = getMapData(this, key)['delete'](key);
-	  this.size -= result ? 1 : 0;
-	  return result;
-	}
-
-	/**
-	 * Gets the map value for `key`.
-	 *
-	 * @private
-	 * @name get
-	 * @memberOf MapCache
-	 * @param {string} key The key of the value to get.
-	 * @returns {*} Returns the entry value.
-	 */
-	function mapCacheGet(key) {
-	  return getMapData(this, key).get(key);
-	}
-
-	/**
-	 * Checks if a map value for `key` exists.
-	 *
-	 * @private
-	 * @name has
-	 * @memberOf MapCache
-	 * @param {string} key The key of the entry to check.
-	 * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
-	 */
-	function mapCacheHas(key) {
-	  return getMapData(this, key).has(key);
-	}
-
-	/**
-	 * Sets the map `key` to `value`.
-	 *
-	 * @private
-	 * @name set
-	 * @memberOf MapCache
-	 * @param {string} key The key of the value to set.
-	 * @param {*} value The value to set.
-	 * @returns {Object} Returns the map cache instance.
-	 */
-	function mapCacheSet(key, value) {
-	  var data = getMapData(this, key),
-	    size = data.size;
-	  data.set(key, value);
-	  this.size += data.size == size ? 0 : 1;
-	  return this;
-	}
-
-	/**
-	 * Creates a map cache object to store key-value pairs.
-	 *
-	 * @private
-	 * @constructor
-	 * @param {Array} [entries] The key-value pairs to cache.
-	 */
-	function MapCache(entries) {
-	  var index = -1,
-	    length = entries == null ? 0 : entries.length;
-	  this.clear();
-	  while (++index < length) {
-	    var entry = entries[index];
-	    this.set(entry[0], entry[1]);
-	  }
-	}
-
-	// Add methods to `MapCache`.
-	MapCache.prototype.clear = mapCacheClear;
-	MapCache.prototype['delete'] = mapCacheDelete;
-	MapCache.prototype.get = mapCacheGet;
-	MapCache.prototype.has = mapCacheHas;
-	MapCache.prototype.set = mapCacheSet;
-
-	/** Error message constants. */
-	var FUNC_ERROR_TEXT$1 = 'Expected a function';
-
-	/**
-	 * Creates a function that memoizes the result of `func`. If `resolver` is
-	 * provided, it determines the cache key for storing the result based on the
-	 * arguments provided to the memoized function. By default, the first argument
-	 * provided to the memoized function is used as the map cache key. The `func`
-	 * is invoked with the `this` binding of the memoized function.
-	 *
-	 * **Note:** The cache is exposed as the `cache` property on the memoized
-	 * function. Its creation may be customized by replacing the `_.memoize.Cache`
-	 * constructor with one whose instances implement the
-	 * [`Map`](http://ecma-international.org/ecma-262/7.0/#sec-properties-of-the-map-prototype-object)
-	 * method interface of `clear`, `delete`, `get`, `has`, and `set`.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @since 0.1.0
-	 * @category Function
-	 * @param {Function} func The function to have its output memoized.
-	 * @param {Function} [resolver] The function to resolve the cache key.
-	 * @returns {Function} Returns the new memoized function.
-	 * @example
-	 *
-	 * var object = { 'a': 1, 'b': 2 };
-	 * var other = { 'c': 3, 'd': 4 };
-	 *
-	 * var values = _.memoize(_.values);
-	 * values(object);
-	 * // => [1, 2]
-	 *
-	 * values(other);
-	 * // => [3, 4]
-	 *
-	 * object.a = 2;
-	 * values(object);
-	 * // => [1, 2]
-	 *
-	 * // Modify the result cache.
-	 * values.cache.set(object, ['a', 'b']);
-	 * values(object);
-	 * // => ['a', 'b']
-	 *
-	 * // Replace `_.memoize.Cache`.
-	 * _.memoize.Cache = WeakMap;
-	 */
-	function memoize(func, resolver) {
-	  if (typeof func != 'function' || resolver != null && typeof resolver != 'function') {
-	    throw new TypeError(FUNC_ERROR_TEXT$1);
-	  }
-	  var memoized = function () {
-	    var args = arguments,
-	      key = resolver ? resolver.apply(this, args) : args[0],
-	      cache = memoized.cache;
-	    if (cache.has(key)) {
-	      return cache.get(key);
-	    }
-	    var result = func.apply(this, args);
-	    memoized.cache = cache.set(key, result) || cache;
-	    return result;
-	  };
-	  memoized.cache = new (memoize.Cache || MapCache)();
-	  return memoized;
-	}
-
-	// Expose `MapCache`.
-	memoize.Cache = MapCache;
 
 	/**
 	 * Gets the timestamp of the number of milliseconds that have elapsed since
@@ -22873,14 +22273,37 @@
 
 	function getBuildModeUnmemoized() {
 	  try {
-	    var _process, _process$env;
-	    if (((_process = process) === null || _process === void 0 ? void 0 : (_process$env = _process.env) === null || _process$env === void 0 ? void 0 : _process$env.NODE_ENV) === 'development') return 'development';
-	    return 'production';
+	    if (process.env.NODE_ENV === "development") return "development";
+	    return "production";
 	  } catch (_e) {
 	    return "production";
 	  }
 	}
-	const getBuildMode = memoize(getBuildModeUnmemoized);
+	const getBuildMode = getBuildModeUnmemoized; //memoize(getBuildModeUnmemoized) as typeof getBuildModeUnmemoized;
+
+	let timeoutHandle = null;
+	function callCountU(hook) {
+	  var _window, _window$_hookCallCoun, _window$_hookCallCoun2, _window$_hookCallCoun3, _window$_hookCallCoun4, _window$_hookCallCoun5;
+	  const name = hook.name;
+	  if (filters.has(name)) return;
+	  (_window$_hookCallCoun = (_window = window)._hookCallCount) !== null && _window$_hookCallCoun !== void 0 ? _window$_hookCallCoun : _window._hookCallCount = {
+	    callCountsMoment: {},
+	    callCountsTotal: {}
+	  };
+	  (_window$_hookCallCoun3 = (_window$_hookCallCoun2 = window._hookCallCount.callCountsMoment)[name]) !== null && _window$_hookCallCoun3 !== void 0 ? _window$_hookCallCoun3 : _window$_hookCallCoun2[name] = 0;
+	  (_window$_hookCallCoun5 = (_window$_hookCallCoun4 = window._hookCallCount.callCountsTotal)[name]) !== null && _window$_hookCallCoun5 !== void 0 ? _window$_hookCallCoun5 : _window$_hookCallCoun4[name] = 0;
+	  window._hookCallCount.callCountsMoment[name] += 1;
+	  window._hookCallCount.callCountsTotal[name] += 1;
+	  if (timeoutHandle == null) {
+	    timeoutHandle = requestIdleCallback(() => {
+	      console.log(window._hookCallCount.callCountsMoment);
+	      window._hookCallCount.callCountsMoment = {};
+	      timeoutHandle = null;
+	    });
+	  }
+	}
+	const filters = new Set();
+	const monitorCallCount = getBuildMode() == "development" ? callCountU : noop$1;
 
 	/**
 	 * Debug hook.
@@ -22937,6 +22360,7 @@
 	 * @returns
 	 */
 	function usePassiveState(onChange, getInitialValue, customDebounceRendering) {
+	  monitorCallCount(usePassiveState);
 	  const valueRef = _(Unset$2);
 	  const reasonRef = _(Unset$2);
 	  const warningRef = _(false);
@@ -23107,6 +22531,7 @@
 	 * @param inputs
 	 */
 	function useBeforeLayoutEffect(effect, inputs) {
+	  monitorCallCount(useBeforeLayoutEffect);
 	  const [id] = h(() => generateRandomId());
 	  if (effect) toRun.set(id, {
 	    effect,
@@ -23136,6 +22561,7 @@
 	 * @returns
 	 */
 	function useStableGetter(value) {
+	  monitorCallCount(useStableGetter);
 	  const ref = _(Unset$1);
 	  useBeforeLayoutEffect(() => {
 	    ref.current = value;
@@ -23187,6 +22613,7 @@
 	 * truly has no dependencies/only stable dependencies!!
 	 */
 	function useStableCallback(fn, noDeps) {
+	  monitorCallCount(useStableCallback);
 	  useEnsureStability("useStableCallback", noDeps == null, noDeps === null || noDeps === void 0 ? void 0 : noDeps.length, isStableGetter(fn));
 	  if (isStableGetter(fn)) return fn;
 	  if (noDeps == null) {
@@ -23201,6 +22628,7 @@
 	}
 
 	function useMergedChildren(lhs, rhs) {
+	  monitorCallCount(useMergedChildren);
 	  if (lhs == null && rhs == null) {
 	    return undefined;
 	  } else if (lhs == null) {
@@ -23233,6 +22661,7 @@
 	 * @returns A string representing all combined classes from both arguments.
 	 */
 	function useMergedClasses(lhsClass, lhsClassName, rhsClass, rhsClassName) {
+	  monitorCallCount(useMergedClasses);
 	  // Note: For the sake of forward compatibility, this function is labelled as
 	  // a hook, but as it uses no other hooks it technically isn't one.
 	  if (lhsClass || rhsClass || lhsClassName || rhsClassName) {
@@ -23263,6 +22692,7 @@
 	 * @returns
 	 */
 	function useMergedRefs(rhs, lhs) {
+	  monitorCallCount(useMergedRefs);
 	  // This *must* be stable in order to prevent repeated reset `null` calls after every render.
 	  const combined = useStableCallback(function combined(current) {
 	    processRef(current, lhs);
@@ -23291,6 +22721,7 @@
 	 * @returns A CSS object containing the properties of both objects.
 	 */
 	function useMergedStyles(lhs, rhs) {
+	  monitorCallCount(useMergedStyles);
 	  // Easy case, when there are no styles to merge return nothing.
 	  if (!lhs && !rhs) return undefined;
 	  if (typeof lhs != typeof rhs) {
@@ -23328,6 +22759,7 @@
 	 * @returns
 	 */
 	function useMergedProps() {
+	  monitorCallCount(useMergedProps);
 	  for (var _len = arguments.length, allProps = new Array(_len), _key = 0; _key < _len; _key++) {
 	    allProps[_key] = arguments[_key];
 	  }
@@ -23407,20 +22839,16 @@
 	/**
 	 * Allows attaching an event handler to any *non-Preact* element, and removing it when the component using the hook unmounts. The callback does not need to be stable across renders.
 	 *
-	 * Due to typing limitations, this function must be called like this:
+	 * `"mode"` controls if there's one handler that calls all your functions (default), or one handler added per function (`"single"`).
 	 *
-	 * `useEventHandler(element, "input")<InputEvent>(e => {})`
-	 *
-	 * The type argument is optional, but narrows down the type from "a union of all events" to whatever you specify, and errors if it doesn't exist.
-	 *
-	 * There is a separate version that attaches event handlers to a set of props.
-	 * It takes different event string types (onEvent vs onevent).
+	 * The default, `"grouped"`, is faster when you have, say, a button component, used hundreds of times on a page, that each installs a global event handler.
 	 *
 	 * @param target A *non-Preact* node to attach the event to.
 	 * @returns
 	 * *
 	 */
 	function useGlobalHandler(target, type, handler, options, mode) {
+	  monitorCallCount(useGlobalHandler);
 	  mode || (mode = "grouped");
 	  useEnsureStability("useGlobalHandler", mode);
 	  if (mode === "grouped") {
@@ -23502,6 +22930,7 @@
 	 * @returns The element, and the sub-hook that makes it retrievable.
 	 */
 	function useRefElement(args) {
+	  monitorCallCount(useRefElement);
 	  const {
 	    onElementChange,
 	    onMount,
@@ -23598,6 +23027,7 @@
 	      getWindow
 	    }
 	  } = _ref;
+	  monitorCallCount(useActiveElement);
 	  useEnsureStability("useActiveElement", onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, getDocument, getWindow);
 	  p(() => {
 	    var _getWindow, _activeElementUpdater, _activeElementUpdater2, _activeElementUpdater3, _lastActiveElementUpd, _windowFocusedUpdater;
@@ -23706,6 +23136,7 @@
 	      ...void2
 	    }
 	  } = _ref;
+	  monitorCallCount(useEscapeDismiss);
 	  const stableOnClose = useStableCallback(onClose);
 	  const getWindow = useStableCallback(unstableGetWindow);
 	  const getDepth = useStableGetter(parentDepth + 1);
@@ -23815,6 +23246,7 @@
 	    },
 	    ...void1
 	  } = _ref2;
+	  monitorCallCount(useLostFocusDismiss);
 	  const {
 	    getElement: getSourceElement,
 	    ...void2
@@ -23853,6 +23285,7 @@
 	    },
 	    ...void2
 	  } = _ref3;
+	  monitorCallCount(useBackdropDismiss);
 	  const getOpen = useStableGetter(open);
 	  const onClose = useStableCallback(onCloseUnstable);
 	  const onBackdropClick = T$1(function onBackdropClick(e) {
@@ -23894,6 +23327,7 @@
 	      parentDepth
 	    }
 	  } = _ref4;
+	  monitorCallCount(useDismiss);
 	  const {
 	    refElementReturn: refElementSourceReturn,
 	    propsStable: propsStableSource
@@ -25385,6 +24819,7 @@
 	 * @param target
 	 */
 	function useBlockingElement(enabled, getTarget) {
+	  monitorCallCount(useBlockingElement);
 	  const stableGetTarget = useStableCallback(getTarget);
 	  const getDocument = useStableCallback(() => {
 	    var _getTarget$ownerDocum, _getTarget;
@@ -25443,6 +24878,7 @@
 	    },
 	    refElementReturn
 	  } = _ref;
+	  monitorCallCount(useFocusTrap);
 	  const focusSelf = useStableCallback(focusSelfUnstable);
 	  const focusOpener = useStableCallback(focusOpenerUnstable);
 	  p(() => {
@@ -25506,6 +24942,7 @@
 	    rovingTabIndexReturn,
 	    linearNavigationParameters
 	  } = _ref;
+	  monitorCallCount(useLinearNavigation);
 	  const {
 	    getHighestIndex,
 	    indexDemangler,
@@ -25863,6 +25300,7 @@
 	 *
 	 */
 	function useManagedChildren(parentParameters) {
+	  monitorCallCount(useManagedChildren);
 	  const {
 	    managedChildrenParameters: {
 	      onAfterChildLayoutEffect,
@@ -25997,6 +25435,7 @@
 	}
 	function useManagedChild(info, managedChildParameters) {
 	  var _info$context;
+	  monitorCallCount(useManagedChild);
 	  const {
 	    managedChildContext: {
 	      getChildren,
@@ -26167,6 +25606,7 @@
 	 * @returns
 	 */
 	function useState(initialState) {
+	  monitorCallCount(useState);
 	  // We keep both, but overrride the `setState` functionality
 	  const [state, setStateP] = h(initialState);
 	  const ref = _(state);
@@ -26232,6 +25672,7 @@
 	    },
 	    ..._void1
 	  } = _ref;
+	  monitorCallCount(useRovingTabIndex);
 	  const getUntabbable = useStableGetter(untabbable);
 	  // Override the actual setter to include some extra logic related to avoiding hidden children, 
 	  // what to do when we're untabbable, what to do when we're tabbable but given `null`, etc.
@@ -26345,6 +25786,7 @@
 	    rovingTabIndexChildParameters,
 	    ..._void3
 	  } = _ref2;
+	  monitorCallCount(useRovingTabIndexChild);
 	  const {
 	    hidden,
 	    ..._void1
@@ -26383,6 +25825,7 @@
 	      hidden
 	    }
 	  } = _ref;
+	  monitorCallCount(useTextContent);
 	  const [getTextContent, setTextContent] = usePassiveState(onTextContentChange, returnNull, runImmediately);
 	  p(() => {
 	    if (!hidden) {
@@ -26423,6 +25866,7 @@
 	    },
 	    ..._void2
 	  } = _ref;
+	  monitorCallCount(useTypeaheadNavigation);
 	  // For typeahead, keep track of what our current "search" string is (if we have one)
 	  // and also clear it every 1000 ms since the last time it changed.
 	  // Next, keep a mapping of typeahead values to indices for faster searching.
@@ -26621,6 +26065,7 @@
 	    },
 	    ...void4
 	  } = _ref2;
+	  monitorCallCount(useTypeaheadNavigationChild);
 	  const {
 	    textContentReturn
 	  } = useTextContent({
@@ -26715,6 +26160,7 @@
 	    managedChildrenReturn,
 	    ..._void1
 	  } = _ref;
+	  monitorCallCount(useListNavigation);
 	  const {
 	    context: {
 	      rovingTabIndexContext
@@ -26770,6 +26216,7 @@
 	    textContentParameters,
 	    ..._void2
 	  } = _ref2;
+	  monitorCallCount(useListNavigationChild);
 	  const {
 	    props,
 	    ...rticr
@@ -26808,6 +26255,7 @@
 	    typeaheadNavigationParameters,
 	    ..._void2
 	  } = _ref;
+	  monitorCallCount(useGridNavigation);
 	  const {
 	    getChildren
 	  } = managedChildrenReturn;
@@ -26889,6 +26337,7 @@
 	    typeaheadNavigationParameters,
 	    ..._void1
 	  } = _ref2;
+	  monitorCallCount(useGridNavigationRow);
 	  const {
 	    getChildren
 	  } = managedChildrenReturn;
@@ -27010,6 +26459,7 @@
 	    },
 	    ..._void1
 	  } = _ref3;
+	  monitorCallCount(useGridNavigationCell);
 	  const {
 	    index
 	  } = managedChildParameters;
@@ -27068,6 +26518,7 @@
 	      initiallySelectedIndex
 	    }
 	  } = _ref;
+	  monitorCallCount(useSingleSelection);
 	  const onSelectedIndexChange = useStableCallback(onSelectedIndexChange_U !== null && onSelectedIndexChange_U !== void 0 ? onSelectedIndexChange_U : noop$1);
 	  const getSelectedAt = T$1(m => {
 	    return m.getSelected();
@@ -27120,6 +26571,7 @@
 	}
 	function useSingleSelectionChild(args) {
 	  var _ariaPropName$split;
+	  monitorCallCount(useSingleSelectionChild);
 	  const {
 	    context: {
 	      singleSelectionContext: {
@@ -27200,6 +26652,7 @@
 	    singleSelectionParameters,
 	    ..._void2
 	  } = _ref;
+	  monitorCallCount(useGridNavigationSingleSelection);
 	  const {
 	    context: {
 	      gridNavigationRowContext,
@@ -27264,6 +26717,7 @@
 	    },
 	    ..._void1
 	  } = _ref2;
+	  monitorCallCount(useGridNavigationSingleSelectionRow);
 	  const {
 	    hasCurrentFocusParameters: {
 	      onCurrentFocusedInnerChanged: ocfic1
@@ -27334,6 +26788,7 @@
 	}
 	// EZ
 	function useGridNavigationSingleSelectionCell(p) {
+	  monitorCallCount(useGridNavigationSingleSelectionCell);
 	  return useGridNavigationCell(p);
 	}
 
@@ -27344,6 +26799,7 @@
 	 * It's a bit smelly, so best to use sparingly.
 	 */
 	function useForceUpdate() {
+	  monitorCallCount(useForceUpdate);
 	  const [, set] = h(0);
 	  return _(() => set(i => ++i)).current;
 	}
@@ -27376,6 +26832,7 @@
 	      onRearranged
 	    }
 	  } = _ref;
+	  monitorCallCount(useRearrangeableChildren);
 	  // These are used to keep track of a mapping between unsorted index <---> sorted index.
 	  // These are needed for navigation with the arrow keys.
 	  const mangleMap = _(new Map());
@@ -27423,6 +26880,7 @@
 	    (_getForceUpdate = getForceUpdate()) === null || _getForceUpdate === void 0 ? void 0 : _getForceUpdate();
 	  }, []);
 	  const useRearrangedChildren = T$1(children => {
+	    monitorCallCount(useRearrangedChildren);
 	    console.assert(Array.isArray(children));
 	    const forceUpdate = useForceUpdate();
 	    y(() => {
@@ -27495,6 +26953,7 @@
 	      compare: userCompare
 	    }
 	  } = _ref3;
+	  monitorCallCount(useSortableChildren);
 	  const getCompare = useStableGetter(userCompare !== null && userCompare !== void 0 ? userCompare : defaultCompare);
 	  const {
 	    rearrangeableChildrenReturn
@@ -27542,6 +27001,7 @@
 	    linearNavigationParameters,
 	    ...gridNavigationSingleSelectionParameters
 	  } = _ref;
+	  monitorCallCount(useGridNavigationSingleSelectionSortable);
 	  const {
 	    ...scr
 	  } = useSortableChildren({
@@ -27577,6 +27037,7 @@
 	    managedChildrenReturn,
 	    ..._void3
 	  } = _ref;
+	  monitorCallCount(useListNavigationSingleSelection);
 	  const {
 	    context: {
 	      rovingTabIndexContext,
@@ -27637,6 +27098,7 @@
 	    textContentParameters,
 	    ..._void1
 	  } = _ref2;
+	  monitorCallCount(useListNavigationSingleSelectionChild);
 	  const {
 	    hasCurrentFocusParameters: {
 	      onCurrentFocusedInnerChanged: ocfic2,
@@ -27701,6 +27163,7 @@
 	    sortableChildrenParameters,
 	    ...void3
 	  } = _ref;
+	  monitorCallCount(useListNavigationSingleSelectionSortable);
 	  const {
 	    rearrangeableChildrenReturn,
 	    sortableChildrenReturn,
@@ -27761,6 +27224,7 @@
 	      paginationMin
 	    }
 	  } = _ref;
+	  monitorCallCount(usePaginatedChildren);
 	  const [childCount, setChildCount] = useState(null);
 	  const parentIsPaginated = paginationMin != null || paginationMax != null;
 	  const lastPagination = _({
@@ -27833,6 +27297,7 @@
 	      }
 	    }
 	  } = _ref2;
+	  monitorCallCount(usePaginatedChild);
 	  const [parentIsPaginated, setParentIsPaginated] = useState(getDefaultIsPaginated());
 	  const [childCountIfPaginated, setChildCountIfPaginated] = useState(null);
 	  const [paginatedVisible, setPaginatedVisible] = useState(getDefaultPaginationVisible(index));
@@ -27871,6 +27336,7 @@
 	      staggered
 	    }
 	  } = _ref;
+	  monitorCallCount(useStaggeredChildren);
 	  // By default, when a child mounts, we tell the next child to mount and simply repeat.
 	  // If a child is missing, however, it will break that chain.
 	  // To guard against that, we also wait for 50ms, and if it hasn't loaded by then, we just continue as if it did.
@@ -27984,6 +27450,7 @@
 	      }
 	    }
 	  } = _ref2;
+	  monitorCallCount(useStaggeredChild);
 	  const [parentIsStaggered, setParentIsStaggered] = useState(getDefaultIsStaggered);
 	  const [staggeredVisible, setStaggeredVisible] = useState(getDefaultStaggeredVisible(index));
 	  y(() => {
@@ -28015,6 +27482,7 @@
 	 * I.E. you can use this without needing a parent `<div>` to listen for a `focusout` event.
 	 */
 	function useChildrenHaveFocus(args) {
+	  monitorCallCount(useChildrenHaveFocus);
 	  const {
 	    childrenHaveFocusParameters: {
 	      onCompositeFocusChange
@@ -28044,6 +27512,7 @@
 	      }
 	    }
 	  } = _ref;
+	  monitorCallCount(useChildrenHaveFocusChild);
 	  return {
 	    hasCurrentFocusParameters: {
 	      onCurrentFocusedInnerChanged: useStableCallback((focused, prev, e) => {
@@ -28058,6 +27527,7 @@
 	}
 
 	function useHasCurrentFocus(args) {
+	  monitorCallCount(useHasCurrentFocus);
 	  const {
 	    hasCurrentFocusParameters: {
 	      onCurrentFocusedChanged: onFocusedChanged,
@@ -28118,6 +27588,7 @@
 	    paginatedChildrenParameters,
 	    staggeredChildrenParameters
 	  } = _ref;
+	  monitorCallCount(useCompleteGridNavigation);
 	  const getChildren = T$1(() => managedChildrenReturn.getChildren(), []);
 	  const getHighestChildIndex = T$1(() => getChildren().getHighestIndex(), []);
 	  const isValid = T$1(i => {
@@ -28253,6 +27724,7 @@
 	    typeaheadNavigationParameters,
 	    sortableChildParameters
 	  } = _ref2;
+	  monitorCallCount(useCompleteGridNavigationRow);
 	  const {
 	    index
 	  } = managedChildParameters;
@@ -28458,6 +27930,7 @@
 	      ...completeGridNavigationCellParameters
 	    }
 	  } = _ref3;
+	  monitorCallCount(useCompleteGridNavigationCell);
 	  const {
 	    index
 	  } = managedChildParameters;
@@ -28553,6 +28026,7 @@
 	    staggeredChildrenParameters,
 	    ...completeListNavigationParameters
 	  } = _ref;
+	  monitorCallCount(useCompleteListNavigation);
 	  const {
 	    initiallySelectedIndex
 	  } = singleSelectionParameters;
@@ -28705,6 +28179,7 @@
 	    },
 	    ..._void
 	  } = _ref2;
+	  monitorCallCount(useCompleteListNavigationChild);
 	  const {
 	    index
 	  } = managedChildParameters;
@@ -28885,6 +28360,7 @@
 	      ...focusTrapParameters
 	    }
 	  } = _ref;
+	  monitorCallCount(useModal);
 	  const {
 	    open
 	  } = dismissParameters;
@@ -28927,6 +28403,7 @@
 	    callback,
 	    triggerIndex
 	  } = _ref;
+	  monitorCallCount(useTimeout);
 	  const stableCallback = useStableCallback(() => {
 	    startTimeRef.current = null;
 	    callback();
@@ -28988,6 +28465,7 @@
 	 * @param exclude Whether the polyfill shouldn't apply (can specify for specific interactions)
 	 */
 	function usePress(args) {
+	  monitorCallCount(usePress);
 	  const {
 	    refElementReturn: {
 	      getElement
@@ -29148,8 +28626,8 @@
 	  useTimeout({
 	    callback: () => {
 	      const element = getElement();
-	      setLongPress(pointerDownStartedHere && hovering);
-	      if (element && pointerDownStartedHere && hovering) {
+	      setLongPress(pointerDownStartedHere && getHovering());
+	      if (element && pointerDownStartedHere && getHovering()) {
 	        focusSelf(element);
 	        if (longPressThreshold) {
 	          setWaitingForSpaceUp(false);
@@ -29159,7 +28637,7 @@
 	      }
 	    },
 	    timeout: longPressThreshold !== null && longPressThreshold !== void 0 ? longPressThreshold : null,
-	    triggerIndex: longPress ? true : pointerDownStartedHere && hovering
+	    triggerIndex: longPress ? true : pointerDownStartedHere && getHovering()
 	  });
 	  const handlePress = useStableCallback(e => {
 	    setWaitingForSpaceUp(false);
@@ -29301,6 +28779,7 @@
 	      otherReferencerProp
 	    }
 	  } = _ref;
+	  monitorCallCount(useRandomId);
 	  const id = prefix + V$1();
 	  useEnsureStability("useRandomId", prefix, id);
 	  const referencerElementProps = _(otherReferencerProp == null ? {} : {
@@ -29327,6 +28806,7 @@
 	    randomIdInputParameters,
 	    randomIdLabelParameters
 	  } = _ref;
+	  monitorCallCount(useRandomDualIds);
 	  const {
 	    randomIdReturn: randomIdInputReturn,
 	    propsReferencer: propsLabelAsReferencer,
@@ -29528,6 +29008,7 @@
 	 *
 	 */
 	function useAsync(asyncHandler2, options) {
+	  monitorCallCount(useAsync);
 	  // Things related to current execution
 	  // Because we can both return and throw undefined, 
 	  // we need separate state to track their existance too.
@@ -29677,6 +29158,7 @@
 	    capture: originalCapture,
 	    ...restAsyncOptions
 	  } = _ref;
+	  monitorCallCount(useAsyncHandler);
 	  // We need to differentiate between "nothing captured yet" and "`undefined` was captured"
 	  const [currentCapture, setCurrentCapture, getCurrentCapture] = useState(undefined);
 	  const [hasCapture, setHasCapture] = useState(false);
@@ -29720,6 +29202,7 @@
 	      getElement
 	    }
 	  } = _ref;
+	  monitorCallCount(useImperativeProps);
 	  const currentImperativeProps = _({
 	    className: new Set(),
 	    style: {},
@@ -29919,6 +29402,7 @@
 	  let {
 	    target
 	  } = _ref;
+	  monitorCallCount(usePortalChildren);
 	  const [pushChild, setPushChild] = useState(null);
 	  const [updateChild, setUpdateChild] = useState(null);
 	  const [removeChild, setRemoveChild] = useState(null);
@@ -30054,6 +29538,7 @@
 	  let fromString = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : JSON.parse;
 	  let toString = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : JSON.stringify;
 	  let storage = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : localStorage;
+	  monitorCallCount(usePersistentState);
 	  const [localCopy, setLocalCopy, getLocalCopy] = useState(() => {
 	    var _ref;
 	    return (_ref = key ? getFromLocalStorage(key, fromString, storage) : null) !== null && _ref !== void 0 ? _ref : initialValue;
@@ -30099,16 +29584,6 @@
 	  const event = e;
 	  event[EventDetail] = detail;
 	  return event;
-	}
-	let debug = false;
-	function setDebugLogging(logging) {
-	  debug = logging;
-	}
-	function debugLog(who) {
-	  for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-	    args[_key - 1] = arguments[_key];
-	  }
-	  if (debug) console.debug(who + ":", ...args);
 	}
 	function noop() {
 	  return;
@@ -30156,7 +29631,7 @@
 	    pressParameters,
 	    refElementParameters
 	  } = _ref;
-	  debugLog("useButton");
+	  monitorCallCount(useButton);
 	  const {
 	    refElementReturn,
 	    propsStable: propsRef
@@ -30229,7 +29704,7 @@
 	    },
 	    ...rest
 	  } = _ref;
-	  debugLog("useAccordion");
+	  monitorCallCount(useAccordion);
 	  const [localStorageIndex, setLocalStorageIndex] = usePersistentState(localStorageKey !== null && localStorageKey !== void 0 ? localStorageKey : null, (_initialIndex = initialIndex) !== null && _initialIndex !== void 0 ? _initialIndex : null);
 	  if (localStorageIndex != null) initialIndex = localStorageIndex;
 	  const {
@@ -30378,11 +29853,11 @@
 	    },
 	    refElementParameters
 	  } = _ref2;
+	  monitorCallCount(useAccordionSection);
 	  const {
 	    disabled,
 	    onPress: userOnPress
 	  } = buttonParameters;
-	  debugLog("useAccordionSection");
 	  const [openFromParent, setOpenFromParent, getOpenFromParent] = useState(null);
 	  const [mostRecentlyTabbed, setMostRecentlyTabbed, getMostRecentlyTabbed] = useState(null);
 	  const {
@@ -30528,7 +30003,7 @@
 	    typeaheadNavigationParameters,
 	    staggeredChildrenParameters
 	  } = _ref;
-	  debugLog("useCheckboxGroup");
+	  monitorCallCount(useCheckboxGroup);
 	  const {
 	    childrenHaveFocusReturn,
 	    context,
@@ -30699,7 +30174,7 @@
 	  y(() => {
 	    setSetter(() => setControls);
 	  }, [setControls]);
-	  debugLog("useCheckboxGroupParent");
+	  monitorCallCount(useCheckboxGroupParent);
 	  const [checked, setChecked] = useState(false);
 	  p(() => {
 	    setSetParentCheckboxChecked(() => setChecked);
@@ -30757,7 +30232,7 @@
 	      setTotalChecked
 	    }
 	  } = context;
-	  debugLog("useCheckboxGroupChild", managedChildParameters.index);
+	  monitorCallCount(useCheckboxGroupChild);
 	  const {
 	    checked,
 	    onChangeFromParent
@@ -30905,6 +30380,7 @@
 	    },
 	    ...rest
 	  } = _ref2;
+	  monitorCallCount(useLabelSynthetic);
 	  return useLabel({
 	    labelParameters: {
 	      ariaLabel,
@@ -30947,6 +30423,7 @@
 	      excludeSpace
 	    }
 	  } = _ref;
+	  monitorCallCount(useCheckboxLike);
 	  const {
 	    getElement: getInputElement
 	  } = refElementInputReturn;
@@ -31100,7 +30577,7 @@
 	    checkboxLikeParameters,
 	    labelParameters
 	  } = _ref;
-	  debugLog("useCheckbox");
+	  monitorCallCount(useCheckbox);
 	  const {
 	    tagInput,
 	    labelPosition
@@ -31161,6 +30638,7 @@
 	    focusTrapParameters,
 	    labelParameters
 	  } = _ref;
+	  monitorCallCount(useDialog);
 	  const {
 	    focusTrapReturn,
 	    propsFocusContainer,
@@ -31218,6 +30696,7 @@
 	    focusTrapParameters,
 	    labelParameters
 	  } = _ref;
+	  monitorCallCount(useDrawer);
 	  const {
 	    focusTrapReturn,
 	    propsFocusContainer,
@@ -31275,6 +30754,7 @@
 	    },
 	    ...restParams
 	  } = _ref;
+	  monitorCallCount(useGridlist);
 	  const {
 	    propsInput: propsLabelList,
 	    propsLabel: propsLabelLabel,
@@ -31362,6 +30842,7 @@
 	    textContentParameters,
 	    typeaheadNavigationParameters
 	  } = _ref2;
+	  monitorCallCount(useGridlistRow);
 	  const {
 	    gridlistRowContext: {
 	      selectionLimit
@@ -31422,6 +30903,7 @@
 	    pressParameters,
 	    ...p
 	  } = _ref3;
+	  monitorCallCount(useGridlistCell);
 	  const {
 	    props,
 	    ...info
@@ -31470,7 +30952,7 @@
 	      surfaceId
 	    }
 	  } = _ref;
-	  debugLog("useMenuSurface");
+	  monitorCallCount(useMenuSurface);
 	  const {
 	    refElementReturn: {
 	      getElement: getButtonElement
@@ -31568,7 +31050,7 @@
 	      sendFocusToMenu
 	    }
 	  } = _ref2;
-	  debugLog("useFocusSentinel");
+	  monitorCallCount(useFocusSentinel);
 	  const getSendFocusWithinMenu = useStableGetter(sendFocusToMenu);
 	  const stableOnClose = useStableCallback(onClose);
 	  const [sentinelIsActive, setSentinelIsActive] = useState(false);
@@ -31617,6 +31099,7 @@
 	    },
 	    ...listNavParameters
 	  } = _ref;
+	  monitorCallCount(useToolbar);
 	  const {
 	    context,
 	    propsStable,
@@ -31674,6 +31157,7 @@
 	  };
 	}
 	function useToolbarChild(args) {
+	  monitorCallCount(useToolbarChild);
 	  return useCompleteListNavigationChild(args);
 	}
 
@@ -31688,7 +31172,7 @@
 	 * @returns
 	 */
 	function useMenubar(args) {
-	  debugLog("useMenubar");
+	  monitorCallCount(useMenubar);
 	  const {
 	    propsToolbar: propsMenubar,
 	    ...restReturn
@@ -31706,7 +31190,7 @@
 	    },
 	    ...restParams
 	  } = _ref;
-	  debugLog("useMenuItem", restParams.managedChildParameters.index);
+	  monitorCallCount(useMenubarChild);
 	  const focusSelf = T$1(e => {
 	    var _e$focus;
 	    return (_e$focus = e.focus) === null || _e$focus === void 0 ? void 0 : _e$focus.call(e);
@@ -31765,7 +31249,7 @@
 	    toolbarParameters,
 	    ...restParams
 	  } = _ref;
-	  debugLog("useMenu");
+	  monitorCallCount(useMenu);
 	  const {
 	    context,
 	    propsLabel: propsButtonAsMenuLabel,
@@ -31866,6 +31350,7 @@
 	  };
 	}
 	function useMenuItem(p) {
+	  monitorCallCount(useMenuItem);
 	  const ret = useMenubarChild(p);
 	  return {
 	    ...ret,
@@ -31893,6 +31378,7 @@
 	    targetAssertive,
 	    targetPolite
 	  } = _ref;
+	  monitorCallCount(useNotificationProvider);
 	  const {
 	    children: childrenPolite,
 	    pushChild: notifyPolite,
@@ -31923,6 +31409,7 @@
 	  };
 	}
 	function useNotify() {
+	  monitorCallCount(useNotify);
 	  return q$1(NotificationProviderContext).notify;
 	}
 
@@ -31937,6 +31424,7 @@
 	      tagIndicator
 	    }
 	  } = _ref;
+	  monitorCallCount(useProgress);
 	  const {
 	    propsInput,
 	    propsLabel,
@@ -32005,6 +31493,7 @@
 	      forciblyPending
 	    }
 	  } = _ref2;
+	  monitorCallCount(useProgressWithHandler);
 	  const asyncInfo = useAsyncHandler(asyncHandlerParameters);
 	  const {
 	    propsIndicator,
@@ -32037,6 +31526,7 @@
 	    },
 	    ...restParams
 	  } = _ref;
+	  monitorCallCount(useRadioGroup);
 	  const [selectedIndex, setSelectedIndex] = useState(null);
 	  const byName = _(new Map());
 	  const {
@@ -32134,8 +31624,8 @@
 	    rovingTabIndexChildParameters,
 	    sortableChildParameters
 	  } = _ref2;
+	  monitorCallCount(useRadio);
 	  const index = managedChildParameters.index;
-	  debugLog("useRadio", index);
 	  const onInput = useStableCallback(e => {
 	    singleSelectionChildReturn.setThisOneSelected(e);
 	  });
@@ -32240,7 +31730,7 @@
 	    },
 	    managedChildrenParameters
 	  } = _ref;
-	  debugLog("useSlider");
+	  monitorCallCount(useSlider);
 	  const {
 	    context,
 	    managedChildrenReturn
@@ -32276,7 +31766,7 @@
 	  const {
 	    index
 	  } = managedChildParameters;
-	  debugLog("useSliderThumb", managedChildParameters.index);
+	  monitorCallCount(useSliderThumb);
 	  const {
 	    managedChildReturn
 	  } = useManagedChild({
@@ -32342,6 +31832,7 @@
 	      tagTable
 	    }
 	  } = _ref;
+	  monitorCallCount(useTable);
 	  const [getSortBody, setSortBody] = usePassiveState(null, returnNull);
 	  const sortQueue = _([]);
 	  const [getSortColumn, setSortColumn] = usePassiveState(T$1(a => {
@@ -32432,6 +31923,7 @@
 	      tableContext
 	    }
 	  } = _ref2;
+	  monitorCallCount(useTableSection);
 	  const {
 	    childrenHaveFocusReturn,
 	    context,
@@ -32510,6 +32002,7 @@
 	    linearNavigationParameters,
 	    rovingTabIndexParameters
 	  } = _ref3;
+	  monitorCallCount(useTableRow);
 	  const {
 	    context: cx2,
 	    managedChildrenReturn,
@@ -32564,6 +32057,7 @@
 	    },
 	    ...p
 	  } = _ref4;
+	  monitorCallCount(useTableCell);
 	  const {
 	    props,
 	    ...ret
@@ -32597,7 +32091,7 @@
 	    },
 	    ...restParams
 	  } = _ref;
-	  debugLog("useTabs");
+	  monitorCallCount(useTabs);
 	  const [localStorageIndex, setLocalStorageIndex] = usePersistentState(localStorageKey !== null && localStorageKey !== void 0 ? localStorageKey : null, 0);
 	  if (localStorageIndex != null) singleSelectionParameters.initiallySelectedIndex = localStorageIndex;
 	  const baseId = generateRandomId("aria-tabs-");
@@ -32781,7 +32275,7 @@
 	  } = context.tabsContext;
 	  const panelId = getPanelId(managedChildParameters.index);
 	  const tabId = getTabId(managedChildParameters.index);
-	  debugLog("useTab", managedChildParameters.index, selected.toString());
+	  monitorCallCount(useTab);
 	  return {
 	    props: useMergedProps(propsPress, listNavigationSingleSelectionChildProps, {
 	      "data-tabbable": tabbable.toString(),
@@ -32802,7 +32296,7 @@
 	  const {
 	    index
 	  } = managedChildParameters;
-	  debugLog("useTabPanel", index);
+	  monitorCallCount(useTabPanel);
 	  const {
 	    tabPanelContext: {
 	      getVisibleIndex: g,
@@ -32865,7 +32359,7 @@
 	      visibleCount
 	    }
 	  } = _ref;
-	  debugLog("useToasts");
+	  monitorCallCount(useToasts);
 	  // Normally, this does just look like [0, 1, 2, 3], etc
 	  // so it could be just an index to the current toast,
 	  // but if we dismiss toasts out of order, it's [0, 2, 3] or something.
@@ -32983,7 +32477,7 @@
 	    onAnyToastDismissed,
 	    onAnyToastMounted
 	  } = context.toastContext;
-	  debugLog("useToast", index);
+	  monitorCallCount(useToast);
 	  const [numberOfToastsAheadOfUs, setNumberOfToastsAheadOfUs] = useState(Infinity);
 	  const getIndex = useStableGetter(index);
 	  const [dismissed2, setDismissed2, getDismissed2] = useState(false);
@@ -33070,6 +32564,7 @@
 	    },
 	    escapeDismissParameters
 	  } = _ref;
+	  monitorCallCount(useTooltip);
 	  /**
 	   * Whether the hover/focus-popup/trigger state we have results in us showing this tooltip.
 	   *
@@ -33943,6 +33438,7 @@
 	    },
 	    ...restParams
 	  } = _ref;
+	  monitorCallCount(useListbox);
 	  useEnsureStability("useListbox", selectionLimit);
 	  const {
 	    propsInput: propsLabelList,
@@ -34033,6 +33529,7 @@
 	    },
 	    ...restParams
 	  } = _ref2;
+	  monitorCallCount(useListboxItem);
 	  const {
 	    pressParameters: {
 	      excludeSpace
@@ -36074,7 +35571,7 @@
 	      /*
 	      
 	      defaultRenderGridlistChild({ tagGridlistChild: "div", makePropsGridlistChild: (_info) => ({ children: text }) })
-	            */
+	           */
 	    }
 	  });
 	}
@@ -36120,7 +35617,7 @@
 	      /*
 	      
 	      defaultRenderGridlistChild<HTMLDivElement>({ tagGridlistChild: "div", makePropsGridlistChild: (info) => ({ children: <Checkbox ref={cb} labelPosition={"separate"} tagInput="input" tagLabel="label" checked={b} disabled={false} getDocument={getDocument} onCheckedChange={e => setB(e[EventDetail].checked)} render={defaultRenderCheckbox({ labelPosition: "separate", tagInput: "input", tagLabel: "label", makeInputProps: () => ({ tabIndex: info.rovingTabIndex.tabbable ? 0 : -1 }), makeLabelProps: () => ({ children: "Checkbox" }) })} /> }) })
-	            */
+	           */
 	    }
 	  });
 	}
@@ -36167,12 +35664,12 @@
 	                        })]
 	                      });
 	                      /*
-	                        defaultRenderGridlistRow({
+	                       defaultRenderGridlistRow({
 	                      tagGridlistRow: "div", makePropsGridlistRow: (_info) => ({
 	                          children: [<DemoGridlistChild1 row={i} />, <DemoGridlistChild2 />]
 	                      })
 	                      })
-	                                                                        */
+	                                                                       */
 	                    }
 	                  });
 	                }
@@ -36892,10 +36389,10 @@
 	        })
 	      });
 	      /*
-	        tagTableCell: "td", makePropsTableCell: (info) => ({
+	       tagTableCell: "td", makePropsTableCell: (info) => ({
 	          children: <DemoInput tabbable={info.rovingTabIndex.tabbable} />
-	        })
-	        */
+	       })
+	       */
 	    }
 	  });
 	  /*
@@ -37029,7 +36526,7 @@
 	                              }, 2)]
 	                            });
 	                            /*
-	                                        tagTableRow: "tr",
+	                                      tagTableRow: "tr",
 	                            makePropsTableRow: () => ({
 	                                children: <>
 	                                    <DemoTableCell key={0} index={0} />
@@ -37038,7 +36535,7 @@
 	                                </>
 	                            })
 	                            })
-	                                  */
+	                                 */
 	                          }
 	                        }, i);
 	                      }
@@ -37449,10 +36946,6 @@
 	  });
 	}
 
-	//import { options } from "preact";
-	//options.debounceRendering = queueMicrotask;
-	//const RandomWords = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.".split(" ");
-	setDebugLogging(true);
 	const Component = () => {
 	  const {
 	    children,

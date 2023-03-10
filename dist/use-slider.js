@@ -1,8 +1,8 @@
-import { generateRandomId, useManagedChild, useManagedChildren } from "preact-prop-helpers";
+import { generateRandomId, monitorCallCount, useManagedChild, useManagedChildren } from "preact-prop-helpers";
 import { useMemo, useRef } from "preact/hooks";
-import { debugLog, enhanceEvent, EventDetail, Prefices } from "./props.js";
+import { enhanceEvent, EventDetail, Prefices } from "./props.js";
 export function useSlider({ sliderParameters: { max, min }, managedChildrenParameters }) {
-    debugLog("useSlider");
+    monitorCallCount(useSlider);
     const { context, managedChildrenReturn } = useManagedChildren({ managedChildrenParameters });
     const baseIdRef = useRef(null);
     if (baseIdRef.current === null)
@@ -21,7 +21,7 @@ export function useSlider({ sliderParameters: { max, min }, managedChildrenParam
 }
 export function useSliderThumb({ managedChildParameters, context: { sliderContext: { max: maxParent, min: minParent }, ...context }, sliderThumbParameters }) {
     const { index } = managedChildParameters;
-    debugLog("useSliderThumb", managedChildParameters.index);
+    monitorCallCount(useSliderThumb);
     const { managedChildReturn } = useManagedChild({ managedChildParameters, context }, { index });
     const { getChildren: _getThumbs } = managedChildReturn;
     const { tag, value, max: maxOverride, min: minOverride, onValueChange, valueText, label } = sliderThumbParameters;

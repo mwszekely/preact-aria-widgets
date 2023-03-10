@@ -1,5 +1,5 @@
-import { useMergedProps, useStableCallback, useStableObject } from "preact-prop-helpers";
-import { debugLog, OmitStrong } from "./props.js";
+import { monitorCallCount, useMergedProps, useStableCallback, useStableObject } from "preact-prop-helpers";
+import { OmitStrong } from "./props.js";
 import { useMenuSurface, UseMenuSurfaceParameters, UseMenuSurfaceReturnType } from "./use-menu-surface.js";
 import { useMenubar, useMenubarChild, UseMenubarContext, UseMenubarItemParameters, UseMenubarItemReturnType, UseMenubarParameters, UseMenubarReturnType, UseMenubarSubInfo } from "./use-menubar.js";
 
@@ -67,7 +67,7 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
     ...restParams
 }: UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, M>): UseMenuReturnType<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement, M> {
 
-    debugLog("useMenu");
+    monitorCallCount(useMenu);
 
     const {
         context,
@@ -166,6 +166,8 @@ export interface UseMenuItemParameters<MenuItemElement extends Element, M extend
 }
 
 export function useMenuItem<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>>(p: UseMenuItemParameters<MenuItemElement, M>): UseMenuItemReturnType<MenuItemElement, M> {
+    monitorCallCount(useMenuItem);
+    
     const ret = useMenubarChild<MenuItemElement, M>(p);
 
     return {

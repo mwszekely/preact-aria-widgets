@@ -1,4 +1,4 @@
-import { returnTrue, useMergedProps, usePress, UsePressReturnType, useRandomDualIds, UseRandomDualIdsParameters, UseRandomDualIdsReturnType, useRefElement } from "preact-prop-helpers";
+import { monitorCallCount, returnTrue, useMergedProps, usePress, UsePressReturnType, useRandomDualIds, UseRandomDualIdsParameters, UseRandomDualIdsReturnType, useRefElement } from "preact-prop-helpers";
 import { ElementToTag, noop, OmitStrong } from "./props.js";
 
 export type LabelPosition = "separate" | "wrapping" | "none";
@@ -96,6 +96,8 @@ export function useLabelSynthetic<InputElement extends Element, LabelElement ext
     labelParameters: { ariaLabel, onLabelClick },
     ...rest
 }: UseLabelSyntheticParameters) {
+    monitorCallCount(useLabelSynthetic);
+    
     return useLabel<LabelPosition, InputElement, LabelElement>({
         labelParameters: {
             ariaLabel,

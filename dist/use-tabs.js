@@ -1,9 +1,9 @@
-import { generateRandomId, returnTrue, useChildrenFlag, useCompleteListNavigation, useCompleteListNavigationChild, useManagedChild, useManagedChildren, useMergedProps, usePersistentState, usePress, useStableCallback, useStableObject, useState } from "preact-prop-helpers";
+import { generateRandomId, monitorCallCount, returnTrue, useChildrenFlag, useCompleteListNavigation, useCompleteListNavigationChild, useManagedChild, useManagedChildren, useMergedProps, usePersistentState, usePress, useStableCallback, useStableObject, useState } from "preact-prop-helpers";
 import { useCallback, useLayoutEffect } from "preact/hooks";
-import { debugLog, EventDetail, Prefices } from "./props.js";
+import { EventDetail, Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
 export function useTabs({ labelParameters, linearNavigationParameters, singleSelectionParameters: { onSelectedIndexChange: ssi, ...singleSelectionParameters }, tabsParameters: { orientation, role, localStorageKey }, ...restParams }) {
-    debugLog("useTabs");
+    monitorCallCount(useTabs);
     const [localStorageIndex, setLocalStorageIndex] = usePersistentState(localStorageKey ?? null, 0);
     if (localStorageIndex != null)
         singleSelectionParameters.initiallySelectedIndex = localStorageIndex;
@@ -87,7 +87,7 @@ export function useTab({ completeListNavigationChildParameters: { focusSelf, ...
     const { getPanelId, getTabId } = context.tabsContext;
     const panelId = getPanelId(managedChildParameters.index);
     const tabId = getTabId(managedChildParameters.index);
-    debugLog("useTab", managedChildParameters.index, selected.toString());
+    monitorCallCount(useTab);
     return {
         props: useMergedProps(propsPress, listNavigationSingleSelectionChildProps, {
             "data-tabbable": tabbable.toString(),
@@ -102,7 +102,7 @@ export function useTab({ completeListNavigationChildParameters: { focusSelf, ...
 }
 export function useTabPanel({ managedChildParameters, context }) {
     const { index } = managedChildParameters;
-    debugLog("useTabPanel", index);
+    monitorCallCount(useTabPanel);
     const { tabPanelContext: { getVisibleIndex: g, getPanelId, getTabId } } = context;
     //const [correspondingTabId, setCorrespondingTabId] = useState<string | null>(null);
     const [lastKnownVisibleIndex, setLastKnownVisibleIndex, getLastKnownVisibleIndex] = useState(g());

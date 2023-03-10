@@ -1,9 +1,10 @@
-import { useCompleteListNavigation, useCompleteListNavigationChild, useMergedProps, useRefElement, useSingleSelectionDeclarative, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
+import { monitorCallCount, useCompleteListNavigation, useCompleteListNavigationChild, useMergedProps, useRefElement, useSingleSelectionDeclarative, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
 import { useEffect, useLayoutEffect, useMemo, useRef } from "preact/hooks";
-import { debugLog, Prefices } from "./props.js";
+import { Prefices } from "./props.js";
 import { useCheckboxLike } from "./use-checkbox-like.js";
 import { useLabelSynthetic } from "./use-label.js";
 export function useRadioGroup({ labelParameters, radioGroupParameters: { name, onSelectedValueChange, selectedValue }, ...restParams }) {
+    monitorCallCount(useRadioGroup);
     const [selectedIndex, setSelectedIndex] = useState(null);
     const byName = useRef(new Map());
     const { propsInput: propsGroup1, propsLabel } = useLabelSynthetic({
@@ -57,8 +58,8 @@ export function useRadioGroup({ labelParameters, radioGroupParameters: { name, o
     };
 }
 export function useRadio({ radioParameters: { value }, checkboxLikeParameters: { disabled }, completeListNavigationChildParameters, labelParameters, managedChildParameters, singleSelectionChildParameters, context, textContentParameters, rovingTabIndexChildParameters, sortableChildParameters }) {
+    monitorCallCount(useRadio);
     const index = managedChildParameters.index;
-    debugLog("useRadio", index);
     const onInput = useStableCallback((e) => {
         singleSelectionChildReturn.setThisOneSelected(e);
     });

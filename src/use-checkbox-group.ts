@@ -1,7 +1,7 @@
 import { h } from "preact";
-import { CompleteListNavigationContext, PassiveStateUpdater, returnFalse, returnNull, returnZero, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useMergedProps, usePassiveState, useStableCallback, useStableGetter, useStableObject, useState } from "preact-prop-helpers";
+import { CompleteListNavigationContext, monitorCallCount, PassiveStateUpdater, returnFalse, returnNull, returnZero, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useMergedProps, usePassiveState, useStableCallback, useStableGetter, useStableObject, useState } from "preact-prop-helpers";
 import { StateUpdater, useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
-import { debugLog, EnhancedEvent, OmitStrong } from "./props.js";
+import { EnhancedEvent, OmitStrong } from "./props.js";
 import { CheckboxCheckedType } from "./use-checkbox-like.js";
 
 export type CheckboxGroupChangeEvent<E extends EventTarget> = EnhancedEvent<E, Event, { childrenChecked: boolean | Map<number, boolean | "mixed"> }>;
@@ -110,7 +110,8 @@ export function useCheckboxGroup<GroupElement extends Element, TCE extends Eleme
     typeaheadNavigationParameters,
     staggeredChildrenParameters
 }: UseCheckboxGroupParameters<GroupElement, TCE, CheckboxGroupInfo<TCE>>): UseCheckboxGroupReturnType<GroupElement, TCE, CheckboxGroupInfo<TCE>> {
-    debugLog("useCheckboxGroup");
+    monitorCallCount(useCheckboxGroup);
+
     const {
         childrenHaveFocusReturn,
         context,
@@ -270,7 +271,7 @@ export function useCheckboxGroupParent<TCE extends Element>({
     useLayoutEffect(() => {
         setSetter(() => setControls);
     }, [setControls]);
-    debugLog("useCheckboxGroupParent");
+    monitorCallCount(useCheckboxGroupParent);
 
     const [checked, setChecked] = useState<CheckboxCheckedType>(false);
     useEffect(() => {
@@ -317,7 +318,7 @@ export function useCheckboxGroupChild<TCE extends Element>({
 }: UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>): UseCheckboxGroupChildReturnType<TCE, CheckboxGroupInfo<TCE>> {
     const { checkboxGroupChildrenContext: { allIds, setUpdateIndex, setTotalChildren, setTotalChecked, } } = context;
 
-    debugLog("useCheckboxGroupChild", managedChildParameters.index);
+    monitorCallCount(useCheckboxGroupChild);
 
     const { checked, onChangeFromParent } = checkboxGroupChild;
     const getChecked = useStableGetter(checked);

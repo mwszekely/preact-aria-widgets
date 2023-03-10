@@ -1,11 +1,11 @@
 import { identity } from "lodash-es";
-import { assertEmptyObject, useChildrenFlag, useLinearNavigation, useManagedChild, useManagedChildren, useMergedProps, usePersistentState, useRandomId, useRefElement, useStableCallback, useStableObject, useState, useTypeaheadNavigation, useTypeaheadNavigationChild } from "preact-prop-helpers";
+import { assertEmptyObject, monitorCallCount, useChildrenFlag, useLinearNavigation, useManagedChild, useManagedChildren, useMergedProps, usePersistentState, useRandomId, useRefElement, useStableCallback, useStableObject, useState, useTypeaheadNavigation, useTypeaheadNavigationChild } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
-import { debugLog, Prefices } from "./props.js";
+import { Prefices } from "./props.js";
 import { useButton } from "./use-button.js";
 export function useAccordion({ accordionParameters: { initialIndex, localStorageKey }, typeaheadNavigationParameters, linearNavigationParameters: { disableArrowKeys, disableHomeEndKeys, navigationDirection, navigatePastEnd, navigatePastStart, pageNavigationSize }, managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange }, ...rest }) {
+    monitorCallCount(useAccordion);
     assertEmptyObject(rest);
-    debugLog("useAccordion");
     const [localStorageIndex, setLocalStorageIndex] = usePersistentState(localStorageKey ?? null, initialIndex ?? null);
     if (localStorageIndex != null)
         initialIndex = localStorageIndex;
@@ -91,8 +91,8 @@ export function useAccordion({ accordionParameters: { initialIndex, localStorage
     };
 }
 export function useAccordionSection({ buttonParameters, accordionSectionParameters: { open: openFromUser, bodyRole }, managedChildParameters: { index }, rovingTabIndexChildParameters: { hidden }, textContentParameters, context: { accordionSectionParameters: { changeExpandedIndex, changeTabbedIndex: setCurrentFocusedIndex, getTabbedIndex: getCurrentFocusedIndex, stableTypeaheadProps }, linearNavigationParameters, rovingTabIndexReturn, managedChildContext, typeaheadNavigationContext }, refElementParameters, }) {
+    monitorCallCount(useAccordionSection);
     const { disabled, onPress: userOnPress } = buttonParameters;
-    debugLog("useAccordionSection");
     const [openFromParent, setOpenFromParent, getOpenFromParent] = useState(null);
     const [mostRecentlyTabbed, setMostRecentlyTabbed, getMostRecentlyTabbed] = useState(null);
     const { randomIdReturn: _bodyIdReturn, propsSource: propsBodySource, propsReferencer: propsHeadReferencer } = useRandomId({ randomIdParameters: { prefix: Prefices.accordionSectionHeaderButton, otherReferencerProp: "aria-controls" } });

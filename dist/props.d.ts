@@ -36,8 +36,6 @@ export type EnhancedEvent<Target extends EventTarget, TypedEvent extends Event, 
 export declare function enhanceEvent<E extends EventTarget, TypedEvent extends Event, Detail extends object>(e: TypedEvent | h.JSX.TargetedEvent<E, TypedEvent>, detail: Detail): EnhancedEvent<E, TypedEvent, Detail>;
 export declare function overwriteWithWarning<P extends {}, K extends keyof P>(componentName: string, props: P, propName: K, newValue: P[K]): void;
 export declare function setDebugLogging(logging: boolean): void;
-export type DebugLogTypes = "useAccordion" | "useAccordionSection" | "useButton" | "useCheckbox" | "useCheckboxGroup" | "useCheckboxGroupParent" | "useCheckboxGroupChild" | "useDialog" | "useDrawer" | "useListboxMulti" | "useListboxMultiItem" | "useListboxSingle" | "useListboxSingleItem" | "useMenubar" | "useMenu" | "useMenuSurface" | "useMenuItem" | "useFocusSentinel" | "useMenuSurfaceSentinel" | "useRadioGroup" | "useRadio" | "useSlider" | "useSliderThumb" | "useTable" | "useTableRow" | "useTableCell" | "useTableBody" | "useGridlist" | "useGridlistRow" | "useGridlistChild" | "useGridlistSection" | "useTabs" | "useTabList" | "useTab" | "useTabPanel" | "useToasts" | "useToast" | "useTooltip" | "useTooltipTooltip" | "useTooltipTrigger";
-export declare function debugLog(who: DebugLogTypes, ...args: Parameters<(typeof console)["log"]>): void;
 export type PropModifier<T extends EventTarget> = (props: h.JSX.HTMLAttributes<T>) => h.JSX.HTMLAttributes<T>;
 export type PropModifier2<P> = (props: P) => P;
 export declare function noop(): void;

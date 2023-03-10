@@ -2,6 +2,7 @@ import { h } from "preact";
 import {
     CompleteGridNavigationContext,
     CompleteGridNavigationRowContext,
+    monitorCallCount,
     useCompleteGridNavigation,
     useCompleteGridNavigationCell,
     UseCompleteGridNavigationCellInfo,
@@ -74,6 +75,8 @@ export function useGridlist<GridlistElement extends Element, GridlistRowElement 
     gridlistParameters: { selectionLimit, groupingType, selectedIndex, onSelectedIndexChange },
     ...restParams
 }: UseGridlistParameters<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM>): UseGridlistReturnType<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM, CM> {
+
+    monitorCallCount(useGridlist);
 
     const {
         propsInput: propsLabelList,
@@ -150,6 +153,8 @@ export function useGridlistRow<GridlistRowElement extends Element, GridlistCellE
     textContentParameters,
     typeaheadNavigationParameters
 }: UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>): UseGridlistRowReturnType<GridlistRowElement, GridlistCellElement, RM, CM> {
+    monitorCallCount(useGridlistRow);
+
     const { gridlistRowContext: { selectionLimit } } = cx1;
     const {
         context: cx2,
@@ -207,6 +212,7 @@ export function useGridlistRow<GridlistRowElement extends Element, GridlistCellE
 }
 
 export function useGridlistCell<GridlistCellElement extends Element, CM extends GridlistCellInfo<GridlistCellElement>>({ pressParameters, ...p }: UseGridlistCellParameters<GridlistCellElement, CM>): UseGridlistCellReturnType<GridlistCellElement, CM> {
+    monitorCallCount(useGridlistCell);
 
     const { props, ...info } = useCompleteGridNavigationCell<GridlistCellElement, CM>(p);
 

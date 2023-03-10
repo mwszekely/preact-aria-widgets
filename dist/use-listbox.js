@@ -1,7 +1,8 @@
-import { useCompleteListNavigation, useCompleteListNavigationChild, useEnsureStability, useMergedProps, usePress, useSingleSelectionDeclarative, useStableCallback, useStableObject } from "preact-prop-helpers";
+import { monitorCallCount, useCompleteListNavigation, useCompleteListNavigationChild, useEnsureStability, useMergedProps, usePress, useSingleSelectionDeclarative, useStableCallback, useStableObject } from "preact-prop-helpers";
 import { EventDetail, Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
 export function useListbox({ labelParameters, listboxParameters: { selectionLimit, groupingType, selectedIndex, onSelectedIndexChange }, ...restParams }) {
+    monitorCallCount(useListbox);
     useEnsureStability("useListbox", selectionLimit);
     const { propsInput: propsLabelList, propsLabel: propsLabelLabel, randomIdInputReturn: { id: _inputId }, randomIdLabelReturn: { id: _labelId } } = useLabelSynthetic({
         labelParameters: {
@@ -49,6 +50,7 @@ export function useListbox({ labelParameters, listboxParameters: { selectionLimi
     };
 }
 export function useListboxItem({ context: { listboxContext: { selectionLimit }, ...context }, listboxParameters: { selected }, pressParameters: { onPressSync: opsu }, ...restParams }) {
+    monitorCallCount(useListboxItem);
     const { pressParameters: { excludeSpace }, props, refElementReturn, ...restRet } = useCompleteListNavigationChild({
         context,
         ...restParams

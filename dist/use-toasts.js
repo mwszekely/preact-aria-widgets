@@ -1,10 +1,9 @@
 import { jsx as _jsx } from "preact/jsx-runtime";
-import { findFirstFocusable, useGlobalHandler, useManagedChild, useManagedChildren, useMergedProps, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
+import { findFirstFocusable, monitorCallCount, useGlobalHandler, useManagedChild, useManagedChildren, useMergedProps, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
 import { useCallback, useEffect, useRef } from "preact/hooks";
-import { debugLog } from "./props.js";
 import { useNotify } from "./use-notify.js";
 export function useToasts({ managedChildrenParameters: { onChildrenMountChange: ocmu, onAfterChildLayoutEffect }, toastsParameters: { visibleCount } }) {
-    debugLog("useToasts");
+    monitorCallCount(useToasts);
     // Normally, this does just look like [0, 1, 2, 3], etc
     // so it could be just an index to the current toast,
     // but if we dismiss toasts out of order, it's [0, 2, 3] or something.
@@ -89,7 +88,7 @@ export function useToasts({ managedChildrenParameters: { onChildrenMountChange: 
 }
 export function useToast({ toastParameters: { politeness, timeout, children }, managedChildParameters: { index, ..._managedChildParameters }, context }) {
     const { getMaxVisibleCount, onAnyToastDismissed, onAnyToastMounted } = context.toastContext;
-    debugLog("useToast", index);
+    monitorCallCount(useToast);
     const [numberOfToastsAheadOfUs, setNumberOfToastsAheadOfUs] = useState(Infinity);
     const getIndex = useStableGetter(index);
     const [dismissed2, setDismissed2, getDismissed2] = useState(false);

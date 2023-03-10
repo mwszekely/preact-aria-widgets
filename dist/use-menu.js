@@ -1,5 +1,4 @@
-import { useMergedProps, useStableCallback, useStableObject } from "preact-prop-helpers";
-import { debugLog } from "./props.js";
+import { monitorCallCount, useMergedProps, useStableCallback, useStableObject } from "preact-prop-helpers";
 import { useMenuSurface } from "./use-menu-surface.js";
 import { useMenubar, useMenubarChild } from "./use-menubar.js";
 /**
@@ -13,7 +12,7 @@ import { useMenubar, useMenubarChild } from "./use-menubar.js";
  * @returns
  */
 export function useMenu({ dismissParameters, escapeDismissParameters, menuParameters: { openDirection, onOpen }, menuSurfaceParameters, toolbarParameters, ...restParams }) {
-    debugLog("useMenu");
+    monitorCallCount(useMenu);
     const { context, propsLabel: propsButtonAsMenuLabel, propsMenubar, randomIdInputReturn, rovingTabIndexReturn, ...restRet } = useMenubar({
         toolbarParameters: { role: "menu", ...toolbarParameters },
         labelParameters: { ariaLabel: null },
@@ -89,6 +88,7 @@ export function useMenu({ dismissParameters, escapeDismissParameters, menuParame
     };
 }
 export function useMenuItem(p) {
+    monitorCallCount(useMenuItem);
     const ret = useMenubarChild(p);
     return {
         ...ret,

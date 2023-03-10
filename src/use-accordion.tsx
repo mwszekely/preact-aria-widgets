@@ -1,8 +1,8 @@
-import { identity } from "lodash-es"
+import { identity } from "lodash-es";
 import { h } from "preact";
-import { assertEmptyObject, ManagedChildInfo, OnChildrenMountChange, PassiveStateUpdater, PersistentStates, useChildrenFlag, useLinearNavigation, UseLinearNavigationParameters, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, useMergedProps, usePersistentState, UsePressReturnType, useRandomId, useRefElement, UseRefElementParameters, UseRefElementReturnType, UseRovingTabIndexChildParameters, useStableCallback, useStableObject, useState, UseTextContentReturnType, useTypeaheadNavigation, useTypeaheadNavigationChild, UseTypeaheadNavigationChildParameters, UseTypeaheadNavigationContext, UseTypeaheadNavigationParameters } from "preact-prop-helpers";
+import { assertEmptyObject, ManagedChildInfo, monitorCallCount, OnChildrenMountChange, PassiveStateUpdater, PersistentStates, useChildrenFlag, useLinearNavigation, UseLinearNavigationParameters, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, useMergedProps, usePersistentState, UsePressReturnType, useRandomId, useRefElement, UseRefElementParameters, UseRefElementReturnType, UseRovingTabIndexChildParameters, useStableCallback, useStableObject, useState, UseTextContentReturnType, useTypeaheadNavigation, useTypeaheadNavigationChild, UseTypeaheadNavigationChildParameters, UseTypeaheadNavigationContext, UseTypeaheadNavigationParameters } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
-import { debugLog, DisabledType, OmitStrong, Prefices } from "./props.js";
+import { DisabledType, OmitStrong, Prefices } from "./props.js";
 import { ButtonPressEvent, useButton, UseButtonParameters, UseButtonReturnType } from "./use-button.js";
 
 export interface UseAccordionParameters<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo> extends
@@ -87,8 +87,8 @@ export function useAccordion<HeaderButtonElement extends Element, M extends UseA
     managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange },
     ...rest
 }: UseAccordionParameters<HeaderButtonElement, M>): UseAccordionReturnType<HeaderButtonElement, M> {
+    monitorCallCount(useAccordion);
     assertEmptyObject(rest);
-    debugLog("useAccordion");
 
     const [localStorageIndex, setLocalStorageIndex] = usePersistentState<never, number | null>(localStorageKey ?? null, initialIndex ?? null);
     if (localStorageIndex != null)
@@ -204,10 +204,9 @@ export function useAccordionSection<_HeaderContainerElement extends Element, Hea
     },
     refElementParameters,
 }: UseAccordionSectionParameters<HeaderButtonElement, UseAccordionSectionInfo>): UseAccordionSectionReturnType<_HeaderContainerElement, HeaderButtonElement, BodyElement> {
+    monitorCallCount(useAccordionSection);
 
     const { disabled, onPress: userOnPress } = buttonParameters;
-
-    debugLog("useAccordionSection");
     const [openFromParent, setOpenFromParent, getOpenFromParent] = useState<boolean | null>(null);
     const [mostRecentlyTabbed, setMostRecentlyTabbed, getMostRecentlyTabbed] = useState<boolean | null>(null);
 
