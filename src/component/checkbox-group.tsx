@@ -9,6 +9,7 @@ type Get<T, K extends keyof T> = T[K];
 export interface CheckboxGroupPropsBase<ParentElement extends Element, TabbableChildElement extends Element, M extends CheckboxGroupInfo<TabbableChildElement>> extends
     RenderableProps<{}>,
     Get<UseCheckboxGroupParameters<ParentElement, TabbableChildElement, M>, "linearNavigationParameters">,
+    Get<UseCheckboxGroupParameters<ParentElement, TabbableChildElement, M>, "checkboxGroupParameters">,
     Get<UseCheckboxGroupParameters<ParentElement, TabbableChildElement, M>, "rearrangeableChildrenParameters">,
     Get<UseCheckboxGroupParameters<ParentElement, TabbableChildElement, M>, "sortableChildrenParameters">,
     Get<UseCheckboxGroupParameters<ParentElement, TabbableChildElement, M>, "typeaheadNavigationParameters">,
@@ -18,27 +19,27 @@ export interface CheckboxGroupPropsBase<ParentElement extends Element, TabbableC
 }
 
 export interface CheckboxGroupParentPropsBase<TCE extends Element> extends
-    Get<UseCheckboxGroupParentParameters<TCE, CheckboxGroupInfo<TCE>>, "managedChildParameters">,
+    Pick<CheckboxGroupInfo<TCE>, "index">,
     Get<UseCheckboxGroupParentParameters<TCE, CheckboxGroupInfo<TCE>>, "rovingTabIndexChildParameters">,
     Get<UseCheckboxGroupParentParameters<TCE, CheckboxGroupInfo<TCE>>, "sortableChildParameters">,
     Get<UseCheckboxGroupParentParameters<TCE, CheckboxGroupInfo<TCE>>, "textContentParameters">,
-    OmitStrong<Get<UseCheckboxGroupParentParameters<TCE, CheckboxGroupInfo<TCE>>, "completeListNavigationChildParameters">, "checkboxInfo"> {
+    OmitStrong<Get<UseCheckboxGroupParentParameters<TCE, CheckboxGroupInfo<TCE>>, "info">, "checkboxInfo"> {
     ref?: Ref<UseCheckboxGroupParentReturnType<TCE, CheckboxGroupInfo<TCE>>>;
 }
 
 export interface CheckboxGroupChildPropsBase<TCE extends Element> extends
     Get<UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>, "checkboxGroupChild">,
-    Get<UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>, "managedChildParameters">,
+    Pick<CheckboxGroupInfo<TCE>, "index">,
     Get<UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>, "rovingTabIndexChildParameters">,
     Get<UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>, "sortableChildParameters">,
     Get<UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>, "textContentParameters"> {
-    focusSelf: UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>["completeListNavigationChildParameters"]["focusSelf"];
+    focusSelf: UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>["info"]["focusSelf"];
     ref?: Ref<UseCheckboxGroupChildReturnType<TCE, CheckboxGroupInfo<TCE>>>;
 }
 
 
 
-export interface CheckboxGroupProps<ParentElement extends Element, TabbableChildElement extends Element, M extends CheckboxGroupInfo<TabbableChildElement>> extends PartialExcept<CheckboxGroupPropsBase<ParentElement, TabbableChildElement, M>, "navigationDirection"> {
+export interface CheckboxGroupProps<ParentElement extends Element, TabbableChildElement extends Element, M extends CheckboxGroupInfo<TabbableChildElement>> extends PartialExcept<CheckboxGroupPropsBase<ParentElement, TabbableChildElement, M>, never> {
     render(info: UseCheckboxGroupReturnType<ParentElement, TabbableChildElement, M>): VNode<any>;
 }
 export interface CheckboxGroupParentProps<TCE extends Element> extends PartialExcept<CheckboxGroupParentPropsBase<TCE>, "index" | "getSortValue" | "focusSelf"> {
@@ -54,9 +55,7 @@ const UseCheckboxGroupChildContext = createContext<CheckboxGroupContext<any, any
 export const CheckboxGroup = memoForwardRef(function CheckboxGroup<ParentElement extends Element, TabbableChildElement extends Element>({
     render,
     collator,
-    disableArrowKeys,
     disableHomeEndKeys,
-    navigationDirection,
     noTypeahead,
     typeaheadTimeout,
     onTabbableIndexChange,
@@ -67,17 +66,17 @@ export const CheckboxGroup = memoForwardRef(function CheckboxGroup<ParentElement
     navigatePastEnd,
     navigatePastStart,
     pageNavigationSize,
+    orientation,
     ..._rest
 }: CheckboxGroupProps<ParentElement, TabbableChildElement, CheckboxGroupInfo<TabbableChildElement>>, ref?: Ref<any>) {
     const info = useCheckboxGroup<ParentElement, TabbableChildElement>({
         linearNavigationParameters: {
-            disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys),
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap",
-            navigationDirection,
             pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
         },
+        checkboxGroupParameters: { orientation: orientation ?? "vertical" },
         staggeredChildrenParameters: { staggered: staggered || false },
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
         rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable: untabbable ?? false },
@@ -104,9 +103,8 @@ export const CheckboxGroupParent = memoForwardRef(function CheckboxGroupParent<T
 
     const info = useCheckboxGroupParent<TCE>({
 
-        completeListNavigationChildParameters: { focusSelf, checkboxInfo: { checkboxChildType: "parent" } },
+        info: { index, focusSelf, checkboxInfo: { checkboxChildType: "parent" } },
         context,
-        managedChildParameters: { index },
         rovingTabIndexChildParameters: { hidden: hidden ?? false },
         sortableChildParameters: { getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) }
@@ -129,12 +127,11 @@ export const CheckboxGroupChild = memoForwardRef(function CheckboxGroupChild<TCE
 }: CheckboxGroupChildProps<TCE>, ref?: Ref<any>) {
     const context = (useContext(UseCheckboxGroupChildContext) as CheckboxGroupContext<any, TCE, CheckboxGroupInfo<TCE>>);
     console.assert(context != null, `This CheckboxGroupChild is not contained within a CheckboxGroup`);
-    const info = useCheckboxGroupChild({
+    const info = useCheckboxGroupChild<TCE>({
         checkboxGroupChild: { checked, onChangeFromParent },
-        completeListNavigationChildParameters: { focusSelf },
+        info: { index, focusSelf },
         textContentParameters: { getText: useDefault("getText", getText) },
         context,
-        managedChildParameters: { index },
         rovingTabIndexChildParameters: { hidden: hidden ?? false },
         sortableChildParameters: { getSortValue },
     });

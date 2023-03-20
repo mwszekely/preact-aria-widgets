@@ -90,13 +90,13 @@ export function useSlider({ sliderParameters: { max, min }, managedChildrenParam
 
 
 export function useSliderThumb<ThumbElement extends Element, M extends SliderThumbInfo>({
-    managedChildParameters,
+    info,
     context: { sliderContext: { max: maxParent, min: minParent }, ...context },
     sliderThumbParameters
 }: UseSliderThumbParameters<ThumbElement, M>): UseSliderThumbReturnType<ThumbElement, SliderThumbInfo> {
-    const { index } = managedChildParameters;
+    const { index } = info;
     monitorCallCount(useSliderThumb);
-    const { managedChildReturn } = useManagedChild<SliderThumbInfo>({ managedChildParameters, context }, { index });
+    const { managedChildReturn } = useManagedChild<SliderThumbInfo>({ info, context });
     const { getChildren: _getThumbs } = managedChildReturn;
 
     const { tag, value, max: maxOverride, min: minOverride, onValueChange, valueText, label } = sliderThumbParameters;

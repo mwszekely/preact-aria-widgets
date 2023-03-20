@@ -4,16 +4,15 @@ import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
 import { useMenubar, useMenubarChild } from "../use-menubar.js";
 import { memoForwardRef, useDefault } from "./util.js";
 export const MenubarItemContext = createContext(null);
-export const Menubar = memoForwardRef(function MenubarU({ render, collator, disableArrowKeys, disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, staggered, noTypeahead, onTabbableIndexChange, compare, getIndex, untabbable, selectedIndex, onSelectedIndexChange, typeaheadTimeout, role, ariaLabel }, ref) {
+export const Menubar = memoForwardRef(function MenubarU({ render, collator, disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, staggered, noTypeahead, onTabbableIndexChange, compare, getIndex, untabbable, selectedIndex, onSelectedIndexChange, typeaheadTimeout, role, ariaLabel }, ref) {
     const info = useMenubar({
         linearNavigationParameters: {
-            disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys),
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap",
             pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
         },
-        toolbarParameters: { orientation, onSelectedIndexChange: onSelectedIndexChange ?? null, role: role ?? "menubar" },
+        toolbarParameters: { orientation, selectedIndex: selectedIndex ?? null, onSelectedIndexChange: onSelectedIndexChange ?? null, role: role ?? "menubar" },
         rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable: untabbable ?? false },
         typeaheadNavigationParameters: {
             collator: useDefault("collator", collator),
@@ -22,21 +21,19 @@ export const Menubar = memoForwardRef(function MenubarU({ render, collator, disa
         },
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
         staggeredChildrenParameters: { staggered: staggered || false },
-        singleSelectionDeclarativeParameters: { selectedIndex: selectedIndex ?? null },
         sortableChildrenParameters: { compare: compare ?? null },
         labelParameters: { ariaLabel }
     });
     useImperativeHandle(ref, () => info);
     return (_jsx(MenubarItemContext.Provider, { value: info.context, children: render(info) }));
 });
-export const MenubarItem = memoForwardRef(function MenuItemU({ index, render, ariaPropName, focusSelf, selectionMode, hidden, getText, disabled, onPress, getSortValue, role, subInfo }, ref) {
+export const MenubarItem = memoForwardRef(function MenuItemU({ index, render, ariaPropName, focusSelf, selectionMode, hidden, getText, disabled, onPress, getSortValue, role, info: uinfo }, ref) {
     const context = (useContext(MenubarItemContext));
     console.assert(context != null, `This MenuItem is not contained within a Menubar/Menu`);
     const defaultFocusSelf = useCallback((e) => e?.focus?.(), []);
     const info = useMenubarChild({
-        completeListNavigationChildParameters: { focusSelf: focusSelf ?? defaultFocusSelf, ...subInfo },
+        info: { index, focusSelf: focusSelf ?? defaultFocusSelf, ...uinfo },
         context,
-        managedChildParameters: { index },
         rovingTabIndexChildParameters: { hidden: hidden ?? false },
         sortableChildParameters: { getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },

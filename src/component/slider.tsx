@@ -10,7 +10,7 @@ export interface SliderProps extends Get<UseSliderParameters<SliderThumbInfo>, "
     ref?: Ref<UseSliderReturnType<SliderThumbInfo>>;
 }
 
-export interface SliderThumbProps<ThumbElement extends Element> extends Get<UseSliderThumbParameters<ThumbElement, SliderThumbInfo>, "managedChildParameters">, Get<UseSliderThumbParameters<ThumbElement, SliderThumbInfo>, "sliderThumbParameters"> {
+export interface SliderThumbProps<ThumbElement extends Element> extends Pick<SliderThumbInfo, "index">, Get<UseSliderThumbParameters<ThumbElement, SliderThumbInfo>, "sliderThumbParameters"> {
     render(info: UseSliderThumbReturnType<ThumbElement, SliderThumbInfo>): VNode;
 }
 
@@ -33,9 +33,9 @@ export const SliderThumb = memoForwardRef(function SliderThumbU<ThumbElement ext
     const context = (useContext(SliderThumbContext) as SliderContext<SliderThumbInfo>);
     console.assert(context != null, `This SliderThumb is not contained within a Slider`);
 
-    const info = useSliderThumb({
+    const info = useSliderThumb<ThumbElement, SliderThumbInfo>({
         context,
-        managedChildParameters: { index },
+        info: { index },
         sliderThumbParameters: { label, tag, value, max, min, onValueChange, valueText },
     });
 

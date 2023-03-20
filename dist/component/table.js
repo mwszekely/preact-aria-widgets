@@ -15,12 +15,11 @@ export const Table = memoForwardRef(function TableU({ ariaLabel, selectionLimit,
     useImperativeHandle(ref, () => info);
     return _jsx(TableContext.Provider, { value: info.context, children: render(info) });
 });
-export const TableSection = memoForwardRef(function TableSection({ disableArrowKeys, disableHomeEndKeys, getIndex, initiallySelectedIndex, untabbable, navigatePastEnd, navigatePastStart, onSelectedIndexChange, onTabbableColumnChange, onTabbableIndexChange, pageNavigationSize, paginationMax, paginationMin, staggered, render, location, tagTableSection }) {
+export const TableSection = memoForwardRef(function TableSection({ disableHomeEndKeys, getIndex, initiallySelectedIndex, untabbable, navigatePastEnd, navigatePastStart, onSelectedIndexChange, onTabbableColumnChange, onTabbableIndexChange, pageNavigationSize, paginationMax, paginationMin, staggered, render, location, tagTableSection }) {
     const info = useTableSection({
         gridNavigationParameters: { onTabbableColumnChange: onTabbableColumnChange ?? null },
         staggeredChildrenParameters: { staggered: staggered || false },
         linearNavigationParameters: {
-            disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys),
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap",
@@ -38,13 +37,12 @@ export const TableSection = memoForwardRef(function TableSection({ disableArrowK
     });
     return (_jsx(TableSectionContext.Provider, { value: info.context, children: render(info) }));
 });
-export const TableRow = memoForwardRef(function TableRowU({ index, getText, tagTableRow, disableArrowKeys, disableHomeEndKeys, onTabbableIndexChange, ariaPropName, disabled, navigatePastEnd, navigatePastStart, selected, selectionMode, hidden, render }, ref) {
+export const TableRow = memoForwardRef(function TableRowU({ index, getText, tagTableRow, disableHomeEndKeys, onTabbableIndexChange, ariaPropName, disabled, navigatePastEnd, navigatePastStart, selected, selectionMode, hidden, render }, ref) {
     const cx1 = useContext(TableSectionContext);
     console.assert(cx1 != null, `This TableRow is not contained within a TableSection`);
     const info = useTableRow({
-        completeGridNavigationRowParameters: {},
+        info: { index },
         context: cx1,
-        managedChildParameters: { index },
         rovingTabIndexChildParameters: { hidden: hidden ?? false },
         singleSelectionChildParameters: {
             ariaPropName,
@@ -59,7 +57,6 @@ export const TableRow = memoForwardRef(function TableRowU({ index, getText, tagT
             tagTableRow
         },
         linearNavigationParameters: {
-            disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys),
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap"
@@ -74,10 +71,9 @@ export const TableCell = memoForwardRef(function TableCell({ index, getText, foc
     console.assert(context != null, `This TableCell is not contained within a TableRow`);
     const defaultFocusSelf = useStableCallback((e) => { e.focus?.(); }, []);
     const info = useTableCell({
-        completeGridNavigationCellParameters: { getSortValue, focusSelf: focusSelf ?? defaultFocusSelf },
+        info: { index, getSortValue, focusSelf: focusSelf ?? defaultFocusSelf },
         context,
         gridNavigationCellParameters: { colSpan: colSpan ?? 1 },
-        managedChildParameters: { index },
         rovingTabIndexChildParameters: { hidden: hidden ?? false },
         tableCellParameters: { tagTableCell },
         textContentParameters: { getText: useDefault("getText", getText) }

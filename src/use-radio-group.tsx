@@ -19,20 +19,21 @@ export interface UseRadioGroupParameters<V extends string | number, GroupElement
 
 
 
-export interface UseRadioParameters<LP extends LabelPosition, V extends string | number, InputElement extends Element, LabelElement extends Element, M extends RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>> extends OmitStrong<UseCompleteListNavigationChildParameters<FocusableLabelElement<LP, InputElement, LabelElement>, M, "getValue2">, "singleSelectionChildParameters"> {
+export interface UseRadioParameters<LP extends LabelPosition, V extends string | number, InputElement extends Element, LabelElement extends Element, M extends RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>> extends OmitStrong<UseCompleteListNavigationChildParameters<FocusableLabelElement<LP, InputElement, LabelElement>, M>, "singleSelectionChildParameters"> {
     radioParameters: {
         value: V;
     }
     context: RadioContext<V, any, FocusableLabelElement<LP, InputElement, LabelElement>, M>;
     checkboxLikeParameters: OmitStrong<UseCheckboxLikeParameters<LP, InputElement, LabelElement>["checkboxLikeParameters"], "checked" | "onInput" | "role">;
     labelParameters: OmitStrong<UseCheckboxLikeParameters<LP, InputElement, LabelElement>["labelParameters"], never>;
-    singleSelectionChildParameters: OmitStrong<UseCompleteListNavigationChildParameters<FocusableLabelElement<LP, InputElement, LabelElement>, M, never>["singleSelectionChildParameters"], "ariaPropName" | "selectionMode">
+    singleSelectionChildParameters: OmitStrong<UseCompleteListNavigationChildParameters<FocusableLabelElement<LP, InputElement, LabelElement>, M>["singleSelectionChildParameters"], "ariaPropName" | "selectionMode">
 }
 
 export interface RadioContext<V extends number | string, ParentElement extends Element, ChildElement extends Element, M extends RadioSubInfo<ChildElement, V>> extends CompleteListNavigationContext<ParentElement, ChildElement, M> {
     radioContext: {
         name: string;
-        byName: Map<V, number>;
+        nameToIndex: Map<V, number>;
+        indexToName: Map<number, V>;
     }
 }
 
@@ -48,7 +49,7 @@ export interface UseRadioGroupReturnType<V extends string | number, GroupElement
 }
 
 export interface RadioSubInfo<TabbableChildElement extends Element, V extends string | number> extends UseCompleteListNavigationChildInfo<TabbableChildElement> {
-    getValue2(): V;
+    //getValue2(): V;
 }
 
 export function useRadioGroup<V extends string | number, G extends Element, GL extends Element, TCE extends Element>({
@@ -59,7 +60,8 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
     monitorCallCount(useRadioGroup);
 
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-    const byName = useRef(new Map<V, number>());
+    const nameToIndex = useRef(new Map<V, number>());
+    const indexToName = useRef(new Map<number, V>());
 
     const { propsInput: propsGroup1, propsLabel } = useLabelSynthetic<G, GL>({
         labelParameters: {
@@ -72,9 +74,9 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
         randomIdInputParameters: { prefix: Prefices.radioGroup }
     });
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (selectedValue != null)
-            singleSelectionReturn.changeSelectedIndex(byName.current.get(selectedValue) ?? null);
+            singleSelectionReturn.changeSelectedIndex(nameToIndex.current.get(selectedValue) ?? null);
         else
             singleSelectionReturn.changeSelectedIndex(null);
     }, [selectedValue])
@@ -87,24 +89,33 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
         rovingTabIndexReturn,
         ...restRet
     } = useCompleteListNavigation<G, TCE, RadioSubInfo<TCE, V>>({
-        singleSelectionParameters: { initiallySelectedIndex: selectedIndex, onSelectedIndexChange: setSelectedIndex },
+        singleSelectionParameters: { initiallySelectedIndex: selectedIndex, onSelectedIndexChange: useStableCallback((i, e) => { setSelectedIndex(i); onSelectedIndexChange?.(i, e); }) },
         paginatedChildrenParameters: { paginationMin: null, paginationMax: null },
         ...restParams
     });
 
-    const _v: void = useSingleSelectionDeclarative({
+    const { singleSelectionParameters: { onSelectedIndexChange } } = useSingleSelectionDeclarative({
         singleSelectionReturn: {
             changeSelectedIndex: useStableCallback((s, r) => {
-                let next = typeof s == "function" ? s(selectedIndex) : s;
+                singleSelectionReturn.changeSelectedIndex(s, r);
+
+                /*let next = typeof s == "function" ? s(selectedIndex) : s;
                 if (next != null) {
-                    const nextValue = managedChildrenReturn.getChildren().getAt(next)?.getValue2();
+                    const nextValue = indexToName.current.get(next); //managedChildrenReturn.getChildren().getAt(next)?.getValue2();
                     onSelectedValueChange(nextValue as V, r);
                 }
                 else {
                     onSelectedValueChange(null, r);
-                }
+                }*/
             })
-        }, singleSelectionDeclarativeParameters: { selectedIndex }
+        },
+        singleSelectionDeclarativeParameters: {
+            selectedIndex, 
+            setSelectedIndex: useStableCallback((i, e) => {
+                let value = i == null? null : indexToName.current.get(i);
+                onSelectedValueChange?.(value ?? null, e);
+            })
+        }
     })
 
 
@@ -116,7 +127,7 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
         rovingTabIndexReturn,
         context: useMemo(() => ({
             ...context,
-            radioContext: { name, byName: byName.current }
+            radioContext: { name, indexToName: indexToName.current, nameToIndex: nameToIndex.current }
         }), [name]),
         managedChildrenReturn,
         radioGroupReturn: { selectedIndex },
@@ -135,9 +146,8 @@ export interface UseRadioReturnType<LP extends LabelPosition, V extends string |
 export function useRadio<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element, V extends string | number>({
     radioParameters: { value },
     checkboxLikeParameters: { disabled },
-    completeListNavigationChildParameters,
     labelParameters,
-    managedChildParameters,
+    info,
     singleSelectionChildParameters,
     context,
     textContentParameters,
@@ -147,12 +157,12 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
 }: UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>): UseRadioReturnType<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>> {
     monitorCallCount(useRadio);
     type TabbableChildElement = FocusableLabelElement<LP, InputElement, LabelElement>;
-    const index = managedChildParameters.index;
+    const index = info.index;
     const onInput = useStableCallback((e: h.JSX.TargetedEvent<InputElement>) => {
         singleSelectionChildReturn.setThisOneSelected(e);
     });
 
-    const { name, byName } = context.radioContext
+    const { name, indexToName, nameToIndex } = context.radioContext
 
     const { tagInput, labelPosition } = labelParameters;
 
@@ -162,9 +172,8 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
         singleSelectionChildReturn,
         pressParameters,
         ...listNavRet
-    } = useCompleteListNavigationChild<TabbableChildElement, RadioSubInfo<TabbableChildElement, V>, never>({
-        completeListNavigationChildParameters: { getValue2: getValue, ...completeListNavigationChildParameters },
-        managedChildParameters,
+    } = useCompleteListNavigationChild<TabbableChildElement, RadioSubInfo<TabbableChildElement, V>>({
+        info,
         context,
         rovingTabIndexChildParameters,
         sortableChildParameters,
@@ -197,8 +206,12 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
         refElementLabelReturn
     });
     useLayoutEffect(() => {
-        byName.set(value, index);
-        return () => { byName.delete(value); }
+        nameToIndex.set(value, index);
+        indexToName.set(index, value);
+        return () => {
+            nameToIndex.delete(value);
+            indexToName.delete(index);
+        }
     }, [value, index]);
 
     if (tagInput == "input") {

@@ -4,12 +4,11 @@ import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
 import { useMenu, useMenuItem } from "../use-menu.js";
 import { memoForwardRef, ParentDepthContext, useDefault } from "./util.js";
 const MenuItemContext = createContext(null);
-export const Menu = memoForwardRef(function Menu({ collator, disableArrowKeys, disableHomeEndKeys, noTypeahead, typeaheadTimeout, orientation, onClose, open, openDirection, onTabbableIndexChange, closeOnBackdrop, closeOnEscape, closeOnLostFocus, compare, getIndex, selectedIndex, navigatePastEnd, navigatePastStart, onSelectedIndexChange, pageNavigationSize, parentDepth, untabbable, staggered, onOpen, getWindow, render }, ref) {
+export const Menu = memoForwardRef(function Menu({ collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, orientation, onClose, open, openDirection, onTabbableIndexChange, closeOnBackdrop, closeOnEscape, closeOnLostFocus, compare, getIndex, selectedIndex, navigatePastEnd, navigatePastStart, onSelectedIndexChange, pageNavigationSize, parentDepth, untabbable, staggered, onOpen, getWindow, render }, ref) {
     const defaultParentDepth = useContext(ParentDepthContext);
     let myDepth = (parentDepth ?? defaultParentDepth) + 1;
     const info = useMenu({
         linearNavigationParameters: {
-            disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys),
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
             pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize),
             navigatePastEnd: navigatePastEnd ?? "wrap",
@@ -42,20 +41,18 @@ export const Menu = memoForwardRef(function Menu({ collator, disableArrowKeys, d
             noTypeahead: useDefault("noTypeahead", noTypeahead),
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
         },
-        singleSelectionDeclarativeParameters: { selectedIndex: selectedIndex ?? null },
-        toolbarParameters: { orientation, onSelectedIndexChange: onSelectedIndexChange ?? null }
+        toolbarParameters: { orientation, selectedIndex: selectedIndex ?? null, onSelectedIndexChange: onSelectedIndexChange ?? null }
     });
     useImperativeHandle(ref, () => info);
     return (_jsx(ParentDepthContext.Provider, { value: myDepth, children: _jsx(MenuItemContext.Provider, { value: info.context, children: render(info) }) }));
 });
-export const MenuItem = memoForwardRef(function MenuItem({ index, hidden, getSortValue, onPress, getText, role, focusSelf, ariaPropName, selectionMode, disabled, render, subInfo }, ref) {
+export const MenuItem = memoForwardRef(function MenuItem({ index, hidden, getSortValue, onPress, getText, role, focusSelf, ariaPropName, selectionMode, disabled, render, info: uinfo }, ref) {
     const context = useContext(MenuItemContext);
     console.assert(context != null, `This MenuItem is not contained within a Menubar/Menu`);
     const defaultFocusSelf = useCallback((e) => e?.focus?.(), []);
     const info = useMenuItem({
-        completeListNavigationChildParameters: { focusSelf: focusSelf ?? defaultFocusSelf, ...subInfo },
+        info: { index, focusSelf: focusSelf ?? defaultFocusSelf, ...uinfo },
         context,
-        managedChildParameters: { index },
         rovingTabIndexChildParameters: { hidden: hidden ?? false },
         sortableChildParameters: { getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },

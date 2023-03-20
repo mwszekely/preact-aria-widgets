@@ -16,10 +16,9 @@ export function defaultRenderGridlistChild({ tagGridlistChild, makePropsGridlist
         return createElement(tagGridlistChild, (makePropsGridlistChild(info)));
     };
 }
-export const Gridlist = memoForwardRef(function GridlistU({ collator, disableArrowKeys, disableHomeEndKeys, noTypeahead, onTabbableIndexChange, groupingType, typeaheadTimeout, selectedIndex, navigatePastEnd, navigatePastStart, onSelectedIndexChange, pageNavigationSize, selectionLimit, untabbable, paginationMax, paginationMin, staggered, compare, getIndex, onTabbableColumnChange, ariaLabel, render }, ref) {
+export const Gridlist = memoForwardRef(function GridlistU({ collator, disableHomeEndKeys, noTypeahead, onTabbableIndexChange, groupingType, typeaheadTimeout, selectedIndex, navigatePastEnd, navigatePastStart, onSelectedIndexChange, pageNavigationSize, selectionLimit, untabbable, paginationMax, paginationMin, staggered, compare, getIndex, onTabbableColumnChange, ariaLabel, orientation, render }, ref) {
     const info = useGridlist({
         linearNavigationParameters: {
-            disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys),
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
             navigatePastEnd: (navigatePastEnd ?? "wrap"),
             navigatePastStart: (navigatePastStart ?? "wrap"),
@@ -39,7 +38,8 @@ export const Gridlist = memoForwardRef(function GridlistU({ collator, disableArr
             selectionLimit,
             groupingType,
             selectedIndex,
-            onSelectedIndexChange: onSelectedIndexChange ?? null
+            onSelectedIndexChange: onSelectedIndexChange ?? null,
+            orientation: orientation ?? "vertical"
         },
         gridNavigationParameters: {
             onTabbableColumnChange: onTabbableColumnChange ?? null
@@ -61,20 +61,18 @@ export const Gridlist = memoForwardRef(function GridlistU({ collator, disableArr
     useImperativeHandle(ref, () => info);
     return (_jsx(GridlistContext.Provider, { value: info.context, children: render(info) }));
 });
-export const GridlistRow = memoForwardRef(function GridlistRowU({ index, collator, disableArrowKeys, ariaPropName, disabled, hidden, navigatePastEnd, navigatePastStart, noTypeahead, onTabbableIndexChange, selected, selectionMode, typeaheadTimeout, getSortValue, getText, render, subInfo }, ref) {
+export const GridlistRow = memoForwardRef(function GridlistRowU({ index, collator, ariaPropName, disabled, hidden, navigatePastEnd, navigatePastStart, noTypeahead, onTabbableIndexChange, selected, selectionMode, typeaheadTimeout, getSortValue, getText, render, info: uinfo }, ref) {
     const context = useContext(GridlistContext);
     console.assert(context != null, `This GridlistRow is not contained within a Gridlist`);
     const info = useGridlistRow({
-        completeGridNavigationRowParameters: { ...subInfo },
+        info: { index, ...uinfo },
         context,
-        managedChildParameters: { index },
         gridlistRowParameters: { selected: selected ?? null },
         rovingTabIndexChildParameters: { hidden: hidden ?? false },
         sortableChildParameters: { getSortValue },
         singleSelectionChildParameters: { disabled: disabled ?? false, ariaPropName, selectionMode: useDefault("selectionMode", selectionMode) },
         textContentParameters: { getText: useDefault("getText", getText) },
         linearNavigationParameters: {
-            disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys),
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap"
         },
@@ -90,16 +88,15 @@ export const GridlistRow = memoForwardRef(function GridlistRowU({ index, collato
     useImperativeHandle(ref, () => info);
     return _jsx(GridlistRowContext.Provider, { value: info.context, children: render(info) });
 });
-export const GridlistChild = memoForwardRef(function GridlistChild({ index, colSpan, focusSelf, hidden, getText, onPressSync, render, subInfo }, ref) {
+export const GridlistChild = memoForwardRef(function GridlistChild({ index, colSpan, focusSelf, hidden, getText, onPressSync, render, info: subInfo }, ref) {
     const context = useContext(GridlistRowContext);
     console.assert(context != null, `This GridlistChild is not contained within a GridlistRow that is contained within a Gridlist`);
     const defaultFocusSelf = useStableCallback((e) => { e.focus?.(); }, []);
     const info = useGridlistCell({
-        completeGridNavigationCellParameters: { focusSelf: (focusSelf ?? defaultFocusSelf), ...subInfo },
+        info: { index, focusSelf: (focusSelf ?? defaultFocusSelf), ...subInfo },
         context,
         gridNavigationCellParameters: { colSpan: colSpan ?? 1 },
         textContentParameters: { getText: useDefault("getText", getText) },
-        managedChildParameters: { index },
         pressParameters: { onPressSync },
         rovingTabIndexChildParameters: { hidden: hidden ?? false }
     });

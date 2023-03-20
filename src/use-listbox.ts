@@ -5,6 +5,7 @@ import {
     UseCompleteListNavigationChildInfo,
     UseCompleteListNavigationChildParameters,
     UseCompleteListNavigationChildReturnType,
+    useCompleteListNavigationDeclarative,
     UseCompleteListNavigationParameters,
     UseCompleteListNavigationReturnType, useEnsureStability, useMergedProps, usePress, UsePressParameters, UsePressReturnType, useSingleSelectionDeclarative, UseSingleSelectionParameters, useStableCallback, useStableObject
 } from "preact-prop-helpers";
@@ -17,9 +18,13 @@ export interface UseListboxContext<ListElement extends Element, ListItemElement 
     listboxContext: { selectionLimit: "single" | "multi" | "none" }
 }
 
-export interface UseListboxParameters<ListElement extends Element, ListItemElement extends Element, _LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationParameters<ListElement, ListItemElement, M>, "singleSelectionParameters"> {
+export interface UseListboxParameters<ListElement extends Element, ListItemElement extends Element, _LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationParameters<ListElement, ListItemElement, M>, "linearNavigationParameters" | "singleSelectionParameters"> {
+    linearNavigationParameters: OmitStrong<UseCompleteListNavigationParameters<ListElement, ListItemElement, M>["linearNavigationParameters"], "arrowKeyDirection">;
     labelParameters: OmitStrong<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
     listboxParameters: {
+
+        orientation: "horizontal" | "vertical";
+
         /**
          * When `"single"`, the selected item is controlled
          * via `selectedIndex`. When `"multi"`, the selected
@@ -31,7 +36,7 @@ export interface UseListboxParameters<ListElement extends Element, ListItemEleme
          * Only used when `groupingType` is `"without-groups"` or `"group"`
          */
         selectedIndex: number | null;
-        onSelectedIndexChange: UseSingleSelectionParameters<ListItemElement>["singleSelectionParameters"]["onSelectedIndexChange"] //PassiveStateUpdater<number | null, Event> | null;
+        onSelectedIndexChange: UseSingleSelectionParameters<ListItemElement, M>["singleSelectionParameters"]["onSelectedIndexChange"] //PassiveStateUpdater<number | null, Event> | null;
 
         /**
          * * `"without-groups"`: This is a listbox with no groups
@@ -43,13 +48,13 @@ export interface UseListboxParameters<ListElement extends Element, ListItemEleme
         groupingType: "with-groups" | "without-groups" | "group";
     }
 }
-export interface UseListboxReturnType<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationReturnType<ListElement, ListItemElement, M>, "propsStable"> {
+export interface UseListboxReturnType<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationReturnType<ListElement, ListItemElement, M>, "singleSelectionReturn" | "propsStable"> {
     propsListbox: h.JSX.HTMLAttributes<ListElement>;
     propsListboxLabel: h.JSX.HTMLAttributes<LabelElement>;
     context: UseListboxContext<ListElement, ListItemElement, M>;
 }
 export interface UseListboxItemReturnType<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationChildReturnType<ListItemElement, M>, "pressParameters">, UsePressReturnType<ListItemElement> { }
-export interface UseListboxItemParameters<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends UseCompleteListNavigationChildParameters<ListItemElement, M, never> {
+export interface UseListboxItemParameters<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends UseCompleteListNavigationChildParameters<ListItemElement, M> {
     pressParameters: Pick<UsePressParameters<ListItemElement>["pressParameters"], "onPressSync">;
     listboxParameters: {
         /**
@@ -66,12 +71,13 @@ export interface ListboxInfo<ListItemElement extends Element> extends UseComplet
 
 export function useListbox<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement>>({
     labelParameters,
-    listboxParameters: { selectionLimit, groupingType, selectedIndex, onSelectedIndexChange },
+    listboxParameters: { selectionLimit, groupingType, selectedIndex, onSelectedIndexChange, orientation },
+    linearNavigationParameters,
     ...restParams
 }: UseListboxParameters<ListElement, ListItemElement, LabelElement, M>): UseListboxReturnType<ListElement, ListItemElement, LabelElement, M> {
     monitorCallCount(useListbox);
     useEnsureStability("useListbox", selectionLimit);
-    
+
     const {
         propsInput: propsLabelList,
         propsLabel: propsLabelLabel,
@@ -93,15 +99,11 @@ export function useListbox<ListElement extends Element, ListItemElement extends 
         rovingTabIndexReturn,
         singleSelectionReturn,
         ...restRet
-    } = useCompleteListNavigation<ListElement, ListItemElement, M>({
-        singleSelectionParameters: { initiallySelectedIndex: selectedIndex, onSelectedIndexChange },
+    } = useCompleteListNavigationDeclarative<ListElement, ListItemElement, M>({
+        singleSelectionDeclarativeParameters: { selectedIndex, setSelectedIndex: onSelectedIndexChange },
+        linearNavigationParameters: { arrowKeyDirection: orientation,  ...linearNavigationParameters },
         ...restParams
     });
-
-    const _v: void = useSingleSelectionDeclarative({
-        singleSelectionDeclarativeParameters: { selectedIndex },
-        singleSelectionReturn: { changeSelectedIndex: singleSelectionReturn.changeSelectedIndex }
-    })
 
     if (groupingType == "group")
         props.role = "group";
@@ -127,7 +129,6 @@ export function useListbox<ListElement extends Element, ListItemElement extends 
             })
         }),
         rovingTabIndexReturn,
-        singleSelectionReturn,
         propsListbox: useMergedProps(props, propsLabelList, { "aria-multiselectable": (selectionLimit == "multi" ? "true" : undefined) }),
         propsListboxLabel: propsLabelLabel
     }
@@ -140,13 +141,13 @@ export function useListboxItem<ListItemElement extends Element, M extends Listbo
     ...restParams
 }: UseListboxItemParameters<ListItemElement, M>): UseListboxItemReturnType<ListItemElement, M> {
     monitorCallCount(useListboxItem);
-    
+
     const {
         pressParameters: { excludeSpace },
         props,
         refElementReturn,
         ...restRet
-    } = useCompleteListNavigationChild<ListItemElement, M, never>({
+    } = useCompleteListNavigationChild<ListItemElement, M>({
         context,
         ...restParams
     });

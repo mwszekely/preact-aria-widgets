@@ -7,7 +7,6 @@ import { memoForwardRef, PartialExcept, useDefault } from "./util.js";
 
 export interface ToolbarPropsBase<ToolbarContainerElement extends Element, ToolbarChildElement extends Element, LabelElement extends Element, M extends UseToolbarSubInfo<ToolbarChildElement>> extends
     Get<UseToolbarParameters<ToolbarContainerElement, ToolbarChildElement, M>, "linearNavigationParameters">,
-    Get<UseToolbarParameters<ToolbarContainerElement, ToolbarChildElement, M>, "singleSelectionDeclarativeParameters">,
     Get<UseToolbarParameters<ToolbarContainerElement, ToolbarChildElement, M>, "rovingTabIndexParameters">,
     Get<UseToolbarParameters<ToolbarContainerElement, ToolbarChildElement, M>, "typeaheadNavigationParameters">,
     Get<UseToolbarParameters<ToolbarContainerElement, ToolbarChildElement, M>, "sortableChildrenParameters">,
@@ -27,9 +26,9 @@ export interface ToolbarChildPropsBase<ToolbarChildElement extends Element, M ex
     Get<UseToolbarChildParameters<ToolbarChildElement, M>, "rovingTabIndexChildParameters">,
     Get<UseToolbarChildParameters<ToolbarChildElement, M>, "sortableChildParameters">,
     Get<UseToolbarChildParameters<ToolbarChildElement, M>, "textContentParameters">,
-    Pick<Get<UseToolbarChildParameters<any, any>, "managedChildParameters">, "index"> {
-    focusSelf?: UseToolbarChildParameters<ToolbarChildElement, M>["completeListNavigationChildParameters"]["focusSelf"];
-    subInfo?: OmitStrong<Get<UseToolbarChildParameters<ToolbarChildElement, M>, "completeListNavigationChildParameters">, "focusSelf">
+    Pick<Get<UseToolbarChildParameters<any, any>, "info">, "index"> {
+    focusSelf?: M["focusSelf"];
+    info?: OmitStrong<Get<UseToolbarChildParameters<ToolbarChildElement, M>, "info">, never>
     ref?: Ref<UseToolbarChildReturnType<ToolbarChildElement, M>>;
 }
 
@@ -47,7 +46,6 @@ export const Toolbar = memoForwardRef(function ToolbarU<ContainerElement extends
     render,
     role,
     collator,
-    disableArrowKeys,
     disableHomeEndKeys,
     untabbable,
     compare,
@@ -66,10 +64,9 @@ export const Toolbar = memoForwardRef(function ToolbarU<ContainerElement extends
 }: ToolbarProps<ContainerElement, ChildElement, LabelElement, M>, ref?: Ref<any>) {
     const listboxReturnType = useToolbar<ContainerElement, ChildElement, LabelElement, M>({
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
-        singleSelectionDeclarativeParameters: { selectedIndex: selectedIndex ?? null },
         sortableChildrenParameters: { compare: compare ?? null },
         linearNavigationParameters: {
-            disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys),
+            //: useDefault("disableArrowKeys", disableArrowKeys),
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap",
@@ -78,6 +75,7 @@ export const Toolbar = memoForwardRef(function ToolbarU<ContainerElement extends
         toolbarParameters: {
             orientation,
             role: role ?? "toolbar",
+            selectedIndex: selectedIndex ?? null,
             onSelectedIndexChange: onSelectedIndexChange ?? null
         },
         staggeredChildrenParameters: { staggered: staggered || false },
@@ -110,7 +108,7 @@ export const ToolbarChild = memoForwardRef(function ToolbarChildU<ToolbarChildEl
     getSortValue,
     hidden,
     getText,
-    subInfo
+    info: uinfo
 }: ToolbarChildProps<ToolbarChildElement, M>, ref?: Ref<any>) {
     const context = (useContext(ToolbarContext) as UseToolbarContext<any, ToolbarChildElement, M>);
     console.assert(context != null, `This ToolbarChild is not contained within a Toolbar`);
@@ -118,8 +116,7 @@ export const ToolbarChild = memoForwardRef(function ToolbarChildU<ToolbarChildEl
 
     const info = useToolbarChild<ToolbarChildElement, M>({
         context,
-        completeListNavigationChildParameters: { focusSelf: focusSelf ?? focusSelfDefault, ...subInfo } as M,
-        managedChildParameters: { index },
+        info: { index, focusSelf: focusSelf ?? focusSelfDefault, ...uinfo } as M,
         rovingTabIndexChildParameters: { hidden: hidden ?? false },
         sortableChildParameters: { getSortValue },
         singleSelectionChildParameters: { ariaPropName, selectionMode, disabled: disabled ?? false },

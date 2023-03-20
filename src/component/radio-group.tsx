@@ -28,11 +28,12 @@ interface RadioPropsBase<LP extends LabelPosition, InputElement extends Element,
     Get<UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>, "rovingTabIndexChildParameters">,
     OmitStrong<Get<UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>, "singleSelectionChildParameters">, "disabled">,
     Get<UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>, "textContentParameters">,
-    OmitStrong<Get<UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>, "managedChildParameters">, never> {
-    focusSelf?: UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>["completeListNavigationChildParameters"]["focusSelf"];
+
+    Pick<RadioSubInfo<any, V>, "index"> {
+    focusSelf?: UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>["info"]["focusSelf"];
 }
 
-export interface RadioGroupProps<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, TabbableChildElement extends Element> extends PartialExcept<RadioGroupPropsBase<V, GroupElement, GroupLabelElement, TabbableChildElement>, "navigationDirection" | "ariaLabel" | "name" | "selectedValue" | "onSelectedValueChange"> {
+export interface RadioGroupProps<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, TabbableChildElement extends Element> extends PartialExcept<RadioGroupPropsBase<V, GroupElement, GroupLabelElement, TabbableChildElement>, "ariaLabel" | "name" | "selectedValue" | "onSelectedValueChange"> {
     render(info: UseRadioGroupReturnType<V, GroupElement, GroupLabelElement, TabbableChildElement>): VNode<any>;
 }
 export interface RadioProps<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element, V extends string | number> extends PartialExcept<RadioPropsBase<LP, InputElement, LabelElement, V>, "index" | "value" | "ariaLabel" | "labelPosition" | "tagInput" | "tagLabel"> {
@@ -45,9 +46,8 @@ export const RadioGroup = memoForwardRef(function RadioGroup<V extends string | 
     name,
     onSelectedValueChange,
     collator,
-    disableArrowKeys,
     disableHomeEndKeys,
-    navigationDirection,
+    arrowKeyDirection,
     noTypeahead,
     typeaheadTimeout,
     ariaLabel,
@@ -63,10 +63,9 @@ export const RadioGroup = memoForwardRef(function RadioGroup<V extends string | 
 }: RadioGroupProps<V, GroupElement, GroupLabelElement, TabbableChildElement>, ref?: Ref<any>) {
     const info = useRadioGroup<V, GroupElement, GroupLabelElement, TabbableChildElement>({
         linearNavigationParameters: {
-            navigationDirection,
+            arrowKeyDirection: arrowKeyDirection ?? "either",
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap",
-            disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys),
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
             pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
         },
@@ -113,12 +112,11 @@ export const Radio = memoForwardRef(function Radio<LP extends LabelPosition, V e
     const getValue = useStableGetter(value);
     const defaultFocusSelf = () => info.checkboxLikeReturn.focusSelf();
     const info = useRadio<LP, InputElement, LabelElement, V>({
-        managedChildParameters: { index },
         rovingTabIndexChildParameters: { hidden: hidden ?? false },
         sortableChildParameters: { getSortValue: getValue },
         radioParameters: { value },
         checkboxLikeParameters: { disabled: disabled ?? false },
-        completeListNavigationChildParameters: { focusSelf: focusSelf ?? defaultFocusSelf },
+        info: { index, focusSelf: focusSelf ?? defaultFocusSelf },
         context,
         labelParameters: { ariaLabel, labelPosition, tagInput, tagLabel },
         singleSelectionChildParameters: { disabled: !!disabled },

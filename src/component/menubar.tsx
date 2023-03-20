@@ -9,7 +9,6 @@ interface MenubarPropsBase<MenuParentElement extends Element, MenuItemElement ex
     Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "linearNavigationParameters">,
     Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "rovingTabIndexParameters">,
     Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "typeaheadNavigationParameters">,
-    Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "singleSelectionDeclarativeParameters">,
     Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "rearrangeableChildrenParameters">,
     Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "sortableChildrenParameters">,
     Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "staggeredChildrenParameters">,
@@ -27,11 +26,11 @@ interface MenubarItemPropsBase<MenuItemElement extends Element> extends
     Get<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "menuItemParameters">,
     Get<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "rovingTabIndexChildParameters">,
     Get<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "sortableChildParameters">,
-    Get<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "managedChildParameters">,
+    Pick<UseMenubarSubInfo<MenuItemElement>, "index">,
     Get<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "singleSelectionChildParameters">,
     Get<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "textContentParameters"> {
-    focusSelf?: UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>["completeListNavigationChildParameters"]["focusSelf"];
-    subInfo?: OmitStrong< UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>["completeListNavigationChildParameters"], "focusSelf">;
+    focusSelf?: UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>["info"]["focusSelf"];
+    //subInfo?: OmitStrong< UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>["completeListNavigationChildParameters"], "focusSelf">;
     ref?: Ref<UseMenubarItemReturnType<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>>;
 }
 
@@ -41,6 +40,7 @@ export interface MenubarProps<MenuParentElement extends Element, MenuItemElement
 export interface MenubarItemProps<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends PartialExcept<MenubarItemPropsBase<MenuItemElement>, "ariaPropName" | "index" | "selectionMode" | "getSortValue"> {
 
     render(info: UseMenubarItemReturnType<MenuItemElement, M>): VNode<any>;
+    info?: OmitStrong<M, keyof UseMenubarSubInfo<MenuItemElement>>;
 }
 
 export const MenubarItemContext = createContext<UseMenubarContext<any, any, any>>(null!);
@@ -48,7 +48,6 @@ export const MenubarItemContext = createContext<UseMenubarContext<any, any, any>
 export const Menubar = memoForwardRef(function MenubarU<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element, M extends UseMenubarSubInfo<ChildElement> = UseMenubarSubInfo<ChildElement>>({
     render,
     collator,
-    disableArrowKeys,
     disableHomeEndKeys,
     navigatePastEnd,
     navigatePastStart,
@@ -68,13 +67,12 @@ export const Menubar = memoForwardRef(function MenubarU<ContainerElement extends
 }: MenubarProps<ContainerElement, ChildElement, LabelElement, M>, ref?: Ref<any>) {
     const info = useMenubar<ContainerElement, ChildElement, LabelElement, M>({
         linearNavigationParameters: {
-            disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys),
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap",
             pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
         },
-        toolbarParameters: { orientation, onSelectedIndexChange: onSelectedIndexChange ?? null, role: role ?? "menubar" },
+        toolbarParameters: { orientation, selectedIndex: selectedIndex ?? null, onSelectedIndexChange: onSelectedIndexChange ?? null, role: role ?? "menubar" },
         rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable: untabbable ?? false },
         typeaheadNavigationParameters: {
             collator: useDefault("collator", collator),
@@ -83,7 +81,6 @@ export const Menubar = memoForwardRef(function MenubarU<ContainerElement extends
         },
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
         staggeredChildrenParameters: { staggered: staggered || false },
-        singleSelectionDeclarativeParameters: { selectedIndex: selectedIndex ?? null },
         sortableChildrenParameters: { compare: compare ?? null },
         labelParameters: { ariaLabel }
     });
@@ -110,16 +107,15 @@ export const MenubarItem = memoForwardRef(function MenuItemU<MenuItemElement ext
     onPress,
     getSortValue,
     role,
-    subInfo
+    info: uinfo
 }: MenubarItemProps<MenuItemElement, M>, ref?: Ref<any>) {
     const context = (useContext(MenubarItemContext));
     console.assert(context != null, `This MenuItem is not contained within a Menubar/Menu`);
     const defaultFocusSelf = useCallback((e: MenuItemElement | null) => (e as Element as HTMLElement)?.focus?.(), [])
 
     const info = useMenubarChild<MenuItemElement, M>({
-        completeListNavigationChildParameters: { focusSelf: focusSelf ?? defaultFocusSelf, ...subInfo } as M,
+        info: { index, focusSelf: focusSelf ?? defaultFocusSelf, ...uinfo } as M,
         context,
-        managedChildParameters: { index },
         rovingTabIndexChildParameters: { hidden: hidden ?? false },
         sortableChildParameters: { getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },

@@ -29,7 +29,7 @@ interface TableSectionPropsBase<SectionElement extends Element, RowElement exten
 interface TableRowPropsBase<RowElement extends Element, CellElement extends Element, RM extends TableRowInfo<RowElement, CellElement>, CM extends TableCellInfo<CellElement>> extends
     //OmitStrong<Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "tableRowParameters">, never>,
     Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "singleSelectionChildParameters">,
-    Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "managedChildParameters">,
+    Pick<CM, "index">,
     Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "rovingTabIndexChildParameters">,
     Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "textContentParameters">,
     Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "tableRowParameters">,
@@ -40,7 +40,7 @@ interface TableRowPropsBase<RowElement extends Element, CellElement extends Elem
 
 interface TableCellPropsBase<CellElement extends Element, CM extends TableCellInfo<CellElement>> extends
     Get<UseTableCellParameters<CellElement, CM>, "tableCellParameters">,
-    Get<UseTableCellParameters<CellElement, CM>, "managedChildParameters">,
+   Pick<CM, "index">,
     Get<UseTableCellParameters<CellElement, CM>, "gridNavigationCellParameters">,
     Get<UseTableCellParameters<CellElement, CM>, "rovingTabIndexChildParameters">,
     Get<UseTableCellParameters<CellElement, CM>, "textContentParameters"> {
@@ -91,7 +91,6 @@ export const Table = memoForwardRef(function TableU<TableElement extends Element
 })
 
 export const TableSection = memoForwardRef(function TableSection<SectionElement extends Element, RowElement extends Element, CellElement extends Element>({
-    disableArrowKeys,
     disableHomeEndKeys,
     getIndex,
     initiallySelectedIndex,
@@ -113,7 +112,6 @@ export const TableSection = memoForwardRef(function TableSection<SectionElement 
         gridNavigationParameters: { onTabbableColumnChange: onTabbableColumnChange ?? null },
         staggeredChildrenParameters: { staggered: staggered || false },
         linearNavigationParameters: {
-            disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys),
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap",
@@ -141,7 +139,6 @@ export const TableRow = memoForwardRef(function TableRowU<RowElement extends Ele
     index,
     getText,
     tagTableRow,
-    disableArrowKeys,
     disableHomeEndKeys,
     onTabbableIndexChange,
     ariaPropName,
@@ -157,9 +154,8 @@ export const TableRow = memoForwardRef(function TableRowU<RowElement extends Ele
     const cx1 = useContext(TableSectionContext);
     console.assert(cx1 != null, `This TableRow is not contained within a TableSection`);
     const info = useTableRow<RowElement, Cellement, TableRowInfo<RowElement, Cellement>, TableCellInfo<Cellement>>({
-        completeGridNavigationRowParameters: {},
+        info: { index },
         context: cx1,
-        managedChildParameters: { index },
         rovingTabIndexChildParameters: { hidden: hidden ?? false },
         singleSelectionChildParameters: {
             ariaPropName,
@@ -174,7 +170,6 @@ export const TableRow = memoForwardRef(function TableRowU<RowElement extends Ele
             tagTableRow
         },
             linearNavigationParameters: {
-            disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys),
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap"
@@ -202,10 +197,9 @@ export const TableCell = memoForwardRef(function TableCell<CellElement extends E
     console.assert(context != null, `This TableCell is not contained within a TableRow`);
     const defaultFocusSelf = useStableCallback((e: CellElement) => { (e as Element as HTMLElement).focus?.() }, []);
     const info = useTableCell<CellElement, TableCellInfo<CellElement>>({
-        completeGridNavigationCellParameters: { getSortValue, focusSelf: focusSelf ?? defaultFocusSelf },
+        info: { index, getSortValue, focusSelf: focusSelf ?? defaultFocusSelf },
         context,
         gridNavigationCellParameters: { colSpan: colSpan ?? 1 },
-        managedChildParameters: { index },
         rovingTabIndexChildParameters: { hidden: hidden ?? false },
         tableCellParameters: { tagTableCell },
         textContentParameters: { getText: useDefault("getText", getText) }

@@ -199,8 +199,7 @@ export function useTableSection<TableSectionElement extends Element, TableRowEle
     useEffect(() => {
         if (location == "body") {
             tableContext.setSortBodyFunction(() => {
-                const managedRows = managedChildrenReturn.getChildren();
-                return () => sortableChildrenReturn.sort(managedRows, tableContext.getCurrentSortColumn().direction);
+                return () => sortableChildrenReturn.sort(tableContext.getCurrentSortColumn().direction);
             })
         }
     });
@@ -225,10 +224,8 @@ export function useTableSection<TableSectionElement extends Element, TableRowEle
 }
 
 export function useTableRow<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>>({
-
-    managedChildParameters,
+    info,
     singleSelectionChildParameters,
-    completeGridNavigationRowParameters,
     rovingTabIndexChildParameters,
     textContentParameters,
     context: cx1,
@@ -249,9 +246,8 @@ export function useTableRow<TableRowElement extends Element, TableCellElement ex
     } = useCompleteGridNavigationRow<TableRowElement, TableCellElement, RM, CM>({
         textContentParameters,
         context: { ...cx1 },
-        managedChildParameters,
         singleSelectionChildParameters,
-        completeGridNavigationRowParameters,
+        info,
         rovingTabIndexChildParameters,
         sortableChildParameters: {
             getSortValue: useStableCallback((): unknown => {
@@ -296,7 +292,7 @@ export function useTableCell<TableCellElement extends Element, CM extends TableC
         ...ret,
         tableCellReturn: {
             sortByThisColumn: useStableCallback(() => {
-                return p.context.tableContext.sortByColumn(p.managedChildParameters.index);
+                return p.context.tableContext.sortByColumn(p.info.index);
             }, [])
         }
     };

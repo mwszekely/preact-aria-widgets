@@ -54,5 +54,5 @@ export interface SliderContext<M extends SliderThumbInfo> extends UseManagedChil
     };
 }
 export declare function useSlider({ sliderParameters: { max, min }, managedChildrenParameters }: UseSliderParameters<SliderThumbInfo>): UseSliderReturnType<SliderThumbInfo>;
-export declare function useSliderThumb<ThumbElement extends Element, M extends SliderThumbInfo>({ managedChildParameters, context: { sliderContext: { max: maxParent, min: minParent }, ...context }, sliderThumbParameters }: UseSliderThumbParameters<ThumbElement, M>): UseSliderThumbReturnType<ThumbElement, SliderThumbInfo>;
+export declare function useSliderThumb<ThumbElement extends Element, M extends SliderThumbInfo>({ info, context: { sliderContext: { max: maxParent, min: minParent }, ...context }, sliderThumbParameters }: UseSliderThumbParameters<ThumbElement, M>): UseSliderThumbReturnType<ThumbElement, SliderThumbInfo>;
 //# sourceMappingURL=use-slider.d.ts.map

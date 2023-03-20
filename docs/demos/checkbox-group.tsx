@@ -81,7 +81,7 @@ export function Demo() {
             <div>
                 <p><strong>Note:</strong> Each checkbox (in this demo only!) takes a random amount of time to update when modified via the parent checkbox to test async handling.</p>
                 <CheckboxGroup<HTMLDivElement, HTMLInputElement>
-                    navigationDirection="vertical"
+                    orientation="vertical"
                     render={
                         (info2) => {
                             const ref = useRef<UseCheckboxReturnType<any, any>>(null);

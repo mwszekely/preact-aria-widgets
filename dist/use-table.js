@@ -75,8 +75,7 @@ export function useTableSection({ linearNavigationParameters, rovingTabIndexPara
     useEffect(() => {
         if (location == "body") {
             tableContext.setSortBodyFunction(() => {
-                const managedRows = managedChildrenReturn.getChildren();
-                return () => sortableChildrenReturn.sort(managedRows, tableContext.getCurrentSortColumn().direction);
+                return () => sortableChildrenReturn.sort(tableContext.getCurrentSortColumn().direction);
             });
         }
     });
@@ -98,16 +97,15 @@ export function useTableSection({ linearNavigationParameters, rovingTabIndexPara
         propsTableSection: props
     };
 }
-export function useTableRow({ managedChildParameters, singleSelectionChildParameters, completeGridNavigationRowParameters, rovingTabIndexChildParameters, textContentParameters, context: cx1, tableRowParameters: { selected }, linearNavigationParameters, rovingTabIndexParameters, }) {
+export function useTableRow({ info, singleSelectionChildParameters, rovingTabIndexChildParameters, textContentParameters, context: cx1, tableRowParameters: { selected }, linearNavigationParameters, rovingTabIndexParameters, }) {
     monitorCallCount(useTableRow);
     const { context: cx2, managedChildrenReturn, props: { ...props }, ...restRet
     // props
      } = useCompleteGridNavigationRow({
         textContentParameters,
         context: { ...cx1 },
-        managedChildParameters,
         singleSelectionChildParameters,
-        completeGridNavigationRowParameters,
+        info,
         rovingTabIndexChildParameters,
         sortableChildParameters: {
             getSortValue: useStableCallback(() => {
@@ -144,7 +142,7 @@ export function useTableCell({ tableCellParameters: { tagTableCell }, ...p }) {
         ...ret,
         tableCellReturn: {
             sortByThisColumn: useStableCallback(() => {
-                return p.context.tableContext.sortByColumn(p.managedChildParameters.index);
+                return p.context.tableContext.sortByColumn(p.info.index);
             }, [])
         }
     };

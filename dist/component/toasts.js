@@ -13,7 +13,7 @@ export const Toast = memoForwardRef(function Toast({ render, index, timeout, pol
     const context = useContext(ToastContext);
     console.assert(context != null, `This Toast was not rendered within a Toasts provider`);
     const info = useToast({
-        managedChildParameters: { index },
+        info: { index },
         toastParameters: { timeout, politeness, children },
         context
     });

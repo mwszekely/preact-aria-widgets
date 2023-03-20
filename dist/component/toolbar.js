@@ -4,13 +4,12 @@ import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
 import { useToolbar, useToolbarChild } from "../use-toolbar.js";
 import { memoForwardRef, useDefault } from "./util.js";
 const ToolbarContext = createContext(null);
-export const Toolbar = memoForwardRef(function ToolbarU({ render, role, collator, disableArrowKeys, disableHomeEndKeys, untabbable, compare, getIndex, navigatePastEnd, navigatePastStart, pageNavigationSize, selectedIndex, onSelectedIndexChange, orientation, noTypeahead, onTabbableIndexChange, typeaheadTimeout, staggered, ariaLabel }, ref) {
+export const Toolbar = memoForwardRef(function ToolbarU({ render, role, collator, disableHomeEndKeys, untabbable, compare, getIndex, navigatePastEnd, navigatePastStart, pageNavigationSize, selectedIndex, onSelectedIndexChange, orientation, noTypeahead, onTabbableIndexChange, typeaheadTimeout, staggered, ariaLabel }, ref) {
     const listboxReturnType = useToolbar({
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
-        singleSelectionDeclarativeParameters: { selectedIndex: selectedIndex ?? null },
         sortableChildrenParameters: { compare: compare ?? null },
         linearNavigationParameters: {
-            disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys),
+            //: useDefault("disableArrowKeys", disableArrowKeys),
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap",
@@ -19,6 +18,7 @@ export const Toolbar = memoForwardRef(function ToolbarU({ render, role, collator
         toolbarParameters: {
             orientation,
             role: role ?? "toolbar",
+            selectedIndex: selectedIndex ?? null,
             onSelectedIndexChange: onSelectedIndexChange ?? null
         },
         staggeredChildrenParameters: { staggered: staggered || false },
@@ -33,14 +33,13 @@ export const Toolbar = memoForwardRef(function ToolbarU({ render, role, collator
     useImperativeHandle(ref, () => listboxReturnType);
     return (_jsx(ToolbarContext.Provider, { value: listboxReturnType.context, children: render(listboxReturnType) }));
 });
-export const ToolbarChild = memoForwardRef(function ToolbarChildU({ index, render, ariaPropName, disabled, selectionMode, focusSelf, getSortValue, hidden, getText, subInfo }, ref) {
+export const ToolbarChild = memoForwardRef(function ToolbarChildU({ index, render, ariaPropName, disabled, selectionMode, focusSelf, getSortValue, hidden, getText, info: uinfo }, ref) {
     const context = useContext(ToolbarContext);
     console.assert(context != null, `This ToolbarChild is not contained within a Toolbar`);
     const focusSelfDefault = useCallback((e) => { e?.focus(); }, []);
     const info = useToolbarChild({
         context,
-        completeListNavigationChildParameters: { focusSelf: focusSelf ?? focusSelfDefault, ...subInfo },
-        managedChildParameters: { index },
+        info: { index, focusSelf: focusSelf ?? focusSelfDefault, ...uinfo },
         rovingTabIndexChildParameters: { hidden: hidden ?? false },
         sortableChildParameters: { getSortValue },
         singleSelectionChildParameters: { ariaPropName, selectionMode, disabled: disabled ?? false },

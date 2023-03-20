@@ -1,12 +1,13 @@
 import { monitorCallCount, useCompleteListNavigation, useCompleteListNavigationChild, useMergedProps, useRefElement, useSingleSelectionDeclarative, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
-import { useEffect, useLayoutEffect, useMemo, useRef } from "preact/hooks";
+import { useLayoutEffect, useMemo, useRef } from "preact/hooks";
 import { Prefices } from "./props.js";
 import { useCheckboxLike } from "./use-checkbox-like.js";
 import { useLabelSynthetic } from "./use-label.js";
 export function useRadioGroup({ labelParameters, radioGroupParameters: { name, onSelectedValueChange, selectedValue }, ...restParams }) {
     monitorCallCount(useRadioGroup);
     const [selectedIndex, setSelectedIndex] = useState(null);
-    const byName = useRef(new Map());
+    const nameToIndex = useRef(new Map());
+    const indexToName = useRef(new Map());
     const { propsInput: propsGroup1, propsLabel } = useLabelSynthetic({
         labelParameters: {
             onLabelClick: useStableCallback(() => {
@@ -17,30 +18,38 @@ export function useRadioGroup({ labelParameters, radioGroupParameters: { name, o
         randomIdLabelParameters: { prefix: Prefices.radioGroupLabel, },
         randomIdInputParameters: { prefix: Prefices.radioGroup }
     });
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (selectedValue != null)
-            singleSelectionReturn.changeSelectedIndex(byName.current.get(selectedValue) ?? null);
+            singleSelectionReturn.changeSelectedIndex(nameToIndex.current.get(selectedValue) ?? null);
         else
             singleSelectionReturn.changeSelectedIndex(null);
     }, [selectedValue]);
     const { context, propsStable: propsGroup2, singleSelectionReturn, managedChildrenReturn, rovingTabIndexReturn, ...restRet } = useCompleteListNavigation({
-        singleSelectionParameters: { initiallySelectedIndex: selectedIndex, onSelectedIndexChange: setSelectedIndex },
+        singleSelectionParameters: { initiallySelectedIndex: selectedIndex, onSelectedIndexChange: useStableCallback((i, e) => { setSelectedIndex(i); onSelectedIndexChange?.(i, e); }) },
         paginatedChildrenParameters: { paginationMin: null, paginationMax: null },
         ...restParams
     });
-    const _v = useSingleSelectionDeclarative({
+    const { singleSelectionParameters: { onSelectedIndexChange } } = useSingleSelectionDeclarative({
         singleSelectionReturn: {
             changeSelectedIndex: useStableCallback((s, r) => {
-                let next = typeof s == "function" ? s(selectedIndex) : s;
+                singleSelectionReturn.changeSelectedIndex(s, r);
+                /*let next = typeof s == "function" ? s(selectedIndex) : s;
                 if (next != null) {
-                    const nextValue = managedChildrenReturn.getChildren().getAt(next)?.getValue2();
-                    onSelectedValueChange(nextValue, r);
+                    const nextValue = indexToName.current.get(next); //managedChildrenReturn.getChildren().getAt(next)?.getValue2();
+                    onSelectedValueChange(nextValue as V, r);
                 }
                 else {
                     onSelectedValueChange(null, r);
-                }
+                }*/
             })
-        }, singleSelectionDeclarativeParameters: { selectedIndex }
+        },
+        singleSelectionDeclarativeParameters: {
+            selectedIndex,
+            setSelectedIndex: useStableCallback((i, e) => {
+                let value = i == null ? null : indexToName.current.get(i);
+                onSelectedValueChange?.(value ?? null, e);
+            })
+        }
     });
     const propsRadioGroup = useMergedProps(propsGroup1, propsGroup2, { role: "radiogroup" });
     return {
@@ -49,7 +58,7 @@ export function useRadioGroup({ labelParameters, radioGroupParameters: { name, o
         rovingTabIndexReturn,
         context: useMemo(() => ({
             ...context,
-            radioContext: { name, byName: byName.current }
+            radioContext: { name, indexToName: indexToName.current, nameToIndex: nameToIndex.current }
         }), [name]),
         managedChildrenReturn,
         radioGroupReturn: { selectedIndex },
@@ -57,18 +66,17 @@ export function useRadioGroup({ labelParameters, radioGroupParameters: { name, o
         ...restRet,
     };
 }
-export function useRadio({ radioParameters: { value }, checkboxLikeParameters: { disabled }, completeListNavigationChildParameters, labelParameters, managedChildParameters, singleSelectionChildParameters, context, textContentParameters, rovingTabIndexChildParameters, sortableChildParameters }) {
+export function useRadio({ radioParameters: { value }, checkboxLikeParameters: { disabled }, labelParameters, info, singleSelectionChildParameters, context, textContentParameters, rovingTabIndexChildParameters, sortableChildParameters }) {
     monitorCallCount(useRadio);
-    const index = managedChildParameters.index;
+    const index = info.index;
     const onInput = useStableCallback((e) => {
         singleSelectionChildReturn.setThisOneSelected(e);
     });
-    const { name, byName } = context.radioContext;
+    const { name, indexToName, nameToIndex } = context.radioContext;
     const { tagInput, labelPosition } = labelParameters;
     const getValue = useStableGetter(value);
     const { props: listNavigationSingleSelectionChildProps, singleSelectionChildReturn, pressParameters, ...listNavRet } = useCompleteListNavigationChild({
-        completeListNavigationChildParameters: { getValue2: getValue, ...completeListNavigationChildParameters },
-        managedChildParameters,
+        info,
         context,
         rovingTabIndexChildParameters,
         sortableChildParameters,
@@ -93,8 +101,12 @@ export function useRadio({ radioParameters: { value }, checkboxLikeParameters: {
         refElementLabelReturn
     });
     useLayoutEffect(() => {
-        byName.set(value, index);
-        return () => { byName.delete(value); };
+        nameToIndex.set(value, index);
+        indexToName.set(index, value);
+        return () => {
+            nameToIndex.delete(value);
+            indexToName.delete(index);
+        };
     }, [value, index]);
     if (tagInput == "input") {
         propsInput.name = name;

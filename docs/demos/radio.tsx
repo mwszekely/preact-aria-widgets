@@ -66,7 +66,7 @@ export function Demo() {
                     name="radio-demo"
                     ariaLabel={null}
                     selectedValue={selectedIndex}
-                    navigationDirection="vertical"
+                    arrowKeyDirection="vertical"
                     onSelectedValueChange={setSelectedIndex}
                     render={info => {
                         return (

@@ -81,7 +81,7 @@ function ListboxDemo({ count, label }: { count: number, label: ComponentChildren
                 )
             }}
             ariaLabel={null}
-            navigationDirection="vertical"
+            orientation="vertical"
             selectionLimit="single"
         />
     )
@@ -101,7 +101,7 @@ export function Demo() {
             </div>
             <div>
                 <GroupedListbox<HTMLLabelElement>
-                    navigationDirection="vertical"
+                    orientation="vertical"
                     selectionLimit="single"
                     ariaLabel={null}
                     render={info => {

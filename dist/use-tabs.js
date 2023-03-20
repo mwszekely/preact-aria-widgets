@@ -35,7 +35,7 @@ export function useTabs({ labelParameters, linearNavigationParameters, singleSel
         randomIdLabelParameters: { prefix: Prefices.tablistLabel },
     });
     const { propsStable: listNavigationSingleSelectionProps, context, ...listNavRet1 } = useCompleteListNavigation({
-        linearNavigationParameters: { navigationDirection: orientation, ...linearNavigationParameters },
+        linearNavigationParameters: { arrowKeyDirection: orientation, ...linearNavigationParameters },
         singleSelectionParameters: {
             onSelectedIndexChange: useStableCallback((i, p) => {
                 ssi?.(i, p);
@@ -71,11 +71,10 @@ export function useTabs({ labelParameters, linearNavigationParameters, singleSel
         ...listNavRet1
     };
 }
-export function useTab({ completeListNavigationChildParameters: { focusSelf, ...completeListNavigationChildParameters }, managedChildParameters, textContentParameters, singleSelectionChildParameters: { selectionMode, ...singleSelectionChildParameters }, rovingTabIndexChildParameters, sortableChildParameters, context }) {
+export function useTab({ info: { focusSelf, ...info }, textContentParameters, singleSelectionChildParameters: { selectionMode, ...singleSelectionChildParameters }, rovingTabIndexChildParameters, sortableChildParameters, context }) {
     const { props: listNavigationSingleSelectionChildProps, ...listNavRet2 } = useCompleteListNavigationChild({
-        completeListNavigationChildParameters: { focusSelf, ...completeListNavigationChildParameters },
         context,
-        managedChildParameters,
+        info: { focusSelf, ...info },
         rovingTabIndexChildParameters,
         sortableChildParameters,
         textContentParameters,
@@ -85,8 +84,8 @@ export function useTab({ completeListNavigationChildParameters: { focusSelf, ...
     const { pressReturn, props: propsPress } = usePress({ pressParameters: { ...pressParameters, onPressSync: useStableCallback((e) => listNavRet2.singleSelectionChildReturn.setThisOneSelected(e)), focusSelf }, refElementReturn });
     const { singleSelectionChildReturn: { selected }, rovingTabIndexChildReturn: { tabbable } } = listNavRet2;
     const { getPanelId, getTabId } = context.tabsContext;
-    const panelId = getPanelId(managedChildParameters.index);
-    const tabId = getTabId(managedChildParameters.index);
+    const panelId = getPanelId(info.index);
+    const tabId = getTabId(info.index);
     monitorCallCount(useTab);
     return {
         props: useMergedProps(propsPress, listNavigationSingleSelectionChildProps, {
@@ -100,32 +99,32 @@ export function useTab({ completeListNavigationChildParameters: { focusSelf, ...
         ...listNavRet2
     };
 }
-export function useTabPanel({ managedChildParameters, context }) {
-    const { index } = managedChildParameters;
+export function useTabPanel({ info, context }) {
+    const { index } = info;
     monitorCallCount(useTabPanel);
     const { tabPanelContext: { getVisibleIndex: g, getPanelId, getTabId } } = context;
     //const [correspondingTabId, setCorrespondingTabId] = useState<string | null>(null);
     const [lastKnownVisibleIndex, setLastKnownVisibleIndex, getLastKnownVisibleIndex] = useState(g());
     const [isVisible, setIsVisible, getIsVisible] = useState(null);
     //const visibleRef = useRef<ChildFlagOperations>({ get: getIsVisible, set: setIsVisible, isValid: returnTrue });
-    useManagedChild({ context, managedChildParameters: { index } }, {
-        getVisible: useStableCallback(() => { return getLastKnownVisibleIndex() == index; }),
-        setVisibleIndex: useStableCallback((newIndex, prevIndex) => {
-            // Similar logic is in singleSelection, but we need to duplicate it here
-            let changeIndex = (newIndex == index ? prevIndex : newIndex);
-            if (changeIndex != null)
-                setLastKnownVisibleIndex(changeIndex);
-            if (newIndex == index) {
-                setIsVisible(true);
-            }
-            else {
-                setIsVisible(false);
-            }
-        }),
-        ...managedChildParameters
-    });
-    const panelId = getPanelId(managedChildParameters.index);
-    const tabId = getTabId(managedChildParameters.index);
+    useManagedChild({ context, info: {
+            getVisible: useStableCallback(() => { return getLastKnownVisibleIndex() == index; }),
+            setVisibleIndex: useStableCallback((newIndex, prevIndex) => {
+                // Similar logic is in singleSelection, but we need to duplicate it here
+                let changeIndex = (newIndex == index ? prevIndex : newIndex);
+                if (changeIndex != null)
+                    setLastKnownVisibleIndex(changeIndex);
+                if (newIndex == index) {
+                    setIsVisible(true);
+                }
+                else {
+                    setIsVisible(false);
+                }
+            }),
+            ...info
+        } });
+    const panelId = getPanelId(info.index);
+    const tabId = getTabId(info.index);
     //const isVisible = (lastKnownVisibleIndex === index);
     return {
         props: useMergedProps({

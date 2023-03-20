@@ -8,6 +8,7 @@ import {
     UseCompleteGridNavigationCellInfo,
     UseCompleteGridNavigationCellParameters,
     UseCompleteGridNavigationCellReturnType,
+    useCompleteGridNavigationDeclarative,
     UseCompleteGridNavigationParameters,
     UseCompleteGridNavigationReturnType,
     useCompleteGridNavigationRow,
@@ -38,7 +39,7 @@ export interface UseGridlistParameters<GridlistElement extends Element, Gridlist
     labelParameters: OmitStrong<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
     gridlistParameters: UseListboxParameters<GridlistElement, GridlistRowElement, LabelElement, RM>["listboxParameters"];
 }
-export interface UseGridlistReturnType<GridlistElement extends Element, GridlistRowElement extends Element, GridlistCellElement extends Element, LabelElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends OmitStrong<UseCompleteGridNavigationReturnType<GridlistElement, GridlistRowElement, GridlistCellElement, RM, CM>, "propsStable"> {
+export interface UseGridlistReturnType<GridlistElement extends Element, GridlistRowElement extends Element, GridlistCellElement extends Element, LabelElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends OmitStrong<UseCompleteGridNavigationReturnType<GridlistElement, GridlistRowElement, GridlistCellElement, RM, CM>, "singleSelectionReturn" | "propsStable"> {
     propsGridlist: h.JSX.HTMLAttributes<GridlistElement>;
     propsGridlistLabel: h.JSX.HTMLAttributes<LabelElement>;
     context: UseGridlistContext<GridlistElement, GridlistRowElement, GridlistCellElement, RM, CM>;
@@ -99,12 +100,10 @@ export function useGridlist<GridlistElement extends Element, GridlistRowElement 
         rovingTabIndexReturn,
         singleSelectionReturn,
         ...restRet
-    } = useCompleteGridNavigation<GridlistElement, GridlistRowElement, GridlistCellElement, RM, CM>({
-        singleSelectionParameters: { initiallySelectedIndex: selectedIndex, onSelectedIndexChange },
+    } = useCompleteGridNavigationDeclarative<GridlistElement, GridlistRowElement, GridlistCellElement, RM, CM>({
+        singleSelectionDeclarativeParameters: { selectedIndex: selectedIndex, setSelectedIndex: onSelectedIndexChange },
         ...restParams
     });
-
-    const _v: void = useSingleSelectionDeclarative({ singleSelectionReturn, singleSelectionDeclarativeParameters: { selectedIndex } });
 
     let propsGridlist = useMergedProps(propsStable, propsLabelList, { "aria-multiselectable": (selectionLimit == "multi" ? "true" : undefined) });
 
@@ -133,7 +132,6 @@ export function useGridlist<GridlistElement extends Element, GridlistRowElement 
     return {
         context: fullContext,
         rovingTabIndexReturn,
-        singleSelectionReturn,
         propsGridlist,
         propsGridlistLabel: propsLabelLabel,
         ...restRet
@@ -143,9 +141,8 @@ export function useGridlist<GridlistElement extends Element, GridlistRowElement 
 export function useGridlistRow<GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>>({
     gridlistRowParameters: { selected },
     linearNavigationParameters,
-    completeGridNavigationRowParameters,
     context: cx1,
-    managedChildParameters,
+    info,
     rovingTabIndexChildParameters,
     rovingTabIndexParameters,
     singleSelectionChildParameters,
@@ -174,9 +171,8 @@ export function useGridlistRow<GridlistRowElement extends Element, GridlistCellE
 
     } = useCompleteGridNavigationRow<GridlistRowElement, GridlistCellElement, RM, CM>({
         linearNavigationParameters: { disableHomeEndKeys: true, ...linearNavigationParameters },
-        completeGridNavigationRowParameters,
+        info,
         context: cx1,
-        managedChildParameters,
         rovingTabIndexChildParameters,
         rovingTabIndexParameters,
         singleSelectionChildParameters,
@@ -220,7 +216,7 @@ export function useGridlistCell<GridlistCellElement extends Element, CM extends 
         pressReturn,
         props: propsPress
     } = usePress({
-        pressParameters: { ...pressParameters, focusSelf: p.completeGridNavigationCellParameters.focusSelf },
+        pressParameters: { ...pressParameters, focusSelf: p.info.focusSelf },
         refElementReturn: info.refElementReturn
     })
 

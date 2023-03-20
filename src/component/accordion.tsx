@@ -17,7 +17,7 @@ interface AccordionPropsBase<HeaderButtonElement extends Element> extends
 
 interface AccordionSectionPropsBase<HeaderElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element> extends
     Get<UseAccordionSectionParameters<HeaderButtonElement, UseAccordionSectionInfo>, "accordionSectionParameters">,
-    Get<UseAccordionSectionParameters<HeaderButtonElement, UseAccordionSectionInfo>, "managedChildParameters">,
+    Pick<UseAccordionSectionInfo, "index">,
     Get<UseAccordionSectionParameters<HeaderButtonElement, UseAccordionSectionInfo>, "buttonParameters">,
     Get<UseAccordionSectionParameters<HeaderButtonElement, UseAccordionSectionInfo>, "rovingTabIndexChildParameters">,
     Get<UseAccordionSectionParameters<HeaderButtonElement, UseAccordionSectionInfo>, "textContentParameters"> {
@@ -25,7 +25,7 @@ interface AccordionSectionPropsBase<HeaderElement extends Element, HeaderButtonE
 }
 
 
-export interface AccordionProps<HeaderButtonElement extends Element> extends PartialExcept<AccordionPropsBase<HeaderButtonElement>, "navigationDirection"> {
+export interface AccordionProps<HeaderButtonElement extends Element> extends PartialExcept<AccordionPropsBase<HeaderButtonElement>, never> {
     render(info: UseAccordionReturnType<HeaderButtonElement, UseAccordionSectionInfo>): VNode<any>;
 }
 
@@ -36,10 +36,8 @@ export interface AccordionSectionProps<HeaderElement extends Element, HeaderButt
 
 const AccordionSectionContext = createContext<UseAccordionContext<any, any>>(null!);
 export const Accordion = memo(function Accordion<HeaderButtonElement extends Element>({
-    disableArrowKeys,
     disableHomeEndKeys,
     initialIndex,
-    navigationDirection,
     onAfterChildLayoutEffect,
     onChildrenMountChange,
     navigatePastEnd,
@@ -49,16 +47,17 @@ export const Accordion = memo(function Accordion<HeaderButtonElement extends Ele
     collator,
     noTypeahead,
     typeaheadTimeout,
-    onChildCountChange,
+    onChildrenCountChange,
     isValid,
     render,
     imperativeHandle,
+    orientation,
     ...rest
 }: AccordionProps<HeaderButtonElement>) {
     assertEmptyObject(rest);
 
     const info = useAccordion<HeaderButtonElement, UseAccordionSectionInfo>({
-        accordionParameters: { initialIndex, localStorageKey: localStorageKey ?? null },
+        accordionParameters: { orientation, initialIndex, localStorageKey: localStorageKey ?? null },
         typeaheadNavigationParameters: {
             isValid: isValid || returnTrue,
             collator: useDefault("collator", collator),
@@ -66,9 +65,7 @@ export const Accordion = memo(function Accordion<HeaderButtonElement extends Ele
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
         },
         linearNavigationParameters: {
-            disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys),
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
-            navigationDirection,
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap",
             pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
@@ -100,9 +97,8 @@ export const AccordionSection = memo(function AccordionSection<HeaderContainerEl
     const info = useAccordionSection<HeaderContainerElement, HeaderButtonElement, BodyElement>({
         buttonParameters: { disabled: disabled ?? false, tagButton, onPress: onPress ?? null },
         accordionSectionParameters: { open, bodyRole: bodyRole ?? "region" },
-        managedChildParameters: { index, },
         rovingTabIndexChildParameters: { hidden: hidden ?? false },
-
+        info: { index },
         refElementParameters: {},
         context,
         textContentParameters: {

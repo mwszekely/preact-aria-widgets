@@ -24,13 +24,13 @@ export interface UseTabsParameters<TabContainerElement extends Element, TabEleme
         role?: "tablist" | string;
     }
 }
-export interface UseTabParameters<TabElement extends Element, M extends TabInfo<TabElement>> extends OmitStrong<UseCompleteListNavigationChildParameters<TabElement,M, never>, "singleSelectionChildParameters"> {
-    singleSelectionChildParameters: OmitStrong<UseCompleteListNavigationChildParameters<TabElement, M, never>["singleSelectionChildParameters"], "ariaPropName">;
+export interface UseTabParameters<TabElement extends Element, M extends TabInfo<TabElement>> extends OmitStrong<UseCompleteListNavigationChildParameters<TabElement,M>, "singleSelectionChildParameters"> {
+    singleSelectionChildParameters: OmitStrong<UseCompleteListNavigationChildParameters<TabElement, M>["singleSelectionChildParameters"], "ariaPropName">;
     context: TabsContext<any, TabElement, M>;
 }
 
-export interface UseTabPanelParameters<M extends TabPanelInfo> extends OmitStrong<UseManagedChildParameters<M>, "managedChildParameters"> {
-    managedChildParameters: OmitStrong<UseManagedChildParameters<M>["managedChildParameters"], never>
+export interface UseTabPanelParameters<M extends TabPanelInfo> extends OmitStrong<UseManagedChildParameters<M>, "info"> {
+    info: OmitStrong<UseManagedChildParameters<M>["info"], "setVisibleIndex" | "getVisible">
     context: TabPanelsContext<M>;
 }
 
@@ -53,7 +53,7 @@ export interface UseTabReturnType<TabElement extends Element, M extends TabInfo<
 
 export interface UseTabLabelParameters { }
 interface UseTabListParameters<TabContainerElement extends Element, TabElement extends Element, M extends TabInfo<TabElement>> extends OmitStrong<UseCompleteListNavigationParameters<TabContainerElement, TabElement, M>, "paginatedChildrenParameters" | "linearNavigationParameters"> {
-    linearNavigationParameters: OmitStrong<UseCompleteListNavigationParameters<TabContainerElement, TabElement, M>["linearNavigationParameters"], "navigationDirection">;
+    linearNavigationParameters: OmitStrong<UseCompleteListNavigationParameters<TabContainerElement, TabElement, M>["linearNavigationParameters"], "arrowKeyDirection">;
 }
 export interface UseTabListReturnType<ParentElement extends Element, ChildElement extends Element, M extends TabInfo<ChildElement>> extends UseCompleteListNavigationReturnType<ParentElement, ChildElement, M> {
 }
@@ -138,7 +138,7 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
         context,
         ...listNavRet1
     } = useCompleteListNavigation<TabListElement, TabElement, M>({
-        linearNavigationParameters: { navigationDirection: orientation, ...linearNavigationParameters },
+        linearNavigationParameters: { arrowKeyDirection: orientation, ...linearNavigationParameters },
         singleSelectionParameters: {
             onSelectedIndexChange: useStableCallback((i, p) => {
                 ssi?.(i, p);
@@ -182,8 +182,7 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
 }
 
 export function useTab<TabElement extends Element, M extends TabInfo<TabElement>>({
-    completeListNavigationChildParameters: { focusSelf, ...completeListNavigationChildParameters },
-    managedChildParameters,
+    info: { focusSelf, ...info },
     textContentParameters,
     singleSelectionChildParameters: { selectionMode, ...singleSelectionChildParameters },
     rovingTabIndexChildParameters,
@@ -192,9 +191,8 @@ export function useTab<TabElement extends Element, M extends TabInfo<TabElement>
 }: UseTabParameters<TabElement, M>) {
 
     const { props: listNavigationSingleSelectionChildProps, ...listNavRet2 } = useCompleteListNavigationChild({
-        completeListNavigationChildParameters: { focusSelf, ...completeListNavigationChildParameters } as M,
         context,
-        managedChildParameters,
+        info: { focusSelf, ...info } as M,
         rovingTabIndexChildParameters,
         sortableChildParameters,
         textContentParameters,
@@ -205,8 +203,8 @@ export function useTab<TabElement extends Element, M extends TabInfo<TabElement>
     const { singleSelectionChildReturn: { selected }, rovingTabIndexChildReturn: { tabbable } } = listNavRet2;
     const { getPanelId, getTabId } = context.tabsContext;
 
-    const panelId = getPanelId(managedChildParameters.index);
-    const tabId = getTabId(managedChildParameters.index);
+    const panelId = getPanelId(info.index);
+    const tabId = getTabId(info.index);
 
     monitorCallCount(useTab);
     return {
@@ -226,15 +224,15 @@ export function useTab<TabElement extends Element, M extends TabInfo<TabElement>
 }
 
 
-export function useTabPanel<PanelElement extends Element, M extends TabPanelInfo>({ managedChildParameters, context }: UseTabPanelParameters<M>): UseTabPanelReturnType<PanelElement> {
-    const { index } = managedChildParameters;
+export function useTabPanel<PanelElement extends Element, M extends TabPanelInfo>({ info, context }: UseTabPanelParameters<M>): UseTabPanelReturnType<PanelElement> {
+    const { index } = info;
     monitorCallCount(useTabPanel);
     const { tabPanelContext: { getVisibleIndex: g, getPanelId, getTabId } } = context;
     //const [correspondingTabId, setCorrespondingTabId] = useState<string | null>(null);
     const [lastKnownVisibleIndex, setLastKnownVisibleIndex, getLastKnownVisibleIndex] = useState(g());
     const [isVisible, setIsVisible, getIsVisible] = useState(null as boolean | null);
     //const visibleRef = useRef<ChildFlagOperations>({ get: getIsVisible, set: setIsVisible, isValid: returnTrue });
-    useManagedChild<TabPanelInfo>({ context, managedChildParameters: { index } }, {
+    useManagedChild<TabPanelInfo>({ context, info: {
         getVisible: useStableCallback(() => { return getLastKnownVisibleIndex() == index }),
         setVisibleIndex: useStableCallback((newIndex, prevIndex) => {
             // Similar logic is in singleSelection, but we need to duplicate it here
@@ -249,10 +247,10 @@ export function useTabPanel<PanelElement extends Element, M extends TabPanelInfo
                 setIsVisible(false);
             }
         }),
-        ...managedChildParameters
-    });
-    const panelId = getPanelId(managedChildParameters.index);
-    const tabId = getTabId(managedChildParameters.index);
+        ...info
+    } });
+    const panelId = getPanelId(info.index);
+    const tabId = getTabId(info.index);
     //const isVisible = (lastKnownVisibleIndex === index);
 
 

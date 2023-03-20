@@ -10,7 +10,7 @@ export interface ToastsProps<ContainerType extends Element> extends Get<UseToast
     render(info: UseToastsReturnType<ContainerType, ToastInfo>): VNode;
 }
 
-export interface ToastProps<E extends Element> extends Get<UseToastParameters<ToastInfo>, "managedChildParameters">, Get<UseToastParameters<ToastInfo>, "toastParameters"> {
+export interface ToastProps<E extends Element> extends Get<UseToastParameters<ToastInfo>, "info">, Get<UseToastParameters<ToastInfo>, "toastParameters"> {
     ref?: Ref<UseToastReturnType<E>>;
     render(args: UseToastReturnType<E>): VNode;
 }
@@ -34,7 +34,7 @@ export const Toast = memoForwardRef(function Toast<E extends Element>({ render, 
     const context = (useContext(ToastContext) as ToastsContext<ToastInfo>)
     console.assert(context != null, `This Toast was not rendered within a Toasts provider`);
     const info = useToast<E>({
-        managedChildParameters: { index },
+        info: { index },
         toastParameters: { timeout, politeness, children },
         context
     });

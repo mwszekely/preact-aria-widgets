@@ -5,14 +5,13 @@ import { useTab, useTabPanel, useTabs } from "../use-tabs.js";
 import { memoForwardRef, useDefault } from "./util.js";
 const TabsContext = createContext(null);
 const TabPanelsContext = createContext(null);
-export const Tabs = memoForwardRef(function Tabs({ ariaLabel, collator, compare, disableArrowKeys, disableHomeEndKeys, getIndex, initiallySelectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSelectedIndexChange, onTabbableIndexChange, orientation, staggered, pageNavigationSize, localStorageKey, 
+export const Tabs = memoForwardRef(function Tabs({ ariaLabel, collator, compare, disableHomeEndKeys, getIndex, initiallySelectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSelectedIndexChange, onTabbableIndexChange, orientation, staggered, pageNavigationSize, localStorageKey, 
 //groupingType,
 untabbable, typeaheadTimeout, role, render }, ref) {
     const info = useTabs({
         labelParameters: { ariaLabel },
         staggeredChildrenParameters: { staggered: staggered || false },
         linearNavigationParameters: {
-            disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys),
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap",
@@ -36,27 +35,26 @@ untabbable, typeaheadTimeout, role, render }, ref) {
     useImperativeHandle(ref, () => info);
     return (_jsx(TabsContext.Provider, { value: contextTabs, children: _jsx(TabPanelsContext.Provider, { value: contextPanels, children: render(info) }) }));
 });
-export const Tab = memoForwardRef(function Tab({ disabled, focusSelf, hidden, index, getText, getSortValue, render, selectionMode, subInfo }, ref) {
+export const Tab = memoForwardRef(function Tab({ disabled, focusSelf, hidden, index, getText, getSortValue, render, selectionMode, info: uinfo }, ref) {
     const context = useContext(TabsContext);
     console.assert(context != null, `This Tab is not contained within a Tabs component`);
     const focusSelfDefault = useCallback((e) => { e?.focus(); }, []);
     const info = useTab({
-        completeListNavigationChildParameters: { focusSelf: focusSelf ?? focusSelfDefault, ...subInfo },
+        info: { index, focusSelf: focusSelf ?? focusSelfDefault, ...uinfo },
         context,
         rovingTabIndexChildParameters: { hidden: hidden ?? false },
         sortableChildParameters: { getSortValue },
-        managedChildParameters: { index },
         singleSelectionChildParameters: { disabled: disabled ?? false, selectionMode: selectionMode ?? "focus" },
         textContentParameters: { getText: useDefault("getText", getText) }
     });
     useImperativeHandle(ref, () => info);
     return render(info);
 });
-export function TabPanel({ index, render }) {
+export function TabPanel({ index, render, info: uinfo }) {
     const context = useContext(TabPanelsContext);
     const info = useTabPanel({
         context,
-        managedChildParameters: { index }
+        info: { index, ...uinfo }
     });
     return render(info);
 }

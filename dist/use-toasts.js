@@ -86,7 +86,7 @@ export function useToasts({ managedChildrenParameters: { onChildrenMountChange: 
         props
     };
 }
-export function useToast({ toastParameters: { politeness, timeout, children }, managedChildParameters: { index, ..._managedChildParameters }, context }) {
+export function useToast({ toastParameters: { politeness, timeout, children }, info: { index, ...info }, context }) {
     const { getMaxVisibleCount, onAnyToastDismissed, onAnyToastMounted } = context.toastContext;
     monitorCallCount(useToast);
     const [numberOfToastsAheadOfUs, setNumberOfToastsAheadOfUs] = useState(Infinity);
@@ -119,7 +119,7 @@ export function useToast({ toastParameters: { politeness, timeout, children }, m
             firstFocusable?.focus?.();
         }
     }, []);
-    const { managedChildReturn: { getChildren: _getToasts } } = useManagedChild({ managedChildParameters: { index }, context }, { index, focus, setNumberAheadOfMe: setNumberOfToastsAheadOfUs, show });
+    const { managedChildReturn: { getChildren: _getToasts } } = useManagedChild({ info: { index, focus, setNumberAheadOfMe: setNumberOfToastsAheadOfUs, show }, context });
     const resetDismissTimer = useCallback(() => {
         setTriggerIndex(i => ++i);
     }, []);

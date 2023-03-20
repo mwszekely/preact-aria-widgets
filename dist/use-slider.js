@@ -19,10 +19,10 @@ export function useSlider({ sliderParameters: { max, min }, managedChildrenParam
         managedChildrenReturn
     };
 }
-export function useSliderThumb({ managedChildParameters, context: { sliderContext: { max: maxParent, min: minParent }, ...context }, sliderThumbParameters }) {
-    const { index } = managedChildParameters;
+export function useSliderThumb({ info, context: { sliderContext: { max: maxParent, min: minParent }, ...context }, sliderThumbParameters }) {
+    const { index } = info;
     monitorCallCount(useSliderThumb);
-    const { managedChildReturn } = useManagedChild({ managedChildParameters, context }, { index });
+    const { managedChildReturn } = useManagedChild({ info, context });
     const { getChildren: _getThumbs } = managedChildReturn;
     const { tag, value, max: maxOverride, min: minOverride, onValueChange, valueText, label } = sliderThumbParameters;
     const min = (minOverride ?? minParent);

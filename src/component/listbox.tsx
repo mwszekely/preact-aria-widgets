@@ -22,18 +22,18 @@ interface ListboxPropsBase<ListElement extends Element, ListItemElement extends 
 
 interface ListboxItemPropsBase<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends
     Get<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "listboxParameters">,
-    Get<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "managedChildParameters">,
+    Pick<M, "index">,
     Get<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "sortableChildParameters">,
     Get<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "rovingTabIndexChildParameters">,
     Get<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "singleSelectionChildParameters">,
     Get<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "pressParameters">,
     Get<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "textContentParameters"> {
-    focusSelf?: UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>["completeListNavigationChildParameters"]["focusSelf"];
-    subInfo?: OmitStrong<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>["completeListNavigationChildParameters"], "focusSelf">;
+    focusSelf?: UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>["info"]["focusSelf"];
+    subInfo?: OmitStrong<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>["info"], "focusSelf">;
     ref?: Ref<UseListboxItemReturnType<ListItemElement, M>>;
 }
 
-export interface ListboxProps<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends PartialExcept<ListboxPropsBase<ListElement, ListItemElement, LabelElement, M>, "ariaLabel" | "navigationDirection" | "selectionLimit" | "selectedIndex"> {
+export interface ListboxProps<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends PartialExcept<ListboxPropsBase<ListElement, ListItemElement, LabelElement, M>, "ariaLabel" | "selectionLimit" | "selectedIndex"> {
     render(info: UseListboxReturnType<ListElement, ListItemElement, LabelElement, M>): VNode;
 }
 export interface ListboxItemProps<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends PartialExcept<ListboxItemPropsBase<ListItemElement, M>, "ariaPropName" | "index" | "getSortValue"> {
@@ -43,22 +43,20 @@ export interface ListboxItemProps<ListItemElement extends Element, M extends Lis
 const ListboxContext = createContext<UseListboxContext<any, any, any>>(null!);
 
 const ListboxGroupContext = createContext<null | UseListboxReturnType<any, any, any, any>>(null);
-export const GroupedListbox = memo(function GroupedListbox<LabelElement extends Element>({ ariaLabel, selectionLimit, navigationDirection, render }: Pick<ListboxProps<any, any, LabelElement, any>, "ariaLabel" | "selectionLimit" | "navigationDirection" | "render">) {
+export const GroupedListbox = memo(function GroupedListbox<LabelElement extends Element>({ ariaLabel, selectionLimit, orientation, render }: Pick<ListboxProps<any, any, LabelElement, any>, "orientation" | "ariaLabel" | "selectionLimit" | "render">) {
 
     const info = useListbox<any, any, LabelElement, any>({
         labelParameters: { ariaLabel },
         linearNavigationParameters: {
             navigatePastEnd: "passthrough",
             navigatePastStart: "passthrough",
-            navigationDirection,
 
-            disableArrowKeys: false,
             disableHomeEndKeys: true,
             pageNavigationSize: 1
         },
         staggeredChildrenParameters: { staggered: false },
         paginatedChildrenParameters: { paginationMax: null, paginationMin: null },
-        listboxParameters: { selectionLimit, groupingType: "with-groups", selectedIndex: null, onSelectedIndexChange: null },
+        listboxParameters: { selectionLimit, groupingType: "with-groups", selectedIndex: null, onSelectedIndexChange: null, orientation: orientation ?? "vertical" },
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", undefined) },
         rovingTabIndexParameters: { onTabbableIndexChange: null, untabbable: false },
         sortableChildrenParameters: { compare: null },
@@ -79,13 +77,11 @@ export const Listbox = memoForwardRef(function Listbox<ListElement extends Eleme
     ariaLabel,
     collator,
     compare,
-    disableArrowKeys,
     disableHomeEndKeys,
     getIndex,
     selectedIndex,
     navigatePastEnd,
     navigatePastStart,
-    navigationDirection,
     noTypeahead,
     onSelectedIndexChange,
     onTabbableIndexChange,
@@ -96,6 +92,7 @@ export const Listbox = memoForwardRef(function Listbox<ListElement extends Eleme
     selectionLimit,
     untabbable,
     typeaheadTimeout,
+    orientation,
     render
 }: ListboxProps<ListElement, ListItemElement, LabelElement, M>) {
     const listboxGroupInfo = useContext(ListboxGroupContext);
@@ -107,9 +104,6 @@ export const Listbox = memoForwardRef(function Listbox<ListElement extends Eleme
         linearNavigationParameters: {
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap",
-            navigationDirection,
-
-            disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys),
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
             pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
         },
@@ -117,7 +111,7 @@ export const Listbox = memoForwardRef(function Listbox<ListElement extends Eleme
             paginationMax: paginationMax ?? null,
             paginationMin: paginationMin ?? null
         },
-        listboxParameters: { selectionLimit, groupingType: listboxGroupInfo == null ? "without-groups" : "group", selectedIndex, onSelectedIndexChange: onSelectedIndexChange ?? null },
+        listboxParameters: { selectionLimit, groupingType: listboxGroupInfo == null ? "without-groups" : "group", selectedIndex, onSelectedIndexChange: onSelectedIndexChange ?? null, orientation: orientation ?? "vertical" },
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
         rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable: untabbable ?? false },
         sortableChildrenParameters: { compare: compare ?? null },
@@ -150,12 +144,11 @@ export const ListboxItem = memoForwardRef(function ListboxItem<ListboxItemElemen
     const context = useContext(ListboxContext) as UseListboxContext<any, ListboxItemElement, M>;
     console.assert(context != null, `This ListboxItem is not contained within a Listbox`);
     const focusSelfDefault = useCallback((e: any) => { e?.focus(); }, []);
-    const info = useListboxItem({
-        completeListNavigationChildParameters: { focusSelf: focusSelf ?? focusSelfDefault, ...subInfo } as M,
+    const info = useListboxItem<ListboxItemElement, M>({
+        info: { index, focusSelf: focusSelf ?? focusSelfDefault, ...subInfo } as M,
         context,
         listboxParameters: { selected: selected ?? null, },
         pressParameters: { onPressSync },
-        managedChildParameters: { index },
         rovingTabIndexChildParameters: { hidden: hidden ?? false },
         sortableChildParameters: { getSortValue: getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },

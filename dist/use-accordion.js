@@ -3,7 +3,7 @@ import { assertEmptyObject, monitorCallCount, useChildrenFlag, useLinearNavigati
 import { useCallback } from "preact/hooks";
 import { Prefices } from "./props.js";
 import { useButton } from "./use-button.js";
-export function useAccordion({ accordionParameters: { initialIndex, localStorageKey }, typeaheadNavigationParameters, linearNavigationParameters: { disableArrowKeys, disableHomeEndKeys, navigationDirection, navigatePastEnd, navigatePastStart, pageNavigationSize }, managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange }, ...rest }) {
+export function useAccordion({ accordionParameters: { initialIndex, localStorageKey, orientation }, typeaheadNavigationParameters, linearNavigationParameters: { disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize }, managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange }, ...rest }) {
     monitorCallCount(useAccordion);
     assertEmptyObject(rest);
     const [localStorageIndex, setLocalStorageIndex] = usePersistentState(localStorageKey ?? null, initialIndex ?? null);
@@ -73,12 +73,11 @@ export function useAccordion({ accordionParameters: { initialIndex, localStorage
                 stableTypeaheadProps: propsTN,
             }),
             linearNavigationParameters: useStableObject({
-                disableArrowKeys,
                 disableHomeEndKeys,
                 getHighestIndex: useCallback(() => getChildren().getHighestIndex(), []),
                 indexMangler: identity,
                 indexDemangler: identity,
-                navigationDirection,
+                arrowKeyDirection: orientation ?? "vertical",
                 isValid: isValidByIndex,
                 navigatePastEnd,
                 navigatePastStart,
@@ -90,7 +89,7 @@ export function useAccordion({ accordionParameters: { initialIndex, localStorage
         accordionReturn: useStableObject({ changeExpandedIndex })
     };
 }
-export function useAccordionSection({ buttonParameters, accordionSectionParameters: { open: openFromUser, bodyRole }, managedChildParameters: { index }, rovingTabIndexChildParameters: { hidden }, textContentParameters, context: { accordionSectionParameters: { changeExpandedIndex, changeTabbedIndex: setCurrentFocusedIndex, getTabbedIndex: getCurrentFocusedIndex, stableTypeaheadProps }, linearNavigationParameters, rovingTabIndexReturn, managedChildContext, typeaheadNavigationContext }, refElementParameters, }) {
+export function useAccordionSection({ buttonParameters, accordionSectionParameters: { open: openFromUser, bodyRole }, info: { index }, rovingTabIndexChildParameters: { hidden }, textContentParameters, context: { accordionSectionParameters: { changeExpandedIndex, changeTabbedIndex: setCurrentFocusedIndex, getTabbedIndex: getCurrentFocusedIndex, stableTypeaheadProps }, linearNavigationParameters, rovingTabIndexReturn, managedChildContext, typeaheadNavigationContext }, refElementParameters, }) {
     monitorCallCount(useAccordionSection);
     const { disabled, onPress: userOnPress } = buttonParameters;
     const [openFromParent, setOpenFromParent, getOpenFromParent] = useState(null);
@@ -107,18 +106,16 @@ export function useAccordionSection({ buttonParameters, accordionSectionParamete
         context: {
             managedChildContext
         },
-        managedChildParameters: {
-            index: index,
+        info: {
+            index,
+            disabled,
+            focusSelf,
+            getMostRecentlyTabbed,
+            getOpenFromParent,
+            hidden,
+            setMostRecentlyTabbed,
+            setOpenFromParent,
         }
-    }, {
-        index,
-        disabled,
-        focusSelf,
-        getMostRecentlyTabbed,
-        getOpenFromParent,
-        hidden,
-        setMostRecentlyTabbed,
-        setOpenFromParent,
     });
     const onPress = (e) => {
         setCurrentFocusedIndex(index);
@@ -130,7 +127,7 @@ export function useAccordionSection({ buttonParameters, accordionSectionParamete
     };
     const { propsStable: propsLN, ...linearReturnType } = useLinearNavigation({ linearNavigationParameters, rovingTabIndexReturn });
     const { pressParameters: { excludeSpace }, textContentReturn } = useTypeaheadNavigationChild({
-        managedChildParameters: { index },
+        info: { index },
         refElementReturn: { getElement: useStableCallback(() => refElementReturn.getElement()) },
         textContentParameters,
         context: { typeaheadNavigationContext }

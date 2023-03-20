@@ -1,4 +1,4 @@
-import { monitorCallCount, useCompleteListNavigation, useCompleteListNavigationChild, useMergedProps, useSingleSelectionDeclarative } from "preact-prop-helpers";
+import { monitorCallCount, useCompleteListNavigationChild, useCompleteListNavigationDeclarative, useMergedProps } from "preact-prop-helpers";
 import { Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
 /**
@@ -13,18 +13,16 @@ import { useLabelSynthetic } from "./use-label.js";
  * @param param0
  * @returns
  */
-export function useToolbar({ linearNavigationParameters, toolbarParameters: { orientation, role, onSelectedIndexChange }, labelParameters, singleSelectionDeclarativeParameters: { selectedIndex }, ...listNavParameters }) {
+export function useToolbar({ linearNavigationParameters, toolbarParameters: { orientation, role, selectedIndex, onSelectedIndexChange }, labelParameters, ...listNavParameters }) {
     monitorCallCount(useToolbar);
-    const { context, propsStable, ...listNavReturn } = useCompleteListNavigation({
+    const { context, propsStable, ...listNavReturn } = useCompleteListNavigationDeclarative({
         ...listNavParameters,
-        singleSelectionParameters: { initiallySelectedIndex: selectedIndex, onSelectedIndexChange: onSelectedIndexChange ?? null },
+        singleSelectionDeclarativeParameters: { selectedIndex, setSelectedIndex: onSelectedIndexChange },
         paginatedChildrenParameters: { paginationMax: null, paginationMin: null },
-        linearNavigationParameters: { ...linearNavigationParameters, navigationDirection: orientation },
+        linearNavigationParameters: { ...linearNavigationParameters, arrowKeyDirection: orientation },
     });
-    const _v = useSingleSelectionDeclarative({
-        singleSelectionDeclarativeParameters: { selectedIndex },
-        singleSelectionReturn: { changeSelectedIndex: listNavReturn.singleSelectionReturn.changeSelectedIndex }
-    });
+    //const _v: void = useSingleSelectionDeclarative({
+    //})
     const { propsInput: propsToolbar, propsLabel, randomIdInputReturn, randomIdLabelReturn } = useLabelSynthetic({
         labelParameters: { ...labelParameters, onLabelClick: listNavReturn.rovingTabIndexReturn.focusSelf },
         randomIdInputParameters: { prefix: Prefices.toolbar },

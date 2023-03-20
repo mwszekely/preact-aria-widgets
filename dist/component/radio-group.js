@@ -5,13 +5,12 @@ import { useContext, useImperativeHandle } from "preact/hooks";
 import { useRadio, useRadioGroup } from "../use-radio-group.js";
 import { memoForwardRef, useDefault } from "./util.js";
 const RadioContext = createContext(null);
-export const RadioGroup = memoForwardRef(function RadioGroup({ render, name, onSelectedValueChange, collator, disableArrowKeys, disableHomeEndKeys, navigationDirection, noTypeahead, typeaheadTimeout, ariaLabel, compare, staggered, getIndex, navigatePastEnd, navigatePastStart, selectedValue, untabbable, onTabbableIndexChange, pageNavigationSize, }, ref) {
+export const RadioGroup = memoForwardRef(function RadioGroup({ render, name, onSelectedValueChange, collator, disableHomeEndKeys, arrowKeyDirection, noTypeahead, typeaheadTimeout, ariaLabel, compare, staggered, getIndex, navigatePastEnd, navigatePastStart, selectedValue, untabbable, onTabbableIndexChange, pageNavigationSize, }, ref) {
     const info = useRadioGroup({
         linearNavigationParameters: {
-            navigationDirection,
+            arrowKeyDirection: arrowKeyDirection ?? "either",
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap",
-            disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys),
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
             pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
         },
@@ -39,12 +38,11 @@ export const Radio = memoForwardRef(function Radio({ disabled, index, render, va
     const getValue = useStableGetter(value);
     const defaultFocusSelf = () => info.checkboxLikeReturn.focusSelf();
     const info = useRadio({
-        managedChildParameters: { index },
         rovingTabIndexChildParameters: { hidden: hidden ?? false },
         sortableChildParameters: { getSortValue: getValue },
         radioParameters: { value },
         checkboxLikeParameters: { disabled: disabled ?? false },
-        completeListNavigationChildParameters: { focusSelf: focusSelf ?? defaultFocusSelf },
+        info: { index, focusSelf: focusSelf ?? defaultFocusSelf },
         context,
         labelParameters: { ariaLabel, labelPosition, tagInput, tagLabel },
         singleSelectionChildParameters: { disabled: !!disabled },

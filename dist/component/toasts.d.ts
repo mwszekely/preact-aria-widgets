@@ -5,7 +5,7 @@ export interface ToastsProps<ContainerType extends Element> extends Get<UseToast
     ref?: Ref<UseToastsReturnType<ContainerType, ToastInfo>>;
     render(info: UseToastsReturnType<ContainerType, ToastInfo>): VNode;
 }
-export interface ToastProps<E extends Element> extends Get<UseToastParameters<ToastInfo>, "managedChildParameters">, Get<UseToastParameters<ToastInfo>, "toastParameters"> {
+export interface ToastProps<E extends Element> extends Get<UseToastParameters<ToastInfo>, "info">, Get<UseToastParameters<ToastInfo>, "toastParameters"> {
     ref?: Ref<UseToastReturnType<E>>;
     render(args: UseToastReturnType<E>): VNode;
 }

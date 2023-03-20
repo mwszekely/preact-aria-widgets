@@ -19,17 +19,18 @@ interface TabsPropsBase<TabContainerElement extends Element, TabElement extends 
 }
 
 interface TabPropsBase<TabElement extends Element, M extends TabInfo<TabElement>> extends
-    Get<UseTabParameters<TabElement, M>, "managedChildParameters">,
+    Pick<M, "index">,
     Get<UseTabParameters<TabElement, M>, "singleSelectionChildParameters">,
     Get<UseTabParameters<TabElement, M>, "sortableChildParameters">,
     Get<UseTabParameters<TabElement, M>, "rovingTabIndexChildParameters">,
     Get<UseTabParameters<TabElement, M>, "textContentParameters"> {
-    focusSelf: Get<UseTabParameters<TabElement, M>, "completeListNavigationChildParameters">["focusSelf"];
-    subInfo?: OmitStrong<Get<UseTabParameters<TabElement, M>, "completeListNavigationChildParameters">, "focusSelf">
+    focusSelf: M["focusSelf"];
+    info?: OmitStrong<M, keyof TabInfo<TabElement>>
 }
 
-interface TabPanelPropsBase<M extends TabPanelInfo> extends
-    Get<UseTabPanelParameters<M>, "managedChildParameters"> {
+interface TabPanelPropsBase<M extends TabPanelInfo> extends Pick<M, "index">
+     {
+        info?: OmitStrong<M, keyof TabPanelInfo>
 }
 
 export interface TabsProps<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element, M extends TabInfo<TabElement>> extends PartialExcept<TabsPropsBase<TabContainerElement, TabElement, TabLabelElement, M>, "orientation" | "ariaLabel"> {
@@ -51,7 +52,6 @@ export const Tabs = memoForwardRef(function Tabs<TabContainerElement extends Ele
     ariaLabel,
     collator,
     compare,
-    disableArrowKeys,
     disableHomeEndKeys,
     getIndex,
     initiallySelectedIndex,
@@ -74,7 +74,6 @@ export const Tabs = memoForwardRef(function Tabs<TabContainerElement extends Ele
         labelParameters: { ariaLabel },
         staggeredChildrenParameters: { staggered: staggered || false },
         linearNavigationParameters: {
-            disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys),
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap",
@@ -118,17 +117,16 @@ export const Tab = memoForwardRef(function Tab<E extends Element, M extends TabI
     getSortValue,
     render,
     selectionMode,
-    subInfo
+    info: uinfo
 }: TabProps<E, M>, ref?: Ref<any>) {
     const context = useContext(TabsContext);
     console.assert(context != null, `This Tab is not contained within a Tabs component`);
     const focusSelfDefault = useCallback((e: any) => { e?.focus(); }, []);
     const info = useTab<E, M>({
-        completeListNavigationChildParameters: { focusSelf: focusSelf ?? focusSelfDefault, ...subInfo } as M,
+        info: { index, focusSelf: focusSelf ?? focusSelfDefault, ...uinfo } as M,
         context,
         rovingTabIndexChildParameters: { hidden: hidden ?? false },
         sortableChildParameters: { getSortValue },
-        managedChildParameters: { index },
         singleSelectionChildParameters: { disabled: disabled ?? false, selectionMode: selectionMode ?? "focus" },
         textContentParameters: { getText: useDefault("getText", getText) }
     });
@@ -138,12 +136,13 @@ export const Tab = memoForwardRef(function Tab<E extends Element, M extends TabI
 
 export function TabPanel<E extends Element, M extends TabPanelInfo = TabPanelInfo>({
     index,
-    render
+    render,
+    info: uinfo
 }: TabPanelProps<E, M>) {
     const context = useContext(TabPanelsContext);
     const info = useTabPanel<E, M>({
         context,
-        managedChildParameters: { index }
+        info: { index, ...uinfo } as M
     });
     return render(info);
 }

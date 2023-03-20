@@ -17,7 +17,7 @@ export const SliderThumb = memoForwardRef(function SliderThumbU({ label, tag, va
     console.assert(context != null, `This SliderThumb is not contained within a Slider`);
     const info = useSliderThumb({
         context,
-        managedChildParameters: { index },
+        info: { index },
         sliderThumbParameters: { label, tag, value, max, min, onValueChange, valueText },
     });
     useImperativeHandle(ref, () => info);

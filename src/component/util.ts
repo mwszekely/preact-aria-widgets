@@ -17,7 +17,7 @@ export const ContextDefaults = {
     getWindow: createContext(() => globalThis.window as Window),
     focusOpener: createContext((e: any) => e?.focus?.()),
     getText: createContext((e: any) => (e?.textContent ?? "") as string | null),
-    selectionMode: createContext<UseSingleSelectionChildParameters<any>["singleSelectionChildParameters"]["selectionMode"]>("activation"),
+    selectionMode: createContext<UseSingleSelectionChildParameters<any, any>["singleSelectionChildParameters"]["selectionMode"]>("activation"),
 }
 
 type DefaultExcepts = keyof typeof ContextDefaults;

@@ -20,7 +20,6 @@ interface MenuPropsBase<MenuSurfaceElement extends Element, MenuParentElement ex
     Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, M>, "escapeDismissParameters">,
     Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, M>, "rearrangeableChildrenParameters">,
     Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, M>, "sortableChildrenParameters">,
-    Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, M>, "singleSelectionDeclarativeParameters">,
     Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, M>, "toolbarParameters"> {
 }
 
@@ -35,10 +34,7 @@ export interface MenuItemProps<MenuItemElement extends Element, M extends UseMen
 const MenuItemContext = createContext<UseMenuContext<any, any, any>>(null!);
 
 export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element, ParentElement extends Element, ChildElement extends Element, ButtonElement extends Element, M extends UseMenubarSubInfo<ChildElement> = UseMenubarSubInfo<ChildElement>>({
-
-
     collator,
-    disableArrowKeys,
     disableHomeEndKeys,
     noTypeahead,
     typeaheadTimeout,
@@ -76,7 +72,6 @@ export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element,
 
     const info = useMenu<SurfaceElement, ParentElement, ChildElement, ButtonElement, M>({
         linearNavigationParameters: {
-            disableArrowKeys: useDefault("disableArrowKeys", disableArrowKeys),
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
             pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize),
             navigatePastEnd: navigatePastEnd ?? "wrap",
@@ -110,8 +105,7 @@ export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element,
             noTypeahead: useDefault("noTypeahead", noTypeahead),
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
         },
-        singleSelectionDeclarativeParameters: { selectedIndex: selectedIndex ?? null },
-        toolbarParameters: { orientation, onSelectedIndexChange: onSelectedIndexChange ?? null }
+        toolbarParameters: { orientation, selectedIndex: selectedIndex ?? null, onSelectedIndexChange: onSelectedIndexChange ?? null }
     });
 
     useImperativeHandle(ref!, () => info);
@@ -138,15 +132,14 @@ export const MenuItem = memoForwardRef(function MenuItem<MenuItemElement extends
     selectionMode,
     disabled,
     render,
-    subInfo
+    info: uinfo
 }: MenuItemProps<MenuItemElement, M>, ref?: Ref<any>) {
     const context = useContext(MenuItemContext);
     console.assert(context != null, `This MenuItem is not contained within a Menubar/Menu`);
     const defaultFocusSelf = useCallback((e: MenuItemElement | null) => (e as Element as HTMLElement)?.focus?.(), []);
     const info = useMenuItem<MenuItemElement, M>({
-        completeListNavigationChildParameters: { focusSelf: focusSelf ?? defaultFocusSelf, ...subInfo } as M,
+        info: { index, focusSelf: focusSelf ?? defaultFocusSelf, ...uinfo } as M,
         context,
-        managedChildParameters: { index },
         rovingTabIndexChildParameters: { hidden: hidden ?? false },
         sortableChildParameters: { getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },

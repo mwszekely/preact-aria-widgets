@@ -5,7 +5,7 @@ export interface SliderProps extends Get<UseSliderParameters<SliderThumbInfo>, "
     children: ComponentChildren;
     ref?: Ref<UseSliderReturnType<SliderThumbInfo>>;
 }
-export interface SliderThumbProps<ThumbElement extends Element> extends Get<UseSliderThumbParameters<ThumbElement, SliderThumbInfo>, "managedChildParameters">, Get<UseSliderThumbParameters<ThumbElement, SliderThumbInfo>, "sliderThumbParameters"> {
+export interface SliderThumbProps<ThumbElement extends Element> extends Pick<SliderThumbInfo, "index">, Get<UseSliderThumbParameters<ThumbElement, SliderThumbInfo>, "sliderThumbParameters"> {
     render(info: UseSliderThumbReturnType<ThumbElement, SliderThumbInfo>): VNode;
 }
 export declare const Slider: ({ max, min, onAfterChildLayoutEffect, onChildrenMountChange, children }: SliderProps, ref?: Ref<any>) => import("preact").JSX.Element;

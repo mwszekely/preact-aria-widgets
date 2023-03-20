@@ -1,7 +1,7 @@
-import { monitorCallCount, useCompleteListNavigation, useCompleteListNavigationChild, useEnsureStability, useMergedProps, usePress, useSingleSelectionDeclarative, useStableCallback, useStableObject } from "preact-prop-helpers";
+import { monitorCallCount, useCompleteListNavigationChild, useCompleteListNavigationDeclarative, useEnsureStability, useMergedProps, usePress, useStableCallback, useStableObject } from "preact-prop-helpers";
 import { EventDetail, Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
-export function useListbox({ labelParameters, listboxParameters: { selectionLimit, groupingType, selectedIndex, onSelectedIndexChange }, ...restParams }) {
+export function useListbox({ labelParameters, listboxParameters: { selectionLimit, groupingType, selectedIndex, onSelectedIndexChange, orientation }, linearNavigationParameters, ...restParams }) {
     monitorCallCount(useListbox);
     useEnsureStability("useListbox", selectionLimit);
     const { propsInput: propsLabelList, propsLabel: propsLabelLabel, randomIdInputReturn: { id: _inputId }, randomIdLabelReturn: { id: _labelId } } = useLabelSynthetic({
@@ -14,13 +14,10 @@ export function useListbox({ labelParameters, listboxParameters: { selectionLimi
         randomIdInputParameters: { prefix: Prefices.listbox },
         randomIdLabelParameters: { prefix: Prefices.listboxLabel }
     });
-    let { context, propsStable: { ...props }, rovingTabIndexReturn, singleSelectionReturn, ...restRet } = useCompleteListNavigation({
-        singleSelectionParameters: { initiallySelectedIndex: selectedIndex, onSelectedIndexChange },
+    let { context, propsStable: { ...props }, rovingTabIndexReturn, singleSelectionReturn, ...restRet } = useCompleteListNavigationDeclarative({
+        singleSelectionDeclarativeParameters: { selectedIndex, setSelectedIndex: onSelectedIndexChange },
+        linearNavigationParameters: { arrowKeyDirection: orientation, ...linearNavigationParameters },
         ...restParams
-    });
-    const _v = useSingleSelectionDeclarative({
-        singleSelectionDeclarativeParameters: { selectedIndex },
-        singleSelectionReturn: { changeSelectedIndex: singleSelectionReturn.changeSelectedIndex }
     });
     if (groupingType == "group")
         props.role = "group";
@@ -44,7 +41,6 @@ export function useListbox({ labelParameters, listboxParameters: { selectionLimi
             })
         }),
         rovingTabIndexReturn,
-        singleSelectionReturn,
         propsListbox: useMergedProps(props, propsLabelList, { "aria-multiselectable": (selectionLimit == "multi" ? "true" : undefined) }),
         propsListboxLabel: propsLabelLabel
     };
