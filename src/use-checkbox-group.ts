@@ -57,7 +57,7 @@ export interface UseCheckboxGroupReturnType<GroupElement extends Element, TCE ex
 
 export interface UseCheckboxGroupParentParameters<TCE extends Element, M extends CheckboxGroupInfo<TCE>> extends OmitStrong<UseCompleteListNavigationChildParameters<TCE, M>, "info" | "singleSelectionChildParameters"> {
     context: CheckboxGroupContext<any, TCE, M>;
-    info: OmitStrong<UseCompleteListNavigationChildParameters<TCE, CheckboxGroupInfo<TCE>>["info"], never>
+    info: OmitStrong<UseCompleteListNavigationChildParameters<TCE, CheckboxGroupInfo<TCE>>["info"], never>;
 }
 
 

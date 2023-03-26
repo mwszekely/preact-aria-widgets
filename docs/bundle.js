@@ -22283,21 +22283,52 @@
 
 	let timeoutHandle = null;
 	function callCountU(hook) {
-	  var _window, _window$_hookCallCoun, _window$_hookCallCoun2, _window$_hookCallCoun3, _window$_hookCallCoun4, _window$_hookCallCoun5;
+	  var _window, _window$_hookCallCoun, _window$_hookCallCoun2, _window$_hookCallCoun3;
 	  const name = hook.name;
 	  if (filters.has(name)) return;
+	  console.assert(name.length > 0);
 	  (_window$_hookCallCoun = (_window = window)._hookCallCount) !== null && _window$_hookCallCoun !== void 0 ? _window$_hookCallCoun : _window._hookCallCount = {
-	    callCountsMoment: {},
-	    callCountsTotal: {}
+	    callCounts: {}
 	  };
-	  (_window$_hookCallCoun3 = (_window$_hookCallCoun2 = window._hookCallCount.callCountsMoment)[name]) !== null && _window$_hookCallCoun3 !== void 0 ? _window$_hookCallCoun3 : _window$_hookCallCoun2[name] = 0;
-	  (_window$_hookCallCoun5 = (_window$_hookCallCoun4 = window._hookCallCount.callCountsTotal)[name]) !== null && _window$_hookCallCoun5 !== void 0 ? _window$_hookCallCoun5 : _window$_hookCallCoun4[name] = 0;
-	  window._hookCallCount.callCountsMoment[name] += 1;
-	  window._hookCallCount.callCountsTotal[name] += 1;
+	  (_window$_hookCallCoun3 = (_window$_hookCallCoun2 = window._hookCallCount.callCounts)[name]) !== null && _window$_hookCallCoun3 !== void 0 ? _window$_hookCallCoun3 : _window$_hookCallCoun2[name] = {
+	    moment: 0,
+	    total: 0
+	  };
+	  window._hookCallCount.callCounts[name].moment += 1;
+	  window._hookCallCount.callCounts[name].total += 1;
 	  if (timeoutHandle == null) {
 	    timeoutHandle = requestIdleCallback(() => {
-	      console.log(window._hookCallCount.callCountsMoment);
-	      window._hookCallCount.callCountsMoment = {};
+	      //console.log((window as WindowWithHookCallCount)._hookCallCount.callCountsMoment);
+	      //(window as WindowWithHookCallCount)._hookCallCount.callCountsMoment = {};
+	      const o = Object.entries(window._hookCallCount.callCounts).map(_ref => {
+	        let [hook, counts] = _ref;
+	        return {
+	          Hook: hook || "?",
+	          Now: (counts === null || counts === void 0 ? void 0 : counts.moment) || 0,
+	          Total: (counts === null || counts === void 0 ? void 0 : counts.total) || 0
+	        };
+	      }).filter(_ref2 => {
+	        let {
+	          Now
+	        } = _ref2;
+	        return !!Now;
+	      }).sort((_ref3, _ref4) => {
+	        let {
+	          Now: lhsM
+	        } = _ref3;
+	        let {
+	          Now: rhsM
+	        } = _ref4;
+	        if (!lhsM && !rhsM) return 0;
+	        lhsM || (lhsM = Infinity);
+	        rhsM || (rhsM = Infinity);
+	        return lhsM - rhsM;
+	      });
+	      console.table(o, ['Hook', 'Now', 'Total']);
+	      Object.entries(window._hookCallCount.callCounts).forEach(_ref5 => {
+	        let [, counts] = _ref5;
+	        counts.moment = 0;
+	      });
 	      timeoutHandle = null;
 	    });
 	  }
@@ -22534,7 +22565,6 @@
 	  return "".concat(prefix !== null && prefix !== void 0 ? prefix : "id-").concat(random64Bits().map(n => base64(n)).join(""));
 	}
 
-	const previousInputs = new Map();
 	const toRun = new Map();
 	// TODO: Whether this goes in options.diffed or options._commit
 	// is a post-suspense question.
@@ -22549,24 +22579,27 @@
 	// which is cool and means we won't need this at all soon.
 	// So for now we'll stick with diff to prevent any weirdness with
 	// commit being private and all.
+	//
+	// Also, in theory this could be replaced with `useInsertionEffect`,
+	// but that probably won't be available in Preact for awhile.
 	const commitName = "diffed";
-	const originalCommit = l$1[commitName];
-	const newCommit = function () {
+	const newCommit = function (vnode) {
 	  for (const [id, effectInfo] of toRun) {
-	    const oldInputs = previousInputs.get(id);
+	    const oldInputs = effectInfo.prevInputs;
 	    if (argsChanged(oldInputs, effectInfo.inputs)) {
 	      var _effectInfo$cleanup;
 	      (_effectInfo$cleanup = effectInfo.cleanup) === null || _effectInfo$cleanup === void 0 ? void 0 : _effectInfo$cleanup.call(effectInfo);
 	      effectInfo.cleanup = effectInfo.effect();
-	      previousInputs.set(id, effectInfo.inputs);
+	      effectInfo.prevInputs = effectInfo.inputs;
 	    }
 	  }
 	  toRun.clear();
-	  for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-	    args[_key] = arguments[_key];
+	  for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+	    args[_key - 1] = arguments[_key];
 	  }
-	  originalCommit === null || originalCommit === void 0 ? void 0 : originalCommit(...args);
+	  originalCommit === null || originalCommit === void 0 ? void 0 : originalCommit(vnode, ...args);
 	};
+	const originalCommit = l$1[commitName];
 	l$1[commitName] = newCommit;
 	/**
 	 * Semi-private function to allow stable callbacks even within `useLayoutEffect` and ref assignment.
@@ -22588,7 +22621,6 @@
 	  p(() => {
 	    return () => {
 	      toRun.delete(id);
-	      previousInputs.delete(id);
 	    };
 	  }, [id]);
 	}
@@ -24741,7 +24773,7 @@
 	    (_onRearrangedGetter = onRearrangedGetter()) === null || _onRearrangedGetter === void 0 ? void 0 : _onRearrangedGetter();
 	    (_getForceUpdate = getForceUpdate()) === null || _getForceUpdate === void 0 ? void 0 : _getForceUpdate();
 	  }, []);
-	  const useRearrangedChildren = T$1(children => {
+	  const useRearrangedChildren = T$1(function useRearrangedChildren(children) {
 	    monitorCallCount(useRearrangedChildren);
 	    console.assert(Array.isArray(children));
 	    const forceUpdate = useForceUpdate();
@@ -25141,7 +25173,7 @@
 	}
 
 	/*
-	export function useRefElementProps<E extends Element>(r: UseRefElementReturnType<E>, ...otherProps: h.JSX.HTMLAttributes<E>[]): h.JSX.HTMLAttributes<E>[] {
+	export function useRefElementProps<E extends Element>(r: UseRefElementReturnType<E>, ...otherProps: ElementProps<E>[]): ElementProps<E>[] {
 	    return [r.refElementReturn.propsStable, ...otherProps];
 	}*/
 	/**
@@ -35499,7 +35531,7 @@
 	      /*
 	      
 	      defaultRenderGridlistChild({ tagGridlistChild: "div", makePropsGridlistChild: (_info) => ({ children: text }) })
-	            */
+	           */
 	    }
 	  });
 	}
@@ -35545,7 +35577,7 @@
 	      /*
 	      
 	      defaultRenderGridlistChild<HTMLDivElement>({ tagGridlistChild: "div", makePropsGridlistChild: (info) => ({ children: <Checkbox ref={cb} labelPosition={"separate"} tagInput="input" tagLabel="label" checked={b} disabled={false} getDocument={getDocument} onCheckedChange={e => setB(e[EventDetail].checked)} render={defaultRenderCheckbox({ labelPosition: "separate", tagInput: "input", tagLabel: "label", makeInputProps: () => ({ tabIndex: info.rovingTabIndex.tabbable ? 0 : -1 }), makeLabelProps: () => ({ children: "Checkbox" }) })} /> }) })
-	            */
+	           */
 	    }
 	  });
 	}
@@ -35592,12 +35624,12 @@
 	                        })]
 	                      });
 	                      /*
-	                        defaultRenderGridlistRow({
+	                       defaultRenderGridlistRow({
 	                      tagGridlistRow: "div", makePropsGridlistRow: (_info) => ({
 	                          children: [<DemoGridlistChild1 row={i} />, <DemoGridlistChild2 />]
 	                      })
 	                      })
-	                                                                        */
+	                                                                       */
 	                    }
 	                  });
 	                }
@@ -36317,10 +36349,10 @@
 	        })
 	      });
 	      /*
-	        tagTableCell: "td", makePropsTableCell: (info) => ({
+	       tagTableCell: "td", makePropsTableCell: (info) => ({
 	          children: <DemoInput tabbable={info.rovingTabIndex.tabbable} />
-	        })
-	        */
+	       })
+	       */
 	    }
 	  });
 	  /*
@@ -36454,7 +36486,7 @@
 	                              }, 2)]
 	                            });
 	                            /*
-	                                        tagTableRow: "tr",
+	                                      tagTableRow: "tr",
 	                            makePropsTableRow: () => ({
 	                                children: <>
 	                                    <DemoTableCell key={0} index={0} />
@@ -36463,7 +36495,7 @@
 	                                </>
 	                            })
 	                            })
-	                                  */
+	                                 */
 	                          }
 	                        }, i);
 	                      }
