@@ -7,7 +7,7 @@ export declare const ContextDefaults: {
     pageNavigationSize: Context<number>;
     typeaheadTimeout: Context<number>;
     noTypeahead: Context<boolean>;
-    getIndex: Context<GetIndex<any>>;
+    getIndex: Context<GetIndex>;
     disableArrowKeys: Context<boolean>;
     disableHomeEndKeys: Context<boolean>;
     getWindow: Context<() => Window>;

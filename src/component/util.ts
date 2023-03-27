@@ -11,7 +11,7 @@ export const ContextDefaults = {
     pageNavigationSize: createContext<number>(0.1),
     typeaheadTimeout: createContext(1000),
     noTypeahead: createContext(false),
-    getIndex: createContext<GetIndex<any>>(v => v.props.index),
+    getIndex: createContext<GetIndex>(v => v.props.index),
     disableArrowKeys: createContext(false),
     disableHomeEndKeys: createContext(false),
     getWindow: createContext(() => globalThis.window as Window),
