@@ -27,7 +27,7 @@
   "author": "",
   "license": "ISC",
   "peerDependencies": {
-    "preact": "^10.13.1"
+    "preact": "^10.13.2"
   },
   "typings": "./dist/index.d.ts",
   "devDependencies": {
