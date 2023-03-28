@@ -97,16 +97,14 @@ export function useTableSection({ linearNavigationParameters, rovingTabIndexPara
         propsTableSection: props
     };
 }
-export function useTableRow({ info, singleSelectionChildParameters, rovingTabIndexChildParameters, textContentParameters, context: cx1, tableRowParameters: { selected }, linearNavigationParameters, rovingTabIndexParameters, }) {
+export function useTableRow({ info, textContentParameters, context: cx1, tableRowParameters: { selected }, linearNavigationParameters, rovingTabIndexParameters, }) {
     monitorCallCount(useTableRow);
     const { context: cx2, managedChildrenReturn, props: { ...props }, ...restRet
     // props
      } = useCompleteGridNavigationRow({
         textContentParameters,
         context: { ...cx1 },
-        singleSelectionChildParameters,
         info,
-        rovingTabIndexChildParameters,
         sortableChildParameters: {
             getSortValue: useStableCallback(() => {
                 const currentColumn = cx1.tableContext.getCurrentSortColumn().column;

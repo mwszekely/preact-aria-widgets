@@ -26,28 +26,26 @@ export const CheckboxGroup = memoForwardRef(function CheckboxGroup({ render, col
     useImperativeHandle(ref, () => info);
     return (_jsx(UseCheckboxGroupChildContext.Provider, { value: info.context, children: render(info) }));
 });
-export const CheckboxGroupParent = memoForwardRef(function CheckboxGroupParent({ render, index, focusSelf, hidden, getText, getSortValue, ..._rest }, ref) {
+export const CheckboxGroupParent = memoForwardRef(function CheckboxGroupParent({ render, index, focusSelf, hidden, getText, getSortValue, disabled, ..._rest }, ref) {
     const context = useContext(UseCheckboxGroupChildContext);
     console.assert(context != null, `This CheckboxGroupParent is not contained within a CheckboxGroup`);
     const info = useCheckboxGroupParent({
-        info: { index, focusSelf, checkboxInfo: { checkboxChildType: "parent" } },
+        info: { index, disabled: disabled || false, hidden: hidden || false, focusSelf, checkboxInfo: { checkboxChildType: "parent" } },
         context,
-        rovingTabIndexChildParameters: { hidden: hidden ?? false },
         sortableChildParameters: { getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) }
     });
     useImperativeHandle(ref, () => info);
     return render(info);
 });
-export const CheckboxGroupChild = memoForwardRef(function CheckboxGroupChild({ index, render, checked, onChangeFromParent, getSortValue, hidden, getText, focusSelf, ..._rest }, ref) {
+export const CheckboxGroupChild = memoForwardRef(function CheckboxGroupChild({ index, render, checked, onChangeFromParent, getSortValue, hidden, getText, focusSelf, disabled, ..._rest }, ref) {
     const context = useContext(UseCheckboxGroupChildContext);
     console.assert(context != null, `This CheckboxGroupChild is not contained within a CheckboxGroup`);
     const info = useCheckboxGroupChild({
         checkboxGroupChild: { checked, onChangeFromParent },
-        info: { index, focusSelf },
+        info: { index, hidden: hidden || false, disabled: disabled || false, focusSelf },
         textContentParameters: { getText: useDefault("getText", getText) },
         context,
-        rovingTabIndexChildParameters: { hidden: hidden ?? false },
         sortableChildParameters: { getSortValue },
     });
     useImperativeHandle(ref, () => info);

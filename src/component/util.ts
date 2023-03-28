@@ -1,5 +1,5 @@
 import { Context, createContext } from "preact";
-import { GetIndex, UseSingleSelectionChildParameters } from "preact-prop-helpers";
+import { GetIndex, UseSingleSelectionParameters } from "preact-prop-helpers";
 import { ForwardFn, forwardRef, memo, useContext } from "preact/compat";
 
 export function memoForwardRef<T extends ForwardFn<any, any>>(fn: T): T {
@@ -17,7 +17,7 @@ export const ContextDefaults = {
     getWindow: createContext(() => globalThis.window as Window),
     focusOpener: createContext((e: any) => e?.focus?.()),
     getText: createContext((e: any) => (e?.textContent ?? "") as string | null),
-    selectionMode: createContext<UseSingleSelectionChildParameters<any, any>["singleSelectionChildParameters"]["selectionMode"]>("activation"),
+    selectionMode: createContext<UseSingleSelectionParameters<any, any>["singleSelectionParameters"]["selectionMode"]>("activation"),
 }
 
 type DefaultExcepts = keyof typeof ContextDefaults;

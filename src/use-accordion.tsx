@@ -1,6 +1,6 @@
 import { identity } from "lodash-es";
 import { h } from "preact";
-import { assertEmptyObject, ManagedChildInfo, monitorCallCount, OnChildrenMountChange, PassiveStateUpdater, PersistentStates, useChildrenFlag, useLinearNavigation, UseLinearNavigationParameters, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, useMergedProps, usePersistentState, UsePressReturnType, useRandomId, useRefElement, UseRefElementParameters, UseRefElementReturnType, UseRovingTabIndexChildInfo, UseRovingTabIndexChildParameters, useStableCallback, useStableObject, useState, UseTextContentReturnType, useTypeaheadNavigation, useTypeaheadNavigationChild, UseTypeaheadNavigationChildParameters, UseTypeaheadNavigationContext, UseTypeaheadNavigationParameters } from "preact-prop-helpers";
+import { assertEmptyObject, ManagedChildInfo, monitorCallCount, OnChildrenMountChange, PassiveStateUpdater, PersistentStates, useChildrenFlag, useLinearNavigation, UseLinearNavigationParameters, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, useMergedProps, usePersistentState, UsePressReturnType, useRandomId, useRefElement, UseRefElementParameters, UseRefElementReturnType, useStableCallback, useStableObject, useState, UseTextContentReturnType, useTypeaheadNavigation, useTypeaheadNavigationChild, UseTypeaheadNavigationChildParameters, UseTypeaheadNavigationContext, UseTypeaheadNavigationParameters } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { DisabledType, OmitStrong, Prefices } from "./props.js";
 import { ButtonPressEvent, useButton, UseButtonParameters, UseButtonReturnType } from "./use-button.js";
@@ -32,9 +32,8 @@ export interface UseAccordionSectionInfo extends ManagedChildInfo<number> {
 export interface UseAccordionSectionParameters<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo> extends
     OmitStrong<UseTypeaheadNavigationChildParameters<HeaderButtonElement, M>, "refElementReturn" | "context">,
     UseRefElementParameters<HeaderButtonElement> {
-    info: Pick<UseManagedChildParameters<M>["info"], "index">;
+    info: Pick<UseManagedChildParameters<M>["info"], "index" | "hidden">;
     context: UseAccordionContext<HeaderButtonElement, M>;
-    rovingTabIndexChildParameters: Pick<UseRovingTabIndexChildParameters<HeaderButtonElement, any>["rovingTabIndexChildParameters"], "hidden">;
     accordionSectionParameters: {
         /** 
          * If this prop is `true` or `false` isn't null, then this section
@@ -192,8 +191,7 @@ export function useAccordion<HeaderButtonElement extends Element, M extends UseA
 export function useAccordionSection<_HeaderContainerElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element>({
     buttonParameters,
     accordionSectionParameters: { open: openFromUser, bodyRole },
-    info: { index },
-    rovingTabIndexChildParameters: { hidden },
+    info: { index, hidden },
     textContentParameters,
     context: {
         accordionSectionParameters: { changeExpandedIndex, changeTabbedIndex: setCurrentFocusedIndex, getTabbedIndex: getCurrentFocusedIndex, stableTypeaheadProps },

@@ -19,7 +19,6 @@ interface AccordionSectionPropsBase<HeaderElement extends Element, HeaderButtonE
     Get<UseAccordionSectionParameters<HeaderButtonElement, UseAccordionSectionInfo>, "accordionSectionParameters">,
     Pick<UseAccordionSectionInfo, "index">,
     Get<UseAccordionSectionParameters<HeaderButtonElement, UseAccordionSectionInfo>, "buttonParameters">,
-    Get<UseAccordionSectionParameters<HeaderButtonElement, UseAccordionSectionInfo>, "rovingTabIndexChildParameters">,
     Get<UseAccordionSectionParameters<HeaderButtonElement, UseAccordionSectionInfo>, "textContentParameters"> {
     imperativeHandle?: Ref<UseAccordionSectionReturnType<HeaderElement, HeaderButtonElement, BodyElement>>;
 }
@@ -97,8 +96,7 @@ export const AccordionSection = memo(function AccordionSection<HeaderContainerEl
     const info = useAccordionSection<HeaderContainerElement, HeaderButtonElement, BodyElement>({
         buttonParameters: { disabled: disabled ?? false, tagButton, onPress: onPress ?? null },
         accordionSectionParameters: { open, bodyRole: bodyRole ?? "region" },
-        rovingTabIndexChildParameters: { hidden: hidden ?? false },
-        info: { index },
+        info: { index, hidden: hidden || false },
         refElementParameters: {},
         context,
         textContentParameters: {

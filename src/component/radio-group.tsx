@@ -1,7 +1,6 @@
 import { createContext, Ref, VNode } from "preact";
 import { useStableGetter } from "preact-prop-helpers";
 import { useContext, useImperativeHandle } from "preact/hooks";
-import { OmitStrong } from "../props.js";
 import { FocusableLabelElement, LabelPosition } from "../use-label.js";
 import { RadioContext, RadioSubInfo, useRadio, useRadioGroup, UseRadioGroupParameters, UseRadioGroupReturnType, UseRadioParameters, UseRadioReturnType } from "../use-radio-group.js";
 import { memoForwardRef, PartialExcept, useDefault } from "./util.js";
@@ -25,11 +24,9 @@ interface RadioPropsBase<LP extends LabelPosition, InputElement extends Element,
     Get<UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>, "radioParameters">,
     Get<UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>, "checkboxLikeParameters">,
     Get<UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>, "labelParameters">,
-    Get<UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>, "rovingTabIndexChildParameters">,
-    OmitStrong<Get<UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>, "singleSelectionChildParameters">, "disabled">,
     Get<UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>, "textContentParameters">,
 
-    Pick<RadioSubInfo<any, V>, "index"> {
+    Pick<RadioSubInfo<any, V>, "index" | "hidden"> {
     focusSelf?: UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>["info"]["focusSelf"];
 }
 
@@ -112,14 +109,12 @@ export const Radio = memoForwardRef(function Radio<LP extends LabelPosition, V e
     const getValue = useStableGetter(value);
     const defaultFocusSelf = () => info.checkboxLikeReturn.focusSelf();
     const info = useRadio<LP, InputElement, LabelElement, V>({
-        rovingTabIndexChildParameters: { hidden: hidden ?? false },
         sortableChildParameters: { getSortValue: getValue },
         radioParameters: { value },
         checkboxLikeParameters: { disabled: disabled ?? false },
-        info: { index, focusSelf: focusSelf ?? defaultFocusSelf },
+        info: { index, focusSelf: focusSelf ?? defaultFocusSelf, hidden: hidden || false, disabled: !!disabled },
         context,
         labelParameters: { ariaLabel, labelPosition, tagInput, tagLabel },
-        singleSelectionChildParameters: { disabled: !!disabled },
         textContentParameters: { getText: useDefault("getText", getText) }
     });
 

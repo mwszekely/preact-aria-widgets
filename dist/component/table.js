@@ -31,24 +31,18 @@ export const TableSection = memoForwardRef(function TableSection({ disableHomeEn
         },
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
         rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable: untabbable ?? false },
-        singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? null, onSelectedIndexChange: onSelectedIndexChange ?? null },
+        singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? null, onSelectedIndexChange: onSelectedIndexChange ?? null, ariaPropName: "aria-selected", selectionMode: "activation" },
         context: useContext(TableContext),
         tableSectionParameters: { tagTableSection, location },
     });
     return (_jsx(TableSectionContext.Provider, { value: info.context, children: render(info) }));
 });
-export const TableRow = memoForwardRef(function TableRowU({ index, getText, tagTableRow, disableHomeEndKeys, onTabbableIndexChange, ariaPropName, disabled, navigatePastEnd, navigatePastStart, selected, selectionMode, hidden, render }, ref) {
+export const TableRow = memoForwardRef(function TableRowU({ index, getText, tagTableRow, disableHomeEndKeys, onTabbableIndexChange, navigatePastEnd, navigatePastStart, selected, hidden, disabled, render }, ref) {
     const cx1 = useContext(TableSectionContext);
     console.assert(cx1 != null, `This TableRow is not contained within a TableSection`);
     const info = useTableRow({
-        info: { index },
+        info: { index, disabled: disabled || false, hidden: hidden || false },
         context: cx1,
-        rovingTabIndexChildParameters: { hidden: hidden ?? false },
-        singleSelectionChildParameters: {
-            ariaPropName,
-            selectionMode: useDefault("selectionMode", selectionMode),
-            disabled: disabled ?? false
-        },
         textContentParameters: {
             getText: useDefault("getText", getText)
         },
@@ -71,10 +65,9 @@ export const TableCell = memoForwardRef(function TableCell({ index, getText, foc
     console.assert(context != null, `This TableCell is not contained within a TableRow`);
     const defaultFocusSelf = useStableCallback((e) => { e.focus?.(); }, []);
     const info = useTableCell({
-        info: { index, getSortValue, focusSelf: focusSelf ?? defaultFocusSelf },
+        info: { index, getSortValue, focusSelf: focusSelf ?? defaultFocusSelf, hidden: hidden || false },
         context,
         gridNavigationCellParameters: { colSpan: colSpan ?? 1 },
-        rovingTabIndexChildParameters: { hidden: hidden ?? false },
         tableCellParameters: { tagTableCell },
         textContentParameters: { getText: useDefault("getText", getText) }
     });

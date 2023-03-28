@@ -21,8 +21,7 @@ export interface UseTabsParameters<TabContainerElement extends Element, TabEleme
         role?: "tablist" | string;
     };
 }
-export interface UseTabParameters<TabElement extends Element, M extends TabInfo<TabElement>> extends OmitStrong<UseCompleteListNavigationChildParameters<TabElement, M>, "singleSelectionChildParameters"> {
-    singleSelectionChildParameters: OmitStrong<UseCompleteListNavigationChildParameters<TabElement, M>["singleSelectionChildParameters"], "ariaPropName">;
+export interface UseTabParameters<TabElement extends Element, M extends TabInfo<TabElement>> extends UseCompleteListNavigationChildParameters<TabElement, M> {
     context: TabsContext<any, TabElement, M>;
 }
 export interface UseTabPanelParameters<M extends TabPanelInfo> extends OmitStrong<UseManagedChildParameters<M>, "info"> {
@@ -44,8 +43,9 @@ export interface UseTabReturnType<TabElement extends Element, M extends TabInfo<
 }
 export interface UseTabLabelParameters {
 }
-interface UseTabListParameters<TabContainerElement extends Element, TabElement extends Element, M extends TabInfo<TabElement>> extends OmitStrong<UseCompleteListNavigationParameters<TabContainerElement, TabElement, M>, "paginatedChildrenParameters" | "linearNavigationParameters"> {
+interface UseTabListParameters<TabContainerElement extends Element, TabElement extends Element, M extends TabInfo<TabElement>> extends OmitStrong<UseCompleteListNavigationParameters<TabContainerElement, TabElement, M>, "paginatedChildrenParameters" | "linearNavigationParameters" | "singleSelectionParameters"> {
     linearNavigationParameters: OmitStrong<UseCompleteListNavigationParameters<TabContainerElement, TabElement, M>["linearNavigationParameters"], "arrowKeyDirection">;
+    singleSelectionParameters: Partial<OmitStrong<UseCompleteListNavigationParameters<TabContainerElement, TabElement, M>["singleSelectionParameters"], "ariaPropName">>;
 }
 export interface UseTabListReturnType<ParentElement extends Element, ChildElement extends Element, M extends TabInfo<ChildElement>> extends UseCompleteListNavigationReturnType<ParentElement, ChildElement, M> {
 }
@@ -72,8 +72,8 @@ export type UseTab<_TabContainerElement extends Element, TabElement extends Elem
 export type UseTabList<TabContainerElement extends Element, TabElement extends Element, M extends TabInfo<TabElement>> = (args: UseTabListParameters<TabContainerElement, TabElement, M>) => UseTabListReturnType<TabContainerElement, TabElement, M>;
 export type UseTabPanel<PanelElement extends Element, M extends TabPanelInfo> = (args: UseTabPanelParameters<M>) => UseTabPanelReturnType<PanelElement>;
 export type UseTabListLabel<LabelElement extends Element> = (args: UseTabLabelParameters) => UseTabLabelReturnTypeWithHooks<LabelElement>;
-export declare function useTabs<TabListElement extends Element, TabElement extends Element, LabelElement extends Element, M extends TabInfo<TabElement>>({ labelParameters, linearNavigationParameters, singleSelectionParameters: { onSelectedIndexChange: ssi, ...singleSelectionParameters }, tabsParameters: { orientation, role, localStorageKey }, ...restParams }: UseTabsParameters<TabListElement, TabElement, LabelElement, M>): UseTabsReturnType<TabListElement, TabElement, LabelElement, M>;
-export declare function useTab<TabElement extends Element, M extends TabInfo<TabElement>>({ info: { focusSelf, ...info }, textContentParameters, singleSelectionChildParameters: { selectionMode, ...singleSelectionChildParameters }, rovingTabIndexChildParameters, sortableChildParameters, context }: UseTabParameters<TabElement, M>): UseTabReturnType<TabElement, M>;
+export declare function useTabs<TabListElement extends Element, TabElement extends Element, LabelElement extends Element, M extends TabInfo<TabElement>>({ labelParameters, linearNavigationParameters, singleSelectionParameters: { initiallySelectedIndex, onSelectedIndexChange: ssi, selectionMode, ...singleSelectionParameters }, tabsParameters: { orientation, role, localStorageKey }, ...restParams }: UseTabsParameters<TabListElement, TabElement, LabelElement, M>): UseTabsReturnType<TabListElement, TabElement, LabelElement, M>;
+export declare function useTab<TabElement extends Element, M extends TabInfo<TabElement>>({ info: { focusSelf, ...info }, textContentParameters, sortableChildParameters, context }: UseTabParameters<TabElement, M>): UseTabReturnType<TabElement, M>;
 export declare function useTabPanel<PanelElement extends Element, M extends TabPanelInfo>({ info, context }: UseTabPanelParameters<M>): UseTabPanelReturnType<PanelElement>;
 export {};
 //# sourceMappingURL=use-tabs.d.ts.map

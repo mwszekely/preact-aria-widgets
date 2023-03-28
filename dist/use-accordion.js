@@ -89,7 +89,7 @@ export function useAccordion({ accordionParameters: { initialIndex, localStorage
         accordionReturn: useStableObject({ changeExpandedIndex })
     };
 }
-export function useAccordionSection({ buttonParameters, accordionSectionParameters: { open: openFromUser, bodyRole }, info: { index }, rovingTabIndexChildParameters: { hidden }, textContentParameters, context: { accordionSectionParameters: { changeExpandedIndex, changeTabbedIndex: setCurrentFocusedIndex, getTabbedIndex: getCurrentFocusedIndex, stableTypeaheadProps }, linearNavigationParameters, rovingTabIndexReturn, managedChildContext, typeaheadNavigationContext }, refElementParameters, }) {
+export function useAccordionSection({ buttonParameters, accordionSectionParameters: { open: openFromUser, bodyRole }, info: { index, hidden }, textContentParameters, context: { accordionSectionParameters: { changeExpandedIndex, changeTabbedIndex: setCurrentFocusedIndex, getTabbedIndex: getCurrentFocusedIndex, stableTypeaheadProps }, linearNavigationParameters, rovingTabIndexReturn, managedChildContext, typeaheadNavigationContext }, refElementParameters, }) {
     monitorCallCount(useAccordionSection);
     const { disabled, onPress: userOnPress } = buttonParameters;
     const [openFromParent, setOpenFromParent, getOpenFromParent] = useState(null);

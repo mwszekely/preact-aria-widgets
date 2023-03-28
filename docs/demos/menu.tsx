@@ -7,9 +7,7 @@ function DemoListItem({ index }: { index: number }) {
     return (
         <MenuItem<HTMLLIElement>
             index={index}
-            ariaPropName={null}
             getSortValue={returnZero}
-            selectionMode="disabled"
             role="menuitem"
             onPress={e => alert(`Menu item #${index} pressed`)}
             disabled={false}
@@ -55,6 +53,8 @@ export function Demo() {
                     onOpen={() => setOpen(true)}
                     onClose={() => setOpen(false)}
                     open={open}
+                    ariaPropName={null}
+                    selectionMode="disabled"
                     openDirection="down"
                     render={info => {
                         return (

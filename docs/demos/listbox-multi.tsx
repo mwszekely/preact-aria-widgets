@@ -14,7 +14,6 @@ const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
             selected={selected}
             index={index}
             disabled={false}
-            ariaPropName="aria-selected"
             getSortValue={returnZero}
 
             onPressSync={() => { setSelected(p => !p) }}
@@ -64,7 +63,13 @@ export function Demo() {
             <Code />
             <label><input type="number" min={0} value={count} onInput={e => setCount(e.currentTarget.valueAsNumber)} /> # of list items</label>
             <div>
-                <Listbox<HTMLUListElement, HTMLLIElement, HTMLLabelElement> selectedIndex={null} ariaLabel={null} orientation="vertical" selectionLimit="multi" render={info => {
+                <Listbox<HTMLUListElement, HTMLLIElement, HTMLLabelElement> 
+                selectedIndex={null} 
+                ariaLabel={null} 
+                ariaPropName="aria-selected"
+                orientation="vertical" 
+                selectionLimit="multi" 
+                render={info => {
                     return (
                         <>
                         <label {...info.propsListboxLabel}></label>

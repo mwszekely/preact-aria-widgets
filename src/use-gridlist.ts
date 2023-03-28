@@ -2,15 +2,11 @@ import { h } from "preact";
 import {
     CompleteGridNavigationContext,
     CompleteGridNavigationRowContext,
-    monitorCallCount,
-    useCompleteGridNavigation,
-    useCompleteGridNavigationCell,
+    monitorCallCount, useCompleteGridNavigationCell,
     UseCompleteGridNavigationCellInfo,
     UseCompleteGridNavigationCellParameters,
     UseCompleteGridNavigationCellReturnType,
-    useCompleteGridNavigationDeclarative,
-    UseCompleteGridNavigationParameters,
-    UseCompleteGridNavigationReturnType,
+    useCompleteGridNavigationDeclarative, UseCompleteGridNavigationDeclarativeParameters, UseCompleteGridNavigationReturnType,
     useCompleteGridNavigationRow,
     UseCompleteGridNavigationRowInfo,
     UseCompleteGridNavigationRowParameters,
@@ -18,13 +14,8 @@ import {
     useMergedProps,
     usePress,
     UsePressParameters,
-    UsePressReturnType,
-    useSingleSelectionDeclarative,
-    UseCompleteGridNavigationDeclarativeParameters,
-    UseCompleteListNavigationDeclarativeReturnType,
-    useStableCallback,
-    useStableObject,
-    UseCompleteGridNavigationDeclarativeReturnType
+    UsePressReturnType, useStableCallback,
+    useStableObject
 } from "preact-prop-helpers";
 import { OmitStrong, Prefices } from "./props.js";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
@@ -146,9 +137,7 @@ export function useGridlistRow<GridlistRowElement extends Element, GridlistCellE
     linearNavigationParameters,
     context: cx1,
     info,
-    rovingTabIndexChildParameters,
     rovingTabIndexParameters,
-    singleSelectionChildParameters,
     sortableChildParameters,
     textContentParameters,
     typeaheadNavigationParameters
@@ -176,9 +165,7 @@ export function useGridlistRow<GridlistRowElement extends Element, GridlistCellE
         linearNavigationParameters: { disableHomeEndKeys: true, ...linearNavigationParameters },
         info,
         context: cx1,
-        rovingTabIndexChildParameters,
         rovingTabIndexParameters,
-        singleSelectionChildParameters,
         sortableChildParameters,
         textContentParameters,
         typeaheadNavigationParameters

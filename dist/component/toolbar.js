@@ -4,7 +4,7 @@ import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
 import { useToolbar, useToolbarChild } from "../use-toolbar.js";
 import { memoForwardRef, useDefault } from "./util.js";
 const ToolbarContext = createContext(null);
-export const Toolbar = memoForwardRef(function ToolbarU({ render, role, collator, disableHomeEndKeys, untabbable, compare, getIndex, navigatePastEnd, navigatePastStart, pageNavigationSize, selectedIndex, onSelectedIndexChange, orientation, noTypeahead, onTabbableIndexChange, typeaheadTimeout, staggered, ariaLabel }, ref) {
+export const Toolbar = memoForwardRef(function ToolbarU({ render, role, collator, disableHomeEndKeys, untabbable, compare, getIndex, navigatePastEnd, navigatePastStart, pageNavigationSize, selectedIndex, onSelectedIndexChange, orientation, noTypeahead, onTabbableIndexChange, typeaheadTimeout, staggered, ariaLabel, ariaPropName, selectionMode }, ref) {
     const listboxReturnType = useToolbar({
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
         sortableChildrenParameters: { compare: compare ?? null },
@@ -28,21 +28,20 @@ export const Toolbar = memoForwardRef(function ToolbarU({ render, role, collator
             noTypeahead: useDefault("noTypeahead", noTypeahead),
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
         },
-        labelParameters: { ariaLabel }
+        labelParameters: { ariaLabel },
+        singleSelectionParameters: { ariaPropName: ariaPropName ?? "aria-selected", selectionMode: selectionMode ?? "activation" }
     });
     useImperativeHandle(ref, () => listboxReturnType);
     return (_jsx(ToolbarContext.Provider, { value: listboxReturnType.context, children: render(listboxReturnType) }));
 });
-export const ToolbarChild = memoForwardRef(function ToolbarChildU({ index, render, ariaPropName, disabled, selectionMode, focusSelf, getSortValue, hidden, getText, info: uinfo }, ref) {
+export const ToolbarChild = memoForwardRef(function ToolbarChildU({ index, render, focusSelf, getSortValue, getText, info: uinfo }, ref) {
     const context = useContext(ToolbarContext);
     console.assert(context != null, `This ToolbarChild is not contained within a Toolbar`);
     const focusSelfDefault = useCallback((e) => { e?.focus(); }, []);
     const info = useToolbarChild({
         context,
         info: { index, focusSelf: focusSelf ?? focusSelfDefault, ...uinfo },
-        rovingTabIndexChildParameters: { hidden: hidden ?? false },
         sortableChildParameters: { getSortValue },
-        singleSelectionChildParameters: { ariaPropName, selectionMode, disabled: disabled ?? false },
         textContentParameters: { getText: useDefault("getText", getText) },
     });
     useImperativeHandle(ref, () => info);

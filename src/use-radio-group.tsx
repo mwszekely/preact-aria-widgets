@@ -1,6 +1,6 @@
 import { h } from "preact";
 import { CompleteListNavigationContext, monitorCallCount, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useMergedProps, useRefElement, useSingleSelectionDeclarative, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
-import { useEffect, useLayoutEffect, useMemo, useRef } from "preact/hooks";
+import { useLayoutEffect, useMemo, useRef } from "preact/hooks";
 import { OmitStrong, Prefices } from "./props.js";
 import { useCheckboxLike, UseCheckboxLikeParameters, UseCheckboxLikeReturnType } from "./use-checkbox-like.js";
 import { FocusableLabelElement, LabelPosition, useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
@@ -19,14 +19,14 @@ export interface UseRadioGroupParameters<V extends string | number, GroupElement
 
 
 
-export interface UseRadioParameters<LP extends LabelPosition, V extends string | number, InputElement extends Element, LabelElement extends Element, M extends RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>> extends OmitStrong<UseCompleteListNavigationChildParameters<FocusableLabelElement<LP, InputElement, LabelElement>, M>, "singleSelectionChildParameters"> {
+export interface UseRadioParameters<LP extends LabelPosition, V extends string | number, InputElement extends Element, LabelElement extends Element, M extends RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>> extends UseCompleteListNavigationChildParameters<FocusableLabelElement<LP, InputElement, LabelElement>, M> {
     radioParameters: {
         value: V;
     }
     context: RadioContext<V, any, FocusableLabelElement<LP, InputElement, LabelElement>, M>;
     checkboxLikeParameters: OmitStrong<UseCheckboxLikeParameters<LP, InputElement, LabelElement>["checkboxLikeParameters"], "checked" | "onInput" | "role">;
     labelParameters: OmitStrong<UseCheckboxLikeParameters<LP, InputElement, LabelElement>["labelParameters"], never>;
-    singleSelectionChildParameters: OmitStrong<UseCompleteListNavigationChildParameters<FocusableLabelElement<LP, InputElement, LabelElement>, M>["singleSelectionChildParameters"], "ariaPropName" | "selectionMode">
+    //singleSelectionChildParameters: OmitStrong<UseCompleteListNavigationChildParameters<FocusableLabelElement<LP, InputElement, LabelElement>, M>["singleSelectionChildParameters"], "ariaPropName" | "selectionMode">
 }
 
 export interface RadioContext<V extends number | string, ParentElement extends Element, ChildElement extends Element, M extends RadioSubInfo<ChildElement, V>> extends CompleteListNavigationContext<ParentElement, ChildElement, M> {
@@ -89,7 +89,7 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
         rovingTabIndexReturn,
         ...restRet
     } = useCompleteListNavigation<G, TCE, RadioSubInfo<TCE, V>>({
-        singleSelectionParameters: { initiallySelectedIndex: selectedIndex, onSelectedIndexChange: useStableCallback((i, e) => { setSelectedIndex(i); onSelectedIndexChange?.(i, e); }) },
+        singleSelectionParameters: { initiallySelectedIndex: selectedIndex, onSelectedIndexChange: useStableCallback((i, e) => { setSelectedIndex(i); onSelectedIndexChange?.(i, e); }), selectionMode: "focus", ariaPropName: null },
         paginatedChildrenParameters: { paginationMin: null, paginationMax: null },
         ...restParams
     });
@@ -148,10 +148,8 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
     checkboxLikeParameters: { disabled },
     labelParameters,
     info,
-    singleSelectionChildParameters,
     context,
     textContentParameters,
-    rovingTabIndexChildParameters,
     sortableChildParameters
 
 }: UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>): UseRadioReturnType<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>> {
@@ -175,10 +173,8 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
     } = useCompleteListNavigationChild<TabbableChildElement, RadioSubInfo<TabbableChildElement, V>>({
         info,
         context,
-        rovingTabIndexChildParameters,
         sortableChildParameters,
         textContentParameters,
-        singleSelectionChildParameters: { selectionMode: "focus", ariaPropName: tagInput == "input" && labelPosition != "wrapping" ? null : "aria-selected", ...singleSelectionChildParameters }
     });
 
 

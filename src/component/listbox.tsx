@@ -16,16 +16,15 @@ interface ListboxPropsBase<ListElement extends Element, ListItemElement extends 
     Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "sortableChildrenParameters">,
     Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "staggeredChildrenParameters">,
     Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "paginatedChildrenParameters">,
-    Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "typeaheadNavigationParameters"> {
+    Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "typeaheadNavigationParameters">,
+    Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "singleSelectionParameters"> {
     ref?: Ref<UseListboxReturnType<ListElement, ListItemElement, LabelElement, M>>;
 }
 
 interface ListboxItemPropsBase<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends
     Get<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "listboxParameters">,
-    Pick<M, "index">,
+    Pick<M, "index" | "hidden" | "disabled">,
     Get<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "sortableChildParameters">,
-    Get<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "rovingTabIndexChildParameters">,
-    Get<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "singleSelectionChildParameters">,
     Get<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "pressParameters">,
     Get<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "textContentParameters"> {
     focusSelf?: UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>["info"]["focusSelf"];
@@ -36,7 +35,7 @@ interface ListboxItemPropsBase<ListItemElement extends Element, M extends Listbo
 export interface ListboxProps<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends PartialExcept<ListboxPropsBase<ListElement, ListItemElement, LabelElement, M>, "ariaLabel" | "selectionLimit" | "selectedIndex"> {
     render(info: UseListboxReturnType<ListElement, ListItemElement, LabelElement, M>): VNode;
 }
-export interface ListboxItemProps<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends PartialExcept<ListboxItemPropsBase<ListItemElement, M>, "ariaPropName" | "index" | "getSortValue"> {
+export interface ListboxItemProps<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends PartialExcept<ListboxItemPropsBase<ListItemElement, M>, "index" | "getSortValue"> {
     render(info: UseListboxItemReturnType<ListItemElement, ListboxInfo<ListItemElement>>): VNode;
 }
 
@@ -64,7 +63,8 @@ export const GroupedListbox = memo(function GroupedListbox<LabelElement extends 
             collator: null,
             noTypeahead: true,
             typeaheadTimeout: Infinity
-        }
+        },
+        singleSelectionParameters: { ariaPropName: null, selectionMode: "disabled" }
     });
     info.context;
     return (
@@ -93,6 +93,8 @@ export const Listbox = memoForwardRef(function Listbox<ListElement extends Eleme
     untabbable,
     typeaheadTimeout,
     orientation,
+    ariaPropName,
+    selectionMode,
     render
 }: ListboxProps<ListElement, ListItemElement, LabelElement, M>) {
     const listboxGroupInfo = useContext(ListboxGroupContext);
@@ -119,7 +121,8 @@ export const Listbox = memoForwardRef(function Listbox<ListElement extends Eleme
             collator: useDefault("collator", collator),
             noTypeahead: useDefault("noTypeahead", noTypeahead),
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
-        }
+        },
+        singleSelectionParameters: { ariaPropName: ariaPropName || "aria-selected", selectionMode: selectionMode || "activation" }
     });
 
     return (
@@ -128,7 +131,6 @@ export const Listbox = memoForwardRef(function Listbox<ListElement extends Eleme
 })
 
 export const ListboxItem = memoForwardRef(function ListboxItem<ListboxItemElement extends Element, M extends ListboxInfo<ListboxItemElement> = ListboxInfo<ListboxItemElement>>({
-    ariaPropName,
     disabled,
     focusSelf,
     onPressSync,
@@ -137,7 +139,6 @@ export const ListboxItem = memoForwardRef(function ListboxItem<ListboxItemElemen
     index,
     render,
     selected,
-    selectionMode,
     getSortValue,
     ...subInfo
 }: ListboxItemProps<ListboxItemElement, M>) {
@@ -145,18 +146,12 @@ export const ListboxItem = memoForwardRef(function ListboxItem<ListboxItemElemen
     console.assert(context != null, `This ListboxItem is not contained within a Listbox`);
     const focusSelfDefault = useCallback((e: any) => { e?.focus(); }, []);
     const info = useListboxItem<ListboxItemElement, M>({
-        info: { index, focusSelf: focusSelf ?? focusSelfDefault, ...subInfo } as M,
+        info: { index, hidden: hidden || false, disabled: disabled || false, focusSelf: focusSelf ?? focusSelfDefault, ...subInfo } as M,
         context,
         listboxParameters: { selected: selected ?? null, },
         pressParameters: { onPressSync },
-        rovingTabIndexChildParameters: { hidden: hidden ?? false },
         sortableChildParameters: { getSortValue: getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },
-        singleSelectionChildParameters: {
-            disabled: disabled ?? false,
-            ariaPropName,
-            selectionMode: useDefault("selectionMode", selectionMode)
-        }
     });
 
     return render(info);

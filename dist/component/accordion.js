@@ -33,8 +33,7 @@ export const AccordionSection = memo(function AccordionSection({ open, index, ta
     const info = useAccordionSection({
         buttonParameters: { disabled: disabled ?? false, tagButton, onPress: onPress ?? null },
         accordionSectionParameters: { open, bodyRole: bodyRole ?? "region" },
-        rovingTabIndexChildParameters: { hidden: hidden ?? false },
-        info: { index },
+        info: { index, hidden: hidden || false },
         refElementParameters: {},
         context,
         textContentParameters: {

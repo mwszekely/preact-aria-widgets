@@ -38,14 +38,12 @@ export const Radio = memoForwardRef(function Radio({ disabled, index, render, va
     const getValue = useStableGetter(value);
     const defaultFocusSelf = () => info.checkboxLikeReturn.focusSelf();
     const info = useRadio({
-        rovingTabIndexChildParameters: { hidden: hidden ?? false },
         sortableChildParameters: { getSortValue: getValue },
         radioParameters: { value },
         checkboxLikeParameters: { disabled: disabled ?? false },
-        info: { index, focusSelf: focusSelf ?? defaultFocusSelf },
+        info: { index, focusSelf: focusSelf ?? defaultFocusSelf, hidden: hidden || false, disabled: !!disabled },
         context,
         labelParameters: { ariaLabel, labelPosition, tagInput, tagLabel },
-        singleSelectionChildParameters: { disabled: !!disabled },
         textContentParameters: { getText: useDefault("getText", getText) }
     });
     useImperativeHandle(ref, () => info);

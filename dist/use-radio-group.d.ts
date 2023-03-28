@@ -11,14 +11,13 @@ export interface UseRadioGroupParameters<V extends string | number, GroupElement
     };
     labelParameters: OmitStrong<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
 }
-export interface UseRadioParameters<LP extends LabelPosition, V extends string | number, InputElement extends Element, LabelElement extends Element, M extends RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>> extends OmitStrong<UseCompleteListNavigationChildParameters<FocusableLabelElement<LP, InputElement, LabelElement>, M>, "singleSelectionChildParameters"> {
+export interface UseRadioParameters<LP extends LabelPosition, V extends string | number, InputElement extends Element, LabelElement extends Element, M extends RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>> extends UseCompleteListNavigationChildParameters<FocusableLabelElement<LP, InputElement, LabelElement>, M> {
     radioParameters: {
         value: V;
     };
     context: RadioContext<V, any, FocusableLabelElement<LP, InputElement, LabelElement>, M>;
     checkboxLikeParameters: OmitStrong<UseCheckboxLikeParameters<LP, InputElement, LabelElement>["checkboxLikeParameters"], "checked" | "onInput" | "role">;
     labelParameters: OmitStrong<UseCheckboxLikeParameters<LP, InputElement, LabelElement>["labelParameters"], never>;
-    singleSelectionChildParameters: OmitStrong<UseCompleteListNavigationChildParameters<FocusableLabelElement<LP, InputElement, LabelElement>, M>["singleSelectionChildParameters"], "ariaPropName" | "selectionMode">;
 }
 export interface RadioContext<V extends number | string, ParentElement extends Element, ChildElement extends Element, M extends RadioSubInfo<ChildElement, V>> extends CompleteListNavigationContext<ParentElement, ChildElement, M> {
     radioContext: {
@@ -42,5 +41,5 @@ export interface UseRadioReturnType<LP extends LabelPosition, V extends string |
     propsInput: h.JSX.HTMLAttributes<I>;
     propsLabel: h.JSX.HTMLAttributes<IL>;
 }
-export declare function useRadio<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element, V extends string | number>({ radioParameters: { value }, checkboxLikeParameters: { disabled }, labelParameters, info, singleSelectionChildParameters, context, textContentParameters, rovingTabIndexChildParameters, sortableChildParameters }: UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>): UseRadioReturnType<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>;
+export declare function useRadio<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element, V extends string | number>({ radioParameters: { value }, checkboxLikeParameters: { disabled }, labelParameters, info, context, textContentParameters, sortableChildParameters }: UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>): UseRadioReturnType<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>;
 //# sourceMappingURL=use-radio-group.d.ts.map

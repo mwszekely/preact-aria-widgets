@@ -1,7 +1,6 @@
 import { createContext, Ref, VNode } from "preact";
 import { useStableCallback } from "preact-prop-helpers";
 import { useContext, useImperativeHandle } from "preact/hooks";
-import { OmitStrong } from "../props.js";
 import { TableCellInfo, TableRowInfo, useTable, useTableCell, UseTableCellParameters, UseTableCellReturnType, UseTableContext, UseTableParameters, UseTableReturnType, useTableRow, UseTableRowContext, UseTableRowParameters, UseTableRowReturnType, useTableSection, UseTableSectionContext, UseTableSectionParameters, UseTableSectionReturnType } from "../use-table.js";
 import { memoForwardRef, PartialExcept, useDefault } from "./util.js";
 
@@ -28,9 +27,8 @@ interface TableSectionPropsBase<SectionElement extends Element, RowElement exten
 
 interface TableRowPropsBase<RowElement extends Element, CellElement extends Element, RM extends TableRowInfo<RowElement, CellElement>, CM extends TableCellInfo<CellElement>> extends
     //OmitStrong<Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "tableRowParameters">, never>,
-    Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "singleSelectionChildParameters">,
-    Pick<CM, "index">,
-    Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "rovingTabIndexChildParameters">,
+
+    Pick<RM, "index" | "hidden" | "disabled">,
     Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "textContentParameters">,
     Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "tableRowParameters">,
     Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "linearNavigationParameters">,
@@ -40,9 +38,8 @@ interface TableRowPropsBase<RowElement extends Element, CellElement extends Elem
 
 interface TableCellPropsBase<CellElement extends Element, CM extends TableCellInfo<CellElement>> extends
     Get<UseTableCellParameters<CellElement, CM>, "tableCellParameters">,
-   Pick<CM, "index">,
+   Pick<CM, "index" | "hidden">,
     Get<UseTableCellParameters<CellElement, CM>, "gridNavigationCellParameters">,
-    Get<UseTableCellParameters<CellElement, CM>, "rovingTabIndexChildParameters">,
     Get<UseTableCellParameters<CellElement, CM>, "textContentParameters"> {
     focusSelf: CM["focusSelf"];
     getSortValue: CM["getSortValue"];
@@ -61,7 +58,7 @@ export interface TableSectionProps<SectionElement extends Element, RowElement ex
     render(info: UseTableSectionReturnType<SectionElement, RowElement, CellElement, RM, CM>): VNode;
 }
 
-export interface TableRowProps<RowElement extends Element, CellElement extends Element, RM extends TableRowInfo<RowElement, CellElement>, CM extends TableCellInfo<CellElement>> extends PartialExcept<TableRowPropsBase<RowElement, CellElement, RM, CM>, "index" | "tagTableRow" | "ariaPropName"> {
+export interface TableRowProps<RowElement extends Element, CellElement extends Element, RM extends TableRowInfo<RowElement, CellElement>, CM extends TableCellInfo<CellElement>> extends PartialExcept<TableRowPropsBase<RowElement, CellElement, RM, CM>, "index" | "tagTableRow"> {
     render(info: UseTableRowReturnType<RowElement, CellElement, RM, CM>): VNode;
 }
 
@@ -123,7 +120,7 @@ export const TableSection = memoForwardRef(function TableSection<SectionElement 
         },
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
         rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable: untabbable ?? false },
-        singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? null, onSelectedIndexChange: onSelectedIndexChange ?? null },
+        singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? null, onSelectedIndexChange: onSelectedIndexChange ?? null, ariaPropName: "aria-selected", selectionMode: "activation" },
         context: useContext(TableContext),
         tableSectionParameters: { tagTableSection, location },
     })
@@ -141,27 +138,19 @@ export const TableRow = memoForwardRef(function TableRowU<RowElement extends Ele
     tagTableRow,
     disableHomeEndKeys,
     onTabbableIndexChange,
-    ariaPropName,
-    disabled,
     navigatePastEnd,
     navigatePastStart,
     selected,
-    selectionMode,
     hidden,
+    disabled,
 
     render
 }: TableRowProps<RowElement, Cellement, TableRowInfo<RowElement, Cellement>, TableCellInfo<Cellement>>, ref?: Ref<any>) {
     const cx1 = useContext(TableSectionContext);
     console.assert(cx1 != null, `This TableRow is not contained within a TableSection`);
     const info = useTableRow<RowElement, Cellement, TableRowInfo<RowElement, Cellement>, TableCellInfo<Cellement>>({
-        info: { index },
+        info: { index, disabled: disabled || false,  hidden: hidden || false   },
         context: cx1,
-        rovingTabIndexChildParameters: { hidden: hidden ?? false },
-        singleSelectionChildParameters: {
-            ariaPropName,
-            selectionMode: useDefault("selectionMode", selectionMode),
-            disabled: disabled ?? false
-        },
         textContentParameters: {
             getText: useDefault("getText", getText)
         },
@@ -197,10 +186,9 @@ export const TableCell = memoForwardRef(function TableCell<CellElement extends E
     console.assert(context != null, `This TableCell is not contained within a TableRow`);
     const defaultFocusSelf = useStableCallback((e: CellElement) => { (e as Element as HTMLElement).focus?.() }, []);
     const info = useTableCell<CellElement, TableCellInfo<CellElement>>({
-        info: { index, getSortValue, focusSelf: focusSelf ?? defaultFocusSelf },
+        info: { index, getSortValue, focusSelf: focusSelf ?? defaultFocusSelf, hidden: hidden || false },
         context,
         gridNavigationCellParameters: { colSpan: colSpan ?? 1 },
-        rovingTabIndexChildParameters: { hidden: hidden ?? false },
         tableCellParameters: { tagTableCell },
         textContentParameters: { getText: useDefault("getText", getText) }
     });

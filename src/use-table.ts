@@ -225,8 +225,6 @@ export function useTableSection<TableSectionElement extends Element, TableRowEle
 
 export function useTableRow<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>>({
     info,
-    singleSelectionChildParameters,
-    rovingTabIndexChildParameters,
     textContentParameters,
     context: cx1,
     tableRowParameters: { selected },
@@ -246,9 +244,7 @@ export function useTableRow<TableRowElement extends Element, TableCellElement ex
     } = useCompleteGridNavigationRow<TableRowElement, TableCellElement, RM, CM>({
         textContentParameters,
         context: { ...cx1 },
-        singleSelectionChildParameters,
         info,
-        rovingTabIndexChildParameters,
         sortableChildParameters: {
             getSortValue: useStableCallback((): unknown => {
                 const currentColumn = cx1.tableContext.getCurrentSortColumn().column;

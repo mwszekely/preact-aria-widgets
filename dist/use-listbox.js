@@ -1,7 +1,7 @@
 import { monitorCallCount, useCompleteListNavigationChild, useCompleteListNavigationDeclarative, useEnsureStability, useMergedProps, usePress, useStableCallback, useStableObject } from "preact-prop-helpers";
 import { EventDetail, Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
-export function useListbox({ labelParameters, listboxParameters: { selectionLimit, groupingType, selectedIndex, onSelectedIndexChange, orientation }, linearNavigationParameters, ...restParams }) {
+export function useListbox({ labelParameters, listboxParameters: { selectionLimit, groupingType, selectedIndex, onSelectedIndexChange, orientation }, linearNavigationParameters, singleSelectionParameters: { ariaPropName, selectionMode }, ...restParams }) {
     monitorCallCount(useListbox);
     useEnsureStability("useListbox", selectionLimit);
     const { propsInput: propsLabelList, propsLabel: propsLabelLabel, randomIdInputReturn: { id: _inputId }, randomIdLabelReturn: { id: _labelId } } = useLabelSynthetic({
@@ -16,6 +16,7 @@ export function useListbox({ labelParameters, listboxParameters: { selectionLimi
     });
     let { context, propsStable: { ...props }, rovingTabIndexReturn, singleSelectionReturn, ...restRet } = useCompleteListNavigationDeclarative({
         singleSelectionDeclarativeParameters: { selectedIndex, setSelectedIndex: onSelectedIndexChange },
+        singleSelectionParameters: { ariaPropName: ariaPropName || "aria-selected", selectionMode: selectionMode },
         linearNavigationParameters: { arrowKeyDirection: orientation, ...linearNavigationParameters },
         ...restParams
     });

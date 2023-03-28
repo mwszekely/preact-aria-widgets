@@ -13,7 +13,7 @@ export function useCheckboxGroup({ linearNavigationParameters, rearrangeableChil
         staggeredChildrenParameters,
         rearrangeableChildrenParameters,
         rovingTabIndexParameters,
-        singleSelectionParameters: { initiallySelectedIndex: null, onSelectedIndexChange: null },
+        singleSelectionParameters: { initiallySelectedIndex: null, onSelectedIndexChange: null, ariaPropName: null, selectionMode: "disabled" },
         sortableChildrenParameters,
         paginatedChildrenParameters: { paginationMax: null, paginationMin: null },
         typeaheadNavigationParameters
@@ -106,16 +106,13 @@ export function useCheckboxGroup({ linearNavigationParameters, rearrangeableChil
         typeaheadNavigationReturn
     };
 }
-export function useCheckboxGroupParent({ context, info, rovingTabIndexChildParameters, textContentParameters, sortableChildParameters, }) {
+export function useCheckboxGroupParent({ context, info, textContentParameters, sortableChildParameters, }) {
     const { checkboxGroupParentContext: { setSetter, setSetParentCheckboxChecked, getPercentChecked, getTotalChecked, getTotalChildren, onCheckboxGroupParentInput } } = context;
     const { hasCurrentFocusReturn, managedChildReturn, pressParameters, textContentReturn, refElementReturn, props, paginatedChildReturn, rovingTabIndexChildReturn, staggeredChildReturn, singleSelectionChildReturn, } = useCompleteListNavigationChild({
         context,
         info,
-        rovingTabIndexChildParameters,
         sortableChildParameters,
         textContentParameters,
-        // single selection isn't used because checkboxes are multiselect; "disabled" refers only to that.
-        singleSelectionChildParameters: { ariaPropName: null, selectionMode: "disabled", disabled: true },
     });
     const [ariaControls, setControls] = useState("");
     useLayoutEffect(() => {
@@ -154,7 +151,7 @@ export function useCheckboxGroupParent({ context, info, rovingTabIndexChildParam
  * @param param0
  * @returns
  */
-export function useCheckboxGroupChild({ checkboxGroupChild, context, info, textContentParameters, rovingTabIndexChildParameters, sortableChildParameters, }) {
+export function useCheckboxGroupChild({ checkboxGroupChild, context, info, textContentParameters, sortableChildParameters, }) {
     const { checkboxGroupChildrenContext: { allIds, setUpdateIndex, setTotalChildren, setTotalChecked, } } = context;
     monitorCallCount(useCheckboxGroupChild);
     const { checked, onChangeFromParent } = checkboxGroupChild;
@@ -185,10 +182,8 @@ export function useCheckboxGroupChild({ checkboxGroupChild, context, info, textC
     const { hasCurrentFocusReturn, managedChildReturn, pressParameters, refElementReturn, textContentReturn, props, singleSelectionChildReturn: _singleSelectionChildReturn, staggeredChildReturn, paginatedChildReturn, rovingTabIndexChildReturn, } = useCompleteListNavigationChild({
         info: { checkboxInfo: { checkboxChildType: "child", getLastUserChecked, getChecked, setCheckedFromParentInput: onChangeFromParent }, ...info },
         context,
-        rovingTabIndexChildParameters,
         textContentParameters,
         sortableChildParameters,
-        singleSelectionChildParameters: { ariaPropName: null, selectionMode: "disabled", disabled: true },
     });
     return {
         checkboxGroupChild: {

@@ -18,15 +18,14 @@ interface GridlistPropsBase<GridlistElement extends Element, GridlistRowElement 
     Get<UseGridlistParameters<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM, CM>, "paginatedChildrenParameters">,
     Get<UseGridlistParameters<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM, CM>, "staggeredChildrenParameters">,
     Get<UseGridlistParameters<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM, CM>, "labelParameters">,
-    Get<UseGridlistParameters<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM, CM>, "gridlistParameters"> {
+    Get<UseGridlistParameters<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM, CM>, "gridlistParameters">,
+    Get<UseGridlistParameters<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM, CM>, "singleSelectionParameters"> {
     ref?: Ref<UseGridlistReturnType<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM, CM>>;
 }
 
 interface GridlistRowPropsBase<GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends
-    Pick<RM, "index">,
-    Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "singleSelectionChildParameters">,
+    Pick<RM, "index" | "hidden" | "disabled">,
     Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "textContentParameters">,
-    Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "rovingTabIndexChildParameters">,
     Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "sortableChildParameters">,
     Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "linearNavigationParameters">,
     Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "rovingTabIndexParameters">,
@@ -39,9 +38,8 @@ interface GridlistRowPropsBase<GridlistRowElement extends Element, GridlistCellE
 interface GridlistChildPropsBase<CellElement extends Element, M extends GridlistCellInfo<CellElement>> extends
     Get<UseGridlistCellParameters<CellElement, M>, "gridNavigationCellParameters">,
     Get<UseGridlistCellParameters<CellElement, M>, "textContentParameters">,
-    Get<UseGridlistCellParameters<CellElement, M>, "rovingTabIndexChildParameters">,
     Get<UseGridlistCellParameters<CellElement, M>, "pressParameters">,
-    Pick<M, "index"> {
+    Pick<M, "index" | "hidden"> {
     focusSelf?: M["focusSelf"];
     info?: OmitStrong<M, "focusSelf">;
     ref?: Ref<UseGridlistCellReturnType<CellElement, M>>;
@@ -54,7 +52,7 @@ export interface GridlistProps<GridlistElement extends Element, GridlistRowEleme
     render(info: UseGridlistReturnType<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM, CM>): VNode;
 }
 
-export interface GridlistRowProps<GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends PartialExcept<GridlistRowPropsBase<GridlistRowElement, GridlistCellElement, RM, CM>, "index" | "ariaPropName" | "getSortValue"> {
+export interface GridlistRowProps<GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends PartialExcept<GridlistRowPropsBase<GridlistRowElement, GridlistCellElement, RM, CM>, "index" | "getSortValue"> {
     render(info: UseGridlistRowReturnType<GridlistRowElement, GridlistCellElement, RM, CM>): VNode;
 }
 
@@ -100,6 +98,8 @@ export const Gridlist = memoForwardRef(function GridlistU<GridlistElement extend
     onTabbableColumnChange,
     ariaLabel,
     orientation,
+    ariaPropName,
+    selectionMode,
     render
 }: GridlistProps<GridlistElement, RowElement, Cellement, LabelElement, RM, CM>, ref?: Ref<any>) {
     const info = useGridlist<GridlistElement, RowElement, Cellement, LabelElement, RM, CM>({
@@ -141,7 +141,8 @@ export const Gridlist = memoForwardRef(function GridlistU<GridlistElement extend
         paginatedChildrenParameters: {
             paginationMax: paginationMax ?? null,
             paginationMin: paginationMin ?? null
-        }
+        },
+        singleSelectionParameters: { ariaPropName: ariaPropName || "aria-selected", selectionMode: selectionMode || "activation" }
     });
 
     useImperativeHandle(ref!, () => info);
@@ -156,7 +157,6 @@ export const Gridlist = memoForwardRef(function GridlistU<GridlistElement extend
 export const GridlistRow = memoForwardRef(function GridlistRowU<RowElement extends Element, Cellement extends Element, RM extends GridlistRowInfo<RowElement, Cellement> = GridlistRowInfo<RowElement, Cellement>, CM extends GridlistCellInfo<Cellement> = GridlistCellInfo<Cellement>>({
     index,
     collator,
-    ariaPropName,
     disabled,
     hidden,
     navigatePastEnd,
@@ -164,7 +164,6 @@ export const GridlistRow = memoForwardRef(function GridlistRowU<RowElement exten
     noTypeahead,
     onTabbableIndexChange,
     selected,
-    selectionMode,
     typeaheadTimeout,
     getSortValue,
     getText,
@@ -177,9 +176,7 @@ export const GridlistRow = memoForwardRef(function GridlistRowU<RowElement exten
         info: {index, ...uinfo} as RM,
         context,
         gridlistRowParameters: { selected: selected ?? null },
-        rovingTabIndexChildParameters: { hidden: hidden ?? false },
         sortableChildParameters: { getSortValue },
-        singleSelectionChildParameters: { disabled: disabled ?? false, ariaPropName, selectionMode: useDefault("selectionMode", selectionMode) },
         textContentParameters: { getText: useDefault("getText", getText) },
         linearNavigationParameters: {
             navigatePastEnd: navigatePastEnd ?? "wrap",
@@ -214,12 +211,11 @@ export const GridlistChild = memoForwardRef(function GridlistChild<CellElement e
     console.assert(context != null, `This GridlistChild is not contained within a GridlistRow that is contained within a Gridlist`);
     const defaultFocusSelf = useStableCallback((e: CellElement) => { (e as Element as HTMLElement).focus?.() }, []);
     const info = useGridlistCell<CellElement, CM>({
-        info: { index, focusSelf: (focusSelf ?? defaultFocusSelf), ...subInfo } as CM,
+        info: { index, hidden: hidden || false, focusSelf: (focusSelf ?? defaultFocusSelf), ...subInfo } as CM,
         context,
         gridNavigationCellParameters: { colSpan: colSpan ?? 1 },
         textContentParameters: { getText: useDefault("getText", getText) },
         pressParameters: { onPressSync },
-        rovingTabIndexChildParameters: { hidden: hidden ?? false }
     });
 
     useImperativeHandle(ref!, () => info);

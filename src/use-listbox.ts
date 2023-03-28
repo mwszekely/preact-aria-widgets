@@ -1,15 +1,14 @@
 import { h } from "preact";
 import {
-    CompleteListNavigationContext, monitorCallCount, useCompleteListNavigation,
-    useCompleteListNavigationChild,
+    CompleteListNavigationContext, monitorCallCount, useCompleteListNavigationChild,
     UseCompleteListNavigationChildInfo,
     UseCompleteListNavigationChildParameters,
     UseCompleteListNavigationChildReturnType,
     useCompleteListNavigationDeclarative,
     UseCompleteListNavigationParameters,
-    UseCompleteListNavigationReturnType, useEnsureStability, useMergedProps, usePress, UsePressParameters, UsePressReturnType, useSingleSelectionDeclarative, UseSingleSelectionParameters, useStableCallback, useStableObject
+    UseCompleteListNavigationReturnType, useEnsureStability, useMergedProps, usePress, UsePressParameters, UsePressReturnType, UseSingleSelectionParameters, useStableCallback, useStableObject
 } from "preact-prop-helpers";
-import { EventDetail, noop, OmitStrong, Prefices } from "./props.js";
+import { EventDetail, OmitStrong, Prefices } from "./props.js";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
 
 export type ListboxSingleSelectEvent<E extends EventTarget> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
@@ -21,6 +20,7 @@ export interface UseListboxContext<ListElement extends Element, ListItemElement 
 export interface UseListboxParameters<ListElement extends Element, ListItemElement extends Element, _LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationParameters<ListElement, ListItemElement, M>, "linearNavigationParameters" | "singleSelectionParameters"> {
     linearNavigationParameters: OmitStrong<UseCompleteListNavigationParameters<ListElement, ListItemElement, M>["linearNavigationParameters"], "arrowKeyDirection">;
     labelParameters: OmitStrong<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
+    singleSelectionParameters: Pick<UseCompleteListNavigationParameters<ListElement, ListItemElement, M>["singleSelectionParameters"], "ariaPropName" | "selectionMode">
     listboxParameters: {
 
         orientation: "horizontal" | "vertical";
@@ -73,6 +73,7 @@ export function useListbox<ListElement extends Element, ListItemElement extends 
     labelParameters,
     listboxParameters: { selectionLimit, groupingType, selectedIndex, onSelectedIndexChange, orientation },
     linearNavigationParameters,
+    singleSelectionParameters: { ariaPropName, selectionMode },
     ...restParams
 }: UseListboxParameters<ListElement, ListItemElement, LabelElement, M>): UseListboxReturnType<ListElement, ListItemElement, LabelElement, M> {
     monitorCallCount(useListbox);
@@ -101,6 +102,7 @@ export function useListbox<ListElement extends Element, ListItemElement extends 
         ...restRet
     } = useCompleteListNavigationDeclarative<ListElement, ListItemElement, M>({
         singleSelectionDeclarativeParameters: { selectedIndex, setSelectedIndex: onSelectedIndexChange },
+        singleSelectionParameters: { ariaPropName: ariaPropName || "aria-selected", selectionMode: selectionMode },
         linearNavigationParameters: { arrowKeyDirection: orientation,  ...linearNavigationParameters },
         ...restParams
     });

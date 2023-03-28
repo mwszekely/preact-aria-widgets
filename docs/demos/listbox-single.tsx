@@ -10,7 +10,6 @@ const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
         <ListboxItem<HTMLLIElement>
             index={index}
             focusSelf={e => e.focus()}
-            ariaPropName="aria-selected"
             getSortValue={returnZero}
             disabled={false}
             selected={null}
@@ -65,6 +64,7 @@ function ListboxDemo({ count, label }: { count: number, label: ComponentChildren
         <Listbox<HTMLOListElement, HTMLLIElement, HTMLLabelElement>
             selectedIndex={selectedIndex}
             onSelectedIndexChange={setSelectedIndex}
+            ariaPropName="aria-selected"
 
             render={info => {
                 return (

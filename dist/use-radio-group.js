@@ -25,7 +25,7 @@ export function useRadioGroup({ labelParameters, radioGroupParameters: { name, o
             singleSelectionReturn.changeSelectedIndex(null);
     }, [selectedValue]);
     const { context, propsStable: propsGroup2, singleSelectionReturn, managedChildrenReturn, rovingTabIndexReturn, ...restRet } = useCompleteListNavigation({
-        singleSelectionParameters: { initiallySelectedIndex: selectedIndex, onSelectedIndexChange: useStableCallback((i, e) => { setSelectedIndex(i); onSelectedIndexChange?.(i, e); }) },
+        singleSelectionParameters: { initiallySelectedIndex: selectedIndex, onSelectedIndexChange: useStableCallback((i, e) => { setSelectedIndex(i); onSelectedIndexChange?.(i, e); }), selectionMode: "focus", ariaPropName: null },
         paginatedChildrenParameters: { paginationMin: null, paginationMax: null },
         ...restParams
     });
@@ -66,7 +66,7 @@ export function useRadioGroup({ labelParameters, radioGroupParameters: { name, o
         ...restRet,
     };
 }
-export function useRadio({ radioParameters: { value }, checkboxLikeParameters: { disabled }, labelParameters, info, singleSelectionChildParameters, context, textContentParameters, rovingTabIndexChildParameters, sortableChildParameters }) {
+export function useRadio({ radioParameters: { value }, checkboxLikeParameters: { disabled }, labelParameters, info, context, textContentParameters, sortableChildParameters }) {
     monitorCallCount(useRadio);
     const index = info.index;
     const onInput = useStableCallback((e) => {
@@ -78,10 +78,8 @@ export function useRadio({ radioParameters: { value }, checkboxLikeParameters: {
     const { props: listNavigationSingleSelectionChildProps, singleSelectionChildReturn, pressParameters, ...listNavRet } = useCompleteListNavigationChild({
         info,
         context,
-        rovingTabIndexChildParameters,
         sortableChildParameters,
         textContentParameters,
-        singleSelectionChildParameters: { selectionMode: "focus", ariaPropName: tagInput == "input" && labelPosition != "wrapping" ? null : "aria-selected", ...singleSelectionChildParameters }
     });
     const { selected: checked } = singleSelectionChildReturn;
     const { refElementReturn: refElementInputReturn, propsStable: propsRefInput } = useRefElement({ refElementParameters: {} });

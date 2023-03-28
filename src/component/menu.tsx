@@ -20,7 +20,8 @@ interface MenuPropsBase<MenuSurfaceElement extends Element, MenuParentElement ex
     Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, M>, "escapeDismissParameters">,
     Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, M>, "rearrangeableChildrenParameters">,
     Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, M>, "sortableChildrenParameters">,
-    Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, M>, "toolbarParameters"> {
+    Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, M>, "toolbarParameters">,
+    Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, M>, "singleSelectionParameters"> {
 }
 
 export interface MenuProps<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends PartialExcept<MenuPropsBase<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement, M>, "open" | "onClose" | "onOpen" | "openDirection" | "orientation"> {
@@ -39,6 +40,8 @@ export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element,
     noTypeahead,
     typeaheadTimeout,
     orientation,
+    ariaPropName,
+    selectionMode,
 
     onClose,
     open,
@@ -105,7 +108,8 @@ export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element,
             noTypeahead: useDefault("noTypeahead", noTypeahead),
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
         },
-        toolbarParameters: { orientation, selectedIndex: selectedIndex ?? null, onSelectedIndexChange: onSelectedIndexChange ?? null }
+        toolbarParameters: { orientation, selectedIndex: selectedIndex ?? null, onSelectedIndexChange: onSelectedIndexChange ?? null },
+        singleSelectionParameters: { ariaPropName: ariaPropName || "aria-selected", selectionMode: selectionMode || "activation" }
     });
 
     useImperativeHandle(ref!, () => info);
@@ -128,8 +132,6 @@ export const MenuItem = memoForwardRef(function MenuItem<MenuItemElement extends
     getText,
     role,
     focusSelf,
-    ariaPropName,
-    selectionMode,
     disabled,
     render,
     info: uinfo
@@ -138,13 +140,11 @@ export const MenuItem = memoForwardRef(function MenuItem<MenuItemElement extends
     console.assert(context != null, `This MenuItem is not contained within a Menubar/Menu`);
     const defaultFocusSelf = useCallback((e: MenuItemElement | null) => (e as Element as HTMLElement)?.focus?.(), []);
     const info = useMenuItem<MenuItemElement, M>({
-        info: { index, focusSelf: focusSelf ?? defaultFocusSelf, ...uinfo } as M,
+        info: { index, hidden, disabled, focusSelf: focusSelf ?? defaultFocusSelf, ...uinfo } as M,
         context,
-        rovingTabIndexChildParameters: { hidden: hidden ?? false },
         sortableChildParameters: { getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },
         menuItemParameters: { onPress: onPress ?? null, role: role ?? "menuitem" },
-        singleSelectionChildParameters: { ariaPropName, selectionMode, disabled: disabled ?? false }
     });
 
     useImperativeHandle(ref!, () => info);

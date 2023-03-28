@@ -33,7 +33,7 @@ export interface CheckboxGroupInfo<TCE extends Element> extends UseCompleteListN
 }
 
 
-export interface UseCheckboxGroupChildParameters<TCE extends Element, M extends CheckboxGroupInfo<TCE>> extends OmitStrong<UseCompleteListNavigationChildParameters<TCE, M>, "info" | "singleSelectionChildParameters"> {
+export interface UseCheckboxGroupChildParameters<TCE extends Element, M extends CheckboxGroupInfo<TCE>> extends OmitStrong<UseCompleteListNavigationChildParameters<TCE, M>, "info"> {
     context: CheckboxGroupContext<any, TCE, M>;
     checkboxGroupChild: {
         checked: CheckboxCheckedType;
@@ -55,7 +55,7 @@ export interface UseCheckboxGroupReturnType<GroupElement extends Element, TCE ex
     context: CheckboxGroupContext<GroupElement, TCE, M>;
 }
 
-export interface UseCheckboxGroupParentParameters<TCE extends Element, M extends CheckboxGroupInfo<TCE>> extends OmitStrong<UseCompleteListNavigationChildParameters<TCE, M>, "info" | "singleSelectionChildParameters"> {
+export interface UseCheckboxGroupParentParameters<TCE extends Element, M extends CheckboxGroupInfo<TCE>> extends OmitStrong<UseCompleteListNavigationChildParameters<TCE, M>, "info"> {
     context: CheckboxGroupContext<any, TCE, M>;
     info: OmitStrong<UseCompleteListNavigationChildParameters<TCE, CheckboxGroupInfo<TCE>>["info"], never>;
 }
@@ -134,7 +134,7 @@ export function useCheckboxGroup<GroupElement extends Element, TCE extends Eleme
         staggeredChildrenParameters,
         rearrangeableChildrenParameters,
         rovingTabIndexParameters,
-        singleSelectionParameters: { initiallySelectedIndex: null, onSelectedIndexChange: null },
+        singleSelectionParameters: { initiallySelectedIndex: null, onSelectedIndexChange: null, ariaPropName: null, selectionMode: "disabled" },
         sortableChildrenParameters,
         paginatedChildrenParameters: { paginationMax: null, paginationMin: null },
         typeaheadNavigationParameters
@@ -244,7 +244,6 @@ export function useCheckboxGroup<GroupElement extends Element, TCE extends Eleme
 export function useCheckboxGroupParent<TCE extends Element>({
     context,
     info,
-    rovingTabIndexChildParameters,
     textContentParameters,
     sortableChildParameters,
 }: UseCheckboxGroupParentParameters<TCE, CheckboxGroupInfo<TCE>>): UseCheckboxGroupParentReturnType<TCE, CheckboxGroupInfo<TCE>> {
@@ -263,11 +262,8 @@ export function useCheckboxGroupParent<TCE extends Element>({
     } = useCompleteListNavigationChild<TCE, CheckboxGroupInfo<TCE>>({
         context,
         info,
-        rovingTabIndexChildParameters,
         sortableChildParameters,
         textContentParameters,
-        // single selection isn't used because checkboxes are multiselect; "disabled" refers only to that.
-        singleSelectionChildParameters: { ariaPropName: null, selectionMode: "disabled", disabled: true },
     });
 
     const [ariaControls, setControls] = useState("");
@@ -316,7 +312,6 @@ export function useCheckboxGroupChild<TCE extends Element>({
     context,
     info,
     textContentParameters,
-    rovingTabIndexChildParameters,
     sortableChildParameters,
 }: UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>): UseCheckboxGroupChildReturnType<TCE, CheckboxGroupInfo<TCE>> {
     const { checkboxGroupChildrenContext: { allIds, setUpdateIndex, setTotalChildren, setTotalChecked, } } = context;
@@ -369,10 +364,8 @@ export function useCheckboxGroupChild<TCE extends Element>({
     } = useCompleteListNavigationChild<TCE, CheckboxGroupInfo<TCE>>({
         info: { checkboxInfo: { checkboxChildType: "child", getLastUserChecked, getChecked, setCheckedFromParentInput: onChangeFromParent }, ...info },
         context,
-        rovingTabIndexChildParameters,
         textContentParameters,
         sortableChildParameters,
-        singleSelectionChildParameters: { ariaPropName: null, selectionMode: "disabled", disabled: true },
     });
 
     return {

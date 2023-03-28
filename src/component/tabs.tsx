@@ -1,7 +1,7 @@
 import { createContext, Ref, VNode } from "preact";
 import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
 import { OmitStrong } from "../props.js";
-import { TabInfo, TabPanelInfo, TabPanelsContext, TabsContext, useTab, useTabPanel, UseTabPanelParameters, UseTabPanelReturnType, UseTabParameters, UseTabReturnType, useTabs, UseTabsParameters, UseTabsReturnType } from "../use-tabs.js";
+import { TabInfo, TabPanelInfo, TabPanelsContext, TabsContext, useTab, useTabPanel, UseTabPanelReturnType, UseTabParameters, UseTabReturnType, useTabs, UseTabsParameters, UseTabsReturnType } from "../use-tabs.js";
 import { memoForwardRef, PartialExcept, useDefault } from "./util.js";
 
 type Get<T, K extends keyof T> = T[K];
@@ -15,14 +15,13 @@ interface TabsPropsBase<TabContainerElement extends Element, TabElement extends 
     Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement, M>, "sortableChildrenParameters">,
     Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement, M>, "staggeredChildrenParameters">,
     Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement, M>, "tabsParameters">,
-    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement, M>, "typeaheadNavigationParameters"> {
+    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement, M>, "typeaheadNavigationParameters">,
+    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement, M>, "singleSelectionParameters"> {
 }
 
 interface TabPropsBase<TabElement extends Element, M extends TabInfo<TabElement>> extends
-    Pick<M, "index">,
-    Get<UseTabParameters<TabElement, M>, "singleSelectionChildParameters">,
+    Pick<M, "index" | "hidden" | "disabled">,
     Get<UseTabParameters<TabElement, M>, "sortableChildParameters">,
-    Get<UseTabParameters<TabElement, M>, "rovingTabIndexChildParameters">,
     Get<UseTabParameters<TabElement, M>, "textContentParameters"> {
     focusSelf: M["focusSelf"];
     info?: OmitStrong<M, keyof TabInfo<TabElement>>
@@ -64,6 +63,7 @@ export const Tabs = memoForwardRef(function Tabs<TabContainerElement extends Ele
     staggered,
     pageNavigationSize,
     localStorageKey,
+    selectionMode,
     //groupingType,
     untabbable,
     typeaheadTimeout,
@@ -84,7 +84,7 @@ export const Tabs = memoForwardRef(function Tabs<TabContainerElement extends Ele
             onTabbableIndexChange: onTabbableIndexChange ?? null,
             untabbable: untabbable ?? false
         },
-        singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? 0, onSelectedIndexChange: onSelectedIndexChange ?? null },
+        singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? 0, onSelectedIndexChange: onSelectedIndexChange ?? null, selectionMode },
         sortableChildrenParameters: { compare: compare ?? null },
         tabsParameters: { orientation, role, localStorageKey: localStorageKey ?? null },
         typeaheadNavigationParameters: {
@@ -116,18 +116,15 @@ export const Tab = memoForwardRef(function Tab<E extends Element, M extends TabI
     getText,
     getSortValue,
     render,
-    selectionMode,
     info: uinfo
 }: TabProps<E, M>, ref?: Ref<any>) {
     const context = useContext(TabsContext);
     console.assert(context != null, `This Tab is not contained within a Tabs component`);
     const focusSelfDefault = useCallback((e: any) => { e?.focus(); }, []);
     const info = useTab<E, M>({
-        info: { index, focusSelf: focusSelf ?? focusSelfDefault, ...uinfo } as M,
+        info: { index, disabled, hidden, focusSelf: focusSelf ?? focusSelfDefault, ...uinfo } as M,
         context,
-        rovingTabIndexChildParameters: { hidden: hidden ?? false },
         sortableChildParameters: { getSortValue },
-        singleSelectionChildParameters: { disabled: disabled ?? false, selectionMode: selectionMode ?? "focus" },
         textContentParameters: { getText: useDefault("getText", getText) }
     });
     useImperativeHandle(ref!, () => info);

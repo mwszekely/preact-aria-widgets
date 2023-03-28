@@ -99,6 +99,7 @@ export function Demo() {
             <div>
                 <Gridlist<HTMLUListElement, HTMLLIElement, HTMLDivElement, HTMLLabelElement>
                     ariaLabel={null}
+                    ariaPropName="aria-selected"
                     groupingType="without-groups"
                     selectionLimit="single"
                     selectedIndex={selectedIndex}
@@ -111,7 +112,6 @@ export function Demo() {
                                     for (let i = 0; i < count; ++i) {
                                         yield (
                                             <GridlistRow<HTMLLIElement, HTMLDivElement>
-                                                ariaPropName="aria-selected"
                                                 selected={null}
                                                 index={i}
                                                 getSortValue={returnZero}

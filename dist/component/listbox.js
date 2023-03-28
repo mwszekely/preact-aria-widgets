@@ -25,12 +25,13 @@ export const GroupedListbox = memo(function GroupedListbox({ ariaLabel, selectio
             collator: null,
             noTypeahead: true,
             typeaheadTimeout: Infinity
-        }
+        },
+        singleSelectionParameters: { ariaPropName: null, selectionMode: "disabled" }
     });
     info.context;
     return (_jsx(ListboxGroupContext.Provider, { value: info, children: render(info) }));
 });
-export const Listbox = memoForwardRef(function Listbox({ ariaLabel, collator, compare, disableHomeEndKeys, getIndex, selectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSelectedIndexChange, onTabbableIndexChange, staggered, pageNavigationSize, paginationMax, paginationMin, selectionLimit, untabbable, typeaheadTimeout, orientation, render }) {
+export const Listbox = memoForwardRef(function Listbox({ ariaLabel, collator, compare, disableHomeEndKeys, getIndex, selectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSelectedIndexChange, onTabbableIndexChange, staggered, pageNavigationSize, paginationMax, paginationMin, selectionLimit, untabbable, typeaheadTimeout, orientation, ariaPropName, selectionMode, render }) {
     const listboxGroupInfo = useContext(ListboxGroupContext);
     const info = useListbox({
         labelParameters: { ariaLabel },
@@ -55,27 +56,22 @@ export const Listbox = memoForwardRef(function Listbox({ ariaLabel, collator, co
             collator: useDefault("collator", collator),
             noTypeahead: useDefault("noTypeahead", noTypeahead),
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
-        }
+        },
+        singleSelectionParameters: { ariaPropName: ariaPropName || "aria-selected", selectionMode: selectionMode || "activation" }
     });
     return (_jsx(ListboxContext.Provider, { value: info.context, children: render(info) }));
 });
-export const ListboxItem = memoForwardRef(function ListboxItem({ ariaPropName, disabled, focusSelf, onPressSync, getText, hidden, index, render, selected, selectionMode, getSortValue, ...subInfo }) {
+export const ListboxItem = memoForwardRef(function ListboxItem({ disabled, focusSelf, onPressSync, getText, hidden, index, render, selected, getSortValue, ...subInfo }) {
     const context = useContext(ListboxContext);
     console.assert(context != null, `This ListboxItem is not contained within a Listbox`);
     const focusSelfDefault = useCallback((e) => { e?.focus(); }, []);
     const info = useListboxItem({
-        info: { index, focusSelf: focusSelf ?? focusSelfDefault, ...subInfo },
+        info: { index, hidden: hidden || false, disabled: disabled || false, focusSelf: focusSelf ?? focusSelfDefault, ...subInfo },
         context,
         listboxParameters: { selected: selected ?? null, },
         pressParameters: { onPressSync },
-        rovingTabIndexChildParameters: { hidden: hidden ?? false },
         sortableChildParameters: { getSortValue: getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },
-        singleSelectionChildParameters: {
-            disabled: disabled ?? false,
-            ariaPropName,
-            selectionMode: useDefault("selectionMode", selectionMode)
-        }
     });
     return render(info);
 });

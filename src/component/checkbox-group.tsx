@@ -14,13 +14,13 @@ export interface CheckboxGroupPropsBase<ParentElement extends Element, TabbableC
     Get<UseCheckboxGroupParameters<ParentElement, TabbableChildElement, M>, "sortableChildrenParameters">,
     Get<UseCheckboxGroupParameters<ParentElement, TabbableChildElement, M>, "typeaheadNavigationParameters">,
     Get<UseCheckboxGroupParameters<ParentElement, TabbableChildElement, M>, "staggeredChildrenParameters">,
+    Get<UseCheckboxGroupParameters<ParentElement, TabbableChildElement, M>, "rovingTabIndexParameters">,
     Get<UseCheckboxGroupParameters<ParentElement, TabbableChildElement, M>, "rovingTabIndexParameters"> {
     ref?: Ref<UseCheckboxGroupReturnType<ParentElement, TabbableChildElement, M>>;
 }
 
 export interface CheckboxGroupParentPropsBase<TCE extends Element> extends
     Pick<CheckboxGroupInfo<TCE>, "index">,
-    Get<UseCheckboxGroupParentParameters<TCE, CheckboxGroupInfo<TCE>>, "rovingTabIndexChildParameters">,
     Get<UseCheckboxGroupParentParameters<TCE, CheckboxGroupInfo<TCE>>, "sortableChildParameters">,
     Get<UseCheckboxGroupParentParameters<TCE, CheckboxGroupInfo<TCE>>, "textContentParameters">,
     OmitStrong<Get<UseCheckboxGroupParentParameters<TCE, CheckboxGroupInfo<TCE>>, "info">, "checkboxInfo"> {
@@ -29,8 +29,7 @@ export interface CheckboxGroupParentPropsBase<TCE extends Element> extends
 
 export interface CheckboxGroupChildPropsBase<TCE extends Element> extends
     Get<UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>, "checkboxGroupChild">,
-    Pick<CheckboxGroupInfo<TCE>, "index">,
-    Get<UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>, "rovingTabIndexChildParameters">,
+    Pick<CheckboxGroupInfo<TCE>, "index" | "hidden" | "disabled">,
     Get<UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>, "sortableChildParameters">,
     Get<UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>, "textContentParameters"> {
     focusSelf: UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>["info"]["focusSelf"];
@@ -97,15 +96,14 @@ export const CheckboxGroup = memoForwardRef(function CheckboxGroup<ParentElement
     )
 });
 
-export const CheckboxGroupParent = memoForwardRef(function CheckboxGroupParent<TCE extends Element>({ render, index, focusSelf, hidden, getText, getSortValue, ..._rest }: CheckboxGroupParentProps<TCE>, ref?: Ref<any>) {
+export const CheckboxGroupParent = memoForwardRef(function CheckboxGroupParent<TCE extends Element>({ render, index, focusSelf, hidden, getText, getSortValue, disabled, ..._rest }: CheckboxGroupParentProps<TCE>, ref?: Ref<any>) {
     const context = (useContext(UseCheckboxGroupChildContext) as CheckboxGroupContext<any, TCE, CheckboxGroupInfo<TCE>>);
     console.assert(context != null, `This CheckboxGroupParent is not contained within a CheckboxGroup`);
 
     const info = useCheckboxGroupParent<TCE>({
 
-        info: { index, focusSelf, checkboxInfo: { checkboxChildType: "parent" } },
+        info: { index, disabled: disabled || false, hidden: hidden || false, focusSelf, checkboxInfo: { checkboxChildType: "parent" } },
         context,
-        rovingTabIndexChildParameters: { hidden: hidden ?? false },
         sortableChildParameters: { getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) }
     });
@@ -123,16 +121,16 @@ export const CheckboxGroupChild = memoForwardRef(function CheckboxGroupChild<TCE
     hidden,
     getText,
     focusSelf,
+    disabled,
     ..._rest
 }: CheckboxGroupChildProps<TCE>, ref?: Ref<any>) {
     const context = (useContext(UseCheckboxGroupChildContext) as CheckboxGroupContext<any, TCE, CheckboxGroupInfo<TCE>>);
     console.assert(context != null, `This CheckboxGroupChild is not contained within a CheckboxGroup`);
     const info = useCheckboxGroupChild<TCE>({
         checkboxGroupChild: { checked, onChangeFromParent },
-        info: { index, focusSelf },
+        info: { index, hidden: hidden || false, disabled: disabled || false, focusSelf },
         textContentParameters: { getText: useDefault("getText", getText) },
         context,
-        rovingTabIndexChildParameters: { hidden: hidden ?? false },
         sortableChildParameters: { getSortValue },
     });
 

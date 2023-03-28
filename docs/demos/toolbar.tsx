@@ -9,8 +9,6 @@ const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
         <ToolbarChild<HTMLButtonElement>
             index={index}
             focusSelf={e => e.focus()}
-            ariaPropName="aria-pressed"
-            selectionMode="activation"
             getSortValue={returnZero}
             render={info2 => {
                 return (
@@ -62,6 +60,8 @@ export function Demo() {
                 <Toolbar<HTMLDivElement, HTMLButtonElement, HTMLLabelElement>
                     orientation="horizontal"
                     role="toolbar"
+                    ariaPropName="aria-pressed"
+                    selectionMode="activation"
                     ariaLabel={null}
                     render={(info) => <>
                         <label {...info.propsLabel}>Toolbar demo</label>

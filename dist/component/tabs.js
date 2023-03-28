@@ -5,7 +5,7 @@ import { useTab, useTabPanel, useTabs } from "../use-tabs.js";
 import { memoForwardRef, useDefault } from "./util.js";
 const TabsContext = createContext(null);
 const TabPanelsContext = createContext(null);
-export const Tabs = memoForwardRef(function Tabs({ ariaLabel, collator, compare, disableHomeEndKeys, getIndex, initiallySelectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSelectedIndexChange, onTabbableIndexChange, orientation, staggered, pageNavigationSize, localStorageKey, 
+export const Tabs = memoForwardRef(function Tabs({ ariaLabel, collator, compare, disableHomeEndKeys, getIndex, initiallySelectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSelectedIndexChange, onTabbableIndexChange, orientation, staggered, pageNavigationSize, localStorageKey, selectionMode, 
 //groupingType,
 untabbable, typeaheadTimeout, role, render }, ref) {
     const info = useTabs({
@@ -22,7 +22,7 @@ untabbable, typeaheadTimeout, role, render }, ref) {
             onTabbableIndexChange: onTabbableIndexChange ?? null,
             untabbable: untabbable ?? false
         },
-        singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? 0, onSelectedIndexChange: onSelectedIndexChange ?? null },
+        singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? 0, onSelectedIndexChange: onSelectedIndexChange ?? null, selectionMode },
         sortableChildrenParameters: { compare: compare ?? null },
         tabsParameters: { orientation, role, localStorageKey: localStorageKey ?? null },
         typeaheadNavigationParameters: {
@@ -35,16 +35,14 @@ untabbable, typeaheadTimeout, role, render }, ref) {
     useImperativeHandle(ref, () => info);
     return (_jsx(TabsContext.Provider, { value: contextTabs, children: _jsx(TabPanelsContext.Provider, { value: contextPanels, children: render(info) }) }));
 });
-export const Tab = memoForwardRef(function Tab({ disabled, focusSelf, hidden, index, getText, getSortValue, render, selectionMode, info: uinfo }, ref) {
+export const Tab = memoForwardRef(function Tab({ disabled, focusSelf, hidden, index, getText, getSortValue, render, info: uinfo }, ref) {
     const context = useContext(TabsContext);
     console.assert(context != null, `This Tab is not contained within a Tabs component`);
     const focusSelfDefault = useCallback((e) => { e?.focus(); }, []);
     const info = useTab({
-        info: { index, focusSelf: focusSelf ?? focusSelfDefault, ...uinfo },
+        info: { index, disabled, hidden, focusSelf: focusSelf ?? focusSelfDefault, ...uinfo },
         context,
-        rovingTabIndexChildParameters: { hidden: hidden ?? false },
         sortableChildParameters: { getSortValue },
-        singleSelectionChildParameters: { disabled: disabled ?? false, selectionMode: selectionMode ?? "focus" },
         textContentParameters: { getText: useDefault("getText", getText) }
     });
     useImperativeHandle(ref, () => info);

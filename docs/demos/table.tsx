@@ -36,7 +36,7 @@ function DemoInput({ index }: { index: number }) {
     const [v, setV] = useState("");
 
     return (
-        <TableCell<HTMLTableCellElement> getSortValue={() => v} focusSelf={e => {debugger; e.focus()}} tagTableCell="td" index={index} render={info => {
+        <TableCell<HTMLTableCellElement> getSortValue={() => v} focusSelf={e => { debugger; e.focus() }} tagTableCell="td" index={index} render={info => {
             return (
                 <td {...info.propsCell}>
                     <input {...info.propsFocus} type="text" onInput={useCallback((e: h.JSX.TargetedEvent<HTMLInputElement>) => {
@@ -116,7 +116,6 @@ export function Demo() {
                                                 <thead {...infoSection.propsTableSection}>
                                                     <TableRow<HTMLTableRowElement, HTMLTableCellElement>
                                                         index={0}
-                                                        ariaPropName="aria-selected"
                                                         tagTableRow="tr"
                                                         render={info => {
                                                             return (
@@ -133,6 +132,7 @@ export function Demo() {
                                     <TableSection<HTMLTableSectionElement, HTMLTableRowElement, HTMLTableCellElement>
                                         tagTableSection="tbody"
                                         location="body"
+                                        ariaPropName="aria-selected"
                                         render={infoSection => {
                                             return (
                                                 <tbody {...infoSection.propsTableSection}>
@@ -140,7 +140,6 @@ export function Demo() {
                                                         for (let i = 0; i < count; ++i) {
                                                             yield (
                                                                 <TableRow<HTMLTableRowElement, HTMLTableCellElement>
-                                                                    ariaPropName="aria-selected"
                                                                     tagTableRow="tr"
                                                                     key={i}
                                                                     index={i}
