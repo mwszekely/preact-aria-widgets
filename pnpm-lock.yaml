@@ -7,18 +7,18 @@ specifiers:
   npm-run-all: ^4.1.5
   preact: ^10.13.2
   preact-prop-helpers: github:mwszekely/preact-prop-helpers
-  typescript: ^5.0.2
+  typescript: ^5.0.4
 
 dependencies:
   clsx: 1.2.1
   lodash-es: 4.17.21
   preact: 10.13.2
-  preact-prop-helpers: github.com/mwszekely/preact-prop-helpers/68495acb9afa8fdaeaf4e88c32b7d9bb28ac0b1d_preact@10.13.2
+  preact-prop-helpers: github.com/mwszekely/preact-prop-helpers/3c11775e0886cc02da18f646298d6e657c705c34_preact@10.13.2
 
 devDependencies:
   '@types/lodash-es': 4.17.7
   npm-run-all: 4.1.5
-  typescript: 5.0.2
+  typescript: 5.0.4
 
 packages:
 
@@ -668,8 +668,8 @@ packages:
       is-typed-array: 1.1.10
     dev: true
 
-  /typescript/5.0.2:
-    resolution: {integrity: sha512-wVORMBGO/FAs/++blGNeAVdbNKtIh1rbBL2EyQ1+J9lClJ93KiiKe8PmFIVdXhHcyv44SL9oglmfeSsndo0jRw==}
+  /typescript/5.0.4:
+    resolution: {integrity: sha512-cW9T5W9xY37cc+jfEnaUvX91foxtHkza3Nw3wkoF4sSlKn0MONdkdEndig/qPBWXNkmplh3NzayQzCiHM4/hqw==}
     engines: {node: '>=12.20'}
     hasBin: true
     dev: true
@@ -723,9 +723,9 @@ packages:
     resolution: {integrity: sha512-Ba9tGNYxXwaqKEi9sJJvPMKuo063umUPsHN0JJsjrs2j8KDSzkWLMZGZ+MH1Jf1Fq4OWZ5HsESJID6nRza2ang==}
     dev: false
 
-  github.com/mwszekely/preact-prop-helpers/68495acb9afa8fdaeaf4e88c32b7d9bb28ac0b1d_preact@10.13.2:
-    resolution: {tarball: https://codeload.github.com/mwszekely/preact-prop-helpers/tar.gz/68495acb9afa8fdaeaf4e88c32b7d9bb28ac0b1d}
-    id: github.com/mwszekely/preact-prop-helpers/68495acb9afa8fdaeaf4e88c32b7d9bb28ac0b1d
+  github.com/mwszekely/preact-prop-helpers/3c11775e0886cc02da18f646298d6e657c705c34_preact@10.13.2:
+    resolution: {tarball: https://codeload.github.com/mwszekely/preact-prop-helpers/tar.gz/3c11775e0886cc02da18f646298d6e657c705c34}
+    id: github.com/mwszekely/preact-prop-helpers/3c11775e0886cc02da18f646298d6e657c705c34
     name: preact-prop-helpers
     version: 0.0.1
     peerDependencies:
