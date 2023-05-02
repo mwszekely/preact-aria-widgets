@@ -13,7 +13,7 @@ dependencies:
   clsx: 1.2.1
   lodash-es: 4.17.21
   preact: 10.13.2
-  preact-prop-helpers: github.com/mwszekely/preact-prop-helpers/3c11775e0886cc02da18f646298d6e657c705c34_preact@10.13.2
+  preact-prop-helpers: github.com/mwszekely/preact-prop-helpers/643f5547026cbeff24a01001a84a2ddeae8736c4_preact@10.13.2
 
 devDependencies:
   '@types/lodash-es': 4.17.7
@@ -25,11 +25,11 @@ packages:
   /@types/lodash-es/4.17.7:
     resolution: {integrity: sha512-z0ptr6UI10VlU6l5MYhGwS4mC8DZyYer2mCoyysZtSF7p26zOX8UpbrV0YpNYLGS8K4PUFIyEr62IMFFjveSiQ==}
     dependencies:
-      '@types/lodash': 4.14.192
+      '@types/lodash': 4.14.194
     dev: true
 
-  /@types/lodash/4.14.192:
-    resolution: {integrity: sha512-km+Vyn3BYm5ytMO13k9KTp27O75rbQ0NFw+U//g+PX7VZyjCioXaRFisqSIJRECljcTv73G3i6BpglNGHgUQ5A==}
+  /@types/lodash/4.14.194:
+    resolution: {integrity: sha512-r22s9tAS7imvBt2lyHC9B8AGwWnXaYb1tY09oyLkXDs4vArpYJzw09nj8MLx5VfciBPGIb+ZwG0ssYnEPJxn/g==}
     dev: true
 
   /ansi-styles/3.2.1:
@@ -156,7 +156,7 @@ packages:
       object-inspect: 1.12.3
       object-keys: 1.1.1
       object.assign: 4.1.4
-      regexp.prototype.flags: 1.4.3
+      regexp.prototype.flags: 1.5.0
       safe-regex-test: 1.0.0
       string.prototype.trim: 1.2.7
       string.prototype.trimend: 1.0.6
@@ -528,8 +528,8 @@ packages:
       path-type: 3.0.0
     dev: true
 
-  /regexp.prototype.flags/1.4.3:
-    resolution: {integrity: sha512-fjggEOO3slI6Wvgjwflkc4NFRCTZAu5CnNfBd5qOMYhWdn67nJBBu34/TkD++eeFmd8C9r9jfXJ27+nSiRkSUA==}
+  /regexp.prototype.flags/1.5.0:
+    resolution: {integrity: sha512-0SutC3pNudRKgquxGoRGIz946MZVHqbNfPjBdxeOhBrdgDKlRoXmYLQN9xRbrR09ZXWeGAdPuif7egofn6v5LA==}
     engines: {node: '>= 0.4'}
     dependencies:
       call-bind: 1.0.2
@@ -723,14 +723,23 @@ packages:
     resolution: {integrity: sha512-Ba9tGNYxXwaqKEi9sJJvPMKuo063umUPsHN0JJsjrs2j8KDSzkWLMZGZ+MH1Jf1Fq4OWZ5HsESJID6nRza2ang==}
     dev: false
 
-  github.com/mwszekely/preact-prop-helpers/3c11775e0886cc02da18f646298d6e657c705c34_preact@10.13.2:
-    resolution: {tarball: https://codeload.github.com/mwszekely/preact-prop-helpers/tar.gz/3c11775e0886cc02da18f646298d6e657c705c34}
-    id: github.com/mwszekely/preact-prop-helpers/3c11775e0886cc02da18f646298d6e657c705c34
+  github.com/mwszekely/async-to-sync/624c049a849d0a02039c1ec14f78617394daabce:
+    resolution: {tarball: https://codeload.github.com/mwszekely/async-to-sync/tar.gz/624c049a849d0a02039c1ec14f78617394daabce}
+    name: async-to-sync
+    version: 0.0.1
+    dependencies:
+      lodash-es: 4.17.21
+    dev: false
+
+  github.com/mwszekely/preact-prop-helpers/643f5547026cbeff24a01001a84a2ddeae8736c4_preact@10.13.2:
+    resolution: {tarball: https://codeload.github.com/mwszekely/preact-prop-helpers/tar.gz/643f5547026cbeff24a01001a84a2ddeae8736c4}
+    id: github.com/mwszekely/preact-prop-helpers/643f5547026cbeff24a01001a84a2ddeae8736c4
     name: preact-prop-helpers
     version: 0.0.1
     peerDependencies:
       preact: ^10.13.2
     dependencies:
+      async-to-sync: github.com/mwszekely/async-to-sync/624c049a849d0a02039c1ec14f78617394daabce
       blocking-elements: 0.1.1
       clsx: 1.2.1
       lodash-es: 4.17.21
