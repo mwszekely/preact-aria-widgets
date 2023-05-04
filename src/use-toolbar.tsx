@@ -90,10 +90,12 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
         randomIdLabelParameters: { prefix: Prefices.toolbarLabel }
     });
 
+    // Note: We return tabIndex=-1 because some browsers (at least Firefox) seem to add role=toolbar to the tab order?
+    // Probably needs a bit more digging because this feels like a bit of a blunt fix.
     return {
         context,
         propsLabel,
-        propsToolbar: useMergedProps({ ...propsToolbar, role: role ?? undefined }, propsStable),
+        propsToolbar: useMergedProps({ ...propsToolbar, role: role ?? undefined, tabIndex: -1 }, propsStable),
         randomIdInputReturn,
         randomIdLabelReturn,
         ...listNavReturn
