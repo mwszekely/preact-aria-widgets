@@ -119,7 +119,7 @@ export function useTable<TableElement extends Element, LabelElement extends Elem
     return {
         propsTable: useMergedProps({ role: tagTable == "table" ? undefined : "grid", "aria-multiselectable": (selectionLimit == "multi" ? "true" : undefined) }, propsLabelList),
         propsLabel: propsLabelLabel,
-        context: ({ tableContext: ({ sortByColumn, setSortBodyFunction: setSortBody, getCurrentSortColumn: getSortColumn }) })
+        context: ({ tableContext: useStableObject({ sortByColumn, setSortBodyFunction: setSortBody, getCurrentSortColumn: getSortColumn }) })
     }
 }
 function fuzzyCompare(lhs: any, rhs: any): number {
