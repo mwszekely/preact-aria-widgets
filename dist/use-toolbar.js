@@ -21,8 +21,6 @@ export function useToolbar({ linearNavigationParameters, toolbarParameters: { or
         paginatedChildrenParameters: { paginationMax: null, paginationMin: null },
         linearNavigationParameters: { ...linearNavigationParameters, arrowKeyDirection: orientation },
     });
-    //const _v: void = useSingleSelectionDeclarative({
-    //})
     const { propsInput: propsToolbar, propsLabel, randomIdInputReturn, randomIdLabelReturn } = useLabelSynthetic({
         labelParameters: { ...labelParameters, onLabelClick: listNavReturn.rovingTabIndexReturn.focusSelf },
         randomIdInputParameters: { prefix: Prefices.toolbar },
@@ -39,8 +37,12 @@ export function useToolbar({ linearNavigationParameters, toolbarParameters: { or
         ...listNavReturn
     };
 }
-export function useToolbarChild(args) {
+export function useToolbarChild({ info, toolbarChildParameters: { disabledProp }, ...args }) {
     monitorCallCount(useToolbarChild);
-    return useCompleteListNavigationChild(args);
+    const { props, ...listNavReturn } = useCompleteListNavigationChild({ info, ...args });
+    return {
+        props: useMergedProps(props, { [disabledProp]: info.disabled ? "true" : undefined }),
+        ...listNavReturn
+    };
 }
 //# sourceMappingURL=use-toolbar.js.map

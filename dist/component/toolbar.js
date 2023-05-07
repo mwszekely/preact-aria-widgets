@@ -34,13 +34,14 @@ export const Toolbar = memoForwardRef(function ToolbarU({ render, role, collator
     useImperativeHandle(ref, () => listboxReturnType);
     return (_jsx(ToolbarContext.Provider, { value: listboxReturnType.context, children: render(listboxReturnType) }));
 });
-export const ToolbarChild = memoForwardRef(function ToolbarChildU({ index, render, focusSelf, getSortValue, getText, info: uinfo }, ref) {
+export const ToolbarChild = memoForwardRef(function ToolbarChildU({ index, render, focusSelf, getSortValue, getText, disabled, disabledProp, hidden, info: uinfo }, ref) {
     const context = useContext(ToolbarContext);
     console.assert(context != null, `This ToolbarChild is not contained within a Toolbar`);
     const focusSelfDefault = useCallback((e) => { e?.focus(); }, []);
     const info = useToolbarChild({
         context,
-        info: { index, focusSelf: focusSelf ?? focusSelfDefault, ...uinfo },
+        toolbarChildParameters: { disabledProp },
+        info: { index, focusSelf: focusSelf ?? focusSelfDefault, hidden: hidden || false, disabled: disabled || false, ...uinfo },
         sortableChildParameters: { getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },
     });

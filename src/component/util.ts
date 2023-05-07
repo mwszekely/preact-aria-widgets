@@ -32,4 +32,8 @@ export function useDefault<K extends DefaultExcepts>(context: K, userValue: unde
 export const ParentDepthContext = createContext(0);
 
 type PartialExceptD<T, KeepRequired extends keyof T> = Partial<Pick<T, Exclude<keyof T, KeepRequired>>> & Pick<T, KeepRequired>;
+
+/**
+ * Like `Partial<T>`, but the properties given by `K` will **NOT** be made partial -- they'll remain required.
+ */
 export type PartialExcept<T, K extends keyof T> = PartialExceptD<T, K>;

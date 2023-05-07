@@ -46,8 +46,9 @@ export interface UseToolbarSubInfo<ChildElement extends Element> extends UseComp
 export type UseToolbarContext<ContainerElement extends Element, ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> = CompleteListNavigationContext<ContainerElement, ChildElement, M>;
 
 
-export interface UseToolbarChildParameters<E extends Element, M extends UseToolbarSubInfo<E>> extends OmitStrong<UseCompleteListNavigationChildParameters<E, M>, never> {}
-export interface UseToolbarChildParameters<E extends Element, M extends UseToolbarSubInfo<E>> extends OmitStrong<UseCompleteListNavigationChildParameters<E, M>, never> {}
+export interface UseToolbarChildParameters<E extends Element, M extends UseToolbarSubInfo<E>> extends OmitStrong<UseCompleteListNavigationChildParameters<E, M>, never> {
+    toolbarChildParameters: { disabledProp: keyof h.JSX.HTMLAttributes<E>; }
+}
 export interface UseToolbarChildReturnType<ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends UseCompleteListNavigationChildReturnType<ChildElement, M> { }
 
 /**
@@ -81,9 +82,6 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
         linearNavigationParameters: { ...linearNavigationParameters, arrowKeyDirection: orientation },
     });
 
-    //const _v: void = useSingleSelectionDeclarative({
-    //})
-
     const { propsInput: propsToolbar, propsLabel, randomIdInputReturn, randomIdLabelReturn } = useLabelSynthetic<ContainerElement, LabelElement>({
         labelParameters: { ...labelParameters, onLabelClick: listNavReturn.rovingTabIndexReturn.focusSelf },
         randomIdInputParameters: { prefix: Prefices.toolbar },
@@ -103,7 +101,15 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
 }
 
 
-export function useToolbarChild<ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>>(args: UseToolbarChildParameters<ChildElement, M>): UseToolbarChildReturnType<ChildElement, M> {
+export function useToolbarChild<ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>>({ info, toolbarChildParameters: { disabledProp }, ...args }: UseToolbarChildParameters<ChildElement, M>): UseToolbarChildReturnType<ChildElement, M> {
     monitorCallCount(useToolbarChild);
-    return useCompleteListNavigationChild<ChildElement, M>(args);
+    const { 
+        props, 
+        ...listNavReturn 
+    } = useCompleteListNavigationChild<ChildElement, M>({ info,  ...args});
+
+    return {
+        props: useMergedProps(props, { [disabledProp]: info.disabled? true : undefined }),
+        ...listNavReturn
+    }
 }

@@ -20,6 +20,9 @@ type ContextType<T extends Context<any>> = T extends Context<infer C> ? C : unkn
 export declare function useDefault<K extends DefaultExcepts>(context: K, userValue: undefined | ContextType<(typeof ContextDefaults)[K]>): ContextType<(typeof ContextDefaults)[K]>;
 export declare const ParentDepthContext: Context<number>;
 type PartialExceptD<T, KeepRequired extends keyof T> = Partial<Pick<T, Exclude<keyof T, KeepRequired>>> & Pick<T, KeepRequired>;
+/**
+ * Like `Partial<T>`, but the properties given by `K` will **NOT** be made partial -- they'll remain required.
+ */
 export type PartialExcept<T, K extends keyof T> = PartialExceptD<T, K>;
 export {};
 //# sourceMappingURL=util.d.ts.map

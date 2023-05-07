@@ -9,7 +9,7 @@ export interface UseMenubarContext<ContainerElement extends Element, ChildElemen
 export interface UseMenubarSubInfo<ChildElement extends Element> extends UseToolbarSubInfo<ChildElement> { }
 export interface UseMenubarParameters<MenuParentElement extends Element, MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseToolbarParameters<MenuParentElement, MenuItemElement, M> {}
 
-export interface UseMenubarItemParameters<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseToolbarChildParameters<MenuItemElement, M> {
+export interface UseMenubarItemParameters<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseToolbarChildParameters<MenuItemElement, M>, "toolbarChildParameters"> {
     menuItemParameters: {
         role: "menuitem" | "menuitemcheckbox" | "menuitemradio";
 
@@ -65,7 +65,8 @@ export function useMenubarChild<MenuItemElement extends Element, M extends UseMe
         props,
         ...restRet
     } = useToolbarChild<MenuItemElement, M>({
-        ...restParams
+        ...restParams,
+        toolbarChildParameters: { disabledProp: "aria-disabled" }
     });
 
     const { pressReturn, props: propsPress } = usePress<MenuItemElement>({

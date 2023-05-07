@@ -23,7 +23,8 @@ export function useMenubarChild({ menuItemParameters: { onPress: opu, role }, ..
     monitorCallCount(useMenubarChild);
     const focusSelf = useCallback((e) => e.focus?.(), []);
     const { pressParameters: { excludeSpace }, props, ...restRet } = useToolbarChild({
-        ...restParams
+        ...restParams,
+        toolbarChildParameters: { disabledProp: "aria-disabled" }
     });
     const { pressReturn, props: propsPress } = usePress({
         pressParameters: {

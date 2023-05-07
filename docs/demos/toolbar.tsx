@@ -10,6 +10,7 @@ const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
             index={index}
             focusSelf={e => e.focus()}
             getSortValue={returnZero}
+            disabledProp="disabled"
             render={info2 => {
                 return (
                     <Button<HTMLButtonElement>

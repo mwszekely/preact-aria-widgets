@@ -25,6 +25,7 @@ export interface ToolbarPropsBase<ToolbarContainerElement extends Element, Toolb
 export interface ToolbarChildPropsBase<ToolbarChildElement extends Element, M extends UseToolbarSubInfo<ToolbarChildElement>> extends
     Get<UseToolbarChildParameters<ToolbarChildElement, M>, "sortableChildParameters">,
     Get<UseToolbarChildParameters<ToolbarChildElement, M>, "textContentParameters">,
+    Get<UseToolbarChildParameters<ToolbarChildElement, M>, "toolbarChildParameters">,
     Pick<Get<UseToolbarChildParameters<any, any>, "info">, "index" | "hidden" | "disabled"> {
     focusSelf?: M["focusSelf"];
     info?: OmitStrong<Get<UseToolbarChildParameters<ToolbarChildElement, M>, "info">, never>
@@ -35,7 +36,7 @@ export interface ToolbarProps<ToolbarContainerElement extends Element, ToolbarCh
     render(info: UseToolbarReturnType<ToolbarContainerElement, ToolbarChildElement, LabelElement, M>): VNode<any>;
 }
 
-export interface ToolbarChildProps<ToolbarChildElement extends Element, M extends UseToolbarSubInfo<ToolbarChildElement>> extends PartialExcept<ToolbarChildPropsBase<ToolbarChildElement, M>, "getSortValue" | "index"> {
+export interface ToolbarChildProps<ToolbarChildElement extends Element, M extends UseToolbarSubInfo<ToolbarChildElement>> extends PartialExcept<ToolbarChildPropsBase<ToolbarChildElement, M>, "getSortValue" | "index" | "disabledProp"> {
     render(info: UseToolbarChildReturnType<ToolbarChildElement, M>): VNode<any>;
 }
 
@@ -60,7 +61,7 @@ export const Toolbar = memoForwardRef(function ToolbarU<ContainerElement extends
     typeaheadTimeout,
     staggered,
     ariaLabel,
-    ariaPropName, 
+    ariaPropName,
     selectionMode
 }: ToolbarProps<ContainerElement, ChildElement, LabelElement, M>, ref?: Ref<any>) {
     const listboxReturnType = useToolbar<ContainerElement, ChildElement, LabelElement, M>({
@@ -106,6 +107,9 @@ export const ToolbarChild = memoForwardRef(function ToolbarChildU<ToolbarChildEl
     focusSelf,
     getSortValue,
     getText,
+    disabled,
+    disabledProp,
+    hidden,
     info: uinfo
 }: ToolbarChildProps<ToolbarChildElement, M>, ref?: Ref<any>) {
     const context = (useContext(ToolbarContext) as UseToolbarContext<any, ToolbarChildElement, M>);
@@ -114,7 +118,8 @@ export const ToolbarChild = memoForwardRef(function ToolbarChildU<ToolbarChildEl
 
     const info = useToolbarChild<ToolbarChildElement, M>({
         context,
-        info: { index, focusSelf: focusSelf ?? focusSelfDefault, ...uinfo } as M,
+        toolbarChildParameters: { disabledProp },
+        info: { index, focusSelf: focusSelf ?? focusSelfDefault, hidden: hidden || false, disabled: disabled || false, ...uinfo } as M,
         sortableChildParameters: { getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },
     });
