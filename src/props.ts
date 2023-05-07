@@ -48,13 +48,14 @@ export interface TagSensitiveProps<E extends EventTarget> {
 
 export const EventDetail = Symbol("event-detail");
 export type EventDetail = typeof EventDetail;
-export type EnhancedEvent<Target extends EventTarget, TypedEvent extends Event, Detail> = h.JSX.TargetedEvent<Target, TypedEvent> & {
+export type EnhancedEventHandler<Target extends EventTarget, TypedEvent extends Event, Detail> = (e: TargetedEnhancedEvent<Target, TypedEvent, Detail>) => void;
+export type TargetedEnhancedEvent<Target extends EventTarget, TypedEvent extends Event, Detail> = h.JSX.TargetedEvent<Target, TypedEvent> & {
     [EventDetail]: Detail;
 };
 
 
-export function enhanceEvent<E extends EventTarget, TypedEvent extends Event, Detail extends object>(e: TypedEvent | h.JSX.TargetedEvent<E, TypedEvent>, detail: Detail): EnhancedEvent<E, TypedEvent, Detail> {
-    const event = e as unknown as EnhancedEvent<E, TypedEvent, Detail>;
+export function enhanceEvent<E extends EventTarget, TypedEvent extends Event, Detail extends object>(e: TypedEvent | h.JSX.TargetedEvent<E, TypedEvent>, detail: Detail): TargetedEnhancedEvent<E, TypedEvent, Detail> {
+    const event = e as unknown as TargetedEnhancedEvent<E, TypedEvent, Detail>;
     event[EventDetail] = detail;
     return event;
 }

@@ -1,13 +1,18 @@
 import { h } from "preact";
 import { CompleteListNavigationContext, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType } from "preact-prop-helpers";
-import { OmitStrong } from "./props.js";
+import { EnhancedEventHandler, OmitStrong, TargetedEnhancedEvent } from "./props.js";
 import { UseCheckboxLikeParameters, UseCheckboxLikeReturnType } from "./use-checkbox-like.js";
 import { FocusableLabelElement, LabelPosition, UseLabelSyntheticParameters } from "./use-label.js";
+export interface RadioChangeEventDetail<V extends number | string> {
+    selectedValue: V | undefined;
+}
+export type TargetedRadioChangeEvent<E extends EventTarget, V extends number | string> = TargetedEnhancedEvent<E, Event, RadioChangeEventDetail<V>>;
+export type RadioChangeEventHandler<E extends EventTarget, V extends number | string> = EnhancedEventHandler<E, Event, RadioChangeEventDetail<V>>;
 export interface UseRadioGroupParameters<V extends string | number, GroupElement extends Element, _GroupLabelElement extends Element, TabbableChildElement extends Element> extends OmitStrong<UseCompleteListNavigationParameters<GroupElement, TabbableChildElement, RadioSubInfo<TabbableChildElement, V>>, "paginatedChildrenParameters" | "singleSelectionParameters"> {
     radioGroupParameters: {
         name: string;
         selectedValue: V | null;
-        onSelectedValueChange(value: V | null, event: Event | undefined): void;
+        onSelectedValueChange: undefined | null | RadioChangeEventHandler<TabbableChildElement, V>;
     };
     labelParameters: OmitStrong<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
 }

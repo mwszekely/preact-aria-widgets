@@ -1,14 +1,16 @@
 import { h } from "preact";
-import { EnhancedEvent, OmitStrong } from "./props.js";
+import { EnhancedEventHandler, OmitStrong, TargetedEnhancedEvent } from "./props.js";
 import { UseCheckboxLikeParameters, UseCheckboxLikeReturnType } from "./use-checkbox-like.js";
 import { LabelPosition } from "./use-label.js";
-export type CheckboxChangeEvent<E extends EventTarget> = EnhancedEvent<E, Event, {
+export interface CheckboxChangeEventDetail {
     checked: boolean;
-}>;
+}
+export type TargetedCheckboxChangeEvent<E extends EventTarget> = TargetedEnhancedEvent<E, Event, CheckboxChangeEventDetail>;
+export type CheckboxChangeEventHandler<E extends EventTarget> = EnhancedEventHandler<E, Event, CheckboxChangeEventDetail>;
 export interface UseCheckboxParameters<LP extends LabelPosition, I extends Element, L extends Element> extends OmitStrong<UseCheckboxLikeParameters<LP, I, L>, "refElementLabelReturn" | "refElementInputReturn" | "checkboxLikeParameters" | "randomIdInputParameters" | "randomIdLabelParameters"> {
     checkboxLikeParameters: OmitStrong<UseCheckboxLikeParameters<LP, I, L>["checkboxLikeParameters"], "onInput" | "role">;
     checkboxParameters: {
-        onCheckedChange(event: CheckboxChangeEvent<I>): void;
+        onCheckedChange: undefined | CheckboxChangeEventHandler<I>;
     };
 }
 export interface UseCheckboxReturnType<InputType extends Element, LabelType extends Element> extends UseCheckboxLikeReturnType<InputType, LabelType> {

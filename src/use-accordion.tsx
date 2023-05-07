@@ -3,7 +3,7 @@ import { h } from "preact";
 import { assertEmptyObject, ManagedChildInfo, monitorCallCount, OnChildrenMountChange, PassiveStateUpdater, PersistentStates, useChildrenFlag, useLinearNavigation, UseLinearNavigationParameters, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, useMergedProps, usePersistentState, UsePressReturnType, useRandomId, useRefElement, UseRefElementParameters, UseRefElementReturnType, useStableCallback, useStableObject, useState, UseTextContentReturnType, useTypeaheadNavigation, useTypeaheadNavigationChild, UseTypeaheadNavigationChildParameters, UseTypeaheadNavigationContext, UseTypeaheadNavigationParameters } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { DisabledType, OmitStrong, Prefices } from "./props.js";
-import { ButtonPressEvent, useButton, UseButtonParameters, UseButtonReturnType } from "./use-button.js";
+import { ButtonPressEventHandler, useButton, UseButtonParameters, UseButtonReturnType } from "./use-button.js";
 
 export interface UseAccordionParameters<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo> extends
     UseManagedChildrenParameters<M>,
@@ -237,7 +237,7 @@ export function useAccordionSection<_HeaderContainerElement extends Element, Hea
         }
     });
 
-    const onPress = (e: ButtonPressEvent<HeaderButtonElement>) => {
+    const onPress: ButtonPressEventHandler<HeaderButtonElement> = (e) => {
         setCurrentFocusedIndex(index);
         if (getOpenFromParent())
             changeExpandedIndex(null);

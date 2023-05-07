@@ -1,18 +1,21 @@
 import { h } from "preact";
 import { CompleteListNavigationContext, monitorCallCount, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useMergedProps, useRefElement, useSingleSelectionDeclarative, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
 import { useLayoutEffect, useMemo, useRef } from "preact/hooks";
-import { OmitStrong, Prefices } from "./props.js";
+import { EnhancedEventHandler, enhanceEvent, OmitStrong, Prefices, TargetedEnhancedEvent } from "./props.js";
 import { useCheckboxLike, UseCheckboxLikeParameters, UseCheckboxLikeReturnType } from "./use-checkbox-like.js";
 import { FocusableLabelElement, LabelPosition, useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
 
-//export type RadioChangeEvent<E extends EventTarget, V extends number | string> = EnhancedEvent<E, Event, { selectedValue: V | undefined }>;
+export interface RadioChangeEventDetail<V extends number | string> { selectedValue: V | undefined };
+
+export type TargetedRadioChangeEvent<E extends EventTarget, V extends number | string> = TargetedEnhancedEvent<E, Event, RadioChangeEventDetail<V>>;
+export type RadioChangeEventHandler<E extends EventTarget, V extends number | string> = EnhancedEventHandler<E, Event, RadioChangeEventDetail<V>>;
 
 export interface UseRadioGroupParameters<V extends string | number, GroupElement extends Element, _GroupLabelElement extends Element, TabbableChildElement extends Element> extends OmitStrong<UseCompleteListNavigationParameters<GroupElement, TabbableChildElement, RadioSubInfo<TabbableChildElement, V>>, "paginatedChildrenParameters" | "singleSelectionParameters"> {
     radioGroupParameters: {
         name: string;
 
         selectedValue: V | null;
-        onSelectedValueChange(value: V | null, event: Event | undefined): void;
+        onSelectedValueChange: undefined | null | RadioChangeEventHandler<TabbableChildElement, V>;
     }
     labelParameters: OmitStrong<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
 }
@@ -112,8 +115,8 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
         singleSelectionDeclarativeParameters: {
             selectedIndex, 
             setSelectedIndex: useStableCallback((i, e) => {
-                let value = i == null? null : indexToName.current.get(i);
-                onSelectedValueChange?.(value ?? null, e);
+                let value = i == undefined? undefined : indexToName.current.get(i);
+                onSelectedValueChange?.(enhanceEvent<TCE, Event, RadioChangeEventDetail<V>>(e!, { selectedValue: value }));
             })
         }
     })

@@ -1,17 +1,21 @@
 import { h } from "preact";
 import { monitorCallCount, useMergedProps, usePress, UsePressParameters, UsePressReturnType, useRefElement, UseRefElementParameters, UseRefElementReturnType } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
-import { DisabledType, ElementToTag, EnhancedEvent, enhanceEvent, OmitStrong } from "./props.js";
+import { DisabledType, ElementToTag, TargetedEnhancedEvent, EnhancedEventHandler, enhanceEvent, OmitStrong } from "./props.js";
 
+export interface ButtonPressEventDetail { 
+    pressed: boolean | null;
+}
+export type TargetedButtonPressEvent<E extends EventTarget> = TargetedEnhancedEvent<E, Event, ButtonPressEventDetail>;
+export type ButtonPressEventHandler<E extends EventTarget> = EnhancedEventHandler<E, Event, ButtonPressEventDetail>;
 
-export type ButtonPressEvent<E extends EventTarget> = EnhancedEvent<E, Event | Event, { pressed: boolean | null }>;
 
 export interface UseButtonParameters<E extends Node> extends UseRefElementParameters<E> {
     buttonParameters: {
         tagButton: ElementToTag<E>;
         disabled: DisabledType;
         pressed: boolean | null | undefined;
-        onPress: null | ((event: ButtonPressEvent<E>) => void);
+        onPress: undefined | null | ButtonPressEventHandler<E>;
         role: h.JSX.AriaRole;
     }
     pressParameters: OmitStrong<UsePressParameters<E>["pressParameters"], "onPressSync" | "focusSelf">
@@ -37,13 +41,9 @@ export function useButton<E extends Element>({ buttonParameters: { tagButton, di
         },
     });
 
-    //const { pressReturn: { propsUnstable: pressProps } } = pressReturn;
-    //const { refElementReturn: { propsStable: refProps } } = refElementReturn;
-
     const baseProps = { "aria-pressed": (pressed === true ? "true" : pressed === false ? "false" : undefined) };
     const buttonProps = { ...baseProps, disabled: (disabled && disabled != "soft") ? true : false, "aria-disabled": (disabled === 'soft' ? 'true' : undefined), role: role == "button" ? undefined : role };
     const divProps = { ...baseProps, tabIndex: (disabled === "hard" ? -1 : 0), role, "aria-disabled": disabled ? "true" : undefined };
-
 
     return {
         pressReturn,

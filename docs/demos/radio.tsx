@@ -1,7 +1,7 @@
 
 import { useState } from "preact-prop-helpers";
 import { memo } from "preact/compat";
-import { Radio, RadioGroup } from "../../dist/index.js";
+import { EventDetail, Radio, RadioGroup } from "../../dist/index.js";
 
 
 const DemoRadioButton = memo(function DemoRadioButton({ index }: { index: number }) {
@@ -67,7 +67,7 @@ export function Demo() {
                     ariaLabel={null}
                     selectedValue={selectedIndex}
                     arrowKeyDirection="vertical"
-                    onSelectedValueChange={setSelectedIndex}
+                    onSelectedValueChange={e => setSelectedIndex(e[EventDetail].selectedValue ?? null)}
                     render={info => {
                         return (
                             <>

@@ -92,7 +92,7 @@ export function Demo() {
                                             index={0}
                                             focusSelf={() => ref.current?.checkboxLikeReturn.focusSelf()}
                                             getSortValue={returnNull}
-                                            render={info3 => (<Checkbox
+                                            render={info3 => (<Checkbox<HTMLInputElement, HTMLLabelElement>
                                                 ref={ref}
                                                 disabled={pending}
                                                 checked={info3.checkboxGroupParentReturn.checked}

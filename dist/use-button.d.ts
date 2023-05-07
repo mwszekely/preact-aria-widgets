@@ -1,15 +1,17 @@
 import { h } from "preact";
 import { UsePressParameters, UsePressReturnType, UseRefElementParameters, UseRefElementReturnType } from "preact-prop-helpers";
-import { DisabledType, ElementToTag, EnhancedEvent, OmitStrong } from "./props.js";
-export type ButtonPressEvent<E extends EventTarget> = EnhancedEvent<E, Event | Event, {
+import { DisabledType, ElementToTag, TargetedEnhancedEvent, EnhancedEventHandler, OmitStrong } from "./props.js";
+export interface ButtonPressEventDetail {
     pressed: boolean | null;
-}>;
+}
+export type TargetedButtonPressEvent<E extends EventTarget> = TargetedEnhancedEvent<E, Event, ButtonPressEventDetail>;
+export type ButtonPressEventHandler<E extends EventTarget> = EnhancedEventHandler<E, Event, ButtonPressEventDetail>;
 export interface UseButtonParameters<E extends Node> extends UseRefElementParameters<E> {
     buttonParameters: {
         tagButton: ElementToTag<E>;
         disabled: DisabledType;
         pressed: boolean | null | undefined;
-        onPress: null | ((event: ButtonPressEvent<E>) => void);
+        onPress: undefined | null | ButtonPressEventHandler<E>;
         role: h.JSX.AriaRole;
     };
     pressParameters: OmitStrong<UsePressParameters<E>["pressParameters"], "onPressSync" | "focusSelf">;

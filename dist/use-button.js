@@ -13,8 +13,6 @@ export function useButton({ buttonParameters: { tagButton, disabled, onPress, pr
             ...pressParameters
         },
     });
-    //const { pressReturn: { propsUnstable: pressProps } } = pressReturn;
-    //const { refElementReturn: { propsStable: refProps } } = refElementReturn;
     const baseProps = { "aria-pressed": (pressed === true ? "true" : pressed === false ? "false" : undefined) };
     const buttonProps = { ...baseProps, disabled: (disabled && disabled != "soft") ? true : false, "aria-disabled": (disabled === 'soft' ? 'true' : undefined), role: role == "button" ? undefined : role };
     const divProps = { ...baseProps, tabIndex: (disabled === "hard" ? -1 : 0), role, "aria-disabled": disabled ? "true" : undefined };

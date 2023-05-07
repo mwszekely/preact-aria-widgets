@@ -1,10 +1,12 @@
 import { CompleteListNavigationContext, PassiveStateUpdater, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType } from "preact-prop-helpers";
 import { StateUpdater } from "preact/hooks";
-import { EnhancedEvent, OmitStrong } from "./props.js";
+import { TargetedEnhancedEvent, OmitStrong, EnhancedEventHandler } from "./props.js";
 import { CheckboxCheckedType } from "./use-checkbox-like.js";
-export type CheckboxGroupChangeEvent<E extends EventTarget> = EnhancedEvent<E, Event, {
+export interface CheckboxGroupChangeEventDetail {
     childrenChecked: boolean | Map<number, boolean | "mixed">;
-}>;
+}
+export type TargetedCheckboxGroupChangeEvent<E extends EventTarget> = TargetedEnhancedEvent<E, Event, CheckboxGroupChangeEventDetail>;
+export type CheckboxGroupChangeEventHandler<E extends EventTarget> = EnhancedEventHandler<E, Event, CheckboxGroupChangeEventDetail>;
 export interface UseCheckboxGroupParameters<ParentElement extends Element, TabbableChildElement extends Element, M extends CheckboxGroupInfo<TabbableChildElement>> extends OmitStrong<UseCompleteListNavigationParameters<ParentElement, TabbableChildElement, M>, "linearNavigationParameters" | "paginatedChildrenParameters" | "singleSelectionParameters"> {
     linearNavigationParameters: OmitStrong<UseCompleteListNavigationParameters<ParentElement, TabbableChildElement, M>["linearNavigationParameters"], "arrowKeyDirection">;
     checkboxGroupParameters: {

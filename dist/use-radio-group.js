@@ -1,8 +1,9 @@
 import { monitorCallCount, useCompleteListNavigation, useCompleteListNavigationChild, useMergedProps, useRefElement, useSingleSelectionDeclarative, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
 import { useLayoutEffect, useMemo, useRef } from "preact/hooks";
-import { Prefices } from "./props.js";
+import { enhanceEvent, Prefices } from "./props.js";
 import { useCheckboxLike } from "./use-checkbox-like.js";
 import { useLabelSynthetic } from "./use-label.js";
+;
 export function useRadioGroup({ labelParameters, radioGroupParameters: { name, onSelectedValueChange, selectedValue }, ...restParams }) {
     monitorCallCount(useRadioGroup);
     const [selectedIndex, setSelectedIndex] = useState(null);
@@ -46,8 +47,8 @@ export function useRadioGroup({ labelParameters, radioGroupParameters: { name, o
         singleSelectionDeclarativeParameters: {
             selectedIndex,
             setSelectedIndex: useStableCallback((i, e) => {
-                let value = i == null ? null : indexToName.current.get(i);
-                onSelectedValueChange?.(value ?? null, e);
+                let value = i == undefined ? undefined : indexToName.current.get(i);
+                onSelectedValueChange?.(enhanceEvent(e, { selectedValue: value }));
             })
         }
     });
