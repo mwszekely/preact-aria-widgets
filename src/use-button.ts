@@ -14,6 +14,10 @@ export interface UseButtonParameters<E extends Node> extends UseRefElementParame
     buttonParameters: {
         tagButton: ElementToTag<E>;
         disabled: DisabledType;
+        /** 
+         * Important: A button can also be marked as pressed by changing its label -- e.g. `muted` to `unmuted`.
+         * If this is the case, `pressed` **must** be null!
+         */
         pressed: boolean | null | undefined;
         onPress: undefined | null | ButtonPressEventHandler<E>;
         role: h.JSX.AriaRole;

@@ -57,7 +57,7 @@ export const Menubar = memoForwardRef(function MenubarU<ContainerElement extends
     onTabbableIndexChange,
     compare,
     getIndex,
-    untabbable,
+    disabled,
     selectedIndex,
     onSelectedIndexChange,
     typeaheadTimeout,
@@ -73,8 +73,8 @@ export const Menubar = memoForwardRef(function MenubarU<ContainerElement extends
             navigatePastStart: navigatePastStart ?? "wrap",
             pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
         },
-        toolbarParameters: { orientation, selectedIndex: selectedIndex ?? null, onSelectedIndexChange: onSelectedIndexChange ?? null, role: role ?? "menubar" },
-        rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable: untabbable ?? false },
+        toolbarParameters: { orientation, selectedIndex: selectedIndex ?? null, onSelectedIndexChange: onSelectedIndexChange ?? null, role: role ?? "menubar", disabled: disabled || false },
+        rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null },
         typeaheadNavigationParameters: {
             collator: useDefault("collator", collator),
             noTypeahead: useDefault("noTypeahead", noTypeahead),

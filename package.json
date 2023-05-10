@@ -20,7 +20,7 @@
     "watch": "npx npm-run-all --npm-path npm -pc watch:*",
     "watch:ts": "tsc --watch",
     "build:ts": "tsc --build",
-    "test": "jest",
+    "test": "playwright test --ui",
     "clean": "tsc --build --clean",
     "rebuild": "rm \"./pnpm-lock.yaml\" && rm -R \"./node_modules\" && pnpm install && pnpm run build"
   },
@@ -31,6 +31,7 @@
   },
   "typings": "./dist/index.d.ts",
   "devDependencies": {
+    "@playwright/test": "^1.33.0",
     "@types/lodash-es": "^4.17.7",
     "npm-run-all": "^4.1.5",
     "typescript": "^5.0.4"
@@ -38,6 +39,7 @@
   "dependencies": {
     "clsx": "^1.2.1",
     "lodash-es": "^4.17.21",
-    "preact-prop-helpers": "github:mwszekely/preact-prop-helpers"
+    "preact-prop-helpers": "github:mwszekely/preact-prop-helpers",
+    "serve": "^14.2.0"
   }
 }

@@ -1,12 +1,12 @@
 import { h } from "preact";
-import { CompleteListNavigationContext, MakeSingleSelectionDeclarativeParameters, MakeSingleSelectionDeclarativeReturnType, monitorCallCount, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, useCompleteListNavigationDeclarative, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useMergedProps, UseRandomIdReturnType, useSingleSelectionDeclarative, UseSingleSelectionParameters } from "preact-prop-helpers";
+import { CompleteListNavigationContext, MakeSingleSelectionDeclarativeParameters, MakeSingleSelectionDeclarativeReturnType, monitorCallCount, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, useCompleteListNavigationDeclarative, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useMergedProps, UseRandomIdReturnType, useStableObject } from "preact-prop-helpers";
 import { OmitStrong, Prefices } from "./props.js";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
 
 
 
 
-export interface UseToolbarParameters<ContainerElement extends Element, ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends OmitStrong<MakeSingleSelectionDeclarativeParameters<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>>, "singleSelectionDeclarativeParameters" | "paginatedChildrenParameters" | "linearNavigationParameters" | "singleSelectionReturn"> {
+export interface UseToolbarParameters<ContainerElement extends Element, ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends OmitStrong<MakeSingleSelectionDeclarativeParameters<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>>, "singleSelectionDeclarativeParameters" | "paginatedChildrenParameters" | "linearNavigationParameters" | "singleSelectionReturn" | "rovingTabIndexParameters"> {
     toolbarParameters: {
 
         orientation: "horizontal" | "vertical";
@@ -27,9 +27,17 @@ export interface UseToolbarParameters<ContainerElement extends Element, ChildEle
          * Optional; Only used if you need single selection logic.
          */
         onSelectedIndexChange: MakeSingleSelectionDeclarativeParameters<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>>["singleSelectionDeclarativeParameters"]["setSelectedIndex"];
+
+        /**
+         * When true, none of the children will be selectable or focusable.
+         * 
+         * The component itself will be made focusable instead (partially to ensure there's always something focusable in the case of e.g. a menu).
+         */
+        disabled: boolean;
     };
     labelParameters: OmitStrong<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
     linearNavigationParameters: OmitStrong<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>["linearNavigationParameters"], "arrowKeyDirection">;
+    rovingTabIndexParameters: OmitStrong<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>["rovingTabIndexParameters"], "untabbable">;
 }
 
 export interface UseToolbarReturnType<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends OmitStrong<MakeSingleSelectionDeclarativeReturnType<UseCompleteListNavigationReturnType<ContainerElement, ChildElement, M>>, "propsStable"> {
@@ -37,17 +45,22 @@ export interface UseToolbarReturnType<ContainerElement extends Element, ChildEle
     propsLabel: h.JSX.HTMLAttributes<LabelElement>;
     randomIdInputReturn: UseRandomIdReturnType<ContainerElement, LabelElement>["randomIdReturn"];
     randomIdLabelReturn: UseRandomIdReturnType<LabelElement, ContainerElement>["randomIdReturn"];
+    context: UseToolbarContext<ContainerElement, ChildElement, M>;
 }
 
 export interface UseToolbarSubInfo<ChildElement extends Element> extends UseCompleteListNavigationChildInfo<ChildElement> {
 
 }
 
-export type UseToolbarContext<ContainerElement extends Element, ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> = CompleteListNavigationContext<ContainerElement, ChildElement, M>;
+export interface UseToolbarContext<ContainerElement extends Element, ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends CompleteListNavigationContext<ContainerElement, ChildElement, M> {
+    toolbarContext: {
+
+    }
+};
 
 
 export interface UseToolbarChildParameters<E extends Element, M extends UseToolbarSubInfo<E>> extends OmitStrong<UseCompleteListNavigationChildParameters<E, M>, never> {
-    toolbarChildParameters: { disabledProp: keyof h.JSX.HTMLAttributes<E>; }
+    toolbarChildParameters: { disabledProp: "disabled" | "aria-disabled"; }
 }
 export interface UseToolbarChildReturnType<ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends UseCompleteListNavigationChildReturnType<ChildElement, M> { }
 
@@ -65,19 +78,21 @@ export interface UseToolbarChildReturnType<ChildElement extends Element, M exten
  */
 export function useToolbar<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element, M extends UseToolbarSubInfo<ChildElement>>({
     linearNavigationParameters,
-    toolbarParameters: { orientation, role, selectedIndex, onSelectedIndexChange },
+    toolbarParameters: { orientation, role, selectedIndex, onSelectedIndexChange, disabled },
     labelParameters,
+    rovingTabIndexParameters,
     ...listNavParameters
 }: UseToolbarParameters<ContainerElement, ChildElement, M>): UseToolbarReturnType<ContainerElement, ChildElement, LabelElement, M> {
     monitorCallCount(useToolbar);
-    
+
     const {
         context,
         propsStable,
         ...listNavReturn
     } = useCompleteListNavigationDeclarative<ContainerElement, ChildElement, M>({
         ...listNavParameters,
-        singleSelectionDeclarativeParameters: { selectedIndex, setSelectedIndex: onSelectedIndexChange },
+        rovingTabIndexParameters: { ...rovingTabIndexParameters, untabbable: disabled },
+        singleSelectionDeclarativeParameters: { selectedIndex, setSelectedIndex: disabled? null : onSelectedIndexChange },
         paginatedChildrenParameters: { paginationMax: null, paginationMin: null },
         linearNavigationParameters: { ...linearNavigationParameters, arrowKeyDirection: orientation },
     });
@@ -88,12 +103,17 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
         randomIdLabelParameters: { prefix: Prefices.toolbarLabel }
     });
 
-    // Note: We return tabIndex=-1 because some browsers (at least Firefox) seem to add role=toolbar to the tab order?
+    // Note: We return tabIndex=-1 (when not disabled) because some browsers (at least Firefox) seem to add role=toolbar to the tab order?
     // Probably needs a bit more digging because this feels like a bit of a blunt fix.
     return {
-        context,
+        context: useStableObject({ ...context, toolbarContext: useStableObject({}) }),
         propsLabel,
-        propsToolbar: useMergedProps({ ...propsToolbar, role: role ?? undefined, tabIndex: -1 }, propsStable),
+        propsToolbar: useMergedProps({
+            ...propsToolbar,
+            role: role ?? undefined,
+            tabIndex: disabled ? 0 : -1,
+            "aria-disabled": disabled ? "true" : undefined
+        }, propsStable),
         randomIdInputReturn,
         randomIdLabelReturn,
         ...listNavReturn
@@ -103,13 +123,13 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
 
 export function useToolbarChild<ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>>({ info, toolbarChildParameters: { disabledProp }, ...args }: UseToolbarChildParameters<ChildElement, M>): UseToolbarChildReturnType<ChildElement, M> {
     monitorCallCount(useToolbarChild);
-    const { 
-        props, 
-        ...listNavReturn 
-    } = useCompleteListNavigationChild<ChildElement, M>({ info,  ...args});
+    const {
+        props,
+        ...listNavReturn
+    } = useCompleteListNavigationChild<ChildElement, M>({ info, ...args });
 
     return {
-        props: useMergedProps(props, { [disabledProp]: info.disabled? true : undefined }),
+        props: useMergedProps(props, { [disabledProp as never]: info.disabled ? true : undefined }),
         ...listNavReturn
     }
 }

@@ -60,7 +60,7 @@ export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element,
     onSelectedIndexChange,
     pageNavigationSize,
     parentDepth,
-    untabbable,
+    disabled,
     staggered,
     onOpen,
 
@@ -101,14 +101,13 @@ export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element,
         menuSurfaceParameters: {},
         rovingTabIndexParameters: {
             onTabbableIndexChange: onTabbableIndexChange ?? null,
-            untabbable: untabbable ?? false
         },
         typeaheadNavigationParameters: {
             collator: useDefault("collator", collator),
             noTypeahead: useDefault("noTypeahead", noTypeahead),
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
         },
-        toolbarParameters: { orientation, selectedIndex: selectedIndex ?? null, onSelectedIndexChange: onSelectedIndexChange ?? null },
+        toolbarParameters: { orientation, selectedIndex: selectedIndex ?? null, onSelectedIndexChange: onSelectedIndexChange ?? null, disabled: disabled || false },
         singleSelectionParameters: { ariaPropName: ariaPropName || "aria-selected", selectionMode: selectionMode || "activation" }
     });
 

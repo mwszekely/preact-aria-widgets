@@ -47,7 +47,7 @@ export const Toolbar = memoForwardRef(function ToolbarU<ContainerElement extends
     role,
     collator,
     disableHomeEndKeys,
-    untabbable,
+    disabled,
     compare,
     getIndex,
     navigatePastEnd,
@@ -76,12 +76,13 @@ export const Toolbar = memoForwardRef(function ToolbarU<ContainerElement extends
         },
         toolbarParameters: {
             orientation,
+            disabled: disabled || false,
             role: role ?? "toolbar",
             selectedIndex: selectedIndex ?? null,
             onSelectedIndexChange: onSelectedIndexChange ?? null
         },
         staggeredChildrenParameters: { staggered: staggered || false },
-        rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable: untabbable || false },
+        rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null },
         typeaheadNavigationParameters: {
             collator: useDefault("collator", collator),
             noTypeahead: useDefault("noTypeahead", noTypeahead),

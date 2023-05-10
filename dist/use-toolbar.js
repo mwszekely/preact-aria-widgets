@@ -1,6 +1,7 @@
-import { monitorCallCount, useCompleteListNavigationChild, useCompleteListNavigationDeclarative, useMergedProps } from "preact-prop-helpers";
+import { monitorCallCount, useCompleteListNavigationChild, useCompleteListNavigationDeclarative, useMergedProps, useStableObject } from "preact-prop-helpers";
 import { Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
+;
 /**
  * A toolbar is just a collection of widgets in an expected order with a label (visible or hidden) and with the usual keyboard navigation stuff.
  *
@@ -13,11 +14,12 @@ import { useLabelSynthetic } from "./use-label.js";
  * @param param0
  * @returns
  */
-export function useToolbar({ linearNavigationParameters, toolbarParameters: { orientation, role, selectedIndex, onSelectedIndexChange }, labelParameters, ...listNavParameters }) {
+export function useToolbar({ linearNavigationParameters, toolbarParameters: { orientation, role, selectedIndex, onSelectedIndexChange, disabled }, labelParameters, rovingTabIndexParameters, ...listNavParameters }) {
     monitorCallCount(useToolbar);
     const { context, propsStable, ...listNavReturn } = useCompleteListNavigationDeclarative({
         ...listNavParameters,
-        singleSelectionDeclarativeParameters: { selectedIndex, setSelectedIndex: onSelectedIndexChange },
+        rovingTabIndexParameters: { ...rovingTabIndexParameters, untabbable: disabled },
+        singleSelectionDeclarativeParameters: { selectedIndex, setSelectedIndex: disabled ? null : onSelectedIndexChange },
         paginatedChildrenParameters: { paginationMax: null, paginationMin: null },
         linearNavigationParameters: { ...linearNavigationParameters, arrowKeyDirection: orientation },
     });
@@ -26,12 +28,17 @@ export function useToolbar({ linearNavigationParameters, toolbarParameters: { or
         randomIdInputParameters: { prefix: Prefices.toolbar },
         randomIdLabelParameters: { prefix: Prefices.toolbarLabel }
     });
-    // Note: We return tabIndex=-1 because some browsers (at least Firefox) seem to add role=toolbar to the tab order?
+    // Note: We return tabIndex=-1 (when not disabled) because some browsers (at least Firefox) seem to add role=toolbar to the tab order?
     // Probably needs a bit more digging because this feels like a bit of a blunt fix.
     return {
-        context,
+        context: useStableObject({ ...context, toolbarContext: useStableObject({}) }),
         propsLabel,
-        propsToolbar: useMergedProps({ ...propsToolbar, role: role ?? undefined, tabIndex: -1 }, propsStable),
+        propsToolbar: useMergedProps({
+            ...propsToolbar,
+            role: role ?? undefined,
+            tabIndex: disabled ? 0 : -1,
+            "aria-disabled": disabled ? "true" : undefined
+        }, propsStable),
         randomIdInputReturn,
         randomIdLabelReturn,
         ...listNavReturn

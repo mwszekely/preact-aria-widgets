@@ -4,7 +4,7 @@ import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
 import { useToolbar, useToolbarChild } from "../use-toolbar.js";
 import { memoForwardRef, useDefault } from "./util.js";
 const ToolbarContext = createContext(null);
-export const Toolbar = memoForwardRef(function ToolbarU({ render, role, collator, disableHomeEndKeys, untabbable, compare, getIndex, navigatePastEnd, navigatePastStart, pageNavigationSize, selectedIndex, onSelectedIndexChange, orientation, noTypeahead, onTabbableIndexChange, typeaheadTimeout, staggered, ariaLabel, ariaPropName, selectionMode }, ref) {
+export const Toolbar = memoForwardRef(function ToolbarU({ render, role, collator, disableHomeEndKeys, disabled, compare, getIndex, navigatePastEnd, navigatePastStart, pageNavigationSize, selectedIndex, onSelectedIndexChange, orientation, noTypeahead, onTabbableIndexChange, typeaheadTimeout, staggered, ariaLabel, ariaPropName, selectionMode }, ref) {
     const listboxReturnType = useToolbar({
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
         sortableChildrenParameters: { compare: compare ?? null },
@@ -17,12 +17,13 @@ export const Toolbar = memoForwardRef(function ToolbarU({ render, role, collator
         },
         toolbarParameters: {
             orientation,
+            disabled: disabled || false,
             role: role ?? "toolbar",
             selectedIndex: selectedIndex ?? null,
             onSelectedIndexChange: onSelectedIndexChange ?? null
         },
         staggeredChildrenParameters: { staggered: staggered || false },
-        rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable: untabbable || false },
+        rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null },
         typeaheadNavigationParameters: {
             collator: useDefault("collator", collator),
             noTypeahead: useDefault("noTypeahead", noTypeahead),

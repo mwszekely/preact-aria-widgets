@@ -4,7 +4,7 @@ import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
 import { useMenu, useMenuItem } from "../use-menu.js";
 import { memoForwardRef, ParentDepthContext, useDefault } from "./util.js";
 const MenuItemContext = createContext(null);
-export const Menu = memoForwardRef(function Menu({ collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, orientation, ariaPropName, selectionMode, onClose, open, openDirection, onTabbableIndexChange, closeOnBackdrop, closeOnEscape, closeOnLostFocus, compare, getIndex, selectedIndex, navigatePastEnd, navigatePastStart, onSelectedIndexChange, pageNavigationSize, parentDepth, untabbable, staggered, onOpen, getWindow, render }, ref) {
+export const Menu = memoForwardRef(function Menu({ collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, orientation, ariaPropName, selectionMode, onClose, open, openDirection, onTabbableIndexChange, closeOnBackdrop, closeOnEscape, closeOnLostFocus, compare, getIndex, selectedIndex, navigatePastEnd, navigatePastStart, onSelectedIndexChange, pageNavigationSize, parentDepth, disabled, staggered, onOpen, getWindow, render }, ref) {
     const defaultParentDepth = useContext(ParentDepthContext);
     let myDepth = (parentDepth ?? defaultParentDepth) + 1;
     const info = useMenu({
@@ -34,14 +34,13 @@ export const Menu = memoForwardRef(function Menu({ collator, disableHomeEndKeys,
         menuSurfaceParameters: {},
         rovingTabIndexParameters: {
             onTabbableIndexChange: onTabbableIndexChange ?? null,
-            untabbable: untabbable ?? false
         },
         typeaheadNavigationParameters: {
             collator: useDefault("collator", collator),
             noTypeahead: useDefault("noTypeahead", noTypeahead),
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
         },
-        toolbarParameters: { orientation, selectedIndex: selectedIndex ?? null, onSelectedIndexChange: onSelectedIndexChange ?? null },
+        toolbarParameters: { orientation, selectedIndex: selectedIndex ?? null, onSelectedIndexChange: onSelectedIndexChange ?? null, disabled: disabled || false },
         singleSelectionParameters: { ariaPropName: ariaPropName || "aria-selected", selectionMode: selectionMode || "activation" }
     });
     useImperativeHandle(ref, () => info);
