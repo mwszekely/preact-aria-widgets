@@ -1,5 +1,6 @@
 import { h } from "preact";
 import {
+    assertEmptyObject,
     CompleteGridNavigationContext,
     CompleteGridNavigationRowContext,
     monitorCallCount, useCompleteGridNavigationCell,
@@ -33,7 +34,7 @@ export interface UseGridlistParameters<GridlistElement extends Element, Gridlist
     labelParameters: OmitStrong<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
     gridlistParameters: UseListboxParameters<GridlistElement, GridlistRowElement, LabelElement, RM>["listboxParameters"];
 }
-export interface UseGridlistReturnType<GridlistElement extends Element, GridlistRowElement extends Element, GridlistCellElement extends Element, LabelElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends OmitStrong<UseCompleteGridNavigationReturnType<GridlistElement, GridlistRowElement, GridlistCellElement, RM, CM>, "singleSelectionReturn" | "propsStable"> {
+export interface UseGridlistReturnType<GridlistElement extends Element, GridlistRowElement extends Element, GridlistCellElement extends Element, LabelElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends OmitStrong<UseCompleteGridNavigationReturnType<GridlistElement, GridlistRowElement, GridlistCellElement, RM, CM>, "singleSelectionReturn" | "props"> {
     propsGridlist: h.JSX.HTMLAttributes<GridlistElement>;
     propsGridlistLabel: h.JSX.HTMLAttributes<LabelElement>;
     context: UseGridlistContext<GridlistElement, GridlistRowElement, GridlistCellElement, RM, CM>;
@@ -52,6 +53,8 @@ export interface UseGridlistRowParameters<GridlistRowElement extends Element, Gr
          */
         selected: boolean | null;
     }
+
+    //rovingTabIndexParameters: UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>["rovingTabIndexParameters"];
 
     linearNavigationParameters: OmitStrong<UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>["linearNavigationParameters"], "disableHomeEndKeys">
 }
@@ -90,7 +93,7 @@ export function useGridlist<GridlistElement extends Element, GridlistRowElement 
     });
     const {
         context,
-        propsStable,
+        props,
         rovingTabIndexReturn,
         singleSelectionReturn,
         ...restRet
@@ -99,7 +102,7 @@ export function useGridlist<GridlistElement extends Element, GridlistRowElement 
         ...restParams
     });
 
-    let propsGridlist = useMergedProps(propsStable, propsLabelList, { "aria-multiselectable": (selectionLimit == "multi" ? "true" : undefined) });
+    let propsGridlist = useMergedProps(props, propsLabelList, { "aria-multiselectable": (selectionLimit == "multi" ? "true" : undefined) });
 
 
     let fullContext = useStableObject({
@@ -137,12 +140,16 @@ export function useGridlistRow<GridlistRowElement extends Element, GridlistCellE
     linearNavigationParameters,
     context: cx1,
     info,
-    rovingTabIndexParameters,
+    rovingTabIndexParametersG2R,
+    rovingTabIndexParametersR2C,
     sortableChildParameters,
     textContentParameters,
-    typeaheadNavigationParameters
+    typeaheadNavigationParameters,
+    singleSelectionParameters,
+    ...void1
 }: UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>): UseGridlistRowReturnType<GridlistRowElement, GridlistCellElement, RM, CM> {
     monitorCallCount(useGridlistRow);
+    assertEmptyObject(void1);
 
     const { gridlistRowContext: { selectionLimit } } = cx1;
     const {
@@ -165,10 +172,12 @@ export function useGridlistRow<GridlistRowElement extends Element, GridlistCellE
         linearNavigationParameters: { disableHomeEndKeys: true, ...linearNavigationParameters },
         info,
         context: cx1,
-        rovingTabIndexParameters,
+        rovingTabIndexParametersG2R,
+        rovingTabIndexParametersR2C,
         sortableChildParameters,
         textContentParameters,
-        typeaheadNavigationParameters
+        typeaheadNavigationParameters,
+        singleSelectionParameters
     });
 
     // `selected` should only be true/false for multi-selection

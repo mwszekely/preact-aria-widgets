@@ -32,6 +32,9 @@ export interface MenuItemProps<MenuItemElement extends Element, M extends UseMen
     render(info: UseMenuItemReturnType<MenuItemElement, M>): VNode<any>;
 }
 
+const UntabbableContext = createContext(false);
+const AriaPropNameContext = createContext<UseMenuParameters<any, any, any, any, any>["singleSelectionParameters"]["ariaPropName"]>("aria-selected")
+const SelectionModeContext = createContext<UseMenuParameters<any, any, any, any, any>["singleSelectionParameters"]["selectionMode"]>("focus");
 const MenuItemContext = createContext<UseMenuContext<any, any, any>>(null!);
 
 export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element, ParentElement extends Element, ChildElement extends Element, ButtonElement extends Element, M extends UseMenubarSubInfo<ChildElement> = UseMenubarSubInfo<ChildElement>>({
@@ -42,6 +45,7 @@ export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element,
     orientation,
     ariaPropName,
     selectionMode,
+    untabbable,
 
     onClose,
     open,
@@ -72,6 +76,10 @@ export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element,
 
     const defaultParentDepth = useContext(ParentDepthContext);
     let myDepth = (parentDepth ?? defaultParentDepth) + 1;
+    ariaPropName ||= "aria-selected";
+    selectionMode ||= "activation";
+    untabbable ||= false;
+
 
     const info = useMenu<SurfaceElement, ParentElement, ChildElement, ButtonElement, M>({
         linearNavigationParameters: {
@@ -101,6 +109,7 @@ export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element,
         menuSurfaceParameters: {},
         rovingTabIndexParameters: {
             onTabbableIndexChange: onTabbableIndexChange ?? null,
+            untabbable: untabbable
         },
         typeaheadNavigationParameters: {
             collator: useDefault("collator", collator),
@@ -114,11 +123,17 @@ export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element,
     useImperativeHandle(ref!, () => info);
 
     return (
-        <ParentDepthContext.Provider value={myDepth}>
-            <MenuItemContext.Provider value={info.context}>
-                {render(info)}
-            </MenuItemContext.Provider>
-        </ParentDepthContext.Provider>
+        <AriaPropNameContext.Provider value={ariaPropName}>
+            <SelectionModeContext.Provider value={selectionMode}>
+                <UntabbableContext.Provider value={untabbable}>
+                    <ParentDepthContext.Provider value={myDepth}>
+                        <MenuItemContext.Provider value={info.context}>
+                            {render(info)}
+                        </MenuItemContext.Provider>
+                    </ParentDepthContext.Provider>
+                </UntabbableContext.Provider>
+            </SelectionModeContext.Provider>
+        </AriaPropNameContext.Provider >
     )
 })
 
@@ -144,6 +159,8 @@ export const MenuItem = memoForwardRef(function MenuItem<MenuItemElement extends
         sortableChildParameters: { getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },
         menuItemParameters: { onPress: onPress ?? null, role: role ?? "menuitem" },
+        rovingTabIndexParameters: { untabbable: useContext(UntabbableContext) },
+        singleSelectionParameters: { ariaPropName: useContext(AriaPropNameContext), selectionMode: useContext(SelectionModeContext) }
     });
 
     useImperativeHandle(ref!, () => info);

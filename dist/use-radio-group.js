@@ -1,4 +1,4 @@
-import { monitorCallCount, useCompleteListNavigation, useCompleteListNavigationChild, useMergedProps, useRefElement, useSingleSelectionDeclarative, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
+import { assertEmptyObject, monitorCallCount, useCompleteListNavigation, useCompleteListNavigationChild, useMergedProps, useRefElement, useSingleSelectionDeclarative, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
 import { useLayoutEffect, useMemo, useRef } from "preact/hooks";
 import { enhanceEvent, Prefices } from "./props.js";
 import { useCheckboxLike } from "./use-checkbox-like.js";
@@ -25,7 +25,7 @@ export function useRadioGroup({ labelParameters, radioGroupParameters: { name, o
         else
             singleSelectionReturn.changeSelectedIndex(null);
     }, [selectedValue]);
-    const { context, propsStable: propsGroup2, singleSelectionReturn, managedChildrenReturn, rovingTabIndexReturn, ...restRet } = useCompleteListNavigation({
+    const { context, props: propsGroup2, singleSelectionReturn, managedChildrenReturn, rovingTabIndexReturn, ...restRet } = useCompleteListNavigation({
         singleSelectionParameters: { initiallySelectedIndex: selectedIndex, onSelectedIndexChange: useStableCallback((i, e) => { setSelectedIndex(i); onSelectedIndexChange?.(i, e); }), selectionMode: "focus", ariaPropName: null },
         paginatedChildrenParameters: { paginationMin: null, paginationMax: null },
         ...restParams
@@ -67,20 +67,24 @@ export function useRadioGroup({ labelParameters, radioGroupParameters: { name, o
         ...restRet,
     };
 }
-export function useRadio({ radioParameters: { value }, checkboxLikeParameters: { disabled }, labelParameters, info, context, textContentParameters, sortableChildParameters }) {
+export function useRadio({ radioParameters: { value }, checkboxLikeParameters: { disabled }, labelParameters, info, context, textContentParameters, sortableChildParameters, pressParameters, rovingTabIndexParameters, ...void1 }) {
     monitorCallCount(useRadio);
     const index = info.index;
     const onInput = useStableCallback((e) => {
         singleSelectionChildReturn.setThisOneSelected(e);
     });
+    assertEmptyObject(void1);
     const { name, indexToName, nameToIndex } = context.radioContext;
     const { tagInput, labelPosition } = labelParameters;
     const getValue = useStableGetter(value);
-    const { props: listNavigationSingleSelectionChildProps, singleSelectionChildReturn, pressParameters, ...listNavRet } = useCompleteListNavigationChild({
+    const { props: listNavigationSingleSelectionChildProps, singleSelectionChildReturn, ...listNavRet } = useCompleteListNavigationChild({
         info,
         context,
         sortableChildParameters,
         textContentParameters,
+        pressParameters,
+        rovingTabIndexParameters,
+        singleSelectionParameters: { selectionMode: "focus", ariaPropName: null }
     });
     const { selected: checked } = singleSelectionChildReturn;
     const { refElementReturn: refElementInputReturn, propsStable: propsRefInput } = useRefElement({ refElementParameters: {} });
@@ -92,7 +96,7 @@ export function useRadio({ radioParameters: { value }, checkboxLikeParameters: {
             onInput: onInput,
             role: "radio"
         },
-        pressParameters,
+        pressParameters: {},
         labelParameters,
         randomIdInputParameters: { prefix: Prefices.radio },
         randomIdLabelParameters: { prefix: Prefices.radioLabel },

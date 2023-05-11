@@ -36,7 +36,7 @@ function DemoInput({ index }: { index: number }) {
     const [v, setV] = useState("");
 
     return (
-        <TableCell<HTMLTableCellElement> getSortValue={() => v} focusSelf={e => { debugger; e.focus() }} tagTableCell="td" index={index} render={info => {
+        <TableCell<HTMLTableCellElement> getSortValue={() => v} focusSelf={e => { e.focus() }} tagTableCell="td" index={index} render={info => {
             return (
                 <td {...info.propsCell}>
                     <input {...info.propsFocus} type="text" onInput={useCallback((e: h.JSX.TargetedEvent<HTMLInputElement>) => {

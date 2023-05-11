@@ -1,5 +1,5 @@
 import { createContext, Ref, RenderableProps, VNode } from "preact";
-import { useContext, useImperativeHandle } from "preact/hooks";
+import { useContext, useImperativeHandle, useMemo } from "preact/hooks";
 import { OmitStrong } from "../props.js";
 import { CheckboxGroupContext, CheckboxGroupInfo, useCheckboxGroup, useCheckboxGroupChild, UseCheckboxGroupChildParameters, UseCheckboxGroupChildReturnType, UseCheckboxGroupParameters, useCheckboxGroupParent, UseCheckboxGroupParentParameters, UseCheckboxGroupParentReturnType, UseCheckboxGroupReturnType } from "../use-checkbox-group.js";
 import { memoForwardRef, PartialExcept, useDefault } from "./util.js";
@@ -49,6 +49,7 @@ export interface CheckboxGroupChildProps<TCE extends Element> extends PartialExc
 }
 
 
+const UntabbableContext = createContext(false);
 const UseCheckboxGroupChildContext = createContext<CheckboxGroupContext<any, any, any>>(null!);
 
 export const CheckboxGroup = memoForwardRef(function CheckboxGroup<ParentElement extends Element, TabbableChildElement extends Element>({
@@ -68,6 +69,7 @@ export const CheckboxGroup = memoForwardRef(function CheckboxGroup<ParentElement
     orientation,
     ..._rest
 }: CheckboxGroupProps<ParentElement, TabbableChildElement, CheckboxGroupInfo<TabbableChildElement>>, ref?: Ref<any>) {
+    untabbable ||= false;
     const info = useCheckboxGroup<ParentElement, TabbableChildElement>({
         linearNavigationParameters: {
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
@@ -78,7 +80,7 @@ export const CheckboxGroup = memoForwardRef(function CheckboxGroup<ParentElement
         checkboxGroupParameters: { orientation: orientation ?? "vertical" },
         staggeredChildrenParameters: { staggered: staggered || false },
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
-        rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable: untabbable ?? false },
+        rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable },
         sortableChildrenParameters: { compare: compare ?? null },
         typeaheadNavigationParameters: {
             collator: useDefault("collator", collator),
@@ -90,9 +92,11 @@ export const CheckboxGroup = memoForwardRef(function CheckboxGroup<ParentElement
     useImperativeHandle(ref!, () => info);
 
     return (
-        <UseCheckboxGroupChildContext.Provider value={info.context}>
-            {render(info)}
-        </UseCheckboxGroupChildContext.Provider>
+        <UntabbableContext.Provider value={untabbable}>
+            <UseCheckboxGroupChildContext.Provider value={info.context}>
+                {render(info)}
+            </UseCheckboxGroupChildContext.Provider>
+        </UntabbableContext.Provider>
     )
 });
 
@@ -101,7 +105,8 @@ export const CheckboxGroupParent = memoForwardRef(function CheckboxGroupParent<T
     console.assert(context != null, `This CheckboxGroupParent is not contained within a CheckboxGroup`);
 
     const info = useCheckboxGroupParent<TCE>({
-
+        pressParameters: { focusSelf, onPressSync: null },
+        rovingTabIndexParameters: { untabbable: useContext(UntabbableContext) },
         info: { index, disabled: disabled || false, hidden: hidden || false, focusSelf, checkboxInfo: { checkboxChildType: "parent" } },
         context,
         sortableChildParameters: { getSortValue },
@@ -132,6 +137,8 @@ export const CheckboxGroupChild = memoForwardRef(function CheckboxGroupChild<TCE
         textContentParameters: { getText: useDefault("getText", getText) },
         context,
         sortableChildParameters: { getSortValue },
+        pressParameters: { focusSelf, onPressSync: null },
+        rovingTabIndexParameters: { untabbable: useContext(UntabbableContext) },
     });
 
     useImperativeHandle(ref!, () => info);

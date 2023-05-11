@@ -3,10 +3,16 @@ import { createContext } from "preact";
 import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
 import { useMenu, useMenuItem } from "../use-menu.js";
 import { memoForwardRef, ParentDepthContext, useDefault } from "./util.js";
+const UntabbableContext = createContext(false);
+const AriaPropNameContext = createContext("aria-selected");
+const SelectionModeContext = createContext("focus");
 const MenuItemContext = createContext(null);
-export const Menu = memoForwardRef(function Menu({ collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, orientation, ariaPropName, selectionMode, onClose, open, openDirection, onTabbableIndexChange, closeOnBackdrop, closeOnEscape, closeOnLostFocus, compare, getIndex, selectedIndex, navigatePastEnd, navigatePastStart, onSelectedIndexChange, pageNavigationSize, parentDepth, disabled, staggered, onOpen, getWindow, render }, ref) {
+export const Menu = memoForwardRef(function Menu({ collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, orientation, ariaPropName, selectionMode, untabbable, onClose, open, openDirection, onTabbableIndexChange, closeOnBackdrop, closeOnEscape, closeOnLostFocus, compare, getIndex, selectedIndex, navigatePastEnd, navigatePastStart, onSelectedIndexChange, pageNavigationSize, parentDepth, disabled, staggered, onOpen, getWindow, render }, ref) {
     const defaultParentDepth = useContext(ParentDepthContext);
     let myDepth = (parentDepth ?? defaultParentDepth) + 1;
+    ariaPropName ||= "aria-selected";
+    selectionMode ||= "activation";
+    untabbable ||= false;
     const info = useMenu({
         linearNavigationParameters: {
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
@@ -34,6 +40,7 @@ export const Menu = memoForwardRef(function Menu({ collator, disableHomeEndKeys,
         menuSurfaceParameters: {},
         rovingTabIndexParameters: {
             onTabbableIndexChange: onTabbableIndexChange ?? null,
+            untabbable: untabbable
         },
         typeaheadNavigationParameters: {
             collator: useDefault("collator", collator),
@@ -44,7 +51,7 @@ export const Menu = memoForwardRef(function Menu({ collator, disableHomeEndKeys,
         singleSelectionParameters: { ariaPropName: ariaPropName || "aria-selected", selectionMode: selectionMode || "activation" }
     });
     useImperativeHandle(ref, () => info);
-    return (_jsx(ParentDepthContext.Provider, { value: myDepth, children: _jsx(MenuItemContext.Provider, { value: info.context, children: render(info) }) }));
+    return (_jsx(AriaPropNameContext.Provider, { value: ariaPropName, children: _jsx(SelectionModeContext.Provider, { value: selectionMode, children: _jsx(UntabbableContext.Provider, { value: untabbable, children: _jsx(ParentDepthContext.Provider, { value: myDepth, children: _jsx(MenuItemContext.Provider, { value: info.context, children: render(info) }) }) }) }) }));
 });
 export const MenuItem = memoForwardRef(function MenuItem({ index, hidden, getSortValue, onPress, getText, role, focusSelf, disabled, render, info: uinfo }, ref) {
     const context = useContext(MenuItemContext);
@@ -56,6 +63,8 @@ export const MenuItem = memoForwardRef(function MenuItem({ index, hidden, getSor
         sortableChildParameters: { getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },
         menuItemParameters: { onPress: onPress ?? null, role: role ?? "menuitem" },
+        rovingTabIndexParameters: { untabbable: useContext(UntabbableContext) },
+        singleSelectionParameters: { ariaPropName: useContext(AriaPropNameContext), selectionMode: useContext(SelectionModeContext) }
     });
     useImperativeHandle(ref, () => info);
     return (_jsx(_Fragment, { children: render(info) }));

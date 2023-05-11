@@ -6,7 +6,7 @@ import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
 
 
 
-export interface UseToolbarParameters<ContainerElement extends Element, ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends OmitStrong<MakeSingleSelectionDeclarativeParameters<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>>, "singleSelectionDeclarativeParameters" | "paginatedChildrenParameters" | "linearNavigationParameters" | "singleSelectionReturn" | "rovingTabIndexParameters"> {
+export interface UseToolbarParameters<ContainerElement extends Element, ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends OmitStrong<MakeSingleSelectionDeclarativeParameters<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>>, "singleSelectionDeclarativeParameters" | "paginatedChildrenParameters" | "linearNavigationParameters" | "singleSelectionReturn"> {
     toolbarParameters: {
 
         orientation: "horizontal" | "vertical";
@@ -37,10 +37,9 @@ export interface UseToolbarParameters<ContainerElement extends Element, ChildEle
     };
     labelParameters: OmitStrong<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
     linearNavigationParameters: OmitStrong<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>["linearNavigationParameters"], "arrowKeyDirection">;
-    rovingTabIndexParameters: OmitStrong<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>["rovingTabIndexParameters"], "untabbable">;
 }
 
-export interface UseToolbarReturnType<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends OmitStrong<MakeSingleSelectionDeclarativeReturnType<UseCompleteListNavigationReturnType<ContainerElement, ChildElement, M>>, "propsStable"> {
+export interface UseToolbarReturnType<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends OmitStrong<MakeSingleSelectionDeclarativeReturnType<UseCompleteListNavigationReturnType<ContainerElement, ChildElement, M>>, "props"> {
     propsToolbar: h.JSX.HTMLAttributes<ContainerElement>;
     propsLabel: h.JSX.HTMLAttributes<LabelElement>;
     randomIdInputReturn: UseRandomIdReturnType<ContainerElement, LabelElement>["randomIdReturn"];
@@ -61,6 +60,7 @@ export interface UseToolbarContext<ContainerElement extends Element, ChildElemen
 
 export interface UseToolbarChildParameters<E extends Element, M extends UseToolbarSubInfo<E>> extends OmitStrong<UseCompleteListNavigationChildParameters<E, M>, never> {
     toolbarChildParameters: { disabledProp: "disabled" | "aria-disabled"; }
+    //rovingTabIndexParameters: OmitStrong<UseCompleteListNavigationChildParameters<E, M>["rovingTabIndexParameters"], "untabbable">;
 }
 export interface UseToolbarChildReturnType<ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends UseCompleteListNavigationChildReturnType<ChildElement, M> { }
 
@@ -87,7 +87,7 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
 
     const {
         context,
-        propsStable,
+        props,
         ...listNavReturn
     } = useCompleteListNavigationDeclarative<ContainerElement, ChildElement, M>({
         ...listNavParameters,
@@ -113,7 +113,7 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
             role: role ?? undefined,
             tabIndex: disabled ? 0 : -1,
             "aria-disabled": disabled ? "true" : undefined
-        }, propsStable),
+        }, props),
         randomIdInputReturn,
         randomIdLabelReturn,
         ...listNavReturn
@@ -126,7 +126,7 @@ export function useToolbarChild<ChildElement extends Element, M extends UseToolb
     const {
         props,
         ...listNavReturn
-    } = useCompleteListNavigationChild<ChildElement, M>({ info, ...args });
+    } = useCompleteListNavigationChild<ChildElement, M>({ info,  ...args });
 
     return {
         props: useMergedProps(props, { [disabledProp as never]: info.disabled ? true : undefined }),

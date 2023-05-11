@@ -1,4 +1,4 @@
-import { monitorCallCount, useCompleteGridNavigationCell, useCompleteGridNavigationDeclarative, useCompleteGridNavigationRow, useMergedProps, usePress, useStableCallback, useStableObject } from "preact-prop-helpers";
+import { assertEmptyObject, monitorCallCount, useCompleteGridNavigationCell, useCompleteGridNavigationDeclarative, useCompleteGridNavigationRow, useMergedProps, usePress, useStableCallback, useStableObject } from "preact-prop-helpers";
 import { Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
 export function useGridlist({ labelParameters, gridlistParameters: { selectionLimit, groupingType, selectedIndex, onSelectedIndexChange }, ...restParams }) {
@@ -13,11 +13,11 @@ export function useGridlist({ labelParameters, gridlistParameters: { selectionLi
         randomIdInputParameters: { prefix: Prefices.gridlist },
         randomIdLabelParameters: { prefix: Prefices.gridlistLabel }
     });
-    const { context, propsStable, rovingTabIndexReturn, singleSelectionReturn, ...restRet } = useCompleteGridNavigationDeclarative({
+    const { context, props, rovingTabIndexReturn, singleSelectionReturn, ...restRet } = useCompleteGridNavigationDeclarative({
         singleSelectionDeclarativeParameters: { selectedIndex: selectedIndex, setSelectedIndex: onSelectedIndexChange },
         ...restParams
     });
-    let propsGridlist = useMergedProps(propsStable, propsLabelList, { "aria-multiselectable": (selectionLimit == "multi" ? "true" : undefined) });
+    let propsGridlist = useMergedProps(props, propsLabelList, { "aria-multiselectable": (selectionLimit == "multi" ? "true" : undefined) });
     let fullContext = useStableObject({
         ...context,
         gridlistRowContext: useStableObject({
@@ -45,17 +45,20 @@ export function useGridlist({ labelParameters, gridlistParameters: { selectionLi
         ...restRet
     };
 }
-export function useGridlistRow({ gridlistRowParameters: { selected }, linearNavigationParameters, context: cx1, info, rovingTabIndexParameters, sortableChildParameters, textContentParameters, typeaheadNavigationParameters }) {
+export function useGridlistRow({ gridlistRowParameters: { selected }, linearNavigationParameters, context: cx1, info, rovingTabIndexParametersG2R, rovingTabIndexParametersR2C, sortableChildParameters, textContentParameters, typeaheadNavigationParameters, singleSelectionParameters, ...void1 }) {
     monitorCallCount(useGridlistRow);
+    assertEmptyObject(void1);
     const { gridlistRowContext: { selectionLimit } } = cx1;
     const { context: cx2, hasCurrentFocusParameters, hasCurrentFocusReturn, linearNavigationReturn, managedChildReturn, managedChildrenReturn, paginatedChildReturn, props, rovingTabIndexChildReturn, rovingTabIndexReturn, singleSelectionChildReturn, staggeredChildReturn, textContentReturn, typeaheadNavigationReturn } = useCompleteGridNavigationRow({
         linearNavigationParameters: { disableHomeEndKeys: true, ...linearNavigationParameters },
         info,
         context: cx1,
-        rovingTabIndexParameters,
+        rovingTabIndexParametersG2R,
+        rovingTabIndexParametersR2C,
         sortableChildParameters,
         textContentParameters,
-        typeaheadNavigationParameters
+        typeaheadNavigationParameters,
+        singleSelectionParameters
     });
     // `selected` should only be true/false for multi-selection
     if (selectionLimit != "multi")

@@ -9,7 +9,7 @@ export interface UseMenubarContext<ContainerElement extends Element, ChildElemen
 export interface UseMenubarSubInfo<ChildElement extends Element> extends UseToolbarSubInfo<ChildElement> { }
 export interface UseMenubarParameters<MenuParentElement extends Element, MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseToolbarParameters<MenuParentElement, MenuItemElement, M> {}
 
-export interface UseMenubarItemParameters<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseToolbarChildParameters<MenuItemElement, M>, "toolbarChildParameters"> {
+export interface UseMenubarItemParameters<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseToolbarChildParameters<MenuItemElement, M>, "toolbarChildParameters" | "pressParameters"> {
     menuItemParameters: {
         role: "menuitem" | "menuitemcheckbox" | "menuitemradio";
 
@@ -24,7 +24,7 @@ export interface UseMenubarReturnType<MenuParentElement extends Element, MenuIte
     propsMenubar: h.JSX.HTMLAttributes<MenuParentElement>;
     context: UseMenubarContext<MenuParentElement, MenuItemElement, M>;
 }
-export interface UseMenubarItemReturnType<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseToolbarChildReturnType<MenuItemElement, M>, "pressParameters">, UsePressReturnType<MenuItemElement> { }
+export interface UseMenubarItemReturnType<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseToolbarChildReturnType<MenuItemElement, M>, never>, UsePressReturnType<MenuItemElement> { }
 
 /**
  * A menubar is identical to a toolbar, except that every item 
@@ -61,15 +61,15 @@ export function useMenubarChild<MenuItemElement extends Element, M extends UseMe
     const focusSelf = useCallback((e: any) => (e as Element as HTMLElement).focus?.(), [])
 
     const {
-        pressParameters: { excludeSpace },
         props,
         ...restRet
     } = useToolbarChild<MenuItemElement, M>({
+        pressParameters: { focusSelf, onPressSync: opu },
         ...restParams,
         toolbarChildParameters: { disabledProp: "aria-disabled" }
     });
 
-    const { pressReturn, props: propsPress } = usePress<MenuItemElement>({
+    /*const { pressReturn, props: propsPress } = usePress<MenuItemElement>({
         pressParameters: {
             focusSelf,
             excludeSpace,
@@ -78,13 +78,12 @@ export function useMenubarChild<MenuItemElement extends Element, M extends UseMe
                 opu?.(e);
             })
         }, refElementReturn: restRet.refElementReturn
-    });
+    });*/
 
     props.role = role;
 
     return {
-        pressReturn,
-        props: useMergedProps(props, propsPress),
+        props,
         ...restRet
     };
 }

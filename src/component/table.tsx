@@ -32,13 +32,13 @@ interface TableRowPropsBase<RowElement extends Element, CellElement extends Elem
     Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "textContentParameters">,
     Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "tableRowParameters">,
     Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "linearNavigationParameters">,
-    Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "rovingTabIndexParameters"> {
+    Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "rovingTabIndexParametersR2C"> {
     ref?: Ref<UseTableRowReturnType<RowElement, CellElement, RM, CM>>;
 }
 
 interface TableCellPropsBase<CellElement extends Element, CM extends TableCellInfo<CellElement>> extends
     Get<UseTableCellParameters<CellElement, CM>, "tableCellParameters">,
-   Pick<CM, "index" | "hidden">,
+    Pick<CM, "index" | "hidden">,
     Get<UseTableCellParameters<CellElement, CM>, "gridNavigationCellParameters">,
     Get<UseTableCellParameters<CellElement, CM>, "textContentParameters"> {
     focusSelf: CM["focusSelf"];
@@ -87,6 +87,12 @@ export const Table = memoForwardRef(function TableU<TableElement extends Element
     return <TableContext.Provider value={info.context}>{render(info)}</TableContext.Provider>
 })
 
+const TableSectionUntabbableContext = createContext(false);
+const TableSectionAriaPropNameContext = createContext<UseTableSectionParameters<any, any, any, any>["singleSelectionParameters"]["ariaPropName"]>("aria-selected");
+const TableSectionSelectionModeContext = createContext<UseTableSectionParameters<any, any, any, any>["singleSelectionParameters"]["selectionMode"]>("activation");
+const TablRowUntabbableContext = createContext(false);
+//const TablRowAriaPropNameContext = createContext<UseTableSectionParameters<any, any, any, any>["singleSelectionParameters"]["ariaPropName"]>("aria-selected");
+//const TablRowSelectionModeContext = createContext<UseTableSectionParameters<any, any, any, any>["singleSelectionParameters"]["selectionMode"]>("activation");
 export const TableSection = memoForwardRef(function TableSection<SectionElement extends Element, RowElement extends Element, CellElement extends Element>({
     disableHomeEndKeys,
     getIndex,
@@ -103,8 +109,14 @@ export const TableSection = memoForwardRef(function TableSection<SectionElement 
     staggered,
     render,
     location,
+    ariaPropName,
+    selectionMode,
     tagTableSection
 }: TableSectionProps<SectionElement, RowElement, CellElement, TableRowInfo<RowElement, CellElement>, TableCellInfo<CellElement>>) {
+    untabbable = (untabbable ?? false);
+    ariaPropName ??= "aria-selected";
+    selectionMode ??= "activation";
+
     const info = useTableSection<SectionElement, RowElement, CellElement, TableRowInfo<RowElement, CellElement>, TableCellInfo<CellElement>>({
         gridNavigationParameters: { onTabbableColumnChange: onTabbableColumnChange ?? null },
         staggeredChildrenParameters: { staggered: staggered || false },
@@ -119,16 +131,22 @@ export const TableSection = memoForwardRef(function TableSection<SectionElement 
             paginationMin: paginationMin ?? null
         },
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
-        rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable: untabbable ?? false },
-        singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? null, onSelectedIndexChange: onSelectedIndexChange ?? null, ariaPropName: "aria-selected", selectionMode: "activation" },
+        rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable },
+        singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? null, onSelectedIndexChange: onSelectedIndexChange ?? null, ariaPropName, selectionMode },
         context: useContext(TableContext),
         tableSectionParameters: { tagTableSection, location },
     })
 
     return (
-        <TableSectionContext.Provider value={info.context}>
-            {render(info)}
-        </TableSectionContext.Provider>
+        <TableSectionAriaPropNameContext.Provider value={ariaPropName}>
+            <TableSectionSelectionModeContext.Provider value={selectionMode}>
+                <TableSectionUntabbableContext.Provider value={untabbable}>
+                    <TableSectionContext.Provider value={info.context}>
+                        {render(info)}
+                    </TableSectionContext.Provider>
+                </TableSectionUntabbableContext.Provider>
+            </TableSectionSelectionModeContext.Provider>
+        </TableSectionAriaPropNameContext.Provider >
     )
 });
 
@@ -143,13 +161,17 @@ export const TableRow = memoForwardRef(function TableRowU<RowElement extends Ele
     selected,
     hidden,
     disabled,
-
+    initiallyTabbedIndex,
+    untabbable,
     render
 }: TableRowProps<RowElement, Cellement, TableRowInfo<RowElement, Cellement>, TableCellInfo<Cellement>>, ref?: Ref<any>) {
+    let gridIsUntabbable = useContext(TableSectionUntabbableContext);
+    untabbable ||= (false || gridIsUntabbable);
+
     const cx1 = useContext(TableSectionContext);
     console.assert(cx1 != null, `This TableRow is not contained within a TableSection`);
     const info = useTableRow<RowElement, Cellement, TableRowInfo<RowElement, Cellement>, TableCellInfo<Cellement>>({
-        info: { index, disabled: disabled || false,  hidden: hidden || false   },
+        info: { index, disabled: disabled || false, hidden: hidden || false },
         context: cx1,
         textContentParameters: {
             getText: useDefault("getText", getText)
@@ -158,18 +180,23 @@ export const TableRow = memoForwardRef(function TableRowU<RowElement extends Ele
             selected: selected ?? null,
             tagTableRow
         },
-            linearNavigationParameters: {
+        linearNavigationParameters: {
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap"
         },
-        rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null },
-
+        rovingTabIndexParametersG2R: { untabbable: useContext(TableSectionUntabbableContext) },
+        rovingTabIndexParametersR2C: { onTabbableIndexChange: onTabbableIndexChange ?? null, initiallyTabbedIndex: initiallyTabbedIndex ?? null, untabbable },
+        singleSelectionParameters: { ariaPropName: useContext(TableSectionAriaPropNameContext), selectionMode: useContext(TableSectionSelectionModeContext) }
     });
 
     useImperativeHandle(ref!, () => info);
 
-    return <TableRowContext.Provider value={info.context}>{render(info)}</TableRowContext.Provider>
+    return (
+        <TablRowUntabbableContext.Provider value={untabbable}>
+            <TableRowContext.Provider value={info.context}>{render(info)}</TableRowContext.Provider>
+        </TablRowUntabbableContext.Provider>
+    )
 })
 
 export const TableCell = memoForwardRef(function TableCell<CellElement extends Element>({
@@ -180,7 +207,7 @@ export const TableCell = memoForwardRef(function TableCell<CellElement extends E
     tagTableCell,
     render,
     colSpan,
-    getSortValue
+    getSortValue,
 }: TableCellProps<CellElement, TableCellInfo<CellElement>>, ref?: Ref<any>) {
     const context = (useContext(TableRowContext) as UseTableRowContext<any, CellElement, TableCellInfo<CellElement>>);
     console.assert(context != null, `This TableCell is not contained within a TableRow`);
@@ -190,7 +217,8 @@ export const TableCell = memoForwardRef(function TableCell<CellElement extends E
         context,
         gridNavigationCellParameters: { colSpan: colSpan ?? 1 },
         tableCellParameters: { tagTableCell },
-        textContentParameters: { getText: useDefault("getText", getText) }
+        textContentParameters: { getText: useDefault("getText", getText) },
+        rovingTabIndexParameters: { untabbable: useContext(TablRowUntabbableContext) }
     });
 
     useImperativeHandle(ref!, () => info);

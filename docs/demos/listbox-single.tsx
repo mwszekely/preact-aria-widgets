@@ -1,6 +1,6 @@
 
 import { ComponentChildren } from "preact";
-import { returnZero, useState } from "preact-prop-helpers";
+import { returnZero, useMergedProps, useState } from "preact-prop-helpers";
 import { memo } from "preact/compat";
 import { GroupedListbox, Listbox, ListboxItem } from "../../dist/index.js";
 
@@ -17,7 +17,7 @@ const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
                 const selected = info.singleSelectionChildReturn.selected;
                 // defaultRenderListboxSingleItem({ tagListItem: "li", makePropsListItem: ({ singleSelection: { selected } }) => ({ children: `List item #${index}${selected ? " (selected)" : ""}` }) })
                 return (
-                    <li {...info.props}>{`List item #${index}${selected ? " (selected)" : ""}`}</li>
+                    <li {...useMergedProps(info.props, info.propsPressStable)}>{`List item #${index}${selected ? " (selected)" : ""}`}</li>
                 )
             }}
         />
@@ -80,6 +80,7 @@ function ListboxDemo({ count, label }: { count: number, label: ComponentChildren
                     </>
                 )
             }}
+            selectionMode="activation"
             ariaLabel={null}
             orientation="vertical"
             selectionLimit="single"

@@ -28,7 +28,8 @@ interface GridlistRowPropsBase<GridlistRowElement extends Element, GridlistCellE
     Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "textContentParameters">,
     Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "sortableChildParameters">,
     Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "linearNavigationParameters">,
-    Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "rovingTabIndexParameters">,
+    Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "rovingTabIndexParametersG2R">,
+    Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "rovingTabIndexParametersR2C">,
     Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "typeaheadNavigationParameters">,
     Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "gridlistRowParameters"> {
     info?: OmitStrong<RM, keyof GridlistRowInfo<GridlistRowElement, GridlistCellElement>>; // Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "completeGridNavigationRowParameters">
@@ -60,6 +61,10 @@ export interface GridlistChildProps<CellElement extends Element, M extends Gridl
     render(info: UseGridlistCellReturnType<CellElement, M>): VNode;
 }
 
+const GridlistUntabbableContext = createContext(false);
+const GridlistAriaPropNameContext = createContext<UseGridlistParameters<any, any, any, any, any, any>["singleSelectionParameters"]["ariaPropName"]>("aria-selected");
+const GridlistSelectionModeContext = createContext<UseGridlistParameters<any, any, any, any, any, any>["singleSelectionParameters"]["selectionMode"]>("activation");
+const GridlistRowUntabbableContext = createContext(false);
 const GridlistContext = createContext<UseGridlistContext<any, any, any, any, any>>(null!);
 const GridlistRowContext = createContext<UseGridlistRowContext<any, any, any>>(null!);
 
@@ -102,6 +107,10 @@ export const Gridlist = memoForwardRef(function GridlistU<GridlistElement extend
     selectionMode,
     render
 }: GridlistProps<GridlistElement, RowElement, Cellement, LabelElement, RM, CM>, ref?: Ref<any>) {
+    untabbable ??= false;
+    ariaPropName ??= "aria-selected";
+    selectionMode ??= "activation";
+
     const info = useGridlist<GridlistElement, RowElement, Cellement, LabelElement, RM, CM>({
         linearNavigationParameters: {
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
@@ -111,7 +120,7 @@ export const Gridlist = memoForwardRef(function GridlistU<GridlistElement extend
         },
         rovingTabIndexParameters: {
             onTabbableIndexChange: onTabbableIndexChange ?? null,
-            untabbable: untabbable ?? false
+            untabbable,
         },
         staggeredChildrenParameters: { staggered: staggered || false },
         typeaheadNavigationParameters: {
@@ -142,15 +151,21 @@ export const Gridlist = memoForwardRef(function GridlistU<GridlistElement extend
             paginationMax: paginationMax ?? null,
             paginationMin: paginationMin ?? null
         },
-        singleSelectionParameters: { ariaPropName: ariaPropName || "aria-selected", selectionMode: selectionMode || "activation" }
+        singleSelectionParameters: { ariaPropName, selectionMode }
     });
 
     useImperativeHandle(ref!, () => info);
 
     return (
-        <GridlistContext.Provider value={info.context}>
-            {render(info)}
-        </GridlistContext.Provider>
+        <GridlistUntabbableContext.Provider value={untabbable}>
+            <GridlistAriaPropNameContext.Provider value={ariaPropName}>
+                <GridlistSelectionModeContext.Provider value={selectionMode}>
+                    <GridlistContext.Provider value={info.context}>
+                        {render(info)}
+                    </GridlistContext.Provider>
+                </GridlistSelectionModeContext.Provider>
+            </GridlistAriaPropNameContext.Provider>
+        </GridlistUntabbableContext.Provider>
     )
 });
 
@@ -168,12 +183,16 @@ export const GridlistRow = memoForwardRef(function GridlistRowU<RowElement exten
     getSortValue,
     getText,
     render,
+    initiallyTabbedIndex,
+    untabbable,
     info: uinfo
 }: GridlistRowProps<RowElement, Cellement, RM, CM>, ref?: Ref<any>) {
     const context = (useContext(GridlistContext) as UseGridlistContext<any, RowElement, Cellement, RM, CM>);
     console.assert(context != null, `This GridlistRow is not contained within a Gridlist`);
+    untabbable ||= false;
+
     const info = useGridlistRow<RowElement, Cellement, RM, CM>({
-        info: {index, ...uinfo} as RM,
+        info: { index, hidden, disabled, ...uinfo } as RM,
         context,
         gridlistRowParameters: { selected: selected ?? null },
         sortableChildParameters: { getSortValue },
@@ -182,9 +201,9 @@ export const GridlistRow = memoForwardRef(function GridlistRowU<RowElement exten
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap"
         },
-        rovingTabIndexParameters: {
-            onTabbableIndexChange: onTabbableIndexChange ?? null
-        },
+        rovingTabIndexParametersG2R: { untabbable: useContext(GridlistUntabbableContext) },
+        rovingTabIndexParametersR2C: { onTabbableIndexChange: onTabbableIndexChange ?? null, initiallyTabbedIndex: initiallyTabbedIndex ?? null, untabbable },
+        singleSelectionParameters: { ariaPropName: useContext(GridlistAriaPropNameContext), selectionMode: useContext(GridlistSelectionModeContext) },
         typeaheadNavigationParameters: {
             collator: useDefault("collator", collator),
             noTypeahead: useDefault("noTypeahead", noTypeahead),
@@ -216,6 +235,7 @@ export const GridlistChild = memoForwardRef(function GridlistChild<CellElement e
         gridNavigationCellParameters: { colSpan: colSpan ?? 1 },
         textContentParameters: { getText: useDefault("getText", getText) },
         pressParameters: { onPressSync },
+        rovingTabIndexParameters: { untabbable: useContext(GridlistRowUntabbableContext) }
     });
 
     useImperativeHandle(ref!, () => info);

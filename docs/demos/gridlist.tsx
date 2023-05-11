@@ -49,7 +49,7 @@ function DemoGridlistChild2({ tabbable }:{tabbable:boolean}) {
     const [b, setB] = useState(false);
     return (
         <GridlistChild<HTMLDivElement>
-            focusSelf={e => { debugger; cb.current?.checkboxLikeReturn.focusSelf() }}
+            focusSelf={e => { cb.current?.checkboxLikeReturn.focusSelf() }}
             index={1}
             render={info => {
 

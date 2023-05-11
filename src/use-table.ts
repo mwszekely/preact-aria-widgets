@@ -28,7 +28,7 @@ export interface UseTableSectionParameters<TableSectionElement extends Element, 
     }
     context: UseTableContext;
 }
-export interface UseTableSectionReturnType<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>> extends OmitStrong<UseCompleteGridNavigationReturnType<TableSectionElement, TableRowElement, TableCellElement, RM, CM>, "propsStable"> {
+export interface UseTableSectionReturnType<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>> extends OmitStrong<UseCompleteGridNavigationReturnType<TableSectionElement, TableRowElement, TableCellElement, RM, CM>, "props"> {
     propsTableSection: h.JSX.HTMLAttributes<TableSectionElement>;
     context: UseTableSectionContext<TableSectionElement, TableRowElement, TableCellElement, RM, CM>;
 }
@@ -91,7 +91,7 @@ export function useTable<TableElement extends Element, LabelElement extends Elem
     tableParameters: { selectionLimit, tagTable },
 }: UseTableParameters<TableElement, LabelElement>): UseTableReturnType<TableElement, LabelElement> {
     monitorCallCount(useTable);
-    
+
     const [getSortBody, setSortBody] = usePassiveState<() => void, never>(null, returnNull as (() => never));
     const sortQueue = useRef<number[]>([]);
     const [getSortColumn, setSortColumn] = usePassiveState<SortInfo, Event>(useCallback((a: SortInfo) => { sortQueue.current.push(a.column); }, []), useCallback(() => { return { column: 0, direction: "ascending" } as const }, []))
@@ -119,7 +119,7 @@ export function useTable<TableElement extends Element, LabelElement extends Elem
     return {
         propsTable: useMergedProps({ role: tagTable == "table" ? undefined : "grid", "aria-multiselectable": (selectionLimit == "multi" ? "true" : undefined) }, propsLabelList),
         propsLabel: propsLabelLabel,
-        context: ({ tableContext: useStableObject({ sortByColumn, setSortBodyFunction: setSortBody, getCurrentSortColumn: getSortColumn }) })
+        context: useStableObject({ tableContext: useStableObject({ sortByColumn, setSortBodyFunction: setSortBody, getCurrentSortColumn: getSortColumn }) })
     }
 }
 function fuzzyCompare(lhs: any, rhs: any): number {
@@ -166,7 +166,7 @@ export function useTableSection<TableSectionElement extends Element, TableRowEle
         context,
         linearNavigationReturn,
         managedChildrenReturn,
-        propsStable: { ...props },
+        props: { ...props },
         rovingTabIndexReturn,
         singleSelectionReturn,
         typeaheadNavigationReturn,
@@ -229,7 +229,9 @@ export function useTableRow<TableRowElement extends Element, TableCellElement ex
     context: cx1,
     tableRowParameters: { selected },
     linearNavigationParameters,
-    rovingTabIndexParameters,
+    rovingTabIndexParametersG2R,
+    rovingTabIndexParametersR2C,
+    singleSelectionParameters,
 
 }: UseTableRowParameters<TableRowElement, TableCellElement, RM, CM>): UseTableRowReturnType<TableRowElement, TableCellElement, RM, CM> {
     monitorCallCount(useTableRow);
@@ -244,6 +246,7 @@ export function useTableRow<TableRowElement extends Element, TableCellElement ex
     } = useCompleteGridNavigationRow<TableRowElement, TableCellElement, RM, CM>({
         textContentParameters,
         context: { ...cx1 },
+        singleSelectionParameters,
         info,
         sortableChildParameters: {
             getSortValue: useStableCallback((): unknown => {
@@ -255,15 +258,26 @@ export function useTableRow<TableRowElement extends Element, TableCellElement ex
             })
         },
         linearNavigationParameters,
-        rovingTabIndexParameters,
+        rovingTabIndexParametersG2R,
+        rovingTabIndexParametersR2C,
         typeaheadNavigationParameters: { noTypeahead: true, collator: null, typeaheadTimeout: Infinity }
     }
     );
 
     props.role = "row";
     // TODO: Unneeded?
-    //if (selected)
-    //    props[singleSelectionChildParameters.ariaPropName ?? "aria-selected"] = "true";
+    if (selected) {
+        switch (singleSelectionParameters.ariaPropName) {
+            case "aria-checked":
+            case "aria-pressed":
+            case "aria-selected":
+                props[singleSelectionParameters.ariaPropName ?? "aria-selected"] = "true";
+            default: {
+                console.assert(false, singleSelectionParameters.ariaPropName + " is not valid for multi-select -- prefer checked, selected, or pressed");
+            }
+
+        }
+    }
 
     return {
         context: useStableObject({

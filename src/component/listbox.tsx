@@ -25,7 +25,7 @@ interface ListboxItemPropsBase<ListItemElement extends Element, M extends Listbo
     Get<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "listboxParameters">,
     Pick<M, "index" | "hidden" | "disabled">,
     Get<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "sortableChildParameters">,
-    Get<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "pressParameters">,
+    OmitStrong<NonNullable<Get<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "pressParameters">>, "focusSelf">,
     Get<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "textContentParameters"> {
     focusSelf?: UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>["info"]["focusSelf"];
     subInfo?: OmitStrong<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>["info"], "focusSelf">;
@@ -39,6 +39,9 @@ export interface ListboxItemProps<ListItemElement extends Element, M extends Lis
     render(info: UseListboxItemReturnType<ListItemElement, ListboxInfo<ListItemElement>>): VNode;
 }
 
+const UntabbableContext = createContext(false);
+const AriaPropNameContext = createContext<UseListboxParameters<any, any, any, any>["singleSelectionParameters"]["ariaPropName"]>("aria-selected")
+const SelectionModeContext = createContext<UseListboxParameters<any, any, any, any>["singleSelectionParameters"]["selectionMode"]>("focus");
 const ListboxContext = createContext<UseListboxContext<any, any, any>>(null!);
 
 const ListboxGroupContext = createContext<null | UseListboxReturnType<any, any, any, any>>(null);
@@ -98,6 +101,10 @@ export const Listbox = memoForwardRef(function Listbox<ListElement extends Eleme
     render
 }: ListboxProps<ListElement, ListItemElement, LabelElement, M>) {
     const listboxGroupInfo = useContext(ListboxGroupContext);
+    ariaPropName ||= "aria-selected";
+    selectionMode ||= "activation";
+    untabbable ||= false;
+
     const info = useListbox<ListElement, ListItemElement, LabelElement, M>({
         labelParameters: { ariaLabel },
         staggeredChildrenParameters: {
@@ -122,36 +129,51 @@ export const Listbox = memoForwardRef(function Listbox<ListElement extends Eleme
             noTypeahead: useDefault("noTypeahead", noTypeahead),
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
         },
-        singleSelectionParameters: { ariaPropName: ariaPropName || "aria-selected", selectionMode: selectionMode || "activation" }
+        singleSelectionParameters: { ariaPropName, selectionMode }
     });
 
     return (
-        <ListboxContext.Provider value={info.context}>{render(info)}</ListboxContext.Provider>
+        <AriaPropNameContext.Provider value={ariaPropName}>
+            <SelectionModeContext.Provider value={selectionMode}>
+                <UntabbableContext.Provider value={untabbable}>
+                    <ListboxContext.Provider value={info.context}>{render(info)}</ListboxContext.Provider>
+                </UntabbableContext.Provider>
+            </SelectionModeContext.Provider>
+        </AriaPropNameContext.Provider>
     );
 })
 
 export const ListboxItem = memoForwardRef(function ListboxItem<ListboxItemElement extends Element, M extends ListboxInfo<ListboxItemElement> = ListboxInfo<ListboxItemElement>>({
     disabled,
     focusSelf,
-    onPressSync,
     getText,
     hidden,
     index,
     render,
     selected,
     getSortValue,
+    allowRepeatPresses,
+    excludeEnter,
+    excludePointer,
+    longPressThreshold,
+    onPressSync,
+    onPressingChange,
     ...subInfo
 }: ListboxItemProps<ListboxItemElement, M>) {
     const context = useContext(ListboxContext) as UseListboxContext<any, ListboxItemElement, M>;
     console.assert(context != null, `This ListboxItem is not contained within a Listbox`);
     const focusSelfDefault = useCallback((e: any) => { e?.focus(); }, []);
+    focusSelf ??= focusSelfDefault;
+
     const info = useListboxItem<ListboxItemElement, M>({
-        info: { index, hidden: hidden || false, disabled: disabled || false, focusSelf: focusSelf ?? focusSelfDefault, ...subInfo } as M,
+        info: { index, hidden: hidden || false, disabled: disabled || false, focusSelf, ...subInfo } as M,
         context,
         listboxParameters: { selected: selected ?? null, },
-        pressParameters: { onPressSync },
+        pressParameters: { onPressSync, focusSelf, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange },
         sortableChildParameters: { getSortValue: getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },
+        rovingTabIndexParameters: { untabbable: useContext(UntabbableContext) },
+        singleSelectionParameters: { ariaPropName: useContext(AriaPropNameContext), selectionMode: useContext(SelectionModeContext) }
     });
 
     return render(info);

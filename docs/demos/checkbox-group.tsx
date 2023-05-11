@@ -85,7 +85,7 @@ export function Demo() {
                     render={
                         (info2) => {
                             const ref = useRef<UseCheckboxReturnType<any, any>>(null);
-                            return <div {...info2.propsStable} {...({
+                            return <div {...info2.props} {...({
                                 children: (
                                     <>
                                         <CheckboxGroupParent<HTMLInputElement>

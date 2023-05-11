@@ -3,8 +3,14 @@ import { createContext } from "preact";
 import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
 import { useMenubar, useMenubarChild } from "../use-menubar.js";
 import { memoForwardRef, useDefault } from "./util.js";
+const UntabbableContext = createContext(false);
+const AriaPropNameContext = createContext("aria-selected");
+const SelectionModeContext = createContext("focus");
 export const MenubarItemContext = createContext(null);
-export const Menubar = memoForwardRef(function MenubarU({ render, collator, disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, staggered, noTypeahead, onTabbableIndexChange, compare, getIndex, disabled, selectedIndex, onSelectedIndexChange, typeaheadTimeout, role, ariaLabel, ariaPropName, selectionMode }, ref) {
+export const Menubar = memoForwardRef(function MenubarU({ render, collator, disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, staggered, noTypeahead, untabbable, onTabbableIndexChange, compare, getIndex, disabled, selectedIndex, onSelectedIndexChange, typeaheadTimeout, role, ariaLabel, ariaPropName, selectionMode }, ref) {
+    ariaPropName ||= "aria-selected";
+    selectionMode ||= "activation";
+    untabbable ||= false;
     const info = useMenubar({
         linearNavigationParameters: {
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
@@ -13,7 +19,7 @@ export const Menubar = memoForwardRef(function MenubarU({ render, collator, disa
             pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
         },
         toolbarParameters: { orientation, selectedIndex: selectedIndex ?? null, onSelectedIndexChange: onSelectedIndexChange ?? null, role: role ?? "menubar", disabled: disabled || false },
-        rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null },
+        rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable },
         typeaheadNavigationParameters: {
             collator: useDefault("collator", collator),
             noTypeahead: useDefault("noTypeahead", noTypeahead),
@@ -23,10 +29,10 @@ export const Menubar = memoForwardRef(function MenubarU({ render, collator, disa
         staggeredChildrenParameters: { staggered: staggered || false },
         sortableChildrenParameters: { compare: compare ?? null },
         labelParameters: { ariaLabel },
-        singleSelectionParameters: { ariaPropName: ariaPropName || "aria-selected", selectionMode: selectionMode || "activation" }
+        singleSelectionParameters: { ariaPropName, selectionMode }
     });
     useImperativeHandle(ref, () => info);
-    return (_jsx(MenubarItemContext.Provider, { value: info.context, children: render(info) }));
+    return (_jsx(AriaPropNameContext.Provider, { value: ariaPropName, children: _jsx(SelectionModeContext.Provider, { value: selectionMode, children: _jsx(UntabbableContext.Provider, { value: untabbable, children: _jsx(MenubarItemContext.Provider, { value: info.context, children: render(info) }) }) }) }));
 });
 export const MenubarItem = memoForwardRef(function MenuItemU({ index, render, focusSelf, hidden, getText, disabled, onPress, getSortValue, role, info: uinfo }, ref) {
     const context = (useContext(MenubarItemContext));
@@ -38,6 +44,8 @@ export const MenubarItem = memoForwardRef(function MenuItemU({ index, render, fo
         sortableChildParameters: { getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },
         menuItemParameters: { onPress: onPress ?? null, role: role ?? "menuitem" },
+        rovingTabIndexParameters: { untabbable: useContext(UntabbableContext) },
+        singleSelectionParameters: { ariaPropName: useContext(AriaPropNameContext), selectionMode: useContext(SelectionModeContext) }
     });
     useImperativeHandle(ref, () => info);
     return (_jsx(_Fragment, { children: render(info) }));

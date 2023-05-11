@@ -5,9 +5,14 @@ import { useTab, useTabPanel, useTabs } from "../use-tabs.js";
 import { memoForwardRef, useDefault } from "./util.js";
 const TabsContext = createContext(null);
 const TabPanelsContext = createContext(null);
+const UntabbableContext = createContext(false);
+//const AriaPropNameContext = createContext<UseTabsParameters<any, any, any, any>["singleSelectionParameters"]["ariaPropName"]>("aria-selected")
+const SelectionModeContext = createContext("focus");
 export const Tabs = memoForwardRef(function Tabs({ ariaLabel, collator, compare, disableHomeEndKeys, getIndex, initiallySelectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSelectedIndexChange, onTabbableIndexChange, orientation, staggered, pageNavigationSize, localStorageKey, selectionMode, 
 //groupingType,
 untabbable, typeaheadTimeout, role, render }, ref) {
+    untabbable ??= false;
+    selectionMode ??= "focus";
     const info = useTabs({
         labelParameters: { ariaLabel },
         staggeredChildrenParameters: { staggered: staggered || false },
@@ -20,7 +25,7 @@ untabbable, typeaheadTimeout, role, render }, ref) {
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
         rovingTabIndexParameters: {
             onTabbableIndexChange: onTabbableIndexChange ?? null,
-            untabbable: untabbable ?? false
+            untabbable
         },
         singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? 0, onSelectedIndexChange: onSelectedIndexChange ?? null, selectionMode },
         sortableChildrenParameters: { compare: compare ?? null },
@@ -33,7 +38,7 @@ untabbable, typeaheadTimeout, role, render }, ref) {
     });
     const { contextPanels, contextTabs } = info;
     useImperativeHandle(ref, () => info);
-    return (_jsx(TabsContext.Provider, { value: contextTabs, children: _jsx(TabPanelsContext.Provider, { value: contextPanels, children: render(info) }) }));
+    return (_jsx(UntabbableContext.Provider, { value: untabbable, children: _jsx(SelectionModeContext.Provider, { value: selectionMode, children: _jsx(TabsContext.Provider, { value: contextTabs, children: _jsx(TabPanelsContext.Provider, { value: contextPanels, children: render(info) }) }) }) }));
 });
 export const Tab = memoForwardRef(function Tab({ disabled, focusSelf, hidden, index, getText, getSortValue, render, info: uinfo }, ref) {
     const context = useContext(TabsContext);
@@ -43,7 +48,10 @@ export const Tab = memoForwardRef(function Tab({ disabled, focusSelf, hidden, in
         info: { index, disabled, hidden, focusSelf: focusSelf ?? focusSelfDefault, ...uinfo },
         context,
         sortableChildParameters: { getSortValue },
-        textContentParameters: { getText: useDefault("getText", getText) }
+        textContentParameters: { getText: useDefault("getText", getText) },
+        pressParameters: null,
+        rovingTabIndexParameters: { untabbable: useContext(UntabbableContext) },
+        singleSelectionParameters: { selectionMode: useContext(SelectionModeContext) }
     });
     useImperativeHandle(ref, () => info);
     return render(info);

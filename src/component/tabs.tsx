@@ -27,9 +27,8 @@ interface TabPropsBase<TabElement extends Element, M extends TabInfo<TabElement>
     info?: OmitStrong<M, keyof TabInfo<TabElement>>
 }
 
-interface TabPanelPropsBase<M extends TabPanelInfo> extends Pick<M, "index">
-     {
-        info?: OmitStrong<M, keyof TabPanelInfo>
+interface TabPanelPropsBase<M extends TabPanelInfo> extends Pick<M, "index"> {
+    info?: OmitStrong<M, keyof TabPanelInfo>
 }
 
 export interface TabsProps<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element, M extends TabInfo<TabElement>> extends PartialExcept<TabsPropsBase<TabContainerElement, TabElement, TabLabelElement, M>, "orientation" | "ariaLabel"> {
@@ -46,6 +45,9 @@ export interface TabPanelProps<PanelElement extends Element, M extends TabPanelI
 
 const TabsContext = createContext<TabsContext<any, any, any>>(null!);
 const TabPanelsContext = createContext<TabPanelsContext<any>>(null!);
+const UntabbableContext = createContext(false);
+//const AriaPropNameContext = createContext<UseTabsParameters<any, any, any, any>["singleSelectionParameters"]["ariaPropName"]>("aria-selected")
+const SelectionModeContext = createContext<NonNullable<UseTabsParameters<any, any, any, any>["singleSelectionParameters"]["selectionMode"]>>("focus");
 
 export const Tabs = memoForwardRef(function Tabs<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element, M extends TabInfo<TabElement> = TabInfo<TabElement>>({
     ariaLabel,
@@ -70,6 +72,9 @@ export const Tabs = memoForwardRef(function Tabs<TabContainerElement extends Ele
     role,
     render
 }: TabsProps<TabContainerElement, TabElement, TabLabelElement, M>, ref?: Ref<any>) {
+    untabbable ??= false;
+    selectionMode ??= "focus";
+
     const info = useTabs<TabContainerElement, TabElement, TabLabelElement, M>({
         labelParameters: { ariaLabel },
         staggeredChildrenParameters: { staggered: staggered || false },
@@ -82,7 +87,7 @@ export const Tabs = memoForwardRef(function Tabs<TabContainerElement extends Ele
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
         rovingTabIndexParameters: {
             onTabbableIndexChange: onTabbableIndexChange ?? null,
-            untabbable: untabbable ?? false
+            untabbable
         },
         singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? 0, onSelectedIndexChange: onSelectedIndexChange ?? null, selectionMode },
         sortableChildrenParameters: { compare: compare ?? null },
@@ -100,11 +105,15 @@ export const Tabs = memoForwardRef(function Tabs<TabContainerElement extends Ele
 
 
     return (
-        <TabsContext.Provider value={contextTabs}>
-            <TabPanelsContext.Provider value={contextPanels}>
-                {render(info)}
-            </TabPanelsContext.Provider>
-        </TabsContext.Provider>
+        <UntabbableContext.Provider value={untabbable}>
+            <SelectionModeContext.Provider value={selectionMode}>
+                <TabsContext.Provider value={contextTabs}>
+                    <TabPanelsContext.Provider value={contextPanels}>
+                        {render(info)}
+                    </TabPanelsContext.Provider>
+                </TabsContext.Provider>
+            </SelectionModeContext.Provider>
+        </UntabbableContext.Provider>
     )
 })
 
@@ -125,7 +134,10 @@ export const Tab = memoForwardRef(function Tab<E extends Element, M extends TabI
         info: { index, disabled, hidden, focusSelf: focusSelf ?? focusSelfDefault, ...uinfo } as M,
         context,
         sortableChildParameters: { getSortValue },
-        textContentParameters: { getText: useDefault("getText", getText) }
+        textContentParameters: { getText: useDefault("getText", getText) },
+        pressParameters: null, //{ focusSelf: focusSelf ?? focusSelfDefault, onPressSync: null },
+        rovingTabIndexParameters: { untabbable: useContext(UntabbableContext) },
+        singleSelectionParameters: { selectionMode: useContext(SelectionModeContext) }
     });
     useImperativeHandle(ref!, () => info);
     return render(info);

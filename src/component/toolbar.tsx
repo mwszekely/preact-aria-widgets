@@ -40,6 +40,10 @@ export interface ToolbarChildProps<ToolbarChildElement extends Element, M extend
     render(info: UseToolbarChildReturnType<ToolbarChildElement, M>): VNode<any>;
 }
 
+// TODO: Are there performance/sanity implications for having one context per primitive?
+const UntabbableContext = createContext(false);
+const AriaPropNameContext = createContext<UseToolbarParameters<any, any, any>["singleSelectionParameters"]["ariaPropName"]>("aria-selected")
+const SelectionModeContext = createContext<UseToolbarParameters<any, any, any>["singleSelectionParameters"]["selectionMode"]>("focus");
 const ToolbarContext = createContext<UseToolbarContext<any, any, any>>(null!);
 
 export const Toolbar = memoForwardRef(function ToolbarU<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element, M extends UseToolbarSubInfo<ChildElement> = UseToolbarSubInfo<ChildElement>>({
@@ -62,8 +66,13 @@ export const Toolbar = memoForwardRef(function ToolbarU<ContainerElement extends
     staggered,
     ariaLabel,
     ariaPropName,
-    selectionMode
+    selectionMode,
+    untabbable
 }: ToolbarProps<ContainerElement, ChildElement, LabelElement, M>, ref?: Ref<any>) {
+    ariaPropName ??= "aria-selected";
+    selectionMode ??= "activation";
+    untabbable ||= false
+
     const listboxReturnType = useToolbar<ContainerElement, ChildElement, LabelElement, M>({
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
         sortableChildrenParameters: { compare: compare ?? null },
@@ -82,22 +91,28 @@ export const Toolbar = memoForwardRef(function ToolbarU<ContainerElement extends
             onSelectedIndexChange: onSelectedIndexChange ?? null
         },
         staggeredChildrenParameters: { staggered: staggered || false },
-        rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null },
+        rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable },
         typeaheadNavigationParameters: {
             collator: useDefault("collator", collator),
             noTypeahead: useDefault("noTypeahead", noTypeahead),
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
         },
         labelParameters: { ariaLabel },
-        singleSelectionParameters: { ariaPropName: ariaPropName ?? "aria-selected", selectionMode: selectionMode ?? "activation" }
+        singleSelectionParameters: { ariaPropName: ariaPropName, selectionMode }
     });
 
     useImperativeHandle(ref!, () => listboxReturnType);
 
     return (
-        <ToolbarContext.Provider value={listboxReturnType.context}>
-            {render(listboxReturnType)}
-        </ToolbarContext.Provider>
+        <AriaPropNameContext.Provider value={ariaPropName}>
+            <SelectionModeContext.Provider value={selectionMode}>
+                <UntabbableContext.Provider value={untabbable}>
+                    <ToolbarContext.Provider value={listboxReturnType.context}>
+                        {render(listboxReturnType)}
+                    </ToolbarContext.Provider>
+                </UntabbableContext.Provider>
+            </SelectionModeContext.Provider>
+        </AriaPropNameContext.Provider>
     )
 })
 
@@ -116,13 +131,17 @@ export const ToolbarChild = memoForwardRef(function ToolbarChildU<ToolbarChildEl
     const context = (useContext(ToolbarContext) as UseToolbarContext<any, ToolbarChildElement, M>);
     console.assert(context != null, `This ToolbarChild is not contained within a Toolbar`);
     const focusSelfDefault = useCallback((e: any) => { e?.focus(); }, []);
+    focusSelf ??= focusSelfDefault;
 
     const info = useToolbarChild<ToolbarChildElement, M>({
         context,
         toolbarChildParameters: { disabledProp },
-        info: { index, focusSelf: focusSelf ?? focusSelfDefault, hidden: hidden || false, disabled: disabled || false, ...uinfo } as M,
+        info: { index, focusSelf, disabled, hidden, ...uinfo } as M,
         sortableChildParameters: { getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },
+        pressParameters: null, //{ focusSelf, onPressSync: null },
+        rovingTabIndexParameters: { untabbable: useContext(UntabbableContext) },
+        singleSelectionParameters: { ariaPropName: useContext(AriaPropNameContext), selectionMode: useContext(SelectionModeContext) }
     });
 
     useImperativeHandle(ref!, () => info);

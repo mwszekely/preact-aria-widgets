@@ -42,6 +42,9 @@ export interface MenubarItemProps<MenuItemElement extends Element, M extends Use
     info?: OmitStrong<M, keyof UseMenubarSubInfo<MenuItemElement>>;
 }
 
+const UntabbableContext = createContext(false);
+const AriaPropNameContext = createContext<UseMenubarParameters<any, any, any>["singleSelectionParameters"]["ariaPropName"]>("aria-selected")
+const SelectionModeContext = createContext<UseMenubarParameters<any, any, any>["singleSelectionParameters"]["selectionMode"]>("focus");
 export const MenubarItemContext = createContext<UseMenubarContext<any, any, any>>(null!);
 
 export const Menubar = memoForwardRef(function MenubarU<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element, M extends UseMenubarSubInfo<ChildElement> = UseMenubarSubInfo<ChildElement>>({
@@ -54,6 +57,7 @@ export const Menubar = memoForwardRef(function MenubarU<ContainerElement extends
     orientation,
     staggered,
     noTypeahead,
+    untabbable,
     onTabbableIndexChange,
     compare,
     getIndex,
@@ -66,6 +70,10 @@ export const Menubar = memoForwardRef(function MenubarU<ContainerElement extends
     ariaPropName,
     selectionMode
 }: MenubarProps<ContainerElement, ChildElement, LabelElement, M>, ref?: Ref<any>) {
+    ariaPropName ||= "aria-selected";
+    selectionMode ||= "activation";
+    untabbable ||= false;
+
     const info = useMenubar<ContainerElement, ChildElement, LabelElement, M>({
         linearNavigationParameters: {
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
@@ -74,7 +82,7 @@ export const Menubar = memoForwardRef(function MenubarU<ContainerElement extends
             pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
         },
         toolbarParameters: { orientation, selectedIndex: selectedIndex ?? null, onSelectedIndexChange: onSelectedIndexChange ?? null, role: role ?? "menubar", disabled: disabled || false },
-        rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null },
+        rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable },
         typeaheadNavigationParameters: {
             collator: useDefault("collator", collator),
             noTypeahead: useDefault("noTypeahead", noTypeahead),
@@ -84,15 +92,21 @@ export const Menubar = memoForwardRef(function MenubarU<ContainerElement extends
         staggeredChildrenParameters: { staggered: staggered || false },
         sortableChildrenParameters: { compare: compare ?? null },
         labelParameters: { ariaLabel },
-        singleSelectionParameters: { ariaPropName: ariaPropName || "aria-selected", selectionMode: selectionMode || "activation" }
+        singleSelectionParameters: { ariaPropName, selectionMode }
     });
 
     useImperativeHandle(ref!, () => info)
 
     return (
-        <MenubarItemContext.Provider value={info.context}>
-            {render(info)}
-        </MenubarItemContext.Provider>
+        <AriaPropNameContext.Provider value={ariaPropName}>
+            <SelectionModeContext.Provider value={selectionMode}>
+                <UntabbableContext.Provider value={untabbable}>
+                    <MenubarItemContext.Provider value={info.context}>
+                        {render(info)}
+                    </MenubarItemContext.Provider>
+                </UntabbableContext.Provider>
+            </SelectionModeContext.Provider>
+        </AriaPropNameContext.Provider>
     )
 })
 
@@ -119,6 +133,8 @@ export const MenubarItem = memoForwardRef(function MenuItemU<MenuItemElement ext
         sortableChildParameters: { getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },
         menuItemParameters: { onPress: onPress ?? null, role: role ?? "menuitem" },
+        rovingTabIndexParameters: { untabbable: useContext(UntabbableContext) },
+        singleSelectionParameters: { ariaPropName: useContext(AriaPropNameContext), selectionMode: useContext(SelectionModeContext) }
     });
 
     useImperativeHandle(ref!, () => info);

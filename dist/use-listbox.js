@@ -1,4 +1,4 @@
-import { monitorCallCount, useCompleteListNavigationChild, useCompleteListNavigationDeclarative, useEnsureStability, useMergedProps, usePress, useStableCallback, useStableObject } from "preact-prop-helpers";
+import { monitorCallCount, useCompleteListNavigationChild, useCompleteListNavigationDeclarative, useEnsureStability, useMergedProps, useStableCallback, useStableObject } from "preact-prop-helpers";
 import { EventDetail, Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
 export function useListbox({ labelParameters, listboxParameters: { selectionLimit, groupingType, selectedIndex, onSelectedIndexChange, orientation }, linearNavigationParameters, singleSelectionParameters: { ariaPropName, selectionMode }, ...restParams }) {
@@ -14,8 +14,8 @@ export function useListbox({ labelParameters, listboxParameters: { selectionLimi
         randomIdInputParameters: { prefix: Prefices.listbox },
         randomIdLabelParameters: { prefix: Prefices.listboxLabel }
     });
-    let { context, propsStable: { ...props }, rovingTabIndexReturn, singleSelectionReturn, ...restRet } = useCompleteListNavigationDeclarative({
-        singleSelectionDeclarativeParameters: { selectedIndex, setSelectedIndex: onSelectedIndexChange },
+    let { context, props: { ...props }, rovingTabIndexReturn, singleSelectionReturn, ...restRet } = useCompleteListNavigationDeclarative({
+        singleSelectionDeclarativeParameters: { selectedIndex, setSelectedIndex: (i, e) => { debugger; onSelectedIndexChange?.(i, e); } },
         singleSelectionParameters: { ariaPropName: ariaPropName || "aria-selected", selectionMode: selectionMode },
         linearNavigationParameters: { arrowKeyDirection: orientation, ...linearNavigationParameters },
         ...restParams
@@ -46,32 +46,23 @@ export function useListbox({ labelParameters, listboxParameters: { selectionLimi
         propsListboxLabel: propsLabelLabel
     };
 }
-export function useListboxItem({ context: { listboxContext: { selectionLimit }, ...context }, listboxParameters: { selected }, pressParameters: { onPressSync: opsu }, ...restParams }) {
+export function useListboxItem({ context: { listboxContext: { selectionLimit }, ...context }, listboxParameters: { selected }, rovingTabIndexParameters, singleSelectionParameters, pressParameters, ...restParams }) {
     monitorCallCount(useListboxItem);
-    const { pressParameters: { excludeSpace }, props, refElementReturn, ...restRet } = useCompleteListNavigationChild({
+    const { props, refElementReturn, ...restRet } = useCompleteListNavigationChild({
         context,
+        rovingTabIndexParameters,
+        singleSelectionParameters,
+        pressParameters,
         ...restParams
-    });
-    const { pressReturn, props: propsPress } = usePress({
-        refElementReturn,
-        pressParameters: {
-            onPressSync: useStableCallback((e) => {
-                if (selectionLimit == "single")
-                    restRet.singleSelectionChildReturn.setThisOneSelected?.(e);
-                opsu?.(e);
-            }),
-            excludeSpace,
-            focusSelf: e => e?.focus?.()
-        }
     });
     if (selectionLimit == "single")
         console.assert(selected == null);
     props.role = "option";
     props["aria-disabled"] = restParams.info.disabled ? "true" : undefined;
     return {
-        pressReturn,
+        //pressReturn,
         refElementReturn,
-        props: useMergedProps(props, propsPress),
+        props,
         ...restRet
     };
 }

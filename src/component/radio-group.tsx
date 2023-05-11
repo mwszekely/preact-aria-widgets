@@ -37,6 +37,10 @@ export interface RadioProps<LP extends LabelPosition, InputElement extends Eleme
     render(info: UseRadioReturnType<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>): VNode<any>;
 }
 
+const UntabbableContext = createContext(false);
+//const AriaPropNameContext = createContext<UseRadioParameters<any, any, any, any, any>["singleSelectionParameters"]["ariaPropName"]>("aria-checked");
+//const SelectionModeContext = createContext<UseRadioParameters<any, any, any, any, any>["singleSelectionParameters"]["selectionMode"]>("activation");
+
 const RadioContext = createContext<RadioContext<any, any, any, any>>(null!);
 export const RadioGroup = memoForwardRef(function RadioGroup<V extends string | number, GroupElement extends HTMLElement, GroupLabelElement extends HTMLElement, TabbableChildElement extends HTMLElement>({
     render,
@@ -58,6 +62,8 @@ export const RadioGroup = memoForwardRef(function RadioGroup<V extends string | 
     onTabbableIndexChange,
     pageNavigationSize,
 }: RadioGroupProps<V, GroupElement, GroupLabelElement, TabbableChildElement>, ref?: Ref<any>) {
+    untabbable ??= false;
+
     const info = useRadioGroup<V, GroupElement, GroupLabelElement, TabbableChildElement>({
         linearNavigationParameters: {
             arrowKeyDirection: arrowKeyDirection ?? "either",
@@ -73,7 +79,7 @@ export const RadioGroup = memoForwardRef(function RadioGroup<V extends string | 
         radioGroupParameters: { name, onSelectedValueChange, selectedValue },
         rovingTabIndexParameters: {
             onTabbableIndexChange: onTabbableIndexChange ?? null,
-            untabbable: untabbable ?? false
+            untabbable
         },
         typeaheadNavigationParameters: {
             collator: useDefault("collator", collator),
@@ -85,9 +91,11 @@ export const RadioGroup = memoForwardRef(function RadioGroup<V extends string | 
     useImperativeHandle(ref!, () => info);
 
     return (
-        <RadioContext.Provider value={info.context}>
-            {render(info)}
-        </RadioContext.Provider>
+        <UntabbableContext.Provider value={untabbable}>
+            <RadioContext.Provider value={info.context}>
+                {render(info)}
+            </RadioContext.Provider>
+        </UntabbableContext.Provider>
     )
 });
 
@@ -104,18 +112,22 @@ export const Radio = memoForwardRef(function Radio<LP extends LabelPosition, V e
     tagLabel,
     getText
 }: RadioProps<LP, InputElement, LabelElement, V>, ref?: Ref<any>) {
+    const defaultFocusSelf = () => info.checkboxLikeReturn.focusSelf();
+    focusSelf ??= defaultFocusSelf;
+
     const context = useContext(RadioContext);
     console.assert(context != null, `This Radio is not contained within a RadioGroup`);
     const getValue = useStableGetter(value);
-    const defaultFocusSelf = () => info.checkboxLikeReturn.focusSelf();
     const info = useRadio<LP, InputElement, LabelElement, V>({
         sortableChildParameters: { getSortValue: getValue },
         radioParameters: { value },
         checkboxLikeParameters: { disabled: disabled ?? false },
-        info: { index, focusSelf: focusSelf ?? defaultFocusSelf, hidden: hidden || false, disabled: !!disabled },
+        info: { index, focusSelf, hidden: hidden || false, disabled: !!disabled },
         context,
         labelParameters: { ariaLabel, labelPosition, tagInput, tagLabel },
-        textContentParameters: { getText: useDefault("getText", getText) }
+        textContentParameters: { getText: useDefault("getText", getText) },
+        pressParameters: null,
+        rovingTabIndexParameters: { untabbable: useContext(UntabbableContext) }
     });
 
     useImperativeHandle(ref!, () => info);

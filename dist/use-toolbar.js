@@ -16,7 +16,7 @@ import { useLabelSynthetic } from "./use-label.js";
  */
 export function useToolbar({ linearNavigationParameters, toolbarParameters: { orientation, role, selectedIndex, onSelectedIndexChange, disabled }, labelParameters, rovingTabIndexParameters, ...listNavParameters }) {
     monitorCallCount(useToolbar);
-    const { context, propsStable, ...listNavReturn } = useCompleteListNavigationDeclarative({
+    const { context, props, ...listNavReturn } = useCompleteListNavigationDeclarative({
         ...listNavParameters,
         rovingTabIndexParameters: { ...rovingTabIndexParameters, untabbable: disabled },
         singleSelectionDeclarativeParameters: { selectedIndex, setSelectedIndex: disabled ? null : onSelectedIndexChange },
@@ -38,7 +38,7 @@ export function useToolbar({ linearNavigationParameters, toolbarParameters: { or
             role: role ?? undefined,
             tabIndex: disabled ? 0 : -1,
             "aria-disabled": disabled ? "true" : undefined
-        }, propsStable),
+        }, props),
         randomIdInputReturn,
         randomIdLabelReturn,
         ...listNavReturn

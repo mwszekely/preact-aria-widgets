@@ -1,4 +1,4 @@
-import { generateRandomId, monitorCallCount, returnTrue, useChildrenFlag, useCompleteListNavigation, useCompleteListNavigationChild, useManagedChild, useManagedChildren, useMergedProps, usePersistentState, usePress, useStableCallback, useStableObject, useState } from "preact-prop-helpers";
+import { generateRandomId, monitorCallCount, returnTrue, useChildrenFlag, useCompleteListNavigation, useCompleteListNavigationChild, useManagedChild, useManagedChildren, useMergedProps, usePersistentState, useStableCallback, useStableObject, useState } from "preact-prop-helpers";
 import { useCallback, useLayoutEffect } from "preact/hooks";
 import { EventDetail, Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
@@ -34,7 +34,7 @@ export function useTabs({ labelParameters, linearNavigationParameters, singleSel
         randomIdInputParameters: { prefix: Prefices.tablist },
         randomIdLabelParameters: { prefix: Prefices.tablistLabel },
     });
-    const { propsStable: listNavigationSingleSelectionProps, context, ...listNavRet1 } = useCompleteListNavigation({
+    const { props: listNavigationSingleSelectionProps, context, ...listNavRet1 } = useCompleteListNavigation({
         linearNavigationParameters: { arrowKeyDirection: orientation, ...linearNavigationParameters },
         singleSelectionParameters: {
             onSelectedIndexChange: useStableCallback((i, p) => {
@@ -74,29 +74,32 @@ export function useTabs({ labelParameters, linearNavigationParameters, singleSel
         ...listNavRet1
     };
 }
-export function useTab({ info: { focusSelf, ...info }, textContentParameters, sortableChildParameters, context }) {
-    const { props: listNavigationSingleSelectionChildProps, ...listNavRet2 } = useCompleteListNavigationChild({
+export function useTab({ info: { focusSelf, ...info }, textContentParameters, sortableChildParameters, pressParameters, rovingTabIndexParameters, singleSelectionParameters, context }) {
+    const { props: listNavigationSingleSelectionChildProps, propsPressStable, ...listNavRet2 } = useCompleteListNavigationChild({
         context,
         info: { focusSelf, ...info },
         sortableChildParameters,
         textContentParameters,
+        pressParameters,
+        rovingTabIndexParameters,
+        singleSelectionParameters: { ariaPropName: "aria-selected", ...singleSelectionParameters },
     });
-    const { pressParameters, refElementReturn } = listNavRet2;
-    const { pressReturn, props: propsPress } = usePress({ pressParameters: { ...pressParameters, onPressSync: useStableCallback((e) => listNavRet2.singleSelectionChildReturn.setThisOneSelected(e)), focusSelf }, refElementReturn });
+    //const { pressParameters, refElementReturn } = listNavRet2
+    //const { pressReturn, props: propsPress } = usePress<TabElement>({ pressParameters: { ...pressParameters, onPressSync: useStableCallback((e) => listNavRet2.singleSelectionChildReturn.setThisOneSelected(e)), focusSelf }, refElementReturn })
     const { singleSelectionChildReturn: { selected }, rovingTabIndexChildReturn: { tabbable } } = listNavRet2;
     const { getPanelId, getTabId } = context.tabsContext;
     const panelId = getPanelId(info.index);
     const tabId = getTabId(info.index);
     monitorCallCount(useTab);
     return {
-        props: useMergedProps(propsPress, listNavigationSingleSelectionChildProps, {
+        propsPressStable,
+        props: useMergedProps(listNavigationSingleSelectionChildProps, {
             "data-tabbable": tabbable.toString(),
             "data-selected": selected.toString(),
             role: "tab",
             "aria-controls": panelId,
             id: tabId
         }),
-        pressReturn,
         ...listNavRet2
     };
 }

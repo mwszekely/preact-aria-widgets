@@ -26,7 +26,7 @@ export function useTable({ labelParameters, tableParameters: { selectionLimit, t
     return {
         propsTable: useMergedProps({ role: tagTable == "table" ? undefined : "grid", "aria-multiselectable": (selectionLimit == "multi" ? "true" : undefined) }, propsLabelList),
         propsLabel: propsLabelLabel,
-        context: ({ tableContext: useStableObject({ sortByColumn, setSortBodyFunction: setSortBody, getCurrentSortColumn: getSortColumn }) })
+        context: useStableObject({ tableContext: useStableObject({ sortByColumn, setSortBodyFunction: setSortBody, getCurrentSortColumn: getSortColumn }) })
     };
 }
 function fuzzyCompare(lhs, rhs) {
@@ -54,7 +54,7 @@ function fuzzyCompare(lhs, rhs) {
 const naturalSectionTypes = new Set(["thead", "tbody", "tfoot"]);
 export function useTableSection({ linearNavigationParameters, rovingTabIndexParameters, singleSelectionParameters, gridNavigationParameters, rearrangeableChildrenParameters, paginatedChildrenParameters, staggeredChildrenParameters, tableSectionParameters: { tagTableSection, location }, context: { tableContext } }) {
     monitorCallCount(useTableSection);
-    const { childrenHaveFocusReturn, context, linearNavigationReturn, managedChildrenReturn, propsStable: { ...props }, rovingTabIndexReturn, singleSelectionReturn, typeaheadNavigationReturn, staggeredChildrenReturn, rearrangeableChildrenReturn, paginatedChildrenReturn, sortableChildrenReturn } = useCompleteGridNavigation({
+    const { childrenHaveFocusReturn, context, linearNavigationReturn, managedChildrenReturn, props: { ...props }, rovingTabIndexReturn, singleSelectionReturn, typeaheadNavigationReturn, staggeredChildrenReturn, rearrangeableChildrenReturn, paginatedChildrenReturn, sortableChildrenReturn } = useCompleteGridNavigation({
         linearNavigationParameters,
         rovingTabIndexParameters,
         singleSelectionParameters,
@@ -97,13 +97,14 @@ export function useTableSection({ linearNavigationParameters, rovingTabIndexPara
         propsTableSection: props
     };
 }
-export function useTableRow({ info, textContentParameters, context: cx1, tableRowParameters: { selected }, linearNavigationParameters, rovingTabIndexParameters, }) {
+export function useTableRow({ info, textContentParameters, context: cx1, tableRowParameters: { selected }, linearNavigationParameters, rovingTabIndexParametersG2R, rovingTabIndexParametersR2C, singleSelectionParameters, }) {
     monitorCallCount(useTableRow);
     const { context: cx2, managedChildrenReturn, props: { ...props }, ...restRet
     // props
      } = useCompleteGridNavigationRow({
         textContentParameters,
         context: { ...cx1 },
+        singleSelectionParameters,
         info,
         sortableChildParameters: {
             getSortValue: useStableCallback(() => {
@@ -114,13 +115,23 @@ export function useTableRow({ info, textContentParameters, context: cx1, tableRo
             })
         },
         linearNavigationParameters,
-        rovingTabIndexParameters,
+        rovingTabIndexParametersG2R,
+        rovingTabIndexParametersR2C,
         typeaheadNavigationParameters: { noTypeahead: true, collator: null, typeaheadTimeout: Infinity }
     });
     props.role = "row";
     // TODO: Unneeded?
-    //if (selected)
-    //    props[singleSelectionChildParameters.ariaPropName ?? "aria-selected"] = "true";
+    if (selected) {
+        switch (singleSelectionParameters.ariaPropName) {
+            case "aria-checked":
+            case "aria-pressed":
+            case "aria-selected":
+                props[singleSelectionParameters.ariaPropName ?? "aria-selected"] = "true";
+            default: {
+                console.assert(false, singleSelectionParameters.ariaPropName + " is not valid for multi-select -- prefer checked, selected, or pressed");
+            }
+        }
+    }
     return {
         context: useStableObject({
             ...cx2,

@@ -1,4 +1,4 @@
-import { monitorCallCount, useMergedProps, usePress, useStableCallback } from "preact-prop-helpers";
+import { monitorCallCount } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { useToolbar, useToolbarChild } from "./use-toolbar.js";
 /**
@@ -22,11 +22,12 @@ export function useMenubar(args) {
 export function useMenubarChild({ menuItemParameters: { onPress: opu, role }, ...restParams }) {
     monitorCallCount(useMenubarChild);
     const focusSelf = useCallback((e) => e.focus?.(), []);
-    const { pressParameters: { excludeSpace }, props, ...restRet } = useToolbarChild({
+    const { props, ...restRet } = useToolbarChild({
+        pressParameters: { focusSelf, onPressSync: opu },
         ...restParams,
         toolbarChildParameters: { disabledProp: "aria-disabled" }
     });
-    const { pressReturn, props: propsPress } = usePress({
+    /*const { pressReturn, props: propsPress } = usePress<MenuItemElement>({
         pressParameters: {
             focusSelf,
             excludeSpace,
@@ -35,11 +36,10 @@ export function useMenubarChild({ menuItemParameters: { onPress: opu, role }, ..
                 opu?.(e);
             })
         }, refElementReturn: restRet.refElementReturn
-    });
+    });*/
     props.role = role;
     return {
-        pressReturn,
-        props: useMergedProps(props, propsPress),
+        props,
         ...restRet
     };
 }
