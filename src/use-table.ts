@@ -4,7 +4,7 @@ import {
     CompleteGridNavigationContext,
     CompleteGridNavigationRowContext, monitorCallCount, PassiveStateUpdater, returnNull, useCompleteGridNavigation,
     useCompleteGridNavigationCell, UseCompleteGridNavigationCellInfo, UseCompleteGridNavigationCellParameters, UseCompleteGridNavigationCellReturnType, UseCompleteGridNavigationParameters,
-    UseCompleteGridNavigationReturnType, useCompleteGridNavigationRow, UseCompleteGridNavigationRowInfo, UseCompleteGridNavigationRowParameters, UseCompleteGridNavigationRowReturnType, useMergedProps, usePassiveState, useStableCallback, useStableObject
+    UseCompleteGridNavigationReturnType, useCompleteGridNavigationRow, UseCompleteGridNavigationRowInfo, UseCompleteGridNavigationRowParameters, UseCompleteGridNavigationRowReturnType, useMergedProps, usePassiveState, useStableCallback, useMemoObject
 } from "preact-prop-helpers";
 import { useCallback, useEffect, useRef } from "preact/hooks";
 import { ElementToTag, OmitStrong, Prefices } from "./props.js";
@@ -119,7 +119,7 @@ export function useTable<TableElement extends Element, LabelElement extends Elem
     return {
         propsTable: useMergedProps({ role: tagTable == "table" ? undefined : "grid", "aria-multiselectable": (selectionLimit == "multi" ? "true" : undefined) }, propsLabelList),
         propsLabel: propsLabelLabel,
-        context: useStableObject({ tableContext: useStableObject({ sortByColumn, setSortBodyFunction: setSortBody, getCurrentSortColumn: getSortColumn }) })
+        context: useMemoObject({ tableContext: useMemoObject({ sortByColumn, setSortBodyFunction: setSortBody, getCurrentSortColumn: getSortColumn }) })
     }
 }
 function fuzzyCompare(lhs: any, rhs: any): number {
@@ -280,7 +280,7 @@ export function useTableRow<TableRowElement extends Element, TableCellElement ex
     }
 
     return {
-        context: useStableObject({
+        context: useMemoObject({
             ...cx2,
             tableContext: cx1.tableContext
         }),

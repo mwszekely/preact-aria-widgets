@@ -23,16 +23,16 @@ export interface UseTabsParameters<TabContainerElement extends Element, TabEleme
 }
 export interface UseTabParameters<TabElement extends Element, M extends TabInfo<TabElement>> extends OmitStrong<UseCompleteListNavigationChildParameters<TabElement, M>, "singleSelectionParameters"> {
     singleSelectionParameters: OmitStrong<UseCompleteListNavigationChildParameters<TabElement, M>["singleSelectionParameters"], "ariaPropName">;
-    context: TabsContext<any, TabElement, M>;
+    context: UseTabsContext<any, TabElement, M>;
 }
 export interface UseTabPanelParameters<M extends TabPanelInfo> extends OmitStrong<UseManagedChildParameters<M>, "info"> {
     info: OmitStrong<UseManagedChildParameters<M>["info"], "setVisibleIndex" | "getVisible">;
-    context: TabPanelsContext<M>;
+    context: UseTabPanelsContext<M>;
 }
-export interface TabsContext<ParentElement extends Element, ChildElement extends Element, M extends TabInfo<ChildElement>> extends CompleteListNavigationContext<ParentElement, ChildElement, M> {
+export interface UseTabsContext<ParentElement extends Element, ChildElement extends Element, M extends TabInfo<ChildElement>> extends CompleteListNavigationContext<ParentElement, ChildElement, M> {
     tabsContext: TC;
 }
-export interface TabPanelsContext<M extends TabPanelInfo> extends UseManagedChildrenContext<M> {
+export interface UseTabPanelsContext<M extends TabPanelInfo> extends UseManagedChildrenContext<M> {
     tabPanelContext: TC;
 }
 interface TC {
@@ -66,8 +66,8 @@ export interface UseTabLabelReturnTypeWithHooks<LabelElement extends Element> ex
 export interface UseTabsReturnType<TabContainerElement extends Element, TabElement extends Element, LabelElement extends Element, M extends TabInfo<TabElement>> extends OmitStrong<UseCompleteListNavigationReturnType<TabContainerElement, TabElement, M>, "props" | "context"> {
     propsContainer: h.JSX.HTMLAttributes<TabContainerElement>;
     propsLabel: h.JSX.HTMLAttributes<LabelElement>;
-    contextPanels: TabPanelsContext<TabPanelInfo>;
-    contextTabs: TabsContext<TabContainerElement, TabElement, M>;
+    contextPanels: UseTabPanelsContext<TabPanelInfo>;
+    contextTabs: UseTabsContext<TabContainerElement, TabElement, M>;
 }
 export type UseTab<_TabContainerElement extends Element, TabElement extends Element, M extends TabInfo<TabElement>> = (args: UseTabParameters<TabElement, M>) => UseTabReturnType<TabElement, M>;
 export type UseTabList<TabContainerElement extends Element, TabElement extends Element, M extends TabInfo<TabElement>> = (args: UseTabListParameters<TabContainerElement, TabElement, M>) => UseTabListReturnType<TabContainerElement, TabElement, M>;

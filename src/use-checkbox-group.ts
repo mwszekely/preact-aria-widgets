@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { CompleteListNavigationContext, monitorCallCount, PassiveStateUpdater, returnFalse, returnNull, returnZero, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useMergedProps, usePassiveState, useStableCallback, useStableGetter, useStableObject, useState } from "preact-prop-helpers";
+import { CompleteListNavigationContext, monitorCallCount, PassiveStateUpdater, returnFalse, returnNull, returnZero, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useMergedProps, usePassiveState, useStableCallback, useStableGetter, useMemoObject, useState } from "preact-prop-helpers";
 import { StateUpdater, useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
 import { TargetedEnhancedEvent, OmitStrong, EnhancedEventHandler } from "./props.js";
 import { CheckboxCheckedType } from "./use-checkbox-like.js";
@@ -214,15 +214,15 @@ export function useCheckboxGroup<GroupElement extends Element, TCE extends Eleme
 
     return {
         linearNavigationReturn,
-        context: useStableObject({
+        context: useMemoObject({
             ...context,
-            checkboxGroupChildrenContext: useStableObject({
+            checkboxGroupChildrenContext: useMemoObject({
                 setUpdateIndex,
                 allIds: allIds.current,
                 setTotalChecked,
                 setTotalChildren
             }),
-            checkboxGroupParentContext: useStableObject({
+            checkboxGroupParentContext: useMemoObject({
                 setSetter,
                 setSetParentCheckboxChecked,
                 getPercentChecked,
@@ -327,7 +327,7 @@ export function useCheckboxGroupChild<TCE extends Element>({
     textContentParameters,
     sortableChildParameters,
     pressParameters,
-    rovingTabIndexParameters
+    rovingTabIndexParameters,
 }: UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>): UseCheckboxGroupChildReturnType<TCE, CheckboxGroupInfo<TCE>> {
     const { checkboxGroupChildrenContext: { allIds, setUpdateIndex, setTotalChildren, setTotalChecked, } } = context;
 

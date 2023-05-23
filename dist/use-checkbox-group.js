@@ -1,4 +1,4 @@
-import { monitorCallCount, returnFalse, returnNull, returnZero, useCompleteListNavigation, useCompleteListNavigationChild, useMergedProps, usePassiveState, useStableCallback, useStableGetter, useStableObject, useState } from "preact-prop-helpers";
+import { monitorCallCount, returnFalse, returnNull, returnZero, useCompleteListNavigation, useCompleteListNavigationChild, useMergedProps, usePassiveState, useStableCallback, useStableGetter, useMemoObject, useState } from "preact-prop-helpers";
 import { useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
 /**
  *
@@ -77,15 +77,15 @@ export function useCheckboxGroup({ linearNavigationParameters, rearrangeableChil
     }, []);
     return {
         linearNavigationReturn,
-        context: useStableObject({
+        context: useMemoObject({
             ...context,
-            checkboxGroupChildrenContext: useStableObject({
+            checkboxGroupChildrenContext: useMemoObject({
                 setUpdateIndex,
                 allIds: allIds.current,
                 setTotalChecked,
                 setTotalChildren
             }),
-            checkboxGroupParentContext: useStableObject({
+            checkboxGroupParentContext: useMemoObject({
                 setSetter,
                 setSetParentCheckboxChecked,
                 getPercentChecked,
@@ -156,7 +156,7 @@ export function useCheckboxGroupParent({ context, info, textContentParameters, s
  * @param param0
  * @returns
  */
-export function useCheckboxGroupChild({ checkboxGroupChild, context, info, textContentParameters, sortableChildParameters, pressParameters, rovingTabIndexParameters }) {
+export function useCheckboxGroupChild({ checkboxGroupChild, context, info, textContentParameters, sortableChildParameters, pressParameters, rovingTabIndexParameters, }) {
     const { checkboxGroupChildrenContext: { allIds, setUpdateIndex, setTotalChildren, setTotalChecked, } } = context;
     monitorCallCount(useCheckboxGroupChild);
     const { checked, onChangeFromParent } = checkboxGroupChild;

@@ -1,7 +1,7 @@
 import { createContext, Ref, VNode } from "preact";
 import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
 import { OmitStrong } from "../props.js";
-import { TabInfo, TabPanelInfo, TabPanelsContext, TabsContext, useTab, useTabPanel, UseTabPanelReturnType, UseTabParameters, UseTabReturnType, useTabs, UseTabsParameters, UseTabsReturnType } from "../use-tabs.js";
+import { TabInfo, TabPanelInfo, useTab, useTabPanel, UseTabPanelReturnType, UseTabPanelsContext, UseTabParameters, UseTabReturnType, useTabs, UseTabsContext, UseTabsParameters, UseTabsReturnType } from "../use-tabs.js";
 import { memoForwardRef, PartialExcept, useDefault } from "./util.js";
 
 type Get<T, K extends keyof T> = T[K];
@@ -43,8 +43,8 @@ export interface TabPanelProps<PanelElement extends Element, M extends TabPanelI
     render(info: UseTabPanelReturnType<PanelElement>): VNode<any>;
 }
 
-const TabsContext = createContext<TabsContext<any, any, any>>(null!);
-const TabPanelsContext = createContext<TabPanelsContext<any>>(null!);
+const TabsContext = createContext<UseTabsContext<any, any, any>>(null!);
+const TabPanelsContext = createContext<UseTabPanelsContext<any>>(null!);
 const UntabbableContext = createContext(false);
 //const AriaPropNameContext = createContext<UseTabsParameters<any, any, any, any>["singleSelectionParameters"]["ariaPropName"]>("aria-selected")
 const SelectionModeContext = createContext<NonNullable<UseTabsParameters<any, any, any, any>["singleSelectionParameters"]["selectionMode"]>>("focus");

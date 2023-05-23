@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { CompleteListNavigationContext, generateRandomId, ManagedChildInfo, monitorCallCount, OnChildrenMountChange, PersistentStates, returnTrue, useChildrenFlag, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, useMergedProps, usePersistentState, usePress, UsePressReturnType, useStableCallback, useStableObject, useState } from "preact-prop-helpers";
+import { CompleteListNavigationContext, generateRandomId, ManagedChildInfo, monitorCallCount, OnChildrenMountChange, PersistentStates, returnTrue, useChildrenFlag, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, useMergedProps, usePersistentState, usePress, UsePressReturnType, useStableCallback, useMemoObject, useState } from "preact-prop-helpers";
 import { useCallback, useLayoutEffect } from "preact/hooks";
 import { EventDetail, OmitStrong, Prefices } from "./props.js";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
@@ -27,19 +27,19 @@ export interface UseTabsParameters<TabContainerElement extends Element, TabEleme
 export interface UseTabParameters<TabElement extends Element, M extends TabInfo<TabElement>> extends OmitStrong<UseCompleteListNavigationChildParameters<TabElement,M>, "singleSelectionParameters"> {
     singleSelectionParameters: OmitStrong<UseCompleteListNavigationChildParameters<TabElement,M>["singleSelectionParameters"], "ariaPropName">;
     //singleSelectionChildParameters: OmitStrong<UseCompleteListNavigationChildParameters<TabElement, M>["singleSelectionChildParameters"], "ariaPropName">;
-    context: TabsContext<any, TabElement, M>;
+    context: UseTabsContext<any, TabElement, M>;
 }
 
 export interface UseTabPanelParameters<M extends TabPanelInfo> extends OmitStrong<UseManagedChildParameters<M>, "info"> {
     info: OmitStrong<UseManagedChildParameters<M>["info"], "setVisibleIndex" | "getVisible">
-    context: TabPanelsContext<M>;
+    context: UseTabPanelsContext<M>;
 }
 
-export interface TabsContext<ParentElement extends Element, ChildElement extends Element, M extends TabInfo<ChildElement>> extends CompleteListNavigationContext<ParentElement, ChildElement, M> {
+export interface UseTabsContext<ParentElement extends Element, ChildElement extends Element, M extends TabInfo<ChildElement>> extends CompleteListNavigationContext<ParentElement, ChildElement, M> {
     tabsContext: TC;
 }
 
-export interface TabPanelsContext<M extends TabPanelInfo> extends UseManagedChildrenContext<M> {
+export interface UseTabPanelsContext<M extends TabPanelInfo> extends UseManagedChildrenContext<M> {
     tabPanelContext: TC;
 }
 
@@ -73,8 +73,8 @@ export interface UseTabLabelReturnTypeWithHooks<LabelElement extends Element> ex
 export interface UseTabsReturnType<TabContainerElement extends Element, TabElement extends Element, LabelElement extends Element, M extends TabInfo<TabElement>> extends OmitStrong<UseCompleteListNavigationReturnType<TabContainerElement, TabElement, M>, "props" | "context"> {
     propsContainer: h.JSX.HTMLAttributes<TabContainerElement>;
     propsLabel: h.JSX.HTMLAttributes<LabelElement>;
-    contextPanels: TabPanelsContext<TabPanelInfo>;
-    contextTabs: TabsContext<TabContainerElement, TabElement, M>;
+    contextPanels: UseTabPanelsContext<TabPanelInfo>;
+    contextTabs: UseTabsContext<TabContainerElement, TabElement, M>;
 }
 
 export type UseTab<_TabContainerElement extends Element, TabElement extends Element, M extends TabInfo<TabElement>> = (args: UseTabParameters<TabElement, M>) => UseTabReturnType<TabElement, M>;
@@ -161,18 +161,18 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
     const { singleSelectionReturn: { changeSelectedIndex } } = listNavRet1;
 
     return {
-        contextPanels: useStableObject({
+        contextPanels: useMemoObject({
             ...managedChildContext,
-            tabPanelContext: useStableObject({
+            tabPanelContext: useMemoObject({
                 getPanelId,
                 getTabId,
                 getVisibleIndex,
                 setSelectedIndex: changeSelectedIndex
             })
         }),
-        contextTabs: useStableObject({
+        contextTabs: useMemoObject({
             ...context,
-            tabsContext: useStableObject({ getTabId, getPanelId, getVisibleIndex, setSelectedIndex: changeSelectedIndex })
+            tabsContext: useMemoObject({ getTabId, getPanelId, getVisibleIndex, setSelectedIndex: changeSelectedIndex })
         }),
         propsContainer: useMergedProps(
             listNavigationSingleSelectionProps,

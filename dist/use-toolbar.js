@@ -1,4 +1,4 @@
-import { monitorCallCount, useCompleteListNavigationChild, useCompleteListNavigationDeclarative, useMergedProps, useStableObject } from "preact-prop-helpers";
+import { monitorCallCount, useCompleteListNavigationChild, useCompleteListNavigationDeclarative, useMergedProps, useMemoObject } from "preact-prop-helpers";
 import { Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
 ;
@@ -31,7 +31,7 @@ export function useToolbar({ linearNavigationParameters, toolbarParameters: { or
     // Note: We return tabIndex=-1 (when not disabled) because some browsers (at least Firefox) seem to add role=toolbar to the tab order?
     // Probably needs a bit more digging because this feels like a bit of a blunt fix.
     return {
-        context: useStableObject({ ...context, toolbarContext: useStableObject({}) }),
+        context: useMemoObject({ ...context, toolbarContext: useMemoObject({}) }),
         propsLabel,
         propsToolbar: useMergedProps({
             ...propsToolbar,

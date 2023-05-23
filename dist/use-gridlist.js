@@ -1,4 +1,4 @@
-import { assertEmptyObject, monitorCallCount, useCompleteGridNavigationCell, useCompleteGridNavigationDeclarative, useCompleteGridNavigationRow, useMergedProps, usePress, useStableCallback, useStableObject } from "preact-prop-helpers";
+import { assertEmptyObject, monitorCallCount, useCompleteGridNavigationCell, useCompleteGridNavigationDeclarative, useCompleteGridNavigationRow, useMergedProps, usePress, useStableCallback, useMemoObject } from "preact-prop-helpers";
 import { Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
 export function useGridlist({ labelParameters, gridlistParameters: { selectionLimit, groupingType, selectedIndex, onSelectedIndexChange }, ...restParams }) {
@@ -18,9 +18,9 @@ export function useGridlist({ labelParameters, gridlistParameters: { selectionLi
         ...restParams
     });
     let propsGridlist = useMergedProps(props, propsLabelList, { "aria-multiselectable": (selectionLimit == "multi" ? "true" : undefined) });
-    let fullContext = useStableObject({
+    let fullContext = useMemoObject({
         ...context,
-        gridlistRowContext: useStableObject({
+        gridlistRowContext: useMemoObject({
             selectionLimit
         })
     });
@@ -63,7 +63,7 @@ export function useGridlistRow({ gridlistRowParameters: { selected }, linearNavi
     // `selected` should only be true/false for multi-selection
     if (selectionLimit != "multi")
         console.assert(selected == null);
-    props.role = "option";
+    props.role = "row";
     return {
         hasCurrentFocusParameters,
         linearNavigationReturn,

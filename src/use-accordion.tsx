@@ -1,6 +1,6 @@
 import { identity } from "lodash-es";
 import { h } from "preact";
-import { assertEmptyObject, ManagedChildInfo, monitorCallCount, OnChildrenMountChange, PassiveStateUpdater, PersistentStates, useChildrenFlag, useLinearNavigation, UseLinearNavigationParameters, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, useMergedProps, usePersistentState, UsePressReturnType, useRandomId, useRefElement, UseRefElementParameters, UseRefElementReturnType, useStableCallback, useStableObject, useState, UseTextContentReturnType, useTypeaheadNavigation, useTypeaheadNavigationChild, UseTypeaheadNavigationChildParameters, UseTypeaheadNavigationContext, UseTypeaheadNavigationParameters } from "preact-prop-helpers";
+import { assertEmptyObject, ManagedChildInfo, monitorCallCount, OnChildrenMountChange, PassiveStateUpdater, PersistentStates, useChildrenFlag, useLinearNavigation, UseLinearNavigationParameters, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, useMergedProps, usePersistentState, UsePressReturnType, useRandomId, useRefElement, UseRefElementParameters, UseRefElementReturnType, useStableCallback, useMemoObject, useState, UseTextContentReturnType, useTypeaheadNavigation, useTypeaheadNavigationChild, UseTypeaheadNavigationChildParameters, UseTypeaheadNavigationContext, UseTypeaheadNavigationParameters } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { DisabledType, OmitStrong, Prefices } from "./props.js";
 import { ButtonPressEventHandler, useButton, UseButtonParameters, UseButtonReturnType } from "./use-button.js";
@@ -143,7 +143,7 @@ export function useAccordion<HeaderButtonElement extends Element, M extends UseA
         setLocalStorageIndex(value);
     });
 
-    const rovingTabIndexReturn = useStableObject({
+    const rovingTabIndexReturn = useMemoObject({
         getTabbableIndex: getTabbedIndex,
         setTabbableIndex: changeTabbedIndex
     })
@@ -158,19 +158,19 @@ export function useAccordion<HeaderButtonElement extends Element, M extends UseA
     })
 
     return {
-        context: useStableObject<UseAccordionContext<HeaderButtonElement, M>>({
+        context: useMemoObject<UseAccordionContext<HeaderButtonElement, M>>({
 
 
             managedChildContext,
             typeaheadNavigationContext,
-            accordionSectionParameters: useStableObject({
+            accordionSectionParameters: useMemoObject({
                 changeExpandedIndex,
                 changeTabbedIndex,
                 getExpandedIndex: getCurrentExpandedIndex,
                 getTabbedIndex: getTabbedIndex,
                 stableTypeaheadProps: propsTN,
             }),
-            linearNavigationParameters: useStableObject({
+            linearNavigationParameters: useMemoObject({
                 disableHomeEndKeys,
                 getHighestIndex: useCallback(() => getChildren().getHighestIndex(), []),
                 indexMangler: identity,
@@ -184,7 +184,7 @@ export function useAccordion<HeaderButtonElement extends Element, M extends UseA
             rovingTabIndexReturn
         }),
         managedChildrenReturn,
-        accordionReturn: useStableObject({ changeExpandedIndex })
+        accordionReturn: useMemoObject({ changeExpandedIndex })
     };
 }
 

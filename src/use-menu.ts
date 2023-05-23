@@ -1,4 +1,4 @@
-import { monitorCallCount, useMergedProps, useStableCallback, useStableObject } from "preact-prop-helpers";
+import { monitorCallCount, useMergedProps, useStableCallback, useMemoObject } from "preact-prop-helpers";
 import { OmitStrong } from "./props.js";
 import { useMenuSurface, UseMenuSurfaceParameters, UseMenuSurfaceReturnType } from "./use-menu-surface.js";
 import { useMenubar, useMenubarChild, UseMenubarContext, UseMenubarItemParameters, UseMenubarItemReturnType, UseMenubarParameters, UseMenubarReturnType, UseMenubarSubInfo } from "./use-menubar.js";
@@ -145,9 +145,9 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
     return {
         ...restRet,
         ...restRet2,
-        context: useStableObject({
+        context: useMemoObject({
             ...context,
-            menu: useStableObject({
+            menu: useMemoObject({
                 closeFromMenuItemClicked: useStableCallback(() => {
                     dismissParameters.onClose("item-clicked");
                 })

@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { CompleteListNavigationContext, MakeSingleSelectionDeclarativeParameters, MakeSingleSelectionDeclarativeReturnType, monitorCallCount, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, useCompleteListNavigationDeclarative, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useMergedProps, UseRandomIdReturnType, useStableObject } from "preact-prop-helpers";
+import { CompleteListNavigationContext, MakeSingleSelectionDeclarativeParameters, MakeSingleSelectionDeclarativeReturnType, monitorCallCount, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, useCompleteListNavigationDeclarative, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useMergedProps, UseRandomIdReturnType, useMemoObject } from "preact-prop-helpers";
 import { OmitStrong, Prefices } from "./props.js";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
 
@@ -106,7 +106,7 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
     // Note: We return tabIndex=-1 (when not disabled) because some browsers (at least Firefox) seem to add role=toolbar to the tab order?
     // Probably needs a bit more digging because this feels like a bit of a blunt fix.
     return {
-        context: useStableObject({ ...context, toolbarContext: useStableObject({}) }),
+        context: useMemoObject({ ...context, toolbarContext: useMemoObject({}) }),
         propsLabel,
         propsToolbar: useMergedProps({
             ...propsToolbar,

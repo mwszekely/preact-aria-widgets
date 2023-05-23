@@ -1,4 +1,4 @@
-import { generateRandomId, monitorCallCount, returnTrue, useChildrenFlag, useCompleteListNavigation, useCompleteListNavigationChild, useManagedChild, useManagedChildren, useMergedProps, usePersistentState, useStableCallback, useStableObject, useState } from "preact-prop-helpers";
+import { generateRandomId, monitorCallCount, returnTrue, useChildrenFlag, useCompleteListNavigation, useCompleteListNavigationChild, useManagedChild, useManagedChildren, useMergedProps, usePersistentState, useStableCallback, useMemoObject, useState } from "preact-prop-helpers";
 import { useCallback, useLayoutEffect } from "preact/hooks";
 import { EventDetail, Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
@@ -53,18 +53,18 @@ export function useTabs({ labelParameters, linearNavigationParameters, singleSel
     });
     const { singleSelectionReturn: { changeSelectedIndex } } = listNavRet1;
     return {
-        contextPanels: useStableObject({
+        contextPanels: useMemoObject({
             ...managedChildContext,
-            tabPanelContext: useStableObject({
+            tabPanelContext: useMemoObject({
                 getPanelId,
                 getTabId,
                 getVisibleIndex,
                 setSelectedIndex: changeSelectedIndex
             })
         }),
-        contextTabs: useStableObject({
+        contextTabs: useMemoObject({
             ...context,
-            tabsContext: useStableObject({ getTabId, getPanelId, getVisibleIndex, setSelectedIndex: changeSelectedIndex })
+            tabsContext: useMemoObject({ getTabId, getPanelId, getVisibleIndex, setSelectedIndex: changeSelectedIndex })
         }),
         propsContainer: useMergedProps(listNavigationSingleSelectionProps, propsInput, {
             role: (role ?? "tablist"),

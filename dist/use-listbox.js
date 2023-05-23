@@ -1,4 +1,4 @@
-import { monitorCallCount, useCompleteListNavigationChild, useCompleteListNavigationDeclarative, useEnsureStability, useMergedProps, useStableCallback, useStableObject } from "preact-prop-helpers";
+import { monitorCallCount, useCompleteListNavigationChild, useCompleteListNavigationDeclarative, useEnsureStability, useMergedProps, useStableCallback, useMemoObject } from "preact-prop-helpers";
 import { EventDetail, Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
 export function useListbox({ labelParameters, listboxParameters: { selectionLimit, groupingType, selectedIndex, onSelectedIndexChange, orientation }, linearNavigationParameters, singleSelectionParameters: { ariaPropName, selectionMode }, ...restParams }) {
@@ -35,9 +35,9 @@ export function useListbox({ labelParameters, listboxParameters: { selectionLimi
         console.assert(singleSelectionReturn.getSelectedIndex() == null);
     return {
         ...restRet,
-        context: useStableObject({
+        context: useMemoObject({
             ...context,
-            listboxContext: useStableObject({
+            listboxContext: useMemoObject({
                 selectionLimit
             })
         }),

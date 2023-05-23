@@ -6,7 +6,7 @@ import {
     UseCompleteListNavigationChildReturnType,
     useCompleteListNavigationDeclarative,
     UseCompleteListNavigationParameters,
-    UseCompleteListNavigationReturnType, useEnsureStability, useMergedProps, usePress, UsePressParameters, UsePressReturnType, UseSingleSelectionParameters, useStableCallback, useStableObject
+    UseCompleteListNavigationReturnType, useEnsureStability, useMergedProps, usePress, UsePressParameters, UsePressReturnType, UseSingleSelectionParameters, useStableCallback, useMemoObject
 } from "preact-prop-helpers";
 import { EventDetail, OmitStrong, Prefices } from "./props.js";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
@@ -124,9 +124,9 @@ export function useListbox<ListElement extends Element, ListItemElement extends 
 
     return {
         ...restRet,
-        context: useStableObject({
+        context: useMemoObject({
             ...context,
-            listboxContext: useStableObject({
+            listboxContext: useMemoObject({
                 selectionLimit
             })
         }),

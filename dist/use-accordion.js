@@ -1,5 +1,5 @@
 import { identity } from "lodash-es";
-import { assertEmptyObject, monitorCallCount, useChildrenFlag, useLinearNavigation, useManagedChild, useManagedChildren, useMergedProps, usePersistentState, useRandomId, useRefElement, useStableCallback, useStableObject, useState, useTypeaheadNavigation, useTypeaheadNavigationChild } from "preact-prop-helpers";
+import { assertEmptyObject, monitorCallCount, useChildrenFlag, useLinearNavigation, useManagedChild, useManagedChildren, useMergedProps, usePersistentState, useRandomId, useRefElement, useStableCallback, useMemoObject, useState, useTypeaheadNavigation, useTypeaheadNavigationChild } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { Prefices } from "./props.js";
 import { useButton } from "./use-button.js";
@@ -53,7 +53,7 @@ export function useAccordion({ accordionParameters: { initialIndex, localStorage
         changeExpandedIndexLocalOnly(value);
         setLocalStorageIndex(value);
     });
-    const rovingTabIndexReturn = useStableObject({
+    const rovingTabIndexReturn = useMemoObject({
         getTabbableIndex: getTabbedIndex,
         setTabbableIndex: changeTabbedIndex
     });
@@ -62,17 +62,17 @@ export function useAccordion({ accordionParameters: { initialIndex, localStorage
         typeaheadNavigationParameters
     });
     return {
-        context: useStableObject({
+        context: useMemoObject({
             managedChildContext,
             typeaheadNavigationContext,
-            accordionSectionParameters: useStableObject({
+            accordionSectionParameters: useMemoObject({
                 changeExpandedIndex,
                 changeTabbedIndex,
                 getExpandedIndex: getCurrentExpandedIndex,
                 getTabbedIndex: getTabbedIndex,
                 stableTypeaheadProps: propsTN,
             }),
-            linearNavigationParameters: useStableObject({
+            linearNavigationParameters: useMemoObject({
                 disableHomeEndKeys,
                 getHighestIndex: useCallback(() => getChildren().getHighestIndex(), []),
                 indexMangler: identity,
@@ -86,7 +86,7 @@ export function useAccordion({ accordionParameters: { initialIndex, localStorage
             rovingTabIndexReturn
         }),
         managedChildrenReturn,
-        accordionReturn: useStableObject({ changeExpandedIndex })
+        accordionReturn: useMemoObject({ changeExpandedIndex })
     };
 }
 export function useAccordionSection({ buttonParameters, accordionSectionParameters: { open: openFromUser, bodyRole }, info: { index, hidden }, textContentParameters, context: { accordionSectionParameters: { changeExpandedIndex, changeTabbedIndex: setCurrentFocusedIndex, getTabbedIndex: getCurrentFocusedIndex, stableTypeaheadProps }, linearNavigationParameters, rovingTabIndexReturn, managedChildContext, typeaheadNavigationContext }, refElementParameters, }) {

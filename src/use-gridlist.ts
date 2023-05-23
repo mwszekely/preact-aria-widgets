@@ -16,7 +16,7 @@ import {
     usePress,
     UsePressParameters,
     UsePressReturnType, useStableCallback,
-    useStableObject
+    useMemoObject
 } from "preact-prop-helpers";
 import { OmitStrong, Prefices } from "./props.js";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
@@ -105,9 +105,9 @@ export function useGridlist<GridlistElement extends Element, GridlistRowElement 
     let propsGridlist = useMergedProps(props, propsLabelList, { "aria-multiselectable": (selectionLimit == "multi" ? "true" : undefined) });
 
 
-    let fullContext = useStableObject({
+    let fullContext = useMemoObject({
         ...context,
-        gridlistRowContext: useStableObject({
+        gridlistRowContext: useMemoObject({
             selectionLimit
         })
     });
@@ -184,7 +184,7 @@ export function useGridlistRow<GridlistRowElement extends Element, GridlistCellE
     if (selectionLimit != "multi")
         console.assert(selected == null);
 
-    props.role = "option";
+    props.role = "row";
 
     return {
 

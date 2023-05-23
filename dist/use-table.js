@@ -1,4 +1,4 @@
-import { monitorCallCount, returnNull, useCompleteGridNavigation, useCompleteGridNavigationCell, useCompleteGridNavigationRow, useMergedProps, usePassiveState, useStableCallback, useStableObject } from "preact-prop-helpers";
+import { monitorCallCount, returnNull, useCompleteGridNavigation, useCompleteGridNavigationCell, useCompleteGridNavigationRow, useMergedProps, usePassiveState, useStableCallback, useMemoObject } from "preact-prop-helpers";
 import { useCallback, useEffect, useRef } from "preact/hooks";
 import { Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
@@ -26,7 +26,7 @@ export function useTable({ labelParameters, tableParameters: { selectionLimit, t
     return {
         propsTable: useMergedProps({ role: tagTable == "table" ? undefined : "grid", "aria-multiselectable": (selectionLimit == "multi" ? "true" : undefined) }, propsLabelList),
         propsLabel: propsLabelLabel,
-        context: useStableObject({ tableContext: useStableObject({ sortByColumn, setSortBodyFunction: setSortBody, getCurrentSortColumn: getSortColumn }) })
+        context: useMemoObject({ tableContext: useMemoObject({ sortByColumn, setSortBodyFunction: setSortBody, getCurrentSortColumn: getSortColumn }) })
     };
 }
 function fuzzyCompare(lhs, rhs) {
@@ -133,7 +133,7 @@ export function useTableRow({ info, textContentParameters, context: cx1, tableRo
         }
     }
     return {
-        context: useStableObject({
+        context: useMemoObject({
             ...cx2,
             tableContext: cx1.tableContext
         }),
