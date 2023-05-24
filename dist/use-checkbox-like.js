@@ -1,4 +1,4 @@
-import { monitorCallCount, useMergedProps, usePress, useStableCallback } from "preact-prop-helpers";
+import { focus, monitorCallCount, useMergedProps, usePress, useStableCallback } from "preact-prop-helpers";
 import { useEffect } from "preact/hooks";
 import { useLabel } from "./use-label.js";
 function preventDefault(e) {
@@ -50,7 +50,7 @@ export function useCheckboxLike({ labelParameters, randomIdInputParameters, rand
             elementToFocus = getLabelElement();
         else
             elementToFocus = getInputElement();
-        elementToFocus?.focus();
+        focus(elementToFocus);
     });
     const onClickInputSync = (labelPosition == "wrapping" ? undefined : onInputSync);
     const onClickLabelSync = onInputSync;
@@ -103,7 +103,7 @@ export function useCheckboxLike({ labelParameters, randomIdInputParameters, rand
                 propsUnstableInput.tabIndex = -1;
                 propsUnstableInput.role = "presentation";
                 propsUnstableInput["aria-hidden"] = "true";
-                propsUnstableInput.onFocus = _ => getLabelElement?.()?.focus?.();
+                propsUnstableInput.onFocus = _ => focus(getLabelElement?.());
             }
             else {
                 // With a wrapping label, we're just using the input for visual styling and ignoring all interaction.

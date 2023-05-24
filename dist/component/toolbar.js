@@ -3,6 +3,7 @@ import { createContext } from "preact";
 import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
 import { useToolbar, useToolbarChild } from "../use-toolbar.js";
 import { memoForwardRef, useDefault } from "./util.js";
+import { focus } from "preact-prop-helpers";
 // TODO: Are there performance/sanity implications for having one context per primitive?
 const UntabbableContext = createContext(false);
 const AriaPropNameContext = createContext("aria-selected");
@@ -45,7 +46,7 @@ export const Toolbar = memoForwardRef(function ToolbarU({ render, role, collator
 export const ToolbarChild = memoForwardRef(function ToolbarChildU({ index, render, focusSelf, getSortValue, getText, disabled, disabledProp, hidden, info: uinfo }, ref) {
     const context = useContext(ToolbarContext);
     console.assert(context != null, `This ToolbarChild is not contained within a Toolbar`);
-    const focusSelfDefault = useCallback((e) => { e?.focus(); }, []);
+    const focusSelfDefault = useCallback((e) => { focus(e); }, []);
     focusSelf ??= focusSelfDefault;
     const info = useToolbarChild({
         context,

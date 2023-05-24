@@ -1,4 +1,4 @@
-import { assertEmptyObject, findFirstFocusable, monitorCallCount, useMergedProps, useModal, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
+import { assertEmptyObject, findFirstFocusable, focus, monitorCallCount, useMergedProps, useModal, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 /**
  * A menu surface is what handles user interaction with an interactive but transient surface (like a menu or a popup).
@@ -23,7 +23,7 @@ dismissParameters, escapeDismissParameters, focusTrapParameters, menuSurfacePara
             trapActive: true,
             focusOpener: useStableCallback(() => {
                 const buttonElement = getButtonElement();
-                buttonElement?.focus();
+                focus(buttonElement);
             })
         }
     });

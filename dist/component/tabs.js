@@ -3,6 +3,7 @@ import { createContext } from "preact";
 import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
 import { useTab, useTabPanel, useTabs } from "../use-tabs.js";
 import { memoForwardRef, useDefault } from "./util.js";
+import { focus } from "preact-prop-helpers";
 const TabsContext = createContext(null);
 const TabPanelsContext = createContext(null);
 const UntabbableContext = createContext(false);
@@ -43,7 +44,7 @@ untabbable, typeaheadTimeout, role, render }, ref) {
 export const Tab = memoForwardRef(function Tab({ disabled, focusSelf, hidden, index, getText, getSortValue, render, info: uinfo }, ref) {
     const context = useContext(TabsContext);
     console.assert(context != null, `This Tab is not contained within a Tabs component`);
-    const focusSelfDefault = useCallback((e) => { e?.focus(); }, []);
+    const focusSelfDefault = useCallback((e) => { focus(e); }, []);
     const info = useTab({
         info: { index, disabled, hidden, focusSelf: focusSelf ?? focusSelfDefault, ...uinfo },
         context,

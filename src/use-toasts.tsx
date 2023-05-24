@@ -1,5 +1,5 @@
 import { ComponentChildren, h } from "preact";
-import { findFirstFocusable, ManagedChildInfo, monitorCallCount, useGlobalHandler, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, useMergedProps, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
+import { findFirstFocusable, focus, ManagedChildInfo, monitorCallCount, useGlobalHandler, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, useMergedProps, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
 import { StateUpdater, useCallback, useEffect, useRef } from "preact/hooks";
 import { useNotify } from "./use-notify.js";
 import { OmitStrong } from "./props.js"
@@ -192,15 +192,15 @@ export function useToast<E extends Element>({ toastParameters: { politeness, tim
         }
     }, [numberOfToastsAheadOfUs]);
 
-    const focus = useCallback(() => {
+    const focus2 = useCallback(() => {
         const element = getElement();
         if (element) {
             const firstFocusable = findFirstFocusable(element) as (HTMLElement | null);
-            firstFocusable?.focus?.();
+            focus(firstFocusable);
         }
     }, []);
 
-    const { managedChildReturn: { getChildren: _getToasts } } = useManagedChild<ToastInfo>({info: { index, focus, setNumberAheadOfMe: setNumberOfToastsAheadOfUs, show }, context });
+    const { managedChildReturn: { getChildren: _getToasts } } = useManagedChild<ToastInfo>({ info: { index, focus: focus2, setNumberAheadOfMe: setNumberOfToastsAheadOfUs, show }, context });
 
     const resetDismissTimer = useCallback(() => {
         setTriggerIndex(i => ++i);

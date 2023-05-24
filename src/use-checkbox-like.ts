@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { monitorCallCount, useMergedProps, usePress, UsePressParameters, UsePressReturnType, UseRefElementReturnType, useStableCallback } from "preact-prop-helpers";
+import { focus, monitorCallCount, useMergedProps, usePress, UsePressParameters, UsePressReturnType, UseRefElementReturnType, useStableCallback } from "preact-prop-helpers";
 import { useEffect } from "preact/hooks";
 import { DisabledType, OmitStrong } from "./props.js";
 import { LabelPosition, useLabel, UseLabelParameters, UseLabelReturnType } from "./use-label.js";
@@ -64,7 +64,7 @@ export function useCheckboxLike<LP extends LabelPosition, InputType extends Elem
     pressParameters: { excludeSpace }
 }: UseCheckboxLikeParameters<LP, InputType, LabelType>): UseCheckboxLikeReturnType<InputType, LabelType> {
     monitorCallCount(useCheckboxLike);
-    
+
     const { getElement: getInputElement } = refElementInputReturn;
     const { getElement: getLabelElement } = refElementLabelReturn;
     const { tagInput, tagLabel, labelPosition } = labelParameters;
@@ -109,7 +109,7 @@ export function useCheckboxLike<LP extends LabelPosition, InputType extends Elem
         else
             elementToFocus = getInputElement() as Element as HTMLElement;
 
-        elementToFocus?.focus();
+        focus(elementToFocus);
     })
 
     const onClickInputSync = (labelPosition == "wrapping" ? undefined : onInputSync);
@@ -169,7 +169,7 @@ export function useCheckboxLike<LP extends LabelPosition, InputType extends Elem
                 propsUnstableInput.tabIndex = -1;
                 propsUnstableInput.role = "presentation";
                 propsUnstableInput["aria-hidden"] = "true";
-                propsUnstableInput.onFocus = _ => (getLabelElement?.() as HTMLElement | null)?.focus?.();
+                propsUnstableInput.onFocus = _ => focus(getLabelElement?.() as HTMLElement | null);
             }
             else {
                 // With a wrapping label, we're just using the input for visual styling and ignoring all interaction.

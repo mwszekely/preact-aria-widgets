@@ -1,5 +1,5 @@
 import { identity } from "lodash-es";
-import { assertEmptyObject, monitorCallCount, useChildrenFlag, useLinearNavigation, useManagedChild, useManagedChildren, useMergedProps, usePersistentState, useRandomId, useRefElement, useStableCallback, useMemoObject, useState, useTypeaheadNavigation, useTypeaheadNavigationChild } from "preact-prop-helpers";
+import { assertEmptyObject, monitorCallCount, useChildrenFlag, useLinearNavigation, useManagedChild, useManagedChildren, useMergedProps, usePersistentState, useRandomId, useRefElement, useStableCallback, useMemoObject, useState, useTypeaheadNavigation, useTypeaheadNavigationChild, focus } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { Prefices } from "./props.js";
 import { useButton } from "./use-button.js";
@@ -100,7 +100,7 @@ export function useAccordionSection({ buttonParameters, accordionSectionParamete
     const { refElementReturn: { getElement: getHeaderElement }, propsStable: headerRefElementProps } = useRefElement({ refElementParameters: {} });
     const { refElementReturn: { getElement: _getBodyElement }, propsStable: bodyRefElementProps } = useRefElement({ refElementParameters: {} });
     const focusSelf = useStableCallback(() => {
-        getHeaderElement()?.focus();
+        focus(getHeaderElement());
     });
     const { managedChildReturn: { getChildren: _getSections } } = useManagedChild({
         context: {

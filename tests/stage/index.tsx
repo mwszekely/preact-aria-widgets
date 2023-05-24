@@ -1,6 +1,5 @@
 import { RenderableProps, render } from "preact";
-import { useSearchParams } from "preact-hash-router";
-import { useForceUpdate } from "preact-prop-helpers";
+import { useForceUpdate, useSearchParamState } from "preact-prop-helpers";
 import { StateUpdater, useCallback, useEffect, useRef, useState } from "preact/hooks";
 import { Button } from "../../dist/index.js";
 import type { TestingConstants } from "../fixtures/shared.js";
@@ -70,8 +69,13 @@ const TestBases = {
     /*"menu": <TestBasesMenu />,*/
 }
 
+declare module 'preact-prop-helpers' {
+    interface SearchParamStates {
+        "test-base": string;
+    }
+}
 function TestsContainer() {
-    const [getBase, setBase] = useSearchParams("test-base", "string");
+    const [getBase, setBase] = useSearchParamState({ key: "test-base", fromString: e => e, toString: e => e, initialValue: "" });
     const base = getBase();
 
     if (!base) {

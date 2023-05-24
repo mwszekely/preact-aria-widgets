@@ -3,6 +3,7 @@ import { createContext } from "preact";
 import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
 import { useMenu, useMenuItem } from "../use-menu.js";
 import { memoForwardRef, ParentDepthContext, useDefault } from "./util.js";
+import { focus } from "preact-prop-helpers";
 const UntabbableContext = createContext(false);
 const AriaPropNameContext = createContext("aria-selected");
 const SelectionModeContext = createContext("focus");
@@ -56,7 +57,7 @@ export const Menu = memoForwardRef(function Menu({ collator, disableHomeEndKeys,
 export const MenuItem = memoForwardRef(function MenuItem({ index, hidden, getSortValue, onPress, getText, role, focusSelf, disabled, render, info: uinfo }, ref) {
     const context = useContext(MenuItemContext);
     console.assert(context != null, `This MenuItem is not contained within a Menubar/Menu`);
-    const defaultFocusSelf = useCallback((e) => e?.focus?.(), []);
+    const defaultFocusSelf = useCallback((e) => focus(e), []);
     const info = useMenuItem({
         info: { index, hidden, disabled, focusSelf: focusSelf ?? defaultFocusSelf, ...uinfo },
         context,

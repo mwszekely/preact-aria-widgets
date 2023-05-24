@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { assertEmptyObject, findFirstFocusable, monitorCallCount, useMergedProps, useModal, UseModalParameters, UseModalReturnType, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
+import { assertEmptyObject, findFirstFocusable, focus, monitorCallCount, useMergedProps, useModal, UseModalParameters, UseModalReturnType, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { OmitStrong } from "./props.js";
 
@@ -65,7 +65,7 @@ export function useMenuSurface<MenuSurfaceElement extends Element, MenuTargetEle
             trapActive: true,
             focusOpener: useStableCallback(() => {
                 const buttonElement = getButtonElement() as HTMLElement | null;
-                buttonElement?.focus();
+                focus(buttonElement);
             })
         }
     });

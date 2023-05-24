@@ -1,4 +1,4 @@
-import { monitorCallCount } from "preact-prop-helpers";
+import { focus, monitorCallCount } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { useToolbar, useToolbarChild } from "./use-toolbar.js";
 /**
@@ -21,7 +21,7 @@ export function useMenubar(args) {
 }
 export function useMenubarChild({ menuItemParameters: { onPress: opu, role }, ...restParams }) {
     monitorCallCount(useMenubarChild);
-    const focusSelf = useCallback((e) => e.focus?.(), []);
+    const focusSelf = useCallback((e) => focus(e), []);
     const { props, ...restRet } = useToolbarChild({
         pressParameters: { focusSelf, onPressSync: opu },
         ...restParams,

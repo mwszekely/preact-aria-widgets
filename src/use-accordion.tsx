@@ -1,6 +1,6 @@
 import { identity } from "lodash-es";
 import { h } from "preact";
-import { assertEmptyObject, ManagedChildInfo, monitorCallCount, OnChildrenMountChange, PassiveStateUpdater, PersistentStates, useChildrenFlag, useLinearNavigation, UseLinearNavigationParameters, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, useMergedProps, usePersistentState, UsePressReturnType, useRandomId, useRefElement, UseRefElementParameters, UseRefElementReturnType, useStableCallback, useMemoObject, useState, UseTextContentReturnType, useTypeaheadNavigation, useTypeaheadNavigationChild, UseTypeaheadNavigationChildParameters, UseTypeaheadNavigationContext, UseTypeaheadNavigationParameters } from "preact-prop-helpers";
+import { assertEmptyObject, ManagedChildInfo, monitorCallCount, OnChildrenMountChange, PassiveStateUpdater, PersistentStates, useChildrenFlag, useLinearNavigation, UseLinearNavigationParameters, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, useMergedProps, usePersistentState, UsePressReturnType, useRandomId, useRefElement, UseRefElementParameters, UseRefElementReturnType, useStableCallback, useMemoObject, useState, UseTextContentReturnType, useTypeaheadNavigation, useTypeaheadNavigationChild, UseTypeaheadNavigationChildParameters, UseTypeaheadNavigationContext, UseTypeaheadNavigationParameters, focus } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { DisabledType, OmitStrong, Prefices } from "./props.js";
 import { ButtonPressEventHandler, useButton, UseButtonParameters, UseButtonReturnType } from "./use-button.js";
@@ -218,7 +218,7 @@ export function useAccordionSection<_HeaderContainerElement extends Element, Hea
     const { refElementReturn: { getElement: getHeaderElement }, propsStable: headerRefElementProps } = useRefElement<HeaderButtonElement>({ refElementParameters: {} });
     const { refElementReturn: { getElement: _getBodyElement }, propsStable: bodyRefElementProps } = useRefElement<BodyElement>({ refElementParameters: {} });
     const focusSelf = useStableCallback(() => {
-        (getHeaderElement() as Element as HTMLElement | undefined)?.focus();
+        focus(getHeaderElement());
     });
 
     const { managedChildReturn: { getChildren: _getSections } } = useManagedChild<M>({

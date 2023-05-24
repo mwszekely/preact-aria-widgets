@@ -1,5 +1,5 @@
 import { createContext, Ref, VNode } from "preact";
-import { useStableCallback } from "preact-prop-helpers";
+import { focus, useStableCallback } from "preact-prop-helpers";
 import { useContext, useImperativeHandle } from "preact/hooks";
 import { TableCellInfo, TableRowInfo, useTable, useTableCell, UseTableCellParameters, UseTableCellReturnType, UseTableContext, UseTableParameters, UseTableReturnType, useTableRow, UseTableRowContext, UseTableRowParameters, UseTableRowReturnType, useTableSection, UseTableSectionContext, UseTableSectionParameters, UseTableSectionReturnType } from "../use-table.js";
 import { memoForwardRef, PartialExcept, useDefault } from "./util.js";
@@ -211,7 +211,7 @@ export const TableCell = memoForwardRef(function TableCell<CellElement extends E
 }: TableCellProps<CellElement, TableCellInfo<CellElement>>, ref?: Ref<any>) {
     const context = (useContext(TableRowContext) as UseTableRowContext<any, CellElement, TableCellInfo<CellElement>>);
     console.assert(context != null, `This TableCell is not contained within a TableRow`);
-    const defaultFocusSelf = useStableCallback((e: CellElement) => { (e as Element as HTMLElement).focus?.() }, []);
+    const defaultFocusSelf = useStableCallback((e: CellElement) => { focus(e as Element as HTMLElement) }, []);
     const info = useTableCell<CellElement, TableCellInfo<CellElement>>({
         info: { index, getSortValue, focusSelf: focusSelf ?? defaultFocusSelf, hidden: hidden || false },
         context,

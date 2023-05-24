@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { DismissListenerTypes, monitorCallCount, returnNull, useDismiss, UseEscapeDismissParameters, useGlobalHandler, useHasCurrentFocus, useMergedProps, usePassiveState, useRandomId, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
+import { DismissListenerTypes, focus, monitorCallCount, returnNull, useDismiss, UseEscapeDismissParameters, useGlobalHandler, useHasCurrentFocus, useMergedProps, usePassiveState, useRandomId, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
 import { useCallback, useRef } from "preact/hooks";
 import { Prefices } from "./props.js";
 
@@ -146,7 +146,7 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
     }
     const otherTriggerProps = {
         onPointerEnter: useCallback(() => { onHoverChanged(true, "trigger") }, []),
-        onClick: useCallback((e: MouseEvent) => { if (e.currentTarget && "focus" in e.currentTarget) (e.currentTarget as HTMLElement).focus(); }, []),
+        onClick: useCallback((e: MouseEvent) => { if (e.currentTarget && "focus" in e.currentTarget) focus(e.currentTarget as HTMLElement); }, []),
         //onPointerLeave: useCallback(() => { onHoverChanged(false, "trigger") }, [])
     }
 
@@ -164,7 +164,7 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
 
     return {
         propsPopup: useMergedProps<PopupType>(popupRefProps, propsPopup, popupFocusReturn.propsStable, { role: "tooltip" }, otherPopupProps, propsStablePopup),
-        propsTrigger: useMergedProps<TriggerType>(triggerRefProps, propsTrigger, triggerFocusReturn.propsStable, { onClick: useStableCallback(e => (e.currentTarget as Element as HTMLElement)?.focus?.()) }, otherTriggerProps, propsStableSource),
+        propsTrigger: useMergedProps<TriggerType>(triggerRefProps, propsTrigger, triggerFocusReturn.propsStable, { onClick: useStableCallback(e => focus(e.currentTarget as Element as HTMLElement)) }, otherTriggerProps, propsStableSource),
         tooltipReturn: {
             getState,
             stateIsFocus,

@@ -1,4 +1,5 @@
 import { createContext } from "preact";
+import { focus } from "preact-prop-helpers";
 import { forwardRef, memo, useContext } from "preact/compat";
 export function memoForwardRef(fn) {
     return memo(forwardRef(fn));
@@ -12,7 +13,7 @@ export const ContextDefaults = {
     disableArrowKeys: createContext(false),
     disableHomeEndKeys: createContext(false),
     getWindow: createContext(() => globalThis.window),
-    focusOpener: createContext((e) => e?.focus?.()),
+    focusOpener: createContext((e) => focus(e)),
     getText: createContext((e) => (e?.textContent ?? "")),
     selectionMode: createContext("activation"),
 };

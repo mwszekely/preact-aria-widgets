@@ -1,6 +1,6 @@
 import { jsx as _jsx } from "preact/jsx-runtime";
 import { createContext } from "preact";
-import { useStableCallback } from "preact-prop-helpers";
+import { focus, useStableCallback } from "preact-prop-helpers";
 import { useContext, useImperativeHandle } from "preact/hooks";
 import { useTable, useTableCell, useTableRow, useTableSection } from "../use-table.js";
 import { memoForwardRef, useDefault } from "./util.js";
@@ -76,7 +76,7 @@ export const TableRow = memoForwardRef(function TableRowU({ index, getText, tagT
 export const TableCell = memoForwardRef(function TableCell({ index, getText, focusSelf, hidden, tagTableCell, render, colSpan, getSortValue, }, ref) {
     const context = useContext(TableRowContext);
     console.assert(context != null, `This TableCell is not contained within a TableRow`);
-    const defaultFocusSelf = useStableCallback((e) => { e.focus?.(); }, []);
+    const defaultFocusSelf = useStableCallback((e) => { focus(e); }, []);
     const info = useTableCell({
         info: { index, getSortValue, focusSelf: focusSelf ?? defaultFocusSelf, hidden: hidden || false },
         context,

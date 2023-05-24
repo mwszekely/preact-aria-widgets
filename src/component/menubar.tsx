@@ -3,6 +3,7 @@ import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
 import { Get, OmitStrong } from "../props.js";
 import { useMenubar, useMenubarChild, UseMenubarContext, UseMenubarItemParameters, UseMenubarItemReturnType, UseMenubarParameters, UseMenubarReturnType, UseMenubarSubInfo } from "../use-menubar.js";
 import { memoForwardRef, PartialExcept, useDefault } from "./util.js";
+import { focus } from "preact-prop-helpers";
 
 
 interface MenubarPropsBase<MenuParentElement extends Element, MenuItemElement extends Element, LabelElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends
@@ -125,7 +126,7 @@ export const MenubarItem = memoForwardRef(function MenuItemU<MenuItemElement ext
 }: MenubarItemProps<MenuItemElement, M>, ref?: Ref<any>) {
     const context = (useContext(MenubarItemContext));
     console.assert(context != null, `This MenuItem is not contained within a Menubar/Menu`);
-    const defaultFocusSelf = useCallback((e: MenuItemElement | null) => (e as Element as HTMLElement)?.focus?.(), [])
+    const defaultFocusSelf = useCallback((e: MenuItemElement | null) => focus(e as Element as HTMLElement), [])
 
     const info = useMenubarChild<MenuItemElement, M>({
         info: { index, hidden: hidden || false, disabled: disabled || false, focusSelf: focusSelf ?? defaultFocusSelf, ...uinfo } as M,

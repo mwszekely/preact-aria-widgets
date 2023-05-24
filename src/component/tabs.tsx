@@ -3,6 +3,7 @@ import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
 import { OmitStrong } from "../props.js";
 import { TabInfo, TabPanelInfo, useTab, useTabPanel, UseTabPanelReturnType, UseTabPanelsContext, UseTabParameters, UseTabReturnType, useTabs, UseTabsContext, UseTabsParameters, UseTabsReturnType } from "../use-tabs.js";
 import { memoForwardRef, PartialExcept, useDefault } from "./util.js";
+import { focus } from "preact-prop-helpers";
 
 type Get<T, K extends keyof T> = T[K];
 
@@ -129,7 +130,7 @@ export const Tab = memoForwardRef(function Tab<E extends Element, M extends TabI
 }: TabProps<E, M>, ref?: Ref<any>) {
     const context = useContext(TabsContext);
     console.assert(context != null, `This Tab is not contained within a Tabs component`);
-    const focusSelfDefault = useCallback((e: any) => { e?.focus(); }, []);
+    const focusSelfDefault = useCallback((e: any) => { focus(e); }, []);
     const info = useTab<E, M>({
         info: { index, disabled, hidden, focusSelf: focusSelf ?? focusSelfDefault, ...uinfo } as M,
         context,

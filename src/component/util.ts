@@ -1,5 +1,5 @@
 import { Context, createContext } from "preact";
-import { GetIndex, UseSingleSelectionParameters } from "preact-prop-helpers";
+import { GetIndex, UseSingleSelectionParameters, focus } from "preact-prop-helpers";
 import { ForwardFn, forwardRef, memo, useContext } from "preact/compat";
 
 export function memoForwardRef<T extends ForwardFn<any, any>>(fn: T): T {
@@ -15,7 +15,7 @@ export const ContextDefaults = {
     disableArrowKeys: createContext(false),
     disableHomeEndKeys: createContext(false),
     getWindow: createContext(() => globalThis.window as Window),
-    focusOpener: createContext((e: any) => e?.focus?.()),
+    focusOpener: createContext((e: any) => focus(e)),
     getText: createContext((e: any) => (e?.textContent ?? "") as string | null),
     selectionMode: createContext<UseSingleSelectionParameters<any, any, any>["singleSelectionParameters"]["selectionMode"]>("activation"),
 }

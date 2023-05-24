@@ -1,5 +1,5 @@
 import { createContext, createElement, h, Ref, VNode } from "preact";
-import { useStableCallback } from "preact-prop-helpers";
+import { focus, useStableCallback } from "preact-prop-helpers";
 import { useContext, useImperativeHandle } from "preact/hooks";
 import { ElementToTag, OmitStrong } from "../props.js";
 import { GridlistCellInfo, GridlistRowInfo, useGridlist, useGridlistCell, UseGridlistCellParameters, UseGridlistCellReturnType, UseGridlistContext, UseGridlistParameters, UseGridlistReturnType, useGridlistRow, UseGridlistRowContext, UseGridlistRowParameters, UseGridlistRowReturnType } from "../use-gridlist.js";
@@ -228,7 +228,7 @@ export const GridlistChild = memoForwardRef(function GridlistChild<CellElement e
 }: GridlistChildProps<CellElement, CM>, ref?: Ref<any>) {
     const context = (useContext(GridlistRowContext) as UseGridlistRowContext<any, CellElement, CM>);
     console.assert(context != null, `This GridlistChild is not contained within a GridlistRow that is contained within a Gridlist`);
-    const defaultFocusSelf = useStableCallback((e: CellElement) => { (e as Element as HTMLElement).focus?.() }, []);
+    const defaultFocusSelf = useStableCallback((e: CellElement) => { focus(e as Element as HTMLElement); }, []);
     const info = useGridlistCell<CellElement, CM>({
         info: { index, hidden: hidden || false, focusSelf: (focusSelf ?? defaultFocusSelf), ...subInfo } as CM,
         context,

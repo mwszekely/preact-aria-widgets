@@ -1,6 +1,6 @@
 import { jsx as _jsx } from "preact/jsx-runtime";
 import { createContext, createElement } from "preact";
-import { useStableCallback } from "preact-prop-helpers";
+import { focus, useStableCallback } from "preact-prop-helpers";
 import { useContext, useImperativeHandle } from "preact/hooks";
 import { useGridlist, useGridlistCell, useGridlistRow } from "../use-gridlist.js";
 import { memoForwardRef, useDefault } from "./util.js";
@@ -98,7 +98,7 @@ export const GridlistRow = memoForwardRef(function GridlistRowU({ index, collato
 export const GridlistChild = memoForwardRef(function GridlistChild({ index, colSpan, focusSelf, hidden, getText, onPressSync, render, info: subInfo }, ref) {
     const context = useContext(GridlistRowContext);
     console.assert(context != null, `This GridlistChild is not contained within a GridlistRow that is contained within a Gridlist`);
-    const defaultFocusSelf = useStableCallback((e) => { e.focus?.(); }, []);
+    const defaultFocusSelf = useStableCallback((e) => { focus(e); }, []);
     const info = useGridlistCell({
         info: { index, hidden: hidden || false, focusSelf: (focusSelf ?? defaultFocusSelf), ...subInfo },
         context,

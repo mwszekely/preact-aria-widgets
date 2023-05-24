@@ -1,4 +1,5 @@
 import { createContext, Ref, VNode } from "preact";
+import { focus } from "preact-prop-helpers";
 import { memo } from "preact/compat";
 import { useCallback, useContext } from "preact/hooks";
 import { OmitStrong } from "../props.js";
@@ -162,7 +163,7 @@ export const ListboxItem = memoForwardRef(function ListboxItem<ListboxItemElemen
 }: ListboxItemProps<ListboxItemElement, M>) {
     const context = useContext(ListboxContext) as UseListboxContext<any, ListboxItemElement, M>;
     console.assert(context != null, `This ListboxItem is not contained within a Listbox`);
-    const focusSelfDefault = useCallback((e: any) => { e?.focus(); }, []);
+    const focusSelfDefault = useCallback((e: any) => { focus(e); }, []);
     focusSelf ??= focusSelfDefault;
 
     const info = useListboxItem<ListboxItemElement, M>({

@@ -11,7 +11,7 @@ export declare const ContextDefaults: {
     disableArrowKeys: Context<boolean>;
     disableHomeEndKeys: Context<boolean>;
     getWindow: Context<() => Window>;
-    focusOpener: Context<(e: any) => any>;
+    focusOpener: Context<(e: any) => void>;
     getText: Context<(e: any) => string | null>;
     selectionMode: Context<"disabled" | "focus" | "activation">;
 };

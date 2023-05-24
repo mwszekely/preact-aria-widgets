@@ -1,4 +1,4 @@
-import { monitorCallCount, returnNull, useDismiss, useGlobalHandler, useHasCurrentFocus, useMergedProps, usePassiveState, useRandomId, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
+import { focus, monitorCallCount, returnNull, useDismiss, useGlobalHandler, useHasCurrentFocus, useMergedProps, usePassiveState, useRandomId, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
 import { useCallback, useRef } from "preact/hooks";
 import { Prefices } from "./props.js";
 export function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType, hoverDelay }, escapeDismissParameters }) {
@@ -84,7 +84,7 @@ export function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType,
     const otherTriggerProps = {
         onPointerEnter: useCallback(() => { onHoverChanged(true, "trigger"); }, []),
         onClick: useCallback((e) => { if (e.currentTarget && "focus" in e.currentTarget)
-            e.currentTarget.focus(); }, []),
+            focus(e.currentTarget); }, []),
         //onPointerLeave: useCallback(() => { onHoverChanged(false, "trigger") }, [])
     };
     useGlobalHandler(document, "pointermove", !openLocal ? null : (e => {
@@ -99,7 +99,7 @@ export function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType,
     }), { capture: true, passive: true });
     return {
         propsPopup: useMergedProps(popupRefProps, propsPopup, popupFocusReturn.propsStable, { role: "tooltip" }, otherPopupProps, propsStablePopup),
-        propsTrigger: useMergedProps(triggerRefProps, propsTrigger, triggerFocusReturn.propsStable, { onClick: useStableCallback(e => e.currentTarget?.focus?.()) }, otherTriggerProps, propsStableSource),
+        propsTrigger: useMergedProps(triggerRefProps, propsTrigger, triggerFocusReturn.propsStable, { onClick: useStableCallback(e => focus(e.currentTarget)) }, otherTriggerProps, propsStableSource),
         tooltipReturn: {
             getState,
             stateIsFocus,
