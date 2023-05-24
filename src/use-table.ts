@@ -229,8 +229,7 @@ export function useTableRow<TableRowElement extends Element, TableCellElement ex
     context: cx1,
     tableRowParameters: { selected },
     linearNavigationParameters,
-    rovingTabIndexParametersG2R,
-    rovingTabIndexParametersR2C,
+    rovingTabIndexParameters,
     singleSelectionParameters,
 
 }: UseTableRowParameters<TableRowElement, TableCellElement, RM, CM>): UseTableRowReturnType<TableRowElement, TableCellElement, RM, CM> {
@@ -258,8 +257,7 @@ export function useTableRow<TableRowElement extends Element, TableCellElement ex
             })
         },
         linearNavigationParameters,
-        rovingTabIndexParametersG2R,
-        rovingTabIndexParametersR2C,
+        rovingTabIndexParameters,
         typeaheadNavigationParameters: { noTypeahead: true, collator: null, typeaheadTimeout: Infinity }
     }
     );

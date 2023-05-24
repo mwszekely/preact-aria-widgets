@@ -97,7 +97,7 @@ export function useTableSection({ linearNavigationParameters, rovingTabIndexPara
         propsTableSection: props
     };
 }
-export function useTableRow({ info, textContentParameters, context: cx1, tableRowParameters: { selected }, linearNavigationParameters, rovingTabIndexParametersG2R, rovingTabIndexParametersR2C, singleSelectionParameters, }) {
+export function useTableRow({ info, textContentParameters, context: cx1, tableRowParameters: { selected }, linearNavigationParameters, rovingTabIndexParameters, singleSelectionParameters, }) {
     monitorCallCount(useTableRow);
     const { context: cx2, managedChildrenReturn, props: { ...props }, ...restRet
     // props
@@ -115,8 +115,7 @@ export function useTableRow({ info, textContentParameters, context: cx1, tableRo
             })
         },
         linearNavigationParameters,
-        rovingTabIndexParametersG2R,
-        rovingTabIndexParametersR2C,
+        rovingTabIndexParameters,
         typeaheadNavigationParameters: { noTypeahead: true, collator: null, typeaheadTimeout: Infinity }
     });
     props.role = "row";

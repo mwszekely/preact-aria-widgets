@@ -66,8 +66,7 @@ export const TableRow = memoForwardRef(function TableRowU({ index, getText, tagT
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap"
         },
-        rovingTabIndexParametersG2R: { untabbable: useContext(TableSectionUntabbableContext) },
-        rovingTabIndexParametersR2C: { onTabbableIndexChange: onTabbableIndexChange ?? null, initiallyTabbedIndex: initiallyTabbedIndex ?? null, untabbable },
+        rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, initiallyTabbedIndex: initiallyTabbedIndex ?? null, untabbable },
         singleSelectionParameters: { ariaPropName: useContext(TableSectionAriaPropNameContext), selectionMode: useContext(TableSectionSelectionModeContext) }
     });
     useImperativeHandle(ref, () => info);

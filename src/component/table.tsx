@@ -32,7 +32,7 @@ interface TableRowPropsBase<RowElement extends Element, CellElement extends Elem
     Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "textContentParameters">,
     Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "tableRowParameters">,
     Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "linearNavigationParameters">,
-    Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "rovingTabIndexParametersR2C"> {
+    Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "rovingTabIndexParameters"> {
     ref?: Ref<UseTableRowReturnType<RowElement, CellElement, RM, CM>>;
 }
 
@@ -185,8 +185,7 @@ export const TableRow = memoForwardRef(function TableRowU<RowElement extends Ele
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap"
         },
-        rovingTabIndexParametersG2R: { untabbable: useContext(TableSectionUntabbableContext) },
-        rovingTabIndexParametersR2C: { onTabbableIndexChange: onTabbableIndexChange ?? null, initiallyTabbedIndex: initiallyTabbedIndex ?? null, untabbable },
+        rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, initiallyTabbedIndex: initiallyTabbedIndex ?? null, untabbable },
         singleSelectionParameters: { ariaPropName: useContext(TableSectionAriaPropNameContext), selectionMode: useContext(TableSectionSelectionModeContext) }
     });
 

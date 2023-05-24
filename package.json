@@ -16,7 +16,7 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "npx npm-run-all --npm-path npm -sc build:ts",
+    "build": "npx npm-run-all --npm-path npm -sc clean build:ts",
     "watch": "npx npm-run-all --npm-path npm -pc watch:*",
     "watch:ts": "tsc --watch",
     "build:ts": "tsc --build",

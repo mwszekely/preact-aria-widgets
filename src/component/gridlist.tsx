@@ -28,8 +28,7 @@ interface GridlistRowPropsBase<GridlistRowElement extends Element, GridlistCellE
     Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "textContentParameters">,
     Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "sortableChildParameters">,
     Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "linearNavigationParameters">,
-    Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "rovingTabIndexParametersG2R">,
-    Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "rovingTabIndexParametersR2C">,
+    Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "rovingTabIndexParameters">,
     Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "typeaheadNavigationParameters">,
     Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "gridlistRowParameters"> {
     info?: OmitStrong<RM, keyof GridlistRowInfo<GridlistRowElement, GridlistCellElement>>; // Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "completeGridNavigationRowParameters">
@@ -201,8 +200,7 @@ export const GridlistRow = memoForwardRef(function GridlistRowU<RowElement exten
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap"
         },
-        rovingTabIndexParametersG2R: { untabbable: useContext(GridlistUntabbableContext) },
-        rovingTabIndexParametersR2C: { onTabbableIndexChange: onTabbableIndexChange ?? null, initiallyTabbedIndex: initiallyTabbedIndex ?? null, untabbable },
+        rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, initiallyTabbedIndex: initiallyTabbedIndex ?? null, untabbable },
         singleSelectionParameters: { ariaPropName: useContext(GridlistAriaPropNameContext), selectionMode: useContext(GridlistSelectionModeContext) },
         typeaheadNavigationParameters: {
             collator: useDefault("collator", collator),

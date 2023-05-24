@@ -83,8 +83,7 @@ export const GridlistRow = memoForwardRef(function GridlistRowU({ index, collato
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap"
         },
-        rovingTabIndexParametersG2R: { untabbable: useContext(GridlistUntabbableContext) },
-        rovingTabIndexParametersR2C: { onTabbableIndexChange: onTabbableIndexChange ?? null, initiallyTabbedIndex: initiallyTabbedIndex ?? null, untabbable },
+        rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, initiallyTabbedIndex: initiallyTabbedIndex ?? null, untabbable },
         singleSelectionParameters: { ariaPropName: useContext(GridlistAriaPropNameContext), selectionMode: useContext(GridlistSelectionModeContext) },
         typeaheadNavigationParameters: {
             collator: useDefault("collator", collator),

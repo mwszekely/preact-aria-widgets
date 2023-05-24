@@ -45,7 +45,7 @@ export function useGridlist({ labelParameters, gridlistParameters: { selectionLi
         ...restRet
     };
 }
-export function useGridlistRow({ gridlistRowParameters: { selected }, linearNavigationParameters, context: cx1, info, rovingTabIndexParametersG2R, rovingTabIndexParametersR2C, sortableChildParameters, textContentParameters, typeaheadNavigationParameters, singleSelectionParameters, ...void1 }) {
+export function useGridlistRow({ gridlistRowParameters: { selected }, linearNavigationParameters, context: cx1, info, rovingTabIndexParameters, sortableChildParameters, textContentParameters, typeaheadNavigationParameters, singleSelectionParameters, ...void1 }) {
     monitorCallCount(useGridlistRow);
     assertEmptyObject(void1);
     const { gridlistRowContext: { selectionLimit } } = cx1;
@@ -53,8 +53,7 @@ export function useGridlistRow({ gridlistRowParameters: { selected }, linearNavi
         linearNavigationParameters: { disableHomeEndKeys: true, ...linearNavigationParameters },
         info,
         context: cx1,
-        rovingTabIndexParametersG2R,
-        rovingTabIndexParametersR2C,
+        rovingTabIndexParameters,
         sortableChildParameters,
         textContentParameters,
         typeaheadNavigationParameters,
