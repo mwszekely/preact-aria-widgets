@@ -12,7 +12,7 @@ dependencies:
     version: 10.13.2
   preact-prop-helpers:
     specifier: github:mwszekely/preact-prop-helpers
-    version: github.com/mwszekely/preact-prop-helpers/4509e96d1fd606c777d04949a0caa21395c6c426(preact@10.13.2)
+    version: github.com/mwszekely/preact-prop-helpers/e168386cb89e9d099ab234a7eb445a524827b983(preact@10.13.2)
   serve:
     specifier: ^14.2.0
     version: 14.2.0
@@ -42,6 +42,7 @@ packages:
       playwright-core: 1.33.0
     optionalDependencies:
       fsevents: 2.3.2
+    dev: true
 
   /@types/lodash-es@4.17.7:
     resolution: {integrity: sha512-z0ptr6UI10VlU6l5MYhGwS4mC8DZyYer2mCoyysZtSF7p26zOX8UpbrV0YpNYLGS8K4PUFIyEr62IMFFjveSiQ==}
@@ -55,6 +56,7 @@ packages:
 
   /@types/node@20.1.2:
     resolution: {integrity: sha512-CTO/wa8x+rZU626cL2BlbCDzydgnFNgc19h4YvizpTO88MFQxab8wqisxaofQJ/9bLGugRdWIuX/TbIs6VVF6g==}
+    dev: true
 
   /@zeit/schemas@2.29.0:
     resolution: {integrity: sha512-g5QiLIfbg3pLuYUJPlisNKY+epQJTcMDsOnVNkscrDP1oi7vmJnzOANYJI/1pZcVJ6umUkBv3aFtlg1UvUHGzA==}
@@ -436,6 +438,7 @@ packages:
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
     requiresBuild: true
+    dev: true
     optional: true
 
   /function-bind@1.1.1:
@@ -889,6 +892,7 @@ packages:
     resolution: {integrity: sha512-aizyPE1Cj62vAECdph1iaMILpT0WUDCq3E6rW6I+dleSbBoGbktvJtzS6VHkZ4DKNEOG9qJpiom/ZxO+S15LAw==}
     engines: {node: '>=14'}
     hasBin: true
+    dev: true
 
   /preact@10.13.2:
     resolution: {integrity: sha512-q44QFLhOhty2Bd0Y46fnYW0gD/cbVM9dUVtNTDKPcdXSMA7jfY+Jpd6rk3GB0lcQss0z5s/6CmVP0Z/hV+g6pw==}
@@ -1302,15 +1306,14 @@ packages:
       lodash-es: 4.17.21
     dev: false
 
-  github.com/mwszekely/preact-prop-helpers/4509e96d1fd606c777d04949a0caa21395c6c426(preact@10.13.2):
-    resolution: {tarball: https://codeload.github.com/mwszekely/preact-prop-helpers/tar.gz/4509e96d1fd606c777d04949a0caa21395c6c426}
-    id: github.com/mwszekely/preact-prop-helpers/4509e96d1fd606c777d04949a0caa21395c6c426
+  github.com/mwszekely/preact-prop-helpers/e168386cb89e9d099ab234a7eb445a524827b983(preact@10.13.2):
+    resolution: {tarball: https://codeload.github.com/mwszekely/preact-prop-helpers/tar.gz/e168386cb89e9d099ab234a7eb445a524827b983}
+    id: github.com/mwszekely/preact-prop-helpers/e168386cb89e9d099ab234a7eb445a524827b983
     name: preact-prop-helpers
     version: 0.0.1
     peerDependencies:
       preact: ^10.13.2
     dependencies:
-      '@playwright/test': 1.33.0
       async-to-sync: github.com/mwszekely/async-to-sync/624c049a849d0a02039c1ec14f78617394daabce
       blocking-elements: 0.1.1
       clsx: 1.2.1
