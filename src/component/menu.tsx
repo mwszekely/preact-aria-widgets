@@ -141,13 +141,13 @@ export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element,
 
 export const MenuItem = memoForwardRef(function MenuItem<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement> = UseMenubarSubInfo<MenuItemElement>>({
     index,
-    hidden,
+    untabbable,
     getSortValue,
     onPress,
     getText,
     role,
     focusSelf,
-    disabled,
+    unselectable,
     render,
     info: uinfo
 }: MenuItemProps<MenuItemElement, M>, ref?: Ref<any>) {
@@ -155,7 +155,7 @@ export const MenuItem = memoForwardRef(function MenuItem<MenuItemElement extends
     console.assert(context != null, `This MenuItem is not contained within a Menubar/Menu`);
     const defaultFocusSelf = useCallback((e: MenuItemElement | null) => focus(e as Element as HTMLElement), []);
     const info = useMenuItem<MenuItemElement, M>({
-        info: { index, hidden, disabled, focusSelf: focusSelf ?? defaultFocusSelf, ...uinfo } as M,
+        info: { index, untabbable, unselectable, focusSelf: focusSelf ?? defaultFocusSelf, ...uinfo } as M,
         context,
         sortableChildParameters: { getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },

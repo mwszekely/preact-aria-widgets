@@ -21,7 +21,7 @@ interface TabsPropsBase<TabContainerElement extends Element, TabElement extends 
 }
 
 interface TabPropsBase<TabElement extends Element, M extends TabInfo<TabElement>> extends
-    Pick<M, "index" | "hidden" | "disabled">,
+    Pick<M, "index" | "untabbable" | "unselectable">,
     Get<UseTabParameters<TabElement, M>, "sortableChildParameters">,
     Get<UseTabParameters<TabElement, M>, "textContentParameters"> {
     focusSelf: M["focusSelf"];
@@ -119,9 +119,9 @@ export const Tabs = memoForwardRef(function Tabs<TabContainerElement extends Ele
 })
 
 export const Tab = memoForwardRef(function Tab<E extends Element, M extends TabInfo<E> = TabInfo<E>>({
-    disabled,
+    unselectable,
     focusSelf,
-    hidden,
+    untabbable,
     index,
     getText,
     getSortValue,
@@ -132,7 +132,7 @@ export const Tab = memoForwardRef(function Tab<E extends Element, M extends TabI
     console.assert(context != null, `This Tab is not contained within a Tabs component`);
     const focusSelfDefault = useCallback((e: any) => { focus(e); }, []);
     const info = useTab<E, M>({
-        info: { index, disabled, hidden, focusSelf: focusSelf ?? focusSelfDefault, ...uinfo } as M,
+        info: { index, unselectable, untabbable, focusSelf: focusSelf ?? focusSelfDefault, ...uinfo } as M,
         context,
         sortableChildParameters: { getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },

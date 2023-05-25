@@ -26,7 +26,7 @@ interface RadioPropsBase<LP extends LabelPosition, InputElement extends Element,
     Get<UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>, "labelParameters">,
     Get<UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>, "textContentParameters">,
 
-    Pick<RadioSubInfo<any, V>, "index" | "hidden"> {
+    Pick<RadioSubInfo<any, V>, "index" | "untabbable" | "unselectable"> {
     focusSelf?: UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>["info"]["focusSelf"];
 }
 
@@ -100,6 +100,7 @@ export const RadioGroup = memoForwardRef(function RadioGroup<V extends string | 
 });
 
 export const Radio = memoForwardRef(function Radio<LP extends LabelPosition, V extends string | number, InputElement extends Element, LabelElement extends Element>({
+    unselectable,
     disabled,
     index,
     render,
@@ -107,7 +108,7 @@ export const Radio = memoForwardRef(function Radio<LP extends LabelPosition, V e
     ariaLabel,
     focusSelf,
     labelPosition,
-    hidden,
+    untabbable,
     tagInput,
     tagLabel,
     getText
@@ -122,7 +123,7 @@ export const Radio = memoForwardRef(function Radio<LP extends LabelPosition, V e
         sortableChildParameters: { getSortValue: getValue },
         radioParameters: { value },
         checkboxLikeParameters: { disabled: disabled ?? false },
-        info: { index, focusSelf, hidden: hidden || false, disabled: !!disabled },
+        info: { index, focusSelf, untabbable: untabbable || false, unselectable: !!unselectable },
         context,
         labelParameters: { ariaLabel, labelPosition, tagInput, tagLabel },
         textContentParameters: { getText: useDefault("getText", getText) },

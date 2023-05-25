@@ -46,13 +46,13 @@ export const TableSection = memoForwardRef(function TableSection({ disableHomeEn
     });
     return (_jsx(TableSectionAriaPropNameContext.Provider, { value: ariaPropName, children: _jsx(TableSectionSelectionModeContext.Provider, { value: selectionMode, children: _jsx(TableSectionUntabbableContext.Provider, { value: untabbable, children: _jsx(TableSectionContext.Provider, { value: info.context, children: render(info) }) }) }) }));
 });
-export const TableRow = memoForwardRef(function TableRowU({ index, getText, tagTableRow, disableHomeEndKeys, onTabbableIndexChange, navigatePastEnd, navigatePastStart, selected, hidden, disabled, initiallyTabbedIndex, untabbable, render }, ref) {
+export const TableRow = memoForwardRef(function TableRowU({ index, getText, tagTableRow, disableHomeEndKeys, onTabbableIndexChange, navigatePastEnd, navigatePastStart, selected, unselectable, initiallyTabbedIndex, untabbable, render }, ref) {
     let gridIsUntabbable = useContext(TableSectionUntabbableContext);
     untabbable ||= (false || gridIsUntabbable);
     const cx1 = useContext(TableSectionContext);
     console.assert(cx1 != null, `This TableRow is not contained within a TableSection`);
     const info = useTableRow({
-        info: { index, disabled: disabled || false, hidden: hidden || false },
+        info: { index, unselectable: unselectable || false, untabbable: untabbable || false },
         context: cx1,
         textContentParameters: {
             getText: useDefault("getText", getText)
@@ -72,12 +72,12 @@ export const TableRow = memoForwardRef(function TableRowU({ index, getText, tagT
     useImperativeHandle(ref, () => info);
     return (_jsx(TablRowUntabbableContext.Provider, { value: untabbable, children: _jsx(TableRowContext.Provider, { value: info.context, children: render(info) }) }));
 });
-export const TableCell = memoForwardRef(function TableCell({ index, getText, focusSelf, hidden, tagTableCell, render, colSpan, getSortValue, }, ref) {
+export const TableCell = memoForwardRef(function TableCell({ index, getText, focusSelf, untabbable, tagTableCell, render, colSpan, getSortValue, }, ref) {
     const context = useContext(TableRowContext);
     console.assert(context != null, `This TableCell is not contained within a TableRow`);
     const defaultFocusSelf = useStableCallback((e) => { focus(e); }, []);
     const info = useTableCell({
-        info: { index, getSortValue, focusSelf: focusSelf ?? defaultFocusSelf, hidden: hidden || false },
+        info: { index, getSortValue, focusSelf: focusSelf ?? defaultFocusSelf, untabbable: untabbable || false },
         context,
         gridNavigationCellParameters: { colSpan: colSpan ?? 1 },
         tableCellParameters: { tagTableCell },

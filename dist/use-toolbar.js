@@ -48,7 +48,7 @@ export function useToolbarChild({ info, toolbarChildParameters: { disabledProp }
     monitorCallCount(useToolbarChild);
     const { props, ...listNavReturn } = useCompleteListNavigationChild({ info, ...args });
     return {
-        props: useMergedProps(props, { [disabledProp]: info.disabled ? true : undefined }),
+        props: useMergedProps(props, { [disabledProp]: info.unselectable ? true : undefined }),
         ...listNavReturn
     };
 }

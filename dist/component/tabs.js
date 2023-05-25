@@ -41,12 +41,12 @@ untabbable, typeaheadTimeout, role, render }, ref) {
     useImperativeHandle(ref, () => info);
     return (_jsx(UntabbableContext.Provider, { value: untabbable, children: _jsx(SelectionModeContext.Provider, { value: selectionMode, children: _jsx(TabsContext.Provider, { value: contextTabs, children: _jsx(TabPanelsContext.Provider, { value: contextPanels, children: render(info) }) }) }) }));
 });
-export const Tab = memoForwardRef(function Tab({ disabled, focusSelf, hidden, index, getText, getSortValue, render, info: uinfo }, ref) {
+export const Tab = memoForwardRef(function Tab({ unselectable, focusSelf, untabbable, index, getText, getSortValue, render, info: uinfo }, ref) {
     const context = useContext(TabsContext);
     console.assert(context != null, `This Tab is not contained within a Tabs component`);
     const focusSelfDefault = useCallback((e) => { focus(e); }, []);
     const info = useTab({
-        info: { index, disabled, hidden, focusSelf: focusSelf ?? focusSelfDefault, ...uinfo },
+        info: { index, unselectable, untabbable, focusSelf: focusSelf ?? focusSelfDefault, ...uinfo },
         context,
         sortableChildParameters: { getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },

@@ -24,7 +24,7 @@ interface GridlistPropsBase<GridlistElement extends Element, GridlistRowElement 
 }
 
 interface GridlistRowPropsBase<GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends
-    Pick<RM, "index" | "hidden" | "disabled">,
+    Pick<RM, "index" | "unselectable">,
     Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "textContentParameters">,
     Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "sortableChildParameters">,
     Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "linearNavigationParameters">,
@@ -39,7 +39,7 @@ interface GridlistChildPropsBase<CellElement extends Element, M extends Gridlist
     Get<UseGridlistCellParameters<CellElement, M>, "gridNavigationCellParameters">,
     Get<UseGridlistCellParameters<CellElement, M>, "textContentParameters">,
     Get<UseGridlistCellParameters<CellElement, M>, "pressParameters">,
-    Pick<M, "index" | "hidden"> {
+    Pick<M, "index" | "untabbable"> {
     focusSelf?: M["focusSelf"];
     info?: OmitStrong<M, "focusSelf">;
     ref?: Ref<UseGridlistCellReturnType<CellElement, M>>;
@@ -171,8 +171,8 @@ export const Gridlist = memoForwardRef(function GridlistU<GridlistElement extend
 export const GridlistRow = memoForwardRef(function GridlistRowU<RowElement extends Element, Cellement extends Element, RM extends GridlistRowInfo<RowElement, Cellement> = GridlistRowInfo<RowElement, Cellement>, CM extends GridlistCellInfo<Cellement> = GridlistCellInfo<Cellement>>({
     index,
     collator,
-    disabled,
-    hidden,
+    unselectable,
+    untabbable,
     navigatePastEnd,
     navigatePastStart,
     noTypeahead,
@@ -183,7 +183,6 @@ export const GridlistRow = memoForwardRef(function GridlistRowU<RowElement exten
     getText,
     render,
     initiallyTabbedIndex,
-    untabbable,
     info: uinfo
 }: GridlistRowProps<RowElement, Cellement, RM, CM>, ref?: Ref<any>) {
     const context = (useContext(GridlistContext) as UseGridlistContext<any, RowElement, Cellement, RM, CM>);
@@ -191,7 +190,7 @@ export const GridlistRow = memoForwardRef(function GridlistRowU<RowElement exten
     untabbable ||= false;
 
     const info = useGridlistRow<RowElement, Cellement, RM, CM>({
-        info: { index, hidden, disabled, ...uinfo } as RM,
+        info: { index, untabbable, unselectable, ...uinfo } as RM,
         context,
         gridlistRowParameters: { selected: selected ?? null },
         sortableChildParameters: { getSortValue },
@@ -218,7 +217,7 @@ export const GridlistChild = memoForwardRef(function GridlistChild<CellElement e
     index,
     colSpan,
     focusSelf,
-    hidden,
+    untabbable,
     getText,
     onPressSync,
     render,
@@ -228,7 +227,7 @@ export const GridlistChild = memoForwardRef(function GridlistChild<CellElement e
     console.assert(context != null, `This GridlistChild is not contained within a GridlistRow that is contained within a Gridlist`);
     const defaultFocusSelf = useStableCallback((e: CellElement) => { focus(e as Element as HTMLElement); }, []);
     const info = useGridlistCell<CellElement, CM>({
-        info: { index, hidden: hidden || false, focusSelf: (focusSelf ?? defaultFocusSelf), ...subInfo } as CM,
+        info: { index, untabbable: untabbable || false, focusSelf: (focusSelf ?? defaultFocusSelf), ...subInfo } as CM,
         context,
         gridNavigationCellParameters: { colSpan: colSpan ?? 1 },
         textContentParameters: { getText: useDefault("getText", getText) },

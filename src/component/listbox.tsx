@@ -24,7 +24,7 @@ interface ListboxPropsBase<ListElement extends Element, ListItemElement extends 
 
 interface ListboxItemPropsBase<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends
     Get<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "listboxParameters">,
-    Pick<M, "index" | "hidden" | "disabled">,
+    Pick<M, "index" | "untabbable" | "unselectable">,
     Get<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "sortableChildParameters">,
     OmitStrong<NonNullable<Get<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "pressParameters">>, "focusSelf">,
     Get<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "textContentParameters"> {
@@ -145,10 +145,10 @@ export const Listbox = memoForwardRef(function Listbox<ListElement extends Eleme
 })
 
 export const ListboxItem = memoForwardRef(function ListboxItem<ListboxItemElement extends Element, M extends ListboxInfo<ListboxItemElement> = ListboxInfo<ListboxItemElement>>({
-    disabled,
+    unselectable,
     focusSelf,
     getText,
-    hidden,
+    untabbable,
     index,
     render,
     selected,
@@ -167,7 +167,7 @@ export const ListboxItem = memoForwardRef(function ListboxItem<ListboxItemElemen
     focusSelf ??= focusSelfDefault;
 
     const info = useListboxItem<ListboxItemElement, M>({
-        info: { index, hidden: hidden || false, disabled: disabled || false, focusSelf, ...subInfo } as M,
+        info: { index, untabbable: untabbable || false, unselectable: unselectable || false, focusSelf, ...subInfo } as M,
         context,
         listboxParameters: { selected: selected ?? null, },
         pressParameters: { onPressSync, focusSelf, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange },

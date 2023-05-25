@@ -27,7 +27,7 @@ export interface ToolbarChildPropsBase<ToolbarChildElement extends Element, M ex
     Get<UseToolbarChildParameters<ToolbarChildElement, M>, "sortableChildParameters">,
     Get<UseToolbarChildParameters<ToolbarChildElement, M>, "textContentParameters">,
     Get<UseToolbarChildParameters<ToolbarChildElement, M>, "toolbarChildParameters">,
-    Pick<Get<UseToolbarChildParameters<any, any>, "info">, "index" | "hidden" | "disabled"> {
+    Pick<Get<UseToolbarChildParameters<any, any>, "info">, "index" | "untabbable" | "unselectable"> {
     focusSelf?: M["focusSelf"];
     info?: OmitStrong<Get<UseToolbarChildParameters<ToolbarChildElement, M>, "info">, never>
     ref?: Ref<UseToolbarChildReturnType<ToolbarChildElement, M>>;
@@ -124,9 +124,9 @@ export const ToolbarChild = memoForwardRef(function ToolbarChildU<ToolbarChildEl
     focusSelf,
     getSortValue,
     getText,
-    disabled,
+    unselectable,
     disabledProp,
-    hidden,
+    untabbable,
     info: uinfo
 }: ToolbarChildProps<ToolbarChildElement, M>, ref?: Ref<any>) {
     const context = (useContext(ToolbarContext) as UseToolbarContext<any, ToolbarChildElement, M>);
@@ -137,7 +137,7 @@ export const ToolbarChild = memoForwardRef(function ToolbarChildU<ToolbarChildEl
     const info = useToolbarChild<ToolbarChildElement, M>({
         context,
         toolbarChildParameters: { disabledProp },
-        info: { index, focusSelf, disabled, hidden, ...uinfo } as M,
+        info: { index, focusSelf, unselectable, untabbable, ...uinfo } as M,
         sortableChildParameters: { getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },
         pressParameters: null, //{ focusSelf, onPressSync: null },

@@ -11,7 +11,7 @@ const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
             index={index}
             focusSelf={e => e.focus()}
             getSortValue={returnZero}
-            disabled={false}
+            unselectable={false}
             selected={null}
             render={info => {
                 const selected = info.singleSelectionChildReturn.selected;

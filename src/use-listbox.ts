@@ -162,7 +162,7 @@ export function useListboxItem<ListItemElement extends Element, M extends Listbo
         console.assert(selected == null);
 
     props.role = "option";
-    props["aria-disabled"] = restParams.info.disabled? "true" : undefined;
+    props["aria-disabled"] = restParams.info.unselectable? "true" : undefined;
 
     return {
         //pressReturn,

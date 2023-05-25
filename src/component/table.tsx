@@ -28,7 +28,7 @@ interface TableSectionPropsBase<SectionElement extends Element, RowElement exten
 interface TableRowPropsBase<RowElement extends Element, CellElement extends Element, RM extends TableRowInfo<RowElement, CellElement>, CM extends TableCellInfo<CellElement>> extends
     //OmitStrong<Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "tableRowParameters">, never>,
 
-    Pick<RM, "index" | "hidden" | "disabled">,
+    Pick<RM, "index" | "unselectable">,
     Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "textContentParameters">,
     Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "tableRowParameters">,
     Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "linearNavigationParameters">,
@@ -38,7 +38,7 @@ interface TableRowPropsBase<RowElement extends Element, CellElement extends Elem
 
 interface TableCellPropsBase<CellElement extends Element, CM extends TableCellInfo<CellElement>> extends
     Get<UseTableCellParameters<CellElement, CM>, "tableCellParameters">,
-    Pick<CM, "index" | "hidden">,
+    Pick<CM, "index" | "untabbable">,
     Get<UseTableCellParameters<CellElement, CM>, "gridNavigationCellParameters">,
     Get<UseTableCellParameters<CellElement, CM>, "textContentParameters"> {
     focusSelf: CM["focusSelf"];
@@ -159,8 +159,7 @@ export const TableRow = memoForwardRef(function TableRowU<RowElement extends Ele
     navigatePastEnd,
     navigatePastStart,
     selected,
-    hidden,
-    disabled,
+    unselectable,
     initiallyTabbedIndex,
     untabbable,
     render
@@ -171,7 +170,7 @@ export const TableRow = memoForwardRef(function TableRowU<RowElement extends Ele
     const cx1 = useContext(TableSectionContext);
     console.assert(cx1 != null, `This TableRow is not contained within a TableSection`);
     const info = useTableRow<RowElement, Cellement, TableRowInfo<RowElement, Cellement>, TableCellInfo<Cellement>>({
-        info: { index, disabled: disabled || false, hidden: hidden || false },
+        info: { index, unselectable: unselectable || false, untabbable: untabbable || false },
         context: cx1,
         textContentParameters: {
             getText: useDefault("getText", getText)
@@ -202,7 +201,7 @@ export const TableCell = memoForwardRef(function TableCell<CellElement extends E
     index,
     getText,
     focusSelf,
-    hidden,
+    untabbable,
     tagTableCell,
     render,
     colSpan,
@@ -212,7 +211,7 @@ export const TableCell = memoForwardRef(function TableCell<CellElement extends E
     console.assert(context != null, `This TableCell is not contained within a TableRow`);
     const defaultFocusSelf = useStableCallback((e: CellElement) => { focus(e as Element as HTMLElement) }, []);
     const info = useTableCell<CellElement, TableCellInfo<CellElement>>({
-        info: { index, getSortValue, focusSelf: focusSelf ?? defaultFocusSelf, hidden: hidden || false },
+        info: { index, getSortValue, focusSelf: focusSelf ?? defaultFocusSelf, untabbable: untabbable || false },
         context,
         gridNavigationCellParameters: { colSpan: colSpan ?? 1 },
         tableCellParameters: { tagTableCell },

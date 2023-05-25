@@ -54,12 +54,12 @@ export const Menu = memoForwardRef(function Menu({ collator, disableHomeEndKeys,
     useImperativeHandle(ref, () => info);
     return (_jsx(AriaPropNameContext.Provider, { value: ariaPropName, children: _jsx(SelectionModeContext.Provider, { value: selectionMode, children: _jsx(UntabbableContext.Provider, { value: untabbable, children: _jsx(ParentDepthContext.Provider, { value: myDepth, children: _jsx(MenuItemContext.Provider, { value: info.context, children: render(info) }) }) }) }) }));
 });
-export const MenuItem = memoForwardRef(function MenuItem({ index, hidden, getSortValue, onPress, getText, role, focusSelf, disabled, render, info: uinfo }, ref) {
+export const MenuItem = memoForwardRef(function MenuItem({ index, untabbable, getSortValue, onPress, getText, role, focusSelf, unselectable, render, info: uinfo }, ref) {
     const context = useContext(MenuItemContext);
     console.assert(context != null, `This MenuItem is not contained within a Menubar/Menu`);
     const defaultFocusSelf = useCallback((e) => focus(e), []);
     const info = useMenuItem({
-        info: { index, hidden, disabled, focusSelf: focusSelf ?? defaultFocusSelf, ...uinfo },
+        info: { index, untabbable, unselectable, focusSelf: focusSelf ?? defaultFocusSelf, ...uinfo },
         context,
         sortableChildParameters: { getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },

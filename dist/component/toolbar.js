@@ -43,7 +43,7 @@ export const Toolbar = memoForwardRef(function ToolbarU({ render, role, collator
     useImperativeHandle(ref, () => listboxReturnType);
     return (_jsx(AriaPropNameContext.Provider, { value: ariaPropName, children: _jsx(SelectionModeContext.Provider, { value: selectionMode, children: _jsx(UntabbableContext.Provider, { value: untabbable, children: _jsx(ToolbarContext.Provider, { value: listboxReturnType.context, children: render(listboxReturnType) }) }) }) }));
 });
-export const ToolbarChild = memoForwardRef(function ToolbarChildU({ index, render, focusSelf, getSortValue, getText, disabled, disabledProp, hidden, info: uinfo }, ref) {
+export const ToolbarChild = memoForwardRef(function ToolbarChildU({ index, render, focusSelf, getSortValue, getText, unselectable, disabledProp, untabbable, info: uinfo }, ref) {
     const context = useContext(ToolbarContext);
     console.assert(context != null, `This ToolbarChild is not contained within a Toolbar`);
     const focusSelfDefault = useCallback((e) => { focus(e); }, []);
@@ -51,7 +51,7 @@ export const ToolbarChild = memoForwardRef(function ToolbarChildU({ index, rende
     const info = useToolbarChild({
         context,
         toolbarChildParameters: { disabledProp },
-        info: { index, focusSelf, disabled, hidden, ...uinfo },
+        info: { index, focusSelf, unselectable, untabbable, ...uinfo },
         sortableChildParameters: { getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },
         pressParameters: null,

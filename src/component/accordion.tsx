@@ -17,7 +17,7 @@ interface AccordionPropsBase<HeaderButtonElement extends Element> extends
 
 interface AccordionSectionPropsBase<HeaderElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element> extends
     Get<UseAccordionSectionParameters<HeaderButtonElement, UseAccordionSectionInfo>, "accordionSectionParameters">,
-    Pick<UseAccordionSectionInfo, "index">,
+    Pick<Get<UseAccordionSectionParameters<HeaderButtonElement, UseAccordionSectionInfo>, "info">, "index" | "untabbable">,
     Get<UseAccordionSectionParameters<HeaderButtonElement, UseAccordionSectionInfo>, "buttonParameters">,
     Get<UseAccordionSectionParameters<HeaderButtonElement, UseAccordionSectionInfo>, "textContentParameters"> {
     imperativeHandle?: Ref<UseAccordionSectionReturnType<HeaderElement, HeaderButtonElement, BodyElement>>;
@@ -85,7 +85,7 @@ export const AccordionSection = memo(function AccordionSection<HeaderContainerEl
     disabled,
     bodyRole,
     onPress,
-    hidden,
+    untabbable,
     getText,
     imperativeHandle,
     render,
@@ -96,13 +96,10 @@ export const AccordionSection = memo(function AccordionSection<HeaderContainerEl
     const info = useAccordionSection<HeaderContainerElement, HeaderButtonElement, BodyElement>({
         buttonParameters: { disabled: disabled ?? false, tagButton, onPress: onPress ?? null },
         accordionSectionParameters: { open, bodyRole: bodyRole ?? "region" },
-        info: { index, hidden: hidden || false },
+        info: { index, untabbable: untabbable || false },
         refElementParameters: {},
         context,
-        textContentParameters: {
-            hidden: hidden || false,
-            getText: useDefault("getText", getText)
-        },
+        textContentParameters: { getText: useDefault("getText", getText) },
     });
 
     useImperativeHandle(imperativeHandle!, () => info);

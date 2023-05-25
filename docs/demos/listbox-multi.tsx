@@ -13,7 +13,7 @@ const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
         <ListboxItem<HTMLLIElement>
             selected={selected}
             index={index}
-            disabled={false}
+            unselectable={false}
             getSortValue={returnZero}
 
             onPressSync={() => { setSelected(p => !p) }}

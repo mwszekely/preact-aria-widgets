@@ -69,12 +69,12 @@ export const Gridlist = memoForwardRef(function GridlistU({ collator, disableHom
     useImperativeHandle(ref, () => info);
     return (_jsx(GridlistUntabbableContext.Provider, { value: untabbable, children: _jsx(GridlistAriaPropNameContext.Provider, { value: ariaPropName, children: _jsx(GridlistSelectionModeContext.Provider, { value: selectionMode, children: _jsx(GridlistContext.Provider, { value: info.context, children: render(info) }) }) }) }));
 });
-export const GridlistRow = memoForwardRef(function GridlistRowU({ index, collator, disabled, hidden, navigatePastEnd, navigatePastStart, noTypeahead, onTabbableIndexChange, selected, typeaheadTimeout, getSortValue, getText, render, initiallyTabbedIndex, untabbable, info: uinfo }, ref) {
+export const GridlistRow = memoForwardRef(function GridlistRowU({ index, collator, unselectable, untabbable, navigatePastEnd, navigatePastStart, noTypeahead, onTabbableIndexChange, selected, typeaheadTimeout, getSortValue, getText, render, initiallyTabbedIndex, info: uinfo }, ref) {
     const context = useContext(GridlistContext);
     console.assert(context != null, `This GridlistRow is not contained within a Gridlist`);
     untabbable ||= false;
     const info = useGridlistRow({
-        info: { index, hidden, disabled, ...uinfo },
+        info: { index, untabbable, unselectable, ...uinfo },
         context,
         gridlistRowParameters: { selected: selected ?? null },
         sortableChildParameters: { getSortValue },
@@ -94,12 +94,12 @@ export const GridlistRow = memoForwardRef(function GridlistRowU({ index, collato
     useImperativeHandle(ref, () => info);
     return _jsx(GridlistRowContext.Provider, { value: info.context, children: render(info) });
 });
-export const GridlistChild = memoForwardRef(function GridlistChild({ index, colSpan, focusSelf, hidden, getText, onPressSync, render, info: subInfo }, ref) {
+export const GridlistChild = memoForwardRef(function GridlistChild({ index, colSpan, focusSelf, untabbable, getText, onPressSync, render, info: subInfo }, ref) {
     const context = useContext(GridlistRowContext);
     console.assert(context != null, `This GridlistChild is not contained within a GridlistRow that is contained within a Gridlist`);
     const defaultFocusSelf = useStableCallback((e) => { focus(e); }, []);
     const info = useGridlistCell({
-        info: { index, hidden: hidden || false, focusSelf: (focusSelf ?? defaultFocusSelf), ...subInfo },
+        info: { index, untabbable: untabbable || false, focusSelf: (focusSelf ?? defaultFocusSelf), ...subInfo },
         context,
         gridNavigationCellParameters: { colSpan: colSpan ?? 1 },
         textContentParameters: { getText: useDefault("getText", getText) },

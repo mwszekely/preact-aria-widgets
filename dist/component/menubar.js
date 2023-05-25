@@ -35,12 +35,12 @@ export const Menubar = memoForwardRef(function MenubarU({ render, collator, disa
     useImperativeHandle(ref, () => info);
     return (_jsx(AriaPropNameContext.Provider, { value: ariaPropName, children: _jsx(SelectionModeContext.Provider, { value: selectionMode, children: _jsx(UntabbableContext.Provider, { value: untabbable, children: _jsx(MenubarItemContext.Provider, { value: info.context, children: render(info) }) }) }) }));
 });
-export const MenubarItem = memoForwardRef(function MenuItemU({ index, render, focusSelf, hidden, getText, disabled, onPress, getSortValue, role, info: uinfo }, ref) {
+export const MenubarItem = memoForwardRef(function MenuItemU({ index, render, focusSelf, untabbable, getText, unselectable, onPress, getSortValue, role, info: uinfo }, ref) {
     const context = (useContext(MenubarItemContext));
     console.assert(context != null, `This MenuItem is not contained within a Menubar/Menu`);
     const defaultFocusSelf = useCallback((e) => focus(e), []);
     const info = useMenubarChild({
-        info: { index, hidden: hidden || false, disabled: disabled || false, focusSelf: focusSelf ?? defaultFocusSelf, ...uinfo },
+        info: { index, untabbable: untabbable || false, unselectable: unselectable || false, focusSelf: focusSelf ?? defaultFocusSelf, ...uinfo },
         context,
         sortableChildParameters: { getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },

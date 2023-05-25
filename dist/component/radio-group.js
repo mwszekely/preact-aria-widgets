@@ -36,7 +36,7 @@ export const RadioGroup = memoForwardRef(function RadioGroup({ render, name, onS
     useImperativeHandle(ref, () => info);
     return (_jsx(UntabbableContext.Provider, { value: untabbable, children: _jsx(RadioContext.Provider, { value: info.context, children: render(info) }) }));
 });
-export const Radio = memoForwardRef(function Radio({ disabled, index, render, value, ariaLabel, focusSelf, labelPosition, hidden, tagInput, tagLabel, getText }, ref) {
+export const Radio = memoForwardRef(function Radio({ unselectable, disabled, index, render, value, ariaLabel, focusSelf, labelPosition, untabbable, tagInput, tagLabel, getText }, ref) {
     const defaultFocusSelf = () => info.checkboxLikeReturn.focusSelf();
     focusSelf ??= defaultFocusSelf;
     const context = useContext(RadioContext);
@@ -46,7 +46,7 @@ export const Radio = memoForwardRef(function Radio({ disabled, index, render, va
         sortableChildParameters: { getSortValue: getValue },
         radioParameters: { value },
         checkboxLikeParameters: { disabled: disabled ?? false },
-        info: { index, focusSelf, hidden: hidden || false, disabled: !!disabled },
+        info: { index, focusSelf, untabbable: untabbable || false, unselectable: !!unselectable },
         context,
         labelParameters: { ariaLabel, labelPosition, tagInput, tagLabel },
         textContentParameters: { getText: useDefault("getText", getText) },

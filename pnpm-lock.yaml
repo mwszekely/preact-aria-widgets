@@ -12,7 +12,7 @@ dependencies:
     version: 10.13.2
   preact-prop-helpers:
     specifier: github:mwszekely/preact-prop-helpers
-    version: github.com/mwszekely/preact-prop-helpers/6002069184014ffd1e1b00ee64fb4b04d79dcdc0(preact@10.13.2)
+    version: github.com/mwszekely/preact-prop-helpers/cdb7ae1fedd3a855dc66ece1e559a495ae30f59d(preact@10.13.2)
   serve:
     specifier: ^14.2.0
     version: 14.2.0
@@ -1307,9 +1307,9 @@ packages:
       lodash-es: 4.17.21
     dev: false
 
-  github.com/mwszekely/preact-prop-helpers/6002069184014ffd1e1b00ee64fb4b04d79dcdc0(preact@10.13.2):
-    resolution: {tarball: https://codeload.github.com/mwszekely/preact-prop-helpers/tar.gz/6002069184014ffd1e1b00ee64fb4b04d79dcdc0}
-    id: github.com/mwszekely/preact-prop-helpers/6002069184014ffd1e1b00ee64fb4b04d79dcdc0
+  github.com/mwszekely/preact-prop-helpers/cdb7ae1fedd3a855dc66ece1e559a495ae30f59d(preact@10.13.2):
+    resolution: {tarball: https://codeload.github.com/mwszekely/preact-prop-helpers/tar.gz/cdb7ae1fedd3a855dc66ece1e559a495ae30f59d}
+    id: github.com/mwszekely/preact-prop-helpers/cdb7ae1fedd3a855dc66ece1e559a495ae30f59d
     name: preact-prop-helpers
     version: 0.0.1
     peerDependencies:

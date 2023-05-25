@@ -10,7 +10,7 @@ function DemoListItem({ index }: { index: number }) {
             getSortValue={returnZero}
             role="menuitem"
             onPress={e => alert(`Menu item #${index} pressed`)}
-            disabled={false}
+            unselectable={false}
             render={info => <li {...info.props}>{`Menu item #${index}`}</li>}
         />
     )

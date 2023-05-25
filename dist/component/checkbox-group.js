@@ -28,13 +28,13 @@ export const CheckboxGroup = memoForwardRef(function CheckboxGroup({ render, col
     useImperativeHandle(ref, () => info);
     return (_jsx(UntabbableContext.Provider, { value: untabbable, children: _jsx(UseCheckboxGroupChildContext.Provider, { value: info.context, children: render(info) }) }));
 });
-export const CheckboxGroupParent = memoForwardRef(function CheckboxGroupParent({ render, index, focusSelf, hidden, getText, getSortValue, disabled, ..._rest }, ref) {
+export const CheckboxGroupParent = memoForwardRef(function CheckboxGroupParent({ render, index, focusSelf, untabbable, getText, getSortValue, unselectable, ..._rest }, ref) {
     const context = useContext(UseCheckboxGroupChildContext);
     console.assert(context != null, `This CheckboxGroupParent is not contained within a CheckboxGroup`);
     const info = useCheckboxGroupParent({
         pressParameters: { focusSelf, onPressSync: null },
         rovingTabIndexParameters: { untabbable: useContext(UntabbableContext) },
-        info: { index, disabled: disabled || false, hidden: hidden || false, focusSelf, checkboxInfo: { checkboxChildType: "parent" } },
+        info: { index, unselectable: unselectable || false, untabbable: untabbable || false, focusSelf, checkboxInfo: { checkboxChildType: "parent" } },
         context,
         sortableChildParameters: { getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) }
@@ -42,12 +42,12 @@ export const CheckboxGroupParent = memoForwardRef(function CheckboxGroupParent({
     useImperativeHandle(ref, () => info);
     return render(info);
 });
-export const CheckboxGroupChild = memoForwardRef(function CheckboxGroupChild({ index, render, checked, onChangeFromParent, getSortValue, hidden, getText, focusSelf, disabled, ..._rest }, ref) {
+export const CheckboxGroupChild = memoForwardRef(function CheckboxGroupChild({ index, render, checked, onChangeFromParent, getSortValue, untabbable, getText, focusSelf, unselectable, ..._rest }, ref) {
     const context = useContext(UseCheckboxGroupChildContext);
     console.assert(context != null, `This CheckboxGroupChild is not contained within a CheckboxGroup`);
     const info = useCheckboxGroupChild({
         checkboxGroupChild: { checked, onChangeFromParent },
-        info: { index, hidden: hidden || false, disabled: disabled || false, focusSelf },
+        info: { index, untabbable: untabbable || false, unselectable: unselectable || false, focusSelf },
         textContentParameters: { getText: useDefault("getText", getText) },
         context,
         sortableChildParameters: { getSortValue },

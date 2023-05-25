@@ -129,7 +129,7 @@ export function useToolbarChild<ChildElement extends Element, M extends UseToolb
     } = useCompleteListNavigationChild<ChildElement, M>({ info,  ...args });
 
     return {
-        props: useMergedProps(props, { [disabledProp as never]: info.disabled ? true : undefined }),
+        props: useMergedProps(props, { [disabledProp as never]: info.unselectable ? true : undefined }),
         ...listNavReturn
     }
 }

@@ -9,7 +9,7 @@ export interface CheckboxGroupPropsBase<ParentElement extends Element, TabbableC
 export interface CheckboxGroupParentPropsBase<TCE extends Element> extends Pick<CheckboxGroupInfo<TCE>, "index">, Get<UseCheckboxGroupParentParameters<TCE, CheckboxGroupInfo<TCE>>, "sortableChildParameters">, Get<UseCheckboxGroupParentParameters<TCE, CheckboxGroupInfo<TCE>>, "textContentParameters">, OmitStrong<Get<UseCheckboxGroupParentParameters<TCE, CheckboxGroupInfo<TCE>>, "info">, "checkboxInfo"> {
     ref?: Ref<UseCheckboxGroupParentReturnType<TCE, CheckboxGroupInfo<TCE>>>;
 }
-export interface CheckboxGroupChildPropsBase<TCE extends Element> extends Get<UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>, "checkboxGroupChild">, Pick<CheckboxGroupInfo<TCE>, "index" | "hidden" | "disabled">, Get<UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>, "sortableChildParameters">, Get<UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>, "textContentParameters"> {
+export interface CheckboxGroupChildPropsBase<TCE extends Element> extends Get<UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>, "checkboxGroupChild">, Pick<CheckboxGroupInfo<TCE>, "index" | "untabbable" | "unselectable">, Get<UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>, "sortableChildParameters">, Get<UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>, "textContentParameters"> {
     focusSelf: UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>["info"]["focusSelf"];
     ref?: Ref<UseCheckboxGroupChildReturnType<TCE, CheckboxGroupInfo<TCE>>>;
 }
@@ -23,7 +23,7 @@ export interface CheckboxGroupChildProps<TCE extends Element> extends PartialExc
     render(info: UseCheckboxGroupChildReturnType<TCE, CheckboxGroupInfo<TCE>>): VNode<any>;
 }
 export declare const CheckboxGroup: <ParentElement extends Element, TabbableChildElement extends Element>({ render, collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, onTabbableIndexChange, compare, staggered, getIndex, untabbable, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, ..._rest }: CheckboxGroupProps<ParentElement, TabbableChildElement, CheckboxGroupInfo<TabbableChildElement>>, ref?: Ref<any>) => import("preact").JSX.Element;
-export declare const CheckboxGroupParent: <TCE extends Element>({ render, index, focusSelf, hidden, getText, getSortValue, disabled, ..._rest }: CheckboxGroupParentProps<TCE>, ref?: Ref<any>) => VNode<any>;
-export declare const CheckboxGroupChild: <TCE extends Element>({ index, render, checked, onChangeFromParent, getSortValue, hidden, getText, focusSelf, disabled, ..._rest }: CheckboxGroupChildProps<TCE>, ref?: Ref<any>) => VNode<any>;
+export declare const CheckboxGroupParent: <TCE extends Element>({ render, index, focusSelf, untabbable, getText, getSortValue, unselectable, ..._rest }: CheckboxGroupParentProps<TCE>, ref?: Ref<any>) => VNode<any>;
+export declare const CheckboxGroupChild: <TCE extends Element>({ index, render, checked, onChangeFromParent, getSortValue, untabbable, getText, focusSelf, unselectable, ..._rest }: CheckboxGroupChildProps<TCE>, ref?: Ref<any>) => VNode<any>;
 export {};
 //# sourceMappingURL=checkbox-group.d.ts.map

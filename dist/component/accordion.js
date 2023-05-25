@@ -27,19 +27,16 @@ export const Accordion = memo(function Accordion({ disableHomeEndKeys, initialIn
     useImperativeHandle(imperativeHandle, () => info);
     return (_jsx(AccordionSectionContext.Provider, { value: info.context, children: render(info) }));
 });
-export const AccordionSection = memo(function AccordionSection({ open, index, tagButton, disabled, bodyRole, onPress, hidden, getText, imperativeHandle, render, ...rest }) {
+export const AccordionSection = memo(function AccordionSection({ open, index, tagButton, disabled, bodyRole, onPress, untabbable, getText, imperativeHandle, render, ...rest }) {
     assertEmptyObject(rest);
     const context = useContext(AccordionSectionContext);
     const info = useAccordionSection({
         buttonParameters: { disabled: disabled ?? false, tagButton, onPress: onPress ?? null },
         accordionSectionParameters: { open, bodyRole: bodyRole ?? "region" },
-        info: { index, hidden: hidden || false },
+        info: { index, untabbable: untabbable || false },
         refElementParameters: {},
         context,
-        textContentParameters: {
-            hidden: hidden || false,
-            getText: useDefault("getText", getText)
-        },
+        textContentParameters: { getText: useDefault("getText", getText) },
     });
     useImperativeHandle(imperativeHandle, () => info);
     return render(info);

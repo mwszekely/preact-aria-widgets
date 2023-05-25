@@ -16,7 +16,7 @@ export function useAccordion({ accordionParameters: { initialIndex, localStorage
         }
     });
     const { getChildren } = managedChildrenReturn;
-    const isValidByChild = useCallback((c) => (c && !c.disabled && !c.hidden), []);
+    const isValidByChild = useCallback((c) => (c && !c.disabled && !c.untabbable), []);
     const isValidByIndex = useCallback((c) => {
         const child = getChildren().getAt(c);
         if (child) {
@@ -89,7 +89,7 @@ export function useAccordion({ accordionParameters: { initialIndex, localStorage
         accordionReturn: useMemoObject({ changeExpandedIndex })
     };
 }
-export function useAccordionSection({ buttonParameters, accordionSectionParameters: { open: openFromUser, bodyRole }, info: { index, hidden }, textContentParameters, context: { accordionSectionParameters: { changeExpandedIndex, changeTabbedIndex: setCurrentFocusedIndex, getTabbedIndex: getCurrentFocusedIndex, stableTypeaheadProps }, linearNavigationParameters, rovingTabIndexReturn, managedChildContext, typeaheadNavigationContext }, refElementParameters, }) {
+export function useAccordionSection({ buttonParameters, accordionSectionParameters: { open: openFromUser, bodyRole }, info: { index, untabbable }, textContentParameters, context: { accordionSectionParameters: { changeExpandedIndex, changeTabbedIndex: setCurrentFocusedIndex, getTabbedIndex: getCurrentFocusedIndex, stableTypeaheadProps }, linearNavigationParameters, rovingTabIndexReturn, managedChildContext, typeaheadNavigationContext }, refElementParameters, }) {
     monitorCallCount(useAccordionSection);
     const { disabled, onPress: userOnPress } = buttonParameters;
     const [openFromParent, setOpenFromParent, getOpenFromParent] = useState(null);
@@ -112,7 +112,7 @@ export function useAccordionSection({ buttonParameters, accordionSectionParamete
             focusSelf,
             getMostRecentlyTabbed,
             getOpenFromParent,
-            hidden,
+            untabbable,
             setMostRecentlyTabbed,
             setOpenFromParent,
         }

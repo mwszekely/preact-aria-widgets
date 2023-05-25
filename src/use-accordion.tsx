@@ -26,13 +26,13 @@ export interface UseAccordionSectionInfo extends ManagedChildInfo<number> {
     getMostRecentlyTabbed(): boolean | null;
     focusSelf(): void;
     disabled: DisabledType;
-    hidden: boolean;
+    untabbable: boolean;
 }
 
 export interface UseAccordionSectionParameters<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo> extends
     OmitStrong<UseTypeaheadNavigationChildParameters<HeaderButtonElement, M>, "refElementReturn" | "context">,
     UseRefElementParameters<HeaderButtonElement> {
-    info: Pick<UseManagedChildParameters<M>["info"], "index" | "hidden">;
+    info: Pick<UseManagedChildParameters<M>["info"], "index" | "untabbable">;
     context: UseAccordionContext<HeaderButtonElement, M>;
     accordionSectionParameters: {
         /** 
@@ -101,7 +101,7 @@ export function useAccordion<HeaderButtonElement extends Element, M extends UseA
     });
     const { getChildren } = managedChildrenReturn;
 
-    const isValidByChild = useCallback((c: M) => (c && !c.disabled && !c.hidden), []);
+    const isValidByChild = useCallback((c: M) => (c && !c.disabled && !c.untabbable), []);
     const isValidByIndex = useCallback((c: number): boolean => {
         const child = getChildren().getAt(c);
         if (child) {
@@ -191,7 +191,7 @@ export function useAccordion<HeaderButtonElement extends Element, M extends UseA
 export function useAccordionSection<_HeaderContainerElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element>({
     buttonParameters,
     accordionSectionParameters: { open: openFromUser, bodyRole },
-    info: { index, hidden },
+    info: { index, untabbable },
     textContentParameters,
     context: {
         accordionSectionParameters: { changeExpandedIndex, changeTabbedIndex: setCurrentFocusedIndex, getTabbedIndex: getCurrentFocusedIndex, stableTypeaheadProps },
@@ -231,7 +231,7 @@ export function useAccordionSection<_HeaderContainerElement extends Element, Hea
             focusSelf,
             getMostRecentlyTabbed,
             getOpenFromParent,
-            hidden,
+            untabbable,
             setMostRecentlyTabbed,
             setOpenFromParent,
         }
