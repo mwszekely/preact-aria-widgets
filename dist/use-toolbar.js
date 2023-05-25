@@ -19,7 +19,7 @@ export function useToolbar({ linearNavigationParameters, toolbarParameters: { or
     const { context, props, ...listNavReturn } = useCompleteListNavigationDeclarative({
         ...listNavParameters,
         rovingTabIndexParameters: { ...rovingTabIndexParameters, untabbable: disabled },
-        singleSelectionDeclarativeParameters: { selectedIndex, setSelectedIndex: disabled ? null : onSelectedIndexChange },
+        singleSelectionDeclarativeParameters: { selectedIndex, onSelectedIndexChange: disabled ? null : onSelectedIndexChange },
         paginatedChildrenParameters: { paginationMax: null, paginationMin: null },
         linearNavigationParameters: { ...linearNavigationParameters, arrowKeyDirection: orientation },
     });

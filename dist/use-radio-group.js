@@ -1,4 +1,4 @@
-import { assertEmptyObject, monitorCallCount, useCompleteListNavigation, useCompleteListNavigationChild, useMergedProps, useRefElement, useSingleSelectionDeclarative, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
+import { assertEmptyObject, EventDetail, monitorCallCount, useCompleteListNavigation, useCompleteListNavigationChild, useMergedProps, useRefElement, useSingleSelectionDeclarative, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
 import { useLayoutEffect, useMemo, useRef } from "preact/hooks";
 import { enhanceEvent, Prefices } from "./props.js";
 import { useCheckboxLike } from "./use-checkbox-like.js";
@@ -26,7 +26,7 @@ export function useRadioGroup({ labelParameters, radioGroupParameters: { name, o
             singleSelectionReturn.changeSelectedIndex(null);
     }, [selectedValue]);
     const { context, props: propsGroup2, singleSelectionReturn, managedChildrenReturn, rovingTabIndexReturn, ...restRet } = useCompleteListNavigation({
-        singleSelectionParameters: { initiallySelectedIndex: selectedIndex, onSelectedIndexChange: useStableCallback((i, e) => { setSelectedIndex(i); onSelectedIndexChange?.(i, e); }), selectionMode: "focus", ariaPropName: null },
+        singleSelectionParameters: { initiallySelectedIndex: selectedIndex, onSelectedIndexChange: useStableCallback((e) => { setSelectedIndex(e[EventDetail].selectedIndex); onSelectedIndexChange?.(e); }), selectionMode: "focus", ariaPropName: null },
         paginatedChildrenParameters: { paginationMin: null, paginationMax: null },
         ...restParams
     });
@@ -46,7 +46,8 @@ export function useRadioGroup({ labelParameters, radioGroupParameters: { name, o
         },
         singleSelectionDeclarativeParameters: {
             selectedIndex,
-            setSelectedIndex: useStableCallback((i, e) => {
+            onSelectedIndexChange: useStableCallback((e) => {
+                let i = e[EventDetail].selectedIndex;
                 let value = i == undefined ? undefined : indexToName.current.get(i);
                 onSelectedValueChange?.(enhanceEvent(e, { selectedValue: value }));
             })

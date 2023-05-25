@@ -103,7 +103,7 @@ export function Demo() {
                     groupingType="without-groups"
                     selectionLimit="single"
                     selectedIndex={selectedIndex}
-                    onSelectedIndexChange={setSelectedIndex}
+                    onSelectedIndexChange={e => setSelectedIndex(e[EventDetail].selectedIndex)}
                     render={infoGridlist => {
                         return (
                             <>
@@ -117,7 +117,7 @@ export function Demo() {
                                                 getSortValue={returnZero}
                                                 render={info => {
                                                     return (
-                                                        <li {...info.props}><DemoGridlistChild1 row={i} /><DemoGridlistChild2 tabbable={info.rovingTabIndexChildReturn.tabbable} /></li>
+                                                        <li {...info.props}><DemoGridlistChild1 row={i} />{i != 2 && <DemoGridlistChild2 tabbable={info.rovingTabIndexChildReturn.tabbable} />}</li>
                                                     )
 
                                                     /*

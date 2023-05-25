@@ -1,11 +1,11 @@
 import { h } from "preact";
-import { UsePressParameters, UsePressReturnType, UseRefElementParameters, UseRefElementReturnType } from "preact-prop-helpers";
+import { UsePressParameters, UsePressReturnType, PressEventReason, UseRefElementParameters, UseRefElementReturnType } from "preact-prop-helpers";
 import { DisabledType, ElementToTag, TargetedEnhancedEvent, EnhancedEventHandler, OmitStrong } from "./props.js";
 export interface ButtonPressEventDetail {
     pressed: boolean | null;
 }
-export type TargetedButtonPressEvent<E extends EventTarget> = TargetedEnhancedEvent<E, Event, ButtonPressEventDetail>;
-export type ButtonPressEventHandler<E extends EventTarget> = EnhancedEventHandler<E, Event, ButtonPressEventDetail>;
+export type TargetedButtonPressEvent<E extends EventTarget> = TargetedEnhancedEvent<PressEventReason<E>, ButtonPressEventDetail>;
+export type ButtonPressEventHandler<E extends EventTarget> = EnhancedEventHandler<PressEventReason<E>, ButtonPressEventDetail>;
 export interface UseButtonParameters<E extends Node> extends UseRefElementParameters<E> {
     buttonParameters: {
         tagButton: ElementToTag<E>;

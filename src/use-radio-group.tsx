@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { assertEmptyObject, CompleteListNavigationContext, monitorCallCount, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useMergedProps, useRefElement, useSingleSelectionDeclarative, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
+import { assertEmptyObject, CompleteListNavigationContext, EventDetail, monitorCallCount, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useMergedProps, useRefElement, useSingleSelectionDeclarative, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
 import { useLayoutEffect, useMemo, useRef } from "preact/hooks";
 import { EnhancedEventHandler, enhanceEvent, OmitStrong, Prefices, TargetedEnhancedEvent } from "./props.js";
 import { useCheckboxLike, UseCheckboxLikeParameters, UseCheckboxLikeReturnType } from "./use-checkbox-like.js";
@@ -7,15 +7,15 @@ import { FocusableLabelElement, LabelPosition, useLabelSynthetic, UseLabelSynthe
 
 export interface RadioChangeEventDetail<V extends number | string> { selectedValue: V | undefined };
 
-export type TargetedRadioChangeEvent<E extends EventTarget, V extends number | string> = TargetedEnhancedEvent<E, Event, RadioChangeEventDetail<V>>;
-export type RadioChangeEventHandler<E extends EventTarget, V extends number | string> = EnhancedEventHandler<E, Event, RadioChangeEventDetail<V>>;
+export type TargetedRadioChangeEvent<V extends number | string> = TargetedEnhancedEvent<Event, RadioChangeEventDetail<V>>;
+export type RadioChangeEventHandler<V extends number | string> = EnhancedEventHandler<Event, RadioChangeEventDetail<V>>;
 
 export interface UseRadioGroupParameters<V extends string | number, GroupElement extends Element, _GroupLabelElement extends Element, TabbableChildElement extends Element> extends OmitStrong<UseCompleteListNavigationParameters<GroupElement, TabbableChildElement, RadioSubInfo<TabbableChildElement, V>>, "paginatedChildrenParameters" | "singleSelectionParameters"> {
     radioGroupParameters: {
         name: string;
 
         selectedValue: V | null;
-        onSelectedValueChange: undefined | null | RadioChangeEventHandler<TabbableChildElement, V>;
+        onSelectedValueChange: undefined | null | RadioChangeEventHandler<V>;
     }
     labelParameters: OmitStrong<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
 }
@@ -92,7 +92,7 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
         rovingTabIndexReturn,
         ...restRet
     } = useCompleteListNavigation<G, TCE, RadioSubInfo<TCE, V>>({
-        singleSelectionParameters: { initiallySelectedIndex: selectedIndex, onSelectedIndexChange: useStableCallback((i, e) => { setSelectedIndex(i); onSelectedIndexChange?.(i, e); }), selectionMode: "focus", ariaPropName: null },
+        singleSelectionParameters: { initiallySelectedIndex: selectedIndex, onSelectedIndexChange: useStableCallback((e) => { setSelectedIndex(e[EventDetail].selectedIndex); onSelectedIndexChange?.(e); }), selectionMode: "focus", ariaPropName: null },
         paginatedChildrenParameters: { paginationMin: null, paginationMax: null },
         ...restParams
     });
@@ -114,9 +114,10 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
         },
         singleSelectionDeclarativeParameters: {
             selectedIndex, 
-            setSelectedIndex: useStableCallback((i, e) => {
+            onSelectedIndexChange: useStableCallback((e) => {
+                let i = e[EventDetail].selectedIndex;
                 let value = i == undefined? undefined : indexToName.current.get(i);
-                onSelectedValueChange?.(enhanceEvent<TCE, Event, RadioChangeEventDetail<V>>(e!, { selectedValue: value }));
+                onSelectedValueChange?.(enhanceEvent(e, { selectedValue: value }));
             })
         }
     })

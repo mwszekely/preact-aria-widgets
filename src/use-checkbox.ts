@@ -3,18 +3,20 @@ import { monitorCallCount, returnFalse, useMergedProps, useRefElement, useStable
 import { EnhancedEventHandler, enhanceEvent, OmitStrong, Prefices, TargetedEnhancedEvent } from "./props.js";
 import { useCheckboxLike, UseCheckboxLikeParameters, UseCheckboxLikeReturnType } from "./use-checkbox-like.js";
 import { LabelPosition } from "./use-label.js";
+import { EventType } from "preact-prop-helpers"
 
 export interface CheckboxChangeEventDetail {
     checked: boolean;
 };
 
-export type TargetedCheckboxChangeEvent<E extends EventTarget> = TargetedEnhancedEvent<E, Event, CheckboxChangeEventDetail>;
-export type CheckboxChangeEventHandler<E extends EventTarget> = EnhancedEventHandler<E, Event, CheckboxChangeEventDetail>;
+// These are not typed because they could come from the input OR the label.
+export type TargetedCheckboxChangeEvent = TargetedEnhancedEvent<Event, CheckboxChangeEventDetail>;
+export type CheckboxChangeEventHandler = EnhancedEventHandler<Event, CheckboxChangeEventDetail>;
 
 export interface UseCheckboxParameters<LP extends LabelPosition, I extends Element, L extends Element> extends OmitStrong<UseCheckboxLikeParameters<LP, I, L>, "refElementLabelReturn" | "refElementInputReturn" | "checkboxLikeParameters" | "randomIdInputParameters" | "randomIdLabelParameters"> {
     checkboxLikeParameters: OmitStrong<UseCheckboxLikeParameters<LP, I, L>["checkboxLikeParameters"], "onInput" | "role">;
     checkboxParameters: {
-        onCheckedChange: undefined | CheckboxChangeEventHandler<I>;
+        onCheckedChange: undefined | CheckboxChangeEventHandler;
     }
 }
 
@@ -35,7 +37,7 @@ export function useCheckbox<LP extends LabelPosition, InputType extends Element,
     const { refElementReturn: refElementInputReturn, propsStable: propsRefInput } = useRefElement<InputType>({});
     const { refElementReturn: refElementLabelReturn, propsStable: propsRefLabel } = useRefElement<LabelType>({});
 
-    const onInputEnhanced = useStableCallback((e: Event) => onCheckedChange?.(enhanceEvent<InputType, Event, { checked: boolean }>(e, { checked: !checked })));
+    const onInputEnhanced = useStableCallback((e: Event) => onCheckedChange?.(enhanceEvent(e, { checked: !checked })));
     const { propsInput, propsLabel, ...ret } = useCheckboxLike<LP, InputType, LabelType>({
         randomIdInputParameters: { prefix: Prefices.checkboxLikeInput },
         randomIdLabelParameters: { prefix: Prefices.checkboxLikeLabel },

@@ -15,7 +15,7 @@ export function useListbox({ labelParameters, listboxParameters: { selectionLimi
         randomIdLabelParameters: { prefix: Prefices.listboxLabel }
     });
     let { context, props: { ...props }, rovingTabIndexReturn, singleSelectionReturn, ...restRet } = useCompleteListNavigationDeclarative({
-        singleSelectionDeclarativeParameters: { selectedIndex, setSelectedIndex: (i, e) => { debugger; onSelectedIndexChange?.(i, e); } },
+        singleSelectionDeclarativeParameters: { selectedIndex, onSelectedIndexChange },
         singleSelectionParameters: { ariaPropName: ariaPropName || "aria-selected", selectionMode: selectionMode },
         linearNavigationParameters: { arrowKeyDirection: orientation, ...linearNavigationParameters },
         ...restParams

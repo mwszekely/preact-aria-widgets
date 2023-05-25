@@ -26,7 +26,7 @@ export interface UseToolbarParameters<ContainerElement extends Element, ChildEle
         /**
          * Optional; Only used if you need single selection logic.
          */
-        onSelectedIndexChange: MakeSingleSelectionDeclarativeParameters<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>>["singleSelectionDeclarativeParameters"]["setSelectedIndex"];
+        onSelectedIndexChange: MakeSingleSelectionDeclarativeParameters<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>>["singleSelectionDeclarativeParameters"]["onSelectedIndexChange"];
 
         /**
          * When true, none of the children will be selectable or focusable.
@@ -92,7 +92,7 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
     } = useCompleteListNavigationDeclarative<ContainerElement, ChildElement, M>({
         ...listNavParameters,
         rovingTabIndexParameters: { ...rovingTabIndexParameters, untabbable: disabled },
-        singleSelectionDeclarativeParameters: { selectedIndex, setSelectedIndex: disabled? null : onSelectedIndexChange },
+        singleSelectionDeclarativeParameters: { selectedIndex, onSelectedIndexChange: disabled? null : onSelectedIndexChange },
         paginatedChildrenParameters: { paginationMax: null, paginationMin: null },
         linearNavigationParameters: { ...linearNavigationParameters, arrowKeyDirection: orientation },
     });

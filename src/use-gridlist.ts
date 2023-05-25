@@ -98,7 +98,7 @@ export function useGridlist<GridlistElement extends Element, GridlistRowElement 
         singleSelectionReturn,
         ...restRet
     } = useCompleteGridNavigationDeclarative<GridlistElement, GridlistRowElement, GridlistCellElement, RM, CM>({
-        singleSelectionDeclarativeParameters: { selectedIndex: selectedIndex, setSelectedIndex: onSelectedIndexChange },
+        singleSelectionDeclarativeParameters: { selectedIndex: selectedIndex, onSelectedIndexChange },
         ...restParams
     });
 

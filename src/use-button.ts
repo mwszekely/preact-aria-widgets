@@ -1,13 +1,13 @@
 import { h } from "preact";
-import { focus, monitorCallCount, useMergedProps, usePress, UsePressParameters, UsePressReturnType, useRefElement, UseRefElementParameters, UseRefElementReturnType } from "preact-prop-helpers";
+import { focus, monitorCallCount, useMergedProps, usePress, UsePressParameters, UsePressReturnType, PressEventReason, useRefElement, UseRefElementParameters, UseRefElementReturnType } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { DisabledType, ElementToTag, TargetedEnhancedEvent, EnhancedEventHandler, enhanceEvent, OmitStrong } from "./props.js";
 
 export interface ButtonPressEventDetail { 
     pressed: boolean | null;
 }
-export type TargetedButtonPressEvent<E extends EventTarget> = TargetedEnhancedEvent<E, Event, ButtonPressEventDetail>;
-export type ButtonPressEventHandler<E extends EventTarget> = EnhancedEventHandler<E, Event, ButtonPressEventDetail>;
+export type TargetedButtonPressEvent<E extends EventTarget> = TargetedEnhancedEvent<PressEventReason<E>, ButtonPressEventDetail>;
+export type ButtonPressEventHandler<E extends EventTarget> = EnhancedEventHandler<PressEventReason<E>, ButtonPressEventDetail>;
 
 
 export interface UseButtonParameters<E extends Node> extends UseRefElementParameters<E> {

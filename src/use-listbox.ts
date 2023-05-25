@@ -101,7 +101,7 @@ export function useListbox<ListElement extends Element, ListItemElement extends 
         singleSelectionReturn,
         ...restRet
     } = useCompleteListNavigationDeclarative<ListElement, ListItemElement, M>({
-        singleSelectionDeclarativeParameters: { selectedIndex, setSelectedIndex: (i,e) => { debugger; onSelectedIndexChange?.(i,e) } },
+        singleSelectionDeclarativeParameters: { selectedIndex, onSelectedIndexChange },
         singleSelectionParameters: { ariaPropName: ariaPropName || "aria-selected", selectionMode: selectionMode },
         linearNavigationParameters: { arrowKeyDirection: orientation, ...linearNavigationParameters },
         ...restParams

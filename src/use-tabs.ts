@@ -142,11 +142,11 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
     } = useCompleteListNavigation<TabListElement, TabElement, M>({
         linearNavigationParameters: { arrowKeyDirection: orientation, ...linearNavigationParameters },
         singleSelectionParameters: {
-            onSelectedIndexChange: useStableCallback((i, p) => {
-                ssi?.(i, p);
-                changeVisiblePanel(i);
-                setLocalStorageIndex(i);
-                changeSelectedIndex(i, p);
+            onSelectedIndexChange: useStableCallback((e) => {
+                ssi?.(e);
+                changeVisiblePanel(e[EventDetail].selectedIndex);
+                setLocalStorageIndex(e[EventDetail].selectedIndex);
+                changeSelectedIndex(e[EventDetail].selectedIndex);
             }),
             ariaPropName: "aria-selected", 
             selectionMode: selectionMode ?? "focus",

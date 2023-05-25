@@ -37,11 +37,11 @@ export function useTabs({ labelParameters, linearNavigationParameters, singleSel
     const { props: listNavigationSingleSelectionProps, context, ...listNavRet1 } = useCompleteListNavigation({
         linearNavigationParameters: { arrowKeyDirection: orientation, ...linearNavigationParameters },
         singleSelectionParameters: {
-            onSelectedIndexChange: useStableCallback((i, p) => {
-                ssi?.(i, p);
-                changeVisiblePanel(i);
-                setLocalStorageIndex(i);
-                changeSelectedIndex(i, p);
+            onSelectedIndexChange: useStableCallback((e) => {
+                ssi?.(e);
+                changeVisiblePanel(e[EventDetail].selectedIndex);
+                setLocalStorageIndex(e[EventDetail].selectedIndex);
+                changeSelectedIndex(e[EventDetail].selectedIndex);
             }),
             ariaPropName: "aria-selected",
             selectionMode: selectionMode ?? "focus",

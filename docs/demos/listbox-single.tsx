@@ -1,6 +1,6 @@
 
 import { ComponentChildren } from "preact";
-import { returnZero, useMergedProps, useState } from "preact-prop-helpers";
+import { EventDetail, returnZero, useMergedProps, useState } from "preact-prop-helpers";
 import { memo } from "preact/compat";
 import { GroupedListbox, Listbox, ListboxItem } from "../../dist/index.js";
 
@@ -63,7 +63,7 @@ function ListboxDemo({ count, label }: { count: number, label: ComponentChildren
     return (
         <Listbox<HTMLOListElement, HTMLLIElement, HTMLLabelElement>
             selectedIndex={selectedIndex}
-            onSelectedIndexChange={setSelectedIndex}
+            onSelectedIndexChange={e => setSelectedIndex(e[EventDetail].selectedIndex)}
             ariaPropName="aria-selected"
 
             render={info => {

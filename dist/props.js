@@ -1,9 +1,4 @@
-export const EventDetail = Symbol("event-detail");
-export function enhanceEvent(e, detail) {
-    const event = e;
-    event[EventDetail] = detail;
-    return event;
-}
+export { EventDetail, enhanceEvent } from "preact-prop-helpers";
 const alreadyWarned = new Set();
 export function overwriteWithWarning(componentName, props, propName, newValue) {
     //const key = `${componentName};${propName}`;

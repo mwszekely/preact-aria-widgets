@@ -8,8 +8,8 @@ export interface CheckboxGroupChangeEventDetail {
     childrenChecked: boolean | Map<number, boolean | "mixed">;
 }
 
-export type TargetedCheckboxGroupChangeEvent<E extends EventTarget> = TargetedEnhancedEvent<E, Event, CheckboxGroupChangeEventDetail>;
-export type CheckboxGroupChangeEventHandler<E extends EventTarget> = EnhancedEventHandler<E, Event, CheckboxGroupChangeEventDetail>;
+export type TargetedCheckboxGroupChangeEvent = TargetedEnhancedEvent<Event, CheckboxGroupChangeEventDetail>;
+export type CheckboxGroupChangeEventHandler = EnhancedEventHandler<Event, CheckboxGroupChangeEventDetail>;
 
 export interface UseCheckboxGroupParameters<ParentElement extends Element, TabbableChildElement extends Element, M extends CheckboxGroupInfo<TabbableChildElement>> extends OmitStrong<UseCompleteListNavigationParameters<ParentElement, TabbableChildElement, M>, "linearNavigationParameters" | "paginatedChildrenParameters" | "singleSelectionParameters"> {
     linearNavigationParameters: OmitStrong<UseCompleteListNavigationParameters<ParentElement, TabbableChildElement, M>["linearNavigationParameters"], "arrowKeyDirection">;

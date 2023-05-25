@@ -5,12 +5,12 @@ import { LabelPosition } from "./use-label.js";
 export interface CheckboxChangeEventDetail {
     checked: boolean;
 }
-export type TargetedCheckboxChangeEvent<E extends EventTarget> = TargetedEnhancedEvent<E, Event, CheckboxChangeEventDetail>;
-export type CheckboxChangeEventHandler<E extends EventTarget> = EnhancedEventHandler<E, Event, CheckboxChangeEventDetail>;
+export type TargetedCheckboxChangeEvent = TargetedEnhancedEvent<Event, CheckboxChangeEventDetail>;
+export type CheckboxChangeEventHandler = EnhancedEventHandler<Event, CheckboxChangeEventDetail>;
 export interface UseCheckboxParameters<LP extends LabelPosition, I extends Element, L extends Element> extends OmitStrong<UseCheckboxLikeParameters<LP, I, L>, "refElementLabelReturn" | "refElementInputReturn" | "checkboxLikeParameters" | "randomIdInputParameters" | "randomIdLabelParameters"> {
     checkboxLikeParameters: OmitStrong<UseCheckboxLikeParameters<LP, I, L>["checkboxLikeParameters"], "onInput" | "role">;
     checkboxParameters: {
-        onCheckedChange: undefined | CheckboxChangeEventHandler<I>;
+        onCheckedChange: undefined | CheckboxChangeEventHandler;
     };
 }
 export interface UseCheckboxReturnType<InputType extends Element, LabelType extends Element> extends UseCheckboxLikeReturnType<InputType, LabelType> {

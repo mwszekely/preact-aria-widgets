@@ -6,13 +6,13 @@ import { FocusableLabelElement, LabelPosition, UseLabelSyntheticParameters } fro
 export interface RadioChangeEventDetail<V extends number | string> {
     selectedValue: V | undefined;
 }
-export type TargetedRadioChangeEvent<E extends EventTarget, V extends number | string> = TargetedEnhancedEvent<E, Event, RadioChangeEventDetail<V>>;
-export type RadioChangeEventHandler<E extends EventTarget, V extends number | string> = EnhancedEventHandler<E, Event, RadioChangeEventDetail<V>>;
+export type TargetedRadioChangeEvent<V extends number | string> = TargetedEnhancedEvent<Event, RadioChangeEventDetail<V>>;
+export type RadioChangeEventHandler<V extends number | string> = EnhancedEventHandler<Event, RadioChangeEventDetail<V>>;
 export interface UseRadioGroupParameters<V extends string | number, GroupElement extends Element, _GroupLabelElement extends Element, TabbableChildElement extends Element> extends OmitStrong<UseCompleteListNavigationParameters<GroupElement, TabbableChildElement, RadioSubInfo<TabbableChildElement, V>>, "paginatedChildrenParameters" | "singleSelectionParameters"> {
     radioGroupParameters: {
         name: string;
         selectedValue: V | null;
-        onSelectedValueChange: undefined | null | RadioChangeEventHandler<TabbableChildElement, V>;
+        onSelectedValueChange: undefined | null | RadioChangeEventHandler<V>;
     };
     labelParameters: OmitStrong<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
 }

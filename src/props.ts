@@ -1,4 +1,5 @@
 import { ComponentType, h, Ref } from "preact";
+export { EventDetail, enhanceEvent, TargetedEnhancedEvent, EnhancedEventHandler } from "preact-prop-helpers";
 
 export type RefFromTag<T extends keyof h.JSX.IntrinsicElements> = NonNullable<h.JSX.IntrinsicElements[T]["ref"]> & Ref<any>;
 export type ElementFromRef<R extends Ref<any>> = R extends Ref<infer E> ? E : EventTarget;
@@ -45,21 +46,6 @@ export type PropsOfType<T> =
 export interface TagSensitiveProps<E extends EventTarget> {
     tag: ElementToTag<E>;
 }
-
-export const EventDetail = Symbol("event-detail");
-export type EventDetail = typeof EventDetail;
-export type EnhancedEventHandler<Target extends EventTarget, TypedEvent extends Event, Detail> = (e: TargetedEnhancedEvent<Target, TypedEvent, Detail>) => void;
-export type TargetedEnhancedEvent<Target extends EventTarget, TypedEvent extends Event, Detail> = h.JSX.TargetedEvent<Target, TypedEvent> & {
-    [EventDetail]: Detail;
-};
-
-
-export function enhanceEvent<E extends EventTarget, TypedEvent extends Event, Detail extends object>(e: TypedEvent | h.JSX.TargetedEvent<E, TypedEvent>, detail: Detail): TargetedEnhancedEvent<E, TypedEvent, Detail> {
-    const event = e as unknown as TargetedEnhancedEvent<E, TypedEvent, Detail>;
-    event[EventDetail] = detail;
-    return event;
-}
-
 
 const alreadyWarned = new Set<string>();
 

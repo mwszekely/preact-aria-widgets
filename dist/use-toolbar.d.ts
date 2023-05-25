@@ -18,7 +18,7 @@ export interface UseToolbarParameters<ContainerElement extends Element, ChildEle
         /**
          * Optional; Only used if you need single selection logic.
          */
-        onSelectedIndexChange: MakeSingleSelectionDeclarativeParameters<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>>["singleSelectionDeclarativeParameters"]["setSelectedIndex"];
+        onSelectedIndexChange: MakeSingleSelectionDeclarativeParameters<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>>["singleSelectionDeclarativeParameters"]["onSelectedIndexChange"];
         /**
          * When true, none of the children will be selectable or focusable.
          *

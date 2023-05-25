@@ -14,7 +14,7 @@ export function useGridlist({ labelParameters, gridlistParameters: { selectionLi
         randomIdLabelParameters: { prefix: Prefices.gridlistLabel }
     });
     const { context, props, rovingTabIndexReturn, singleSelectionReturn, ...restRet } = useCompleteGridNavigationDeclarative({
-        singleSelectionDeclarativeParameters: { selectedIndex: selectedIndex, setSelectedIndex: onSelectedIndexChange },
+        singleSelectionDeclarativeParameters: { selectedIndex: selectedIndex, onSelectedIndexChange },
         ...restParams
     });
     let propsGridlist = useMergedProps(props, propsLabelList, { "aria-multiselectable": (selectionLimit == "multi" ? "true" : undefined) });
