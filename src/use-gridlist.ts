@@ -219,7 +219,7 @@ export function useGridlistCell<GridlistCellElement extends Element, CM extends 
 
     return {
         ...info,
-        props: useMergedProps(props, propsPress),
+        props: useMergedProps(props, propsPress, { role: "gridcell" }),
         pressReturn
     }
 

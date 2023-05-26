@@ -89,7 +89,7 @@ export function useGridlistCell({ pressParameters, ...p }) {
     });
     return {
         ...info,
-        props: useMergedProps(props, propsPress),
+        props: useMergedProps(props, propsPress, { role: "gridcell" }),
         pressReturn
     };
 }
