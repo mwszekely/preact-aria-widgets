@@ -45,7 +45,7 @@ export function useGridlist({ labelParameters, gridlistParameters: { selectionLi
         ...restRet
     };
 }
-export function useGridlistRow({ gridlistRowParameters: { selected }, linearNavigationParameters, context: cx1, info, rovingTabIndexParameters, sortableChildParameters, textContentParameters, typeaheadNavigationParameters, singleSelectionParameters, ...void1 }) {
+export function useGridlistRow({ gridlistRowParameters: { selected }, linearNavigationParameters, context: cx1, info, rovingTabIndexParameters, sortableChildParameters, textContentParameters, typeaheadNavigationParameters, ...void1 }) {
     monitorCallCount(useGridlistRow);
     assertEmptyObject(void1);
     const { gridlistRowContext: { selectionLimit } } = cx1;
@@ -57,7 +57,6 @@ export function useGridlistRow({ gridlistRowParameters: { selected }, linearNavi
         sortableChildParameters,
         textContentParameters,
         typeaheadNavigationParameters,
-        singleSelectionParameters
     });
     // `selected` should only be true/false for multi-selection
     if (selectionLimit != "multi")

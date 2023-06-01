@@ -159,9 +159,7 @@ export const MenuItem = memoForwardRef(function MenuItem<MenuItemElement extends
         context,
         sortableChildParameters: { getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },
-        menuItemParameters: { onPress: onPress ?? null, role: role ?? "menuitem" },
-        rovingTabIndexParameters: { untabbable: useContext(UntabbableContext) },
-        singleSelectionParameters: { ariaPropName: useContext(AriaPropNameContext), selectionMode: useContext(SelectionModeContext) }
+        menuItemParameters: { onPress: onPress ?? null, role: role ?? "menuitem" }
     });
 
     useImperativeHandle(ref!, () => info);

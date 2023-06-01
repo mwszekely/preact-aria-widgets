@@ -141,8 +141,6 @@ export const ToolbarChild = memoForwardRef(function ToolbarChildU<ToolbarChildEl
         sortableChildParameters: { getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },
         pressParameters: null, //{ focusSelf, onPressSync: null },
-        rovingTabIndexParameters: { untabbable: useContext(UntabbableContext) },
-        singleSelectionParameters: { ariaPropName: useContext(AriaPropNameContext), selectionMode: useContext(SelectionModeContext) }
     });
 
     useImperativeHandle(ref!, () => info);

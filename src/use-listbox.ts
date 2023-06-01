@@ -139,8 +139,6 @@ export function useListbox<ListElement extends Element, ListItemElement extends 
 export function useListboxItem<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>>({
     context: { listboxContext: { selectionLimit }, ...context },
     listboxParameters: { selected },
-    rovingTabIndexParameters,
-    singleSelectionParameters,
     pressParameters,
     ...restParams
 }: UseListboxItemParameters<ListItemElement, M>): UseListboxItemReturnType<ListItemElement, M> {
@@ -152,8 +150,6 @@ export function useListboxItem<ListItemElement extends Element, M extends Listbo
         ...restRet
     } = useCompleteListNavigationChild<ListItemElement, M>({
         context,
-        rovingTabIndexParameters,
-        singleSelectionParameters,
         pressParameters,
         ...restParams
     });

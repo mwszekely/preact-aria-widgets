@@ -3,7 +3,6 @@ import { createContext } from "preact";
 import { useContext, useImperativeHandle } from "preact/hooks";
 import { useCheckboxGroup, useCheckboxGroupChild, useCheckboxGroupParent } from "../use-checkbox-group.js";
 import { memoForwardRef, useDefault } from "./util.js";
-const UntabbableContext = createContext(false);
 const UseCheckboxGroupChildContext = createContext(null);
 export const CheckboxGroup = memoForwardRef(function CheckboxGroup({ render, collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, onTabbableIndexChange, compare, staggered, getIndex, untabbable, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, ..._rest }, ref) {
     untabbable ||= false;
@@ -26,14 +25,13 @@ export const CheckboxGroup = memoForwardRef(function CheckboxGroup({ render, col
         }
     });
     useImperativeHandle(ref, () => info);
-    return (_jsx(UntabbableContext.Provider, { value: untabbable, children: _jsx(UseCheckboxGroupChildContext.Provider, { value: info.context, children: render(info) }) }));
+    return (_jsx(UseCheckboxGroupChildContext.Provider, { value: info.context, children: render(info) }));
 });
 export const CheckboxGroupParent = memoForwardRef(function CheckboxGroupParent({ render, index, focusSelf, untabbable, getText, getSortValue, unselectable, ..._rest }, ref) {
     const context = useContext(UseCheckboxGroupChildContext);
     console.assert(context != null, `This CheckboxGroupParent is not contained within a CheckboxGroup`);
     const info = useCheckboxGroupParent({
         pressParameters: { focusSelf, onPressSync: null },
-        rovingTabIndexParameters: { untabbable: useContext(UntabbableContext) },
         info: { index, unselectable: unselectable || false, untabbable: untabbable || false, focusSelf, checkboxInfo: { checkboxChildType: "parent" } },
         context,
         sortableChildParameters: { getSortValue },
@@ -52,7 +50,6 @@ export const CheckboxGroupChild = memoForwardRef(function CheckboxGroupChild({ i
         context,
         sortableChildParameters: { getSortValue },
         pressParameters: { focusSelf, onPressSync: null },
-        rovingTabIndexParameters: { untabbable: useContext(UntabbableContext) },
     });
     useImperativeHandle(ref, () => info);
     return render(info);

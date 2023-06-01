@@ -74,15 +74,13 @@ export function useTabs({ labelParameters, linearNavigationParameters, singleSel
         ...listNavRet1
     };
 }
-export function useTab({ info: { focusSelf, ...info }, textContentParameters, sortableChildParameters, pressParameters, rovingTabIndexParameters, singleSelectionParameters, context }) {
+export function useTab({ info: { focusSelf, ...info }, textContentParameters, sortableChildParameters, pressParameters, context }) {
     const { props: listNavigationSingleSelectionChildProps, propsPressStable, ...listNavRet2 } = useCompleteListNavigationChild({
         context,
         info: { focusSelf, ...info },
         sortableChildParameters,
         textContentParameters,
-        pressParameters,
-        rovingTabIndexParameters,
-        singleSelectionParameters: { ariaPropName: "aria-selected", ...singleSelectionParameters },
+        pressParameters
     });
     //const { pressParameters, refElementReturn } = listNavRet2
     //const { pressReturn, props: propsPress } = usePress<TabElement>({ pressParameters: { ...pressParameters, onPressSync: useStableCallback((e) => listNavRet2.singleSelectionChildReturn.setThisOneSelected(e)), focusSelf }, refElementReturn })

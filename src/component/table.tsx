@@ -87,12 +87,6 @@ export const Table = memoForwardRef(function TableU<TableElement extends Element
     return <TableContext.Provider value={info.context}>{render(info)}</TableContext.Provider>
 })
 
-const TableSectionUntabbableContext = createContext(false);
-const TableSectionAriaPropNameContext = createContext<UseTableSectionParameters<any, any, any, any>["singleSelectionParameters"]["ariaPropName"]>("aria-selected");
-const TableSectionSelectionModeContext = createContext<UseTableSectionParameters<any, any, any, any>["singleSelectionParameters"]["selectionMode"]>("activation");
-const TablRowUntabbableContext = createContext(false);
-//const TablRowAriaPropNameContext = createContext<UseTableSectionParameters<any, any, any, any>["singleSelectionParameters"]["ariaPropName"]>("aria-selected");
-//const TablRowSelectionModeContext = createContext<UseTableSectionParameters<any, any, any, any>["singleSelectionParameters"]["selectionMode"]>("activation");
 export const TableSection = memoForwardRef(function TableSection<SectionElement extends Element, RowElement extends Element, CellElement extends Element>({
     disableHomeEndKeys,
     getIndex,
@@ -138,15 +132,9 @@ export const TableSection = memoForwardRef(function TableSection<SectionElement 
     })
 
     return (
-        <TableSectionAriaPropNameContext.Provider value={ariaPropName}>
-            <TableSectionSelectionModeContext.Provider value={selectionMode}>
-                <TableSectionUntabbableContext.Provider value={untabbable}>
-                    <TableSectionContext.Provider value={info.context}>
-                        {render(info)}
-                    </TableSectionContext.Provider>
-                </TableSectionUntabbableContext.Provider>
-            </TableSectionSelectionModeContext.Provider>
-        </TableSectionAriaPropNameContext.Provider >
+        <TableSectionContext.Provider value={info.context}>
+            {render(info)}
+        </TableSectionContext.Provider>
     )
 });
 
@@ -164,11 +152,11 @@ export const TableRow = memoForwardRef(function TableRowU<RowElement extends Ele
     untabbable,
     render
 }: TableRowProps<RowElement, Cellement, TableRowInfo<RowElement, Cellement>, TableCellInfo<Cellement>>, ref?: Ref<any>) {
-    let gridIsUntabbable = useContext(TableSectionUntabbableContext);
-    untabbable ||= (false || gridIsUntabbable);
 
     const cx1 = useContext(TableSectionContext);
     console.assert(cx1 != null, `This TableRow is not contained within a TableSection`);
+    untabbable ||= (false || cx1.rovingTabIndexContext.untabbable);
+
     const info = useTableRow<RowElement, Cellement, TableRowInfo<RowElement, Cellement>, TableCellInfo<Cellement>>({
         info: { index, unselectable: unselectable || false, untabbable: untabbable || false },
         context: cx1,
@@ -185,15 +173,12 @@ export const TableRow = memoForwardRef(function TableRowU<RowElement extends Ele
             navigatePastStart: navigatePastStart ?? "wrap"
         },
         rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, initiallyTabbedIndex: initiallyTabbedIndex ?? null, untabbable },
-        singleSelectionParameters: { ariaPropName: useContext(TableSectionAriaPropNameContext), selectionMode: useContext(TableSectionSelectionModeContext) }
     });
 
     useImperativeHandle(ref!, () => info);
 
     return (
-        <TablRowUntabbableContext.Provider value={untabbable}>
-            <TableRowContext.Provider value={info.context}>{render(info)}</TableRowContext.Provider>
-        </TablRowUntabbableContext.Provider>
+        <TableRowContext.Provider value={info.context}>{render(info)}</TableRowContext.Provider>
     )
 })
 
@@ -215,8 +200,7 @@ export const TableCell = memoForwardRef(function TableCell<CellElement extends E
         context,
         gridNavigationCellParameters: { colSpan: colSpan ?? 1 },
         tableCellParameters: { tagTableCell },
-        textContentParameters: { getText: useDefault("getText", getText) },
-        rovingTabIndexParameters: { untabbable: useContext(TablRowUntabbableContext) }
+        textContentParameters: { getText: useDefault("getText", getText) }
     });
 
     useImperativeHandle(ref!, () => info);

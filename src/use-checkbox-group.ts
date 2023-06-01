@@ -38,7 +38,7 @@ export interface CheckboxGroupInfo<TCE extends Element> extends UseCompleteListN
 }
 
 
-export interface UseCheckboxGroupChildParameters<TCE extends Element, M extends CheckboxGroupInfo<TCE>> extends OmitStrong<UseCompleteListNavigationChildParameters<TCE, M>, "singleSelectionParameters" | "info"> {
+export interface UseCheckboxGroupChildParameters<TCE extends Element, M extends CheckboxGroupInfo<TCE>> extends OmitStrong<UseCompleteListNavigationChildParameters<TCE, M>, "info"> {
     context: CheckboxGroupContext<any, TCE, M>;
     checkboxGroupChild: {
         checked: CheckboxCheckedType;
@@ -60,7 +60,7 @@ export interface UseCheckboxGroupReturnType<GroupElement extends Element, TCE ex
     context: CheckboxGroupContext<GroupElement, TCE, M>;
 }
 
-export interface UseCheckboxGroupParentParameters<TCE extends Element, M extends CheckboxGroupInfo<TCE>> extends OmitStrong<UseCompleteListNavigationChildParameters<TCE, M>, "singleSelectionParameters" | "info"> {
+export interface UseCheckboxGroupParentParameters<TCE extends Element, M extends CheckboxGroupInfo<TCE>> extends OmitStrong<UseCompleteListNavigationChildParameters<TCE, M>, "info"> {
     context: CheckboxGroupContext<any, TCE, M>;
     info: OmitStrong<UseCompleteListNavigationChildParameters<TCE, CheckboxGroupInfo<TCE>>["info"], never>;
 }
@@ -251,8 +251,7 @@ export function useCheckboxGroupParent<TCE extends Element>({
     info,
     textContentParameters,
     sortableChildParameters,
-    pressParameters,
-    rovingTabIndexParameters
+    pressParameters
 }: UseCheckboxGroupParentParameters<TCE, CheckboxGroupInfo<TCE>>): UseCheckboxGroupParentReturnType<TCE, CheckboxGroupInfo<TCE>> {
     const { checkboxGroupParentContext: { setSetter, setSetParentCheckboxChecked, getPercentChecked, getTotalChecked, getTotalChildren, onCheckboxGroupParentInput } } = context;
     const {
@@ -273,8 +272,6 @@ export function useCheckboxGroupParent<TCE extends Element>({
         sortableChildParameters,
         textContentParameters,
         pressParameters,
-        rovingTabIndexParameters,
-        singleSelectionParameters: { ariaPropName: null, selectionMode: "disabled" }
     });
 
     const [ariaControls, setControls] = useState("");
@@ -327,7 +324,6 @@ export function useCheckboxGroupChild<TCE extends Element>({
     textContentParameters,
     sortableChildParameters,
     pressParameters,
-    rovingTabIndexParameters,
 }: UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>): UseCheckboxGroupChildReturnType<TCE, CheckboxGroupInfo<TCE>> {
     const { checkboxGroupChildrenContext: { allIds, setUpdateIndex, setTotalChildren, setTotalChecked, } } = context;
 
@@ -382,9 +378,7 @@ export function useCheckboxGroupChild<TCE extends Element>({
         context,
         textContentParameters,
         sortableChildParameters,
-        pressParameters,
-        rovingTabIndexParameters,
-        singleSelectionParameters: { ariaPropName: null, selectionMode: "disabled" }
+        pressParameters
     });
 
     return {

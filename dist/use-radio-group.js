@@ -68,7 +68,7 @@ export function useRadioGroup({ labelParameters, radioGroupParameters: { name, o
         ...restRet,
     };
 }
-export function useRadio({ radioParameters: { value }, checkboxLikeParameters: { disabled }, labelParameters, info, context, textContentParameters, sortableChildParameters, pressParameters, rovingTabIndexParameters, ...void1 }) {
+export function useRadio({ radioParameters: { value }, checkboxLikeParameters: { disabled }, labelParameters, info, context, textContentParameters, sortableChildParameters, pressParameters, ...void1 }) {
     monitorCallCount(useRadio);
     const index = info.index;
     const onInput = useStableCallback((e) => {
@@ -83,9 +83,7 @@ export function useRadio({ radioParameters: { value }, checkboxLikeParameters: {
         context,
         sortableChildParameters,
         textContentParameters,
-        pressParameters,
-        rovingTabIndexParameters,
-        singleSelectionParameters: { selectionMode: "focus", ariaPropName: null }
+        pressParameters
     });
     const { selected: checked } = singleSelectionChildReturn;
     const { refElementReturn: refElementInputReturn, propsStable: propsRefInput } = useRefElement({ refElementParameters: {} });

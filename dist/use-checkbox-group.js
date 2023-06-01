@@ -106,7 +106,7 @@ export function useCheckboxGroup({ linearNavigationParameters, rearrangeableChil
         typeaheadNavigationReturn
     };
 }
-export function useCheckboxGroupParent({ context, info, textContentParameters, sortableChildParameters, pressParameters, rovingTabIndexParameters }) {
+export function useCheckboxGroupParent({ context, info, textContentParameters, sortableChildParameters, pressParameters }) {
     const { checkboxGroupParentContext: { setSetter, setSetParentCheckboxChecked, getPercentChecked, getTotalChecked, getTotalChildren, onCheckboxGroupParentInput } } = context;
     const { hasCurrentFocusReturn, managedChildReturn, pressReturn, propsPressStable, textContentReturn, refElementReturn, props, paginatedChildReturn, rovingTabIndexChildReturn, staggeredChildReturn, singleSelectionChildReturn, } = useCompleteListNavigationChild({
         context,
@@ -114,8 +114,6 @@ export function useCheckboxGroupParent({ context, info, textContentParameters, s
         sortableChildParameters,
         textContentParameters,
         pressParameters,
-        rovingTabIndexParameters,
-        singleSelectionParameters: { ariaPropName: null, selectionMode: "disabled" }
     });
     const [ariaControls, setControls] = useState("");
     useLayoutEffect(() => {
@@ -156,7 +154,7 @@ export function useCheckboxGroupParent({ context, info, textContentParameters, s
  * @param param0
  * @returns
  */
-export function useCheckboxGroupChild({ checkboxGroupChild, context, info, textContentParameters, sortableChildParameters, pressParameters, rovingTabIndexParameters, }) {
+export function useCheckboxGroupChild({ checkboxGroupChild, context, info, textContentParameters, sortableChildParameters, pressParameters, }) {
     const { checkboxGroupChildrenContext: { allIds, setUpdateIndex, setTotalChildren, setTotalChecked, } } = context;
     monitorCallCount(useCheckboxGroupChild);
     const { checked, onChangeFromParent } = checkboxGroupChild;
@@ -189,9 +187,7 @@ export function useCheckboxGroupChild({ checkboxGroupChild, context, info, textC
         context,
         textContentParameters,
         sortableChildParameters,
-        pressParameters,
-        rovingTabIndexParameters,
-        singleSelectionParameters: { ariaPropName: null, selectionMode: "disabled" }
+        pressParameters
     });
     return {
         checkboxGroupChild: {

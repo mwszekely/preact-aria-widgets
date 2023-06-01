@@ -4,7 +4,7 @@ import {
     CompleteGridNavigationContext,
     CompleteGridNavigationRowContext, monitorCallCount, PassiveStateUpdater, returnNull, useCompleteGridNavigation,
     useCompleteGridNavigationCell, UseCompleteGridNavigationCellInfo, UseCompleteGridNavigationCellParameters, UseCompleteGridNavigationCellReturnType, UseCompleteGridNavigationParameters,
-    UseCompleteGridNavigationReturnType, useCompleteGridNavigationRow, UseCompleteGridNavigationRowInfo, UseCompleteGridNavigationRowParameters, UseCompleteGridNavigationRowReturnType, useMergedProps, usePassiveState, useStableCallback, useMemoObject
+    UseCompleteGridNavigationReturnType, useCompleteGridNavigationRow, UseCompleteGridNavigationRowInfo, UseCompleteGridNavigationRowParameters, UseCompleteGridNavigationRowReturnType, useMergedProps, usePassiveState, useStableCallback, useMemoObject, assertEmptyObject
 } from "preact-prop-helpers";
 import { useCallback, useEffect, useRef } from "preact/hooks";
 import { ElementToTag, OmitStrong, Prefices } from "./props.js";
@@ -230,10 +230,11 @@ export function useTableRow<TableRowElement extends Element, TableCellElement ex
     tableRowParameters: { selected },
     linearNavigationParameters,
     rovingTabIndexParameters,
-    singleSelectionParameters,
+    ...void1
 
 }: UseTableRowParameters<TableRowElement, TableCellElement, RM, CM>): UseTableRowReturnType<TableRowElement, TableCellElement, RM, CM> {
     monitorCallCount(useTableRow);
+    assertEmptyObject(void1);
 
     const {
         context: cx2,
@@ -245,7 +246,6 @@ export function useTableRow<TableRowElement extends Element, TableCellElement ex
     } = useCompleteGridNavigationRow<TableRowElement, TableCellElement, RM, CM>({
         textContentParameters,
         context: { ...cx1 },
-        singleSelectionParameters,
         info,
         sortableChildParameters: {
             getSortValue: useStableCallback((): unknown => {
@@ -265,13 +265,13 @@ export function useTableRow<TableRowElement extends Element, TableCellElement ex
     props.role = "row";
     // TODO: Unneeded?
     if (selected) {
-        switch (singleSelectionParameters.ariaPropName) {
+        switch (cx1.singleSelectionContext.ariaPropName) {
             case "aria-checked":
             case "aria-pressed":
             case "aria-selected":
-                props[singleSelectionParameters.ariaPropName ?? "aria-selected"] = "true";
+                props[cx1.singleSelectionContext.ariaPropName ?? "aria-selected"] = "true";
             default: {
-                console.assert(false, singleSelectionParameters.ariaPropName + " is not valid for multi-select -- prefer checked, selected, or pressed");
+                console.assert(false, cx1.singleSelectionContext.ariaPropName + " is not valid for multi-select -- prefer checked, selected, or pressed");
             }
 
         }

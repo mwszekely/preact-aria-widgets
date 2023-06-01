@@ -46,12 +46,10 @@ export function useListbox({ labelParameters, listboxParameters: { selectionLimi
         propsListboxLabel: propsLabelLabel
     };
 }
-export function useListboxItem({ context: { listboxContext: { selectionLimit }, ...context }, listboxParameters: { selected }, rovingTabIndexParameters, singleSelectionParameters, pressParameters, ...restParams }) {
+export function useListboxItem({ context: { listboxContext: { selectionLimit }, ...context }, listboxParameters: { selected }, pressParameters, ...restParams }) {
     monitorCallCount(useListboxItem);
     const { props, refElementReturn, ...restRet } = useCompleteListNavigationChild({
         context,
-        rovingTabIndexParameters,
-        singleSelectionParameters,
         pressParameters,
         ...restParams
     });

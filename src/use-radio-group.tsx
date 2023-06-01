@@ -22,7 +22,7 @@ export interface UseRadioGroupParameters<V extends string | number, GroupElement
 
 
 
-export interface UseRadioParameters<LP extends LabelPosition, V extends string | number, InputElement extends Element, LabelElement extends Element, M extends RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>> extends OmitStrong<UseCompleteListNavigationChildParameters<FocusableLabelElement<LP, InputElement, LabelElement>, M>, "singleSelectionParameters"> {
+export interface UseRadioParameters<LP extends LabelPosition, V extends string | number, InputElement extends Element, LabelElement extends Element, M extends RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>> extends OmitStrong<UseCompleteListNavigationChildParameters<FocusableLabelElement<LP, InputElement, LabelElement>, M>, never> {
     radioParameters: {
         value: V;
     }
@@ -156,7 +156,6 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
     textContentParameters,
     sortableChildParameters,
     pressParameters,
-    rovingTabIndexParameters,
     ...void1
 
 }: UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>): UseRadioReturnType<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>> {
@@ -183,9 +182,7 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
         context,
         sortableChildParameters,
         textContentParameters,
-        pressParameters,
-        rovingTabIndexParameters,
-        singleSelectionParameters: { selectionMode: "focus", ariaPropName: null }
+        pressParameters
     });
 
 

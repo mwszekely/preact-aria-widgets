@@ -5,9 +5,6 @@ import { memo } from "preact/compat";
 import { useCallback, useContext } from "preact/hooks";
 import { useListbox, useListboxItem } from "../use-listbox.js";
 import { memoForwardRef, useDefault } from "./util.js";
-const UntabbableContext = createContext(false);
-const AriaPropNameContext = createContext("aria-selected");
-const SelectionModeContext = createContext("focus");
 const ListboxContext = createContext(null);
 const ListboxGroupContext = createContext(null);
 export const GroupedListbox = memo(function GroupedListbox({ ariaLabel, selectionLimit, orientation, render }) {
@@ -66,7 +63,7 @@ export const Listbox = memoForwardRef(function Listbox({ ariaLabel, collator, co
         },
         singleSelectionParameters: { ariaPropName, selectionMode }
     });
-    return (_jsx(AriaPropNameContext.Provider, { value: ariaPropName, children: _jsx(SelectionModeContext.Provider, { value: selectionMode, children: _jsx(UntabbableContext.Provider, { value: untabbable, children: _jsx(ListboxContext.Provider, { value: info.context, children: render(info) }) }) }) }));
+    return (_jsx(ListboxContext.Provider, { value: info.context, children: render(info) }));
 });
 export const ListboxItem = memoForwardRef(function ListboxItem({ unselectable, focusSelf, getText, untabbable, index, render, selected, getSortValue, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressSync, onPressingChange, ...subInfo }) {
     const context = useContext(ListboxContext);
@@ -80,8 +77,6 @@ export const ListboxItem = memoForwardRef(function ListboxItem({ unselectable, f
         pressParameters: { onPressSync, focusSelf, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange },
         sortableChildParameters: { getSortValue: getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },
-        rovingTabIndexParameters: { untabbable: useContext(UntabbableContext) },
-        singleSelectionParameters: { ariaPropName: useContext(AriaPropNameContext), selectionMode: useContext(SelectionModeContext) }
     });
     return render(info);
 });

@@ -24,8 +24,8 @@ export interface UseTabsParameters<TabContainerElement extends Element, TabEleme
         role?: "tablist" | string;
     }
 }
-export interface UseTabParameters<TabElement extends Element, M extends TabInfo<TabElement>> extends OmitStrong<UseCompleteListNavigationChildParameters<TabElement,M>, "singleSelectionParameters"> {
-    singleSelectionParameters: OmitStrong<UseCompleteListNavigationChildParameters<TabElement,M>["singleSelectionParameters"], "ariaPropName">;
+export interface UseTabParameters<TabElement extends Element, M extends TabInfo<TabElement>> extends OmitStrong<UseCompleteListNavigationChildParameters<TabElement,M>, never> {
+    //singleSelectionParameters: OmitStrong<UseCompleteListNavigationChildParameters<TabElement,M>["singleSelectionParameters"], "ariaPropName">;
     //singleSelectionChildParameters: OmitStrong<UseCompleteListNavigationChildParameters<TabElement, M>["singleSelectionChildParameters"], "ariaPropName">;
     context: UseTabsContext<any, TabElement, M>;
 }
@@ -191,8 +191,6 @@ export function useTab<TabElement extends Element, M extends TabInfo<TabElement>
     textContentParameters,
     sortableChildParameters,
     pressParameters,
-    rovingTabIndexParameters,
-    singleSelectionParameters,
     context
 }: UseTabParameters<TabElement, M>): UseTabReturnType<TabElement, M> {
 
@@ -201,9 +199,7 @@ export function useTab<TabElement extends Element, M extends TabInfo<TabElement>
         info: { focusSelf, ...info } as M,
         sortableChildParameters,
         textContentParameters,
-        pressParameters,
-        rovingTabIndexParameters,
-        singleSelectionParameters: { ariaPropName: "aria-selected", ...singleSelectionParameters },
+        pressParameters
     });
     //const { pressParameters, refElementReturn } = listNavRet2
     //const { pressReturn, props: propsPress } = usePress<TabElement>({ pressParameters: { ...pressParameters, onPressSync: useStableCallback((e) => listNavRet2.singleSelectionChildReturn.setThisOneSelected(e)), focusSelf }, refElementReturn })

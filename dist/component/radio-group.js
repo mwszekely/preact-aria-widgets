@@ -4,9 +4,6 @@ import { useStableGetter } from "preact-prop-helpers";
 import { useContext, useImperativeHandle } from "preact/hooks";
 import { useRadio, useRadioGroup } from "../use-radio-group.js";
 import { memoForwardRef, useDefault } from "./util.js";
-const UntabbableContext = createContext(false);
-//const AriaPropNameContext = createContext<UseRadioParameters<any, any, any, any, any>["singleSelectionParameters"]["ariaPropName"]>("aria-checked");
-//const SelectionModeContext = createContext<UseRadioParameters<any, any, any, any, any>["singleSelectionParameters"]["selectionMode"]>("activation");
 const RadioContext = createContext(null);
 export const RadioGroup = memoForwardRef(function RadioGroup({ render, name, onSelectedValueChange, collator, disableHomeEndKeys, arrowKeyDirection, noTypeahead, typeaheadTimeout, ariaLabel, compare, staggered, getIndex, navigatePastEnd, navigatePastStart, selectedValue, untabbable, onTabbableIndexChange, pageNavigationSize, }, ref) {
     untabbable ??= false;
@@ -34,7 +31,7 @@ export const RadioGroup = memoForwardRef(function RadioGroup({ render, name, onS
         },
     });
     useImperativeHandle(ref, () => info);
-    return (_jsx(UntabbableContext.Provider, { value: untabbable, children: _jsx(RadioContext.Provider, { value: info.context, children: render(info) }) }));
+    return (_jsx(RadioContext.Provider, { value: info.context, children: render(info) }));
 });
 export const Radio = memoForwardRef(function Radio({ unselectable, disabled, index, render, value, ariaLabel, focusSelf, labelPosition, untabbable, tagInput, tagLabel, getText }, ref) {
     const defaultFocusSelf = () => info.checkboxLikeReturn.focusSelf();
@@ -50,8 +47,7 @@ export const Radio = memoForwardRef(function Radio({ unselectable, disabled, ind
         context,
         labelParameters: { ariaLabel, labelPosition, tagInput, tagLabel },
         textContentParameters: { getText: useDefault("getText", getText) },
-        pressParameters: null,
-        rovingTabIndexParameters: { untabbable: useContext(UntabbableContext) }
+        pressParameters: null
     });
     useImperativeHandle(ref, () => info);
     return render(info);

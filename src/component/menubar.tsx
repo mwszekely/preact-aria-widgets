@@ -43,9 +43,6 @@ export interface MenubarItemProps<MenuItemElement extends Element, M extends Use
     info?: OmitStrong<M, keyof UseMenubarSubInfo<MenuItemElement>>;
 }
 
-const UntabbableContext = createContext(false);
-const AriaPropNameContext = createContext<UseMenubarParameters<any, any, any>["singleSelectionParameters"]["ariaPropName"]>("aria-selected")
-const SelectionModeContext = createContext<UseMenubarParameters<any, any, any>["singleSelectionParameters"]["selectionMode"]>("focus");
 export const MenubarItemContext = createContext<UseMenubarContext<any, any, any>>(null!);
 
 export const Menubar = memoForwardRef(function MenubarU<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element, M extends UseMenubarSubInfo<ChildElement> = UseMenubarSubInfo<ChildElement>>({
@@ -99,15 +96,9 @@ export const Menubar = memoForwardRef(function MenubarU<ContainerElement extends
     useImperativeHandle(ref!, () => info)
 
     return (
-        <AriaPropNameContext.Provider value={ariaPropName}>
-            <SelectionModeContext.Provider value={selectionMode}>
-                <UntabbableContext.Provider value={untabbable}>
-                    <MenubarItemContext.Provider value={info.context}>
-                        {render(info)}
-                    </MenubarItemContext.Provider>
-                </UntabbableContext.Provider>
-            </SelectionModeContext.Provider>
-        </AriaPropNameContext.Provider>
+        <MenubarItemContext.Provider value={info.context}>
+            {render(info)}
+        </MenubarItemContext.Provider>
     )
 })
 
@@ -133,9 +124,7 @@ export const MenubarItem = memoForwardRef(function MenuItemU<MenuItemElement ext
         context,
         sortableChildParameters: { getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },
-        menuItemParameters: { onPress: onPress ?? null, role: role ?? "menuitem" },
-        rovingTabIndexParameters: { untabbable: useContext(UntabbableContext) },
-        singleSelectionParameters: { ariaPropName: useContext(AriaPropNameContext), selectionMode: useContext(SelectionModeContext) }
+        menuItemParameters: { onPress: onPress ?? null, role: role ?? "menuitem" }
     });
 
     useImperativeHandle(ref!, () => info);

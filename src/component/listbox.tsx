@@ -40,9 +40,6 @@ export interface ListboxItemProps<ListItemElement extends Element, M extends Lis
     render(info: UseListboxItemReturnType<ListItemElement, ListboxInfo<ListItemElement>>): VNode;
 }
 
-const UntabbableContext = createContext(false);
-const AriaPropNameContext = createContext<UseListboxParameters<any, any, any, any>["singleSelectionParameters"]["ariaPropName"]>("aria-selected")
-const SelectionModeContext = createContext<UseListboxParameters<any, any, any, any>["singleSelectionParameters"]["selectionMode"]>("focus");
 const ListboxContext = createContext<UseListboxContext<any, any, any>>(null!);
 
 const ListboxGroupContext = createContext<null | UseListboxReturnType<any, any, any, any>>(null);
@@ -134,13 +131,7 @@ export const Listbox = memoForwardRef(function Listbox<ListElement extends Eleme
     });
 
     return (
-        <AriaPropNameContext.Provider value={ariaPropName}>
-            <SelectionModeContext.Provider value={selectionMode}>
-                <UntabbableContext.Provider value={untabbable}>
-                    <ListboxContext.Provider value={info.context}>{render(info)}</ListboxContext.Provider>
-                </UntabbableContext.Provider>
-            </SelectionModeContext.Provider>
-        </AriaPropNameContext.Provider>
+        <ListboxContext.Provider value={info.context}>{render(info)}</ListboxContext.Provider>
     );
 })
 
@@ -173,8 +164,6 @@ export const ListboxItem = memoForwardRef(function ListboxItem<ListboxItemElemen
         pressParameters: { onPressSync, focusSelf, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange },
         sortableChildParameters: { getSortValue: getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },
-        rovingTabIndexParameters: { untabbable: useContext(UntabbableContext) },
-        singleSelectionParameters: { ariaPropName: useContext(AriaPropNameContext), selectionMode: useContext(SelectionModeContext) }
     });
 
     return render(info);

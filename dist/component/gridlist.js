@@ -4,10 +4,10 @@ import { focus, useStableCallback } from "preact-prop-helpers";
 import { useContext, useImperativeHandle } from "preact/hooks";
 import { useGridlist, useGridlistCell, useGridlistRow } from "../use-gridlist.js";
 import { memoForwardRef, useDefault } from "./util.js";
-const GridlistUntabbableContext = createContext(false);
-const GridlistAriaPropNameContext = createContext("aria-selected");
-const GridlistSelectionModeContext = createContext("activation");
-const GridlistRowUntabbableContext = createContext(false);
+//const GridlistUntabbableContext = createContext(false);
+//const GridlistAriaPropNameContext = createContext<UseGridlistParameters<any, any, any, any, any, any>["singleSelectionParameters"]["ariaPropName"]>("aria-selected");
+//const GridlistSelectionModeContext = createContext<UseGridlistParameters<any, any, any, any, any, any>["singleSelectionParameters"]["selectionMode"]>("activation");
+//const GridlistRowUntabbableContext = createContext(false);
 const GridlistContext = createContext(null);
 const GridlistRowContext = createContext(null);
 export function defaultRenderGridlistRow({ tagGridlistRow, makePropsGridlistRow }) {
@@ -67,7 +67,7 @@ export const Gridlist = memoForwardRef(function GridlistU({ collator, disableHom
         singleSelectionParameters: { ariaPropName, selectionMode }
     });
     useImperativeHandle(ref, () => info);
-    return (_jsx(GridlistUntabbableContext.Provider, { value: untabbable, children: _jsx(GridlistAriaPropNameContext.Provider, { value: ariaPropName, children: _jsx(GridlistSelectionModeContext.Provider, { value: selectionMode, children: _jsx(GridlistContext.Provider, { value: info.context, children: render(info) }) }) }) }));
+    return (_jsx(GridlistContext.Provider, { value: info.context, children: render(info) }));
 });
 export const GridlistRow = memoForwardRef(function GridlistRowU({ index, collator, unselectable, untabbable, navigatePastEnd, navigatePastStart, noTypeahead, onTabbableIndexChange, selected, typeaheadTimeout, getSortValue, getText, render, initiallyTabbedIndex, info: uinfo }, ref) {
     const context = useContext(GridlistContext);
@@ -84,7 +84,6 @@ export const GridlistRow = memoForwardRef(function GridlistRowU({ index, collato
             navigatePastStart: navigatePastStart ?? "wrap"
         },
         rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, initiallyTabbedIndex: initiallyTabbedIndex ?? null, untabbable },
-        singleSelectionParameters: { ariaPropName: useContext(GridlistAriaPropNameContext), selectionMode: useContext(GridlistSelectionModeContext) },
         typeaheadNavigationParameters: {
             collator: useDefault("collator", collator),
             noTypeahead: useDefault("noTypeahead", noTypeahead),
@@ -103,8 +102,7 @@ export const GridlistChild = memoForwardRef(function GridlistChild({ index, colS
         context,
         gridNavigationCellParameters: { colSpan: colSpan ?? 1 },
         textContentParameters: { getText: useDefault("getText", getText) },
-        pressParameters: { onPressSync },
-        rovingTabIndexParameters: { untabbable: useContext(GridlistRowUntabbableContext) }
+        pressParameters: { onPressSync }
     });
     useImperativeHandle(ref, () => info);
     return render(info);

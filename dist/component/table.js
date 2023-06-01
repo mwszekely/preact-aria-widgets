@@ -15,12 +15,6 @@ export const Table = memoForwardRef(function TableU({ ariaLabel, selectionLimit,
     useImperativeHandle(ref, () => info);
     return _jsx(TableContext.Provider, { value: info.context, children: render(info) });
 });
-const TableSectionUntabbableContext = createContext(false);
-const TableSectionAriaPropNameContext = createContext("aria-selected");
-const TableSectionSelectionModeContext = createContext("activation");
-const TablRowUntabbableContext = createContext(false);
-//const TablRowAriaPropNameContext = createContext<UseTableSectionParameters<any, any, any, any>["singleSelectionParameters"]["ariaPropName"]>("aria-selected");
-//const TablRowSelectionModeContext = createContext<UseTableSectionParameters<any, any, any, any>["singleSelectionParameters"]["selectionMode"]>("activation");
 export const TableSection = memoForwardRef(function TableSection({ disableHomeEndKeys, getIndex, initiallySelectedIndex, untabbable, navigatePastEnd, navigatePastStart, onSelectedIndexChange, onTabbableColumnChange, onTabbableIndexChange, pageNavigationSize, paginationMax, paginationMin, staggered, render, location, ariaPropName, selectionMode, tagTableSection }) {
     untabbable = (untabbable ?? false);
     ariaPropName ??= "aria-selected";
@@ -44,13 +38,12 @@ export const TableSection = memoForwardRef(function TableSection({ disableHomeEn
         context: useContext(TableContext),
         tableSectionParameters: { tagTableSection, location },
     });
-    return (_jsx(TableSectionAriaPropNameContext.Provider, { value: ariaPropName, children: _jsx(TableSectionSelectionModeContext.Provider, { value: selectionMode, children: _jsx(TableSectionUntabbableContext.Provider, { value: untabbable, children: _jsx(TableSectionContext.Provider, { value: info.context, children: render(info) }) }) }) }));
+    return (_jsx(TableSectionContext.Provider, { value: info.context, children: render(info) }));
 });
 export const TableRow = memoForwardRef(function TableRowU({ index, getText, tagTableRow, disableHomeEndKeys, onTabbableIndexChange, navigatePastEnd, navigatePastStart, selected, unselectable, initiallyTabbedIndex, untabbable, render }, ref) {
-    let gridIsUntabbable = useContext(TableSectionUntabbableContext);
-    untabbable ||= (false || gridIsUntabbable);
     const cx1 = useContext(TableSectionContext);
     console.assert(cx1 != null, `This TableRow is not contained within a TableSection`);
+    untabbable ||= (false || cx1.rovingTabIndexContext.untabbable);
     const info = useTableRow({
         info: { index, unselectable: unselectable || false, untabbable: untabbable || false },
         context: cx1,
@@ -67,10 +60,9 @@ export const TableRow = memoForwardRef(function TableRowU({ index, getText, tagT
             navigatePastStart: navigatePastStart ?? "wrap"
         },
         rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, initiallyTabbedIndex: initiallyTabbedIndex ?? null, untabbable },
-        singleSelectionParameters: { ariaPropName: useContext(TableSectionAriaPropNameContext), selectionMode: useContext(TableSectionSelectionModeContext) }
     });
     useImperativeHandle(ref, () => info);
-    return (_jsx(TablRowUntabbableContext.Provider, { value: untabbable, children: _jsx(TableRowContext.Provider, { value: info.context, children: render(info) }) }));
+    return (_jsx(TableRowContext.Provider, { value: info.context, children: render(info) }));
 });
 export const TableCell = memoForwardRef(function TableCell({ index, getText, focusSelf, untabbable, tagTableCell, render, colSpan, getSortValue, }, ref) {
     const context = useContext(TableRowContext);
@@ -81,8 +73,7 @@ export const TableCell = memoForwardRef(function TableCell({ index, getText, foc
         context,
         gridNavigationCellParameters: { colSpan: colSpan ?? 1 },
         tableCellParameters: { tagTableCell },
-        textContentParameters: { getText: useDefault("getText", getText) },
-        rovingTabIndexParameters: { untabbable: useContext(TablRowUntabbableContext) }
+        textContentParameters: { getText: useDefault("getText", getText) }
     });
     useImperativeHandle(ref, () => info);
     return render(info);

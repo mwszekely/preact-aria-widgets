@@ -144,7 +144,6 @@ export function useGridlistRow<GridlistRowElement extends Element, GridlistCellE
     sortableChildParameters,
     textContentParameters,
     typeaheadNavigationParameters,
-    singleSelectionParameters,
     ...void1
 }: UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>): UseGridlistRowReturnType<GridlistRowElement, GridlistCellElement, RM, CM> {
     monitorCallCount(useGridlistRow);
@@ -175,7 +174,6 @@ export function useGridlistRow<GridlistRowElement extends Element, GridlistCellE
         sortableChildParameters,
         textContentParameters,
         typeaheadNavigationParameters,
-        singleSelectionParameters
     });
 
     // `selected` should only be true/false for multi-selection

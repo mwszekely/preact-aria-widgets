@@ -4,9 +4,6 @@ import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
 import { useMenubar, useMenubarChild } from "../use-menubar.js";
 import { memoForwardRef, useDefault } from "./util.js";
 import { focus } from "preact-prop-helpers";
-const UntabbableContext = createContext(false);
-const AriaPropNameContext = createContext("aria-selected");
-const SelectionModeContext = createContext("focus");
 export const MenubarItemContext = createContext(null);
 export const Menubar = memoForwardRef(function MenubarU({ render, collator, disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, staggered, noTypeahead, untabbable, onTabbableIndexChange, compare, getIndex, disabled, selectedIndex, onSelectedIndexChange, typeaheadTimeout, role, ariaLabel, ariaPropName, selectionMode }, ref) {
     ariaPropName ||= "aria-selected";
@@ -33,7 +30,7 @@ export const Menubar = memoForwardRef(function MenubarU({ render, collator, disa
         singleSelectionParameters: { ariaPropName, selectionMode }
     });
     useImperativeHandle(ref, () => info);
-    return (_jsx(AriaPropNameContext.Provider, { value: ariaPropName, children: _jsx(SelectionModeContext.Provider, { value: selectionMode, children: _jsx(UntabbableContext.Provider, { value: untabbable, children: _jsx(MenubarItemContext.Provider, { value: info.context, children: render(info) }) }) }) }));
+    return (_jsx(MenubarItemContext.Provider, { value: info.context, children: render(info) }));
 });
 export const MenubarItem = memoForwardRef(function MenuItemU({ index, render, focusSelf, untabbable, getText, unselectable, onPress, getSortValue, role, info: uinfo }, ref) {
     const context = (useContext(MenubarItemContext));
@@ -44,9 +41,7 @@ export const MenubarItem = memoForwardRef(function MenuItemU({ index, render, fo
         context,
         sortableChildParameters: { getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },
-        menuItemParameters: { onPress: onPress ?? null, role: role ?? "menuitem" },
-        rovingTabIndexParameters: { untabbable: useContext(UntabbableContext) },
-        singleSelectionParameters: { ariaPropName: useContext(AriaPropNameContext), selectionMode: useContext(SelectionModeContext) }
+        menuItemParameters: { onPress: onPress ?? null, role: role ?? "menuitem" }
     });
     useImperativeHandle(ref, () => info);
     return (_jsx(_Fragment, { children: render(info) }));

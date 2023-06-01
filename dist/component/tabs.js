@@ -50,9 +50,7 @@ export const Tab = memoForwardRef(function Tab({ unselectable, focusSelf, untabb
         context,
         sortableChildParameters: { getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },
-        pressParameters: null,
-        rovingTabIndexParameters: { untabbable: useContext(UntabbableContext) },
-        singleSelectionParameters: { selectionMode: useContext(SelectionModeContext) }
+        pressParameters: null
     });
     useImperativeHandle(ref, () => info);
     return render(info);

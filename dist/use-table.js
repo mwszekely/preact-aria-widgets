@@ -1,4 +1,4 @@
-import { monitorCallCount, returnNull, useCompleteGridNavigation, useCompleteGridNavigationCell, useCompleteGridNavigationRow, useMergedProps, usePassiveState, useStableCallback, useMemoObject } from "preact-prop-helpers";
+import { monitorCallCount, returnNull, useCompleteGridNavigation, useCompleteGridNavigationCell, useCompleteGridNavigationRow, useMergedProps, usePassiveState, useStableCallback, useMemoObject, assertEmptyObject } from "preact-prop-helpers";
 import { useCallback, useEffect, useRef } from "preact/hooks";
 import { Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
@@ -97,14 +97,14 @@ export function useTableSection({ linearNavigationParameters, rovingTabIndexPara
         propsTableSection: props
     };
 }
-export function useTableRow({ info, textContentParameters, context: cx1, tableRowParameters: { selected }, linearNavigationParameters, rovingTabIndexParameters, singleSelectionParameters, }) {
+export function useTableRow({ info, textContentParameters, context: cx1, tableRowParameters: { selected }, linearNavigationParameters, rovingTabIndexParameters, ...void1 }) {
     monitorCallCount(useTableRow);
+    assertEmptyObject(void1);
     const { context: cx2, managedChildrenReturn, props: { ...props }, ...restRet
     // props
      } = useCompleteGridNavigationRow({
         textContentParameters,
         context: { ...cx1 },
-        singleSelectionParameters,
         info,
         sortableChildParameters: {
             getSortValue: useStableCallback(() => {
@@ -121,13 +121,13 @@ export function useTableRow({ info, textContentParameters, context: cx1, tableRo
     props.role = "row";
     // TODO: Unneeded?
     if (selected) {
-        switch (singleSelectionParameters.ariaPropName) {
+        switch (cx1.singleSelectionContext.ariaPropName) {
             case "aria-checked":
             case "aria-pressed":
             case "aria-selected":
-                props[singleSelectionParameters.ariaPropName ?? "aria-selected"] = "true";
+                props[cx1.singleSelectionContext.ariaPropName ?? "aria-selected"] = "true";
             default: {
-                console.assert(false, singleSelectionParameters.ariaPropName + " is not valid for multi-select -- prefer checked, selected, or pressed");
+                console.assert(false, cx1.singleSelectionContext.ariaPropName + " is not valid for multi-select -- prefer checked, selected, or pressed");
             }
         }
     }

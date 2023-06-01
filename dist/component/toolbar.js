@@ -54,9 +54,7 @@ export const ToolbarChild = memoForwardRef(function ToolbarChildU({ index, rende
         info: { index, focusSelf, unselectable, untabbable, ...uinfo },
         sortableChildParameters: { getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },
-        pressParameters: null,
-        rovingTabIndexParameters: { untabbable: useContext(UntabbableContext) },
-        singleSelectionParameters: { ariaPropName: useContext(AriaPropNameContext), selectionMode: useContext(SelectionModeContext) }
+        pressParameters: null, //{ focusSelf, onPressSync: null },
     });
     useImperativeHandle(ref, () => info);
     return (_jsx(_Fragment, { children: render(info) }));
