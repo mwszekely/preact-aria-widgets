@@ -33,7 +33,7 @@ export const Gridlist = memoForwardRef(function GridlistU({ collator, disableHom
         },
         rovingTabIndexParameters: {
             onTabbableIndexChange: onTabbableIndexChange ?? null,
-            untabbable,
+            untabbable
         },
         staggeredChildrenParameters: { staggered: staggered || false },
         typeaheadNavigationParameters: {

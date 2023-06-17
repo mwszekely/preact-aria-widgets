@@ -119,7 +119,7 @@ export const Gridlist = memoForwardRef(function GridlistU<GridlistElement extend
         },
         rovingTabIndexParameters: {
             onTabbableIndexChange: onTabbableIndexChange ?? null,
-            untabbable,
+            untabbable
         },
         staggeredChildrenParameters: { staggered: staggered || false },
         typeaheadNavigationParameters: {

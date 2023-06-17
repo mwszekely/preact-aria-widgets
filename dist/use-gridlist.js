@@ -1,7 +1,7 @@
-import { assertEmptyObject, monitorCallCount, useCompleteGridNavigationCell, useCompleteGridNavigationDeclarative, useCompleteGridNavigationRow, useMergedProps, usePress, useStableCallback, useMemoObject } from "preact-prop-helpers";
+import { assertEmptyObject, monitorCallCount, useCompleteGridNavigationCell, useCompleteGridNavigationDeclarative, useCompleteGridNavigationRow, useMergedProps, usePress, useStableCallback, useMemoObject, focus } from "preact-prop-helpers";
 import { Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
-export function useGridlist({ labelParameters, gridlistParameters: { selectionLimit, groupingType, selectedIndex, onSelectedIndexChange }, ...restParams }) {
+export function useGridlist({ labelParameters, gridlistParameters: { selectionLimit, groupingType, selectedIndex, onSelectedIndexChange }, rovingTabIndexParameters, ...restParams }) {
     monitorCallCount(useGridlist);
     const { propsInput: propsLabelList, propsLabel: propsLabelLabel, randomIdInputReturn: { id: _gridlistId }, randomIdLabelReturn: { id: _labelId } } = useLabelSynthetic({
         labelParameters: {
@@ -15,6 +15,7 @@ export function useGridlist({ labelParameters, gridlistParameters: { selectionLi
     });
     const { context, props, rovingTabIndexReturn, singleSelectionReturn, ...restRet } = useCompleteGridNavigationDeclarative({
         singleSelectionDeclarativeParameters: { selectedIndex: selectedIndex, onSelectedIndexChange },
+        rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
         ...restParams
     });
     let propsGridlist = useMergedProps(props, propsLabelList, { "aria-multiselectable": (selectionLimit == "multi" ? "true" : undefined) });
@@ -53,7 +54,7 @@ export function useGridlistRow({ gridlistRowParameters: { selected }, linearNavi
         linearNavigationParameters: { disableHomeEndKeys: true, ...linearNavigationParameters },
         info,
         context: cx1,
-        rovingTabIndexParameters,
+        rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
         sortableChildParameters,
         textContentParameters,
         typeaheadNavigationParameters,

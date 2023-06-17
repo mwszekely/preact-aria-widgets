@@ -6,7 +6,7 @@ import {
     UseCompleteListNavigationChildReturnType,
     useCompleteListNavigationDeclarative,
     UseCompleteListNavigationParameters,
-    UseCompleteListNavigationReturnType, useEnsureStability, useMergedProps, usePress, UsePressParameters, UsePressReturnType, UseSingleSelectionParameters, useStableCallback, useMemoObject
+    UseCompleteListNavigationReturnType, useEnsureStability, useMergedProps, usePress, UsePressParameters, UsePressReturnType, UseSingleSelectionParameters, useStableCallback, useMemoObject, focus
 } from "preact-prop-helpers";
 import { EventDetail, OmitStrong, Prefices } from "./props.js";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
@@ -17,7 +17,8 @@ export interface UseListboxContext<ListElement extends Element, ListItemElement 
     listboxContext: { selectionLimit: "single" | "multi" | "none" }
 }
 
-export interface UseListboxParameters<ListElement extends Element, ListItemElement extends Element, _LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationParameters<ListElement, ListItemElement, M>, "linearNavigationParameters" | "singleSelectionParameters"> {
+export interface UseListboxParameters<ListElement extends Element, ListItemElement extends Element, _LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationParameters<ListElement, ListItemElement, M>, "rovingTabIndexParameters" | "linearNavigationParameters" | "singleSelectionParameters"> {
+    rovingTabIndexParameters: OmitStrong<UseCompleteListNavigationParameters<ListElement, ListItemElement, M>["rovingTabIndexParameters"], "focusSelfParent">;
     linearNavigationParameters: OmitStrong<UseCompleteListNavigationParameters<ListElement, ListItemElement, M>["linearNavigationParameters"], "arrowKeyDirection">;
     labelParameters: OmitStrong<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
     singleSelectionParameters: Pick<UseCompleteListNavigationParameters<ListElement, ListItemElement, M>["singleSelectionParameters"], "ariaPropName" | "selectionMode">
@@ -74,6 +75,7 @@ export function useListbox<ListElement extends Element, ListItemElement extends 
     listboxParameters: { selectionLimit, groupingType, selectedIndex, onSelectedIndexChange, orientation },
     linearNavigationParameters,
     singleSelectionParameters: { ariaPropName, selectionMode },
+    rovingTabIndexParameters,
     ...restParams
 }: UseListboxParameters<ListElement, ListItemElement, LabelElement, M>): UseListboxReturnType<ListElement, ListItemElement, LabelElement, M> {
     monitorCallCount(useListbox);
@@ -101,6 +103,7 @@ export function useListbox<ListElement extends Element, ListItemElement extends 
         singleSelectionReturn,
         ...restRet
     } = useCompleteListNavigationDeclarative<ListElement, ListItemElement, M>({
+        rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
         singleSelectionDeclarativeParameters: { selectedIndex, onSelectedIndexChange },
         singleSelectionParameters: { ariaPropName: ariaPropName || "aria-selected", selectionMode: selectionMode },
         linearNavigationParameters: { arrowKeyDirection: orientation, ...linearNavigationParameters },

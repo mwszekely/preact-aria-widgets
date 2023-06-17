@@ -1,4 +1,4 @@
-import { monitorCallCount, returnFalse, returnNull, returnZero, useCompleteListNavigation, useCompleteListNavigationChild, useMergedProps, usePassiveState, useStableCallback, useStableGetter, useMemoObject, useState } from "preact-prop-helpers";
+import { monitorCallCount, returnFalse, returnNull, returnZero, useCompleteListNavigation, useCompleteListNavigationChild, useMergedProps, usePassiveState, useStableCallback, useStableGetter, useMemoObject, useState, focus } from "preact-prop-helpers";
 import { useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
 /**
  *
@@ -12,7 +12,7 @@ export function useCheckboxGroup({ linearNavigationParameters, rearrangeableChil
         linearNavigationParameters: { arrowKeyDirection: orientation, ...linearNavigationParameters },
         staggeredChildrenParameters,
         rearrangeableChildrenParameters,
-        rovingTabIndexParameters,
+        rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
         singleSelectionParameters: { initiallySelectedIndex: null, onSelectedIndexChange: null, ariaPropName: null, selectionMode: "disabled" },
         sortableChildrenParameters,
         paginatedChildrenParameters: { paginationMax: null, paginationMin: null },

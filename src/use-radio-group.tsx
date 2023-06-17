@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { assertEmptyObject, CompleteListNavigationContext, EventDetail, monitorCallCount, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useMergedProps, useRefElement, useSingleSelectionDeclarative, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
+import { assertEmptyObject, CompleteListNavigationContext, EventDetail, focus, monitorCallCount, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useMergedProps, useRefElement, useSingleSelectionDeclarative, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
 import { useLayoutEffect, useMemo, useRef } from "preact/hooks";
 import { EnhancedEventHandler, enhanceEvent, OmitStrong, Prefices, TargetedEnhancedEvent } from "./props.js";
 import { useCheckboxLike, UseCheckboxLikeParameters, UseCheckboxLikeReturnType } from "./use-checkbox-like.js";
@@ -10,7 +10,8 @@ export interface RadioChangeEventDetail<V extends number | string> { selectedVal
 export type TargetedRadioChangeEvent<V extends number | string> = TargetedEnhancedEvent<Event, RadioChangeEventDetail<V>>;
 export type RadioChangeEventHandler<V extends number | string> = EnhancedEventHandler<Event, RadioChangeEventDetail<V>>;
 
-export interface UseRadioGroupParameters<V extends string | number, GroupElement extends Element, _GroupLabelElement extends Element, TabbableChildElement extends Element> extends OmitStrong<UseCompleteListNavigationParameters<GroupElement, TabbableChildElement, RadioSubInfo<TabbableChildElement, V>>, "paginatedChildrenParameters" | "singleSelectionParameters"> {
+export interface UseRadioGroupParameters<V extends string | number, GroupElement extends Element, _GroupLabelElement extends Element, TabbableChildElement extends Element> extends OmitStrong<UseCompleteListNavigationParameters<GroupElement, TabbableChildElement, RadioSubInfo<TabbableChildElement, V>>, "rovingTabIndexParameters" | "paginatedChildrenParameters" | "singleSelectionParameters"> {
+    rovingTabIndexParameters: OmitStrong<UseCompleteListNavigationParameters<GroupElement, TabbableChildElement, any>["rovingTabIndexParameters"], "focusSelfParent">
     radioGroupParameters: {
         name: string;
 
@@ -58,6 +59,7 @@ export interface RadioSubInfo<TabbableChildElement extends Element, V extends st
 export function useRadioGroup<V extends string | number, G extends Element, GL extends Element, TCE extends Element>({
     labelParameters,
     radioGroupParameters: { name, onSelectedValueChange, selectedValue },
+    rovingTabIndexParameters,
     ...restParams
 }: UseRadioGroupParameters<V, G, GL, TCE>): UseRadioGroupReturnType<V, G, GL, TCE> {
     monitorCallCount(useRadioGroup);
@@ -94,6 +96,7 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
     } = useCompleteListNavigation<G, TCE, RadioSubInfo<TCE, V>>({
         singleSelectionParameters: { initiallySelectedIndex: selectedIndex, onSelectedIndexChange: useStableCallback((e) => { setSelectedIndex(e[EventDetail].selectedIndex); onSelectedIndexChange?.(e); }), selectionMode: "focus", ariaPropName: null },
         paginatedChildrenParameters: { paginationMin: null, paginationMax: null },
+        rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
         ...restParams
     });
 

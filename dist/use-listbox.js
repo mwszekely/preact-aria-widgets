@@ -1,7 +1,7 @@
-import { monitorCallCount, useCompleteListNavigationChild, useCompleteListNavigationDeclarative, useEnsureStability, useMergedProps, useStableCallback, useMemoObject } from "preact-prop-helpers";
+import { monitorCallCount, useCompleteListNavigationChild, useCompleteListNavigationDeclarative, useEnsureStability, useMergedProps, useStableCallback, useMemoObject, focus } from "preact-prop-helpers";
 import { EventDetail, Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
-export function useListbox({ labelParameters, listboxParameters: { selectionLimit, groupingType, selectedIndex, onSelectedIndexChange, orientation }, linearNavigationParameters, singleSelectionParameters: { ariaPropName, selectionMode }, ...restParams }) {
+export function useListbox({ labelParameters, listboxParameters: { selectionLimit, groupingType, selectedIndex, onSelectedIndexChange, orientation }, linearNavigationParameters, singleSelectionParameters: { ariaPropName, selectionMode }, rovingTabIndexParameters, ...restParams }) {
     monitorCallCount(useListbox);
     useEnsureStability("useListbox", selectionLimit);
     const { propsInput: propsLabelList, propsLabel: propsLabelLabel, randomIdInputReturn: { id: _inputId }, randomIdLabelReturn: { id: _labelId } } = useLabelSynthetic({
@@ -15,6 +15,7 @@ export function useListbox({ labelParameters, listboxParameters: { selectionLimi
         randomIdLabelParameters: { prefix: Prefices.listboxLabel }
     });
     let { context, props: { ...props }, rovingTabIndexReturn, singleSelectionReturn, ...restRet } = useCompleteListNavigationDeclarative({
+        rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
         singleSelectionDeclarativeParameters: { selectedIndex, onSelectedIndexChange },
         singleSelectionParameters: { ariaPropName: ariaPropName || "aria-selected", selectionMode: selectionMode },
         linearNavigationParameters: { arrowKeyDirection: orientation, ...linearNavigationParameters },

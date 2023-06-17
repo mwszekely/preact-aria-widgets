@@ -75,7 +75,7 @@ declare module 'preact-prop-helpers' {
     }
 }
 function TestsContainer() {
-    const [getBase, setBase] = useSearchParamState({ key: "test-base", fromString: e => e, toString: e => e, initialValue: "" });
+    const [getBase, setBase] = useSearchParamState<"test-base">({ key: "test-base", stringToValue: e => e, valueToString: e => e, initialValue: "" });
     const base = getBase();
 
     if (!base) {

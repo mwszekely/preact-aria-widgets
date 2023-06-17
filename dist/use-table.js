@@ -1,4 +1,4 @@
-import { monitorCallCount, returnNull, useCompleteGridNavigation, useCompleteGridNavigationCell, useCompleteGridNavigationRow, useMergedProps, usePassiveState, useStableCallback, useMemoObject, assertEmptyObject } from "preact-prop-helpers";
+import { assertEmptyObject, focus, monitorCallCount, returnNull, useCompleteGridNavigation, useCompleteGridNavigationCell, useCompleteGridNavigationRow, useMemoObject, useMergedProps, usePassiveState, useStableCallback } from "preact-prop-helpers";
 import { useCallback, useEffect, useRef } from "preact/hooks";
 import { Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
@@ -56,7 +56,7 @@ export function useTableSection({ linearNavigationParameters, rovingTabIndexPara
     monitorCallCount(useTableSection);
     const { childrenHaveFocusReturn, context, linearNavigationReturn, managedChildrenReturn, props: { ...props }, rovingTabIndexReturn, singleSelectionReturn, typeaheadNavigationReturn, staggeredChildrenReturn, rearrangeableChildrenReturn, paginatedChildrenReturn, sortableChildrenReturn } = useCompleteGridNavigation({
         linearNavigationParameters,
-        rovingTabIndexParameters,
+        rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
         singleSelectionParameters,
         paginatedChildrenParameters,
         staggeredChildrenParameters,
@@ -115,7 +115,7 @@ export function useTableRow({ info, textContentParameters, context: cx1, tableRo
             })
         },
         linearNavigationParameters,
-        rovingTabIndexParameters,
+        rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
         typeaheadNavigationParameters: { noTypeahead: true, collator: null, typeaheadTimeout: Infinity }
     });
     props.role = "row";

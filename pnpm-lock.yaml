@@ -1,8 +1,4 @@
-lockfileVersion: '6.1'
-
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
+lockfileVersion: '6.0'
 
 dependencies:
   clsx:
@@ -16,7 +12,7 @@ dependencies:
     version: 10.13.2
   preact-prop-helpers:
     specifier: github:mwszekely/preact-prop-helpers
-    version: github.com/mwszekely/preact-prop-helpers/54d4b4a76b0580986a21dc2ca821a339c55cfdf5(preact@10.13.2)
+    version: github.com/mwszekely/preact-prop-helpers/36cce08c20c2df0dbe25948b8a088442a823c8f4(preact@10.13.2)
   serve:
     specifier: ^14.2.0
     version: 14.2.0
@@ -42,7 +38,7 @@ packages:
     engines: {node: '>=14'}
     hasBin: true
     dependencies:
-      '@types/node': 20.2.5
+      '@types/node': 20.3.1
       playwright-core: 1.33.0
     optionalDependencies:
       fsevents: 2.3.2
@@ -58,8 +54,8 @@ packages:
     resolution: {integrity: sha512-Hwx9EUgdwf2GLarOjQp5ZH8ZmblzcbTBC2wtQWNKARBSxM9ezRIAUpeDTgoQRAFB0+8CNWXVA9+MaSOzOF3nPg==}
     dev: true
 
-  /@types/node@20.2.5:
-    resolution: {integrity: sha512-JJulVEQXmiY9Px5axXHeYGLSjhkZEnD+MDPDGbCbIAbMslkKwmygtZFy1X6s/075Yo94sf8GuSlFfPzysQrWZQ==}
+  /@types/node@20.3.1:
+    resolution: {integrity: sha512-EhcH/wvidPy1WeML3TtYFGR83UzjxeWRen9V402T8aUGYsCHOmfoisV3ZSg03gAFIbLq8TnWOJ0f4cALtnSEUg==}
     dev: true
 
   /@zeit/schemas@2.29.0:
@@ -1311,9 +1307,9 @@ packages:
       lodash-es: 4.17.21
     dev: false
 
-  github.com/mwszekely/preact-prop-helpers/54d4b4a76b0580986a21dc2ca821a339c55cfdf5(preact@10.13.2):
-    resolution: {tarball: https://codeload.github.com/mwszekely/preact-prop-helpers/tar.gz/54d4b4a76b0580986a21dc2ca821a339c55cfdf5}
-    id: github.com/mwszekely/preact-prop-helpers/54d4b4a76b0580986a21dc2ca821a339c55cfdf5
+  github.com/mwszekely/preact-prop-helpers/36cce08c20c2df0dbe25948b8a088442a823c8f4(preact@10.13.2):
+    resolution: {tarball: https://codeload.github.com/mwszekely/preact-prop-helpers/tar.gz/36cce08c20c2df0dbe25948b8a088442a823c8f4}
+    id: github.com/mwszekely/preact-prop-helpers/36cce08c20c2df0dbe25948b8a088442a823c8f4
     name: preact-prop-helpers
     version: 0.0.1
     peerDependencies:

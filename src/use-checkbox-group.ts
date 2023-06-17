@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { CompleteListNavigationContext, monitorCallCount, PassiveStateUpdater, returnFalse, returnNull, returnZero, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useMergedProps, usePassiveState, useStableCallback, useStableGetter, useMemoObject, useState } from "preact-prop-helpers";
+import { CompleteListNavigationContext, monitorCallCount, PassiveStateUpdater, returnFalse, returnNull, returnZero, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useMergedProps, usePassiveState, useStableCallback, useStableGetter, useMemoObject, useState, focus } from "preact-prop-helpers";
 import { StateUpdater, useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
 import { TargetedEnhancedEvent, OmitStrong, EnhancedEventHandler } from "./props.js";
 import { CheckboxCheckedType } from "./use-checkbox-like.js";
@@ -11,8 +11,9 @@ export interface CheckboxGroupChangeEventDetail {
 export type TargetedCheckboxGroupChangeEvent = TargetedEnhancedEvent<Event, CheckboxGroupChangeEventDetail>;
 export type CheckboxGroupChangeEventHandler = EnhancedEventHandler<Event, CheckboxGroupChangeEventDetail>;
 
-export interface UseCheckboxGroupParameters<ParentElement extends Element, TabbableChildElement extends Element, M extends CheckboxGroupInfo<TabbableChildElement>> extends OmitStrong<UseCompleteListNavigationParameters<ParentElement, TabbableChildElement, M>, "linearNavigationParameters" | "paginatedChildrenParameters" | "singleSelectionParameters"> {
+export interface UseCheckboxGroupParameters<ParentElement extends Element, TabbableChildElement extends Element, M extends CheckboxGroupInfo<TabbableChildElement>> extends OmitStrong<UseCompleteListNavigationParameters<ParentElement, TabbableChildElement, M>, "linearNavigationParameters" | "paginatedChildrenParameters" | "singleSelectionParameters" | "rovingTabIndexParameters"> {
     linearNavigationParameters: OmitStrong<UseCompleteListNavigationParameters<ParentElement, TabbableChildElement, M>["linearNavigationParameters"], "arrowKeyDirection">;
+    rovingTabIndexParameters: OmitStrong<UseCompleteListNavigationParameters<ParentElement, TabbableChildElement, M>["rovingTabIndexParameters"], "focusSelfParent">;
     checkboxGroupParameters: {
         orientation: "vertical" | "horizontal";
     }
@@ -138,7 +139,7 @@ export function useCheckboxGroup<GroupElement extends Element, TCE extends Eleme
         linearNavigationParameters: { arrowKeyDirection: orientation, ...linearNavigationParameters },
         staggeredChildrenParameters,
         rearrangeableChildrenParameters,
-        rovingTabIndexParameters,
+        rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
         singleSelectionParameters: { initiallySelectedIndex: null, onSelectedIndexChange: null, ariaPropName: null, selectionMode: "disabled" },
         sortableChildrenParameters,
         paginatedChildrenParameters: { paginationMax: null, paginationMin: null },

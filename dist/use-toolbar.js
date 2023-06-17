@@ -1,4 +1,4 @@
-import { monitorCallCount, useCompleteListNavigationChild, useCompleteListNavigationDeclarative, useMergedProps, useMemoObject } from "preact-prop-helpers";
+import { monitorCallCount, useCompleteListNavigationChild, useCompleteListNavigationDeclarative, useMergedProps, useMemoObject, focus } from "preact-prop-helpers";
 import { Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
 ;
@@ -18,7 +18,7 @@ export function useToolbar({ linearNavigationParameters, toolbarParameters: { or
     monitorCallCount(useToolbar);
     const { context, props, ...listNavReturn } = useCompleteListNavigationDeclarative({
         ...listNavParameters,
-        rovingTabIndexParameters: { ...rovingTabIndexParameters, untabbable: disabled },
+        rovingTabIndexParameters: { ...rovingTabIndexParameters, untabbable: disabled, focusSelfParent: focus },
         singleSelectionDeclarativeParameters: { selectedIndex, onSelectedIndexChange: disabled ? null : onSelectedIndexChange },
         paginatedChildrenParameters: { paginationMax: null, paginationMin: null },
         linearNavigationParameters: { ...linearNavigationParameters, arrowKeyDirection: orientation },

@@ -1,8 +1,8 @@
-import { generateRandomId, monitorCallCount, returnTrue, useChildrenFlag, useCompleteListNavigation, useCompleteListNavigationChild, useManagedChild, useManagedChildren, useMergedProps, usePersistentState, useStableCallback, useMemoObject, useState } from "preact-prop-helpers";
+import { generateRandomId, monitorCallCount, returnTrue, useChildrenFlag, useCompleteListNavigation, useCompleteListNavigationChild, useManagedChild, useManagedChildren, useMergedProps, usePersistentState, useStableCallback, useMemoObject, useState, focus } from "preact-prop-helpers";
 import { useCallback, useLayoutEffect } from "preact/hooks";
 import { EventDetail, Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
-export function useTabs({ labelParameters, linearNavigationParameters, singleSelectionParameters: { initiallySelectedIndex, onSelectedIndexChange: ssi, selectionMode, ...singleSelectionParameters }, tabsParameters: { orientation, role, localStorageKey }, ...restParams }) {
+export function useTabs({ labelParameters, linearNavigationParameters, singleSelectionParameters: { initiallySelectedIndex, onSelectedIndexChange: ssi, selectionMode, ...singleSelectionParameters }, tabsParameters: { orientation, role, localStorageKey }, rovingTabIndexParameters, ...restParams }) {
     monitorCallCount(useTabs);
     const [localStorageIndex, setLocalStorageIndex] = usePersistentState(localStorageKey ?? null, 0);
     if (localStorageIndex != null)
@@ -36,6 +36,7 @@ export function useTabs({ labelParameters, linearNavigationParameters, singleSel
     });
     const { props: listNavigationSingleSelectionProps, context, ...listNavRet1 } = useCompleteListNavigation({
         linearNavigationParameters: { arrowKeyDirection: orientation, ...linearNavigationParameters },
+        rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
         singleSelectionParameters: {
             onSelectedIndexChange: useStableCallback((e) => {
                 ssi?.(e);

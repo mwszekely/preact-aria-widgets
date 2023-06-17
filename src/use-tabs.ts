@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { CompleteListNavigationContext, generateRandomId, ManagedChildInfo, monitorCallCount, OnChildrenMountChange, PersistentStates, returnTrue, useChildrenFlag, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, useMergedProps, usePersistentState, usePress, UsePressReturnType, useStableCallback, useMemoObject, useState } from "preact-prop-helpers";
+import { CompleteListNavigationContext, generateRandomId, ManagedChildInfo, monitorCallCount, OnChildrenMountChange, PersistentStates, returnTrue, useChildrenFlag, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, useMergedProps, usePersistentState, usePress, UsePressReturnType, useStableCallback, useMemoObject, useState, focus } from "preact-prop-helpers";
 import { useCallback, useLayoutEffect } from "preact/hooks";
 import { EventDetail, OmitStrong, Prefices } from "./props.js";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
@@ -53,7 +53,8 @@ export interface UseTabReturnType<TabElement extends Element, M extends TabInfo<
 
 
 export interface UseTabLabelParameters { }
-interface UseTabListParameters<TabContainerElement extends Element, TabElement extends Element, M extends TabInfo<TabElement>> extends OmitStrong<UseCompleteListNavigationParameters<TabContainerElement, TabElement, M>, "paginatedChildrenParameters" | "linearNavigationParameters" | "singleSelectionParameters"> {
+interface UseTabListParameters<TabContainerElement extends Element, TabElement extends Element, M extends TabInfo<TabElement>> extends OmitStrong<UseCompleteListNavigationParameters<TabContainerElement, TabElement, M>, "rovingTabIndexParameters" | "paginatedChildrenParameters" | "linearNavigationParameters" | "singleSelectionParameters"> {
+    rovingTabIndexParameters: OmitStrong<UseCompleteListNavigationParameters<TabContainerElement, TabElement, M>["rovingTabIndexParameters"], "focusSelfParent">;
     linearNavigationParameters: OmitStrong<UseCompleteListNavigationParameters<TabContainerElement, TabElement, M>["linearNavigationParameters"], "arrowKeyDirection">;
     singleSelectionParameters: Partial<OmitStrong<UseCompleteListNavigationParameters<TabContainerElement, TabElement, M>["singleSelectionParameters"], "ariaPropName">>;
 }
@@ -87,6 +88,7 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
     linearNavigationParameters,
     singleSelectionParameters: { initiallySelectedIndex, onSelectedIndexChange: ssi, selectionMode, ...singleSelectionParameters },
     tabsParameters: { orientation, role, localStorageKey },
+    rovingTabIndexParameters,
     ...restParams
 }: UseTabsParameters<TabListElement, TabElement, LabelElement, M>): UseTabsReturnType<TabListElement, TabElement, LabelElement, M> {
 
@@ -141,6 +143,7 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
         ...listNavRet1
     } = useCompleteListNavigation<TabListElement, TabElement, M>({
         linearNavigationParameters: { arrowKeyDirection: orientation, ...linearNavigationParameters },
+        rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
         singleSelectionParameters: {
             onSelectedIndexChange: useStableCallback((e) => {
                 ssi?.(e);

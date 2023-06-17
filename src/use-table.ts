@@ -2,13 +2,24 @@ import { h } from "preact";
 import {
     Compare,
     CompleteGridNavigationContext,
-    CompleteGridNavigationRowContext, monitorCallCount, PassiveStateUpdater, returnNull, useCompleteGridNavigation,
-    useCompleteGridNavigationCell, UseCompleteGridNavigationCellInfo, UseCompleteGridNavigationCellParameters, UseCompleteGridNavigationCellReturnType, UseCompleteGridNavigationParameters,
-    UseCompleteGridNavigationReturnType, useCompleteGridNavigationRow, UseCompleteGridNavigationRowInfo, UseCompleteGridNavigationRowParameters, UseCompleteGridNavigationRowReturnType, useMergedProps, usePassiveState, useStableCallback, useMemoObject, assertEmptyObject
+    CompleteGridNavigationRowContext,
+    PassiveStateUpdater,
+    UseCompleteGridNavigationCellInfo, UseCompleteGridNavigationCellParameters, UseCompleteGridNavigationCellReturnType, UseCompleteGridNavigationParameters,
+    UseCompleteGridNavigationReturnType,
+    UseCompleteGridNavigationRowInfo, UseCompleteGridNavigationRowParameters, UseCompleteGridNavigationRowReturnType,
+    UseGridNavigationRowParameters,
+    assertEmptyObject,
+    focus,
+    monitorCallCount,
+    returnNull, useCompleteGridNavigation,
+    useCompleteGridNavigationCell,
+    useCompleteGridNavigationRow,
+    useMemoObject,
+    useMergedProps, usePassiveState, useStableCallback
 } from "preact-prop-helpers";
 import { useCallback, useEffect, useRef } from "preact/hooks";
 import { ElementToTag, OmitStrong, Prefices } from "./props.js";
-import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
+import { UseLabelSyntheticParameters, useLabelSynthetic } from "./use-label.js";
 import { UseListboxParameters } from "./use-listbox.js";
 
 export interface UseTableContext {
@@ -21,7 +32,8 @@ export interface UseTableContext {
 
 export interface UseTableSectionContext<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>> extends CompleteGridNavigationContext<TableSectionElement, TableRowElement, TableCellElement, RM, CM>, UseTableContext { }
 
-export interface UseTableSectionParameters<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>> extends OmitStrong<UseCompleteGridNavigationParameters<TableSectionElement, TableRowElement, TableCellElement, RM>, "typeaheadNavigationParameters" | "sortableChildrenParameters"> {
+export interface UseTableSectionParameters<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>> extends OmitStrong<UseCompleteGridNavigationParameters<TableSectionElement, TableRowElement, TableCellElement, RM>, "rovingTabIndexParameters" | "typeaheadNavigationParameters" | "sortableChildrenParameters"> {
+    rovingTabIndexParameters: OmitStrong<UseCompleteGridNavigationParameters<TableSectionElement, TableRowElement, TableCellElement, RM>["rovingTabIndexParameters"], "focusSelfParent">;
     tableSectionParameters: {
         location: "head" | "body" | "foot";
         tagTableSection: ElementToTag<TableSectionElement>;
@@ -35,8 +47,8 @@ export interface UseTableSectionReturnType<TableSectionElement extends Element, 
 export interface UseTableRowReturnType<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>> extends OmitStrong<UseCompleteGridNavigationRowReturnType<TableRowElement, TableCellElement, RM, CM>, "context"> {
     context: UseTableRowContext<any, TableCellElement, CM>;
 }
-export interface UseTableRowParameters<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>> extends OmitStrong<UseCompleteGridNavigationRowParameters<TableRowElement, TableCellElement, RM, CM>, "typeaheadNavigationParameters" | "sortableChildParameters" | "context"> {
-
+export interface UseTableRowParameters<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>> extends OmitStrong<UseCompleteGridNavigationRowParameters<TableRowElement, TableCellElement, RM, CM>, "rovingTabIndexParameters" | "typeaheadNavigationParameters" | "sortableChildParameters" | "context"> {
+    rovingTabIndexParameters: OmitStrong<UseGridNavigationRowParameters<TableRowElement, TableCellElement, RM, CM>["rovingTabIndexParameters"], "focusSelfParent">
     context: UseTableSectionContext<any, TableRowElement, TableCellElement, RM, CM>;
     tableRowParameters: {
         /**
@@ -176,7 +188,7 @@ export function useTableSection<TableSectionElement extends Element, TableRowEle
         sortableChildrenReturn
     } = useCompleteGridNavigation<TableSectionElement, TableRowElement, TableCellElement, RM, CM>({
         linearNavigationParameters,
-        rovingTabIndexParameters,
+        rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
         singleSelectionParameters,
         paginatedChildrenParameters,
         staggeredChildrenParameters,
@@ -257,7 +269,7 @@ export function useTableRow<TableRowElement extends Element, TableCellElement ex
             })
         },
         linearNavigationParameters,
-        rovingTabIndexParameters,
+        rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
         typeaheadNavigationParameters: { noTypeahead: true, collator: null, typeaheadTimeout: Infinity }
     }
     );

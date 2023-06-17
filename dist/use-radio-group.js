@@ -1,10 +1,10 @@
-import { assertEmptyObject, EventDetail, monitorCallCount, useCompleteListNavigation, useCompleteListNavigationChild, useMergedProps, useRefElement, useSingleSelectionDeclarative, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
+import { assertEmptyObject, EventDetail, focus, monitorCallCount, useCompleteListNavigation, useCompleteListNavigationChild, useMergedProps, useRefElement, useSingleSelectionDeclarative, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
 import { useLayoutEffect, useMemo, useRef } from "preact/hooks";
 import { enhanceEvent, Prefices } from "./props.js";
 import { useCheckboxLike } from "./use-checkbox-like.js";
 import { useLabelSynthetic } from "./use-label.js";
 ;
-export function useRadioGroup({ labelParameters, radioGroupParameters: { name, onSelectedValueChange, selectedValue }, ...restParams }) {
+export function useRadioGroup({ labelParameters, radioGroupParameters: { name, onSelectedValueChange, selectedValue }, rovingTabIndexParameters, ...restParams }) {
     monitorCallCount(useRadioGroup);
     const [selectedIndex, setSelectedIndex] = useState(null);
     const nameToIndex = useRef(new Map());
@@ -28,6 +28,7 @@ export function useRadioGroup({ labelParameters, radioGroupParameters: { name, o
     const { context, props: propsGroup2, singleSelectionReturn, managedChildrenReturn, rovingTabIndexReturn, ...restRet } = useCompleteListNavigation({
         singleSelectionParameters: { initiallySelectedIndex: selectedIndex, onSelectedIndexChange: useStableCallback((e) => { setSelectedIndex(e[EventDetail].selectedIndex); onSelectedIndexChange?.(e); }), selectionMode: "focus", ariaPropName: null },
         paginatedChildrenParameters: { paginationMin: null, paginationMax: null },
+        rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
         ...restParams
     });
     const { singleSelectionParameters: { onSelectedIndexChange } } = useSingleSelectionDeclarative({

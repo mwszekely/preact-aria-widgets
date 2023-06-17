@@ -1,12 +1,13 @@
 import { h } from "preact";
-import { CompleteListNavigationContext, MakeSingleSelectionDeclarativeParameters, MakeSingleSelectionDeclarativeReturnType, monitorCallCount, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, useCompleteListNavigationDeclarative, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useMergedProps, UseRandomIdReturnType, useMemoObject } from "preact-prop-helpers";
+import { CompleteListNavigationContext, MakeSingleSelectionDeclarativeParameters, MakeSingleSelectionDeclarativeReturnType, monitorCallCount, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, useCompleteListNavigationDeclarative, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useMergedProps, UseRandomIdReturnType, useMemoObject, focus } from "preact-prop-helpers";
 import { OmitStrong, Prefices } from "./props.js";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
 
 
 
 
-export interface UseToolbarParameters<ContainerElement extends Element, ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends OmitStrong<MakeSingleSelectionDeclarativeParameters<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>>, "singleSelectionDeclarativeParameters" | "paginatedChildrenParameters" | "linearNavigationParameters" | "singleSelectionReturn"> {
+export interface UseToolbarParameters<ContainerElement extends Element, ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends OmitStrong<MakeSingleSelectionDeclarativeParameters<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>>, "rovingTabIndexParameters" | "singleSelectionDeclarativeParameters" | "paginatedChildrenParameters" | "linearNavigationParameters" | "singleSelectionReturn"> {
+    rovingTabIndexParameters: OmitStrong<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>["rovingTabIndexParameters"], "focusSelfParent">;
     toolbarParameters: {
 
         orientation: "horizontal" | "vertical";
@@ -91,7 +92,7 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
         ...listNavReturn
     } = useCompleteListNavigationDeclarative<ContainerElement, ChildElement, M>({
         ...listNavParameters,
-        rovingTabIndexParameters: { ...rovingTabIndexParameters, untabbable: disabled },
+        rovingTabIndexParameters: { ...rovingTabIndexParameters, untabbable: disabled, focusSelfParent: focus },
         singleSelectionDeclarativeParameters: { selectedIndex, onSelectedIndexChange: disabled? null : onSelectedIndexChange },
         paginatedChildrenParameters: { paginationMax: null, paginationMin: null },
         linearNavigationParameters: { ...linearNavigationParameters, arrowKeyDirection: orientation },
