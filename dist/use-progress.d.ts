@@ -1,5 +1,4 @@
-import { h } from "preact";
-import { UseAsyncHandlerParameters, UseAsyncHandlerReturnType } from "preact-prop-helpers";
+import { ElementProps, UseAsyncHandlerParameters, UseAsyncHandlerReturnType } from "preact-prop-helpers";
 import { ElementToTag, OmitStrong } from "./props.js";
 import { UseLabelReturnType, UseLabelSyntheticParameters } from "./use-label.js";
 export interface UseProgressParameters<IndicatorElement extends Element, _LabelElement extends Element> {
@@ -12,9 +11,9 @@ export interface UseProgressParameters<IndicatorElement extends Element, _LabelE
     };
 }
 export interface UseProgressReturnType<ProgressElement extends Element, ProgressLabelElement extends Element> extends OmitStrong<UseLabelReturnType<ProgressElement, ProgressLabelElement>, "propsInput" | "propsLabel"> {
-    propsIndicator: h.JSX.HTMLAttributes<ProgressElement>;
-    propsLabel: h.JSX.HTMLAttributes<ProgressLabelElement>;
-    propsRegion: h.JSX.HTMLAttributes<any>;
+    propsIndicator: ElementProps<ProgressElement>;
+    propsLabel: ElementProps<ProgressLabelElement>;
+    propsRegion: ElementProps<any>;
 }
 export declare function useProgress<ProgressElement extends Element, LabelElement extends Element>({ labelParameters, progressIndicatorParameters: { max, value, valueText, tagIndicator } }: UseProgressParameters<ProgressElement, LabelElement>): UseProgressReturnType<ProgressElement, LabelElement>;
 export interface UseProgressWithHandlerParameters<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element> {

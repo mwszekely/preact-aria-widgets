@@ -1,9 +1,9 @@
 import { jsx as _jsx, Fragment as _Fragment } from "preact/jsx-runtime";
 import { createContext } from "preact";
+import { focus } from "preact-prop-helpers";
 import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
 import { useMenubar, useMenubarChild } from "../use-menubar.js";
 import { memoForwardRef, useDefault } from "./util.js";
-import { focus } from "preact-prop-helpers";
 export const MenubarItemContext = createContext(null);
 export const Menubar = memoForwardRef(function MenubarU({ render, collator, disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, staggered, noTypeahead, untabbable, onTabbableIndexChange, compare, getIndex, disabled, selectedIndex, onSelectedIndexChange, typeaheadTimeout, role, ariaLabel, ariaPropName, selectionMode }, ref) {
     ariaPropName ||= "aria-selected";

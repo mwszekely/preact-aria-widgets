@@ -1,9 +1,9 @@
 import { createContext, Ref, VNode } from "preact";
+import { focus } from "preact-prop-helpers";
 import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
 import { OmitStrong } from "../props.js";
 import { TabInfo, TabPanelInfo, useTab, useTabPanel, UseTabPanelReturnType, UseTabPanelsContext, UseTabParameters, UseTabReturnType, useTabs, UseTabsContext, UseTabsParameters, UseTabsReturnType } from "../use-tabs.js";
 import { memoForwardRef, PartialExcept, useDefault } from "./util.js";
-import { focus } from "preact-prop-helpers";
 
 type Get<T, K extends keyof T> = T[K];
 

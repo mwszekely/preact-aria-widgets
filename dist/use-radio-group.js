@@ -117,7 +117,7 @@ export function useRadio({ radioParameters: { value }, checkboxLikeParameters: {
         propsInput.type = "radio";
     }
     else {
-        propsInput["aria-checked"] = (checked ?? false).toString();
+        propsInput["aria-checked"] = (checked ?? false);
     }
     const propsIfInputHandlesFocus = useMergedProps(listNavigationSingleSelectionChildProps, propsInput);
     const propsInput2 = useMergedProps(propsRefInput, labelPosition != "wrapping" ? propsIfInputHandlesFocus : propsInput);

@@ -1,6 +1,7 @@
 
 import { useState } from "preact-prop-helpers";
 import { Button, EventDetail } from "../../dist/index.js";
+import { JSX } from "preact";
 
 export function Blurb() {
     return (
@@ -54,7 +55,7 @@ export function Demo() {
     )
 }
 
-function DemoButton({ tag: Tag, disabled }: { tag: string, disabled: boolean | "soft" | "hard" }) {
+function DemoButton({ tag: Tag, disabled }: { tag: keyof JSX.IntrinsicElements, disabled: boolean | "soft" | "hard" }) {
     const onPress = () => { alert("Button clicked") }
 
     return (
@@ -62,7 +63,7 @@ function DemoButton({ tag: Tag, disabled }: { tag: string, disabled: boolean | "
             disabled={disabled}
             tagButton={Tag as any}
             onPress={onPress}
-            render={info => (<Tag {...info.props}>{`${Tag} ${disabled ? ` disabled (${disabled == "soft" ? "soft" : "hard"})` : ""}` }</Tag>)}
+            render={info => (<Tag {...info.props as {}}>{`${Tag} ${disabled ? ` disabled (${disabled == "soft" ? "soft" : "hard"})` : ""}` }</Tag>)}
         />
     )
 }

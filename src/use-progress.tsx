@@ -1,5 +1,4 @@
-import { h } from "preact";
-import { monitorCallCount, useAsyncHandler, UseAsyncHandlerParameters, UseAsyncHandlerReturnType, useMergedProps } from "preact-prop-helpers";
+import { ElementProps, monitorCallCount, useAsyncHandler, UseAsyncHandlerParameters, UseAsyncHandlerReturnType, useMergedProps } from "preact-prop-helpers";
 import { ElementToTag, OmitStrong, Prefices } from "./props.js";
 import { UseLabelReturnType, useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
 
@@ -15,9 +14,9 @@ export interface UseProgressParameters<IndicatorElement extends Element, _LabelE
 }
 
 export interface UseProgressReturnType<ProgressElement extends Element, ProgressLabelElement extends Element> extends OmitStrong<UseLabelReturnType<ProgressElement, ProgressLabelElement>, "propsInput" | "propsLabel"> {
-    propsIndicator: h.JSX.HTMLAttributes<ProgressElement>;
-    propsLabel: h.JSX.HTMLAttributes<ProgressLabelElement>;
-    propsRegion: h.JSX.HTMLAttributes<any>;
+    propsIndicator: ElementProps<ProgressElement>;
+    propsLabel: ElementProps<ProgressLabelElement>;
+    propsRegion: ElementProps<any>;
 }
 
 export function useProgress<ProgressElement extends Element, LabelElement extends Element>({
@@ -54,32 +53,32 @@ export function useProgress<ProgressElement extends Element, LabelElement extend
         value = null!;
         max ??= 100;
     }
-    const indicatorProps: h.JSX.HTMLAttributes<ProgressElement> = tagIndicator === "progress" ?
+    const indicatorProps: ElementProps<ProgressElement> = tagIndicator === "progress" ?
         {
             max,
             value: (value ?? undefined),
-            "aria-valuemin": "0",
-            "aria-valuenow": value == null ? undefined : `${value}`,
-        } as h.JSX.HTMLAttributes<HTMLProgressElement> as any as h.JSX.HTMLAttributes<ProgressElement>
+            "aria-valuemin": 0,
+            "aria-valuenow": value == null ? undefined : value,
+        } satisfies ElementProps<ProgressElement>
         :
         {
-            "aria-valuemin": "0",
-            "aria-valuemax": max == null ? undefined : `${max}`,
+            "aria-valuemin": 0,
+            "aria-valuemax": max == null ? undefined : max,
             "aria-valuetext": valueText == null ? undefined : `${valueText}`,
-            "aria-valuenow": value == null ? undefined : `${value}`,
+            "aria-valuenow": value == null ? undefined : value,
             role: "progressbar"
-        };
+        } satisfies ElementProps<ProgressElement>;
 
     if (disabled) {
-        indicatorProps["aria-hidden"] = "true";
+        indicatorProps["aria-hidden"] = true;
     }
 
-    const labelProps: h.JSX.HTMLAttributes<LabelElement> = {
+    const labelProps: ElementProps<LabelElement> = {
         "aria-hidden": (!busy ? "true" : undefined)
     };
 
-    const regionProps = {
-        "aria-busy": (busy).toString(),
+    const regionProps: ElementProps<any> = {
+        "aria-busy": !!(busy),
         "aria-describedby": randomIdInputReturn.id
     }
 

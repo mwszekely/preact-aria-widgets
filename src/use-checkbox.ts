@@ -1,9 +1,7 @@
-import { h } from "preact";
-import { monitorCallCount, returnFalse, useMergedProps, useRefElement, useStableCallback } from "preact-prop-helpers";
-import { EnhancedEventHandler, enhanceEvent, OmitStrong, Prefices, TargetedEnhancedEvent } from "./props.js";
-import { useCheckboxLike, UseCheckboxLikeParameters, UseCheckboxLikeReturnType } from "./use-checkbox-like.js";
+import { ElementProps, monitorCallCount, returnFalse, useMergedProps, useRefElement, useStableCallback } from "preact-prop-helpers";
+import { EnhancedEventHandler, OmitStrong, Prefices, TargetedEnhancedEvent, enhanceEvent } from "./props.js";
+import { UseCheckboxLikeParameters, UseCheckboxLikeReturnType, useCheckboxLike } from "./use-checkbox-like.js";
 import { LabelPosition } from "./use-label.js";
-import { EventType } from "preact-prop-helpers"
 
 export interface CheckboxChangeEventDetail {
     checked: boolean;
@@ -21,7 +19,7 @@ export interface UseCheckboxParameters<LP extends LabelPosition, I extends Eleme
 }
 
 export interface UseCheckboxReturnType<InputType extends Element, LabelType extends Element> extends UseCheckboxLikeReturnType<InputType, LabelType> {
-    checkboxReturn: { propsUnstable: h.JSX.HTMLAttributes<InputType> }
+    checkboxReturn: { propsUnstable: ElementProps<InputType> }
 }
 
 export function useCheckbox<LP extends LabelPosition, InputType extends Element, LabelType extends Element>({

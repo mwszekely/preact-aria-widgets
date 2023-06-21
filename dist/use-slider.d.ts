@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { ManagedChildInfo, UseManagedChildParameters, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, UseManagedChildReturnType } from "preact-prop-helpers";
+import { ElementProps, ManagedChildInfo, UseManagedChildParameters, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, UseManagedChildReturnType } from "preact-prop-helpers";
 import { EventDetail, TagSensitiveProps } from "./props.js";
 export type RangeChangeEvent<E extends EventTarget> = {
     [EventDetail]: {
@@ -27,7 +27,7 @@ export interface UseSliderThumbParameters<E extends Element, M extends SliderThu
     };
     context: SliderContext<M>;
 }
-export interface UseSliderThumbProps<E extends Element> extends h.JSX.HTMLAttributes<E> {
+export interface UseSliderThumbProps<E extends Element> extends ElementProps<E> {
 }
 export interface UseSliderParameters<M extends SliderThumbInfo> extends UseManagedChildrenParameters<M> {
     sliderParameters: {
@@ -40,7 +40,7 @@ export interface UseSliderThumbReturnType<E extends Element, M extends SliderThu
         min: number;
         max: number;
     };
-    propsSliderThumb: h.JSX.HTMLAttributes<E>;
+    propsSliderThumb: ElementProps<E>;
 }
 export type UseSliderThumb<ThumbElement extends Element, M extends SliderThumbInfo> = (props: UseSliderThumbParameters<ThumbElement, M>) => UseSliderThumbReturnType<ThumbElement, M>;
 export interface UseSliderReturnType<M extends SliderThumbInfo> extends UseManagedChildrenReturnType<M> {

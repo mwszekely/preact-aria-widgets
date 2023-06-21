@@ -1,9 +1,9 @@
 import { jsx as _jsx, Fragment as _Fragment } from "preact/jsx-runtime";
 import { createContext } from "preact";
+import { focus } from "preact-prop-helpers";
 import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
 import { useToolbar, useToolbarChild } from "../use-toolbar.js";
 import { memoForwardRef, useDefault } from "./util.js";
-import { focus } from "preact-prop-helpers";
 // TODO: Are there performance/sanity implications for having one context per primitive?
 const UntabbableContext = createContext(false);
 const AriaPropNameContext = createContext("aria-selected");

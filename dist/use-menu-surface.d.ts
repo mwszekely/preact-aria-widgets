@@ -1,5 +1,4 @@
-import { h } from "preact";
-import { UseModalParameters, UseModalReturnType } from "preact-prop-helpers";
+import { ElementProps, UseModalParameters, UseModalReturnType } from "preact-prop-helpers";
 import { OmitStrong } from "./props.js";
 export interface UseMenuSurfaceParameters<_S extends Element, _B extends Element> extends OmitStrong<UseModalParameters<"escape" | "lost-focus" | "backdrop">, "focusTrapParameters"> {
     focusTrapParameters: OmitStrong<UseModalParameters<"escape" | "lost-focus" | "backdrop">["focusTrapParameters"], "trapActive" | "focusOpener" | "onlyMoveFocus">;
@@ -14,10 +13,10 @@ export interface UseMenuSurfaceParameters<_S extends Element, _B extends Element
     };
 }
 export interface UseMenuSurfaceReturnType<MenuSurfaceElement extends Element, MenuTargetElement extends Element, MenuTriggerElement extends Element> {
-    propsSurface: h.JSX.HTMLAttributes<MenuSurfaceElement>;
-    propsTarget: h.JSX.HTMLAttributes<MenuTargetElement>;
-    propsTrigger: h.JSX.HTMLAttributes<MenuTriggerElement>;
-    propsSentinel: h.JSX.HTMLAttributes<any>;
+    propsSurface: ElementProps<MenuSurfaceElement>;
+    propsTarget: ElementProps<MenuTargetElement>;
+    propsTrigger: ElementProps<MenuTriggerElement>;
+    propsSentinel: ElementProps<any>;
     focusTrapReturn: UseModalReturnType<null, MenuTriggerElement, MenuSurfaceElement>["focusTrapReturn"];
     refElementPopupReturn: UseModalReturnType<null, MenuTriggerElement, MenuSurfaceElement>["refElementPopupReturn"];
     refElementSourceReturn: UseModalReturnType<null, MenuTriggerElement, MenuSurfaceElement>["refElementSourceReturn"];
@@ -52,5 +51,5 @@ export interface UseFocusSentinelParameters {
  * @param param0
  * @returns
  */
-export declare function useFocusSentinel<E extends Element>({ focusSentinel: { open, onClose, sendFocusToMenu } }: UseFocusSentinelParameters): h.JSX.HTMLAttributes<E>;
+export declare function useFocusSentinel<E extends Element>({ focusSentinel: { open, onClose, sendFocusToMenu } }: UseFocusSentinelParameters): ElementProps<E>;
 //# sourceMappingURL=use-menu-surface.d.ts.map

@@ -1,7 +1,5 @@
-import { RenderableProps, render } from "preact";
-import { useForceUpdate, useSearchParamState } from "preact-prop-helpers";
-import { StateUpdater, useCallback, useEffect, useRef, useState } from "preact/hooks";
-import { Button } from "../../dist/index.js";
+import { render } from "preact";
+import { useSearchParamState } from "preact-prop-helpers";
 import type { TestingConstants } from "../fixtures/shared.js";
 import { TestBasesButton } from "./spec-button.js";
 import { TestBasesToolbar } from "./spec-toolbar.js";

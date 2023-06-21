@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { generateRandomId, ManagedChildInfo, monitorCallCount, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, UseManagedChildReturnType } from "preact-prop-helpers";
+import { ElementProps, generateRandomId, ManagedChildInfo, monitorCallCount, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, UseManagedChildReturnType } from "preact-prop-helpers";
 import { useMemo, useRef } from "preact/hooks";
 import { enhanceEvent, EventDetail, Prefices, TagSensitiveProps } from "./props.js";
 
@@ -32,7 +32,7 @@ export interface UseSliderThumbParameters<E extends Element, M extends SliderThu
     context: SliderContext<M>;
 }
 
-export interface UseSliderThumbProps<E extends Element> extends h.JSX.HTMLAttributes<E> {
+export interface UseSliderThumbProps<E extends Element> extends ElementProps<E> {
 
 }
 
@@ -48,7 +48,7 @@ export interface UseSliderThumbReturnType<E extends Element, M extends SliderThu
         min: number;
         max: number;
     }
-    propsSliderThumb: h.JSX.HTMLAttributes<E>;
+    propsSliderThumb: ElementProps<E>;
 }
 
 
@@ -104,10 +104,10 @@ export function useSliderThumb<ThumbElement extends Element, M extends SliderThu
     const min = (minOverride ?? minParent);
     const max = (maxOverride ?? maxParent);
 
-    let newProps: h.JSX.HTMLAttributes<ThumbElement> = (
+    let newProps: ElementProps<ThumbElement> = (
         tag == "input" ?
             { min, max, value, type: "range" } :
-            { "aria-valuemax": `${max}`, "aria-valuemin": `${min}`, "aria-valuenow": `${value}` }
+            { "aria-valuemax": max, "aria-valuemin": min, "aria-valuenow": value }
     );
     newProps = { ...newProps, "aria-label": label, "aria-valuetext": valueText, style: { "--range-value": `${value}`, "--range-value-text": `${valueText}` } };
     if (tag == "input") {

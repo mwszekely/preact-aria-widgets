@@ -1,6 +1,6 @@
 import { CompleteListNavigationContext, PassiveStateUpdater, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType } from "preact-prop-helpers";
 import { StateUpdater } from "preact/hooks";
-import { TargetedEnhancedEvent, OmitStrong, EnhancedEventHandler } from "./props.js";
+import { EnhancedEventHandler, OmitStrong, TargetedEnhancedEvent } from "./props.js";
 import { CheckboxCheckedType } from "./use-checkbox-like.js";
 export interface CheckboxGroupChangeEventDetail {
     childrenChecked: boolean | Map<number, boolean | "mixed">;

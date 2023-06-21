@@ -1,5 +1,5 @@
-import { createElement, h, Ref, VNode } from "preact";
-import { returnFalse } from "preact-prop-helpers";
+import { createElement, Ref, VNode } from "preact";
+import { ElementProps, returnFalse } from "preact-prop-helpers";
 import { useImperativeHandle } from "preact/hooks";
 import { ElementToTag } from "../props.js";
 import { useCheckbox, UseCheckboxParameters, UseCheckboxReturnType } from "../use-checkbox.js";
@@ -58,8 +58,8 @@ export interface DefaultRenderCheckboxLikeParameters<I extends Element, L extend
     labelPosition: "wrapping" | "separate" | "hidden",
     tagInput: ElementToTag<I>,
     tagLabel: ElementToTag<L>,
-    makePropsInput: (info: InfoType) => h.JSX.HTMLAttributes<I>,
-    makePropsLabel: (info: InfoType) => h.JSX.HTMLAttributes<L>
+    makePropsInput: (info: InfoType) => ElementProps<I>,
+    makePropsLabel: (info: InfoType) => ElementProps<L>
 }
 
 export const Checkbox = memoForwardRef(function Checkbox<I extends Element, L extends Element>({

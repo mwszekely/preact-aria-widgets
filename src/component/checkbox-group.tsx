@@ -1,5 +1,5 @@
 import { createContext, Ref, RenderableProps, VNode } from "preact";
-import { useContext, useImperativeHandle, useMemo } from "preact/hooks";
+import { useContext, useImperativeHandle } from "preact/hooks";
 import { OmitStrong } from "../props.js";
 import { CheckboxGroupContext, CheckboxGroupInfo, useCheckboxGroup, useCheckboxGroupChild, UseCheckboxGroupChildParameters, UseCheckboxGroupChildReturnType, UseCheckboxGroupParameters, useCheckboxGroupParent, UseCheckboxGroupParentParameters, UseCheckboxGroupParentReturnType, UseCheckboxGroupReturnType } from "../use-checkbox-group.js";
 import { memoForwardRef, PartialExcept, useDefault } from "./util.js";

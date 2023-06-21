@@ -1,5 +1,5 @@
-import { ComponentChildren, h } from "preact";
-import { ManagedChildInfo, UseManagedChildParameters, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType } from "preact-prop-helpers";
+import { ComponentChildren } from "preact";
+import { ElementProps, ManagedChildInfo, UseManagedChildParameters, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType } from "preact-prop-helpers";
 import { StateUpdater } from "preact/hooks";
 import { OmitStrong } from "./props.js";
 export interface UseToastsParameters extends UseManagedChildrenParameters<ToastInfo> {
@@ -29,11 +29,11 @@ export interface UseToastReturnType<ToastType extends Element> {
         showing: boolean;
         resetDismissTimer: () => void;
     };
-    props: h.JSX.HTMLAttributes<ToastType>;
+    props: ElementProps<ToastType>;
 }
 export interface UseToastsReturnType<ContainerType extends Element, M extends ToastInfo> extends UseManagedChildrenReturnType<ToastInfo> {
     context: ToastsContext<M>;
-    props: h.JSX.HTMLAttributes<ContainerType>;
+    props: ElementProps<ContainerType>;
 }
 export interface ToastsContext<M extends ToastInfo> extends UseManagedChildrenContext<M> {
     toastContext: {

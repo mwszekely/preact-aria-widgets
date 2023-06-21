@@ -80,8 +80,8 @@ export function useCheckboxLike({ labelParameters, randomIdInputParameters, rand
                 // div inputs need their various ARIA roles and properties
                 propsUnstableInput.role = role;
                 propsUnstableInput.tabIndex = 0;
-                propsUnstableInput["aria-checked"] = (checked ?? false).toString();
-                propsUnstableInput["aria-disabled"] = (!!disabled).toString();
+                propsUnstableInput["aria-checked"] = (checked ?? false);
+                propsUnstableInput["aria-disabled"] = (!!disabled);
             }
             if (tagLabel != "label") {
                 // We don't need to do anything special for regular labels
@@ -113,8 +113,8 @@ export function useCheckboxLike({ labelParameters, randomIdInputParameters, rand
             // And are very similar conceptually to div inputs when separated
             propsUnstableLabel.role = role;
             propsUnstableLabel.tabIndex = 0;
-            propsUnstableLabel["aria-checked"] = (checked ?? false).toString();
-            propsUnstableLabel["aria-disabled"] = (!!disabled).toString();
+            propsUnstableLabel["aria-checked"] = (checked ?? false);
+            propsUnstableLabel["aria-disabled"] = (!!disabled);
             break;
         }
     }

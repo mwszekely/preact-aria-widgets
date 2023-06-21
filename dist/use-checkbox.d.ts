@@ -1,4 +1,4 @@
-import { h } from "preact";
+import { ElementProps } from "preact-prop-helpers";
 import { EnhancedEventHandler, OmitStrong, TargetedEnhancedEvent } from "./props.js";
 import { UseCheckboxLikeParameters, UseCheckboxLikeReturnType } from "./use-checkbox-like.js";
 import { LabelPosition } from "./use-label.js";
@@ -15,7 +15,7 @@ export interface UseCheckboxParameters<LP extends LabelPosition, I extends Eleme
 }
 export interface UseCheckboxReturnType<InputType extends Element, LabelType extends Element> extends UseCheckboxLikeReturnType<InputType, LabelType> {
     checkboxReturn: {
-        propsUnstable: h.JSX.HTMLAttributes<InputType>;
+        propsUnstable: ElementProps<InputType>;
     };
 }
 export declare function useCheckbox<LP extends LabelPosition, InputType extends Element, LabelType extends Element>({ checkboxParameters: { onCheckedChange }, checkboxLikeParameters, labelParameters, }: UseCheckboxParameters<LP, InputType, LabelType>): UseCheckboxReturnType<InputType, LabelType>;

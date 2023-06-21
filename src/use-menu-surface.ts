@@ -1,5 +1,4 @@
-import { h } from "preact";
-import { assertEmptyObject, findFirstFocusable, focus, monitorCallCount, useMergedProps, useModal, UseModalParameters, UseModalReturnType, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
+import { assertEmptyObject, ElementProps, findFirstFocusable, focus, monitorCallCount, useMergedProps, useModal, UseModalParameters, UseModalReturnType, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { OmitStrong } from "./props.js";
 
@@ -19,10 +18,10 @@ export interface UseMenuSurfaceParameters<_S extends Element, _B extends Element
 
 
 export interface UseMenuSurfaceReturnType<MenuSurfaceElement extends Element, MenuTargetElement extends Element, MenuTriggerElement extends Element> {
-    propsSurface: h.JSX.HTMLAttributes<MenuSurfaceElement>;
-    propsTarget: h.JSX.HTMLAttributes<MenuTargetElement>;
-    propsTrigger: h.JSX.HTMLAttributes<MenuTriggerElement>;
-    propsSentinel: h.JSX.HTMLAttributes<any>;
+    propsSurface: ElementProps<MenuSurfaceElement>;
+    propsTarget: ElementProps<MenuTargetElement>;
+    propsTrigger: ElementProps<MenuTriggerElement>;
+    propsSentinel: ElementProps<any>;
     focusTrapReturn: UseModalReturnType<null, MenuTriggerElement, MenuSurfaceElement>["focusTrapReturn"];
     refElementPopupReturn: UseModalReturnType<null, MenuTriggerElement, MenuSurfaceElement>["refElementPopupReturn"];
     refElementSourceReturn: UseModalReturnType<null, MenuTriggerElement, MenuSurfaceElement>["refElementSourceReturn"];
@@ -74,19 +73,19 @@ export function useMenuSurface<MenuSurfaceElement extends Element, MenuTargetEle
     assertEmptyObject(void5);
     assertEmptyObject(void6);
 
-    const propsSurface: h.JSX.HTMLAttributes<MenuSurfaceElement> = useMergedProps(propsRefSurface, propsPopup, propsFocusContainer);
+    const propsSurface: ElementProps<MenuSurfaceElement> = useMergedProps(propsRefSurface, propsPopup, propsFocusContainer);
 
-    const propsTarget: h.JSX.HTMLAttributes<MenuTargetElement> = useMergedProps({
+    const propsTarget: ElementProps<MenuTargetElement> = useMergedProps({
         role,
         id: surfaceId
     });
 
-    const propsTrigger: h.JSX.HTMLAttributes<MenuTriggerElement> = useMergedProps({
-        "aria-expanded": (dismissParameters.open).toString(),
+    const propsTrigger: ElementProps<MenuTriggerElement> = useMergedProps({
+        "aria-expanded": (dismissParameters.open),
         "aria-haspopup": role,
     }, propsRefTrigger, ps2, { "aria-controls": surfaceId });
 
-    const propsSentinel: h.JSX.HTMLAttributes<any> = useFocusSentinel({
+    const propsSentinel: ElementProps<any> = useFocusSentinel({
         focusSentinel: {
             sendFocusToMenu: useCallback(() => { return focusTrapParameters.focusPopup(getMenuElement(), () => (findFirstFocusable(getMenuElement()!) as HTMLElement | null)) }, []),
             onClose: useCallback(() => { dismissParameters.onClose("lost-focus") }, [dismissParameters.onClose]),
@@ -124,7 +123,7 @@ export interface UseFocusSentinelParameters {
  * @param param0 
  * @returns 
  */
-export function useFocusSentinel<E extends Element>({ focusSentinel: { open, onClose, sendFocusToMenu } }: UseFocusSentinelParameters): h.JSX.HTMLAttributes<E> {
+export function useFocusSentinel<E extends Element>({ focusSentinel: { open, onClose, sendFocusToMenu } }: UseFocusSentinelParameters): ElementProps<E> {
     monitorCallCount(useFocusSentinel);
     const getSendFocusWithinMenu = useStableGetter(sendFocusToMenu);
     const stableOnClose = useStableCallback(onClose);

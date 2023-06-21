@@ -29,7 +29,7 @@ export function useSliderThumb({ info, context: { sliderContext: { max: maxParen
     const max = (maxOverride ?? maxParent);
     let newProps = (tag == "input" ?
         { min, max, value, type: "range" } :
-        { "aria-valuemax": `${max}`, "aria-valuemin": `${min}`, "aria-valuenow": `${value}` });
+        { "aria-valuemax": max, "aria-valuemin": min, "aria-valuenow": value });
     newProps = { ...newProps, "aria-label": label, "aria-valuetext": valueText, style: { "--range-value": `${value}`, "--range-value-text": `${valueText}` } };
     if (tag == "input") {
         newProps.onInput = e => {

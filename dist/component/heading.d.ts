@@ -1,6 +1,7 @@
-import { ComponentChildren, createElement, h, RenderableProps } from "preact";
+import { ComponentChildren, createElement, RenderableProps } from "preact";
+import { ElementProps } from "preact-prop-helpers";
 type ElementToTag<A> = any;
-export interface HeadingProps<T extends Element> extends RenderableProps<h.JSX.HTMLAttributes<T>> {
+export interface HeadingProps<T extends Element> extends RenderableProps<ElementProps<T>> {
     /**
      * The contents of the heading.
      *

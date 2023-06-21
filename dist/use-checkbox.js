@@ -1,5 +1,5 @@
 import { monitorCallCount, returnFalse, useMergedProps, useRefElement, useStableCallback } from "preact-prop-helpers";
-import { enhanceEvent, Prefices } from "./props.js";
+import { Prefices, enhanceEvent } from "./props.js";
 import { useCheckboxLike } from "./use-checkbox-like.js";
 ;
 export function useCheckbox({ checkboxParameters: { onCheckedChange }, checkboxLikeParameters, labelParameters, }) {

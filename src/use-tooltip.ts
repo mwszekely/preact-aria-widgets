@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { DismissListenerTypes, focus, monitorCallCount, returnNull, useDismiss, UseEscapeDismissParameters, useGlobalHandler, useHasCurrentFocus, useMergedProps, usePassiveState, useRandomId, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
+import { DismissListenerTypes, ElementProps, focus, monitorCallCount, returnNull, useDismiss, UseEscapeDismissParameters, useGlobalHandler, useHasCurrentFocus, useMergedProps, usePassiveState, useRandomId, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
 import { useCallback, useRef } from "preact/hooks";
 import { Prefices } from "./props.js";
 
@@ -174,8 +174,8 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
 }
 
 export interface UseTooltipReturnType<TriggerType extends Element, PopupType extends Element> {
-    propsPopup: h.JSX.HTMLAttributes<PopupType>;
-    propsTrigger: h.JSX.HTMLAttributes<TriggerType>;
+    propsPopup: ElementProps<PopupType>;
+    propsTrigger: ElementProps<TriggerType>;
     tooltipReturn: {
         getState(): TooltipState;
         stateIsFocus(): boolean;

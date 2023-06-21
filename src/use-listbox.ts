@@ -1,15 +1,23 @@
 import { h } from "preact";
 import {
-    CompleteListNavigationContext, monitorCallCount, useCompleteListNavigationChild,
+    CompleteListNavigationContext,
+    ElementProps,
     UseCompleteListNavigationChildInfo,
     UseCompleteListNavigationChildParameters,
     UseCompleteListNavigationChildReturnType,
-    useCompleteListNavigationDeclarative,
     UseCompleteListNavigationParameters,
-    UseCompleteListNavigationReturnType, useEnsureStability, useMergedProps, usePress, UsePressParameters, UsePressReturnType, UseSingleSelectionParameters, useStableCallback, useMemoObject, focus
+    UseCompleteListNavigationReturnType,
+    UsePressReturnType, UseSingleSelectionParameters,
+    focus,
+    monitorCallCount, useCompleteListNavigationChild,
+    useCompleteListNavigationDeclarative,
+    useEnsureStability,
+    useMemoObject,
+    useMergedProps,
+    useStableCallback
 } from "preact-prop-helpers";
 import { EventDetail, OmitStrong, Prefices } from "./props.js";
-import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
+import { UseLabelSyntheticParameters, useLabelSynthetic } from "./use-label.js";
 
 export type ListboxSingleSelectEvent<E extends EventTarget> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 
@@ -50,8 +58,8 @@ export interface UseListboxParameters<ListElement extends Element, ListItemEleme
     }
 }
 export interface UseListboxReturnType<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationReturnType<ListElement, ListItemElement, M>, "singleSelectionReturn" | "props"> {
-    propsListbox: h.JSX.HTMLAttributes<ListElement>;
-    propsListboxLabel: h.JSX.HTMLAttributes<LabelElement>;
+    propsListbox: ElementProps<ListElement>;
+    propsListboxLabel: ElementProps<LabelElement>;
     context: UseListboxContext<ListElement, ListItemElement, M>;
 }
 export interface UseListboxItemReturnType<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends UseCompleteListNavigationChildReturnType<ListItemElement, M>, UsePressReturnType<ListItemElement> { }

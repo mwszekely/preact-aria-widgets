@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { focus, monitorCallCount, useMergedProps, usePress, UsePressParameters, UsePressReturnType, UseRefElementReturnType, useStableCallback } from "preact-prop-helpers";
+import { ElementProps, focus, monitorCallCount, useMergedProps, usePress, UsePressParameters, UsePressReturnType, UseRefElementReturnType, useStableCallback } from "preact-prop-helpers";
 import { useEffect } from "preact/hooks";
 import { DisabledType, OmitStrong } from "./props.js";
 import { LabelPosition, useLabel, UseLabelParameters, UseLabelReturnType } from "./use-label.js";
@@ -34,8 +34,8 @@ export interface UseCheckboxLikeParameters<LP extends LabelPosition, InputType e
 export interface UseCheckboxLikeReturnType<InputType extends Element, LabelType extends Element> extends UseLabelReturnType<InputType, LabelType> {
     pressLabelReturn: UsePressReturnType<LabelType>["pressReturn"];
     pressInputReturn: UsePressReturnType<InputType>["pressReturn"];
-    checkboxLikeInputReturn: { propsUnstable: h.JSX.HTMLAttributes<InputType> }
-    checkboxLikeLabelReturn: { propsUnstable: h.JSX.HTMLAttributes<LabelType> }
+    checkboxLikeInputReturn: { propsUnstable: ElementProps<InputType> }
+    checkboxLikeLabelReturn: { propsUnstable: ElementProps<LabelType> }
     checkboxLikeReturn: {
         /**
          * Call this to focus whichever element handles the focus based on `labelPosition`.
@@ -116,8 +116,8 @@ export function useCheckboxLike<LP extends LabelPosition, InputType extends Elem
     const onClickLabelSync = onInputSync;
     const { pressReturn: pressInputReturn, props: propsPressInput } = usePress<InputType>({ pressParameters: { excludeSpace, focusSelf, onPressSync: (disabled) ? undefined : onClickInputSync }, refElementReturn: refElementInputReturn });
     const { pressReturn: pressLabelReturn, props: propsPressLabel } = usePress<LabelType>({ pressParameters: { excludeSpace, focusSelf, onPressSync: (disabled) ? undefined : onClickLabelSync }, refElementReturn: refElementLabelReturn });
-    const propsUnstableInput: h.JSX.HTMLAttributes<InputType> = {};
-    const propsUnstableLabel: h.JSX.HTMLAttributes<LabelType> = {};
+    const propsUnstableInput: ElementProps<InputType> = {};
+    const propsUnstableLabel: ElementProps<LabelType> = {};
 
     // Make sure that label clicks can't affect the visual state of the checkbox
     propsUnstableInput.onClick = preventDefault;
@@ -144,8 +144,8 @@ export function useCheckboxLike<LP extends LabelPosition, InputType extends Elem
                 // div inputs need their various ARIA roles and properties
                 propsUnstableInput.role = role;
                 propsUnstableInput.tabIndex = 0;
-                propsUnstableInput["aria-checked"] = (checked ?? false).toString();
-                propsUnstableInput["aria-disabled"] = (!!disabled).toString();
+                propsUnstableInput["aria-checked"] = (checked ?? false);
+                propsUnstableInput["aria-disabled"] = (!!disabled);
             }
 
             if (tagLabel != "label") {
@@ -181,8 +181,8 @@ export function useCheckboxLike<LP extends LabelPosition, InputType extends Elem
             // And are very similar conceptually to div inputs when separated
             propsUnstableLabel.role = role;
             propsUnstableLabel.tabIndex = 0;
-            propsUnstableLabel["aria-checked"] = (checked ?? false).toString();
-            propsUnstableLabel["aria-disabled"] = (!!disabled).toString();
+            propsUnstableLabel["aria-checked"] = (checked ?? false);
+            propsUnstableLabel["aria-disabled"] = (!!disabled);
 
             break;
         }

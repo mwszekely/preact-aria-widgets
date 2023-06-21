@@ -1,8 +1,8 @@
-import { ComponentChildren, h } from "preact";
-import { findFirstFocusable, focus, ManagedChildInfo, monitorCallCount, useGlobalHandler, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, useMergedProps, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
+import { ComponentChildren } from "preact";
+import { ElementProps, ManagedChildInfo, UseManagedChildParameters, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, findFirstFocusable, focus, monitorCallCount, useGlobalHandler, useManagedChild, useManagedChildren, useMergedProps, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
 import { StateUpdater, useCallback, useEffect, useRef } from "preact/hooks";
+import { OmitStrong } from "./props.js";
 import { useNotify } from "./use-notify.js";
-import { OmitStrong } from "./props.js"
 
 
 export interface UseToastsParameters extends UseManagedChildrenParameters<ToastInfo> {
@@ -35,12 +35,12 @@ export interface UseToastReturnType<ToastType extends Element> {
         showing: boolean;
         resetDismissTimer: () => void;
     }
-    props: h.JSX.HTMLAttributes<ToastType>;
+    props: ElementProps<ToastType>;
 }
 
 export interface UseToastsReturnType<ContainerType extends Element, M extends ToastInfo> extends UseManagedChildrenReturnType<ToastInfo> {
     context: ToastsContext<M>
-    props: h.JSX.HTMLAttributes<ContainerType>;
+    props: ElementProps<ContainerType>;
 }
 
 export interface ToastsContext<M extends ToastInfo> extends UseManagedChildrenContext<M> {
@@ -147,7 +147,7 @@ export function useToasts<ContainerType extends Element>({ managedChildrenParame
         onAnyToastMounted
     }
 
-    const props = useMergedProps<ContainerType>(useMergedProps(propsStable, { class: "toasts-container" } as h.JSX.HTMLAttributes<ContainerType>));
+    const props = useMergedProps<ContainerType>(useMergedProps(propsStable, { class: "toasts-container" } as ElementProps<ContainerType>));
 
     return {
         context: {

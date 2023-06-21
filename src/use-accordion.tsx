@@ -1,9 +1,9 @@
 import { identity } from "lodash-es";
 import { h } from "preact";
-import { assertEmptyObject, ManagedChildInfo, monitorCallCount, OnChildrenMountChange, PassiveStateUpdater, PersistentStates, useChildrenFlag, useLinearNavigation, UseLinearNavigationParameters, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, useMergedProps, usePersistentState, UsePressReturnType, useRandomId, useRefElement, UseRefElementParameters, UseRefElementReturnType, useStableCallback, useMemoObject, useState, UseTextContentReturnType, useTypeaheadNavigation, useTypeaheadNavigationChild, UseTypeaheadNavigationChildParameters, UseTypeaheadNavigationContext, UseTypeaheadNavigationParameters, focus } from "preact-prop-helpers";
+import { ElementProps, ManagedChildInfo, OnChildrenMountChange, PassiveStateUpdater, PersistentStates, UseLinearNavigationParameters, UseManagedChildParameters, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, UsePressReturnType, UseRefElementParameters, UseRefElementReturnType, UseTextContentReturnType, UseTypeaheadNavigationChildParameters, UseTypeaheadNavigationContext, UseTypeaheadNavigationParameters, assertEmptyObject, focus, monitorCallCount, useChildrenFlag, useLinearNavigation, useManagedChild, useManagedChildren, useMemoObject, useMergedProps, usePersistentState, useRandomId, useRefElement, useStableCallback, useState, useTypeaheadNavigation, useTypeaheadNavigationChild } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { DisabledType, OmitStrong, Prefices } from "./props.js";
-import { ButtonPressEventHandler, useButton, UseButtonParameters, UseButtonReturnType } from "./use-button.js";
+import { ButtonPressEventHandler, UseButtonParameters, UseButtonReturnType, useButton } from "./use-button.js";
 
 export interface UseAccordionParameters<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo> extends
     UseManagedChildrenParameters<M>,
@@ -62,9 +62,9 @@ export interface UseAccordionSectionReturnType<HeaderElement extends Element, He
         mostRecentlyTabbed: boolean;
     }
 
-    propsHeaderButton: h.JSX.HTMLAttributes<HeaderButtonElement>;
-    propsHeader: h.JSX.HTMLAttributes<HeaderElement>;
-    propsBody: h.JSX.HTMLAttributes<BodyElement>
+    propsHeaderButton: ElementProps<HeaderButtonElement>;
+    propsHeader: ElementProps<HeaderElement>;
+    propsBody: ElementProps<BodyElement>
 }
 
 export interface UseAccordionContext<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo> extends UseManagedChildrenContext<M>, UseTypeaheadNavigationContext {
@@ -73,7 +73,7 @@ export interface UseAccordionContext<HeaderButtonElement extends Element, M exte
         changeExpandedIndex: PassiveStateUpdater<number | null, Event>;
         getExpandedIndex: () => (number | null);
         getTabbedIndex: () => (number | null);
-        stableTypeaheadProps: h.JSX.HTMLAttributes<HeaderButtonElement>;
+        stableTypeaheadProps: ElementProps<HeaderButtonElement>;
     }
     linearNavigationParameters: UseLinearNavigationParameters<HeaderButtonElement, HeaderButtonElement, M>["linearNavigationParameters"];
     rovingTabIndexReturn: UseLinearNavigationParameters<HeaderButtonElement, HeaderButtonElement, M>["rovingTabIndexReturn"];
@@ -275,7 +275,7 @@ export function useAccordionSection<_HeaderContainerElement extends Element, Hea
         propsHeadSource,
         propsLN,
         stableTypeaheadProps,
-        { "aria-expanded": (open ?? false).toString(), }
+        { "aria-expanded": (open ?? false), }
     );
 
     const bodyProps = useMergedProps<BodyElement>(

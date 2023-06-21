@@ -1,13 +1,14 @@
-import { ComponentChildren, createContext, createElement, h, RenderableProps } from "preact";
+import { ComponentChildren, createContext, createElement, RenderableProps } from "preact";
+import { ElementProps } from "preact-prop-helpers";
 import { memo } from "preact/compat";
 import { useContext } from "preact/hooks";
-//import { ElementToTag, overwriteWithWarning } from "../props.js";
+
 type ElementToTag<A> = any;
 function overwriteWithWarning(a: any, ...t: any[]) { return a; }
 
 const HeadingLevelContext = createContext(0);
 
-export interface HeadingProps<T extends Element> extends RenderableProps<h.JSX.HTMLAttributes<T>> {
+export interface HeadingProps<T extends Element> extends RenderableProps<ElementProps<T>> {
     /**
      * The contents of the heading.
      * 

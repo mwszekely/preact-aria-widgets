@@ -1,9 +1,9 @@
 import { createContext, Ref, VNode } from "preact";
+import { focus } from "preact-prop-helpers";
 import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
 import { Get, OmitStrong } from "../props.js";
 import { useToolbar, useToolbarChild, UseToolbarChildParameters, UseToolbarChildReturnType, UseToolbarContext, UseToolbarParameters, UseToolbarReturnType, UseToolbarSubInfo } from "../use-toolbar.js";
 import { memoForwardRef, PartialExcept, useDefault } from "./util.js";
-import { focus } from "preact-prop-helpers";
 
 
 export interface ToolbarPropsBase<ToolbarContainerElement extends Element, ToolbarChildElement extends Element, LabelElement extends Element, M extends UseToolbarSubInfo<ToolbarChildElement>> extends

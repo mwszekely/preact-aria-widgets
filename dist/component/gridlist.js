@@ -4,10 +4,6 @@ import { focus, useStableCallback } from "preact-prop-helpers";
 import { useContext, useImperativeHandle } from "preact/hooks";
 import { useGridlist, useGridlistCell, useGridlistRow } from "../use-gridlist.js";
 import { memoForwardRef, useDefault } from "./util.js";
-//const GridlistUntabbableContext = createContext(false);
-//const GridlistAriaPropNameContext = createContext<UseGridlistParameters<any, any, any, any, any, any>["singleSelectionParameters"]["ariaPropName"]>("aria-selected");
-//const GridlistSelectionModeContext = createContext<UseGridlistParameters<any, any, any, any, any, any>["singleSelectionParameters"]["selectionMode"]>("activation");
-//const GridlistRowUntabbableContext = createContext(false);
 const GridlistContext = createContext(null);
 const GridlistRowContext = createContext(null);
 export function defaultRenderGridlistRow({ tagGridlistRow, makePropsGridlistRow }) {

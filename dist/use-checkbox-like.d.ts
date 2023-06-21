@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { UsePressParameters, UsePressReturnType, UseRefElementReturnType } from "preact-prop-helpers";
+import { ElementProps, UsePressParameters, UsePressReturnType, UseRefElementReturnType } from "preact-prop-helpers";
 import { DisabledType, OmitStrong } from "./props.js";
 import { LabelPosition, UseLabelParameters, UseLabelReturnType } from "./use-label.js";
 export type CheckboxCheckedType = boolean | "mixed";
@@ -20,10 +20,10 @@ export interface UseCheckboxLikeReturnType<InputType extends Element, LabelType 
     pressLabelReturn: UsePressReturnType<LabelType>["pressReturn"];
     pressInputReturn: UsePressReturnType<InputType>["pressReturn"];
     checkboxLikeInputReturn: {
-        propsUnstable: h.JSX.HTMLAttributes<InputType>;
+        propsUnstable: ElementProps<InputType>;
     };
     checkboxLikeLabelReturn: {
-        propsUnstable: h.JSX.HTMLAttributes<LabelType>;
+        propsUnstable: ElementProps<LabelType>;
     };
     checkboxLikeReturn: {
         /**

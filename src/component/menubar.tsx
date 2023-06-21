@@ -1,9 +1,9 @@
 import { createContext, Ref, VNode } from "preact";
+import { focus } from "preact-prop-helpers";
 import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
 import { Get, OmitStrong } from "../props.js";
 import { useMenubar, useMenubarChild, UseMenubarContext, UseMenubarItemParameters, UseMenubarItemReturnType, UseMenubarParameters, UseMenubarReturnType, UseMenubarSubInfo } from "../use-menubar.js";
 import { memoForwardRef, PartialExcept, useDefault } from "./util.js";
-import { focus } from "preact-prop-helpers";
 
 
 interface MenubarPropsBase<MenuParentElement extends Element, MenuItemElement extends Element, LabelElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends

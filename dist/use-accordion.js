@@ -1,5 +1,5 @@
 import { identity } from "lodash-es";
-import { assertEmptyObject, monitorCallCount, useChildrenFlag, useLinearNavigation, useManagedChild, useManagedChildren, useMergedProps, usePersistentState, useRandomId, useRefElement, useStableCallback, useMemoObject, useState, useTypeaheadNavigation, useTypeaheadNavigationChild, focus } from "preact-prop-helpers";
+import { assertEmptyObject, focus, monitorCallCount, useChildrenFlag, useLinearNavigation, useManagedChild, useManagedChildren, useMemoObject, useMergedProps, usePersistentState, useRandomId, useRefElement, useStableCallback, useState, useTypeaheadNavigation, useTypeaheadNavigationChild } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { Prefices } from "./props.js";
 import { useButton } from "./use-button.js";
@@ -139,7 +139,7 @@ export function useAccordionSection({ buttonParameters, accordionSectionParamete
     });
     const { pressReturn, props: buttonProps, refElementReturn } = buttonReturn;
     //const { linearNavigationReturn: { propsStable } } = linearReturnType;
-    const headerButtonProps = useMergedProps(buttonProps, headerRefElementProps, propsHeadReferencer, propsHeadSource, propsLN, stableTypeaheadProps, { "aria-expanded": (open ?? false).toString(), });
+    const headerButtonProps = useMergedProps(buttonProps, headerRefElementProps, propsHeadReferencer, propsHeadSource, propsLN, stableTypeaheadProps, { "aria-expanded": (open ?? false), });
     const bodyProps = useMergedProps(bodyRefElementProps, propsBodyReferencer, propsBodySource, {
         role: bodyRole,
         tabIndex: -1

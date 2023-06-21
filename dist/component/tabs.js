@@ -1,9 +1,9 @@
 import { jsx as _jsx } from "preact/jsx-runtime";
 import { createContext } from "preact";
+import { focus } from "preact-prop-helpers";
 import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
 import { useTab, useTabPanel, useTabs } from "../use-tabs.js";
 import { memoForwardRef, useDefault } from "./util.js";
-import { focus } from "preact-prop-helpers";
 const TabsContext = createContext(null);
 const TabPanelsContext = createContext(null);
 const UntabbableContext = createContext(false);

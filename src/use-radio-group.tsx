@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { assertEmptyObject, CompleteListNavigationContext, EventDetail, focus, monitorCallCount, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useMergedProps, useRefElement, useSingleSelectionDeclarative, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
+import { assertEmptyObject, CompleteListNavigationContext, ElementProps, EventDetail, focus, monitorCallCount, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useMergedProps, useRefElement, useSingleSelectionDeclarative, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
 import { useLayoutEffect, useMemo, useRef } from "preact/hooks";
 import { EnhancedEventHandler, enhanceEvent, OmitStrong, Prefices, TargetedEnhancedEvent } from "./props.js";
 import { useCheckboxLike, UseCheckboxLikeParameters, UseCheckboxLikeReturnType } from "./use-checkbox-like.js";
@@ -45,8 +45,8 @@ export interface UseRadioGroupReturnType<V extends string | number, GroupElement
     radioGroupReturn: {
         selectedIndex: number | null;
     }
-    propsRadioGroup: h.JSX.HTMLAttributes<GroupElement>;
-    propsRadioGroupLabel: h.JSX.HTMLAttributes<GroupLabelElement>;
+    propsRadioGroup: ElementProps<GroupElement>;
+    propsRadioGroupLabel: ElementProps<GroupLabelElement>;
 
     // override
     context: RadioContext<V, GroupElement, TabbableChildElement, RadioSubInfo<TabbableChildElement, V>>;
@@ -144,8 +144,8 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
 }
 
 export interface UseRadioReturnType<LP extends LabelPosition, V extends string | number, I extends Element, IL extends Element, M extends RadioSubInfo<FocusableLabelElement<LP, I, IL>, V>> extends OmitStrong<UseCompleteListNavigationChildReturnType<FocusableLabelElement<LP, I, IL>, M>, "props">, UseCheckboxLikeReturnType<I, IL> {
-    propsInput: h.JSX.HTMLAttributes<I>;
-    propsLabel: h.JSX.HTMLAttributes<IL>;
+    propsInput: ElementProps<I>;
+    propsLabel: ElementProps<IL>;
 }
 
 
@@ -227,14 +227,14 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
         propsInput.type = "radio";
     }
     else {
-        propsInput["aria-checked"] = (checked ?? false).toString();
+        propsInput["aria-checked"] = (checked ?? false);
     }
 
-    const propsIfInputHandlesFocus = useMergedProps<InputElement>(listNavigationSingleSelectionChildProps as h.JSX.HTMLAttributes<any>, propsInput);
-    const propsInput2: h.JSX.HTMLAttributes<InputElement> = useMergedProps(propsRefInput, labelPosition != "wrapping" ? propsIfInputHandlesFocus : propsInput);
+    const propsIfInputHandlesFocus = useMergedProps<InputElement>(listNavigationSingleSelectionChildProps as ElementProps<any>, propsInput);
+    const propsInput2: ElementProps<InputElement> = useMergedProps(propsRefInput, labelPosition != "wrapping" ? propsIfInputHandlesFocus : propsInput);
 
-    const propsIfLabelHandlesFocus = useMergedProps<LabelElement>(listNavigationSingleSelectionChildProps as h.JSX.HTMLAttributes<any>, propsLabel);
-    const propsLabel2: h.JSX.HTMLAttributes<LabelElement> = useMergedProps(propsRefLabel, labelPosition == "wrapping" ? propsIfLabelHandlesFocus as any : propsLabel as any);
+    const propsIfLabelHandlesFocus = useMergedProps<LabelElement>(listNavigationSingleSelectionChildProps as ElementProps<any>, propsLabel);
+    const propsLabel2: ElementProps<LabelElement> = useMergedProps(propsRefLabel, labelPosition == "wrapping" ? propsIfLabelHandlesFocus as any : propsLabel as any);
 
     return {
         propsInput: propsInput2,

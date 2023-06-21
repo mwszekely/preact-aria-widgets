@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { CompleteListNavigationContext, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UsePressReturnType, UseSingleSelectionParameters } from "preact-prop-helpers";
+import { CompleteListNavigationContext, ElementProps, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UsePressReturnType, UseSingleSelectionParameters } from "preact-prop-helpers";
 import { EventDetail, OmitStrong } from "./props.js";
 import { UseLabelSyntheticParameters } from "./use-label.js";
 export type ListboxSingleSelectEvent<E extends EventTarget> = {
@@ -41,8 +41,8 @@ export interface UseListboxParameters<ListElement extends Element, ListItemEleme
     };
 }
 export interface UseListboxReturnType<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationReturnType<ListElement, ListItemElement, M>, "singleSelectionReturn" | "props"> {
-    propsListbox: h.JSX.HTMLAttributes<ListElement>;
-    propsListboxLabel: h.JSX.HTMLAttributes<LabelElement>;
+    propsListbox: ElementProps<ListElement>;
+    propsListboxLabel: ElementProps<LabelElement>;
     context: UseListboxContext<ListElement, ListItemElement, M>;
 }
 export interface UseListboxItemReturnType<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends UseCompleteListNavigationChildReturnType<ListItemElement, M>, UsePressReturnType<ListItemElement> {

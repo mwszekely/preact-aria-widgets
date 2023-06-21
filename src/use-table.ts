@@ -3,6 +3,7 @@ import {
     Compare,
     CompleteGridNavigationContext,
     CompleteGridNavigationRowContext,
+    ElementProps,
     PassiveStateUpdater,
     UseCompleteGridNavigationCellInfo, UseCompleteGridNavigationCellParameters, UseCompleteGridNavigationCellReturnType, UseCompleteGridNavigationParameters,
     UseCompleteGridNavigationReturnType,
@@ -41,7 +42,7 @@ export interface UseTableSectionParameters<TableSectionElement extends Element, 
     context: UseTableContext;
 }
 export interface UseTableSectionReturnType<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>> extends OmitStrong<UseCompleteGridNavigationReturnType<TableSectionElement, TableRowElement, TableCellElement, RM, CM>, "props"> {
-    propsTableSection: h.JSX.HTMLAttributes<TableSectionElement>;
+    propsTableSection: ElementProps<TableSectionElement>;
     context: UseTableSectionContext<TableSectionElement, TableRowElement, TableCellElement, RM, CM>;
 }
 export interface UseTableRowReturnType<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>> extends OmitStrong<UseCompleteGridNavigationRowReturnType<TableRowElement, TableCellElement, RM, CM>, "context"> {
@@ -65,8 +66,8 @@ export interface UseTableRowContext<TableRowElement extends Element, TableCellEl
 
 
 export interface UseTableCellReturnType<TableCellElement extends Element, CM extends TableCellInfo<TableCellElement>> extends OmitStrong<UseCompleteGridNavigationCellReturnType<TableCellElement, CM>, "props"> {
-    propsCell: h.JSX.HTMLAttributes<TableCellElement>;
-    propsFocus: h.JSX.HTMLAttributes<any>;
+    propsCell: ElementProps<TableCellElement>;
+    propsFocus: ElementProps<any>;
     tableCellReturn: {
         sortByThisColumn(): SortInfo;
     }
@@ -91,8 +92,8 @@ export interface UseTableParameters<TableElement extends Element, LabelElement e
 }
 
 export interface UseTableReturnType<TableElement extends Element, LabelElement extends Element> {
-    propsTable: h.JSX.HTMLAttributes<TableElement>;
-    propsLabel: h.JSX.HTMLAttributes<LabelElement>;
+    propsTable: ElementProps<TableElement>;
+    propsLabel: ElementProps<LabelElement>;
     context: UseTableContext;
 }
 

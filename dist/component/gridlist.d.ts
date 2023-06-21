@@ -1,4 +1,5 @@
-import { createElement, h, Ref, VNode } from "preact";
+import { createElement, Ref, VNode } from "preact";
+import { ElementProps } from "preact-prop-helpers";
 import { ElementToTag, OmitStrong } from "../props.js";
 import { GridlistCellInfo, GridlistRowInfo, UseGridlistCellParameters, UseGridlistCellReturnType, UseGridlistParameters, UseGridlistReturnType, UseGridlistRowParameters, UseGridlistRowReturnType } from "../use-gridlist.js";
 import { PartialExcept } from "./util.js";
@@ -26,11 +27,11 @@ export interface GridlistChildProps<CellElement extends Element, M extends Gridl
 }
 export declare function defaultRenderGridlistRow<RowElement extends Element, CellElement extends Element, RM extends GridlistRowInfo<RowElement, CellElement>, CM extends GridlistCellInfo<CellElement>>({ tagGridlistRow, makePropsGridlistRow }: {
     tagGridlistRow: ElementToTag<RowElement>;
-    makePropsGridlistRow: (info: UseGridlistRowReturnType<RowElement, CellElement, RM, CM>) => h.JSX.HTMLAttributes<RowElement>;
+    makePropsGridlistRow: (info: UseGridlistRowReturnType<RowElement, CellElement, RM, CM>) => ElementProps<RowElement>;
 }): (info: UseGridlistRowReturnType<RowElement, CellElement, RM, CM>) => VNode<any>;
 export declare function defaultRenderGridlistChild<CellElement extends Element, CM extends GridlistCellInfo<CellElement>>({ tagGridlistChild, makePropsGridlistChild }: {
     tagGridlistChild: ElementToTag<CellElement>;
-    makePropsGridlistChild: (info: UseGridlistCellReturnType<CellElement, CM>) => h.JSX.HTMLAttributes<CellElement>;
+    makePropsGridlistChild: (info: UseGridlistCellReturnType<CellElement, CM>) => ElementProps<CellElement>;
 }): (info: UseGridlistCellReturnType<CellElement, CM>) => VNode<any>;
 export declare const Gridlist: <GridlistElement extends Element, RowElement extends Element, Cellement extends Element, LabelElement extends Element, RM extends GridlistRowInfo<RowElement, Cellement> = GridlistRowInfo<RowElement, Cellement>, CM extends GridlistCellInfo<Cellement> = GridlistCellInfo<Cellement>>({ collator, disableHomeEndKeys, noTypeahead, onTabbableIndexChange, groupingType, typeaheadTimeout, selectedIndex, navigatePastEnd, navigatePastStart, onSelectedIndexChange, pageNavigationSize, selectionLimit, untabbable, paginationMax, paginationMin, staggered, compare, getIndex, onTabbableColumnChange, ariaLabel, orientation, ariaPropName, selectionMode, render }: GridlistProps<GridlistElement, RowElement, Cellement, LabelElement, RM, CM>, ref?: Ref<any>) => createElement.JSX.Element;
 export declare const GridlistRow: <RowElement extends Element, Cellement extends Element, RM extends GridlistRowInfo<RowElement, Cellement> = GridlistRowInfo<RowElement, Cellement>, CM extends GridlistCellInfo<Cellement> = GridlistCellInfo<Cellement>>({ index, collator, unselectable, untabbable, navigatePastEnd, navigatePastStart, noTypeahead, onTabbableIndexChange, selected, typeaheadTimeout, getSortValue, getText, render, initiallyTabbedIndex, info: uinfo }: GridlistRowProps<RowElement, Cellement, RM, CM>, ref?: Ref<any>) => createElement.JSX.Element;

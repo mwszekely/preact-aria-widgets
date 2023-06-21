@@ -36,7 +36,7 @@ dismissParameters, escapeDismissParameters, focusTrapParameters, menuSurfacePara
         id: surfaceId
     });
     const propsTrigger = useMergedProps({
-        "aria-expanded": (dismissParameters.open).toString(),
+        "aria-expanded": (dismissParameters.open),
         "aria-haspopup": role,
     }, propsRefTrigger, ps2, { "aria-controls": surfaceId });
     const propsSentinel = useFocusSentinel({

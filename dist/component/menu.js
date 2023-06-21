@@ -1,9 +1,9 @@
 import { jsx as _jsx, Fragment as _Fragment } from "preact/jsx-runtime";
 import { createContext } from "preact";
+import { focus } from "preact-prop-helpers";
 import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
 import { useMenu, useMenuItem } from "../use-menu.js";
 import { memoForwardRef, ParentDepthContext, useDefault } from "./util.js";
-import { focus } from "preact-prop-helpers";
 const UntabbableContext = createContext(false);
 const AriaPropNameContext = createContext("aria-selected");
 const SelectionModeContext = createContext("focus");

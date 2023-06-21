@@ -1,7 +1,6 @@
-import { h } from "preact";
-import { CompleteListNavigationContext, monitorCallCount, PassiveStateUpdater, returnFalse, returnNull, returnZero, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useMergedProps, usePassiveState, useStableCallback, useStableGetter, useMemoObject, useState, focus } from "preact-prop-helpers";
+import { CompleteListNavigationContext, ElementProps, PassiveStateUpdater, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, focus, monitorCallCount, returnFalse, returnNull, returnZero, useCompleteListNavigation, useCompleteListNavigationChild, useMemoObject, useMergedProps, usePassiveState, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
 import { StateUpdater, useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
-import { TargetedEnhancedEvent, OmitStrong, EnhancedEventHandler } from "./props.js";
+import { EnhancedEventHandler, OmitStrong, TargetedEnhancedEvent } from "./props.js";
 import { CheckboxCheckedType } from "./use-checkbox-like.js";
 
 export interface CheckboxGroupChangeEventDetail {
@@ -294,7 +293,7 @@ export function useCheckboxGroupParent<TCE extends Element>({
         textContentReturn,
         staggeredChildReturn,
         refElementReturn,
-        props: useMergedProps({ "aria-controls": ariaControls } as h.JSX.HTMLAttributes<TCE>, props),
+        props: useMergedProps({ "aria-controls": ariaControls } as ElementProps<TCE>, props),
         rovingTabIndexChildReturn,
         paginatedChildReturn,
         singleSelectionChildReturn,

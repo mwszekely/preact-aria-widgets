@@ -1,8 +1,8 @@
 import { h } from "preact";
-import { CompleteListNavigationContext, generateRandomId, ManagedChildInfo, monitorCallCount, OnChildrenMountChange, PersistentStates, returnTrue, useChildrenFlag, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, useMergedProps, usePersistentState, usePress, UsePressReturnType, useStableCallback, useMemoObject, useState, focus } from "preact-prop-helpers";
+import { CompleteListNavigationContext, ElementProps, ManagedChildInfo, OnChildrenMountChange, PersistentStates, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseManagedChildParameters, UseManagedChildrenContext, UsePressReturnType, focus, generateRandomId, monitorCallCount, returnTrue, useChildrenFlag, useCompleteListNavigation, useCompleteListNavigationChild, useManagedChild, useManagedChildren, useMemoObject, useMergedProps, usePersistentState, useStableCallback, useState } from "preact-prop-helpers";
 import { useCallback, useLayoutEffect } from "preact/hooks";
 import { EventDetail, OmitStrong, Prefices } from "./props.js";
-import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
+import { UseLabelSyntheticParameters, useLabelSynthetic } from "./use-label.js";
 
 
 export interface TabPanelInfo extends ManagedChildInfo<number> {
@@ -61,19 +61,19 @@ interface UseTabListParameters<TabContainerElement extends Element, TabElement e
 export interface UseTabListReturnType<ParentElement extends Element, ChildElement extends Element, M extends TabInfo<ChildElement>> extends UseCompleteListNavigationReturnType<ParentElement, ChildElement, M> {
 }
 export interface UseTabPanelReturnType<E extends Element> {
-    props: h.JSX.HTMLAttributes<E>;
+    props: ElementProps<E>;
     tabPanelReturn: { visibleOffset: number | null; visible: boolean | null; getVisible: () => boolean; };
 }
 
 
 export interface UseTabListLabelReturnTypeInfo { }
 export interface UseTabLabelReturnTypeWithHooks<LabelElement extends Element> extends UseTabListLabelReturnTypeInfo {
-    useTabListLabelProps: (props: h.JSX.HTMLAttributes<LabelElement>) => h.JSX.HTMLAttributes<LabelElement>;
+    useTabListLabelProps: (props: ElementProps<LabelElement>) => ElementProps<LabelElement>;
 }
 
 export interface UseTabsReturnType<TabContainerElement extends Element, TabElement extends Element, LabelElement extends Element, M extends TabInfo<TabElement>> extends OmitStrong<UseCompleteListNavigationReturnType<TabContainerElement, TabElement, M>, "props" | "context"> {
-    propsContainer: h.JSX.HTMLAttributes<TabContainerElement>;
-    propsLabel: h.JSX.HTMLAttributes<LabelElement>;
+    propsContainer: ElementProps<TabContainerElement>;
+    propsLabel: ElementProps<LabelElement>;
     contextPanels: UseTabPanelsContext<TabPanelInfo>;
     contextTabs: UseTabsContext<TabContainerElement, TabElement, M>;
 }

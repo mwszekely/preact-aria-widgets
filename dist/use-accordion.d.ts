@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { ManagedChildInfo, PassiveStateUpdater, PersistentStates, UseLinearNavigationParameters, UseManagedChildParameters, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, UsePressReturnType, UseRefElementParameters, UseRefElementReturnType, UseTextContentReturnType, UseTypeaheadNavigationChildParameters, UseTypeaheadNavigationContext, UseTypeaheadNavigationParameters } from "preact-prop-helpers";
+import { ElementProps, ManagedChildInfo, PassiveStateUpdater, PersistentStates, UseLinearNavigationParameters, UseManagedChildParameters, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, UsePressReturnType, UseRefElementParameters, UseRefElementReturnType, UseTextContentReturnType, UseTypeaheadNavigationChildParameters, UseTypeaheadNavigationContext, UseTypeaheadNavigationParameters } from "preact-prop-helpers";
 import { DisabledType, OmitStrong } from "./props.js";
 import { UseButtonParameters } from "./use-button.js";
 export interface UseAccordionParameters<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo> extends UseManagedChildrenParameters<M>, Pick<UseTypeaheadNavigationParameters<HeaderButtonElement, M>, "typeaheadNavigationParameters"> {
@@ -50,9 +50,9 @@ export interface UseAccordionSectionReturnType<HeaderElement extends Element, He
         focused: boolean;
         mostRecentlyTabbed: boolean;
     };
-    propsHeaderButton: h.JSX.HTMLAttributes<HeaderButtonElement>;
-    propsHeader: h.JSX.HTMLAttributes<HeaderElement>;
-    propsBody: h.JSX.HTMLAttributes<BodyElement>;
+    propsHeaderButton: ElementProps<HeaderButtonElement>;
+    propsHeader: ElementProps<HeaderElement>;
+    propsBody: ElementProps<BodyElement>;
 }
 export interface UseAccordionContext<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo> extends UseManagedChildrenContext<M>, UseTypeaheadNavigationContext {
     accordionSectionParameters: {
@@ -60,7 +60,7 @@ export interface UseAccordionContext<HeaderButtonElement extends Element, M exte
         changeExpandedIndex: PassiveStateUpdater<number | null, Event>;
         getExpandedIndex: () => (number | null);
         getTabbedIndex: () => (number | null);
-        stableTypeaheadProps: h.JSX.HTMLAttributes<HeaderButtonElement>;
+        stableTypeaheadProps: ElementProps<HeaderButtonElement>;
     };
     linearNavigationParameters: UseLinearNavigationParameters<HeaderButtonElement, HeaderButtonElement, M>["linearNavigationParameters"];
     rovingTabIndexReturn: UseLinearNavigationParameters<HeaderButtonElement, HeaderButtonElement, M>["rovingTabIndexReturn"];

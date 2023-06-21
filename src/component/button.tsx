@@ -1,8 +1,8 @@
 import { Ref, VNode } from "preact";
 import { useImperativeHandle } from "preact/hooks";
 import { OmitStrong } from "../props.js";
-import { useButton, UseButtonParameters, UseButtonReturnType } from "../use-button.js";
-import { memoForwardRef, PartialExcept } from "./util.js";
+import { UseButtonParameters, UseButtonReturnType, useButton } from "../use-button.js";
+import { PartialExcept, memoForwardRef } from "./util.js";
 
 type Get<T, K extends keyof T> = NonNullable<T[K]>;
 

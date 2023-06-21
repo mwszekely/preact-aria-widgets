@@ -1,4 +1,5 @@
-import { h, Ref, VNode } from "preact";
+import { Ref, VNode } from "preact";
+import { ElementProps } from "preact-prop-helpers";
 import { ElementToTag } from "../props.js";
 import { UseCheckboxParameters, UseCheckboxReturnType } from "../use-checkbox.js";
 import { LabelPosition } from "../use-label.js";
@@ -15,8 +16,8 @@ export interface DefaultRenderCheckboxLikeParameters<I extends Element, L extend
     labelPosition: "wrapping" | "separate" | "hidden";
     tagInput: ElementToTag<I>;
     tagLabel: ElementToTag<L>;
-    makePropsInput: (info: InfoType) => h.JSX.HTMLAttributes<I>;
-    makePropsLabel: (info: InfoType) => h.JSX.HTMLAttributes<L>;
+    makePropsInput: (info: InfoType) => ElementProps<I>;
+    makePropsLabel: (info: InfoType) => ElementProps<L>;
 }
 export declare const Checkbox: <I extends Element, L extends Element>({ checked, disabled, tagLabel, labelPosition, tagInput, ariaLabel, onCheckedChange, render }: CheckboxProps<I, L>, ref: Ref<any>) => VNode<any>;
 export {};

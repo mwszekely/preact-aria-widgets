@@ -1,5 +1,4 @@
-import { h } from "preact";
-import { findFirstFocusable, monitorCallCount, useMergedProps, useModal, UseModalParameters, UseModalReturnType, useStableCallback } from "preact-prop-helpers";
+import { ElementProps, findFirstFocusable, monitorCallCount, useMergedProps, useModal, UseModalParameters, UseModalReturnType, useStableCallback } from "preact-prop-helpers";
 import { OmitStrong, Prefices } from "./props.js";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
 
@@ -9,9 +8,9 @@ export interface UseDrawerParameters<_DialogElement extends Element, _TitleEleme
 }
 
 export interface UseDrawerReturnType<FocusContainerElement extends Element, SourceElement extends Element, DrawerElement extends Element, TitleElement extends Element> extends OmitStrong<UseModalReturnType<FocusContainerElement, SourceElement, DrawerElement>, "propsStableSource" | "propsStablePopup"> {
-    propsDrawer: h.JSX.HTMLAttributes<DrawerElement>;
-    propsSource: h.JSX.HTMLAttributes<SourceElement>;
-    propsTitle: h.JSX.HTMLAttributes<TitleElement>;
+    propsDrawer: ElementProps<DrawerElement>;
+    propsSource: ElementProps<SourceElement>;
+    propsTitle: ElementProps<TitleElement>;
 }
 
 export function useDrawer<FocusContainerElement extends Element, SourceElement extends Element, PopupElement extends Element, TitleElement extends Element>({ dismissParameters, escapeDismissParameters, focusTrapParameters, labelParameters }: UseDrawerParameters<PopupElement, TitleElement>): UseDrawerReturnType<FocusContainerElement, SourceElement, PopupElement, TitleElement> {

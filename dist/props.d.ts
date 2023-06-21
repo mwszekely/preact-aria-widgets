@@ -1,5 +1,6 @@
 import { ComponentType, h, Ref } from "preact";
-export { EventDetail, enhanceEvent, TargetedEnhancedEvent, EnhancedEventHandler } from "preact-prop-helpers";
+import { ElementProps } from "preact-prop-helpers";
+export { EnhancedEventHandler, enhanceEvent, EventDetail, TargetedEnhancedEvent } from "preact-prop-helpers";
 export type RefFromTag<T extends keyof h.JSX.IntrinsicElements> = NonNullable<h.JSX.IntrinsicElements[T]["ref"]> & Ref<any>;
 export type ElementFromRef<R extends Ref<any>> = R extends Ref<infer E> ? E : EventTarget;
 export type ElementFromTag<T extends keyof h.JSX.IntrinsicElements> = ElementFromRef<RefFromTag<T>>;
@@ -31,7 +32,7 @@ export interface TagSensitiveProps<E extends EventTarget> {
 }
 export declare function overwriteWithWarning<P extends {}, K extends keyof P>(componentName: string, props: P, propName: K, newValue: P[K]): void;
 export declare function setDebugLogging(logging: boolean): void;
-export type PropModifier<T extends EventTarget> = (props: h.JSX.HTMLAttributes<T>) => h.JSX.HTMLAttributes<T>;
+export type PropModifier<T extends EventTarget> = (props: ElementProps<T>) => ElementProps<T>;
 export type PropModifier2<P> = (props: P) => P;
 export declare function noop(): void;
 export declare const Prefices: {

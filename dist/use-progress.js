@@ -21,25 +21,25 @@ export function useProgress({ labelParameters, progressIndicatorParameters: { ma
         {
             max,
             value: (value ?? undefined),
-            "aria-valuemin": "0",
-            "aria-valuenow": value == null ? undefined : `${value}`,
+            "aria-valuemin": 0,
+            "aria-valuenow": value == null ? undefined : value,
         }
         :
             {
-                "aria-valuemin": "0",
-                "aria-valuemax": max == null ? undefined : `${max}`,
+                "aria-valuemin": 0,
+                "aria-valuemax": max == null ? undefined : max,
                 "aria-valuetext": valueText == null ? undefined : `${valueText}`,
-                "aria-valuenow": value == null ? undefined : `${value}`,
+                "aria-valuenow": value == null ? undefined : value,
                 role: "progressbar"
             };
     if (disabled) {
-        indicatorProps["aria-hidden"] = "true";
+        indicatorProps["aria-hidden"] = true;
     }
     const labelProps = {
         "aria-hidden": (!busy ? "true" : undefined)
     };
     const regionProps = {
-        "aria-busy": (busy).toString(),
+        "aria-busy": !!(busy),
         "aria-describedby": randomIdInputReturn.id
     };
     return {

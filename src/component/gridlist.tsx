@@ -1,5 +1,5 @@
-import { createContext, createElement, h, Ref, VNode } from "preact";
-import { focus, useStableCallback } from "preact-prop-helpers";
+import { createContext, createElement, Ref, VNode } from "preact";
+import { ElementProps, focus, useStableCallback } from "preact-prop-helpers";
 import { useContext, useImperativeHandle } from "preact/hooks";
 import { ElementToTag, OmitStrong } from "../props.js";
 import { GridlistCellInfo, GridlistRowInfo, useGridlist, useGridlistCell, UseGridlistCellParameters, UseGridlistCellReturnType, UseGridlistContext, UseGridlistParameters, UseGridlistReturnType, useGridlistRow, UseGridlistRowContext, UseGridlistRowParameters, UseGridlistRowReturnType } from "../use-gridlist.js";
@@ -60,21 +60,17 @@ export interface GridlistChildProps<CellElement extends Element, M extends Gridl
     render(info: UseGridlistCellReturnType<CellElement, M>): VNode;
 }
 
-//const GridlistUntabbableContext = createContext(false);
-//const GridlistAriaPropNameContext = createContext<UseGridlistParameters<any, any, any, any, any, any>["singleSelectionParameters"]["ariaPropName"]>("aria-selected");
-//const GridlistSelectionModeContext = createContext<UseGridlistParameters<any, any, any, any, any, any>["singleSelectionParameters"]["selectionMode"]>("activation");
-//const GridlistRowUntabbableContext = createContext(false);
 const GridlistContext = createContext<UseGridlistContext<any, any, any, any, any>>(null!);
 const GridlistRowContext = createContext<UseGridlistRowContext<any, any, any>>(null!);
 
 
-export function defaultRenderGridlistRow<RowElement extends Element, CellElement extends Element, RM extends GridlistRowInfo<RowElement, CellElement>, CM extends GridlistCellInfo<CellElement>>({ tagGridlistRow, makePropsGridlistRow }: { tagGridlistRow: ElementToTag<RowElement>, makePropsGridlistRow: (info: UseGridlistRowReturnType<RowElement, CellElement, RM, CM>) => h.JSX.HTMLAttributes<RowElement> }) {
+export function defaultRenderGridlistRow<RowElement extends Element, CellElement extends Element, RM extends GridlistRowInfo<RowElement, CellElement>, CM extends GridlistCellInfo<CellElement>>({ tagGridlistRow, makePropsGridlistRow }: { tagGridlistRow: ElementToTag<RowElement>, makePropsGridlistRow: (info: UseGridlistRowReturnType<RowElement, CellElement, RM, CM>) => ElementProps<RowElement> }) {
     return function (info: UseGridlistRowReturnType<RowElement, CellElement, RM, CM>) {
         return createElement(tagGridlistRow as never, (makePropsGridlistRow(info)));
     }
 }
 
-export function defaultRenderGridlistChild<CellElement extends Element, CM extends GridlistCellInfo<CellElement>>({ tagGridlistChild, makePropsGridlistChild }: { tagGridlistChild: ElementToTag<CellElement>, makePropsGridlistChild: (info: UseGridlistCellReturnType<CellElement, CM>) => h.JSX.HTMLAttributes<CellElement> }) {
+export function defaultRenderGridlistChild<CellElement extends Element, CM extends GridlistCellInfo<CellElement>>({ tagGridlistChild, makePropsGridlistChild }: { tagGridlistChild: ElementToTag<CellElement>, makePropsGridlistChild: (info: UseGridlistCellReturnType<CellElement, CM>) => ElementProps<CellElement> }) {
     return function (info: UseGridlistCellReturnType<CellElement, CM>) {
         return createElement(tagGridlistChild as never, (makePropsGridlistChild(info)));
     }

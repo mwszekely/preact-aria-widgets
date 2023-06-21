@@ -1,5 +1,4 @@
-import { h } from "preact";
-import { UseEscapeDismissParameters } from "preact-prop-helpers";
+import { ElementProps, UseEscapeDismissParameters } from "preact-prop-helpers";
 export type TooltipStatus = "hover" | "focus" | null;
 export interface UseTooltipParameters<TriggerType extends Element, PopupType extends Element> {
     tooltipParameters: {
@@ -32,8 +31,8 @@ export interface UseTooltipParameters<TriggerType extends Element, PopupType ext
 export type TooltipState = `${"hovering" | "focused"}-${"popup" | "trigger"}` | null;
 export declare function useTooltip<TriggerType extends Element, PopupType extends Element>({ tooltipParameters: { onStatus, tooltipSemanticType, hoverDelay }, escapeDismissParameters }: UseTooltipParameters<TriggerType, PopupType>): UseTooltipReturnType<TriggerType, PopupType>;
 export interface UseTooltipReturnType<TriggerType extends Element, PopupType extends Element> {
-    propsPopup: h.JSX.HTMLAttributes<PopupType>;
-    propsTrigger: h.JSX.HTMLAttributes<TriggerType>;
+    propsPopup: ElementProps<PopupType>;
+    propsTrigger: ElementProps<TriggerType>;
     tooltipReturn: {
         getState(): TooltipState;
         stateIsFocus(): boolean;

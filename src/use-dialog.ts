@@ -1,6 +1,5 @@
 
-import { h } from "preact";
-import { findFirstFocusable, monitorCallCount, useMergedProps, useModal, UseModalParameters, UseModalReturnType, useStableCallback } from "preact-prop-helpers";
+import { ElementProps, findFirstFocusable, monitorCallCount, useMergedProps, useModal, UseModalParameters, UseModalReturnType, useStableCallback } from "preact-prop-helpers";
 import { OmitStrong, Prefices } from "./props.js";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
 
@@ -11,9 +10,9 @@ export interface UseDialogParameters<_DialogElement extends Element, _TitleEleme
 }
 
 export interface UseDialogReturnType<FocusContainerElement extends Element, SourceElement extends Element, PopupElement extends Element, TitleElement extends Element> extends OmitStrong<UseModalReturnType<FocusContainerElement, SourceElement, PopupElement>, "propsStableSource" | "propsStablePopup"> {
-    propsDialog: h.JSX.HTMLAttributes<PopupElement>;
-    propsSource: h.JSX.HTMLAttributes<SourceElement>;
-    propsTitle: h.JSX.HTMLAttributes<TitleElement>;
+    propsDialog: ElementProps<PopupElement>;
+    propsSource: ElementProps<SourceElement>;
+    propsTitle: ElementProps<TitleElement>;
 }
 
 export function useDialog<FocusContainerElement extends Element, SourceElement extends Element, DialogElement extends Element, TitleElement extends Element>({ dismissParameters, escapeDismissParameters, focusTrapParameters, labelParameters }: UseDialogParameters<DialogElement, TitleElement>): UseDialogReturnType<FocusContainerElement, SourceElement, DialogElement, TitleElement> {

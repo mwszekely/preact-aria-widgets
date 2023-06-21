@@ -1,6 +1,6 @@
 import { h } from "preact";
-import { UsePressParameters, UsePressReturnType, PressEventReason, UseRefElementParameters, UseRefElementReturnType } from "preact-prop-helpers";
-import { DisabledType, ElementToTag, TargetedEnhancedEvent, EnhancedEventHandler, OmitStrong } from "./props.js";
+import { ElementProps, PressEventReason, UsePressParameters, UsePressReturnType, UseRefElementParameters, UseRefElementReturnType } from "preact-prop-helpers";
+import { DisabledType, ElementToTag, EnhancedEventHandler, OmitStrong, TargetedEnhancedEvent } from "./props.js";
 export interface ButtonPressEventDetail {
     pressed: boolean | null;
 }
@@ -21,7 +21,7 @@ export interface UseButtonParameters<E extends Node> extends UseRefElementParame
     pressParameters: OmitStrong<UsePressParameters<E>["pressParameters"], "onPressSync" | "focusSelf">;
 }
 export interface UseButtonReturnType<E extends Element> extends UsePressReturnType<E>, OmitStrong<UseRefElementReturnType<E>, "propsStable"> {
-    props: h.JSX.HTMLAttributes<E>;
+    props: ElementProps<E>;
 }
 export declare function useButton<E extends Element>({ buttonParameters: { tagButton, disabled, onPress, pressed, role }, pressParameters, refElementParameters }: UseButtonParameters<E>): UseButtonReturnType<E>;
 //# sourceMappingURL=use-button.d.ts.map
