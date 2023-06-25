@@ -1,0 +1,17 @@
+import { Button } from "../../dist/index.js";
+import { TestItem, useTestSyncState } from "../util.js";
+import { fromStringBoolean, fromStringString } from "./base.types.js";
+
+export function TestBasesButton() {
+    const [disabledType] = useTestSyncState("Button", "setDisabledType", "soft", fromStringString);
+    const [disabled] = useTestSyncState("Button", "setDisabled", false, fromStringBoolean);
+    const [pressed] = useTestSyncState("Button", "setPressed", undefined, fromStringBoolean);
+    installTestingHandler("Button", "onPress", e => alert(e))
+    return (
+        <TestItem>
+            <Button<HTMLButtonElement> onPress={(e) => { console.log("Button (button) clicked"); let ret = getTestingHandler("Button", "onPress")(e); console.log(ret); return ret; }} disabled={disabled ? (disabledType) : false} pressed={pressed} tagButton="button" render={info => <button {...info.props}>Button</button>} />
+            <Button<HTMLDivElement> onPress={(e) => { console.log("Button (div) clicked"); let ret = getTestingHandler("Button", "onPress")(e); console.log(ret); return ret; }} disabled={disabled ? (disabledType) : false} pressed={pressed} tagButton="div" render={info => <div {...info.props}>Div</div>} />
+            <input type="text" value="I can take focus" />
+        </TestItem>
+    )
+}

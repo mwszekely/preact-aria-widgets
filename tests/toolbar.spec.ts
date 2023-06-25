@@ -1,5 +1,3 @@
-import { Page, expect } from '@playwright/test';
-import { test } from "./fixtures/toolbar.js"
 
 
 /*

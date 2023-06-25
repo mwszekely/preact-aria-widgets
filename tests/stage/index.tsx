@@ -1,14 +1,23 @@
 import { render } from "preact";
-import { useSearchParamState } from "preact-prop-helpers";
-import type { TestingConstants } from "../fixtures/shared.js";
-import { TestBasesButton } from "./spec-button.js";
-import { TestBasesToolbar } from "./spec-toolbar.js";
-
+import { useSearchParamStateDeclarative } from "preact-prop-helpers";
+import { useEffect } from "preact/hooks";
+import { TestBasesAccordion } from "../fixtures/accordion.stage.js";
+import { SharedFixtures } from "../fixtures/base.fixture.js";
+import { TestBasesSanityCheck } from "../fixtures/base.stage.js";
+import { TestingConstants } from "../fixtures/base.types.js";
+import { TestBasesButton } from "../fixtures/button.stage.js";
+import { TestBasesToolbar } from "../fixtures/toolbar.stage.js";
+import { TestItem } from "../util.js";
 
 declare module globalThis {
     let installTestingHandler: <K extends keyof TestingConstants, K2 extends keyof TestingConstants[K]>(key: K, Key2: K2, func: TestingConstants[K][K2]) => void;
     let _TestingConstants: TestingConstants;
     let getTestingHandler: <K extends keyof TestingConstants, K2 extends keyof TestingConstants[K]>(key: K, Key2: K2) => TestingConstants[K][K2];
+
+    // TODO: Rename run, both here and in Playwright.
+    // This is here so that both sides can just call run and it just works,
+    // but it should have a different name in that case.
+    let run: SharedFixtures["run"];
 }
 
 
@@ -24,14 +33,15 @@ globalThis.getTestingHandler = function getTestingHandler<K extends keyof Testin
     (globalThis)._TestingConstants[key] ??= {} as any;
     return (globalThis)._TestingConstants[key][Key2] ?? undefined!; // || (noop as never);
 };
+globalThis.run = (key, key2, ...args) => ((globalThis).getTestingHandler?.(key, key2) as Function | null)?.(...(args as any[]));
 
 function noop() { }
-
-declare global {
-    let installTestingHandler: (typeof globalThis)["installTestingHandler"];
-    let _TestingConstants: TestingConstants;
-    let getTestingHandler: (typeof globalThis)["getTestingHandler"];
-}
+/*
+let old = HTMLElement.prototype.focus
+HTMLElement.prototype.focus = function (e) {
+    debugger;
+    old.bind(this)();
+}*/
 
 
 /*
@@ -50,32 +60,33 @@ function TestBasesMenu() {
     )
 }
 */
-function TestBasesSanityCheck() {
-    // Please, it's 2023, this should never ever fail, surely, please. (please)
-    return (
-        <>
-            <div class="default">default</div>
-            <div class="encoding">符号化テスト</div>
-        </>
-    )
-}
 
 const TestBases = {
     "sanity-check": <TestBasesSanityCheck />,
+    
+    "accordion": <TestBasesAccordion />,
     "button": <TestBasesButton />,
     "toolbar": <TestBasesToolbar />,
     /*"menu": <TestBasesMenu />,*/
 }
 
-declare module 'preact-prop-helpers' {
-    interface SearchParamStates {
+export type TestBases = keyof typeof TestBases;
+
+declare module "preact-prop-helpers" {
+    export interface SearchParamStates {
         "test-base": string;
+        "test-bool": boolean | null;
+        "sanity-check": number;
     }
 }
-function TestsContainer() {
-    const [getBase, setBase] = useSearchParamState<"test-base">({ key: "test-base", stringToValue: e => e, valueToString: e => e, initialValue: "" });
-    const base = getBase();
 
+function TestsContainer() {
+//    const [bool, setBool, getBool] = useSearchParamStateDeclarative({ key: "test-bool", initialValue: null, stringToValue: fromStringBoolean });
+    const [base, setBase, getBase] = useSearchParamStateDeclarative({ key: "test-base", initialValue: "", stringToValue: value => value });
+
+    useEffect(() => {
+        document.getElementById("focusable-first")?.focus?.();
+    }, [])
     if (!base) {
         return (
             <>
@@ -85,15 +96,21 @@ function TestsContainer() {
         );
     }
     return (
-        <div class="tests-container">
-            {Object.entries(TestBases).map(([name, component]) => {
-                if (name === base)
-                    return component;
-                return null;
-            })}
-        </div>
+        <>
+            <input id="focusable-first" />
+            <TestItem>
+                {Object.entries(TestBases).map(([name, component]) => {
+                    if (name === base)
+                        return component;
+                    return null;
+                })}
+
+            </TestItem>
+            <input id="focusable-last" />
+        </>
     )
 }
+
 
 document.addEventListener("DOMContentLoaded", () => {
 

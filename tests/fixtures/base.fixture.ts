@@ -1,4 +1,14 @@
-import { Locator, Page, test as base } from "@playwright/test";
+import { Locator, Response, test as base, expect } from "@playwright/test";
+import { LoremIpsum } from "../lorem.js";
+import type { TestBases } from "../stage/index.js";
+import type { TestingConstants, TestingConstantsParameter } from "./base.types.js";
+
+
+declare global {
+    interface Window {
+        increment(): Promise<void>;
+    }
+}
 
 declare module globalThis {
     let installTestingHandler: <K extends keyof TestingConstants, K2 extends keyof TestingConstants[K]>(key: K, Key2: K2, func: TestingConstants[K][K2]) => void;
@@ -6,31 +16,31 @@ declare module globalThis {
     let getTestingHandler: <K extends keyof TestingConstants, K2 extends keyof TestingConstants[K]>(key: K, Key2: K2) => TestingConstants[K][K2];
 }
 
-export interface TestingConstants {
-    Button: {
-        onPress(e: Event): (void | Promise<void>);
-        setDisabledType(type: "soft" | "hard"): Promise<void>;
-        setDisabled(disabled: boolean): Promise<void>;
-        setPressed(pressed: boolean | undefined): Promise<void>;
-    }
-    Menu: {
-        onMenuItem(closeMenu: () => void, index: number): (void | Promise<void>)
-    },
-    Toolbar: {
-        setSelectedIndex(index: number | null): Promise<void>;
-        setChildCount(count: number): Promise<void>;
-        setDisabled(disabled: boolean): Promise<void>;
-    }
+declare global {
+    let installTestingHandler: (typeof globalThis)["installTestingHandler"];
+    let _TestingConstants: TestingConstants;
+    let getTestingHandler: (typeof globalThis)["getTestingHandler"];
 }
 
-export const test = base.extend<{ shared: SharedFixtures & { locator: Locator } }>({
+export const test = base.extend<{ shared: SharedFixtures }>({
     shared: async ({ page }, use) => {
-        
-        let counter = 0;
-        page.exposeFunction("increment", () => counter += 1);
 
-        use({
+
+        let counter = 0;
+        let renderCounts: Partial<Record<string, number>> = {};
+        page.exposeFunction("increment", () => counter += 1);
+        page.exposeFunction("onRender", (id: string) => { renderCounts[id] = ((renderCounts[id] ?? 0) + 1); });
+
+        const focusableFirst = page.locator("#focusable-first");
+        const focusableLast = page.locator("#focusable-last");
+        await use({
+            goToTest: async (k) => { return (await page.goto(`?test-base=${k}`))! },
+            getRenderCount(id: string) { return renderCounts[id] ?? 0; },
+            async awaitRender(id: string) { return await expect(page.locator("[data-render-pending-" + id + "]")).toHaveAttribute("data-render-pending-" + id, "false") },
+            focusableFirst,
+            focusableLast,
             getCounter() { return counter; },
+            generateText(childIndex: number) { return LoremIpsum[childIndex % LoremIpsum.length] },
             resetCounter() { counter = 0; },
             install: async function install<K extends keyof TestingConstants, K2 extends keyof TestingConstants[K]>(key: K, Key2: K2, func: TestingConstants[K][K2]) {
                 await page.evaluate(([key, Key2, func]) => {
@@ -40,17 +50,43 @@ export const test = base.extend<{ shared: SharedFixtures & { locator: Locator } 
             },
             run: async function run<K extends keyof TestingConstants, K2 extends keyof TestingConstants[K]>(key: K, Key2: K2, ...args: TestingConstants[K][K2] extends (...args: any) => any ? Parameters<TestingConstants[K][K2]> : never): Promise<TestingConstants[K][K2] extends (...args: any) => any ? ReturnType<TestingConstants[K][K2]> : never> {
                 return await page.evaluate(async ([key, Key2, ...args]: any[] | any) => {
-                    // getTestingHandler is globally in scope on the testing page
                     const handler = getTestingHandler<K, K2>(key, Key2) as (TestingConstants[K][K2] & Function);
                     return await handler(...(args as [any, any]));
                 }, [key, Key2, ...args] as const);
             },
-            locator: page.locator(".tests-container")
+            locator: page.locator(".tests-container"),
+            getTestSyncState: async (key, Key2) => {
+                return await page.evaluate(async ([key, Key2, ...args]: any[] | any) => {
+                    return new URL(window.location.toString()).searchParams.get(Key2) as never;
+                }, [key, Key2] as const);
+            }
         })
     }
 })
 
-interface SharedFixtures {
+export interface SharedFixtures {
+
+    goToTest: (key: TestBases) => Promise<Response>;
+
+    focusableFirst: Locator;
+    focusableLast: Locator;
+
+    generateText(childIndex: number): string;
+
+    locator: Locator;
+
+    getTestSyncState<K extends keyof TestingConstants, K2 extends keyof TestingConstants[K]>(key: K, key2: K2, fromString: (str: string) => TestingConstantsParameter<K, K2> | null): Promise<TestingConstantsParameter<K, K2>>;
+
+    /**
+     * If a testing component calls `window.onRender(id)`, you can call `getRenderCount` to return the
+     * number of times `onRender` has been called with that id.
+     * 
+     * @param id 
+     */
+    getRenderCount(id: string): number;
+
+    awaitRender(id: string): Promise<void>;
+
     /**
      * The page exposes a function called `increment`, which controls the value returned by this function.
      * 

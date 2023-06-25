@@ -1,11 +1,12 @@
-import { Button, Toolbar, ToolbarChild } from "../../dist/index.js";
-import { TestItem, useTestSyncState } from "./util.js";
-import { returnZero } from "preact-prop-helpers"
+import { returnZero } from "preact-prop-helpers";
+import { Toolbar, ToolbarChild } from "../../dist/index.js";
+import { TestItem, useTestSyncState } from "../util.js";
+import { fromStringBoolean, fromStringNumber } from "./base.types.js";
 
 export function TestBasesToolbar() {
-    const selectedIndex = useTestSyncState("Toolbar", "setSelectedIndex", null);
-    const childCount = useTestSyncState("Toolbar", "setChildCount", 10);
-    const disabled = useTestSyncState("Toolbar", "setDisabled", false);
+    const [selectedIndex] = useTestSyncState("Toolbar", "setSelectedIndex", null, fromStringNumber);
+    const [childCount] = useTestSyncState("Toolbar", "setChildCount", 10, fromStringNumber);
+    const [disabled] = useTestSyncState("Toolbar", "setDisabled", false, fromStringBoolean);
     installTestingHandler("Button", "onPress", e => alert(e))
     return (
         <TestItem>

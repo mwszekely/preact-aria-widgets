@@ -1,5 +1,5 @@
-import { Page, expect } from '@playwright/test';
-import { test } from "./fixtures/button.js"
+import { expect } from '@playwright/test';
+import { test } from "./button.fixture.js";
 
 
 

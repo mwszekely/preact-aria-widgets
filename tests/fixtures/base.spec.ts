@@ -1,5 +1,5 @@
 import { expect } from '@playwright/test';
-import { test } from "./fixtures/shared.js"
+import { test } from "./base.fixture.js";
 
 test('Sanity checks', async ({ page, shared: { getCounter, resetCounter } }) => {
     console.log("TEST");
