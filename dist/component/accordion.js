@@ -2,7 +2,8 @@ import { jsx as _jsx } from "preact/jsx-runtime";
 import { createContext } from "preact";
 import { assertEmptyObject, returnTrue } from "preact-prop-helpers";
 import { memo } from "preact/compat";
-import { useContext, useImperativeHandle } from "preact/hooks";
+import { useImperativeHandle } from "preact/hooks";
+import { useContextWithWarning } from "../props.js";
 import { useAccordion, useAccordionSection } from "../use-accordion.js";
 import { useDefault } from "./util.js";
 const AccordionSectionContext = createContext(null);
@@ -29,7 +30,7 @@ export const Accordion = memo(function Accordion({ disableHomeEndKeys, initialIn
 });
 export const AccordionSection = memo(function AccordionSection({ open, index, tagButton, disabled, bodyRole, onPress, untabbable, getText, imperativeHandle, render, ...rest }) {
     assertEmptyObject(rest);
-    const context = useContext(AccordionSectionContext);
+    const context = useContextWithWarning(AccordionSectionContext, "accordion section");
     const info = useAccordionSection({
         buttonParameters: { disabled: disabled ?? false, tagButton, onPress: onPress ?? null },
         accordionSectionParameters: { open, bodyRole: bodyRole ?? "region" },

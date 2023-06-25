@@ -1,5 +1,6 @@
 import { ComponentChildren, createContext, Ref, VNode } from "preact";
-import { useContext, useImperativeHandle } from "preact/hooks";
+import { useImperativeHandle } from "preact/hooks";
+import { useContextWithWarning } from "../props.js";
 import { SliderContext, SliderThumbInfo, useSlider, UseSliderParameters, UseSliderReturnType, useSliderThumb, UseSliderThumbParameters, UseSliderThumbReturnType } from "../use-slider.js";
 import { memoForwardRef } from "./util.js";
 
@@ -30,7 +31,7 @@ export const Slider = memoForwardRef(function Slider({ max, min, onAfterChildLay
 })
 
 export const SliderThumb = memoForwardRef(function SliderThumbU<ThumbElement extends Element>({ label, tag, value, max, min, onValueChange, index, render, valueText }: SliderThumbProps<ThumbElement>, ref?: Ref<any>) {
-    const context = (useContext(SliderThumbContext) as SliderContext<SliderThumbInfo>);
+    const context = (useContextWithWarning(SliderThumbContext, "slider") as SliderContext<SliderThumbInfo>);
     console.assert(context != null, `This SliderThumb is not contained within a Slider`);
 
     const info = useSliderThumb<ThumbElement, SliderThumbInfo>({

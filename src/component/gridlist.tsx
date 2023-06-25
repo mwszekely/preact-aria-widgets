@@ -1,7 +1,7 @@
 import { createContext, createElement, Ref, VNode } from "preact";
 import { ElementProps, focus, useStableCallback } from "preact-prop-helpers";
-import { useContext, useImperativeHandle } from "preact/hooks";
-import { ElementToTag, OmitStrong } from "../props.js";
+import { useImperativeHandle } from "preact/hooks";
+import { ElementToTag, OmitStrong, useContextWithWarning } from "../props.js";
 import { GridlistCellInfo, GridlistRowInfo, useGridlist, useGridlistCell, UseGridlistCellParameters, UseGridlistCellReturnType, UseGridlistContext, UseGridlistParameters, UseGridlistReturnType, useGridlistRow, UseGridlistRowContext, UseGridlistRowParameters, UseGridlistRowReturnType } from "../use-gridlist.js";
 import { memoForwardRef, PartialExcept, useDefault } from "./util.js";
 
@@ -175,7 +175,7 @@ export const GridlistRow = memoForwardRef(function GridlistRowU<RowElement exten
     initiallyTabbedIndex,
     info: uinfo
 }: GridlistRowProps<RowElement, Cellement, RM, CM>, ref?: Ref<any>) {
-    const context = (useContext(GridlistContext) as UseGridlistContext<any, RowElement, Cellement, RM, CM>);
+    const context = useContextWithWarning(GridlistContext, "gridlist");
     console.assert(context != null, `This GridlistRow is not contained within a Gridlist`);
     untabbable ||= false;
 
@@ -212,7 +212,7 @@ export const GridlistChild = memoForwardRef(function GridlistChild<CellElement e
     render,
     info: subInfo
 }: GridlistChildProps<CellElement, CM>, ref?: Ref<any>) {
-    const context = (useContext(GridlistRowContext) as UseGridlistRowContext<any, CellElement, CM>);
+    const context = (useContextWithWarning(GridlistRowContext, "gridlist row") as UseGridlistRowContext<any, CellElement, CM>);
     console.assert(context != null, `This GridlistChild is not contained within a GridlistRow that is contained within a Gridlist`);
     const defaultFocusSelf = useStableCallback((e: CellElement) => { focus(e as Element as HTMLElement); }, []);
     const info = useGridlistCell<CellElement, CM>({

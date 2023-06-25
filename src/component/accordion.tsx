@@ -1,7 +1,8 @@
 import { createContext, Ref, VNode } from "preact";
 import { assertEmptyObject, returnTrue } from "preact-prop-helpers";
 import { memo } from "preact/compat";
-import { useContext, useImperativeHandle } from "preact/hooks";
+import { useImperativeHandle } from "preact/hooks";
+import { useContextWithWarning } from "../props.js";
 import { useAccordion, UseAccordionContext, UseAccordionParameters, UseAccordionReturnType, useAccordionSection, UseAccordionSectionInfo, UseAccordionSectionParameters, UseAccordionSectionReturnType } from "../use-accordion.js";
 import { PartialExcept, useDefault } from "./util.js";
 
@@ -92,7 +93,7 @@ export const AccordionSection = memo(function AccordionSection<HeaderContainerEl
     ...rest
 }: AccordionSectionProps<HeaderContainerElement, HeaderButtonElement, BodyElement>) {
     assertEmptyObject(rest);
-    const context = useContext(AccordionSectionContext) as UseAccordionContext<HeaderButtonElement, UseAccordionSectionInfo>;
+    const context = useContextWithWarning(AccordionSectionContext, "accordion section");
     const info = useAccordionSection<HeaderContainerElement, HeaderButtonElement, BodyElement>({
         buttonParameters: { disabled: disabled ?? false, tagButton, onPress: onPress ?? null },
         accordionSectionParameters: { open, bodyRole: bodyRole ?? "region" },

@@ -1,7 +1,8 @@
 import { jsx as _jsx, Fragment as _Fragment } from "preact/jsx-runtime";
 import { createContext } from "preact";
 import { focus } from "preact-prop-helpers";
-import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
+import { useCallback, useImperativeHandle } from "preact/hooks";
+import { useContextWithWarning } from "../props.js";
 import { useMenubar, useMenubarChild } from "../use-menubar.js";
 import { memoForwardRef, useDefault } from "./util.js";
 export const MenubarItemContext = createContext(null);
@@ -33,8 +34,7 @@ export const Menubar = memoForwardRef(function MenubarU({ render, collator, disa
     return (_jsx(MenubarItemContext.Provider, { value: info.context, children: render(info) }));
 });
 export const MenubarItem = memoForwardRef(function MenuItemU({ index, render, focusSelf, untabbable, getText, unselectable, onPress, getSortValue, role, info: uinfo }, ref) {
-    const context = (useContext(MenubarItemContext));
-    console.assert(context != null, `This MenuItem is not contained within a Menubar/Menu`);
+    const context = (useContextWithWarning(MenubarItemContext, "menubar"));
     const defaultFocusSelf = useCallback((e) => focus(e), []);
     const info = useMenubarChild({
         info: { index, untabbable: untabbable || false, unselectable: unselectable || false, focusSelf: focusSelf ?? defaultFocusSelf, ...uinfo },

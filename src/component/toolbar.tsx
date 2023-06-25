@@ -1,7 +1,7 @@
 import { createContext, Ref, VNode } from "preact";
 import { focus } from "preact-prop-helpers";
-import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
-import { Get, OmitStrong } from "../props.js";
+import { useCallback, useImperativeHandle } from "preact/hooks";
+import { Get, OmitStrong, useContextWithWarning } from "../props.js";
 import { useToolbar, useToolbarChild, UseToolbarChildParameters, UseToolbarChildReturnType, UseToolbarContext, UseToolbarParameters, UseToolbarReturnType, UseToolbarSubInfo } from "../use-toolbar.js";
 import { memoForwardRef, PartialExcept, useDefault } from "./util.js";
 
@@ -129,7 +129,7 @@ export const ToolbarChild = memoForwardRef(function ToolbarChildU<ToolbarChildEl
     untabbable,
     info: uinfo
 }: ToolbarChildProps<ToolbarChildElement, M>, ref?: Ref<any>) {
-    const context = (useContext(ToolbarContext) as UseToolbarContext<any, ToolbarChildElement, M>);
+    const context = useContextWithWarning(ToolbarContext, "toolbar") as UseToolbarContext<any, ToolbarChildElement, M>;
     console.assert(context != null, `This ToolbarChild is not contained within a Toolbar`);
     const focusSelfDefault = useCallback((e: any) => { focus(e); }, []);
     focusSelf ??= focusSelfDefault;

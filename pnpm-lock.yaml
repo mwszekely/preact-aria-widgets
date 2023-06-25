@@ -1,8 +1,4 @@
-lockfileVersion: '6.1'
-
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
+lockfileVersion: '6.0'
 
 dependencies:
   clsx:
@@ -16,7 +12,7 @@ dependencies:
     version: 10.13.2
   preact-prop-helpers:
     specifier: github:mwszekely/preact-prop-helpers
-    version: github.com/mwszekely/preact-prop-helpers/52125380b759d0f73a02859a800e4b9ee3d94db5(preact@10.13.2)
+    version: github.com/mwszekely/preact-prop-helpers/bb51c325192686a4a7907d1d8f66f7e6b2dd26b4(preact@10.13.2)
 
 devDependencies:
   '@playwright/test':
@@ -773,9 +769,9 @@ packages:
       lodash-es: 4.17.21
     dev: false
 
-  github.com/mwszekely/preact-prop-helpers/52125380b759d0f73a02859a800e4b9ee3d94db5(preact@10.13.2):
-    resolution: {tarball: https://codeload.github.com/mwszekely/preact-prop-helpers/tar.gz/52125380b759d0f73a02859a800e4b9ee3d94db5}
-    id: github.com/mwszekely/preact-prop-helpers/52125380b759d0f73a02859a800e4b9ee3d94db5
+  github.com/mwszekely/preact-prop-helpers/bb51c325192686a4a7907d1d8f66f7e6b2dd26b4(preact@10.13.2):
+    resolution: {tarball: https://codeload.github.com/mwszekely/preact-prop-helpers/tar.gz/bb51c325192686a4a7907d1d8f66f7e6b2dd26b4}
+    id: github.com/mwszekely/preact-prop-helpers/bb51c325192686a4a7907d1d8f66f7e6b2dd26b4
     name: preact-prop-helpers
     version: 0.0.1
     peerDependencies:

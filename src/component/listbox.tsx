@@ -2,7 +2,7 @@ import { createContext, Ref, VNode } from "preact";
 import { focus } from "preact-prop-helpers";
 import { memo } from "preact/compat";
 import { useCallback, useContext } from "preact/hooks";
-import { OmitStrong } from "../props.js";
+import { OmitStrong, useContextWithWarning } from "../props.js";
 import { ListboxInfo, useListbox, UseListboxContext, useListboxItem, UseListboxItemParameters, UseListboxItemReturnType, UseListboxParameters, UseListboxReturnType } from "../use-listbox.js";
 import { memoForwardRef, PartialExcept, useDefault } from "./util.js";
 
@@ -152,7 +152,7 @@ export const ListboxItem = memoForwardRef(function ListboxItem<ListboxItemElemen
     onPressingChange,
     ...subInfo
 }: ListboxItemProps<ListboxItemElement, M>) {
-    const context = useContext(ListboxContext) as UseListboxContext<any, ListboxItemElement, M>;
+    const context = useContextWithWarning(ListboxContext, "listbox");
     console.assert(context != null, `This ListboxItem is not contained within a Listbox`);
     const focusSelfDefault = useCallback((e: any) => { focus(e); }, []);
     focusSelf ??= focusSelfDefault;

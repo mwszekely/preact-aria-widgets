@@ -1,6 +1,6 @@
 import { createContext, Ref, RenderableProps, VNode } from "preact";
-import { useContext, useImperativeHandle } from "preact/hooks";
-import { OmitStrong } from "../props.js";
+import { useImperativeHandle } from "preact/hooks";
+import { OmitStrong, useContextWithWarning } from "../props.js";
 import { CheckboxGroupContext, CheckboxGroupInfo, useCheckboxGroup, useCheckboxGroupChild, UseCheckboxGroupChildParameters, UseCheckboxGroupChildReturnType, UseCheckboxGroupParameters, useCheckboxGroupParent, UseCheckboxGroupParentParameters, UseCheckboxGroupParentReturnType, UseCheckboxGroupReturnType } from "../use-checkbox-group.js";
 import { memoForwardRef, PartialExcept, useDefault } from "./util.js";
 
@@ -98,7 +98,7 @@ export const CheckboxGroup = memoForwardRef(function CheckboxGroup<ParentElement
 });
 
 export const CheckboxGroupParent = memoForwardRef(function CheckboxGroupParent<TCE extends Element>({ render, index, focusSelf, untabbable, getText, getSortValue, unselectable, ..._rest }: CheckboxGroupParentProps<TCE>, ref?: Ref<any>) {
-    const context = (useContext(UseCheckboxGroupChildContext) as CheckboxGroupContext<any, TCE, CheckboxGroupInfo<TCE>>);
+    const context = useContextWithWarning(UseCheckboxGroupChildContext, "checkbox group");
     console.assert(context != null, `This CheckboxGroupParent is not contained within a CheckboxGroup`);
 
     const info = useCheckboxGroupParent<TCE>({
@@ -125,7 +125,7 @@ export const CheckboxGroupChild = memoForwardRef(function CheckboxGroupChild<TCE
     unselectable,
     ..._rest
 }: CheckboxGroupChildProps<TCE>, ref?: Ref<any>) {
-    const context = (useContext(UseCheckboxGroupChildContext) as CheckboxGroupContext<any, TCE, CheckboxGroupInfo<TCE>>);
+    const context = useContextWithWarning(UseCheckboxGroupChildContext, "checkbox group");
     console.assert(context != null, `This CheckboxGroupChild is not contained within a CheckboxGroup`);
     const info = useCheckboxGroupChild<TCE>({
         checkboxGroupChild: { checked, onChangeFromParent },

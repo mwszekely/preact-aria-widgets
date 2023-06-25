@@ -1,7 +1,8 @@
 import { jsx as _jsx, Fragment as _Fragment } from "preact/jsx-runtime";
 import { createContext } from "preact";
 import { focus } from "preact-prop-helpers";
-import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
+import { useCallback, useImperativeHandle } from "preact/hooks";
+import { useContextWithWarning } from "../props.js";
 import { useToolbar, useToolbarChild } from "../use-toolbar.js";
 import { memoForwardRef, useDefault } from "./util.js";
 // TODO: Are there performance/sanity implications for having one context per primitive?
@@ -44,7 +45,7 @@ export const Toolbar = memoForwardRef(function ToolbarU({ render, role, collator
     return (_jsx(AriaPropNameContext.Provider, { value: ariaPropName, children: _jsx(SelectionModeContext.Provider, { value: selectionMode, children: _jsx(UntabbableContext.Provider, { value: untabbable, children: _jsx(ToolbarContext.Provider, { value: listboxReturnType.context, children: render(listboxReturnType) }) }) }) }));
 });
 export const ToolbarChild = memoForwardRef(function ToolbarChildU({ index, render, focusSelf, getSortValue, getText, unselectable, disabledProp, untabbable, info: uinfo }, ref) {
-    const context = useContext(ToolbarContext);
+    const context = useContextWithWarning(ToolbarContext, "toolbar");
     console.assert(context != null, `This ToolbarChild is not contained within a Toolbar`);
     const focusSelfDefault = useCallback((e) => { focus(e); }, []);
     focusSelf ??= focusSelfDefault;

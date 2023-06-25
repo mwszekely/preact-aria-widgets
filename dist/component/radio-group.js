@@ -1,7 +1,8 @@
 import { jsx as _jsx } from "preact/jsx-runtime";
 import { createContext } from "preact";
 import { useStableGetter } from "preact-prop-helpers";
-import { useContext, useImperativeHandle } from "preact/hooks";
+import { useImperativeHandle } from "preact/hooks";
+import { useContextWithWarning } from "../props.js";
 import { useRadio, useRadioGroup } from "../use-radio-group.js";
 import { memoForwardRef, useDefault } from "./util.js";
 const RadioContext = createContext(null);
@@ -36,7 +37,7 @@ export const RadioGroup = memoForwardRef(function RadioGroup({ render, name, onS
 export const Radio = memoForwardRef(function Radio({ unselectable, disabled, index, render, value, ariaLabel, focusSelf, labelPosition, untabbable, tagInput, tagLabel, getText }, ref) {
     const defaultFocusSelf = () => info.checkboxLikeReturn.focusSelf();
     focusSelf ??= defaultFocusSelf;
-    const context = useContext(RadioContext);
+    const context = useContextWithWarning(RadioContext, "radio group");
     console.assert(context != null, `This Radio is not contained within a RadioGroup`);
     const getValue = useStableGetter(value);
     const info = useRadio({

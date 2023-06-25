@@ -1,6 +1,7 @@
 import { createContext, Ref, VNode } from "preact";
 import { focus, useStableCallback } from "preact-prop-helpers";
-import { useContext, useImperativeHandle } from "preact/hooks";
+import { useImperativeHandle } from "preact/hooks";
+import { useContextWithWarning } from "../props.js";
 import { TableCellInfo, TableRowInfo, useTable, useTableCell, UseTableCellParameters, UseTableCellReturnType, UseTableContext, UseTableParameters, UseTableReturnType, useTableRow, UseTableRowContext, UseTableRowParameters, UseTableRowReturnType, useTableSection, UseTableSectionContext, UseTableSectionParameters, UseTableSectionReturnType } from "../use-table.js";
 import { memoForwardRef, PartialExcept, useDefault } from "./util.js";
 
@@ -127,7 +128,7 @@ export const TableSection = memoForwardRef(function TableSection<SectionElement 
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
         rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable },
         singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? null, onSelectedIndexChange: onSelectedIndexChange ?? null, ariaPropName, selectionMode },
-        context: useContext(TableContext),
+        context: useContextWithWarning(TableContext, "table"),
         tableSectionParameters: { tagTableSection, location },
     })
 
@@ -153,7 +154,7 @@ export const TableRow = memoForwardRef(function TableRowU<RowElement extends Ele
     render
 }: TableRowProps<RowElement, Cellement, TableRowInfo<RowElement, Cellement>, TableCellInfo<Cellement>>, ref?: Ref<any>) {
 
-    const cx1 = useContext(TableSectionContext);
+    const cx1 = useContextWithWarning(TableSectionContext, "table section");
     console.assert(cx1 != null, `This TableRow is not contained within a TableSection`);
     untabbable ||= (false || cx1.rovingTabIndexContext.untabbable);
 
@@ -192,7 +193,7 @@ export const TableCell = memoForwardRef(function TableCell<CellElement extends E
     colSpan,
     getSortValue,
 }: TableCellProps<CellElement, TableCellInfo<CellElement>>, ref?: Ref<any>) {
-    const context = (useContext(TableRowContext) as UseTableRowContext<any, CellElement, TableCellInfo<CellElement>>);
+    const context = useContextWithWarning(TableRowContext, "table row");
     console.assert(context != null, `This TableCell is not contained within a TableRow`);
     const defaultFocusSelf = useStableCallback((e: CellElement) => { focus(e as Element as HTMLElement) }, []);
     const info = useTableCell<CellElement, TableCellInfo<CellElement>>({

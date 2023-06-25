@@ -1,7 +1,8 @@
 import { Fragment as _Fragment, jsxs as _jsxs } from "preact/jsx-runtime";
 import { createContext } from "preact";
 import { monitorCallCount, usePortalChildren } from "preact-prop-helpers";
-import { useCallback, useContext, useMemo } from "preact/hooks";
+import { useCallback, useMemo } from "preact/hooks";
+import { useContextWithWarning } from "./props.js";
 export const NotificationProviderContext = createContext(null);
 /**
  * Allows children to send notifications to a screen reader or other assistive technology.
@@ -32,6 +33,6 @@ export function useNotificationProvider({ targetAssertive, targetPolite }) {
 }
 export function useNotify() {
     monitorCallCount(useNotify);
-    return useContext(NotificationProviderContext).notify;
+    return useContextWithWarning(NotificationProviderContext, "notification provider").notify;
 }
 //# sourceMappingURL=use-notify.js.map

@@ -1,6 +1,7 @@
 import { jsx as _jsx } from "preact/jsx-runtime";
 import { createContext } from "preact";
-import { useContext, useImperativeHandle } from "preact/hooks";
+import { useImperativeHandle } from "preact/hooks";
+import { useContextWithWarning } from "../props.js";
 import { useCheckboxGroup, useCheckboxGroupChild, useCheckboxGroupParent } from "../use-checkbox-group.js";
 import { memoForwardRef, useDefault } from "./util.js";
 const UseCheckboxGroupChildContext = createContext(null);
@@ -28,7 +29,7 @@ export const CheckboxGroup = memoForwardRef(function CheckboxGroup({ render, col
     return (_jsx(UseCheckboxGroupChildContext.Provider, { value: info.context, children: render(info) }));
 });
 export const CheckboxGroupParent = memoForwardRef(function CheckboxGroupParent({ render, index, focusSelf, untabbable, getText, getSortValue, unselectable, ..._rest }, ref) {
-    const context = useContext(UseCheckboxGroupChildContext);
+    const context = useContextWithWarning(UseCheckboxGroupChildContext, "checkbox group");
     console.assert(context != null, `This CheckboxGroupParent is not contained within a CheckboxGroup`);
     const info = useCheckboxGroupParent({
         pressParameters: { focusSelf, onPressSync: null },
@@ -41,7 +42,7 @@ export const CheckboxGroupParent = memoForwardRef(function CheckboxGroupParent({
     return render(info);
 });
 export const CheckboxGroupChild = memoForwardRef(function CheckboxGroupChild({ index, render, checked, onChangeFromParent, getSortValue, untabbable, getText, focusSelf, unselectable, ..._rest }, ref) {
-    const context = useContext(UseCheckboxGroupChildContext);
+    const context = useContextWithWarning(UseCheckboxGroupChildContext, "checkbox group");
     console.assert(context != null, `This CheckboxGroupChild is not contained within a CheckboxGroup`);
     const info = useCheckboxGroupChild({
         checkboxGroupChild: { checked, onChangeFromParent },

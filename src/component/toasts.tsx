@@ -1,5 +1,6 @@
 import { createContext, Ref, VNode } from "preact";
-import { useContext, useImperativeHandle } from "preact/hooks";
+import { useImperativeHandle } from "preact/hooks";
+import { useContextWithWarning } from "../props.js";
 import { ToastInfo, ToastsContext, useToast, UseToastParameters, UseToastReturnType, useToasts, UseToastsParameters, UseToastsReturnType } from "../use-toasts.js";
 import { memoForwardRef } from "./util.js";
 
@@ -31,7 +32,7 @@ export const Toasts = memoForwardRef(function Toasts<ContainerType extends Eleme
 })
 
 export const Toast = memoForwardRef(function Toast<E extends Element>({ render, index, timeout, politeness, children }: ToastProps<E>, ref?: Ref<any>) {
-    const context = (useContext(ToastContext) as ToastsContext<ToastInfo>)
+    const context = useContextWithWarning(ToastContext, "toasts provider");
     console.assert(context != null, `This Toast was not rendered within a Toasts provider`);
     const info = useToast<E>({
         info: { index },

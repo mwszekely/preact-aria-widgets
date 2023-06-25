@@ -1,7 +1,8 @@
 import { jsx as _jsx } from "preact/jsx-runtime";
 import { createContext } from "preact";
 import { focus, useStableCallback } from "preact-prop-helpers";
-import { useContext, useImperativeHandle } from "preact/hooks";
+import { useImperativeHandle } from "preact/hooks";
+import { useContextWithWarning } from "../props.js";
 import { useTable, useTableCell, useTableRow, useTableSection } from "../use-table.js";
 import { memoForwardRef, useDefault } from "./util.js";
 const TableContext = createContext(null);
@@ -35,13 +36,13 @@ export const TableSection = memoForwardRef(function TableSection({ disableHomeEn
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
         rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable },
         singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? null, onSelectedIndexChange: onSelectedIndexChange ?? null, ariaPropName, selectionMode },
-        context: useContext(TableContext),
+        context: useContextWithWarning(TableContext, "table"),
         tableSectionParameters: { tagTableSection, location },
     });
     return (_jsx(TableSectionContext.Provider, { value: info.context, children: render(info) }));
 });
 export const TableRow = memoForwardRef(function TableRowU({ index, getText, tagTableRow, disableHomeEndKeys, onTabbableIndexChange, navigatePastEnd, navigatePastStart, selected, unselectable, initiallyTabbedIndex, untabbable, render }, ref) {
-    const cx1 = useContext(TableSectionContext);
+    const cx1 = useContextWithWarning(TableSectionContext, "table section");
     console.assert(cx1 != null, `This TableRow is not contained within a TableSection`);
     untabbable ||= (false || cx1.rovingTabIndexContext.untabbable);
     const info = useTableRow({
@@ -65,7 +66,7 @@ export const TableRow = memoForwardRef(function TableRowU({ index, getText, tagT
     return (_jsx(TableRowContext.Provider, { value: info.context, children: render(info) }));
 });
 export const TableCell = memoForwardRef(function TableCell({ index, getText, focusSelf, untabbable, tagTableCell, render, colSpan, getSortValue, }, ref) {
-    const context = useContext(TableRowContext);
+    const context = useContextWithWarning(TableRowContext, "table row");
     console.assert(context != null, `This TableCell is not contained within a TableRow`);
     const defaultFocusSelf = useStableCallback((e) => { focus(e); }, []);
     const info = useTableCell({

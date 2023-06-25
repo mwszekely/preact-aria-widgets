@@ -1,6 +1,7 @@
 import { createContext, Ref, VNode } from "preact";
 import { useStableGetter } from "preact-prop-helpers";
-import { useContext, useImperativeHandle } from "preact/hooks";
+import { useImperativeHandle } from "preact/hooks";
+import { useContextWithWarning } from "../props.js";
 import { FocusableLabelElement, LabelPosition } from "../use-label.js";
 import { RadioContext, RadioSubInfo, useRadio, useRadioGroup, UseRadioGroupParameters, UseRadioGroupReturnType, UseRadioParameters, UseRadioReturnType } from "../use-radio-group.js";
 import { memoForwardRef, PartialExcept, useDefault } from "./util.js";
@@ -110,7 +111,7 @@ export const Radio = memoForwardRef(function Radio<LP extends LabelPosition, V e
     const defaultFocusSelf = () => info.checkboxLikeReturn.focusSelf();
     focusSelf ??= defaultFocusSelf;
 
-    const context = useContext(RadioContext);
+    const context = useContextWithWarning(RadioContext, "radio group");
     console.assert(context != null, `This Radio is not contained within a RadioGroup`);
     const getValue = useStableGetter(value);
     const info = useRadio<LP, InputElement, LabelElement, V>({

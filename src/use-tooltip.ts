@@ -1,4 +1,3 @@
-import { h } from "preact";
 import { DismissListenerTypes, ElementProps, focus, monitorCallCount, returnNull, useDismiss, UseEscapeDismissParameters, useGlobalHandler, useHasCurrentFocus, useMergedProps, usePassiveState, useRandomId, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
 import { useCallback, useRef } from "preact/hooks";
 import { Prefices } from "./props.js";

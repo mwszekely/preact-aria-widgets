@@ -1,3 +1,4 @@
+import { useContext } from "preact/hooks";
 export { enhanceEvent, EventDetail } from "preact-prop-helpers";
 const alreadyWarned = new Set();
 export function overwriteWithWarning(componentName, props, propName, newValue) {
@@ -10,6 +11,14 @@ export function overwriteWithWarning(componentName, props, propName, newValue) {
         }
     }
     props[propName] = newValue;
+}
+export function useContextWithWarning(context, parentContextName) {
+    let ret = useContext(context);
+    if (ret == null) {
+        debugger;
+        console.error(`This child is missing its parent ${parentContextName} context`);
+    }
+    return ret;
 }
 let debug = false;
 export function setDebugLogging(logging) {

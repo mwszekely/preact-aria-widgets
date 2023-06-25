@@ -2,7 +2,7 @@ import { jsx as _jsx } from "preact/jsx-runtime";
 import { createPortal } from "preact/compat";
 import { useContext, useImperativeHandle, useRef } from "preact/hooks";
 import { useDialog } from "../use-dialog.js";
-import { memoForwardRef, ParentDepthContext, useDefault } from "./util.js";
+import { ParentDepthContext, memoForwardRef, useDefault } from "./util.js";
 export function defaultRenderPortal({ portalId, children }) {
     const portalRef = useRef(null);
     portalRef.current ??= document.getElementById(portalId);

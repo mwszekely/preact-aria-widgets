@@ -115,7 +115,7 @@ export function useTableRow({ info, textContentParameters, context: cx1, tableRo
             })
         },
         linearNavigationParameters,
-        rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
+        rovingTabIndexParameters: { ...rovingTabIndexParameters },
         typeaheadNavigationParameters: { noTypeahead: true, collator: null, typeaheadTimeout: Infinity }
     });
     props.role = "row";

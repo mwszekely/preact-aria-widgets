@@ -3,6 +3,7 @@ import { createContext } from "preact";
 import { focus } from "preact-prop-helpers";
 import { memo } from "preact/compat";
 import { useCallback, useContext } from "preact/hooks";
+import { useContextWithWarning } from "../props.js";
 import { useListbox, useListboxItem } from "../use-listbox.js";
 import { memoForwardRef, useDefault } from "./util.js";
 const ListboxContext = createContext(null);
@@ -66,7 +67,7 @@ export const Listbox = memoForwardRef(function Listbox({ ariaLabel, collator, co
     return (_jsx(ListboxContext.Provider, { value: info.context, children: render(info) }));
 });
 export const ListboxItem = memoForwardRef(function ListboxItem({ unselectable, focusSelf, getText, untabbable, index, render, selected, getSortValue, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressSync, onPressingChange, ...subInfo }) {
-    const context = useContext(ListboxContext);
+    const context = useContextWithWarning(ListboxContext, "listbox");
     console.assert(context != null, `This ListboxItem is not contained within a Listbox`);
     const focusSelfDefault = useCallback((e) => { focus(e); }, []);
     focusSelf ??= focusSelfDefault;

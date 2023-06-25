@@ -1,7 +1,8 @@
 import { jsx as _jsx } from "preact/jsx-runtime";
 import { createContext, createElement } from "preact";
 import { focus, useStableCallback } from "preact-prop-helpers";
-import { useContext, useImperativeHandle } from "preact/hooks";
+import { useImperativeHandle } from "preact/hooks";
+import { useContextWithWarning } from "../props.js";
 import { useGridlist, useGridlistCell, useGridlistRow } from "../use-gridlist.js";
 import { memoForwardRef, useDefault } from "./util.js";
 const GridlistContext = createContext(null);
@@ -66,7 +67,7 @@ export const Gridlist = memoForwardRef(function GridlistU({ collator, disableHom
     return (_jsx(GridlistContext.Provider, { value: info.context, children: render(info) }));
 });
 export const GridlistRow = memoForwardRef(function GridlistRowU({ index, collator, unselectable, untabbable, navigatePastEnd, navigatePastStart, noTypeahead, onTabbableIndexChange, selected, typeaheadTimeout, getSortValue, getText, render, initiallyTabbedIndex, info: uinfo }, ref) {
-    const context = useContext(GridlistContext);
+    const context = useContextWithWarning(GridlistContext, "gridlist");
     console.assert(context != null, `This GridlistRow is not contained within a Gridlist`);
     untabbable ||= false;
     const info = useGridlistRow({
@@ -90,7 +91,7 @@ export const GridlistRow = memoForwardRef(function GridlistRowU({ index, collato
     return _jsx(GridlistRowContext.Provider, { value: info.context, children: render(info) });
 });
 export const GridlistChild = memoForwardRef(function GridlistChild({ index, colSpan, focusSelf, untabbable, getText, onPressSync, render, info: subInfo }, ref) {
-    const context = useContext(GridlistRowContext);
+    const context = useContextWithWarning(GridlistRowContext, "gridlist row");
     console.assert(context != null, `This GridlistChild is not contained within a GridlistRow that is contained within a Gridlist`);
     const defaultFocusSelf = useStableCallback((e) => { focus(e); }, []);
     const info = useGridlistCell({

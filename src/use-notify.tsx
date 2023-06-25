@@ -1,7 +1,8 @@
 
 import { createContext, h, VNode } from "preact";
 import { monitorCallCount, usePortalChildren } from "preact-prop-helpers";
-import { useCallback, useContext, useMemo } from "preact/hooks";
+import { useCallback, useMemo } from "preact/hooks";
+import { useContextWithWarning } from "./props.js";
 
 export interface NotificationProviderProps {
     targetAssertive: string | Element;
@@ -58,5 +59,5 @@ export function useNotificationProvider({ targetAssertive, targetPolite }: Notif
 export function useNotify() {
     monitorCallCount(useNotify);
 
-    return useContext(NotificationProviderContext).notify;
+    return useContextWithWarning(NotificationProviderContext, "notification provider").notify;
 }

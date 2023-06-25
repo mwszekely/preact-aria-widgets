@@ -1,7 +1,8 @@
 import { jsx as _jsx } from "preact/jsx-runtime";
 import { createContext } from "preact";
 import { focus } from "preact-prop-helpers";
-import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
+import { useCallback, useImperativeHandle } from "preact/hooks";
+import { useContextWithWarning } from "../props.js";
 import { useTab, useTabPanel, useTabs } from "../use-tabs.js";
 import { memoForwardRef, useDefault } from "./util.js";
 const TabsContext = createContext(null);
@@ -42,7 +43,7 @@ untabbable, typeaheadTimeout, role, render }, ref) {
     return (_jsx(UntabbableContext.Provider, { value: untabbable, children: _jsx(SelectionModeContext.Provider, { value: selectionMode, children: _jsx(TabsContext.Provider, { value: contextTabs, children: _jsx(TabPanelsContext.Provider, { value: contextPanels, children: render(info) }) }) }) }));
 });
 export const Tab = memoForwardRef(function Tab({ unselectable, focusSelf, untabbable, index, getText, getSortValue, render, info: uinfo }, ref) {
-    const context = useContext(TabsContext);
+    const context = useContextWithWarning(TabsContext, "tabs");
     console.assert(context != null, `This Tab is not contained within a Tabs component`);
     const focusSelfDefault = useCallback((e) => { focus(e); }, []);
     const info = useTab({
@@ -56,7 +57,7 @@ export const Tab = memoForwardRef(function Tab({ unselectable, focusSelf, untabb
     return render(info);
 });
 export function TabPanel({ index, render, info: uinfo }) {
-    const context = useContext(TabPanelsContext);
+    const context = useContextWithWarning(TabPanelsContext, "tabs");
     const info = useTabPanel({
         context,
         info: { index, ...uinfo }

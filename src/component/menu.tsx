@@ -1,6 +1,7 @@
 import { createContext, Ref, VNode } from "preact";
 import { focus } from "preact-prop-helpers";
 import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
+import { useContextWithWarning } from "../props.js";
 import { useMenu, UseMenuContext, useMenuItem, UseMenuItemReturnType, UseMenuParameters, UseMenuReturnType } from "../use-menu.js";
 import { UseMenubarSubInfo } from "../use-menubar.js";
 import { MenubarItemProps } from "./menubar.js";
@@ -151,8 +152,7 @@ export const MenuItem = memoForwardRef(function MenuItem<MenuItemElement extends
     render,
     info: uinfo
 }: MenuItemProps<MenuItemElement, M>, ref?: Ref<any>) {
-    const context = useContext(MenuItemContext);
-    console.assert(context != null, `This MenuItem is not contained within a Menubar/Menu`);
+    const context = useContextWithWarning(MenuItemContext, "menu");
     const defaultFocusSelf = useCallback((e: MenuItemElement | null) => focus(e as Element as HTMLElement), []);
     const info = useMenuItem<MenuItemElement, M>({
         info: { index, untabbable, unselectable, focusSelf: focusSelf ?? defaultFocusSelf, ...uinfo } as M,

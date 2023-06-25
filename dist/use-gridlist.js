@@ -54,7 +54,7 @@ export function useGridlistRow({ gridlistRowParameters: { selected }, linearNavi
         linearNavigationParameters: { disableHomeEndKeys: true, ...linearNavigationParameters },
         info,
         context: cx1,
-        rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
+        rovingTabIndexParameters: { ...rovingTabIndexParameters },
         sortableChildParameters,
         textContentParameters,
         typeaheadNavigationParameters,

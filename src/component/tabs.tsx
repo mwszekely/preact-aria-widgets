@@ -1,7 +1,7 @@
 import { createContext, Ref, VNode } from "preact";
 import { focus } from "preact-prop-helpers";
-import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
-import { OmitStrong } from "../props.js";
+import { useCallback, useImperativeHandle } from "preact/hooks";
+import { OmitStrong, useContextWithWarning } from "../props.js";
 import { TabInfo, TabPanelInfo, useTab, useTabPanel, UseTabPanelReturnType, UseTabPanelsContext, UseTabParameters, UseTabReturnType, useTabs, UseTabsContext, UseTabsParameters, UseTabsReturnType } from "../use-tabs.js";
 import { memoForwardRef, PartialExcept, useDefault } from "./util.js";
 
@@ -128,7 +128,7 @@ export const Tab = memoForwardRef(function Tab<E extends Element, M extends TabI
     render,
     info: uinfo
 }: TabProps<E, M>, ref?: Ref<any>) {
-    const context = useContext(TabsContext);
+    const context = useContextWithWarning(TabsContext, "tabs");
     console.assert(context != null, `This Tab is not contained within a Tabs component`);
     const focusSelfDefault = useCallback((e: any) => { focus(e); }, []);
     const info = useTab<E, M>({
@@ -147,7 +147,7 @@ export function TabPanel<E extends Element, M extends TabPanelInfo = TabPanelInf
     render,
     info: uinfo
 }: TabPanelProps<E, M>) {
-    const context = useContext(TabPanelsContext);
+    const context = useContextWithWarning(TabPanelsContext, "tabs");
     const info = useTabPanel<E, M>({
         context,
         info: { index, ...uinfo } as M
