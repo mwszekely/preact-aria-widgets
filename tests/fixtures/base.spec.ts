@@ -1,13 +1,13 @@
 import { expect } from '@playwright/test';
 import { test } from "./base.fixture.js";
 
-test('Sanity checks', async ({ page, shared: { getCounter, resetCounter } }) => {
+test('Sanity checks', async ({ page, shared: { goToTest, getCounter, resetCounter } }) => {
     console.log("TEST");
 
 
 
 
-    await page.goto("/tests/stage/?test-base=sanity-check");
+    await goToTest("sanity-check");
 
     await expect(page).toHaveTitle("Unit Testing");
 

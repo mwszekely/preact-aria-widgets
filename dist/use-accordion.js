@@ -1,5 +1,5 @@
 import { identity } from "lodash-es";
-import { assertEmptyObject, focus, monitorCallCount, useChildrenFlag, useLinearNavigation, useManagedChild, useManagedChildren, useMemoObject, useMergedProps, usePersistentState, useRandomId, useRefElement, useStableCallback, useState, useTypeaheadNavigation, useTypeaheadNavigationChild } from "preact-prop-helpers";
+import { assertEmptyObject, findBackupFocus, focus, monitorCallCount, useChildrenFlag, useHasCurrentFocus, useLinearNavigation, useManagedChild, useManagedChildren, useMemoObject, useMergedProps, usePersistentState, useRandomId, useRefElement, useStableCallback, useState, useTypeaheadNavigation, useTypeaheadNavigationChild } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { Prefices } from "./props.js";
 import { useButton } from "./use-button.js";
@@ -24,6 +24,7 @@ export function useAccordion({ accordionParameters: { initialIndex, localStorage
         }
         return false;
     }, []);
+    const { propsStable, refElementReturn: { getElement } } = useRefElement({});
     // Keep track of the one expanded index (if there is only one expanded index)
     const { changeIndex: changeExpandedIndexLocalOnly, getCurrentIndex: getCurrentExpandedIndex } = useChildrenFlag({
         initialIndex,
@@ -32,7 +33,8 @@ export function useAccordion({ accordionParameters: { initialIndex, localStorage
         setAt: useCallback((child, open) => { return child.setOpenFromParent(open); }, []),
         isValid: isValidByChild,
         onIndexChange: null,
-        closestFit: false
+        closestFit: false,
+        onClosestFit: null
     });
     // Also keep track of which button is currently tabbable.
     // For some reason, Accordion buttons are both individually tabbable *and* arrow-key navigatable.
@@ -47,7 +49,15 @@ export function useAccordion({ accordionParameters: { initialIndex, localStorage
             if (i != null) {
                 getChildren().getAt(i)?.focusSelf();
             }
-        }, [])
+        }, []),
+        onClosestFit: useStableCallback((index) => {
+            if (document.activeElement == null || document.activeElement == document.body) {
+                if (index == null)
+                    findBackupFocus(getElement()).focus();
+                else
+                    getChildren().getAt(index)?.focusSelf();
+            }
+        })
     });
     const changeExpandedIndex = useStableCallback((value) => {
         changeExpandedIndexLocalOnly(value);
@@ -62,6 +72,7 @@ export function useAccordion({ accordionParameters: { initialIndex, localStorage
         typeaheadNavigationParameters
     });
     return {
+        props: propsStable,
         context: useMemoObject({
             managedChildContext,
             typeaheadNavigationContext,
@@ -99,6 +110,12 @@ export function useAccordionSection({ buttonParameters, accordionSectionParamete
     const open = ((openFromUser ?? openFromParent) ?? false);
     const { refElementReturn: { getElement: getHeaderElement }, propsStable: headerRefElementProps } = useRefElement({ refElementParameters: {} });
     const { refElementReturn: { getElement: _getBodyElement }, propsStable: bodyRefElementProps } = useRefElement({ refElementParameters: {} });
+    const { hasCurrentFocusReturn } = useHasCurrentFocus({ refElementReturn: { getElement: getHeaderElement }, hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: useStableCallback(focused => {
+                if (focused) {
+                    setCurrentFocusedIndex(index);
+                    setMostRecentlyTabbed(true);
+                }
+            }) } });
     const focusSelf = useStableCallback(() => {
         focus(getHeaderElement());
     });
@@ -139,7 +156,7 @@ export function useAccordionSection({ buttonParameters, accordionSectionParamete
     });
     const { pressReturn, props: buttonProps, refElementReturn } = buttonReturn;
     //const { linearNavigationReturn: { propsStable } } = linearReturnType;
-    const headerButtonProps = useMergedProps(buttonProps, headerRefElementProps, propsHeadReferencer, propsHeadSource, propsLN, stableTypeaheadProps, { "aria-expanded": (open ?? false), });
+    const headerButtonProps = useMergedProps(buttonProps, hasCurrentFocusReturn.propsStable, headerRefElementProps, propsHeadReferencer, propsHeadSource, propsLN, stableTypeaheadProps, { "aria-expanded": (open ?? false), });
     const bodyProps = useMergedProps(bodyRefElementProps, propsBodyReferencer, propsBodySource, {
         role: bodyRole,
         tabIndex: -1
@@ -156,6 +173,7 @@ export function useAccordionSection({ buttonParameters, accordionSectionParamete
         propsHeaderButton: headerButtonProps,
         propsHeader: {},
         propsBody: bodyProps,
+        hasCurrentFocusReturn
     };
 }
 //# sourceMappingURL=use-accordion.js.map

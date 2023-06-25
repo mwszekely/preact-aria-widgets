@@ -20,6 +20,7 @@ export function useTabs({ labelParameters, linearNavigationParameters, singleSel
     const { changeIndex: changeVisiblePanel, getCurrentIndex: getVisibleIndex, reevaluateClosestFit } = useChildrenFlag({
         getChildren: panelChildrenReturn.getChildren,
         closestFit: false,
+        onClosestFit: null,
         initialIndex: null,
         getAt: useStableCallback((i) => { return i.getVisible() ?? false; /*getPanels().getAt(i)?.getVisible() ?? false)*/ }, []),
         setAt: useStableCallback((i, b, n, p) => { return i.setVisibleIndex(n, p); /*(getPanels().getAt(i)?.setVisible(b));*/ }, []),

@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { ElementProps, ManagedChildInfo, PassiveStateUpdater, PersistentStates, UseLinearNavigationParameters, UseManagedChildParameters, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, UsePressReturnType, UseRefElementParameters, UseRefElementReturnType, UseTextContentReturnType, UseTypeaheadNavigationChildParameters, UseTypeaheadNavigationContext, UseTypeaheadNavigationParameters } from "preact-prop-helpers";
+import { ElementProps, ManagedChildInfo, PassiveStateUpdater, PersistentStates, UseHasCurrentFocusReturnType, UseLinearNavigationParameters, UseManagedChildParameters, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, UsePressReturnType, UseRefElementParameters, UseRefElementReturnType, UseTextContentReturnType, UseTypeaheadNavigationChildParameters, UseTypeaheadNavigationContext, UseTypeaheadNavigationParameters } from "preact-prop-helpers";
 import { DisabledType, OmitStrong } from "./props.js";
 import { UseButtonParameters } from "./use-button.js";
 export interface UseAccordionParameters<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo> extends UseManagedChildrenParameters<M>, Pick<UseTypeaheadNavigationParameters<HeaderButtonElement, M>, "typeaheadNavigationParameters"> {
@@ -16,6 +16,7 @@ export interface UseAccordionReturnType<HeaderButtonElement extends Element, M e
         changeExpandedIndex: PassiveStateUpdater<number | null, Event>;
     };
     context: UseAccordionContext<HeaderButtonElement, M>;
+    props: ElementProps<any>;
 }
 export interface UseAccordionSectionInfo extends ManagedChildInfo<number> {
     setOpenFromParent(open: boolean): void;
@@ -31,20 +32,20 @@ export interface UseAccordionSectionParameters<HeaderButtonElement extends Eleme
     context: UseAccordionContext<HeaderButtonElement, M>;
     accordionSectionParameters: {
         /**
-         * If this prop is `true` or `false` isn't null, then this section
+         * If this prop is `true` or `false` (isn't null), then this section
          * will be open/closed regardless of what the parent's singular open index is.
          *
          * In other words, leave null to only allow one section to be open at a time.
          * To allow multiple sections to be open at once,
          * set the parent's index to null and toggle this `true`/`false` when the button's pressed
          */
-        open: boolean | undefined;
+        open: boolean | null | undefined;
         /** Generally `"region"` */
         bodyRole: h.JSX.AriaRole;
     };
     buttonParameters: OmitStrong<UseButtonParameters<HeaderButtonElement>["buttonParameters"], "pressed" | "role">;
 }
-export interface UseAccordionSectionReturnType<HeaderElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element> extends OmitStrong<UsePressReturnType<HeaderButtonElement>, "props">, OmitStrong<UseRefElementReturnType<HeaderButtonElement>, "propsStable">, UseTextContentReturnType {
+export interface UseAccordionSectionReturnType<HeaderElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element> extends OmitStrong<UsePressReturnType<HeaderButtonElement>, "props">, OmitStrong<UseRefElementReturnType<HeaderButtonElement>, "propsStable">, UseTextContentReturnType, UseHasCurrentFocusReturnType<HeaderButtonElement> {
     accordionSectionReturn: {
         expanded: boolean;
         focused: boolean;
