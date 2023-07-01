@@ -80,7 +80,7 @@ export interface CheckboxGroupContext<GroupElement extends Element, TCE extends 
  * @returns
  */
 export declare function useCheckboxGroup<GroupElement extends Element, TCE extends Element>({ linearNavigationParameters, rearrangeableChildrenParameters, sortableChildrenParameters, rovingTabIndexParameters, typeaheadNavigationParameters, staggeredChildrenParameters, checkboxGroupParameters: { orientation } }: UseCheckboxGroupParameters<GroupElement, TCE, CheckboxGroupInfo<TCE>>): UseCheckboxGroupReturnType<GroupElement, TCE, CheckboxGroupInfo<TCE>>;
-export declare function useCheckboxGroupParent<TCE extends Element>({ context, info, textContentParameters, sortableChildParameters, pressParameters }: UseCheckboxGroupParentParameters<TCE, CheckboxGroupInfo<TCE>>): UseCheckboxGroupParentReturnType<TCE, CheckboxGroupInfo<TCE>>;
+export declare function useCheckboxGroupParent<TCE extends Element>({ context, info, textContentParameters, sortableChildParameters }: UseCheckboxGroupParentParameters<TCE, CheckboxGroupInfo<TCE>>): UseCheckboxGroupParentReturnType<TCE, CheckboxGroupInfo<TCE>>;
 /**
  * Implements the "child" part of a checkbox group.
  *
@@ -95,6 +95,6 @@ export declare function useCheckboxGroupParent<TCE extends Element>({ context, i
  * @param param0
  * @returns
  */
-export declare function useCheckboxGroupChild<TCE extends Element>({ checkboxGroupChild, context, info, textContentParameters, sortableChildParameters, pressParameters, }: UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>): UseCheckboxGroupChildReturnType<TCE, CheckboxGroupInfo<TCE>>;
+export declare function useCheckboxGroupChild<TCE extends Element>({ checkboxGroupChild, context, info, textContentParameters, sortableChildParameters, }: UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>): UseCheckboxGroupChildReturnType<TCE, CheckboxGroupInfo<TCE>>;
 export {};
 //# sourceMappingURL=use-checkbox-group.d.ts.map

@@ -66,7 +66,7 @@ export const Listbox = memoForwardRef(function Listbox({ ariaLabel, collator, co
     });
     return (_jsx(ListboxContext.Provider, { value: info.context, children: render(info) }));
 });
-export const ListboxItem = memoForwardRef(function ListboxItem({ unselectable, focusSelf, getText, untabbable, index, render, selected, getSortValue, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressSync, onPressingChange, ...subInfo }) {
+export const ListboxItem = memoForwardRef(function ListboxItem({ unselectable, focusSelf, getText, untabbable, index, render, selected, getSortValue, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, onMultiSelect, ...subInfo }) {
     const context = useContextWithWarning(ListboxContext, "listbox");
     console.assert(context != null, `This ListboxItem is not contained within a Listbox`);
     const focusSelfDefault = useCallback((e) => { focus(e); }, []);
@@ -74,8 +74,8 @@ export const ListboxItem = memoForwardRef(function ListboxItem({ unselectable, f
     const info = useListboxItem({
         info: { index, untabbable: untabbable || false, unselectable: unselectable || false, focusSelf, ...subInfo },
         context,
-        listboxParameters: { selected: selected ?? null, },
-        pressParameters: { onPressSync, focusSelf, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange },
+        listboxParameters: { selected: selected ?? null, onMultiSelect: onMultiSelect || null },
+        pressParameters: { focusSelf, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange },
         sortableChildParameters: { getSortValue: getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },
     });

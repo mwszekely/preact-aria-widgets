@@ -23,7 +23,7 @@ export const Accordion = memo(function Accordion({ disableHomeEndKeys, initialIn
             navigatePastStart: navigatePastStart ?? "wrap",
             pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
         },
-        managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange }
+        managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange },
     });
     useImperativeHandle(imperativeHandle, () => info);
     return (_jsx(AccordionSectionContext.Provider, { value: info.context, children: render(info) }));

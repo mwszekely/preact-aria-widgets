@@ -23,6 +23,7 @@ interface TabsPropsBase<TabContainerElement extends Element, TabElement extends 
 interface TabPropsBase<TabElement extends Element, M extends TabInfo<TabElement>> extends
     Pick<M, "index" | "untabbable" | "unselectable">,
     Get<UseTabParameters<TabElement, M>, "sortableChildParameters">,
+    Get<UseTabParameters<TabElement, M>, "pressParameters">,
     Get<UseTabParameters<TabElement, M>, "textContentParameters"> {
     focusSelf: M["focusSelf"];
     info?: OmitStrong<M, keyof TabInfo<TabElement>>
@@ -126,6 +127,11 @@ export const Tab = memoForwardRef(function Tab<E extends Element, M extends TabI
     getText,
     getSortValue,
     render,
+    allowRepeatPresses,
+    excludeEnter,
+    excludePointer,
+    longPressThreshold,
+    onPressingChange,
     info: uinfo
 }: TabProps<E, M>, ref?: Ref<any>) {
     const context = useContextWithWarning(TabsContext, "tabs");
@@ -134,9 +140,9 @@ export const Tab = memoForwardRef(function Tab<E extends Element, M extends TabI
     const info = useTab<E, M>({
         info: { index, unselectable, untabbable, focusSelf: focusSelf ?? focusSelfDefault, ...uinfo } as M,
         context,
+        pressParameters: { focusSelf: focusSelfDefault, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange },
         sortableChildParameters: { getSortValue },
-        textContentParameters: { getText: useDefault("getText", getText) },
-        pressParameters: null
+        textContentParameters: { getText: useDefault("getText", getText) }
     });
     useImperativeHandle(ref!, () => info);
     return render(info);

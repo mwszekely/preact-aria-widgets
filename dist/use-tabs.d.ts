@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { CompleteListNavigationContext, ElementProps, ManagedChildInfo, PersistentStates, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseManagedChildParameters, UseManagedChildrenContext, UsePressReturnType } from "preact-prop-helpers";
+import { CompleteListNavigationContext, ElementProps, ManagedChildInfo, PersistentStates, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseManagedChildParameters, UseManagedChildrenContext, UsePressParameters, UsePressReturnType } from "preact-prop-helpers";
 import { EventDetail, OmitStrong } from "./props.js";
 import { UseLabelSyntheticParameters } from "./use-label.js";
 export interface TabPanelInfo extends ManagedChildInfo<number> {
@@ -23,6 +23,7 @@ export interface UseTabsParameters<TabContainerElement extends Element, TabEleme
 }
 export interface UseTabParameters<TabElement extends Element, M extends TabInfo<TabElement>> extends OmitStrong<UseCompleteListNavigationChildParameters<TabElement, M>, never> {
     context: UseTabsContext<any, TabElement, M>;
+    pressParameters: OmitStrong<UsePressParameters<TabElement>["pressParameters"], "excludeSpace" | "onPressSync">;
 }
 export interface UseTabPanelParameters<M extends TabPanelInfo> extends OmitStrong<UseManagedChildParameters<M>, "info"> {
     info: OmitStrong<UseManagedChildParameters<M>["info"], "setVisibleIndex" | "getVisible">;
@@ -39,7 +40,7 @@ interface TC {
     getPanelId: (index: number) => string;
     getTabId: (index: number) => string;
 }
-export interface UseTabReturnType<TabElement extends Element, M extends TabInfo<TabElement>> extends UseCompleteListNavigationChildReturnType<TabElement, M>, UsePressReturnType<TabElement> {
+export interface UseTabReturnType<TabElement extends Element, M extends TabInfo<TabElement>> extends OmitStrong<UseCompleteListNavigationChildReturnType<TabElement, M>, "pressParameters">, UsePressReturnType<TabElement> {
 }
 export interface UseTabLabelParameters {
 }
@@ -74,7 +75,7 @@ export type UseTabList<TabContainerElement extends Element, TabElement extends E
 export type UseTabPanel<PanelElement extends Element, M extends TabPanelInfo> = (args: UseTabPanelParameters<M>) => UseTabPanelReturnType<PanelElement>;
 export type UseTabListLabel<LabelElement extends Element> = (args: UseTabLabelParameters) => UseTabLabelReturnTypeWithHooks<LabelElement>;
 export declare function useTabs<TabListElement extends Element, TabElement extends Element, LabelElement extends Element, M extends TabInfo<TabElement>>({ labelParameters, linearNavigationParameters, singleSelectionParameters: { initiallySelectedIndex, onSelectedIndexChange: ssi, selectionMode, ...singleSelectionParameters }, tabsParameters: { orientation, role, localStorageKey }, rovingTabIndexParameters, ...restParams }: UseTabsParameters<TabListElement, TabElement, LabelElement, M>): UseTabsReturnType<TabListElement, TabElement, LabelElement, M>;
-export declare function useTab<TabElement extends Element, M extends TabInfo<TabElement>>({ info: { focusSelf, ...info }, textContentParameters, sortableChildParameters, pressParameters, context }: UseTabParameters<TabElement, M>): UseTabReturnType<TabElement, M>;
+export declare function useTab<TabElement extends Element, M extends TabInfo<TabElement>>({ info: { focusSelf: focusSelfParent, ...info }, textContentParameters, sortableChildParameters, pressParameters: { focusSelf: focusSelfChild, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, ...void2 }, context }: UseTabParameters<TabElement, M>): UseTabReturnType<TabElement, M>;
 export declare function useTabPanel<PanelElement extends Element, M extends TabPanelInfo>({ info, context }: UseTabPanelParameters<M>): UseTabPanelReturnType<PanelElement>;
 export {};
 //# sourceMappingURL=use-tabs.d.ts.map

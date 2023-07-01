@@ -62,7 +62,7 @@ export const test = base.extend<{ shared: SharedFixtures }>({
             }
         })
     }
-})
+});
 
 export interface SharedFixtures {
 

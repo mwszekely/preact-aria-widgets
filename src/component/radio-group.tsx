@@ -121,8 +121,7 @@ export const Radio = memoForwardRef(function Radio<LP extends LabelPosition, V e
         info: { index, focusSelf, untabbable: untabbable || false, unselectable: !!unselectable },
         context,
         labelParameters: { ariaLabel, labelPosition, tagInput, tagLabel },
-        textContentParameters: { getText: useDefault("getText", getText) },
-        pressParameters: null
+        textContentParameters: { getText: useDefault("getText", getText) }
     });
 
     useImperativeHandle(ref!, () => info);

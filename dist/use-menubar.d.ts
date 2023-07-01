@@ -8,7 +8,7 @@ export interface UseMenubarSubInfo<ChildElement extends Element> extends UseTool
 }
 export interface UseMenubarParameters<MenuParentElement extends Element, MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseToolbarParameters<MenuParentElement, MenuItemElement, M> {
 }
-export interface UseMenubarItemParameters<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseToolbarChildParameters<MenuItemElement, M>, "toolbarChildParameters" | "pressParameters"> {
+export interface UseMenubarItemParameters<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseToolbarChildParameters<MenuItemElement, M>, "toolbarChildParameters"> {
     menuItemParameters: {
         role: "menuitem" | "menuitemcheckbox" | "menuitemradio";
         /**
@@ -21,7 +21,7 @@ export interface UseMenubarReturnType<MenuParentElement extends Element, MenuIte
     propsMenubar: ElementProps<MenuParentElement>;
     context: UseMenubarContext<MenuParentElement, MenuItemElement, M>;
 }
-export interface UseMenubarItemReturnType<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseToolbarChildReturnType<MenuItemElement, M>, never>, UsePressReturnType<MenuItemElement> {
+export interface UseMenubarItemReturnType<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseToolbarChildReturnType<MenuItemElement, M>, "pressParameters">, UsePressReturnType<MenuItemElement> {
 }
 /**
  * A menubar is identical to a toolbar, except that every item

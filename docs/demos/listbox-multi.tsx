@@ -1,7 +1,7 @@
 
 import { returnZero, useMergedProps, useState } from "preact-prop-helpers";
 import { memo } from "preact/compat";
-import { Listbox, ListboxItem } from "../../dist/index.js";
+import { EventDetail, Listbox, ListboxItem } from "../../dist/index.js";
 
 const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
     const [selected, setSelected] = useState(false);
@@ -15,11 +15,11 @@ const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
             index={index}
             unselectable={false}
             getSortValue={returnZero}
+            onMultiSelect={e => setSelected(e[EventDetail].selected)}
 
-            onPressSync={() => { setSelected(p => !p) }}
             render={info => {
                 return (
-                    <li {...useMergedProps(info.props, info.propsPressStable)}>{labelText}</li>
+                    <li {...useMergedProps(info.props)}>{labelText}</li>
                 )
             }}
         />

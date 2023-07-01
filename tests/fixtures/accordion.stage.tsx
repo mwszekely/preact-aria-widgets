@@ -30,7 +30,7 @@ function Child({ index }: { index: number }) {
     const [open, setOpen] = useTestSyncState("Accordion", `setChildOpened_${index}`, null, fromStringString);
 
     if (index == MissingIndex)
-        return <div aria-hidden data-accordion-header-button data-accordion-header>(There is no section #{index}&mdash;it is a hole in the array)</div>
+        return <div aria-hidden><div data-accordion-header>(There is no section #{index}&mdash;it is a hole in the array)<div data-accordion-header-button /></div><div data-accordion-section /></div>
 
     return (
         <AccordionSection<HTMLDivElement, HTMLButtonElement, HTMLDivElement>

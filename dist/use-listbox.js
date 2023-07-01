@@ -1,4 +1,4 @@
-import { focus, monitorCallCount, useCompleteListNavigationChild, useCompleteListNavigationDeclarative, useEnsureStability, useMemoObject, useMergedProps, useStableCallback } from "preact-prop-helpers";
+import { assertEmptyObject, enhanceEvent, focus, monitorCallCount, useCompleteListNavigationChild, useCompleteListNavigationDeclarative, useEnsureStability, useMemoObject, useMergedProps, usePress, useStableCallback } from "preact-prop-helpers";
 import { EventDetail, Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
 export function useListbox({ labelParameters, listboxParameters: { selectionLimit, groupingType, selectedIndex, onSelectedIndexChange, orientation }, linearNavigationParameters, singleSelectionParameters: { ariaPropName, selectionMode }, rovingTabIndexParameters, ...restParams }) {
@@ -47,21 +47,38 @@ export function useListbox({ labelParameters, listboxParameters: { selectionLimi
         propsListboxLabel: propsLabelLabel
     };
 }
-export function useListboxItem({ context: { listboxContext: { selectionLimit }, ...context }, listboxParameters: { selected }, pressParameters, ...restParams }) {
+export function useListboxItem({ context: { listboxContext: { selectionLimit }, ...context }, listboxParameters: { selected, onMultiSelect }, pressParameters: { focusSelf, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, ...void1 }, ...restParams }) {
     monitorCallCount(useListboxItem);
-    const { props, refElementReturn, ...restRet } = useCompleteListNavigationChild({
+    const { props, refElementReturn, pressParameters: { onPressSync, excludeSpace, ...void2 }, ...restRet } = useCompleteListNavigationChild({
         context,
-        pressParameters,
         ...restParams
     });
+    assertEmptyObject(void1);
+    assertEmptyObject(void2);
     if (selectionLimit == "single")
         console.assert(selected == null);
     props.role = "option";
     props["aria-disabled"] = restParams.info.unselectable ? "true" : undefined;
+    const { pressReturn, props: propsPress } = usePress({
+        refElementReturn, pressParameters: {
+            focusSelf,
+            onPressSync: useStableCallback((e) => {
+                onPressSync?.(e);
+                if (selectionLimit == "multi")
+                    onMultiSelect?.(enhanceEvent(e, { selected: !selected }));
+            }),
+            excludeSpace,
+            allowRepeatPresses,
+            excludeEnter,
+            excludePointer,
+            longPressThreshold,
+            onPressingChange
+        }
+    });
     return {
-        //pressReturn,
+        pressReturn,
         refElementReturn,
-        props,
+        props: useMergedProps(props, propsPress),
         ...restRet
     };
 }

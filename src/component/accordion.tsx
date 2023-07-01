@@ -70,7 +70,7 @@ export const Accordion = memo(function Accordion<HeaderButtonElement extends Ele
             navigatePastStart: navigatePastStart ?? "wrap",
             pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
         },
-        managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange }
+        managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange },
     });
     useImperativeHandle(imperativeHandle!, () => info);
 

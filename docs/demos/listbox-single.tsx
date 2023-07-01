@@ -17,7 +17,7 @@ const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
                 const selected = info.singleSelectionChildReturn.selected;
                 // defaultRenderListboxSingleItem({ tagListItem: "li", makePropsListItem: ({ singleSelection: { selected } }) => ({ children: `List item #${index}${selected ? " (selected)" : ""}` }) })
                 return (
-                    <li {...useMergedProps(info.props, info.propsPressStable)}>{`List item #${index}${selected ? " (selected)" : ""}`}</li>
+                    <li {...useMergedProps(info.props)}>{`List item #${index}${selected ? " (selected)" : ""}`}</li>
                 )
             }}
         />

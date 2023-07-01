@@ -69,23 +69,24 @@ export function useRadioGroup({ labelParameters, radioGroupParameters: { name, o
         ...restRet,
     };
 }
-export function useRadio({ radioParameters: { value }, checkboxLikeParameters: { disabled }, labelParameters, info, context, textContentParameters, sortableChildParameters, pressParameters, ...void1 }) {
+export function useRadio({ radioParameters: { value }, checkboxLikeParameters: { disabled }, labelParameters, info, context, textContentParameters, sortableChildParameters, ...void1 }) {
     monitorCallCount(useRadio);
     const index = info.index;
     const onInput = useStableCallback((e) => {
-        singleSelectionChildReturn.setThisOneSelected(e);
+        onPressSync?.(e);
     });
     assertEmptyObject(void1);
     const { name, indexToName, nameToIndex } = context.radioContext;
     const { tagInput, labelPosition } = labelParameters;
     const getValue = useStableGetter(value);
-    const { props: listNavigationSingleSelectionChildProps, singleSelectionChildReturn, ...listNavRet } = useCompleteListNavigationChild({
+    const { props: listNavigationSingleSelectionChildProps, singleSelectionChildReturn, pressParameters: { onPressSync, excludeSpace, ...void2 }, ...listNavRet } = useCompleteListNavigationChild({
         info,
         context,
         sortableChildParameters,
-        textContentParameters,
-        pressParameters
+        textContentParameters
     });
+    assertEmptyObject(void1);
+    assertEmptyObject(void2);
     const { selected: checked } = singleSelectionChildReturn;
     const { refElementReturn: refElementInputReturn, propsStable: propsRefInput } = useRefElement({ refElementParameters: {} });
     const { refElementReturn: refElementLabelReturn, propsStable: propsRefLabel } = useRefElement({ refElementParameters: {} });
@@ -96,7 +97,7 @@ export function useRadio({ radioParameters: { value }, checkboxLikeParameters: {
             onInput: onInput,
             role: "radio"
         },
-        pressParameters: {},
+        pressParameters: { excludeSpace },
         labelParameters,
         randomIdInputParameters: { prefix: Prefices.radio },
         randomIdLabelParameters: { prefix: Prefices.radioLabel },

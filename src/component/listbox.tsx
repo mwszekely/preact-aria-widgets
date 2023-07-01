@@ -148,8 +148,8 @@ export const ListboxItem = memoForwardRef(function ListboxItem<ListboxItemElemen
     excludeEnter,
     excludePointer,
     longPressThreshold,
-    onPressSync,
     onPressingChange,
+    onMultiSelect,
     ...subInfo
 }: ListboxItemProps<ListboxItemElement, M>) {
     const context = useContextWithWarning(ListboxContext, "listbox");
@@ -160,8 +160,8 @@ export const ListboxItem = memoForwardRef(function ListboxItem<ListboxItemElemen
     const info = useListboxItem<ListboxItemElement, M>({
         info: { index, untabbable: untabbable || false, unselectable: unselectable || false, focusSelf, ...subInfo } as M,
         context,
-        listboxParameters: { selected: selected ?? null, },
-        pressParameters: { onPressSync, focusSelf, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange },
+        listboxParameters: { selected: selected ?? null, onMultiSelect: onMultiSelect || null },
+        pressParameters: { focusSelf, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange },
         sortableChildParameters: { getSortValue: getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },
     });

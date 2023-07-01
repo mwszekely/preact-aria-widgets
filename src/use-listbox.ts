@@ -7,19 +7,24 @@ import {
     UseCompleteListNavigationChildReturnType,
     UseCompleteListNavigationParameters,
     UseCompleteListNavigationReturnType,
+    UsePressParameters,
     UsePressReturnType, UseSingleSelectionParameters,
+    assertEmptyObject,
+    enhanceEvent,
     focus,
     monitorCallCount, useCompleteListNavigationChild,
     useCompleteListNavigationDeclarative,
     useEnsureStability,
     useMemoObject,
     useMergedProps,
+    usePress,
     useStableCallback
 } from "preact-prop-helpers";
 import { EventDetail, OmitStrong, Prefices } from "./props.js";
 import { UseLabelSyntheticParameters, useLabelSynthetic } from "./use-label.js";
 
 export type ListboxSingleSelectEvent<E extends EventTarget> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
+export type ListboxMultiSelectEvent<E extends EventTarget> = { [EventDetail]: { selected: boolean } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 
 export interface UseListboxContext<ListElement extends Element, ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends CompleteListNavigationContext<ListElement, ListItemElement, M> {
     listboxContext: { selectionLimit: "single" | "multi" | "none" }
@@ -62,14 +67,17 @@ export interface UseListboxReturnType<ListElement extends Element, ListItemEleme
     propsListboxLabel: ElementProps<LabelElement>;
     context: UseListboxContext<ListElement, ListItemElement, M>;
 }
-export interface UseListboxItemReturnType<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends UseCompleteListNavigationChildReturnType<ListItemElement, M>, UsePressReturnType<ListItemElement> { }
+export interface UseListboxItemReturnType<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationChildReturnType<ListItemElement, M>, "pressParameters">, UsePressReturnType<ListItemElement> { }
 export interface UseListboxItemParameters<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends UseCompleteListNavigationChildParameters<ListItemElement, M> {
-    //pressParameters: Pick<UsePressParameters<ListItemElement>["pressParameters"], "onPressSync">;
+
+    pressParameters: OmitStrong<UsePressParameters<ListItemElement>["pressParameters"], "excludeSpace" | "onPressSync">;
     listboxParameters: {
         /**
          * When the `selectionLimit` is `"single"`, this must be `null`.
          */
         selected: boolean | null;
+
+        onMultiSelect: null | ((e: ListboxMultiSelectEvent<ListItemElement>) => void);
     }
     context: UseListboxContext<any, ListItemElement, M>;
 }
@@ -149,8 +157,8 @@ export function useListbox<ListElement extends Element, ListItemElement extends 
 
 export function useListboxItem<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>>({
     context: { listboxContext: { selectionLimit }, ...context },
-    listboxParameters: { selected },
-    pressParameters,
+    listboxParameters: { selected, onMultiSelect },
+    pressParameters: { focusSelf, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, ...void1 },
     ...restParams
 }: UseListboxItemParameters<ListItemElement, M>): UseListboxItemReturnType<ListItemElement, M> {
     monitorCallCount(useListboxItem);
@@ -158,23 +166,43 @@ export function useListboxItem<ListItemElement extends Element, M extends Listbo
     const {
         props,
         refElementReturn,
+        pressParameters: { onPressSync, excludeSpace, ...void2 },
         ...restRet
     } = useCompleteListNavigationChild<ListItemElement, M>({
         context,
-        pressParameters,
         ...restParams
     });
+
+    assertEmptyObject(void1);
+    assertEmptyObject(void2);
 
     if (selectionLimit == "single")
         console.assert(selected == null);
 
     props.role = "option";
-    props["aria-disabled"] = restParams.info.unselectable? "true" : undefined;
+    props["aria-disabled"] = restParams.info.unselectable ? "true" : undefined;
+
+    const { pressReturn, props: propsPress } = usePress<ListItemElement>({
+        refElementReturn, pressParameters: {
+            focusSelf,
+            onPressSync: useStableCallback((e) => {
+                onPressSync?.(e);
+                if (selectionLimit == "multi")
+                    onMultiSelect?.(enhanceEvent(e, { selected: !selected }));
+            }),
+            excludeSpace,
+            allowRepeatPresses,
+            excludeEnter,
+            excludePointer,
+            longPressThreshold,
+            onPressingChange
+        }
+    })
 
     return {
-        //pressReturn,
+        pressReturn,
         refElementReturn,
-        props, //useMergedProps(props, propsPress),
+        props: useMergedProps(props, propsPress),
         ...restRet
     }
 }

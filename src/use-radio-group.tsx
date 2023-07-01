@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { assertEmptyObject, CompleteListNavigationContext, ElementProps, EventDetail, focus, monitorCallCount, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useMergedProps, useRefElement, useSingleSelectionDeclarative, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
+import { assertEmptyObject, CompleteListNavigationContext, ElementProps, EventDetail, focus, monitorCallCount, PressEventReason, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useMergedProps, useRefElement, useSingleSelectionDeclarative, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
 import { useLayoutEffect, useMemo, useRef } from "preact/hooks";
 import { EnhancedEventHandler, enhanceEvent, OmitStrong, Prefices, TargetedEnhancedEvent } from "./props.js";
 import { useCheckboxLike, UseCheckboxLikeParameters, UseCheckboxLikeReturnType } from "./use-checkbox-like.js";
@@ -27,6 +27,7 @@ export interface UseRadioParameters<LP extends LabelPosition, V extends string |
     radioParameters: {
         value: V;
     }
+    //pressParameters: OmitStrong<UsePressParameters<InputElement>["pressParameters"], "excludeSpace" | "onPressSync">;
     context: RadioContext<V, any, FocusableLabelElement<LP, InputElement, LabelElement>, M>;
     checkboxLikeParameters: OmitStrong<UseCheckboxLikeParameters<LP, InputElement, LabelElement>["checkboxLikeParameters"], "checked" | "onInput" | "role">;
     labelParameters: OmitStrong<UseCheckboxLikeParameters<LP, InputElement, LabelElement>["labelParameters"], never>;
@@ -143,7 +144,7 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
     }
 }
 
-export interface UseRadioReturnType<LP extends LabelPosition, V extends string | number, I extends Element, IL extends Element, M extends RadioSubInfo<FocusableLabelElement<LP, I, IL>, V>> extends OmitStrong<UseCompleteListNavigationChildReturnType<FocusableLabelElement<LP, I, IL>, M>, "props">, UseCheckboxLikeReturnType<I, IL> {
+export interface UseRadioReturnType<LP extends LabelPosition, V extends string | number, I extends Element, IL extends Element, M extends RadioSubInfo<FocusableLabelElement<LP, I, IL>, V>> extends OmitStrong<UseCompleteListNavigationChildReturnType<FocusableLabelElement<LP, I, IL>, M>, "props" | "pressParameters">, UseCheckboxLikeReturnType<I, IL> {
     propsInput: ElementProps<I>;
     propsLabel: ElementProps<IL>;
 }
@@ -158,7 +159,6 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
     context,
     textContentParameters,
     sortableChildParameters,
-    pressParameters,
     ...void1
 
 }: UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>): UseRadioReturnType<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>> {
@@ -166,7 +166,7 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
     type TabbableChildElement = FocusableLabelElement<LP, InputElement, LabelElement>;
     const index = info.index;
     const onInput = useStableCallback((e: h.JSX.TargetedEvent<InputElement>) => {
-        singleSelectionChildReturn.setThisOneSelected(e);
+        onPressSync?.(e as PressEventReason<any>);
     });
     assertEmptyObject(void1);
 
@@ -178,15 +178,16 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
     const {
         props: listNavigationSingleSelectionChildProps,
         singleSelectionChildReturn,
-        
+        pressParameters: { onPressSync, excludeSpace, ...void2 },
         ...listNavRet
     } = useCompleteListNavigationChild<TabbableChildElement, RadioSubInfo<TabbableChildElement, V>>({
         info,
         context,
         sortableChildParameters,
-        textContentParameters,
-        pressParameters
+        textContentParameters
     });
+    assertEmptyObject(void1);
+    assertEmptyObject(void2);
 
 
     const { selected: checked } = singleSelectionChildReturn;
@@ -205,7 +206,7 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
             onInput: onInput,
             role: "radio"
         },
-        pressParameters: {  },
+        pressParameters: { excludeSpace },
         labelParameters,
         randomIdInputParameters: { prefix: Prefices.radio },
         randomIdLabelParameters: { prefix: Prefices.radioLabel },
