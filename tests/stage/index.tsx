@@ -6,6 +6,7 @@ import { SharedFixtures } from "../fixtures/base.fixture.js";
 import { TestBasesSanityCheck } from "../fixtures/base.stage.js";
 import { TestingConstants } from "../fixtures/base.types.js";
 import { TestBasesButton } from "../fixtures/button.stage.js";
+import { TestBasesGridlist } from "../fixtures/gridlist.stage.js";
 import { TestBasesToolbar } from "../fixtures/toolbar.stage.js";
 import { TestItem } from "../util.js";
 
@@ -67,6 +68,7 @@ const TestBases = {
     "accordion": <TestBasesAccordion />,
     "button": <TestBasesButton />,
     "toolbar": <TestBasesToolbar />,
+    "gridlist": <TestBasesGridlist />,
     /*"menu": <TestBasesMenu />,*/
 }
 

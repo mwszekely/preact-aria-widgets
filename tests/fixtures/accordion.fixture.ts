@@ -20,7 +20,7 @@ export const test = base.extend<{ accordion: { setAllOpen(open: boolean | null):
         }
         
         expect(await (await sections.all()).map(section => section.isVisible()).reduce((prev, current) => (prev || current)), "All accordion sections should be closed on initialization");
-        use({
+        await use({
             accordion,
             headers,
             headerButtons,

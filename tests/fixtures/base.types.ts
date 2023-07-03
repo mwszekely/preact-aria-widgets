@@ -1,5 +1,6 @@
 import type { AccordionTestingConstants } from "./accordion.types.js";
 import type { ButtonTestingConstants } from "./button.types.js";
+import { GridlistTestingConstants } from "./gridlist.types.js";
 import type { MenuTestingConstants } from "./menu.types.js";
 import type { ToolbarTestingConstants } from "./toolbar.types.js";
 
@@ -13,6 +14,7 @@ export interface TestingConstants {
     Menu: MenuTestingConstants;
     Toolbar: ToolbarTestingConstants,
     Accordion: AccordionTestingConstants;
+    Gridlist: GridlistTestingConstants;
 }
 
 
