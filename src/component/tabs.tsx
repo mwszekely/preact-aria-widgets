@@ -72,6 +72,8 @@ export const Tabs = memoForwardRef(function Tabs<TabContainerElement extends Ele
     untabbable,
     typeaheadTimeout,
     role,
+    onNavigateLinear,
+    onNavigateTypeahead,
     render
 }: TabsProps<TabContainerElement, TabElement, TabLabelElement, M>, ref?: Ref<any>) {
     untabbable ??= false;
@@ -81,6 +83,7 @@ export const Tabs = memoForwardRef(function Tabs<TabContainerElement extends Ele
         labelParameters: { ariaLabel },
         staggeredChildrenParameters: { staggered: staggered || false },
         linearNavigationParameters: {
+            onNavigateLinear,
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap",
@@ -95,6 +98,7 @@ export const Tabs = memoForwardRef(function Tabs<TabContainerElement extends Ele
         sortableChildrenParameters: { compare: compare ?? null },
         tabsParameters: { orientation, role, localStorageKey: localStorageKey ?? null },
         typeaheadNavigationParameters: {
+            onNavigateTypeahead,
             collator: useDefault("collator", collator),
             noTypeahead: useDefault("noTypeahead", noTypeahead),
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)

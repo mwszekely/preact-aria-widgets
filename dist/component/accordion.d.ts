@@ -14,7 +14,7 @@ export interface AccordionProps<HeaderButtonElement extends Element> extends Par
 export interface AccordionSectionProps<HeaderElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element> extends PartialExcept<AccordionSectionPropsBase<HeaderElement, HeaderButtonElement, BodyElement>, "index" | "tagButton"> {
     render(info: UseAccordionSectionReturnType<HeaderElement, HeaderButtonElement, BodyElement>): VNode<any>;
 }
-export declare const Accordion: <HeaderButtonElement extends Element>({ disableHomeEndKeys, initialIndex, onAfterChildLayoutEffect, onChildrenMountChange, navigatePastEnd, navigatePastStart, pageNavigationSize, localStorageKey, collator, noTypeahead, typeaheadTimeout, onChildrenCountChange, isValid, render, imperativeHandle, orientation, ...rest }: AccordionProps<HeaderButtonElement>) => import("preact").JSX.Element;
+export declare const Accordion: <HeaderButtonElement extends Element>({ disableHomeEndKeys, initialIndex, onAfterChildLayoutEffect, onChildrenMountChange, navigatePastEnd, navigatePastStart, pageNavigationSize, localStorageKey, collator, noTypeahead, typeaheadTimeout, onChildrenCountChange, isValid, render, imperativeHandle, orientation, onNavigateLinear, onNavigateTypeahead, ...rest }: AccordionProps<HeaderButtonElement>) => import("preact").JSX.Element;
 export declare const AccordionSection: <HeaderContainerElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element>({ open, index, tagButton, disabled, bodyRole, onPress, untabbable, getText, imperativeHandle, render, ...rest }: AccordionSectionProps<HeaderContainerElement, HeaderButtonElement, BodyElement>) => VNode<any>;
 export {};
 //# sourceMappingURL=accordion.d.ts.map

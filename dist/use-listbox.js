@@ -49,7 +49,7 @@ export function useListbox({ labelParameters, listboxParameters: { selectionLimi
 }
 export function useListboxItem({ context: { listboxContext: { selectionLimit }, ...context }, listboxParameters: { selected, onMultiSelect }, pressParameters: { focusSelf, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, ...void1 }, ...restParams }) {
     monitorCallCount(useListboxItem);
-    const { props, refElementReturn, pressParameters: { onPressSync, excludeSpace, ...void2 }, ...restRet } = useCompleteListNavigationChild({
+    const { propsChild, propsTabbable, refElementReturn, pressParameters: { onPressSync, excludeSpace, ...void2 }, ...restRet } = useCompleteListNavigationChild({
         context,
         ...restParams
     });
@@ -57,8 +57,8 @@ export function useListboxItem({ context: { listboxContext: { selectionLimit }, 
     assertEmptyObject(void2);
     if (selectionLimit == "single")
         console.assert(selected == null);
-    props.role = "option";
-    props["aria-disabled"] = restParams.info.unselectable ? "true" : undefined;
+    propsChild.role = "option";
+    propsChild["aria-disabled"] = restParams.info.unselectable ? "true" : undefined;
     const { pressReturn, props: propsPress } = usePress({
         refElementReturn, pressParameters: {
             focusSelf,
@@ -78,7 +78,7 @@ export function useListboxItem({ context: { listboxContext: { selectionLimit }, 
     return {
         pressReturn,
         refElementReturn,
-        props: useMergedProps(props, propsPress),
+        props: useMergedProps(propsChild, propsTabbable, propsPress),
         ...restRet
     };
 }

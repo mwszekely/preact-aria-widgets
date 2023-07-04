@@ -15,7 +15,8 @@ export const GroupedListbox = memo(function GroupedListbox({ ariaLabel, selectio
             navigatePastEnd: "passthrough",
             navigatePastStart: "passthrough",
             disableHomeEndKeys: true,
-            pageNavigationSize: 1
+            pageNavigationSize: 1,
+            onNavigateLinear: null
         },
         staggeredChildrenParameters: { staggered: false },
         paginatedChildrenParameters: { paginationMax: null, paginationMin: null },
@@ -26,14 +27,15 @@ export const GroupedListbox = memo(function GroupedListbox({ ariaLabel, selectio
         typeaheadNavigationParameters: {
             collator: null,
             noTypeahead: true,
-            typeaheadTimeout: Infinity
+            typeaheadTimeout: Infinity,
+            onNavigateTypeahead: null
         },
         singleSelectionParameters: { ariaPropName: null, selectionMode: "disabled" }
     });
     info.context;
     return (_jsx(ListboxGroupContext.Provider, { value: info, children: render(info) }));
 });
-export const Listbox = memoForwardRef(function Listbox({ ariaLabel, collator, compare, disableHomeEndKeys, getIndex, selectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSelectedIndexChange, onTabbableIndexChange, staggered, pageNavigationSize, paginationMax, paginationMin, selectionLimit, untabbable, typeaheadTimeout, orientation, ariaPropName, selectionMode, render }) {
+export const Listbox = memoForwardRef(function Listbox({ ariaLabel, collator, compare, disableHomeEndKeys, getIndex, selectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSelectedIndexChange, onTabbableIndexChange, staggered, pageNavigationSize, paginationMax, paginationMin, selectionLimit, untabbable, typeaheadTimeout, orientation, ariaPropName, selectionMode, onNavigateLinear, onNavigateTypeahead, render }) {
     const listboxGroupInfo = useContext(ListboxGroupContext);
     ariaPropName ||= "aria-selected";
     selectionMode ||= "activation";
@@ -44,6 +46,7 @@ export const Listbox = memoForwardRef(function Listbox({ ariaLabel, collator, co
             staggered: staggered || false
         },
         linearNavigationParameters: {
+            onNavigateLinear,
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap",
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
@@ -58,6 +61,7 @@ export const Listbox = memoForwardRef(function Listbox({ ariaLabel, collator, co
         rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable: untabbable ?? false },
         sortableChildrenParameters: { compare: compare ?? null },
         typeaheadNavigationParameters: {
+            onNavigateTypeahead,
             collator: useDefault("collator", collator),
             noTypeahead: useDefault("noTypeahead", noTypeahead),
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)

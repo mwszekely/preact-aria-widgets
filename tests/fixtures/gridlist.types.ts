@@ -5,3 +5,4 @@ export interface GridlistTestingConstants /*extends Record<`setChildOpened_${num
 };
 
 export const WithFocusableIndex = 8;
+export const WithColSpanIndex = 3;

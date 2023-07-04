@@ -6,10 +6,11 @@ import { useContextWithWarning } from "../props.js";
 import { useRadio, useRadioGroup } from "../use-radio-group.js";
 import { memoForwardRef, useDefault } from "./util.js";
 const RadioContext = createContext(null);
-export const RadioGroup = memoForwardRef(function RadioGroup({ render, name, onSelectedValueChange, collator, disableHomeEndKeys, arrowKeyDirection, noTypeahead, typeaheadTimeout, ariaLabel, compare, staggered, getIndex, navigatePastEnd, navigatePastStart, selectedValue, untabbable, onTabbableIndexChange, pageNavigationSize, }, ref) {
+export const RadioGroup = memoForwardRef(function RadioGroup({ render, name, onSelectedValueChange, collator, disableHomeEndKeys, arrowKeyDirection, noTypeahead, typeaheadTimeout, ariaLabel, compare, staggered, getIndex, navigatePastEnd, navigatePastStart, selectedValue, untabbable, onTabbableIndexChange, onNavigateLinear, onNavigateTypeahead, pageNavigationSize, }, ref) {
     untabbable ??= false;
     const info = useRadioGroup({
         linearNavigationParameters: {
+            onNavigateLinear,
             arrowKeyDirection: arrowKeyDirection ?? "either",
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap",
@@ -26,6 +27,7 @@ export const RadioGroup = memoForwardRef(function RadioGroup({ render, name, onS
             untabbable
         },
         typeaheadNavigationParameters: {
+            onNavigateTypeahead,
             collator: useDefault("collator", collator),
             noTypeahead: useDefault("noTypeahead", noTypeahead),
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)

@@ -10,7 +10,7 @@ const UntabbableContext = createContext(false);
 const AriaPropNameContext = createContext("aria-selected");
 const SelectionModeContext = createContext("focus");
 const ToolbarContext = createContext(null);
-export const Toolbar = memoForwardRef(function ToolbarU({ render, role, collator, disableHomeEndKeys, disabled, compare, getIndex, navigatePastEnd, navigatePastStart, pageNavigationSize, selectedIndex, onSelectedIndexChange, orientation, noTypeahead, onTabbableIndexChange, typeaheadTimeout, staggered, ariaLabel, ariaPropName, selectionMode, untabbable }, ref) {
+export const Toolbar = memoForwardRef(function ToolbarU({ render, role, collator, disableHomeEndKeys, disabled, compare, getIndex, navigatePastEnd, navigatePastStart, pageNavigationSize, selectedIndex, onSelectedIndexChange, orientation, noTypeahead, onTabbableIndexChange, typeaheadTimeout, staggered, ariaLabel, ariaPropName, selectionMode, untabbable, onNavigateLinear, onNavigateTypeahead }, ref) {
     ariaPropName ??= "aria-selected";
     selectionMode ??= "activation";
     untabbable ||= false;
@@ -18,7 +18,7 @@ export const Toolbar = memoForwardRef(function ToolbarU({ render, role, collator
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
         sortableChildrenParameters: { compare: compare ?? null },
         linearNavigationParameters: {
-            //: useDefault("disableArrowKeys", disableArrowKeys),
+            onNavigateLinear,
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap",
@@ -34,6 +34,7 @@ export const Toolbar = memoForwardRef(function ToolbarU({ render, role, collator
         staggeredChildrenParameters: { staggered: staggered || false },
         rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable },
         typeaheadNavigationParameters: {
+            onNavigateTypeahead,
             collator: useDefault("collator", collator),
             noTypeahead: useDefault("noTypeahead", noTypeahead),
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)

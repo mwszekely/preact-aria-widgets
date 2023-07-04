@@ -33,7 +33,7 @@ export interface UseTableContext {
 
 export interface UseTableSectionContext<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>> extends CompleteGridNavigationContext<TableSectionElement, TableRowElement, TableCellElement, RM, CM>, UseTableContext { }
 
-export interface UseTableSectionParameters<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>> extends OmitStrong<UseCompleteGridNavigationParameters<TableSectionElement, TableRowElement, TableCellElement, RM>, "rovingTabIndexParameters" | "typeaheadNavigationParameters" | "sortableChildrenParameters"> {
+export interface UseTableSectionParameters<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>> extends OmitStrong<UseCompleteGridNavigationParameters<TableSectionElement, TableRowElement, TableCellElement, RM>, "rovingTabIndexParameters" | "sortableChildrenParameters"> {
     rovingTabIndexParameters: OmitStrong<UseCompleteGridNavigationParameters<TableSectionElement, TableRowElement, TableCellElement, RM>["rovingTabIndexParameters"], "focusSelfParent">;
     tableSectionParameters: {
         location: "head" | "body" | "foot";
@@ -170,6 +170,7 @@ export function useTableSection<TableSectionElement extends Element, TableRowEle
     paginatedChildrenParameters,
     staggeredChildrenParameters,
     tableSectionParameters: { tagTableSection, location },
+    typeaheadNavigationParameters,
     context: { tableContext }
 }: UseTableSectionParameters<TableSectionElement, TableRowElement, TableCellElement, RM>): UseTableSectionReturnType<TableSectionElement, TableRowElement, TableCellElement, RM, CM> {
     monitorCallCount(useTableSection);
@@ -198,7 +199,7 @@ export function useTableSection<TableSectionElement extends Element, TableRowEle
                 return fuzzyCompare(lhs?.getSortValue?.(), rhs?.getSortValue?.());
             }, [])
         },
-        typeaheadNavigationParameters: { noTypeahead: true, collator: null, typeaheadTimeout: Infinity },
+        typeaheadNavigationParameters,
         gridNavigationParameters,
         rearrangeableChildrenParameters
     });
@@ -271,7 +272,7 @@ export function useTableRow<TableRowElement extends Element, TableCellElement ex
         },
         linearNavigationParameters,
         rovingTabIndexParameters: { ...rovingTabIndexParameters },
-        typeaheadNavigationParameters: { noTypeahead: true, collator: null, typeaheadTimeout: Infinity }
+        typeaheadNavigationParameters: { noTypeahead: true, collator: null, typeaheadTimeout: Infinity, onNavigateTypeahead: null }
     }
     );
 

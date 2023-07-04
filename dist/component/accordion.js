@@ -7,17 +7,19 @@ import { useContextWithWarning } from "../props.js";
 import { useAccordion, useAccordionSection } from "../use-accordion.js";
 import { useDefault } from "./util.js";
 const AccordionSectionContext = createContext(null);
-export const Accordion = memo(function Accordion({ disableHomeEndKeys, initialIndex, onAfterChildLayoutEffect, onChildrenMountChange, navigatePastEnd, navigatePastStart, pageNavigationSize, localStorageKey, collator, noTypeahead, typeaheadTimeout, onChildrenCountChange, isValid, render, imperativeHandle, orientation, ...rest }) {
+export const Accordion = memo(function Accordion({ disableHomeEndKeys, initialIndex, onAfterChildLayoutEffect, onChildrenMountChange, navigatePastEnd, navigatePastStart, pageNavigationSize, localStorageKey, collator, noTypeahead, typeaheadTimeout, onChildrenCountChange, isValid, render, imperativeHandle, orientation, onNavigateLinear, onNavigateTypeahead, ...rest }) {
     assertEmptyObject(rest);
     const info = useAccordion({
         accordionParameters: { orientation, initialIndex, localStorageKey: localStorageKey ?? null },
         typeaheadNavigationParameters: {
+            onNavigateTypeahead,
             isValid: isValid || returnTrue,
             collator: useDefault("collator", collator),
             noTypeahead: useDefault("noTypeahead", noTypeahead),
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
         },
         linearNavigationParameters: {
+            onNavigateLinear,
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap",

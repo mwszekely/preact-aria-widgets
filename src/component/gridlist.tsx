@@ -100,6 +100,8 @@ export const Gridlist = memoForwardRef(function GridlistU<GridlistElement extend
     orientation,
     ariaPropName,
     selectionMode,
+    onNavigateLinear,
+    onNavigateTypeahead,
     render
 }: GridlistProps<GridlistElement, RowElement, Cellement, LabelElement, RM, CM>, ref?: Ref<any>) {
     untabbable ??= false;
@@ -108,6 +110,7 @@ export const Gridlist = memoForwardRef(function GridlistU<GridlistElement extend
 
     const info = useGridlist<GridlistElement, RowElement, Cellement, LabelElement, RM, CM>({
         linearNavigationParameters: {
+            onNavigateLinear,
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
             navigatePastEnd: (navigatePastEnd ?? "wrap"),
             navigatePastStart: (navigatePastStart ?? "wrap"),
@@ -119,6 +122,7 @@ export const Gridlist = memoForwardRef(function GridlistU<GridlistElement extend
         },
         staggeredChildrenParameters: { staggered: staggered || false },
         typeaheadNavigationParameters: {
+            onNavigateTypeahead,
             collator: useDefault("collator", collator),
             noTypeahead: useDefault("noTypeahead", noTypeahead),
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout),
@@ -173,6 +177,7 @@ export const GridlistRow = memoForwardRef(function GridlistRowU<RowElement exten
     getText,
     render,
     initiallyTabbedIndex,
+    onNavigateTypeahead,
     info: uinfo
 }: GridlistRowProps<RowElement, Cellement, RM, CM>, ref?: Ref<any>) {
     const context = useContextWithWarning(GridlistContext, "gridlist");
@@ -191,6 +196,7 @@ export const GridlistRow = memoForwardRef(function GridlistRowU<RowElement exten
         },
         rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, initiallyTabbedIndex: initiallyTabbedIndex ?? null, untabbable },
         typeaheadNavigationParameters: {
+            onNavigateTypeahead,
             collator: useDefault("collator", collator),
             noTypeahead: useDefault("noTypeahead", noTypeahead),
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)

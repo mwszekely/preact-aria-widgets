@@ -68,7 +68,9 @@ export const Toolbar = memoForwardRef(function ToolbarU<ContainerElement extends
     ariaLabel,
     ariaPropName,
     selectionMode,
-    untabbable
+    untabbable,
+    onNavigateLinear,
+    onNavigateTypeahead
 }: ToolbarProps<ContainerElement, ChildElement, LabelElement, M>, ref?: Ref<any>) {
     ariaPropName ??= "aria-selected";
     selectionMode ??= "activation";
@@ -78,7 +80,7 @@ export const Toolbar = memoForwardRef(function ToolbarU<ContainerElement extends
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
         sortableChildrenParameters: { compare: compare ?? null },
         linearNavigationParameters: {
-            //: useDefault("disableArrowKeys", disableArrowKeys),
+            onNavigateLinear,
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap",
@@ -94,6 +96,7 @@ export const Toolbar = memoForwardRef(function ToolbarU<ContainerElement extends
         staggeredChildrenParameters: { staggered: staggered || false },
         rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable },
         typeaheadNavigationParameters: {
+            onNavigateTypeahead,
             collator: useDefault("collator", collator),
             noTypeahead: useDefault("noTypeahead", noTypeahead),
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)

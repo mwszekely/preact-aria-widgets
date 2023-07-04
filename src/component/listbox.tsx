@@ -52,7 +52,8 @@ export const GroupedListbox = memo(function GroupedListbox<LabelElement extends 
             navigatePastStart: "passthrough",
 
             disableHomeEndKeys: true,
-            pageNavigationSize: 1
+            pageNavigationSize: 1,
+            onNavigateLinear: null
         },
         staggeredChildrenParameters: { staggered: false },
         paginatedChildrenParameters: { paginationMax: null, paginationMin: null },
@@ -63,7 +64,8 @@ export const GroupedListbox = memo(function GroupedListbox<LabelElement extends 
         typeaheadNavigationParameters: {
             collator: null,
             noTypeahead: true,
-            typeaheadTimeout: Infinity
+            typeaheadTimeout: Infinity,
+            onNavigateTypeahead: null
         },
         singleSelectionParameters: { ariaPropName: null, selectionMode: "disabled" }
     });
@@ -96,6 +98,8 @@ export const Listbox = memoForwardRef(function Listbox<ListElement extends Eleme
     orientation,
     ariaPropName,
     selectionMode,
+    onNavigateLinear,
+    onNavigateTypeahead,
     render
 }: ListboxProps<ListElement, ListItemElement, LabelElement, M>) {
     const listboxGroupInfo = useContext(ListboxGroupContext);
@@ -109,6 +113,7 @@ export const Listbox = memoForwardRef(function Listbox<ListElement extends Eleme
             staggered: staggered || false
         },
         linearNavigationParameters: {
+            onNavigateLinear,
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap",
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
@@ -123,6 +128,7 @@ export const Listbox = memoForwardRef(function Listbox<ListElement extends Eleme
         rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable: untabbable ?? false },
         sortableChildrenParameters: { compare: compare ?? null },
         typeaheadNavigationParameters: {
+            onNavigateTypeahead,
             collator: useDefault("collator", collator),
             noTypeahead: useDefault("noTypeahead", noTypeahead),
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)

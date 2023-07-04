@@ -3,16 +3,20 @@ import { assertEmptyObject, findBackupFocus, focus, monitorCallCount, useChildre
 import { useCallback } from "preact/hooks";
 import { Prefices } from "./props.js";
 import { useButton } from "./use-button.js";
-export function useAccordion({ accordionParameters: { initialIndex, localStorageKey, orientation }, typeaheadNavigationParameters, linearNavigationParameters: { disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize }, managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange }, ...rest }) {
+export function useAccordion({ accordionParameters: { initialIndex, localStorageKey, orientation, ...void2 }, typeaheadNavigationParameters, linearNavigationParameters: { disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize, onNavigateLinear, ...void1 }, managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange, onChildrenCountChange, ...void3 }, ...void4 }) {
     monitorCallCount(useAccordion);
-    assertEmptyObject(rest);
+    assertEmptyObject(void1);
+    assertEmptyObject(void2);
+    assertEmptyObject(void3);
+    assertEmptyObject(void4);
     const [localStorageIndex, setLocalStorageIndex] = usePersistentState(localStorageKey ?? null, initialIndex ?? null);
     if (localStorageIndex != null)
         initialIndex = localStorageIndex;
     const { managedChildrenReturn, context: { managedChildContext } } = useManagedChildren({
         managedChildrenParameters: {
             onChildrenMountChange: useStableCallback((m, u) => { ocmc2(); onChildrenMountChange?.(m, u); }),
-            onAfterChildLayoutEffect
+            onAfterChildLayoutEffect,
+            onChildrenCountChange
         }
     });
     const { getChildren } = managedChildrenReturn;
@@ -92,7 +96,8 @@ export function useAccordion({ accordionParameters: { initialIndex, localStorage
                 isValid: isValidByIndex,
                 navigatePastEnd,
                 navigatePastStart,
-                pageNavigationSize
+                pageNavigationSize,
+                onNavigateLinear
             }),
             rovingTabIndexReturn
         }),

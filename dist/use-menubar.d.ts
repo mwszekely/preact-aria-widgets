@@ -21,7 +21,7 @@ export interface UseMenubarReturnType<MenuParentElement extends Element, MenuIte
     propsMenubar: ElementProps<MenuParentElement>;
     context: UseMenubarContext<MenuParentElement, MenuItemElement, M>;
 }
-export interface UseMenubarItemReturnType<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseToolbarChildReturnType<MenuItemElement, M>, "pressParameters">, UsePressReturnType<MenuItemElement> {
+export interface UseMenubarItemReturnType<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseToolbarChildReturnType<MenuItemElement, M>, "propsChild" | "propsTabbable" | "pressParameters">, UsePressReturnType<MenuItemElement> {
 }
 /**
  * A menubar is identical to a toolbar, except that every item

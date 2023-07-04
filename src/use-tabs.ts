@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { CompleteListNavigationContext, ElementProps, ManagedChildInfo, OnChildrenMountChange, PersistentStates, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseManagedChildParameters, UseManagedChildrenContext, UsePressParameters, UsePressReturnType, focus, generateRandomId, monitorCallCount, returnTrue, useChildrenFlag, useCompleteListNavigation, useCompleteListNavigationChild, useManagedChild, useManagedChildren, useMemoObject, useMergedProps, usePersistentState, usePress, useStableCallback, useState } from "preact-prop-helpers";
+import { CompleteListNavigationContext, ElementProps, ManagedChildInfo, OnChildrenMountChange, PersistentStates, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseManagedChildParameters, UseManagedChildrenContext, UsePressParameters, UsePressReturnType, assertEmptyObject, focus, generateRandomId, monitorCallCount, returnTrue, useChildrenFlag, useCompleteListNavigation, useCompleteListNavigationChild, useManagedChild, useManagedChildren, useMemoObject, useMergedProps, usePersistentState, usePress, useStableCallback, useState } from "preact-prop-helpers";
 import { useCallback, useLayoutEffect } from "preact/hooks";
 import { EventDetail, OmitStrong, Prefices } from "./props.js";
 import { UseLabelSyntheticParameters, useLabelSynthetic } from "./use-label.js";
@@ -24,7 +24,7 @@ export interface UseTabsParameters<TabContainerElement extends Element, TabEleme
         role?: "tablist" | string;
     }
 }
-export interface UseTabParameters<TabElement extends Element, M extends TabInfo<TabElement>> extends OmitStrong<UseCompleteListNavigationChildParameters<TabElement,M>, never> {
+export interface UseTabParameters<TabElement extends Element, M extends TabInfo<TabElement>> extends OmitStrong<UseCompleteListNavigationChildParameters<TabElement, M>, never> {
     //singleSelectionParameters: OmitStrong<UseCompleteListNavigationChildParameters<TabElement,M>["singleSelectionParameters"], "ariaPropName">;
     //singleSelectionChildParameters: OmitStrong<UseCompleteListNavigationChildParameters<TabElement, M>["singleSelectionChildParameters"], "ariaPropName">;
     context: UseTabsContext<any, TabElement, M>;
@@ -50,7 +50,9 @@ interface TC {
     getTabId: (index: number) => string;
 }
 
-export interface UseTabReturnType<TabElement extends Element, M extends TabInfo<TabElement>> extends OmitStrong<UseCompleteListNavigationChildReturnType<TabElement, M>, "pressParameters">, UsePressReturnType<TabElement> { }
+export interface UseTabReturnType<TabElement extends Element, M extends TabInfo<TabElement>> extends OmitStrong<UseCompleteListNavigationChildReturnType<TabElement, M>, "pressParameters" | "propsChild" | "propsTabbable">, UsePressReturnType<TabElement> {
+    props: ElementProps<TabElement>;
+ }
 
 
 export interface UseTabLabelParameters { }
@@ -153,7 +155,7 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
                 setLocalStorageIndex(e[EventDetail].selectedIndex);
                 changeSelectedIndex(e[EventDetail].selectedIndex);
             }),
-            ariaPropName: "aria-selected", 
+            ariaPropName: "aria-selected",
             selectionMode: selectionMode ?? "focus",
             initiallySelectedIndex: initiallySelectedIndex ?? null,
             ...singleSelectionParameters
@@ -199,7 +201,7 @@ export function useTab<TabElement extends Element, M extends TabInfo<TabElement>
     context
 }: UseTabParameters<TabElement, M>): UseTabReturnType<TabElement, M> {
 
-    const { props: listNavigationSingleSelectionChildProps, pressParameters: { onPressSync, excludeSpace, ...void1 }, refElementReturn, ...listNavRet2 } = useCompleteListNavigationChild({
+    const { propsChild: listNavigationSingleSelectionChildProps, propsTabbable, pressParameters: { onPressSync, excludeSpace, ...void1 }, refElementReturn, ...listNavRet2 } = useCompleteListNavigationChild({
         context,
         info: { focusSelf: focusSelfParent, ...info } as M,
         sortableChildParameters,
@@ -213,6 +215,9 @@ export function useTab<TabElement extends Element, M extends TabInfo<TabElement>
     const panelId = getPanelId(info.index);
     const tabId = getTabId(info.index);
 
+    assertEmptyObject(void1);
+    assertEmptyObject(void2);
+
     monitorCallCount(useTab);
     return {
         pressReturn,
@@ -220,6 +225,7 @@ export function useTab<TabElement extends Element, M extends TabInfo<TabElement>
         props: useMergedProps(
             propsPressStable,
             listNavigationSingleSelectionChildProps,
+            propsTabbable,
             {
                 "data-tabbable": tabbable.toString(),
                 "data-selected": selected.toString(),
@@ -240,23 +246,25 @@ export function useTabPanel<PanelElement extends Element, M extends TabPanelInfo
     const [lastKnownVisibleIndex, setLastKnownVisibleIndex, getLastKnownVisibleIndex] = useState(g());
     const [isVisible, setIsVisible, getIsVisible] = useState(null as boolean | null);
     //const visibleRef = useRef<ChildFlagOperations>({ get: getIsVisible, set: setIsVisible, isValid: returnTrue });
-    useManagedChild<TabPanelInfo>({ context, info: {
-        getVisible: useStableCallback(() => { return getLastKnownVisibleIndex() == index }),
-        setVisibleIndex: useStableCallback((newIndex, prevIndex) => {
-            // Similar logic is in singleSelection, but we need to duplicate it here
-            let changeIndex = (newIndex == index ? prevIndex : newIndex);
-            if (changeIndex != null)
-                setLastKnownVisibleIndex(changeIndex);
+    useManagedChild<TabPanelInfo>({
+        context, info: {
+            getVisible: useStableCallback(() => { return getLastKnownVisibleIndex() == index }),
+            setVisibleIndex: useStableCallback((newIndex, prevIndex) => {
+                // Similar logic is in singleSelection, but we need to duplicate it here
+                let changeIndex = (newIndex == index ? prevIndex : newIndex);
+                if (changeIndex != null)
+                    setLastKnownVisibleIndex(changeIndex);
 
-            if (newIndex == index) {
-                setIsVisible(true);
-            }
-            else {
-                setIsVisible(false);
-            }
-        }),
-        ...info
-    } });
+                if (newIndex == index) {
+                    setIsVisible(true);
+                }
+                else {
+                    setIsVisible(false);
+                }
+            }),
+            ...info
+        }
+    });
     const panelId = getPanelId(info.index);
     const tabId = getTabId(info.index);
     //const isVisible = (lastKnownVisibleIndex === index);

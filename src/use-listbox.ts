@@ -67,7 +67,7 @@ export interface UseListboxReturnType<ListElement extends Element, ListItemEleme
     propsListboxLabel: ElementProps<LabelElement>;
     context: UseListboxContext<ListElement, ListItemElement, M>;
 }
-export interface UseListboxItemReturnType<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationChildReturnType<ListItemElement, M>, "pressParameters">, UsePressReturnType<ListItemElement> { }
+export interface UseListboxItemReturnType<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationChildReturnType<ListItemElement, M>, "propsChild" | "propsTabbable" | "pressParameters">, UsePressReturnType<ListItemElement> { }
 export interface UseListboxItemParameters<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends UseCompleteListNavigationChildParameters<ListItemElement, M> {
 
     pressParameters: OmitStrong<UsePressParameters<ListItemElement>["pressParameters"], "excludeSpace" | "onPressSync">;
@@ -164,7 +164,8 @@ export function useListboxItem<ListItemElement extends Element, M extends Listbo
     monitorCallCount(useListboxItem);
 
     const {
-        props,
+        propsChild, 
+        propsTabbable,
         refElementReturn,
         pressParameters: { onPressSync, excludeSpace, ...void2 },
         ...restRet
@@ -179,8 +180,8 @@ export function useListboxItem<ListItemElement extends Element, M extends Listbo
     if (selectionLimit == "single")
         console.assert(selected == null);
 
-    props.role = "option";
-    props["aria-disabled"] = restParams.info.unselectable ? "true" : undefined;
+        propsChild.role = "option";
+        propsChild["aria-disabled"] = restParams.info.unselectable ? "true" : undefined;
 
     const { pressReturn, props: propsPress } = usePress<ListItemElement>({
         refElementReturn, pressParameters: {
@@ -202,7 +203,7 @@ export function useListboxItem<ListItemElement extends Element, M extends Listbo
     return {
         pressReturn,
         refElementReturn,
-        props: useMergedProps(props, propsPress),
+        props: useMergedProps(propsChild, propsTabbable, propsPress),
         ...restRet
     }
 }

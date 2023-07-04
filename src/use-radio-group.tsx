@@ -144,7 +144,7 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
     }
 }
 
-export interface UseRadioReturnType<LP extends LabelPosition, V extends string | number, I extends Element, IL extends Element, M extends RadioSubInfo<FocusableLabelElement<LP, I, IL>, V>> extends OmitStrong<UseCompleteListNavigationChildReturnType<FocusableLabelElement<LP, I, IL>, M>, "props" | "pressParameters">, UseCheckboxLikeReturnType<I, IL> {
+export interface UseRadioReturnType<LP extends LabelPosition, V extends string | number, I extends Element, IL extends Element, M extends RadioSubInfo<FocusableLabelElement<LP, I, IL>, V>> extends OmitStrong<UseCompleteListNavigationChildReturnType<FocusableLabelElement<LP, I, IL>, M>, "propsChild" | "propsTabbable" | "pressParameters">, UseCheckboxLikeReturnType<I, IL> {
     propsInput: ElementProps<I>;
     propsLabel: ElementProps<IL>;
 }
@@ -176,7 +176,8 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
 
     const getValue = useStableGetter(value);
     const {
-        props: listNavigationSingleSelectionChildProps,
+        propsChild: listNavigationSingleSelectionChildProps,
+        propsTabbable,
         singleSelectionChildReturn,
         pressParameters: { onPressSync, excludeSpace, ...void2 },
         ...listNavRet
@@ -231,10 +232,10 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
         propsInput["aria-checked"] = (checked ?? false);
     }
 
-    const propsIfInputHandlesFocus = useMergedProps<InputElement>(listNavigationSingleSelectionChildProps as ElementProps<any>, propsInput);
+    const propsIfInputHandlesFocus = useMergedProps<InputElement>(listNavigationSingleSelectionChildProps as ElementProps<any>, propsTabbable, propsInput);
     const propsInput2: ElementProps<InputElement> = useMergedProps(propsRefInput, labelPosition != "wrapping" ? propsIfInputHandlesFocus : propsInput);
 
-    const propsIfLabelHandlesFocus = useMergedProps<LabelElement>(listNavigationSingleSelectionChildProps as ElementProps<any>, propsLabel);
+    const propsIfLabelHandlesFocus = useMergedProps<LabelElement>(listNavigationSingleSelectionChildProps as ElementProps<any>, propsTabbable, propsLabel);
     const propsLabel2: ElementProps<LabelElement> = useMergedProps(propsRefLabel, labelPosition == "wrapping" ? propsIfLabelHandlesFocus as any : propsLabel as any);
 
     return {

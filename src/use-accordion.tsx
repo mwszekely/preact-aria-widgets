@@ -83,14 +83,17 @@ export interface UseAccordionContext<HeaderButtonElement extends Element, M exte
 }
 
 export function useAccordion<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo>({
-    accordionParameters: { initialIndex, localStorageKey, orientation },
+    accordionParameters: { initialIndex, localStorageKey, orientation, ...void2 },
     typeaheadNavigationParameters,
-    linearNavigationParameters: { disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize },
-    managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange },
-    ...rest
+    linearNavigationParameters: { disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize,onNavigateLinear, ...void1 },
+    managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange, onChildrenCountChange, ...void3 },
+    ...void4
 }: UseAccordionParameters<HeaderButtonElement, M>): UseAccordionReturnType<HeaderButtonElement, M> {
     monitorCallCount(useAccordion);
-    assertEmptyObject(rest);
+    assertEmptyObject(void1);
+    assertEmptyObject(void2);
+    assertEmptyObject(void3);
+    assertEmptyObject(void4);
 
     const [localStorageIndex, setLocalStorageIndex] = usePersistentState<never, number | null>(localStorageKey ?? null, initialIndex ?? null);
     if (localStorageIndex != null)
@@ -99,7 +102,8 @@ export function useAccordion<HeaderButtonElement extends Element, M extends UseA
     const { managedChildrenReturn, context: { managedChildContext } } = useManagedChildren<M>({
         managedChildrenParameters: {
             onChildrenMountChange: useStableCallback<OnChildrenMountChange<number>>((m, u) => { ocmc2(); onChildrenMountChange?.(m, u); }),
-            onAfterChildLayoutEffect
+            onAfterChildLayoutEffect,
+            onChildrenCountChange
         }
     });
     const { getChildren } = managedChildrenReturn;
@@ -193,7 +197,8 @@ export function useAccordion<HeaderButtonElement extends Element, M extends UseA
                 isValid: isValidByIndex,
                 navigatePastEnd,
                 navigatePastStart,
-                pageNavigationSize
+                pageNavigationSize,
+                onNavigateLinear
             }),
             rovingTabIndexReturn
         }),

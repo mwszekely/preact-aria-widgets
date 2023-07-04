@@ -24,7 +24,7 @@ export interface UseMenubarReturnType<MenuParentElement extends Element, MenuIte
     propsMenubar: ElementProps<MenuParentElement>;
     context: UseMenubarContext<MenuParentElement, MenuItemElement, M>;
 }
-export interface UseMenubarItemReturnType<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseToolbarChildReturnType<MenuItemElement, M>, "pressParameters">, UsePressReturnType<MenuItemElement> { }
+export interface UseMenubarItemReturnType<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseToolbarChildReturnType<MenuItemElement, M>, "propsChild" | "propsTabbable" | "pressParameters">, UsePressReturnType<MenuItemElement> { }
 
 /**
  * A menubar is identical to a toolbar, except that every item 
@@ -61,7 +61,8 @@ export function useMenubarChild<MenuItemElement extends Element, M extends UseMe
     const focusSelf = useCallback((e: any) => focus(e as Element as HTMLElement), [])
 
     const {
-        props,
+        propsChild,
+        propsTabbable,
         pressParameters: { onPressSync, excludeSpace },
         ...restRet
     } = useToolbarChild<MenuItemElement, M>({
@@ -80,10 +81,10 @@ export function useMenubarChild<MenuItemElement extends Element, M extends UseMe
         }, refElementReturn: restRet.refElementReturn
     });
 
-    props.role = role;
+    propsChild.role = role;
 
     return {
-        props: useMergedProps(props, propsPress),
+        props: useMergedProps(propsChild, propsTabbable, propsPress),
         pressReturn,
         ...restRet
     };

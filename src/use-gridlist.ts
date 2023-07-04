@@ -2,6 +2,7 @@ import {
     CompleteGridNavigationContext,
     CompleteGridNavigationRowContext,
     ElementProps,
+    ExtendMerge,
     UseCompleteGridNavigationCellInfo,
     UseCompleteGridNavigationCellParameters,
     UseCompleteGridNavigationCellReturnType,
@@ -68,7 +69,11 @@ export interface UseGridlistRowParameters<GridlistRowElement extends Element, Gr
 }
 
 
-export interface UseGridlistCellReturnType<GridlistCellElement extends Element, CM extends GridlistCellInfo<GridlistCellElement>> extends UseCompleteGridNavigationCellReturnType<GridlistCellElement, CM>, Pick<UsePressReturnType<GridlistCellElement>, "pressReturn"> { }
+export interface UseGridlistCellReturnType<GridlistCellElement extends Element, CM extends GridlistCellInfo<GridlistCellElement>> extends OmitStrong<ExtendMerge<UseCompleteGridNavigationCellReturnType<GridlistCellElement, CM>, Pick<UsePressReturnType<GridlistCellElement>, "pressReturn">>, "props"> { 
+    propsCell: ElementProps<GridlistCellElement>;
+    propsTabbable: ElementProps<any>;
+    propsPress: ElementProps<any>;
+}
 export interface UseGridlistCellParameters<GridlistCellElement extends Element, CM extends GridlistCellInfo<GridlistCellElement>> extends UseCompleteGridNavigationCellParameters<GridlistCellElement, CM> {
     pressParameters: Pick<UsePressParameters<GridlistCellElement>["pressParameters"], "onPressSync">;
 }
@@ -227,7 +232,9 @@ export function useGridlistCell<GridlistCellElement extends Element, CM extends 
 
     return {
         ...info,
-        props: useMergedProps(props, propsPress, { role: "gridcell" }),
+        propsPress,
+        propsCell: { role: "gridcell" },
+        propsTabbable: props,
         pressReturn
     }
 

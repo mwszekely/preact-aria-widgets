@@ -22,7 +22,7 @@ export function useMenubar(args) {
 export function useMenubarChild({ menuItemParameters: { onPress: opu, role }, ...restParams }) {
     monitorCallCount(useMenubarChild);
     const focusSelf = useCallback((e) => focus(e), []);
-    const { props, pressParameters: { onPressSync, excludeSpace }, ...restRet } = useToolbarChild({
+    const { propsChild, propsTabbable, pressParameters: { onPressSync, excludeSpace }, ...restRet } = useToolbarChild({
         ...restParams,
         toolbarChildParameters: { disabledProp: "aria-disabled" }
     });
@@ -36,9 +36,9 @@ export function useMenubarChild({ menuItemParameters: { onPress: opu, role }, ..
             })
         }, refElementReturn: restRet.refElementReturn
     });
-    props.role = role;
+    propsChild.role = role;
     return {
-        props: useMergedProps(props, propsPress),
+        props: useMergedProps(propsChild, propsTabbable, propsPress),
         pressReturn,
         ...restRet
     };

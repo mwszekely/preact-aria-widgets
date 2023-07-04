@@ -12,13 +12,14 @@ const UntabbableContext = createContext(false);
 const SelectionModeContext = createContext("focus");
 export const Tabs = memoForwardRef(function Tabs({ ariaLabel, collator, compare, disableHomeEndKeys, getIndex, initiallySelectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSelectedIndexChange, onTabbableIndexChange, orientation, staggered, pageNavigationSize, localStorageKey, selectionMode, 
 //groupingType,
-untabbable, typeaheadTimeout, role, render }, ref) {
+untabbable, typeaheadTimeout, role, onNavigateLinear, onNavigateTypeahead, render }, ref) {
     untabbable ??= false;
     selectionMode ??= "focus";
     const info = useTabs({
         labelParameters: { ariaLabel },
         staggeredChildrenParameters: { staggered: staggered || false },
         linearNavigationParameters: {
+            onNavigateLinear,
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap",
@@ -33,6 +34,7 @@ untabbable, typeaheadTimeout, role, render }, ref) {
         sortableChildrenParameters: { compare: compare ?? null },
         tabsParameters: { orientation, role, localStorageKey: localStorageKey ?? null },
         typeaheadNavigationParameters: {
+            onNavigateTypeahead,
             collator: useDefault("collator", collator),
             noTypeahead: useDefault("noTypeahead", noTypeahead),
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)

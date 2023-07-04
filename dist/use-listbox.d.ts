@@ -50,7 +50,7 @@ export interface UseListboxReturnType<ListElement extends Element, ListItemEleme
     propsListboxLabel: ElementProps<LabelElement>;
     context: UseListboxContext<ListElement, ListItemElement, M>;
 }
-export interface UseListboxItemReturnType<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationChildReturnType<ListItemElement, M>, "pressParameters">, UsePressReturnType<ListItemElement> {
+export interface UseListboxItemReturnType<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationChildReturnType<ListItemElement, M>, "propsChild" | "propsTabbable" | "pressParameters">, UsePressReturnType<ListItemElement> {
 }
 export interface UseListboxItemParameters<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends UseCompleteListNavigationChildParameters<ListItemElement, M> {
     pressParameters: OmitStrong<UsePressParameters<ListItemElement>["pressParameters"], "excludeSpace" | "onPressSync">;

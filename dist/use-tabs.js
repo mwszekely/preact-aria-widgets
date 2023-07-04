@@ -1,4 +1,4 @@
-import { focus, generateRandomId, monitorCallCount, returnTrue, useChildrenFlag, useCompleteListNavigation, useCompleteListNavigationChild, useManagedChild, useManagedChildren, useMemoObject, useMergedProps, usePersistentState, usePress, useStableCallback, useState } from "preact-prop-helpers";
+import { assertEmptyObject, focus, generateRandomId, monitorCallCount, returnTrue, useChildrenFlag, useCompleteListNavigation, useCompleteListNavigationChild, useManagedChild, useManagedChildren, useMemoObject, useMergedProps, usePersistentState, usePress, useStableCallback, useState } from "preact-prop-helpers";
 import { useCallback, useLayoutEffect } from "preact/hooks";
 import { EventDetail, Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
@@ -77,7 +77,7 @@ export function useTabs({ labelParameters, linearNavigationParameters, singleSel
     };
 }
 export function useTab({ info: { focusSelf: focusSelfParent, ...info }, textContentParameters, sortableChildParameters, pressParameters: { focusSelf: focusSelfChild, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, ...void2 }, context }) {
-    const { props: listNavigationSingleSelectionChildProps, pressParameters: { onPressSync, excludeSpace, ...void1 }, refElementReturn, ...listNavRet2 } = useCompleteListNavigationChild({
+    const { propsChild: listNavigationSingleSelectionChildProps, propsTabbable, pressParameters: { onPressSync, excludeSpace, ...void1 }, refElementReturn, ...listNavRet2 } = useCompleteListNavigationChild({
         context,
         info: { focusSelf: focusSelfParent, ...info },
         sortableChildParameters,
@@ -89,11 +89,13 @@ export function useTab({ info: { focusSelf: focusSelfParent, ...info }, textCont
     const { getPanelId, getTabId } = context.tabsContext;
     const panelId = getPanelId(info.index);
     const tabId = getTabId(info.index);
+    assertEmptyObject(void1);
+    assertEmptyObject(void2);
     monitorCallCount(useTab);
     return {
         pressReturn,
         refElementReturn,
-        props: useMergedProps(propsPressStable, listNavigationSingleSelectionChildProps, {
+        props: useMergedProps(propsPressStable, listNavigationSingleSelectionChildProps, propsTabbable, {
             "data-tabbable": tabbable.toString(),
             "data-selected": selected.toString(),
             role: "tab",
@@ -111,7 +113,8 @@ export function useTabPanel({ info, context }) {
     const [lastKnownVisibleIndex, setLastKnownVisibleIndex, getLastKnownVisibleIndex] = useState(g());
     const [isVisible, setIsVisible, getIsVisible] = useState(null);
     //const visibleRef = useRef<ChildFlagOperations>({ get: getIsVisible, set: setIsVisible, isValid: returnTrue });
-    useManagedChild({ context, info: {
+    useManagedChild({
+        context, info: {
             getVisible: useStableCallback(() => { return getLastKnownVisibleIndex() == index; }),
             setVisibleIndex: useStableCallback((newIndex, prevIndex) => {
                 // Similar logic is in singleSelection, but we need to duplicate it here
@@ -126,7 +129,8 @@ export function useTabPanel({ info, context }) {
                 }
             }),
             ...info
-        } });
+        }
+    });
     const panelId = getPanelId(info.index);
     const tabId = getTabId(info.index);
     //const isVisible = (lastKnownVisibleIndex === index);

@@ -20,6 +20,7 @@ interface TableSectionPropsBase<SectionElement extends Element, RowElement exten
     Get<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "rearrangeableChildrenParameters">,
     Get<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "rovingTabIndexParameters">,
     Get<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "singleSelectionParameters">,
+    Get<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "typeaheadNavigationParameters">,
     Get<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "paginatedChildrenParameters">,
     Get<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "staggeredChildrenParameters">,
     Get<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "tableSectionParameters"> {
@@ -106,6 +107,11 @@ export const TableSection = memoForwardRef(function TableSection<SectionElement 
     location,
     ariaPropName,
     selectionMode,
+    onNavigateLinear,
+    collator,
+    noTypeahead,
+    onNavigateTypeahead,
+    typeaheadTimeout,
     tagTableSection
 }: TableSectionProps<SectionElement, RowElement, CellElement, TableRowInfo<RowElement, CellElement>, TableCellInfo<CellElement>>) {
     untabbable = (untabbable ?? false);
@@ -115,7 +121,14 @@ export const TableSection = memoForwardRef(function TableSection<SectionElement 
     const info = useTableSection<SectionElement, RowElement, CellElement, TableRowInfo<RowElement, CellElement>, TableCellInfo<CellElement>>({
         gridNavigationParameters: { onTabbableColumnChange: onTabbableColumnChange ?? null },
         staggeredChildrenParameters: { staggered: staggered || false },
+        typeaheadNavigationParameters: { 
+            onNavigateTypeahead, 
+            collator: useDefault("collator", null), 
+            noTypeahead: useDefault("noTypeahead", noTypeahead), 
+            typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout) 
+        },
         linearNavigationParameters: {
+            onNavigateLinear,
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap",

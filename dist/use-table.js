@@ -52,7 +52,7 @@ function fuzzyCompare(lhs, rhs) {
     return 0;
 }
 const naturalSectionTypes = new Set(["thead", "tbody", "tfoot"]);
-export function useTableSection({ linearNavigationParameters, rovingTabIndexParameters, singleSelectionParameters, gridNavigationParameters, rearrangeableChildrenParameters, paginatedChildrenParameters, staggeredChildrenParameters, tableSectionParameters: { tagTableSection, location }, context: { tableContext } }) {
+export function useTableSection({ linearNavigationParameters, rovingTabIndexParameters, singleSelectionParameters, gridNavigationParameters, rearrangeableChildrenParameters, paginatedChildrenParameters, staggeredChildrenParameters, tableSectionParameters: { tagTableSection, location }, typeaheadNavigationParameters, context: { tableContext } }) {
     monitorCallCount(useTableSection);
     const { childrenHaveFocusReturn, context, linearNavigationReturn, managedChildrenReturn, props: { ...props }, rovingTabIndexReturn, singleSelectionReturn, typeaheadNavigationReturn, staggeredChildrenReturn, rearrangeableChildrenReturn, paginatedChildrenReturn, sortableChildrenReturn } = useCompleteGridNavigation({
         linearNavigationParameters,
@@ -65,7 +65,7 @@ export function useTableSection({ linearNavigationParameters, rovingTabIndexPara
                 return fuzzyCompare(lhs?.getSortValue?.(), rhs?.getSortValue?.());
             }, [])
         },
-        typeaheadNavigationParameters: { noTypeahead: true, collator: null, typeaheadTimeout: Infinity },
+        typeaheadNavigationParameters,
         gridNavigationParameters,
         rearrangeableChildrenParameters
     });
@@ -116,7 +116,7 @@ export function useTableRow({ info, textContentParameters, context: cx1, tableRo
         },
         linearNavigationParameters,
         rovingTabIndexParameters: { ...rovingTabIndexParameters },
-        typeaheadNavigationParameters: { noTypeahead: true, collator: null, typeaheadTimeout: Infinity }
+        typeaheadNavigationParameters: { noTypeahead: true, collator: null, typeaheadTimeout: Infinity, onNavigateTypeahead: null }
     });
     props.role = "row";
     // TODO: Unneeded?

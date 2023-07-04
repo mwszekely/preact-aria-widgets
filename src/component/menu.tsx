@@ -69,6 +69,8 @@ export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element,
     disabled,
     staggered,
     onOpen,
+    onNavigateLinear,
+    onNavigateTypeahead,
 
     getWindow,
 
@@ -85,6 +87,7 @@ export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element,
 
     const info = useMenu<SurfaceElement, ParentElement, ChildElement, ButtonElement, M>({
         linearNavigationParameters: {
+            onNavigateLinear,
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
             pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize),
             navigatePastEnd: navigatePastEnd ?? "wrap",
@@ -114,6 +117,7 @@ export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element,
             untabbable: untabbable
         },
         typeaheadNavigationParameters: {
+            onNavigateTypeahead,
             collator: useDefault("collator", collator),
             noTypeahead: useDefault("noTypeahead", noTypeahead),
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)

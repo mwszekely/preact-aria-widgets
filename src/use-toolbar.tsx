@@ -125,12 +125,14 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
 export function useToolbarChild<ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>>({ info, toolbarChildParameters: { disabledProp }, ...args }: UseToolbarChildParameters<ChildElement, M>): UseToolbarChildReturnType<ChildElement, M> {
     monitorCallCount(useToolbarChild);
     const {
-        props,
+        propsChild,
+        propsTabbable,
         ...listNavReturn
     } = useCompleteListNavigationChild<ChildElement, M>({ info,  ...args });
 
     return {
-        props: useMergedProps(props, { [disabledProp as never]: info.unselectable ? true : undefined }),
+        propsChild: useMergedProps(propsChild, { [disabledProp as never]: info.unselectable ? true : undefined }),
+        propsTabbable,
         ...listNavReturn
     }
 }

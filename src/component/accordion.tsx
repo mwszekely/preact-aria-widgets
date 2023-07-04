@@ -52,6 +52,8 @@ export const Accordion = memo(function Accordion<HeaderButtonElement extends Ele
     render,
     imperativeHandle,
     orientation,
+    onNavigateLinear,
+    onNavigateTypeahead,
     ...rest
 }: AccordionProps<HeaderButtonElement>) {
     assertEmptyObject(rest);
@@ -59,12 +61,14 @@ export const Accordion = memo(function Accordion<HeaderButtonElement extends Ele
     const info = useAccordion<HeaderButtonElement, UseAccordionSectionInfo>({
         accordionParameters: { orientation, initialIndex, localStorageKey: localStorageKey ?? null },
         typeaheadNavigationParameters: {
+            onNavigateTypeahead,
             isValid: isValid || returnTrue,
             collator: useDefault("collator", collator),
             noTypeahead: useDefault("noTypeahead", noTypeahead),
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
         },
         linearNavigationParameters: {
+            onNavigateLinear,
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap",

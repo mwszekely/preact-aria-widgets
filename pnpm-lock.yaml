@@ -12,7 +12,7 @@ dependencies:
     version: 10.13.2
   preact-prop-helpers:
     specifier: github:mwszekely/preact-prop-helpers
-    version: github.com/mwszekely/preact-prop-helpers/6ee431394c548a47550357803b60aa26f6728a07(preact@10.13.2)
+    version: github.com/mwszekely/preact-prop-helpers/9088bf766659fcf83284f4a051ad3b25229b7bf9(preact@10.13.2)
 
 devDependencies:
   '@playwright/test':
@@ -769,9 +769,9 @@ packages:
       lodash-es: 4.17.21
     dev: false
 
-  github.com/mwszekely/preact-prop-helpers/6ee431394c548a47550357803b60aa26f6728a07(preact@10.13.2):
-    resolution: {tarball: https://codeload.github.com/mwszekely/preact-prop-helpers/tar.gz/6ee431394c548a47550357803b60aa26f6728a07}
-    id: github.com/mwszekely/preact-prop-helpers/6ee431394c548a47550357803b60aa26f6728a07
+  github.com/mwszekely/preact-prop-helpers/9088bf766659fcf83284f4a051ad3b25229b7bf9(preact@10.13.2):
+    resolution: {tarball: https://codeload.github.com/mwszekely/preact-prop-helpers/tar.gz/9088bf766659fcf83284f4a051ad3b25229b7bf9}
+    id: github.com/mwszekely/preact-prop-helpers/9088bf766659fcf83284f4a051ad3b25229b7bf9
     name: preact-prop-helpers
     version: 0.0.1
     peerDependencies:

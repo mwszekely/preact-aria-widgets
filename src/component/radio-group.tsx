@@ -57,12 +57,15 @@ export const RadioGroup = memoForwardRef(function RadioGroup<V extends string | 
     selectedValue,
     untabbable,
     onTabbableIndexChange,
+    onNavigateLinear,
+    onNavigateTypeahead,
     pageNavigationSize,
 }: RadioGroupProps<V, GroupElement, GroupLabelElement, TabbableChildElement>, ref?: Ref<any>) {
     untabbable ??= false;
 
     const info = useRadioGroup<V, GroupElement, GroupLabelElement, TabbableChildElement>({
         linearNavigationParameters: {
+            onNavigateLinear,
             arrowKeyDirection: arrowKeyDirection ?? "either",
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap",
@@ -79,6 +82,7 @@ export const RadioGroup = memoForwardRef(function RadioGroup<V extends string | 
             untabbable
         },
         typeaheadNavigationParameters: {
+            onNavigateTypeahead,
             collator: useDefault("collator", collator),
             noTypeahead: useDefault("noTypeahead", noTypeahead),
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)

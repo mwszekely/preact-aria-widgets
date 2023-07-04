@@ -66,7 +66,9 @@ export const Menubar = memoForwardRef(function MenubarU<ContainerElement extends
     role,
     ariaLabel,
     ariaPropName,
-    selectionMode
+    selectionMode,
+    onNavigateLinear,
+    onNavigateTypeahead
 }: MenubarProps<ContainerElement, ChildElement, LabelElement, M>, ref?: Ref<any>) {
     ariaPropName ||= "aria-selected";
     selectionMode ||= "activation";
@@ -74,6 +76,7 @@ export const Menubar = memoForwardRef(function MenubarU<ContainerElement extends
 
     const info = useMenubar<ContainerElement, ChildElement, LabelElement, M>({
         linearNavigationParameters: {
+            onNavigateLinear,
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap",
@@ -82,6 +85,7 @@ export const Menubar = memoForwardRef(function MenubarU<ContainerElement extends
         toolbarParameters: { orientation, selectedIndex: selectedIndex ?? null, onSelectedIndexChange: onSelectedIndexChange ?? null, role: role ?? "menubar", disabled: disabled || false },
         rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable },
         typeaheadNavigationParameters: {
+            onNavigateTypeahead,
             collator: useDefault("collator", collator),
             noTypeahead: useDefault("noTypeahead", noTypeahead),
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)

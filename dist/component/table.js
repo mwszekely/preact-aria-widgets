@@ -16,14 +16,21 @@ export const Table = memoForwardRef(function TableU({ ariaLabel, selectionLimit,
     useImperativeHandle(ref, () => info);
     return _jsx(TableContext.Provider, { value: info.context, children: render(info) });
 });
-export const TableSection = memoForwardRef(function TableSection({ disableHomeEndKeys, getIndex, initiallySelectedIndex, untabbable, navigatePastEnd, navigatePastStart, onSelectedIndexChange, onTabbableColumnChange, onTabbableIndexChange, pageNavigationSize, paginationMax, paginationMin, staggered, render, location, ariaPropName, selectionMode, tagTableSection }) {
+export const TableSection = memoForwardRef(function TableSection({ disableHomeEndKeys, getIndex, initiallySelectedIndex, untabbable, navigatePastEnd, navigatePastStart, onSelectedIndexChange, onTabbableColumnChange, onTabbableIndexChange, pageNavigationSize, paginationMax, paginationMin, staggered, render, location, ariaPropName, selectionMode, onNavigateLinear, collator, noTypeahead, onNavigateTypeahead, typeaheadTimeout, tagTableSection }) {
     untabbable = (untabbable ?? false);
     ariaPropName ??= "aria-selected";
     selectionMode ??= "activation";
     const info = useTableSection({
         gridNavigationParameters: { onTabbableColumnChange: onTabbableColumnChange ?? null },
         staggeredChildrenParameters: { staggered: staggered || false },
+        typeaheadNavigationParameters: {
+            onNavigateTypeahead,
+            collator: useDefault("collator", null),
+            noTypeahead: useDefault("noTypeahead", noTypeahead),
+            typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
+        },
         linearNavigationParameters: {
+            onNavigateLinear,
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap",

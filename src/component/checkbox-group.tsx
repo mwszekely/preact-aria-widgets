@@ -66,11 +66,14 @@ export const CheckboxGroup = memoForwardRef(function CheckboxGroup<ParentElement
     navigatePastStart,
     pageNavigationSize,
     orientation,
+    onNavigateLinear,
+    onNavigateTypeahead,
     ..._rest
 }: CheckboxGroupProps<ParentElement, TabbableChildElement, CheckboxGroupInfo<TabbableChildElement>>, ref?: Ref<any>) {
     untabbable ||= false;
     const info = useCheckboxGroup<ParentElement, TabbableChildElement>({
         linearNavigationParameters: {
+            onNavigateLinear,
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap",
@@ -82,6 +85,7 @@ export const CheckboxGroup = memoForwardRef(function CheckboxGroup<ParentElement
         rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable },
         sortableChildrenParameters: { compare: compare ?? null },
         typeaheadNavigationParameters: {
+            onNavigateTypeahead,
             collator: useDefault("collator", collator),
             noTypeahead: useDefault("noTypeahead", noTypeahead),
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
