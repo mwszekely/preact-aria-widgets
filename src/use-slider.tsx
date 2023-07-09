@@ -11,7 +11,7 @@ export type RangeChangeEvent<E extends EventTarget> = { [EventDetail]: { value: 
 export interface SliderThumbInfo extends ManagedChildInfo<number> {
 }
 
-export interface UseSliderThumbParameters<E extends Element, M extends SliderThumbInfo> extends UseManagedChildParameters<M> {
+export interface UseSliderThumbParameters<E extends Element, M extends SliderThumbInfo> extends UseManagedChildParameters<M, "index"> {
     sliderThumbParameters: TagSensitiveProps<E> & {
         value: number;
         valueText?: string;

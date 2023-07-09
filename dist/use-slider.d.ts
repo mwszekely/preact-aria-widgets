@@ -8,7 +8,7 @@ export type RangeChangeEvent<E extends EventTarget> = {
 } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
 export interface SliderThumbInfo extends ManagedChildInfo<number> {
 }
-export interface UseSliderThumbParameters<E extends Element, M extends SliderThumbInfo> extends UseManagedChildParameters<M> {
+export interface UseSliderThumbParameters<E extends Element, M extends SliderThumbInfo> extends UseManagedChildParameters<M, "index"> {
     sliderThumbParameters: TagSensitiveProps<E> & {
         value: number;
         valueText?: string;

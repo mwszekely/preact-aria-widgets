@@ -25,8 +25,7 @@ export interface UseTabParameters<TabElement extends Element, M extends TabInfo<
     context: UseTabsContext<any, TabElement, M>;
     pressParameters: OmitStrong<UsePressParameters<TabElement>["pressParameters"], "excludeSpace" | "onPressSync">;
 }
-export interface UseTabPanelParameters<M extends TabPanelInfo> extends OmitStrong<UseManagedChildParameters<M>, "info"> {
-    info: OmitStrong<UseManagedChildParameters<M>["info"], "setVisibleIndex" | "getVisible">;
+export interface UseTabPanelParameters<M extends TabPanelInfo> extends UseManagedChildParameters<M, "index"> {
     context: UseTabPanelsContext<M>;
 }
 export interface UseTabsContext<ParentElement extends Element, ChildElement extends Element, M extends TabInfo<ChildElement>> extends CompleteListNavigationContext<ParentElement, ChildElement, M> {

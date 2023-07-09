@@ -11,7 +11,7 @@ export interface UseToastsParameters extends UseManagedChildrenParameters<ToastI
     }
 }
 
-export interface UseToastParameters<M extends ToastInfo> extends OmitStrong<UseManagedChildParameters<M>, "info"> {
+export interface UseToastParameters<M extends ToastInfo> extends UseManagedChildParameters<M, "index"> {
     toastParameters: {
         politeness?: "polite" | "assertive";
         timeout: number | null;

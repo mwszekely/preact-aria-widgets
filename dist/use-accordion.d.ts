@@ -27,8 +27,7 @@ export interface UseAccordionSectionInfo extends ManagedChildInfo<number> {
     disabled: DisabledType;
     untabbable: boolean;
 }
-export interface UseAccordionSectionParameters<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo> extends OmitStrong<UseTypeaheadNavigationChildParameters<HeaderButtonElement, M>, "refElementReturn" | "context">, UseRefElementParameters<HeaderButtonElement> {
-    info: Pick<UseManagedChildParameters<M>["info"], "index" | "untabbable">;
+export interface UseAccordionSectionParameters<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo> extends OmitStrong<UseTypeaheadNavigationChildParameters<HeaderButtonElement, M>, "info" | "refElementReturn" | "context">, UseRefElementParameters<HeaderButtonElement>, UseManagedChildParameters<M, "index" | "untabbable"> {
     context: UseAccordionContext<HeaderButtonElement, M>;
     accordionSectionParameters: {
         /**
