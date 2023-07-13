@@ -26,8 +26,7 @@ interface MenubarPropsBase<MenuParentElement extends Element, MenuItemElement ex
 interface MenubarItemPropsBase<MenuItemElement extends Element> extends
     //Get<UseMenubarItemParameters<MenuItemElement, M>, "managedChildParameters">,
     Get<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "menuItemParameters">,
-    Get<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "sortableChildParameters">,
-    Pick<UseMenubarSubInfo<MenuItemElement>, "index" | "untabbable" | "unselectable">,
+    Pick<UseMenubarSubInfo<MenuItemElement>, "index" | "untabbable" | "unselectable" | "getSortValue">,
     Get<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "textContentParameters"> {
     focusSelf?: UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>["info"]["focusSelf"];
     //subInfo?: OmitStrong< UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>["completeListNavigationChildParameters"], "focusSelf">;
@@ -123,9 +122,8 @@ export const MenubarItem = memoForwardRef(function MenuItemU<MenuItemElement ext
     const defaultFocusSelf = useCallback((e: MenuItemElement | null) => focus(e as Element as HTMLElement), [])
 
     const info = useMenubarChild<MenuItemElement, M>({
-        info: { index, untabbable: untabbable || false, unselectable: unselectable || false, focusSelf: focusSelf ?? defaultFocusSelf, ...uinfo } as M,
+        info: { index, untabbable: untabbable || false, unselectable: unselectable || false, focusSelf: focusSelf ?? defaultFocusSelf, getSortValue, ...uinfo } as M,
         context,
-        sortableChildParameters: { getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },
         menuItemParameters: { onPress: onPress ?? null, role: role ?? "menuitem" }
     });

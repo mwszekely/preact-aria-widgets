@@ -90,6 +90,7 @@ export function useAccordion({ accordionParameters: { initialIndex, localStorage
             linearNavigationParameters: useMemoObject({
                 disableHomeEndKeys,
                 getHighestIndex: useCallback(() => getChildren().getHighestIndex(), []),
+                getLowestIndex: useCallback(() => getChildren().getLowestIndex(), []),
                 indexMangler: identity,
                 indexDemangler: identity,
                 arrowKeyDirection: orientation ?? "vertical",

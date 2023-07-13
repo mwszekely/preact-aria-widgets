@@ -12,7 +12,8 @@ import {
     assertEmptyObject,
     focus,
     monitorCallCount,
-    returnNull, useCompleteGridNavigation,
+    returnNull,
+    useCompleteGridNavigation,
     useCompleteGridNavigationCell,
     useCompleteGridNavigationRow,
     useMemoObject,
@@ -48,7 +49,7 @@ export interface UseTableSectionReturnType<TableSectionElement extends Element, 
 export interface UseTableRowReturnType<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>> extends OmitStrong<UseCompleteGridNavigationRowReturnType<TableRowElement, TableCellElement, RM, CM>, "context"> {
     context: UseTableRowContext<any, TableCellElement, CM>;
 }
-export interface UseTableRowParameters<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>> extends OmitStrong<UseCompleteGridNavigationRowParameters<TableRowElement, TableCellElement, RM, CM>, "rovingTabIndexParameters" | "typeaheadNavigationParameters" | "sortableChildParameters" | "context"> {
+export interface UseTableRowParameters<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>> extends OmitStrong<UseCompleteGridNavigationRowParameters<TableRowElement, TableCellElement, RM, CM>, "rovingTabIndexParameters" | "typeaheadNavigationParameters" | "context" | "info"> {
     rovingTabIndexParameters: OmitStrong<UseGridNavigationRowParameters<TableRowElement, TableCellElement, RM, CM>["rovingTabIndexParameters"], never>
     context: UseTableSectionContext<any, TableRowElement, TableCellElement, RM, CM>;
     tableRowParameters: {
@@ -58,6 +59,7 @@ export interface UseTableRowParameters<TableRowElement extends Element, TableCel
         selected: boolean | null;
         tagTableRow: ElementToTag<TableRowElement>;
     };
+    info: Omit<UseCompleteGridNavigationRowParameters<TableRowElement, TableCellElement, RM, CM>["info"], "getSortValue">;
 }
 
 export interface UseTableRowContext<TableRowElement extends Element, TableCellElement extends Element, M extends TableCellInfo<TableCellElement>> extends CompleteGridNavigationRowContext<TableRowElement, TableCellElement, M> {
@@ -72,11 +74,12 @@ export interface UseTableCellReturnType<TableCellElement extends Element, CM ext
         sortByThisColumn(): SortInfo;
     }
 }
-export interface UseTableCellParameters<TableCellElement extends Element, CM extends TableCellInfo<TableCellElement>> extends UseCompleteGridNavigationCellParameters<TableCellElement, CM> {
+export interface UseTableCellParameters<TableCellElement extends Element, CM extends TableCellInfo<TableCellElement>> extends OmitStrong<UseCompleteGridNavigationCellParameters<TableCellElement, CM>, "info"> {
     tableCellParameters: {
         tagTableCell: ElementToTag<TableCellElement>;
     }
     context: UseTableRowContext<any, TableCellElement, CM>;
+    info: OmitStrong<UseCompleteGridNavigationCellParameters<TableCellElement, CM>["info"], never>;
 }
 
 export interface TableRowInfo<TableRowElement extends Element, TableCellElement extends Element> extends UseCompleteGridNavigationRowInfo<TableRowElement, TableCellElement> { }
@@ -201,7 +204,7 @@ export function useTableSection<TableSectionElement extends Element, TableRowEle
         },
         typeaheadNavigationParameters,
         gridNavigationParameters,
-        rearrangeableChildrenParameters
+        rearrangeableChildrenParameters,
     });
 
     if (!naturalSectionTypes.has(tagTableSection as any)) {
@@ -213,7 +216,7 @@ export function useTableSection<TableSectionElement extends Element, TableRowEle
     useEffect(() => {
         if (location == "body") {
             tableContext.setSortBodyFunction(() => {
-                return () => sortableChildrenReturn.sort(tableContext.getCurrentSortColumn().direction);
+                return () => {sortableChildrenReturn.sort(tableContext.getCurrentSortColumn().direction);}
             })
         }
     });
@@ -260,8 +263,8 @@ export function useTableRow<TableRowElement extends Element, TableCellElement ex
     } = useCompleteGridNavigationRow<TableRowElement, TableCellElement, RM, CM>({
         textContentParameters,
         context: { ...cx1 },
-        info,
-        sortableChildParameters: {
+        info: {
+            ...info,
             getSortValue: useStableCallback((): unknown => {
                 const currentColumn = cx1.tableContext.getCurrentSortColumn().column;
                 const currentChild = managedChildrenReturn.getChildren().getAt(currentColumn ?? 0)
@@ -269,7 +272,7 @@ export function useTableRow<TableRowElement extends Element, TableCellElement ex
 
                 return sortValue;
             })
-        },
+        } as RM,
         linearNavigationParameters,
         rovingTabIndexParameters: { ...rovingTabIndexParameters },
         typeaheadNavigationParameters: { noTypeahead: true, collator: null, typeaheadTimeout: Infinity, onNavigateTypeahead: null }
@@ -304,17 +307,20 @@ export function useTableRow<TableRowElement extends Element, TableCellElement ex
     }
 }
 
-export function useTableCell<TableCellElement extends Element, CM extends TableCellInfo<TableCellElement>>({ tableCellParameters: { tagTableCell }, ...p }: UseTableCellParameters<TableCellElement, CM>): UseTableCellReturnType<TableCellElement, CM> {
+export function useTableCell<TableCellElement extends Element, CM extends TableCellInfo<TableCellElement>>({ tableCellParameters: { tagTableCell }, info, ...p }: UseTableCellParameters<TableCellElement, CM>): UseTableCellReturnType<TableCellElement, CM> {
     monitorCallCount(useTableCell);
 
-    const { props, ...ret } = useCompleteGridNavigationCell<TableCellElement, CM>(p);
+    const { props, ...ret } = useCompleteGridNavigationCell<TableCellElement, CM>({
+        info,
+        ...p
+    });
     return {
         propsFocus: props,
         propsCell: { role: (tagTableCell != "th" && tagTableCell != "td") ? "gridcell" : undefined },
         ...ret,
         tableCellReturn: {
             sortByThisColumn: useStableCallback(() => {
-                return p.context.tableContext.sortByColumn(p.info.index);
+                return p.context.tableContext.sortByColumn(info.index);
             }, [])
         }
     };

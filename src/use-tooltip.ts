@@ -40,7 +40,14 @@ export type TooltipState = `${"hovering" | "focused"}-${"popup" | "trigger"}` | 
 
 export function useTooltip<TriggerType extends Element, PopupType extends Element>({ tooltipParameters: { onStatus, tooltipSemanticType, hoverDelay }, escapeDismissParameters }: UseTooltipParameters<TriggerType, PopupType>): UseTooltipReturnType<TriggerType, PopupType> {
     monitorCallCount(useTooltip);
-    
+
+
+    useGlobalHandler(window, "mouseout", useCallback((e: MouseEvent) => {
+        console.log(e);
+        if (e.relatedTarget == null)
+            onHoverChanged(false, "popup");
+    }, []));
+
     /**
      * Whether the hover/focus-popup/trigger state we have results in us showing this tooltip.
      * 

@@ -3,6 +3,11 @@ import { useCallback, useRef } from "preact/hooks";
 import { Prefices } from "./props.js";
 export function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType, hoverDelay }, escapeDismissParameters }) {
     monitorCallCount(useTooltip);
+    useGlobalHandler(window, "mouseout", useCallback((e) => {
+        console.log(e);
+        if (e.relatedTarget == null)
+            onHoverChanged(false, "popup");
+    }, []));
     /**
      * Whether the hover/focus-popup/trigger state we have results in us showing this tooltip.
      *

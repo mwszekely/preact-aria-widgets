@@ -24,9 +24,8 @@ interface GridlistPropsBase<GridlistElement extends Element, GridlistRowElement 
 }
 
 interface GridlistRowPropsBase<GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends
-    Pick<RM, "index" | "unselectable">,
+    Pick<RM, "index" | "unselectable" | "getSortValue">,
     Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "textContentParameters">,
-    Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "sortableChildParameters">,
     Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "linearNavigationParameters">,
     Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "rovingTabIndexParameters">,
     Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "typeaheadNavigationParameters">,
@@ -102,6 +101,7 @@ export const Gridlist = memoForwardRef(function GridlistU<GridlistElement extend
     selectionMode,
     onNavigateLinear,
     onNavigateTypeahead,
+    onRearranged,
     render
 }: GridlistProps<GridlistElement, RowElement, Cellement, LabelElement, RM, CM>, ref?: Ref<any>) {
     untabbable ??= false;
@@ -141,7 +141,8 @@ export const Gridlist = memoForwardRef(function GridlistU<GridlistElement extend
             ariaLabel
         },
         rearrangeableChildrenParameters: {
-            getIndex: useDefault("getIndex", getIndex)
+            getIndex: useDefault("getIndex", getIndex),
+            onRearranged: onRearranged || null
         },
         sortableChildrenParameters: {
             compare: compare ?? null
@@ -185,10 +186,9 @@ export const GridlistRow = memoForwardRef(function GridlistRowU<RowElement exten
     untabbable ||= false;
 
     const info = useGridlistRow<RowElement, Cellement, RM, CM>({
-        info: { index, untabbable, unselectable, ...uinfo } as RM,
+        info: { index, untabbable, unselectable, getSortValue, ...uinfo } as RM,
         context,
         gridlistRowParameters: { selected: selected ?? null },
-        sortableChildParameters: { getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },
         linearNavigationParameters: {
             navigatePastEnd: navigatePastEnd ?? "wrap",

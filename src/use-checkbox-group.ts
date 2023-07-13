@@ -249,8 +249,7 @@ export function useCheckboxGroup<GroupElement extends Element, TCE extends Eleme
 export function useCheckboxGroupParent<TCE extends Element>({
     context,
     info,
-    textContentParameters,
-    sortableChildParameters
+    textContentParameters
 }: UseCheckboxGroupParentParameters<TCE, CheckboxGroupInfo<TCE>>): UseCheckboxGroupParentReturnType<TCE, CheckboxGroupInfo<TCE>> {
     const { checkboxGroupParentContext: { setSetter, setSetParentCheckboxChecked, getPercentChecked, getTotalChecked, getTotalChildren, onCheckboxGroupParentInput } } = context;
     const {
@@ -268,7 +267,6 @@ export function useCheckboxGroupParent<TCE extends Element>({
     } = useCompleteListNavigationChild<TCE, CheckboxGroupInfo<TCE>>({
         context,
         info,
-        sortableChildParameters,
         textContentParameters
     });
 
@@ -320,7 +318,6 @@ export function useCheckboxGroupChild<TCE extends Element>({
     context,
     info,
     textContentParameters,
-    sortableChildParameters,
 }: UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>): UseCheckboxGroupChildReturnType<TCE, CheckboxGroupInfo<TCE>> {
     const { checkboxGroupChildrenContext: { allIds, setUpdateIndex, setTotalChildren, setTotalChecked, } } = context;
 
@@ -374,7 +371,6 @@ export function useCheckboxGroupChild<TCE extends Element>({
         info: { checkboxInfo: { checkboxChildType: "child", getLastUserChecked, getChecked, setCheckedFromParentInput: onChangeFromParent }, ...info },
         context,
         textContentParameters,
-        sortableChildParameters,
     });
 
     return {

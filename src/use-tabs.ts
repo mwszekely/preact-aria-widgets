@@ -195,7 +195,6 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
 export function useTab<TabElement extends Element, M extends TabInfo<TabElement>>({
     info: { focusSelf: focusSelfParent, ...info },
     textContentParameters,
-    sortableChildParameters,
     pressParameters: { focusSelf: focusSelfChild, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, ...void2 },
     context
 }: UseTabParameters<TabElement, M>): UseTabReturnType<TabElement, M> {
@@ -203,7 +202,6 @@ export function useTab<TabElement extends Element, M extends TabInfo<TabElement>
     const { propsChild: listNavigationSingleSelectionChildProps, propsTabbable, pressParameters: { onPressSync, excludeSpace, ...void1 }, refElementReturn, ...listNavRet2 } = useCompleteListNavigationChild({
         context,
         info: { focusSelf: focusSelfParent, ...info } as M,
-        sortableChildParameters,
         textContentParameters,
     });
     //const { pressParameters, refElementReturn } = listNavRet2

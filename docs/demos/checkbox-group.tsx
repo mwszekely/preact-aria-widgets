@@ -1,7 +1,7 @@
 
 import { returnNull, useMergedProps, useStableCallback, useState } from "preact-prop-helpers";
 import { useRef } from "preact/hooks";
-import { Checkbox, CheckboxCheckedType, CheckboxGroup, CheckboxGroupChild, CheckboxGroupParent, defaultRenderCheckboxLike, EventDetail, UseCheckboxReturnType } from "../../dist/index.js";
+import { Checkbox, CheckboxCheckedType, CheckboxGroup, CheckboxGroupChild, CheckboxGroupParent, EventDetail, UseCheckboxReturnType, defaultRenderCheckboxLike } from "../../dist/index.js";
 
 function DemoCheckbox({ index }: { index: number }) {
     const [checked, setChecked] = useState<CheckboxCheckedType>(false);
@@ -31,7 +31,7 @@ function DemoCheckbox({ index }: { index: number }) {
                                 labelPosition: "separate",
                                 tagInput: "input",
                                 tagLabel: "label",
-                                makePropsInput: info2 => useMergedProps(info.props, info2.propsInput),
+                                makePropsInput: info2 => useMergedProps(info.propsChild, info.propsTabbable, info2.propsInput),
                                 makePropsLabel: info2 => ({ children: `Checkbox #${index}`, ...info2.propsLabel })
                             })}
 
@@ -106,7 +106,7 @@ export function Demo() {
                                                 tagLabel="label"
                                                 render={defaultRenderCheckboxLike({
                                                     labelPosition: "separate",
-                                                    makePropsInput: info4 => useMergedProps(info4.propsInput, info3.props),
+                                                    makePropsInput: info4 => useMergedProps(info4.propsInput, info3.propsChild, info3.propsTabbable),
                                                     makePropsLabel: info4 => ({ children: "Parent checkbox", ...info4.propsLabel }),
                                                     tagInput: "input",
                                                     tagLabel: "label"

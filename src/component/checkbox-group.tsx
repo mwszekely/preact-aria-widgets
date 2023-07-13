@@ -20,8 +20,7 @@ export interface CheckboxGroupPropsBase<ParentElement extends Element, TabbableC
 }
 
 export interface CheckboxGroupParentPropsBase<TCE extends Element> extends
-    Pick<CheckboxGroupInfo<TCE>, "index">,
-    Get<UseCheckboxGroupParentParameters<TCE, CheckboxGroupInfo<TCE>>, "sortableChildParameters">,
+    Pick<CheckboxGroupInfo<TCE>, "index" | "getSortValue">,
     Get<UseCheckboxGroupParentParameters<TCE, CheckboxGroupInfo<TCE>>, "textContentParameters">,
     OmitStrong<Get<UseCheckboxGroupParentParameters<TCE, CheckboxGroupInfo<TCE>>, "info">, "checkboxInfo"> {
     ref?: Ref<UseCheckboxGroupParentReturnType<TCE, CheckboxGroupInfo<TCE>>>;
@@ -29,8 +28,7 @@ export interface CheckboxGroupParentPropsBase<TCE extends Element> extends
 
 export interface CheckboxGroupChildPropsBase<TCE extends Element> extends
     Get<UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>, "checkboxGroupChild">,
-    Pick<CheckboxGroupInfo<TCE>, "index" | "untabbable" | "unselectable">,
-    Get<UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>, "sortableChildParameters">,
+    Pick<CheckboxGroupInfo<TCE>, "index" | "untabbable" | "unselectable" | "getSortValue">,
     Get<UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>, "textContentParameters"> {
     focusSelf: UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>["info"]["focusSelf"];
     ref?: Ref<UseCheckboxGroupChildReturnType<TCE, CheckboxGroupInfo<TCE>>>;
@@ -106,9 +104,8 @@ export const CheckboxGroupParent = memoForwardRef(function CheckboxGroupParent<T
     console.assert(context != null, `This CheckboxGroupParent is not contained within a CheckboxGroup`);
 
     const info = useCheckboxGroupParent<TCE>({
-        info: { index, unselectable: unselectable || false, untabbable: untabbable || false, focusSelf, checkboxInfo: { checkboxChildType: "parent" } },
+        info: { index, unselectable: unselectable || false, untabbable: untabbable || false, focusSelf, getSortValue, checkboxInfo: { checkboxChildType: "parent" } },
         context,
-        sortableChildParameters: { getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) }
     });
 
@@ -132,10 +129,9 @@ export const CheckboxGroupChild = memoForwardRef(function CheckboxGroupChild<TCE
     console.assert(context != null, `This CheckboxGroupChild is not contained within a CheckboxGroup`);
     const info = useCheckboxGroupChild<TCE>({
         checkboxGroupChild: { checked, onChangeFromParent },
-        info: { index, untabbable: untabbable || false, unselectable: unselectable || false, focusSelf },
+        info: { index, untabbable: untabbable || false, unselectable: unselectable || false, focusSelf, getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },
         context,
-        sortableChildParameters: { getSortValue },
     });
 
     useImperativeHandle(ref!, () => info);

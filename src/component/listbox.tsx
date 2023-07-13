@@ -24,8 +24,7 @@ interface ListboxPropsBase<ListElement extends Element, ListItemElement extends 
 
 interface ListboxItemPropsBase<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends
     Get<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "listboxParameters">,
-    Pick<M, "index" | "untabbable" | "unselectable">,
-    Get<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "sortableChildParameters">,
+    Pick<M, "index" | "untabbable" | "unselectable" | "getSortValue">,
     OmitStrong<NonNullable<Get<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "pressParameters">>, "focusSelf">,
     Get<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "textContentParameters"> {
     focusSelf?: UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>["info"]["focusSelf"];
@@ -164,11 +163,10 @@ export const ListboxItem = memoForwardRef(function ListboxItem<ListboxItemElemen
     focusSelf ??= focusSelfDefault;
 
     const info = useListboxItem<ListboxItemElement, M>({
-        info: { index, untabbable: untabbable || false, unselectable: unselectable || false, focusSelf, ...subInfo } as M,
+        info: { index, untabbable: untabbable || false, unselectable: unselectable || false, focusSelf, getSortValue, ...subInfo } as M,
         context,
         listboxParameters: { selected: selected ?? null, onMultiSelect: onMultiSelect || null },
         pressParameters: { focusSelf, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange },
-        sortableChildParameters: { getSortValue: getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },
     });
 

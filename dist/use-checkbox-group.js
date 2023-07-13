@@ -106,12 +106,11 @@ export function useCheckboxGroup({ linearNavigationParameters, rearrangeableChil
         typeaheadNavigationReturn
     };
 }
-export function useCheckboxGroupParent({ context, info, textContentParameters, sortableChildParameters }) {
+export function useCheckboxGroupParent({ context, info, textContentParameters }) {
     const { checkboxGroupParentContext: { setSetter, setSetParentCheckboxChecked, getPercentChecked, getTotalChecked, getTotalChildren, onCheckboxGroupParentInput } } = context;
     const { hasCurrentFocusReturn, managedChildReturn, pressParameters, textContentReturn, refElementReturn, propsChild, propsTabbable, paginatedChildReturn, rovingTabIndexChildReturn, staggeredChildReturn, singleSelectionChildReturn, } = useCompleteListNavigationChild({
         context,
         info,
-        sortableChildParameters,
         textContentParameters
     });
     const [ariaControls, setControls] = useState("");
@@ -153,7 +152,7 @@ export function useCheckboxGroupParent({ context, info, textContentParameters, s
  * @param param0
  * @returns
  */
-export function useCheckboxGroupChild({ checkboxGroupChild, context, info, textContentParameters, sortableChildParameters, }) {
+export function useCheckboxGroupChild({ checkboxGroupChild, context, info, textContentParameters, }) {
     const { checkboxGroupChildrenContext: { allIds, setUpdateIndex, setTotalChildren, setTotalChecked, } } = context;
     monitorCallCount(useCheckboxGroupChild);
     const { checked, onChangeFromParent } = checkboxGroupChild;
@@ -185,7 +184,6 @@ export function useCheckboxGroupChild({ checkboxGroupChild, context, info, textC
         info: { checkboxInfo: { checkboxChildType: "child", getLastUserChecked, getChecked, setCheckedFromParentInput: onChangeFromParent }, ...info },
         context,
         textContentParameters,
-        sortableChildParameters,
     });
     return {
         checkboxGroupChild: {

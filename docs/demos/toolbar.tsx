@@ -16,7 +16,7 @@ const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
                     <Button<HTMLButtonElement>
                         tagButton="button"
                         pressed={false}
-                        render={info3 => <button {...useMergedProps(info2.props, info3.props)}>Toolbar child #{index}</button>} />
+                        render={info3 => <button {...useMergedProps(info2.propsChild, info2.propsTabbable, info3.props)}>Toolbar child #{index}</button>} />
                 );
             }}
         />

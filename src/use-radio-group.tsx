@@ -158,7 +158,6 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
     info,
     context,
     textContentParameters,
-    sortableChildParameters,
     ...void1
 
 }: UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>): UseRadioReturnType<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>> {
@@ -184,7 +183,6 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
     } = useCompleteListNavigationChild<TabbableChildElement, RadioSubInfo<TabbableChildElement, V>>({
         info,
         context,
-        sortableChildParameters,
         textContentParameters
     });
     assertEmptyObject(void1);

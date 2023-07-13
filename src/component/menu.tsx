@@ -159,9 +159,8 @@ export const MenuItem = memoForwardRef(function MenuItem<MenuItemElement extends
     const context = useContextWithWarning(MenuItemContext, "menu");
     const defaultFocusSelf = useCallback((e: MenuItemElement | null) => focus(e as Element as HTMLElement), []);
     const info = useMenuItem<MenuItemElement, M>({
-        info: { index, untabbable, unselectable, focusSelf: focusSelf ?? defaultFocusSelf, ...uinfo } as M,
+        info: { index, untabbable, unselectable, focusSelf: focusSelf ?? defaultFocusSelf, getSortValue, ...uinfo } as M,
         context,
-        sortableChildParameters: { getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },
         menuItemParameters: { onPress: onPress ?? null, role: role ?? "menuitem" }
     });

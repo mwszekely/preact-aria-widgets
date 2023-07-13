@@ -69,7 +69,7 @@ export function useRadioGroup({ labelParameters, radioGroupParameters: { name, o
         ...restRet,
     };
 }
-export function useRadio({ radioParameters: { value }, checkboxLikeParameters: { disabled }, labelParameters, info, context, textContentParameters, sortableChildParameters, ...void1 }) {
+export function useRadio({ radioParameters: { value }, checkboxLikeParameters: { disabled }, labelParameters, info, context, textContentParameters, ...void1 }) {
     monitorCallCount(useRadio);
     const index = info.index;
     const onInput = useStableCallback((e) => {
@@ -82,7 +82,6 @@ export function useRadio({ radioParameters: { value }, checkboxLikeParameters: {
     const { propsChild: listNavigationSingleSelectionChildProps, propsTabbable, singleSelectionChildReturn, pressParameters: { onPressSync, excludeSpace, ...void2 }, ...listNavRet } = useCompleteListNavigationChild({
         info,
         context,
-        sortableChildParameters,
         textContentParameters
     });
     assertEmptyObject(void1);

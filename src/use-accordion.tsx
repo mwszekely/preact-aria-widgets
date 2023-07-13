@@ -9,7 +9,7 @@ export interface UseAccordionParameters<HeaderButtonElement extends Element, M e
     UseManagedChildrenParameters<M>,
     Pick<UseTypeaheadNavigationParameters<HeaderButtonElement, M>, "typeaheadNavigationParameters"> {
     accordionParameters: { orientation?: "vertical" | "horizontal"; initialIndex?: number | null; localStorageKey: keyof PersistentStates | null; }
-    linearNavigationParameters: OmitStrong<UseLinearNavigationParameters<HeaderButtonElement, HeaderButtonElement, M>["linearNavigationParameters"], "arrowKeyDirection" | "getHighestIndex" | "isValid" | "indexDemangler" | "indexMangler">;
+    linearNavigationParameters: OmitStrong<UseLinearNavigationParameters<HeaderButtonElement, HeaderButtonElement, M>["linearNavigationParameters"], "getLowestIndex" | "arrowKeyDirection" | "getHighestIndex" | "isValid" | "indexDemangler" | "indexMangler">;
 }
 
 export interface UseAccordionReturnType<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo> extends UseManagedChildrenReturnType<M> {
@@ -191,6 +191,7 @@ export function useAccordion<HeaderButtonElement extends Element, M extends UseA
             linearNavigationParameters: useMemoObject({
                 disableHomeEndKeys,
                 getHighestIndex: useCallback(() => getChildren().getHighestIndex(), []),
+                getLowestIndex: useCallback(() => getChildren().getLowestIndex(), []),
                 indexMangler: identity,
                 indexDemangler: identity,
                 arrowKeyDirection: orientation ?? "vertical",

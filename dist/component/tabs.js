@@ -49,10 +49,9 @@ export const Tab = memoForwardRef(function Tab({ unselectable, focusSelf, untabb
     console.assert(context != null, `This Tab is not contained within a Tabs component`);
     const focusSelfDefault = useCallback((e) => { focus(e); }, []);
     const info = useTab({
-        info: { index, unselectable, untabbable, focusSelf: focusSelf ?? focusSelfDefault, ...uinfo },
+        info: { index, unselectable, untabbable, focusSelf: focusSelf ?? focusSelfDefault, getSortValue, ...uinfo },
         context,
         pressParameters: { focusSelf: focusSelfDefault, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange },
-        sortableChildParameters: { getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) }
     });
     useImperativeHandle(ref, () => info);

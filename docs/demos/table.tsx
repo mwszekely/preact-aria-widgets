@@ -1,6 +1,6 @@
 
 import { h } from "preact";
-import { returnZero, useState } from "preact-prop-helpers";
+import { returnZero, useMergedProps, useState } from "preact-prop-helpers";
 import { useRef } from "preact/compat";
 import { useCallback } from "preact/hooks";
 import { Table, TableCell, TableRow, TableSection } from "../../dist/index.js";
@@ -69,8 +69,9 @@ function DemoTableCell({ index, header }: { index: number, header?: boolean }) {
     const r = useRef(Math.random());
 
     if (header) {
+        const ref = useRef<HTMLTableCellElement>(null);
         const text = `Header #${index}`;
-        return <TableCell<HTMLTableCellElement> getSortValue={returnZero} focusSelf={e => e.focus()} tagTableCell="th" index={index} render={info => <th {...info.propsFocus} {...info.propsCell}>{text}<button tabIndex={info.rovingTabIndexChildReturn.tabbable ? 0 : -1} onClick={() => info.tableCellReturn.sortByThisColumn()}>Sort</button></th>} />
+        return <TableCell<HTMLTableCellElement> getSortValue={returnZero} focusSelf={e => ref.current?.focus()} tagTableCell="th" index={index} render={info => <th {...info.propsCell}>{text}<button {...useMergedProps(info.propsFocus, { ref })} onClick={() => { info.tableCellReturn.sortByThisColumn() }}>Sort</button></th>} />
     }
     else {
         //const text = `Cell in column #${index}`;

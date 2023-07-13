@@ -46,16 +46,15 @@ export function useGridlist({ labelParameters, gridlistParameters: { selectionLi
         ...restRet
     };
 }
-export function useGridlistRow({ gridlistRowParameters: { selected }, linearNavigationParameters, context: cx1, info, rovingTabIndexParameters, sortableChildParameters, textContentParameters, typeaheadNavigationParameters, ...void1 }) {
+export function useGridlistRow({ gridlistRowParameters: { selected }, linearNavigationParameters, context: cx1, info, rovingTabIndexParameters, textContentParameters, typeaheadNavigationParameters, ...void1 }) {
     monitorCallCount(useGridlistRow);
     assertEmptyObject(void1);
     const { gridlistRowContext: { selectionLimit } } = cx1;
     const { context: cx2, hasCurrentFocusParameters, hasCurrentFocusReturn, linearNavigationReturn, managedChildReturn, managedChildrenReturn, paginatedChildReturn, props, rovingTabIndexChildReturn, rovingTabIndexReturn, singleSelectionChildReturn, staggeredChildReturn, textContentReturn, typeaheadNavigationReturn } = useCompleteGridNavigationRow({
-        linearNavigationParameters: { disableHomeEndKeys: true, ...linearNavigationParameters },
+        linearNavigationParameters,
         info,
         context: cx1,
-        rovingTabIndexParameters: { ...rovingTabIndexParameters },
-        sortableChildParameters,
+        rovingTabIndexParameters,
         textContentParameters,
         typeaheadNavigationParameters,
     });

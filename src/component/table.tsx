@@ -64,7 +64,7 @@ export interface TableRowProps<RowElement extends Element, CellElement extends E
     render(info: UseTableRowReturnType<RowElement, CellElement, RM, CM>): VNode;
 }
 
-export interface TableCellProps<CellElement extends Element, CM extends TableCellInfo<CellElement>> extends PartialExcept<TableCellPropsBase<CellElement, CM>, "tagTableCell" | "index" | "getSortValue" | "focusSelf"> {
+export interface TableCellProps<CellElement extends Element, CM extends TableCellInfo<CellElement>> extends PartialExcept<TableCellPropsBase<CellElement, CM>, "getSortValue" | "tagTableCell" | "index" | "focusSelf"> {
     render(info: UseTableCellReturnType<CellElement, CM>): VNode;
 }
 
@@ -109,6 +109,7 @@ export const TableSection = memoForwardRef(function TableSection<SectionElement 
     selectionMode,
     onNavigateLinear,
     collator,
+    onRearranged,
     noTypeahead,
     onNavigateTypeahead,
     typeaheadTimeout,
@@ -123,7 +124,7 @@ export const TableSection = memoForwardRef(function TableSection<SectionElement 
         staggeredChildrenParameters: { staggered: staggered || false },
         typeaheadNavigationParameters: { 
             onNavigateTypeahead, 
-            collator: useDefault("collator", null), 
+            collator: useDefault("collator", collator), 
             noTypeahead: useDefault("noTypeahead", noTypeahead), 
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout) 
         },
@@ -138,7 +139,7 @@ export const TableSection = memoForwardRef(function TableSection<SectionElement 
             paginationMax: paginationMax ?? null,
             paginationMin: paginationMin ?? null
         },
-        rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
+        rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex), onRearranged: onRearranged || null },
         rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable },
         singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? null, onSelectedIndexChange: onSelectedIndexChange ?? null, ariaPropName, selectionMode },
         context: useContextWithWarning(TableContext, "table"),
@@ -156,7 +157,6 @@ export const TableRow = memoForwardRef(function TableRowU<RowElement extends Ele
     index,
     getText,
     tagTableRow,
-    disableHomeEndKeys,
     onTabbableIndexChange,
     navigatePastEnd,
     navigatePastStart,
@@ -182,7 +182,6 @@ export const TableRow = memoForwardRef(function TableRowU<RowElement extends Ele
             tagTableRow
         },
         linearNavigationParameters: {
-            disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap"
         },
@@ -210,7 +209,7 @@ export const TableCell = memoForwardRef(function TableCell<CellElement extends E
     console.assert(context != null, `This TableCell is not contained within a TableRow`);
     const defaultFocusSelf = useStableCallback((e: CellElement) => { focus(e as Element as HTMLElement) }, []);
     const info = useTableCell<CellElement, TableCellInfo<CellElement>>({
-        info: { index, getSortValue, focusSelf: focusSelf ?? defaultFocusSelf, untabbable: untabbable || false },
+        info: { index, focusSelf: focusSelf ?? defaultFocusSelf, untabbable: untabbable || false, getSortValue },
         context,
         gridNavigationCellParameters: { colSpan: colSpan ?? 1 },
         tableCellParameters: { tagTableCell },

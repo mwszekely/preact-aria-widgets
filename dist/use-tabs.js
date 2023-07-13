@@ -76,11 +76,10 @@ export function useTabs({ labelParameters, linearNavigationParameters, singleSel
         ...listNavRet1
     };
 }
-export function useTab({ info: { focusSelf: focusSelfParent, ...info }, textContentParameters, sortableChildParameters, pressParameters: { focusSelf: focusSelfChild, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, ...void2 }, context }) {
+export function useTab({ info: { focusSelf: focusSelfParent, ...info }, textContentParameters, pressParameters: { focusSelf: focusSelfChild, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, ...void2 }, context }) {
     const { propsChild: listNavigationSingleSelectionChildProps, propsTabbable, pressParameters: { onPressSync, excludeSpace, ...void1 }, refElementReturn, ...listNavRet2 } = useCompleteListNavigationChild({
         context,
         info: { focusSelf: focusSelfParent, ...info },
-        sortableChildParameters,
         textContentParameters,
     });
     //const { pressParameters, refElementReturn } = listNavRet2

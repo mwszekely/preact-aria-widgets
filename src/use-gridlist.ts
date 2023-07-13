@@ -64,7 +64,7 @@ export interface UseGridlistRowParameters<GridlistRowElement extends Element, Gr
 
     //rovingTabIndexParameters: UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>["rovingTabIndexParameters"];
 
-    linearNavigationParameters: OmitStrong<UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>["linearNavigationParameters"], "disableHomeEndKeys">
+    linearNavigationParameters: OmitStrong<UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>["linearNavigationParameters"], never>
     rovingTabIndexParameters: OmitStrong<UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>["rovingTabIndexParameters"], never>;
 }
 
@@ -156,7 +156,6 @@ export function useGridlistRow<GridlistRowElement extends Element, GridlistCellE
     context: cx1,
     info,
     rovingTabIndexParameters,
-    sortableChildParameters,
     textContentParameters,
     typeaheadNavigationParameters,
     ...void1
@@ -182,11 +181,10 @@ export function useGridlistRow<GridlistRowElement extends Element, GridlistCellE
         typeaheadNavigationReturn
 
     } = useCompleteGridNavigationRow<GridlistRowElement, GridlistCellElement, RM, CM>({
-        linearNavigationParameters: { disableHomeEndKeys: true, ...linearNavigationParameters },
+        linearNavigationParameters,
         info,
         context: cx1,
-        rovingTabIndexParameters: { ...rovingTabIndexParameters },
-        sortableChildParameters,
+        rovingTabIndexParameters,
         textContentParameters,
         typeaheadNavigationParameters,
     });

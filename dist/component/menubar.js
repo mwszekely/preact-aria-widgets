@@ -39,9 +39,8 @@ export const MenubarItem = memoForwardRef(function MenuItemU({ index, render, fo
     const context = (useContextWithWarning(MenubarItemContext, "menubar"));
     const defaultFocusSelf = useCallback((e) => focus(e), []);
     const info = useMenubarChild({
-        info: { index, untabbable: untabbable || false, unselectable: unselectable || false, focusSelf: focusSelf ?? defaultFocusSelf, ...uinfo },
+        info: { index, untabbable: untabbable || false, unselectable: unselectable || false, focusSelf: focusSelf ?? defaultFocusSelf, getSortValue, ...uinfo },
         context,
-        sortableChildParameters: { getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },
         menuItemParameters: { onPress: onPress ?? null, role: role ?? "menuitem" }
     });

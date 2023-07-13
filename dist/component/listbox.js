@@ -76,11 +76,10 @@ export const ListboxItem = memoForwardRef(function ListboxItem({ unselectable, f
     const focusSelfDefault = useCallback((e) => { focus(e); }, []);
     focusSelf ??= focusSelfDefault;
     const info = useListboxItem({
-        info: { index, untabbable: untabbable || false, unselectable: unselectable || false, focusSelf, ...subInfo },
+        info: { index, untabbable: untabbable || false, unselectable: unselectable || false, focusSelf, getSortValue, ...subInfo },
         context,
         listboxParameters: { selected: selected ?? null, onMultiSelect: onMultiSelect || null },
         pressParameters: { focusSelf, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange },
-        sortableChildParameters: { getSortValue: getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },
     });
     return render(info);

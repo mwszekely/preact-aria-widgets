@@ -43,10 +43,9 @@ export const Radio = memoForwardRef(function Radio({ unselectable, disabled, ind
     console.assert(context != null, `This Radio is not contained within a RadioGroup`);
     const getValue = useStableGetter(value);
     const info = useRadio({
-        sortableChildParameters: { getSortValue: getValue },
         radioParameters: { value },
         checkboxLikeParameters: { disabled: disabled ?? false },
-        info: { index, focusSelf, untabbable: untabbable || false, unselectable: !!unselectable },
+        info: { index, focusSelf, untabbable: untabbable || false, unselectable: !!unselectable, getSortValue: getValue },
         context,
         labelParameters: { ariaLabel, labelPosition, tagInput, tagLabel },
         textContentParameters: { getText: useDefault("getText", getText) }

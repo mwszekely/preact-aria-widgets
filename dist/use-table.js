@@ -67,7 +67,7 @@ export function useTableSection({ linearNavigationParameters, rovingTabIndexPara
         },
         typeaheadNavigationParameters,
         gridNavigationParameters,
-        rearrangeableChildrenParameters
+        rearrangeableChildrenParameters,
     });
     if (!naturalSectionTypes.has(tagTableSection)) {
         props.role = "rowgroup";
@@ -75,7 +75,7 @@ export function useTableSection({ linearNavigationParameters, rovingTabIndexPara
     useEffect(() => {
         if (location == "body") {
             tableContext.setSortBodyFunction(() => {
-                return () => sortableChildrenReturn.sort(tableContext.getCurrentSortColumn().direction);
+                return () => { sortableChildrenReturn.sort(tableContext.getCurrentSortColumn().direction); };
             });
         }
     });
@@ -105,8 +105,8 @@ export function useTableRow({ info, textContentParameters, context: cx1, tableRo
      } = useCompleteGridNavigationRow({
         textContentParameters,
         context: { ...cx1 },
-        info,
-        sortableChildParameters: {
+        info: {
+            ...info,
             getSortValue: useStableCallback(() => {
                 const currentColumn = cx1.tableContext.getCurrentSortColumn().column;
                 const currentChild = managedChildrenReturn.getChildren().getAt(currentColumn ?? 0);
@@ -141,16 +141,19 @@ export function useTableRow({ info, textContentParameters, context: cx1, tableRo
         ...restRet
     };
 }
-export function useTableCell({ tableCellParameters: { tagTableCell }, ...p }) {
+export function useTableCell({ tableCellParameters: { tagTableCell }, info, ...p }) {
     monitorCallCount(useTableCell);
-    const { props, ...ret } = useCompleteGridNavigationCell(p);
+    const { props, ...ret } = useCompleteGridNavigationCell({
+        info,
+        ...p
+    });
     return {
         propsFocus: props,
         propsCell: { role: (tagTableCell != "th" && tagTableCell != "td") ? "gridcell" : undefined },
         ...ret,
         tableCellReturn: {
             sortByThisColumn: useStableCallback(() => {
-                return p.context.tableContext.sortByColumn(p.info.index);
+                return p.context.tableContext.sortByColumn(info.index);
             }, [])
         }
     };

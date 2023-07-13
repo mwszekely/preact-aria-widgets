@@ -17,7 +17,7 @@ export function defaultRenderGridlistChild({ tagGridlistChild, makePropsGridlist
         return createElement(tagGridlistChild, (makePropsGridlistChild(info)));
     };
 }
-export const Gridlist = memoForwardRef(function GridlistU({ collator, disableHomeEndKeys, noTypeahead, onTabbableIndexChange, groupingType, typeaheadTimeout, selectedIndex, navigatePastEnd, navigatePastStart, onSelectedIndexChange, pageNavigationSize, selectionLimit, untabbable, paginationMax, paginationMin, staggered, compare, getIndex, onTabbableColumnChange, ariaLabel, orientation, ariaPropName, selectionMode, onNavigateLinear, onNavigateTypeahead, render }, ref) {
+export const Gridlist = memoForwardRef(function GridlistU({ collator, disableHomeEndKeys, noTypeahead, onTabbableIndexChange, groupingType, typeaheadTimeout, selectedIndex, navigatePastEnd, navigatePastStart, onSelectedIndexChange, pageNavigationSize, selectionLimit, untabbable, paginationMax, paginationMin, staggered, compare, getIndex, onTabbableColumnChange, ariaLabel, orientation, ariaPropName, selectionMode, onNavigateLinear, onNavigateTypeahead, onRearranged, render }, ref) {
     untabbable ??= false;
     ariaPropName ??= "aria-selected";
     selectionMode ??= "activation";
@@ -54,7 +54,8 @@ export const Gridlist = memoForwardRef(function GridlistU({ collator, disableHom
             ariaLabel
         },
         rearrangeableChildrenParameters: {
-            getIndex: useDefault("getIndex", getIndex)
+            getIndex: useDefault("getIndex", getIndex),
+            onRearranged: onRearranged || null
         },
         sortableChildrenParameters: {
             compare: compare ?? null
@@ -73,10 +74,9 @@ export const GridlistRow = memoForwardRef(function GridlistRowU({ index, collato
     console.assert(context != null, `This GridlistRow is not contained within a Gridlist`);
     untabbable ||= false;
     const info = useGridlistRow({
-        info: { index, untabbable, unselectable, ...uinfo },
+        info: { index, untabbable, unselectable, getSortValue, ...uinfo },
         context,
         gridlistRowParameters: { selected: selected ?? null },
-        sortableChildParameters: { getSortValue },
         textContentParameters: { getText: useDefault("getText", getText) },
         linearNavigationParameters: {
             navigatePastEnd: navigatePastEnd ?? "wrap",

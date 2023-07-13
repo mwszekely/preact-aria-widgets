@@ -1,5 +1,5 @@
 
-import { returnZero, useState } from "preact-prop-helpers";
+import { returnZero, useMergedProps, useState } from "preact-prop-helpers";
 import { useRef } from "preact/compat";
 import { Checkbox, EventDetail, Gridlist, GridlistChild, GridlistRow, UseCheckboxReturnType } from "../../dist/index.js";
 
@@ -33,7 +33,7 @@ function DemoGridlistChild1({ row }: { row: number }) {
     return (
         <GridlistChild<HTMLDivElement> focusSelf={e => e.focus()} index={0} render={info => {
             return (
-                <div {...info.props}>{text}</div>
+                <div {...useMergedProps<HTMLDivElement>(info.propsCell, info.propsTabbable, info.propsPress)}>{text}</div>
             );
             /*
             
@@ -54,7 +54,7 @@ function DemoGridlistChild2({ tabbable }:{tabbable:boolean}) {
             render={info => {
 
                 return (
-                    <div {...info.props}>
+                    <div {...useMergedProps<HTMLDivElement>(info.propsCell, info.propsTabbable, info.propsPress)}>
                         <Checkbox<HTMLInputElement, HTMLLabelElement>
                             ariaLabel={"Whether this item is selected"}
                             ref={cb}
