@@ -161,7 +161,6 @@ export function useGridlistRow<GridlistRowElement extends Element, GridlistCellE
     ...void1
 }: UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>): UseGridlistRowReturnType<GridlistRowElement, GridlistCellElement, RM, CM> {
     monitorCallCount(useGridlistRow);
-    assertEmptyObject(void1);
 
     const { gridlistRowContext: { selectionLimit } } = cx1;
     const {
@@ -177,7 +176,9 @@ export function useGridlistRow<GridlistRowElement extends Element, GridlistCellE
         singleSelectionChildReturn,
         staggeredChildReturn,
         textContentReturn,
-        typeaheadNavigationReturn
+        typeaheadNavigationReturn,
+        pressParameters,
+        ...void2
 
     } = useCompleteGridNavigationRow<GridlistRowElement, GridlistCellElement, RM, CM>({
         linearNavigationParameters,
@@ -194,7 +195,11 @@ export function useGridlistRow<GridlistRowElement extends Element, GridlistCellE
 
     props.role = "row";
 
+    assertEmptyObject(void1);
+    assertEmptyObject(void2);
+    
     return {
+        pressParameters,
         linearNavigationReturn,
         managedChildrenReturn,
         managedChildReturn,
