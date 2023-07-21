@@ -3,7 +3,7 @@ import { Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
 export function useDialog({ dismissParameters, escapeDismissParameters, focusTrapParameters, labelParameters }) {
     monitorCallCount(useDialog);
-    const { focusTrapReturn, propsFocusContainer, propsStablePopup, propsStableSource, refElementPopupReturn, refElementSourceReturn } = useModal({
+    const { propsFocusContainer, propsStablePopup, propsStableSource, refElementPopupReturn, refElementSourceReturn } = useModal({
         dismissParameters: { closeOnLostFocus: false, ...dismissParameters },
         escapeDismissParameters,
         focusTrapParameters: { trapActive: true, onlyMoveFocus: false, ...focusTrapParameters }
@@ -19,7 +19,6 @@ export function useDialog({ dismissParameters, escapeDismissParameters, focusTra
         randomIdLabelParameters: { prefix: Prefices.dialogTitle }
     });
     return {
-        focusTrapReturn,
         propsFocusContainer,
         propsDialog: useMergedProps(propsStablePopup, propsInput),
         propsSource: { ...propsStableSource },

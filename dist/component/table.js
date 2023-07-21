@@ -16,7 +16,7 @@ export const Table = memoForwardRef(function TableU({ ariaLabel, selectionLimit,
     useImperativeHandle(ref, () => info);
     return _jsx(TableContext.Provider, { value: info.context, children: render(info) });
 });
-export const TableSection = memoForwardRef(function TableSection({ disableHomeEndKeys, getIndex, initiallySelectedIndex, untabbable, navigatePastEnd, navigatePastStart, onSelectedIndexChange, onTabbableColumnChange, onTabbableIndexChange, pageNavigationSize, paginationMax, paginationMin, staggered, render, location, ariaPropName, selectionMode, onNavigateLinear, collator, onRearranged, noTypeahead, onNavigateTypeahead, typeaheadTimeout, tagTableSection }) {
+export const TableSection = memoForwardRef(function TableSection({ disableHomeEndKeys, getIndex, initiallySelectedIndex, untabbable, navigatePastEnd, navigatePastStart, onSelectedIndexChange, onTabbableColumnChange, onTabbableIndexChange, pageNavigationSize, paginationMax, paginationMin, staggered, render, location, ariaPropName, selectionMode, onNavigateLinear, collator, noTypeahead, onNavigateTypeahead, typeaheadTimeout, tagTableSection }) {
     untabbable = (untabbable ?? false);
     ariaPropName ??= "aria-selected";
     selectionMode ??= "activation";
@@ -40,7 +40,7 @@ export const TableSection = memoForwardRef(function TableSection({ disableHomeEn
             paginationMax: paginationMax ?? null,
             paginationMin: paginationMin ?? null
         },
-        rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex), onRearranged: onRearranged || null },
+        rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
         rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable },
         singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? null, onSelectedIndexChange: onSelectedIndexChange ?? null, ariaPropName, selectionMode },
         context: useContextWithWarning(TableContext, "table"),

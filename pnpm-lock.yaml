@@ -12,7 +12,7 @@ dependencies:
     version: 10.13.2
   preact-prop-helpers:
     specifier: github:mwszekely/preact-prop-helpers
-    version: github.com/mwszekely/preact-prop-helpers/d2893432d824f25d1fd20f084fb799022c1f4aca(preact@10.13.2)
+    version: github.com/mwszekely/preact-prop-helpers/5bc72ee90f8f8c40bf48a5a106088a8f49121802(preact@10.13.2)
 
 devDependencies:
   '@playwright/test':
@@ -35,7 +35,7 @@ packages:
     engines: {node: '>=16'}
     hasBin: true
     dependencies:
-      '@types/node': 20.4.2
+      '@types/node': 20.4.3
       playwright-core: 1.35.1
     optionalDependencies:
       fsevents: 2.3.2
@@ -51,8 +51,8 @@ packages:
     resolution: {integrity: sha512-Hwx9EUgdwf2GLarOjQp5ZH8ZmblzcbTBC2wtQWNKARBSxM9ezRIAUpeDTgoQRAFB0+8CNWXVA9+MaSOzOF3nPg==}
     dev: true
 
-  /@types/node@20.4.2:
-    resolution: {integrity: sha512-Dd0BYtWgnWJKwO1jkmTrzofjK2QXXcai0dmtzvIBhcA+RsG5h8R3xlyta0kGOZRNfL9GuRtb1knmPEhQrePCEw==}
+  /@types/node@20.4.3:
+    resolution: {integrity: sha512-Yu3+r4Mn/iY6Mf0aihncZQ1qOjOUrCiodbHHY1hds5O+7BbKp9t+Li7zLO13zO8j9L2C6euz8xsYQP0rjGvVXw==}
     dev: true
 
   /ansi-styles@3.2.1:
@@ -67,6 +67,18 @@ packages:
     dependencies:
       call-bind: 1.0.2
       is-array-buffer: 3.0.2
+    dev: true
+
+  /arraybuffer.prototype.slice@1.0.1:
+    resolution: {integrity: sha512-09x0ZWFEjj4WD8PDbykUwo3t9arLn8NIzmmYEJFpYekOAQjpkGSyrQhNoRTcwwcFRu+ycWF78QZ63oWTqSjBcw==}
+    engines: {node: '>= 0.4'}
+    dependencies:
+      array-buffer-byte-length: 1.0.0
+      call-bind: 1.0.2
+      define-properties: 1.2.0
+      get-intrinsic: 1.2.1
+      is-array-buffer: 3.0.2
+      is-shared-array-buffer: 1.0.2
     dev: true
 
   /available-typed-arrays@1.0.5:
@@ -149,11 +161,12 @@ packages:
       is-arrayish: 0.2.1
     dev: true
 
-  /es-abstract@1.21.3:
-    resolution: {integrity: sha512-ZU4miiY1j3sGPFLJ34VJXEqhpmL+HGByCinGHv4HC+Fxl2fI2Z4yR6tl0mORnDr6PA8eihWo4LmSWDbvhALckg==}
+  /es-abstract@1.22.1:
+    resolution: {integrity: sha512-ioRRcXMO6OFyRpyzV3kE1IIBd4WG5/kltnzdxSCqoP8CMGs/Li+M1uF5o7lOkZVFjDs+NLesthnF66Pg/0q0Lw==}
     engines: {node: '>= 0.4'}
     dependencies:
       array-buffer-byte-length: 1.0.0
+      arraybuffer.prototype.slice: 1.0.1
       available-typed-arrays: 1.0.5
       call-bind: 1.0.2
       es-set-tostringtag: 2.0.1
@@ -174,20 +187,23 @@ packages:
       is-regex: 1.1.4
       is-shared-array-buffer: 1.0.2
       is-string: 1.0.7
-      is-typed-array: 1.1.10
+      is-typed-array: 1.1.12
       is-weakref: 1.0.2
       object-inspect: 1.12.3
       object-keys: 1.1.1
       object.assign: 4.1.4
       regexp.prototype.flags: 1.5.0
+      safe-array-concat: 1.0.0
       safe-regex-test: 1.0.0
       string.prototype.trim: 1.2.7
       string.prototype.trimend: 1.0.6
       string.prototype.trimstart: 1.0.6
+      typed-array-buffer: 1.0.0
+      typed-array-byte-length: 1.0.0
       typed-array-byte-offset: 1.0.0
       typed-array-length: 1.0.4
       unbox-primitive: 1.0.2
-      which-typed-array: 1.1.10
+      which-typed-array: 1.1.11
     dev: true
 
   /es-set-tostringtag@2.0.1:
@@ -237,7 +253,7 @@ packages:
     dependencies:
       call-bind: 1.0.2
       define-properties: 1.2.0
-      es-abstract: 1.21.3
+      es-abstract: 1.22.1
       functions-have-names: 1.2.3
     dev: true
 
@@ -336,7 +352,7 @@ packages:
     dependencies:
       call-bind: 1.0.2
       get-intrinsic: 1.2.1
-      is-typed-array: 1.1.10
+      is-typed-array: 1.1.12
     dev: true
 
   /is-arrayish@0.2.1:
@@ -415,21 +431,21 @@ packages:
       has-symbols: 1.0.3
     dev: true
 
-  /is-typed-array@1.1.10:
-    resolution: {integrity: sha512-PJqgEHiWZvMpaFZ3uTc8kHPM4+4ADTlDniuQL7cU/UDA0Ql7F70yGfHph3cLNe+c9toaigv+DFzTJKhc2CtO6A==}
+  /is-typed-array@1.1.12:
+    resolution: {integrity: sha512-Z14TF2JNG8Lss5/HMqt0//T9JeHXttXy5pH/DBU4vi98ozO2btxzq9MwYDZYnKwU8nRsz/+GVFVRDq3DkVuSPg==}
     engines: {node: '>= 0.4'}
     dependencies:
-      available-typed-arrays: 1.0.5
-      call-bind: 1.0.2
-      for-each: 0.3.3
-      gopd: 1.0.1
-      has-tostringtag: 1.0.0
+      which-typed-array: 1.1.11
     dev: true
 
   /is-weakref@1.0.2:
     resolution: {integrity: sha512-qctsuLZmIQ0+vSSMfoVvyFe2+GSEvnmZ2ezTup1SBse9+twCCeial6EEi3Nc2KFcf6+qz2FBPnjXsk8xhKSaPQ==}
     dependencies:
       call-bind: 1.0.2
+    dev: true
+
+  /isarray@2.0.5:
+    resolution: {integrity: sha512-xHjhDr3cNBK0BzdUJSPXZntQUx/mwMS5Rw4A7lPJ90XGAO6ISP/ePDNuo0vhqOZU+UD5JoodwCAAoZQd3FeAKw==}
     dev: true
 
   /isexe@2.0.0:
@@ -585,6 +601,16 @@ packages:
       supports-preserve-symlinks-flag: 1.0.0
     dev: true
 
+  /safe-array-concat@1.0.0:
+    resolution: {integrity: sha512-9dVEFruWIsnie89yym+xWTAYASdpw3CJV7Li/6zBewGf9z2i1j31rP6jnY0pHEO4QZh6N0K11bFjWmdR8UGdPQ==}
+    engines: {node: '>=0.4'}
+    dependencies:
+      call-bind: 1.0.2
+      get-intrinsic: 1.2.1
+      has-symbols: 1.0.3
+      isarray: 2.0.5
+    dev: true
+
   /safe-regex-test@1.0.0:
     resolution: {integrity: sha512-JBUUzyOgEwXQY1NuPtvcj/qcBDbDmEvWufhlnXZIm75DEHp+afM1r1ujJpJsV/gSM4t59tpDyPi1sd6ZaPFfsA==}
     dependencies:
@@ -650,7 +676,7 @@ packages:
     dependencies:
       call-bind: 1.0.2
       define-properties: 1.2.0
-      es-abstract: 1.21.3
+      es-abstract: 1.22.1
     dev: true
 
   /string.prototype.trim@1.2.7:
@@ -659,7 +685,7 @@ packages:
     dependencies:
       call-bind: 1.0.2
       define-properties: 1.2.0
-      es-abstract: 1.21.3
+      es-abstract: 1.22.1
     dev: true
 
   /string.prototype.trimend@1.0.6:
@@ -667,7 +693,7 @@ packages:
     dependencies:
       call-bind: 1.0.2
       define-properties: 1.2.0
-      es-abstract: 1.21.3
+      es-abstract: 1.22.1
     dev: true
 
   /string.prototype.trimstart@1.0.6:
@@ -675,7 +701,7 @@ packages:
     dependencies:
       call-bind: 1.0.2
       define-properties: 1.2.0
-      es-abstract: 1.21.3
+      es-abstract: 1.22.1
     dev: true
 
   /strip-bom@3.0.0:
@@ -699,6 +725,25 @@ packages:
     resolution: {integrity: sha512-Cat63mxsVJlzYvN51JmVXIgNoUokrIaT2zLclCXjRd8boZ0004U4KCs/sToJ75C6sdlByWxpYnb5Boif1VSFew==}
     dev: false
 
+  /typed-array-buffer@1.0.0:
+    resolution: {integrity: sha512-Y8KTSIglk9OZEr8zywiIHG/kmQ7KWyjseXs1CbSo8vC42w7hg2HgYTxSWwP0+is7bWDc1H+Fo026CpHFwm8tkw==}
+    engines: {node: '>= 0.4'}
+    dependencies:
+      call-bind: 1.0.2
+      get-intrinsic: 1.2.1
+      is-typed-array: 1.1.12
+    dev: true
+
+  /typed-array-byte-length@1.0.0:
+    resolution: {integrity: sha512-Or/+kvLxNpeQ9DtSydonMxCx+9ZXOswtwJn17SNLvhptaXYDJvkFFP5zbfU/uLmvnBJlI4yrnXRxpdWH/M5tNA==}
+    engines: {node: '>= 0.4'}
+    dependencies:
+      call-bind: 1.0.2
+      for-each: 0.3.3
+      has-proto: 1.0.1
+      is-typed-array: 1.1.12
+    dev: true
+
   /typed-array-byte-offset@1.0.0:
     resolution: {integrity: sha512-RD97prjEt9EL8YgAgpOkf3O4IF9lhJFr9g0htQkm0rchFp/Vx7LW5Q8fSXXub7BXAODyUQohRMyOc3faCPd0hg==}
     engines: {node: '>= 0.4'}
@@ -707,7 +752,7 @@ packages:
       call-bind: 1.0.2
       for-each: 0.3.3
       has-proto: 1.0.1
-      is-typed-array: 1.1.10
+      is-typed-array: 1.1.12
     dev: true
 
   /typed-array-length@1.0.4:
@@ -715,7 +760,7 @@ packages:
     dependencies:
       call-bind: 1.0.2
       for-each: 0.3.3
-      is-typed-array: 1.1.10
+      is-typed-array: 1.1.12
     dev: true
 
   /typescript@5.1.3:
@@ -750,8 +795,8 @@ packages:
       is-symbol: 1.0.4
     dev: true
 
-  /which-typed-array@1.1.10:
-    resolution: {integrity: sha512-uxoA5vLUfRPdjCuJ1h5LlYdmTLbYfums398v3WLkM+i/Wltl2/XyZpQWKbN++ck5L64SR/grOHqtXCUKmlZPNA==}
+  /which-typed-array@1.1.11:
+    resolution: {integrity: sha512-qe9UWWpkeG5yzZ0tNYxDmd7vo58HDBc39mZ0xWWpolAGADdFOzkfamWLDxkOWcvHQKVmdTyQdLD4NOfjLWTKew==}
     engines: {node: '>= 0.4'}
     dependencies:
       available-typed-arrays: 1.0.5
@@ -759,7 +804,6 @@ packages:
       for-each: 0.3.3
       gopd: 1.0.1
       has-tostringtag: 1.0.0
-      is-typed-array: 1.1.10
     dev: true
 
   /which@1.3.1:
@@ -781,9 +825,15 @@ packages:
       lodash-es: 4.17.21
     dev: false
 
-  github.com/mwszekely/preact-prop-helpers/d2893432d824f25d1fd20f084fb799022c1f4aca(preact@10.13.2):
-    resolution: {tarball: https://codeload.github.com/mwszekely/preact-prop-helpers/tar.gz/d2893432d824f25d1fd20f084fb799022c1f4aca}
-    id: github.com/mwszekely/preact-prop-helpers/d2893432d824f25d1fd20f084fb799022c1f4aca
+  github.com/mwszekely/map-and-set-extensions/f0a9758a5dbccc8fe88f4bfc928166c84d86ac6b:
+    resolution: {tarball: https://codeload.github.com/mwszekely/map-and-set-extensions/tar.gz/f0a9758a5dbccc8fe88f4bfc928166c84d86ac6b}
+    name: map-and-set-extensions
+    version: 1.0.0
+    dev: false
+
+  github.com/mwszekely/preact-prop-helpers/5bc72ee90f8f8c40bf48a5a106088a8f49121802(preact@10.13.2):
+    resolution: {tarball: https://codeload.github.com/mwszekely/preact-prop-helpers/tar.gz/5bc72ee90f8f8c40bf48a5a106088a8f49121802}
+    id: github.com/mwszekely/preact-prop-helpers/5bc72ee90f8f8c40bf48a5a106088a8f49121802
     name: preact-prop-helpers
     version: 0.0.1
     peerDependencies:
@@ -793,6 +843,7 @@ packages:
       blocking-elements: 0.1.1
       clsx: 1.2.1
       lodash-es: 4.17.21
+      map-and-set-extensions: github.com/mwszekely/map-and-set-extensions/f0a9758a5dbccc8fe88f4bfc928166c84d86ac6b
       preact: 10.13.2
       tabbable: 6.2.0
       wicg-inert: 3.1.2

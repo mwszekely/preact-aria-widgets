@@ -1,4 +1,4 @@
-import { CompleteGridNavigationContext, CompleteGridNavigationRowContext, ElementProps, PassiveStateUpdater, UseCompleteGridNavigationCellInfo, UseCompleteGridNavigationCellParameters, UseCompleteGridNavigationCellReturnType, UseCompleteGridNavigationParameters, UseCompleteGridNavigationReturnType, UseCompleteGridNavigationRowInfo, UseCompleteGridNavigationRowParameters, UseCompleteGridNavigationRowReturnType, UseGridNavigationRowParameters } from "preact-prop-helpers";
+import { CompleteGridNavigationCellContext, CompleteGridNavigationRowContext, ElementProps, PassiveStateUpdater, UseCompleteGridNavigationCellInfo, UseCompleteGridNavigationCellParameters, UseCompleteGridNavigationCellReturnType, UseCompleteGridNavigationParameters, UseCompleteGridNavigationReturnType, UseCompleteGridNavigationRowInfo, UseCompleteGridNavigationRowParameters, UseCompleteGridNavigationRowReturnType, UseGridNavigationRowParameters } from "preact-prop-helpers";
 import { ElementToTag, OmitStrong } from "./props.js";
 import { UseLabelSyntheticParameters } from "./use-label.js";
 import { UseListboxParameters } from "./use-listbox.js";
@@ -9,7 +9,7 @@ export interface UseTableContext {
         getCurrentSortColumn(): SortInfo;
     };
 }
-export interface UseTableSectionContext<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>> extends CompleteGridNavigationContext<TableSectionElement, TableRowElement, TableCellElement, RM, CM>, UseTableContext {
+export interface UseTableSectionContext<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>> extends CompleteGridNavigationRowContext<TableSectionElement, TableRowElement, TableCellElement, RM, CM>, UseTableContext {
 }
 export interface UseTableSectionParameters<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>> extends OmitStrong<UseCompleteGridNavigationParameters<TableSectionElement, TableRowElement, TableCellElement, RM>, "rovingTabIndexParameters" | "sortableChildrenParameters"> {
     rovingTabIndexParameters: OmitStrong<UseCompleteGridNavigationParameters<TableSectionElement, TableRowElement, TableCellElement, RM>["rovingTabIndexParameters"], "focusSelfParent">;
@@ -38,7 +38,7 @@ export interface UseTableRowParameters<TableRowElement extends Element, TableCel
     };
     info: Omit<UseCompleteGridNavigationRowParameters<TableRowElement, TableCellElement, RM, CM>["info"], "getSortValue">;
 }
-export interface UseTableRowContext<TableRowElement extends Element, TableCellElement extends Element, M extends TableCellInfo<TableCellElement>> extends CompleteGridNavigationRowContext<TableRowElement, TableCellElement, M> {
+export interface UseTableRowContext<TableRowElement extends Element, TableCellElement extends Element, M extends TableCellInfo<TableCellElement>> extends CompleteGridNavigationCellContext<TableRowElement, TableCellElement, M> {
     tableContext: UseTableContext["tableContext"];
 }
 export interface UseTableCellReturnType<TableCellElement extends Element, CM extends TableCellInfo<TableCellElement>> extends OmitStrong<UseCompleteGridNavigationCellReturnType<TableCellElement, CM>, "props"> {

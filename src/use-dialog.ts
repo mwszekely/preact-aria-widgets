@@ -19,7 +19,6 @@ export function useDialog<FocusContainerElement extends Element, SourceElement e
     monitorCallCount(useDialog);
     
     const {
-        focusTrapReturn,
         propsFocusContainer,
         propsStablePopup,
         propsStableSource,
@@ -47,7 +46,6 @@ export function useDialog<FocusContainerElement extends Element, SourceElement e
     });
 
     return {
-        focusTrapReturn,
         propsFocusContainer,
         propsDialog: useMergedProps<DialogElement>(propsStablePopup, propsInput),
         propsSource: { ...propsStableSource },

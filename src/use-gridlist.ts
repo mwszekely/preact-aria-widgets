@@ -1,5 +1,5 @@
 import {
-    CompleteGridNavigationContext,
+    CompleteGridNavigationCellContext,
     CompleteGridNavigationRowContext,
     ElementProps,
     ExtendMerge,
@@ -28,11 +28,11 @@ import { OmitStrong, Prefices } from "./props.js";
 import { UseLabelSyntheticParameters, useLabelSynthetic } from "./use-label.js";
 import { UseListboxParameters } from "./use-listbox.js";
 
-export interface UseGridlistContext<GridlistElement extends Element, GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends CompleteGridNavigationContext<GridlistElement, GridlistRowElement, GridlistCellElement, RM, CM> {
+export interface UseGridlistContext<GridlistElement extends Element, GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends CompleteGridNavigationRowContext<GridlistElement, GridlistRowElement, GridlistCellElement, RM, CM> {
     gridlistRowContext: { selectionLimit: "single" | "multi" | "none" }
 }
 
-export interface UseGridlistRowContext<ParentElement extends Element, ChildElement extends Element, M extends GridlistCellInfo<ChildElement>> extends CompleteGridNavigationRowContext<ParentElement, ChildElement, M> {
+export interface UseGridlistRowContext<ParentElement extends Element, ChildElement extends Element, M extends GridlistCellInfo<ChildElement>> extends CompleteGridNavigationCellContext<ParentElement, ChildElement, M> {
 
 }
 
@@ -166,7 +166,6 @@ export function useGridlistRow<GridlistRowElement extends Element, GridlistCellE
     const { gridlistRowContext: { selectionLimit } } = cx1;
     const {
         context: cx2,
-        hasCurrentFocusParameters,
         hasCurrentFocusReturn,
         linearNavigationReturn,
         managedChildReturn,
@@ -196,8 +195,6 @@ export function useGridlistRow<GridlistRowElement extends Element, GridlistCellE
     props.role = "row";
 
     return {
-
-        hasCurrentFocusParameters,
         linearNavigationReturn,
         managedChildrenReturn,
         managedChildReturn,

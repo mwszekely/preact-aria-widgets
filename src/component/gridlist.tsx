@@ -101,7 +101,6 @@ export const Gridlist = memoForwardRef(function GridlistU<GridlistElement extend
     selectionMode,
     onNavigateLinear,
     onNavigateTypeahead,
-    onRearranged,
     render
 }: GridlistProps<GridlistElement, RowElement, Cellement, LabelElement, RM, CM>, ref?: Ref<any>) {
     untabbable ??= false;
@@ -141,8 +140,7 @@ export const Gridlist = memoForwardRef(function GridlistU<GridlistElement extend
             ariaLabel
         },
         rearrangeableChildrenParameters: {
-            getIndex: useDefault("getIndex", getIndex),
-            onRearranged: onRearranged || null
+            getIndex: useDefault("getIndex", getIndex)
         },
         sortableChildrenParameters: {
             compare: compare ?? null

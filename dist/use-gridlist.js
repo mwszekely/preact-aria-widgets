@@ -50,7 +50,7 @@ export function useGridlistRow({ gridlistRowParameters: { selected }, linearNavi
     monitorCallCount(useGridlistRow);
     assertEmptyObject(void1);
     const { gridlistRowContext: { selectionLimit } } = cx1;
-    const { context: cx2, hasCurrentFocusParameters, hasCurrentFocusReturn, linearNavigationReturn, managedChildReturn, managedChildrenReturn, paginatedChildReturn, props, rovingTabIndexChildReturn, rovingTabIndexReturn, singleSelectionChildReturn, staggeredChildReturn, textContentReturn, typeaheadNavigationReturn } = useCompleteGridNavigationRow({
+    const { context: cx2, hasCurrentFocusReturn, linearNavigationReturn, managedChildReturn, managedChildrenReturn, paginatedChildReturn, props, rovingTabIndexChildReturn, rovingTabIndexReturn, singleSelectionChildReturn, staggeredChildReturn, textContentReturn, typeaheadNavigationReturn } = useCompleteGridNavigationRow({
         linearNavigationParameters,
         info,
         context: cx1,
@@ -63,7 +63,6 @@ export function useGridlistRow({ gridlistRowParameters: { selected }, linearNavi
         console.assert(selected == null);
     props.role = "row";
     return {
-        hasCurrentFocusParameters,
         linearNavigationReturn,
         managedChildrenReturn,
         managedChildReturn,

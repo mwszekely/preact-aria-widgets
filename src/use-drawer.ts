@@ -17,7 +17,6 @@ export function useDrawer<FocusContainerElement extends Element, SourceElement e
     monitorCallCount(useDrawer);
     
     const {
-        focusTrapReturn,
         propsFocusContainer,
         propsStablePopup,
         propsStableSource,
@@ -45,7 +44,6 @@ export function useDrawer<FocusContainerElement extends Element, SourceElement e
     });
 
     return {
-        focusTrapReturn,
         propsFocusContainer,
         propsDrawer: useMergedProps<PopupElement>(propsStablePopup, propsInput),
         propsTitle: propsLabel,

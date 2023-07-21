@@ -3,7 +3,7 @@ import { Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
 export function useDrawer({ dismissParameters, escapeDismissParameters, focusTrapParameters, labelParameters }) {
     monitorCallCount(useDrawer);
-    const { focusTrapReturn, propsFocusContainer, propsStablePopup, propsStableSource, refElementPopupReturn, refElementSourceReturn } = useModal({
+    const { propsFocusContainer, propsStablePopup, propsStableSource, refElementPopupReturn, refElementSourceReturn } = useModal({
         dismissParameters,
         escapeDismissParameters,
         focusTrapParameters: { onlyMoveFocus: false, ...focusTrapParameters }
@@ -19,7 +19,6 @@ export function useDrawer({ dismissParameters, escapeDismissParameters, focusTra
         randomIdLabelParameters: { prefix: Prefices.drawerTitle }
     });
     return {
-        focusTrapReturn,
         propsFocusContainer,
         propsDrawer: useMergedProps(propsStablePopup, propsInput),
         propsTitle: propsLabel,

@@ -17,7 +17,6 @@ export interface UseMenuSurfaceReturnType<MenuSurfaceElement extends Element, Me
     propsTarget: ElementProps<MenuTargetElement>;
     propsTrigger: ElementProps<MenuTriggerElement>;
     propsSentinel: ElementProps<any>;
-    focusTrapReturn: UseModalReturnType<null, MenuTriggerElement, MenuSurfaceElement>["focusTrapReturn"];
     refElementPopupReturn: UseModalReturnType<null, MenuTriggerElement, MenuSurfaceElement>["refElementPopupReturn"];
     refElementSourceReturn: UseModalReturnType<null, MenuTriggerElement, MenuSurfaceElement>["refElementSourceReturn"];
 }

@@ -17,7 +17,7 @@ export function defaultRenderGridlistChild({ tagGridlistChild, makePropsGridlist
         return createElement(tagGridlistChild, (makePropsGridlistChild(info)));
     };
 }
-export const Gridlist = memoForwardRef(function GridlistU({ collator, disableHomeEndKeys, noTypeahead, onTabbableIndexChange, groupingType, typeaheadTimeout, selectedIndex, navigatePastEnd, navigatePastStart, onSelectedIndexChange, pageNavigationSize, selectionLimit, untabbable, paginationMax, paginationMin, staggered, compare, getIndex, onTabbableColumnChange, ariaLabel, orientation, ariaPropName, selectionMode, onNavigateLinear, onNavigateTypeahead, onRearranged, render }, ref) {
+export const Gridlist = memoForwardRef(function GridlistU({ collator, disableHomeEndKeys, noTypeahead, onTabbableIndexChange, groupingType, typeaheadTimeout, selectedIndex, navigatePastEnd, navigatePastStart, onSelectedIndexChange, pageNavigationSize, selectionLimit, untabbable, paginationMax, paginationMin, staggered, compare, getIndex, onTabbableColumnChange, ariaLabel, orientation, ariaPropName, selectionMode, onNavigateLinear, onNavigateTypeahead, render }, ref) {
     untabbable ??= false;
     ariaPropName ??= "aria-selected";
     selectionMode ??= "activation";
@@ -54,8 +54,7 @@ export const Gridlist = memoForwardRef(function GridlistU({ collator, disableHom
             ariaLabel
         },
         rearrangeableChildrenParameters: {
-            getIndex: useDefault("getIndex", getIndex),
-            onRearranged: onRearranged || null
+            getIndex: useDefault("getIndex", getIndex)
         },
         sortableChildrenParameters: {
             compare: compare ?? null

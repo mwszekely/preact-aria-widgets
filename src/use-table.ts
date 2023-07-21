@@ -1,7 +1,7 @@
 import { h } from "preact";
 import {
     Compare,
-    CompleteGridNavigationContext,
+    CompleteGridNavigationCellContext,
     CompleteGridNavigationRowContext,
     ElementProps,
     PassiveStateUpdater,
@@ -32,7 +32,7 @@ export interface UseTableContext {
     }
 }
 
-export interface UseTableSectionContext<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>> extends CompleteGridNavigationContext<TableSectionElement, TableRowElement, TableCellElement, RM, CM>, UseTableContext { }
+export interface UseTableSectionContext<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>> extends CompleteGridNavigationRowContext<TableSectionElement, TableRowElement, TableCellElement, RM, CM>, UseTableContext { }
 
 export interface UseTableSectionParameters<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>> extends OmitStrong<UseCompleteGridNavigationParameters<TableSectionElement, TableRowElement, TableCellElement, RM>, "rovingTabIndexParameters" | "sortableChildrenParameters"> {
     rovingTabIndexParameters: OmitStrong<UseCompleteGridNavigationParameters<TableSectionElement, TableRowElement, TableCellElement, RM>["rovingTabIndexParameters"], "focusSelfParent">;
@@ -62,7 +62,7 @@ export interface UseTableRowParameters<TableRowElement extends Element, TableCel
     info: Omit<UseCompleteGridNavigationRowParameters<TableRowElement, TableCellElement, RM, CM>["info"], "getSortValue">;
 }
 
-export interface UseTableRowContext<TableRowElement extends Element, TableCellElement extends Element, M extends TableCellInfo<TableCellElement>> extends CompleteGridNavigationRowContext<TableRowElement, TableCellElement, M> {
+export interface UseTableRowContext<TableRowElement extends Element, TableCellElement extends Element, M extends TableCellInfo<TableCellElement>> extends CompleteGridNavigationCellContext<TableRowElement, TableCellElement, M> {
     tableContext: UseTableContext["tableContext"];
 }
 
@@ -216,7 +216,7 @@ export function useTableSection<TableSectionElement extends Element, TableRowEle
     useEffect(() => {
         if (location == "body") {
             tableContext.setSortBodyFunction(() => {
-                return () => {sortableChildrenReturn.sort(tableContext.getCurrentSortColumn().direction);}
+                return () => { sortableChildrenReturn.sort(tableContext.getCurrentSortColumn().direction); }
             })
         }
     });

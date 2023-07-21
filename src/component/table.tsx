@@ -109,7 +109,6 @@ export const TableSection = memoForwardRef(function TableSection<SectionElement 
     selectionMode,
     onNavigateLinear,
     collator,
-    onRearranged,
     noTypeahead,
     onNavigateTypeahead,
     typeaheadTimeout,
@@ -139,7 +138,7 @@ export const TableSection = memoForwardRef(function TableSection<SectionElement 
             paginationMax: paginationMax ?? null,
             paginationMin: paginationMin ?? null
         },
-        rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex), onRearranged: onRearranged || null },
+        rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
         rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable },
         singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? null, onSelectedIndexChange: onSelectedIndexChange ?? null, ariaPropName, selectionMode },
         context: useContextWithWarning(TableContext, "table"),
