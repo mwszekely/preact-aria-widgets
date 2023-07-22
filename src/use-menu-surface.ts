@@ -1,19 +1,22 @@
-import { assertEmptyObject, ElementProps, findFirstFocusable, focus, monitorCallCount, useMergedProps, useModal, UseModalParameters, UseModalReturnType, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
+import { assertEmptyObject, ElementProps, findFirstFocusable, focus, monitorCallCount, TargetedOmit, useMergedProps, useModal, UseModalParameters, UseModalReturnType, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { OmitStrong } from "./props.js";
 
-export interface UseMenuSurfaceParameters<_S extends Element, _B extends Element> extends OmitStrong<UseModalParameters<"escape" | "lost-focus" | "backdrop">, "focusTrapParameters"> {
-    focusTrapParameters: OmitStrong<UseModalParameters<"escape" | "lost-focus" | "backdrop">["focusTrapParameters"], "trapActive" | "focusOpener" | "onlyMoveFocus">
-    menuSurfaceParameters: {
-        /**
-         * What role the surface fulfills.
-         * 
-         * General menus should use "menu". "dialog" can be used for generic pop-up things.
-         */
-        role: "dialog" | "menu" | "tree" | "grid" | "listbox";
+export interface UseMenuSurfaceParametersSelf {
+    /**
+     * What role the surface fulfills.
+     * 
+     * General menus should use "menu". "dialog" can be used for generic pop-up things.
+     */
+    role: "dialog" | "menu" | "tree" | "grid" | "listbox";
 
-        surfaceId: string;
-    };
+    surfaceId: string;
+}
+
+export interface UseMenuSurfaceParameters<_S extends Element, _B extends Element> extends
+    OmitStrong<UseModalParameters<"escape" | "lost-focus" | "backdrop">, "focusTrapParameters">,
+    TargetedOmit<UseModalParameters<"escape" | "lost-focus" | "backdrop">, "focusTrapParameters", "trapActive" | "focusOpener" | "onlyMoveFocus"> {
+    menuSurfaceParameters: UseMenuSurfaceParametersSelf;
 }
 
 
@@ -36,11 +39,11 @@ export interface UseMenuSurfaceReturnType<MenuSurfaceElement extends Element, Me
  * 
  */
 export function useMenuSurface<MenuSurfaceElement extends Element, MenuTargetElement extends Element, MenuTriggerElement extends Element>({
-    //menuSurface: { sendFocusToMenu, role }, 
     dismissParameters,
     escapeDismissParameters,
     focusTrapParameters,
-    menuSurfaceParameters: { role, surfaceId }
+    menuSurfaceParameters: { role, surfaceId, ...void1 },
+    ...void2
 }: UseMenuSurfaceParameters<MenuSurfaceElement, MenuTriggerElement>): UseMenuSurfaceReturnType<MenuSurfaceElement, MenuTargetElement, MenuTriggerElement> {
     monitorCallCount(useMenuSurface);
 
@@ -57,16 +60,18 @@ export function useMenuSurface<MenuSurfaceElement extends Element, MenuTargetEle
         dismissParameters,
         escapeDismissParameters,
         focusTrapParameters: {
-            ...focusTrapParameters,
             onlyMoveFocus: true,
             trapActive: true,
             focusOpener: useStableCallback(() => {
                 const buttonElement = getButtonElement() as HTMLElement | null;
                 focus(buttonElement);
-            })
+            }),
+            ...focusTrapParameters
         }
     });
 
+    assertEmptyObject(void1);
+    assertEmptyObject(void2);
     assertEmptyObject(void4);
     assertEmptyObject(void5);
     assertEmptyObject(void6);

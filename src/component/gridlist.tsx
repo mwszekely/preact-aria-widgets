@@ -1,43 +1,24 @@
 import { createContext, createElement, Ref, VNode } from "preact";
 import { ElementProps, focus, useStableCallback } from "preact-prop-helpers";
 import { useImperativeHandle } from "preact/hooks";
-import { ElementToTag, OmitStrong, useContextWithWarning } from "../props.js";
+import { ElementToTag, Get11, Get3, Get5, OmitStrong, useContextWithWarning } from "../props.js";
 import { GridlistCellInfo, GridlistRowInfo, useGridlist, useGridlistCell, UseGridlistCellParameters, UseGridlistCellReturnType, UseGridlistContext, UseGridlistParameters, UseGridlistReturnType, useGridlistRow, UseGridlistRowContext, UseGridlistRowParameters, UseGridlistRowReturnType } from "../use-gridlist.js";
 import { memoForwardRef, PartialExcept, useDefault } from "./util.js";
 
-type Get<T, K extends keyof T> = T[K];
-type Get2<T, K extends keyof T, K2 extends keyof T[K]> = T[K][K2];
-
 interface GridlistPropsBase<GridlistElement extends Element, GridlistRowElement extends Element, GridlistCellElement extends Element, LabelElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends
-    Get<UseGridlistParameters<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM, CM>, "linearNavigationParameters">,
-    Get<UseGridlistParameters<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM, CM>, "rovingTabIndexParameters">,
-    Get<UseGridlistParameters<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM, CM>, "typeaheadNavigationParameters">,
-    Get<UseGridlistParameters<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM, CM>, "gridNavigationParameters">,
-    Get<UseGridlistParameters<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM, CM>, "rearrangeableChildrenParameters">,
-    Get<UseGridlistParameters<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM, CM>, "sortableChildrenParameters">,
-    Get<UseGridlistParameters<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM, CM>, "paginatedChildrenParameters">,
-    Get<UseGridlistParameters<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM, CM>, "staggeredChildrenParameters">,
-    Get<UseGridlistParameters<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM, CM>, "labelParameters">,
-    Get<UseGridlistParameters<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM, CM>, "gridlistParameters">,
-    Get<UseGridlistParameters<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM, CM>, "singleSelectionParameters"> {
+    Get11<UseGridlistParameters<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM, CM>, "linearNavigationParameters","rovingTabIndexParameters","typeaheadNavigationParameters","gridNavigationParameters","rearrangeableChildrenParameters","sortableChildrenParameters","paginatedChildrenParameters","staggeredChildrenParameters","labelParameters","listboxParameters","singleSelectionParameters"> {
     ref?: Ref<UseGridlistReturnType<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM, CM>>;
 }
 
 interface GridlistRowPropsBase<GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends
     Pick<RM, "index" | "unselectable" | "getSortValue">,
-    Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "textContentParameters">,
-    Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "linearNavigationParameters">,
-    Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "rovingTabIndexParameters">,
-    Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "typeaheadNavigationParameters">,
-    Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "gridlistRowParameters"> {
-    info?: OmitStrong<RM, keyof GridlistRowInfo<GridlistRowElement, GridlistCellElement>>; // Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "completeGridNavigationRowParameters">
+    Get5<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "textContentParameters","linearNavigationParameters","rovingTabIndexParameters","typeaheadNavigationParameters","gridlistRowParameters"> {
+    info?: OmitStrong<RM, keyof GridlistRowInfo<GridlistRowElement, GridlistCellElement>>;
     ref?: Ref<UseGridlistRowReturnType<GridlistRowElement, GridlistCellElement, RM, CM>>;
 }
 
 interface GridlistChildPropsBase<CellElement extends Element, M extends GridlistCellInfo<CellElement>> extends
-    Get<UseGridlistCellParameters<CellElement, M>, "gridNavigationCellParameters">,
-    Get<UseGridlistCellParameters<CellElement, M>, "textContentParameters">,
-    Get<UseGridlistCellParameters<CellElement, M>, "pressParameters">,
+    Get3<UseGridlistCellParameters<CellElement, M>, "gridNavigationCellParameters","textContentParameters","pressParameters">,
     Pick<M, "index" | "untabbable"> {
     focusSelf?: M["focusSelf"];
     info?: OmitStrong<M, "focusSelf">;
@@ -126,7 +107,7 @@ export const Gridlist = memoForwardRef(function GridlistU<GridlistElement extend
             noTypeahead: useDefault("noTypeahead", noTypeahead),
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout),
         },
-        gridlistParameters: {
+        listboxParameters: {
             selectionLimit,
             groupingType,
             selectedIndex,

@@ -1,12 +1,13 @@
 import { Ref, VNode } from "preact";
 import { UseAsyncHandlerParameters } from "preact-prop-helpers";
+import { Get3 } from "../props.js";
 import { UseProgressParameters, UseProgressReturnType, UseProgressWithHandlerParameters, UseProgressWithHandlerReturnType } from "../use-progress.js";
 import { PartialExcept } from "./util.js";
 type Get<T, K extends keyof T> = T[K];
 interface ProgressPropsBase<IndicatorElement extends Element, LabelElement extends Element> extends Get<UseProgressParameters<IndicatorElement, LabelElement>, "labelParameters">, Get<UseProgressParameters<IndicatorElement, LabelElement>, "progressIndicatorParameters"> {
     ref?: Ref<UseProgressReturnType<IndicatorElement, LabelElement>>;
 }
-interface ProgressWithHandlerPropsBase<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element> extends Get<UseProgressWithHandlerParameters<EventType, CaptureType, IndicatorElement, LabelElement>, "labelParameters">, Get<UseProgressWithHandlerParameters<EventType, CaptureType, IndicatorElement, LabelElement>, "progressIndicatorParameters">, Get<UseProgressWithHandlerParameters<EventType, CaptureType, IndicatorElement, LabelElement>, "progressWithHandlerParameters">, UseAsyncHandlerParameters<EventType, CaptureType> {
+interface ProgressWithHandlerPropsBase<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element> extends Get3<UseProgressWithHandlerParameters<EventType, CaptureType, IndicatorElement, LabelElement>, "labelParameters", "progressIndicatorParameters", "progressWithHandlerParameters">, UseAsyncHandlerParameters<EventType, CaptureType> {
     ref?: Ref<UseProgressReturnType<IndicatorElement, LabelElement>>;
 }
 export interface ProgressProps<IndicatorElement extends Element, LabelElement extends Element> extends PartialExcept<ProgressPropsBase<IndicatorElement, LabelElement>, "tagIndicator" | "ariaLabel"> {

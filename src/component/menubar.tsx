@@ -1,26 +1,15 @@
 import { createContext, Ref, VNode } from "preact";
 import { focus } from "preact-prop-helpers";
 import { useCallback, useImperativeHandle } from "preact/hooks";
-import { Get, OmitStrong, useContextWithWarning } from "../props.js";
+import { Get, Get9, OmitStrong, useContextWithWarning } from "../props.js";
 import { useMenubar, useMenubarChild, UseMenubarContext, UseMenubarItemParameters, UseMenubarItemReturnType, UseMenubarParameters, UseMenubarReturnType, UseMenubarSubInfo } from "../use-menubar.js";
 import { memoForwardRef, PartialExcept, useDefault } from "./util.js";
 
 
 interface MenubarPropsBase<MenuParentElement extends Element, MenuItemElement extends Element, LabelElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends
-    Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "linearNavigationParameters">,
-    Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "rovingTabIndexParameters">,
-    Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "typeaheadNavigationParameters">,
-    Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "rearrangeableChildrenParameters">,
-    Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "sortableChildrenParameters">,
-    Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "staggeredChildrenParameters">,
-    Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "labelParameters">,
-    Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "toolbarParameters">,
-    Get<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "singleSelectionParameters"> {
+    Get9<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "linearNavigationParameters" , "rovingTabIndexParameters" , "typeaheadNavigationParameters" , "rearrangeableChildrenParameters" , "sortableChildrenParameters" , "staggeredChildrenParameters" , "labelParameters" , "toolbarParameters", "singleSelectionParameters"> {
     ref?: Ref<UseMenubarReturnType<MenuParentElement, MenuItemElement, LabelElement, M>>;
 }
-
-
-
 
 
 interface MenubarItemPropsBase<MenuItemElement extends Element> extends

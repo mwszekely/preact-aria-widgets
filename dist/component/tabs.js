@@ -8,11 +8,8 @@ import { memoForwardRef, useDefault } from "./util.js";
 const TabsContext = createContext(null);
 const TabPanelsContext = createContext(null);
 const UntabbableContext = createContext(false);
-//const AriaPropNameContext = createContext<UseTabsParameters<any, any, any, any>["singleSelectionParameters"]["ariaPropName"]>("aria-selected")
 const SelectionModeContext = createContext("focus");
-export const Tabs = memoForwardRef(function Tabs({ ariaLabel, collator, compare, disableHomeEndKeys, getIndex, initiallySelectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSelectedIndexChange, onTabbableIndexChange, orientation, staggered, pageNavigationSize, localStorageKey, selectionMode, 
-//groupingType,
-untabbable, typeaheadTimeout, role, onNavigateLinear, onNavigateTypeahead, render }, ref) {
+export const Tabs = memoForwardRef(function Tabs({ ariaLabel, collator, compare, disableHomeEndKeys, getIndex, initiallySelectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSelectedIndexChange, onTabbableIndexChange, orientation, staggered, pageNavigationSize, localStorageKey, selectionMode, untabbable, typeaheadTimeout, role, onNavigateLinear, onNavigateTypeahead, render }, ref) {
     untabbable ??= false;
     selectionMode ??= "focus";
     const info = useTabs({

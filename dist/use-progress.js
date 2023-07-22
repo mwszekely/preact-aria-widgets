@@ -1,9 +1,9 @@
-import { monitorCallCount, useAsyncHandler, useMergedProps } from "preact-prop-helpers";
+import { assertEmptyObject, monitorCallCount, useAsyncHandler, useMergedProps } from "preact-prop-helpers";
 import { Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
-export function useProgress({ labelParameters, progressIndicatorParameters: { max, value, valueText, tagIndicator } }) {
+export function useProgress({ labelParameters, progressIndicatorParameters: { max, value, valueText, tagIndicator, ...void1 }, ...void2 }) {
     monitorCallCount(useProgress);
-    const { propsInput, propsLabel, randomIdInputReturn, randomIdLabelReturn, pressReturn } = useLabelSynthetic({
+    const { propsInput, propsLabel, randomIdInputReturn, randomIdLabelReturn, pressReturn, ...void3 } = useLabelSynthetic({
         labelParameters: { ...labelParameters, onLabelClick: null },
         randomIdInputParameters: { prefix: Prefices.progressIndicator },
         randomIdLabelParameters: { prefix: Prefices.progressLabel }
@@ -42,6 +42,9 @@ export function useProgress({ labelParameters, progressIndicatorParameters: { ma
         "aria-busy": !!(busy),
         "aria-describedby": randomIdInputReturn.id
     };
+    assertEmptyObject(void1);
+    assertEmptyObject(void2);
+    assertEmptyObject(void3);
     return {
         propsIndicator: useMergedProps(indicatorProps, propsInput),
         propsLabel: useMergedProps(labelProps, propsLabel),

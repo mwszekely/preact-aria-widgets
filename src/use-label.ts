@@ -4,36 +4,40 @@ import { ElementToTag, noop, OmitStrong } from "./props.js";
 export type LabelPosition = "separate" | "wrapping" | "none";
 export type FocusableLabelElement<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element> = LP extends "wrapping" ? LabelElement : InputElement;
 
+export interface UseLabelParametersSelf<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element> {
+    onLabelClick: null | ((e: Event) => void);
+    tagInput: ElementToTag<InputElement>;
+    tagLabel: ElementToTag<LabelElement>;
+    /**
+     * Where is this component's label relative to the component itself?
+     * 
+     * * `"separate"`: `<label /><input />`
+     * * `"wrapping"`: `<label><input /></label>`
+     * * `"none"`: `<input aria-label="..." />`
+     * 
+     * In cases where you're using non-`input` and `label` elements, `"separate"` and `"wrapping"` are identical; 
+     * this is most important for native `label` and `input` elements, as they only need a `for` prop when the label doesn't wrap the input.
+     */
+    labelPosition: LP;
+
+    /** 
+     * When `null`, this corresponds to having a visible label (with `labelPosition` == `"separate"` or `"wrapping"`).
+     * 
+     * When a string, this corresponds to `labelPosition` == `"none"`; this label is only visible to assistive technologies and *not* visible otherwise.
+     */
+    ariaLabel: LP extends "none" ? string : null;
+}
+
 export interface UseLabelParameters<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element> {
     randomIdInputParameters: OmitStrong<UseRandomDualIdsParameters["randomIdInputParameters"], "otherReferencerProp">;
     randomIdLabelParameters: OmitStrong<UseRandomDualIdsParameters["randomIdLabelParameters"], "otherReferencerProp">;
 
-    labelParameters: {
-        onLabelClick: null | ((e: Event) => void);
-        tagInput: ElementToTag<InputElement>;
-        tagLabel: ElementToTag<LabelElement>;
-        /**
-         * Where is this component's label relative to the component itself?
-         * 
-         * * `"separate"`: `<label /><input />`
-         * * `"wrapping"`: `<label><input /></label>`
-         * * `"none"`: `<input aria-label="..." />`
-         * 
-         * In cases where you're using non-`input` and `label` elements, `"separate"` and `"wrapping"` are identical; 
-         * this is most important for native `label` and `input` elements, as they only need a `for` prop when the label doesn't wrap the input.
-         */
-        labelPosition: LP;
-
-        /** 
-         * When `null`, this corresponds to having a visible label (with `labelPosition` == `"separate"` or `"wrapping"`).
-         * 
-         * When a string, this corresponds to `labelPosition` == `"none"`; this label is only visible to assistive technologies and *not* visible otherwise.
-         */
-        ariaLabel: LP extends "none" ? string : null;
-    }
+    labelParameters: UseLabelParametersSelf<LP, InputElement, LabelElement>;
 }
 
-export interface UseLabelReturnType<InputElement extends Element, LabelElement extends Element> extends UseRandomDualIdsReturnType<InputElement, LabelElement>, OmitStrong<UsePressReturnType<LabelElement>, "props"> { }
+export interface UseLabelReturnType<InputElement extends Element, LabelElement extends Element> extends 
+UseRandomDualIdsReturnType<InputElement, LabelElement>, 
+OmitStrong<UsePressReturnType<LabelElement>, "props"> { }
 
 export function useLabel<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element>({
     randomIdInputParameters,

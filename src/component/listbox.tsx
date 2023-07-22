@@ -2,31 +2,21 @@ import { createContext, Ref, VNode } from "preact";
 import { focus } from "preact-prop-helpers";
 import { memo } from "preact/compat";
 import { useCallback, useContext } from "preact/hooks";
-import { OmitStrong, useContextWithWarning } from "../props.js";
+import { Get, Get2, Get9, OmitStrong, useContextWithWarning } from "../props.js";
 import { ListboxInfo, useListbox, UseListboxContext, useListboxItem, UseListboxItemParameters, UseListboxItemReturnType, UseListboxParameters, UseListboxReturnType } from "../use-listbox.js";
 import { memoForwardRef, PartialExcept, useDefault } from "./util.js";
 
-type Get<T, K extends keyof T> = T[K];
 
 interface ListboxPropsBase<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends
-    Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "labelParameters">,
-    Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "linearNavigationParameters">,
-    OmitStrong<Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "listboxParameters">, "groupingType">,
-    Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "rearrangeableChildrenParameters">,
-    Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "rovingTabIndexParameters">,
-    Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "sortableChildrenParameters">,
-    Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "staggeredChildrenParameters">,
-    Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "paginatedChildrenParameters">,
-    Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "typeaheadNavigationParameters">,
-    Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "singleSelectionParameters"> {
+    Get9<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "labelParameters","linearNavigationParameters","rearrangeableChildrenParameters","rovingTabIndexParameters","sortableChildrenParameters","staggeredChildrenParameters","paginatedChildrenParameters","typeaheadNavigationParameters","singleSelectionParameters">,
+    OmitStrong<Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "listboxParameters">, "groupingType"> {
     ref?: Ref<UseListboxReturnType<ListElement, ListItemElement, LabelElement, M>>;
 }
 
 interface ListboxItemPropsBase<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends
-    Get<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "listboxParameters">,
+    Get2<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "listboxParameters", "textContentParameters">,
     Pick<M, "index" | "untabbable" | "unselectable" | "getSortValue">,
-    OmitStrong<NonNullable<Get<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "pressParameters">>, "focusSelf">,
-    Get<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "textContentParameters"> {
+    OmitStrong<NonNullable<Get<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "pressParameters">>, "focusSelf"> {
     focusSelf?: UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>["info"]["focusSelf"];
     subInfo?: OmitStrong<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>["info"], "focusSelf">;
     ref?: Ref<UseListboxItemReturnType<ListItemElement, M>>;

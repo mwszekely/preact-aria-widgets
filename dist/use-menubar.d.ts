@@ -8,14 +8,15 @@ export interface UseMenubarSubInfo<ChildElement extends Element> extends UseTool
 }
 export interface UseMenubarParameters<MenuParentElement extends Element, MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseToolbarParameters<MenuParentElement, MenuItemElement, M> {
 }
+export interface UseMenubarItemParametersSelf<MenuItemElement extends Element> {
+    role: "menuitem" | "menuitemcheckbox" | "menuitemradio";
+    /**
+     * Optional. Applies in addition to any single-selection behavior.
+     */
+    onPress: null | ((e: h.JSX.TargetedEvent<MenuItemElement>) => void);
+}
 export interface UseMenubarItemParameters<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseToolbarChildParameters<MenuItemElement, M>, "toolbarChildParameters"> {
-    menuItemParameters: {
-        role: "menuitem" | "menuitemcheckbox" | "menuitemradio";
-        /**
-         * Optional. Applies in addition to any single-selection behavior.
-         */
-        onPress: null | ((e: h.JSX.TargetedEvent<MenuItemElement>) => void);
-    };
+    menuItemParameters: UseMenubarItemParametersSelf<MenuItemElement>;
 }
 export interface UseMenubarReturnType<MenuParentElement extends Element, MenuItemElement extends Element, LabelElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseToolbarReturnType<MenuParentElement, MenuItemElement, LabelElement, M>, "propsToolbar"> {
     propsMenubar: ElementProps<MenuParentElement>;

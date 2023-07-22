@@ -1,7 +1,7 @@
 import { createContext, Ref, VNode } from "preact";
 import { focus, useStableCallback } from "preact-prop-helpers";
 import { useImperativeHandle } from "preact/hooks";
-import { useContextWithWarning } from "../props.js";
+import { Get3, Get4, Get9, useContextWithWarning } from "../props.js";
 import { TableCellInfo, TableRowInfo, useTable, useTableCell, UseTableCellParameters, UseTableCellReturnType, UseTableContext, UseTableParameters, UseTableReturnType, useTableRow, UseTableRowContext, UseTableRowParameters, UseTableRowReturnType, useTableSection, UseTableSectionContext, UseTableSectionParameters, UseTableSectionReturnType } from "../use-table.js";
 import { memoForwardRef, PartialExcept, useDefault } from "./util.js";
 
@@ -15,34 +15,19 @@ interface TablePropsBase<TableElement extends Element, LabelElement extends Elem
 }
 
 interface TableSectionPropsBase<SectionElement extends Element, RowElement extends Element, CellElement extends Element, RM extends TableRowInfo<RowElement, CellElement>, CM extends TableCellInfo<CellElement>> extends
-    Get<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "gridNavigationParameters">,
-    Get<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "linearNavigationParameters">,
-    Get<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "rearrangeableChildrenParameters">,
-    Get<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "rovingTabIndexParameters">,
-    Get<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "singleSelectionParameters">,
-    Get<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "typeaheadNavigationParameters">,
-    Get<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "paginatedChildrenParameters">,
-    Get<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "staggeredChildrenParameters">,
-    Get<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "tableSectionParameters"> {
+    Get9<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "gridNavigationParameters", "linearNavigationParameters", "rearrangeableChildrenParameters", "rovingTabIndexParameters", "singleSelectionParameters", "typeaheadNavigationParameters", "paginatedChildrenParameters", "staggeredChildrenParameters", "tableSectionParameters"> {
     ref?: Ref<UseTableSectionReturnType<SectionElement, RowElement, CellElement, RM, CM>>;
 }
 
 interface TableRowPropsBase<RowElement extends Element, CellElement extends Element, RM extends TableRowInfo<RowElement, CellElement>, CM extends TableCellInfo<CellElement>> extends
-    //OmitStrong<Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "tableRowParameters">, never>,
-
     Pick<RM, "index" | "unselectable">,
-    Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "textContentParameters">,
-    Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "tableRowParameters">,
-    Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "linearNavigationParameters">,
-    Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "rovingTabIndexParameters"> {
+    Get4<UseTableRowParameters<RowElement, CellElement, RM, CM>, "textContentParameters", "tableRowParameters", "linearNavigationParameters", "rovingTabIndexParameters"> {
     ref?: Ref<UseTableRowReturnType<RowElement, CellElement, RM, CM>>;
 }
 
 interface TableCellPropsBase<CellElement extends Element, CM extends TableCellInfo<CellElement>> extends
-    Get<UseTableCellParameters<CellElement, CM>, "tableCellParameters">,
     Pick<CM, "index" | "untabbable">,
-    Get<UseTableCellParameters<CellElement, CM>, "gridNavigationCellParameters">,
-    Get<UseTableCellParameters<CellElement, CM>, "textContentParameters"> {
+    Get3<UseTableCellParameters<CellElement, CM>, "tableCellParameters", "gridNavigationCellParameters", "textContentParameters"> {
     focusSelf: CM["focusSelf"];
     getSortValue: CM["getSortValue"];
     ref?: Ref<UseTableCellReturnType<CellElement, CM>>;
@@ -121,11 +106,11 @@ export const TableSection = memoForwardRef(function TableSection<SectionElement 
     const info = useTableSection<SectionElement, RowElement, CellElement, TableRowInfo<RowElement, CellElement>, TableCellInfo<CellElement>>({
         gridNavigationParameters: { onTabbableColumnChange: onTabbableColumnChange ?? null },
         staggeredChildrenParameters: { staggered: staggered || false },
-        typeaheadNavigationParameters: { 
-            onNavigateTypeahead, 
-            collator: useDefault("collator", collator), 
-            noTypeahead: useDefault("noTypeahead", noTypeahead), 
-            typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout) 
+        typeaheadNavigationParameters: {
+            onNavigateTypeahead,
+            collator: useDefault("collator", collator),
+            noTypeahead: useDefault("noTypeahead", noTypeahead),
+            typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
         },
         linearNavigationParameters: {
             onNavigateLinear,

@@ -40,7 +40,7 @@ export const Gridlist = memoForwardRef(function GridlistU({ collator, disableHom
             noTypeahead: useDefault("noTypeahead", noTypeahead),
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout),
         },
-        gridlistParameters: {
+        listboxParameters: {
             selectionLimit,
             groupingType,
             selectedIndex,

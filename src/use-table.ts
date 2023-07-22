@@ -5,6 +5,7 @@ import {
     CompleteGridNavigationRowContext,
     ElementProps,
     PassiveStateUpdater,
+    TargetedOmit,
     UseCompleteGridNavigationCellInfo, UseCompleteGridNavigationCellParameters, UseCompleteGridNavigationCellReturnType, UseCompleteGridNavigationParameters,
     UseCompleteGridNavigationReturnType,
     UseCompleteGridNavigationRowInfo, UseCompleteGridNavigationRowParameters, UseCompleteGridNavigationRowReturnType,
@@ -24,22 +25,28 @@ import { ElementToTag, OmitStrong, Prefices } from "./props.js";
 import { UseLabelSyntheticParameters, useLabelSynthetic } from "./use-label.js";
 import { UseListboxParameters } from "./use-listbox.js";
 
+export interface UseTableContextSelf {
+    setSortBodyFunction: PassiveStateUpdater<() => void, never>;
+    sortByColumn(column: number): SortInfo;
+    getCurrentSortColumn(): SortInfo;
+}
+
+
 export interface UseTableContext {
-    tableContext: {
-        setSortBodyFunction: PassiveStateUpdater<() => void, never>;
-        sortByColumn(column: number): SortInfo;
-        getCurrentSortColumn(): SortInfo;
-    }
+    tableContext: UseTableContextSelf;
 }
 
 export interface UseTableSectionContext<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>> extends CompleteGridNavigationRowContext<TableSectionElement, TableRowElement, TableCellElement, RM, CM>, UseTableContext { }
 
-export interface UseTableSectionParameters<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>> extends OmitStrong<UseCompleteGridNavigationParameters<TableSectionElement, TableRowElement, TableCellElement, RM>, "rovingTabIndexParameters" | "sortableChildrenParameters"> {
-    rovingTabIndexParameters: OmitStrong<UseCompleteGridNavigationParameters<TableSectionElement, TableRowElement, TableCellElement, RM>["rovingTabIndexParameters"], "focusSelfParent">;
-    tableSectionParameters: {
-        location: "head" | "body" | "foot";
-        tagTableSection: ElementToTag<TableSectionElement>;
-    }
+export interface UseTableSectionParametersSelf<TableSectionElement extends Element> {
+    location: "head" | "body" | "foot";
+    tagTableSection: ElementToTag<TableSectionElement>;
+}
+
+export interface UseTableSectionParameters<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>> extends
+    OmitStrong<UseCompleteGridNavigationParameters<TableSectionElement, TableRowElement, TableCellElement, RM>, "rovingTabIndexParameters" | "sortableChildrenParameters">,
+    TargetedOmit<UseCompleteGridNavigationParameters<TableSectionElement, TableRowElement, TableCellElement, RM>, "rovingTabIndexParameters", "focusSelfParent"> {
+    tableSectionParameters: UseTableSectionParametersSelf<TableSectionElement>;
     context: UseTableContext;
 }
 export interface UseTableSectionReturnType<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>> extends OmitStrong<UseCompleteGridNavigationReturnType<TableSectionElement, TableRowElement, TableCellElement, RM, CM>, "props"> {
@@ -49,16 +56,18 @@ export interface UseTableSectionReturnType<TableSectionElement extends Element, 
 export interface UseTableRowReturnType<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>> extends OmitStrong<UseCompleteGridNavigationRowReturnType<TableRowElement, TableCellElement, RM, CM>, "context"> {
     context: UseTableRowContext<any, TableCellElement, CM>;
 }
-export interface UseTableRowParameters<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>> extends OmitStrong<UseCompleteGridNavigationRowParameters<TableRowElement, TableCellElement, RM, CM>, "rovingTabIndexParameters" | "typeaheadNavigationParameters" | "context" | "info"> {
-    rovingTabIndexParameters: OmitStrong<UseGridNavigationRowParameters<TableRowElement, TableCellElement, RM, CM>["rovingTabIndexParameters"], never>
+export interface UseTableRowParametersSelf<TableRowElement extends Element> {
+    /**
+     * When the `selectionLimit` is `"single"`, this must be `null`.
+     */
+    selected: boolean | null;
+    tagTableRow: ElementToTag<TableRowElement>;
+}
+export interface UseTableRowParameters<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>> extends
+    OmitStrong<UseCompleteGridNavigationRowParameters<TableRowElement, TableCellElement, RM, CM>, "rovingTabIndexParameters" | "typeaheadNavigationParameters" | "context" | "info">,
+    TargetedOmit<UseGridNavigationRowParameters<TableRowElement, TableCellElement, RM, CM>, "rovingTabIndexParameters", never> {
     context: UseTableSectionContext<any, TableRowElement, TableCellElement, RM, CM>;
-    tableRowParameters: {
-        /**
-         * When the `selectionLimit` is `"single"`, this must be `null`.
-         */
-        selected: boolean | null;
-        tagTableRow: ElementToTag<TableRowElement>;
-    };
+    tableRowParameters: UseTableRowParametersSelf<TableRowElement>;
     info: Omit<UseCompleteGridNavigationRowParameters<TableRowElement, TableCellElement, RM, CM>["info"], "getSortValue">;
 }
 
@@ -67,17 +76,21 @@ export interface UseTableRowContext<TableRowElement extends Element, TableCellEl
 }
 
 
+export interface UseTableCellReturnTypeSelf {
+    sortByThisColumn(): SortInfo;
+}
+
 export interface UseTableCellReturnType<TableCellElement extends Element, CM extends TableCellInfo<TableCellElement>> extends OmitStrong<UseCompleteGridNavigationCellReturnType<TableCellElement, CM>, "props"> {
     propsCell: ElementProps<TableCellElement>;
     propsFocus: ElementProps<any>;
-    tableCellReturn: {
-        sortByThisColumn(): SortInfo;
-    }
+    tableCellReturn: UseTableCellReturnTypeSelf;
 }
+export interface UseTableCellParametersSelf<TableCellElement extends Element> {
+    tagTableCell: ElementToTag<TableCellElement>;
+}
+
 export interface UseTableCellParameters<TableCellElement extends Element, CM extends TableCellInfo<TableCellElement>> extends OmitStrong<UseCompleteGridNavigationCellParameters<TableCellElement, CM>, "info"> {
-    tableCellParameters: {
-        tagTableCell: ElementToTag<TableCellElement>;
-    }
+    tableCellParameters: UseTableCellParametersSelf<TableCellElement>;
     context: UseTableRowContext<any, TableCellElement, CM>;
     info: OmitStrong<UseCompleteGridNavigationCellParameters<TableCellElement, CM>["info"], never>;
 }

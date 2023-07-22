@@ -5,18 +5,22 @@ import { OmitStrong } from "./props.js";
 import { useNotify } from "./use-notify.js";
 
 
+export interface UseToastsParametersSelf {
+    visibleCount: number;   // The maximum number of toasts that are shown at one time (used for automatic management of when to show toasts, i.e. don't show this toast if 2 are already on-screen -- 1 is a good default)
+}
+
 export interface UseToastsParameters extends UseManagedChildrenParameters<ToastInfo> {
-    toastsParameters: {
-        visibleCount: number;   // The maximum number of toasts that are shown at one time (used for automatic management of when to show toasts, i.e. don't show this toast if 2 are already on-screen -- 1 is a good default)
-    }
+    toastsParameters: UseToastsParametersSelf
+}
+
+export interface UseToastParametersSelf {
+    politeness?: "polite" | "assertive";
+    timeout: number | null;
+    children: ComponentChildren;
 }
 
 export interface UseToastParameters<M extends ToastInfo> extends UseManagedChildParameters<M, "index"> {
-    toastParameters: {
-        politeness?: "polite" | "assertive";
-        timeout: number | null;
-        children: ComponentChildren;
-    }
+    toastParameters: UseToastParametersSelf;
     context: ToastsContext<M>;
     info: OmitStrong<M, "setNumberAheadOfMe" | "focus" | "show">
 }
@@ -27,14 +31,16 @@ export interface ToastInfo extends ManagedChildInfo<number> {
     show(): void;
 }
 
+export interface UseToastReturnTypeSelf {
+    numberOfToastsAheadOfUs: number;
+    dismiss: () => void;
+    dismissed: boolean;
+    showing: boolean;
+    resetDismissTimer: () => void;
+}
+
 export interface UseToastReturnType<ToastType extends Element> {
-    toastReturn: {
-        numberOfToastsAheadOfUs: number;
-        dismiss: () => void;
-        dismissed: boolean;
-        showing: boolean;
-        resetDismissTimer: () => void;
-    }
+    toastReturn: UseToastReturnTypeSelf
     props: ElementProps<ToastType>;
 }
 
@@ -43,12 +49,14 @@ export interface UseToastsReturnType<ContainerType extends Element, M extends To
     props: ElementProps<ContainerType>;
 }
 
+export interface ToastsContextSelf {
+    onAnyToastDismissed: (_index: number) => void;
+    getMaxVisibleCount: () => number;
+    onAnyToastMounted: (toastIndex: number) => void;
+}
+
 export interface ToastsContext<M extends ToastInfo> extends UseManagedChildrenContext<M> {
-    toastContext: {
-        onAnyToastDismissed: (_index: number) => void;
-        getMaxVisibleCount: () => number;
-        onAnyToastMounted: (toastIndex: number) => void;
-    };
+    toastContext: ToastsContextSelf;
 }
 
 

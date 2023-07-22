@@ -1,20 +1,21 @@
 import { h } from "preact";
-import { ElementProps, ManagedChildInfo, PassiveStateUpdater, PersistentStates, UseHasCurrentFocusReturnType, UseLinearNavigationParameters, UseManagedChildParameters, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, UsePressReturnType, UseRefElementParameters, UseRefElementReturnType, UseTextContentReturnType, UseTypeaheadNavigationChildParameters, UseTypeaheadNavigationContext, UseTypeaheadNavigationParameters } from "preact-prop-helpers";
+import { ElementProps, ManagedChildInfo, PassiveStateUpdater, PersistentStates, TargetedOmit, UseHasCurrentFocusReturnType, UseLinearNavigationParameters, UseManagedChildParameters, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, UsePressReturnType, UseRefElementParameters, UseRefElementReturnType, UseTextContentReturnType, UseTypeaheadNavigationChildParameters, UseTypeaheadNavigationContext, UseTypeaheadNavigationParameters } from "preact-prop-helpers";
 import { DisabledType, OmitStrong } from "./props.js";
 import { UseButtonParameters } from "./use-button.js";
-export interface UseAccordionParameters<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo> extends UseManagedChildrenParameters<M>, Pick<UseTypeaheadNavigationParameters<HeaderButtonElement, M>, "typeaheadNavigationParameters"> {
-    accordionParameters: {
-        orientation?: "vertical" | "horizontal";
-        initialIndex?: number | null;
-        localStorageKey: keyof PersistentStates | null;
-    };
-    linearNavigationParameters: OmitStrong<UseLinearNavigationParameters<HeaderButtonElement, HeaderButtonElement, M>["linearNavigationParameters"], "getLowestIndex" | "arrowKeyDirection" | "getHighestIndex" | "isValid" | "indexDemangler" | "indexMangler">;
+export interface UseAccordionParametersSelf {
+    orientation?: "vertical" | "horizontal";
+    initialIndex?: number | null;
+    localStorageKey: keyof PersistentStates | null;
+}
+export interface UseAccordionParameters<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo> extends TargetedOmit<UseLinearNavigationParameters<HeaderButtonElement, HeaderButtonElement, M>, "linearNavigationParameters", "getLowestIndex" | "arrowKeyDirection" | "getHighestIndex" | "isValid" | "indexDemangler" | "indexMangler">, UseManagedChildrenParameters<M>, Pick<UseTypeaheadNavigationParameters<HeaderButtonElement, M>, "typeaheadNavigationParameters"> {
+    accordionParameters: UseAccordionParametersSelf;
+}
+export interface UseAccordionReturnTypeSelf {
+    changeExpandedIndex: PassiveStateUpdater<number | null, Event>;
 }
 export interface UseAccordionReturnType<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo> extends UseManagedChildrenReturnType<M> {
     /** **STABLE** */
-    accordionReturn: {
-        changeExpandedIndex: PassiveStateUpdater<number | null, Event>;
-    };
+    accordionReturn: UseAccordionReturnTypeSelf;
     context: UseAccordionContext<HeaderButtonElement, M>;
     props: ElementProps<any>;
 }
@@ -27,21 +28,22 @@ export interface UseAccordionSectionInfo extends ManagedChildInfo<number> {
     disabled: DisabledType;
     untabbable: boolean;
 }
+export interface UseAccordionSectionParametersSelf {
+    /**
+     * If this prop is `true` or `false` (isn't null), then this section
+     * will be open/closed regardless of what the parent's singular open index is.
+     *
+     * In other words, leave null to only allow one section to be open at a time.
+     * To allow multiple sections to be open at once,
+     * set the parent's index to null and toggle this `true`/`false` when the button's pressed
+     */
+    open: boolean | null | undefined;
+    /** Generally `"region"` */
+    bodyRole: h.JSX.AriaRole;
+}
 export interface UseAccordionSectionParameters<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo> extends OmitStrong<UseTypeaheadNavigationChildParameters<HeaderButtonElement, M>, "info" | "refElementReturn" | "context">, UseRefElementParameters<HeaderButtonElement>, UseManagedChildParameters<M, "index" | "untabbable"> {
     context: UseAccordionContext<HeaderButtonElement, M>;
-    accordionSectionParameters: {
-        /**
-         * If this prop is `true` or `false` (isn't null), then this section
-         * will be open/closed regardless of what the parent's singular open index is.
-         *
-         * In other words, leave null to only allow one section to be open at a time.
-         * To allow multiple sections to be open at once,
-         * set the parent's index to null and toggle this `true`/`false` when the button's pressed
-         */
-        open: boolean | null | undefined;
-        /** Generally `"region"` */
-        bodyRole: h.JSX.AriaRole;
-    };
+    accordionSectionParameters: UseAccordionSectionParametersSelf;
     buttonParameters: OmitStrong<UseButtonParameters<HeaderButtonElement>["buttonParameters"], "pressed" | "role">;
 }
 export interface UseAccordionSectionReturnType<HeaderElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element> extends OmitStrong<UsePressReturnType<HeaderButtonElement>, "props">, OmitStrong<UseRefElementReturnType<HeaderButtonElement>, "propsStable">, UseTextContentReturnType, UseHasCurrentFocusReturnType<HeaderButtonElement> {

@@ -1,28 +1,28 @@
 import { h } from "preact";
-import { ElementProps, PressEventReason, UsePressParameters, UsePressReturnType, UseRefElementParameters, UseRefElementReturnType, focus, monitorCallCount, useMergedProps, usePress, useRefElement } from "preact-prop-helpers";
+import { ElementProps, PressEventReason, TargetedOmit, UsePressParameters, UsePressReturnType, UseRefElementParameters, UseRefElementReturnType, focus, monitorCallCount, useMergedProps, usePress, useRefElement } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { DisabledType, ElementToTag, EnhancedEventHandler, OmitStrong, TargetedEnhancedEvent, enhanceEvent } from "./props.js";
 
-export interface ButtonPressEventDetail { 
+export interface ButtonPressEventDetail {
     pressed: boolean | null;
 }
 export type TargetedButtonPressEvent<E extends EventTarget> = TargetedEnhancedEvent<PressEventReason<E>, ButtonPressEventDetail>;
 export type ButtonPressEventHandler<E extends EventTarget> = EnhancedEventHandler<PressEventReason<E>, ButtonPressEventDetail>;
 
+export interface UseButtonParametersSelf<E extends Node> {
+    tagButton: ElementToTag<E>;
+    disabled: DisabledType;
+    /** 
+     * Important: A button can also be marked as pressed by changing its label -- e.g. `muted` to `unmuted`.
+     * If this is the case, `pressed` **must** be null!
+     */
+    pressed: boolean | null | undefined;
+    onPress: undefined | null | ButtonPressEventHandler<E>;
+    role: h.JSX.AriaRole;
+}
 
-export interface UseButtonParameters<E extends Node> extends UseRefElementParameters<E> {
-    buttonParameters: {
-        tagButton: ElementToTag<E>;
-        disabled: DisabledType;
-        /** 
-         * Important: A button can also be marked as pressed by changing its label -- e.g. `muted` to `unmuted`.
-         * If this is the case, `pressed` **must** be null!
-         */
-        pressed: boolean | null | undefined;
-        onPress: undefined | null | ButtonPressEventHandler<E>;
-        role: h.JSX.AriaRole;
-    }
-    pressParameters: OmitStrong<UsePressParameters<E>["pressParameters"], "onPressSync" | "focusSelf">
+export interface UseButtonParameters<E extends Node> extends UseRefElementParameters<E>, TargetedOmit<UsePressParameters<E>, "pressParameters", "onPressSync" | "focusSelf"> {
+    buttonParameters: UseButtonParametersSelf<E>;
 }
 
 export interface UseButtonReturnType<E extends Element> extends UsePressReturnType<E>, OmitStrong<UseRefElementReturnType<E>, "propsStable"> {
@@ -41,7 +41,7 @@ export function useButton<E extends Element>({ buttonParameters: { tagButton, di
         pressParameters: {
             onPressSync: (e) => (disabled ? null : onPress)?.(enhanceEvent(e, { pressed: pressed == null ? null : !pressed })),
             focusSelf,
-            ...pressParameters
+            ...pressParameters  // Intentionally at the end so Typescript will error if we forget something
         },
     });
 

@@ -1,29 +1,14 @@
 import { createContext, Ref, VNode } from "preact";
 import { focus } from "preact-prop-helpers";
 import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
-import { useContextWithWarning } from "../props.js";
+import { Get12, useContextWithWarning } from "../props.js";
 import { useMenu, UseMenuContext, useMenuItem, UseMenuItemReturnType, UseMenuParameters, UseMenuReturnType } from "../use-menu.js";
 import { UseMenubarSubInfo } from "../use-menubar.js";
 import { MenubarItemProps } from "./menubar.js";
 import { memoForwardRef, ParentDepthContext, PartialExcept, useDefault } from "./util.js";
 
-
-type Get<T, K extends keyof T> = T[K];
-
-
 interface MenuPropsBase<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends //Omit<UseMenuParameters<E, K, I>, "indexMangler" | "indexDemangler" | "onAfterChildLayoutEffect" | "onChildrenMountChange" | "onTabbableIndexChange" | "onTabbableRender" | "onTabbedInTo" | "onTabbedOutOf"> & {
-    Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, M>, "menuParameters">,
-    Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, M>, "menuSurfaceParameters">,
-    Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, M>, "linearNavigationParameters">,
-    Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, M>, "rovingTabIndexParameters">,
-    Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, M>, "typeaheadNavigationParameters">,
-    Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, M>, "dismissParameters">,
-    Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, M>, "staggeredChildrenParameters">,
-    Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, M>, "escapeDismissParameters">,
-    Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, M>, "rearrangeableChildrenParameters">,
-    Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, M>, "sortableChildrenParameters">,
-    Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, M>, "toolbarParameters">,
-    Get<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, M>, "singleSelectionParameters"> {
+    Get12<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, M>, "menuParameters","menuSurfaceParameters","linearNavigationParameters","rovingTabIndexParameters","typeaheadNavigationParameters","dismissParameters","staggeredChildrenParameters","escapeDismissParameters","rearrangeableChildrenParameters","sortableChildrenParameters","toolbarParameters","singleSelectionParameters"> {
 }
 
 export interface MenuProps<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends PartialExcept<MenuPropsBase<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement, M>, "open" | "onClose" | "onOpen" | "openDirection" | "orientation"> {

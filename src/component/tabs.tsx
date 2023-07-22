@@ -1,29 +1,19 @@
 import { createContext, Ref, VNode } from "preact";
 import { focus } from "preact-prop-helpers";
 import { useCallback, useImperativeHandle } from "preact/hooks";
-import { OmitStrong, useContextWithWarning } from "../props.js";
+import { Get10, Get2, OmitStrong, useContextWithWarning } from "../props.js";
 import { TabInfo, TabPanelInfo, useTab, useTabPanel, UseTabPanelReturnType, UseTabPanelsContext, UseTabParameters, UseTabReturnType, useTabs, UseTabsContext, UseTabsParameters, UseTabsReturnType } from "../use-tabs.js";
 import { memoForwardRef, PartialExcept, useDefault } from "./util.js";
 
 type Get<T, K extends keyof T> = T[K];
 
 interface TabsPropsBase<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element, M extends TabInfo<TabElement>> extends
-    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement, M>, "labelParameters">,
-    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement, M>, "linearNavigationParameters">,
-    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement, M>, "rearrangeableChildrenParameters">,
-    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement, M>, "rovingTabIndexParameters">,
-    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement, M>, "singleSelectionParameters">,
-    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement, M>, "sortableChildrenParameters">,
-    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement, M>, "staggeredChildrenParameters">,
-    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement, M>, "tabsParameters">,
-    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement, M>, "typeaheadNavigationParameters">,
-    Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement, M>, "singleSelectionParameters"> {
+    Get10<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement, M>, "labelParameters","linearNavigationParameters","rearrangeableChildrenParameters","rovingTabIndexParameters","singleSelectionParameters","sortableChildrenParameters","staggeredChildrenParameters","tabsParameters","typeaheadNavigationParameters", "singleSelectionParameters"> {
 }
 
 interface TabPropsBase<TabElement extends Element, M extends TabInfo<TabElement>> extends
     Pick<M, "index" | "untabbable" | "unselectable" | "getSortValue">,
-    Get<UseTabParameters<TabElement, M>, "pressParameters">,
-    Get<UseTabParameters<TabElement, M>, "textContentParameters"> {
+    Get2<UseTabParameters<TabElement, M>, "pressParameters","textContentParameters"> {
     focusSelf: M["focusSelf"];
     info?: OmitStrong<M, keyof TabInfo<TabElement>>
 }
@@ -47,7 +37,6 @@ export interface TabPanelProps<PanelElement extends Element, M extends TabPanelI
 const TabsContext = createContext<UseTabsContext<any, any, any>>(null!);
 const TabPanelsContext = createContext<UseTabPanelsContext<any>>(null!);
 const UntabbableContext = createContext(false);
-//const AriaPropNameContext = createContext<UseTabsParameters<any, any, any, any>["singleSelectionParameters"]["ariaPropName"]>("aria-selected")
 const SelectionModeContext = createContext<NonNullable<UseTabsParameters<any, any, any, any>["singleSelectionParameters"]["selectionMode"]>>("focus");
 
 export const Tabs = memoForwardRef(function Tabs<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element, M extends TabInfo<TabElement> = TabInfo<TabElement>>({
@@ -67,7 +56,6 @@ export const Tabs = memoForwardRef(function Tabs<TabContainerElement extends Ele
     pageNavigationSize,
     localStorageKey,
     selectionMode,
-    //groupingType,
     untabbable,
     typeaheadTimeout,
     role,

@@ -30,37 +30,40 @@ export interface UseListboxContext<ListElement extends Element, ListItemElement 
     listboxContext: { selectionLimit: "single" | "multi" | "none" }
 }
 
-export interface UseListboxParameters<ListElement extends Element, ListItemElement extends Element, _LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationParameters<ListElement, ListItemElement, M>, "rovingTabIndexParameters" | "linearNavigationParameters" | "singleSelectionParameters"> {
+export interface UseListboxParametersSelf<ListElement extends Element, ListItemElement extends Element, _LabelElement extends Element, M extends ListboxInfo<ListItemElement>> {
+
+    orientation: "horizontal" | "vertical";
+
+    /**
+     * When `"single"`, the selected item is controlled
+     * via `selectedIndex`. When `"multi"`, the selected
+     * items are controlled by their individual `selected` props.
+     */
+    selectionLimit: "single" | "multi" | "none";
+
+    /**
+     * Only used when `groupingType` is `"without-groups"` or `"group"`
+     */
+    selectedIndex: number | null;
+    onSelectedIndexChange: UseSingleSelectionParameters<ListElement, ListItemElement, M>["singleSelectionParameters"]["onSelectedIndexChange"] //PassiveStateUpdater<number | null, Event> | null;
+
+    /**
+     * * `"without-groups"`: This is a listbox with no groups
+     * * `"with-groups"`: This is a listbox that is grouped into 2 or more labelled sections. In this case, **all navigation and selection is disabled** (meaning you can pass whatever you'd like to them, it's all ignored) and delegated to the child `group`s.
+     * * `"group"`: This is a group, contained within a listbox with `type=="with-groups"`
+     * 
+     * There is currently no support for a mix of grouped and ungrouped options.
+     */
+    groupingType: "with-groups" | "without-groups" | "group";
+}
+
+export interface UseListboxParameters<ListElement extends Element, ListItemElement extends Element, _LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends 
+OmitStrong<UseCompleteListNavigationParameters<ListElement, ListItemElement, M>, "rovingTabIndexParameters" | "linearNavigationParameters" | "singleSelectionParameters"> {
     rovingTabIndexParameters: OmitStrong<UseCompleteListNavigationParameters<ListElement, ListItemElement, M>["rovingTabIndexParameters"], "focusSelfParent">;
     linearNavigationParameters: OmitStrong<UseCompleteListNavigationParameters<ListElement, ListItemElement, M>["linearNavigationParameters"], "arrowKeyDirection">;
     labelParameters: OmitStrong<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
     singleSelectionParameters: Pick<UseCompleteListNavigationParameters<ListElement, ListItemElement, M>["singleSelectionParameters"], "ariaPropName" | "selectionMode">
-    listboxParameters: {
-
-        orientation: "horizontal" | "vertical";
-
-        /**
-         * When `"single"`, the selected item is controlled
-         * via `selectedIndex`. When `"multi"`, the selected
-         * items are controlled by their individual `selected` props.
-         */
-        selectionLimit: "single" | "multi" | "none";
-
-        /**
-         * Only used when `groupingType` is `"without-groups"` or `"group"`
-         */
-        selectedIndex: number | null;
-        onSelectedIndexChange: UseSingleSelectionParameters<ListElement, ListItemElement, M>["singleSelectionParameters"]["onSelectedIndexChange"] //PassiveStateUpdater<number | null, Event> | null;
-
-        /**
-         * * `"without-groups"`: This is a listbox with no groups
-         * * `"with-groups"`: This is a listbox that is grouped into 2 or more labelled sections. In this case, **all navigation and selection is disabled** (meaning you can pass whatever you'd like to them, it's all ignored) and delegated to the child `group`s.
-         * * `"group"`: This is a group, contained within a listbox with `type=="with-groups"`
-         * 
-         * There is currently no support for a mix of grouped and ungrouped options.
-         */
-        groupingType: "with-groups" | "without-groups" | "group";
-    }
+    listboxParameters: UseListboxParametersSelf<ListElement, ListItemElement, _LabelElement, M>;
 }
 export interface UseListboxReturnType<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationReturnType<ListElement, ListItemElement, M>, "singleSelectionReturn" | "props"> {
     propsListbox: ElementProps<ListElement>;

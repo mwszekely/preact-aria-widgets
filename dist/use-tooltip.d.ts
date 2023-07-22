@@ -1,42 +1,43 @@
-import { ElementProps, UseEscapeDismissParameters } from "preact-prop-helpers";
+import { ElementProps, TargetedPick, UseEscapeDismissParameters } from "preact-prop-helpers";
 export type TooltipStatus = "hover" | "focus" | null;
-export interface UseTooltipParameters<TriggerType extends Element, PopupType extends Element> {
-    tooltipParameters: {
-        /**
-         * Called when the tooltip's content should be shown or hidden
-         * or when the manner in which it's shown should be changed.
-         *
-         * This can change from `"hover"` to `"mouse"`, but never the other way around.
-         *
-         * `"null"` means the tooltip should be hidden
-         *
-         * @param status C
-         */
-        onStatus(status: TooltipStatus): void;
-        /**
-         * This is whether `aria-describedby` or `aria-labelledby` is used.
-         *
-         * Certain situations require one or the other, so you need to specify for each circumstance.
-         */
-        tooltipSemanticType: "label" | "description";
-        /**
-         * How long should the tooltip wait to show itself if it was shown via hover?
-         *
-         * Default is 0.
-         */
-        hoverDelay: number | null;
-    };
-    escapeDismissParameters: Pick<UseEscapeDismissParameters<PopupType>["escapeDismissParameters"], "getWindow" | "parentDepth">;
+export interface UseTooltipParametersSelf {
+    /**
+     * Called when the tooltip's content should be shown or hidden
+     * or when the manner in which it's shown should be changed.
+     *
+     * This can change from `"hover"` to `"mouse"`, but never the other way around.
+     *
+     * `"null"` means the tooltip should be hidden
+     *
+     * @param status C
+     */
+    onStatus(status: TooltipStatus): void;
+    /**
+     * This is whether `aria-describedby` or `aria-labelledby` is used.
+     *
+     * Certain situations require one or the other, so you need to specify for each circumstance.
+     */
+    tooltipSemanticType: "label" | "description";
+    /**
+     * How long should the tooltip wait to show itself if it was shown via hover?
+     *
+     * Default is 0.
+     */
+    hoverDelay: number | null;
+}
+export interface UseTooltipParameters<TriggerType extends Element, PopupType extends Element> extends TargetedPick<UseEscapeDismissParameters<PopupType>, "escapeDismissParameters", "getWindow" | "parentDepth"> {
+    tooltipParameters: UseTooltipParametersSelf;
 }
 export type TooltipState = `${"hovering" | "focused"}-${"popup" | "trigger"}` | null;
 export declare function useTooltip<TriggerType extends Element, PopupType extends Element>({ tooltipParameters: { onStatus, tooltipSemanticType, hoverDelay }, escapeDismissParameters }: UseTooltipParameters<TriggerType, PopupType>): UseTooltipReturnType<TriggerType, PopupType>;
+export interface UseTooltipReturnTypeSelf {
+    getState(): TooltipState;
+    stateIsFocus(): boolean;
+    stateIsMouse(): boolean;
+}
 export interface UseTooltipReturnType<TriggerType extends Element, PopupType extends Element> {
     propsPopup: ElementProps<PopupType>;
     propsTrigger: ElementProps<TriggerType>;
-    tooltipReturn: {
-        getState(): TooltipState;
-        stateIsFocus(): boolean;
-        stateIsMouse(): boolean;
-    };
+    tooltipReturn: UseTooltipReturnTypeSelf;
 }
 //# sourceMappingURL=use-tooltip.d.ts.map

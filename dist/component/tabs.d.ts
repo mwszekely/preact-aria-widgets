@@ -1,11 +1,10 @@
 import { Ref, VNode } from "preact";
-import { OmitStrong } from "../props.js";
+import { Get10, Get2, OmitStrong } from "../props.js";
 import { TabInfo, TabPanelInfo, UseTabPanelReturnType, UseTabParameters, UseTabReturnType, UseTabsParameters, UseTabsReturnType } from "../use-tabs.js";
 import { PartialExcept } from "./util.js";
-type Get<T, K extends keyof T> = T[K];
-interface TabsPropsBase<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element, M extends TabInfo<TabElement>> extends Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement, M>, "labelParameters">, Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement, M>, "linearNavigationParameters">, Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement, M>, "rearrangeableChildrenParameters">, Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement, M>, "rovingTabIndexParameters">, Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement, M>, "singleSelectionParameters">, Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement, M>, "sortableChildrenParameters">, Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement, M>, "staggeredChildrenParameters">, Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement, M>, "tabsParameters">, Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement, M>, "typeaheadNavigationParameters">, Get<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement, M>, "singleSelectionParameters"> {
+interface TabsPropsBase<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element, M extends TabInfo<TabElement>> extends Get10<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement, M>, "labelParameters", "linearNavigationParameters", "rearrangeableChildrenParameters", "rovingTabIndexParameters", "singleSelectionParameters", "sortableChildrenParameters", "staggeredChildrenParameters", "tabsParameters", "typeaheadNavigationParameters", "singleSelectionParameters"> {
 }
-interface TabPropsBase<TabElement extends Element, M extends TabInfo<TabElement>> extends Pick<M, "index" | "untabbable" | "unselectable" | "getSortValue">, Get<UseTabParameters<TabElement, M>, "pressParameters">, Get<UseTabParameters<TabElement, M>, "textContentParameters"> {
+interface TabPropsBase<TabElement extends Element, M extends TabInfo<TabElement>> extends Pick<M, "index" | "untabbable" | "unselectable" | "getSortValue">, Get2<UseTabParameters<TabElement, M>, "pressParameters", "textContentParameters"> {
     focusSelf: M["focusSelf"];
     info?: OmitStrong<M, keyof TabInfo<TabElement>>;
 }

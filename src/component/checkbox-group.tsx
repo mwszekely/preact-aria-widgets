@@ -1,21 +1,14 @@
 import { createContext, Ref, RenderableProps, VNode } from "preact";
 import { useImperativeHandle } from "preact/hooks";
-import { OmitStrong, useContextWithWarning } from "../props.js";
+import { Get2, Get8, OmitStrong, useContextWithWarning } from "../props.js";
 import { CheckboxGroupContext, CheckboxGroupInfo, useCheckboxGroup, useCheckboxGroupChild, UseCheckboxGroupChildParameters, UseCheckboxGroupChildReturnType, UseCheckboxGroupParameters, useCheckboxGroupParent, UseCheckboxGroupParentParameters, UseCheckboxGroupParentReturnType, UseCheckboxGroupReturnType } from "../use-checkbox-group.js";
 import { memoForwardRef, PartialExcept, useDefault } from "./util.js";
 
 type Get<T, K extends keyof T> = T[K];
 
 export interface CheckboxGroupPropsBase<ParentElement extends Element, TabbableChildElement extends Element, M extends CheckboxGroupInfo<TabbableChildElement>> extends
-    RenderableProps<{}>,
-    Get<UseCheckboxGroupParameters<ParentElement, TabbableChildElement, M>, "linearNavigationParameters">,
-    Get<UseCheckboxGroupParameters<ParentElement, TabbableChildElement, M>, "checkboxGroupParameters">,
-    Get<UseCheckboxGroupParameters<ParentElement, TabbableChildElement, M>, "rearrangeableChildrenParameters">,
-    Get<UseCheckboxGroupParameters<ParentElement, TabbableChildElement, M>, "sortableChildrenParameters">,
-    Get<UseCheckboxGroupParameters<ParentElement, TabbableChildElement, M>, "typeaheadNavigationParameters">,
-    Get<UseCheckboxGroupParameters<ParentElement, TabbableChildElement, M>, "staggeredChildrenParameters">,
-    Get<UseCheckboxGroupParameters<ParentElement, TabbableChildElement, M>, "rovingTabIndexParameters">,
-    Get<UseCheckboxGroupParameters<ParentElement, TabbableChildElement, M>, "rovingTabIndexParameters"> {
+    Get8<UseCheckboxGroupParameters<ParentElement, TabbableChildElement, M>, "linearNavigationParameters", "checkboxGroupParameters", "rearrangeableChildrenParameters", "sortableChildrenParameters", "typeaheadNavigationParameters", "staggeredChildrenParameters", "rovingTabIndexParameters", "rovingTabIndexParameters">,
+    RenderableProps<{}> {
     ref?: Ref<UseCheckboxGroupReturnType<ParentElement, TabbableChildElement, M>>;
 }
 
@@ -27,9 +20,8 @@ export interface CheckboxGroupParentPropsBase<TCE extends Element> extends
 }
 
 export interface CheckboxGroupChildPropsBase<TCE extends Element> extends
-    Get<UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>, "checkboxGroupChild">,
-    Pick<CheckboxGroupInfo<TCE>, "index" | "untabbable" | "unselectable" | "getSortValue">,
-    Get<UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>, "textContentParameters"> {
+    Get2<UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>, "checkboxGroupChild", "textContentParameters">,
+    Pick<CheckboxGroupInfo<TCE>, "index" | "untabbable" | "unselectable" | "getSortValue"> {
     focusSelf: UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>["info"]["focusSelf"];
     ref?: Ref<UseCheckboxGroupChildReturnType<TCE, CheckboxGroupInfo<TCE>>>;
 }
@@ -99,12 +91,28 @@ export const CheckboxGroup = memoForwardRef(function CheckboxGroup<ParentElement
     )
 });
 
-export const CheckboxGroupParent = memoForwardRef(function CheckboxGroupParent<TCE extends Element>({ render, index, focusSelf, untabbable, getText, getSortValue, unselectable, ..._rest }: CheckboxGroupParentProps<TCE>, ref?: Ref<any>) {
+export const CheckboxGroupParent = memoForwardRef(function CheckboxGroupParent<TCE extends Element>({ 
+    render, 
+    index, 
+    focusSelf, 
+    untabbable, 
+    getText, 
+    getSortValue, 
+    unselectable, 
+    ..._rest
+}: CheckboxGroupParentProps<TCE>, ref?: Ref<any>) {
     const context = useContextWithWarning(UseCheckboxGroupChildContext, "checkbox group");
     console.assert(context != null, `This CheckboxGroupParent is not contained within a CheckboxGroup`);
 
     const info = useCheckboxGroupParent<TCE>({
-        info: { index, unselectable: unselectable || false, untabbable: untabbable || false, focusSelf, getSortValue, checkboxInfo: { checkboxChildType: "parent" } },
+        info: { 
+            index, 
+            unselectable: unselectable || false, 
+            untabbable: untabbable || false, 
+            focusSelf, 
+            getSortValue, 
+            checkboxInfo: { checkboxChildType: "parent" } 
+        },
         context,
         textContentParameters: { getText: useDefault("getText", getText) }
     });

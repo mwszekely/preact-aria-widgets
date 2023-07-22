@@ -1,20 +1,28 @@
 import { identity } from "lodash-es";
 import { h } from "preact";
-import { ElementProps, ManagedChildInfo, OnChildrenMountChange, PassiveStateUpdater, PersistentStates, UseHasCurrentFocusReturnType, UseLinearNavigationParameters, UseManagedChildParameters, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, UsePressReturnType, UseRefElementParameters, UseRefElementReturnType, UseTextContentReturnType, UseTypeaheadNavigationChildParameters, UseTypeaheadNavigationContext, UseTypeaheadNavigationParameters, assertEmptyObject, findBackupFocus, focus, monitorCallCount, useChildrenFlag, useHasCurrentFocus, useLinearNavigation, useManagedChild, useManagedChildren, useMemoObject, useMergedProps, usePersistentState, useRandomId, useRefElement, useStableCallback, useState, useTypeaheadNavigation, useTypeaheadNavigationChild } from "preact-prop-helpers";
+import { ElementProps, ManagedChildInfo, OnChildrenMountChange, PassiveStateUpdater, PersistentStates, TargetedOmit, UseHasCurrentFocusReturnType, UseLinearNavigationParameters, UseManagedChildParameters, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, UsePressReturnType, UseRefElementParameters, UseRefElementReturnType, UseTextContentReturnType, UseTypeaheadNavigationChildParameters, UseTypeaheadNavigationContext, UseTypeaheadNavigationParameters, assertEmptyObject, findBackupFocus, focus, monitorCallCount, useChildrenFlag, useHasCurrentFocus, useLinearNavigation, useManagedChild, useManagedChildren, useMemoObject, useMergedProps, usePersistentState, useRandomId, useRefElement, useStableCallback, useState, useTypeaheadNavigation, useTypeaheadNavigationChild } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { DisabledType, OmitStrong, Prefices } from "./props.js";
 import { ButtonPressEventHandler, UseButtonParameters, UseButtonReturnType, useButton } from "./use-button.js";
 
+export interface UseAccordionParametersSelf {
+    orientation?: "vertical" | "horizontal";
+    initialIndex?: number | null;
+    localStorageKey: keyof PersistentStates | null;
+}
+
 export interface UseAccordionParameters<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo> extends
+    TargetedOmit<UseLinearNavigationParameters<HeaderButtonElement, HeaderButtonElement, M>, "linearNavigationParameters", "getLowestIndex" | "arrowKeyDirection" | "getHighestIndex" | "isValid" | "indexDemangler" | "indexMangler">,
     UseManagedChildrenParameters<M>,
     Pick<UseTypeaheadNavigationParameters<HeaderButtonElement, M>, "typeaheadNavigationParameters"> {
-    accordionParameters: { orientation?: "vertical" | "horizontal"; initialIndex?: number | null; localStorageKey: keyof PersistentStates | null; }
-    linearNavigationParameters: OmitStrong<UseLinearNavigationParameters<HeaderButtonElement, HeaderButtonElement, M>["linearNavigationParameters"], "getLowestIndex" | "arrowKeyDirection" | "getHighestIndex" | "isValid" | "indexDemangler" | "indexMangler">;
+    accordionParameters: UseAccordionParametersSelf;
 }
+
+export interface UseAccordionReturnTypeSelf { changeExpandedIndex: PassiveStateUpdater<number | null, Event> }
 
 export interface UseAccordionReturnType<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo> extends UseManagedChildrenReturnType<M> {
     /** **STABLE** */
-    accordionReturn: { changeExpandedIndex: PassiveStateUpdater<number | null, Event> }
+    accordionReturn: UseAccordionReturnTypeSelf;
     context: UseAccordionContext<HeaderButtonElement, M>;
 
     props: ElementProps<any>;
@@ -31,24 +39,26 @@ export interface UseAccordionSectionInfo extends ManagedChildInfo<number> {
     untabbable: boolean;
 }
 
+export interface UseAccordionSectionParametersSelf {
+    /** 
+     * If this prop is `true` or `false` (isn't null), then this section
+     * will be open/closed regardless of what the parent's singular open index is.
+     * 
+     * In other words, leave null to only allow one section to be open at a time.
+     * To allow multiple sections to be open at once, 
+     * set the parent's index to null and toggle this `true`/`false` when the button's pressed
+     */
+    open: boolean | null | undefined;
+    /** Generally `"region"` */
+    bodyRole: h.JSX.AriaRole;
+}
+
 export interface UseAccordionSectionParameters<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo> extends
     OmitStrong<UseTypeaheadNavigationChildParameters<HeaderButtonElement, M>, "info" | "refElementReturn" | "context">,
-    UseRefElementParameters<HeaderButtonElement>, 
+    UseRefElementParameters<HeaderButtonElement>,
     UseManagedChildParameters<M, "index" | "untabbable"> {
     context: UseAccordionContext<HeaderButtonElement, M>;
-    accordionSectionParameters: {
-        /** 
-         * If this prop is `true` or `false` (isn't null), then this section
-         * will be open/closed regardless of what the parent's singular open index is.
-         * 
-         * In other words, leave null to only allow one section to be open at a time.
-         * To allow multiple sections to be open at once, 
-         * set the parent's index to null and toggle this `true`/`false` when the button's pressed
-         */
-        open: boolean | null | undefined;
-        /** Generally `"region"` */
-        bodyRole: h.JSX.AriaRole;
-    }
+    accordionSectionParameters: UseAccordionSectionParametersSelf;
     buttonParameters: OmitStrong<UseButtonParameters<HeaderButtonElement>["buttonParameters"], "pressed" | "role">;
     //pressParameters: UseButtonParameters<HeaderButtonElement>["pressParameters"];
 
@@ -85,7 +95,7 @@ export interface UseAccordionContext<HeaderButtonElement extends Element, M exte
 export function useAccordion<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo>({
     accordionParameters: { initialIndex, localStorageKey, orientation, ...void2 },
     typeaheadNavigationParameters,
-    linearNavigationParameters: { disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize,onNavigateLinear, ...void1 },
+    linearNavigationParameters: { disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize, onNavigateLinear, ...void1 },
     managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange, onChildrenCountChange, ...void3 },
     ...void4
 }: UseAccordionParameters<HeaderButtonElement, M>): UseAccordionReturnType<HeaderButtonElement, M> {
@@ -117,7 +127,7 @@ export function useAccordion<HeaderButtonElement extends Element, M extends UseA
         return false;
     }, []);
 
-    const { propsStable, refElementReturn: { getElement }  } = useRefElement<any>({  })
+    const { propsStable, refElementReturn: { getElement } } = useRefElement<any>({})
 
     // Keep track of the one expanded index (if there is only one expanded index)
     const { changeIndex: changeExpandedIndexLocalOnly, getCurrentIndex: getCurrentExpandedIndex } = useChildrenFlag<M, Event>({
@@ -237,12 +247,16 @@ export function useAccordionSection<_HeaderContainerElement extends Element, Hea
 
     const { refElementReturn: { getElement: getHeaderElement }, propsStable: headerRefElementProps } = useRefElement<HeaderButtonElement>({ refElementParameters: {} });
     const { refElementReturn: { getElement: _getBodyElement }, propsStable: bodyRefElementProps } = useRefElement<BodyElement>({ refElementParameters: {} });
-    const { hasCurrentFocusReturn } = useHasCurrentFocus({ refElementReturn: { getElement: getHeaderElement }, hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: useStableCallback(focused => {
-        if (focused) {
-            setCurrentFocusedIndex(index);
-            setMostRecentlyTabbed(true);
+    const { hasCurrentFocusReturn } = useHasCurrentFocus({
+        refElementReturn: { getElement: getHeaderElement }, hasCurrentFocusParameters: {
+            onCurrentFocusedInnerChanged: useStableCallback(focused => {
+                if (focused) {
+                    setCurrentFocusedIndex(index);
+                    setMostRecentlyTabbed(true);
+                }
+            })
         }
-    }) } })
+    })
     const focusSelf = useStableCallback(() => {
         focus(getHeaderElement());
     });
@@ -272,7 +286,7 @@ export function useAccordionSection<_HeaderContainerElement extends Element, Hea
 
         userOnPress?.(e);
     };
-    
+
     const { propsStable: propsLN, ...linearReturnType } = useLinearNavigation<HeaderButtonElement, HeaderButtonElement, M>({ linearNavigationParameters, rovingTabIndexReturn });
     const {
         pressParameters: { excludeSpace },

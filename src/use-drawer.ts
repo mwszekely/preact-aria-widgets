@@ -1,10 +1,11 @@
-import { ElementProps, findFirstFocusable, monitorCallCount, useMergedProps, useModal, UseModalParameters, UseModalReturnType, useStableCallback } from "preact-prop-helpers";
+import { ElementProps, findFirstFocusable, monitorCallCount, TargetedOmit, useMergedProps, useModal, UseModalParameters, UseModalReturnType, useStableCallback } from "preact-prop-helpers";
 import { OmitStrong, Prefices } from "./props.js";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
 
-export interface UseDrawerParameters<_DialogElement extends Element, _TitleElement extends Element> extends OmitStrong<UseModalParameters<"escape" | "backdrop" | "lost-focus">, "focusTrapParameters"> {
-    labelParameters: OmitStrong<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
-    focusTrapParameters: OmitStrong<UseModalParameters<"escape" | "backdrop" | "lost-focus">["focusTrapParameters"], "onlyMoveFocus">
+export interface UseDrawerParameters<_DialogElement extends Element, _TitleElement extends Element> extends
+    OmitStrong<UseModalParameters<"escape" | "backdrop" | "lost-focus">, "focusTrapParameters">,
+    TargetedOmit<UseLabelSyntheticParameters, "labelParameters", "onLabelClick">,
+    TargetedOmit<UseModalParameters<"escape" | "backdrop" | "lost-focus">, "focusTrapParameters", "onlyMoveFocus"> {
 }
 
 export interface UseDrawerReturnType<FocusContainerElement extends Element, SourceElement extends Element, DrawerElement extends Element, TitleElement extends Element> extends OmitStrong<UseModalReturnType<FocusContainerElement, SourceElement, DrawerElement>, "propsStableSource" | "propsStablePopup"> {
@@ -15,7 +16,7 @@ export interface UseDrawerReturnType<FocusContainerElement extends Element, Sour
 
 export function useDrawer<FocusContainerElement extends Element, SourceElement extends Element, PopupElement extends Element, TitleElement extends Element>({ dismissParameters, escapeDismissParameters, focusTrapParameters, labelParameters }: UseDrawerParameters<PopupElement, TitleElement>): UseDrawerReturnType<FocusContainerElement, SourceElement, PopupElement, TitleElement> {
     monitorCallCount(useDrawer);
-    
+
     const {
         propsFocusContainer,
         propsStablePopup,

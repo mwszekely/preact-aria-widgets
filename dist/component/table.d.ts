@@ -1,17 +1,18 @@
 import { Ref, VNode } from "preact";
+import { Get3, Get4, Get9 } from "../props.js";
 import { TableCellInfo, TableRowInfo, UseTableCellParameters, UseTableCellReturnType, UseTableParameters, UseTableReturnType, UseTableRowParameters, UseTableRowReturnType, UseTableSectionParameters, UseTableSectionReturnType } from "../use-table.js";
 import { PartialExcept } from "./util.js";
 type Get<T, K extends keyof T> = T[K];
 interface TablePropsBase<TableElement extends Element, LabelElement extends Element> extends Get<UseTableParameters<TableElement, LabelElement>, "labelParameters">, Get<UseTableParameters<TableElement, LabelElement>, "tableParameters"> {
     ref?: Ref<UseTableReturnType<TableElement, LabelElement>>;
 }
-interface TableSectionPropsBase<SectionElement extends Element, RowElement extends Element, CellElement extends Element, RM extends TableRowInfo<RowElement, CellElement>, CM extends TableCellInfo<CellElement>> extends Get<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "gridNavigationParameters">, Get<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "linearNavigationParameters">, Get<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "rearrangeableChildrenParameters">, Get<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "rovingTabIndexParameters">, Get<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "singleSelectionParameters">, Get<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "typeaheadNavigationParameters">, Get<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "paginatedChildrenParameters">, Get<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "staggeredChildrenParameters">, Get<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "tableSectionParameters"> {
+interface TableSectionPropsBase<SectionElement extends Element, RowElement extends Element, CellElement extends Element, RM extends TableRowInfo<RowElement, CellElement>, CM extends TableCellInfo<CellElement>> extends Get9<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "gridNavigationParameters", "linearNavigationParameters", "rearrangeableChildrenParameters", "rovingTabIndexParameters", "singleSelectionParameters", "typeaheadNavigationParameters", "paginatedChildrenParameters", "staggeredChildrenParameters", "tableSectionParameters"> {
     ref?: Ref<UseTableSectionReturnType<SectionElement, RowElement, CellElement, RM, CM>>;
 }
-interface TableRowPropsBase<RowElement extends Element, CellElement extends Element, RM extends TableRowInfo<RowElement, CellElement>, CM extends TableCellInfo<CellElement>> extends Pick<RM, "index" | "unselectable">, Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "textContentParameters">, Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "tableRowParameters">, Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "linearNavigationParameters">, Get<UseTableRowParameters<RowElement, CellElement, RM, CM>, "rovingTabIndexParameters"> {
+interface TableRowPropsBase<RowElement extends Element, CellElement extends Element, RM extends TableRowInfo<RowElement, CellElement>, CM extends TableCellInfo<CellElement>> extends Pick<RM, "index" | "unselectable">, Get4<UseTableRowParameters<RowElement, CellElement, RM, CM>, "textContentParameters", "tableRowParameters", "linearNavigationParameters", "rovingTabIndexParameters"> {
     ref?: Ref<UseTableRowReturnType<RowElement, CellElement, RM, CM>>;
 }
-interface TableCellPropsBase<CellElement extends Element, CM extends TableCellInfo<CellElement>> extends Get<UseTableCellParameters<CellElement, CM>, "tableCellParameters">, Pick<CM, "index" | "untabbable">, Get<UseTableCellParameters<CellElement, CM>, "gridNavigationCellParameters">, Get<UseTableCellParameters<CellElement, CM>, "textContentParameters"> {
+interface TableCellPropsBase<CellElement extends Element, CM extends TableCellInfo<CellElement>> extends Pick<CM, "index" | "untabbable">, Get3<UseTableCellParameters<CellElement, CM>, "tableCellParameters", "gridNavigationCellParameters", "textContentParameters"> {
     focusSelf: CM["focusSelf"];
     getSortValue: CM["getSortValue"];
     ref?: Ref<UseTableCellReturnType<CellElement, CM>>;

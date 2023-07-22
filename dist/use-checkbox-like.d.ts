@@ -1,20 +1,25 @@
 import { h } from "preact";
-import { ElementProps, UsePressParameters, UsePressReturnType, UseRefElementReturnType } from "preact-prop-helpers";
+import { ElementProps, TargetedOmit, TargetedPick, UsePressParameters, UsePressReturnType, UseRefElementReturnType } from "preact-prop-helpers";
 import { DisabledType, OmitStrong } from "./props.js";
 import { LabelPosition, UseLabelParameters, UseLabelReturnType } from "./use-label.js";
 export type CheckboxCheckedType = boolean | "mixed";
-export interface UseCheckboxLikeParameters<LP extends LabelPosition, InputType extends Element, LabelType extends Element> extends OmitStrong<UseLabelParameters<LP, InputType, LabelType>, "labelParameters"> {
-    checkboxLikeParameters: {
-        /** The role attribute to use, when applicable */
-        role: h.JSX.AriaRole;
-        disabled: DisabledType;
-        checked: CheckboxCheckedType;
-        onInput(event: Event): void;
-    };
-    pressParameters: Pick<UsePressParameters<any>["pressParameters"], "excludeSpace">;
-    labelParameters: OmitStrong<UseLabelParameters<LP, InputType, LabelType>["labelParameters"], "onLabelClick">;
+export interface UseCheckboxLikeParametersSelf {
+    /** The role attribute to use, when applicable */
+    role: h.JSX.AriaRole;
+    disabled: DisabledType;
+    checked: CheckboxCheckedType;
+    onInput(event: Event): void;
+}
+export interface UseCheckboxLikeParameters<LP extends LabelPosition, InputType extends Element, LabelType extends Element> extends OmitStrong<UseLabelParameters<LP, InputType, LabelType>, "labelParameters">, TargetedOmit<UseLabelParameters<LP, InputType, LabelType>, "labelParameters", "onLabelClick">, TargetedPick<UsePressParameters<any>, "pressParameters", "excludeSpace"> {
+    checkboxLikeParameters: UseCheckboxLikeParametersSelf;
     refElementLabelReturn: UseRefElementReturnType<LabelType>["refElementReturn"];
     refElementInputReturn: UseRefElementReturnType<InputType>["refElementReturn"];
+}
+export interface UseCheckboxLikeReturnTypeSelf {
+    /**
+     * Call this to focus whichever element handles the focus based on `labelPosition`.
+     */
+    focusSelf(): void;
 }
 export interface UseCheckboxLikeReturnType<InputType extends Element, LabelType extends Element> extends UseLabelReturnType<InputType, LabelType> {
     pressLabelReturn: UsePressReturnType<LabelType>["pressReturn"];
@@ -25,12 +30,7 @@ export interface UseCheckboxLikeReturnType<InputType extends Element, LabelType 
     checkboxLikeLabelReturn: {
         propsUnstable: ElementProps<LabelType>;
     };
-    checkboxLikeReturn: {
-        /**
-         * Call this to focus whichever element handles the focus based on `labelPosition`.
-         */
-        focusSelf(): void;
-    };
+    checkboxLikeReturn: UseCheckboxLikeReturnTypeSelf;
 }
 /**
  * Handles any component where there's:

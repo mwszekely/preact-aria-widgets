@@ -1,8 +1,8 @@
 import { Ref, VNode } from "preact";
+import { Get4 } from "../props.js";
 import { UseDialogParameters, UseDialogReturnType } from "../use-dialog.js";
 import { PartialExcept } from "./util.js";
-type Get<T, K extends keyof T> = T[K];
-interface DialogPropsBase<FocusContainerElement extends Element, SourceElement extends Element, DialogElement extends Element, TitleElement extends Element> extends Get<UseDialogParameters<DialogElement, TitleElement>, "dismissParameters">, Get<UseDialogParameters<DialogElement, TitleElement>, "escapeDismissParameters">, Get<UseDialogParameters<DialogElement, TitleElement>, "labelParameters">, Get<UseDialogParameters<DialogElement, TitleElement>, "focusTrapParameters"> {
+interface DialogPropsBase<FocusContainerElement extends Element, SourceElement extends Element, DialogElement extends Element, TitleElement extends Element> extends Get4<UseDialogParameters<DialogElement, TitleElement>, "dismissParameters", "escapeDismissParameters", "labelParameters", "focusTrapParameters"> {
     ref?: Ref<UseDialogReturnType<FocusContainerElement, SourceElement, DialogElement, TitleElement>>;
 }
 export interface DialogProps<FocusContainerElement extends Element, SourceElement extends Element, DialogElement extends Element, TitleElement extends Element> extends PartialExcept<DialogPropsBase<FocusContainerElement, SourceElement, DialogElement, TitleElement>, "ariaLabel" | "onClose" | "open" | "focusPopup"> {

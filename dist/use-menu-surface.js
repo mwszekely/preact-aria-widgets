@@ -8,9 +8,7 @@ import { useCallback } from "preact/hooks";
  * Related to menus, which are a menu contained within a menu surface. Not related to menubars -- menus contain menubars, but not all menubars are contained within a menu or its surface.
  *
  */
-export function useMenuSurface({ 
-//menuSurface: { sendFocusToMenu, role }, 
-dismissParameters, escapeDismissParameters, focusTrapParameters, menuSurfaceParameters: { role, surfaceId } }) {
+export function useMenuSurface({ dismissParameters, escapeDismissParameters, focusTrapParameters, menuSurfaceParameters: { role, surfaceId, ...void1 }, ...void2 }) {
     monitorCallCount(useMenuSurface);
     const { refElementReturn: { getElement: getButtonElement }, propsStable: propsRefTrigger, ...void4 } = useRefElement({ refElementParameters: { onElementChange: undefined } });
     const { refElementReturn: { getElement: getMenuElement, ...void5 }, propsStable: propsRefSurface, ...void6 } = useRefElement({ refElementParameters: { onElementChange: undefined } });
@@ -18,15 +16,17 @@ dismissParameters, escapeDismissParameters, focusTrapParameters, menuSurfacePara
         dismissParameters,
         escapeDismissParameters,
         focusTrapParameters: {
-            ...focusTrapParameters,
             onlyMoveFocus: true,
             trapActive: true,
             focusOpener: useStableCallback(() => {
                 const buttonElement = getButtonElement();
                 focus(buttonElement);
-            })
+            }),
+            ...focusTrapParameters
         }
     });
+    assertEmptyObject(void1);
+    assertEmptyObject(void2);
     assertEmptyObject(void4);
     assertEmptyObject(void5);
     assertEmptyObject(void6);

@@ -1,15 +1,15 @@
 import { Ref, RenderableProps, VNode } from "preact";
-import { OmitStrong } from "../props.js";
+import { Get2, Get8, OmitStrong } from "../props.js";
 import { CheckboxGroupInfo, UseCheckboxGroupChildParameters, UseCheckboxGroupChildReturnType, UseCheckboxGroupParameters, UseCheckboxGroupParentParameters, UseCheckboxGroupParentReturnType, UseCheckboxGroupReturnType } from "../use-checkbox-group.js";
 import { PartialExcept } from "./util.js";
 type Get<T, K extends keyof T> = T[K];
-export interface CheckboxGroupPropsBase<ParentElement extends Element, TabbableChildElement extends Element, M extends CheckboxGroupInfo<TabbableChildElement>> extends RenderableProps<{}>, Get<UseCheckboxGroupParameters<ParentElement, TabbableChildElement, M>, "linearNavigationParameters">, Get<UseCheckboxGroupParameters<ParentElement, TabbableChildElement, M>, "checkboxGroupParameters">, Get<UseCheckboxGroupParameters<ParentElement, TabbableChildElement, M>, "rearrangeableChildrenParameters">, Get<UseCheckboxGroupParameters<ParentElement, TabbableChildElement, M>, "sortableChildrenParameters">, Get<UseCheckboxGroupParameters<ParentElement, TabbableChildElement, M>, "typeaheadNavigationParameters">, Get<UseCheckboxGroupParameters<ParentElement, TabbableChildElement, M>, "staggeredChildrenParameters">, Get<UseCheckboxGroupParameters<ParentElement, TabbableChildElement, M>, "rovingTabIndexParameters">, Get<UseCheckboxGroupParameters<ParentElement, TabbableChildElement, M>, "rovingTabIndexParameters"> {
+export interface CheckboxGroupPropsBase<ParentElement extends Element, TabbableChildElement extends Element, M extends CheckboxGroupInfo<TabbableChildElement>> extends Get8<UseCheckboxGroupParameters<ParentElement, TabbableChildElement, M>, "linearNavigationParameters", "checkboxGroupParameters", "rearrangeableChildrenParameters", "sortableChildrenParameters", "typeaheadNavigationParameters", "staggeredChildrenParameters", "rovingTabIndexParameters", "rovingTabIndexParameters">, RenderableProps<{}> {
     ref?: Ref<UseCheckboxGroupReturnType<ParentElement, TabbableChildElement, M>>;
 }
 export interface CheckboxGroupParentPropsBase<TCE extends Element> extends Pick<CheckboxGroupInfo<TCE>, "index" | "getSortValue">, Get<UseCheckboxGroupParentParameters<TCE, CheckboxGroupInfo<TCE>>, "textContentParameters">, OmitStrong<Get<UseCheckboxGroupParentParameters<TCE, CheckboxGroupInfo<TCE>>, "info">, "checkboxInfo"> {
     ref?: Ref<UseCheckboxGroupParentReturnType<TCE, CheckboxGroupInfo<TCE>>>;
 }
-export interface CheckboxGroupChildPropsBase<TCE extends Element> extends Get<UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>, "checkboxGroupChild">, Pick<CheckboxGroupInfo<TCE>, "index" | "untabbable" | "unselectable" | "getSortValue">, Get<UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>, "textContentParameters"> {
+export interface CheckboxGroupChildPropsBase<TCE extends Element> extends Get2<UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>, "checkboxGroupChild", "textContentParameters">, Pick<CheckboxGroupInfo<TCE>, "index" | "untabbable" | "unselectable" | "getSortValue"> {
     focusSelf: UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>["info"]["focusSelf"];
     ref?: Ref<UseCheckboxGroupChildReturnType<TCE, CheckboxGroupInfo<TCE>>>;
 }

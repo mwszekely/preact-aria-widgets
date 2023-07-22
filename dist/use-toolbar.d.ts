@@ -1,34 +1,32 @@
 import { h } from "preact";
-import { CompleteListNavigationContext, ElementProps, MakeSingleSelectionDeclarativeParameters, MakeSingleSelectionDeclarativeReturnType, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseRandomIdReturnType } from "preact-prop-helpers";
+import { CompleteListNavigationContext, ElementProps, MakeSingleSelectionDeclarativeParameters, MakeSingleSelectionDeclarativeReturnType, TargetedOmit, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseRandomIdReturnType } from "preact-prop-helpers";
 import { OmitStrong } from "./props.js";
 import { UseLabelSyntheticParameters } from "./use-label.js";
-export interface UseToolbarParameters<ContainerElement extends Element, ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends OmitStrong<MakeSingleSelectionDeclarativeParameters<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>>, "rovingTabIndexParameters" | "singleSelectionDeclarativeParameters" | "paginatedChildrenParameters" | "linearNavigationParameters" | "singleSelectionReturn"> {
-    rovingTabIndexParameters: OmitStrong<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>["rovingTabIndexParameters"], "focusSelfParent">;
-    toolbarParameters: {
-        orientation: "horizontal" | "vertical";
-        /**
-         * Should be "toolbar" for toolbars,
-         * `null` if someone else takes care of the role (TODO: it's still labelled in this case, what does this mean?),
-         * and whatever string is applicable otherwise.
-         */
-        role: h.JSX.AriaRole | null;
-        /**
-         * Optional; Only used if you need single selection logic.
-         */
-        selectedIndex: MakeSingleSelectionDeclarativeParameters<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>>["singleSelectionDeclarativeParameters"]["selectedIndex"];
-        /**
-         * Optional; Only used if you need single selection logic.
-         */
-        onSelectedIndexChange: MakeSingleSelectionDeclarativeParameters<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>>["singleSelectionDeclarativeParameters"]["onSelectedIndexChange"];
-        /**
-         * When true, none of the children will be selectable or focusable.
-         *
-         * The component itself will be made focusable instead (partially to ensure there's always something focusable in the case of e.g. a menu).
-         */
-        disabled: boolean;
-    };
-    labelParameters: OmitStrong<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
-    linearNavigationParameters: OmitStrong<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>["linearNavigationParameters"], "arrowKeyDirection">;
+export interface UseToolbarParametersSelf<ContainerElement extends Element, ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> {
+    orientation: "horizontal" | "vertical";
+    /**
+     * Should be "toolbar" for toolbars,
+     * `null` if someone else takes care of the role (TODO: it's still labelled in this case, what does this mean?),
+     * and whatever string is applicable otherwise.
+     */
+    role: h.JSX.AriaRole | null;
+    /**
+     * Optional; Only used if you need single selection logic.
+     */
+    selectedIndex: MakeSingleSelectionDeclarativeParameters<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>>["singleSelectionDeclarativeParameters"]["selectedIndex"];
+    /**
+     * Optional; Only used if you need single selection logic.
+     */
+    onSelectedIndexChange: MakeSingleSelectionDeclarativeParameters<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>>["singleSelectionDeclarativeParameters"]["onSelectedIndexChange"];
+    /**
+     * When true, none of the children will be selectable or focusable.
+     *
+     * The component itself will be made focusable instead (partially to ensure there's always something focusable in the case of e.g. a menu).
+     */
+    disabled: boolean;
+}
+export interface UseToolbarParameters<ContainerElement extends Element, ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends OmitStrong<MakeSingleSelectionDeclarativeParameters<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>>, "rovingTabIndexParameters" | "singleSelectionDeclarativeParameters" | "paginatedChildrenParameters" | "linearNavigationParameters" | "singleSelectionReturn">, TargetedOmit<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>, "rovingTabIndexParameters", "focusSelfParent">, TargetedOmit<UseLabelSyntheticParameters, "labelParameters", "onLabelClick">, TargetedOmit<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>, "linearNavigationParameters", "arrowKeyDirection"> {
+    toolbarParameters: UseToolbarParametersSelf<ContainerElement, ChildElement, M>;
 }
 export interface UseToolbarReturnType<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends OmitStrong<MakeSingleSelectionDeclarativeReturnType<UseCompleteListNavigationReturnType<ContainerElement, ChildElement, M>>, "props"> {
     propsToolbar: ElementProps<ContainerElement>;
@@ -39,13 +37,16 @@ export interface UseToolbarReturnType<ContainerElement extends Element, ChildEle
 }
 export interface UseToolbarSubInfo<ChildElement extends Element> extends UseCompleteListNavigationChildInfo<ChildElement> {
 }
+export interface UseToolbarContextSelf {
+}
 export interface UseToolbarContext<ContainerElement extends Element, ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends CompleteListNavigationContext<ContainerElement, ChildElement, M> {
-    toolbarContext: {};
+    toolbarContext: UseToolbarContextSelf;
+}
+export interface UseToolbarChildParametersSelf {
+    disabledProp: "disabled" | "aria-disabled";
 }
 export interface UseToolbarChildParameters<E extends Element, M extends UseToolbarSubInfo<E>> extends OmitStrong<UseCompleteListNavigationChildParameters<E, M>, never> {
-    toolbarChildParameters: {
-        disabledProp: "disabled" | "aria-disabled";
-    };
+    toolbarChildParameters: UseToolbarChildParametersSelf;
 }
 export interface UseToolbarChildReturnType<ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends UseCompleteListNavigationChildReturnType<ChildElement, M> {
 }

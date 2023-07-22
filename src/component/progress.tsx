@@ -1,6 +1,7 @@
 import { Ref, VNode } from "preact";
 import { UseAsyncHandlerParameters } from "preact-prop-helpers";
 import { useImperativeHandle } from "preact/hooks";
+import { Get3 } from "../props.js";
 import { UseProgressParameters, UseProgressReturnType, UseProgressWithHandlerParameters, UseProgressWithHandlerReturnType, useProgress, useProgressWithHandler } from "../use-progress.js";
 import { PartialExcept, memoForwardRef } from "./util.js";
 
@@ -11,9 +12,7 @@ interface ProgressPropsBase<IndicatorElement extends Element, LabelElement exten
 }
 
 interface ProgressWithHandlerPropsBase<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element> extends
-    Get<UseProgressWithHandlerParameters<EventType, CaptureType, IndicatorElement, LabelElement>, "labelParameters">,
-    Get<UseProgressWithHandlerParameters<EventType, CaptureType, IndicatorElement, LabelElement>, "progressIndicatorParameters">,
-    Get<UseProgressWithHandlerParameters<EventType, CaptureType, IndicatorElement, LabelElement>, "progressWithHandlerParameters">,
+    Get3<UseProgressWithHandlerParameters<EventType, CaptureType, IndicatorElement, LabelElement>, "labelParameters","progressIndicatorParameters","progressWithHandlerParameters">,
     UseAsyncHandlerParameters<EventType, CaptureType> {
     ref?: Ref<UseProgressReturnType<IndicatorElement, LabelElement>>;
 }

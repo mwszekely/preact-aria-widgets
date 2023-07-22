@@ -1,8 +1,8 @@
 import { Ref, VNode } from "preact";
+import { Get4 } from "../props.js";
 import { UseDrawerParameters, UseDrawerReturnType } from "../use-drawer.js";
 import { PartialExcept } from "./util.js";
-type Get<T, K extends keyof T> = T[K];
-interface DrawerPropsBase<FocusContainerElement extends Element, SourceElement extends Element, DrawerElement extends Element, TitleElement extends Element> extends Get<UseDrawerParameters<DrawerElement, TitleElement>, "dismissParameters">, Get<UseDrawerParameters<DrawerElement, TitleElement>, "escapeDismissParameters">, Get<UseDrawerParameters<DrawerElement, TitleElement>, "labelParameters">, Get<UseDrawerParameters<DrawerElement, TitleElement>, "focusTrapParameters"> {
+interface DrawerPropsBase<FocusContainerElement extends Element, SourceElement extends Element, DrawerElement extends Element, TitleElement extends Element> extends Get4<UseDrawerParameters<DrawerElement, TitleElement>, "dismissParameters", "escapeDismissParameters", "labelParameters", "focusTrapParameters"> {
     ref?: Ref<UseDrawerReturnType<FocusContainerElement, SourceElement, DrawerElement, TitleElement>>;
     render(drawerInfo: UseDrawerReturnType<FocusContainerElement, SourceElement, DrawerElement, TitleElement>): VNode<any>;
 }

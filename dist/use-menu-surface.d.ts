@@ -1,16 +1,16 @@
-import { ElementProps, UseModalParameters, UseModalReturnType } from "preact-prop-helpers";
+import { ElementProps, TargetedOmit, UseModalParameters, UseModalReturnType } from "preact-prop-helpers";
 import { OmitStrong } from "./props.js";
-export interface UseMenuSurfaceParameters<_S extends Element, _B extends Element> extends OmitStrong<UseModalParameters<"escape" | "lost-focus" | "backdrop">, "focusTrapParameters"> {
-    focusTrapParameters: OmitStrong<UseModalParameters<"escape" | "lost-focus" | "backdrop">["focusTrapParameters"], "trapActive" | "focusOpener" | "onlyMoveFocus">;
-    menuSurfaceParameters: {
-        /**
-         * What role the surface fulfills.
-         *
-         * General menus should use "menu". "dialog" can be used for generic pop-up things.
-         */
-        role: "dialog" | "menu" | "tree" | "grid" | "listbox";
-        surfaceId: string;
-    };
+export interface UseMenuSurfaceParametersSelf {
+    /**
+     * What role the surface fulfills.
+     *
+     * General menus should use "menu". "dialog" can be used for generic pop-up things.
+     */
+    role: "dialog" | "menu" | "tree" | "grid" | "listbox";
+    surfaceId: string;
+}
+export interface UseMenuSurfaceParameters<_S extends Element, _B extends Element> extends OmitStrong<UseModalParameters<"escape" | "lost-focus" | "backdrop">, "focusTrapParameters">, TargetedOmit<UseModalParameters<"escape" | "lost-focus" | "backdrop">, "focusTrapParameters", "trapActive" | "focusOpener" | "onlyMoveFocus"> {
+    menuSurfaceParameters: UseMenuSurfaceParametersSelf;
 }
 export interface UseMenuSurfaceReturnType<MenuSurfaceElement extends Element, MenuTargetElement extends Element, MenuTriggerElement extends Element> {
     propsSurface: ElementProps<MenuSurfaceElement>;
@@ -28,7 +28,7 @@ export interface UseMenuSurfaceReturnType<MenuSurfaceElement extends Element, Me
  * Related to menus, which are a menu contained within a menu surface. Not related to menubars -- menus contain menubars, but not all menubars are contained within a menu or its surface.
  *
  */
-export declare function useMenuSurface<MenuSurfaceElement extends Element, MenuTargetElement extends Element, MenuTriggerElement extends Element>({ dismissParameters, escapeDismissParameters, focusTrapParameters, menuSurfaceParameters: { role, surfaceId } }: UseMenuSurfaceParameters<MenuSurfaceElement, MenuTriggerElement>): UseMenuSurfaceReturnType<MenuSurfaceElement, MenuTargetElement, MenuTriggerElement>;
+export declare function useMenuSurface<MenuSurfaceElement extends Element, MenuTargetElement extends Element, MenuTriggerElement extends Element>({ dismissParameters, escapeDismissParameters, focusTrapParameters, menuSurfaceParameters: { role, surfaceId, ...void1 }, ...void2 }: UseMenuSurfaceParameters<MenuSurfaceElement, MenuTriggerElement>): UseMenuSurfaceReturnType<MenuSurfaceElement, MenuTargetElement, MenuTriggerElement>;
 export interface UseFocusSentinelParameters {
     focusSentinel: {
         sendFocusToMenu: () => void;

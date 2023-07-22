@@ -10,7 +10,7 @@ export function useButton({ buttonParameters: { tagButton, disabled, onPress, pr
         pressParameters: {
             onPressSync: (e) => (disabled ? null : onPress)?.(enhanceEvent(e, { pressed: pressed == null ? null : !pressed })),
             focusSelf,
-            ...pressParameters
+            ...pressParameters // Intentionally at the end so Typescript will error if we forget something
         },
     });
     const baseProps = { "aria-pressed": (pressed === true ? "true" : pressed === false ? "false" : undefined) };

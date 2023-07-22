@@ -2,25 +2,18 @@ import { createContext, Ref, VNode } from "preact";
 import { assertEmptyObject, returnTrue } from "preact-prop-helpers";
 import { memo } from "preact/compat";
 import { useImperativeHandle } from "preact/hooks";
-import { useContextWithWarning } from "../props.js";
+import { Get4, useContextWithWarning } from "../props.js";
 import { useAccordion, UseAccordionContext, UseAccordionParameters, UseAccordionReturnType, useAccordionSection, UseAccordionSectionInfo, UseAccordionSectionParameters, UseAccordionSectionReturnType } from "../use-accordion.js";
 import { PartialExcept, useDefault } from "./util.js";
 
-type Get<T, K extends keyof T> = T[K];
 
 interface AccordionPropsBase<HeaderButtonElement extends Element> extends
-    Get<UseAccordionParameters<HeaderButtonElement, UseAccordionSectionInfo>, "accordionParameters">,
-    Get<UseAccordionParameters<HeaderButtonElement, UseAccordionSectionInfo>, "typeaheadNavigationParameters">,
-    Get<UseAccordionParameters<HeaderButtonElement, UseAccordionSectionInfo>, "linearNavigationParameters">,
-    Get<UseAccordionParameters<HeaderButtonElement, UseAccordionSectionInfo>, "managedChildrenParameters"> {
+    Get4<UseAccordionParameters<HeaderButtonElement, UseAccordionSectionInfo>, "accordionParameters", "typeaheadNavigationParameters", "linearNavigationParameters", "managedChildrenParameters"> {
     imperativeHandle?: Ref<UseAccordionReturnType<HeaderButtonElement, UseAccordionSectionInfo>>;
 }
 
 interface AccordionSectionPropsBase<HeaderElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element> extends
-    Get<UseAccordionSectionParameters<HeaderButtonElement, UseAccordionSectionInfo>, "accordionSectionParameters">,
-    Pick<Get<UseAccordionSectionParameters<HeaderButtonElement, UseAccordionSectionInfo>, "info">, "index" | "untabbable">,
-    Get<UseAccordionSectionParameters<HeaderButtonElement, UseAccordionSectionInfo>, "buttonParameters">,
-    Get<UseAccordionSectionParameters<HeaderButtonElement, UseAccordionSectionInfo>, "textContentParameters"> {
+    Get4<UseAccordionSectionParameters<HeaderButtonElement, UseAccordionSectionInfo>, "info", "accordionSectionParameters", "buttonParameters", "textContentParameters"> {
     imperativeHandle?: Ref<UseAccordionSectionReturnType<HeaderElement, HeaderButtonElement, BodyElement>>;
 }
 

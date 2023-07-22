@@ -6,17 +6,14 @@ import { useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
  * @param param0
  * @returns
  */
-export function useCheckboxGroup({ linearNavigationParameters, rearrangeableChildrenParameters, sortableChildrenParameters, rovingTabIndexParameters, typeaheadNavigationParameters, staggeredChildrenParameters, checkboxGroupParameters: { orientation } }) {
+export function useCheckboxGroup({ linearNavigationParameters, rovingTabIndexParameters, checkboxGroupParameters: { orientation }, ...listNavParameters }) {
     monitorCallCount(useCheckboxGroup);
     const { childrenHaveFocusReturn, context, linearNavigationReturn, managedChildrenReturn, props, rearrangeableChildrenReturn, rovingTabIndexReturn, singleSelectionReturn, staggeredChildrenReturn, paginatedChildrenReturn, sortableChildrenReturn, typeaheadNavigationReturn } = useCompleteListNavigation({
         linearNavigationParameters: { arrowKeyDirection: orientation, ...linearNavigationParameters },
-        staggeredChildrenParameters,
-        rearrangeableChildrenParameters,
-        rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
+        rovingTabIndexParameters: { focusSelfParent: focus, ...rovingTabIndexParameters },
         singleSelectionParameters: { initiallySelectedIndex: null, onSelectedIndexChange: null, ariaPropName: null, selectionMode: "disabled" },
-        sortableChildrenParameters,
         paginatedChildrenParameters: { paginationMax: null, paginationMin: null },
-        typeaheadNavigationParameters
+        ...listNavParameters
     });
     const { getChildren } = managedChildrenReturn;
     const children = getChildren();

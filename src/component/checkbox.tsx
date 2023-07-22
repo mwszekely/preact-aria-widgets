@@ -1,7 +1,7 @@
 import { createElement, Ref, VNode } from "preact";
 import { ElementProps, returnFalse } from "preact-prop-helpers";
 import { useImperativeHandle } from "preact/hooks";
-import { ElementToTag } from "../props.js";
+import { ElementToTag, Get3 } from "../props.js";
 import { useCheckbox, UseCheckboxParameters, UseCheckboxReturnType } from "../use-checkbox.js";
 import { LabelPosition } from "../use-label.js";
 import { memoForwardRef, PartialExcept } from "./util.js";
@@ -9,9 +9,7 @@ import { memoForwardRef, PartialExcept } from "./util.js";
 type Get<T, K extends keyof T> = T[K];
 
 interface CheckboxPropsBase<I extends Element, L extends Element> extends
-    Get<UseCheckboxParameters<LabelPosition, I, L>, "checkboxLikeParameters">,
-    Get<UseCheckboxParameters<LabelPosition, I, L>, "checkboxParameters">,
-    Get<UseCheckboxParameters<LabelPosition, I, L>, "labelParameters"> {
+    Get3<UseCheckboxParameters<LabelPosition, I, L>, "checkboxLikeParameters","checkboxParameters","labelParameters"> {
     ref?: Ref<UseCheckboxReturnType<I, L>>;
 }
 

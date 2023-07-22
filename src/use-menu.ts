@@ -1,4 +1,4 @@
-import { monitorCallCount, useMemoObject, useMergedProps, useStableCallback } from "preact-prop-helpers";
+import { TargetedOmit, monitorCallCount, useMemoObject, useMergedProps, useStableCallback } from "preact-prop-helpers";
 import { OmitStrong } from "./props.js";
 import { UseMenuSurfaceParameters, UseMenuSurfaceReturnType, useMenuSurface } from "./use-menu-surface.js";
 import { UseMenubarContext, UseMenubarItemParameters, UseMenubarItemReturnType, UseMenubarParameters, UseMenubarReturnType, UseMenubarSubInfo, useMenubar, useMenubarChild } from "./use-menubar.js";
@@ -6,28 +6,32 @@ import { UseMenubarContext, UseMenubarItemParameters, UseMenubarItemReturnType, 
 export interface UseMenuContext<ContainerElement extends Element, ChildElement extends Element, M extends UseMenubarSubInfo<ChildElement>> extends UseMenubarContext<ContainerElement, ChildElement, M> {
     menu: { closeFromMenuItemClicked(): void; }
 }
+export interface UseMenuParametersSelf {
+    /** This is called whenever the corresponding arrow key is pressed on the triggering button. */
+    onOpen(): void;
 
-export interface UseMenuParameters<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuButtonElement extends Element, MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "toolbarParameters" | "labelParameters"> {
+    /**
+     * This is the **physical** direction that is pressed
+     * using the **arrow keys** on your keyboard.
+     * 
+     * It has no effect on display, list navigation direction, etc.
+     * It solely controls the arrow key that's listened for.
+     */
+    openDirection: "down" | "up" | "left" | "right" | null;
+}
+
+export interface UseMenuParameters<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuButtonElement extends Element, MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends 
+OmitStrong<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "toolbarParameters" | "labelParameters">,
+TargetedOmit<UseMenuSurfaceParameters<MenuSurfaceElement, MenuButtonElement>, "menuSurfaceParameters", "role" | "surfaceId">,
+TargetedOmit<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "toolbarParameters", "role"> {
     dismissParameters: UseMenuSurfaceParameters<MenuSurfaceElement, MenuButtonElement>["dismissParameters"] & {
         onClose(reason: "escape" | "backdrop" | "lost-focus" | "item-clicked"): void;
     }
     escapeDismissParameters: UseMenuSurfaceParameters<MenuSurfaceElement, MenuButtonElement>["escapeDismissParameters"];
-    menuSurfaceParameters: OmitStrong<UseMenuSurfaceParameters<MenuSurfaceElement, MenuButtonElement>["menuSurfaceParameters"], "role" | "surfaceId">;
+    //menuSurfaceParameters: OmitStrong<UseMenuSurfaceParameters<MenuSurfaceElement, MenuButtonElement>["menuSurfaceParameters"], "role" | "surfaceId">;
     toolbarParameters: OmitStrong<UseMenubarParameters<MenuParentElement, MenuItemElement, M>["toolbarParameters"], "role">;
 
-    menuParameters: {
-        /** This is called whenever the corresponding arrow key is pressed on the triggering button. */
-        onOpen(): void;
-
-        /**
-         * This is the **physical** direction that is pressed
-         * using the **arrow keys** on your keyboard.
-         * 
-         * It has no effect on display, list navigation direction, etc.
-         * It solely controls the arrow key that's listened for.
-         */
-        openDirection: "down" | "up" | "left" | "right" | null;
-    }
+    menuParameters: UseMenuParametersSelf;
 }
 export interface UseMenuItemParameters<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseMenubarItemParameters<MenuItemElement, M> {
 
@@ -37,15 +41,17 @@ export interface UseMenuReturnType<MenuSurfaceElement extends Element, MenuParen
     context: UseMenuContext<MenuParentElement, MenuItemElement, M>;
 }
 
+export interface MenuItemReturnTypeSelf {
+    /**
+     * When a menu item is clicked, it's often expected that the menu closes itself immediately after.
+     * 
+     * Use this function to do so.
+     */
+    closeMenu(): void;
+}
+
 export interface UseMenuItemReturnType<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseMenubarItemReturnType<MenuItemElement, M> {
-    menuItemReturn: {
-        /**
-         * When a menu item is clicked, it's often expected that the menu closes itself immediately after.
-         * 
-         * Use this function to do so.
-         */
-        closeMenu(): void;
-    }
+    menuItemReturn: MenuItemReturnTypeSelf;
 }
 
 /**

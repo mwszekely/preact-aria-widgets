@@ -34,7 +34,14 @@ export const CheckboxGroupParent = memoForwardRef(function CheckboxGroupParent({
     const context = useContextWithWarning(UseCheckboxGroupChildContext, "checkbox group");
     console.assert(context != null, `This CheckboxGroupParent is not contained within a CheckboxGroup`);
     const info = useCheckboxGroupParent({
-        info: { index, unselectable: unselectable || false, untabbable: untabbable || false, focusSelf, getSortValue, checkboxInfo: { checkboxChildType: "parent" } },
+        info: {
+            index,
+            unselectable: unselectable || false,
+            untabbable: untabbable || false,
+            focusSelf,
+            getSortValue,
+            checkboxInfo: { checkboxChildType: "parent" }
+        },
         context,
         textContentParameters: { getText: useDefault("getText", getText) }
     });

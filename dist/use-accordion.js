@@ -116,12 +116,16 @@ export function useAccordionSection({ buttonParameters, accordionSectionParamete
     const open = ((openFromUser ?? openFromParent) ?? false);
     const { refElementReturn: { getElement: getHeaderElement }, propsStable: headerRefElementProps } = useRefElement({ refElementParameters: {} });
     const { refElementReturn: { getElement: _getBodyElement }, propsStable: bodyRefElementProps } = useRefElement({ refElementParameters: {} });
-    const { hasCurrentFocusReturn } = useHasCurrentFocus({ refElementReturn: { getElement: getHeaderElement }, hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: useStableCallback(focused => {
+    const { hasCurrentFocusReturn } = useHasCurrentFocus({
+        refElementReturn: { getElement: getHeaderElement }, hasCurrentFocusParameters: {
+            onCurrentFocusedInnerChanged: useStableCallback(focused => {
                 if (focused) {
                     setCurrentFocusedIndex(index);
                     setMostRecentlyTabbed(true);
                 }
-            }) } });
+            })
+        }
+    });
     const focusSelf = useStableCallback(() => {
         focus(getHeaderElement());
     });

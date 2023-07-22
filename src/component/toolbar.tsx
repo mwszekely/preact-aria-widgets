@@ -1,21 +1,13 @@
 import { createContext, Ref, VNode } from "preact";
 import { focus } from "preact-prop-helpers";
 import { useCallback, useImperativeHandle } from "preact/hooks";
-import { Get, OmitStrong, useContextWithWarning } from "../props.js";
+import { Get, Get9, OmitStrong, useContextWithWarning } from "../props.js";
 import { useToolbar, useToolbarChild, UseToolbarChildParameters, UseToolbarChildReturnType, UseToolbarContext, UseToolbarParameters, UseToolbarReturnType, UseToolbarSubInfo } from "../use-toolbar.js";
 import { memoForwardRef, PartialExcept, useDefault } from "./util.js";
 
 
 export interface ToolbarPropsBase<ToolbarContainerElement extends Element, ToolbarChildElement extends Element, LabelElement extends Element, M extends UseToolbarSubInfo<ToolbarChildElement>> extends
-    Get<UseToolbarParameters<ToolbarContainerElement, ToolbarChildElement, M>, "linearNavigationParameters">,
-    Get<UseToolbarParameters<ToolbarContainerElement, ToolbarChildElement, M>, "rovingTabIndexParameters">,
-    Get<UseToolbarParameters<ToolbarContainerElement, ToolbarChildElement, M>, "typeaheadNavigationParameters">,
-    Get<UseToolbarParameters<ToolbarContainerElement, ToolbarChildElement, M>, "sortableChildrenParameters">,
-    Get<UseToolbarParameters<ToolbarContainerElement, ToolbarChildElement, M>, "rearrangeableChildrenParameters">,
-    Get<UseToolbarParameters<ToolbarContainerElement, ToolbarChildElement, M>, "labelParameters">,
-    Get<UseToolbarParameters<ToolbarContainerElement, ToolbarChildElement, M>, "staggeredChildrenParameters">,
-    Get<UseToolbarParameters<ToolbarContainerElement, ToolbarChildElement, M>, "toolbarParameters">,
-    Get<UseToolbarParameters<ToolbarContainerElement, ToolbarChildElement, M>, "singleSelectionParameters"> {
+    Get9<UseToolbarParameters<ToolbarContainerElement, ToolbarChildElement, M>, "linearNavigationParameters", "rovingTabIndexParameters", "typeaheadNavigationParameters", "sortableChildrenParameters", "rearrangeableChildrenParameters", "labelParameters", "staggeredChildrenParameters", "toolbarParameters", "singleSelectionParameters"> {
     ref?: Ref<UseToolbarReturnType<ToolbarContainerElement, ToolbarChildElement, LabelElement, M>>;
 }
 
