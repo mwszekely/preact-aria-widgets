@@ -1,5 +1,4 @@
-import { h } from "preact";
-import { CompleteListNavigationContext, ElementProps, MakeSingleSelectionDeclarativeParameters, MakeSingleSelectionDeclarativeReturnType, TargetedOmit, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseRandomIdReturnType } from "preact-prop-helpers";
+import { CompleteListNavigationContext, ElementProps, JSX, MakeSingleSelectionDeclarativeParameters, MakeSingleSelectionDeclarativeReturnType, TargetedOmit, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseRandomIdReturnType } from "preact-prop-helpers";
 import { OmitStrong } from "./props.js";
 import { UseLabelSyntheticParameters } from "./use-label.js";
 export interface UseToolbarParametersSelf<ContainerElement extends Element, ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> {
@@ -9,7 +8,7 @@ export interface UseToolbarParametersSelf<ContainerElement extends Element, Chil
      * `null` if someone else takes care of the role (TODO: it's still labelled in this case, what does this mean?),
      * and whatever string is applicable otherwise.
      */
-    role: h.JSX.AriaRole | null;
+    role: JSX.AriaRole | null;
     /**
      * Optional; Only used if you need single selection logic.
      */

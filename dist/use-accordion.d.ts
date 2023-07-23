@@ -1,5 +1,4 @@
-import { h } from "preact";
-import { ElementProps, ManagedChildInfo, PassiveStateUpdater, PersistentStates, TargetedOmit, UseHasCurrentFocusReturnType, UseLinearNavigationParameters, UseManagedChildParameters, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, UsePressReturnType, UseRefElementParameters, UseRefElementReturnType, UseTextContentReturnType, UseTypeaheadNavigationChildParameters, UseTypeaheadNavigationContext, UseTypeaheadNavigationParameters } from "preact-prop-helpers";
+import { ElementProps, JSX, ManagedChildInfo, PassiveStateUpdater, PersistentStates, TargetedOmit, UseHasCurrentFocusReturnType, UseLinearNavigationParameters, UseManagedChildParameters, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, UsePressReturnType, UseRefElementParameters, UseRefElementReturnType, UseTextContentReturnType, UseTypeaheadNavigationChildParameters, UseTypeaheadNavigationContext, UseTypeaheadNavigationParameters } from "preact-prop-helpers";
 import { DisabledType, OmitStrong } from "./props.js";
 import { UseButtonParameters } from "./use-button.js";
 export interface UseAccordionParametersSelf {
@@ -39,7 +38,7 @@ export interface UseAccordionSectionParametersSelf {
      */
     open: boolean | null | undefined;
     /** Generally `"region"` */
-    bodyRole: h.JSX.AriaRole;
+    bodyRole: JSX.AriaRole;
 }
 export interface UseAccordionSectionParameters<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo> extends OmitStrong<UseTypeaheadNavigationChildParameters<HeaderButtonElement, M>, "info" | "refElementReturn" | "context">, UseRefElementParameters<HeaderButtonElement>, UseManagedChildParameters<M, "index" | "untabbable">, TargetedOmit<UseButtonParameters<HeaderButtonElement>, "buttonParameters", "pressed" | "role"> {
     context: UseAccordionContext<HeaderButtonElement, M>;

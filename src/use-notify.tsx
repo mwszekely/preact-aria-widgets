@@ -1,6 +1,4 @@
-
-import { createContext, h, VNode } from "preact";
-import { monitorCallCount, usePortalChildren } from "preact-prop-helpers";
+import { createContext, monitorCallCount, usePortalChildren, VNode } from "preact-prop-helpers";
 import { useCallback, useMemo } from "preact/hooks";
 import { useContextWithWarning } from "./props.js";
 
@@ -10,7 +8,7 @@ export interface NotificationProviderProps {
 }
 
 export interface NotificationProviderReturnType {
-    children: h.JSX.Element;
+    children: VNode;
     context: NotificationProviderContext;
 }
 
@@ -35,13 +33,13 @@ export const NotificationProviderContext = createContext<NotificationProviderCon
  */
 export function useNotificationProvider({ targetAssertive, targetPolite }: NotificationProviderProps) {
     monitorCallCount(useNotificationProvider);
-    
+
     const { children: childrenPolite, pushChild: notifyPolite, portalElement: politeElement } = usePortalChildren({ target: targetPolite });
     const { children: childrenAssertive, pushChild: notifyAssertive, portalElement: assertiveElement } = usePortalChildren({ target: targetAssertive });
     console.assert(politeElement?.getAttribute("aria-live") == "polite");
     console.assert(assertiveElement?.getAttribute("aria-live") == "assertive");
 
-    const notify = useCallback((mode: "polite" | "assertive", child: h.JSX.Element) => {
+    const notify = useCallback((mode: "polite" | "assertive", child: VNode) => {
         return mode == "assertive" ? notifyAssertive(child) : notifyPolite(child);
     }, [notifyAssertive, notifyPolite])
 

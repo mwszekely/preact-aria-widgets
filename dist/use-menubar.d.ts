@@ -1,5 +1,4 @@
-import { h } from "preact";
-import { ElementProps, TargetedPick, UsePressParameters, UsePressReturnType } from "preact-prop-helpers";
+import { ElementProps, PressEventReason, TargetedPick, UsePressParameters, UsePressReturnType } from "preact-prop-helpers";
 import { OmitStrong } from "./props.js";
 import { UseToolbarChildParameters, UseToolbarChildReturnType, UseToolbarContext, UseToolbarParameters, UseToolbarReturnType, UseToolbarSubInfo } from "./use-toolbar.js";
 export interface UseMenubarContext<ContainerElement extends Element, ChildElement extends Element, M extends UseMenubarSubInfo<ChildElement>> extends UseToolbarContext<ContainerElement, ChildElement, M> {
@@ -13,7 +12,7 @@ export interface UseMenubarItemParametersSelf<MenuItemElement extends Element> {
     /**
      * Optional. Applies in addition to any single-selection behavior.
      */
-    onPress: null | ((e: h.JSX.TargetedEvent<MenuItemElement>) => void);
+    onPress: null | ((e: PressEventReason<MenuItemElement>) => void);
 }
 export interface UseMenubarItemParameters<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseToolbarChildParameters<MenuItemElement, M>, "toolbarChildParameters">, TargetedPick<UsePressParameters<MenuItemElement>, "pressParameters", "onPressingChange"> {
     menuItemParameters: UseMenubarItemParametersSelf<MenuItemElement>;

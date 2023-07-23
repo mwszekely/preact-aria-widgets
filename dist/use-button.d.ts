@@ -1,5 +1,4 @@
-import { h } from "preact";
-import { ElementProps, PressEventReason, TargetedOmit, UsePressParameters, UsePressReturnType, UseRefElementParameters, UseRefElementReturnType } from "preact-prop-helpers";
+import { ElementProps, JSX, PressEventReason, TargetedOmit, UsePressParameters, UsePressReturnType, UseRefElementParameters, UseRefElementReturnType } from "preact-prop-helpers";
 import { DisabledType, ElementToTag, EnhancedEventHandler, OmitStrong, TargetedEnhancedEvent } from "./props.js";
 export interface ButtonPressEventDetail {
     pressed: boolean | null;
@@ -15,7 +14,7 @@ export interface UseButtonParametersSelf<E extends Node> {
      */
     pressed: boolean | null | undefined;
     onPress: undefined | null | ButtonPressEventHandler<E>;
-    role: h.JSX.AriaRole;
+    role: JSX.AriaRole;
 }
 export interface UseButtonParameters<E extends Node> extends UseRefElementParameters<E>, TargetedOmit<UsePressParameters<E>, "pressParameters", "onPressSync" | "focusSelf"> {
     buttonParameters: UseButtonParametersSelf<E>;

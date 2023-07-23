@@ -1,11 +1,9 @@
-import { Ref, VNode } from "preact";
+import { Ref, VNode } from "preact-prop-helpers";
 import { createPortal } from "preact/compat";
 import { useContext, useImperativeHandle, useRef } from "preact/hooks";
 import { Get4 } from "../props.js";
 import { UseDialogParameters, UseDialogReturnType, useDialog } from "../use-dialog.js";
 import { ParentDepthContext, PartialExcept, memoForwardRef, useDefault } from "./util.js";
-
-type Get<T, K extends keyof T> = T[K];
 
 interface DialogPropsBase<FocusContainerElement extends Element, SourceElement extends Element, DialogElement extends Element, TitleElement extends Element> extends
     Get4<UseDialogParameters<DialogElement, TitleElement>, "dismissParameters","escapeDismissParameters","labelParameters","focusTrapParameters"> {
@@ -14,7 +12,7 @@ interface DialogPropsBase<FocusContainerElement extends Element, SourceElement e
 
 export interface DialogProps<FocusContainerElement extends Element, SourceElement extends Element, DialogElement extends Element, TitleElement extends Element> extends PartialExcept<DialogPropsBase<FocusContainerElement, SourceElement, DialogElement, TitleElement>, "ariaLabel" | "onClose" | "open" | "focusPopup"> {
 
-    render(dialogInfo: UseDialogReturnType<FocusContainerElement, SourceElement, DialogElement, TitleElement>): VNode<any>;
+    render(dialogInfo: UseDialogReturnType<FocusContainerElement, SourceElement, DialogElement, TitleElement>): VNode;
 }
 
 export function defaultRenderPortal({ portalId, children }: { portalId: string, children: VNode }): VNode {

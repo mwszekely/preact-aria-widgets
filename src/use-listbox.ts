@@ -1,7 +1,7 @@
-import { h } from "preact";
 import {
     CompleteListNavigationContext,
     ElementProps,
+    EventType,
     TargetedOmit,
     TargetedPick,
     UseCompleteListNavigationChildInfo,
@@ -13,8 +13,7 @@ import {
     UsePressReturnType, UseSingleSelectionDeclarativeParameters,
     assertEmptyObject,
     enhanceEvent,
-    focus,
-    monitorCallCount, useCompleteListNavigationChild,
+    focus, monitorCallCount, useCompleteListNavigationChild,
     useCompleteListNavigationDeclarative,
     useEnsureStability,
     useMemoObject,
@@ -25,8 +24,8 @@ import {
 import { EventDetail, OmitStrong, Prefices } from "./props.js";
 import { UseLabelSyntheticParameters, useLabelSynthetic } from "./use-label.js";
 
-export type ListboxSingleSelectEvent<E extends EventTarget> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
-export type ListboxMultiSelectEvent<E extends EventTarget> = { [EventDetail]: { selected: boolean } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
+export type ListboxSingleSelectEvent<E extends EventTarget> = { [EventDetail]: { selectedIndex: number } } & Pick<EventType<E, Event>, "target" | "currentTarget">;
+export type ListboxMultiSelectEvent<E extends EventTarget> = { [EventDetail]: { selected: boolean } } & Pick<EventType<E, Event>, "target" | "currentTarget">;
 
 export interface UseListboxContext<ListElement extends Element, ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends CompleteListNavigationContext<ListElement, ListItemElement, M> {
     listboxContext: { selectionLimit: "single" | "multi" | "none" }

@@ -1,10 +1,10 @@
-import { h, VNode } from "preact";
+import { VNode } from "preact-prop-helpers";
 export interface NotificationProviderProps {
     targetAssertive: string | Element;
     targetPolite: string | Element;
 }
 export interface NotificationProviderReturnType {
-    children: h.JSX.Element;
+    children: VNode;
     context: NotificationProviderContext;
 }
 export interface NotificationProviderContext {
@@ -25,11 +25,11 @@ export declare const NotificationProviderContext: import("preact").Context<Notif
  * @hasChild {@link useNotify}
  */
 export declare function useNotificationProvider({ targetAssertive, targetPolite }: NotificationProviderProps): {
-    notify: (mode: "polite" | "assertive", child: h.JSX.Element) => number;
+    notify: (mode: "polite" | "assertive", child: VNode) => number;
     context: {
-        notify: (mode: "polite" | "assertive", child: h.JSX.Element) => number;
+        notify: (mode: "polite" | "assertive", child: VNode) => number;
     };
-    children: import("preact").JSX.Element;
+    children: import("preact-prop-helpers").JSX.Element;
 };
-export declare function useNotify(): (mode: "assertive" | "polite", content: VNode<{}>) => void;
+export declare function useNotify(): (mode: "assertive" | "polite", content: import("preact-prop-helpers").JSX.Element) => void;
 //# sourceMappingURL=use-notify.d.ts.map

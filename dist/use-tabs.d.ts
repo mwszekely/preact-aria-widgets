@@ -1,5 +1,4 @@
-import { h } from "preact";
-import { CompleteListNavigationContext, ElementProps, ManagedChildInfo, PersistentStates, TargetedOmit, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseManagedChildParameters, UseManagedChildrenContext, UsePressParameters, UsePressReturnType } from "preact-prop-helpers";
+import { CompleteListNavigationContext, ElementProps, EventType, ManagedChildInfo, PersistentStates, TargetedOmit, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseManagedChildParameters, UseManagedChildrenContext, UsePressParameters, UsePressReturnType } from "preact-prop-helpers";
 import { EventDetail, OmitStrong } from "./props.js";
 import { UseLabelSyntheticParameters } from "./use-label.js";
 export interface TabPanelInfo extends ManagedChildInfo<number> {
@@ -12,7 +11,7 @@ export type TabsChangeEvent<E extends Element> = {
     [EventDetail]: {
         selectedIndex: number;
     };
-} & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
+} & Pick<EventType<E, Event>, "target" | "currentTarget">;
 export interface UseTabsParametersSelf {
     localStorageKey: keyof PersistentStates | null;
     orientation: "horizontal" | "vertical";

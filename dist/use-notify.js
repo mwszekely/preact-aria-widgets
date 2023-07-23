@@ -1,6 +1,5 @@
 import { Fragment as _Fragment, jsxs as _jsxs } from "preact/jsx-runtime";
-import { createContext } from "preact";
-import { monitorCallCount, usePortalChildren } from "preact-prop-helpers";
+import { createContext, monitorCallCount, usePortalChildren } from "preact-prop-helpers";
 import { useCallback, useMemo } from "preact/hooks";
 import { useContextWithWarning } from "./props.js";
 export const NotificationProviderContext = createContext(null);

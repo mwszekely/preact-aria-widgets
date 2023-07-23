@@ -1,5 +1,4 @@
-import { h } from "preact";
-import { assertEmptyObject, CompleteListNavigationContext, ElementProps, EventDetail, focus, monitorCallCount, PressEventReason, TargetedOmit, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useMergedProps, useRefElement, useSingleSelectionDeclarative, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
+import { assertEmptyObject, CompleteListNavigationContext, ElementProps, EventDetail, EventType, focus, monitorCallCount, PressEventReason, TargetedOmit, useCompleteListNavigation, useCompleteListNavigationChild, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, useMergedProps, useRefElement, useSingleSelectionDeclarative, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
 import { useLayoutEffect, useMemo, useRef } from "preact/hooks";
 import { EnhancedEventHandler, enhanceEvent, OmitStrong, Prefices, TargetedEnhancedEvent } from "./props.js";
 import { useCheckboxLike, UseCheckboxLikeParameters, UseCheckboxLikeReturnType } from "./use-checkbox-like.js";
@@ -186,7 +185,7 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
     monitorCallCount(useRadio);
     type TabbableChildElement = FocusableLabelElement<LP, InputElement, LabelElement>;
     const index = info.index;
-    const onInput = useStableCallback((e: h.JSX.TargetedEvent<InputElement>) => {
+    const onInput = useStableCallback((e: EventType<InputElement, Event>) => {
         onPressSync?.(e as PressEventReason<any>);
     });
 

@@ -1,11 +1,10 @@
-import { h } from "preact";
-import { ElementProps, TargetedOmit, TargetedPick, UsePressParameters, UsePressReturnType, UseRefElementReturnType } from "preact-prop-helpers";
+import { ElementProps, JSX, TargetedOmit, TargetedPick, UsePressParameters, UsePressReturnType, UseRefElementReturnType } from "preact-prop-helpers";
 import { DisabledType, OmitStrong } from "./props.js";
 import { LabelPosition, UseLabelParameters, UseLabelReturnType } from "./use-label.js";
 export type CheckboxCheckedType = boolean | "mixed";
 export interface UseCheckboxLikeParametersSelf {
     /** The role attribute to use, when applicable */
-    role: h.JSX.AriaRole;
+    role: JSX.AriaRole;
     disabled: DisabledType;
     checked: CheckboxCheckedType;
     onInput(event: Event): void;

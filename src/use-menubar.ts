@@ -1,5 +1,4 @@
-import { h } from "preact";
-import { assertEmptyObject, ElementProps, focus, monitorCallCount, returnFalse, TargetedPick, useMergedProps, usePress, UsePressParameters, UsePressReturnType, useStableCallback } from "preact-prop-helpers";
+import { assertEmptyObject, ElementProps, focus, monitorCallCount, PressEventReason, returnFalse, TargetedPick, useMergedProps, usePress, UsePressParameters, UsePressReturnType, useStableCallback } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { OmitStrong } from "./props.js";
 import { useToolbar, useToolbarChild, UseToolbarChildParameters, UseToolbarChildReturnType, UseToolbarContext, UseToolbarParameters, UseToolbarReturnType, UseToolbarSubInfo } from "./use-toolbar.js";
@@ -15,7 +14,7 @@ export interface UseMenubarItemParametersSelf<MenuItemElement extends Element> {
     /**
      * Optional. Applies in addition to any single-selection behavior.
      */
-    onPress: null | ((e: h.JSX.TargetedEvent<MenuItemElement>) => void);
+    onPress: null | ((e: PressEventReason<MenuItemElement>) => void);
 }
 
 export interface UseMenubarItemParameters<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends

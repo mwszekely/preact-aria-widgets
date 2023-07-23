@@ -1,7 +1,5 @@
 import { identity } from "lodash-es";
-import { h } from "preact";
-import { ElementProps, ManagedChildInfo, OnChildrenMountChange, PassiveStateUpdater, PersistentStates, TargetedOmit, UseHasCurrentFocusReturnType, UseLinearNavigationParameters, UseManagedChildParameters, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, UsePressReturnType, UseRefElementParameters, UseRefElementReturnType, UseTextContentReturnType, UseTypeaheadNavigationChildParameters, UseTypeaheadNavigationContext, UseTypeaheadNavigationParameters, assertEmptyObject, findBackupFocus, focus, monitorCallCount, useChildrenFlag, useHasCurrentFocus, useLinearNavigation, useManagedChild, useManagedChildren, useMemoObject, useMergedProps, usePersistentState, useRandomId, useRefElement, useStableCallback, useState, useTypeaheadNavigation, useTypeaheadNavigationChild } from "preact-prop-helpers";
-import { useCallback } from "preact/hooks";
+import { ElementProps, EventType, JSX, ManagedChildInfo, OnChildrenMountChange, PassiveStateUpdater, PersistentStates, TargetedOmit, UseHasCurrentFocusReturnType, UseLinearNavigationParameters, UseManagedChildParameters, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, UsePressReturnType, UseRefElementParameters, UseRefElementReturnType, UseTextContentReturnType, UseTypeaheadNavigationChildParameters, UseTypeaheadNavigationContext, UseTypeaheadNavigationParameters, assertEmptyObject, findBackupFocus, focus, monitorCallCount, useCallback, useChildrenFlag, useHasCurrentFocus, useLinearNavigation, useManagedChild, useManagedChildren, useMemoObject, useMergedProps, usePersistentState, useRandomId, useRefElement, useStableCallback, useState, useTypeaheadNavigation, useTypeaheadNavigationChild } from "preact-prop-helpers";
 import { DisabledType, OmitStrong, Prefices } from "./props.js";
 import { ButtonPressEventHandler, UseButtonParameters, UseButtonReturnType, useButton } from "./use-button.js";
 
@@ -50,7 +48,7 @@ export interface UseAccordionSectionParametersSelf {
      */
     open: boolean | null | undefined;
     /** Generally `"region"` */
-    bodyRole: h.JSX.AriaRole;
+    bodyRole: JSX.AriaRole;
 }
 
 export interface UseAccordionSectionParameters<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo> extends
@@ -152,7 +150,7 @@ export function useAccordion<HeaderButtonElement extends Element, M extends UseA
 
     // Also keep track of which button is currently tabbable.
     // For some reason, Accordion buttons are both individually tabbable *and* arrow-key navigatable.
-    const { changeIndex: changeTabbedIndex, getCurrentIndex: getTabbedIndex, reevaluateClosestFit: ocmc2 } = useChildrenFlag<M, Event>({
+    const { changeIndex: changeTabbedIndex, getCurrentIndex: getTabbedIndex, reevaluateClosestFit: ocmc2 } = useChildrenFlag<M, EventType<any, any>>({
         initialIndex,
         getChildren,
         getAt: useCallback((child) => { return child.getMostRecentlyTabbed() ?? false; }, []),

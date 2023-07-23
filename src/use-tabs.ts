@@ -1,5 +1,4 @@
-import { h } from "preact";
-import { CompleteListNavigationContext, ElementProps, ManagedChildInfo, OnChildrenMountChange, PersistentStates, TargetedOmit, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseManagedChildParameters, UseManagedChildrenContext, UsePressParameters, UsePressReturnType, assertEmptyObject, focus, generateRandomId, monitorCallCount, returnFalse, returnTrue, useChildrenFlag, useCompleteListNavigation, useCompleteListNavigationChild, useManagedChild, useManagedChildren, useMemoObject, useMergedProps, usePersistentState, usePress, useStableCallback, useState } from "preact-prop-helpers";
+import { CompleteListNavigationContext, ElementProps, EventType, ManagedChildInfo, OnChildrenMountChange, PersistentStates, TargetedOmit, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseManagedChildParameters, UseManagedChildrenContext, UsePressParameters, UsePressReturnType, assertEmptyObject, focus, generateRandomId, monitorCallCount, returnFalse, returnTrue, useChildrenFlag, useCompleteListNavigation, useCompleteListNavigationChild, useManagedChild, useManagedChildren, useMemoObject, useMergedProps, usePersistentState, usePress, useStableCallback, useState } from "preact-prop-helpers";
 import { useCallback, useLayoutEffect } from "preact/hooks";
 import { EventDetail, OmitStrong, Prefices } from "./props.js";
 import { UseLabelSyntheticParameters, useLabelSynthetic } from "./use-label.js";
@@ -13,7 +12,7 @@ export interface TabPanelInfo extends ManagedChildInfo<number> {
 export interface TabInfo<E extends Element> extends UseCompleteListNavigationChildInfo<E> { }
 
 
-export type TabsChangeEvent<E extends Element> = { [EventDetail]: { selectedIndex: number } } & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
+export type TabsChangeEvent<E extends Element> = { [EventDetail]: { selectedIndex: number } } & Pick<EventType<E, Event>, "target" | "currentTarget">;
 
 export interface UseTabsParametersSelf {
     localStorageKey: keyof PersistentStates | null;

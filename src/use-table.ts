@@ -1,9 +1,9 @@
-import { h } from "preact";
 import {
     Compare,
     CompleteGridNavigationCellContext,
     CompleteGridNavigationRowContext,
     ElementProps,
+    JSX,
     PassiveStateUpdater,
     TargetedOmit,
     UseCompleteGridNavigationCellInfo, UseCompleteGridNavigationCellParameters, UseCompleteGridNavigationCellReturnType, UseCompleteGridNavigationParameters,
@@ -187,7 +187,7 @@ function fuzzyCompare(lhs: any, rhs: any): number {
     return 0;
 
 }
-const naturalSectionTypes = new Set<keyof h.JSX.IntrinsicElements>(["thead", "tbody", "tfoot"]);
+const naturalSectionTypes = new Set<keyof JSX.IntrinsicElements>(["thead", "tbody", "tfoot"]);
 
 
 /**
