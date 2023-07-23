@@ -1,7 +1,7 @@
 import { useImperativeHandle } from "preact/hooks";
 import { useButton } from "../use-button.js";
 import { memoForwardRef } from "./util.js";
-export const Button = memoForwardRef(function Button({ tagButton, onPress, pressed, render, disabled, onElementChange, onMount, onUnmount, allowRepeatPresses, longPressThreshold }, ref) {
+export const Button = memoForwardRef(function Button({ tagButton, onPress, pressed, render, disabled, onElementChange, onMount, onUnmount, allowRepeatPresses, longPressThreshold, excludeEnter, excludePointer, excludeSpace, onPressingChange }, ref) {
     const info = useButton({
         buttonParameters: {
             role: "button",
@@ -10,7 +10,7 @@ export const Button = memoForwardRef(function Button({ tagButton, onPress, press
             pressed,
             disabled: disabled ?? false
         },
-        pressParameters: { longPressThreshold, allowRepeatPresses },
+        pressParameters: { longPressThreshold, allowRepeatPresses, excludeEnter, excludePointer, excludeSpace, onPressingChange },
         refElementParameters: { onElementChange, onMount, onUnmount }
     });
     useImperativeHandle(ref, () => info);

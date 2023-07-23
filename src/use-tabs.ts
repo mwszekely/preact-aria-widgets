@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { CompleteListNavigationContext, ElementProps, ManagedChildInfo, OnChildrenMountChange, PersistentStates, TargetedOmit, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseManagedChildParameters, UseManagedChildrenContext, UsePressParameters, UsePressReturnType, assertEmptyObject, focus, generateRandomId, monitorCallCount, returnTrue, useChildrenFlag, useCompleteListNavigation, useCompleteListNavigationChild, useManagedChild, useManagedChildren, useMemoObject, useMergedProps, usePersistentState, usePress, useStableCallback, useState } from "preact-prop-helpers";
+import { CompleteListNavigationContext, ElementProps, ManagedChildInfo, OnChildrenMountChange, PersistentStates, TargetedOmit, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseManagedChildParameters, UseManagedChildrenContext, UsePressParameters, UsePressReturnType, assertEmptyObject, focus, generateRandomId, monitorCallCount, returnFalse, returnTrue, useChildrenFlag, useCompleteListNavigation, useCompleteListNavigationChild, useManagedChild, useManagedChildren, useMemoObject, useMergedProps, usePersistentState, usePress, useStableCallback, useState } from "preact-prop-helpers";
 import { useCallback, useLayoutEffect } from "preact/hooks";
 import { EventDetail, OmitStrong, Prefices } from "./props.js";
 import { UseLabelSyntheticParameters, useLabelSynthetic } from "./use-label.js";
@@ -28,7 +28,7 @@ TargetedOmit<UseLabelSyntheticParameters,"labelParameters", "onLabelClick"> {
 }
 export interface UseTabParameters<TabElement extends Element, M extends TabInfo<TabElement>> extends 
 OmitStrong<UseCompleteListNavigationChildParameters<TabElement, M>, never>,
-TargetedOmit<UsePressParameters<TabElement>,"pressParameters", "excludeSpace" | "onPressSync"> {
+TargetedOmit<UsePressParameters<TabElement>,"pressParameters","excludeEnter" | "excludePointer" | "excludeSpace" | "allowRepeatPresses" | "onPressSync"> {
     context: UseTabsContext<any, TabElement, M>;
 }
 
@@ -198,7 +198,7 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
 export function useTab<TabElement extends Element, M extends TabInfo<TabElement>>({
     info: { focusSelf: focusSelfParent, ...info },
     textContentParameters,
-    pressParameters: { focusSelf: focusSelfChild, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, ...void2 },
+    pressParameters: { focusSelf: focusSelfChild, longPressThreshold, onPressingChange, ...void2 },
     context
 }: UseTabParameters<TabElement, M>): UseTabReturnType<TabElement, M> {
 
@@ -207,8 +207,8 @@ export function useTab<TabElement extends Element, M extends TabInfo<TabElement>
         info: { focusSelf: focusSelfParent, ...info } as M,
         textContentParameters,
     });
-    //const { pressParameters, refElementReturn } = listNavRet2
-    const { pressReturn, props: propsPressStable } = usePress<TabElement>({ pressParameters: { onPressSync, focusSelf: focusSelfChild }, refElementReturn })
+    
+    const { pressReturn, props: propsPressStable } = usePress<TabElement>({ pressParameters: { onPressSync, focusSelf: focusSelfChild, allowRepeatPresses: false, excludeEnter: returnFalse, excludePointer: returnFalse, excludeSpace: returnFalse, longPressThreshold, onPressingChange }, refElementReturn })
     const { singleSelectionChildReturn: { selected }, rovingTabIndexChildReturn: { tabbable } } = listNavRet2;
     const { getPanelId, getTabId } = context.tabsContext;
 

@@ -8,6 +8,6 @@ interface ButtonPropsBase<E extends Element> extends Get3<UseButtonParameters<E>
 export interface ButtonProps<E extends Element> extends PartialExcept<ButtonPropsBase<E>, "tagButton"> {
     render(info: UseButtonReturnType<E>): VNode<any>;
 }
-export declare const Button: <E extends Element>({ tagButton, onPress, pressed, render, disabled, onElementChange, onMount, onUnmount, allowRepeatPresses, longPressThreshold }: ButtonProps<E>, ref: Ref<any>) => VNode<any>;
+export declare const Button: <E extends Element>({ tagButton, onPress, pressed, render, disabled, onElementChange, onMount, onUnmount, allowRepeatPresses, longPressThreshold, excludeEnter, excludePointer, excludeSpace, onPressingChange }: ButtonProps<E>, ref: Ref<any>) => VNode<any>;
 export {};
 //# sourceMappingURL=button.d.ts.map

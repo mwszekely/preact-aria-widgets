@@ -1,10 +1,10 @@
 import { Ref, VNode } from "preact";
 import { ElementProps } from "preact-prop-helpers";
-import { ElementToTag, Get3 } from "../props.js";
+import { ElementToTag, Get4 } from "../props.js";
 import { UseCheckboxParameters, UseCheckboxReturnType } from "../use-checkbox.js";
 import { LabelPosition } from "../use-label.js";
 import { PartialExcept } from "./util.js";
-interface CheckboxPropsBase<I extends Element, L extends Element> extends Get3<UseCheckboxParameters<LabelPosition, I, L>, "checkboxLikeParameters", "checkboxParameters", "labelParameters"> {
+interface CheckboxPropsBase<I extends Element, L extends Element> extends Get4<UseCheckboxParameters<LabelPosition, I, L>, "checkboxLikeParameters", "checkboxParameters", "labelParameters", "pressParameters"> {
     ref?: Ref<UseCheckboxReturnType<I, L>>;
 }
 export interface CheckboxProps<I extends Element, L extends Element> extends PartialExcept<CheckboxPropsBase<I, L>, "tagInput" | "tagLabel" | "labelPosition" | "ariaLabel" | "checked" | "onCheckedChange"> {
@@ -18,6 +18,6 @@ export interface DefaultRenderCheckboxLikeParameters<I extends Element, L extend
     makePropsInput: (info: InfoType) => ElementProps<I>;
     makePropsLabel: (info: InfoType) => ElementProps<L>;
 }
-export declare const Checkbox: <I extends Element, L extends Element>({ checked, disabled, tagLabel, labelPosition, tagInput, ariaLabel, onCheckedChange, render }: CheckboxProps<I, L>, ref: Ref<any>) => VNode<any>;
+export declare const Checkbox: <I extends Element, L extends Element>({ checked, disabled, tagLabel, labelPosition, tagInput, ariaLabel, onCheckedChange, longPressThreshold, excludeSpace, render }: CheckboxProps<I, L>, ref: Ref<any>) => VNode<any>;
 export {};
 //# sourceMappingURL=checkbox.d.ts.map

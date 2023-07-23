@@ -78,7 +78,7 @@ export interface UseGridlistCellReturnType<GridlistCellElement extends Element, 
     propsPress: ElementProps<any>;
 }
 export interface UseGridlistCellParameters<GridlistCellElement extends Element, CM extends GridlistCellInfo<GridlistCellElement>> extends UseCompleteGridNavigationCellParameters<GridlistCellElement, CM> {
-    pressParameters: Pick<UsePressParameters<GridlistCellElement>["pressParameters"], "onPressSync">;
+    pressParameters: Pick<UsePressParameters<GridlistCellElement>["pressParameters"], "longPressThreshold" | "onPressingChange" | "onPressSync">;
 }
 
 export interface GridlistRowInfo<GridlistRowElement extends Element, GridlistCellElement extends Element> extends UseCompleteGridNavigationRowInfo<GridlistRowElement, GridlistCellElement> { }
@@ -86,7 +86,7 @@ export interface GridlistCellInfo<GridlistCellElement extends Element> extends U
 
 export function useGridlist<GridlistElement extends Element, GridlistRowElement extends Element, GridlistCellElement extends Element, LabelElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>>({
     labelParameters,
-    
+
     listboxParameters: { selectionLimit, groupingType, selectedIndex, onSelectedIndexChange },
     rovingTabIndexParameters,
     ...restParams
@@ -221,16 +221,18 @@ export function useGridlistRow<GridlistRowElement extends Element, GridlistCellE
     }
 }
 
-export function useGridlistCell<GridlistCellElement extends Element, CM extends GridlistCellInfo<GridlistCellElement>>({ pressParameters, ...p }: UseGridlistCellParameters<GridlistCellElement, CM>): UseGridlistCellReturnType<GridlistCellElement, CM> {
+export function useGridlistCell<GridlistCellElement extends Element, CM extends GridlistCellInfo<GridlistCellElement>>({ pressParameters: { onPressSync, longPressThreshold, onPressingChange, ...void1 }, ...p }: UseGridlistCellParameters<GridlistCellElement, CM>): UseGridlistCellReturnType<GridlistCellElement, CM> {
     monitorCallCount(useGridlistCell);
 
     const { props, ...info } = useCompleteGridNavigationCell<GridlistCellElement, CM>(p);
+
+    assertEmptyObject(void1);
 
     const {
         pressReturn,
         props: propsPress
     } = usePress({
-        pressParameters: { ...pressParameters, focusSelf: p.info.focusSelf },
+        pressParameters: { onPressSync, focusSelf: p.info.focusSelf, allowRepeatPresses: false, excludeEnter: null, excludePointer: null, excludeSpace: info.pressParameters.excludeSpace, longPressThreshold, onPressingChange },
         refElementReturn: info.refElementReturn
     })
 

@@ -1,7 +1,7 @@
 import { createContext, Ref, VNode } from "preact";
 import { useStableGetter } from "preact-prop-helpers";
 import { useImperativeHandle } from "preact/hooks";
-import { Get4, Get9, useContextWithWarning } from "../props.js";
+import { Get5, Get9, useContextWithWarning } from "../props.js";
 import { FocusableLabelElement, LabelPosition } from "../use-label.js";
 import { RadioContext, RadioSubInfo, useRadio, useRadioGroup, UseRadioGroupParameters, UseRadioGroupReturnType, UseRadioParameters, UseRadioReturnType } from "../use-radio-group.js";
 import { memoForwardRef, PartialExcept, useDefault } from "./util.js";
@@ -12,7 +12,7 @@ interface RadioGroupPropsBase<V extends string | number, GroupElement extends El
 }
 
 interface RadioPropsBase<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element, V extends string | number> extends
-    Get4<UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>, "radioParameters", "checkboxLikeParameters", "labelParameters", "textContentParameters">,
+    Get5<UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>, "radioParameters", "checkboxLikeParameters", "labelParameters", "textContentParameters", "pressParameters">,
     Pick<RadioSubInfo<any, V>, "index" | "untabbable" | "unselectable"> {
     focusSelf?: UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>["info"]["focusSelf"];
 }
@@ -97,7 +97,8 @@ export const Radio = memoForwardRef(function Radio<LP extends LabelPosition, V e
     untabbable,
     tagInput,
     tagLabel,
-    getText
+    getText,
+    longPressThreshold
 }: RadioProps<LP, InputElement, LabelElement, V>, ref?: Ref<any>) {
     const defaultFocusSelf = () => info.checkboxLikeReturn.focusSelf();
     focusSelf ??= defaultFocusSelf;
@@ -111,7 +112,8 @@ export const Radio = memoForwardRef(function Radio<LP extends LabelPosition, V e
         info: { index, focusSelf, untabbable: untabbable || false, unselectable: !!unselectable, getSortValue: getValue },
         context,
         labelParameters: { ariaLabel, labelPosition, tagInput, tagLabel },
-        textContentParameters: { getText: useDefault("getText", getText) }
+        textContentParameters: { getText: useDefault("getText", getText) },
+        pressParameters: { longPressThreshold }
     });
 
     useImperativeHandle(ref!, () => info);

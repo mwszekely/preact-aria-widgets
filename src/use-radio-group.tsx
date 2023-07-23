@@ -32,6 +32,7 @@ export interface UseRadioParametersSelf<V extends string | number> {
 export interface UseRadioParameters<LP extends LabelPosition, V extends string | number, InputElement extends Element, LabelElement extends Element, M extends RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>> extends
     OmitStrong<UseCompleteListNavigationChildParameters<FocusableLabelElement<LP, InputElement, LabelElement>, M>, never>,
     TargetedOmit<UseCheckboxLikeParameters<LP, InputElement, LabelElement>, "labelParameters", never>,
+    TargetedOmit<UseCheckboxLikeParameters<LP, InputElement, LabelElement>, "pressParameters", "excludeSpace">,
     TargetedOmit<UseCheckboxLikeParameters<LP, InputElement, LabelElement>, "checkboxLikeParameters", "checked" | "onInput" | "role"> {
     radioParameters: UseRadioParametersSelf<V>;
     context: RadioContext<V, any, FocusableLabelElement<LP, InputElement, LabelElement>, M>; 
@@ -167,6 +168,7 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
     info,
     context,
     textContentParameters,
+    pressParameters: { longPressThreshold, ...void3 },
     ...void1
 
 }: UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>): UseRadioReturnType<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>> {
@@ -176,7 +178,6 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
     const onInput = useStableCallback((e: h.JSX.TargetedEvent<InputElement>) => {
         onPressSync?.(e as PressEventReason<any>);
     });
-    assertEmptyObject(void1);
 
     const { name, indexToName, nameToIndex } = context.radioContext
 
@@ -194,8 +195,10 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
         context,
         textContentParameters
     });
+    
     assertEmptyObject(void1);
     assertEmptyObject(void2);
+    assertEmptyObject(void3);
 
 
     const { selected: checked } = singleSelectionChildReturn;
@@ -214,7 +217,7 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
             onInput: onInput,
             role: "radio"
         },
-        pressParameters: { excludeSpace },
+        pressParameters: { excludeSpace, longPressThreshold },
         labelParameters,
         randomIdInputParameters: { prefix: Prefices.radio },
         randomIdLabelParameters: { prefix: Prefices.radioLabel },

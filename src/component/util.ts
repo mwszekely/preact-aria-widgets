@@ -24,7 +24,7 @@ type DefaultExcepts = keyof typeof ContextDefaults;
 
 type ContextType<T extends Context<any>> = T extends Context<infer C> ? C : unknown;
 
-export function useDefault<K extends DefaultExcepts>(context: K, userValue: undefined | ContextType<(typeof ContextDefaults)[K]>): ContextType<(typeof ContextDefaults)[K]> {
+export function useDefault<K extends DefaultExcepts>(context: K, userValue: null | undefined | ContextType<(typeof ContextDefaults)[K]>): ContextType<(typeof ContextDefaults)[K]> {
     const defaultValue = useContext<ContextType<(typeof ContextDefaults)[K]>>(ContextDefaults[context] as Context<any>);
     return userValue ?? defaultValue;
 }

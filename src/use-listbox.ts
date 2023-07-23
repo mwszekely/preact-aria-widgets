@@ -8,7 +8,7 @@ import {
     UseCompleteListNavigationParameters,
     UseCompleteListNavigationReturnType,
     UsePressParameters,
-    UsePressReturnType, UseSingleSelectionParameters,
+    UsePressReturnType, UseSingleSelectionDeclarativeParameters,
     assertEmptyObject,
     enhanceEvent,
     focus,
@@ -45,7 +45,7 @@ export interface UseListboxParametersSelf<ListElement extends Element, ListItemE
      * Only used when `groupingType` is `"without-groups"` or `"group"`
      */
     selectedIndex: number | null;
-    onSelectedIndexChange: UseSingleSelectionParameters<ListElement, ListItemElement, M>["singleSelectionParameters"]["onSelectedIndexChange"] //PassiveStateUpdater<number | null, Event> | null;
+    onSelectedIndexChange: UseSingleSelectionDeclarativeParameters["singleSelectionDeclarativeParameters"]["onSelectedIndexChange"] //PassiveStateUpdater<number | null, Event> | null;
 
     /**
      * * `"without-groups"`: This is a listbox with no groups

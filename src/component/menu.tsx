@@ -138,6 +138,7 @@ export const MenuItem = memoForwardRef(function MenuItem<MenuItemElement extends
     role,
     focusSelf,
     unselectable,
+    onPressingChange,
     render,
     info: uinfo
 }: MenuItemProps<MenuItemElement, M>, ref?: Ref<any>) {
@@ -147,7 +148,8 @@ export const MenuItem = memoForwardRef(function MenuItem<MenuItemElement extends
         info: { index, untabbable, unselectable, focusSelf: focusSelf ?? defaultFocusSelf, getSortValue, ...uinfo } as M,
         context,
         textContentParameters: { getText: useDefault("getText", getText) },
-        menuItemParameters: { onPress: onPress ?? null, role: role ?? "menuitem" }
+        menuItemParameters: { onPress: onPress ?? null, role: role ?? "menuitem" },
+        pressParameters: { onPressingChange }
     });
 
     useImperativeHandle(ref!, () => info);

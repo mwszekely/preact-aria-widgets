@@ -194,6 +194,8 @@ export const GridlistChild = memoForwardRef(function GridlistChild<CellElement e
     untabbable,
     getText,
     onPressSync,
+    longPressThreshold,
+    onPressingChange,
     render,
     info: subInfo
 }: GridlistChildProps<CellElement, CM>, ref?: Ref<any>) {
@@ -205,7 +207,7 @@ export const GridlistChild = memoForwardRef(function GridlistChild<CellElement e
         context,
         gridNavigationCellParameters: { colSpan: colSpan ?? 1 },
         textContentParameters: { getText: useDefault("getText", getText) },
-        pressParameters: { onPressSync }
+        pressParameters: { onPressSync, longPressThreshold, onPressingChange }
     });
 
     useImperativeHandle(ref!, () => info);

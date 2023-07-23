@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { ElementProps, focus, monitorCallCount, useMergedProps, usePress, UsePressReturnType, useStableCallback } from "preact-prop-helpers";
+import { assertEmptyObject, ElementProps, focus, monitorCallCount, returnFalse, TargetedPick, useMergedProps, usePress, UsePressParameters, UsePressReturnType, useStableCallback } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { OmitStrong } from "./props.js";
 import { useToolbar, useToolbarChild, UseToolbarChildParameters, UseToolbarChildReturnType, UseToolbarContext, UseToolbarParameters, UseToolbarReturnType, UseToolbarSubInfo } from "./use-toolbar.js";
@@ -7,7 +7,7 @@ import { useToolbar, useToolbarChild, UseToolbarChildParameters, UseToolbarChild
 
 export interface UseMenubarContext<ContainerElement extends Element, ChildElement extends Element, M extends UseMenubarSubInfo<ChildElement>> extends UseToolbarContext<ContainerElement, ChildElement, M> { }
 export interface UseMenubarSubInfo<ChildElement extends Element> extends UseToolbarSubInfo<ChildElement> { }
-export interface UseMenubarParameters<MenuParentElement extends Element, MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseToolbarParameters<MenuParentElement, MenuItemElement, M> {}
+export interface UseMenubarParameters<MenuParentElement extends Element, MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseToolbarParameters<MenuParentElement, MenuItemElement, M> { }
 
 export interface UseMenubarItemParametersSelf<MenuItemElement extends Element> {
     role: "menuitem" | "menuitemcheckbox" | "menuitemradio";
@@ -18,7 +18,9 @@ export interface UseMenubarItemParametersSelf<MenuItemElement extends Element> {
     onPress: null | ((e: h.JSX.TargetedEvent<MenuItemElement>) => void);
 }
 
-export interface UseMenubarItemParameters<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseToolbarChildParameters<MenuItemElement, M>, "toolbarChildParameters"> {
+export interface UseMenubarItemParameters<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends
+    OmitStrong<UseToolbarChildParameters<MenuItemElement, M>, "toolbarChildParameters">, 
+    TargetedPick<UsePressParameters<MenuItemElement>, "pressParameters", "onPressingChange"> {
     menuItemParameters: UseMenubarItemParametersSelf<MenuItemElement>;
 }
 
@@ -56,12 +58,13 @@ export function useMenubar<MenuParentElement extends Element, MenuItemElement ex
 
 export function useMenubarChild<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>>({
     menuItemParameters: { onPress: opu, role },
-   ...restParams
+    pressParameters: { onPressingChange, ...void1 },
+    ...restParams
 }: UseMenubarItemParameters<MenuItemElement, M>): UseMenubarItemReturnType<MenuItemElement, M> {
     monitorCallCount(useMenubarChild);
 
     const focusSelf = useCallback((e: any) => focus(e as Element as HTMLElement), [])
-
+    assertEmptyObject(void1);
     const {
         propsChild,
         propsTabbable,
@@ -79,7 +82,12 @@ export function useMenubarChild<MenuItemElement extends Element, M extends UseMe
             onPressSync: useStableCallback((e) => {
                 onPressSync?.(e);
                 opu?.(e);
-            })
+            }),
+            allowRepeatPresses: false,
+            excludeEnter: returnFalse,
+            excludePointer: returnFalse,
+            longPressThreshold: null,
+            onPressingChange
         }, refElementReturn: restRet.refElementReturn
     });
 

@@ -69,13 +69,12 @@ export function useRadioGroup({ labelParameters, radioGroupParameters: { name, o
         ...restRet,
     };
 }
-export function useRadio({ radioParameters: { value }, checkboxLikeParameters: { disabled }, labelParameters, info, context, textContentParameters, ...void1 }) {
+export function useRadio({ radioParameters: { value }, checkboxLikeParameters: { disabled }, labelParameters, info, context, textContentParameters, pressParameters: { longPressThreshold, ...void3 }, ...void1 }) {
     monitorCallCount(useRadio);
     const index = info.index;
     const onInput = useStableCallback((e) => {
         onPressSync?.(e);
     });
-    assertEmptyObject(void1);
     const { name, indexToName, nameToIndex } = context.radioContext;
     const { tagInput, labelPosition } = labelParameters;
     const getValue = useStableGetter(value);
@@ -86,6 +85,7 @@ export function useRadio({ radioParameters: { value }, checkboxLikeParameters: {
     });
     assertEmptyObject(void1);
     assertEmptyObject(void2);
+    assertEmptyObject(void3);
     const { selected: checked } = singleSelectionChildReturn;
     const { refElementReturn: refElementInputReturn, propsStable: propsRefInput } = useRefElement({ refElementParameters: {} });
     const { refElementReturn: refElementLabelReturn, propsStable: propsRefLabel } = useRefElement({ refElementParameters: {} });
@@ -96,7 +96,7 @@ export function useRadio({ radioParameters: { value }, checkboxLikeParameters: {
             onInput: onInput,
             role: "radio"
         },
-        pressParameters: { excludeSpace },
+        pressParameters: { excludeSpace, longPressThreshold },
         labelParameters,
         randomIdInputParameters: { prefix: Prefices.radio },
         randomIdLabelParameters: { prefix: Prefices.radioLabel },

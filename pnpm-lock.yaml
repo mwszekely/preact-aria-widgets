@@ -12,7 +12,7 @@ dependencies:
     version: 10.13.2
   preact-prop-helpers:
     specifier: github:mwszekely/preact-prop-helpers
-    version: github.com/mwszekely/preact-prop-helpers/852c457a25c40d71a9595e9206b160499e960936(preact@10.13.2)
+    version: github.com/mwszekely/preact-prop-helpers/cf93e9477ce068b5d136d164ffa02eb05409c42f(preact@10.13.2)
 
 devDependencies:
   '@playwright/test':
@@ -35,7 +35,7 @@ packages:
     engines: {node: '>=16'}
     hasBin: true
     dependencies:
-      '@types/node': 20.4.3
+      '@types/node': 20.4.4
       playwright-core: 1.35.1
     optionalDependencies:
       fsevents: 2.3.2
@@ -51,8 +51,8 @@ packages:
     resolution: {integrity: sha512-Hwx9EUgdwf2GLarOjQp5ZH8ZmblzcbTBC2wtQWNKARBSxM9ezRIAUpeDTgoQRAFB0+8CNWXVA9+MaSOzOF3nPg==}
     dev: true
 
-  /@types/node@20.4.3:
-    resolution: {integrity: sha512-Yu3+r4Mn/iY6Mf0aihncZQ1qOjOUrCiodbHHY1hds5O+7BbKp9t+Li7zLO13zO8j9L2C6euz8xsYQP0rjGvVXw==}
+  /@types/node@20.4.4:
+    resolution: {integrity: sha512-CukZhumInROvLq3+b5gLev+vgpsIqC2D0deQr/yS1WnxvmYLlJXZpaQrQiseMY+6xusl79E04UjWoqyr+t1/Ew==}
     dev: true
 
   /ansi-styles@3.2.1:
@@ -831,9 +831,9 @@ packages:
     version: 1.0.0
     dev: false
 
-  github.com/mwszekely/preact-prop-helpers/852c457a25c40d71a9595e9206b160499e960936(preact@10.13.2):
-    resolution: {tarball: https://codeload.github.com/mwszekely/preact-prop-helpers/tar.gz/852c457a25c40d71a9595e9206b160499e960936}
-    id: github.com/mwszekely/preact-prop-helpers/852c457a25c40d71a9595e9206b160499e960936
+  github.com/mwszekely/preact-prop-helpers/cf93e9477ce068b5d136d164ffa02eb05409c42f(preact@10.13.2):
+    resolution: {tarball: https://codeload.github.com/mwszekely/preact-prop-helpers/tar.gz/cf93e9477ce068b5d136d164ffa02eb05409c42f}
+    id: github.com/mwszekely/preact-prop-helpers/cf93e9477ce068b5d136d164ffa02eb05409c42f
     name: preact-prop-helpers
     version: 0.0.1
     peerDependencies:

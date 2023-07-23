@@ -35,14 +35,15 @@ export const Menubar = memoForwardRef(function MenubarU({ render, collator, disa
     useImperativeHandle(ref, () => info);
     return (_jsx(MenubarItemContext.Provider, { value: info.context, children: render(info) }));
 });
-export const MenubarItem = memoForwardRef(function MenuItemU({ index, render, focusSelf, untabbable, getText, unselectable, onPress, getSortValue, role, info: uinfo }, ref) {
+export const MenubarItem = memoForwardRef(function MenuItemU({ index, render, focusSelf, untabbable, getText, unselectable, onPress, getSortValue, onPressingChange, role, info: uinfo }, ref) {
     const context = (useContextWithWarning(MenubarItemContext, "menubar"));
     const defaultFocusSelf = useCallback((e) => focus(e), []);
     const info = useMenubarChild({
         info: { index, untabbable: untabbable || false, unselectable: unselectable || false, focusSelf: focusSelf ?? defaultFocusSelf, getSortValue, ...uinfo },
         context,
         textContentParameters: { getText: useDefault("getText", getText) },
-        menuItemParameters: { onPress: onPress ?? null, role: role ?? "menuitem" }
+        menuItemParameters: { onPress: onPress ?? null, role: role ?? "menuitem" },
+        pressParameters: { onPressingChange }
     });
     useImperativeHandle(ref, () => info);
     return (_jsx(_Fragment, { children: render(info) }));

@@ -21,7 +21,7 @@ export interface TabPanelProps<PanelElement extends Element, M extends TabPanelI
     render(info: UseTabPanelReturnType<PanelElement>): VNode<any>;
 }
 export declare const Tabs: <TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element, M extends TabInfo<TabElement> = TabInfo<TabElement>>({ ariaLabel, collator, compare, disableHomeEndKeys, getIndex, initiallySelectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSelectedIndexChange, onTabbableIndexChange, orientation, staggered, pageNavigationSize, localStorageKey, selectionMode, untabbable, typeaheadTimeout, role, onNavigateLinear, onNavigateTypeahead, render }: TabsProps<TabContainerElement, TabElement, TabLabelElement, M>, ref?: Ref<any>) => import("preact").JSX.Element;
-export declare const Tab: <E extends Element, M extends TabInfo<E> = TabInfo<E>>({ unselectable, focusSelf, untabbable, index, getText, getSortValue, render, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, info: uinfo }: TabProps<E, M>, ref?: Ref<any>) => VNode<any>;
+export declare const Tab: <E extends Element, M extends TabInfo<E> = TabInfo<E>>({ unselectable, focusSelf, untabbable, index, getText, getSortValue, render, longPressThreshold, onPressingChange, info: uinfo }: TabProps<E, M>, ref?: Ref<any>) => VNode<any>;
 export declare function TabPanel<E extends Element, M extends TabPanelInfo = TabPanelInfo>({ index, render, info: uinfo }: TabPanelProps<E, M>): VNode<any>;
 export {};
 //# sourceMappingURL=tabs.d.ts.map

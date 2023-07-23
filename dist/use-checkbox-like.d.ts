@@ -10,7 +10,7 @@ export interface UseCheckboxLikeParametersSelf {
     checked: CheckboxCheckedType;
     onInput(event: Event): void;
 }
-export interface UseCheckboxLikeParameters<LP extends LabelPosition, InputType extends Element, LabelType extends Element> extends OmitStrong<UseLabelParameters<LP, InputType, LabelType>, "labelParameters">, TargetedOmit<UseLabelParameters<LP, InputType, LabelType>, "labelParameters", "onLabelClick">, TargetedPick<UsePressParameters<any>, "pressParameters", "excludeSpace"> {
+export interface UseCheckboxLikeParameters<LP extends LabelPosition, InputType extends Element, LabelType extends Element> extends OmitStrong<UseLabelParameters<LP, InputType, LabelType>, "labelParameters">, TargetedOmit<UseLabelParameters<LP, InputType, LabelType>, "labelParameters", "onLabelClick">, TargetedPick<UsePressParameters<any>, "pressParameters", "longPressThreshold" | "excludeSpace"> {
     checkboxLikeParameters: UseCheckboxLikeParametersSelf;
     refElementLabelReturn: UseRefElementReturnType<LabelType>["refElementReturn"];
     refElementInputReturn: UseRefElementReturnType<InputType>["refElementReturn"];
@@ -42,5 +42,5 @@ export interface UseCheckboxLikeReturnType<InputType extends Element, LabelType 
  * @param param0
  * @returns
  */
-export declare function useCheckboxLike<LP extends LabelPosition, InputType extends Element, LabelType extends Element>({ labelParameters, randomIdInputParameters, randomIdLabelParameters, checkboxLikeParameters: { checked, disabled, onInput: onInputSync, role }, refElementInputReturn, refElementLabelReturn, pressParameters: { excludeSpace } }: UseCheckboxLikeParameters<LP, InputType, LabelType>): UseCheckboxLikeReturnType<InputType, LabelType>;
+export declare function useCheckboxLike<LP extends LabelPosition, InputType extends Element, LabelType extends Element>({ labelParameters, randomIdInputParameters, randomIdLabelParameters, checkboxLikeParameters: { checked, disabled, onInput: onInputSync, role, ...void1 }, refElementInputReturn, refElementLabelReturn, pressParameters: { excludeSpace, longPressThreshold, ...void2 }, ...void3 }: UseCheckboxLikeParameters<LP, InputType, LabelType>): UseCheckboxLikeReturnType<InputType, LabelType>;
 //# sourceMappingURL=use-checkbox-like.d.ts.map

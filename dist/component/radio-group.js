@@ -36,7 +36,7 @@ export const RadioGroup = memoForwardRef(function RadioGroup({ render, name, onS
     useImperativeHandle(ref, () => info);
     return (_jsx(RadioContext.Provider, { value: info.context, children: render(info) }));
 });
-export const Radio = memoForwardRef(function Radio({ unselectable, disabled, index, render, value, ariaLabel, focusSelf, labelPosition, untabbable, tagInput, tagLabel, getText }, ref) {
+export const Radio = memoForwardRef(function Radio({ unselectable, disabled, index, render, value, ariaLabel, focusSelf, labelPosition, untabbable, tagInput, tagLabel, getText, longPressThreshold }, ref) {
     const defaultFocusSelf = () => info.checkboxLikeReturn.focusSelf();
     focusSelf ??= defaultFocusSelf;
     const context = useContextWithWarning(RadioContext, "radio group");
@@ -48,7 +48,8 @@ export const Radio = memoForwardRef(function Radio({ unselectable, disabled, ind
         info: { index, focusSelf, untabbable: untabbable || false, unselectable: !!unselectable, getSortValue: getValue },
         context,
         labelParameters: { ariaLabel, labelPosition, tagInput, tagLabel },
-        textContentParameters: { getText: useDefault("getText", getText) }
+        textContentParameters: { getText: useDefault("getText", getText) },
+        pressParameters: { longPressThreshold }
     });
     useImperativeHandle(ref, () => info);
     return render(info);

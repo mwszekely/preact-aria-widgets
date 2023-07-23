@@ -118,9 +118,6 @@ export const Tab = memoForwardRef(function Tab<E extends Element, M extends TabI
     getText,
     getSortValue,
     render,
-    allowRepeatPresses,
-    excludeEnter,
-    excludePointer,
     longPressThreshold,
     onPressingChange,
     info: uinfo
@@ -131,7 +128,7 @@ export const Tab = memoForwardRef(function Tab<E extends Element, M extends TabI
     const info = useTab<E, M>({
         info: { index, unselectable, untabbable, focusSelf: focusSelf ?? focusSelfDefault, getSortValue, ...uinfo } as M,
         context,
-        pressParameters: { focusSelf: focusSelfDefault, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange },
+        pressParameters: { focusSelf: focusSelfDefault, longPressThreshold, onPressingChange },
         textContentParameters: { getText: useDefault("getText", getText) }
     });
     useImperativeHandle(ref!, () => info);

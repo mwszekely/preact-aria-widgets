@@ -1,6 +1,5 @@
 import { Fragment as _Fragment, jsxs as _jsxs, jsx as _jsx } from "preact/jsx-runtime";
 import { createElement } from "preact";
-import { returnFalse } from "preact-prop-helpers";
 import { useImperativeHandle } from "preact/hooks";
 import { useCheckbox } from "../use-checkbox.js";
 import { memoForwardRef } from "./util.js";
@@ -24,12 +23,12 @@ export function defaultRenderCheckboxLike({ labelPosition, tagInput, tagLabel, m
         }
     };
 }
-export const Checkbox = memoForwardRef(function Checkbox({ checked, disabled, tagLabel, labelPosition, tagInput, ariaLabel, onCheckedChange, render }, ref) {
+export const Checkbox = memoForwardRef(function Checkbox({ checked, disabled, tagLabel, labelPosition, tagInput, ariaLabel, onCheckedChange, longPressThreshold, excludeSpace, render }, ref) {
     const checkbox = useCheckbox({
         checkboxLikeParameters: { checked: checked ?? false, disabled: disabled ?? false },
         checkboxParameters: { onCheckedChange },
         labelParameters: { ariaLabel: ariaLabel, labelPosition, tagInput, tagLabel },
-        pressParameters: { excludeSpace: returnFalse }
+        pressParameters: { excludeSpace, longPressThreshold }
     });
     useImperativeHandle(ref, () => checkbox);
     return render(checkbox);

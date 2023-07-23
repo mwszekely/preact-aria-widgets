@@ -1,15 +1,13 @@
 import { createElement, Ref, VNode } from "preact";
-import { ElementProps, returnFalse } from "preact-prop-helpers";
+import { ElementProps } from "preact-prop-helpers";
 import { useImperativeHandle } from "preact/hooks";
-import { ElementToTag, Get3 } from "../props.js";
+import { ElementToTag, Get4 } from "../props.js";
 import { useCheckbox, UseCheckboxParameters, UseCheckboxReturnType } from "../use-checkbox.js";
 import { LabelPosition } from "../use-label.js";
 import { memoForwardRef, PartialExcept } from "./util.js";
 
-type Get<T, K extends keyof T> = T[K];
-
 interface CheckboxPropsBase<I extends Element, L extends Element> extends
-    Get3<UseCheckboxParameters<LabelPosition, I, L>, "checkboxLikeParameters","checkboxParameters","labelParameters"> {
+    Get4<UseCheckboxParameters<LabelPosition, I, L>, "checkboxLikeParameters", "checkboxParameters", "labelParameters", "pressParameters"> {
     ref?: Ref<UseCheckboxReturnType<I, L>>;
 }
 
@@ -68,6 +66,8 @@ export const Checkbox = memoForwardRef(function Checkbox<I extends Element, L ex
     tagInput,
     ariaLabel,
     onCheckedChange,
+    longPressThreshold,
+    excludeSpace,
     render
 }: CheckboxProps<I, L>, ref: Ref<any>) {
 
@@ -75,7 +75,7 @@ export const Checkbox = memoForwardRef(function Checkbox<I extends Element, L ex
         checkboxLikeParameters: { checked: checked ?? false, disabled: disabled ?? false },
         checkboxParameters: { onCheckedChange },
         labelParameters: { ariaLabel: ariaLabel, labelPosition, tagInput, tagLabel },
-        pressParameters: { excludeSpace: returnFalse }
+        pressParameters: { excludeSpace, longPressThreshold }
     });
 
     useImperativeHandle(ref!, () => checkbox);

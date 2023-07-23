@@ -76,7 +76,7 @@ export function useLabel<LP extends LabelPosition, InputElement extends Element,
         propsLabel["for"] = undefined;
     }
 
-    const { pressReturn, props: propsPress } = usePress({ pressParameters: { excludeEnter: returnTrue, excludeSpace: returnTrue, onPressSync: onLabelClick, focusSelf: noop }, refElementReturn });
+    const { pressReturn, props: propsPress } = usePress({ pressParameters: { excludeEnter: returnTrue, excludeSpace: returnTrue, onPressSync: onLabelClick, focusSelf: noop, allowRepeatPresses: false, excludePointer: null, longPressThreshold: null, onPressingChange: null }, refElementReturn });
 
     return {
         pressReturn,

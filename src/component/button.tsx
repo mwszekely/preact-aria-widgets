@@ -24,7 +24,11 @@ export const Button = memoForwardRef(function Button<E extends Element>({
     onMount, 
     onUnmount, 
     allowRepeatPresses, 
-    longPressThreshold 
+    longPressThreshold,
+    excludeEnter,
+    excludePointer,
+    excludeSpace,
+    onPressingChange
 }: ButtonProps<E>, ref: Ref<any>) {
     const info = useButton<E>({
         buttonParameters: {
@@ -34,7 +38,7 @@ export const Button = memoForwardRef(function Button<E extends Element>({
             pressed,
             disabled: disabled ?? false
         },
-        pressParameters: { longPressThreshold, allowRepeatPresses },
+        pressParameters: { longPressThreshold, allowRepeatPresses, excludeEnter, excludePointer, excludeSpace, onPressingChange },
         refElementParameters: { onElementChange, onMount, onUnmount }
     });
     useImperativeHandle(ref!, () => info);

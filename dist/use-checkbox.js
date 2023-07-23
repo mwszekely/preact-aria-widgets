@@ -1,8 +1,8 @@
-import { monitorCallCount, returnFalse, useMergedProps, useRefElement, useStableCallback } from "preact-prop-helpers";
+import { monitorCallCount, useMergedProps, useRefElement, useStableCallback } from "preact-prop-helpers";
 import { Prefices, enhanceEvent } from "./props.js";
 import { useCheckboxLike } from "./use-checkbox-like.js";
 ;
-export function useCheckbox({ checkboxParameters: { onCheckedChange }, checkboxLikeParameters, labelParameters, }) {
+export function useCheckbox({ checkboxParameters: { onCheckedChange }, checkboxLikeParameters, labelParameters, pressParameters }) {
     monitorCallCount(useCheckbox);
     const { tagInput, labelPosition } = labelParameters;
     const { checked } = checkboxLikeParameters;
@@ -15,7 +15,7 @@ export function useCheckbox({ checkboxParameters: { onCheckedChange }, checkboxL
         refElementInputReturn,
         refElementLabelReturn,
         checkboxLikeParameters: { role: "checkbox", onInput: onInputEnhanced, ...checkboxLikeParameters },
-        pressParameters: { excludeSpace: returnFalse },
+        pressParameters,
         labelParameters
     });
     return {

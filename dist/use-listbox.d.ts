@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { CompleteListNavigationContext, ElementProps, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UsePressParameters, UsePressReturnType, UseSingleSelectionParameters } from "preact-prop-helpers";
+import { CompleteListNavigationContext, ElementProps, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UsePressParameters, UsePressReturnType, UseSingleSelectionDeclarativeParameters } from "preact-prop-helpers";
 import { EventDetail, OmitStrong } from "./props.js";
 import { UseLabelSyntheticParameters } from "./use-label.js";
 export type ListboxSingleSelectEvent<E extends EventTarget> = {
@@ -29,7 +29,7 @@ export interface UseListboxParametersSelf<ListElement extends Element, ListItemE
      * Only used when `groupingType` is `"without-groups"` or `"group"`
      */
     selectedIndex: number | null;
-    onSelectedIndexChange: UseSingleSelectionParameters<ListElement, ListItemElement, M>["singleSelectionParameters"]["onSelectedIndexChange"];
+    onSelectedIndexChange: UseSingleSelectionDeclarativeParameters["singleSelectionDeclarativeParameters"]["onSelectedIndexChange"];
     /**
      * * `"without-groups"`: This is a listbox with no groups
      * * `"with-groups"`: This is a listbox that is grouped into 2 or more labelled sections. In this case, **all navigation and selection is disabled** (meaning you can pass whatever you'd like to them, it's all ignored) and delegated to the child `group`s.

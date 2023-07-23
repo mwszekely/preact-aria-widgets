@@ -152,7 +152,7 @@ export function useAccordionSection({ buttonParameters, accordionSectionParamete
             changeExpandedIndex(index);
         userOnPress?.(e);
     };
-    const { propsStable: propsLN, ...linearReturnType } = useLinearNavigation({ linearNavigationParameters, rovingTabIndexReturn });
+    const { propsStable: propsLN, ...linearReturnType } = useLinearNavigation({ linearNavigationParameters, rovingTabIndexReturn, paginatedChildrenParameters: { paginationMin: null, paginationMax: null } });
     const { pressParameters: { excludeSpace }, textContentReturn } = useTypeaheadNavigationChild({
         info: { index },
         refElementReturn: { getElement: useStableCallback(() => refElementReturn.getElement()) },
@@ -161,7 +161,7 @@ export function useAccordionSection({ buttonParameters, accordionSectionParamete
     });
     const buttonReturn = useButton({
         buttonParameters: { ...buttonParameters, pressed: null, onPress, role: "button", },
-        pressParameters: { excludeSpace, allowRepeatPresses: false },
+        pressParameters: { excludeSpace, allowRepeatPresses: false, excludeEnter: null, excludePointer: null, longPressThreshold: null, onPressingChange: null },
         refElementParameters
     });
     const { pressReturn, props: buttonProps, refElementReturn } = buttonReturn;

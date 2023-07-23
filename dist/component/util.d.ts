@@ -17,7 +17,7 @@ export declare const ContextDefaults: {
 };
 type DefaultExcepts = keyof typeof ContextDefaults;
 type ContextType<T extends Context<any>> = T extends Context<infer C> ? C : unknown;
-export declare function useDefault<K extends DefaultExcepts>(context: K, userValue: undefined | ContextType<(typeof ContextDefaults)[K]>): ContextType<(typeof ContextDefaults)[K]>;
+export declare function useDefault<K extends DefaultExcepts>(context: K, userValue: null | undefined | ContextType<(typeof ContextDefaults)[K]>): ContextType<(typeof ContextDefaults)[K]>;
 export declare const ParentDepthContext: Context<number>;
 type PartialExceptD<T, KeepRequired extends keyof T> = Partial<Pick<T, Exclude<keyof T, KeepRequired>>> & Pick<T, KeepRequired>;
 /**

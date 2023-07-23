@@ -1,7 +1,7 @@
 import { createContext, Ref, VNode } from "preact";
 import { focus } from "preact-prop-helpers";
 import { useCallback, useImperativeHandle } from "preact/hooks";
-import { Get, Get9, OmitStrong, useContextWithWarning } from "../props.js";
+import { Get3, Get9, OmitStrong, useContextWithWarning } from "../props.js";
 import { useMenubar, useMenubarChild, UseMenubarContext, UseMenubarItemParameters, UseMenubarItemReturnType, UseMenubarParameters, UseMenubarReturnType, UseMenubarSubInfo } from "../use-menubar.js";
 import { memoForwardRef, PartialExcept, useDefault } from "./util.js";
 
@@ -13,12 +13,9 @@ interface MenubarPropsBase<MenuParentElement extends Element, MenuItemElement ex
 
 
 interface MenubarItemPropsBase<MenuItemElement extends Element> extends
-    //Get<UseMenubarItemParameters<MenuItemElement, M>, "managedChildParameters">,
-    Get<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "menuItemParameters">,
-    Pick<UseMenubarSubInfo<MenuItemElement>, "index" | "untabbable" | "unselectable" | "getSortValue">,
-    Get<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "textContentParameters"> {
+    Get3<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "menuItemParameters", "textContentParameters", "pressParameters">,
+    Pick<UseMenubarSubInfo<MenuItemElement>, "index" | "untabbable" | "unselectable" | "getSortValue"> {
     focusSelf?: UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>["info"]["focusSelf"];
-    //subInfo?: OmitStrong< UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>["completeListNavigationChildParameters"], "focusSelf">;
     ref?: Ref<UseMenubarItemReturnType<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>>;
 }
 
@@ -104,6 +101,7 @@ export const MenubarItem = memoForwardRef(function MenuItemU<MenuItemElement ext
     unselectable,
     onPress,
     getSortValue,
+    onPressingChange,
     role,
     info: uinfo
 }: MenubarItemProps<MenuItemElement, M>, ref?: Ref<any>) {
@@ -114,7 +112,8 @@ export const MenubarItem = memoForwardRef(function MenuItemU<MenuItemElement ext
         info: { index, untabbable: untabbable || false, unselectable: unselectable || false, focusSelf: focusSelf ?? defaultFocusSelf, getSortValue, ...uinfo } as M,
         context,
         textContentParameters: { getText: useDefault("getText", getText) },
-        menuItemParameters: { onPress: onPress ?? null, role: role ?? "menuitem" }
+        menuItemParameters: { onPress: onPress ?? null, role: role ?? "menuitem" },
+        pressParameters: { onPressingChange }
     });
 
     useImperativeHandle(ref!, () => info);

@@ -92,7 +92,7 @@ export const GridlistRow = memoForwardRef(function GridlistRowU({ index, collato
     useImperativeHandle(ref, () => info);
     return _jsx(GridlistRowContext.Provider, { value: info.context, children: render(info) });
 });
-export const GridlistChild = memoForwardRef(function GridlistChild({ index, colSpan, focusSelf, untabbable, getText, onPressSync, render, info: subInfo }, ref) {
+export const GridlistChild = memoForwardRef(function GridlistChild({ index, colSpan, focusSelf, untabbable, getText, onPressSync, longPressThreshold, onPressingChange, render, info: subInfo }, ref) {
     const context = useContextWithWarning(GridlistRowContext, "gridlist row");
     console.assert(context != null, `This GridlistChild is not contained within a GridlistRow that is contained within a Gridlist`);
     const defaultFocusSelf = useStableCallback((e) => { focus(e); }, []);
@@ -101,7 +101,7 @@ export const GridlistChild = memoForwardRef(function GridlistChild({ index, colS
         context,
         gridNavigationCellParameters: { colSpan: colSpan ?? 1 },
         textContentParameters: { getText: useDefault("getText", getText) },
-        pressParameters: { onPressSync }
+        pressParameters: { onPressSync, longPressThreshold, onPressingChange }
     });
     useImperativeHandle(ref, () => info);
     return render(info);

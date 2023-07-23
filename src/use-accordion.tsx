@@ -287,7 +287,7 @@ export function useAccordionSection<_HeaderContainerElement extends Element, Hea
         userOnPress?.(e);
     };
 
-    const { propsStable: propsLN, ...linearReturnType } = useLinearNavigation<HeaderButtonElement, HeaderButtonElement, M>({ linearNavigationParameters, rovingTabIndexReturn });
+    const { propsStable: propsLN, ...linearReturnType } = useLinearNavigation<HeaderButtonElement, HeaderButtonElement, M>({ linearNavigationParameters, rovingTabIndexReturn, paginatedChildrenParameters: { paginationMin: null, paginationMax: null } });
     const {
         pressParameters: { excludeSpace },
         textContentReturn
@@ -300,7 +300,7 @@ export function useAccordionSection<_HeaderContainerElement extends Element, Hea
 
     const buttonReturn: UseButtonReturnType<HeaderButtonElement> = useButton<HeaderButtonElement>({
         buttonParameters: { ...buttonParameters, pressed: null, onPress, role: "button", },
-        pressParameters: { excludeSpace, allowRepeatPresses: false },
+        pressParameters: { excludeSpace, allowRepeatPresses: false, excludeEnter: null, excludePointer: null, longPressThreshold: null, onPressingChange: null },
         refElementParameters
     });
 

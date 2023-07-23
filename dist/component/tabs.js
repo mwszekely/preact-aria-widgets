@@ -41,14 +41,14 @@ export const Tabs = memoForwardRef(function Tabs({ ariaLabel, collator, compare,
     useImperativeHandle(ref, () => info);
     return (_jsx(UntabbableContext.Provider, { value: untabbable, children: _jsx(SelectionModeContext.Provider, { value: selectionMode, children: _jsx(TabsContext.Provider, { value: contextTabs, children: _jsx(TabPanelsContext.Provider, { value: contextPanels, children: render(info) }) }) }) }));
 });
-export const Tab = memoForwardRef(function Tab({ unselectable, focusSelf, untabbable, index, getText, getSortValue, render, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, info: uinfo }, ref) {
+export const Tab = memoForwardRef(function Tab({ unselectable, focusSelf, untabbable, index, getText, getSortValue, render, longPressThreshold, onPressingChange, info: uinfo }, ref) {
     const context = useContextWithWarning(TabsContext, "tabs");
     console.assert(context != null, `This Tab is not contained within a Tabs component`);
     const focusSelfDefault = useCallback((e) => { focus(e); }, []);
     const info = useTab({
         info: { index, unselectable, untabbable, focusSelf: focusSelf ?? focusSelfDefault, getSortValue, ...uinfo },
         context,
-        pressParameters: { focusSelf: focusSelfDefault, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange },
+        pressParameters: { focusSelf: focusSelfDefault, longPressThreshold, onPressingChange },
         textContentParameters: { getText: useDefault("getText", getText) }
     });
     useImperativeHandle(ref, () => info);

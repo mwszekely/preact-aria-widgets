@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { ElementProps, UsePressReturnType } from "preact-prop-helpers";
+import { ElementProps, TargetedPick, UsePressParameters, UsePressReturnType } from "preact-prop-helpers";
 import { OmitStrong } from "./props.js";
 import { UseToolbarChildParameters, UseToolbarChildReturnType, UseToolbarContext, UseToolbarParameters, UseToolbarReturnType, UseToolbarSubInfo } from "./use-toolbar.js";
 export interface UseMenubarContext<ContainerElement extends Element, ChildElement extends Element, M extends UseMenubarSubInfo<ChildElement>> extends UseToolbarContext<ContainerElement, ChildElement, M> {
@@ -15,7 +15,7 @@ export interface UseMenubarItemParametersSelf<MenuItemElement extends Element> {
      */
     onPress: null | ((e: h.JSX.TargetedEvent<MenuItemElement>) => void);
 }
-export interface UseMenubarItemParameters<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseToolbarChildParameters<MenuItemElement, M>, "toolbarChildParameters"> {
+export interface UseMenubarItemParameters<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseToolbarChildParameters<MenuItemElement, M>, "toolbarChildParameters">, TargetedPick<UsePressParameters<MenuItemElement>, "pressParameters", "onPressingChange"> {
     menuItemParameters: UseMenubarItemParametersSelf<MenuItemElement>;
 }
 export interface UseMenubarReturnType<MenuParentElement extends Element, MenuItemElement extends Element, LabelElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseToolbarReturnType<MenuParentElement, MenuItemElement, LabelElement, M>, "propsToolbar"> {
@@ -35,5 +35,5 @@ export interface UseMenubarItemReturnType<MenuItemElement extends Element, M ext
  * @returns
  */
 export declare function useMenubar<MenuParentElement extends Element, MenuItemElement extends Element, LabelElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>>(args: UseMenubarParameters<MenuParentElement, MenuItemElement, M>): UseMenubarReturnType<MenuParentElement, MenuItemElement, LabelElement, M>;
-export declare function useMenubarChild<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>>({ menuItemParameters: { onPress: opu, role }, ...restParams }: UseMenubarItemParameters<MenuItemElement, M>): UseMenubarItemReturnType<MenuItemElement, M>;
+export declare function useMenubarChild<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>>({ menuItemParameters: { onPress: opu, role }, pressParameters: { onPressingChange, ...void1 }, ...restParams }: UseMenubarItemParameters<MenuItemElement, M>): UseMenubarItemReturnType<MenuItemElement, M>;
 //# sourceMappingURL=use-menubar.d.ts.map

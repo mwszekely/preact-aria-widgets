@@ -80,11 +80,12 @@ export function useGridlistRow({ gridlistRowParameters: { selected }, linearNavi
         props
     };
 }
-export function useGridlistCell({ pressParameters, ...p }) {
+export function useGridlistCell({ pressParameters: { onPressSync, longPressThreshold, onPressingChange, ...void1 }, ...p }) {
     monitorCallCount(useGridlistCell);
     const { props, ...info } = useCompleteGridNavigationCell(p);
+    assertEmptyObject(void1);
     const { pressReturn, props: propsPress } = usePress({
-        pressParameters: { ...pressParameters, focusSelf: p.info.focusSelf },
+        pressParameters: { onPressSync, focusSelf: p.info.focusSelf, allowRepeatPresses: false, excludeEnter: null, excludePointer: null, excludeSpace: info.pressParameters.excludeSpace, longPressThreshold, onPressingChange },
         refElementReturn: info.refElementReturn
     });
     return {
