@@ -1,10 +1,12 @@
-import { focus, monitorCallCount, returnFalse, returnNull, returnZero, useCompleteListNavigation, useCompleteListNavigationChild, useMemoObject, useMergedProps, usePassiveState, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
+import { assertEmptyObject, focus, monitorCallCount, returnFalse, returnNull, returnZero, useCompleteListNavigation, useCompleteListNavigationChild, useMemoObject, useMergedProps, usePassiveState, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
 import { useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
 /**
+ * Allows a parent checkbox to control a number of child checkboxes, in accordance with the [Checkbox](https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/) pattern.
  *
+ * @compositeParams
  *
- * @param param0
- * @returns
+ * @hasChild {@link useCheckboxGroupParent}
+ * @hasChild {@link useCheckboxGroupChild}
  */
 export function useCheckboxGroup({ linearNavigationParameters, rovingTabIndexParameters, checkboxGroupParameters: { orientation }, ...listNavParameters }) {
     monitorCallCount(useCheckboxGroup);
@@ -103,11 +105,16 @@ export function useCheckboxGroup({ linearNavigationParameters, rovingTabIndexPar
         typeaheadNavigationReturn
     };
 }
+/**
+ * Implements the logic for the parent checkbox (but not the checkbox itself).
+ *
+ * @compositeParams
+ */
 export function useCheckboxGroupParent({ context, info, textContentParameters }) {
     const { checkboxGroupParentContext: { setSetter, setSetParentCheckboxChecked, getPercentChecked, getTotalChecked, getTotalChildren, onCheckboxGroupParentInput } } = context;
     const { hasCurrentFocusReturn, managedChildReturn, pressParameters, textContentReturn, refElementReturn, propsChild, propsTabbable, paginatedChildReturn, rovingTabIndexChildReturn, staggeredChildReturn, singleSelectionChildReturn, } = useCompleteListNavigationChild({
         context,
-        info,
+        info: info,
         textContentParameters
     });
     const [ariaControls, setControls] = useState("");
@@ -138,7 +145,7 @@ export function useCheckboxGroupParent({ context, info, textContentParameters })
 /**
  * Implements the "child" part of a checkbox group.
  *
- * Does not implement any actual "checkbox" functionality,
+ * @remarks Does not implement any actual "checkbox" functionality,
  * but it does tell you what to do *with* a checkbox.
  *
  * (That is to say, use `onChildCheckedChange` whenever
@@ -146,13 +153,12 @@ export function useCheckboxGroupParent({ context, info, textContentParameters })
  * properly implement `onChangeFromParent` to work
  * properly when the parent changes)
  *
- * @param param0
- * @returns
+ * @compositeParams
  */
-export function useCheckboxGroupChild({ checkboxGroupChild, context, info, textContentParameters, }) {
+export function useCheckboxGroupChild({ checkboxGroupChildParameters, context, info, textContentParameters, }) {
     const { checkboxGroupChildrenContext: { allIds, setUpdateIndex, setTotalChildren, setTotalChecked, } } = context;
     monitorCallCount(useCheckboxGroupChild);
-    const { checked, onChangeFromParent } = checkboxGroupChild;
+    const { checked, onChangeFromParent, ...void1 } = checkboxGroupChildParameters;
     const getChecked = useStableGetter(checked);
     const [getLastUserChecked, setLastUserChecked] = usePassiveState(null, returnFalse);
     const onChildCheckedChange = useStableCallback((checked) => {
@@ -177,13 +183,15 @@ export function useCheckboxGroupChild({ checkboxGroupChild, context, info, textC
             return () => setTotalChecked(c => ((c ?? 0) - 1));
         }
     }, [checked]);
-    const { hasCurrentFocusReturn, managedChildReturn, refElementReturn, textContentReturn, propsChild, propsTabbable, singleSelectionChildReturn: _singleSelectionChildReturn, staggeredChildReturn, paginatedChildReturn, rovingTabIndexChildReturn, pressParameters } = useCompleteListNavigationChild({
+    const { hasCurrentFocusReturn, managedChildReturn, refElementReturn, textContentReturn, propsChild, propsTabbable, singleSelectionChildReturn: _singleSelectionChildReturn, staggeredChildReturn, paginatedChildReturn, rovingTabIndexChildReturn, pressParameters, ...void2 } = useCompleteListNavigationChild({
         info: { checkboxInfo: { checkboxChildType: "child", getLastUserChecked, getChecked, setCheckedFromParentInput: onChangeFromParent }, ...info },
         context,
         textContentParameters,
     });
+    assertEmptyObject(void1);
+    assertEmptyObject(void2);
     return {
-        checkboxGroupChild: {
+        checkboxGroupChildReturn: {
             onChildCheckedChange,
             onControlIdChanged
         },

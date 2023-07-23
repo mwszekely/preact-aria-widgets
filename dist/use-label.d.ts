@@ -1,4 +1,4 @@
-import { UsePressReturnType, UseRandomDualIdsParameters, UseRandomDualIdsReturnType } from "preact-prop-helpers";
+import { TargetedPick, UsePressReturnType, UseRandomDualIdsParameters, UseRandomDualIdsReturnType } from "preact-prop-helpers";
 import { ElementToTag, OmitStrong } from "./props.js";
 export type LabelPosition = "separate" | "wrapping" | "none";
 export type FocusableLabelElement<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element> = LP extends "wrapping" ? LabelElement : InputElement;
@@ -31,14 +31,18 @@ export interface UseLabelParameters<LP extends LabelPosition, InputElement exten
 }
 export interface UseLabelReturnType<InputElement extends Element, LabelElement extends Element> extends UseRandomDualIdsReturnType<InputElement, LabelElement>, OmitStrong<UsePressReturnType<LabelElement>, "props"> {
 }
+/**
+ * @compositeParams
+ */
 export declare function useLabel<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element>({ randomIdInputParameters, randomIdLabelParameters, labelParameters: { tagInput, tagLabel, ariaLabel, labelPosition, onLabelClick } }: UseLabelParameters<LP, InputElement, LabelElement>): UseLabelReturnType<InputElement, LabelElement>;
-export interface UseLabelSyntheticParameters {
+export interface UseLabelSyntheticParameters extends TargetedPick<UseLabelParameters<LabelPosition, any, any>, "labelParameters", "ariaLabel" | "onLabelClick"> {
     randomIdInputParameters: OmitStrong<UseRandomDualIdsParameters["randomIdInputParameters"], "otherReferencerProp">;
     randomIdLabelParameters: OmitStrong<UseRandomDualIdsParameters["randomIdLabelParameters"], "otherReferencerProp">;
-    labelParameters: Pick<UseLabelParameters<LabelPosition, any, any>["labelParameters"], "ariaLabel" | "onLabelClick">;
 }
 /**
  * Shortcut for `useLabel` that assumes we're just never working with native HTML `input` and `label` elements. So for labelling guaranteably non-native elements.
+ *
+ * @compositeParams
  */
 export declare function useLabelSynthetic<InputElement extends Element, LabelElement extends Element>({ labelParameters: { ariaLabel, onLabelClick }, ...rest }: UseLabelSyntheticParameters): UseLabelReturnType<InputElement, LabelElement>;
 //# sourceMappingURL=use-label.d.ts.map

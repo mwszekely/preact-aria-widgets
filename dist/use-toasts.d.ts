@@ -46,6 +46,16 @@ export interface ToastsContextSelf {
 export interface ToastsContext<M extends ToastInfo> extends UseManagedChildrenContext<M> {
     toastContext: ToastsContextSelf;
 }
+/**
+ * Allows any descendent children to push a visible (and/or audible) message to the user's attention.
+ *
+ * @compositeParams
+ *
+ * @hasChild {@link useToast}
+ */
 export declare function useToasts<ContainerType extends Element>({ managedChildrenParameters: { onChildrenMountChange: ocmu, onAfterChildLayoutEffect }, toastsParameters: { visibleCount } }: UseToastsParameters): UseToastsReturnType<ContainerType, ToastInfo>;
+/**
+ * @compositeParams
+ */
 export declare function useToast<E extends Element>({ toastParameters: { politeness, timeout, children }, info: { index, ...info }, context }: UseToastParameters<ToastInfo>): UseToastReturnType<E>;
 //# sourceMappingURL=use-toasts.d.ts.map

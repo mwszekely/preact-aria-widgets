@@ -8,5 +8,10 @@ export interface UseDrawerReturnType<FocusContainerElement extends Element, Sour
     propsSource: ElementProps<SourceElement>;
     propsTitle: ElementProps<TitleElement>;
 }
+/**
+ * Implements a drawer, which is a specific kind of [Dialog](https://www.w3.org/WAI/ARIA/apg/patterns/dialog/).
+ *
+ * @compositeParams
+ */
 export declare function useDrawer<FocusContainerElement extends Element, SourceElement extends Element, PopupElement extends Element, TitleElement extends Element>({ dismissParameters, escapeDismissParameters, focusTrapParameters, labelParameters }: UseDrawerParameters<PopupElement, TitleElement>): UseDrawerReturnType<FocusContainerElement, SourceElement, PopupElement, TitleElement>;
 //# sourceMappingURL=use-drawer.d.ts.map

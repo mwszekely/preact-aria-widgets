@@ -61,6 +61,13 @@ export interface ToastsContext<M extends ToastInfo> extends UseManagedChildrenCo
 
 
 
+/**
+ * Allows any descendent children to push a visible (and/or audible) message to the user's attention.
+ * 
+ * @compositeParams
+ * 
+ * @hasChild {@link useToast}
+ */
 export function useToasts<ContainerType extends Element>({ managedChildrenParameters: { onChildrenMountChange: ocmu, onAfterChildLayoutEffect }, toastsParameters: { visibleCount } }: UseToastsParameters): UseToastsReturnType<ContainerType, ToastInfo> {
     monitorCallCount(useToasts);
 
@@ -168,6 +175,9 @@ export function useToasts<ContainerType extends Element>({ managedChildrenParame
     };
 }
 
+/**
+ * @compositeParams
+ */
 export function useToast<E extends Element>({ toastParameters: { politeness, timeout, children }, info: { index, ...info }, context }: UseToastParameters<ToastInfo>): UseToastReturnType<E> {
     const { getMaxVisibleCount, onAnyToastDismissed, onAnyToastMounted } = context.toastContext;
     monitorCallCount(useToast);

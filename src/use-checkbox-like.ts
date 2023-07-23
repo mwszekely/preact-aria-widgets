@@ -51,13 +51,14 @@ export interface UseCheckboxLikeReturnType<InputType extends Element, LabelType 
 
 /**
  * Handles any component where there's:
+ * ```md-literal
  * 1. Some kind of an on/off binary/trinary input element that needs event handlers
  * 2. Some kind of label for that input element
+ * ```md-literal
  * 
  * See also `useLabel` for when there's a label for a non-checkbox-like component.
  * 
- * @param param0 
- * @returns 
+ * @compositeParams
  */
 export function useCheckboxLike<LP extends LabelPosition, InputType extends Element, LabelType extends Element>({
     labelParameters,

@@ -2,6 +2,11 @@ import { monitorCallCount, useMergedProps, useRefElement, useStableCallback } fr
 import { Prefices, enhanceEvent } from "./props.js";
 import { useCheckboxLike } from "./use-checkbox-like.js";
 ;
+/**
+ * Implements a [Checkbox](https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/) pattern.
+ *
+ * @compositeParams
+ */
 export function useCheckbox({ checkboxParameters: { onCheckedChange }, checkboxLikeParameters, labelParameters, pressParameters }) {
     monitorCallCount(useCheckbox);
     const { tagInput, labelPosition } = labelParameters;

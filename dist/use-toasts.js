@@ -2,6 +2,13 @@ import { jsx as _jsx } from "preact/jsx-runtime";
 import { findFirstFocusable, focus, monitorCallCount, useGlobalHandler, useManagedChild, useManagedChildren, useMergedProps, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
 import { useCallback, useEffect, useRef } from "preact/hooks";
 import { useNotify } from "./use-notify.js";
+/**
+ * Allows any descendent children to push a visible (and/or audible) message to the user's attention.
+ *
+ * @compositeParams
+ *
+ * @hasChild {@link useToast}
+ */
 export function useToasts({ managedChildrenParameters: { onChildrenMountChange: ocmu, onAfterChildLayoutEffect }, toastsParameters: { visibleCount } }) {
     monitorCallCount(useToasts);
     // Normally, this does just look like [0, 1, 2, 3], etc
@@ -86,6 +93,9 @@ export function useToasts({ managedChildrenParameters: { onChildrenMountChange: 
         props
     };
 }
+/**
+ * @compositeParams
+ */
 export function useToast({ toastParameters: { politeness, timeout, children }, info: { index, ...info }, context }) {
     const { getMaxVisibleCount, onAnyToastDismissed, onAnyToastMounted } = context.toastContext;
     monitorCallCount(useToast);

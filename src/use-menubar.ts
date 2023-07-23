@@ -31,14 +31,15 @@ export interface UseMenubarReturnType<MenuParentElement extends Element, MenuIte
 export interface UseMenubarItemReturnType<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseToolbarChildReturnType<MenuItemElement, M>, "propsChild" | "propsTabbable" | "pressParameters">, UsePressReturnType<MenuItemElement> { }
 
 /**
- * A menubar is identical to a toolbar, except that every item 
+ * Implements a [Menubar](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/) pattern.
+ * 
+ * @remarks A menubar is identical to a toolbar, except that every item 
  * in a menubar is a menuitem (or similar) and has some sort of 
  * role and action when pressed besides just single selection (if applicable).
  * 
  * (A toolbar child won't have a defined role, but every menubar child will)
  * 
- * @param args 
- * @returns 
+ * @compositeParams
  */
 export function useMenubar<MenuParentElement extends Element, MenuItemElement extends Element, LabelElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>>(args: UseMenubarParameters<MenuParentElement, MenuItemElement, M>): UseMenubarReturnType<MenuParentElement, MenuItemElement, LabelElement, M> {
 
@@ -56,6 +57,9 @@ export function useMenubar<MenuParentElement extends Element, MenuItemElement ex
 }
 
 
+/**
+ * @compositeParams
+ */
 export function useMenubarChild<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>>({
     menuItemParameters: { onPress: opu, role },
     pressParameters: { onPressingChange, ...void1 },

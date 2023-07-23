@@ -2,14 +2,15 @@ import { assertEmptyObject, focus, monitorCallCount, returnFalse, useMergedProps
 import { useCallback } from "preact/hooks";
 import { useToolbar, useToolbarChild } from "./use-toolbar.js";
 /**
- * A menubar is identical to a toolbar, except that every item
+ * Implements a [Menubar](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/) pattern.
+ *
+ * @remarks A menubar is identical to a toolbar, except that every item
  * in a menubar is a menuitem (or similar) and has some sort of
  * role and action when pressed besides just single selection (if applicable).
  *
  * (A toolbar child won't have a defined role, but every menubar child will)
  *
- * @param args
- * @returns
+ * @compositeParams
  */
 export function useMenubar(args) {
     monitorCallCount(useMenubar);
@@ -19,6 +20,9 @@ export function useMenubar(args) {
         ...restReturn
     };
 }
+/**
+ * @compositeParams
+ */
 export function useMenubarChild({ menuItemParameters: { onPress: opu, role }, pressParameters: { onPressingChange, ...void1 }, ...restParams }) {
     monitorCallCount(useMenubarChild);
     const focusSelf = useCallback((e) => focus(e), []);

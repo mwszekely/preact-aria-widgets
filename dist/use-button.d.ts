@@ -23,5 +23,10 @@ export interface UseButtonParameters<E extends Node> extends UseRefElementParame
 export interface UseButtonReturnType<E extends Element> extends UsePressReturnType<E>, OmitStrong<UseRefElementReturnType<E>, "propsStable"> {
     props: ElementProps<E>;
 }
+/**
+ * Implements a [Button](https://www.w3.org/WAI/ARIA/apg/patterns/button/) pattern.
+ *
+ * @compositeParams
+ */
 export declare function useButton<E extends Element>({ buttonParameters: { tagButton, disabled, onPress, pressed, role }, pressParameters, refElementParameters }: UseButtonParameters<E>): UseButtonReturnType<E>;
 //# sourceMappingURL=use-button.d.ts.map

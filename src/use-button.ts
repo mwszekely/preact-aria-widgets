@@ -21,7 +21,9 @@ export interface UseButtonParametersSelf<E extends Node> {
     role: h.JSX.AriaRole;
 }
 
-export interface UseButtonParameters<E extends Node> extends UseRefElementParameters<E>, TargetedOmit<UsePressParameters<E>, "pressParameters", "onPressSync" | "focusSelf"> {
+export interface UseButtonParameters<E extends Node> extends
+    UseRefElementParameters<E>,
+    TargetedOmit<UsePressParameters<E>, "pressParameters", "onPressSync" | "focusSelf"> {
     buttonParameters: UseButtonParametersSelf<E>;
 }
 
@@ -31,6 +33,11 @@ export interface UseButtonReturnType<E extends Element> extends UsePressReturnTy
 
 
 
+/**
+ * Implements a [Button](https://www.w3.org/WAI/ARIA/apg/patterns/button/) pattern.
+ * 
+ * @compositeParams
+ */
 export function useButton<E extends Element>({ buttonParameters: { tagButton, disabled, onPress, pressed, role }, pressParameters, refElementParameters }: UseButtonParameters<E>): UseButtonReturnType<E> {
     monitorCallCount(useButton);
 

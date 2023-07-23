@@ -100,11 +100,13 @@ export interface TableCellInfo<TableCellElement extends Element> extends UseComp
     getSortValue(): unknown;
 }
 
-export interface UseTableParameters<TableElement extends Element, LabelElement extends Element> {
-    labelParameters: OmitStrong<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
-    tableParameters: Pick<UseListboxParameters<TableElement, any, LabelElement, any>["listboxParameters"], "selectionLimit"> & {
-        tagTable: ElementToTag<TableElement>;
-    };
+export interface UseTableParameters<TableElement extends Element, LabelElement extends Element> extends
+    TargetedOmit<UseLabelSyntheticParameters, "labelParameters", "onLabelClick"> {
+    tableParameters: UseTableParametersSelf<TableElement, LabelElement>;
+}
+
+export interface UseTableParametersSelf<TableElement extends Element, LabelElement extends Element> extends Pick<UseListboxParameters<TableElement, any, LabelElement, any>["listboxParameters"], "selectionLimit"> {
+    tagTable: ElementToTag<TableElement>;
 }
 
 export interface UseTableReturnType<TableElement extends Element, LabelElement extends Element> {
@@ -115,6 +117,15 @@ export interface UseTableReturnType<TableElement extends Element, LabelElement e
 
 interface SortInfo { column: number, direction: "ascending" | "descending" }
 
+/**
+ * Creates a sortable data table in a [Grid](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) pattern.
+ * 
+ * @compositeParams
+ * 
+ * @hasChild {@link useTableSection}
+ * @hasChild {@link useTableRow}
+ * @hasChild {@link useTableCell}
+ */
 export function useTable<TableElement extends Element, LabelElement extends Element>({
     labelParameters,
     tableParameters: { selectionLimit, tagTable },
@@ -177,6 +188,11 @@ function fuzzyCompare(lhs: any, rhs: any): number {
 
 }
 const naturalSectionTypes = new Set<keyof h.JSX.IntrinsicElements>(["thead", "tbody", "tfoot"]);
+
+
+/**
+ * @compositeParams
+ */
 export function useTableSection<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>>({
     linearNavigationParameters,
     rovingTabIndexParameters,
@@ -253,6 +269,9 @@ export function useTableSection<TableSectionElement extends Element, TableRowEle
     }
 }
 
+/**
+ * @compositeParams
+ */
 export function useTableRow<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>>({
     info,
     textContentParameters,
@@ -320,6 +339,9 @@ export function useTableRow<TableRowElement extends Element, TableCellElement ex
     }
 }
 
+/**
+ * @compositeParams
+ */
 export function useTableCell<TableCellElement extends Element, CM extends TableCellInfo<TableCellElement>>({ tableCellParameters: { tagTableCell }, info, ...p }: UseTableCellParameters<TableCellElement, CM>): UseTableCellReturnType<TableCellElement, CM> {
     monitorCallCount(useTableCell);
 

@@ -1,6 +1,13 @@
 import { focus, monitorCallCount, returnNull, useDismiss, useGlobalHandler, useHasCurrentFocus, useMergedProps, usePassiveState, useRandomId, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
 import { useCallback, useRef } from "preact/hooks";
 import { Prefices } from "./props.js";
+/**
+ * Implements a [Tooltip](https://www.w3.org/WAI/ARIA/apg/patterns/tooltip/) pattern.
+ *
+ * @remarks Tooltips are remarkably under-specified, so some of this is speculative.
+ *
+ * @compositeParams
+ */
 export function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType, hoverDelay }, escapeDismissParameters }) {
     monitorCallCount(useTooltip);
     useGlobalHandler(window, "mouseout", useCallback((e) => {

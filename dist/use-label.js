@@ -1,5 +1,8 @@
 import { monitorCallCount, returnTrue, useMergedProps, usePress, useRandomDualIds, useRefElement } from "preact-prop-helpers";
 import { noop } from "./props.js";
+/**
+ * @compositeParams
+ */
 export function useLabel({ randomIdInputParameters, randomIdLabelParameters, labelParameters: { tagInput, tagLabel, ariaLabel, labelPosition, onLabelClick } }) {
     const nativeHTMLBehavior = (tagInput == "input" && tagLabel == "label" && labelPosition != "wrapping");
     const synthetic = !nativeHTMLBehavior;
@@ -35,6 +38,8 @@ export function useLabel({ randomIdInputParameters, randomIdLabelParameters, lab
 }
 /**
  * Shortcut for `useLabel` that assumes we're just never working with native HTML `input` and `label` elements. So for labelling guaranteably non-native elements.
+ *
+ * @compositeParams
  */
 export function useLabelSynthetic({ labelParameters: { ariaLabel, onLabelClick }, ...rest }) {
     monitorCallCount(useLabelSynthetic);

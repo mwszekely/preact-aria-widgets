@@ -1,6 +1,11 @@
 import { findFirstFocusable, monitorCallCount, useMergedProps, useModal, useStableCallback } from "preact-prop-helpers";
 import { Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
+/**
+ * Implements a [Dialog](https://www.w3.org/WAI/ARIA/apg/patterns/dialog/) pattern.
+ *
+ * @compositeParams
+ */
 export function useDialog({ dismissParameters, escapeDismissParameters, focusTrapParameters, labelParameters }) {
     monitorCallCount(useDialog);
     const { propsFocusContainer, propsStablePopup, propsStableSource, refElementPopupReturn, refElementSourceReturn } = useModal({

@@ -3,6 +3,13 @@ import { assertEmptyObject, findBackupFocus, focus, monitorCallCount, useChildre
 import { useCallback } from "preact/hooks";
 import { Prefices } from "./props.js";
 import { useButton } from "./use-button.js";
+/**
+ * Implements an [Accordion](https://www.w3.org/WAI/ARIA/apg/patterns/accordion/) pattern.
+ *
+ * @compositeParams
+ *
+ * @hasChild {@link useAccordionSection}
+ */
 export function useAccordion({ accordionParameters: { initialIndex, localStorageKey, orientation, ...void2 }, typeaheadNavigationParameters, linearNavigationParameters: { disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize, onNavigateLinear, ...void1 }, managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange, onChildrenCountChange, ...void3 }, ...void4 }) {
     monitorCallCount(useAccordion);
     assertEmptyObject(void1);
@@ -106,7 +113,10 @@ export function useAccordion({ accordionParameters: { initialIndex, localStorage
         accordionReturn: useMemoObject({ changeExpandedIndex })
     };
 }
-export function useAccordionSection({ buttonParameters, accordionSectionParameters: { open: openFromUser, bodyRole }, info: { index, untabbable }, textContentParameters, context: { accordionSectionParameters: { changeExpandedIndex, changeTabbedIndex: setCurrentFocusedIndex, getTabbedIndex: getCurrentFocusedIndex, stableTypeaheadProps }, linearNavigationParameters, rovingTabIndexReturn, managedChildContext, typeaheadNavigationContext }, refElementParameters, }) {
+/**
+ * @compositeParams
+ */
+export function useAccordionSection({ buttonParameters, accordionSectionParameters: { open: openFromUser, bodyRole }, info: { index, untabbable, ...info }, textContentParameters, context: { accordionSectionParameters: { changeExpandedIndex, changeTabbedIndex: setCurrentFocusedIndex, getTabbedIndex: getCurrentFocusedIndex, stableTypeaheadProps }, linearNavigationParameters, rovingTabIndexReturn, managedChildContext, typeaheadNavigationContext }, refElementParameters, }) {
     monitorCallCount(useAccordionSection);
     const { disabled, onPress: userOnPress } = buttonParameters;
     const [openFromParent, setOpenFromParent, getOpenFromParent] = useState(null);
@@ -142,6 +152,7 @@ export function useAccordionSection({ buttonParameters, accordionSectionParamete
             untabbable,
             setMostRecentlyTabbed,
             setOpenFromParent,
+            ...info
         }
     });
     const onPress = (e) => {

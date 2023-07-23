@@ -1,24 +1,65 @@
-export { UseAccordionContext, UseAccordionParameters, UseAccordionReturnType, UseAccordionSectionInfo, UseAccordionSectionParameters, UseAccordionSectionReturnType, useAccordion, useAccordionSection } from "./use-accordion.js";
-export { ButtonPressEventDetail, ButtonPressEventHandler, TargetedButtonPressEvent, UseButtonParameters, UseButtonReturnType, useButton } from "./use-button.js";
-export { CheckboxGroupChangeEventDetail, CheckboxGroupChangeEventHandler, CheckboxGroupContext, CheckboxGroupInfo, TargetedCheckboxGroupChangeEvent, UseCheckboxGroupChildParameters, UseCheckboxGroupChildReturnType, UseCheckboxGroupParameters, UseCheckboxGroupParentParameters, UseCheckboxGroupParentReturnType, UseCheckboxGroupReturnType, useCheckboxGroup, useCheckboxGroupChild, useCheckboxGroupParent } from "./use-checkbox-group.js";
-export { CheckboxCheckedType, UseCheckboxLikeParameters, UseCheckboxLikeReturnType, useCheckboxLike } from "./use-checkbox-like.js";
-export { CheckboxChangeEventDetail, CheckboxChangeEventHandler, TargetedCheckboxChangeEvent, UseCheckboxParameters, UseCheckboxReturnType, useCheckbox } from "./use-checkbox.js";
+/**
+ * # Preact Aria Widgets
+ * 
+ * Preact props that implement ARIA-compliant widgets in the style of `preact-prop-helpers` (i.e. hooks that swizzle parameters and returns back and forth).  
+ * **No CSS is provided** &ndash; this library is intended for wiring up event handlers, HTML/ARIA attributes, labels, and so on, but each hook gives you the information you need to create appropriate e.g. `class` values to style your own components.
+ *
+ * This library is split into two parts: hook implementations and component implementations. 
+ * They are near identical, with the components providing a nicer user interface. 
+ * When using a component, you must specify a `render` prop that takes all the information the hook version returns and gives back the markup to use.  
+ * As an example, `Checkbox` components can be rendered as `<label /><input />` or  `<label><input /></label>` based on the function you pass to that `render` prop.
+ *  You can even do just plain `<input>`, though `aria-label` usually needs to be handled manually in all cases.
+ *
+ * The intent is to help ensure that individual widgets on a given page are accessible, but it is still up to you to ensure that the page as a whole is too, and that things *actually make sense* in practice. 
+ * Don't forget to do lots of testing. * 
+ * 
+ * {@tableOfContents start}
+ * {@include } {@link useAccordion}
+ * {@include } {@link useButton}
+ * {@include } {@link useCheckbox}
+ * {@include } {@link useCheckboxGroup}
+ * {@include } {@link useDialog}
+ * {@include } {@link useDrawer}
+ * {@include } {@link useGridlist}
+ * {@include } {@link useListbox}
+ * {@include } {@link useMenuSurface}
+ * {@include } {@link useMenu}
+ * {@include } {@link useMenubar}
+ * {@include } {@link useProgress}
+ * {@include } {@link useRadioGroup}
+ * {@include } {@link useSlider}
+ * {@include } {@link useTable}
+ * {@include } {@link useTabs}
+ * {@include } {@link useToolbar}
+ * {@include } {@link useTooltip}
+ * {@tableOfContents end}
+ * 
+ * 
+ * @packageDocumentation
+ */
+
+export { UseAccordionContext, UseAccordionContextSelf, UseAccordionParameters, UseAccordionParametersSelf, UseAccordionReturnType, UseAccordionReturnTypeSelf, UseAccordionSectionInfo, UseAccordionSectionParameters, UseAccordionSectionParametersSelf, UseAccordionSectionReturnType, UseAccordionSectionReturnTypeSelf, useAccordion, useAccordionSection } from "./use-accordion.js";
+export { ButtonPressEventDetail, ButtonPressEventHandler, TargetedButtonPressEvent, UseButtonParameters, UseButtonParametersSelf, UseButtonReturnType, useButton } from "./use-button.js";
+export { CheckboxGroupChangeEventDetail, CheckboxGroupChangeEventHandler, CheckboxGroupContext, CheckboxGroupInfo, TargetedCheckboxGroupChangeEvent, UseCheckboxGroupChildParameters, UseCheckboxGroupChildParametersSelf, UseCheckboxGroupChildReturnType, UseCheckboxGroupChildReturnTypeSelf, UseCheckboxGroupParameters, UseCheckboxGroupParametersSelf, UseCheckboxGroupParentParameters, UseCheckboxGroupParentReturnType, UseCheckboxGroupParentReturnTypeSelf, UseCheckboxGroupReturnType, useCheckboxGroup, useCheckboxGroupChild, useCheckboxGroupParent } from "./use-checkbox-group.js";
+export { CheckboxCheckedType, UseCheckboxLikeParameters, UseCheckboxLikeParametersSelf, UseCheckboxLikeReturnType, UseCheckboxLikeReturnTypeSelf, useCheckboxLike } from "./use-checkbox-like.js";
+export { CheckboxChangeEventDetail, CheckboxChangeEventHandler, TargetedCheckboxChangeEvent, UseCheckboxParameters, UseCheckboxParametersSelf, UseCheckboxReturnType, UseCheckboxReturnTypeSelf, useCheckbox } from "./use-checkbox.js";
 export { UseDialogParameters, UseDialogReturnType, useDialog } from "./use-dialog.js";
 export { UseDrawerParameters, UseDrawerReturnType, useDrawer } from "./use-drawer.js";
-export { GridlistCellInfo, GridlistRowInfo, UseGridlistCellParameters, UseGridlistCellReturnType, UseGridlistContext, UseGridlistParameters, UseGridlistReturnType, UseGridlistRowContext, UseGridlistRowParameters, UseGridlistRowReturnType, useGridlist, useGridlistCell, useGridlistRow } from "./use-gridlist.js";
-export { FocusableLabelElement, LabelPosition, UseLabelParameters, UseLabelReturnType, UseLabelSyntheticParameters, useLabel, useLabelSynthetic } from "./use-label.js";
-export { UseFocusSentinelParameters, UseMenuSurfaceParameters, UseMenuSurfaceReturnType, useFocusSentinel, useMenuSurface } from "./use-menu-surface.js";
-export { UseMenuContext, UseMenuItemParameters, UseMenuItemReturnType, UseMenuParameters, UseMenuReturnType, useMenu, useMenuItem } from "./use-menu.js";
-export { UseMenubarItemParameters, UseMenubarItemReturnType, UseMenubarParameters, UseMenubarReturnType, UseMenubarSubInfo, useMenubar, useMenubarChild } from "./use-menubar.js";
+export { GridlistCellInfo, GridlistRowInfo, UseGridlistCellParameters, UseGridlistCellReturnType, UseGridlistContext, UseGridlistParameters, UseGridlistParametersSelf, UseGridlistReturnType, UseGridlistRowContext, UseGridlistRowParameters, UseGridlistRowParametersSelf, UseGridlistRowReturnType, useGridlist, useGridlistCell, useGridlistRow } from "./use-gridlist.js";
+export { FocusableLabelElement, LabelPosition, UseLabelParameters, UseLabelParametersSelf, UseLabelReturnType, UseLabelSyntheticParameters, useLabel, useLabelSynthetic } from "./use-label.js";
+export { ListboxInfo, ListboxMultiSelectEvent, ListboxSingleSelectEvent, UseListboxContext, UseListboxItemParameters, UseListboxItemParametersSelf, UseListboxItemReturnType, UseListboxParameters, UseListboxParametersSelf, UseListboxReturnType, useListbox, useListboxItem } from "./use-listbox.js";
+export { UseFocusSentinelParameters, UseMenuSurfaceParameters, UseMenuSurfaceParametersSelf, UseMenuSurfaceReturnType, useFocusSentinel, useMenuSurface } from "./use-menu-surface.js";
+export { MenuItemReturnTypeSelf, UseMenuContext, UseMenuItemParameters, UseMenuItemReturnType, UseMenuParameters, UseMenuParametersSelf, UseMenuReturnType, useMenu, useMenuItem } from "./use-menu.js";
+export { UseMenubarContext, UseMenubarItemParameters, UseMenubarItemParametersSelf, UseMenubarItemReturnType, UseMenubarParameters, UseMenubarReturnType, UseMenubarSubInfo, useMenubar, useMenubarChild } from "./use-menubar.js";
 export { NotificationProviderContext, NotificationProviderProps, NotificationProviderReturnType, useNotificationProvider, useNotify } from "./use-notify.js";
-export { UseProgressParameters, UseProgressReturnType, UseProgressWithHandlerParameters, UseProgressWithHandlerReturnType, useProgress, useProgressWithHandler } from "./use-progress.js";
-export { RadioChangeEventDetail, RadioChangeEventHandler, RadioContext, RadioSubInfo, TargetedRadioChangeEvent, UseRadioGroupParameters, UseRadioGroupReturnType, UseRadioParameters, UseRadioReturnType, useRadio, useRadioGroup } from "./use-radio-group.js";
-export { RangeChangeEvent, SliderContext, SliderThumbInfo, UseSliderParameters, UseSliderReturnType, UseSliderThumbParameters, UseSliderThumbReturnType, useSlider, useSliderThumb } from "./use-slider.js";
-export { TableCellInfo, TableRowInfo, UseTableCellParameters, UseTableCellReturnType, UseTableParameters, UseTableReturnType, UseTableRowContext, UseTableRowParameters, UseTableRowReturnType, UseTableSectionContext, UseTableSectionParameters, UseTableSectionReturnType, useTable, useTableCell, useTableRow, useTableSection } from "./use-table.js";
-export { TabsChangeEvent, UseTab, UseTabLabelParameters, UseTabLabelReturnTypeWithHooks, UseTabList, UseTabListLabel, UseTabListLabelReturnTypeInfo, UseTabListReturnType, UseTabPanel, UseTabPanelParameters, UseTabPanelReturnType, UseTabPanelsContext, UseTabParameters, UseTabReturnType, UseTabsContext, UseTabsParameters, UseTabsReturnType, useTab, useTabPanel, useTabs } from "./use-tabs.js";
-export { ToastInfo, ToastsContext, UseToastParameters, UseToastReturnType, UseToastsParameters, UseToastsReturnType, useToast, useToasts } from "./use-toasts.js";
-export { UseToolbarChildParameters, UseToolbarChildReturnType, UseToolbarContext, UseToolbarParameters, UseToolbarReturnType, UseToolbarSubInfo, useToolbar, useToolbarChild } from "./use-toolbar.js";
-export { TooltipState, TooltipStatus, UseTooltipParameters, UseTooltipReturnType, useTooltip } from "./use-tooltip.js";
+export { UseProgressParameters, UseProgressParametersSelf, UseProgressReturnType, UseProgressWithHandlerParameters, UseProgressWithHandlerParametersSelf, UseProgressWithHandlerReturnType, useProgress, useProgressWithHandler } from "./use-progress.js";
+export { RadioChangeEventDetail, RadioChangeEventHandler, RadioContext, RadioContextSelf, RadioSubInfo, TargetedRadioChangeEvent, UseRadioGroupParameters, UseRadioGroupParametersSelf, UseRadioGroupReturnType, UseRadioGroupReturnTypeSelf, UseRadioParameters, UseRadioParametersSelf, UseRadioReturnType, useRadio, useRadioGroup } from "./use-radio-group.js";
+export { RangeChangeEvent, SliderContext, SliderContextSelf, SliderThumbInfo, UseSliderParameters, UseSliderParametersSelf, UseSliderReturnType, UseSliderThumbParameters, UseSliderThumbParametersSelf, UseSliderThumbReturnType, UseSliderThumbReturnTypeSelf, useSlider, useSliderThumb } from "./use-slider.js";
+export { TableCellInfo, TableRowInfo, UseTableCellParameters, UseTableCellParametersSelf, UseTableCellReturnType, UseTableCellReturnTypeSelf, UseTableContext, UseTableContextSelf, UseTableParameters, UseTableParametersSelf, UseTableReturnType, UseTableRowContext, UseTableRowParameters, UseTableRowParametersSelf, UseTableRowReturnType, UseTableSectionContext, UseTableSectionParameters, UseTableSectionParametersSelf, UseTableSectionReturnType, useTable, useTableCell, useTableRow, useTableSection } from "./use-table.js";
+export { TabInfo, TabPanelInfo, TabsChangeEvent, UseTab, UseTabLabelParameters, UseTabLabelReturnTypeWithHooks, UseTabList, UseTabListLabel, UseTabListLabelReturnTypeInfo, UseTabListParameters, UseTabListReturnType, UseTabPanel, UseTabPanelParameters, UseTabPanelReturnType, UseTabPanelReturnTypeSelf, UseTabPanelsContext, UseTabParameters, UseTabReturnType, UseTabsContext, UseTabsParameters, UseTabsParametersSelf, UseTabsReturnType, useTab, useTabPanel, useTabs } from "./use-tabs.js";
+export { ToastInfo, ToastsContext, ToastsContextSelf, UseToastParameters, UseToastParametersSelf, UseToastReturnType, UseToastReturnTypeSelf, UseToastsParameters, UseToastsParametersSelf, UseToastsReturnType, useToast, useToasts } from "./use-toasts.js";
+export { UseToolbarChildParameters, UseToolbarChildParametersSelf, UseToolbarChildReturnType, UseToolbarContext, UseToolbarContextSelf, UseToolbarParameters, UseToolbarParametersSelf, UseToolbarReturnType, UseToolbarSubInfo, useToolbar, useToolbarChild } from "./use-toolbar.js";
+export { TooltipState, TooltipStatus, UseTooltipParameters, UseTooltipParametersSelf, UseTooltipReturnType, UseTooltipReturnTypeSelf, useTooltip } from "./use-tooltip.js";
 
 export { Accordion, AccordionProps, AccordionSection, AccordionSectionProps } from "./component/accordion.js";
 export { Button, ButtonProps } from "./component/button.js";

@@ -73,9 +73,16 @@ export interface SliderContext<M extends SliderThumbInfo> extends UseManagedChil
 }
 
 
-export function useSlider({ sliderParameters: { max, min }, managedChildrenParameters }: UseSliderParameters<SliderThumbInfo>): UseSliderReturnType<SliderThumbInfo> {
+/**
+ * Implements a [Slider](https://www.w3.org/WAI/ARIA/apg/patterns/slider-multithumb/) pattern.
+ * 
+ * @compositeParams
+ * 
+ * @hasChild {@link useSliderThumb}
+ */
+export function useSlider<M extends SliderThumbInfo>({ sliderParameters: { max, min }, managedChildrenParameters }: UseSliderParameters<M>): UseSliderReturnType<M> {
     monitorCallCount(useSlider);
-    const { context, managedChildrenReturn } = useManagedChildren<SliderThumbInfo>({ managedChildrenParameters });
+    const { context, managedChildrenReturn } = useManagedChildren<M>({ managedChildrenParameters });
 
     const baseIdRef = useRef<string>(null! as "");
     if (baseIdRef.current === null)
@@ -95,14 +102,17 @@ export function useSlider({ sliderParameters: { max, min }, managedChildrenParam
 }
 
 
+/**
+ * @compositeParams
+ */
 export function useSliderThumb<ThumbElement extends Element, M extends SliderThumbInfo>({
     info,
     context: { sliderContext: { max: maxParent, min: minParent }, ...context },
     sliderThumbParameters
-}: UseSliderThumbParameters<ThumbElement, M>): UseSliderThumbReturnType<ThumbElement, SliderThumbInfo> {
+}: UseSliderThumbParameters<ThumbElement, M>): UseSliderThumbReturnType<ThumbElement, M> {
     const { index } = info;
     monitorCallCount(useSliderThumb);
-    const { managedChildReturn } = useManagedChild<SliderThumbInfo>({ info, context });
+    const { managedChildReturn } = useManagedChild<M>({ info: info as M, context });
     const { getChildren: _getThumbs } = managedChildReturn;
 
     const { tag, value, max: maxOverride, min: minOverride, onValueChange, valueText, label } = sliderThumbParameters;

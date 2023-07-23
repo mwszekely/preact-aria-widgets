@@ -2,6 +2,14 @@ import { assertEmptyObject, focus, generateRandomId, monitorCallCount, returnFal
 import { useCallback, useLayoutEffect } from "preact/hooks";
 import { EventDetail, Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
+/**
+ * Implements a [Tabs](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/) pattern.
+ *
+ * @compositeParams
+ *
+ * @hasChild {@link useTab}
+ * @hasChild {@link useTabPanel}
+ */
 export function useTabs({ labelParameters, linearNavigationParameters, singleSelectionParameters: { initiallySelectedIndex, onSelectedIndexChange: ssi, selectionMode, ...singleSelectionParameters }, tabsParameters: { orientation, role, localStorageKey }, rovingTabIndexParameters, ...restParams }) {
     monitorCallCount(useTabs);
     const [localStorageIndex, setLocalStorageIndex] = usePersistentState(localStorageKey ?? null, 0);
@@ -76,6 +84,9 @@ export function useTabs({ labelParameters, linearNavigationParameters, singleSel
         ...listNavRet1
     };
 }
+/**
+ * @compositeParams
+ */
 export function useTab({ info: { focusSelf: focusSelfParent, ...info }, textContentParameters, pressParameters: { focusSelf: focusSelfChild, longPressThreshold, onPressingChange, ...void2 }, context }) {
     const { propsChild: listNavigationSingleSelectionChildProps, propsTabbable, pressParameters: { onPressSync, excludeSpace, ...void1 }, refElementReturn, ...listNavRet2 } = useCompleteListNavigationChild({
         context,
@@ -103,6 +114,9 @@ export function useTab({ info: { focusSelf: focusSelfParent, ...info }, textCont
         ...listNavRet2
     };
 }
+/**
+ * @compositeParams
+ */
 export function useTabPanel({ info, context }) {
     const { index } = info;
     monitorCallCount(useTabPanel);

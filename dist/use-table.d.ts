@@ -63,11 +63,11 @@ export interface TableRowInfo<TableRowElement extends Element, TableCellElement 
 export interface TableCellInfo<TableCellElement extends Element> extends UseCompleteGridNavigationCellInfo<TableCellElement> {
     getSortValue(): unknown;
 }
-export interface UseTableParameters<TableElement extends Element, LabelElement extends Element> {
-    labelParameters: OmitStrong<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
-    tableParameters: Pick<UseListboxParameters<TableElement, any, LabelElement, any>["listboxParameters"], "selectionLimit"> & {
-        tagTable: ElementToTag<TableElement>;
-    };
+export interface UseTableParameters<TableElement extends Element, LabelElement extends Element> extends TargetedOmit<UseLabelSyntheticParameters, "labelParameters", "onLabelClick"> {
+    tableParameters: UseTableParametersSelf<TableElement, LabelElement>;
+}
+export interface UseTableParametersSelf<TableElement extends Element, LabelElement extends Element> extends Pick<UseListboxParameters<TableElement, any, LabelElement, any>["listboxParameters"], "selectionLimit"> {
+    tagTable: ElementToTag<TableElement>;
 }
 export interface UseTableReturnType<TableElement extends Element, LabelElement extends Element> {
     propsTable: ElementProps<TableElement>;
@@ -78,9 +78,27 @@ interface SortInfo {
     column: number;
     direction: "ascending" | "descending";
 }
+/**
+ * Creates a sortable data table in a [Grid](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) pattern.
+ *
+ * @compositeParams
+ *
+ * @hasChild {@link useTableSection}
+ * @hasChild {@link useTableRow}
+ * @hasChild {@link useTableCell}
+ */
 export declare function useTable<TableElement extends Element, LabelElement extends Element>({ labelParameters, tableParameters: { selectionLimit, tagTable }, }: UseTableParameters<TableElement, LabelElement>): UseTableReturnType<TableElement, LabelElement>;
+/**
+ * @compositeParams
+ */
 export declare function useTableSection<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>>({ linearNavigationParameters, rovingTabIndexParameters, singleSelectionParameters, gridNavigationParameters, rearrangeableChildrenParameters, paginatedChildrenParameters, staggeredChildrenParameters, tableSectionParameters: { tagTableSection, location }, typeaheadNavigationParameters, context: { tableContext } }: UseTableSectionParameters<TableSectionElement, TableRowElement, TableCellElement, RM>): UseTableSectionReturnType<TableSectionElement, TableRowElement, TableCellElement, RM, CM>;
+/**
+ * @compositeParams
+ */
 export declare function useTableRow<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>>({ info, textContentParameters, context: cx1, tableRowParameters: { selected }, linearNavigationParameters, rovingTabIndexParameters, ...void1 }: UseTableRowParameters<TableRowElement, TableCellElement, RM, CM>): UseTableRowReturnType<TableRowElement, TableCellElement, RM, CM>;
+/**
+ * @compositeParams
+ */
 export declare function useTableCell<TableCellElement extends Element, CM extends TableCellInfo<TableCellElement>>({ tableCellParameters: { tagTableCell }, info, ...p }: UseTableCellParameters<TableCellElement, CM>): UseTableCellReturnType<TableCellElement, CM>;
 export {};
 //# sourceMappingURL=use-table.d.ts.map

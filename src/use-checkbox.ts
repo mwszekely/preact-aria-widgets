@@ -25,6 +25,11 @@ export interface UseCheckboxReturnType<InputType extends Element, LabelType exte
     checkboxReturn: UseCheckboxReturnTypeSelf<InputType>;
 }
 
+/**
+ * Implements a [Checkbox](https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/) pattern.
+ * 
+ * @compositeParams
+ */
 export function useCheckbox<LP extends LabelPosition, InputType extends Element, LabelType extends Element>({
     checkboxParameters: { onCheckedChange },
     checkboxLikeParameters,

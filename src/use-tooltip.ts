@@ -39,6 +39,13 @@ export interface UseTooltipParameters<TriggerType extends Element, PopupType ext
 
 export type TooltipState = `${"hovering" | "focused"}-${"popup" | "trigger"}` | null;
 
+/**
+ * Implements a [Tooltip](https://www.w3.org/WAI/ARIA/apg/patterns/tooltip/) pattern.
+ * 
+ * @remarks Tooltips are remarkably under-specified, so some of this is speculative.
+ * 
+ * @compositeParams
+ */
 export function useTooltip<TriggerType extends Element, PopupType extends Element>({ tooltipParameters: { onStatus, tooltipSemanticType, hoverDelay }, escapeDismissParameters }: UseTooltipParameters<TriggerType, PopupType>): UseTooltipReturnType<TriggerType, PopupType> {
     monitorCallCount(useTooltip);
 

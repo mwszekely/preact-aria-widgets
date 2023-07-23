@@ -66,7 +66,7 @@ export const Table = memoForwardRef(function TableU<TableElement extends Element
 }: TableProps<TableElement, LabelElement>, ref?: Ref<any>) {
     const info = useTable<TableElement, LabelElement>({
         labelParameters: { ariaLabel },
-        tableParameters: { selectionLimit, tagTable }
+        tableParameters: { selectionLimit, tagTable,  }
     });
 
     useImperativeHandle(ref!, () => info);

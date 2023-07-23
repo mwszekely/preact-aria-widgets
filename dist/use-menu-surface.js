@@ -3,10 +3,11 @@ import { useCallback } from "preact/hooks";
 /**
  * A menu surface is what handles user interaction with an interactive but transient surface (like a menu or a popup).
  *
- * The keyboard (etc.) interactions are shared among a lot of widgets, and the opening button has some ARIA properties that need setting.
+ * @remarks The keyboard (etc.) interactions are shared among a lot of widgets, and the opening button has some ARIA properties that need setting.
  *
  * Related to menus, which are a menu contained within a menu surface. Not related to menubars -- menus contain menubars, but not all menubars are contained within a menu or its surface.
  *
+ * @compositeParams
  */
 export function useMenuSurface({ dismissParameters, escapeDismissParameters, focusTrapParameters, menuSurfaceParameters: { role, surfaceId, ...void1 }, ...void2 }) {
     monitorCallCount(useMenuSurface);
@@ -66,8 +67,7 @@ export function useMenuSurface({ dismissParameters, escapeDismissParameters, foc
  * and keyboard users can escape to close a menu, screen readers and other input methods
  * that don't use those two would become stuck.
  *
- * @param param0
- * @returns
+ * @compositeParams
  */
 export function useFocusSentinel({ focusSentinel: { open, onClose, sendFocusToMenu } }) {
     monitorCallCount(useFocusSentinel);

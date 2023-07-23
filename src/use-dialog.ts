@@ -16,6 +16,11 @@ export interface UseDialogReturnType<FocusContainerElement extends Element, Sour
     propsTitle: ElementProps<TitleElement>;
 }
 
+/**
+ * Implements a [Dialog](https://www.w3.org/WAI/ARIA/apg/patterns/dialog/) pattern.
+ * 
+ * @compositeParams
+ */
 export function useDialog<FocusContainerElement extends Element, SourceElement extends Element, DialogElement extends Element, TitleElement extends Element>({ dismissParameters, escapeDismissParameters, focusTrapParameters, labelParameters }: UseDialogParameters<DialogElement, TitleElement>): UseDialogReturnType<FocusContainerElement, SourceElement, DialogElement, TitleElement> {
     monitorCallCount(useDialog);
 

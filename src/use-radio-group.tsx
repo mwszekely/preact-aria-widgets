@@ -17,7 +17,8 @@ export interface UseRadioGroupParametersSelf<V extends string | number> {
     onSelectedValueChange: undefined | null | RadioChangeEventHandler<V>;
 }
 
-export interface UseRadioGroupParameters<V extends string | number, GroupElement extends Element, _GroupLabelElement extends Element, TabbableChildElement extends Element> extends OmitStrong<UseCompleteListNavigationParameters<GroupElement, TabbableChildElement, RadioSubInfo<TabbableChildElement, V>>, "rovingTabIndexParameters" | "paginatedChildrenParameters" | "singleSelectionParameters">,
+export interface UseRadioGroupParameters<V extends string | number, GroupElement extends Element, _GroupLabelElement extends Element, TabbableChildElement extends Element, M extends RadioSubInfo<TabbableChildElement, V> = RadioSubInfo<TabbableChildElement, V>> extends 
+OmitStrong<UseCompleteListNavigationParameters<GroupElement, TabbableChildElement, M>, "rovingTabIndexParameters" | "paginatedChildrenParameters" | "singleSelectionParameters">,
     TargetedOmit<UseCompleteListNavigationParameters<GroupElement, TabbableChildElement, any>, "rovingTabIndexParameters", "focusSelfParent">,
     TargetedOmit<UseLabelSyntheticParameters, "labelParameters", "onLabelClick"> {
     radioGroupParameters: UseRadioGroupParametersSelf<V>;
@@ -54,25 +55,32 @@ export interface UseRadioGroupReturnTypeSelf {
     selectedIndex: number | null;
 }
 
-export interface UseRadioGroupReturnType<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, TabbableChildElement extends Element> extends OmitStrong<UseCompleteListNavigationReturnType<GroupElement, TabbableChildElement, RadioSubInfo<TabbableChildElement, V>>, "props"> {
+export interface UseRadioGroupReturnType<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, TabbableChildElement extends Element, M extends RadioSubInfo<TabbableChildElement, V> = RadioSubInfo<TabbableChildElement, V>> extends OmitStrong<UseCompleteListNavigationReturnType<GroupElement, TabbableChildElement, M>, "props"> {
     radioGroupReturn: UseRadioGroupReturnTypeSelf;
     propsRadioGroup: ElementProps<GroupElement>;
     propsRadioGroupLabel: ElementProps<GroupLabelElement>;
 
     // override
-    context: RadioContext<V, GroupElement, TabbableChildElement, RadioSubInfo<TabbableChildElement, V>>;
+    context: RadioContext<V, GroupElement, TabbableChildElement, M>;
 }
 
 export interface RadioSubInfo<TabbableChildElement extends Element, V extends string | number> extends UseCompleteListNavigationChildInfo<TabbableChildElement> {
     //getValue2(): V;
 }
 
-export function useRadioGroup<V extends string | number, G extends Element, GL extends Element, TCE extends Element>({
+/**
+ * Implements a [Radio Group](https://www.w3.org/WAI/ARIA/apg/patterns/radio/) pattern.
+ * 
+ * @compositeParams
+ * 
+ * @hasChild {@link useRadio}
+ */
+export function useRadioGroup<V extends string | number, G extends Element, GL extends Element, TCE extends Element, M extends RadioSubInfo<TCE, V> = RadioSubInfo<TCE, V>>({
     labelParameters,
     radioGroupParameters: { name, onSelectedValueChange, selectedValue },
     rovingTabIndexParameters,
     ...restParams
-}: UseRadioGroupParameters<V, G, GL, TCE>): UseRadioGroupReturnType<V, G, GL, TCE> {
+}: UseRadioGroupParameters<V, G, GL, TCE, M>): UseRadioGroupReturnType<V, G, GL, TCE, M> {
     monitorCallCount(useRadioGroup);
 
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
@@ -104,14 +112,14 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
         managedChildrenReturn,
         rovingTabIndexReturn,
         ...restRet
-    } = useCompleteListNavigation<G, TCE, RadioSubInfo<TCE, V>>({
+    } = useCompleteListNavigation<G, TCE, M>({
         singleSelectionParameters: { initiallySelectedIndex: selectedIndex, onSelectedIndexChange: useStableCallback((e) => { setSelectedIndex(e[EventDetail].selectedIndex); onSelectedIndexChange?.(e); }), selectionMode: "focus", ariaPropName: null },
         paginatedChildrenParameters: { paginationMin: null, paginationMax: null },
         rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
         ...restParams
     });
 
-    const { singleSelectionParameters: { onSelectedIndexChange } } = useSingleSelectionDeclarative({
+    const { singleSelectionParameters: { onSelectedIndexChange } } = useSingleSelectionDeclarative<G, TCE, M>({
         singleSelectionReturn: {
             changeSelectedIndex: useStableCallback((s, r) => {
                 singleSelectionReturn.changeSelectedIndex(s, r);
@@ -161,7 +169,10 @@ export interface UseRadioReturnType<LP extends LabelPosition, V extends string |
 
 
 
-export function useRadio<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element, V extends string | number>({
+/**
+ * @compositeParams
+ */
+export function useRadio<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element, V extends string | number, M extends RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V> = RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>({
     radioParameters: { value },
     checkboxLikeParameters: { disabled },
     labelParameters,
@@ -171,7 +182,7 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
     pressParameters: { longPressThreshold, ...void3 },
     ...void1
 
-}: UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>): UseRadioReturnType<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>> {
+}: UseRadioParameters<LP, V, InputElement, LabelElement, M>): UseRadioReturnType<LP, V, InputElement, LabelElement, M> {
     monitorCallCount(useRadio);
     type TabbableChildElement = FocusableLabelElement<LP, InputElement, LabelElement>;
     const index = info.index;
@@ -190,7 +201,7 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
         singleSelectionChildReturn,
         pressParameters: { onPressSync, excludeSpace, ...void2 },
         ...listNavRet
-    } = useCompleteListNavigationChild<TabbableChildElement, RadioSubInfo<TabbableChildElement, V>>({
+    } = useCompleteListNavigationChild<TabbableChildElement, M>({
         info,
         context,
         textContentParameters

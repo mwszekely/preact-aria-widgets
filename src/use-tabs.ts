@@ -56,7 +56,7 @@ export interface UseTabReturnType<TabElement extends Element, M extends TabInfo<
 
 
 export interface UseTabLabelParameters { }
-interface UseTabListParameters<TabContainerElement extends Element, TabElement extends Element, M extends TabInfo<TabElement>> extends 
+export interface UseTabListParameters<TabContainerElement extends Element, TabElement extends Element, M extends TabInfo<TabElement>> extends 
 OmitStrong<UseCompleteListNavigationParameters<TabContainerElement, TabElement, M>, "rovingTabIndexParameters" | "paginatedChildrenParameters" | "linearNavigationParameters" | "singleSelectionParameters">,
 TargetedOmit<UseCompleteListNavigationParameters<TabContainerElement, TabElement, M>,"rovingTabIndexParameters", "focusSelfParent">,
 TargetedOmit<UseCompleteListNavigationParameters<TabContainerElement, TabElement, M>,"linearNavigationParameters", "arrowKeyDirection">,
@@ -65,9 +65,15 @@ TargetedOmit<UseCompleteListNavigationParameters<TabContainerElement, TabElement
 }
 export interface UseTabListReturnType<ParentElement extends Element, ChildElement extends Element, M extends TabInfo<ChildElement>> extends UseCompleteListNavigationReturnType<ParentElement, ChildElement, M> {
 }
+export interface UseTabPanelReturnTypeSelf { 
+    visibleOffset: number | null; 
+    visible: boolean | null; 
+    getVisible: () => boolean; 
+}
+
 export interface UseTabPanelReturnType<E extends Element> {
     props: ElementProps<E>;
-    tabPanelReturn: { visibleOffset: number | null; visible: boolean | null; getVisible: () => boolean; };
+    tabPanelReturn: UseTabPanelReturnTypeSelf;
 }
 
 
@@ -88,6 +94,14 @@ export type UseTabList<TabContainerElement extends Element, TabElement extends E
 export type UseTabPanel<PanelElement extends Element, M extends TabPanelInfo> = (args: UseTabPanelParameters<M>) => UseTabPanelReturnType<PanelElement>;
 export type UseTabListLabel<LabelElement extends Element> = (args: UseTabLabelParameters) => UseTabLabelReturnTypeWithHooks<LabelElement>;
 
+/**
+ * Implements a [Tabs](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/) pattern.
+ * 
+ * @compositeParams
+ * 
+ * @hasChild {@link useTab}
+ * @hasChild {@link useTabPanel}
+ */
 export function useTabs<TabListElement extends Element, TabElement extends Element, LabelElement extends Element, M extends TabInfo<TabElement>>({
     labelParameters,
     linearNavigationParameters,
@@ -195,6 +209,9 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
     }
 }
 
+/**
+ * @compositeParams
+ */
 export function useTab<TabElement extends Element, M extends TabInfo<TabElement>>({
     info: { focusSelf: focusSelfParent, ...info },
     textContentParameters,
@@ -238,6 +255,9 @@ export function useTab<TabElement extends Element, M extends TabInfo<TabElement>
 }
 
 
+/**
+ * @compositeParams
+ */
 export function useTabPanel<PanelElement extends Element, M extends TabPanelInfo>({ info, context }: UseTabPanelParameters<M>): UseTabPanelReturnType<PanelElement> {
     const { index } = info;
     monitorCallCount(useTabPanel);

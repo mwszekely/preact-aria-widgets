@@ -1,4 +1,4 @@
-import { CompleteListNavigationContext, ElementProps, PassiveStateUpdater, TargetedOmit, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, focus, monitorCallCount, returnFalse, returnNull, returnZero, useCompleteListNavigation, useCompleteListNavigationChild, useMemoObject, useMergedProps, usePassiveState, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
+import { CompleteListNavigationContext, ElementProps, PassiveStateUpdater, TargetedOmit, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, assertEmptyObject, focus, monitorCallCount, returnFalse, returnNull, returnZero, useCompleteListNavigation, useCompleteListNavigationChild, useMemoObject, useMergedProps, usePassiveState, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
 import { StateUpdater, useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
 import { EnhancedEventHandler, OmitStrong, TargetedEnhancedEvent } from "./props.js";
 import { CheckboxCheckedType } from "./use-checkbox-like.js";
@@ -47,7 +47,7 @@ export interface UseCheckboxGroupChildParametersSelf {
 export interface UseCheckboxGroupChildParameters<TCE extends Element, M extends CheckboxGroupInfo<TCE>> extends OmitStrong<UseCompleteListNavigationChildParameters<TCE, M>, "info"> {
     context: CheckboxGroupContext<any, TCE, M>;
     info: Omit<UseCompleteListNavigationChildParameters<TCE, M>["info"], "checkboxInfo">;
-    checkboxGroupChild: UseCheckboxGroupChildParametersSelf;
+    checkboxGroupChildParameters: UseCheckboxGroupChildParametersSelf;
 }
 export interface UseCheckboxGroupChildReturnTypeSelf {
     onControlIdChanged: (next: string | undefined, prev: string | undefined) => void;
@@ -55,7 +55,7 @@ export interface UseCheckboxGroupChildReturnTypeSelf {
 }
 
 export interface UseCheckboxGroupChildReturnType<TCE extends Element, M extends CheckboxGroupInfo<TCE>> extends OmitStrong<UseCompleteListNavigationChildReturnType<TCE, M>, "singleSelectionChildReturn"> {
-    checkboxGroupChild: UseCheckboxGroupChildReturnTypeSelf;
+    checkboxGroupChildReturn: UseCheckboxGroupChildReturnTypeSelf;
 }
 
 
@@ -111,17 +111,19 @@ export interface CheckboxGroupContext<GroupElement extends Element, TCE extends 
 }
 
 /**
+ * Allows a parent checkbox to control a number of child checkboxes, in accordance with the [Checkbox](https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/) pattern.
  * 
+ * @compositeParams
  * 
- * @param param0 
- * @returns 
+ * @hasChild {@link useCheckboxGroupParent}
+ * @hasChild {@link useCheckboxGroupChild}
  */
-export function useCheckboxGroup<GroupElement extends Element, TCE extends Element>({
+export function useCheckboxGroup<GroupElement extends Element, TCE extends Element, M extends CheckboxGroupInfo<TCE> = CheckboxGroupInfo<TCE>>({
     linearNavigationParameters,
     rovingTabIndexParameters,
     checkboxGroupParameters: { orientation },
     ...listNavParameters
-}: UseCheckboxGroupParameters<GroupElement, TCE, CheckboxGroupInfo<TCE>>): UseCheckboxGroupReturnType<GroupElement, TCE, CheckboxGroupInfo<TCE>> {
+}: UseCheckboxGroupParameters<GroupElement, TCE, M>): UseCheckboxGroupReturnType<GroupElement, TCE, M> {
     monitorCallCount(useCheckboxGroup);
 
     const {
@@ -137,7 +139,7 @@ export function useCheckboxGroup<GroupElement extends Element, TCE extends Eleme
         paginatedChildrenReturn,
         sortableChildrenReturn,
         typeaheadNavigationReturn
-    } = useCompleteListNavigation<GroupElement, TCE, CheckboxGroupInfo<TCE>>({
+    } = useCompleteListNavigation<GroupElement, TCE, M>({
         linearNavigationParameters: { arrowKeyDirection: orientation, ...linearNavigationParameters },
         rovingTabIndexParameters: { focusSelfParent: focus, ...rovingTabIndexParameters },
         singleSelectionParameters: { initiallySelectedIndex: null, onSelectedIndexChange: null, ariaPropName: null, selectionMode: "disabled" },
@@ -246,11 +248,16 @@ export function useCheckboxGroup<GroupElement extends Element, TCE extends Eleme
 
 
 
-export function useCheckboxGroupParent<TCE extends Element>({
+/**
+ * Implements the logic for the parent checkbox (but not the checkbox itself).
+ * 
+ * @compositeParams
+ */
+export function useCheckboxGroupParent<TCE extends Element, M extends CheckboxGroupInfo<TCE> = CheckboxGroupInfo<TCE>>({
     context,
     info,
     textContentParameters
-}: UseCheckboxGroupParentParameters<TCE, CheckboxGroupInfo<TCE>>): UseCheckboxGroupParentReturnType<TCE, CheckboxGroupInfo<TCE>> {
+}: UseCheckboxGroupParentParameters<TCE, M>): UseCheckboxGroupParentReturnType<TCE, M> {
     const { checkboxGroupParentContext: { setSetter, setSetParentCheckboxChecked, getPercentChecked, getTotalChecked, getTotalChildren, onCheckboxGroupParentInput } } = context;
     const {
         hasCurrentFocusReturn,
@@ -264,9 +271,9 @@ export function useCheckboxGroupParent<TCE extends Element>({
         rovingTabIndexChildReturn,
         staggeredChildReturn,
         singleSelectionChildReturn,
-    } = useCompleteListNavigationChild<TCE, CheckboxGroupInfo<TCE>>({
+    } = useCompleteListNavigationChild<TCE, M>({
         context,
-        info,
+        info: info as M,
         textContentParameters
     });
 
@@ -302,7 +309,7 @@ export function useCheckboxGroupParent<TCE extends Element>({
 /**
  * Implements the "child" part of a checkbox group.
  * 
- * Does not implement any actual "checkbox" functionality,
+ * @remarks Does not implement any actual "checkbox" functionality,
  * but it does tell you what to do *with* a checkbox.
  * 
  * (That is to say, use `onChildCheckedChange` whenever
@@ -310,20 +317,19 @@ export function useCheckboxGroupParent<TCE extends Element>({
  * properly implement `onChangeFromParent` to work
  * properly when the parent changes)
  * 
- * @param param0 
- * @returns 
+ * @compositeParams
  */
-export function useCheckboxGroupChild<TCE extends Element>({
-    checkboxGroupChild,
+export function useCheckboxGroupChild<TCE extends Element, M extends CheckboxGroupInfo<TCE> = CheckboxGroupInfo<TCE>>({
+    checkboxGroupChildParameters,
     context,
     info,
     textContentParameters,
-}: UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>): UseCheckboxGroupChildReturnType<TCE, CheckboxGroupInfo<TCE>> {
+}: UseCheckboxGroupChildParameters<TCE, M>): UseCheckboxGroupChildReturnType<TCE, M> {
     const { checkboxGroupChildrenContext: { allIds, setUpdateIndex, setTotalChildren, setTotalChecked, } } = context;
 
     monitorCallCount(useCheckboxGroupChild);
 
-    const { checked, onChangeFromParent } = checkboxGroupChild;
+    const { checked, onChangeFromParent, ...void1 } = checkboxGroupChildParameters;
     const getChecked = useStableGetter(checked);
     const [getLastUserChecked, setLastUserChecked] = usePassiveState<boolean | "mixed", Event>(null, returnFalse);
     const onChildCheckedChange = useStableCallback((checked: CheckboxCheckedType) => {
@@ -366,15 +372,19 @@ export function useCheckboxGroupChild<TCE extends Element>({
         staggeredChildReturn,
         paginatedChildReturn,
         rovingTabIndexChildReturn,
-        pressParameters
-    } = useCompleteListNavigationChild<TCE, CheckboxGroupInfo<TCE>>({
-        info: { checkboxInfo: { checkboxChildType: "child", getLastUserChecked, getChecked, setCheckedFromParentInput: onChangeFromParent }, ...info },
+        pressParameters,
+        ...void2
+    } = useCompleteListNavigationChild<TCE, M>({
+        info: { checkboxInfo: { checkboxChildType: "child", getLastUserChecked, getChecked, setCheckedFromParentInput: onChangeFromParent }, ...info } as M,
         context,
         textContentParameters,
     });
 
+    assertEmptyObject(void1);
+    assertEmptyObject(void2);
+
     return {
-        checkboxGroupChild: {
+        checkboxGroupChildReturn: {
             onChildCheckedChange,
             onControlIdChanged
         },

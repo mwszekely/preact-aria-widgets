@@ -1,6 +1,11 @@
 import { focus, monitorCallCount, useMergedProps, usePress, useRefElement } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { enhanceEvent } from "./props.js";
+/**
+ * Implements a [Button](https://www.w3.org/WAI/ARIA/apg/patterns/button/) pattern.
+ *
+ * @compositeParams
+ */
 export function useButton({ buttonParameters: { tagButton, disabled, onPress, pressed, role }, pressParameters, refElementParameters }) {
     monitorCallCount(useButton);
     const { refElementReturn, propsStable: propsRef } = useRefElement({ refElementParameters });

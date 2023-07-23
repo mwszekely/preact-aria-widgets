@@ -54,6 +54,16 @@ export interface SliderContextSelf {
 export interface SliderContext<M extends SliderThumbInfo> extends UseManagedChildrenContext<M> {
     sliderContext: SliderContextSelf;
 }
-export declare function useSlider({ sliderParameters: { max, min }, managedChildrenParameters }: UseSliderParameters<SliderThumbInfo>): UseSliderReturnType<SliderThumbInfo>;
-export declare function useSliderThumb<ThumbElement extends Element, M extends SliderThumbInfo>({ info, context: { sliderContext: { max: maxParent, min: minParent }, ...context }, sliderThumbParameters }: UseSliderThumbParameters<ThumbElement, M>): UseSliderThumbReturnType<ThumbElement, SliderThumbInfo>;
+/**
+ * Implements a [Slider](https://www.w3.org/WAI/ARIA/apg/patterns/slider-multithumb/) pattern.
+ *
+ * @compositeParams
+ *
+ * @hasChild {@link useSliderThumb}
+ */
+export declare function useSlider<M extends SliderThumbInfo>({ sliderParameters: { max, min }, managedChildrenParameters }: UseSliderParameters<M>): UseSliderReturnType<M>;
+/**
+ * @compositeParams
+ */
+export declare function useSliderThumb<ThumbElement extends Element, M extends SliderThumbInfo>({ info, context: { sliderContext: { max: maxParent, min: minParent }, ...context }, sliderThumbParameters }: UseSliderThumbParameters<ThumbElement, M>): UseSliderThumbReturnType<ThumbElement, M>;
 //# sourceMappingURL=use-slider.d.ts.map

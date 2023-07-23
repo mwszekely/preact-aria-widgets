@@ -35,14 +35,14 @@ export interface UseCheckboxGroupChildParametersSelf {
 export interface UseCheckboxGroupChildParameters<TCE extends Element, M extends CheckboxGroupInfo<TCE>> extends OmitStrong<UseCompleteListNavigationChildParameters<TCE, M>, "info"> {
     context: CheckboxGroupContext<any, TCE, M>;
     info: Omit<UseCompleteListNavigationChildParameters<TCE, M>["info"], "checkboxInfo">;
-    checkboxGroupChild: UseCheckboxGroupChildParametersSelf;
+    checkboxGroupChildParameters: UseCheckboxGroupChildParametersSelf;
 }
 export interface UseCheckboxGroupChildReturnTypeSelf {
     onControlIdChanged: (next: string | undefined, prev: string | undefined) => void;
     onChildCheckedChange: (checked: CheckboxCheckedType) => void;
 }
 export interface UseCheckboxGroupChildReturnType<TCE extends Element, M extends CheckboxGroupInfo<TCE>> extends OmitStrong<UseCompleteListNavigationChildReturnType<TCE, M>, "singleSelectionChildReturn"> {
-    checkboxGroupChild: UseCheckboxGroupChildReturnTypeSelf;
+    checkboxGroupChildReturn: UseCheckboxGroupChildReturnTypeSelf;
 }
 export interface UseCheckboxGroupReturnType<GroupElement extends Element, TCE extends Element, M extends CheckboxGroupInfo<TCE>> extends UseCompleteListNavigationReturnType<GroupElement, TCE, M> {
     context: CheckboxGroupContext<GroupElement, TCE, M>;
@@ -76,17 +76,24 @@ export interface CheckboxGroupContext<GroupElement extends Element, TCE extends 
     };
 }
 /**
+ * Allows a parent checkbox to control a number of child checkboxes, in accordance with the [Checkbox](https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/) pattern.
  *
+ * @compositeParams
  *
- * @param param0
- * @returns
+ * @hasChild {@link useCheckboxGroupParent}
+ * @hasChild {@link useCheckboxGroupChild}
  */
-export declare function useCheckboxGroup<GroupElement extends Element, TCE extends Element>({ linearNavigationParameters, rovingTabIndexParameters, checkboxGroupParameters: { orientation }, ...listNavParameters }: UseCheckboxGroupParameters<GroupElement, TCE, CheckboxGroupInfo<TCE>>): UseCheckboxGroupReturnType<GroupElement, TCE, CheckboxGroupInfo<TCE>>;
-export declare function useCheckboxGroupParent<TCE extends Element>({ context, info, textContentParameters }: UseCheckboxGroupParentParameters<TCE, CheckboxGroupInfo<TCE>>): UseCheckboxGroupParentReturnType<TCE, CheckboxGroupInfo<TCE>>;
+export declare function useCheckboxGroup<GroupElement extends Element, TCE extends Element, M extends CheckboxGroupInfo<TCE> = CheckboxGroupInfo<TCE>>({ linearNavigationParameters, rovingTabIndexParameters, checkboxGroupParameters: { orientation }, ...listNavParameters }: UseCheckboxGroupParameters<GroupElement, TCE, M>): UseCheckboxGroupReturnType<GroupElement, TCE, M>;
+/**
+ * Implements the logic for the parent checkbox (but not the checkbox itself).
+ *
+ * @compositeParams
+ */
+export declare function useCheckboxGroupParent<TCE extends Element, M extends CheckboxGroupInfo<TCE> = CheckboxGroupInfo<TCE>>({ context, info, textContentParameters }: UseCheckboxGroupParentParameters<TCE, M>): UseCheckboxGroupParentReturnType<TCE, M>;
 /**
  * Implements the "child" part of a checkbox group.
  *
- * Does not implement any actual "checkbox" functionality,
+ * @remarks Does not implement any actual "checkbox" functionality,
  * but it does tell you what to do *with* a checkbox.
  *
  * (That is to say, use `onChildCheckedChange` whenever
@@ -94,9 +101,8 @@ export declare function useCheckboxGroupParent<TCE extends Element>({ context, i
  * properly implement `onChangeFromParent` to work
  * properly when the parent changes)
  *
- * @param param0
- * @returns
+ * @compositeParams
  */
-export declare function useCheckboxGroupChild<TCE extends Element>({ checkboxGroupChild, context, info, textContentParameters, }: UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>): UseCheckboxGroupChildReturnType<TCE, CheckboxGroupInfo<TCE>>;
+export declare function useCheckboxGroupChild<TCE extends Element, M extends CheckboxGroupInfo<TCE> = CheckboxGroupInfo<TCE>>({ checkboxGroupChildParameters, context, info, textContentParameters, }: UseCheckboxGroupChildParameters<TCE, M>): UseCheckboxGroupChildReturnType<TCE, M>;
 export {};
 //# sourceMappingURL=use-checkbox-group.d.ts.map

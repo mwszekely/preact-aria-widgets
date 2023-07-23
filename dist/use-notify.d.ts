@@ -20,8 +20,9 @@ export declare const NotificationProviderContext: import("preact").Context<Notif
  * One *must* have `aria-live=polite` and one *must* have `aria-live=assertive`, but there aren't really any other requirements.
  * They shouldn't be visible, I suppose.
  *
- * @param param0
- * @returns
+ * @compositeParams
+ *
+ * @hasChild {@link useNotify}
  */
 export declare function useNotificationProvider({ targetAssertive, targetPolite }: NotificationProviderProps): {
     notify: (mode: "polite" | "assertive", child: h.JSX.Element) => number;

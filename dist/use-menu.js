@@ -2,14 +2,15 @@ import { monitorCallCount, useMemoObject, useMergedProps, useStableCallback } fr
 import { useMenuSurface } from "./use-menu-surface.js";
 import { useMenubar, useMenubarChild } from "./use-menubar.js";
 /**
- * A menu is a specialization of a menubar (something that handles navigation among a set of menuitems)
+ * Implements the [Menu](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/) and [Menu Button](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/) patterns.
+ *
+ * @remarks A menu is a specialization of a menubar (something that handles navigation among a set of menuitems)
  * and a menu surface (something that handles moving focus to/from an unrelated area of the page).
  *
  * Additionally, pressing the arrow key that corresponds to the direction that the menu opens
  * in will open it.
  *
- * @param param0
- * @returns
+ * @compositeParams
  */
 export function useMenu({ dismissParameters, escapeDismissParameters, menuParameters: { openDirection, onOpen }, menuSurfaceParameters, toolbarParameters, ...restParams }) {
     monitorCallCount(useMenu);
@@ -87,6 +88,9 @@ export function useMenu({ dismissParameters, escapeDismissParameters, menuParame
         propsTrigger: useMergedProps({ onKeyDown }, propsTrigger, propsButtonAsMenuLabel),
     };
 }
+/**
+ * @compositeParams
+ */
 export function useMenuItem(p) {
     monitorCallCount(useMenuItem);
     const ret = useMenubarChild(p);

@@ -1,4 +1,4 @@
-import { monitorCallCount, returnTrue, useMergedProps, usePress, UsePressReturnType, useRandomDualIds, UseRandomDualIdsParameters, UseRandomDualIdsReturnType, useRefElement } from "preact-prop-helpers";
+import { monitorCallCount, returnTrue, TargetedPick, useMergedProps, usePress, UsePressReturnType, useRandomDualIds, UseRandomDualIdsParameters, UseRandomDualIdsReturnType, useRefElement } from "preact-prop-helpers";
 import { ElementToTag, noop, OmitStrong } from "./props.js";
 
 export type LabelPosition = "separate" | "wrapping" | "none";
@@ -35,10 +35,13 @@ export interface UseLabelParameters<LP extends LabelPosition, InputElement exten
     labelParameters: UseLabelParametersSelf<LP, InputElement, LabelElement>;
 }
 
-export interface UseLabelReturnType<InputElement extends Element, LabelElement extends Element> extends 
-UseRandomDualIdsReturnType<InputElement, LabelElement>, 
-OmitStrong<UsePressReturnType<LabelElement>, "props"> { }
+export interface UseLabelReturnType<InputElement extends Element, LabelElement extends Element> extends
+    UseRandomDualIdsReturnType<InputElement, LabelElement>,
+    OmitStrong<UsePressReturnType<LabelElement>, "props"> { }
 
+/**
+ * @compositeParams
+ */
 export function useLabel<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element>({
     randomIdInputParameters,
     randomIdLabelParameters,
@@ -87,21 +90,22 @@ export function useLabel<LP extends LabelPosition, InputElement extends Element,
     }
 }
 
-export interface UseLabelSyntheticParameters {
+export interface UseLabelSyntheticParameters extends TargetedPick<UseLabelParameters<LabelPosition, any, any>, "labelParameters", "ariaLabel" | "onLabelClick"> {
     randomIdInputParameters: OmitStrong<UseRandomDualIdsParameters["randomIdInputParameters"], "otherReferencerProp">;
     randomIdLabelParameters: OmitStrong<UseRandomDualIdsParameters["randomIdLabelParameters"], "otherReferencerProp">;
-    labelParameters: Pick<UseLabelParameters<LabelPosition, any, any>["labelParameters"], "ariaLabel" | "onLabelClick">
 }
 
 /**
  * Shortcut for `useLabel` that assumes we're just never working with native HTML `input` and `label` elements. So for labelling guaranteably non-native elements.
+ * 
+ * @compositeParams
  */
 export function useLabelSynthetic<InputElement extends Element, LabelElement extends Element>({
     labelParameters: { ariaLabel, onLabelClick },
     ...rest
 }: UseLabelSyntheticParameters) {
     monitorCallCount(useLabelSynthetic);
-    
+
     return useLabel<LabelPosition, InputElement, LabelElement>({
         labelParameters: {
             ariaLabel,

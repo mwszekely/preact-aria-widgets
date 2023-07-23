@@ -1,6 +1,17 @@
 import { assertEmptyObject, enhanceEvent, focus, monitorCallCount, useCompleteListNavigationChild, useCompleteListNavigationDeclarative, useEnsureStability, useMemoObject, useMergedProps, usePress, useStableCallback } from "preact-prop-helpers";
 import { EventDetail, Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
+/**
+ * Implements a [Listbox](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/) pattern.
+ *
+ * @remarks A listbox is a very limited widget and its items cannot contain interactive or non-text content.
+ *
+ * @see {@link useGridlist} for a more capable list widget.
+ *
+ * @compositeParams
+ *
+ * @hasChild {@link useListboxItem}
+ */
 export function useListbox({ labelParameters, listboxParameters: { selectionLimit, groupingType, selectedIndex, onSelectedIndexChange, orientation }, linearNavigationParameters, singleSelectionParameters: { ariaPropName, selectionMode }, rovingTabIndexParameters, ...restParams }) {
     monitorCallCount(useListbox);
     useEnsureStability("useListbox", selectionLimit);
@@ -47,6 +58,9 @@ export function useListbox({ labelParameters, listboxParameters: { selectionLimi
         propsListboxLabel: propsLabelLabel
     };
 }
+/**
+ * @compositeParams
+ */
 export function useListboxItem({ context: { listboxContext: { selectionLimit }, ...context }, listboxParameters: { selected, onMultiSelect }, pressParameters: { focusSelf, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, ...void1 }, ...restParams }) {
     monitorCallCount(useListboxItem);
     const { propsChild, propsTabbable, refElementReturn, pressParameters: { onPressSync, excludeSpace, ...void2 }, ...restRet } = useCompleteListNavigationChild({

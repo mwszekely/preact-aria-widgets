@@ -34,13 +34,14 @@ export interface UseCheckboxLikeReturnType<InputType extends Element, LabelType 
 }
 /**
  * Handles any component where there's:
+ * ```md-literal
  * 1. Some kind of an on/off binary/trinary input element that needs event handlers
  * 2. Some kind of label for that input element
+ * ```md-literal
  *
  * See also `useLabel` for when there's a label for a non-checkbox-like component.
  *
- * @param param0
- * @returns
+ * @compositeParams
  */
 export declare function useCheckboxLike<LP extends LabelPosition, InputType extends Element, LabelType extends Element>({ labelParameters, randomIdInputParameters, randomIdLabelParameters, checkboxLikeParameters: { checked, disabled, onInput: onInputSync, role, ...void1 }, refElementInputReturn, refElementLabelReturn, pressParameters: { excludeSpace, longPressThreshold, ...void2 }, ...void3 }: UseCheckboxLikeParameters<LP, InputType, LabelType>): UseCheckboxLikeReturnType<InputType, LabelType>;
 //# sourceMappingURL=use-checkbox-like.d.ts.map

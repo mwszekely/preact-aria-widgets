@@ -70,7 +70,9 @@ export interface UseToolbarChildParameters<E extends Element, M extends UseToolb
 export interface UseToolbarChildReturnType<ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends UseCompleteListNavigationChildReturnType<ChildElement, M> { }
 
 /**
- * A toolbar is just a collection of widgets in an expected order with a label (visible or hidden) and with the usual keyboard navigation stuff.
+ * Implements a [Toolbar](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/) pattern.
+ * 
+ * @remarks A toolbar is just a collection of widgets in an expected order with a label (visible or hidden) and with the usual keyboard navigation stuff.
  * 
  * The main difference between a toolbar and a menubar is that a menubar contains purely static menuitems, 
  * but a toolbar is the more general case, being able to contain anything at all. 
@@ -78,8 +80,7 @@ export interface UseToolbarChildReturnType<ChildElement extends Element, M exten
  * 
  * Either way, be sure to specify the role and orientation this toolbar has (role=toolbar if you're using this as an actual toolbar).
  * 
- * @param param0 
- * @returns 
+ * @compositeParams
  */
 export function useToolbar<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element, M extends UseToolbarSubInfo<ChildElement>>({
     linearNavigationParameters,
@@ -126,6 +127,9 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
 }
 
 
+/**
+ * @compositeParams
+ */
 export function useToolbarChild<ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>>({ info, toolbarChildParameters: { disabledProp }, ...args }: UseToolbarChildParameters<ChildElement, M>): UseToolbarChildReturnType<ChildElement, M> {
     monitorCallCount(useToolbarChild);
     const {

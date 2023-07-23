@@ -2,6 +2,8 @@ import { h } from "preact";
 import {
     CompleteListNavigationContext,
     ElementProps,
+    TargetedOmit,
+    TargetedPick,
     UseCompleteListNavigationChildInfo,
     UseCompleteListNavigationChildParameters,
     UseCompleteListNavigationChildReturnType,
@@ -57,12 +59,12 @@ export interface UseListboxParametersSelf<ListElement extends Element, ListItemE
     groupingType: "with-groups" | "without-groups" | "group";
 }
 
-export interface UseListboxParameters<ListElement extends Element, ListItemElement extends Element, _LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends 
-OmitStrong<UseCompleteListNavigationParameters<ListElement, ListItemElement, M>, "rovingTabIndexParameters" | "linearNavigationParameters" | "singleSelectionParameters"> {
-    rovingTabIndexParameters: OmitStrong<UseCompleteListNavigationParameters<ListElement, ListItemElement, M>["rovingTabIndexParameters"], "focusSelfParent">;
-    linearNavigationParameters: OmitStrong<UseCompleteListNavigationParameters<ListElement, ListItemElement, M>["linearNavigationParameters"], "arrowKeyDirection">;
-    labelParameters: OmitStrong<UseLabelSyntheticParameters["labelParameters"], "onLabelClick">;
-    singleSelectionParameters: Pick<UseCompleteListNavigationParameters<ListElement, ListItemElement, M>["singleSelectionParameters"], "ariaPropName" | "selectionMode">
+export interface UseListboxParameters<ListElement extends Element, ListItemElement extends Element, _LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends
+    OmitStrong<UseCompleteListNavigationParameters<ListElement, ListItemElement, M>, "rovingTabIndexParameters" | "linearNavigationParameters" | "singleSelectionParameters">,
+    TargetedOmit<UseLabelSyntheticParameters, "labelParameters", "onLabelClick">,
+    TargetedOmit<UseCompleteListNavigationParameters<ListElement, ListItemElement, M>, "rovingTabIndexParameters", "focusSelfParent">,
+    TargetedOmit<UseCompleteListNavigationParameters<ListElement, ListItemElement, M>, "linearNavigationParameters", "arrowKeyDirection">,
+    TargetedPick<UseCompleteListNavigationParameters<ListElement, ListItemElement, M>, "singleSelectionParameters", "ariaPropName" | "selectionMode"> {
     listboxParameters: UseListboxParametersSelf<ListElement, ListItemElement, _LabelElement, M>;
 }
 export interface UseListboxReturnType<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationReturnType<ListElement, ListItemElement, M>, "singleSelectionReturn" | "props"> {
@@ -71,17 +73,21 @@ export interface UseListboxReturnType<ListElement extends Element, ListItemEleme
     context: UseListboxContext<ListElement, ListItemElement, M>;
 }
 export interface UseListboxItemReturnType<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationChildReturnType<ListItemElement, M>, "propsChild" | "propsTabbable" | "pressParameters">, UsePressReturnType<ListItemElement> { }
-export interface UseListboxItemParameters<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends UseCompleteListNavigationChildParameters<ListItemElement, M> {
 
-    pressParameters: OmitStrong<UsePressParameters<ListItemElement>["pressParameters"], "excludeSpace" | "onPressSync">;
-    listboxParameters: {
-        /**
-         * When the `selectionLimit` is `"single"`, this must be `null`.
-         */
-        selected: boolean | null;
 
-        onMultiSelect: null | ((e: ListboxMultiSelectEvent<ListItemElement>) => void);
-    }
+export interface UseListboxItemParametersSelf<ListItemElement extends Element> {
+    /**
+     * When the `selectionLimit` is `"single"`, this must be `null`.
+     */
+    selected: boolean | null;
+
+    onMultiSelect: null | ((e: ListboxMultiSelectEvent<ListItemElement>) => void);
+}
+
+export interface UseListboxItemParameters<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends
+    UseCompleteListNavigationChildParameters<ListItemElement, M>,
+    TargetedOmit<UsePressParameters<ListItemElement>, "pressParameters", "excludeSpace" | "onPressSync"> {
+    listboxParameters: UseListboxItemParametersSelf<ListItemElement>;
     context: UseListboxContext<any, ListItemElement, M>;
 }
 
@@ -89,7 +95,18 @@ export interface ListboxInfo<ListItemElement extends Element> extends UseComplet
 
 }
 
-export function useListbox<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement>>({
+/**
+ * Implements a [Listbox](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/) pattern.
+ * 
+ * @remarks A listbox is a very limited widget and its items cannot contain interactive or non-text content.
+ * 
+ * @see {@link useGridlist} for a more capable list widget.
+ * 
+ * @compositeParams
+ * 
+ * @hasChild {@link useListboxItem}
+ */
+export function useListbox<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement> = ListboxInfo<ListItemElement>>({
     labelParameters,
     listboxParameters: { selectionLimit, groupingType, selectedIndex, onSelectedIndexChange, orientation },
     linearNavigationParameters,
@@ -158,7 +175,10 @@ export function useListbox<ListElement extends Element, ListItemElement extends 
     }
 }
 
-export function useListboxItem<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>>({
+/**
+ * @compositeParams
+ */
+export function useListboxItem<ListItemElement extends Element, M extends ListboxInfo<ListItemElement> = ListboxInfo<ListItemElement>>({
     context: { listboxContext: { selectionLimit }, ...context },
     listboxParameters: { selected, onMultiSelect },
     pressParameters: { focusSelf, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, ...void1 },
@@ -167,7 +187,7 @@ export function useListboxItem<ListItemElement extends Element, M extends Listbo
     monitorCallCount(useListboxItem);
 
     const {
-        propsChild, 
+        propsChild,
         propsTabbable,
         refElementReturn,
         pressParameters: { onPressSync, excludeSpace, ...void2 },
@@ -183,8 +203,8 @@ export function useListboxItem<ListItemElement extends Element, M extends Listbo
     if (selectionLimit == "single")
         console.assert(selected == null);
 
-        propsChild.role = "option";
-        propsChild["aria-disabled"] = restParams.info.unselectable ? "true" : undefined;
+    propsChild.role = "option";
+    propsChild["aria-disabled"] = restParams.info.unselectable ? "true" : undefined;
 
     const { pressReturn, props: propsPress } = usePress<ListItemElement>({
         refElementReturn, pressParameters: {

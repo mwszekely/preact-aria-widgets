@@ -3,7 +3,9 @@ import { Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
 ;
 /**
- * A toolbar is just a collection of widgets in an expected order with a label (visible or hidden) and with the usual keyboard navigation stuff.
+ * Implements a [Toolbar](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/) pattern.
+ *
+ * @remarks A toolbar is just a collection of widgets in an expected order with a label (visible or hidden) and with the usual keyboard navigation stuff.
  *
  * The main difference between a toolbar and a menubar is that a menubar contains purely static menuitems,
  * but a toolbar is the more general case, being able to contain anything at all.
@@ -11,8 +13,7 @@ import { useLabelSynthetic } from "./use-label.js";
  *
  * Either way, be sure to specify the role and orientation this toolbar has (role=toolbar if you're using this as an actual toolbar).
  *
- * @param param0
- * @returns
+ * @compositeParams
  */
 export function useToolbar({ linearNavigationParameters, toolbarParameters: { orientation, role, selectedIndex, onSelectedIndexChange, disabled }, labelParameters, rovingTabIndexParameters, ...listNavParameters }) {
     monitorCallCount(useToolbar);
@@ -44,6 +45,9 @@ export function useToolbar({ linearNavigationParameters, toolbarParameters: { or
         ...listNavReturn
     };
 }
+/**
+ * @compositeParams
+ */
 export function useToolbarChild({ info, toolbarChildParameters: { disabledProp }, ...args }) {
     monitorCallCount(useToolbarChild);
     const { propsChild, propsTabbable, ...listNavReturn } = useCompleteListNavigationChild({ info, ...args });

@@ -1,6 +1,13 @@
 import { generateRandomId, monitorCallCount, useManagedChild, useManagedChildren } from "preact-prop-helpers";
 import { useMemo, useRef } from "preact/hooks";
 import { enhanceEvent, EventDetail, Prefices } from "./props.js";
+/**
+ * Implements a [Slider](https://www.w3.org/WAI/ARIA/apg/patterns/slider-multithumb/) pattern.
+ *
+ * @compositeParams
+ *
+ * @hasChild {@link useSliderThumb}
+ */
 export function useSlider({ sliderParameters: { max, min }, managedChildrenParameters }) {
     monitorCallCount(useSlider);
     const { context, managedChildrenReturn } = useManagedChildren({ managedChildrenParameters });
@@ -19,10 +26,13 @@ export function useSlider({ sliderParameters: { max, min }, managedChildrenParam
         managedChildrenReturn
     };
 }
+/**
+ * @compositeParams
+ */
 export function useSliderThumb({ info, context: { sliderContext: { max: maxParent, min: minParent }, ...context }, sliderThumbParameters }) {
     const { index } = info;
     monitorCallCount(useSliderThumb);
-    const { managedChildReturn } = useManagedChild({ info, context });
+    const { managedChildReturn } = useManagedChild({ info: info, context });
     const { getChildren: _getThumbs } = managedChildReturn;
     const { tag, value, max: maxOverride, min: minOverride, onValueChange, valueText, label } = sliderThumbParameters;
     const min = (minOverride ?? minParent);

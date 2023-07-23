@@ -11,7 +11,7 @@ const TableRowContext = createContext(null);
 export const Table = memoForwardRef(function TableU({ ariaLabel, selectionLimit, tagTable, render }, ref) {
     const info = useTable({
         labelParameters: { ariaLabel },
-        tableParameters: { selectionLimit, tagTable }
+        tableParameters: { selectionLimit, tagTable, }
     });
     useImperativeHandle(ref, () => info);
     return _jsx(TableContext.Provider, { value: info.context, children: render(info) });

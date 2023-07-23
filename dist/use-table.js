@@ -2,6 +2,15 @@ import { assertEmptyObject, focus, monitorCallCount, returnNull, useCompleteGrid
 import { useCallback, useEffect, useRef } from "preact/hooks";
 import { Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
+/**
+ * Creates a sortable data table in a [Grid](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) pattern.
+ *
+ * @compositeParams
+ *
+ * @hasChild {@link useTableSection}
+ * @hasChild {@link useTableRow}
+ * @hasChild {@link useTableCell}
+ */
 export function useTable({ labelParameters, tableParameters: { selectionLimit, tagTable }, }) {
     monitorCallCount(useTable);
     const [getSortBody, setSortBody] = usePassiveState(null, returnNull);
@@ -52,6 +61,9 @@ function fuzzyCompare(lhs, rhs) {
     return 0;
 }
 const naturalSectionTypes = new Set(["thead", "tbody", "tfoot"]);
+/**
+ * @compositeParams
+ */
 export function useTableSection({ linearNavigationParameters, rovingTabIndexParameters, singleSelectionParameters, gridNavigationParameters, rearrangeableChildrenParameters, paginatedChildrenParameters, staggeredChildrenParameters, tableSectionParameters: { tagTableSection, location }, typeaheadNavigationParameters, context: { tableContext } }) {
     monitorCallCount(useTableSection);
     const { childrenHaveFocusReturn, context, linearNavigationReturn, managedChildrenReturn, props: { ...props }, rovingTabIndexReturn, singleSelectionReturn, typeaheadNavigationReturn, staggeredChildrenReturn, rearrangeableChildrenReturn, paginatedChildrenReturn, sortableChildrenReturn } = useCompleteGridNavigation({
@@ -97,6 +109,9 @@ export function useTableSection({ linearNavigationParameters, rovingTabIndexPara
         propsTableSection: props
     };
 }
+/**
+ * @compositeParams
+ */
 export function useTableRow({ info, textContentParameters, context: cx1, tableRowParameters: { selected }, linearNavigationParameters, rovingTabIndexParameters, ...void1 }) {
     monitorCallCount(useTableRow);
     assertEmptyObject(void1);
@@ -141,6 +156,9 @@ export function useTableRow({ info, textContentParameters, context: cx1, tableRo
         ...restRet
     };
 }
+/**
+ * @compositeParams
+ */
 export function useTableCell({ tableCellParameters: { tagTableCell }, info, ...p }) {
     monitorCallCount(useTableCell);
     const { props, ...ret } = useCompleteGridNavigationCell({

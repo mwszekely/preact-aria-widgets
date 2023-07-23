@@ -4,6 +4,13 @@ import { enhanceEvent, Prefices } from "./props.js";
 import { useCheckboxLike } from "./use-checkbox-like.js";
 import { useLabelSynthetic } from "./use-label.js";
 ;
+/**
+ * Implements a [Radio Group](https://www.w3.org/WAI/ARIA/apg/patterns/radio/) pattern.
+ *
+ * @compositeParams
+ *
+ * @hasChild {@link useRadio}
+ */
 export function useRadioGroup({ labelParameters, radioGroupParameters: { name, onSelectedValueChange, selectedValue }, rovingTabIndexParameters, ...restParams }) {
     monitorCallCount(useRadioGroup);
     const [selectedIndex, setSelectedIndex] = useState(null);
@@ -69,6 +76,9 @@ export function useRadioGroup({ labelParameters, radioGroupParameters: { name, o
         ...restRet,
     };
 }
+/**
+ * @compositeParams
+ */
 export function useRadio({ radioParameters: { value }, checkboxLikeParameters: { disabled }, labelParameters, info, context, textContentParameters, pressParameters: { longPressThreshold, ...void3 }, ...void1 }) {
     monitorCallCount(useRadio);
     const index = info.index;

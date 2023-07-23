@@ -1,3 +1,42 @@
+/**
+ * # Preact Aria Widgets
+ *
+ * Preact props that implement ARIA-compliant widgets in the style of `preact-prop-helpers` (i.e. hooks that swizzle parameters and returns back and forth).
+ * **No CSS is provided** &ndash; this library is intended for wiring up event handlers, HTML/ARIA attributes, labels, and so on, but each hook gives you the information you need to create appropriate e.g. `class` values to style your own components.
+ *
+ * This library is split into two parts: hook implementations and component implementations.
+ * They are near identical, with the components providing a nicer user interface.
+ * When using a component, you must specify a `render` prop that takes all the information the hook version returns and gives back the markup to use.
+ * As an example, `Checkbox` components can be rendered as `<label /><input />` or  `<label><input /></label>` based on the function you pass to that `render` prop.
+ *  You can even do just plain `<input>`, though `aria-label` usually needs to be handled manually in all cases.
+ *
+ * The intent is to help ensure that individual widgets on a given page are accessible, but it is still up to you to ensure that the page as a whole is too, and that things *actually make sense* in practice.
+ * Don't forget to do lots of testing. *
+ *
+ * {@tableOfContents start}
+ * {@include } {@link useAccordion}
+ * {@include } {@link useButton}
+ * {@include } {@link useCheckbox}
+ * {@include } {@link useCheckboxGroup}
+ * {@include } {@link useDialog}
+ * {@include } {@link useDrawer}
+ * {@include } {@link useGridlist}
+ * {@include } {@link useListbox}
+ * {@include } {@link useMenuSurface}
+ * {@include } {@link useMenu}
+ * {@include } {@link useMenubar}
+ * {@include } {@link useProgress}
+ * {@include } {@link useRadioGroup}
+ * {@include } {@link useSlider}
+ * {@include } {@link useTable}
+ * {@include } {@link useTabs}
+ * {@include } {@link useToolbar}
+ * {@include } {@link useTooltip}
+ * {@tableOfContents end}
+ *
+ *
+ * @packageDocumentation
+ */
 export { useAccordion, useAccordionSection } from "./use-accordion.js";
 export { useButton } from "./use-button.js";
 export { useCheckboxGroup, useCheckboxGroupChild, useCheckboxGroupParent } from "./use-checkbox-group.js";
@@ -7,6 +46,7 @@ export { useDialog } from "./use-dialog.js";
 export { useDrawer } from "./use-drawer.js";
 export { useGridlist, useGridlistCell, useGridlistRow } from "./use-gridlist.js";
 export { useLabel, useLabelSynthetic } from "./use-label.js";
+export { useListbox, useListboxItem } from "./use-listbox.js";
 export { useFocusSentinel, useMenuSurface } from "./use-menu-surface.js";
 export { useMenu, useMenuItem } from "./use-menu.js";
 export { useMenubar, useMenubarChild } from "./use-menubar.js";

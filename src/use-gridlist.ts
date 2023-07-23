@@ -4,6 +4,7 @@ import {
     ElementProps,
     ExtendMerge,
     TargetedOmit,
+    TargetedPick,
     UseCompleteGridNavigationCellInfo,
     UseCompleteGridNavigationCellParameters,
     UseCompleteGridNavigationCellReturnType,
@@ -77,14 +78,28 @@ export interface UseGridlistCellReturnType<GridlistCellElement extends Element, 
     propsTabbable: ElementProps<any>;
     propsPress: ElementProps<any>;
 }
-export interface UseGridlistCellParameters<GridlistCellElement extends Element, CM extends GridlistCellInfo<GridlistCellElement>> extends UseCompleteGridNavigationCellParameters<GridlistCellElement, CM> {
-    pressParameters: Pick<UsePressParameters<GridlistCellElement>["pressParameters"], "longPressThreshold" | "onPressingChange" | "onPressSync">;
+export interface UseGridlistCellParameters<GridlistCellElement extends Element, CM extends GridlistCellInfo<GridlistCellElement>> extends
+    UseCompleteGridNavigationCellParameters<GridlistCellElement, CM>,
+    TargetedPick<UsePressParameters<GridlistCellElement>, "pressParameters", "longPressThreshold" | "onPressingChange" | "onPressSync"> {
+
 }
 
 export interface GridlistRowInfo<GridlistRowElement extends Element, GridlistCellElement extends Element> extends UseCompleteGridNavigationRowInfo<GridlistRowElement, GridlistCellElement> { }
 export interface GridlistCellInfo<GridlistCellElement extends Element> extends UseCompleteGridNavigationCellInfo<GridlistCellElement> { }
 
-export function useGridlist<GridlistElement extends Element, GridlistRowElement extends Element, GridlistCellElement extends Element, LabelElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>>({
+/**
+ * Implements a gridlist, which is a hybrid of a [Listbox](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/) and a [Grid](https://www.w3.org/WAI/ARIA/apg/patterns/grid/).
+ * 
+ * @remarks A Listbox is a very limited structure, essentially being just a list with no further interactive content allowed.
+ * 
+ * If you need a list where each list item has a menu or a button or other non-text content, a Gridlist is probably what you want.
+ * 
+ * @compositeParams
+ * 
+ * @hasChild {@link useGridlistRow}
+ * @hasChild {@link useGridlistCell}
+ */
+export function useGridlist<GridlistElement extends Element, GridlistRowElement extends Element, GridlistCellElement extends Element, LabelElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement> = GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement> = GridlistCellInfo<GridlistCellElement>>({
     labelParameters,
 
     listboxParameters: { selectionLimit, groupingType, selectedIndex, onSelectedIndexChange },
@@ -154,7 +169,11 @@ export function useGridlist<GridlistElement extends Element, GridlistRowElement 
     }
 }
 
-export function useGridlistRow<GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement>>({
+/**
+ * @compositeParams
+ * 
+ */
+export function useGridlistRow<GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement, GridlistCellElement> = GridlistRowInfo<GridlistRowElement, GridlistCellElement>, CM extends GridlistCellInfo<GridlistCellElement> = GridlistCellInfo<GridlistCellElement>>({
     gridlistRowParameters: { selected },
     linearNavigationParameters,
     context: cx1,
@@ -221,7 +240,11 @@ export function useGridlistRow<GridlistRowElement extends Element, GridlistCellE
     }
 }
 
-export function useGridlistCell<GridlistCellElement extends Element, CM extends GridlistCellInfo<GridlistCellElement>>({ pressParameters: { onPressSync, longPressThreshold, onPressingChange, ...void1 }, ...p }: UseGridlistCellParameters<GridlistCellElement, CM>): UseGridlistCellReturnType<GridlistCellElement, CM> {
+/**
+ * @compositeParams
+ * 
+ */
+export function useGridlistCell<GridlistCellElement extends Element, CM extends GridlistCellInfo<GridlistCellElement> = GridlistCellInfo<GridlistCellElement>>({ pressParameters: { onPressSync, longPressThreshold, onPressingChange, ...void1 }, ...p }: UseGridlistCellParameters<GridlistCellElement, CM>): UseGridlistCellReturnType<GridlistCellElement, CM> {
     monitorCallCount(useGridlistCell);
 
     const { props, ...info } = useCompleteGridNavigationCell<GridlistCellElement, CM>(p);

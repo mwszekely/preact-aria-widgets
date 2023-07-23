@@ -1,6 +1,11 @@
 import { assertEmptyObject, monitorCallCount, useAsyncHandler, useMergedProps } from "preact-prop-helpers";
 import { Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
+/**
+ * Provides the attributes and roles for a progress bar.
+ *
+ * @compositeParams
+ */
 export function useProgress({ labelParameters, progressIndicatorParameters: { max, value, valueText, tagIndicator, ...void1 }, ...void2 }) {
     monitorCallCount(useProgress);
     const { propsInput, propsLabel, randomIdInputReturn, randomIdLabelReturn, pressReturn, ...void3 } = useLabelSynthetic({
@@ -54,6 +59,11 @@ export function useProgress({ labelParameters, progressIndicatorParameters: { ma
         pressReturn,
     };
 }
+/**
+ * Provides props for a progress bar based on the progress of an async event handler.
+ *
+ * @compositeParams
+ */
 export function useProgressWithHandler({ labelParameters, progressIndicatorParameters, asyncHandlerParameters, progressWithHandlerParameters: { forciblyPending } }) {
     monitorCallCount(useProgressWithHandler);
     const asyncInfo = useAsyncHandler(asyncHandlerParameters);

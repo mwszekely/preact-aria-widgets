@@ -23,10 +23,11 @@ export interface UseMenuSurfaceReturnType<MenuSurfaceElement extends Element, Me
 /**
  * A menu surface is what handles user interaction with an interactive but transient surface (like a menu or a popup).
  *
- * The keyboard (etc.) interactions are shared among a lot of widgets, and the opening button has some ARIA properties that need setting.
+ * @remarks The keyboard (etc.) interactions are shared among a lot of widgets, and the opening button has some ARIA properties that need setting.
  *
  * Related to menus, which are a menu contained within a menu surface. Not related to menubars -- menus contain menubars, but not all menubars are contained within a menu or its surface.
  *
+ * @compositeParams
  */
 export declare function useMenuSurface<MenuSurfaceElement extends Element, MenuTargetElement extends Element, MenuTriggerElement extends Element>({ dismissParameters, escapeDismissParameters, focusTrapParameters, menuSurfaceParameters: { role, surfaceId, ...void1 }, ...void2 }: UseMenuSurfaceParameters<MenuSurfaceElement, MenuTriggerElement>): UseMenuSurfaceReturnType<MenuSurfaceElement, MenuTargetElement, MenuTriggerElement>;
 export interface UseFocusSentinelParameters {
@@ -47,8 +48,7 @@ export interface UseFocusSentinelParameters {
  * and keyboard users can escape to close a menu, screen readers and other input methods
  * that don't use those two would become stuck.
  *
- * @param param0
- * @returns
+ * @compositeParams
  */
 export declare function useFocusSentinel<E extends Element>({ focusSentinel: { open, onClose, sendFocusToMenu } }: UseFocusSentinelParameters): ElementProps<E>;
 //# sourceMappingURL=use-menu-surface.d.ts.map

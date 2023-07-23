@@ -15,6 +15,11 @@ export interface UseProgressReturnType<ProgressElement extends Element, Progress
     propsLabel: ElementProps<ProgressLabelElement>;
     propsRegion: ElementProps<any>;
 }
+/**
+ * Provides the attributes and roles for a progress bar.
+ *
+ * @compositeParams
+ */
 export declare function useProgress<ProgressElement extends Element, LabelElement extends Element>({ labelParameters, progressIndicatorParameters: { max, value, valueText, tagIndicator, ...void1 }, ...void2 }: UseProgressParameters<ProgressElement, LabelElement>): UseProgressReturnType<ProgressElement, LabelElement>;
 export interface UseProgressWithHandlerParametersSelf {
     forciblyPending: boolean | null;
@@ -29,5 +34,10 @@ export interface UseProgressWithHandlerReturnType<EventType, CaptureType, Indica
     propsRegion: UseProgressReturnType<IndicatorElement, LabelElement>["propsRegion"];
     asyncHandlerReturn: UseAsyncHandlerReturnType<EventType, CaptureType>;
 }
+/**
+ * Provides props for a progress bar based on the progress of an async event handler.
+ *
+ * @compositeParams
+ */
 export declare function useProgressWithHandler<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element>({ labelParameters, progressIndicatorParameters, asyncHandlerParameters, progressWithHandlerParameters: { forciblyPending } }: UseProgressWithHandlerParameters<EventType, CaptureType, IndicatorElement, LabelElement>): UseProgressWithHandlerReturnType<EventType, CaptureType, IndicatorElement, LabelElement>;
 //# sourceMappingURL=use-progress.d.ts.map

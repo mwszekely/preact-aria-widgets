@@ -21,6 +21,11 @@ export interface UseProgressReturnType<ProgressElement extends Element, Progress
     propsRegion: ElementProps<any>;
 }
 
+/**
+ * Provides the attributes and roles for a progress bar.
+ * 
+ * @compositeParams
+ */
 export function useProgress<ProgressElement extends Element, LabelElement extends Element>({
     labelParameters,
     progressIndicatorParameters: {
@@ -119,6 +124,11 @@ export interface UseProgressWithHandlerReturnType<EventType, CaptureType, Indica
     asyncHandlerReturn: UseAsyncHandlerReturnType<EventType, CaptureType>
 }
 
+/**
+ * Provides props for a progress bar based on the progress of an async event handler.
+ * 
+ * @compositeParams
+ */
 export function useProgressWithHandler<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element>({
     labelParameters,
     progressIndicatorParameters,

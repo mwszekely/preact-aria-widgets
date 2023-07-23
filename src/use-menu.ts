@@ -20,16 +20,15 @@ export interface UseMenuParametersSelf {
     openDirection: "down" | "up" | "left" | "right" | null;
 }
 
-export interface UseMenuParameters<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuButtonElement extends Element, MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends 
-OmitStrong<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "toolbarParameters" | "labelParameters">,
-TargetedOmit<UseMenuSurfaceParameters<MenuSurfaceElement, MenuButtonElement>, "menuSurfaceParameters", "role" | "surfaceId">,
-TargetedOmit<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "toolbarParameters", "role"> {
+export interface UseMenuParameters<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuButtonElement extends Element, MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends
+    OmitStrong<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "toolbarParameters" | "labelParameters">,
+    TargetedOmit<UseMenuSurfaceParameters<MenuSurfaceElement, MenuButtonElement>, "menuSurfaceParameters", "role" | "surfaceId">,
+    TargetedOmit<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "toolbarParameters", "role">,
+    TargetedOmit<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "toolbarParameters", "role"> {
     dismissParameters: UseMenuSurfaceParameters<MenuSurfaceElement, MenuButtonElement>["dismissParameters"] & {
         onClose(reason: "escape" | "backdrop" | "lost-focus" | "item-clicked"): void;
     }
     escapeDismissParameters: UseMenuSurfaceParameters<MenuSurfaceElement, MenuButtonElement>["escapeDismissParameters"];
-    //menuSurfaceParameters: OmitStrong<UseMenuSurfaceParameters<MenuSurfaceElement, MenuButtonElement>["menuSurfaceParameters"], "role" | "surfaceId">;
-    toolbarParameters: OmitStrong<UseMenubarParameters<MenuParentElement, MenuItemElement, M>["toolbarParameters"], "role">;
 
     menuParameters: UseMenuParametersSelf;
 }
@@ -55,14 +54,15 @@ export interface UseMenuItemReturnType<MenuItemElement extends Element, M extend
 }
 
 /**
- * A menu is a specialization of a menubar (something that handles navigation among a set of menuitems) 
+ * Implements the [Menu](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/) and [Menu Button](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/) patterns.
+ * 
+ * @remarks A menu is a specialization of a menubar (something that handles navigation among a set of menuitems) 
  * and a menu surface (something that handles moving focus to/from an unrelated area of the page).
  * 
  * Additionally, pressing the arrow key that corresponds to the direction that the menu opens
  * in will open it.
  * 
- * @param param0 
- * @returns 
+ * @compositeParams 
  */
 export function useMenu<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>>({
     dismissParameters,
@@ -171,9 +171,12 @@ export interface UseMenuItemParameters<MenuItemElement extends Element, M extend
     context: UseMenuContext<any, MenuItemElement, M>;
 }
 
+/**
+ * @compositeParams
+ */
 export function useMenuItem<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>>(p: UseMenuItemParameters<MenuItemElement, M>): UseMenuItemReturnType<MenuItemElement, M> {
     monitorCallCount(useMenuItem);
-    
+
     const ret = useMenubarChild<MenuItemElement, M>(p);
 
     return {
