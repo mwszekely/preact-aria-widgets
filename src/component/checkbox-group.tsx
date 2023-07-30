@@ -59,9 +59,9 @@ export const CheckboxGroup = memo(function CheckboxGroup<ParentElement extends E
         useCheckboxGroup<ParentElement, TabbableChildElement>({
             linearNavigationParameters: {
                 onNavigateLinear,
-                disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
                 navigatePastEnd: navigatePastEnd ?? "wrap",
                 navigatePastStart: navigatePastStart ?? "wrap",
+                disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
                 pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
             },
             checkboxGroupParameters: {

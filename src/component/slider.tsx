@@ -1,5 +1,5 @@
 import { createContext } from "preact";
-import { OmitStrong } from "preact-prop-helpers";
+import { OmitStrong, assertEmptyObject } from "preact-prop-helpers";
 import { Get2, useContextWithWarning } from "../props.js";
 import { SliderContext, SliderThumbInfo, UseSliderParameters, UseSliderReturnType, UseSliderThumbParameters, UseSliderThumbReturnType, useSlider, useSliderThumb } from "../use-slider.js";
 import { GenericComponentProps, useComponent } from "./util.js";
@@ -25,13 +25,19 @@ export function Slider({
     onChildrenMountChange,
     render,
     imperativeHandle,
-    onChildrenCountChange
+    onChildrenCountChange,
+    ...void1
 }: SliderProps<SliderThumbInfo>) {
-
-    return useComponent(imperativeHandle, render, SliderThumbContext, useSlider<SliderThumbInfo>({
-        managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange, onChildrenCountChange },
-        sliderParameters: { max, min }
-    }));
+    assertEmptyObject(void1);
+    return useComponent(
+        imperativeHandle,
+        render,
+        SliderThumbContext,
+        useSlider<SliderThumbInfo>({
+            managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange, onChildrenCountChange },
+            sliderParameters: { max, min }
+        })
+    );
 }
 
 export function SliderThumb<ThumbElement extends Element, ProgressIndicatorElement extends Element, ProgressLabelElement extends Element>({
@@ -45,11 +51,18 @@ export function SliderThumb<ThumbElement extends Element, ProgressIndicatorEleme
     valueText,
     imperativeHandle,
     onValueChange,
-    info
+    info,
+    ...void1
 }: SliderThumbProps<ThumbElement>) {
-    return useComponent(imperativeHandle, render, null, useSliderThumb<ThumbElement>({
-        context: (useContextWithWarning(SliderThumbContext, "slider")),
-        info: { index, ...info },
-        sliderThumbParameters: { label, tag, value, max, min, valueText, onValueChange },
-    }));
+    assertEmptyObject(void1);
+    return useComponent(
+        imperativeHandle,
+        render,
+        null,
+        useSliderThumb<ThumbElement>({
+            context: (useContextWithWarning(SliderThumbContext, "slider")),
+            info: { index, ...info },
+            sliderThumbParameters: { label, tag, value, max, min, valueText, onValueChange },
+        })
+    );
 };

@@ -1,5 +1,5 @@
-import { Context, createContext, Ref } from "preact";
-import { focus, memo, OmitStrong, useStableCallback } from "preact-prop-helpers";
+import { Context, createContext } from "preact";
+import { assertEmptyObject, focus, memo, OmitStrong, useStableCallback } from "preact-prop-helpers";
 import { Get10, Get2, Get4, Get6, useContextWithWarning } from "../props.js";
 import { TableCellInfo, TableRowInfo, useTable, useTableCell, UseTableCellParameters, UseTableCellReturnType, UseTableContext, UseTableParameters, UseTableReturnType, useTableRow, UseTableRowContext, UseTableRowParameters, UseTableRowReturnType, useTableSection, UseTableSectionContext, UseTableSectionParameters, UseTableSectionReturnType } from "../use-table.js";
 import { GenericComponentProps, useComponent, useDefault } from "./util.js";
@@ -149,8 +149,11 @@ export const TableRow = memo(function TableRow<RowElement extends Element, CellE
     imperativeHandle,
     onCurrentFocusedChanged,
     onCurrentFocusedInnerChanged,
-    render
-}: TableRowProps<RowElement, CellElement, TableRowInfo<RowElement>, TableCellInfo<CellElement>>, ref?: Ref<any>) {
+    render,
+    ...void1
+}: TableRowProps<RowElement, CellElement, TableRowInfo<RowElement>, TableCellInfo<CellElement>>) {
+
+    assertEmptyObject(void1);
 
     return useComponent(
         imperativeHandle,
@@ -197,10 +200,11 @@ export const TableCell = memo(function TableCell<CellElement extends Element>({
     colSpan,
     imperativeHandle,
     getSortValue,
-    info
+    info,
+    ...void1
 }: TableCellProps<CellElement, TableCellInfo<CellElement>>) {
     const defaultFocusSelf = useStableCallback((e: CellElement) => { focus(e as Element as HTMLElement) }, []);
-
+    assertEmptyObject(void1);
     return useComponent(
         imperativeHandle,
         render,

@@ -1,66 +1,36 @@
-import { createContext, Ref } from "preact";
-import { focus, OmitStrong } from "preact-prop-helpers";
+import { createContext } from "preact";
+import { assertEmptyObject, focus, memo, OmitStrong } from "preact-prop-helpers";
 import { useCallback, useImperativeHandle } from "preact/hooks";
 import { Get, Get11, Get5, useContextWithWarning } from "../props.js";
 import { TabInfo, TabPanelInfo, useTab, useTabPanel, UseTabPanelParameters, UseTabPanelReturnType, UseTabPanelsContext, UseTabParameters, UseTabReturnType, useTabs, UseTabsContext, UseTabsParameters, UseTabsReturnType } from "../use-tabs.js";
-import { GenericComponentProps, memoForwardRef, useComponent, useDefault } from "./util.js";
+import { GenericComponentProps, useComponent, useDefault } from "./util.js";
 
-export type TabsProps<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element, M extends TabInfo<TabElement>> = GenericComponentProps<
+export type TabsProps<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element, M extends TabInfo<TabElement> = TabInfo<TabElement>> = GenericComponentProps<
     UseTabsReturnType<TabContainerElement, TabElement, TabLabelElement, M>,
     Get11<UseTabsParameters<TabContainerElement, TabElement, M>, "labelParameters", "linearNavigationParameters", "rearrangeableChildrenParameters", "rovingTabIndexParameters", "singleSelectionParameters", "sortableChildrenParameters", "staggeredChildrenParameters", "tabsParameters", "typeaheadNavigationParameters", "singleSelectionParameters", "refElementParameters">,
     "orientation" | "ariaLabel"
 >;
 
 
-export type TabProps<TabElement extends Element, M extends TabInfo<TabElement>> = GenericComponentProps<
+export type TabProps<TabElement extends Element, M extends TabInfo<TabElement> = TabInfo<TabElement>> = GenericComponentProps<
     UseTabReturnType<TabElement, M>,
     Get5<UseTabParameters<TabElement, TabInfo<TabElement>>, "pressParameters", "textContentParameters", "info", "hasCurrentFocusParameters", "refElementParameters">,
     "index" | "getSortValue"
 > & { info?: OmitStrong<M, keyof TabInfo<TabElement>>; };
 
-export type TabPanelProps<PanelElement extends Element, M extends TabPanelInfo> = GenericComponentProps<
+export type TabPanelProps<PanelElement extends Element, M extends TabPanelInfo = TabPanelInfo> = GenericComponentProps<
     UseTabPanelReturnType<PanelElement>,
     Get<UseTabPanelParameters<M>, "info">,
     "index"
 > & { info?: OmitStrong<M, keyof TabPanelInfo>; };
 
 
-/*
-type Get<T, K extends keyof T> = T[K];
-
-interface TabsPropsBase<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element, M extends TabInfo<TabElement>> extends
-    Get10<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement, M>, "labelParameters","linearNavigationParameters","rearrangeableChildrenParameters","rovingTabIndexParameters","singleSelectionParameters","sortableChildrenParameters","staggeredChildrenParameters","tabsParameters","typeaheadNavigationParameters", "singleSelectionParameters"> {
-}
-
-interface TabPropsBase<TabElement extends Element, M extends TabInfo<TabElement>> extends
-    Pick<M, "index" | "untabbable" | "unselectable" | "getSortValue">,
-    Get2<UseTabParameters<TabElement, M>, "pressParameters","textContentParameters"> {
-    focusSelf: M["focusSelf"];
-    info?: OmitStrong<M, keyof TabInfo<TabElement>>
-}
-
-interface TabPanelPropsBase<M extends TabPanelInfo> extends Pick<M, "index"> {
-    info?: OmitStrong<M, keyof TabPanelInfo>
-}
-
-export interface TabsProps<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element, M extends TabInfo<TabElement>> extends PartialExcept<TabsPropsBase<TabContainerElement, TabElement, TabLabelElement, M>, "orientation" | "ariaLabel"> {
-    render(info: UseTabsReturnType<TabContainerElement, TabElement, TabLabelElement, M>): VNode<any>;
-}
-
-export interface TabProps<TabElement extends Element, M extends TabInfo<TabElement>> extends PartialExcept<TabPropsBase<TabElement, M>, "index" | "getSortValue"> {
-    render(info: UseTabReturnType<TabElement, M>): VNode<any>;
-}
-
-export interface TabPanelProps<PanelElement extends Element, M extends TabPanelInfo> extends PartialExcept<TabPanelPropsBase<M>, "index"> {
-    render(info: UseTabPanelReturnType<PanelElement>): VNode<any>;
-}*/
-
 const TabsContext = createContext<UseTabsContext<any, any>>(null!);
 const TabPanelsContext = createContext<UseTabPanelsContext<any>>(null!);
 const UntabbableContext = createContext(false);
 const SelectionModeContext = createContext<NonNullable<UseTabsParameters<any, any, any>["singleSelectionParameters"]["selectionMode"]>>("focus");
 
-export const Tabs = memoForwardRef(function Tabs<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element>({
+export const Tabs = memo(function Tabs<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element>({
     ariaLabel,
     collator,
     compare,
@@ -86,11 +56,12 @@ export const Tabs = memoForwardRef(function Tabs<TabContainerElement extends Ele
     onElementChange, 
     onMount, 
     onUnmount,
-    render
-}: TabsProps<TabContainerElement, TabElement, TabLabelElement, TabInfo<TabElement>>, ref?: Ref<any>) {
+    render,
+    ...void1
+}: TabsProps<TabContainerElement, TabElement, TabLabelElement>) {
     untabbable ??= false;
     selectionMode ??= "focus";
-
+    assertEmptyObject(void1);
     const info = useTabs<TabContainerElement, TabElement, TabLabelElement>({
         labelParameters: { ariaLabel },
         staggeredChildrenParameters: { staggered: staggered || false },
@@ -106,7 +77,7 @@ export const Tabs = memoForwardRef(function Tabs<TabContainerElement extends Ele
             onTabbableIndexChange,
             untabbable
         },
-        singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? 0, onSelectedIndexChange: onSelectedIndexChange ?? null, selectionMode },
+        singleSelectionParameters: { initiallySelectedIndex, onSelectedIndexChange, selectionMode },
         sortableChildrenParameters: { compare },
         tabsParameters: { 
             orientation, 

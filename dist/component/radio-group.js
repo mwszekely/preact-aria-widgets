@@ -4,9 +4,9 @@ import { useContextWithWarning } from "../props.js";
 import { useRadio, useRadioGroup } from "../use-radio-group.js";
 import { useComponent, useDefault } from "./util.js";
 const RadioContext = createContext(null);
-export const RadioGroup = memo(function RadioGroup({ render, name, collator, disableHomeEndKeys, arrowKeyDirection, noTypeahead, typeaheadTimeout, ariaLabel, compare, staggered, getIndex, navigatePastEnd, navigatePastStart, selectedValue, untabbable, onTabbableIndexChange, onNavigateLinear, onNavigateTypeahead, pageNavigationSize, onElementChange, onMount, onUnmount, imperativeHandle, onSelectedValueChange, ...rest }) {
+export const RadioGroup = memo(function RadioGroup({ render, name, collator, disableHomeEndKeys, arrowKeyDirection, noTypeahead, typeaheadTimeout, ariaLabel, compare, staggered, getIndex, navigatePastEnd, navigatePastStart, selectedValue, untabbable, onTabbableIndexChange, onNavigateLinear, onNavigateTypeahead, pageNavigationSize, onElementChange, onMount, onUnmount, imperativeHandle, onSelectedValueChange, ...void1 }) {
     untabbable ??= false;
-    assertEmptyObject(rest);
+    assertEmptyObject(void1);
     return useComponent(imperativeHandle, render, RadioContext, useRadioGroup({
         linearNavigationParameters: {
             onNavigateLinear,

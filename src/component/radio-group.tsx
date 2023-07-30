@@ -54,10 +54,10 @@ export const RadioGroup = memo(function RadioGroup<V extends string | number, Gr
     onUnmount,
     imperativeHandle,
     onSelectedValueChange,
-    ...rest
+    ...void1
 }: RadioGroupProps<V, GroupElement, GroupLabelElement, TabbableChildElement>) {
     untabbable ??= false;
-    assertEmptyObject(rest);
+    assertEmptyObject(void1);
 
     return useComponent(
         imperativeHandle,

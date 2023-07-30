@@ -1,9 +1,9 @@
 import { createContext, Ref } from "preact";
-import { focus } from "preact-prop-helpers";
+import { focus, memo } from "preact-prop-helpers";
 import { useCallback, useImperativeHandle } from "preact/hooks";
 import { Get10, Get5, OmitStrong, useContextWithWarning } from "../props.js";
 import { useToolbar, useToolbarChild, UseToolbarChildParameters, UseToolbarChildReturnType, UseToolbarContext, UseToolbarParameters, UseToolbarReturnType, UseToolbarSubInfo } from "../use-toolbar.js";
-import { GenericComponentProps, memoForwardRef, useDefault } from "./util.js";
+import { GenericComponentProps, useDefault } from "./util.js";
 
 export type ToolbarProps<ToolbarContainerElement extends Element, ToolbarChildElement extends Element, LabelElement extends Element, M extends UseToolbarSubInfo<ToolbarChildElement>> = GenericComponentProps<
     UseToolbarReturnType<ToolbarContainerElement, ToolbarChildElement, LabelElement, M>,
@@ -23,7 +23,7 @@ const AriaPropNameContext = createContext<UseToolbarParameters<any, any, any>["s
 const SelectionModeContext = createContext<UseToolbarParameters<any, any, any>["singleSelectionParameters"]["selectionMode"]>("focus");
 const ToolbarContext = createContext<UseToolbarContext<any, any>>(null!);
 
-export const Toolbar = memoForwardRef(function ToolbarU<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({
+export const Toolbar = memo(function ToolbarU<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({
     render,
     role,
     collator,

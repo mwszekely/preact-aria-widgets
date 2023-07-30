@@ -88,10 +88,18 @@ export interface CheckboxGroupContext<TCE extends Element> extends CompleteListN
     // parent
     checkboxGroupParentContext: {
 
-        // What a horrifying type.  Name this better please.
-        setSetter: PassiveStateUpdater<StateUpdater<string> | null, Event>;
+        /**
+         * So the group needs to be able to provide the parent checkbox with all the IDs of each child for its aria-controls prop.
+         * 
+         * Thus, the parent needs to provide the group with its own function to be able to call "setMyAriaControls(theIdsOfEachChild)".
+         * 
+         * That's what this is.
+         */
+        setControlsSetterOnParentCheckbox: PassiveStateUpdater<StateUpdater<string> | null, Event>;
 
-        // whyyyyy
+        /**
+         * Similar to the above, but for the overall checked state on the parent checkbox for the group to coordinate.
+         */
         setSetParentCheckboxChecked: PassiveStateUpdater<StateUpdater<CheckboxCheckedType> | null, Event>;
 
         getPercentChecked: (totalChecked: number, totalChildren: number) => number;
@@ -158,10 +166,10 @@ export function useCheckboxGroup<GroupElement extends Element, TCE extends Eleme
     // (but only once per render);
     const allIds = useRef(new Set<string>());
     const updateParentControlIds = useStableCallback((setter: StateUpdater<string> | null) => { setter?.(Array.from(allIds.current).join(" ")) });
-    const [getSetter, setSetter] = usePassiveState<StateUpdater<string> | null, Event>(updateParentControlIds, returnNull);
-    const [_getUpdateIndex, setUpdateIndex] = usePassiveState<number, Event>(useStableCallback(() => { updateParentControlIds(getSetter()) }), returnZero);
+    const [getControlsSetterOnParentCheckbox, setControlsSetterOnParentCheckbox] = usePassiveState<StateUpdater<string> | null, Event>(updateParentControlIds, returnNull);
+    const [_getUpdateIndex, setUpdateIndex] = usePassiveState<number, Event>(useStableCallback(() => { updateParentControlIds(getControlsSetterOnParentCheckbox()) }), returnZero, setTimeout);
 
-    // Lots of machenery to track what total percentage of all checkboxes are checked,
+    // Lots of machinery to track what total percentage of all checkboxes are checked,
     // and notifying the parent checkbox of this information (while re-rendering as little as possible)
     const getSelfIsChecked = useCallback((percentChecked: number): CheckboxCheckedType => { return percentChecked <= 0 ? false : percentChecked >= 1 ? true : "mixed"; }, []);
     const onAnyChildCheckedUpdate = useStableCallback((setter: StateUpdater<CheckboxCheckedType> | null, percentChecked: number) => { setter?.(getSelfIsChecked(percentChecked)); })
@@ -228,7 +236,7 @@ export function useCheckboxGroup<GroupElement extends Element, TCE extends Eleme
                 setTotalChildren
             }),
             checkboxGroupParentContext: useMemoObject({
-                setSetter,
+                setControlsSetterOnParentCheckbox,
                 setSetParentCheckboxChecked,
                 getPercentChecked,
                 getTotalChecked,
@@ -258,7 +266,7 @@ export function useCheckboxGroup<GroupElement extends Element, TCE extends Eleme
 export function useCheckboxGroupParent<TCE extends Element>({
     context: {
         checkboxGroupParentContext: {
-            setSetter,
+            setControlsSetterOnParentCheckbox,
             setSetParentCheckboxChecked,
             getPercentChecked,
             getTotalChecked,
@@ -304,7 +312,7 @@ export function useCheckboxGroupParent<TCE extends Element>({
 
     const [ariaControls, setControls] = useState("");
     useLayoutEffect(() => {
-        setSetter(() => setControls);
+        setControlsSetterOnParentCheckbox(() => setControls);
     }, [setControls]);
     monitorCallCount(useCheckboxGroupParent);
 

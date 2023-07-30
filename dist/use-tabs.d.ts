@@ -58,7 +58,7 @@ export interface UseTabListLabelReturnTypeInfo {
 export interface UseTabLabelReturnTypeWithHooks<LabelElement extends Element> extends UseTabListLabelReturnTypeInfo {
     useTabListLabelProps: (props: ElementProps<LabelElement>) => ElementProps<LabelElement>;
 }
-export interface UseTabsReturnType<TabContainerElement extends Element, TabElement extends Element, LabelElement extends Element, M extends TabInfo<TabElement>> extends OmitStrong<UseCompleteListNavigationReturnType<TabContainerElement, TabElement, M>, "props" | "context"> {
+export interface UseTabsReturnType<TabContainerElement extends Element, TabElement extends Element, LabelElement extends Element, M extends TabInfo<TabElement> = TabInfo<TabElement>> extends OmitStrong<UseCompleteListNavigationReturnType<TabContainerElement, TabElement, M>, "props" | "context"> {
     propsContainer: ElementProps<TabContainerElement>;
     propsLabel: ElementProps<LabelElement>;
     contextPanels: UseTabPanelsContext<TabPanelInfo>;

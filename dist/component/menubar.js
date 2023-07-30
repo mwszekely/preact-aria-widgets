@@ -1,15 +1,16 @@
 import { jsx as _jsx, Fragment as _Fragment } from "preact/jsx-runtime";
 import { createContext } from "preact";
-import { focus } from "preact-prop-helpers";
+import { assertEmptyObject, focus, memo } from "preact-prop-helpers";
 import { useCallback, useImperativeHandle } from "preact/hooks";
 import { useContextWithWarning } from "../props.js";
 import { useMenubar, useMenubarChild } from "../use-menubar.js";
-import { memoForwardRef, useDefault } from "./util.js";
+import { useDefault } from "./util.js";
 export const MenubarItemContext = createContext(null);
-export const Menubar = memoForwardRef(function MenubarU({ render, collator, disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, staggered, noTypeahead, untabbable, onTabbableIndexChange, compare, getIndex, disabled, selectedIndex, onSelectedIndexChange, typeaheadTimeout, role, ariaLabel, ariaPropName, selectionMode, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount }) {
+export const Menubar = memo(function Menubar({ render, collator, disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, staggered, noTypeahead, untabbable, onTabbableIndexChange, compare, getIndex, disabled, selectedIndex, onSelectedIndexChange, typeaheadTimeout, role, ariaLabel, ariaPropName, selectionMode, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, ...void1 }) {
     ariaPropName ||= "aria-selected";
     selectionMode ||= "activation";
     untabbable ||= false;
+    assertEmptyObject(void1);
     const info = useMenubar({
         linearNavigationParameters: {
             onNavigateLinear,

@@ -1,10 +1,10 @@
-import { createContext, VNode } from "preact";
-import { focus } from "preact-prop-helpers";
+import { createContext } from "preact";
+import { assertEmptyObject, focus } from "preact-prop-helpers";
 import { memo } from "preact/compat";
 import { useCallback, useContext } from "preact/hooks";
 import { Get, Get10, Get4, OmitStrong, useContextWithWarning } from "../props.js";
 import { ListboxInfo, useListbox, UseListboxContext, useListboxItem, UseListboxItemParameters, UseListboxItemReturnType, UseListboxParameters, UseListboxReturnType } from "../use-listbox.js";
-import { GenericComponentProps, PartialExcept, useDefault } from "./util.js";
+import { GenericComponentProps, useComponent, useDefault } from "./util.js";
 
 
 interface ListboxPropsBase<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement> = ListboxInfo<ListItemElement>> extends
@@ -25,8 +25,9 @@ export interface ListboxProps<ListElement extends Element, ListItemElement exten
     ListboxPropsBase<ListElement, ListItemElement, LabelElement, M>,
     "ariaLabel" | "selectionLimit" | "selectedIndex"> {
 }
-export interface ListboxItemProps<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends PartialExcept<ListboxItemPropsBase<ListItemElement, M>, "index" | "getSortValue"> {
-    render(info: UseListboxItemReturnType<ListItemElement, ListboxInfo<ListItemElement>>): VNode;
+export interface ListboxItemProps<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends
+    GenericComponentProps<UseListboxItemReturnType<ListItemElement, ListboxInfo<ListItemElement>>, ListboxItemPropsBase<ListItemElement, M>,
+        "index" | "getSortValue"> {
 }
 
 const ListboxContext = createContext<UseListboxContext<any, any, any>>(null!);
@@ -93,55 +94,60 @@ export const Listbox = memo(function Listbox<ListElement extends Element, ListIt
     onElementChange,
     onMount,
     onUnmount,
-    render
+    render,
+    imperativeHandle,
+    ...void1
 }: ListboxProps<ListElement, ListItemElement, LabelElement, ListboxInfo<ListItemElement>>) {
     const listboxGroupInfo = useContext(ListboxGroupContext);
     ariaPropName ||= "aria-selected";
     selectionMode ||= "activation";
     untabbable ||= false;
 
-    const info = useListbox<ListElement, ListItemElement, LabelElement>({
-        labelParameters: { ariaLabel },
-        staggeredChildrenParameters: {
-            staggered: staggered || false
-        },
-        linearNavigationParameters: {
-            onNavigateLinear,
-            navigatePastEnd: navigatePastEnd ?? "wrap",
-            navigatePastStart: navigatePastStart ?? "wrap",
-            disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
-            pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
-        },
-        paginatedChildrenParameters: {
-            paginationMax,
-            paginationMin
-        },
-        listboxParameters: {
-            selectionLimit,
-            groupingType: listboxGroupInfo == null ? "without-groups" : "group",
-            selectedIndex,
-            onSelectedIndexChange,
-            orientation: orientation ?? "vertical"
-        },
-        rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
-        rovingTabIndexParameters: {
-            onTabbableIndexChange,
-            untabbable: untabbable ?? false
-        },
-        sortableChildrenParameters: { compare },
-        typeaheadNavigationParameters: {
-            onNavigateTypeahead,
-            collator: useDefault("collator", collator),
-            noTypeahead: useDefault("noTypeahead", noTypeahead),
-            typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
-        },
-        refElementParameters: { onElementChange, onMount, onUnmount },
-        singleSelectionParameters: { ariaPropName, selectionMode }
-    });
+    assertEmptyObject(void1);
 
-    return (
-        <ListboxContext.Provider value={info.context}>{render(info)}</ListboxContext.Provider>
-    );
+    return useComponent(
+        imperativeHandle,
+        render,
+        ListboxContext,
+        useListbox<ListElement, ListItemElement, LabelElement>({
+            labelParameters: { ariaLabel },
+            staggeredChildrenParameters: {
+                staggered: staggered || false
+            },
+            linearNavigationParameters: {
+                onNavigateLinear,
+                navigatePastEnd: navigatePastEnd ?? "wrap",
+                navigatePastStart: navigatePastStart ?? "wrap",
+                disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
+                pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
+            },
+            paginatedChildrenParameters: {
+                paginationMax,
+                paginationMin
+            },
+            listboxParameters: {
+                selectionLimit,
+                groupingType: listboxGroupInfo == null ? "without-groups" : "group",
+                selectedIndex,
+                onSelectedIndexChange,
+                orientation: orientation ?? "vertical"
+            },
+            rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
+            rovingTabIndexParameters: {
+                onTabbableIndexChange,
+                untabbable: untabbable ?? false
+            },
+            sortableChildrenParameters: { compare },
+            typeaheadNavigationParameters: {
+                onNavigateTypeahead,
+                collator: useDefault("collator", collator),
+                noTypeahead: useDefault("noTypeahead", noTypeahead),
+                typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
+            },
+            refElementParameters: { onElementChange, onMount, onUnmount },
+            singleSelectionParameters: { ariaPropName, selectionMode }
+        })
+    )
 })
 
 export const ListboxItem = memo(function ListboxItem<ListboxItemElement extends Element>({
@@ -164,29 +170,31 @@ export const ListboxItem = memo(function ListboxItem<ListboxItemElement extends 
     onCurrentFocusedChanged,
     onCurrentFocusedInnerChanged,
     focusSelf,
-    ...subInfo
+    imperativeHandle,
+    ...void1
 }: ListboxItemProps<ListboxItemElement, ListboxInfo<ListboxItemElement>>) {
     const context = useContextWithWarning(ListboxContext, "listbox");
     console.assert(context != null, `This ListboxItem is not contained within a Listbox`);
     const focusSelfDefault = useCallback((e: any) => { focus(e); }, []);
-   //focusSelf ??= focusSelfDefault;
+    assertEmptyObject(void1);
 
-    const info = useListboxItem<ListboxItemElement>({
-        info: {
-            index,
-            untabbable: untabbable || false,
-            unselectable: unselectable || false,
-            focusSelf: focusSelf ?? focusSelfDefault,
-            getSortValue,
-            ...subInfo
-        },
-        context,
-        listboxParameters: { selected, onMultiSelect },
-        pressParameters: { allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange },
-        textContentParameters: { getText: useDefault("getText", getText) },
-        hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged, },
-        refElementParameters: { onElementChange, onMount, onUnmount }
-    });
-
-    return render(info);
+    return useComponent(
+        imperativeHandle,
+        render,
+        null,
+        useListboxItem<ListboxItemElement>({
+            info: {
+                index,
+                untabbable: untabbable || false,
+                unselectable: unselectable || false,
+                focusSelf: focusSelf ?? focusSelfDefault,
+                getSortValue
+            },
+            context,
+            listboxParameters: { selected, onMultiSelect },
+            pressParameters: { allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange },
+            textContentParameters: { getText: useDefault("getText", getText) },
+            hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged, },
+            refElementParameters: { onElementChange, onMount, onUnmount }
+        }))
 })

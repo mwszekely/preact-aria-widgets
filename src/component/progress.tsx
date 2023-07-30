@@ -1,7 +1,7 @@
 import { UseAsyncHandlerParameters, assertEmptyObject, memo } from "preact-prop-helpers";
 import { Get3 } from "../props.js";
 import { UseProgressParameters, UseProgressReturnType, UseProgressWithHandlerParameters, UseProgressWithHandlerReturnType, useProgress, useProgressWithHandler } from "../use-progress.js";
-import { GenericComponentProps, PartialExcept, memoForwardRef, useComponent } from "./util.js";
+import { GenericComponentProps, PartialExcept, useComponent } from "./util.js";
 
 type Get<T, K extends keyof T> = T[K];
 
@@ -35,8 +35,11 @@ export const Progress = memo(function Progress<IndicatorElement extends Element,
     render,
     value,
     valueText,
-    imperativeHandle
+    imperativeHandle,
+    ...void1
 }: ProgressProps<IndicatorElement, LabelElement>) {
+    assertEmptyObject(void1);
+    
     return useComponent(
         imperativeHandle,
         render,
@@ -52,7 +55,7 @@ export const Progress = memo(function Progress<IndicatorElement extends Element,
         }));
 })
 
-export const ProgressWithHandler = memoForwardRef(function ProgressWithHandler<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element>({
+export const ProgressWithHandler = memo(function ProgressWithHandler<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element>({
     ariaLabel,
     forciblyPending,
     render,

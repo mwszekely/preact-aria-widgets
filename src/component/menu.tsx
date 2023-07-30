@@ -1,5 +1,5 @@
 import { createContext } from "preact";
-import { focus, OmitStrong } from "preact-prop-helpers";
+import { assertEmptyObject, focus, OmitStrong } from "preact-prop-helpers";
 import { useCallback, useContext } from "preact/hooks";
 import { Get16, useContextWithWarning } from "../props.js";
 import { useMenu, UseMenuContext, useMenuItem, UseMenuItemReturnType, UseMenuParameters, UseMenuReturnType } from "../use-menu.js";
@@ -65,7 +65,8 @@ export function Menu<SurfaceElement extends Element, ParentElement extends Eleme
 
     render,
 
-    imperativeHandle
+    imperativeHandle,
+    ...void1
 
 }: MenuProps<SurfaceElement, ParentElement, ChildElement, ButtonElement, UseMenubarSubInfo<ChildElement>>) {
 
@@ -74,7 +75,7 @@ export function Menu<SurfaceElement extends Element, ParentElement extends Eleme
     ariaPropName ||= "aria-selected";
     selectionMode ||= "activation";
     untabbable ||= false;
-
+    assertEmptyObject(void1);
 
 
     return (
@@ -165,11 +166,13 @@ export function MenuItem<MenuItemElement extends Element>({
     onElementChange,
     onMount,
     onUnmount,
-    info: uinfo
+    info: uinfo,
+    ...void1
 }: MenuItemProps<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>) {
     const context = useContextWithWarning(MenuItemContext, "menu");
     const defaultFocusSelf = useCallback((e: MenuItemElement | null) => focus(e as Element as HTMLElement), []);
-
+    assertEmptyObject(void1);
+    
     return (
         useComponent(
             imperativeHandle,

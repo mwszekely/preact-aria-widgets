@@ -9,9 +9,9 @@ export const CheckboxGroup = memo(function CheckboxGroup({ render, collator, dis
     return useComponent(imperativeHandle, render, UseCheckboxGroupChildContext, useCheckboxGroup({
         linearNavigationParameters: {
             onNavigateLinear,
-            disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap",
+            disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
             pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
         },
         checkboxGroupParameters: {

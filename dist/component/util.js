@@ -2,11 +2,20 @@ import { jsx as _jsx } from "preact/jsx-runtime";
 import { createContext } from "preact";
 import { focus } from "preact-prop-helpers";
 import { createPortal, forwardRef, memo, useContext, useImperativeHandle, useRef } from "preact/compat";
-export function memoForwardRef(fn) {
+function memoForwardRef(fn) {
     return memo(forwardRef(fn));
 }
-export function useComponent(ref, render, Context, info) {
-    useImperativeHandle(ref, () => info);
+/**
+ * Almost all components are built in the exact same way from their implementing hook -- this just sets all of that up.
+ *
+ * @param imperativeHandle The `imperativeHandle` prop all component props have that hook a `ref` up to the hook's return values
+ * @param render The `render` prop all component props have that turns a hook's return values into JSX to render
+ * @param Context Optional. Some hooks return a `context` object, and if so, it will be rendered with the `Context` object provided.
+ * @param info The return type of the hook.
+ * @returns
+ */
+export function useComponent(imperativeHandle, render, Context, info) {
+    useImperativeHandle(imperativeHandle, () => info);
     if (Context) {
         return _jsx(Context.Provider, { value: info.context, children: render(info) });
     }

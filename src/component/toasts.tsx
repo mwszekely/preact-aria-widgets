@@ -1,23 +1,11 @@
 import { Context, createContext } from "preact";
-import { assertEmptyObject, OmitStrong } from "preact-prop-helpers";
+import { OmitStrong, assertEmptyObject } from "preact-prop-helpers";
 import { Get2, useContextWithWarning } from "../props.js";
-import { ToastInfo, ToastsContext, useToast, UseToastParameters, UseToastReturnType, useToasts, UseToastsParameters, UseToastsReturnType } from "../use-toasts.js";
+import { ToastInfo, ToastsContext, UseToastParameters, UseToastReturnType, UseToastsParameters, UseToastsReturnType, useToast, useToasts } from "../use-toasts.js";
 import { GenericComponentProps, useComponent } from "./util.js";
-/*
-type Get<T, K extends keyof T> = T[K];
 
-export interface ToastsProps<ContainerType extends Element> extends Get<UseToastsParameters, "managedChildrenParameters">, Get<UseToastsParameters, "toastsParameters"> {
-    ref?: Ref<UseToastsReturnType<ContainerType, ToastInfo>>;
-    render(info: UseToastsReturnType<ContainerType, ToastInfo>): VNode;
-}
 
-export interface ToastProps<E extends Element> extends Get<UseToastParameters<ToastInfo>, "info">, Get<UseToastParameters<ToastInfo>, "toastParameters"> {
-    ref?: Ref<UseToastReturnType<E>>;
-    render(args: UseToastReturnType<E>): VNode;
-}
-*/
-
-export type ToastsProps<ContainerType extends Element, M extends ToastInfo> = GenericComponentProps<
+export type ToastsProps<ContainerType extends Element, M extends ToastInfo = ToastInfo> = GenericComponentProps<
     UseToastsReturnType<ContainerType, M>,
     Get2<UseToastsParameters, "managedChildrenParameters", "toastsParameters">,
     "visibleCount"

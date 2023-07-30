@@ -1,5 +1,5 @@
 import { createContext, createElement } from "preact";
-import { ElementProps, focus, memo, returnZero, useStableCallback } from "preact-prop-helpers";
+import { ElementProps, assertEmptyObject, focus, memo, returnZero, useStableCallback } from "preact-prop-helpers";
 import { useImperativeHandle } from "preact/hooks";
 import { ElementToTag, Get12, Get4, Get7, OmitStrong, useContextWithWarning } from "../props.js";
 import { GridlistCellInfo, GridlistRowInfo, UseGridlistCellParameters, UseGridlistCellReturnType, UseGridlistContext, UseGridlistParameters, UseGridlistReturnType, UseGridlistRowContext, UseGridlistRowParameters, UseGridlistRowReturnType, useGridlist, useGridlistCell, useGridlistRow } from "../use-gridlist.js";
@@ -70,9 +70,10 @@ export const Gridlist = (function Gridlist<GridlistElement extends Element, RowE
     onElementChange,
     onMount,
     onUnmount,
-    render
+    render,
+    ...void1
 }: GridlistProps<GridlistElement, RowElement, CellElement, LabelElement, GridlistRowInfo<RowElement>, GridlistCellInfo<CellElement>>) {
-
+    assertEmptyObject(void1);
     type RM = GridlistRowInfo<RowElement>;
     type CM = GridlistCellInfo<CellElement>;
     untabbable ??= false;

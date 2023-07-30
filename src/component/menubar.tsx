@@ -1,9 +1,9 @@
 import { createContext } from "preact";
-import { focus } from "preact-prop-helpers";
+import { assertEmptyObject, focus, memo } from "preact-prop-helpers";
 import { useCallback, useImperativeHandle } from "preact/hooks";
 import { Get10, Get6, OmitStrong, useContextWithWarning } from "../props.js";
 import { UseMenubarContext, UseMenubarItemParameters, UseMenubarItemReturnType, UseMenubarParameters, UseMenubarReturnType, UseMenubarSubInfo, useMenubar, useMenubarChild } from "../use-menubar.js";
-import { GenericComponentProps, memoForwardRef, useDefault } from "./util.js";
+import { GenericComponentProps, useDefault } from "./util.js";
 
 
 export type MenubarProps<MenuParentElement extends Element, MenuItemElement extends Element, LabelElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> = GenericComponentProps<
@@ -20,7 +20,7 @@ export type MenubarItemProps<MenuItemElement extends Element, M extends UseMenub
 
 export const MenubarItemContext = createContext<UseMenubarContext<any, any, any>>(null!);
 
-export const Menubar = memoForwardRef(function MenubarU<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({
+export const Menubar = memo(function Menubar<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({
     render,
     collator,
     disableHomeEndKeys,
@@ -47,11 +47,13 @@ export const Menubar = memoForwardRef(function MenubarU<ContainerElement extends
     imperativeHandle,
     onElementChange, 
     onMount, 
-    onUnmount 
+    onUnmount ,
+    ...void1
 }: MenubarProps<ContainerElement, ChildElement, LabelElement, UseMenubarSubInfo<ChildElement>>) {
     ariaPropName ||= "aria-selected";
     selectionMode ||= "activation";
     untabbable ||= false;
+    assertEmptyObject(void1);
 
     const info = useMenubar<ContainerElement, ChildElement, LabelElement>({
         linearNavigationParameters: {

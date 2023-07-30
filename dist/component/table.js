@@ -1,6 +1,6 @@
 import { jsx as _jsx } from "preact/jsx-runtime";
 import { createContext } from "preact";
-import { focus, memo, useStableCallback } from "preact-prop-helpers";
+import { assertEmptyObject, focus, memo, useStableCallback } from "preact-prop-helpers";
 import { useContextWithWarning } from "../props.js";
 import { useTable, useTableCell, useTableRow, useTableSection } from "../use-table.js";
 import { useComponent, useDefault } from "./util.js";
@@ -63,7 +63,8 @@ export const TableSection = memo(function TableSection({ disableHomeEndKeys, get
     });
     return (_jsx(TableSectionContext.Provider, { value: info.context, children: render(info) }));
 });
-export const TableRow = memo(function TableRow({ index, getText, tagTableRow, onTabbableIndexChange, navigatePastEnd, navigatePastStart, selected, unselectable, initiallyTabbedIndex, untabbable, info, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, render }, ref) {
+export const TableRow = memo(function TableRow({ index, getText, tagTableRow, onTabbableIndexChange, navigatePastEnd, navigatePastStart, selected, unselectable, initiallyTabbedIndex, untabbable, info, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, render, ...void1 }) {
+    assertEmptyObject(void1);
     return useComponent(imperativeHandle, render, TableRowContext, useTableRow({
         info: {
             index,
@@ -94,8 +95,9 @@ export const TableRow = memo(function TableRow({ index, getText, tagTableRow, on
         },
     }));
 });
-export const TableCell = memo(function TableCell({ index, getText, focusSelf, untabbable, tagTableCell, render, colSpan, imperativeHandle, getSortValue, info }) {
+export const TableCell = memo(function TableCell({ index, getText, focusSelf, untabbable, tagTableCell, render, colSpan, imperativeHandle, getSortValue, info, ...void1 }) {
     const defaultFocusSelf = useStableCallback((e) => { focus(e); }, []);
+    assertEmptyObject(void1);
     return useComponent(imperativeHandle, render, null, useTableCell({
         info: {
             index,

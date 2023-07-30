@@ -1,46 +1,18 @@
 import { jsx as _jsx } from "preact/jsx-runtime";
 import { createContext } from "preact";
-import { focus } from "preact-prop-helpers";
+import { assertEmptyObject, focus, memo } from "preact-prop-helpers";
 import { useCallback, useImperativeHandle } from "preact/hooks";
 import { useContextWithWarning } from "../props.js";
 import { useTab, useTabPanel, useTabs } from "../use-tabs.js";
-import { memoForwardRef, useComponent, useDefault } from "./util.js";
-/*
-type Get<T, K extends keyof T> = T[K];
-
-interface TabsPropsBase<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element, M extends TabInfo<TabElement>> extends
-    Get10<UseTabsParameters<TabContainerElement, TabElement, TabLabelElement, M>, "labelParameters","linearNavigationParameters","rearrangeableChildrenParameters","rovingTabIndexParameters","singleSelectionParameters","sortableChildrenParameters","staggeredChildrenParameters","tabsParameters","typeaheadNavigationParameters", "singleSelectionParameters"> {
-}
-
-interface TabPropsBase<TabElement extends Element, M extends TabInfo<TabElement>> extends
-    Pick<M, "index" | "untabbable" | "unselectable" | "getSortValue">,
-    Get2<UseTabParameters<TabElement, M>, "pressParameters","textContentParameters"> {
-    focusSelf: M["focusSelf"];
-    info?: OmitStrong<M, keyof TabInfo<TabElement>>
-}
-
-interface TabPanelPropsBase<M extends TabPanelInfo> extends Pick<M, "index"> {
-    info?: OmitStrong<M, keyof TabPanelInfo>
-}
-
-export interface TabsProps<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element, M extends TabInfo<TabElement>> extends PartialExcept<TabsPropsBase<TabContainerElement, TabElement, TabLabelElement, M>, "orientation" | "ariaLabel"> {
-    render(info: UseTabsReturnType<TabContainerElement, TabElement, TabLabelElement, M>): VNode<any>;
-}
-
-export interface TabProps<TabElement extends Element, M extends TabInfo<TabElement>> extends PartialExcept<TabPropsBase<TabElement, M>, "index" | "getSortValue"> {
-    render(info: UseTabReturnType<TabElement, M>): VNode<any>;
-}
-
-export interface TabPanelProps<PanelElement extends Element, M extends TabPanelInfo> extends PartialExcept<TabPanelPropsBase<M>, "index"> {
-    render(info: UseTabPanelReturnType<PanelElement>): VNode<any>;
-}*/
+import { useComponent, useDefault } from "./util.js";
 const TabsContext = createContext(null);
 const TabPanelsContext = createContext(null);
 const UntabbableContext = createContext(false);
 const SelectionModeContext = createContext("focus");
-export const Tabs = memoForwardRef(function Tabs({ ariaLabel, collator, compare, disableHomeEndKeys, getIndex, initiallySelectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSelectedIndexChange, onTabbableIndexChange, orientation, staggered, pageNavigationSize, localStorageKey, selectionMode, untabbable, typeaheadTimeout, role, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, render }, ref) {
+export const Tabs = memo(function Tabs({ ariaLabel, collator, compare, disableHomeEndKeys, getIndex, initiallySelectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSelectedIndexChange, onTabbableIndexChange, orientation, staggered, pageNavigationSize, localStorageKey, selectionMode, untabbable, typeaheadTimeout, role, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, render, ...void1 }) {
     untabbable ??= false;
     selectionMode ??= "focus";
+    assertEmptyObject(void1);
     const info = useTabs({
         labelParameters: { ariaLabel },
         staggeredChildrenParameters: { staggered: staggered || false },
@@ -56,7 +28,7 @@ export const Tabs = memoForwardRef(function Tabs({ ariaLabel, collator, compare,
             onTabbableIndexChange,
             untabbable
         },
-        singleSelectionParameters: { initiallySelectedIndex: initiallySelectedIndex ?? 0, onSelectedIndexChange: onSelectedIndexChange ?? null, selectionMode },
+        singleSelectionParameters: { initiallySelectedIndex, onSelectedIndexChange, selectionMode },
         sortableChildrenParameters: { compare },
         tabsParameters: {
             orientation,

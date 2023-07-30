@@ -11,15 +11,16 @@ export interface CheckboxChangeEventDetail {
 export type TargetedCheckboxChangeEvent = TargetedEnhancedEvent<Event, CheckboxChangeEventDetail>;
 export type CheckboxChangeEventHandler = EnhancedEventHandler<Event, CheckboxChangeEventDetail>;
 export interface UseCheckboxParametersSelf {
+    /** Called when the user changes the value of the checkbox.
+     * 
+     * @remarks If you need this to be async, see {@link useProgressWithHandler}
+     */
     onCheckedChange: Nullable<CheckboxChangeEventHandler>;
-    //onCheckedChange: Nullable<CheckboxChangeEventHandler>;
 }
 
 export interface UseCheckboxParameters<LP extends LabelPosition, I extends Element, L extends Element> extends
     OmitStrong<UseCheckboxLikeParameters<LP, I, L, boolean | "mixed">, "pressParameters" | "checkboxLikeParameters" | "randomIdInputParameters" | "randomIdLabelParameters" | "refElementLabelReturn" | "refElementInputReturn">,
     TargetedOmit<UseCheckboxLikeParameters<LP, I, L, boolean | "mixed">, "pressParameters", "onPressSync">,
-    //OmitStrong<UseProgressWithHandlerParameters<TargetedCheckboxChangeEvent, CheckboxCheckedType, ProgressIndicatorType, ProgressLabelType>, "asyncHandlerParameters" | "labelParameters">,
-    //TargetedOmit<UseProgressWithHandlerParameters<TargetedCheckboxChangeEvent, CheckboxCheckedType, ProgressIndicatorType, ProgressLabelType>, "asyncHandlerParameters", "capture">,
     TargetedOmit<UseCheckboxLikeParameters<LP, I, L, boolean | "mixed">, "checkboxLikeParameters", "role"> {
     checkboxParameters: UseCheckboxParametersSelf;
 }
@@ -27,7 +28,6 @@ export interface UseCheckboxParameters<LP extends LabelPosition, I extends Eleme
 export interface UseCheckboxReturnTypeSelf<InputType extends Element> { propsUnstable: ElementProps<InputType> }
 
 export interface UseCheckboxReturnType<InputType extends Element, LabelType extends Element> extends
-    //OmitStrong<UseProgressWithHandlerReturnType<TargetedCheckboxChangeEvent, CheckboxCheckedType, ProgressIndicatorType, ProgressLabelType>, never>,
     UseCheckboxLikeReturnType<InputType, LabelType> {
     checkboxReturn: UseCheckboxReturnTypeSelf<InputType>;
 }

@@ -30,7 +30,6 @@ export function useDialog<FocusContainerElement extends Element, SourceElement e
     focusTrapParameters, 
     activeElementParameters,
     backdropDismissParameters,
-    //lostFocusDismissParameters,
     modalParameters,
     refElementParameters,
     labelParameters,

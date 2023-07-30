@@ -24,9 +24,9 @@ export function useCheckboxGroup({ linearNavigationParameters, rovingTabIndexPar
     // (but only once per render);
     const allIds = useRef(new Set());
     const updateParentControlIds = useStableCallback((setter) => { setter?.(Array.from(allIds.current).join(" ")); });
-    const [getSetter, setSetter] = usePassiveState(updateParentControlIds, returnNull);
-    const [_getUpdateIndex, setUpdateIndex] = usePassiveState(useStableCallback(() => { updateParentControlIds(getSetter()); }), returnZero);
-    // Lots of machenery to track what total percentage of all checkboxes are checked,
+    const [getControlsSetterOnParentCheckbox, setControlsSetterOnParentCheckbox] = usePassiveState(updateParentControlIds, returnNull);
+    const [_getUpdateIndex, setUpdateIndex] = usePassiveState(useStableCallback(() => { updateParentControlIds(getControlsSetterOnParentCheckbox()); }), returnZero, setTimeout);
+    // Lots of machinery to track what total percentage of all checkboxes are checked,
     // and notifying the parent checkbox of this information (while re-rendering as little as possible)
     const getSelfIsChecked = useCallback((percentChecked) => { return percentChecked <= 0 ? false : percentChecked >= 1 ? true : "mixed"; }, []);
     const onAnyChildCheckedUpdate = useStableCallback((setter, percentChecked) => { setter?.(getSelfIsChecked(percentChecked)); });
@@ -86,7 +86,7 @@ export function useCheckboxGroup({ linearNavigationParameters, rovingTabIndexPar
                 setTotalChildren
             }),
             checkboxGroupParentContext: useMemoObject({
-                setSetter,
+                setControlsSetterOnParentCheckbox,
                 setSetParentCheckboxChecked,
                 getPercentChecked,
                 getTotalChecked,
@@ -110,7 +110,7 @@ export function useCheckboxGroup({ linearNavigationParameters, rovingTabIndexPar
  *
  * @compositeParams
  */
-export function useCheckboxGroupParent({ context: { checkboxGroupParentContext: { setSetter, setSetParentCheckboxChecked, getPercentChecked, getTotalChecked, getTotalChildren, onCheckboxGroupParentInput }, ...context }, info, hasCurrentFocusParameters, refElementParameters, textContentParameters }) {
+export function useCheckboxGroupParent({ context: { checkboxGroupParentContext: { setControlsSetterOnParentCheckbox, setSetParentCheckboxChecked, getPercentChecked, getTotalChecked, getTotalChildren, onCheckboxGroupParentInput }, ...context }, info, hasCurrentFocusParameters, refElementParameters, textContentParameters }) {
     const { hasCurrentFocusReturn, managedChildReturn, pressParameters, textContentReturn, refElementReturn, propsChild, propsTabbable, paginatedChildReturn, rovingTabIndexChildReturn, staggeredChildReturn, singleSelectionChildReturn, } = useCompleteListNavigationChild({
         context,
         hasCurrentFocusParameters,
@@ -127,7 +127,7 @@ export function useCheckboxGroupParent({ context: { checkboxGroupParentContext: 
     });
     const [ariaControls, setControls] = useState("");
     useLayoutEffect(() => {
-        setSetter(() => setControls);
+        setControlsSetterOnParentCheckbox(() => setControls);
     }, [setControls]);
     monitorCallCount(useCheckboxGroupParent);
     const [checked, setChecked] = useState(false);

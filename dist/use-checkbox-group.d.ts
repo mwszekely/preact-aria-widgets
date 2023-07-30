@@ -56,7 +56,17 @@ export interface UseCheckboxGroupParentReturnType<TCE extends Element> extends O
 }
 export interface CheckboxGroupContext<TCE extends Element> extends CompleteListNavigationContext<TCE, CheckboxGroupInfo<TCE>> {
     checkboxGroupParentContext: {
-        setSetter: PassiveStateUpdater<StateUpdater<string> | null, Event>;
+        /**
+         * So the group needs to be able to provide the parent checkbox with all the IDs of each child for its aria-controls prop.
+         *
+         * Thus, the parent needs to provide the group with its own function to be able to call "setMyAriaControls(theIdsOfEachChild)".
+         *
+         * That's what this is.
+         */
+        setControlsSetterOnParentCheckbox: PassiveStateUpdater<StateUpdater<string> | null, Event>;
+        /**
+         * Similar to the above, but for the overall checked state on the parent checkbox for the group to coordinate.
+         */
         setSetParentCheckboxChecked: PassiveStateUpdater<StateUpdater<CheckboxCheckedType> | null, Event>;
         getPercentChecked: (totalChecked: number, totalChildren: number) => number;
         getTotalChecked: () => number;
@@ -84,7 +94,7 @@ export declare function useCheckboxGroup<GroupElement extends Element, TCE exten
  *
  * @compositeParams
  */
-export declare function useCheckboxGroupParent<TCE extends Element>({ context: { checkboxGroupParentContext: { setSetter, setSetParentCheckboxChecked, getPercentChecked, getTotalChecked, getTotalChildren, onCheckboxGroupParentInput }, ...context }, info, hasCurrentFocusParameters, refElementParameters, textContentParameters }: UseCheckboxGroupParentParameters<TCE>): UseCheckboxGroupParentReturnType<TCE>;
+export declare function useCheckboxGroupParent<TCE extends Element>({ context: { checkboxGroupParentContext: { setControlsSetterOnParentCheckbox, setSetParentCheckboxChecked, getPercentChecked, getTotalChecked, getTotalChildren, onCheckboxGroupParentInput }, ...context }, info, hasCurrentFocusParameters, refElementParameters, textContentParameters }: UseCheckboxGroupParentParameters<TCE>): UseCheckboxGroupParentReturnType<TCE>;
 /**
  * Implements the "child" part of a checkbox group.
  *

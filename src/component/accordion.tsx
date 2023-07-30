@@ -67,7 +67,8 @@ export const Accordion = memo(function Accordion<HeaderButtonElement extends Ele
                 },
                 refElementParameters: { onElementChange, onMount, onUnmount },
                 managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange },
-            }))
+            })
+        )
     );
 
 })
@@ -106,5 +107,6 @@ export const AccordionSection = memo(function AccordionSection<HeaderContainerEl
             refElementBodyParameters: {},
             textContentParameters: { getText: useDefault("getText", getText) },
             context: useContextWithWarning(AccordionSectionContext, "accordion section"),
-        }));
+        })
+    );
 });

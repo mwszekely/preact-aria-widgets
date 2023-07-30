@@ -37,5 +37,6 @@ export const Button = memo(function Button<ButtonElement extends Element>({
             buttonParameters: { onPressSync, role: role, tagButton, pressed, disabled },
             pressParameters: { longPressThreshold, allowRepeatPresses, excludeSpace, onPressingChange, focusSelf: useDefault("focusSelf", focusSelf) },
             refElementParameters: { onElementChange, onMount, onUnmount },
-        }));
+        })
+    );
 })

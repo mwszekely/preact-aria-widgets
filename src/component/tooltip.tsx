@@ -1,8 +1,8 @@
-import { Ref } from "preact";
+import { assertEmptyObject, memo } from "preact-prop-helpers";
 import { useContext } from "preact/compat";
 import { Get3 } from "../props.js";
 import { UseTooltipParameters, UseTooltipReturnType, useTooltip } from "../use-tooltip.js";
-import { GenericComponentProps, ParentDepthContext, memoForwardRef, useComponent, useDefault } from "./util.js";
+import { GenericComponentProps, ParentDepthContext, useComponent, useDefault } from "./util.js";
 
 export type TooltipProps<TriggerType extends Element, PopupType extends Element> = GenericComponentProps<
     UseTooltipReturnType<TriggerType, PopupType>,
@@ -10,7 +10,7 @@ export type TooltipProps<TriggerType extends Element, PopupType extends Element>
     "tooltipSemanticType" | "onStatus"
 >;
 
-export const Tooltip = memoForwardRef(function TooltipU<TriggerType extends Element, PopupType extends Element>({
+export const Tooltip = memo(function TooltipU<TriggerType extends Element, PopupType extends Element>({
     onStatus,
     getDocument,
     parentDepth,
@@ -20,11 +20,13 @@ export const Tooltip = memoForwardRef(function TooltipU<TriggerType extends Elem
     onActiveElementChange,
     onLastActiveElementChange,
     onWindowFocusedChange,
-    tooltipSemanticType
-}: TooltipProps<TriggerType, PopupType>, ref?: Ref<any>) {
+    tooltipSemanticType,
+    ...void1
+}: TooltipProps<TriggerType, PopupType>) {
 
     const defaultParentDepth = useContext(ParentDepthContext);
     let myDepth = (parentDepth ?? defaultParentDepth) + 1;
+    assertEmptyObject(void1);
 
     return (
         <ParentDepthContext.Provider value={myDepth}>

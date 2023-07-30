@@ -1,16 +1,16 @@
 import { jsx as _jsx, Fragment as _Fragment } from "preact/jsx-runtime";
 import { createContext } from "preact";
-import { focus } from "preact-prop-helpers";
+import { focus, memo } from "preact-prop-helpers";
 import { useCallback, useImperativeHandle } from "preact/hooks";
 import { useContextWithWarning } from "../props.js";
 import { useToolbar, useToolbarChild } from "../use-toolbar.js";
-import { memoForwardRef, useDefault } from "./util.js";
+import { useDefault } from "./util.js";
 // TODO: Are there performance/sanity implications for having one context per primitive?
 const UntabbableContext = createContext(false);
 const AriaPropNameContext = createContext("aria-selected");
 const SelectionModeContext = createContext("focus");
 const ToolbarContext = createContext(null);
-export const Toolbar = memoForwardRef(function ToolbarU({ render, role, collator, disableHomeEndKeys, disabled, compare, getIndex, navigatePastEnd, navigatePastStart, pageNavigationSize, selectedIndex, onSelectedIndexChange, orientation, noTypeahead, onTabbableIndexChange, typeaheadTimeout, staggered, ariaLabel, ariaPropName, selectionMode, untabbable, onNavigateLinear, onNavigateTypeahead, onElementChange, onMount, onUnmount }, ref) {
+export const Toolbar = memo(function ToolbarU({ render, role, collator, disableHomeEndKeys, disabled, compare, getIndex, navigatePastEnd, navigatePastStart, pageNavigationSize, selectedIndex, onSelectedIndexChange, orientation, noTypeahead, onTabbableIndexChange, typeaheadTimeout, staggered, ariaLabel, ariaPropName, selectionMode, untabbable, onNavigateLinear, onNavigateTypeahead, onElementChange, onMount, onUnmount }, ref) {
     ariaPropName ??= "aria-selected";
     selectionMode ??= "activation";
     untabbable ||= false;

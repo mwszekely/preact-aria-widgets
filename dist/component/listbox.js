@@ -1,11 +1,11 @@
 import { jsx as _jsx } from "preact/jsx-runtime";
 import { createContext } from "preact";
-import { focus } from "preact-prop-helpers";
+import { assertEmptyObject, focus } from "preact-prop-helpers";
 import { memo } from "preact/compat";
 import { useCallback, useContext } from "preact/hooks";
 import { useContextWithWarning } from "../props.js";
 import { useListbox, useListboxItem } from "../use-listbox.js";
-import { useDefault } from "./util.js";
+import { useComponent, useDefault } from "./util.js";
 const ListboxContext = createContext(null);
 const ListboxGroupContext = createContext(null);
 export const GroupedListbox = memo(function GroupedListbox({ ariaLabel, selectionLimit, orientation, render, onElementChange, onMount, onUnmount }) {
@@ -35,12 +35,13 @@ export const GroupedListbox = memo(function GroupedListbox({ ariaLabel, selectio
     });
     return (_jsx(ListboxGroupContext.Provider, { value: info, children: render(info) }));
 });
-export const Listbox = memo(function Listbox({ ariaLabel, collator, compare, disableHomeEndKeys, getIndex, selectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSelectedIndexChange, onTabbableIndexChange, staggered, pageNavigationSize, paginationMax, paginationMin, selectionLimit, untabbable, typeaheadTimeout, orientation, ariaPropName, selectionMode, onNavigateLinear, onNavigateTypeahead, onElementChange, onMount, onUnmount, render }) {
+export const Listbox = memo(function Listbox({ ariaLabel, collator, compare, disableHomeEndKeys, getIndex, selectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSelectedIndexChange, onTabbableIndexChange, staggered, pageNavigationSize, paginationMax, paginationMin, selectionLimit, untabbable, typeaheadTimeout, orientation, ariaPropName, selectionMode, onNavigateLinear, onNavigateTypeahead, onElementChange, onMount, onUnmount, render, imperativeHandle, ...void1 }) {
     const listboxGroupInfo = useContext(ListboxGroupContext);
     ariaPropName ||= "aria-selected";
     selectionMode ||= "activation";
     untabbable ||= false;
-    const info = useListbox({
+    assertEmptyObject(void1);
+    return useComponent(imperativeHandle, render, ListboxContext, useListbox({
         labelParameters: { ariaLabel },
         staggeredChildrenParameters: {
             staggered: staggered || false
@@ -77,22 +78,20 @@ export const Listbox = memo(function Listbox({ ariaLabel, collator, compare, dis
         },
         refElementParameters: { onElementChange, onMount, onUnmount },
         singleSelectionParameters: { ariaPropName, selectionMode }
-    });
-    return (_jsx(ListboxContext.Provider, { value: info.context, children: render(info) }));
+    }));
 });
-export const ListboxItem = memo(function ListboxItem({ unselectable, getText, untabbable, index, render, selected, getSortValue, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, onMultiSelect, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, ...subInfo }) {
+export const ListboxItem = memo(function ListboxItem({ unselectable, getText, untabbable, index, render, selected, getSortValue, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, onMultiSelect, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, imperativeHandle, ...void1 }) {
     const context = useContextWithWarning(ListboxContext, "listbox");
     console.assert(context != null, `This ListboxItem is not contained within a Listbox`);
     const focusSelfDefault = useCallback((e) => { focus(e); }, []);
-    //focusSelf ??= focusSelfDefault;
-    const info = useListboxItem({
+    assertEmptyObject(void1);
+    return useComponent(imperativeHandle, render, null, useListboxItem({
         info: {
             index,
             untabbable: untabbable || false,
             unselectable: unselectable || false,
             focusSelf: focusSelf ?? focusSelfDefault,
-            getSortValue,
-            ...subInfo
+            getSortValue
         },
         context,
         listboxParameters: { selected, onMultiSelect },
@@ -100,7 +99,6 @@ export const ListboxItem = memo(function ListboxItem({ unselectable, getText, un
         textContentParameters: { getText: useDefault("getText", getText) },
         hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged, },
         refElementParameters: { onElementChange, onMount, onUnmount }
-    });
-    return render(info);
+    }));
 });
 //# sourceMappingURL=listbox.js.map

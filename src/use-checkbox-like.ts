@@ -17,7 +17,6 @@ export interface UseCheckboxLikeParametersSelf<C extends CheckboxCheckedType> {
     role: JSX.AriaRole;
     disabled: DisabledType;
     checked: C;
-    //onInput(event: Event): void;
 }
 
 export interface UseCheckboxLikeParameters<LP extends LabelPosition, InputType extends Element, LabelType extends Element, C extends CheckboxCheckedType> extends 

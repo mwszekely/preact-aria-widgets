@@ -79,6 +79,7 @@ export const Checkbox = memo(function Checkbox<I extends Element, L extends Elem
             labelParameters: { ariaLabel: ariaLabel, labelPosition, tagInput, tagLabel },
             pressParameters: { excludeSpace, longPressThreshold },
             checkboxParameters: { onCheckedChange }
-        }));
+        })
+    );
 
 });

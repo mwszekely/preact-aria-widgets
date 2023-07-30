@@ -1,5 +1,5 @@
 import { createContext, createElement } from "preact";
-import { focus, memo, returnZero, useStableCallback } from "preact-prop-helpers";
+import { assertEmptyObject, focus, memo, returnZero, useStableCallback } from "preact-prop-helpers";
 import { useImperativeHandle } from "preact/hooks";
 import { useContextWithWarning } from "../props.js";
 import { useGridlist, useGridlistCell, useGridlistRow } from "../use-gridlist.js";
@@ -16,7 +16,8 @@ export function defaultRenderGridlistChild({ tagGridlistChild, makePropsGridlist
         return createElement(tagGridlistChild, (makePropsGridlistChild(info)));
     };
 }
-export const Gridlist = (function Gridlist({ collator, disableHomeEndKeys, noTypeahead, onTabbableIndexChange, groupingType, typeaheadTimeout, selectedIndex, navigatePastEnd, navigatePastStart, onSelectedIndexChange, pageNavigationSize, selectionLimit, untabbable, paginationMax, paginationMin, staggered, compare, getIndex, onTabbableColumnChange, ariaLabel, orientation, ariaPropName, selectionMode, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, render }) {
+export const Gridlist = (function Gridlist({ collator, disableHomeEndKeys, noTypeahead, onTabbableIndexChange, groupingType, typeaheadTimeout, selectedIndex, navigatePastEnd, navigatePastStart, onSelectedIndexChange, pageNavigationSize, selectionLimit, untabbable, paginationMax, paginationMin, staggered, compare, getIndex, onTabbableColumnChange, ariaLabel, orientation, ariaPropName, selectionMode, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, render, ...void1 }) {
+    assertEmptyObject(void1);
     untabbable ??= false;
     ariaPropName ??= "aria-selected";
     selectionMode ??= "activation";

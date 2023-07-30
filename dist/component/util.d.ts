@@ -1,8 +1,15 @@
 import { Context, Ref } from "preact";
 import { GetIndex, Nullable, VNode } from "preact-prop-helpers";
-import { ForwardFn } from "preact/compat";
-export declare function memoForwardRef<T extends ForwardFn<any, any>>(fn: T): T;
-export declare function useComponent<R>(ref: Nullable<Ref<R>>, render: (info: R) => VNode, Context: null | Context<(R extends {
+/**
+ * Almost all components are built in the exact same way from their implementing hook -- this just sets all of that up.
+ *
+ * @param imperativeHandle The `imperativeHandle` prop all component props have that hook a `ref` up to the hook's return values
+ * @param render The `render` prop all component props have that turns a hook's return values into JSX to render
+ * @param Context Optional. Some hooks return a `context` object, and if so, it will be rendered with the `Context` object provided.
+ * @param info The return type of the hook.
+ * @returns
+ */
+export declare function useComponent<R>(imperativeHandle: Nullable<Ref<R>>, render: (info: R) => VNode, Context: null | Context<(R extends {
     context?: infer C;
 } ? C : unknown)>, info: R): import("preact").JSX.Element;
 /**
