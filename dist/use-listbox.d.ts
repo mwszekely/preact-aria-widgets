@@ -1,4 +1,4 @@
-import { CompleteListNavigationContext, ElementProps, EventType, TargetedOmit, TargetedPick, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UsePressParameters, UsePressReturnType, UseSingleSelectionDeclarativeParameters } from "preact-prop-helpers";
+import { CompleteListNavigationContext, ElementProps, EventType, Nullable, TargetedOmit, TargetedPick, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UsePressParameters, UsePressReturnType, UseSingleSelectionDeclarativeParameters } from "preact-prop-helpers";
 import { EventDetail, OmitStrong } from "./props.js";
 import { UseLabelSyntheticParameters } from "./use-label.js";
 export type ListboxSingleSelectEvent<E extends EventTarget> = {
@@ -11,7 +11,7 @@ export type ListboxMultiSelectEvent<E extends EventTarget> = {
         selected: boolean;
     };
 } & Pick<EventType<E, Event>, "target" | "currentTarget">;
-export interface UseListboxContext<ListElement extends Element, ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends CompleteListNavigationContext<ListElement, ListItemElement, M> {
+export interface UseListboxContext<ListElement extends Element, ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends CompleteListNavigationContext<ListItemElement, M> {
     listboxContext: {
         selectionLimit: "single" | "multi" | "none";
     };
@@ -52,10 +52,10 @@ export interface UseListboxItemParametersSelf<ListItemElement extends Element> {
     /**
      * When the `selectionLimit` is `"single"`, this must be `null`.
      */
-    selected: boolean | null;
-    onMultiSelect: null | ((e: ListboxMultiSelectEvent<ListItemElement>) => void);
+    selected: Nullable<boolean>;
+    onMultiSelect: Nullable<((e: ListboxMultiSelectEvent<ListItemElement>) => void)>;
 }
-export interface UseListboxItemParameters<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends UseCompleteListNavigationChildParameters<ListItemElement, M>, TargetedOmit<UsePressParameters<ListItemElement>, "pressParameters", "excludeSpace" | "onPressSync"> {
+export interface UseListboxItemParameters<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends UseCompleteListNavigationChildParameters<ListItemElement, M>, TargetedOmit<UsePressParameters<ListItemElement>, "pressParameters", "excludeSpace" | "onPressSync" | "focusSelf"> {
     listboxParameters: UseListboxItemParametersSelf<ListItemElement>;
     context: UseListboxContext<any, ListItemElement, M>;
 }
@@ -72,9 +72,9 @@ export interface ListboxInfo<ListItemElement extends Element> extends UseComplet
  *
  * @hasChild {@link useListboxItem}
  */
-export declare function useListbox<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement> = ListboxInfo<ListItemElement>>({ labelParameters, listboxParameters: { selectionLimit, groupingType, selectedIndex, onSelectedIndexChange, orientation }, linearNavigationParameters, singleSelectionParameters: { ariaPropName, selectionMode }, rovingTabIndexParameters, ...restParams }: UseListboxParameters<ListElement, ListItemElement, LabelElement, M>): UseListboxReturnType<ListElement, ListItemElement, LabelElement, M>;
+export declare function useListbox<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element>({ labelParameters, listboxParameters: { selectionLimit, groupingType, selectedIndex, onSelectedIndexChange, orientation }, linearNavigationParameters, singleSelectionParameters: { ariaPropName, selectionMode }, rovingTabIndexParameters, ...restParams }: UseListboxParameters<ListElement, ListItemElement, LabelElement, ListboxInfo<ListItemElement>>): UseListboxReturnType<ListElement, ListItemElement, LabelElement, ListboxInfo<ListItemElement>>;
 /**
  * @compositeParams
  */
-export declare function useListboxItem<ListItemElement extends Element, M extends ListboxInfo<ListItemElement> = ListboxInfo<ListItemElement>>({ context: { listboxContext: { selectionLimit }, ...context }, listboxParameters: { selected, onMultiSelect }, pressParameters: { focusSelf, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, ...void1 }, ...restParams }: UseListboxItemParameters<ListItemElement, M>): UseListboxItemReturnType<ListItemElement, M>;
+export declare function useListboxItem<ListItemElement extends Element, M extends ListboxInfo<ListItemElement> = ListboxInfo<ListItemElement>>({ context: { listboxContext: { selectionLimit }, ...context }, listboxParameters: { selected, onMultiSelect }, pressParameters: { allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, ...void1 }, ...restParams }: UseListboxItemParameters<ListItemElement, M>): UseListboxItemReturnType<ListItemElement, M>;
 //# sourceMappingURL=use-listbox.d.ts.map

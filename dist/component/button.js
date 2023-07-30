@@ -1,19 +1,12 @@
-import { useImperativeHandle } from "preact/hooks";
+import { assertEmptyObject, memo } from "preact-prop-helpers";
 import { useButton } from "../use-button.js";
-import { memoForwardRef } from "./util.js";
-export const Button = memoForwardRef(function Button({ tagButton, onPress, pressed, render, disabled, onElementChange, onMount, onUnmount, allowRepeatPresses, longPressThreshold, excludeEnter, excludePointer, excludeSpace, onPressingChange }, ref) {
-    const info = useButton({
-        buttonParameters: {
-            role: "button",
-            tagButton: tagButton,
-            onPress: onPress ?? null,
-            pressed,
-            disabled: disabled ?? false
-        },
-        pressParameters: { longPressThreshold, allowRepeatPresses, excludeEnter, excludePointer, excludeSpace, onPressingChange },
-        refElementParameters: { onElementChange, onMount, onUnmount }
-    });
-    useImperativeHandle(ref, () => info);
-    return render(info);
+import { useComponent, useDefault } from "./util.js";
+export const Button = memo(function Button({ tagButton, pressed, render, disabled, onElementChange, onMount, onUnmount, allowRepeatPresses, longPressThreshold, excludeSpace, onPressingChange, onPressSync, focusSelf, role, imperativeHandle, ...void1 }) {
+    assertEmptyObject(void1);
+    return useComponent(imperativeHandle, render, null, useButton({
+        buttonParameters: { onPressSync, role: role, tagButton, pressed, disabled },
+        pressParameters: { longPressThreshold, allowRepeatPresses, excludeSpace, onPressingChange, focusSelf: useDefault("focusSelf", focusSelf) },
+        refElementParameters: { onElementChange, onMount, onUnmount },
+    }));
 });
 //# sourceMappingURL=button.js.map

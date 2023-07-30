@@ -1,24 +1,34 @@
-import { jsx as _jsx } from "preact/jsx-runtime";
 import { createContext } from "preact";
-import { useImperativeHandle } from "preact/hooks";
+import { assertEmptyObject } from "preact-prop-helpers";
 import { useContextWithWarning } from "../props.js";
 import { useToast, useToasts } from "../use-toasts.js";
-import { memoForwardRef } from "./util.js";
+import { useComponent } from "./util.js";
 const ToastContext = createContext(null);
-export const Toasts = memoForwardRef(function Toasts({ onAfterChildLayoutEffect, onChildrenMountChange, render, visibleCount }, ref) {
-    const info = useToasts({ managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange }, toastsParameters: { visibleCount } });
-    useImperativeHandle(ref, () => info);
-    return (_jsx(ToastContext.Provider, { value: info.context, children: render(info) }));
-});
-export const Toast = memoForwardRef(function Toast({ render, index, timeout, politeness, children }, ref) {
-    const context = useContextWithWarning(ToastContext, "toasts provider");
-    console.assert(context != null, `This Toast was not rendered within a Toasts provider`);
-    const info = useToast({
-        info: { index },
-        toastParameters: { timeout, politeness, children },
-        context
-    });
-    useImperativeHandle(ref, () => info);
-    return render(info);
-});
+export function Toasts({ onAfterChildLayoutEffect, onChildrenMountChange, render, visibleCount, imperativeHandle, onChildrenCountChange, ...void1 }) {
+    assertEmptyObject(void1);
+    return useComponent(imperativeHandle, render, ToastContext, useToasts({
+        managedChildrenParameters: {
+            onAfterChildLayoutEffect,
+            onChildrenMountChange,
+            onChildrenCountChange
+        },
+        toastsParameters: {
+            visibleCount
+        }
+    }));
+}
+export function Toast({ render, index, timeout, politeness, children, info, imperativeHandle }) {
+    return useComponent(imperativeHandle, render, null, useToast({
+        toastParameters: {
+            timeout,
+            politeness,
+            children
+        },
+        info: {
+            index,
+            ...info
+        },
+        context: useContextWithWarning(ToastContext, "toasts provider")
+    }));
+}
 //# sourceMappingURL=toasts.js.map

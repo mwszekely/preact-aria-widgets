@@ -62,7 +62,7 @@ export function useGridlist({ labelParameters, listboxParameters: { selectionLim
  * @compositeParams
  *
  */
-export function useGridlistRow({ gridlistRowParameters: { selected }, linearNavigationParameters, context: cx1, info, rovingTabIndexParameters, textContentParameters, typeaheadNavigationParameters, ...void1 }) {
+export function useGridlistRow({ gridlistRowParameters: { selected }, linearNavigationParameters, context: cx1, info, rovingTabIndexParameters, textContentParameters, typeaheadNavigationParameters, hasCurrentFocusParameters, gridNavigationSingleSelectionSortableRowParameters, ...void1 }) {
     monitorCallCount(useGridlistRow);
     const { gridlistRowContext: { selectionLimit } } = cx1;
     const { context: cx2, hasCurrentFocusReturn, linearNavigationReturn, managedChildReturn, managedChildrenReturn, paginatedChildReturn, props, rovingTabIndexChildReturn, rovingTabIndexReturn, singleSelectionChildReturn, staggeredChildReturn, textContentReturn, typeaheadNavigationReturn, pressParameters, ...void2 } = useCompleteGridNavigationRow({
@@ -72,6 +72,8 @@ export function useGridlistRow({ gridlistRowParameters: { selected }, linearNavi
         rovingTabIndexParameters,
         textContentParameters,
         typeaheadNavigationParameters,
+        hasCurrentFocusParameters,
+        gridNavigationSingleSelectionSortableRowParameters,
     });
     // `selected` should only be true/false for multi-selection
     if (selectionLimit != "multi")

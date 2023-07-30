@@ -1,10 +1,10 @@
-import { assertEmptyObject, ElementProps, focus, monitorCallCount, PressEventReason, returnFalse, TargetedPick, useMergedProps, usePress, UsePressParameters, UsePressReturnType, useStableCallback } from "preact-prop-helpers";
+import { assertEmptyObject, ElementProps, focus, monitorCallCount, Nullable, PressEventReason, returnFalse, TargetedPick, useMergedProps, usePress, UsePressParameters, UsePressReturnType, useStableCallback } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { OmitStrong } from "./props.js";
 import { useToolbar, useToolbarChild, UseToolbarChildParameters, UseToolbarChildReturnType, UseToolbarContext, UseToolbarParameters, UseToolbarReturnType, UseToolbarSubInfo } from "./use-toolbar.js";
 
 
-export interface UseMenubarContext<ContainerElement extends Element, ChildElement extends Element, M extends UseMenubarSubInfo<ChildElement>> extends UseToolbarContext<ContainerElement, ChildElement, M> { }
+export interface UseMenubarContext<ContainerElement extends Element, ChildElement extends Element, M extends UseMenubarSubInfo<ChildElement>> extends UseToolbarContext<ChildElement, M> { }
 export interface UseMenubarSubInfo<ChildElement extends Element> extends UseToolbarSubInfo<ChildElement> { }
 export interface UseMenubarParameters<MenuParentElement extends Element, MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseToolbarParameters<MenuParentElement, MenuItemElement, M> { }
 
@@ -14,7 +14,7 @@ export interface UseMenubarItemParametersSelf<MenuItemElement extends Element> {
     /**
      * Optional. Applies in addition to any single-selection behavior.
      */
-    onPress: null | ((e: PressEventReason<MenuItemElement>) => void);
+    onPress: Nullable<((e: PressEventReason<MenuItemElement>) => void)>;
 }
 
 export interface UseMenubarItemParameters<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends
@@ -23,7 +23,8 @@ export interface UseMenubarItemParameters<MenuItemElement extends Element, M ext
     menuItemParameters: UseMenubarItemParametersSelf<MenuItemElement>;
 }
 
-export interface UseMenubarReturnType<MenuParentElement extends Element, MenuItemElement extends Element, LabelElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseToolbarReturnType<MenuParentElement, MenuItemElement, LabelElement, M>, "propsToolbar"> {
+export interface UseMenubarReturnType<MenuParentElement extends Element, MenuItemElement extends Element, LabelElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends 
+OmitStrong<UseToolbarReturnType<MenuParentElement, MenuItemElement, LabelElement, M>, "propsToolbar"> {
     propsMenubar: ElementProps<MenuParentElement>;
     context: UseMenubarContext<MenuParentElement, MenuItemElement, M>;
 }
@@ -40,14 +41,16 @@ export interface UseMenubarItemReturnType<MenuItemElement extends Element, M ext
  * 
  * @compositeParams
  */
-export function useMenubar<MenuParentElement extends Element, MenuItemElement extends Element, LabelElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>>(args: UseMenubarParameters<MenuParentElement, MenuItemElement, M>): UseMenubarReturnType<MenuParentElement, MenuItemElement, LabelElement, M> {
+export function useMenubar<MenuParentElement extends Element, MenuItemElement extends Element, LabelElement extends Element>(args: UseMenubarParameters<MenuParentElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenubarReturnType<MenuParentElement, MenuItemElement, LabelElement, UseMenubarSubInfo<MenuItemElement>> {
+
+    type M = UseMenubarSubInfo<MenuItemElement>;
 
     monitorCallCount(useMenubar);
 
     const {
         propsToolbar: propsMenubar,
         ...restReturn
-    } = useToolbar<MenuParentElement, MenuItemElement, LabelElement, M>(args);
+    } = useToolbar<MenuParentElement, MenuItemElement, LabelElement>(args);
 
     return {
         propsMenubar,
@@ -59,11 +62,11 @@ export function useMenubar<MenuParentElement extends Element, MenuItemElement ex
 /**
  * @compositeParams
  */
-export function useMenubarChild<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>>({
+export function useMenubarChild<MenuItemElement extends Element>({
     menuItemParameters: { onPress: opu, role },
     pressParameters: { onPressingChange, ...void1 },
     ...restParams
-}: UseMenubarItemParameters<MenuItemElement, M>): UseMenubarItemReturnType<MenuItemElement, M> {
+}: UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenubarItemReturnType<MenuItemElement, UseMenubarSubInfo<MenuItemElement>> {
     monitorCallCount(useMenubarChild);
 
     const focusSelf = useCallback((e: any) => focus(e as Element as HTMLElement), [])
@@ -73,7 +76,7 @@ export function useMenubarChild<MenuItemElement extends Element, M extends UseMe
         propsTabbable,
         pressParameters: { onPressSync, excludeSpace },
         ...restRet
-    } = useToolbarChild<MenuItemElement, M>({
+    } = useToolbarChild<MenuItemElement>({
         ...restParams,
         toolbarChildParameters: { disabledProp: "aria-disabled" }
     });

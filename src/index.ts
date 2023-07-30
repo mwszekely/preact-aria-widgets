@@ -55,7 +55,7 @@ export { NotificationProviderContext, NotificationProviderProps, NotificationPro
 export { UseProgressParameters, UseProgressParametersSelf, UseProgressReturnType, UseProgressWithHandlerParameters, UseProgressWithHandlerParametersSelf, UseProgressWithHandlerReturnType, useProgress, useProgressWithHandler } from "./use-progress.js";
 export { RadioChangeEventDetail, RadioChangeEventHandler, RadioContext, RadioContextSelf, RadioSubInfo, TargetedRadioChangeEvent, UseRadioGroupParameters, UseRadioGroupParametersSelf, UseRadioGroupReturnType, UseRadioGroupReturnTypeSelf, UseRadioParameters, UseRadioParametersSelf, UseRadioReturnType, useRadio, useRadioGroup } from "./use-radio-group.js";
 export { RangeChangeEvent, SliderContext, SliderContextSelf, SliderThumbInfo, UseSliderParameters, UseSliderParametersSelf, UseSliderReturnType, UseSliderThumbParameters, UseSliderThumbParametersSelf, UseSliderThumbReturnType, UseSliderThumbReturnTypeSelf, useSlider, useSliderThumb } from "./use-slider.js";
-export { TableCellInfo, TableRowInfo, UseTableCellParameters, UseTableCellParametersSelf, UseTableCellReturnType, UseTableCellReturnTypeSelf, UseTableContext, UseTableContextSelf, UseTableParameters, UseTableParametersSelf, UseTableReturnType, UseTableRowContext, UseTableRowParameters, UseTableRowParametersSelf, UseTableRowReturnType, UseTableSectionContext, UseTableSectionParameters, UseTableSectionParametersSelf, UseTableSectionReturnType, useTable, useTableCell, useTableRow, useTableSection } from "./use-table.js";
+export { SortDirection, TableCellInfo, TableRowInfo, UseTableCellParameters, UseTableCellParametersSelf, UseTableCellReturnType, UseTableCellReturnTypeSelf, UseTableContext, UseTableContextSelf, UseTableParameters, UseTableParametersSelf, UseTableReturnType, UseTableRowContext, UseTableRowParameters, UseTableRowParametersSelf, UseTableRowReturnType, UseTableSectionContext, UseTableSectionParameters, UseTableSectionParametersSelf, UseTableSectionReturnType, useTable, useTableCell, useTableRow, useTableSection } from "./use-table.js";
 export { TabInfo, TabPanelInfo, TabsChangeEvent, UseTab, UseTabLabelParameters, UseTabLabelReturnTypeWithHooks, UseTabList, UseTabListLabel, UseTabListLabelReturnTypeInfo, UseTabListParameters, UseTabListReturnType, UseTabPanel, UseTabPanelParameters, UseTabPanelReturnType, UseTabPanelReturnTypeSelf, UseTabPanelsContext, UseTabParameters, UseTabReturnType, UseTabsContext, UseTabsParameters, UseTabsParametersSelf, UseTabsReturnType, useTab, useTabPanel, useTabs } from "./use-tabs.js";
 export { ToastInfo, ToastsContext, ToastsContextSelf, UseToastParameters, UseToastParametersSelf, UseToastReturnType, UseToastReturnTypeSelf, UseToastsParameters, UseToastsParametersSelf, UseToastsReturnType, useToast, useToasts } from "./use-toasts.js";
 export { UseToolbarChildParameters, UseToolbarChildParametersSelf, UseToolbarChildReturnType, UseToolbarContext, UseToolbarContextSelf, UseToolbarParameters, UseToolbarParametersSelf, UseToolbarReturnType, UseToolbarSubInfo, useToolbar, useToolbarChild } from "./use-toolbar.js";
@@ -65,13 +65,13 @@ export { Accordion, AccordionProps, AccordionSection, AccordionSectionProps } fr
 export { Button, ButtonProps } from "./component/button.js";
 export { CheckboxGroup, CheckboxGroupChild, CheckboxGroupChildProps, CheckboxGroupParent, CheckboxGroupParentProps, CheckboxGroupProps } from "./component/checkbox-group.js";
 export { Checkbox, CheckboxProps, defaultRenderCheckboxLike } from "./component/checkbox.js";
-export { Dialog, DialogProps, defaultRenderPortal } from "./component/dialog.js";
+export { Dialog, DialogProps } from "./component/dialog.js";
 export { Drawer, DrawerProps } from "./component/drawer.js";
 export { Gridlist, GridlistChild, GridlistChildProps, GridlistProps, GridlistRow, GridlistRowProps, defaultRenderGridlistChild } from "./component/gridlist.js";
-export { Heading, HeadingReset } from "./component/heading.js";
+export { Heading, HeadingProps, HeadingReset } from "./component/heading.js";
 export { GroupedListbox, Listbox, ListboxItem, ListboxItemProps, ListboxProps } from "./component/listbox.js";
 export { Menu, MenuItem, MenuItemProps, MenuProps } from "./component/menu.js";
-export { Menubar, MenubarItem, MenubarItemProps, MenubarProps } from "./component/menubar.js";
+export { Menubar, MenubarItem, MenubarItemContext, MenubarItemProps, MenubarProps } from "./component/menubar.js";
 export { Progress, ProgressProps, ProgressWithHandler, ProgressWithHandlerProps } from "./component/progress.js";
 export { Radio, RadioGroup, RadioGroupProps, RadioProps } from "./component/radio-group.js";
 export { Slider, SliderProps, SliderThumb, SliderThumbProps } from "./component/slider.js";
@@ -80,6 +80,7 @@ export { Tab, TabPanel, TabPanelProps, TabProps, Tabs, TabsProps } from "./compo
 export { Toast, ToastProps, Toasts, ToastsProps } from "./component/toasts.js";
 export { Toolbar, ToolbarChild, ToolbarChildProps, ToolbarProps } from "./component/toolbar.js";
 export { Tooltip, TooltipProps } from "./component/tooltip.js";
+export { useDefaultRenderPortal } from "./component/util.js";
 
 export { ParentDepthContext, useDefault } from "./component/util.js";
 export { EventDetail, setDebugLogging } from "./props.js";

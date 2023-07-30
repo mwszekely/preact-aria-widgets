@@ -2,15 +2,14 @@ import { ElementProps, JSX, TargetedOmit, TargetedPick, UsePressParameters, UseP
 import { DisabledType, OmitStrong } from "./props.js";
 import { LabelPosition, UseLabelParameters, UseLabelReturnType } from "./use-label.js";
 export type CheckboxCheckedType = boolean | "mixed";
-export interface UseCheckboxLikeParametersSelf {
+export interface UseCheckboxLikeParametersSelf<C extends CheckboxCheckedType> {
     /** The role attribute to use, when applicable */
     role: JSX.AriaRole;
     disabled: DisabledType;
-    checked: CheckboxCheckedType;
-    onInput(event: Event): void;
+    checked: C;
 }
-export interface UseCheckboxLikeParameters<LP extends LabelPosition, InputType extends Element, LabelType extends Element> extends OmitStrong<UseLabelParameters<LP, InputType, LabelType>, "labelParameters">, TargetedOmit<UseLabelParameters<LP, InputType, LabelType>, "labelParameters", "onLabelClick">, TargetedPick<UsePressParameters<any>, "pressParameters", "longPressThreshold" | "excludeSpace"> {
-    checkboxLikeParameters: UseCheckboxLikeParametersSelf;
+export interface UseCheckboxLikeParameters<LP extends LabelPosition, InputType extends Element, LabelType extends Element, C extends CheckboxCheckedType> extends OmitStrong<UseLabelParameters<LP, InputType, LabelType>, "labelParameters">, TargetedOmit<UseLabelParameters<LP, InputType, LabelType>, "labelParameters", "onLabelClick">, TargetedPick<UsePressParameters<any>, "pressParameters", "longPressThreshold" | "excludeSpace" | "onPressSync"> {
+    checkboxLikeParameters: UseCheckboxLikeParametersSelf<C>;
     refElementLabelReturn: UseRefElementReturnType<LabelType>["refElementReturn"];
     refElementInputReturn: UseRefElementReturnType<InputType>["refElementReturn"];
 }
@@ -42,5 +41,5 @@ export interface UseCheckboxLikeReturnType<InputType extends Element, LabelType 
  *
  * @compositeParams
  */
-export declare function useCheckboxLike<LP extends LabelPosition, InputType extends Element, LabelType extends Element>({ labelParameters, randomIdInputParameters, randomIdLabelParameters, checkboxLikeParameters: { checked, disabled, onInput: onInputSync, role, ...void1 }, refElementInputReturn, refElementLabelReturn, pressParameters: { excludeSpace, longPressThreshold, ...void2 }, ...void3 }: UseCheckboxLikeParameters<LP, InputType, LabelType>): UseCheckboxLikeReturnType<InputType, LabelType>;
+export declare function useCheckboxLike<LP extends LabelPosition, InputType extends Element, LabelType extends Element, C extends CheckboxCheckedType>({ labelParameters, randomIdInputParameters, randomIdLabelParameters, checkboxLikeParameters: { checked, disabled, role, ...void1 }, refElementInputReturn, refElementLabelReturn, pressParameters: { excludeSpace, longPressThreshold, onPressSync: onInputSync, ...void2 }, ...void3 }: UseCheckboxLikeParameters<LP, InputType, LabelType, C>): UseCheckboxLikeReturnType<InputType, LabelType>;
 //# sourceMappingURL=use-checkbox-like.d.ts.map

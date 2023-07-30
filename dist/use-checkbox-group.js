@@ -10,7 +10,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
  */
 export function useCheckboxGroup({ linearNavigationParameters, rovingTabIndexParameters, checkboxGroupParameters: { orientation }, ...listNavParameters }) {
     monitorCallCount(useCheckboxGroup);
-    const { childrenHaveFocusReturn, context, linearNavigationReturn, managedChildrenReturn, props, rearrangeableChildrenReturn, rovingTabIndexReturn, singleSelectionReturn, staggeredChildrenReturn, paginatedChildrenReturn, sortableChildrenReturn, typeaheadNavigationReturn } = useCompleteListNavigation({
+    const { context, linearNavigationReturn, managedChildrenReturn, props, rearrangeableChildrenReturn, rovingTabIndexReturn, singleSelectionReturn, staggeredChildrenReturn, paginatedChildrenReturn, sortableChildrenReturn, typeaheadNavigationReturn, childrenHaveFocusReturn, } = useCompleteListNavigation({
         linearNavigationParameters: { arrowKeyDirection: orientation, ...linearNavigationParameters },
         rovingTabIndexParameters: { focusSelfParent: focus, ...rovingTabIndexParameters },
         singleSelectionParameters: { initiallySelectedIndex: null, onSelectedIndexChange: null, ariaPropName: null, selectionMode: "disabled" },
@@ -48,16 +48,16 @@ export function useCheckboxGroup({ linearNavigationParameters, rovingTabIndexPar
         let willChangeAny = false;
         const promises = [];
         children.forEach(child => {
-            if (child.checkboxInfo.checkboxChildType == "child")
-                willChangeAny ||= (child.checkboxInfo.getChecked() != child.checkboxInfo.getLastUserChecked());
+            if (child.checkboxChildType == "child")
+                willChangeAny ||= (child.getChecked() != child.getLastUserChecked());
         });
         children.forEach(child => {
-            if (child.checkboxInfo.checkboxChildType == "child") {
-                const prevChecked = child.checkboxInfo.getChecked();
+            if (child.checkboxChildType == "child") {
+                const prevChecked = child.getChecked();
                 let checked;
                 if (nextChecked == "mixed") {
                     if (willChangeAny)
-                        checked = (child.checkboxInfo.getLastUserChecked());
+                        checked = (child.getLastUserChecked());
                     else
                         checked = true;
                 }
@@ -65,7 +65,7 @@ export function useCheckboxGroup({ linearNavigationParameters, rovingTabIndexPar
                     checked = nextChecked;
                 }
                 if (checked != prevChecked) {
-                    const promise = child.checkboxInfo.setCheckedFromParentInput(checked, e);
+                    const promise = child.setCheckedFromParentInput(checked, e);
                     if (promise) {
                         promises.push(promise);
                     }
@@ -76,6 +76,7 @@ export function useCheckboxGroup({ linearNavigationParameters, rovingTabIndexPar
     }, []);
     return {
         linearNavigationReturn,
+        childrenHaveFocusReturn,
         context: useMemoObject({
             ...context,
             checkboxGroupChildrenContext: useMemoObject({
@@ -93,7 +94,6 @@ export function useCheckboxGroup({ linearNavigationParameters, rovingTabIndexPar
                 onCheckboxGroupParentInput,
             })
         }),
-        childrenHaveFocusReturn,
         props,
         staggeredChildrenReturn,
         paginatedChildrenReturn,
@@ -110,11 +110,19 @@ export function useCheckboxGroup({ linearNavigationParameters, rovingTabIndexPar
  *
  * @compositeParams
  */
-export function useCheckboxGroupParent({ context, info, textContentParameters }) {
-    const { checkboxGroupParentContext: { setSetter, setSetParentCheckboxChecked, getPercentChecked, getTotalChecked, getTotalChildren, onCheckboxGroupParentInput } } = context;
+export function useCheckboxGroupParent({ context: { checkboxGroupParentContext: { setSetter, setSetParentCheckboxChecked, getPercentChecked, getTotalChecked, getTotalChildren, onCheckboxGroupParentInput }, ...context }, info, hasCurrentFocusParameters, refElementParameters, textContentParameters }) {
     const { hasCurrentFocusReturn, managedChildReturn, pressParameters, textContentReturn, refElementReturn, propsChild, propsTabbable, paginatedChildReturn, rovingTabIndexChildReturn, staggeredChildReturn, singleSelectionChildReturn, } = useCompleteListNavigationChild({
         context,
-        info: info,
+        hasCurrentFocusParameters,
+        refElementParameters,
+        info: {
+            ...info,
+            checkboxChildType: "parent",
+            // These 3 are child-only
+            getLastUserChecked: null,
+            setCheckedFromParentInput: null,
+            getChecked: null
+        },
         textContentParameters
     });
     const [ariaControls, setControls] = useState("");
@@ -155,7 +163,7 @@ export function useCheckboxGroupParent({ context, info, textContentParameters })
  *
  * @compositeParams
  */
-export function useCheckboxGroupChild({ checkboxGroupChildParameters, context, info, textContentParameters, }) {
+export function useCheckboxGroupChild({ checkboxGroupChildParameters, context, info: { focusSelf, getSortValue, index, unselectable, untabbable, ...void3 }, textContentParameters, hasCurrentFocusParameters, refElementParameters, ...void4 }) {
     const { checkboxGroupChildrenContext: { allIds, setUpdateIndex, setTotalChildren, setTotalChecked, } } = context;
     monitorCallCount(useCheckboxGroupChild);
     const { checked, onChangeFromParent, ...void1 } = checkboxGroupChildParameters;
@@ -184,12 +192,26 @@ export function useCheckboxGroupChild({ checkboxGroupChildParameters, context, i
         }
     }, [checked]);
     const { hasCurrentFocusReturn, managedChildReturn, refElementReturn, textContentReturn, propsChild, propsTabbable, singleSelectionChildReturn: _singleSelectionChildReturn, staggeredChildReturn, paginatedChildReturn, rovingTabIndexChildReturn, pressParameters, ...void2 } = useCompleteListNavigationChild({
-        info: { checkboxInfo: { checkboxChildType: "child", getLastUserChecked, getChecked, setCheckedFromParentInput: onChangeFromParent }, ...info },
+        info: {
+            checkboxChildType: "child",
+            getLastUserChecked,
+            getChecked,
+            setCheckedFromParentInput: onChangeFromParent,
+            focusSelf,
+            getSortValue,
+            index,
+            unselectable,
+            untabbable
+        },
         context,
         textContentParameters,
+        hasCurrentFocusParameters,
+        refElementParameters,
     });
     assertEmptyObject(void1);
     assertEmptyObject(void2);
+    assertEmptyObject(void3);
+    assertEmptyObject(void4);
     return {
         checkboxGroupChildReturn: {
             onChildCheckedChange,

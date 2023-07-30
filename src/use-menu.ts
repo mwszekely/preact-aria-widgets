@@ -1,10 +1,10 @@
-import { TargetedOmit, monitorCallCount, useMemoObject, useMergedProps, useStableCallback } from "preact-prop-helpers";
+import { EventType, TargetedOmit, monitorCallCount, useMemoObject, useMergedProps, useStableCallback } from "preact-prop-helpers";
 import { OmitStrong } from "./props.js";
 import { UseMenuSurfaceParameters, UseMenuSurfaceReturnType, useMenuSurface } from "./use-menu-surface.js";
 import { UseMenubarContext, UseMenubarItemParameters, UseMenubarItemReturnType, UseMenubarParameters, UseMenubarReturnType, UseMenubarSubInfo, useMenubar, useMenubarChild } from "./use-menubar.js";
 
 export interface UseMenuContext<ContainerElement extends Element, ChildElement extends Element, M extends UseMenubarSubInfo<ChildElement>> extends UseMenubarContext<ContainerElement, ChildElement, M> {
-    menu: { closeFromMenuItemClicked(): void; }
+    menu: { closeFromMenuItemClicked(e: EventType<any, any>): void; }
 }
 export interface UseMenuParametersSelf {
     /** This is called whenever the corresponding arrow key is pressed on the triggering button. */
@@ -24,11 +24,13 @@ export interface UseMenuParameters<MenuSurfaceElement extends Element, MenuParen
     OmitStrong<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "toolbarParameters" | "labelParameters">,
     TargetedOmit<UseMenuSurfaceParameters<MenuSurfaceElement, MenuButtonElement>, "menuSurfaceParameters", "role" | "surfaceId">,
     TargetedOmit<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "toolbarParameters", "role">,
-    TargetedOmit<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "toolbarParameters", "role"> {
-    dismissParameters: UseMenuSurfaceParameters<MenuSurfaceElement, MenuButtonElement>["dismissParameters"] & {
+    TargetedOmit<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "toolbarParameters", "role">,
+    TargetedOmit<UseMenuSurfaceParameters<MenuParentElement, MenuButtonElement>, "escapeDismissParameters", never>,
+    Pick<UseMenuSurfaceParameters<MenuSurfaceElement, MenuButtonElement>, "activeElementParameters" | "dismissParameters" | "modalParameters"> {
+    /*dismissParameters: UseMenuSurfaceParameters<MenuSurfaceElement, MenuButtonElement>["dismissParameters"] & {
         onClose(reason: "escape" | "backdrop" | "lost-focus" | "item-clicked"): void;
-    }
-    escapeDismissParameters: UseMenuSurfaceParameters<MenuSurfaceElement, MenuButtonElement>["escapeDismissParameters"];
+    }*/
+    //escapeDismissParameters: UseMenuSurfaceParameters<MenuSurfaceElement, MenuButtonElement>["escapeDismissParameters"];
 
     menuParameters: UseMenuParametersSelf;
 }
@@ -46,7 +48,7 @@ export interface MenuItemReturnTypeSelf {
      * 
      * Use this function to do so.
      */
-    closeMenu(): void;
+    closeMenu(e: EventType<any, any>): void;
 }
 
 export interface UseMenuItemReturnType<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseMenubarItemReturnType<MenuItemElement, M> {
@@ -64,14 +66,18 @@ export interface UseMenuItemReturnType<MenuItemElement extends Element, M extend
  * 
  * @compositeParams 
  */
-export function useMenu<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>>({
+export function useMenu<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element>({
     dismissParameters,
     escapeDismissParameters,
     menuParameters: { openDirection, onOpen },
     menuSurfaceParameters,
+    activeElementParameters,
     toolbarParameters,
+    modalParameters,
+
     ...restParams
-}: UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, M>): UseMenuReturnType<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement, M> {
+}: UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenuReturnType<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement, UseMenubarSubInfo<MenuItemElement>> {
+    type M = UseMenubarSubInfo<MenuItemElement>;
 
     monitorCallCount(useMenu);
 
@@ -82,14 +88,14 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
         randomIdInputReturn,
         rovingTabIndexReturn,
         ...restRet
-    } = useMenubar<MenuParentElement, MenuItemElement, MenuButtonElement, M>({
+    } = useMenubar<MenuParentElement, MenuItemElement, MenuButtonElement>({
         toolbarParameters: { role: "menu", ...toolbarParameters },
         labelParameters: { ariaLabel: null },
         ...restParams
     });
 
     const onKeyDown = useStableCallback((e: KeyboardEvent) => {
-        const isOpen = dismissParameters.open;
+        const isOpen = modalParameters.active;
         if (!isOpen) {
             switch (e.key) {
                 case "ArrowUp": {
@@ -140,8 +146,10 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
             surfaceId: randomIdInputReturn.id,
             role: "menu",
         },
-        dismissParameters,
         escapeDismissParameters,
+        modalParameters,
+        dismissParameters,
+        activeElementParameters,
         focusTrapParameters: {
             focusPopup: () => { rovingTabIndexReturn.focusSelf() }
         }
@@ -151,11 +159,11 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
     return {
         ...restRet,
         ...restRet2,
-        context: useMemoObject({
+        context: useMemoObject<UseMenuContext<MenuParentElement, MenuItemElement, M>>({
             ...context,
-            menu: useMemoObject({
-                closeFromMenuItemClicked: useStableCallback(() => {
-                    dismissParameters.onClose("item-clicked");
+            menu: useMemoObject<UseMenuContext<MenuParentElement, MenuItemElement, M>["menu"]>({
+                closeFromMenuItemClicked: useStableCallback((e) => {
+                    dismissParameters.onDismiss(e, "item-clicked" as never);    // TODO
                 })
             })
         }),
@@ -174,10 +182,12 @@ export interface UseMenuItemParameters<MenuItemElement extends Element, M extend
 /**
  * @compositeParams
  */
-export function useMenuItem<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>>(p: UseMenuItemParameters<MenuItemElement, M>): UseMenuItemReturnType<MenuItemElement, M> {
+export function useMenuItem<MenuItemElement extends Element>(p: UseMenuItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenuItemReturnType<MenuItemElement, UseMenubarSubInfo<MenuItemElement>> {
     monitorCallCount(useMenuItem);
 
-    const ret = useMenubarChild<MenuItemElement, M>(p);
+    type M = UseMenubarSubInfo<MenuItemElement>;
+
+    const ret = useMenubarChild<MenuItemElement>(p);
 
     return {
         ...ret,

@@ -87,19 +87,22 @@ export function useTabs({ labelParameters, linearNavigationParameters, singleSel
 /**
  * @compositeParams
  */
-export function useTab({ info: { focusSelf: focusSelfParent, ...info }, textContentParameters, pressParameters: { focusSelf: focusSelfChild, longPressThreshold, onPressingChange, ...void2 }, context }) {
+export function useTab({ info: { focusSelf: focusSelfParent, index, unselectable, untabbable, getSortValue, ...info }, textContentParameters, pressParameters: { focusSelf: focusSelfChild, longPressThreshold, onPressingChange, ...void2 }, context, hasCurrentFocusParameters, refElementParameters, ...void3 }) {
     const { propsChild: listNavigationSingleSelectionChildProps, propsTabbable, pressParameters: { onPressSync, excludeSpace, ...void1 }, refElementReturn, ...listNavRet2 } = useCompleteListNavigationChild({
         context,
-        info: { focusSelf: focusSelfParent, ...info },
+        info: { index, focusSelf: focusSelfParent, getSortValue, unselectable, untabbable, ...info },
         textContentParameters,
+        hasCurrentFocusParameters,
+        refElementParameters
     });
     const { pressReturn, props: propsPressStable } = usePress({ pressParameters: { onPressSync, focusSelf: focusSelfChild, allowRepeatPresses: false, excludeEnter: returnFalse, excludePointer: returnFalse, excludeSpace: returnFalse, longPressThreshold, onPressingChange }, refElementReturn });
     const { singleSelectionChildReturn: { selected }, rovingTabIndexChildReturn: { tabbable } } = listNavRet2;
     const { getPanelId, getTabId } = context.tabsContext;
-    const panelId = getPanelId(info.index);
-    const tabId = getTabId(info.index);
+    const panelId = getPanelId(index);
+    const tabId = getTabId(index);
     assertEmptyObject(void1);
     assertEmptyObject(void2);
+    assertEmptyObject(void3);
     monitorCallCount(useTab);
     return {
         pressReturn,
@@ -126,7 +129,8 @@ export function useTabPanel({ info, context }) {
     const [isVisible, setIsVisible, getIsVisible] = useState(null);
     //const visibleRef = useRef<ChildFlagOperations>({ get: getIsVisible, set: setIsVisible, isValid: returnTrue });
     useManagedChild({
-        context, info: {
+        context,
+        info: {
             getVisible: useStableCallback(() => { return getLastKnownVisibleIndex() == index; }),
             setVisibleIndex: useStableCallback((newIndex, prevIndex) => {
                 // Similar logic is in singleSelection, but we need to duplicate it here

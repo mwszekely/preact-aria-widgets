@@ -1,40 +1,55 @@
-import { Ref, VNode } from "preact";
-import { useContext, useImperativeHandle } from "preact/compat";
+import { Ref } from "preact";
+import { useContext } from "preact/compat";
+import { Get3 } from "../props.js";
 import { UseTooltipParameters, UseTooltipReturnType, useTooltip } from "../use-tooltip.js";
-import { ParentDepthContext, PartialExcept, memoForwardRef, useDefault } from "./util.js";
+import { GenericComponentProps, ParentDepthContext, memoForwardRef, useComponent, useDefault } from "./util.js";
 
-type Get<T, K extends keyof T> = T[K];
+export type TooltipProps<TriggerType extends Element, PopupType extends Element> = GenericComponentProps<
+    UseTooltipReturnType<TriggerType, PopupType>,
+    Get3<UseTooltipParameters<TriggerType, PopupType>, "escapeDismissParameters", "tooltipParameters", "activeElementParameters">,
+    "tooltipSemanticType" | "onStatus"
+>;
 
-interface TooltipPropsBase<TriggerType extends Element, PopupType extends Element> extends Get<UseTooltipParameters<TriggerType, PopupType>, "escapeDismissParameters">, Get<UseTooltipParameters<TriggerType, PopupType>, "tooltipParameters"> {
-    render(info: UseTooltipReturnType<TriggerType, PopupType>): VNode;
-    ref?: Ref<UseTooltipReturnType<TriggerType, PopupType>>;
-}
-
-export type TooltipProps<TriggerType extends Element, PopupType extends Element> = PartialExcept<TooltipPropsBase<TriggerType, PopupType>, "render" | "tooltipSemanticType" | "onStatus">
-
-export const Tooltip = memoForwardRef(function TooltipU<TriggerType extends Element, PopupType extends Element>({ onStatus, getWindow, parentDepth, hoverDelay, render, tooltipSemanticType }: TooltipProps<TriggerType, PopupType>, ref?: Ref<any>) {
+export const Tooltip = memoForwardRef(function TooltipU<TriggerType extends Element, PopupType extends Element>({
+    onStatus,
+    getDocument,
+    parentDepth,
+    hoverDelay,
+    render,
+    imperativeHandle,
+    onActiveElementChange,
+    onLastActiveElementChange,
+    onWindowFocusedChange,
+    tooltipSemanticType
+}: TooltipProps<TriggerType, PopupType>, ref?: Ref<any>) {
 
     const defaultParentDepth = useContext(ParentDepthContext);
     let myDepth = (parentDepth ?? defaultParentDepth) + 1;
 
-    const info = useTooltip<TriggerType, PopupType>({
-        escapeDismissParameters: {
-            getWindow: useDefault("getWindow", getWindow),
-            parentDepth: parentDepth ?? defaultParentDepth
-        },
-        tooltipParameters: {
-            onStatus,
-            tooltipSemanticType,
-            hoverDelay: hoverDelay ?? null
-        }
-    });
-
-    useImperativeHandle(ref!, () => info);
-
     return (
         <ParentDepthContext.Provider value={myDepth}>
-            {render(info)}
+            {useComponent(
+                imperativeHandle,
+                render,
+                null,
+                useTooltip<TriggerType, PopupType>({
+                    escapeDismissParameters: {
+                        getDocument: useDefault("getDocument", getDocument),
+                        parentDepth: parentDepth ?? defaultParentDepth,
+                    },
+                    activeElementParameters: {
+                        getDocument: useDefault("getDocument", getDocument),
+                        onActiveElementChange,
+                        onLastActiveElementChange,
+                        onWindowFocusedChange
+                    },
+                    tooltipParameters: {
+                        onStatus,
+                        tooltipSemanticType,
+                        hoverDelay: hoverDelay ?? null
+                    }
+                }))}
         </ParentDepthContext.Provider>
-    );
+    )
 })
 

@@ -1,11 +1,11 @@
 
-import { ComponentChildren, h, RenderableProps, VNode } from "preact";
+import { ComponentChildren, RenderableProps, VNode } from "preact";
 import { memo } from "preact/compat";
 import { useState } from "preact/hooks";
 import { Accordion, AccordionSection, Heading } from "../../dist/index.js";
 
 function DemoAccordion({ children }: RenderableProps<{}>) {
-    return <Accordion orientation="vertical" render={(_info): VNode<any> => { return <div id="accordion-demo">{children}</div> }} />
+    return <Accordion orientation="vertical" render={(_info): VNode<any> => { return <div id="accordion-demo" {..._info.props}>{children}</div> }} />
 }
 
 const DemoAccordionSection = memo(function DemoAccordionSection({ index, body, heading, disabled, open }: { open?: boolean, disabled: boolean, index: number, heading: ComponentChildren, body: ComponentChildren }) {

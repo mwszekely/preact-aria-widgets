@@ -1,44 +1,29 @@
-import { createContext, Ref, VNode } from "preact";
+import { createContext, Ref } from "preact";
 import { focus } from "preact-prop-helpers";
 import { useCallback, useImperativeHandle } from "preact/hooks";
-import { Get, Get9, OmitStrong, useContextWithWarning } from "../props.js";
+import { Get10, Get5, OmitStrong, useContextWithWarning } from "../props.js";
 import { useToolbar, useToolbarChild, UseToolbarChildParameters, UseToolbarChildReturnType, UseToolbarContext, UseToolbarParameters, UseToolbarReturnType, UseToolbarSubInfo } from "../use-toolbar.js";
-import { memoForwardRef, PartialExcept, useDefault } from "./util.js";
+import { GenericComponentProps, memoForwardRef, useDefault } from "./util.js";
 
+export type ToolbarProps<ToolbarContainerElement extends Element, ToolbarChildElement extends Element, LabelElement extends Element, M extends UseToolbarSubInfo<ToolbarChildElement>> = GenericComponentProps<
+    UseToolbarReturnType<ToolbarContainerElement, ToolbarChildElement, LabelElement, M>,
+    Get10<UseToolbarParameters<ToolbarContainerElement, ToolbarChildElement, M>, "linearNavigationParameters", "rovingTabIndexParameters", "typeaheadNavigationParameters", "sortableChildrenParameters", "rearrangeableChildrenParameters", "labelParameters", "staggeredChildrenParameters", "toolbarParameters", "singleSelectionParameters", "refElementParameters">,
+    "orientation" | "ariaLabel"
+>;
 
-export interface ToolbarPropsBase<ToolbarContainerElement extends Element, ToolbarChildElement extends Element, LabelElement extends Element, M extends UseToolbarSubInfo<ToolbarChildElement>> extends
-    Get9<UseToolbarParameters<ToolbarContainerElement, ToolbarChildElement, M>, "linearNavigationParameters", "rovingTabIndexParameters", "typeaheadNavigationParameters", "sortableChildrenParameters", "rearrangeableChildrenParameters", "labelParameters", "staggeredChildrenParameters", "toolbarParameters", "singleSelectionParameters"> {
-    ref?: Ref<UseToolbarReturnType<ToolbarContainerElement, ToolbarChildElement, LabelElement, M>>;
-}
-
-
-
-
-
-export interface ToolbarChildPropsBase<ToolbarChildElement extends Element, M extends UseToolbarSubInfo<ToolbarChildElement>> extends
-    Get<UseToolbarChildParameters<ToolbarChildElement, M>, "textContentParameters">,
-    Get<UseToolbarChildParameters<ToolbarChildElement, M>, "toolbarChildParameters">,
-    Pick<Get<UseToolbarChildParameters<any, any>, "info">, "getSortValue" | "index" | "untabbable" | "unselectable"> {
-    focusSelf?: M["focusSelf"];
-    info?: OmitStrong<Get<UseToolbarChildParameters<ToolbarChildElement, M>, "info">, never>
-    ref?: Ref<UseToolbarChildReturnType<ToolbarChildElement, M>>;
-}
-
-export interface ToolbarProps<ToolbarContainerElement extends Element, ToolbarChildElement extends Element, LabelElement extends Element, M extends UseToolbarSubInfo<ToolbarChildElement>> extends PartialExcept<ToolbarPropsBase<ToolbarContainerElement, ToolbarChildElement, LabelElement, M>, "orientation" | "ariaLabel"> {
-    render(info: UseToolbarReturnType<ToolbarContainerElement, ToolbarChildElement, LabelElement, M>): VNode<any>;
-}
-
-export interface ToolbarChildProps<ToolbarChildElement extends Element, M extends UseToolbarSubInfo<ToolbarChildElement>> extends PartialExcept<ToolbarChildPropsBase<ToolbarChildElement, M>, "getSortValue" | "index" | "disabledProp"> {
-    render(info: UseToolbarChildReturnType<ToolbarChildElement, M>): VNode<any>;
-}
+export type ToolbarChildProps<ToolbarChildElement extends Element, M extends UseToolbarSubInfo<ToolbarChildElement>> = GenericComponentProps<
+    UseToolbarChildReturnType<ToolbarChildElement, UseToolbarSubInfo<ToolbarChildElement>>,
+    Get5<UseToolbarChildParameters<ToolbarChildElement, UseToolbarSubInfo<ToolbarChildElement>>, "textContentParameters", "toolbarChildParameters", "info", "hasCurrentFocusParameters", "refElementParameters">,
+    "disabledProp" | "getSortValue" | "index"
+> & { info?: OmitStrong<M, keyof UseToolbarSubInfo<ToolbarChildElement>> };
 
 // TODO: Are there performance/sanity implications for having one context per primitive?
 const UntabbableContext = createContext(false);
 const AriaPropNameContext = createContext<UseToolbarParameters<any, any, any>["singleSelectionParameters"]["ariaPropName"]>("aria-selected")
 const SelectionModeContext = createContext<UseToolbarParameters<any, any, any>["singleSelectionParameters"]["selectionMode"]>("focus");
-const ToolbarContext = createContext<UseToolbarContext<any, any, any>>(null!);
+const ToolbarContext = createContext<UseToolbarContext<any, any>>(null!);
 
-export const Toolbar = memoForwardRef(function ToolbarU<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element, M extends UseToolbarSubInfo<ChildElement> = UseToolbarSubInfo<ChildElement>>({
+export const Toolbar = memoForwardRef(function ToolbarU<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({
     render,
     role,
     collator,
@@ -61,15 +46,18 @@ export const Toolbar = memoForwardRef(function ToolbarU<ContainerElement extends
     selectionMode,
     untabbable,
     onNavigateLinear,
-    onNavigateTypeahead
-}: ToolbarProps<ContainerElement, ChildElement, LabelElement, M>, ref?: Ref<any>) {
+    onNavigateTypeahead,
+    onElementChange,
+    onMount,
+    onUnmount
+}: ToolbarProps<ContainerElement, ChildElement, LabelElement, UseToolbarSubInfo<ChildElement>>, ref?: Ref<any>) {
     ariaPropName ??= "aria-selected";
     selectionMode ??= "activation";
     untabbable ||= false
 
-    const listboxReturnType = useToolbar<ContainerElement, ChildElement, LabelElement, M>({
+    const listboxReturnType = useToolbar<ContainerElement, ChildElement, LabelElement>({
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
-        sortableChildrenParameters: { compare: compare ?? null },
+        sortableChildrenParameters: { compare: compare },
         linearNavigationParameters: {
             onNavigateLinear,
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
@@ -81,11 +69,11 @@ export const Toolbar = memoForwardRef(function ToolbarU<ContainerElement extends
             orientation,
             disabled: disabled || false,
             role: role ?? "toolbar",
-            selectedIndex: selectedIndex ?? null,
-            onSelectedIndexChange: onSelectedIndexChange ?? null
+            selectedIndex,
+            onSelectedIndexChange
         },
         staggeredChildrenParameters: { staggered: staggered || false },
-        rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable },
+        rovingTabIndexParameters: { onTabbableIndexChange, untabbable },
         typeaheadNavigationParameters: {
             onNavigateTypeahead,
             collator: useDefault("collator", collator),
@@ -93,7 +81,8 @@ export const Toolbar = memoForwardRef(function ToolbarU<ContainerElement extends
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
         },
         labelParameters: { ariaLabel },
-        singleSelectionParameters: { ariaPropName: ariaPropName, selectionMode }
+        singleSelectionParameters: { ariaPropName: ariaPropName, selectionMode },
+        refElementParameters: { onElementChange, onMount, onUnmount },
     });
 
     useImperativeHandle(ref!, () => listboxReturnType);
@@ -112,7 +101,7 @@ export const Toolbar = memoForwardRef(function ToolbarU<ContainerElement extends
 })
 
 
-export const ToolbarChild = memoForwardRef(function ToolbarChildU<ToolbarChildElement extends Element, M extends UseToolbarSubInfo<ToolbarChildElement> = UseToolbarSubInfo<ToolbarChildElement>>({
+export function ToolbarChild<ToolbarChildElement extends Element>({
     index,
     render,
     focusSelf,
@@ -121,23 +110,37 @@ export const ToolbarChild = memoForwardRef(function ToolbarChildU<ToolbarChildEl
     unselectable,
     disabledProp,
     untabbable,
+    onElementChange,
+    onMount,
+    onUnmount,
+    onCurrentFocusedChanged,
+    onCurrentFocusedInnerChanged,
+    imperativeHandle,
     info: uinfo
-}: ToolbarChildProps<ToolbarChildElement, M>, ref?: Ref<any>) {
-    const context = useContextWithWarning(ToolbarContext, "toolbar") as UseToolbarContext<any, ToolbarChildElement, M>;
+}: ToolbarChildProps<ToolbarChildElement, UseToolbarSubInfo<ToolbarChildElement>>) {
+    const context = useContextWithWarning(ToolbarContext, "toolbar") as UseToolbarContext<ToolbarChildElement, UseToolbarSubInfo<ToolbarChildElement>>;
     console.assert(context != null, `This ToolbarChild is not contained within a Toolbar`);
     const focusSelfDefault = useCallback((e: any) => { focus(e); }, []);
     focusSelf ??= focusSelfDefault;
 
-    const info = useToolbarChild<ToolbarChildElement, M>({
+    const info = useToolbarChild<ToolbarChildElement>({
         context,
         toolbarChildParameters: { disabledProp },
-        info: { index, focusSelf, unselectable, untabbable, getSortValue, ...uinfo } as M,
+        info: { 
+            index, 
+            focusSelf, 
+            unselectable: unselectable || false, 
+            untabbable: untabbable || false, 
+            getSortValue 
+        },
         textContentParameters: { getText: useDefault("getText", getText) },
+        hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged },
+        refElementParameters: { onElementChange, onMount, onUnmount }
     });
 
-    useImperativeHandle(ref!, () => info);
+    useImperativeHandle(imperativeHandle!, () => info);
 
     return (
         <>{render(info)}</>
     )
-});
+};

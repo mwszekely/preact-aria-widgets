@@ -12,7 +12,7 @@ import { useMenubar, useMenubarChild } from "./use-menubar.js";
  *
  * @compositeParams
  */
-export function useMenu({ dismissParameters, escapeDismissParameters, menuParameters: { openDirection, onOpen }, menuSurfaceParameters, toolbarParameters, ...restParams }) {
+export function useMenu({ dismissParameters, escapeDismissParameters, menuParameters: { openDirection, onOpen }, menuSurfaceParameters, activeElementParameters, toolbarParameters, modalParameters, ...restParams }) {
     monitorCallCount(useMenu);
     const { context, propsLabel: propsButtonAsMenuLabel, propsMenubar, randomIdInputReturn, rovingTabIndexReturn, ...restRet } = useMenubar({
         toolbarParameters: { role: "menu", ...toolbarParameters },
@@ -20,7 +20,7 @@ export function useMenu({ dismissParameters, escapeDismissParameters, menuParame
         ...restParams
     });
     const onKeyDown = useStableCallback((e) => {
-        const isOpen = dismissParameters.open;
+        const isOpen = modalParameters.active;
         if (!isOpen) {
             switch (e.key) {
                 case "ArrowUp": {
@@ -64,8 +64,10 @@ export function useMenu({ dismissParameters, escapeDismissParameters, menuParame
             surfaceId: randomIdInputReturn.id,
             role: "menu",
         },
-        dismissParameters,
         escapeDismissParameters,
+        modalParameters,
+        dismissParameters,
+        activeElementParameters,
         focusTrapParameters: {
             focusPopup: () => { rovingTabIndexReturn.focusSelf(); }
         }
@@ -76,8 +78,8 @@ export function useMenu({ dismissParameters, escapeDismissParameters, menuParame
         context: useMemoObject({
             ...context,
             menu: useMemoObject({
-                closeFromMenuItemClicked: useStableCallback(() => {
-                    dismissParameters.onClose("item-clicked");
+                closeFromMenuItemClicked: useStableCallback((e) => {
+                    dismissParameters.onDismiss(e, "item-clicked"); // TODO
                 })
             })
         }),

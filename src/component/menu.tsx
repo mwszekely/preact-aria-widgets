@@ -1,30 +1,30 @@
-import { createContext, Ref, VNode } from "preact";
-import { focus } from "preact-prop-helpers";
-import { useCallback, useContext, useImperativeHandle } from "preact/hooks";
-import { Get12, useContextWithWarning } from "../props.js";
+import { createContext } from "preact";
+import { focus, OmitStrong } from "preact-prop-helpers";
+import { useCallback, useContext } from "preact/hooks";
+import { Get16, useContextWithWarning } from "../props.js";
 import { useMenu, UseMenuContext, useMenuItem, UseMenuItemReturnType, UseMenuParameters, UseMenuReturnType } from "../use-menu.js";
 import { UseMenubarSubInfo } from "../use-menubar.js";
 import { MenubarItemProps } from "./menubar.js";
-import { memoForwardRef, ParentDepthContext, PartialExcept, useDefault } from "./util.js";
+import { GenericComponentProps, ParentDepthContext, useComponent, useDefault } from "./util.js";
 
-interface MenuPropsBase<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends //Omit<UseMenuParameters<E, K, I>, "indexMangler" | "indexDemangler" | "onAfterChildLayoutEffect" | "onChildrenMountChange" | "onTabbableIndexChange" | "onTabbableRender" | "onTabbedInTo" | "onTabbedOutOf"> & {
-    Get12<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, M>, "menuParameters","menuSurfaceParameters","linearNavigationParameters","rovingTabIndexParameters","typeaheadNavigationParameters","dismissParameters","staggeredChildrenParameters","escapeDismissParameters","rearrangeableChildrenParameters","sortableChildrenParameters","toolbarParameters","singleSelectionParameters"> {
-}
+export type MenuProps<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> = GenericComponentProps<
+    UseMenuReturnType<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement, M>,
+    Get16<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, M>, "menuParameters", "menuSurfaceParameters", "linearNavigationParameters", "rovingTabIndexParameters", "typeaheadNavigationParameters", "dismissParameters", "staggeredChildrenParameters", "escapeDismissParameters", "rearrangeableChildrenParameters", "sortableChildrenParameters", "toolbarParameters", "singleSelectionParameters", "activeElementParameters", "refElementParameters", "dismissParameters", "modalParameters">,
+    "active" | "onDismiss" | "openDirection" | "orientation" | "onOpen"
+>;
 
-export interface MenuProps<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends PartialExcept<MenuPropsBase<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement, M>, "open" | "onClose" | "onOpen" | "openDirection" | "orientation"> {
-    render(menuInfo: UseMenuReturnType<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement, M>): VNode;
-}
-
-export interface MenuItemProps<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends MenubarItemProps<MenuItemElement, M> {
-    render(info: UseMenuItemReturnType<MenuItemElement, M>): VNode<any>;
-}
+export type MenuItemProps<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> = GenericComponentProps<
+    UseMenuItemReturnType<MenuItemElement, M>,
+    MenubarItemProps<MenuItemElement, M>,
+    "index" | "getSortValue"
+> & { info?: OmitStrong<M, keyof UseMenubarSubInfo<MenuItemElement>>; };
 
 const UntabbableContext = createContext(false);
 const AriaPropNameContext = createContext<UseMenuParameters<any, any, any, any, any>["singleSelectionParameters"]["ariaPropName"]>("aria-selected")
 const SelectionModeContext = createContext<UseMenuParameters<any, any, any, any, any>["singleSelectionParameters"]["selectionMode"]>("focus");
 const MenuItemContext = createContext<UseMenuContext<any, any, any>>(null!);
 
-export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element, ParentElement extends Element, ChildElement extends Element, ButtonElement extends Element, M extends UseMenubarSubInfo<ChildElement> = UseMenubarSubInfo<ChildElement>>({
+export function Menu<SurfaceElement extends Element, ParentElement extends Element, ChildElement extends Element, ButtonElement extends Element>({
     collator,
     disableHomeEndKeys,
     noTypeahead,
@@ -34,15 +34,15 @@ export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element,
     selectionMode,
     untabbable,
 
-    onClose,
-    open,
+    active,
+    onDismiss,
+    onElementChange,
+    onMount,
+    onUnmount,
 
     openDirection,
 
     onTabbableIndexChange,
-    closeOnBackdrop,
-    closeOnEscape,
-    closeOnLostFocus,
     compare,
     getIndex,
     selectedIndex,
@@ -57,11 +57,17 @@ export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element,
     onNavigateLinear,
     onNavigateTypeahead,
 
-    getWindow,
+    getDocument,
+    onActiveElementChange,
+    onLastActiveElementChange,
+    onWindowFocusedChange,
 
-    render
 
-}: MenuProps<SurfaceElement, ParentElement, ChildElement, ButtonElement, M>, ref?: Ref<any>) {
+    render,
+
+    imperativeHandle
+
+}: MenuProps<SurfaceElement, ParentElement, ChildElement, ButtonElement, UseMenubarSubInfo<ChildElement>>) {
 
     const defaultParentDepth = useContext(ParentDepthContext);
     let myDepth = (parentDepth ?? defaultParentDepth) + 1;
@@ -70,66 +76,79 @@ export const Menu = memoForwardRef(function Menu<SurfaceElement extends Element,
     untabbable ||= false;
 
 
-    const info = useMenu<SurfaceElement, ParentElement, ChildElement, ButtonElement, M>({
-        linearNavigationParameters: {
-            onNavigateLinear,
-            disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
-            pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize),
-            navigatePastEnd: navigatePastEnd ?? "wrap",
-            navigatePastStart: navigatePastStart ?? "wrap"
-        },
-        staggeredChildrenParameters: {
-            staggered: staggered || false
-        },
-        dismissParameters: {
-            closeOnBackdrop: closeOnBackdrop ?? true,
-            closeOnEscape: closeOnEscape ?? true,
-            closeOnLostFocus: closeOnLostFocus ?? true,
-            onClose,
-            open
-        },
-        escapeDismissParameters: {
-            getWindow: useDefault("getWindow", getWindow),
-            parentDepth: parentDepth ?? defaultParentDepth
-        },
-        rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
-
-        sortableChildrenParameters: { compare: compare ?? null },
-        menuParameters: { openDirection, onOpen },
-        menuSurfaceParameters: {},
-        rovingTabIndexParameters: {
-            onTabbableIndexChange: onTabbableIndexChange ?? null,
-            untabbable: untabbable
-        },
-        typeaheadNavigationParameters: {
-            onNavigateTypeahead,
-            collator: useDefault("collator", collator),
-            noTypeahead: useDefault("noTypeahead", noTypeahead),
-            typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
-        },
-        toolbarParameters: { orientation, selectedIndex: selectedIndex ?? null, onSelectedIndexChange: onSelectedIndexChange ?? null, disabled: disabled || false },
-        singleSelectionParameters: { ariaPropName: ariaPropName || "aria-selected", selectionMode: selectionMode || "activation" }
-    });
-
-    useImperativeHandle(ref!, () => info);
 
     return (
         <AriaPropNameContext.Provider value={ariaPropName}>
             <SelectionModeContext.Provider value={selectionMode}>
                 <UntabbableContext.Provider value={untabbable}>
                     <ParentDepthContext.Provider value={myDepth}>
-                        <MenuItemContext.Provider value={info.context}>
-                            {render(info)}
-                        </MenuItemContext.Provider>
+                        {useComponent(
+                            imperativeHandle,
+                            render,
+                            MenuItemContext,
+                            useMenu<SurfaceElement, ParentElement, ChildElement, ButtonElement>({
+                                linearNavigationParameters: {
+                                    onNavigateLinear,
+                                    disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
+                                    pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize),
+                                    navigatePastEnd: navigatePastEnd ?? "wrap",
+                                    navigatePastStart: navigatePastStart ?? "wrap"
+                                },
+                                staggeredChildrenParameters: {
+                                    staggered: staggered || false
+                                },
+                                escapeDismissParameters: { parentDepth: parentDepth || 1, },
+                                dismissParameters: { onDismiss },
+                                modalParameters: { active },
+                                refElementParameters: { onElementChange, onMount, onUnmount },
+                                activeElementParameters: {
+                                    getDocument: useDefault("getDocument", getDocument),
+                                    onActiveElementChange,
+                                    onLastActiveElementChange,
+                                    onWindowFocusedChange
+                                },
+                                rearrangeableChildrenParameters: {
+                                    getIndex: useDefault("getIndex", getIndex)
+                                },
+
+                                sortableChildrenParameters: {
+                                    compare
+                                },
+                                menuParameters: {
+                                    openDirection,
+                                    onOpen
+                                },
+                                menuSurfaceParameters: {},
+                                rovingTabIndexParameters: {
+                                    onTabbableIndexChange,
+                                    untabbable: untabbable
+                                },
+                                typeaheadNavigationParameters: {
+                                    onNavigateTypeahead,
+                                    collator: useDefault("collator", collator),
+                                    noTypeahead: useDefault("noTypeahead", noTypeahead),
+                                    typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
+                                },
+                                toolbarParameters: {
+                                    orientation,
+                                    selectedIndex,
+                                    onSelectedIndexChange,
+                                    disabled: disabled || false
+                                },
+                                singleSelectionParameters: {
+                                    ariaPropName: ariaPropName || "aria-selected",
+                                    selectionMode: selectionMode || "activation"
+                                }
+                            }))}
                     </ParentDepthContext.Provider>
                 </UntabbableContext.Provider>
             </SelectionModeContext.Provider>
         </AriaPropNameContext.Provider >
     )
-})
+}
 
 
-export const MenuItem = memoForwardRef(function MenuItem<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement> = UseMenubarSubInfo<MenuItemElement>>({
+export function MenuItem<MenuItemElement extends Element>({
     index,
     untabbable,
     getSortValue,
@@ -140,21 +159,44 @@ export const MenuItem = memoForwardRef(function MenuItem<MenuItemElement extends
     unselectable,
     onPressingChange,
     render,
+    imperativeHandle,
+    onCurrentFocusedChanged,
+    onCurrentFocusedInnerChanged,
+    onElementChange,
+    onMount,
+    onUnmount,
     info: uinfo
-}: MenuItemProps<MenuItemElement, M>, ref?: Ref<any>) {
+}: MenuItemProps<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>) {
     const context = useContextWithWarning(MenuItemContext, "menu");
     const defaultFocusSelf = useCallback((e: MenuItemElement | null) => focus(e as Element as HTMLElement), []);
-    const info = useMenuItem<MenuItemElement, M>({
-        info: { index, untabbable, unselectable, focusSelf: focusSelf ?? defaultFocusSelf, getSortValue, ...uinfo } as M,
-        context,
-        textContentParameters: { getText: useDefault("getText", getText) },
-        menuItemParameters: { onPress: onPress ?? null, role: role ?? "menuitem" },
-        pressParameters: { onPressingChange }
-    });
-
-    useImperativeHandle(ref!, () => info);
 
     return (
-        <>{render(info)}</>
-    )
-});
+        useComponent(
+            imperativeHandle,
+            render,
+            null,
+            useMenuItem<MenuItemElement>({
+                info: {
+                    index,
+                    untabbable: untabbable || false,
+                    unselectable: unselectable || false,
+                    focusSelf: focusSelf ?? defaultFocusSelf, 
+                    getSortValue,
+                },
+                context,
+                textContentParameters: {
+                    getText: useDefault("getText", getText)
+                },
+                menuItemParameters: {
+                    onPress,
+                    role: role ?? "menuitem"
+                },
+                pressParameters: {
+                    onPressingChange
+                },
+                hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged },
+                refElementParameters: { onElementChange, onMount, onUnmount },
+            })
+        )
+    );
+};

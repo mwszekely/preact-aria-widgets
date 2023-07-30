@@ -1,47 +1,32 @@
-import { createContext, Ref, RenderableProps, VNode } from "preact";
-import { useImperativeHandle } from "preact/hooks";
-import { Get2, Get8, OmitStrong, useContextWithWarning } from "../props.js";
-import { CheckboxGroupContext, CheckboxGroupInfo, useCheckboxGroup, useCheckboxGroupChild, UseCheckboxGroupChildParameters, UseCheckboxGroupChildReturnType, UseCheckboxGroupParameters, useCheckboxGroupParent, UseCheckboxGroupParentParameters, UseCheckboxGroupParentReturnType, UseCheckboxGroupReturnType } from "../use-checkbox-group.js";
-import { memoForwardRef, PartialExcept, useDefault } from "./util.js";
+import { createContext } from "preact";
+import { assertEmptyObject, memo } from "preact-prop-helpers";
+import { Get4, Get5, Get9, useContextWithWarning } from "../props.js";
+import { CheckboxGroupContext, CheckboxGroupInfo, UseCheckboxGroupChildParameters, UseCheckboxGroupChildReturnType, UseCheckboxGroupParameters, UseCheckboxGroupParentParameters, UseCheckboxGroupParentReturnType, UseCheckboxGroupReturnType, useCheckboxGroup, useCheckboxGroupChild, useCheckboxGroupParent } from "../use-checkbox-group.js";
+import { GenericComponentProps, useComponent, useDefault } from "./util.js";
 
-type Get<T, K extends keyof T> = T[K];
+export type CheckboxGroupProps<ParentElement extends Element, TabbableChildElement extends Element> = GenericComponentProps<
+    UseCheckboxGroupReturnType<ParentElement, TabbableChildElement>,
+    Get9<UseCheckboxGroupParameters<ParentElement, TabbableChildElement>, "linearNavigationParameters", "checkboxGroupParameters", "rearrangeableChildrenParameters", "sortableChildrenParameters", "typeaheadNavigationParameters", "staggeredChildrenParameters", "rovingTabIndexParameters", "rovingTabIndexParameters", "refElementParameters">,
+    never
+>;
 
-export interface CheckboxGroupPropsBase<ParentElement extends Element, TabbableChildElement extends Element, M extends CheckboxGroupInfo<TabbableChildElement>> extends
-    Get8<UseCheckboxGroupParameters<ParentElement, TabbableChildElement, M>, "linearNavigationParameters", "checkboxGroupParameters", "rearrangeableChildrenParameters", "sortableChildrenParameters", "typeaheadNavigationParameters", "staggeredChildrenParameters", "rovingTabIndexParameters", "rovingTabIndexParameters">,
-    RenderableProps<{}> {
-    ref?: Ref<UseCheckboxGroupReturnType<ParentElement, TabbableChildElement, M>>;
-}
-
-export interface CheckboxGroupParentPropsBase<TCE extends Element> extends
-    Pick<CheckboxGroupInfo<TCE>, "index" | "getSortValue">,
-    Get<UseCheckboxGroupParentParameters<TCE, CheckboxGroupInfo<TCE>>, "textContentParameters">,
-    OmitStrong<Get<UseCheckboxGroupParentParameters<TCE, CheckboxGroupInfo<TCE>>, "info">, "checkboxInfo"> {
-    ref?: Ref<UseCheckboxGroupParentReturnType<TCE, CheckboxGroupInfo<TCE>>>;
-}
-
-export interface CheckboxGroupChildPropsBase<TCE extends Element> extends
-    Get2<UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>, "checkboxGroupChildParameters", "textContentParameters">,
-    Pick<CheckboxGroupInfo<TCE>, "index" | "untabbable" | "unselectable" | "getSortValue"> {
-    focusSelf: UseCheckboxGroupChildParameters<TCE, CheckboxGroupInfo<TCE>>["info"]["focusSelf"];
-    ref?: Ref<UseCheckboxGroupChildReturnType<TCE, CheckboxGroupInfo<TCE>>>;
-}
+export type CheckboxGroupParentProps<TCE extends Element> = GenericComponentProps<
+    UseCheckboxGroupParentReturnType<TCE>,
+    Get4<UseCheckboxGroupParentParameters<TCE>, "textContentParameters", "info", "refElementParameters", "hasCurrentFocusParameters">,
+    "index" | "getSortValue" | "focusSelf"
+>// & { info?: OmitStrong<M, keyof CheckboxGroupInfo<TCE>> };
 
 
-
-export interface CheckboxGroupProps<ParentElement extends Element, TabbableChildElement extends Element, M extends CheckboxGroupInfo<TabbableChildElement>> extends PartialExcept<CheckboxGroupPropsBase<ParentElement, TabbableChildElement, M>, never> {
-    render(info: UseCheckboxGroupReturnType<ParentElement, TabbableChildElement, M>): VNode<any>;
-}
-export interface CheckboxGroupParentProps<TCE extends Element> extends PartialExcept<CheckboxGroupParentPropsBase<TCE>, "index" | "getSortValue" | "focusSelf"> {
-    render(parentCheckboxInfo: UseCheckboxGroupParentReturnType<TCE, CheckboxGroupInfo<TCE>>): VNode<any>;
-}
-export interface CheckboxGroupChildProps<TCE extends Element> extends PartialExcept<CheckboxGroupChildPropsBase<TCE>, "index" | "checked" | "onChangeFromParent" | "getSortValue" | "focusSelf"> {
-    render(info: UseCheckboxGroupChildReturnType<TCE, CheckboxGroupInfo<TCE>>): VNode<any>;
-}
+export type CheckboxGroupChildProps<TCE extends Element> = GenericComponentProps<
+    UseCheckboxGroupChildReturnType<TCE>,
+    Get5<UseCheckboxGroupChildParameters<TCE>, "checkboxGroupChildParameters", "textContentParameters", "info", "refElementParameters", "hasCurrentFocusParameters">,
+    "index" | "getSortValue" | "focusSelf" | "checked" | "onChangeFromParent"
+>// & { info?: OmitStrong<M, keyof CheckboxGroupInfo<TCE>> };
 
 
-const UseCheckboxGroupChildContext = createContext<CheckboxGroupContext<any, any, any>>(null!);
+const UseCheckboxGroupChildContext = createContext<CheckboxGroupContext<any>>(null!);
 
-export const CheckboxGroup = memoForwardRef(function CheckboxGroup<ParentElement extends Element, TabbableChildElement extends Element>({
+export const CheckboxGroup = memo(function CheckboxGroup<ParentElement extends Element, TabbableChildElement extends Element>({
     render,
     collator,
     disableHomeEndKeys,
@@ -58,70 +43,97 @@ export const CheckboxGroup = memoForwardRef(function CheckboxGroup<ParentElement
     orientation,
     onNavigateLinear,
     onNavigateTypeahead,
-    ..._rest
-}: CheckboxGroupProps<ParentElement, TabbableChildElement, CheckboxGroupInfo<TabbableChildElement>>, ref?: Ref<any>) {
-    untabbable ||= false;
-    const info = useCheckboxGroup<ParentElement, TabbableChildElement>({
-        linearNavigationParameters: {
-            onNavigateLinear,
-            disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
-            navigatePastEnd: navigatePastEnd ?? "wrap",
-            navigatePastStart: navigatePastStart ?? "wrap",
-            pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
-        },
-        checkboxGroupParameters: { orientation: orientation ?? "vertical" },
-        staggeredChildrenParameters: { staggered: staggered || false },
-        rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
-        rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable },
-        sortableChildrenParameters: { compare: compare ?? null },
-        typeaheadNavigationParameters: {
-            onNavigateTypeahead,
-            collator: useDefault("collator", collator),
-            noTypeahead: useDefault("noTypeahead", noTypeahead),
-            typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
-        }
-    });
+    imperativeHandle,
+    onElementChange,
+    onMount,
+    onUnmount,
+    ...void1
+}: CheckboxGroupProps<ParentElement, TabbableChildElement>) {
 
-    useImperativeHandle(ref!, () => info);
+    assertEmptyObject(void1);
 
-    return (
-        <UseCheckboxGroupChildContext.Provider value={info.context}>
-            {render(info)}
-        </UseCheckboxGroupChildContext.Provider>
-    )
+    return useComponent(
+        imperativeHandle,
+        render,
+        UseCheckboxGroupChildContext,
+        useCheckboxGroup<ParentElement, TabbableChildElement>({
+            linearNavigationParameters: {
+                onNavigateLinear,
+                disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
+                navigatePastEnd: navigatePastEnd ?? "wrap",
+                navigatePastStart: navigatePastStart ?? "wrap",
+                pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
+            },
+            checkboxGroupParameters: {
+                orientation: orientation ?? "vertical"
+            },
+            staggeredChildrenParameters: {
+                staggered: staggered || false
+            },
+            rearrangeableChildrenParameters: {
+                getIndex: useDefault("getIndex", getIndex)
+            },
+            rovingTabIndexParameters: {
+                onTabbableIndexChange,
+                untabbable: untabbable || false
+            },
+            sortableChildrenParameters: {
+                compare,
+            },
+            typeaheadNavigationParameters: {
+                onNavigateTypeahead,
+                collator: useDefault("collator", collator),
+                noTypeahead: useDefault("noTypeahead", noTypeahead),
+                typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
+            },
+            refElementParameters: { onElementChange, onMount, onUnmount }
+        }));
 });
 
-export const CheckboxGroupParent = memoForwardRef(function CheckboxGroupParent<TCE extends Element>({ 
-    render, 
-    index, 
-    focusSelf, 
-    untabbable, 
-    getText, 
-    getSortValue, 
-    unselectable, 
+export const CheckboxGroupParent = memo(function CheckboxGroupParent<TCE extends Element>({
+    render,
+    index,
+    focusSelf,
+    untabbable,
+    getSortValue,
+    unselectable,
+    imperativeHandle,
+    getText,
+    onCurrentFocusedChanged,
+    onCurrentFocusedInnerChanged,
+    onElementChange,
+    onMount,
+    onUnmount,
+    //info,
     ..._rest
-}: CheckboxGroupParentProps<TCE>, ref?: Ref<any>) {
+}: CheckboxGroupParentProps<TCE>) {
     const context = useContextWithWarning(UseCheckboxGroupChildContext, "checkbox group");
     console.assert(context != null, `This CheckboxGroupParent is not contained within a CheckboxGroup`);
 
-    const info = useCheckboxGroupParent<TCE>({
-        info: { 
-            index, 
-            unselectable: unselectable || false, 
-            untabbable: untabbable || false, 
-            focusSelf, 
-            getSortValue, 
-            checkboxInfo: { checkboxChildType: "parent" } 
-        },
-        context,
-        textContentParameters: { getText: useDefault("getText", getText) }
-    });
-
-    useImperativeHandle(ref!, () => info);
-    return render(info);
+    return (
+        useComponent(
+            imperativeHandle,
+            render,
+            null!,
+            useCheckboxGroupParent<TCE>({
+                info: {
+                    index,
+                    unselectable: unselectable || false,
+                    untabbable: untabbable || false,
+                    focusSelf,
+                    getSortValue,
+                },
+                context,
+                textContentParameters: {
+                    getText: useDefault("getText", getText)
+                },
+                hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged },
+                refElementParameters: { onElementChange, onMount, onUnmount }
+            }))
+    );
 })
 
-export const CheckboxGroupChild = memoForwardRef(function CheckboxGroupChild<TCE extends Element>({
+export const CheckboxGroupChild = (function CheckboxGroupChild<TCE extends Element>({
     index,
     render,
     checked,
@@ -131,18 +143,48 @@ export const CheckboxGroupChild = memoForwardRef(function CheckboxGroupChild<TCE
     getText,
     focusSelf,
     unselectable,
-    ..._rest
-}: CheckboxGroupChildProps<TCE>, ref?: Ref<any>) {
-    const context = useContextWithWarning(UseCheckboxGroupChildContext, "checkbox group");
-    console.assert(context != null, `This CheckboxGroupChild is not contained within a CheckboxGroup`);
-    const info = useCheckboxGroupChild<TCE>({
-        checkboxGroupChildParameters: { checked, onChangeFromParent },
-        info: { index, untabbable: untabbable || false, unselectable: unselectable || false, focusSelf, getSortValue },
-        textContentParameters: { getText: useDefault("getText", getText) },
-        context,
-    });
+    //info,
+    imperativeHandle,
+    onCurrentFocusedChanged,
+    onCurrentFocusedInnerChanged,
+    onElementChange,
+    onMount,
+    onUnmount,
 
-    useImperativeHandle(ref!, () => info);
+    ...void1
+}: CheckboxGroupChildProps<TCE>) {
 
-    return render(info);
+    type M = CheckboxGroupInfo<TCE>
+    assertEmptyObject(void1);
+
+    return useComponent(
+        imperativeHandle,
+        render,
+        null,
+        useCheckboxGroupChild<TCE>({
+            checkboxGroupChildParameters: {
+                checked: checked,
+                onChangeFromParent
+            },
+            info: {
+                index,
+                untabbable: untabbable || false,
+                unselectable: unselectable || false,
+                focusSelf,
+                getSortValue
+            },
+            textContentParameters: {
+                getText: useDefault("getText", getText)
+            },
+            context: useContextWithWarning(UseCheckboxGroupChildContext, "checkbox group"),
+            hasCurrentFocusParameters: {
+                onCurrentFocusedChanged,
+                onCurrentFocusedInnerChanged
+            },
+            refElementParameters: {
+                onElementChange,
+                onMount,
+                onUnmount
+            }
+        }));
 });

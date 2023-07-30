@@ -1,6 +1,6 @@
 
 import { useState } from "preact-prop-helpers";
-import { defaultRenderPortal, Dialog } from "../../dist/index.js";
+import { Dialog, useDefaultRenderPortal } from "../../dist/index.js";
 
 
 export function Blurb() {
@@ -45,10 +45,10 @@ export function Demo() {
             <Code />
             <div>
                 <Dialog<HTMLDivElement, HTMLButtonElement, HTMLDivElement, HTMLDivElement>
-                    open={open}
-                    onClose={() => setOpen(false)}
-                    closeOnBackdrop={true}
-                    closeOnEscape={true}
+                    active={open}
+                    onDismiss={() => setOpen(false)}
+                    dismissBackdropActive={true}
+                    dismissEscapeActive={true}
                     focusOpener={e => { e.focus() }}
                     parentDepth={0}
                     focusPopup={(e, f) => {  f()?.focus() }}
@@ -57,7 +57,7 @@ export function Demo() {
                         return (
                             <>
                                 <button {...info.propsSource} onClick={() => setOpen(o => !o)}>Open dialog</button>
-                                {defaultRenderPortal({
+                                {useDefaultRenderPortal({
                                     portalId: "portal",
                                     children: <div {...info.propsFocusContainer} hidden={!open}>
                                         <div {...info.propsDialog}>

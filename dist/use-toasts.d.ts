@@ -1,5 +1,5 @@
 import { ComponentChildren } from "preact";
-import { ElementProps, ManagedChildInfo, UseManagedChildParameters, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType } from "preact-prop-helpers";
+import { ElementProps, ManagedChildInfo, Nullable, UseGenericChildParameters, UseManagedChildParameters, UseManagedChildReturnType, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType } from "preact-prop-helpers";
 import { StateUpdater } from "preact/hooks";
 import { OmitStrong } from "./props.js";
 export interface UseToastsParametersSelf {
@@ -9,14 +9,12 @@ export interface UseToastsParameters extends UseManagedChildrenParameters<ToastI
     toastsParameters: UseToastsParametersSelf;
 }
 export interface UseToastParametersSelf {
-    politeness?: "polite" | "assertive";
-    timeout: number | null;
+    politeness?: Nullable<"polite" | "assertive">;
+    timeout: Nullable<number>;
     children: ComponentChildren;
 }
-export interface UseToastParameters<M extends ToastInfo> extends UseManagedChildParameters<M, "index"> {
+export interface UseToastParameters<M extends ToastInfo> extends OmitStrong<UseManagedChildParameters<M>, "info" | "context">, UseGenericChildParameters<ToastsContext<M>, Pick<M, "index">> {
     toastParameters: UseToastParametersSelf;
-    context: ToastsContext<M>;
-    info: OmitStrong<M, "setNumberAheadOfMe" | "focus" | "show">;
 }
 export interface ToastInfo extends ManagedChildInfo<number> {
     setNumberAheadOfMe: StateUpdater<number>;
@@ -30,11 +28,11 @@ export interface UseToastReturnTypeSelf {
     showing: boolean;
     resetDismissTimer: () => void;
 }
-export interface UseToastReturnType<ToastType extends Element> {
+export interface UseToastReturnType<ToastType extends Element, M extends ToastInfo> extends UseManagedChildReturnType<M> {
     toastReturn: UseToastReturnTypeSelf;
     props: ElementProps<ToastType>;
 }
-export interface UseToastsReturnType<ContainerType extends Element, M extends ToastInfo> extends UseManagedChildrenReturnType<ToastInfo> {
+export interface UseToastsReturnType<ContainerType extends Element, M extends ToastInfo> extends UseManagedChildrenReturnType<M> {
     context: ToastsContext<M>;
     props: ElementProps<ContainerType>;
 }
@@ -57,5 +55,5 @@ export declare function useToasts<ContainerType extends Element>({ managedChildr
 /**
  * @compositeParams
  */
-export declare function useToast<E extends Element>({ toastParameters: { politeness, timeout, children }, info: { index, ...info }, context }: UseToastParameters<ToastInfo>): UseToastReturnType<E>;
+export declare function useToast<E extends Element>({ toastParameters: { politeness, timeout, children }, info: { index, ...info }, context }: UseToastParameters<ToastInfo>): UseToastReturnType<E, ToastInfo>;
 //# sourceMappingURL=use-toasts.d.ts.map

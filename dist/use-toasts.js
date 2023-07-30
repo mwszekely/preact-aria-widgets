@@ -112,7 +112,7 @@ export function useToast({ toastParameters: { politeness, timeout, children }, i
         setShowing2(false);
     }, []);
     const show = useStableCallback(() => {
-        notify("polite", _jsx("p", { children: children }));
+        notify(politeness ?? "polite", _jsx("p", { children: children }));
         setShowing2(true);
     });
     useEffect(() => {
@@ -129,7 +129,7 @@ export function useToast({ toastParameters: { politeness, timeout, children }, i
             focus(firstFocusable);
         }
     }, []);
-    const { managedChildReturn: { getChildren: _getToasts } } = useManagedChild({ info: { index, focus: focus2, setNumberAheadOfMe: setNumberOfToastsAheadOfUs, show }, context });
+    const { managedChildReturn } = useManagedChild({ info: { index, focus: focus2, setNumberAheadOfMe: setNumberOfToastsAheadOfUs, show, ...info }, context });
     const resetDismissTimer = useCallback(() => {
         setTriggerIndex(i => ++i);
     }, []);
@@ -154,6 +154,7 @@ export function useToast({ toastParameters: { politeness, timeout, children }, i
             dismiss,
             resetDismissTimer
         },
+        managedChildReturn,
         props: propsStable
     };
 }

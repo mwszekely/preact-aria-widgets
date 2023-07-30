@@ -1,46 +1,55 @@
-import { ComponentChildren, createContext, Ref, VNode } from "preact";
-import { useImperativeHandle } from "preact/hooks";
-import { useContextWithWarning } from "../props.js";
-import { SliderContext, SliderThumbInfo, useSlider, UseSliderParameters, UseSliderReturnType, useSliderThumb, UseSliderThumbParameters, UseSliderThumbReturnType } from "../use-slider.js";
-import { memoForwardRef } from "./util.js";
+import { createContext } from "preact";
+import { OmitStrong } from "preact-prop-helpers";
+import { Get2, useContextWithWarning } from "../props.js";
+import { SliderContext, SliderThumbInfo, UseSliderParameters, UseSliderReturnType, UseSliderThumbParameters, UseSliderThumbReturnType, useSlider, useSliderThumb } from "../use-slider.js";
+import { GenericComponentProps, useComponent } from "./util.js";
 
-type Get<T, K extends keyof T> = T[K];
+export type SliderProps<M extends SliderThumbInfo> = GenericComponentProps<
+    UseSliderReturnType<M>,
+    Get2<UseSliderParameters<M>, "managedChildrenParameters", "sliderParameters">,
+    "min" | "max"
+>;
 
-export interface SliderProps extends Get<UseSliderParameters<SliderThumbInfo>, "managedChildrenParameters">, Get<UseSliderParameters<SliderThumbInfo>, "sliderParameters"> {
-    children: ComponentChildren;
-    ref?: Ref<UseSliderReturnType<SliderThumbInfo>>;
-}
-
-export interface SliderThumbProps<ThumbElement extends Element> extends Pick<SliderThumbInfo, "index">, Get<UseSliderThumbParameters<ThumbElement, SliderThumbInfo>, "sliderThumbParameters"> {
-    render(info: UseSliderThumbReturnType<ThumbElement, SliderThumbInfo>): VNode;
-}
+export type SliderThumbProps<ThumbElement extends Element, M extends SliderThumbInfo = SliderThumbInfo> = GenericComponentProps<
+    UseSliderThumbReturnType<ThumbElement>,
+    Get2<UseSliderThumbParameters<ThumbElement>, "sliderThumbParameters", "info">,
+    "index" | "label" | "tag" | "value"
+> & { info?: OmitStrong<M, keyof SliderThumbInfo> };
 
 const SliderThumbContext = createContext<SliderContext<any>>(null!);
 
-export const Slider = memoForwardRef(function Slider({ max, min, onAfterChildLayoutEffect, onChildrenMountChange, children }: SliderProps, ref?: Ref<any>) {
-    const info = useSlider({
-        managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange },
+export function Slider({
+    max,
+    min,
+    onAfterChildLayoutEffect,
+    onChildrenMountChange,
+    render,
+    imperativeHandle,
+    onChildrenCountChange
+}: SliderProps<SliderThumbInfo>) {
+
+    return useComponent(imperativeHandle, render, SliderThumbContext, useSlider<SliderThumbInfo>({
+        managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange, onChildrenCountChange },
         sliderParameters: { max, min }
-    });
+    }));
+}
 
-    useImperativeHandle(ref!, () => info);
-
-    return (
-        <SliderThumbContext.Provider value={info.context}>{children}</SliderThumbContext.Provider>
-    );
-})
-
-export const SliderThumb = memoForwardRef(function SliderThumbU<ThumbElement extends Element>({ label, tag, value, max, min, onValueChange, index, render, valueText }: SliderThumbProps<ThumbElement>, ref?: Ref<any>) {
-    const context = (useContextWithWarning(SliderThumbContext, "slider") as SliderContext<SliderThumbInfo>);
-    console.assert(context != null, `This SliderThumb is not contained within a Slider`);
-
-    const info = useSliderThumb<ThumbElement, SliderThumbInfo>({
-        context,
-        info: { index },
-        sliderThumbParameters: { label, tag, value, max, min, onValueChange, valueText },
-    });
-
-    useImperativeHandle(ref!, () => info);
-
-    return render(info);
-});
+export function SliderThumb<ThumbElement extends Element, ProgressIndicatorElement extends Element, ProgressLabelElement extends Element>({
+    label,
+    tag,
+    value,
+    max,
+    min,
+    index,
+    render,
+    valueText,
+    imperativeHandle,
+    onValueChange,
+    info
+}: SliderThumbProps<ThumbElement>) {
+    return useComponent(imperativeHandle, render, null, useSliderThumb<ThumbElement>({
+        context: (useContextWithWarning(SliderThumbContext, "slider")),
+        info: { index, ...info },
+        sliderThumbParameters: { label, tag, value, max, min, valueText, onValueChange },
+    }));
+};

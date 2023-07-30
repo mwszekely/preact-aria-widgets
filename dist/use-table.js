@@ -1,5 +1,5 @@
-import { assertEmptyObject, focus, monitorCallCount, returnNull, useCompleteGridNavigation, useCompleteGridNavigationCell, useCompleteGridNavigationRow, useMemoObject, useMergedProps, usePassiveState, useStableCallback } from "preact-prop-helpers";
-import { useCallback, useEffect, useRef } from "preact/hooks";
+import { assertEmptyObject, focus, monitorCallCount, returnNull, useCompleteGridNavigation, useCompleteGridNavigationCell, useCompleteGridNavigationRow, useMemoObject, useMergedProps, usePassiveState, useStableCallback, useState } from "preact-prop-helpers";
+import { useCallback, useEffect } from "preact/hooks";
 import { Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
 /**
@@ -13,19 +13,42 @@ import { useLabelSynthetic } from "./use-label.js";
  */
 export function useTable({ labelParameters, tableParameters: { selectionLimit, tagTable }, }) {
     monitorCallCount(useTable);
+    // This is the function that, when called, sorts the body's children.
+    // It's here to coordinate among multiple table sections (i.e. the head sorts the body, but they're siblings to each other, so we need to take care that)
+    // TODO: This...should probably be useManagedChildren
     const [getSortBody, setSortBody] = usePassiveState(null, returnNull);
-    const sortQueue = useRef([]);
-    const [getSortColumn, setSortColumn] = usePassiveState(useCallback((a) => { sortQueue.current.push(a.column); }, []), useCallback(() => { return { column: 0, direction: "ascending" }; }, []));
-    const updateSortDirection = useCallback((column) => {
+    const [sortDirection, setSortDirection, getSortDirection] = useState("ascending");
+    const [sortColumn, setSortColumn, getSortColumn] = useState(null);
+    /*const updateSortDirection = useCallback((column: number) => {
         const { column: currentColumn, direction: currentDirection } = getSortColumn();
-        const next = { column, direction: column != currentColumn ? "ascending" : (currentDirection == "ascending" ? "descending" : "ascending") };
+        const next = { column, direction: column != currentColumn ? "ascending" : (currentDirection == "ascending" ? "descending" : "ascending") } as const;
         setSortColumn(next);
         return next;
     }, []);
-    const sortByColumn = useCallback((column) => {
+    const sortByColumn = useCallback((column: number) => {
         const next = updateSortDirection(column);
         getSortBody()?.();
         return next;
+    }, [])*/
+    const sortByColumn = useCallback((column) => {
+        let nextSortDirection = getSortDirection();
+        let nextSortIndex = getSortColumn();
+        if (column == nextSortIndex) {
+            setSortDirection(nextSortDirection = (nextSortDirection == "ascending" ? "descending" : "ascending"));
+        }
+        else {
+            setSortColumn(nextSortIndex = column);
+        }
+        const sortBody = getSortBody();
+        console.assert(!!sortBody);
+        if (!sortBody) {
+            debugger;
+            console.error("An attempt was made to sort a table with a head but no body");
+        }
+        else {
+            sortBody();
+        }
+        return { column: nextSortIndex, direction: nextSortDirection };
     }, []);
     const { propsInput: propsLabelList, propsLabel: propsLabelLabel } = useLabelSynthetic({
         labelParameters: { ...labelParameters, onLabelClick: null },
@@ -35,7 +58,14 @@ export function useTable({ labelParameters, tableParameters: { selectionLimit, t
     return {
         propsTable: useMergedProps({ role: tagTable == "table" ? undefined : "grid", "aria-multiselectable": (selectionLimit == "multi" ? "true" : undefined) }, propsLabelList),
         propsLabel: propsLabelLabel,
-        context: useMemoObject({ tableContext: useMemoObject({ sortByColumn, setSortBodyFunction: setSortBody, getCurrentSortColumn: getSortColumn }) })
+        context: useMemoObject({
+            tableContext: useMemoObject({
+                sortByColumn,
+                setSortBodyFunction: setSortBody,
+                getCurrentSortColumn: getSortColumn,
+                getCurrentSortDirection: getSortDirection
+            })
+        })
     };
 }
 function fuzzyCompare(lhs, rhs) {
@@ -64,9 +94,9 @@ const naturalSectionTypes = new Set(["thead", "tbody", "tfoot"]);
 /**
  * @compositeParams
  */
-export function useTableSection({ linearNavigationParameters, rovingTabIndexParameters, singleSelectionParameters, gridNavigationParameters, rearrangeableChildrenParameters, paginatedChildrenParameters, staggeredChildrenParameters, tableSectionParameters: { tagTableSection, location }, typeaheadNavigationParameters, context: { tableContext } }) {
+export function useTableSection({ linearNavigationParameters, rovingTabIndexParameters, singleSelectionParameters, gridNavigationParameters, rearrangeableChildrenParameters, paginatedChildrenParameters, staggeredChildrenParameters, tableSectionParameters: { tagTableSection, location }, typeaheadNavigationParameters, context: { tableContext }, refElementParameters, ...void1 }) {
     monitorCallCount(useTableSection);
-    const { childrenHaveFocusReturn, context, linearNavigationReturn, managedChildrenReturn, props: { ...props }, rovingTabIndexReturn, singleSelectionReturn, typeaheadNavigationReturn, staggeredChildrenReturn, rearrangeableChildrenReturn, paginatedChildrenReturn, sortableChildrenReturn } = useCompleteGridNavigation({
+    const { childrenHaveFocusReturn, context, linearNavigationReturn, managedChildrenReturn, props: { ...props }, rovingTabIndexReturn, singleSelectionReturn, typeaheadNavigationReturn, staggeredChildrenReturn, rearrangeableChildrenReturn, paginatedChildrenReturn, sortableChildrenReturn, ...void2 } = useCompleteGridNavigation({
         linearNavigationParameters,
         rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
         singleSelectionParameters,
@@ -80,6 +110,7 @@ export function useTableSection({ linearNavigationParameters, rovingTabIndexPara
         typeaheadNavigationParameters,
         gridNavigationParameters,
         rearrangeableChildrenParameters,
+        refElementParameters,
     });
     if (!naturalSectionTypes.has(tagTableSection)) {
         props.role = "rowgroup";
@@ -87,10 +118,12 @@ export function useTableSection({ linearNavigationParameters, rovingTabIndexPara
     useEffect(() => {
         if (location == "body") {
             tableContext.setSortBodyFunction(() => {
-                return () => { sortableChildrenReturn.sort(tableContext.getCurrentSortColumn().direction); };
+                return () => { sortableChildrenReturn.sort(tableContext.getCurrentSortDirection()); };
             });
         }
     });
+    assertEmptyObject(void1);
+    assertEmptyObject(void2);
     return {
         childrenHaveFocusReturn,
         context: {
@@ -112,25 +145,19 @@ export function useTableSection({ linearNavigationParameters, rovingTabIndexPara
 /**
  * @compositeParams
  */
-export function useTableRow({ info, textContentParameters, context: cx1, tableRowParameters: { selected }, linearNavigationParameters, rovingTabIndexParameters, ...void1 }) {
+export function useTableRow({ info, textContentParameters, context: cx1, tableRowParameters: { selected }, linearNavigationParameters, rovingTabIndexParameters, hasCurrentFocusParameters, ...void1 }) {
     monitorCallCount(useTableRow);
     assertEmptyObject(void1);
     const { context: cx2, managedChildrenReturn, props: { ...props }, ...restRet
     // props
      } = useCompleteGridNavigationRow({
         textContentParameters,
+        hasCurrentFocusParameters,
         context: { ...cx1 },
-        info: {
-            ...info,
-            getSortValue: useStableCallback(() => {
-                const currentColumn = cx1.tableContext.getCurrentSortColumn().column;
-                const currentChild = managedChildrenReturn.getChildren().getAt(currentColumn ?? 0);
-                const sortValue = currentChild?.getSortValue();
-                return sortValue;
-            })
-        },
+        info,
         linearNavigationParameters,
-        rovingTabIndexParameters: { ...rovingTabIndexParameters },
+        rovingTabIndexParameters,
+        gridNavigationSingleSelectionSortableRowParameters: { getSortableColumnIndex: cx1.tableContext.getCurrentSortColumn },
         typeaheadNavigationParameters: { noTypeahead: true, collator: null, typeaheadTimeout: Infinity, onNavigateTypeahead: null }
     });
     props.role = "row";

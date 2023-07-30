@@ -1,27 +1,24 @@
-import { useImperativeHandle } from "preact/hooks";
+import { assertEmptyObject, memo } from "preact-prop-helpers";
 import { useProgress, useProgressWithHandler } from "../use-progress.js";
-import { memoForwardRef } from "./util.js";
-export const Progress = memoForwardRef(function Progress({ tagIndicator, ariaLabel, max, render, value, valueText }, ref) {
-    const info = useProgress({
+import { memoForwardRef, useComponent } from "./util.js";
+export const Progress = memo(function Progress({ tagProgressIndicator, ariaLabel, max, render, value, valueText, imperativeHandle }) {
+    return useComponent(imperativeHandle, render, null, useProgress({
         labelParameters: { ariaLabel },
         progressIndicatorParameters: {
             max: max ?? 100,
             value: value ?? "indeterminate",
-            valueText: valueText ?? null,
-            tagIndicator
+            valueText,
+            tagProgressIndicator
         }
-    });
-    useImperativeHandle(ref, () => info);
-    return render(info);
+    }));
 });
-export const ProgressWithHandler = memoForwardRef(function ProgressWithHandler({ ariaLabel, forciblyPending, render, tagIndicator, asyncHandler, capture, debounce, throttle }, ref) {
-    const info = useProgressWithHandler({
+export const ProgressWithHandler = memoForwardRef(function ProgressWithHandler({ ariaLabel, forciblyPending, render, tagProgressIndicator, asyncHandler, capture, debounce, throttle, notifyFailure, notifyPending, notifySuccess, imperativeHandle, ...void1 }) {
+    assertEmptyObject(void1);
+    return useComponent(imperativeHandle, render, null, useProgressWithHandler({
         asyncHandlerParameters: { asyncHandler, capture, debounce, throttle },
         labelParameters: { ariaLabel },
-        progressIndicatorParameters: { tagIndicator },
-        progressWithHandlerParameters: { forciblyPending: forciblyPending ?? false }
-    });
-    useImperativeHandle(ref, () => info);
-    return (render(info));
+        progressIndicatorParameters: { tagProgressIndicator },
+        progressWithHandlerParameters: { forciblyPending, notifyFailure, notifyPending, notifySuccess }
+    }));
 });
 //# sourceMappingURL=progress.js.map

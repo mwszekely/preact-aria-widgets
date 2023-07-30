@@ -38,7 +38,7 @@ function Child({ index }: { index: number }) {
             tagButton="button"
             index={index}
             open={open == "true" ? true : open == "false" ? false : undefined}
-            onPress={open != null ? (e => setOpen(o => (o == "true" ? "false" : o == "false" ? "true" : null))) : null}
+            onPressSync={open != null ? (e => setOpen(o => (o == "true" ? "false" : o == "false" ? "true" : null))) : null}
             render={sectionInfo => {
                 return (
                     <>

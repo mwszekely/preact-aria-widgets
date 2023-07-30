@@ -9,8 +9,8 @@ export function TestBasesButton() {
     installTestingHandler("Button", "onPress", e => alert(e))
     return (
         <TestItem>
-            <Button<HTMLButtonElement> onPress={(e) => { console.log("Button (button) clicked"); let ret = getTestingHandler("Button", "onPress")(e); console.log(ret); return ret; }} disabled={disabled ? (disabledType) : false} pressed={pressed} tagButton="button" render={info => <button {...info.props}>Button</button>} />
-            <Button<HTMLDivElement> onPress={(e) => { console.log("Button (div) clicked"); let ret = getTestingHandler("Button", "onPress")(e); console.log(ret); return ret; }} disabled={disabled ? (disabledType) : false} pressed={pressed} tagButton="div" render={info => <div {...info.props}>Div</div>} />
+            <Button<HTMLButtonElement> onPressSync={(e) => { console.log("Button (button) clicked"); let ret = getTestingHandler("Button", "onPress")(e); console.log(ret); return ret; }} disabled={disabled ? (disabledType) : false} pressed={pressed} tagButton="button" render={info => <button {...info.props}>Button</button>} />
+            <Button<HTMLDivElement> onPressSync={(e) => { console.log("Button (div) clicked"); let ret = getTestingHandler("Button", "onPress")(e); console.log(ret); return ret; }} disabled={disabled ? (disabledType) : false} pressed={pressed} tagButton="div" render={info => <div {...info.props}>Div</div>} />
             <input type="text" value="I can take focus" />
         </TestItem>
     )

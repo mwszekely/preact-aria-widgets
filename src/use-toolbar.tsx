@@ -47,23 +47,25 @@ export interface UseToolbarReturnType<ContainerElement extends Element, ChildEle
     propsLabel: ElementProps<LabelElement>;
     randomIdInputReturn: UseRandomIdReturnType<ContainerElement, LabelElement>["randomIdReturn"];
     randomIdLabelReturn: UseRandomIdReturnType<LabelElement, ContainerElement>["randomIdReturn"];
-    context: UseToolbarContext<ContainerElement, ChildElement, M>;
+    context: UseToolbarContext<ChildElement, M>;
 }
 
 export interface UseToolbarSubInfo<ChildElement extends Element> extends UseCompleteListNavigationChildInfo<ChildElement> {
 
 }
 
-export interface UseToolbarContextSelf {}
+export interface UseToolbarContextSelf { }
 
-export interface UseToolbarContext<ContainerElement extends Element, ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends CompleteListNavigationContext<ContainerElement, ChildElement, M> {
+export interface UseToolbarContext<ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends
+    CompleteListNavigationContext<ChildElement, M> {
     toolbarContext: UseToolbarContextSelf;
 };
 
 
 export interface UseToolbarChildParametersSelf { disabledProp: "disabled" | "aria-disabled"; }
 
-export interface UseToolbarChildParameters<E extends Element, M extends UseToolbarSubInfo<E>> extends OmitStrong<UseCompleteListNavigationChildParameters<E, M>, never> {
+export interface UseToolbarChildParameters<E extends Element, M extends UseToolbarSubInfo<E>> extends
+    UseCompleteListNavigationChildParameters<E, M> {
     toolbarChildParameters: UseToolbarChildParametersSelf;
 }
 export interface UseToolbarChildReturnType<ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends UseCompleteListNavigationChildReturnType<ChildElement, M> { }
@@ -81,13 +83,15 @@ export interface UseToolbarChildReturnType<ChildElement extends Element, M exten
  * 
  * @compositeParams
  */
-export function useToolbar<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element, M extends UseToolbarSubInfo<ChildElement>>({
+export function useToolbar<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({
     linearNavigationParameters,
     toolbarParameters: { orientation, role, selectedIndex, onSelectedIndexChange, disabled },
     labelParameters,
     rovingTabIndexParameters,
     ...listNavParameters
-}: UseToolbarParameters<ContainerElement, ChildElement, M>): UseToolbarReturnType<ContainerElement, ChildElement, LabelElement, M> {
+}: UseToolbarParameters<ContainerElement, ChildElement, UseToolbarSubInfo<ChildElement>>): UseToolbarReturnType<ContainerElement, ChildElement, LabelElement, UseToolbarSubInfo<ChildElement>> {
+    type M = UseToolbarSubInfo<ChildElement>;
+
     monitorCallCount(useToolbar);
 
     const {
@@ -129,13 +133,13 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
 /**
  * @compositeParams
  */
-export function useToolbarChild<ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>>({ info, toolbarChildParameters: { disabledProp }, ...args }: UseToolbarChildParameters<ChildElement, M>): UseToolbarChildReturnType<ChildElement, M> {
+export function useToolbarChild<ChildElement extends Element>({ info, toolbarChildParameters: { disabledProp }, ...args }: UseToolbarChildParameters<ChildElement, UseToolbarSubInfo<ChildElement>>): UseToolbarChildReturnType<ChildElement, UseToolbarSubInfo<ChildElement>> {
     monitorCallCount(useToolbarChild);
     const {
         propsChild,
         propsTabbable,
         ...listNavReturn
-    } = useCompleteListNavigationChild<ChildElement, M>({ info, ...args });
+    } = useCompleteListNavigationChild<ChildElement, UseToolbarSubInfo<ChildElement>>({ info, ...args });
 
     return {
         propsChild: useMergedProps(propsChild, { [disabledProp as never]: info.unselectable ? true : undefined }),

@@ -1,31 +1,33 @@
-import { Ref, VNode } from "preact";
+import { Ref } from "preact";
+import { memo } from "preact-prop-helpers";
 import { useContext, useImperativeHandle } from "preact/hooks";
-import { Get4 } from "../props.js";
+import { Get11 } from "../props.js";
 import { UseDrawerParameters, UseDrawerReturnType, useDrawer } from "../use-drawer.js";
-import { ParentDepthContext, PartialExcept, memoForwardRef, useDefault } from "./util.js";
+import { GenericComponentProps, ParentDepthContext, useDefault } from "./util.js";
 
-type Get<T, K extends keyof T> = T[K];
+export type DrawerProps<FocusContainerElement extends Element, SourceElement extends Element, DrawerElement extends Element, TitleElement extends Element> = GenericComponentProps<
+    UseDrawerReturnType<FocusContainerElement, SourceElement, DrawerElement, TitleElement>,
+    Get11<UseDrawerParameters<DrawerElement, TitleElement>, "dismissParameters", "escapeDismissParameters", "labelParameters", "focusTrapParameters", "activeElementParameters","dismissParameters","backdropDismissParameters","escapeDismissParameters","lostFocusDismissParameters","modalParameters","refElementParameters">,
+    "ariaLabel" | "onDismiss" | "active" | "focusPopup"
+>;
 
-interface DrawerPropsBase<FocusContainerElement extends Element, SourceElement extends Element, DrawerElement extends Element, TitleElement extends Element> extends
-    Get4<UseDrawerParameters<DrawerElement, TitleElement>, "dismissParameters", "escapeDismissParameters", "labelParameters", "focusTrapParameters"> {
-    ref?: Ref<UseDrawerReturnType<FocusContainerElement, SourceElement, DrawerElement, TitleElement>>;
-    render(drawerInfo: UseDrawerReturnType<FocusContainerElement, SourceElement, DrawerElement, TitleElement>): VNode<any>;
-}
+export const Drawer = memo(function Drawer<FocusContainerElement extends Element, SourceElement extends Element, DrawerElement extends Element, TitleElement extends Element>({
 
-export interface DrawerProps<FocusContainerElement extends Element, SourceElement extends Element, DialogElement extends Element, TitleElement extends Element> extends PartialExcept<DrawerPropsBase<FocusContainerElement, SourceElement, DialogElement, TitleElement>, "ariaLabel" | "onClose" | "open" | "focusPopup"> {
-    render(dialogInfo: UseDrawerReturnType<FocusContainerElement, SourceElement, DialogElement, TitleElement>): VNode<any>;
-}
-
-export const Drawer = memoForwardRef(function Drawer<FocusContainerElement extends Element, SourceElement extends Element, DrawerElement extends Element, TitleElement extends Element>({
-
-    closeOnBackdrop,
-    closeOnEscape,
-    closeOnLostFocus,
+    active,
+    onDismiss,
+    dismissBackdropActive,
+    dismissEscapeActive,
+    dismissLostFocusActive,
+    onElementChange,
+    onMount,
+    onUnmount,
     focusOpener,
     focusPopup,
-    getWindow,
-    onClose,
-    open,
+    getDocument,
+    imperativeHandle,
+    onActiveElementChange,
+    onLastActiveElementChange,
+    onWindowFocusedChange,
     parentDepth,
     render,
     trapActive,
@@ -36,15 +38,21 @@ export const Drawer = memoForwardRef(function Drawer<FocusContainerElement exten
 
     const info = useDrawer<FocusContainerElement, SourceElement, DrawerElement, TitleElement>({
         dismissParameters: {
-            closeOnBackdrop: closeOnBackdrop ?? true,
-            closeOnEscape: closeOnEscape ?? true,
-            closeOnLostFocus: closeOnLostFocus ?? true,
-            onClose,
-            open
+            onDismiss,
         },
+        backdropDismissParameters: { dismissBackdropActive: dismissBackdropActive || false },
+        lostFocusDismissParameters: { dismissLostFocusActive: dismissLostFocusActive || false },
+        modalParameters: { active },
+        refElementParameters: { onElementChange, onMount, onUnmount },
         escapeDismissParameters: {
-            getWindow: useDefault("getWindow", getWindow),
-            parentDepth: parentDepth ?? defaultParentDepth
+            parentDepth: parentDepth ?? defaultParentDepth,
+            dismissEscapeActive: dismissEscapeActive || false
+        },
+        activeElementParameters: {
+            getDocument: useDefault("getDocument", getDocument),
+            onActiveElementChange,
+            onLastActiveElementChange,
+            onWindowFocusedChange
         },
         focusTrapParameters: {
             focusOpener: useDefault("focusOpener", focusOpener),

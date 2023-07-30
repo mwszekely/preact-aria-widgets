@@ -4,12 +4,13 @@ import {
     CompleteGridNavigationRowContext,
     ElementProps,
     JSX,
+    Nullable,
     PassiveStateUpdater,
     TargetedOmit,
-    UseCompleteGridNavigationCellInfo, UseCompleteGridNavigationCellParameters, UseCompleteGridNavigationCellReturnType, UseCompleteGridNavigationParameters,
+    UseCompleteGridNavigationCellInfo, UseCompleteGridNavigationCellInfoKeysParameters, UseCompleteGridNavigationCellParameters, UseCompleteGridNavigationCellReturnType, UseCompleteGridNavigationParameters,
     UseCompleteGridNavigationReturnType,
     UseCompleteGridNavigationRowInfo, UseCompleteGridNavigationRowParameters, UseCompleteGridNavigationRowReturnType,
-    UseGridNavigationRowParameters,
+    UseGenericChildParameters,
     assertEmptyObject,
     focus,
     monitorCallCount,
@@ -18,9 +19,9 @@ import {
     useCompleteGridNavigationCell,
     useCompleteGridNavigationRow,
     useMemoObject,
-    useMergedProps, usePassiveState, useStableCallback
+    useMergedProps, usePassiveState, useStableCallback, useState
 } from "preact-prop-helpers";
-import { useCallback, useEffect, useRef } from "preact/hooks";
+import { useCallback, useEffect } from "preact/hooks";
 import { ElementToTag, OmitStrong, Prefices } from "./props.js";
 import { UseLabelSyntheticParameters, useLabelSynthetic } from "./use-label.js";
 import { UseListboxParameters } from "./use-listbox.js";
@@ -28,7 +29,8 @@ import { UseListboxParameters } from "./use-listbox.js";
 export interface UseTableContextSelf {
     setSortBodyFunction: PassiveStateUpdater<() => void, never>;
     sortByColumn(column: number): SortInfo;
-    getCurrentSortColumn(): SortInfo;
+    getCurrentSortColumn(): number | null;
+    getCurrentSortDirection(): SortDirection;
 }
 
 
@@ -36,42 +38,43 @@ export interface UseTableContext {
     tableContext: UseTableContextSelf;
 }
 
-export interface UseTableSectionContext<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>> extends CompleteGridNavigationRowContext<TableSectionElement, TableRowElement, TableCellElement, RM, CM>, UseTableContext { }
+export interface UseTableSectionContext<TableRowElement extends Element, RM extends TableRowInfo<TableRowElement>> extends CompleteGridNavigationRowContext<TableRowElement, RM>, UseTableContext { }
 
 export interface UseTableSectionParametersSelf<TableSectionElement extends Element> {
     location: "head" | "body" | "foot";
     tagTableSection: ElementToTag<TableSectionElement>;
 }
 
-export interface UseTableSectionParameters<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>> extends
-    OmitStrong<UseCompleteGridNavigationParameters<TableSectionElement, TableRowElement, TableCellElement, RM>, "rovingTabIndexParameters" | "sortableChildrenParameters">,
-    TargetedOmit<UseCompleteGridNavigationParameters<TableSectionElement, TableRowElement, TableCellElement, RM>, "rovingTabIndexParameters", "focusSelfParent"> {
+export interface UseTableSectionParameters<TableSectionElement extends Element, TableRowElement extends Element, RM extends TableRowInfo<TableRowElement>> extends
+    OmitStrong<UseCompleteGridNavigationParameters<TableSectionElement, TableRowElement, RM>, "rovingTabIndexParameters" | "sortableChildrenParameters">,
+    TargetedOmit<UseCompleteGridNavigationParameters<TableSectionElement, TableRowElement, RM>, "rovingTabIndexParameters", "focusSelfParent"> {
     tableSectionParameters: UseTableSectionParametersSelf<TableSectionElement>;
     context: UseTableContext;
 }
-export interface UseTableSectionReturnType<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>> extends OmitStrong<UseCompleteGridNavigationReturnType<TableSectionElement, TableRowElement, TableCellElement, RM, CM>, "props"> {
+export interface UseTableSectionReturnType<TableSectionElement extends Element, TableRowElement extends Element, RM extends TableRowInfo<TableRowElement>> extends
+    OmitStrong<UseCompleteGridNavigationReturnType<TableSectionElement, TableRowElement, RM>, "props"> {
     propsTableSection: ElementProps<TableSectionElement>;
-    context: UseTableSectionContext<TableSectionElement, TableRowElement, TableCellElement, RM, CM>;
+    context: UseTableSectionContext<TableRowElement, RM>;
 }
-export interface UseTableRowReturnType<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>> extends OmitStrong<UseCompleteGridNavigationRowReturnType<TableRowElement, TableCellElement, RM, CM>, "context"> {
-    context: UseTableRowContext<any, TableCellElement, CM>;
+export interface UseTableRowReturnType<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement>, CM extends TableCellInfo<TableCellElement>> extends OmitStrong<UseCompleteGridNavigationRowReturnType<TableRowElement, TableCellElement, RM, CM>, "context"> {
+    context: UseTableRowContext<TableCellElement, CM>;
 }
 export interface UseTableRowParametersSelf<TableRowElement extends Element> {
     /**
      * When the `selectionLimit` is `"single"`, this must be `null`.
      */
-    selected: boolean | null;
+    selected: Nullable<boolean>;
     tagTableRow: ElementToTag<TableRowElement>;
 }
-export interface UseTableRowParameters<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>> extends
-    OmitStrong<UseCompleteGridNavigationRowParameters<TableRowElement, TableCellElement, RM, CM>, "rovingTabIndexParameters" | "typeaheadNavigationParameters" | "context" | "info">,
-    TargetedOmit<UseGridNavigationRowParameters<TableRowElement, TableCellElement, RM, CM>, "rovingTabIndexParameters", never> {
-    context: UseTableSectionContext<any, TableRowElement, TableCellElement, RM, CM>;
+export interface UseTableRowParameters<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement>, CM extends TableCellInfo<TableCellElement>> extends
+    OmitStrong<UseCompleteGridNavigationRowParameters<TableRowElement, TableCellElement, RM, CM>, "gridNavigationSingleSelectionSortableRowParameters" | "rovingTabIndexParameters" | "typeaheadNavigationParameters" | "context" | "info">,
+    TargetedOmit<UseCompleteGridNavigationRowParameters<TableRowElement, TableCellElement, RM, CM>, "rovingTabIndexParameters", never> {
+    context: UseTableSectionContext<TableRowElement, RM>;
     tableRowParameters: UseTableRowParametersSelf<TableRowElement>;
-    info: Omit<UseCompleteGridNavigationRowParameters<TableRowElement, TableCellElement, RM, CM>["info"], "getSortValue">;
+    info: OmitStrong<UseCompleteGridNavigationRowParameters<TableRowElement, TableCellElement, RM, CM>["info"], never>;
 }
 
-export interface UseTableRowContext<TableRowElement extends Element, TableCellElement extends Element, M extends TableCellInfo<TableCellElement>> extends CompleteGridNavigationCellContext<TableRowElement, TableCellElement, M> {
+export interface UseTableRowContext<TableCellElement extends Element, M extends TableCellInfo<TableCellElement>> extends CompleteGridNavigationCellContext<TableCellElement, M> {
     tableContext: UseTableContext["tableContext"];
 }
 
@@ -89,13 +92,13 @@ export interface UseTableCellParametersSelf<TableCellElement extends Element> {
     tagTableCell: ElementToTag<TableCellElement>;
 }
 
-export interface UseTableCellParameters<TableCellElement extends Element, CM extends TableCellInfo<TableCellElement>> extends OmitStrong<UseCompleteGridNavigationCellParameters<TableCellElement, CM>, "info"> {
+export interface UseTableCellParameters<TableCellElement extends Element, CM extends TableCellInfo<TableCellElement>> extends
+    UseGenericChildParameters<UseTableRowContext<TableCellElement, CM>, Pick<CM, UseCompleteGridNavigationCellInfoKeysParameters<CM>>>,
+    OmitStrong<UseCompleteGridNavigationCellParameters<TableCellElement, CM>, "info" | "context"> {
     tableCellParameters: UseTableCellParametersSelf<TableCellElement>;
-    context: UseTableRowContext<any, TableCellElement, CM>;
-    info: OmitStrong<UseCompleteGridNavigationCellParameters<TableCellElement, CM>["info"], never>;
 }
 
-export interface TableRowInfo<TableRowElement extends Element, TableCellElement extends Element> extends UseCompleteGridNavigationRowInfo<TableRowElement, TableCellElement> { }
+export interface TableRowInfo<TableRowElement extends Element> extends UseCompleteGridNavigationRowInfo<TableRowElement> { }
 export interface TableCellInfo<TableCellElement extends Element> extends UseCompleteGridNavigationCellInfo<TableCellElement> {
     getSortValue(): unknown;
 }
@@ -114,8 +117,8 @@ export interface UseTableReturnType<TableElement extends Element, LabelElement e
     propsLabel: ElementProps<LabelElement>;
     context: UseTableContext;
 }
-
-interface SortInfo { column: number, direction: "ascending" | "descending" }
+export type SortDirection = "ascending" | "descending";
+interface SortInfo { column: number, direction: SortDirection }
 
 /**
  * Creates a sortable data table in a [Grid](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) pattern.
@@ -132,10 +135,15 @@ export function useTable<TableElement extends Element, LabelElement extends Elem
 }: UseTableParameters<TableElement, LabelElement>): UseTableReturnType<TableElement, LabelElement> {
     monitorCallCount(useTable);
 
+    // This is the function that, when called, sorts the body's children.
+    // It's here to coordinate among multiple table sections (i.e. the head sorts the body, but they're siblings to each other, so we need to take care that)
+    // TODO: This...should probably be useManagedChildren
     const [getSortBody, setSortBody] = usePassiveState<() => void, never>(null, returnNull as (() => never));
-    const sortQueue = useRef<number[]>([]);
-    const [getSortColumn, setSortColumn] = usePassiveState<SortInfo, Event>(useCallback((a: SortInfo) => { sortQueue.current.push(a.column); }, []), useCallback(() => { return { column: 0, direction: "ascending" } as const }, []))
-    const updateSortDirection = useCallback((column: number) => {
+    
+    const [sortDirection, setSortDirection, getSortDirection] = useState<SortDirection>("ascending");
+    const [sortColumn, setSortColumn, getSortColumn] = useState<number | null>(null);
+
+    /*const updateSortDirection = useCallback((column: number) => {
         const { column: currentColumn, direction: currentDirection } = getSortColumn();
         const next = { column, direction: column != currentColumn ? "ascending" : (currentDirection == "ascending" ? "descending" : "ascending") } as const;
         setSortColumn(next);
@@ -145,6 +153,30 @@ export function useTable<TableElement extends Element, LabelElement extends Elem
         const next = updateSortDirection(column);
         getSortBody()?.();
         return next;
+    }, [])*/
+
+    const sortByColumn = useCallback((column: number): SortInfo => {
+        let nextSortDirection = getSortDirection();
+        let nextSortIndex = getSortColumn();
+        if (column == nextSortIndex) {
+            setSortDirection(nextSortDirection = (nextSortDirection == "ascending"? "descending" : "ascending"));
+        }
+        else {
+            setSortColumn(nextSortIndex = column);
+        }
+
+        const sortBody = getSortBody();
+
+        console.assert(!!sortBody);
+        if (!sortBody) {
+            debugger;
+            console.error("An attempt was made to sort a table with a head but no body");
+        }
+        else {
+            sortBody();
+        }
+
+        return { column: nextSortIndex, direction: nextSortDirection };
     }, [])
 
     const {
@@ -159,7 +191,14 @@ export function useTable<TableElement extends Element, LabelElement extends Elem
     return {
         propsTable: useMergedProps({ role: tagTable == "table" ? undefined : "grid", "aria-multiselectable": (selectionLimit == "multi" ? "true" : undefined) }, propsLabelList),
         propsLabel: propsLabelLabel,
-        context: useMemoObject({ tableContext: useMemoObject({ sortByColumn, setSortBodyFunction: setSortBody, getCurrentSortColumn: getSortColumn }) })
+        context: useMemoObject<UseTableContext>({ 
+            tableContext: useMemoObject<UseTableContextSelf>({ 
+                sortByColumn, 
+                setSortBodyFunction: setSortBody, 
+                getCurrentSortColumn: getSortColumn,
+                getCurrentSortDirection: getSortDirection
+            }) 
+        })
     }
 }
 function fuzzyCompare(lhs: any, rhs: any): number {
@@ -193,7 +232,7 @@ const naturalSectionTypes = new Set<keyof JSX.IntrinsicElements>(["thead", "tbod
 /**
  * @compositeParams
  */
-export function useTableSection<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>>({
+export function useTableSection<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element>({
     linearNavigationParameters,
     rovingTabIndexParameters,
     singleSelectionParameters,
@@ -203,9 +242,12 @@ export function useTableSection<TableSectionElement extends Element, TableRowEle
     staggeredChildrenParameters,
     tableSectionParameters: { tagTableSection, location },
     typeaheadNavigationParameters,
-    context: { tableContext }
-}: UseTableSectionParameters<TableSectionElement, TableRowElement, TableCellElement, RM>): UseTableSectionReturnType<TableSectionElement, TableRowElement, TableCellElement, RM, CM> {
+    context: { tableContext },
+    refElementParameters,
+    ...void1
+}: UseTableSectionParameters<TableSectionElement, TableRowElement, TableRowInfo<TableRowElement>>): UseTableSectionReturnType<TableSectionElement, TableRowElement, TableRowInfo<TableRowElement>> {
     monitorCallCount(useTableSection);
+    type RM = TableRowInfo<TableRowElement>;
 
     const {
         childrenHaveFocusReturn,
@@ -219,8 +261,9 @@ export function useTableSection<TableSectionElement extends Element, TableRowEle
         staggeredChildrenReturn,
         rearrangeableChildrenReturn,
         paginatedChildrenReturn,
-        sortableChildrenReturn
-    } = useCompleteGridNavigation<TableSectionElement, TableRowElement, TableCellElement, RM, CM>({
+        sortableChildrenReturn,
+        ...void2
+    } = useCompleteGridNavigation<TableSectionElement, TableRowElement, TableCellElement, RM>({
         linearNavigationParameters,
         rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
         singleSelectionParameters,
@@ -234,6 +277,7 @@ export function useTableSection<TableSectionElement extends Element, TableRowEle
         typeaheadNavigationParameters,
         gridNavigationParameters,
         rearrangeableChildrenParameters,
+        refElementParameters,
     });
 
     if (!naturalSectionTypes.has(tagTableSection as any)) {
@@ -245,10 +289,13 @@ export function useTableSection<TableSectionElement extends Element, TableRowEle
     useEffect(() => {
         if (location == "body") {
             tableContext.setSortBodyFunction(() => {
-                return () => { sortableChildrenReturn.sort(tableContext.getCurrentSortColumn().direction); }
+                return () => { sortableChildrenReturn.sort(tableContext.getCurrentSortDirection()); }
             })
         }
     });
+
+    assertEmptyObject(void1);
+    assertEmptyObject(void2);
 
     return {
         childrenHaveFocusReturn,
@@ -272,16 +319,20 @@ export function useTableSection<TableSectionElement extends Element, TableRowEle
 /**
  * @compositeParams
  */
-export function useTableRow<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement, TableCellElement>, CM extends TableCellInfo<TableCellElement>>({
+export function useTableRow<TableRowElement extends Element, TableCellElement extends Element>({
     info,
     textContentParameters,
     context: cx1,
     tableRowParameters: { selected },
     linearNavigationParameters,
     rovingTabIndexParameters,
+    hasCurrentFocusParameters,
+
     ...void1
 
-}: UseTableRowParameters<TableRowElement, TableCellElement, RM, CM>): UseTableRowReturnType<TableRowElement, TableCellElement, RM, CM> {
+}: UseTableRowParameters<TableRowElement, TableCellElement, TableRowInfo<TableRowElement>, TableCellInfo<TableCellElement>>): UseTableRowReturnType<TableRowElement, TableCellElement, TableRowInfo<TableRowElement>, TableCellInfo<TableCellElement>> {
+    type RM = TableRowInfo<TableRowElement>;
+    type CM = TableCellInfo<TableCellElement>;
     monitorCallCount(useTableRow);
     assertEmptyObject(void1);
 
@@ -294,19 +345,12 @@ export function useTableRow<TableRowElement extends Element, TableCellElement ex
         // props
     } = useCompleteGridNavigationRow<TableRowElement, TableCellElement, RM, CM>({
         textContentParameters,
+        hasCurrentFocusParameters,
         context: { ...cx1 },
-        info: {
-            ...info,
-            getSortValue: useStableCallback((): unknown => {
-                const currentColumn = cx1.tableContext.getCurrentSortColumn().column;
-                const currentChild = managedChildrenReturn.getChildren().getAt(currentColumn ?? 0)
-                const sortValue = currentChild?.getSortValue();
-
-                return sortValue;
-            })
-        } as RM,
+        info,
         linearNavigationParameters,
-        rovingTabIndexParameters: { ...rovingTabIndexParameters },
+        rovingTabIndexParameters,
+        gridNavigationSingleSelectionSortableRowParameters: { getSortableColumnIndex: cx1.tableContext.getCurrentSortColumn },
         typeaheadNavigationParameters: { noTypeahead: true, collator: null, typeaheadTimeout: Infinity, onNavigateTypeahead: null }
     }
     );
@@ -342,10 +386,14 @@ export function useTableRow<TableRowElement extends Element, TableCellElement ex
 /**
  * @compositeParams
  */
-export function useTableCell<TableCellElement extends Element, CM extends TableCellInfo<TableCellElement>>({ tableCellParameters: { tagTableCell }, info, ...p }: UseTableCellParameters<TableCellElement, CM>): UseTableCellReturnType<TableCellElement, CM> {
+export function useTableCell<TableCellElement extends Element>({
+    tableCellParameters: { tagTableCell },
+    info,
+    ...p
+}: UseTableCellParameters<TableCellElement, TableCellInfo<TableCellElement>>): UseTableCellReturnType<TableCellElement, TableCellInfo<TableCellElement>> {
     monitorCallCount(useTableCell);
 
-    const { props, ...ret } = useCompleteGridNavigationCell<TableCellElement, CM>({
+    const { props, ...ret } = useCompleteGridNavigationCell<TableCellElement, TableCellInfo<TableCellElement>>({
         info,
         ...p
     });

@@ -1,7 +1,7 @@
 
-import { returnZero, useMergedProps, useState } from "preact-prop-helpers";
+import { getEventDetail, useMergedProps, useState } from "preact-prop-helpers";
 import { useRef } from "preact/compat";
-import { Checkbox, EventDetail, Gridlist, GridlistChild, GridlistRow, UseCheckboxReturnType } from "../../dist/index.js";
+import { Checkbox, CheckboxChangeEventDetail, EventDetail, Gridlist, GridlistChild, GridlistRow, UseCheckboxReturnType } from "../../dist/index.js";
 
 function getDocument() { return window.document; }
 
@@ -49,25 +49,25 @@ function DemoGridlistChild2({ tabbable }:{tabbable:boolean}) {
     const [b, setB] = useState(false);
     return (
         <GridlistChild<HTMLDivElement>
-            focusSelf={e => { cb.current?.checkboxLikeReturn.focusSelf() }}
+            focusSelf={e => { debugger; cb.current?.checkboxLikeReturn.focusSelf() }}
             index={1}
             render={info => {
 
                 return (
-                    <div {...useMergedProps<HTMLDivElement>(info.propsCell, info.propsTabbable, info.propsPress)}>
+                    <div {...useMergedProps<HTMLDivElement>(info.propsCell)}>
                         <Checkbox<HTMLInputElement, HTMLLabelElement>
                             ariaLabel={"Whether this item is selected"}
-                            ref={cb}
+                            imperativeHandle={cb}
                             labelPosition={"separate"}
                             tagInput="input"
                             tagLabel="label"
                             checked={b}
                             disabled={false}
-                            onCheckedChange={e => setB(e[EventDetail].checked)}
+                            onCheckedChange={checked => setB(getEventDetail<CheckboxChangeEventDetail>(checked).checked)}
                             render={infoCheckbox => {
                                 return (
                                     <>
-                                        <input tabIndex={tabbable? 0 : -1} {...infoCheckbox.propsInput} />
+                                        <input {...useMergedProps(infoCheckbox.propsInput, info.propsTabbable, info.propsPress)} />
                                     </>
                                 )
 
@@ -114,7 +114,7 @@ export function Demo() {
                                             <GridlistRow<HTMLLIElement, HTMLDivElement>
                                                 selected={null}
                                                 index={i}
-                                                getSortValue={returnZero}
+                                                unselectable={false}
                                                 render={info => {
                                                     return (
                                                         <li {...info.props}><DemoGridlistChild1 row={i} />{i != 2 && <DemoGridlistChild2 tabbable={info.rovingTabIndexChildReturn.tabbable} />}</li>

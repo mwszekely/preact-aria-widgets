@@ -1,6 +1,6 @@
 
 import { useState } from "preact/hooks";
-import { defaultRenderPortal, Tooltip, TooltipStatus } from "../../dist/index.js";
+import { Tooltip, TooltipStatus, useDefaultRenderPortal } from "../../dist/index.js";
 
 export function Blurb() {
     return (
@@ -41,7 +41,7 @@ export function Demo() {
                 render={info => {
                     return <>
                         <span tabIndex={0} {...info.propsTrigger}>Tooltip-triggering text that is hoverable and focusable: </span>
-                        {defaultRenderPortal({
+                        {useDefaultRenderPortal({
                             portalId: "portal",
                             children: <div {...info.propsPopup} hidden={!tooltipStatus}>This text describes the triggering text in more detail.</div>
                         })}</>

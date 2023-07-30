@@ -1,4 +1,4 @@
-import { returnZero, useMergedProps } from "preact-prop-helpers";
+import { useMergedProps } from "preact-prop-helpers";
 import { Gridlist, GridlistChild, GridlistRow } from "../../dist/index.js";
 import { TestItem, useTestSyncState } from "../util.js";
 import { MissingIndex, fromStringNumber, fromStringString } from "./base.types.js";
@@ -51,7 +51,6 @@ function Row({ index }: { index: number }) {
         <GridlistRow<HTMLTableRowElement, HTMLTableCellElement>
 
             index={index}
-            getSortValue={returnZero}
             render={rowInfo => {
                 return (
                     <tr data-gridlist-row {...rowInfo.props} >

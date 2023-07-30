@@ -1,7 +1,7 @@
 
-import { useState } from "preact-prop-helpers";
-import { Button, EventDetail } from "../../dist/index.js";
 import { JSX } from "preact";
+import { EventDetail, useState } from "preact-prop-helpers";
+import { Button, ProgressWithHandler, TargetedButtonPressEvent } from "../../dist/index.js";
 
 export function Blurb() {
     return (
@@ -33,7 +33,7 @@ export function Code() {
 }
 
 export function Demo() {
-    const [pressed, setPressed] = useState(false);
+    const [pressed, setPressed] = useState(false as boolean | undefined);
 
     return (
         <>
@@ -48,22 +48,50 @@ export function Demo() {
             <Button<HTMLButtonElement>
                 tagButton="button"
                 pressed={pressed}
-                onPress={e => setPressed(e[EventDetail].pressed ?? false)}
-                render={info => (<button {...info.props}>{`Toggle button (${pressed ? "pressed" : "unpressed"})`}</button>)}
+                onPressSync={e => setPressed(e[EventDetail].pressed!)}
+                render={info => {
+                    return (
+                        <>
+                            <button {...info.props}>{`Toggle button (${pressed ? "pressed" : "unpressed"})`}</button>
+                        </>
+                    )
+                }}
             />
         </>
     )
 }
 
 function DemoButton({ tag: Tag, disabled }: { tag: keyof JSX.IntrinsicElements, disabled: boolean | "soft" | "hard" }) {
-    const onPress = () => { alert("Button clicked") }
+    const onPress = async () => { await new Promise(resolve => setTimeout(resolve, 1000)); alert("Button clicked"); }
 
     return (
-        <Button<HTMLButtonElement>
-            disabled={disabled}
-            tagButton={Tag as any}
-            onPress={onPress}
-            render={info => (<Tag {...info.props as {}}>{`${Tag} ${disabled ? ` disabled (${disabled == "soft" ? "soft" : "hard"})` : ""}` }</Tag>)}
-        />
+        <ProgressWithHandler<TargetedButtonPressEvent<HTMLButtonElement>, boolean | undefined, HTMLProgressElement, HTMLLabelElement> 
+        capture={e => undefined}
+        tagProgressIndicator="progress"
+        asyncHandler={onPress}
+        
+        render={progressInfo => {
+            return (
+                <Button<HTMLButtonElement>
+                    disabled={disabled}
+                    tagButton={Tag as any}
+                    onPressSync={progressInfo.asyncHandlerReturn.syncHandler}
+                    render={info => {
+                        let progressBar = (
+                            <>
+                                <label {...progressInfo.propsProgressLabel}>Async handler progress</label>
+                                <progress {...progressInfo.propsProgressIndicator} />
+                            </>
+                        );
+                        return (
+                            <>
+                                <Tag {...info.props as {}}>{`${Tag} ${disabled ? ` disabled (${disabled == "soft" ? "soft" : "hard"})` : ""}`}</Tag>
+                                {progressInfo.asyncHandlerReturn.pending && progressBar}
+                            </>)
+                    }}
+                />
+            )
+        }} />
+
     )
 }

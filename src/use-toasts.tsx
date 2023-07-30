@@ -1,5 +1,5 @@
 import { ComponentChildren } from "preact";
-import { ElementProps, ManagedChildInfo, UseManagedChildParameters, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, findFirstFocusable, focus, monitorCallCount, useGlobalHandler, useManagedChild, useManagedChildren, useMergedProps, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
+import { ElementProps, ManagedChildInfo, Nullable, UseGenericChildParameters, UseManagedChildParameters, UseManagedChildReturnType, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, findFirstFocusable, focus, monitorCallCount, useGlobalHandler, useManagedChild, useManagedChildren, useMergedProps, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
 import { StateUpdater, useCallback, useEffect, useRef } from "preact/hooks";
 import { OmitStrong } from "./props.js";
 import { useNotify } from "./use-notify.js";
@@ -14,15 +14,15 @@ export interface UseToastsParameters extends UseManagedChildrenParameters<ToastI
 }
 
 export interface UseToastParametersSelf {
-    politeness?: "polite" | "assertive";
-    timeout: number | null;
+    politeness?: Nullable<"polite" | "assertive">;
+    timeout: Nullable<number>;
     children: ComponentChildren;
 }
 
-export interface UseToastParameters<M extends ToastInfo> extends UseManagedChildParameters<M, "index"> {
+export interface UseToastParameters<M extends ToastInfo> extends
+    OmitStrong<UseManagedChildParameters<M>, "info" | "context">,
+    UseGenericChildParameters<ToastsContext<M>, Pick<M, "index">> {
     toastParameters: UseToastParametersSelf;
-    context: ToastsContext<M>;
-    info: OmitStrong<M, "setNumberAheadOfMe" | "focus" | "show">
 }
 
 export interface ToastInfo extends ManagedChildInfo<number> {
@@ -39,12 +39,12 @@ export interface UseToastReturnTypeSelf {
     resetDismissTimer: () => void;
 }
 
-export interface UseToastReturnType<ToastType extends Element> {
+export interface UseToastReturnType<ToastType extends Element, M extends ToastInfo> extends UseManagedChildReturnType<M> {
     toastReturn: UseToastReturnTypeSelf
     props: ElementProps<ToastType>;
 }
 
-export interface UseToastsReturnType<ContainerType extends Element, M extends ToastInfo> extends UseManagedChildrenReturnType<ToastInfo> {
+export interface UseToastsReturnType<ContainerType extends Element, M extends ToastInfo> extends UseManagedChildrenReturnType<M> {
     context: ToastsContext<M>
     props: ElementProps<ContainerType>;
 }
@@ -178,7 +178,7 @@ export function useToasts<ContainerType extends Element>({ managedChildrenParame
 /**
  * @compositeParams
  */
-export function useToast<E extends Element>({ toastParameters: { politeness, timeout, children }, info: { index, ...info }, context }: UseToastParameters<ToastInfo>): UseToastReturnType<E> {
+export function useToast<E extends Element>({ toastParameters: { politeness, timeout, children }, info: { index, ...info }, context }: UseToastParameters<ToastInfo>): UseToastReturnType<E, ToastInfo> {
     const { getMaxVisibleCount, onAnyToastDismissed, onAnyToastMounted } = context.toastContext;
     monitorCallCount(useToast);
     const [numberOfToastsAheadOfUs, setNumberOfToastsAheadOfUs] = useState(Infinity);
@@ -198,7 +198,7 @@ export function useToast<E extends Element>({ toastParameters: { politeness, tim
     }, []);
 
     const show = useStableCallback(() => {
-        notify("polite", <p>{children}</p>);
+        notify(politeness ?? "polite", <p>{children}</p>);
         setShowing2(true);
     })
 
@@ -218,7 +218,7 @@ export function useToast<E extends Element>({ toastParameters: { politeness, tim
         }
     }, []);
 
-    const { managedChildReturn: { getChildren: _getToasts } } = useManagedChild<ToastInfo>({ info: { index, focus: focus2, setNumberAheadOfMe: setNumberOfToastsAheadOfUs, show }, context });
+    const { managedChildReturn } = useManagedChild<ToastInfo>({ info: { index, focus: focus2, setNumberAheadOfMe: setNumberOfToastsAheadOfUs, show, ...info }, context });
 
     const resetDismissTimer = useCallback(() => {
         setTriggerIndex(i => ++i);
@@ -249,6 +249,7 @@ export function useToast<E extends Element>({ toastParameters: { politeness, tim
             dismiss,
             resetDismissTimer
         },
+        managedChildReturn,
         props: propsStable
     }
 }

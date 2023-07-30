@@ -1,21 +1,28 @@
 import { jsx as _jsx } from "preact/jsx-runtime";
+import { memo } from "preact-prop-helpers";
 import { useContext, useImperativeHandle } from "preact/hooks";
 import { useDrawer } from "../use-drawer.js";
-import { ParentDepthContext, memoForwardRef, useDefault } from "./util.js";
-export const Drawer = memoForwardRef(function Drawer({ closeOnBackdrop, closeOnEscape, closeOnLostFocus, focusOpener, focusPopup, getWindow, onClose, open, parentDepth, render, trapActive, ariaLabel, }, ref) {
+import { ParentDepthContext, useDefault } from "./util.js";
+export const Drawer = memo(function Drawer({ active, onDismiss, dismissBackdropActive, dismissEscapeActive, dismissLostFocusActive, onElementChange, onMount, onUnmount, focusOpener, focusPopup, getDocument, imperativeHandle, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, parentDepth, render, trapActive, ariaLabel, }, ref) {
     const defaultParentDepth = useContext(ParentDepthContext);
     let myDepth = (parentDepth ?? defaultParentDepth) + 1;
     const info = useDrawer({
         dismissParameters: {
-            closeOnBackdrop: closeOnBackdrop ?? true,
-            closeOnEscape: closeOnEscape ?? true,
-            closeOnLostFocus: closeOnLostFocus ?? true,
-            onClose,
-            open
+            onDismiss,
         },
+        backdropDismissParameters: { dismissBackdropActive: dismissBackdropActive || false },
+        lostFocusDismissParameters: { dismissLostFocusActive: dismissLostFocusActive || false },
+        modalParameters: { active },
+        refElementParameters: { onElementChange, onMount, onUnmount },
         escapeDismissParameters: {
-            getWindow: useDefault("getWindow", getWindow),
-            parentDepth: parentDepth ?? defaultParentDepth
+            parentDepth: parentDepth ?? defaultParentDepth,
+            dismissEscapeActive: dismissEscapeActive || false
+        },
+        activeElementParameters: {
+            getDocument: useDefault("getDocument", getDocument),
+            onActiveElementChange,
+            onLastActiveElementChange,
+            onWindowFocusedChange
         },
         focusTrapParameters: {
             focusOpener: useDefault("focusOpener", focusOpener),

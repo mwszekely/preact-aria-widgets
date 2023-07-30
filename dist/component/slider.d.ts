@@ -1,14 +1,11 @@
-import { ComponentChildren, Ref, VNode } from "preact";
+import { OmitStrong } from "preact-prop-helpers";
+import { Get2 } from "../props.js";
 import { SliderThumbInfo, UseSliderParameters, UseSliderReturnType, UseSliderThumbParameters, UseSliderThumbReturnType } from "../use-slider.js";
-type Get<T, K extends keyof T> = T[K];
-export interface SliderProps extends Get<UseSliderParameters<SliderThumbInfo>, "managedChildrenParameters">, Get<UseSliderParameters<SliderThumbInfo>, "sliderParameters"> {
-    children: ComponentChildren;
-    ref?: Ref<UseSliderReturnType<SliderThumbInfo>>;
-}
-export interface SliderThumbProps<ThumbElement extends Element> extends Pick<SliderThumbInfo, "index">, Get<UseSliderThumbParameters<ThumbElement, SliderThumbInfo>, "sliderThumbParameters"> {
-    render(info: UseSliderThumbReturnType<ThumbElement, SliderThumbInfo>): VNode;
-}
-export declare const Slider: ({ max, min, onAfterChildLayoutEffect, onChildrenMountChange, children }: SliderProps, ref?: Ref<any>) => import("preact").JSX.Element;
-export declare const SliderThumb: <ThumbElement extends Element>({ label, tag, value, max, min, onValueChange, index, render, valueText }: SliderThumbProps<ThumbElement>, ref?: Ref<any>) => VNode<{}>;
-export {};
+import { GenericComponentProps } from "./util.js";
+export type SliderProps<M extends SliderThumbInfo> = GenericComponentProps<UseSliderReturnType<M>, Get2<UseSliderParameters<M>, "managedChildrenParameters", "sliderParameters">, "min" | "max">;
+export type SliderThumbProps<ThumbElement extends Element, M extends SliderThumbInfo = SliderThumbInfo> = GenericComponentProps<UseSliderThumbReturnType<ThumbElement>, Get2<UseSliderThumbParameters<ThumbElement>, "sliderThumbParameters", "info">, "index" | "label" | "tag" | "value"> & {
+    info?: OmitStrong<M, keyof SliderThumbInfo>;
+};
+export declare function Slider({ max, min, onAfterChildLayoutEffect, onChildrenMountChange, render, imperativeHandle, onChildrenCountChange }: SliderProps<SliderThumbInfo>): import("preact").JSX.Element;
+export declare function SliderThumb<ThumbElement extends Element, ProgressIndicatorElement extends Element, ProgressLabelElement extends Element>({ label, tag, value, max, min, index, render, valueText, imperativeHandle, onValueChange, info }: SliderThumbProps<ThumbElement>): import("preact").JSX.Element;
 //# sourceMappingURL=slider.d.ts.map

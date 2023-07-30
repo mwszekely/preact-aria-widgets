@@ -1,13 +1,12 @@
-import { jsx as _jsx } from "preact/jsx-runtime";
 import { createContext } from "preact";
-import { useImperativeHandle } from "preact/hooks";
+import { assertEmptyObject, memo } from "preact-prop-helpers";
 import { useContextWithWarning } from "../props.js";
 import { useCheckboxGroup, useCheckboxGroupChild, useCheckboxGroupParent } from "../use-checkbox-group.js";
-import { memoForwardRef, useDefault } from "./util.js";
+import { useComponent, useDefault } from "./util.js";
 const UseCheckboxGroupChildContext = createContext(null);
-export const CheckboxGroup = memoForwardRef(function CheckboxGroup({ render, collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, onTabbableIndexChange, compare, staggered, getIndex, untabbable, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, onNavigateLinear, onNavigateTypeahead, ..._rest }, ref) {
-    untabbable ||= false;
-    const info = useCheckboxGroup({
+export const CheckboxGroup = memo(function CheckboxGroup({ render, collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, onTabbableIndexChange, compare, staggered, getIndex, untabbable, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, ...void1 }) {
+    assertEmptyObject(void1);
+    return useComponent(imperativeHandle, render, UseCheckboxGroupChildContext, useCheckboxGroup({
         linearNavigationParameters: {
             onNavigateLinear,
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
@@ -15,49 +14,81 @@ export const CheckboxGroup = memoForwardRef(function CheckboxGroup({ render, col
             navigatePastStart: navigatePastStart ?? "wrap",
             pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
         },
-        checkboxGroupParameters: { orientation: orientation ?? "vertical" },
-        staggeredChildrenParameters: { staggered: staggered || false },
-        rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
-        rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable },
-        sortableChildrenParameters: { compare: compare ?? null },
+        checkboxGroupParameters: {
+            orientation: orientation ?? "vertical"
+        },
+        staggeredChildrenParameters: {
+            staggered: staggered || false
+        },
+        rearrangeableChildrenParameters: {
+            getIndex: useDefault("getIndex", getIndex)
+        },
+        rovingTabIndexParameters: {
+            onTabbableIndexChange,
+            untabbable: untabbable || false
+        },
+        sortableChildrenParameters: {
+            compare,
+        },
         typeaheadNavigationParameters: {
             onNavigateTypeahead,
             collator: useDefault("collator", collator),
             noTypeahead: useDefault("noTypeahead", noTypeahead),
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
-        }
-    });
-    useImperativeHandle(ref, () => info);
-    return (_jsx(UseCheckboxGroupChildContext.Provider, { value: info.context, children: render(info) }));
+        },
+        refElementParameters: { onElementChange, onMount, onUnmount }
+    }));
 });
-export const CheckboxGroupParent = memoForwardRef(function CheckboxGroupParent({ render, index, focusSelf, untabbable, getText, getSortValue, unselectable, ..._rest }, ref) {
+export const CheckboxGroupParent = memo(function CheckboxGroupParent({ render, index, focusSelf, untabbable, getSortValue, unselectable, imperativeHandle, getText, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, 
+//info,
+..._rest }) {
     const context = useContextWithWarning(UseCheckboxGroupChildContext, "checkbox group");
     console.assert(context != null, `This CheckboxGroupParent is not contained within a CheckboxGroup`);
-    const info = useCheckboxGroupParent({
+    return (useComponent(imperativeHandle, render, null, useCheckboxGroupParent({
         info: {
             index,
             unselectable: unselectable || false,
             untabbable: untabbable || false,
             focusSelf,
             getSortValue,
-            checkboxInfo: { checkboxChildType: "parent" }
         },
         context,
-        textContentParameters: { getText: useDefault("getText", getText) }
-    });
-    useImperativeHandle(ref, () => info);
-    return render(info);
+        textContentParameters: {
+            getText: useDefault("getText", getText)
+        },
+        hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged },
+        refElementParameters: { onElementChange, onMount, onUnmount }
+    })));
 });
-export const CheckboxGroupChild = memoForwardRef(function CheckboxGroupChild({ index, render, checked, onChangeFromParent, getSortValue, untabbable, getText, focusSelf, unselectable, ..._rest }, ref) {
-    const context = useContextWithWarning(UseCheckboxGroupChildContext, "checkbox group");
-    console.assert(context != null, `This CheckboxGroupChild is not contained within a CheckboxGroup`);
-    const info = useCheckboxGroupChild({
-        checkboxGroupChildParameters: { checked, onChangeFromParent },
-        info: { index, untabbable: untabbable || false, unselectable: unselectable || false, focusSelf, getSortValue },
-        textContentParameters: { getText: useDefault("getText", getText) },
-        context,
-    });
-    useImperativeHandle(ref, () => info);
-    return render(info);
+export const CheckboxGroupChild = (function CheckboxGroupChild({ index, render, checked, onChangeFromParent, getSortValue, untabbable, getText, focusSelf, unselectable, 
+//info,
+imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, ...void1 }) {
+    assertEmptyObject(void1);
+    return useComponent(imperativeHandle, render, null, useCheckboxGroupChild({
+        checkboxGroupChildParameters: {
+            checked: checked,
+            onChangeFromParent
+        },
+        info: {
+            index,
+            untabbable: untabbable || false,
+            unselectable: unselectable || false,
+            focusSelf,
+            getSortValue
+        },
+        textContentParameters: {
+            getText: useDefault("getText", getText)
+        },
+        context: useContextWithWarning(UseCheckboxGroupChildContext, "checkbox group"),
+        hasCurrentFocusParameters: {
+            onCurrentFocusedChanged,
+            onCurrentFocusedInnerChanged
+        },
+        refElementParameters: {
+            onElementChange,
+            onMount,
+            onUnmount
+        }
+    }));
 });
 //# sourceMappingURL=checkbox-group.js.map

@@ -1,4 +1,4 @@
-import { DismissListenerTypes, ElementProps, focus, monitorCallCount, returnNull, TargetedPick, useDismiss, UseEscapeDismissParameters, useGlobalHandler, useHasCurrentFocus, useMergedProps, usePassiveState, useRandomId, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
+import { DismissListenerTypes, ElementProps, focus, monitorCallCount, returnNull, TargetedPick, useDismiss, UseDismissParameters, UseEscapeDismissParameters, useGlobalHandler, useHasCurrentFocus, useMergedProps, usePassiveState, useRandomId, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
 import { useCallback, useRef } from "preact/hooks";
 import { Prefices } from "./props.js";
 
@@ -33,7 +33,9 @@ export interface UseTooltipParametersSelf {
     hoverDelay: number | null;
 }
 
-export interface UseTooltipParameters<TriggerType extends Element, PopupType extends Element> extends TargetedPick<UseEscapeDismissParameters<PopupType>,"escapeDismissParameters", "getWindow" | "parentDepth"> {
+export interface UseTooltipParameters<TriggerType extends Element, PopupType extends Element> extends
+    TargetedPick<UseEscapeDismissParameters<PopupType, true>, "escapeDismissParameters", "getDocument" | "parentDepth">,
+    Pick<UseDismissParameters<any>, "activeElementParameters"> {
     tooltipParameters: UseTooltipParametersSelf;
 }
 
@@ -46,7 +48,15 @@ export type TooltipState = `${"hovering" | "focused"}-${"popup" | "trigger"}` | 
  * 
  * @compositeParams
  */
-export function useTooltip<TriggerType extends Element, PopupType extends Element>({ tooltipParameters: { onStatus, tooltipSemanticType, hoverDelay }, escapeDismissParameters }: UseTooltipParameters<TriggerType, PopupType>): UseTooltipReturnType<TriggerType, PopupType> {
+export function useTooltip<TriggerType extends Element, PopupType extends Element>({
+    tooltipParameters: {
+        onStatus,
+        tooltipSemanticType,
+        hoverDelay
+    },
+    activeElementParameters,
+    escapeDismissParameters
+}: UseTooltipParameters<TriggerType, PopupType>): UseTooltipReturnType<TriggerType, PopupType> {
     monitorCallCount(useTooltip);
 
 
@@ -140,16 +150,27 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
         propsStablePopup,
         propsStableSource
     } = useDismiss<DismissListenerTypes, TriggerType, PopupType>({
+        backdropDismissParameters: {
+            dismissBackdropActive: true,     // we handle this ourselves, but for mobile devices with a sorta virtualish cursor this helps. 
+            onDismissBackdrop: null
+        },
+        lostFocusDismissParameters: {
+            dismissLostFocusActive: false,    // and it interferes with our own focus logic (or, our onClose there does)
+            onDismissLostFocus: null,
+        },
+
         dismissParameters: {
-            closeOnBackdrop: true,     // we handle this ourselves, but for mobile devices with a sorta virtualish cursor this helps. 
-            closeOnLostFocus: false,    // and it interferes with our own focus logic (or, our onClose there does)
-            closeOnEscape: true,
-            open: openLocal,
-            onClose: useStableCallback((reason) => {
+            dismissActive: openLocal,
+            onDismiss: useStableCallback((e, reason) => {
                 setState(null);
             }),
         },
-        escapeDismissParameters,
+        activeElementParameters,
+        escapeDismissParameters: {
+            dismissEscapeActive: true,
+            onDismissEscape: null,
+            parentDepth: 1
+        },
     });
 
 

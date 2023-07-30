@@ -1,37 +1,18 @@
-import { Ref, VNode } from "preact";
-import { Get3, Get4, Get9 } from "../props.js";
+import { Ref } from "preact";
+import { OmitStrong } from "preact-prop-helpers";
+import { Get10, Get2, Get4, Get6 } from "../props.js";
 import { TableCellInfo, TableRowInfo, UseTableCellParameters, UseTableCellReturnType, UseTableParameters, UseTableReturnType, UseTableRowParameters, UseTableRowReturnType, UseTableSectionParameters, UseTableSectionReturnType } from "../use-table.js";
-import { PartialExcept } from "./util.js";
-type Get<T, K extends keyof T> = T[K];
-interface TablePropsBase<TableElement extends Element, LabelElement extends Element> extends Get<UseTableParameters<TableElement, LabelElement>, "labelParameters">, Get<UseTableParameters<TableElement, LabelElement>, "tableParameters"> {
-    ref?: Ref<UseTableReturnType<TableElement, LabelElement>>;
-}
-interface TableSectionPropsBase<SectionElement extends Element, RowElement extends Element, CellElement extends Element, RM extends TableRowInfo<RowElement, CellElement>, CM extends TableCellInfo<CellElement>> extends Get9<UseTableSectionParameters<SectionElement, RowElement, CellElement, RM>, "gridNavigationParameters", "linearNavigationParameters", "rearrangeableChildrenParameters", "rovingTabIndexParameters", "singleSelectionParameters", "typeaheadNavigationParameters", "paginatedChildrenParameters", "staggeredChildrenParameters", "tableSectionParameters"> {
-    ref?: Ref<UseTableSectionReturnType<SectionElement, RowElement, CellElement, RM, CM>>;
-}
-interface TableRowPropsBase<RowElement extends Element, CellElement extends Element, RM extends TableRowInfo<RowElement, CellElement>, CM extends TableCellInfo<CellElement>> extends Pick<RM, "index" | "unselectable">, Get4<UseTableRowParameters<RowElement, CellElement, RM, CM>, "textContentParameters", "tableRowParameters", "linearNavigationParameters", "rovingTabIndexParameters"> {
-    ref?: Ref<UseTableRowReturnType<RowElement, CellElement, RM, CM>>;
-}
-interface TableCellPropsBase<CellElement extends Element, CM extends TableCellInfo<CellElement>> extends Pick<CM, "index" | "untabbable">, Get3<UseTableCellParameters<CellElement, CM>, "tableCellParameters", "gridNavigationCellParameters", "textContentParameters"> {
-    focusSelf: CM["focusSelf"];
-    getSortValue: CM["getSortValue"];
-    ref?: Ref<UseTableCellReturnType<CellElement, CM>>;
-}
-export interface TableProps<TableElement extends Element, LabelElement extends Element> extends PartialExcept<TablePropsBase<TableElement, LabelElement>, "tagTable" | "selectionLimit" | "ariaLabel"> {
-    render(info: UseTableReturnType<TableElement, LabelElement>): VNode;
-}
-export interface TableSectionProps<SectionElement extends Element, RowElement extends Element, CellElement extends Element, RM extends TableRowInfo<RowElement, CellElement>, CM extends TableCellInfo<CellElement>> extends PartialExcept<TableSectionPropsBase<SectionElement, RowElement, CellElement, RM, CM>, "tagTableSection" | "location"> {
-    render(info: UseTableSectionReturnType<SectionElement, RowElement, CellElement, RM, CM>): VNode;
-}
-export interface TableRowProps<RowElement extends Element, CellElement extends Element, RM extends TableRowInfo<RowElement, CellElement>, CM extends TableCellInfo<CellElement>> extends PartialExcept<TableRowPropsBase<RowElement, CellElement, RM, CM>, "index" | "tagTableRow"> {
-    render(info: UseTableRowReturnType<RowElement, CellElement, RM, CM>): VNode;
-}
-export interface TableCellProps<CellElement extends Element, CM extends TableCellInfo<CellElement>> extends PartialExcept<TableCellPropsBase<CellElement, CM>, "getSortValue" | "tagTableCell" | "index" | "focusSelf"> {
-    render(info: UseTableCellReturnType<CellElement, CM>): VNode;
-}
-export declare const Table: <TableElement extends Element, LabelElement extends Element>({ ariaLabel, selectionLimit, tagTable, render }: TableProps<TableElement, LabelElement>, ref?: Ref<any>) => import("preact").JSX.Element;
-export declare const TableSection: <SectionElement extends Element, RowElement extends Element, CellElement extends Element>({ disableHomeEndKeys, getIndex, initiallySelectedIndex, untabbable, navigatePastEnd, navigatePastStart, onSelectedIndexChange, onTabbableColumnChange, onTabbableIndexChange, pageNavigationSize, paginationMax, paginationMin, staggered, render, location, ariaPropName, selectionMode, onNavigateLinear, collator, noTypeahead, onNavigateTypeahead, typeaheadTimeout, tagTableSection }: TableSectionProps<SectionElement, RowElement, CellElement, TableRowInfo<RowElement, CellElement>, TableCellInfo<CellElement>>) => import("preact").JSX.Element;
-export declare const TableRow: <RowElement extends Element, Cellement extends Element>({ index, getText, tagTableRow, onTabbableIndexChange, navigatePastEnd, navigatePastStart, selected, unselectable, initiallyTabbedIndex, untabbable, render }: TableRowProps<RowElement, Cellement, TableRowInfo<RowElement, Cellement>, TableCellInfo<Cellement>>, ref?: Ref<any>) => import("preact").JSX.Element;
-export declare const TableCell: <CellElement extends Element>({ index, getText, focusSelf, untabbable, tagTableCell, render, colSpan, getSortValue, }: TableCellProps<CellElement, TableCellInfo<CellElement>>, ref?: Ref<any>) => VNode<{}>;
-export {};
+import { GenericComponentProps } from "./util.js";
+export type TableProps<TableElement extends Element, LabelElement extends Element> = GenericComponentProps<UseTableReturnType<TableElement, LabelElement>, Get2<UseTableParameters<TableElement, LabelElement>, "labelParameters", "tableParameters">, "selectionLimit" | "tagTable">;
+export type TableSectionProps<SectionElement extends Element, RowElement extends Element, RM extends TableRowInfo<RowElement> = TableRowInfo<RowElement>> = GenericComponentProps<UseTableSectionReturnType<SectionElement, RowElement, RM>, Get10<UseTableSectionParameters<SectionElement, RowElement, RM>, "gridNavigationParameters", "linearNavigationParameters", "rearrangeableChildrenParameters", "rovingTabIndexParameters", "singleSelectionParameters", "typeaheadNavigationParameters", "paginatedChildrenParameters", "staggeredChildrenParameters", "tableSectionParameters", "refElementParameters">, "tagTableSection" | "location">;
+export type TableRowProps<RowElement extends Element, CellElement extends Element, RM extends TableRowInfo<RowElement>, CM extends TableCellInfo<CellElement>> = GenericComponentProps<UseTableRowReturnType<RowElement, CellElement, RM, CM>, Get6<UseTableRowParameters<RowElement, CellElement, TableRowInfo<RowElement>, CM>, "textContentParameters", "tableRowParameters", "linearNavigationParameters", "rovingTabIndexParameters", "info", "hasCurrentFocusParameters">, "index" | "tagTableRow"> & {
+    info?: OmitStrong<RM, keyof TableRowInfo<RowElement>>;
+};
+export type TableCellProps<CellElement extends Element, CM extends TableCellInfo<CellElement>> = GenericComponentProps<UseTableCellReturnType<CellElement, CM>, Get4<UseTableCellParameters<CellElement, TableCellInfo<CellElement>>, "tableCellParameters", "gridNavigationCellParameters", "textContentParameters", "info">, "index" | "tagTableCell" | "getSortValue"> & {
+    info?: OmitStrong<CM, keyof TableCellInfo<CellElement>>;
+};
+export declare const Table: <TableElement extends Element, LabelElement extends Element>({ ariaLabel, selectionLimit, tagTable, imperativeHandle, render }: TableProps<TableElement, LabelElement>) => import("preact").JSX.Element;
+export declare const TableSection: <SectionElement extends Element, RowElement extends Element, CellElement extends Element>({ disableHomeEndKeys, getIndex, initiallySelectedIndex, untabbable, navigatePastEnd, navigatePastStart, onSelectedIndexChange, onTabbableColumnChange, onTabbableIndexChange, pageNavigationSize, paginationMax, paginationMin, staggered, render, location, ariaPropName, selectionMode, onNavigateLinear, collator, noTypeahead, onNavigateTypeahead, typeaheadTimeout, tagTableSection, onElementChange, onMount, onUnmount }: TableSectionProps<SectionElement, RowElement, TableRowInfo<RowElement>>) => import("preact").JSX.Element;
+export declare const TableRow: <RowElement extends Element, CellElement extends Element>({ index, getText, tagTableRow, onTabbableIndexChange, navigatePastEnd, navigatePastStart, selected, unselectable, initiallyTabbedIndex, untabbable, info, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, render }: TableRowProps<RowElement, CellElement, TableRowInfo<RowElement>, TableCellInfo<CellElement>>, ref?: Ref<any>) => import("preact").JSX.Element;
+export declare const TableCell: <CellElement extends Element>({ index, getText, focusSelf, untabbable, tagTableCell, render, colSpan, imperativeHandle, getSortValue, info }: TableCellProps<CellElement, TableCellInfo<CellElement>>) => import("preact").JSX.Element;
 //# sourceMappingURL=table.d.ts.map

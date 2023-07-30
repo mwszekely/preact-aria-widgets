@@ -10,13 +10,13 @@ const UntabbableContext = createContext(false);
 const AriaPropNameContext = createContext("aria-selected");
 const SelectionModeContext = createContext("focus");
 const ToolbarContext = createContext(null);
-export const Toolbar = memoForwardRef(function ToolbarU({ render, role, collator, disableHomeEndKeys, disabled, compare, getIndex, navigatePastEnd, navigatePastStart, pageNavigationSize, selectedIndex, onSelectedIndexChange, orientation, noTypeahead, onTabbableIndexChange, typeaheadTimeout, staggered, ariaLabel, ariaPropName, selectionMode, untabbable, onNavigateLinear, onNavigateTypeahead }, ref) {
+export const Toolbar = memoForwardRef(function ToolbarU({ render, role, collator, disableHomeEndKeys, disabled, compare, getIndex, navigatePastEnd, navigatePastStart, pageNavigationSize, selectedIndex, onSelectedIndexChange, orientation, noTypeahead, onTabbableIndexChange, typeaheadTimeout, staggered, ariaLabel, ariaPropName, selectionMode, untabbable, onNavigateLinear, onNavigateTypeahead, onElementChange, onMount, onUnmount }, ref) {
     ariaPropName ??= "aria-selected";
     selectionMode ??= "activation";
     untabbable ||= false;
     const listboxReturnType = useToolbar({
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
-        sortableChildrenParameters: { compare: compare ?? null },
+        sortableChildrenParameters: { compare: compare },
         linearNavigationParameters: {
             onNavigateLinear,
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
@@ -28,11 +28,11 @@ export const Toolbar = memoForwardRef(function ToolbarU({ render, role, collator
             orientation,
             disabled: disabled || false,
             role: role ?? "toolbar",
-            selectedIndex: selectedIndex ?? null,
-            onSelectedIndexChange: onSelectedIndexChange ?? null
+            selectedIndex,
+            onSelectedIndexChange
         },
         staggeredChildrenParameters: { staggered: staggered || false },
-        rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, untabbable },
+        rovingTabIndexParameters: { onTabbableIndexChange, untabbable },
         typeaheadNavigationParameters: {
             onNavigateTypeahead,
             collator: useDefault("collator", collator),
@@ -40,12 +40,13 @@ export const Toolbar = memoForwardRef(function ToolbarU({ render, role, collator
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
         },
         labelParameters: { ariaLabel },
-        singleSelectionParameters: { ariaPropName: ariaPropName, selectionMode }
+        singleSelectionParameters: { ariaPropName: ariaPropName, selectionMode },
+        refElementParameters: { onElementChange, onMount, onUnmount },
     });
     useImperativeHandle(ref, () => listboxReturnType);
     return (_jsx(AriaPropNameContext.Provider, { value: ariaPropName, children: _jsx(SelectionModeContext.Provider, { value: selectionMode, children: _jsx(UntabbableContext.Provider, { value: untabbable, children: _jsx(ToolbarContext.Provider, { value: listboxReturnType.context, children: render(listboxReturnType) }) }) }) }));
 });
-export const ToolbarChild = memoForwardRef(function ToolbarChildU({ index, render, focusSelf, getSortValue, getText, unselectable, disabledProp, untabbable, info: uinfo }, ref) {
+export function ToolbarChild({ index, render, focusSelf, getSortValue, getText, unselectable, disabledProp, untabbable, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, imperativeHandle, info: uinfo }) {
     const context = useContextWithWarning(ToolbarContext, "toolbar");
     console.assert(context != null, `This ToolbarChild is not contained within a Toolbar`);
     const focusSelfDefault = useCallback((e) => { focus(e); }, []);
@@ -53,10 +54,19 @@ export const ToolbarChild = memoForwardRef(function ToolbarChildU({ index, rende
     const info = useToolbarChild({
         context,
         toolbarChildParameters: { disabledProp },
-        info: { index, focusSelf, unselectable, untabbable, getSortValue, ...uinfo },
+        info: {
+            index,
+            focusSelf,
+            unselectable: unselectable || false,
+            untabbable: untabbable || false,
+            getSortValue
+        },
         textContentParameters: { getText: useDefault("getText", getText) },
+        hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged },
+        refElementParameters: { onElementChange, onMount, onUnmount }
     });
-    useImperativeHandle(ref, () => info);
+    useImperativeHandle(imperativeHandle, () => info);
     return (_jsx(_Fragment, { children: render(info) }));
-});
+}
+;
 //# sourceMappingURL=toolbar.js.map

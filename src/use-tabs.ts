@@ -1,4 +1,4 @@
-import { CompleteListNavigationContext, ElementProps, EventType, ManagedChildInfo, OnChildrenMountChange, PersistentStates, TargetedOmit, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseManagedChildParameters, UseManagedChildrenContext, UsePressParameters, UsePressReturnType, assertEmptyObject, focus, generateRandomId, monitorCallCount, returnFalse, returnTrue, useChildrenFlag, useCompleteListNavigation, useCompleteListNavigationChild, useManagedChild, useManagedChildren, useMemoObject, useMergedProps, usePersistentState, usePress, useStableCallback, useState } from "preact-prop-helpers";
+import { CompleteListNavigationContext, ElementProps, EventType, ManagedChildInfo, Nullable, OnChildrenMountChange, PersistentStates, TargetedOmit, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseGenericChildParameters, UseManagedChildParameters, UseManagedChildrenContext, UsePressParameters, UsePressReturnType, assertEmptyObject, focus, generateRandomId, monitorCallCount, returnFalse, returnTrue, useChildrenFlag, useCompleteListNavigation, useCompleteListNavigationChild, useManagedChild, useManagedChildren, useMemoObject, useMergedProps, usePersistentState, usePress, useStableCallback, useState } from "preact-prop-helpers";
 import { useCallback, useLayoutEffect } from "preact/hooks";
 import { EventDetail, OmitStrong, Prefices } from "./props.js";
 import { UseLabelSyntheticParameters, useLabelSynthetic } from "./use-label.js";
@@ -15,27 +15,29 @@ export interface TabInfo<E extends Element> extends UseCompleteListNavigationChi
 export type TabsChangeEvent<E extends Element> = { [EventDetail]: { selectedIndex: number } } & Pick<EventType<E, Event>, "target" | "currentTarget">;
 
 export interface UseTabsParametersSelf {
-    localStorageKey: keyof PersistentStates | null;
+    localStorageKey: Nullable<keyof PersistentStates>;
     orientation: "horizontal" | "vertical";
-    role?: "tablist" | string;
+    role: Nullable<"tablist" | string>;
 }
 
-export interface UseTabsParameters<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element, M extends TabInfo<TabElement>> extends 
-UseTabListParameters<TabContainerElement, TabElement, M>,
-TargetedOmit<UseLabelSyntheticParameters,"labelParameters", "onLabelClick"> {
+export interface UseTabsParameters<TabContainerElement extends Element, TabElement extends Element, M extends TabInfo<TabElement>> extends
+    UseTabListParameters<TabContainerElement, TabElement, M>,
+    TargetedOmit<UseLabelSyntheticParameters, "labelParameters", "onLabelClick"> {
     tabsParameters: UseTabsParametersSelf;
 }
-export interface UseTabParameters<TabElement extends Element, M extends TabInfo<TabElement>> extends 
-OmitStrong<UseCompleteListNavigationChildParameters<TabElement, M>, never>,
-TargetedOmit<UsePressParameters<TabElement>,"pressParameters","excludeEnter" | "excludePointer" | "excludeSpace" | "allowRepeatPresses" | "onPressSync"> {
-    context: UseTabsContext<any, TabElement, M>;
+export interface UseTabParameters<TabElement extends Element, M extends TabInfo<TabElement>> extends
+    UseGenericChildParameters<UseTabsContext<TabElement, M>, Pick<TabInfo<TabElement>,  "index" | "focusSelf" | "untabbable" | "unselectable" | "getSortValue">>,
+    OmitStrong<UseCompleteListNavigationChildParameters<TabElement, M>, "context" | "info">,
+    TargetedOmit<UsePressParameters<TabElement>, "pressParameters", "excludeEnter" | "excludePointer" | "excludeSpace" | "allowRepeatPresses" | "onPressSync"> {
+
 }
 
-export interface UseTabPanelParameters<M extends TabPanelInfo> extends UseManagedChildParameters<M, "index"> {
-    context: UseTabPanelsContext<M>;
+export interface UseTabPanelParameters<M extends TabPanelInfo> extends
+    UseGenericChildParameters<UseTabPanelsContext<M>, Pick<M, "index">>,
+    OmitStrong<UseManagedChildParameters<M>, "context" | "info"> {
 }
 
-export interface UseTabsContext<ParentElement extends Element, ChildElement extends Element, M extends TabInfo<ChildElement>> extends CompleteListNavigationContext<ParentElement, ChildElement, M> {
+export interface UseTabsContext<ChildElement extends Element, M extends TabInfo<ChildElement>> extends CompleteListNavigationContext<ChildElement, M> {
     tabsContext: TC;
 }
 
@@ -51,23 +53,23 @@ interface TC {
 
 export interface UseTabReturnType<TabElement extends Element, M extends TabInfo<TabElement>> extends OmitStrong<UseCompleteListNavigationChildReturnType<TabElement, M>, "pressParameters" | "propsChild" | "propsTabbable">, UsePressReturnType<TabElement> {
     props: ElementProps<TabElement>;
- }
+}
 
 
 export interface UseTabLabelParameters { }
-export interface UseTabListParameters<TabContainerElement extends Element, TabElement extends Element, M extends TabInfo<TabElement>> extends 
-OmitStrong<UseCompleteListNavigationParameters<TabContainerElement, TabElement, M>, "rovingTabIndexParameters" | "paginatedChildrenParameters" | "linearNavigationParameters" | "singleSelectionParameters">,
-TargetedOmit<UseCompleteListNavigationParameters<TabContainerElement, TabElement, M>,"rovingTabIndexParameters", "focusSelfParent">,
-TargetedOmit<UseCompleteListNavigationParameters<TabContainerElement, TabElement, M>,"linearNavigationParameters", "arrowKeyDirection">,
-TargetedOmit<UseCompleteListNavigationParameters<TabContainerElement, TabElement, M>,"singleSelectionParameters", "ariaPropName"> {
+export interface UseTabListParameters<TabContainerElement extends Element, TabElement extends Element, M extends TabInfo<TabElement>> extends
+    OmitStrong<UseCompleteListNavigationParameters<TabContainerElement, TabElement, M>, "rovingTabIndexParameters" | "paginatedChildrenParameters" | "linearNavigationParameters" | "singleSelectionParameters">,
+    TargetedOmit<UseCompleteListNavigationParameters<TabContainerElement, TabElement, M>, "rovingTabIndexParameters", "focusSelfParent">,
+    TargetedOmit<UseCompleteListNavigationParameters<TabContainerElement, TabElement, M>, "linearNavigationParameters", "arrowKeyDirection">,
+    TargetedOmit<UseCompleteListNavigationParameters<TabContainerElement, TabElement, M>, "singleSelectionParameters", "ariaPropName"> {
 
 }
 export interface UseTabListReturnType<ParentElement extends Element, ChildElement extends Element, M extends TabInfo<ChildElement>> extends UseCompleteListNavigationReturnType<ParentElement, ChildElement, M> {
 }
-export interface UseTabPanelReturnTypeSelf { 
-    visibleOffset: number | null; 
-    visible: boolean | null; 
-    getVisible: () => boolean; 
+export interface UseTabPanelReturnTypeSelf {
+    visibleOffset: number | null;
+    visible: boolean | null;
+    getVisible: () => boolean;
 }
 
 export interface UseTabPanelReturnType<E extends Element> {
@@ -85,7 +87,7 @@ export interface UseTabsReturnType<TabContainerElement extends Element, TabEleme
     propsContainer: ElementProps<TabContainerElement>;
     propsLabel: ElementProps<LabelElement>;
     contextPanels: UseTabPanelsContext<TabPanelInfo>;
-    contextTabs: UseTabsContext<TabContainerElement, TabElement, M>;
+    contextTabs: UseTabsContext<TabElement, M>;
 }
 
 export type UseTab<_TabContainerElement extends Element, TabElement extends Element, M extends TabInfo<TabElement>> = (args: UseTabParameters<TabElement, M>) => UseTabReturnType<TabElement, M>;
@@ -101,14 +103,14 @@ export type UseTabListLabel<LabelElement extends Element> = (args: UseTabLabelPa
  * @hasChild {@link useTab}
  * @hasChild {@link useTabPanel}
  */
-export function useTabs<TabListElement extends Element, TabElement extends Element, LabelElement extends Element, M extends TabInfo<TabElement>>({
+export function useTabs<TabListElement extends Element, TabElement extends Element, LabelElement extends Element>({
     labelParameters,
     linearNavigationParameters,
     singleSelectionParameters: { initiallySelectedIndex, onSelectedIndexChange: ssi, selectionMode, ...singleSelectionParameters },
     tabsParameters: { orientation, role, localStorageKey },
     rovingTabIndexParameters,
     ...restParams
-}: UseTabsParameters<TabListElement, TabElement, LabelElement, M>): UseTabsReturnType<TabListElement, TabElement, LabelElement, M> {
+}: UseTabsParameters<TabListElement, TabElement, TabInfo<TabElement>>): UseTabsReturnType<TabListElement, TabElement, LabelElement, TabInfo<TabElement>> {
 
     monitorCallCount(useTabs);
 
@@ -160,7 +162,7 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
         props: listNavigationSingleSelectionProps,
         context,
         ...listNavRet1
-    } = useCompleteListNavigation<TabListElement, TabElement, M>({
+    } = useCompleteListNavigation<TabListElement, TabElement, TabInfo<TabElement>>({
         linearNavigationParameters: { arrowKeyDirection: orientation, ...linearNavigationParameters },
         rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
         singleSelectionParameters: {
@@ -211,28 +213,34 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
 /**
  * @compositeParams
  */
-export function useTab<TabElement extends Element, M extends TabInfo<TabElement>>({
-    info: { focusSelf: focusSelfParent, ...info },
+export function useTab<TabElement extends Element>({
+    info: { focusSelf: focusSelfParent, index, unselectable, untabbable, getSortValue, ...info },
     textContentParameters,
     pressParameters: { focusSelf: focusSelfChild, longPressThreshold, onPressingChange, ...void2 },
-    context
-}: UseTabParameters<TabElement, M>): UseTabReturnType<TabElement, M> {
+    context,
+    hasCurrentFocusParameters,
+    refElementParameters,
+    ...void3
+}: UseTabParameters<TabElement, TabInfo<TabElement>>): UseTabReturnType<TabElement, TabInfo<TabElement>> {
 
     const { propsChild: listNavigationSingleSelectionChildProps, propsTabbable, pressParameters: { onPressSync, excludeSpace, ...void1 }, refElementReturn, ...listNavRet2 } = useCompleteListNavigationChild({
         context,
-        info: { focusSelf: focusSelfParent, ...info } as M,
+        info: { index, focusSelf: focusSelfParent, getSortValue, unselectable, untabbable, ...info },
         textContentParameters,
+        hasCurrentFocusParameters,
+        refElementParameters
     });
-    
+
     const { pressReturn, props: propsPressStable } = usePress<TabElement>({ pressParameters: { onPressSync, focusSelf: focusSelfChild, allowRepeatPresses: false, excludeEnter: returnFalse, excludePointer: returnFalse, excludeSpace: returnFalse, longPressThreshold, onPressingChange }, refElementReturn })
     const { singleSelectionChildReturn: { selected }, rovingTabIndexChildReturn: { tabbable } } = listNavRet2;
     const { getPanelId, getTabId } = context.tabsContext;
 
-    const panelId = getPanelId(info.index);
-    const tabId = getTabId(info.index);
+    const panelId = getPanelId(index);
+    const tabId = getTabId(index);
 
     assertEmptyObject(void1);
     assertEmptyObject(void2);
+    assertEmptyObject(void3);
 
     monitorCallCount(useTab);
     return {
@@ -257,7 +265,9 @@ export function useTab<TabElement extends Element, M extends TabInfo<TabElement>
 /**
  * @compositeParams
  */
-export function useTabPanel<PanelElement extends Element, M extends TabPanelInfo>({ info, context }: UseTabPanelParameters<M>): UseTabPanelReturnType<PanelElement> {
+export function useTabPanel<PanelElement extends Element>({ info, context }: UseTabPanelParameters<TabPanelInfo>): UseTabPanelReturnType<PanelElement> {
+    type M = TabPanelInfo;
+
     const { index } = info;
     monitorCallCount(useTabPanel);
     const { tabPanelContext: { getVisibleIndex: g, getPanelId, getTabId } } = context;
@@ -266,7 +276,8 @@ export function useTabPanel<PanelElement extends Element, M extends TabPanelInfo
     const [isVisible, setIsVisible, getIsVisible] = useState(null as boolean | null);
     //const visibleRef = useRef<ChildFlagOperations>({ get: getIsVisible, set: setIsVisible, isValid: returnTrue });
     useManagedChild<TabPanelInfo>({
-        context, info: {
+        context,
+        info: {
             getVisible: useStableCallback(() => { return getLastKnownVisibleIndex() == index }),
             setVisibleIndex: useStableCallback((newIndex, prevIndex) => {
                 // Similar logic is in singleSelection, but we need to duplicate it here

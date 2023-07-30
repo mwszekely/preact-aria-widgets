@@ -1,6 +1,6 @@
 
 import { h } from "preact";
-import { returnZero, useMergedProps, useState } from "preact-prop-helpers";
+import { returnZero, useMergedProps, useStableGetter, useState } from "preact-prop-helpers";
 import { useRef } from "preact/compat";
 import { useCallback } from "preact/hooks";
 import { Table, TableCell, TableRow, TableSection } from "../../dist/index.js";
@@ -36,24 +36,29 @@ function DemoInput({ index }: { index: number }) {
     const [v, setV] = useState("");
 
     return (
-        <TableCell<HTMLTableCellElement> getSortValue={() => v} focusSelf={e => { e.focus() }} tagTableCell="td" index={index} render={info => {
-            return (
-                <td {...info.propsCell}>
-                    <input {...info.propsFocus} type="text" onInput={useCallback((e: h.JSX.TargetedEvent<HTMLInputElement>) => {
-                        setV(e.currentTarget.value);
-                        e.preventDefault();
-                    }, [])} value={v} />
-                </td>
-            )
-            /*
-
-            tagTableCell: "td", makePropsTableCell: (info) => ({
-                children: <DemoInput tabbable={info.rovingTabIndex.tabbable} />
-
-            })
-
-            */
-        }} />
+        <TableCell<HTMLTableCellElement> /*getSortValue={() => v}*/
+            focusSelf={e => { e.focus() }}
+            tagTableCell="td"
+            index={index}
+            getSortValue={useStableGetter(v)}
+            render={info => {
+                return (
+                    <td {...info.propsCell}>
+                        <input {...info.propsFocus} type="text" onInput={useCallback((e: h.JSX.TargetedEvent<HTMLInputElement>) => {
+                            setV(e.currentTarget.value);
+                            e.preventDefault();
+                        }, [])} value={v} />
+                    </td>
+                )
+                /*
+    
+                tagTableCell: "td", makePropsTableCell: (info) => ({
+                    children: <DemoInput tabbable={info.rovingTabIndex.tabbable} />
+    
+                })
+    
+                */
+            }} />
     )
     /*
     return (
@@ -71,7 +76,12 @@ function DemoTableCell({ index, header }: { index: number, header?: boolean }) {
     if (header) {
         const ref = useRef<HTMLTableCellElement>(null);
         const text = `Header #${index}`;
-        return <TableCell<HTMLTableCellElement> getSortValue={returnZero} focusSelf={e => ref.current?.focus()} tagTableCell="th" index={index} render={info => <th {...info.propsCell}>{text}<button {...useMergedProps(info.propsFocus, { ref })} onClick={() => { info.tableCellReturn.sortByThisColumn() }}>Sort</button></th>} />
+        return <TableCell<HTMLTableCellElement> /* getSortValue={returnZero} */
+            focusSelf={e => ref.current?.focus()}
+            tagTableCell="th"
+            index={index}
+            getSortValue={returnZero}
+            render={info => <th {...info.propsCell}>{text}<button {...useMergedProps(info.propsFocus, { ref })} onClick={() => { info.tableCellReturn.sortByThisColumn() }}>Sort</button></th>} />
     }
     else {
         //const text = `Cell in column #${index}`;
@@ -81,7 +91,7 @@ function DemoTableCell({ index, header }: { index: number, header?: boolean }) {
                     <DemoInput index={index} />
                 );
             default:
-                return <TableCell<HTMLTableCellElement> getSortValue={() => r.current} focusSelf={e => e.focus()} tagTableCell="td" index={index} render={info => {
+                return <TableCell<HTMLTableCellElement> /* getSortValue={() => r.current} */ focusSelf={e => e.focus()} tagTableCell="td" index={index} getSortValue={useStableGetter(r.current)} render={info => {
                     return (
                         <td {...info.propsFocus} {...info.propsCell}>{r.current.toString()}</td>
                     )

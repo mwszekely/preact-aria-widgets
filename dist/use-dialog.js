@@ -1,4 +1,4 @@
-import { findFirstFocusable, monitorCallCount, useMergedProps, useModal, useStableCallback } from "preact-prop-helpers";
+import { assertEmptyObject, findFirstFocusable, monitorCallCount, useMergedProps, useModal, useStableCallback } from "preact-prop-helpers";
 import { Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
 /**
@@ -6,16 +6,24 @@ import { useLabelSynthetic } from "./use-label.js";
  *
  * @compositeParams
  */
-export function useDialog({ dismissParameters, escapeDismissParameters, focusTrapParameters, labelParameters }) {
+export function useDialog({ dismissParameters, escapeDismissParameters, focusTrapParameters, activeElementParameters, backdropDismissParameters, 
+//lostFocusDismissParameters,
+modalParameters, refElementParameters, labelParameters, ...void1 }) {
     monitorCallCount(useDialog);
-    const { propsFocusContainer, propsStablePopup, propsStableSource, refElementPopupReturn, refElementSourceReturn } = useModal({
-        dismissParameters: { closeOnLostFocus: false, ...dismissParameters },
-        escapeDismissParameters,
+    const { propsFocusContainer, propsStablePopup, propsStableSource, refElementPopupReturn, refElementSourceReturn, ...void2 } = useModal({
+        dismissParameters: { dismissActive: true, ...dismissParameters },
+        backdropDismissParameters: { onDismissBackdrop: null, ...backdropDismissParameters },
+        lostFocusDismissParameters: { onDismissLostFocus: null, dismissLostFocusActive: false },
+        escapeDismissParameters: { onDismissEscape: null, ...escapeDismissParameters },
+        modalParameters,
+        refElementParameters,
+        activeElementParameters,
         focusTrapParameters: { trapActive: true, onlyMoveFocus: false, ...focusTrapParameters }
     });
-    const { propsInput, propsLabel } = useLabelSynthetic({
+    const { propsInput, propsLabel, pressReturn, randomIdInputReturn, randomIdLabelReturn, ...void3 } = useLabelSynthetic({
         labelParameters: {
-            ...labelParameters, onLabelClick: useStableCallback(() => {
+            ...labelParameters,
+            onLabelClick: useStableCallback(() => {
                 const e = refElementPopupReturn.getElement();
                 focusTrapParameters.focusPopup(e, () => findFirstFocusable(e));
             })
@@ -23,6 +31,9 @@ export function useDialog({ dismissParameters, escapeDismissParameters, focusTra
         randomIdInputParameters: { prefix: Prefices.dialog },
         randomIdLabelParameters: { prefix: Prefices.dialogTitle }
     });
+    assertEmptyObject(void1);
+    assertEmptyObject(void2);
+    assertEmptyObject(void3);
     return {
         propsFocusContainer,
         propsDialog: useMergedProps(propsStablePopup, propsInput),

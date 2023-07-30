@@ -1,38 +1,54 @@
 import { identity } from "lodash-es";
-import { ElementProps, EventType, JSX, ManagedChildInfo, OnChildrenMountChange, PassiveStateUpdater, PersistentStates, TargetedOmit, UseHasCurrentFocusReturnType, UseLinearNavigationParameters, UseManagedChildParameters, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, UsePressReturnType, UseRefElementParameters, UseRefElementReturnType, UseTextContentReturnType, UseTypeaheadNavigationChildParameters, UseTypeaheadNavigationContext, UseTypeaheadNavigationParameters, assertEmptyObject, findBackupFocus, focus, monitorCallCount, useCallback, useChildrenFlag, useHasCurrentFocus, useLinearNavigation, useManagedChild, useManagedChildren, useMemoObject, useMergedProps, usePersistentState, useRandomId, useRefElement, useStableCallback, useState, useTypeaheadNavigation, useTypeaheadNavigationChild } from "preact-prop-helpers";
+import { ElementProps, EventType, JSX, ManagedChildInfo, Nullable, OnChildrenMountChange, PassiveStateUpdater, PersistentStates, TargetedOmit, TargetedPick, UseGenericChildParameters, UseHasCurrentFocusReturnType, UseLinearNavigationParameters, UseLinearNavigationReturnType, UseManagedChildParameters, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, UsePressParameters, UseRefElementParameters, UseRefElementReturnTypeSelf, UseTextContentReturnType, UseTypeaheadNavigationChildParameters, UseTypeaheadNavigationChildReturnType, UseTypeaheadNavigationContext, UseTypeaheadNavigationParameters, UseTypeaheadNavigationReturnType, assertEmptyObject, findBackupFocus, monitorCallCount, useCallback, useChildrenFlag, useHasCurrentFocus, useLinearNavigation, useManagedChild, useManagedChildren, useMemoObject, useMergedProps, usePersistentState, useRandomId, useRefElement, useStableCallback, useState, useTypeaheadNavigation, useTypeaheadNavigationChild } from "preact-prop-helpers";
 import { DisabledType, OmitStrong, Prefices } from "./props.js";
-import { ButtonPressEventHandler, UseButtonParameters, UseButtonReturnType, useButton } from "./use-button.js";
+import { UseButtonParameters, UseButtonReturnType, useButton } from "./use-button.js";
 
 export interface UseAccordionParametersSelf {
-    orientation?: "vertical" | "horizontal";
-    initialIndex?: number | null;
-    localStorageKey: keyof PersistentStates | null;
+    /**
+     * Almost all Accordions are `"vertical"`, but you certainly can have a `"horizontal"` Accordion if you want.
+     */
+    orientation: Nullable<"vertical" | "horizontal">;
+
+    /** For a one-at-a-time accordion, which index is initially opened? */
+    initialIndex: Nullable<number>;
+
+    /** For a one-at-a-time accordion, this is the key {@link usePersistentState} will use to remember which one is open. */
+    localStorageKey: Nullable<keyof PersistentStates>;
 }
 
-export interface UseAccordionParameters<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo> extends
-    TargetedOmit<UseLinearNavigationParameters<HeaderButtonElement, HeaderButtonElement, M>, "linearNavigationParameters", "getLowestIndex" | "arrowKeyDirection" | "getHighestIndex" | "isValid" | "indexDemangler" | "indexMangler">,
+export interface UseAccordionParameters<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo<HeaderButtonElement>> extends
+    TargetedOmit<UseLinearNavigationParameters<HeaderButtonElement, HeaderButtonElement>, "linearNavigationParameters", "isValidForLinearNavigation" | "getLowestIndex" | "arrowKeyDirection" | "getHighestIndex">,
+    TargetedOmit<UseTypeaheadNavigationParameters<HeaderButtonElement>, "typeaheadNavigationParameters", "isValidForTypeaheadNavigation">,
     UseManagedChildrenParameters<M>,
-    Pick<UseTypeaheadNavigationParameters<HeaderButtonElement, M>, "typeaheadNavigationParameters"> {
+    Pick<UseRefElementParameters<HeaderButtonElement>, "refElementParameters"> {
     accordionParameters: UseAccordionParametersSelf;
 }
 
-export interface UseAccordionReturnTypeSelf { changeExpandedIndex: PassiveStateUpdater<number | null, Event> }
+export interface UseAccordionReturnTypeSelf {
+    /**
+     * For a one-at-a-time, changes which one is currently open
+     */
+    changeExpandedIndex: PassiveStateUpdater<number | null, Event>;
+}
 
-export interface UseAccordionReturnType<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo> extends UseManagedChildrenReturnType<M> {
-    /** **STABLE** */
+export interface UseAccordionReturnType<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo<HeaderButtonElement>> extends
+    UseManagedChildrenReturnType<M>,
+    OmitStrong<UseTypeaheadNavigationReturnType<HeaderButtonElement>, "propsStable"> {
+
+    /** @stable */
     accordionReturn: UseAccordionReturnTypeSelf;
     context: UseAccordionContext<HeaderButtonElement, M>;
-
     props: ElementProps<any>;
 }
 
 
-export interface UseAccordionSectionInfo extends ManagedChildInfo<number> {
+export interface UseAccordionSectionInfo<E extends Element> extends ManagedChildInfo<number> {
     setOpenFromParent(open: boolean): void;
     getOpenFromParent(): boolean | null;
     setMostRecentlyTabbed(tabbed: boolean): void;
     getMostRecentlyTabbed(): boolean | null;
-    focusSelf(): void;
+    focusSelf(e: E): void;
+    getElement(): E | null;
     disabled: DisabledType;
     untabbable: boolean;
 }
@@ -51,11 +67,15 @@ export interface UseAccordionSectionParametersSelf {
     bodyRole: JSX.AriaRole;
 }
 
-export interface UseAccordionSectionParameters<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo> extends
-    OmitStrong<UseTypeaheadNavigationChildParameters<HeaderButtonElement, M>, "info" | "refElementReturn" | "context">,
-    UseRefElementParameters<HeaderButtonElement>,
-    UseManagedChildParameters<M, "index" | "untabbable">,
+export interface UseAccordionSectionParameters<HeaderButtonElement extends Element, BodyElement extends Element, M extends UseAccordionSectionInfo<HeaderButtonElement>> extends
+    UseGenericChildParameters<UseAccordionContext<HeaderButtonElement, M>, Pick<M, "index" | "untabbable">>,
+    OmitStrong<UseTypeaheadNavigationChildParameters<HeaderButtonElement>, "info" | "refElementReturn" | "context">,
+    OmitStrong<UseManagedChildParameters<M>, "info">,
+    TargetedPick<UsePressParameters<HeaderButtonElement>, "pressParameters", "focusSelf">,
     TargetedOmit<UseButtonParameters<HeaderButtonElement>, "buttonParameters", "pressed" | "role"> {
+
+    refElementHeaderButtonParameters: UseRefElementParameters<HeaderButtonElement>["refElementParameters"];
+    refElementBodyParameters: UseRefElementParameters<BodyElement>["refElementParameters"];
     context: UseAccordionContext<HeaderButtonElement, M>;
     accordionSectionParameters: UseAccordionSectionParametersSelf;
 }
@@ -67,15 +87,18 @@ export interface UseAccordionSectionReturnTypeSelf {
 }
 
 export interface UseAccordionSectionReturnType<HeaderElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element> extends
-    OmitStrong<UsePressReturnType<HeaderButtonElement>, "props">,
-    OmitStrong<UseRefElementReturnType<HeaderButtonElement>, "propsStable">,
-    UseTextContentReturnType,
-    UseHasCurrentFocusReturnType<HeaderButtonElement> {
+    OmitStrong<UseButtonReturnType<HeaderButtonElement>, "props" | "refElementReturn">,
+    OmitStrong<UseTypeaheadNavigationChildReturnType, "pressParameters">,
+    OmitStrong<UseLinearNavigationReturnType<HeaderButtonElement>, "propsStable">,
+    OmitStrong<UseTextContentReturnType, never>,
+    OmitStrong<UseHasCurrentFocusReturnType<HeaderButtonElement>, never> {
     accordionSectionReturn: UseAccordionSectionReturnTypeSelf;
 
     propsHeaderButton: ElementProps<HeaderButtonElement>;
     propsHeader: ElementProps<HeaderElement>;
-    propsBody: ElementProps<BodyElement>
+    propsBody: ElementProps<BodyElement>;
+    refElementBodyReturn: UseRefElementReturnTypeSelf<BodyElement>;
+    refElementHeaderButtonReturn: UseRefElementReturnTypeSelf<HeaderButtonElement>;
 }
 
 export interface UseAccordionContextSelf<HeaderButtonElement extends Element> {
@@ -86,43 +109,47 @@ export interface UseAccordionContextSelf<HeaderButtonElement extends Element> {
     stableTypeaheadProps: ElementProps<HeaderButtonElement>;
 }
 
-export interface UseAccordionContext<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo> extends UseManagedChildrenContext<M>, UseTypeaheadNavigationContext {
+export interface UseAccordionContext<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo<HeaderButtonElement>> extends UseManagedChildrenContext<M>, UseTypeaheadNavigationContext {
     accordionSectionParameters: UseAccordionContextSelf<HeaderButtonElement>;
-    linearNavigationParameters: UseLinearNavigationParameters<HeaderButtonElement, HeaderButtonElement, M>["linearNavigationParameters"];
-    rovingTabIndexReturn: UseLinearNavigationParameters<HeaderButtonElement, HeaderButtonElement, M>["rovingTabIndexReturn"];
+    linearNavigationParameters: UseLinearNavigationParameters<HeaderButtonElement, HeaderButtonElement>["linearNavigationParameters"];
+    rovingTabIndexReturn: UseLinearNavigationParameters<HeaderButtonElement, HeaderButtonElement>["rovingTabIndexReturn"];
 }
 
 /**
  * Implements an [Accordion](https://www.w3.org/WAI/ARIA/apg/patterns/accordion/) pattern.
  * 
+ * @remarks For some reason, accordions don't have a parent element, and don't have a roving tab index, but do implement keyboard navigation.
+ * 
+ * This makes their implementation a little bit messy. Each child individually handles keyboard navigation even though the parent orchestrates it.
+ * 
  * @compositeParams
  * 
  * @hasChild {@link useAccordionSection}
  */
-export function useAccordion<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo>({
-    accordionParameters: { initialIndex, localStorageKey, orientation, ...void2 },
-    typeaheadNavigationParameters,
-    linearNavigationParameters: { disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize, onNavigateLinear, ...void1 },
-    managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange, onChildrenCountChange, ...void3 },
-    ...void4
-}: UseAccordionParameters<HeaderButtonElement, M>): UseAccordionReturnType<HeaderButtonElement, M> {
-    monitorCallCount(useAccordion);
-    assertEmptyObject(void1);
-    assertEmptyObject(void2);
-    assertEmptyObject(void3);
-    assertEmptyObject(void4);
+export function useAccordion<HeaderButtonElement extends Element>({
+    accordionParameters: { initialIndex, localStorageKey, orientation, ...accordionParameters },
+    typeaheadNavigationParameters: { collator, noTypeahead, onNavigateTypeahead, typeaheadTimeout, ...typeaheadNavigationParameters },
+    linearNavigationParameters: { disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize, onNavigateLinear, ...linearNavigationParameters },
+    managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange: ocmc1, onChildrenCountChange, ...managedChildrenParameters },
+    refElementParameters,
+    ...void1
+}: UseAccordionParameters<HeaderButtonElement, UseAccordionSectionInfo<HeaderButtonElement>>): UseAccordionReturnType<HeaderButtonElement, UseAccordionSectionInfo<HeaderButtonElement>> {
+    type M = UseAccordionSectionInfo<HeaderButtonElement>;
 
+    monitorCallCount(useAccordion);
     const [localStorageIndex, setLocalStorageIndex] = usePersistentState<never, number | null>(localStorageKey ?? null, initialIndex ?? null);
     if (localStorageIndex != null)
         initialIndex = localStorageIndex;
 
     const { managedChildrenReturn, context: { managedChildContext } } = useManagedChildren<M>({
         managedChildrenParameters: {
-            onChildrenMountChange: useStableCallback<OnChildrenMountChange<number>>((m, u) => { ocmc2(); onChildrenMountChange?.(m, u); }),
+            onChildrenMountChange: useStableCallback<OnChildrenMountChange<number>>((m, u) => { ocmc2(); ocmc1?.(m, u); }),
             onAfterChildLayoutEffect,
-            onChildrenCountChange
+            onChildrenCountChange,
+            ...managedChildrenParameters
         }
     });
+
     const { getChildren } = managedChildrenReturn;
 
     const isValidByChild = useCallback((c: M) => (c && !c.disabled && !c.untabbable), []);
@@ -134,7 +161,7 @@ export function useAccordion<HeaderButtonElement extends Element, M extends UseA
         return false;
     }, []);
 
-    const { propsStable, refElementReturn: { getElement } } = useRefElement<any>({})
+    const { propsStable, refElementReturn: { getElement } } = useRefElement<any>({ refElementParameters })
 
     // Keep track of the one expanded index (if there is only one expanded index)
     const { changeIndex: changeExpandedIndexLocalOnly, getCurrentIndex: getCurrentExpandedIndex } = useChildrenFlag<M, Event>({
@@ -159,15 +186,20 @@ export function useAccordion<HeaderButtonElement extends Element, M extends UseA
         closestFit: true,
         onIndexChange: useCallback((i: number | null) => {
             if (i != null) {
-                getChildren().getAt(i)?.focusSelf();
+                const element = getChildren().getAt(i)?.getElement();
+                if (element)
+                    getChildren().getAt(i)?.focusSelf(element);
             }
         }, []),
         onClosestFit: useStableCallback((index) => {
             if (document.activeElement == null || document.activeElement == document.body) {
-                if (index == null)
-                    findBackupFocus(getElement()!).focus();
-                else
-                    getChildren().getAt(index)?.focusSelf();
+                if (index != null) {
+                    const element = getChildren().getAt(index)?.getElement();
+                    if (index == null)
+                        findBackupFocus(getElement()!).focus();
+                    else if (element)
+                        getChildren().getAt(index)?.focusSelf(element);
+                }
             }
         })
     });
@@ -185,14 +217,30 @@ export function useAccordion<HeaderButtonElement extends Element, M extends UseA
     const {
         context: { typeaheadNavigationContext },
         typeaheadNavigationReturn,
-        propsStable: propsTN
-    } = useTypeaheadNavigation<HeaderButtonElement, HeaderButtonElement, M>({
+        propsStable: propsTN,
+        ...void2
+    } = useTypeaheadNavigation<HeaderButtonElement, HeaderButtonElement>({
         rovingTabIndexReturn,
-        typeaheadNavigationParameters
+        typeaheadNavigationParameters: {
+            isValidForTypeaheadNavigation: isValidByIndex,
+            collator,
+            noTypeahead,
+            onNavigateTypeahead,
+            typeaheadTimeout,
+            ...typeaheadNavigationParameters
+        }
     })
+
+    assertEmptyObject(accordionParameters);
+    assertEmptyObject(linearNavigationParameters);
+    assertEmptyObject(managedChildrenParameters);
+    assertEmptyObject(typeaheadNavigationParameters);
+    assertEmptyObject(void1);
+    assertEmptyObject(void2);
 
     return {
         props: propsStable,
+        typeaheadNavigationReturn,
         context: useMemoObject<UseAccordionContext<HeaderButtonElement, M>>({
 
 
@@ -206,17 +254,18 @@ export function useAccordion<HeaderButtonElement extends Element, M extends UseA
                 stableTypeaheadProps: propsTN,
             }),
             linearNavigationParameters: useMemoObject({
-                disableHomeEndKeys,
                 getHighestIndex: useCallback(() => getChildren().getHighestIndex(), []),
                 getLowestIndex: useCallback(() => getChildren().getLowestIndex(), []),
                 indexMangler: identity,
                 indexDemangler: identity,
+                isValidForLinearNavigation: isValidByIndex,
                 arrowKeyDirection: orientation ?? "vertical",
-                isValid: isValidByIndex,
+                disableHomeEndKeys,
                 navigatePastEnd,
                 navigatePastStart,
                 pageNavigationSize,
-                onNavigateLinear
+                onNavigateLinear,
+                ...linearNavigationParameters
             }),
             rovingTabIndexReturn
         }),
@@ -228,36 +277,43 @@ export function useAccordion<HeaderButtonElement extends Element, M extends UseA
 /**
  * @compositeParams
  */
-export function useAccordionSection<_HeaderContainerElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element, M extends UseAccordionSectionInfo = UseAccordionSectionInfo>({
-    buttonParameters,
-    accordionSectionParameters: { open: openFromUser, bodyRole },
-    info: { index, untabbable, ...info },
-    textContentParameters,
-    context: {
-        accordionSectionParameters: { changeExpandedIndex, changeTabbedIndex: setCurrentFocusedIndex, getTabbedIndex: getCurrentFocusedIndex, stableTypeaheadProps },
-        linearNavigationParameters,
-        rovingTabIndexReturn,
-        managedChildContext,
-        typeaheadNavigationContext
-    },
-    refElementParameters,
-}: UseAccordionSectionParameters<HeaderButtonElement, M>): UseAccordionSectionReturnType<_HeaderContainerElement, HeaderButtonElement, BodyElement> {
+export function useAccordionSection<HeaderContainerElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element>({
+    buttonParameters: { disabled, tagButton, onPressSync: userOnPress,  ...buttonParameters },
+    accordionSectionParameters: { open: openFromUser, bodyRole, ...accordionSectionParameters },
+    info: { index, untabbable, ...void4 },
+    textContentParameters: { getText, ...textContentParameters },
+    context,
+    refElementBodyParameters,
+    refElementHeaderButtonParameters,
+    pressParameters: { focusSelf, ...pressParameters },
+    ...void1
+}: UseAccordionSectionParameters<HeaderButtonElement, BodyElement, UseAccordionSectionInfo<HeaderButtonElement>>): UseAccordionSectionReturnType<HeaderContainerElement, HeaderButtonElement, BodyElement> {
     monitorCallCount(useAccordionSection);
+    type M = UseAccordionSectionInfo<HeaderButtonElement>
 
-    const { disabled, onPress: userOnPress } = buttonParameters;
     const [openFromParent, setOpenFromParent, getOpenFromParent] = useState<boolean | null>(null);
     const [mostRecentlyTabbed, setMostRecentlyTabbed, getMostRecentlyTabbed] = useState<boolean | null>(null);
 
-
+    const {
+        accordionSectionParameters: {
+            changeExpandedIndex,
+            changeTabbedIndex: setCurrentFocusedIndex,
+            getTabbedIndex: getCurrentFocusedIndex,
+            stableTypeaheadProps
+        },
+        linearNavigationParameters,
+        rovingTabIndexReturn,
+    } = context;
 
     const { randomIdReturn: _bodyIdReturn, propsSource: propsBodySource, propsReferencer: propsHeadReferencer } = useRandomId<BodyElement, HeaderButtonElement>({ randomIdParameters: { prefix: Prefices.accordionSectionHeaderButton, otherReferencerProp: "aria-controls" } });
     const { randomIdReturn: _headIdReturn, propsSource: propsHeadSource, propsReferencer: propsBodyReferencer } = useRandomId<HeaderButtonElement, BodyElement>({ randomIdParameters: { prefix: Prefices.accordionSectionBody, otherReferencerProp: "aria-labelledby" } });
     const open = ((openFromUser ?? openFromParent) ?? false);
 
-    const { refElementReturn: { getElement: getHeaderElement }, propsStable: headerRefElementProps } = useRefElement<HeaderButtonElement>({ refElementParameters: {} });
-    const { refElementReturn: { getElement: _getBodyElement }, propsStable: bodyRefElementProps } = useRefElement<BodyElement>({ refElementParameters: {} });
+    const { refElementReturn: refElementBodyReturn, propsStable: bodyRefElementProps } = useRefElement<BodyElement>({ refElementParameters: refElementBodyParameters });
     const { hasCurrentFocusReturn } = useHasCurrentFocus({
-        refElementReturn: { getElement: getHeaderElement }, hasCurrentFocusParameters: {
+        refElementReturn: { getElement: useStableCallback(() => { return refElementHeaderButtonReturn.getElement() }) },
+        hasCurrentFocusParameters: {
+            onCurrentFocusedChanged: null,
             onCurrentFocusedInnerChanged: useStableCallback(focused => {
                 if (focused) {
                     setCurrentFocusedIndex(index);
@@ -265,92 +321,117 @@ export function useAccordionSection<_HeaderContainerElement extends Element, Hea
                 }
             })
         }
-    })
-    const focusSelf = useStableCallback(() => {
-        focus(getHeaderElement());
     });
 
-    const { managedChildReturn: { getChildren: _getSections } } = useManagedChild<M>({
-        context: {
-            managedChildContext
-        },
+    const { managedChildReturn: { getChildren: _getSections }, ...void9 } = useManagedChild<M>({
+        context,
         info: {
             index,
-            disabled,
+            disabled: disabled || false,
             focusSelf,
             getMostRecentlyTabbed,
             getOpenFromParent,
             untabbable,
             setMostRecentlyTabbed,
             setOpenFromParent,
-            ...info
-        } as M
+            getElement: useStableCallback(() => { return refElementHeaderButtonReturn.getElement() }),
+        }
     });
 
-    const onPress: ButtonPressEventHandler<HeaderButtonElement> = (e) => {
-        setCurrentFocusedIndex(index);
-        if (getOpenFromParent())
-            changeExpandedIndex(null);
-        else
-            changeExpandedIndex(index);
-
-        userOnPress?.(e);
-    };
-
-    const { propsStable: propsLN, ...linearReturnType } = useLinearNavigation<HeaderButtonElement, HeaderButtonElement, M>({ linearNavigationParameters, rovingTabIndexReturn, paginatedChildrenParameters: { paginationMin: null, paginationMax: null } });
+    const { propsStable: propsLN, linearNavigationReturn, ...void10 } = useLinearNavigation<HeaderButtonElement, HeaderButtonElement>({
+        linearNavigationParameters,
+        rovingTabIndexReturn,
+        paginatedChildrenParameters: { paginationMin: null, paginationMax: null },
+        rearrangeableChildrenReturn: { indexMangler: identity, indexDemangler: identity }
+    });
     const {
-        pressParameters: { excludeSpace },
-        textContentReturn
-    } = useTypeaheadNavigationChild<HeaderButtonElement, M>({
+        pressParameters: { excludeSpace, ...void11 },
+        textContentReturn,
+        ...void2
+    } = useTypeaheadNavigationChild<HeaderButtonElement>({
         info: { index },
-        refElementReturn: { getElement: useStableCallback(() => refElementReturn.getElement()) },
-        textContentParameters,
-        context: { typeaheadNavigationContext }
+        refElementReturn: { getElement: useStableCallback((): HeaderButtonElement | null => refElementHeaderButtonReturn.getElement()) },
+        textContentParameters: { getText, },
+        context
     })
 
-    const buttonReturn: UseButtonReturnType<HeaderButtonElement> = useButton<HeaderButtonElement>({
-        buttonParameters: { ...buttonParameters, pressed: null, onPress, role: "button", },
-        pressParameters: { excludeSpace, allowRepeatPresses: false, excludeEnter: null, excludePointer: null, longPressThreshold: null, onPressingChange: null },
-        refElementParameters
+    const {
+        pressReturn,
+        props,
+        refElementReturn: refElementHeaderButtonReturn,
+        ...void12
+    }: UseButtonReturnType<HeaderButtonElement> = useButton<HeaderButtonElement>({
+        buttonParameters: { 
+            pressed: null, 
+            role: "button", 
+            disabled, 
+            tagButton, 
+            onPressSync: (e) => {
+                setCurrentFocusedIndex(index);
+                if (getOpenFromParent())
+                    changeExpandedIndex(null);
+                else
+                    changeExpandedIndex(index);
+
+                userOnPress?.(e);
+            },
+            ...buttonParameters 
+        },
+        pressParameters: { 
+            excludeSpace, 
+            focusSelf, 
+            allowRepeatPresses: false, 
+            longPressThreshold: null, 
+            onPressingChange: null, 
+            ...pressParameters },
+        refElementParameters: refElementHeaderButtonParameters
     });
 
-    const { pressReturn, props: buttonProps, refElementReturn } = buttonReturn;
 
-    //const { linearNavigationReturn: { propsStable } } = linearReturnType;
+    assertEmptyObject(void1);
+    assertEmptyObject(void2);
+    assertEmptyObject(accordionSectionParameters);
+    assertEmptyObject(void4);
+    assertEmptyObject(textContentParameters);
 
-    const headerButtonProps = useMergedProps<HeaderButtonElement>(
-        buttonProps,
-        hasCurrentFocusReturn.propsStable,
-        headerRefElementProps,
-        propsHeadReferencer,
-        propsHeadSource,
-        propsLN,
-        stableTypeaheadProps,
-        { "aria-expanded": (open ?? false), }
-    );
-
-    const bodyProps = useMergedProps<BodyElement>(
-        bodyRefElementProps,
-        propsBodyReferencer,
-        propsBodySource,
-        {
-            role: bodyRole,
-            tabIndex: -1
-        }
-    );
+    assertEmptyObject(pressParameters);
+    assertEmptyObject(buttonParameters);
+    assertEmptyObject(void9);
+    assertEmptyObject(void10);
+    assertEmptyObject(void11);
+    assertEmptyObject(void12);
 
     return {
         pressReturn,
-        refElementReturn,
+        refElementBodyReturn,
+        refElementHeaderButtonReturn,
+        linearNavigationReturn,
         textContentReturn,
+        hasCurrentFocusReturn,
         accordionSectionReturn: {
             mostRecentlyTabbed: !!mostRecentlyTabbed,
             expanded: open,
             focused: (getCurrentFocusedIndex() == index)
         },
-        propsHeaderButton: headerButtonProps,
-        propsHeader: {},    // This is intentionally empty, it's just a reminder that there *does* need to be a header that contains the button.
-        propsBody: bodyProps,
-        hasCurrentFocusReturn
+        propsHeaderButton: useMergedProps<HeaderButtonElement>(
+            props,
+            hasCurrentFocusReturn.propsStable,
+            propsHeadReferencer,
+            propsHeadSource,
+            propsLN,
+            stableTypeaheadProps,
+            { "aria-expanded": (open ?? false), }
+        ),
+        propsBody: useMergedProps<BodyElement>(
+            bodyRefElementProps,
+            propsBodyReferencer,
+            propsBodySource,
+            {
+                role: bodyRole,
+                tabIndex: -1
+            }
+        ),
+        propsHeader: {}    // This is intentionally empty, it's just a reminder that there *does* need to be a header that contains the button.
+
     };
 }

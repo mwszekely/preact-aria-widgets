@@ -15,7 +15,7 @@ function preventDefault(e) {
  *
  * @compositeParams
  */
-export function useCheckboxLike({ labelParameters, randomIdInputParameters, randomIdLabelParameters, checkboxLikeParameters: { checked, disabled, onInput: onInputSync, role, ...void1 }, refElementInputReturn, refElementLabelReturn, pressParameters: { excludeSpace, longPressThreshold, ...void2 }, ...void3 }) {
+export function useCheckboxLike({ labelParameters, randomIdInputParameters, randomIdLabelParameters, checkboxLikeParameters: { checked, disabled, role, ...void1 }, refElementInputReturn, refElementLabelReturn, pressParameters: { excludeSpace, longPressThreshold, onPressSync: onInputSync, ...void2 }, ...void3 }) {
     monitorCallCount(useCheckboxLike);
     const { getElement: getInputElement } = refElementInputReturn;
     const { getElement: getLabelElement } = refElementLabelReturn;
@@ -38,7 +38,7 @@ export function useCheckboxLike({ labelParameters, randomIdInputParameters, rand
             onLabelClick: useStableCallback((e) => {
                 if (!disabled && tagInput != "input" && tagLabel != "label" && labelPosition != "separate") {
                     focusSelf();
-                    onInputSync(e);
+                    onInputSync?.(e);
                 }
             })
         },

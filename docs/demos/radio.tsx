@@ -1,7 +1,7 @@
 
-import { useState } from "preact-prop-helpers";
+import { EventDetail, useState } from "preact-prop-helpers";
 import { memo } from "preact/compat";
-import { EventDetail, Radio, RadioGroup } from "../../dist/index.js";
+import { Radio, RadioGroup } from "../../dist/index.js";
 
 
 const DemoRadioButton = memo(function DemoRadioButton({ index }: { index: number }) {
@@ -10,7 +10,6 @@ const DemoRadioButton = memo(function DemoRadioButton({ index }: { index: number
         <div>
             <Radio<"separate", number, HTMLInputElement, HTMLLabelElement>
                 index={index}
-                focusSelf={e => e.focus()}
                 disabled={false}
                 labelPosition="separate"
                 value={index}
@@ -52,7 +51,7 @@ export function Code() {
 }
 
 export function Demo() {
-    const [selectedIndex, setSelectedIndex] = useState<null | number>(null);
+    const [selectedValue, setSelectedValue] = useState<null | number | undefined>(null);
     const [count, setCount] = useState(5);
 
 
@@ -65,9 +64,9 @@ export function Demo() {
                 <RadioGroup<number, HTMLDivElement, HTMLLabelElement, HTMLInputElement>
                     name="radio-demo"
                     ariaLabel={null}
-                    selectedValue={selectedIndex}
+                    selectedValue={selectedValue}
                     arrowKeyDirection="vertical"
-                    onSelectedValueChange={e => setSelectedIndex(e[EventDetail].selectedValue ?? null)}
+                    onSelectedValueChange={(e) => { setSelectedValue(e[EventDetail].selectedValue) }}
                     render={info => {
                         return (
                             <>

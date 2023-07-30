@@ -1,5 +1,4 @@
 import { assertEmptyObject, findFirstFocusable, focus, monitorCallCount, useMergedProps, useModal, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
-import { useCallback } from "preact/hooks";
 /**
  * A menu surface is what handles user interaction with an interactive but transient surface (like a menu or a popup).
  *
@@ -9,13 +8,18 @@ import { useCallback } from "preact/hooks";
  *
  * @compositeParams
  */
-export function useMenuSurface({ dismissParameters, escapeDismissParameters, focusTrapParameters, menuSurfaceParameters: { role, surfaceId, ...void1 }, ...void2 }) {
+export function useMenuSurface({ dismissParameters, focusTrapParameters, activeElementParameters, menuSurfaceParameters: { role, surfaceId, ...void1 }, modalParameters, escapeDismissParameters, ...void2 }) {
     monitorCallCount(useMenuSurface);
     const { refElementReturn: { getElement: getButtonElement }, propsStable: propsRefTrigger, ...void4 } = useRefElement({ refElementParameters: { onElementChange: undefined } });
     const { refElementReturn: { getElement: getMenuElement, ...void5 }, propsStable: propsRefSurface, ...void6 } = useRefElement({ refElementParameters: { onElementChange: undefined } });
     const { propsFocusContainer, propsStablePopup: propsPopup, propsStableSource: ps2, refElementPopupReturn, refElementSourceReturn } = useModal({
-        dismissParameters,
-        escapeDismissParameters,
+        dismissParameters: { dismissActive: true, ...dismissParameters },
+        backdropDismissParameters: { dismissBackdropActive: true, onDismissBackdrop: null },
+        lostFocusDismissParameters: { dismissLostFocusActive: true, onDismissLostFocus: null },
+        escapeDismissParameters: { dismissEscapeActive: true, onDismissEscape: null, ...escapeDismissParameters },
+        modalParameters,
+        refElementParameters: {},
+        activeElementParameters,
         focusTrapParameters: {
             onlyMoveFocus: true,
             trapActive: true,
@@ -37,14 +41,14 @@ export function useMenuSurface({ dismissParameters, escapeDismissParameters, foc
         id: surfaceId
     });
     const propsTrigger = useMergedProps({
-        "aria-expanded": (dismissParameters.open),
+        "aria-expanded": (modalParameters.active),
         "aria-haspopup": role,
     }, propsRefTrigger, ps2, { "aria-controls": surfaceId });
     const propsSentinel = useFocusSentinel({
         focusSentinel: {
-            sendFocusToMenu: useCallback(() => { return focusTrapParameters.focusPopup(getMenuElement(), () => findFirstFocusable(getMenuElement())); }, []),
-            onClose: useCallback(() => { dismissParameters.onClose("lost-focus"); }, [dismissParameters.onClose]),
-            open: dismissParameters.open
+            sendFocusToMenu: useStableCallback(() => { return focusTrapParameters.focusPopup(getMenuElement(), () => findFirstFocusable(getMenuElement())); }),
+            onClose: useStableCallback((e) => { dismissParameters.onDismiss(e, "lost-focus"); }),
+            open: modalParameters.active
         }
     });
     return {
@@ -75,8 +79,8 @@ export function useFocusSentinel({ focusSentinel: { open, onClose, sendFocusToMe
     const stableOnClose = useStableCallback(onClose);
     const [sentinelIsActive, setSentinelIsActive] = useState(false);
     useTimeout({ callback: () => { setSentinelIsActive(open); }, timeout: 100, triggerIndex: `${open}-${sentinelIsActive}` });
-    const onFocus = sentinelIsActive ? (() => stableOnClose()) : (() => getSendFocusWithinMenu()?.());
-    const onClick = () => stableOnClose();
+    const onFocus = sentinelIsActive ? ((e) => stableOnClose(e)) : (() => getSendFocusWithinMenu()?.());
+    const onClick = (e) => stableOnClose(e);
     return {
         tabIndex: sentinelIsActive ? 0 : -1,
         onFocus,

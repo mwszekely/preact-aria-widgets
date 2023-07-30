@@ -1,12 +1,15 @@
 
-import { ElementProps, findFirstFocusable, monitorCallCount, TargetedOmit, useMergedProps, useModal, UseModalParameters, UseModalReturnType, useStableCallback } from "preact-prop-helpers";
+import { assertEmptyObject, ElementProps, findFirstFocusable, monitorCallCount, TargetedOmit, useMergedProps, useModal, UseModalParameters, UseModalReturnType, useStableCallback } from "preact-prop-helpers";
 import { OmitStrong, Prefices } from "./props.js";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
 
 export interface UseDialogParameters<_DialogElement extends Element, _TitleElement extends Element> extends
-    OmitStrong<UseModalParameters<"escape" | "backdrop">, "focusTrapParameters" | "dismissParameters">,
+    OmitStrong<UseModalParameters<"escape" | "backdrop">, "focusTrapParameters" | "dismissParameters" | "backdropDismissParameters" | "escapeDismissParameters" | "lostFocusDismissParameters">,
     TargetedOmit<UseModalParameters<"escape" | "backdrop">, "focusTrapParameters", "trapActive" | "onlyMoveFocus">,
-    TargetedOmit<UseModalParameters<"escape" | "backdrop">, "dismissParameters", "closeOnLostFocus">,
+    TargetedOmit<UseModalParameters<"escape" | "backdrop">, "dismissParameters", "dismissActive">,
+    TargetedOmit<UseModalParameters<"escape" | "backdrop">, "backdropDismissParameters", "onDismissBackdrop">,
+    TargetedOmit<UseModalParameters<"escape" | "backdrop">, "escapeDismissParameters", "onDismissEscape">,
+    //TargetedOmit<UseModalParameters<"escape" | "backdrop">, "lostFocusDismissParameters", "onDismissLostFocus">,
     TargetedOmit<UseLabelSyntheticParameters, "labelParameters", "onLabelClick"> {
 }
 
@@ -21,7 +24,18 @@ export interface UseDialogReturnType<FocusContainerElement extends Element, Sour
  * 
  * @compositeParams
  */
-export function useDialog<FocusContainerElement extends Element, SourceElement extends Element, DialogElement extends Element, TitleElement extends Element>({ dismissParameters, escapeDismissParameters, focusTrapParameters, labelParameters }: UseDialogParameters<DialogElement, TitleElement>): UseDialogReturnType<FocusContainerElement, SourceElement, DialogElement, TitleElement> {
+export function useDialog<FocusContainerElement extends Element, SourceElement extends Element, DialogElement extends Element, TitleElement extends Element>({ 
+    dismissParameters, 
+    escapeDismissParameters, 
+    focusTrapParameters, 
+    activeElementParameters,
+    backdropDismissParameters,
+    //lostFocusDismissParameters,
+    modalParameters,
+    refElementParameters,
+    labelParameters,
+    ...void1
+ }: UseDialogParameters<DialogElement, TitleElement>): UseDialogReturnType<FocusContainerElement, SourceElement, DialogElement, TitleElement> {
     monitorCallCount(useDialog);
 
     const {
@@ -29,27 +43,41 @@ export function useDialog<FocusContainerElement extends Element, SourceElement e
         propsStablePopup,
         propsStableSource,
         refElementPopupReturn,
-        refElementSourceReturn
+        refElementSourceReturn,
+        ...void2
     } = useModal<"escape" | "backdrop", FocusContainerElement, SourceElement, DialogElement>({
-        dismissParameters: { closeOnLostFocus: false, ...dismissParameters },
-        escapeDismissParameters,
+        dismissParameters: { dismissActive: true, ...dismissParameters },
+        backdropDismissParameters: { onDismissBackdrop: null, ...backdropDismissParameters },
+        lostFocusDismissParameters: { onDismissLostFocus: null, dismissLostFocusActive: false },
+        escapeDismissParameters: { onDismissEscape: null, ...escapeDismissParameters },
+        modalParameters,
+        refElementParameters,
+        activeElementParameters,
         focusTrapParameters: { trapActive: true, onlyMoveFocus: false, ...focusTrapParameters }
     });
 
     const {
         propsInput,
-        propsLabel
+        propsLabel,
+        pressReturn,
+        randomIdInputReturn,
+        randomIdLabelReturn,
+        ...void3
     } = useLabelSynthetic<DialogElement, TitleElement>({
         labelParameters: {
-            ...labelParameters, onLabelClick: useStableCallback(() => {
+            ...labelParameters, 
+            onLabelClick: useStableCallback(() => {
                 const e = refElementPopupReturn.getElement();
                 focusTrapParameters.focusPopup(e, () => (findFirstFocusable(e!) as HTMLElement | null));
-
             })
         },
         randomIdInputParameters: { prefix: Prefices.dialog },
         randomIdLabelParameters: { prefix: Prefices.dialogTitle }
     });
+
+    assertEmptyObject(void1);
+    assertEmptyObject(void2);
+    assertEmptyObject(void3);
 
     return {
         propsFocusContainer,

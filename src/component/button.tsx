@@ -1,46 +1,41 @@
-import { Ref, VNode } from "preact";
-import { useImperativeHandle } from "preact/hooks";
+import { assertEmptyObject, memo } from "preact-prop-helpers";
 import { Get3 } from "../props.js";
 import { UseButtonParameters, UseButtonReturnType, useButton } from "../use-button.js";
-import { PartialExcept, memoForwardRef } from "./util.js";
+import { GenericComponentProps, useComponent, useDefault } from "./util.js";
 
+export type ButtonProps<ButtonElement extends Element> = GenericComponentProps<
+    UseButtonReturnType<ButtonElement>,
+    Get3<UseButtonParameters<ButtonElement>, "buttonParameters", "pressParameters", "refElementParameters">,
+    "tagButton"
+>;
 
-interface ButtonPropsBase<E extends Element> extends
-    Get3<UseButtonParameters<E>, "buttonParameters", "pressParameters", "refElementParameters"> {
-    ref?: Ref<UseButtonReturnType<E>>;
-}
-
-export interface ButtonProps<E extends Element> extends PartialExcept<ButtonPropsBase<E>, "tagButton"> {
-    render(info: UseButtonReturnType<E>): VNode<any>;
-}
-
-export const Button = memoForwardRef(function Button<E extends Element>({ 
-    tagButton, 
-    onPress, 
-    pressed, 
-    render, 
-    disabled, 
-    onElementChange, 
-    onMount, 
-    onUnmount, 
-    allowRepeatPresses, 
+export const Button = memo(function Button<ButtonElement extends Element>({
+    tagButton,
+    pressed,
+    render,
+    disabled,
+    onElementChange,
+    onMount,
+    onUnmount,
+    allowRepeatPresses,
     longPressThreshold,
-    excludeEnter,
-    excludePointer,
     excludeSpace,
-    onPressingChange
-}: ButtonProps<E>, ref: Ref<any>) {
-    const info = useButton<E>({
-        buttonParameters: {
-            role: "button",
-            tagButton: tagButton,
-            onPress: onPress ?? null,
-            pressed,
-            disabled: disabled ?? false
-        },
-        pressParameters: { longPressThreshold, allowRepeatPresses, excludeEnter, excludePointer, excludeSpace, onPressingChange },
-        refElementParameters: { onElementChange, onMount, onUnmount }
-    });
-    useImperativeHandle(ref!, () => info);
-    return render(info);
+    onPressingChange,
+    onPressSync,
+    focusSelf,
+    role,
+    imperativeHandle,
+    ...void1
+}: ButtonProps<ButtonElement>) {
+    assertEmptyObject(void1);
+
+    return useComponent(
+        imperativeHandle,
+        render,
+        null,
+        useButton<ButtonElement>({
+            buttonParameters: { onPressSync, role: role, tagButton, pressed, disabled },
+            pressParameters: { longPressThreshold, allowRepeatPresses, excludeSpace, onPressingChange, focusSelf: useDefault("focusSelf", focusSelf) },
+            refElementParameters: { onElementChange, onMount, onUnmount },
+        }));
 })

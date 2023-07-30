@@ -25,7 +25,7 @@ export interface UseLabelParametersSelf<LP extends LabelPosition, InputElement e
      * 
      * When a string, this corresponds to `labelPosition` == `"none"`; this label is only visible to assistive technologies and *not* visible otherwise.
      */
-    ariaLabel: LP extends "none" ? string : null;
+    ariaLabel: LP extends "none" ? string : (null | undefined);
 }
 
 export interface UseLabelParameters<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element> {

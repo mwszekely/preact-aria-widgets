@@ -1,14 +1,13 @@
-import { jsx as _jsx } from "preact/jsx-runtime";
 import { createContext } from "preact";
-import { useStableGetter } from "preact-prop-helpers";
-import { useImperativeHandle } from "preact/hooks";
+import { assertEmptyObject, memo, useStableGetter } from "preact-prop-helpers";
 import { useContextWithWarning } from "../props.js";
 import { useRadio, useRadioGroup } from "../use-radio-group.js";
-import { memoForwardRef, useDefault } from "./util.js";
+import { useComponent, useDefault } from "./util.js";
 const RadioContext = createContext(null);
-export const RadioGroup = memoForwardRef(function RadioGroup({ render, name, onSelectedValueChange, collator, disableHomeEndKeys, arrowKeyDirection, noTypeahead, typeaheadTimeout, ariaLabel, compare, staggered, getIndex, navigatePastEnd, navigatePastStart, selectedValue, untabbable, onTabbableIndexChange, onNavigateLinear, onNavigateTypeahead, pageNavigationSize, ...rest }, ref) {
+export const RadioGroup = memo(function RadioGroup({ render, name, collator, disableHomeEndKeys, arrowKeyDirection, noTypeahead, typeaheadTimeout, ariaLabel, compare, staggered, getIndex, navigatePastEnd, navigatePastStart, selectedValue, untabbable, onTabbableIndexChange, onNavigateLinear, onNavigateTypeahead, pageNavigationSize, onElementChange, onMount, onUnmount, imperativeHandle, onSelectedValueChange, ...rest }) {
     untabbable ??= false;
-    const info = useRadioGroup({
+    assertEmptyObject(rest);
+    return useComponent(imperativeHandle, render, RadioContext, useRadioGroup({
         linearNavigationParameters: {
             onNavigateLinear,
             arrowKeyDirection: arrowKeyDirection ?? "either",
@@ -20,10 +19,10 @@ export const RadioGroup = memoForwardRef(function RadioGroup({ render, name, onS
         staggeredChildrenParameters: { staggered: staggered || false },
         labelParameters: { ariaLabel },
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
-        sortableChildrenParameters: { compare: compare ?? null },
-        radioGroupParameters: { name, onSelectedValueChange, selectedValue },
+        sortableChildrenParameters: { compare },
+        radioGroupParameters: { name, selectedValue, onSelectedValueChange },
         rovingTabIndexParameters: {
-            onTabbableIndexChange: onTabbableIndexChange ?? null,
+            onTabbableIndexChange,
             untabbable
         },
         typeaheadNavigationParameters: {
@@ -32,26 +31,24 @@ export const RadioGroup = memoForwardRef(function RadioGroup({ render, name, onS
             noTypeahead: useDefault("noTypeahead", noTypeahead),
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
         },
-    });
-    useImperativeHandle(ref, () => info);
-    return (_jsx(RadioContext.Provider, { value: info.context, children: render(info) }));
+        refElementParameters: { onElementChange, onMount, onUnmount },
+    }));
 });
-export const Radio = memoForwardRef(function Radio({ unselectable, disabled, index, render, value, ariaLabel, focusSelf, labelPosition, untabbable, tagInput, tagLabel, getText, longPressThreshold }, ref) {
-    const defaultFocusSelf = () => info.checkboxLikeReturn.focusSelf();
-    focusSelf ??= defaultFocusSelf;
+export const Radio = memo(function Radio({ unselectable, disabled, index, render, value, ariaLabel, labelPosition, untabbable, tagInput, tagLabel, getText, longPressThreshold, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, imperativeHandle, ...void1 }) {
+    assertEmptyObject(void1);
     const context = useContextWithWarning(RadioContext, "radio group");
     console.assert(context != null, `This Radio is not contained within a RadioGroup`);
     const getValue = useStableGetter(value);
-    const info = useRadio({
+    return useComponent(imperativeHandle, render, null, useRadio({
         radioParameters: { value },
         checkboxLikeParameters: { disabled: disabled ?? false },
-        info: { index, focusSelf, untabbable: untabbable || false, unselectable: !!unselectable, getSortValue: getValue },
+        info: { index, untabbable: untabbable || false, unselectable: !!unselectable, getSortValue: getValue },
         context,
         labelParameters: { ariaLabel, labelPosition, tagInput, tagLabel },
         textContentParameters: { getText: useDefault("getText", getText) },
-        pressParameters: { longPressThreshold }
-    });
-    useImperativeHandle(ref, () => info);
-    return render(info);
+        pressParameters: { longPressThreshold },
+        hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged },
+        refElementParameters: { onElementChange, onMount, onUnmount }
+    }));
 });
 //# sourceMappingURL=radio-group.js.map

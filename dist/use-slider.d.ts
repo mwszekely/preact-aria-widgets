@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { ElementProps, ManagedChildInfo, UseManagedChildParameters, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, UseManagedChildReturnType } from "preact-prop-helpers";
+import { ElementProps, ManagedChildInfo, Nullable, UseGenericChildParameters, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, UseManagedChildReturnType } from "preact-prop-helpers";
 import { EventDetail, TagSensitiveProps } from "./props.js";
 export type RangeChangeEvent<E extends EventTarget> = {
     [EventDetail]: {
@@ -10,10 +10,10 @@ export interface SliderThumbInfo extends ManagedChildInfo<number> {
 }
 export interface UseSliderThumbParametersSelf<E extends Element> extends TagSensitiveProps<E> {
     value: number;
-    valueText?: string;
-    onValueChange?: (e: RangeChangeEvent<E>) => void;
-    min?: number;
-    max?: number;
+    valueText: Nullable<string>;
+    onValueChange: Nullable<(e: RangeChangeEvent<E>) => void>;
+    min: Nullable<number>;
+    max: Nullable<number>;
     /**
      * There's no, like, "slider container" for multi-thumb sliders defined,
      * so each individual slider needs its own label.
@@ -24,9 +24,8 @@ export interface UseSliderThumbParametersSelf<E extends Element> extends TagSens
      */
     label: string;
 }
-export interface UseSliderThumbParameters<E extends Element, M extends SliderThumbInfo> extends UseManagedChildParameters<M, "index"> {
-    sliderThumbParameters: UseSliderThumbParametersSelf<E>;
-    context: SliderContext<M>;
+export interface UseSliderThumbParameters<ThumbElement extends Element, M extends SliderThumbInfo = SliderThumbInfo> extends UseGenericChildParameters<SliderContext<M>, Pick<M, "index">> {
+    sliderThumbParameters: UseSliderThumbParametersSelf<ThumbElement>;
 }
 export interface UseSliderParametersSelf {
     min: number;
@@ -39,7 +38,7 @@ export interface UseSliderThumbReturnTypeSelf {
     min: number;
     max: number;
 }
-export interface UseSliderThumbReturnType<E extends Element, M extends SliderThumbInfo> extends UseManagedChildReturnType<M> {
+export interface UseSliderThumbReturnType<E extends Element, M extends SliderThumbInfo = SliderThumbInfo> extends UseManagedChildReturnType<M> {
     sliderThumbReturn: UseSliderThumbReturnTypeSelf;
     propsSliderThumb: ElementProps<E>;
 }
@@ -65,5 +64,5 @@ export declare function useSlider<M extends SliderThumbInfo>({ sliderParameters:
 /**
  * @compositeParams
  */
-export declare function useSliderThumb<ThumbElement extends Element, M extends SliderThumbInfo>({ info, context: { sliderContext: { max: maxParent, min: minParent }, ...context }, sliderThumbParameters }: UseSliderThumbParameters<ThumbElement, M>): UseSliderThumbReturnType<ThumbElement, M>;
+export declare function useSliderThumb<ThumbElement extends Element>({ sliderThumbParameters: { tag, value, max: maxOverride, min: minOverride, valueText, label, onValueChange, ...void2 }, info, context: { sliderContext: { max: maxParent, min: minParent }, ...context }, ...void1 }: UseSliderThumbParameters<ThumbElement>): UseSliderThumbReturnType<ThumbElement>;
 //# sourceMappingURL=use-slider.d.ts.map

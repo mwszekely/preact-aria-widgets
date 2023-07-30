@@ -1,4 +1,4 @@
-import { ElementProps, TargetedPick, UseEscapeDismissParameters } from "preact-prop-helpers";
+import { ElementProps, TargetedPick, UseDismissParameters, UseEscapeDismissParameters } from "preact-prop-helpers";
 export type TooltipStatus = "hover" | "focus" | null;
 export interface UseTooltipParametersSelf {
     /**
@@ -25,7 +25,7 @@ export interface UseTooltipParametersSelf {
      */
     hoverDelay: number | null;
 }
-export interface UseTooltipParameters<TriggerType extends Element, PopupType extends Element> extends TargetedPick<UseEscapeDismissParameters<PopupType>, "escapeDismissParameters", "getWindow" | "parentDepth"> {
+export interface UseTooltipParameters<TriggerType extends Element, PopupType extends Element> extends TargetedPick<UseEscapeDismissParameters<PopupType, true>, "escapeDismissParameters", "getDocument" | "parentDepth">, Pick<UseDismissParameters<any>, "activeElementParameters"> {
     tooltipParameters: UseTooltipParametersSelf;
 }
 export type TooltipState = `${"hovering" | "focused"}-${"popup" | "trigger"}` | null;
@@ -36,7 +36,7 @@ export type TooltipState = `${"hovering" | "focused"}-${"popup" | "trigger"}` | 
  *
  * @compositeParams
  */
-export declare function useTooltip<TriggerType extends Element, PopupType extends Element>({ tooltipParameters: { onStatus, tooltipSemanticType, hoverDelay }, escapeDismissParameters }: UseTooltipParameters<TriggerType, PopupType>): UseTooltipReturnType<TriggerType, PopupType>;
+export declare function useTooltip<TriggerType extends Element, PopupType extends Element>({ tooltipParameters: { onStatus, tooltipSemanticType, hoverDelay }, activeElementParameters, escapeDismissParameters }: UseTooltipParameters<TriggerType, PopupType>): UseTooltipReturnType<TriggerType, PopupType>;
 export interface UseTooltipReturnTypeSelf {
     getState(): TooltipState;
     stateIsFocus(): boolean;

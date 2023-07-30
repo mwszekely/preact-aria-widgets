@@ -1,8 +1,8 @@
 import { Fragment as _Fragment, jsxs as _jsxs, jsx as _jsx } from "preact/jsx-runtime";
 import { createElement } from "preact";
-import { useImperativeHandle } from "preact/hooks";
+import { assertEmptyObject, memo } from "preact-prop-helpers";
 import { useCheckbox } from "../use-checkbox.js";
-import { memoForwardRef } from "./util.js";
+import { useComponent } from "./util.js";
 export function defaultRenderCheckboxLike({ labelPosition, tagInput, tagLabel, makePropsInput, makePropsLabel }) {
     return function (info) {
         const inputProps = (makePropsInput(info));
@@ -23,14 +23,13 @@ export function defaultRenderCheckboxLike({ labelPosition, tagInput, tagLabel, m
         }
     };
 }
-export const Checkbox = memoForwardRef(function Checkbox({ checked, disabled, tagLabel, labelPosition, tagInput, ariaLabel, onCheckedChange, longPressThreshold, excludeSpace, render }, ref) {
-    const checkbox = useCheckbox({
-        checkboxLikeParameters: { checked: checked ?? false, disabled: disabled ?? false },
-        checkboxParameters: { onCheckedChange },
+export const Checkbox = memo(function Checkbox({ checked, disabled, tagLabel, labelPosition, tagInput, ariaLabel, longPressThreshold, excludeSpace, imperativeHandle, render, onCheckedChange, ...void1 }) {
+    assertEmptyObject(void1);
+    return useComponent(imperativeHandle, render, null, useCheckbox({
+        checkboxLikeParameters: { checked, disabled: disabled ?? false },
         labelParameters: { ariaLabel: ariaLabel, labelPosition, tagInput, tagLabel },
-        pressParameters: { excludeSpace, longPressThreshold }
-    });
-    useImperativeHandle(ref, () => checkbox);
-    return render(checkbox);
+        pressParameters: { excludeSpace, longPressThreshold },
+        checkboxParameters: { onCheckedChange }
+    }));
 });
 //# sourceMappingURL=checkbox.js.map

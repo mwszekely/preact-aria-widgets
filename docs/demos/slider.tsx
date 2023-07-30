@@ -6,12 +6,12 @@ function DemoSliderThumb({ index }: { index: number }) {
     const [value, setValue] = useState(0);
 
     return (
-        <SliderThumb<HTMLInputElement>
+        <SliderThumb<HTMLInputElement, HTMLProgressElement, HTMLLabelElement>
             index={index}
             tag="input"
             label={`Slider thumb #${index}`}
             value={value}
-            onValueChange={e => setValue(e[EventDetail].value)}
+            onValueChange={(e) => setValue(e[EventDetail].value)}
             min={0}
             max={10}
             render={info => {
@@ -57,12 +57,16 @@ export function Demo() {
                 <Slider
                     min={0}
                     max={10}
-                    children={<>{Array.from((function* () {
-                        for (let i = 0; i < count; ++i) {
-                            yield <div><DemoSliderThumb index={i} key={i} /></div>
-                        }
-                    })())}
-                    </>} />
+                    render={info => {
+                        
+                        return <>{Array.from((function* () {
+                            for (let i = 0; i < count; ++i) {
+                                yield <div><DemoSliderThumb index={i} key={i} /></div>
+                            }
+                        })())}
+                        </>
+                    }}
+                     />
             </div>
         </>
     )

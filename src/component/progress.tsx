@@ -1,55 +1,83 @@
-import { Ref, VNode } from "preact";
-import { UseAsyncHandlerParameters } from "preact-prop-helpers";
-import { useImperativeHandle } from "preact/hooks";
+import { UseAsyncHandlerParameters, assertEmptyObject, memo } from "preact-prop-helpers";
 import { Get3 } from "../props.js";
 import { UseProgressParameters, UseProgressReturnType, UseProgressWithHandlerParameters, UseProgressWithHandlerReturnType, useProgress, useProgressWithHandler } from "../use-progress.js";
-import { PartialExcept, memoForwardRef } from "./util.js";
+import { GenericComponentProps, PartialExcept, memoForwardRef, useComponent } from "./util.js";
 
 type Get<T, K extends keyof T> = T[K];
 
 interface ProgressPropsBase<IndicatorElement extends Element, LabelElement extends Element> extends Get<UseProgressParameters<IndicatorElement, LabelElement>, "labelParameters">, Get<UseProgressParameters<IndicatorElement, LabelElement>, "progressIndicatorParameters"> {
-    ref?: Ref<UseProgressReturnType<IndicatorElement, LabelElement>>;
+
 }
 
 interface ProgressWithHandlerPropsBase<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element> extends
-    Get3<UseProgressWithHandlerParameters<EventType, CaptureType, IndicatorElement, LabelElement>, "labelParameters","progressIndicatorParameters","progressWithHandlerParameters">,
+    Get3<UseProgressWithHandlerParameters<EventType, CaptureType, IndicatorElement, LabelElement>, "labelParameters", "progressIndicatorParameters", "progressWithHandlerParameters">,
     UseAsyncHandlerParameters<EventType, CaptureType> {
-    ref?: Ref<UseProgressReturnType<IndicatorElement, LabelElement>>;
+
 }
 
-export interface ProgressProps<IndicatorElement extends Element, LabelElement extends Element> extends PartialExcept<ProgressPropsBase<IndicatorElement, LabelElement>, "tagIndicator" | "ariaLabel"> {
-    render(info: UseProgressReturnType<IndicatorElement, LabelElement>): VNode<any>;
+export interface ProgressProps<IndicatorElement extends Element, LabelElement extends Element> extends
+    GenericComponentProps<UseProgressReturnType<IndicatorElement, LabelElement>,
+        PartialExcept<ProgressPropsBase<IndicatorElement, LabelElement>, "tagProgressIndicator" | "ariaLabel">,
+        "tagProgressIndicator"> {
 }
 
-export interface ProgressWithHandlerProps<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element> extends PartialExcept<ProgressWithHandlerPropsBase<EventType, CaptureType, IndicatorElement, LabelElement>, "capture" | "tagIndicator" | "ariaLabel" | "asyncHandler"> {
-    render(info: UseProgressWithHandlerReturnType<EventType, CaptureType, IndicatorElement, LabelElement>): VNode<any>;
+export interface ProgressWithHandlerProps<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element> extends
+    GenericComponentProps<
+        UseProgressWithHandlerReturnType<EventType, CaptureType, IndicatorElement, LabelElement>,
+        PartialExcept<ProgressWithHandlerPropsBase<EventType, CaptureType, IndicatorElement, LabelElement>, "capture" | "tagProgressIndicator" | "ariaLabel" | "asyncHandler">,
+        "capture" | "tagProgressIndicator"> {
 }
 
-export const Progress = memoForwardRef(function Progress<IndicatorElement extends Element, LabelElement extends Element>({ tagIndicator, ariaLabel, max, render, value, valueText }: ProgressProps<IndicatorElement, LabelElement>, ref?: Ref<any>) {
-    const info = useProgress<IndicatorElement, LabelElement>({
-        labelParameters: { ariaLabel },
-        progressIndicatorParameters: {
-            max: max ?? 100,
-            value: value ?? "indeterminate",
-            valueText: valueText ?? null,
-            tagIndicator
-        }
-    });
-
-    useImperativeHandle(ref!, () => info);
-
-    return render(info);
+export const Progress = memo(function Progress<IndicatorElement extends Element, LabelElement extends Element>({
+    tagProgressIndicator,
+    ariaLabel,
+    max,
+    render,
+    value,
+    valueText,
+    imperativeHandle
+}: ProgressProps<IndicatorElement, LabelElement>) {
+    return useComponent(
+        imperativeHandle,
+        render,
+        null,
+        useProgress<IndicatorElement, LabelElement>({
+            labelParameters: { ariaLabel },
+            progressIndicatorParameters: {
+                max: max ?? 100,
+                value: value ?? "indeterminate",
+                valueText,
+                tagProgressIndicator
+            }
+        }));
 })
 
-export const ProgressWithHandler = memoForwardRef(function ProgressWithHandler<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element>({ ariaLabel, forciblyPending, render, tagIndicator, asyncHandler, capture, debounce, throttle }: ProgressWithHandlerProps<EventType, CaptureType, IndicatorElement, LabelElement>, ref?: Ref<any>) {
-    const info = useProgressWithHandler<EventType, CaptureType, IndicatorElement, LabelElement>({
-        asyncHandlerParameters: { asyncHandler, capture, debounce, throttle },
-        labelParameters: { ariaLabel },
-        progressIndicatorParameters: { tagIndicator },
-        progressWithHandlerParameters: { forciblyPending: forciblyPending ?? false }
-    })
-
-    useImperativeHandle(ref!, () => info);
-
-    return (render(info))
+export const ProgressWithHandler = memoForwardRef(function ProgressWithHandler<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element>({
+    ariaLabel,
+    forciblyPending,
+    render,
+    tagProgressIndicator,
+    asyncHandler,
+    capture,
+    debounce,
+    throttle,
+    notifyFailure,
+    notifyPending,
+    notifySuccess,
+    imperativeHandle,
+    ...void1
+}: ProgressWithHandlerProps<EventType, CaptureType, IndicatorElement, LabelElement>) {
+    assertEmptyObject(void1);
+    
+    return useComponent(
+        imperativeHandle,
+        render,
+        null,
+        useProgressWithHandler<EventType, CaptureType, IndicatorElement, LabelElement>({
+            asyncHandlerParameters: { asyncHandler, capture, debounce, throttle },
+            labelParameters: { ariaLabel },
+            progressIndicatorParameters: { tagProgressIndicator },
+            progressWithHandlerParameters: { forciblyPending, notifyFailure, notifyPending, notifySuccess }
+        })
+    );
 });

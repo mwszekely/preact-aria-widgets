@@ -1,10 +1,9 @@
-import { jsx as _jsx } from "preact/jsx-runtime";
 import { createContext, createElement } from "preact";
-import { focus, useStableCallback } from "preact-prop-helpers";
+import { focus, memo, returnZero, useStableCallback } from "preact-prop-helpers";
 import { useImperativeHandle } from "preact/hooks";
 import { useContextWithWarning } from "../props.js";
 import { useGridlist, useGridlistCell, useGridlistRow } from "../use-gridlist.js";
-import { memoForwardRef, useDefault } from "./util.js";
+import { useComponent, useDefault } from "./util.js";
 const GridlistContext = createContext(null);
 const GridlistRowContext = createContext(null);
 export function defaultRenderGridlistRow({ tagGridlistRow, makePropsGridlistRow }) {
@@ -17,11 +16,11 @@ export function defaultRenderGridlistChild({ tagGridlistChild, makePropsGridlist
         return createElement(tagGridlistChild, (makePropsGridlistChild(info)));
     };
 }
-export const Gridlist = memoForwardRef(function GridlistU({ collator, disableHomeEndKeys, noTypeahead, onTabbableIndexChange, groupingType, typeaheadTimeout, selectedIndex, navigatePastEnd, navigatePastStart, onSelectedIndexChange, pageNavigationSize, selectionLimit, untabbable, paginationMax, paginationMin, staggered, compare, getIndex, onTabbableColumnChange, ariaLabel, orientation, ariaPropName, selectionMode, onNavigateLinear, onNavigateTypeahead, render }, ref) {
+export const Gridlist = (function Gridlist({ collator, disableHomeEndKeys, noTypeahead, onTabbableIndexChange, groupingType, typeaheadTimeout, selectedIndex, navigatePastEnd, navigatePastStart, onSelectedIndexChange, pageNavigationSize, selectionLimit, untabbable, paginationMax, paginationMin, staggered, compare, getIndex, onTabbableColumnChange, ariaLabel, orientation, ariaPropName, selectionMode, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, render }) {
     untabbable ??= false;
     ariaPropName ??= "aria-selected";
     selectionMode ??= "activation";
-    const info = useGridlist({
+    return useComponent(imperativeHandle, render, GridlistContext, useGridlist({
         linearNavigationParameters: {
             onNavigateLinear,
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
@@ -30,7 +29,7 @@ export const Gridlist = memoForwardRef(function GridlistU({ collator, disableHom
             pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize),
         },
         rovingTabIndexParameters: {
-            onTabbableIndexChange: onTabbableIndexChange ?? null,
+            onTabbableIndexChange,
             untabbable
         },
         staggeredChildrenParameters: { staggered: staggered || false },
@@ -44,11 +43,11 @@ export const Gridlist = memoForwardRef(function GridlistU({ collator, disableHom
             selectionLimit,
             groupingType,
             selectedIndex,
-            onSelectedIndexChange: onSelectedIndexChange ?? null,
+            onSelectedIndexChange,
             orientation: orientation ?? "vertical"
         },
         gridNavigationParameters: {
-            onTabbableColumnChange: onTabbableColumnChange ?? null
+            onTabbableColumnChange,
         },
         labelParameters: {
             ariaLabel
@@ -57,53 +56,68 @@ export const Gridlist = memoForwardRef(function GridlistU({ collator, disableHom
             getIndex: useDefault("getIndex", getIndex)
         },
         sortableChildrenParameters: {
-            compare: compare ?? null
+            compare,
         },
         paginatedChildrenParameters: {
-            paginationMax: paginationMax ?? null,
-            paginationMin: paginationMin ?? null
+            paginationMax,
+            paginationMin
         },
-        singleSelectionParameters: { ariaPropName, selectionMode }
-    });
-    useImperativeHandle(ref, () => info);
-    return (_jsx(GridlistContext.Provider, { value: info.context, children: render(info) }));
+        singleSelectionParameters: { ariaPropName, selectionMode },
+        refElementParameters: { onElementChange, onMount, onUnmount }
+    }));
 });
-export const GridlistRow = memoForwardRef(function GridlistRowU({ index, collator, unselectable, untabbable, navigatePastEnd, navigatePastStart, noTypeahead, onTabbableIndexChange, selected, typeaheadTimeout, getSortValue, getText, render, initiallyTabbedIndex, onNavigateTypeahead, info: uinfo }, ref) {
+export const GridlistRow = memo(function GridlistRowU({ index, collator, unselectable, untabbable, navigatePastEnd, navigatePastStart, noTypeahead, onTabbableIndexChange, selected, typeaheadTimeout, getText, render, initiallyTabbedIndex, onNavigateTypeahead, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, info: uinfo }) {
     const context = useContextWithWarning(GridlistContext, "gridlist");
     console.assert(context != null, `This GridlistRow is not contained within a Gridlist`);
-    untabbable ||= false;
-    const info = useGridlistRow({
-        info: { index, untabbable, unselectable, getSortValue, ...uinfo },
+    return useComponent(imperativeHandle, render, GridlistRowContext, useGridlistRow({
+        info: {
+            index,
+            untabbable: untabbable || false,
+            unselectable: unselectable || false,
+            ...uinfo
+        },
         context,
-        gridlistRowParameters: { selected: selected ?? null },
+        gridlistRowParameters: { selected },
         textContentParameters: { getText: useDefault("getText", getText) },
         linearNavigationParameters: {
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap"
         },
-        rovingTabIndexParameters: { onTabbableIndexChange: onTabbableIndexChange ?? null, initiallyTabbedIndex: initiallyTabbedIndex ?? null, untabbable },
+        hasCurrentFocusParameters: {
+            onCurrentFocusedChanged,
+            onCurrentFocusedInnerChanged,
+        },
+        rovingTabIndexParameters: {
+            onTabbableIndexChange,
+            initiallyTabbedIndex,
+            untabbable: untabbable || false,
+        },
         typeaheadNavigationParameters: {
             onNavigateTypeahead,
             collator: useDefault("collator", collator),
             noTypeahead: useDefault("noTypeahead", noTypeahead),
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
-        }
-    });
-    useImperativeHandle(ref, () => info);
-    return _jsx(GridlistRowContext.Provider, { value: info.context, children: render(info) });
+        },
+        gridNavigationSingleSelectionSortableRowParameters: { getSortableColumnIndex: returnZero }
+    }));
 });
-export const GridlistChild = memoForwardRef(function GridlistChild({ index, colSpan, focusSelf, untabbable, getText, onPressSync, longPressThreshold, onPressingChange, render, info: subInfo }, ref) {
+export const GridlistChild = memo(function GridlistChild({ index, colSpan, focusSelf, untabbable, getText, onPressSync, longPressThreshold, onPressingChange, render, getSortValue, imperativeHandle, info: subInfo }) {
     const context = useContextWithWarning(GridlistRowContext, "gridlist row");
     console.assert(context != null, `This GridlistChild is not contained within a GridlistRow that is contained within a Gridlist`);
     const defaultFocusSelf = useStableCallback((e) => { focus(e); }, []);
     const info = useGridlistCell({
-        info: { index, untabbable: untabbable || false, focusSelf: (focusSelf ?? defaultFocusSelf), ...subInfo },
+        info: {
+            index: index,
+            untabbable: untabbable || false,
+            focusSelf: (focusSelf ?? defaultFocusSelf),
+            getSortValue: getSortValue,
+        },
         context,
         gridNavigationCellParameters: { colSpan: colSpan ?? 1 },
         textContentParameters: { getText: useDefault("getText", getText) },
         pressParameters: { onPressSync, longPressThreshold, onPressingChange }
     });
-    useImperativeHandle(ref, () => info);
+    useImperativeHandle(imperativeHandle, () => info);
     return render(info);
 });
 //# sourceMappingURL=gridlist.js.map

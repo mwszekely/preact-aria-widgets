@@ -1,5 +1,5 @@
-import { monitorCallCount, useMergedProps, useRefElement, useStableCallback } from "preact-prop-helpers";
-import { Prefices, enhanceEvent } from "./props.js";
+import { assertEmptyObject, enhanceEvent, monitorCallCount, useMergedProps, useRefElement, useStableCallback } from "preact-prop-helpers";
+import { Prefices } from "./props.js";
 import { useCheckboxLike } from "./use-checkbox-like.js";
 ;
 /**
@@ -7,27 +7,39 @@ import { useCheckboxLike } from "./use-checkbox-like.js";
  *
  * @compositeParams
  */
-export function useCheckbox({ checkboxParameters: { onCheckedChange }, checkboxLikeParameters, labelParameters, pressParameters }) {
+export function useCheckbox({ checkboxLikeParameters: { checked, disabled, ...void2 }, checkboxParameters: { onCheckedChange, ...void4 }, labelParameters, pressParameters, ...void1 }) {
     monitorCallCount(useCheckbox);
     const { tagInput, labelPosition } = labelParameters;
-    const { checked } = checkboxLikeParameters;
-    const { refElementReturn: refElementInputReturn, propsStable: propsRefInput } = useRefElement({});
-    const { refElementReturn: refElementLabelReturn, propsStable: propsRefLabel } = useRefElement({});
-    const onInputEnhanced = useStableCallback((e) => onCheckedChange?.(enhanceEvent(e, { checked: !checked })));
-    const { propsInput, propsLabel, ...ret } = useCheckboxLike({
+    const { refElementReturn: refElementInputReturn, propsStable: propsRefInput } = useRefElement({ refElementParameters: {} });
+    const { refElementReturn: refElementLabelReturn, propsStable: propsRefLabel } = useRefElement({ refElementParameters: {} });
+    const { propsInput, propsLabel, checkboxLikeInputReturn, checkboxLikeLabelReturn, checkboxLikeReturn, pressInputReturn, pressLabelReturn, pressReturn, randomIdInputReturn, randomIdLabelReturn, ...void3 } = useCheckboxLike({
         randomIdInputParameters: { prefix: Prefices.checkboxLikeInput },
         randomIdLabelParameters: { prefix: Prefices.checkboxLikeLabel },
         refElementInputReturn,
         refElementLabelReturn,
-        checkboxLikeParameters: { role: "checkbox", onInput: onInputEnhanced, ...checkboxLikeParameters },
-        pressParameters,
-        labelParameters
+        checkboxLikeParameters: { role: "checkbox", checked, disabled },
+        pressParameters: {
+            onPressSync: useStableCallback(e => { onCheckedChange?.(enhanceEvent(e, { checked: !checked })); }),
+            ...pressParameters,
+        },
+        labelParameters,
     });
+    assertEmptyObject(void1);
+    assertEmptyObject(void2);
+    assertEmptyObject(void3);
+    assertEmptyObject(void4);
     return {
         checkboxReturn: { propsUnstable: { type: (tagInput == "input" && labelPosition != "wrapping" ? "checkbox" : undefined) } },
         propsInput: useMergedProps(propsInput, propsRefInput),
         propsLabel: useMergedProps(propsLabel, propsRefLabel),
-        ...ret
+        checkboxLikeInputReturn,
+        checkboxLikeLabelReturn,
+        checkboxLikeReturn,
+        pressInputReturn,
+        pressLabelReturn,
+        pressReturn,
+        randomIdInputReturn,
+        randomIdLabelReturn
     };
 }
 //# sourceMappingURL=use-checkbox.js.map

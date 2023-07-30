@@ -1,15 +1,11 @@
-import { Ref, VNode } from "preact";
+import { OmitStrong } from "preact-prop-helpers";
+import { Get2 } from "../props.js";
 import { ToastInfo, UseToastParameters, UseToastReturnType, UseToastsParameters, UseToastsReturnType } from "../use-toasts.js";
-type Get<T, K extends keyof T> = T[K];
-export interface ToastsProps<ContainerType extends Element> extends Get<UseToastsParameters, "managedChildrenParameters">, Get<UseToastsParameters, "toastsParameters"> {
-    ref?: Ref<UseToastsReturnType<ContainerType, ToastInfo>>;
-    render(info: UseToastsReturnType<ContainerType, ToastInfo>): VNode;
-}
-export interface ToastProps<E extends Element> extends Get<UseToastParameters<ToastInfo>, "info">, Get<UseToastParameters<ToastInfo>, "toastParameters"> {
-    ref?: Ref<UseToastReturnType<E>>;
-    render(args: UseToastReturnType<E>): VNode;
-}
-export declare const Toasts: <ContainerType extends Element>({ onAfterChildLayoutEffect, onChildrenMountChange, render, visibleCount }: ToastsProps<ContainerType>, ref?: Ref<any>) => import("preact").JSX.Element;
-export declare const Toast: <E extends Element>({ render, index, timeout, politeness, children }: ToastProps<E>, ref?: Ref<any>) => VNode<{}>;
-export {};
+import { GenericComponentProps } from "./util.js";
+export type ToastsProps<ContainerType extends Element, M extends ToastInfo> = GenericComponentProps<UseToastsReturnType<ContainerType, M>, Get2<UseToastsParameters, "managedChildrenParameters", "toastsParameters">, "visibleCount">;
+export type ToastProps<E extends Element, M extends ToastInfo = ToastInfo> = GenericComponentProps<UseToastReturnType<E, M>, Get2<UseToastParameters<M>, "toastParameters", "info">, "index"> & {
+    info?: OmitStrong<M, keyof ToastInfo>;
+};
+export declare function Toasts<ContainerType extends Element>({ onAfterChildLayoutEffect, onChildrenMountChange, render, visibleCount, imperativeHandle, onChildrenCountChange, ...void1 }: ToastsProps<ContainerType, ToastInfo>): import("preact").JSX.Element;
+export declare function Toast<E extends Element>({ render, index, timeout, politeness, children, info, imperativeHandle }: ToastProps<E, ToastInfo>): import("preact").JSX.Element;
 //# sourceMappingURL=toasts.d.ts.map

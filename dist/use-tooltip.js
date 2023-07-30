@@ -8,7 +8,7 @@ import { Prefices } from "./props.js";
  *
  * @compositeParams
  */
-export function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType, hoverDelay }, escapeDismissParameters }) {
+export function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType, hoverDelay }, activeElementParameters, escapeDismissParameters }) {
     monitorCallCount(useTooltip);
     useGlobalHandler(window, "mouseout", useCallback((e) => {
         console.log(e);
@@ -78,16 +78,26 @@ export function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType,
     const { hasCurrentFocusReturn: triggerFocusReturn } = useHasCurrentFocus({ hasCurrentFocusParameters: { onCurrentFocusedChanged: null, onCurrentFocusedInnerChanged: onTriggerCurrentFocusedInnerChanged }, refElementReturn: { getElement: getTriggerElement } });
     const { hasCurrentFocusReturn: popupFocusReturn } = useHasCurrentFocus({ hasCurrentFocusParameters: { onCurrentFocusedChanged: null, onCurrentFocusedInnerChanged: onPopupCurrentFocusedInnerChanged }, refElementReturn: { getElement: getPopupElement } });
     const { refElementPopupReturn, refElementSourceReturn, propsStablePopup, propsStableSource } = useDismiss({
+        backdropDismissParameters: {
+            dismissBackdropActive: true,
+            onDismissBackdrop: null
+        },
+        lostFocusDismissParameters: {
+            dismissLostFocusActive: false,
+            onDismissLostFocus: null,
+        },
         dismissParameters: {
-            closeOnBackdrop: true,
-            closeOnLostFocus: false,
-            closeOnEscape: true,
-            open: openLocal,
-            onClose: useStableCallback((reason) => {
+            dismissActive: openLocal,
+            onDismiss: useStableCallback((e, reason) => {
                 setState(null);
             }),
         },
-        escapeDismissParameters,
+        activeElementParameters,
+        escapeDismissParameters: {
+            dismissEscapeActive: true,
+            onDismissEscape: null,
+            parentDepth: 1
+        },
     });
     const otherPopupProps = {
         onPointerEnter: useCallback(() => { onHoverChanged(true, "popup"); }, []),

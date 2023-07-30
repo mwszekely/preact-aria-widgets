@@ -1,6 +1,6 @@
 
 import { returnZero, useState } from "preact-prop-helpers";
-import { defaultRenderPortal, Menu, MenuItem } from "../../dist/index.js";
+import { Menu, MenuItem, useDefaultRenderPortal } from "../../dist/index.js";
 
 function DemoListItem({ index }: { index: number }) {
 
@@ -51,8 +51,8 @@ export function Demo() {
                 <Menu<HTMLDivElement, HTMLUListElement, HTMLLIElement, HTMLButtonElement>
                     orientation="vertical"
                     onOpen={() => setOpen(true)}
-                    onClose={() => setOpen(false)}
-                    open={open}
+                    onDismiss={() => setOpen(false)}
+                    active={open}
                     ariaPropName={null}
                     selectionMode="disabled"
                     openDirection="down"
@@ -60,7 +60,7 @@ export function Demo() {
                         return (
                             <>
                                 <button {...info.propsTrigger} onClick={() => setOpen(o => !o)}>Menu trigger</button>
-                                {defaultRenderPortal({
+                                {useDefaultRenderPortal({
                                     portalId: "portal", children: (
 
                                         <div {...info.propsSurface} hidden={!open}>

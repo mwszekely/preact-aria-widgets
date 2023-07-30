@@ -1,6 +1,6 @@
-import { assertEmptyObject, EventDetail, focus, monitorCallCount, useCompleteListNavigation, useCompleteListNavigationChild, useMergedProps, useRefElement, useSingleSelectionDeclarative, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
-import { useLayoutEffect, useMemo, useRef } from "preact/hooks";
-import { enhanceEvent, Prefices } from "./props.js";
+import { EventDetail, assertEmptyObject, focus, monitorCallCount, useCompleteListNavigationChild, useCompleteListNavigationDeclarative, useMergedProps, useRefElement, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
+import { useEffect, useLayoutEffect, useMemo, useRef } from "preact/hooks";
+import { Prefices, enhanceEvent } from "./props.js";
 import { useCheckboxLike } from "./use-checkbox-like.js";
 import { useLabelSynthetic } from "./use-label.js";
 ;
@@ -11,11 +11,30 @@ import { useLabelSynthetic } from "./use-label.js";
  *
  * @hasChild {@link useRadio}
  */
-export function useRadioGroup({ labelParameters, radioGroupParameters: { name, onSelectedValueChange, selectedValue }, rovingTabIndexParameters, ...restParams }) {
+export function useRadioGroup({ labelParameters, radioGroupParameters: { name, selectedValue, onSelectedValueChange, ...void2 }, rovingTabIndexParameters, linearNavigationParameters, rearrangeableChildrenParameters, sortableChildrenParameters, staggeredChildrenParameters, typeaheadNavigationParameters, refElementParameters, ...void1 }) {
     monitorCallCount(useRadioGroup);
+    // TODO: The way this is structured causes 1 extra re-render on the parent
+    // when the selectedValue changes to selectedIndex.
     const [selectedIndex, setSelectedIndex] = useState(null);
     const nameToIndex = useRef(new Map());
     const indexToName = useRef(new Map());
+    useEffect(() => {
+        setSelectedIndex(nameToIndex.current.get(selectedValue) ?? null);
+    }, [selectedValue]);
+    /*const {
+        asyncHandlerReturn,
+        propsProgressIndicator,
+        propsProgressRegion,
+        propsProgressLabel: propsProgressLabel
+    } = useProgressWithHandler<TargetedRadioChangeEvent<V>, V | null, ProgressIndicatorType, ProgressLabelType>({
+        asyncHandlerParameters: {
+            ...asyncHandlerParameters,
+            capture: useCallback((e: TargetedRadioChangeEvent<V>) => { return getEventDetail<RadioChangeEventDetail<V>>(e).selectedValue as V; }, [])
+        },
+        labelParameters,
+        progressIndicatorParameters,
+        progressWithHandlerParameters
+    });*/
     const { propsInput: propsGroup1, propsLabel } = useLabelSynthetic({
         labelParameters: {
             onLabelClick: useStableCallback(() => {
@@ -26,30 +45,34 @@ export function useRadioGroup({ labelParameters, radioGroupParameters: { name, o
         randomIdLabelParameters: { prefix: Prefices.radioGroupLabel, },
         randomIdInputParameters: { prefix: Prefices.radioGroup }
     });
-    useLayoutEffect(() => {
+    /*useLayoutEffect(() => {
         if (selectedValue != null)
-            singleSelectionReturn.changeSelectedIndex(nameToIndex.current.get(selectedValue) ?? null);
+        asyncHandlerReturn.syncHandler(nameToIndex.current.get(selectedValue) ?? null);
         else
-            singleSelectionReturn.changeSelectedIndex(null);
-    }, [selectedValue]);
-    const { context, props: propsGroup2, singleSelectionReturn, managedChildrenReturn, rovingTabIndexReturn, ...restRet } = useCompleteListNavigation({
-        singleSelectionParameters: { initiallySelectedIndex: selectedIndex, onSelectedIndexChange: useStableCallback((e) => { setSelectedIndex(e[EventDetail].selectedIndex); onSelectedIndexChange?.(e); }), selectionMode: "focus", ariaPropName: null },
+        asyncHandlerReturn.syncHandler(null);
+    }, [selectedValue])*/
+    const { context, props: propsGroup2, singleSelectionReturn, managedChildrenReturn, rovingTabIndexReturn, linearNavigationReturn, paginatedChildrenReturn, rearrangeableChildrenReturn, sortableChildrenReturn, staggeredChildrenReturn, typeaheadNavigationReturn, childrenHaveFocusReturn, ...void3 } = useCompleteListNavigationDeclarative({
+        singleSelectionDeclarativeParameters: {
+            selectedIndex,
+            onSelectedIndexChange: useStableCallback((e) => {
+                setSelectedIndex(e[EventDetail].selectedIndex);
+                onSelectedValueChange?.(enhanceEvent(e, { selectedValue: indexToName.current.get(e[EventDetail].selectedIndex) }));
+            }),
+        },
+        singleSelectionParameters: { selectionMode: "focus", ariaPropName: null },
         paginatedChildrenParameters: { paginationMin: null, paginationMax: null },
         rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
-        ...restParams
+        linearNavigationParameters,
+        rearrangeableChildrenParameters,
+        sortableChildrenParameters,
+        staggeredChildrenParameters,
+        typeaheadNavigationParameters,
+        refElementParameters
     });
-    const { singleSelectionParameters: { onSelectedIndexChange } } = useSingleSelectionDeclarative({
+    /*const { singleSelectionParameters: { onSelectedIndexChange } } = useSingleSelectionDeclarative<G, TCE, M>({
         singleSelectionReturn: {
             changeSelectedIndex: useStableCallback((s, r) => {
                 singleSelectionReturn.changeSelectedIndex(s, r);
-                /*let next = typeof s == "function" ? s(selectedIndex) : s;
-                if (next != null) {
-                    const nextValue = indexToName.current.get(next); //managedChildrenReturn.getChildren().getAt(next)?.getValue2();
-                    onSelectedValueChange(nextValue as V, r);
-                }
-                else {
-                    onSelectedValueChange(null, r);
-                }*/
             })
         },
         singleSelectionDeclarativeParameters: {
@@ -60,42 +83,58 @@ export function useRadioGroup({ labelParameters, radioGroupParameters: { name, o
                 onSelectedValueChange?.(enhanceEvent(e, { selectedValue: value }));
             })
         }
-    });
+    })*/
     const propsRadioGroup = useMergedProps(propsGroup1, propsGroup2, { role: "radiogroup" });
+    assertEmptyObject(void1);
+    assertEmptyObject(void2);
+    assertEmptyObject(void3);
     return {
         propsRadioGroup,
         propsRadioGroupLabel: propsLabel,
         rovingTabIndexReturn,
+        linearNavigationReturn,
+        paginatedChildrenReturn,
+        managedChildrenReturn,
+        radioGroupReturn: { selectedIndex },
+        singleSelectionReturn,
+        rearrangeableChildrenReturn,
+        sortableChildrenReturn,
+        staggeredChildrenReturn,
+        typeaheadNavigationReturn,
+        childrenHaveFocusReturn,
         context: useMemo(() => ({
             ...context,
             radioContext: { name, indexToName: indexToName.current, nameToIndex: nameToIndex.current }
         }), [name]),
-        managedChildrenReturn,
-        radioGroupReturn: { selectedIndex },
-        singleSelectionReturn,
-        ...restRet,
     };
 }
 /**
  * @compositeParams
  */
-export function useRadio({ radioParameters: { value }, checkboxLikeParameters: { disabled }, labelParameters, info, context, textContentParameters, pressParameters: { longPressThreshold, ...void3 }, ...void1 }) {
+export function useRadio({ radioParameters: { value, ...void5 }, checkboxLikeParameters: { disabled, ...void4 }, labelParameters, info, context, textContentParameters, pressParameters: { longPressThreshold, ...void3 }, hasCurrentFocusParameters, refElementParameters, ...void1 }) {
     monitorCallCount(useRadio);
     const index = info.index;
-    const onInput = useStableCallback((e) => {
-        onPressSync?.(e);
-    });
+    /*const onInput = useStableCallback((e: EventType<InputElement, Event>) => {
+        onPressSync?.(e as PressEventReason<any>);
+    });*/
     const { name, indexToName, nameToIndex } = context.radioContext;
     const { tagInput, labelPosition } = labelParameters;
     const getValue = useStableGetter(value);
     const { propsChild: listNavigationSingleSelectionChildProps, propsTabbable, singleSelectionChildReturn, pressParameters: { onPressSync, excludeSpace, ...void2 }, ...listNavRet } = useCompleteListNavigationChild({
-        info,
+        info: {
+            focusSelf: useStableCallback((e) => { return checkboxLikeRet.checkboxLikeReturn.focusSelf(); }),
+            ...info
+        },
         context,
-        textContentParameters
+        textContentParameters,
+        hasCurrentFocusParameters,
+        refElementParameters
     });
     assertEmptyObject(void1);
     assertEmptyObject(void2);
     assertEmptyObject(void3);
+    assertEmptyObject(void4);
+    assertEmptyObject(void5);
     const { selected: checked } = singleSelectionChildReturn;
     const { refElementReturn: refElementInputReturn, propsStable: propsRefInput } = useRefElement({ refElementParameters: {} });
     const { refElementReturn: refElementLabelReturn, propsStable: propsRefLabel } = useRefElement({ refElementParameters: {} });
@@ -103,10 +142,9 @@ export function useRadio({ radioParameters: { value }, checkboxLikeParameters: {
         checkboxLikeParameters: {
             checked: (checked ?? false),
             disabled,
-            onInput: onInput,
             role: "radio"
         },
-        pressParameters: { excludeSpace, longPressThreshold },
+        pressParameters: { excludeSpace, longPressThreshold, onPressSync },
         labelParameters,
         randomIdInputParameters: { prefix: Prefices.radio },
         randomIdLabelParameters: { prefix: Prefices.radioLabel },

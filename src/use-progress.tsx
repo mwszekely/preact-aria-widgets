@@ -1,13 +1,14 @@
-import { assertEmptyObject, ElementProps, monitorCallCount, TargetedOmit, TargetedPick, useAsyncHandler, UseAsyncHandlerParameters, UseAsyncHandlerReturnType, useMergedProps } from "preact-prop-helpers";
+import { assertEmptyObject, ElementProps, monitorCallCount, Nullable, TargetedOmit, TargetedPick, useAsyncHandler, UseAsyncHandlerParameters, UseAsyncHandlerReturnType, useMergedProps, VNode } from "preact-prop-helpers";
 import { ElementToTag, OmitStrong, Prefices } from "./props.js";
 import { UseLabelReturnType, useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
+import { useNotify } from "./use-notify.js";
 
 
 export interface UseProgressParametersSelf<IndicatorElement extends Element> {
     max: number;
     value: number | "indeterminate" | "disabled";
-    valueText: string | null;
-    tagIndicator: ElementToTag<IndicatorElement>;
+    valueText: Nullable<string>;
+    tagProgressIndicator: ElementToTag<IndicatorElement>;
 }
 
 export interface UseProgressParameters<IndicatorElement extends Element, _LabelElement extends Element> extends
@@ -16,9 +17,9 @@ export interface UseProgressParameters<IndicatorElement extends Element, _LabelE
 }
 
 export interface UseProgressReturnType<ProgressElement extends Element, ProgressLabelElement extends Element> extends OmitStrong<UseLabelReturnType<ProgressElement, ProgressLabelElement>, "propsInput" | "propsLabel"> {
-    propsIndicator: ElementProps<ProgressElement>;
-    propsLabel: ElementProps<ProgressLabelElement>;
-    propsRegion: ElementProps<any>;
+    propsProgressIndicator: ElementProps<ProgressElement>;
+    propsProgressLabel: ElementProps<ProgressLabelElement>;
+    propsProgressRegion: ElementProps<any>;
 }
 
 /**
@@ -32,7 +33,7 @@ export function useProgress<ProgressElement extends Element, LabelElement extend
         max,
         value,
         valueText,
-        tagIndicator,
+        tagProgressIndicator,
         ...void1
     },
     ...void2
@@ -63,7 +64,7 @@ export function useProgress<ProgressElement extends Element, LabelElement extend
         value = null!;
         max ??= 100;
     }
-    const indicatorProps: ElementProps<ProgressElement> = tagIndicator === "progress" ?
+    const indicatorProps: ElementProps<ProgressElement> = tagProgressIndicator === "progress" ?
         {
             max,
             value: (value ?? undefined),
@@ -97,9 +98,9 @@ export function useProgress<ProgressElement extends Element, LabelElement extend
     assertEmptyObject(void3);
 
     return {
-        propsIndicator: useMergedProps(indicatorProps, propsInput),
-        propsLabel: useMergedProps(labelProps, propsLabel),
-        propsRegion: regionProps,
+        propsProgressIndicator: useMergedProps(indicatorProps, propsInput),
+        propsProgressLabel: useMergedProps(labelProps, propsLabel),
+        propsProgressRegion: regionProps,
         randomIdInputReturn,
         randomIdLabelReturn,
         pressReturn,
@@ -107,42 +108,77 @@ export function useProgress<ProgressElement extends Element, LabelElement extend
 }
 
 export interface UseProgressWithHandlerParametersSelf {
-    forciblyPending: boolean | null;
+    /** If true, the progress bar will always read as at least having an indeterminate value. Nothing is announced to ATs when this changes. */
+    forciblyPending: Nullable<boolean>;
+    /** This will be announced to ATs when the async handler starts running */
+    notifyPending: Nullable<VNode>;
+    /** This will be announced to ATs when the async handler succeeds */
+    notifySuccess: Nullable<VNode>;
+    /** This will be announced to ATs when the async handler throws */
+    notifyFailure: Nullable<VNode>;
 }
 
 export interface UseProgressWithHandlerParameters<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element> extends
-    TargetedPick<UseProgressParameters<IndicatorElement, LabelElement>, "progressIndicatorParameters", "tagIndicator">,
+    TargetedPick<UseProgressParameters<IndicatorElement, LabelElement>, "progressIndicatorParameters", "tagProgressIndicator">,
     Pick<UseProgressParameters<IndicatorElement, LabelElement>, "labelParameters"> {
     progressWithHandlerParameters: UseProgressWithHandlerParametersSelf;
     asyncHandlerParameters: UseAsyncHandlerParameters<EventType, CaptureType>;
 }
 
 export interface UseProgressWithHandlerReturnType<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element> {
-    propsIndicator: UseProgressReturnType<IndicatorElement, LabelElement>["propsIndicator"];
-    propsLabel: UseProgressReturnType<IndicatorElement, LabelElement>["propsLabel"];
-    propsRegion: UseProgressReturnType<IndicatorElement, LabelElement>["propsRegion"];
+    propsProgressIndicator: UseProgressReturnType<IndicatorElement, LabelElement>["propsProgressIndicator"];
+    propsProgressLabel: UseProgressReturnType<IndicatorElement, LabelElement>["propsProgressLabel"];
+    propsProgressRegion: UseProgressReturnType<IndicatorElement, LabelElement>["propsProgressRegion"];
     asyncHandlerReturn: UseAsyncHandlerReturnType<EventType, CaptureType>
 }
 
 /**
- * Provides props for a progress bar based on the progress of an async event handler.
+ * Provides props for a progress bar based on the progress of an async event handler, and notifies ATs when the operation has started/finished.
+ * 
+ * @remarks
  * 
  * @compositeParams
  */
 export function useProgressWithHandler<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element>({
     labelParameters,
     progressIndicatorParameters,
-    asyncHandlerParameters,
-    progressWithHandlerParameters: { forciblyPending }
+    asyncHandlerParameters: { asyncHandler, ...asyncHandlerParameters },
+    progressWithHandlerParameters: { forciblyPending, notifyFailure, notifyPending, notifySuccess, ...void1 },
+    ...void2
 }: UseProgressWithHandlerParameters<EventType, CaptureType, IndicatorElement, LabelElement>): UseProgressWithHandlerReturnType<EventType, CaptureType, IndicatorElement, LabelElement> {
     monitorCallCount(useProgressWithHandler);
+    assertEmptyObject(void1);
+    assertEmptyObject(void2);
 
-    const asyncInfo = useAsyncHandler(asyncHandlerParameters);
+    const notify = useNotify();
+
+    const asyncInfo = useAsyncHandler({
+        ...asyncHandlerParameters, asyncHandler: async (...args) => {
+            try {
+                let promiseOrValue = asyncHandler?.(...args);
+                if (promiseOrValue && "then" in promiseOrValue) {
+                    if (notifyPending)
+                        notify("assertive", notifyPending);
+                    let value = await promiseOrValue;
+                    if (notifySuccess)
+                        notify("assertive", notifySuccess);
+                    return value;
+                }
+                return promiseOrValue;
+            }
+            catch (ex) {
+                if (notifyFailure)
+                    notify("assertive", notifyFailure);
+                throw ex;
+            }
+        }
+    });
+
 
     const {
-        propsIndicator,
-        propsLabel,
-        propsRegion
+        propsProgressIndicator,
+        propsProgressLabel,
+        propsProgressRegion
     } = useProgress<IndicatorElement, LabelElement>({
         labelParameters,
         progressIndicatorParameters: {
@@ -154,9 +190,9 @@ export function useProgressWithHandler<EventType, CaptureType, IndicatorElement 
     });
 
     return {
-        propsIndicator,
-        propsLabel,
-        propsRegion,
+        propsProgressIndicator,
+        propsProgressLabel,
+        propsProgressRegion,
         asyncHandlerReturn: asyncInfo
     }
 }

@@ -1,6 +1,6 @@
-import "core-js"
+import "core-js";
 import { render } from "preact";
-import { NotificationProviderContext, setDebugLogging, useNotificationProvider, Heading } from "../dist/index.js";
+import { Heading, NotificationProviderContext, setDebugLogging, useNotificationProvider } from "../dist/index.js";
 import * as Accordion from "./demos/accordion.js";
 import * as Button from "./demos/button.js";
 import * as CheckboxGroup from "./demos/checkbox-group.js";
@@ -22,6 +22,8 @@ import * as Tooltip from "./demos/tooltip.js";
 //options.debounceRendering = queueMicrotask;
 
 //const RandomWords = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.".split(" ");
+
+(window as any)._generate_setState_stacks = true;
 
 setDebugLogging(true)
 

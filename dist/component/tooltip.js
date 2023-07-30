@@ -1,22 +1,26 @@
 import { jsx as _jsx } from "preact/jsx-runtime";
-import { useContext, useImperativeHandle } from "preact/compat";
+import { useContext } from "preact/compat";
 import { useTooltip } from "../use-tooltip.js";
-import { ParentDepthContext, memoForwardRef, useDefault } from "./util.js";
-export const Tooltip = memoForwardRef(function TooltipU({ onStatus, getWindow, parentDepth, hoverDelay, render, tooltipSemanticType }, ref) {
+import { ParentDepthContext, memoForwardRef, useComponent, useDefault } from "./util.js";
+export const Tooltip = memoForwardRef(function TooltipU({ onStatus, getDocument, parentDepth, hoverDelay, render, imperativeHandle, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, tooltipSemanticType }, ref) {
     const defaultParentDepth = useContext(ParentDepthContext);
     let myDepth = (parentDepth ?? defaultParentDepth) + 1;
-    const info = useTooltip({
-        escapeDismissParameters: {
-            getWindow: useDefault("getWindow", getWindow),
-            parentDepth: parentDepth ?? defaultParentDepth
-        },
-        tooltipParameters: {
-            onStatus,
-            tooltipSemanticType,
-            hoverDelay: hoverDelay ?? null
-        }
-    });
-    useImperativeHandle(ref, () => info);
-    return (_jsx(ParentDepthContext.Provider, { value: myDepth, children: render(info) }));
+    return (_jsx(ParentDepthContext.Provider, { value: myDepth, children: useComponent(imperativeHandle, render, null, useTooltip({
+            escapeDismissParameters: {
+                getDocument: useDefault("getDocument", getDocument),
+                parentDepth: parentDepth ?? defaultParentDepth,
+            },
+            activeElementParameters: {
+                getDocument: useDefault("getDocument", getDocument),
+                onActiveElementChange,
+                onLastActiveElementChange,
+                onWindowFocusedChange
+            },
+            tooltipParameters: {
+                onStatus,
+                tooltipSemanticType,
+                hoverDelay: hoverDelay ?? null
+            }
+        })) }));
 });
 //# sourceMappingURL=tooltip.js.map

@@ -61,7 +61,7 @@ export function useListbox({ labelParameters, listboxParameters: { selectionLimi
 /**
  * @compositeParams
  */
-export function useListboxItem({ context: { listboxContext: { selectionLimit }, ...context }, listboxParameters: { selected, onMultiSelect }, pressParameters: { focusSelf, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, ...void1 }, ...restParams }) {
+export function useListboxItem({ context: { listboxContext: { selectionLimit }, ...context }, listboxParameters: { selected, onMultiSelect }, pressParameters: { allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, ...void1 }, ...restParams }) {
     monitorCallCount(useListboxItem);
     const { propsChild, propsTabbable, refElementReturn, pressParameters: { onPressSync, excludeSpace, ...void2 }, ...restRet } = useCompleteListNavigationChild({
         context,
@@ -74,13 +74,14 @@ export function useListboxItem({ context: { listboxContext: { selectionLimit }, 
     propsChild.role = "option";
     propsChild["aria-disabled"] = restParams.info.unselectable ? "true" : undefined;
     const { pressReturn, props: propsPress } = usePress({
-        refElementReturn, pressParameters: {
-            focusSelf,
+        refElementReturn,
+        pressParameters: {
             onPressSync: useStableCallback((e) => {
                 onPressSync?.(e);
                 if (selectionLimit == "multi")
                     onMultiSelect?.(enhanceEvent(e, { selected: !selected }));
             }),
+            focusSelf: restParams.info.focusSelf,
             excludeSpace,
             allowRepeatPresses,
             excludeEnter,

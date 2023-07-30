@@ -1,9 +1,9 @@
-import { createContext, Ref, VNode } from "preact";
-import { useImperativeHandle } from "preact/hooks";
-import { useContextWithWarning } from "../props.js";
+import { Context, createContext } from "preact";
+import { assertEmptyObject, OmitStrong } from "preact-prop-helpers";
+import { Get2, useContextWithWarning } from "../props.js";
 import { ToastInfo, ToastsContext, useToast, UseToastParameters, UseToastReturnType, useToasts, UseToastsParameters, UseToastsReturnType } from "../use-toasts.js";
-import { memoForwardRef } from "./util.js";
-
+import { GenericComponentProps, useComponent } from "./util.js";
+/*
 type Get<T, K extends keyof T> = T[K];
 
 export interface ToastsProps<ContainerType extends Element> extends Get<UseToastsParameters, "managedChildrenParameters">, Get<UseToastsParameters, "toastsParameters"> {
@@ -15,32 +15,63 @@ export interface ToastProps<E extends Element> extends Get<UseToastParameters<To
     ref?: Ref<UseToastReturnType<E>>;
     render(args: UseToastReturnType<E>): VNode;
 }
+*/
 
-
+export type ToastsProps<ContainerType extends Element, M extends ToastInfo> = GenericComponentProps<
+    UseToastsReturnType<ContainerType, M>,
+    Get2<UseToastsParameters, "managedChildrenParameters", "toastsParameters">,
+    "visibleCount"
+>;
+export type ToastProps<E extends Element, M extends ToastInfo = ToastInfo> = GenericComponentProps<
+    UseToastReturnType<E, M>,
+    Get2<UseToastParameters<M>, "toastParameters", "info">,
+    "index"
+> & { info?: OmitStrong<M, keyof ToastInfo>; };
 const ToastContext = createContext<ToastsContext<ToastInfo>>(null!);
 
-export const Toasts = memoForwardRef(function Toasts<ContainerType extends Element>({ onAfterChildLayoutEffect, onChildrenMountChange, render, visibleCount }: ToastsProps<ContainerType>, ref?: Ref<any>) {
-    const info = useToasts<ContainerType>({ managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange }, toastsParameters: { visibleCount } });
-
-    useImperativeHandle(ref!, () => info);
-
-    return (
-        <ToastContext.Provider value={info.context}>
-            {render(info)}
-        </ToastContext.Provider>
+export function Toasts<ContainerType extends Element>({
+    onAfterChildLayoutEffect,
+    onChildrenMountChange,
+    render,
+    visibleCount,
+    imperativeHandle,
+    onChildrenCountChange,
+    ...void1
+}: ToastsProps<ContainerType, ToastInfo>) {
+    assertEmptyObject(void1);
+    return useComponent(
+        imperativeHandle,
+        render,
+        ToastContext as Context<ToastsContext<any>>,
+        useToasts<ContainerType>({
+            managedChildrenParameters: {
+                onAfterChildLayoutEffect,
+                onChildrenMountChange,
+                onChildrenCountChange
+            },
+            toastsParameters: {
+                visibleCount
+            }
+        })
     );
-})
+}
 
-export const Toast = memoForwardRef(function Toast<E extends Element>({ render, index, timeout, politeness, children }: ToastProps<E>, ref?: Ref<any>) {
-    const context = useContextWithWarning(ToastContext, "toasts provider");
-    console.assert(context != null, `This Toast was not rendered within a Toasts provider`);
-    const info = useToast<E>({
-        info: { index },
-        toastParameters: { timeout, politeness, children },
-        context
-    });
+export function Toast<E extends Element>({ render, index, timeout, politeness, children, info, imperativeHandle }: ToastProps<E, ToastInfo>) {
 
-    useImperativeHandle(ref!, () => info);
-
-    return render(info);
-})
+    return useComponent(
+        imperativeHandle, 
+        render, 
+        null, 
+        useToast<E>({
+        toastParameters: { 
+            timeout, 
+            politeness, 
+            children 
+        },
+        info: { 
+            index, 
+            ...info 
+        },
+        context: useContextWithWarning(ToastContext, "toasts provider")
+    }));
+}

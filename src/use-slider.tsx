@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { ElementProps, generateRandomId, ManagedChildInfo, monitorCallCount, useManagedChild, UseManagedChildParameters, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, UseManagedChildReturnType } from "preact-prop-helpers";
+import { assertEmptyObject, ElementProps, generateRandomId, ManagedChildInfo, monitorCallCount, Nullable, UseGenericChildParameters, useManagedChild, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, UseManagedChildReturnType } from "preact-prop-helpers";
 import { useMemo, useRef } from "preact/hooks";
 import { enhanceEvent, EventDetail, Prefices, TagSensitiveProps } from "./props.js";
 
@@ -13,10 +13,10 @@ export interface SliderThumbInfo extends ManagedChildInfo<number> {
 
 export interface UseSliderThumbParametersSelf<E extends Element> extends TagSensitiveProps<E> {
     value: number;
-    valueText?: string;
-    onValueChange?: (e: RangeChangeEvent<E>) => void;
-    min?: number;
-    max?: number;
+    valueText: Nullable<string>;
+    onValueChange: Nullable<(e: RangeChangeEvent<E>) => void>;
+    min: Nullable<number>;
+    max: Nullable<number>;
 
     /**
      * There's no, like, "slider container" for multi-thumb sliders defined,
@@ -29,9 +29,12 @@ export interface UseSliderThumbParametersSelf<E extends Element> extends TagSens
     label: string;
 }
 
-export interface UseSliderThumbParameters<E extends Element, M extends SliderThumbInfo> extends UseManagedChildParameters<M, "index"> {
-    sliderThumbParameters: UseSliderThumbParametersSelf<E>;
-    context: SliderContext<M>;
+export interface UseSliderThumbParameters<ThumbElement extends Element, M extends SliderThumbInfo = SliderThumbInfo> extends
+    UseGenericChildParameters<SliderContext<M>, Pick<M, "index">>
+    //OmitStrong<UseProgressWithHandlerParameters<RangeChangeEvent<ThumbElement>, number>, "asyncHandlerParameters">,
+    //TargetedOmit<UseProgressWithHandlerParameters<RangeChangeEvent<ThumbElement>, number>, "asyncHandlerParameters", "capture
+    {
+    sliderThumbParameters: UseSliderThumbParametersSelf<ThumbElement>;
 }
 
 //export interface UseSliderThumbProps<E extends Element> extends ElementProps<E> {}
@@ -50,7 +53,8 @@ export interface UseSliderThumbReturnTypeSelf {
     max: number;
 }
 
-export interface UseSliderThumbReturnType<E extends Element, M extends SliderThumbInfo> extends UseManagedChildReturnType<M> {
+export interface UseSliderThumbReturnType<E extends Element, M extends SliderThumbInfo = SliderThumbInfo> extends 
+UseManagedChildReturnType<M> {
     sliderThumbReturn: UseSliderThumbReturnTypeSelf;
     propsSliderThumb: ElementProps<E>;
 }
@@ -105,17 +109,15 @@ export function useSlider<M extends SliderThumbInfo>({ sliderParameters: { max, 
 /**
  * @compositeParams
  */
-export function useSliderThumb<ThumbElement extends Element, M extends SliderThumbInfo>({
+export function useSliderThumb<ThumbElement extends Element>({
+    sliderThumbParameters: { tag, value, max: maxOverride, min: minOverride, valueText, label, onValueChange, ...void2 },
     info,
     context: { sliderContext: { max: maxParent, min: minParent }, ...context },
-    sliderThumbParameters
-}: UseSliderThumbParameters<ThumbElement, M>): UseSliderThumbReturnType<ThumbElement, M> {
-    const { index } = info;
+    ...void1
+}: UseSliderThumbParameters<ThumbElement>): UseSliderThumbReturnType<ThumbElement> {
     monitorCallCount(useSliderThumb);
-    const { managedChildReturn } = useManagedChild<M>({ info: info as M, context });
+    const { managedChildReturn } = useManagedChild<SliderThumbInfo>({ info, context });
     const { getChildren: _getThumbs } = managedChildReturn;
-
-    const { tag, value, max: maxOverride, min: minOverride, onValueChange, valueText, label } = sliderThumbParameters;
 
     const min = (minOverride ?? minParent);
     const max = (maxOverride ?? maxParent);
@@ -125,15 +127,18 @@ export function useSliderThumb<ThumbElement extends Element, M extends SliderThu
             { min, max, value, type: "range" } :
             { "aria-valuemax": max, "aria-valuemin": min, "aria-valuenow": value }
     );
-    newProps = { ...newProps, "aria-label": label, "aria-valuetext": valueText, style: { "--range-value": `${value}`, "--range-value-text": `${valueText}` } };
+    newProps = { ...newProps, "aria-label": label, "aria-valuetext": valueText ?? undefined, style: { "--range-value": `${value}`, "--range-value-text": `${valueText}` } };
     if (tag == "input") {
         newProps.onInput = e => {
-            onValueChange?.(enhanceEvent(e, { value: (e.currentTarget as Element as HTMLInputElement).valueAsNumber } ));
+            onValueChange?.(enhanceEvent(e, { value: (e.currentTarget as Element as HTMLInputElement).valueAsNumber }));
         }
     }
     else {
         throw new Error("Unimplemented");
     }
+
+    assertEmptyObject(void1);
+    assertEmptyObject(void2);
 
     return {
         sliderThumbReturn: {

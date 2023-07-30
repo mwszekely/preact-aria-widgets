@@ -1,19 +1,15 @@
-import { createElement, Ref, VNode } from "preact";
-import { ElementProps } from "preact-prop-helpers";
-import { useImperativeHandle } from "preact/hooks";
+import { createElement, VNode } from "preact";
+import { assertEmptyObject, ElementProps, memo } from "preact-prop-helpers";
 import { ElementToTag, Get4 } from "../props.js";
 import { useCheckbox, UseCheckboxParameters, UseCheckboxReturnType } from "../use-checkbox.js";
 import { LabelPosition } from "../use-label.js";
-import { memoForwardRef, PartialExcept } from "./util.js";
+import { GenericComponentProps, useComponent } from "./util.js";
 
-interface CheckboxPropsBase<I extends Element, L extends Element> extends
-    Get4<UseCheckboxParameters<LabelPosition, I, L>, "checkboxLikeParameters", "checkboxParameters", "labelParameters", "pressParameters"> {
-    ref?: Ref<UseCheckboxReturnType<I, L>>;
-}
-
-export interface CheckboxProps<I extends Element, L extends Element> extends PartialExcept<CheckboxPropsBase<I, L>, "tagInput" | "tagLabel" | "labelPosition" | "ariaLabel" | "checked" | "onCheckedChange"> {
-    render(info: UseCheckboxReturnType<I, L>): VNode<any>;
-}
+export type CheckboxProps<InputElement extends Element, LabelElement extends Element> = GenericComponentProps<
+    UseCheckboxReturnType<InputElement, LabelElement>,
+    Get4<UseCheckboxParameters<LabelPosition, InputElement, LabelElement>, "checkboxLikeParameters", "labelParameters", "pressParameters", "checkboxParameters">,
+    "tagInput" | "tagLabel" | "labelPosition" | "ariaLabel" | "checked"
+>;
 
 export function defaultRenderCheckboxLike<I extends Element, L extends Element, InfoType>({ labelPosition, tagInput, tagLabel, makePropsInput, makePropsLabel }: DefaultRenderCheckboxLikeParameters<I, L, InfoType>) {
     return function (info: InfoType): VNode<any> {
@@ -58,27 +54,31 @@ export interface DefaultRenderCheckboxLikeParameters<I extends Element, L extend
     makePropsLabel: (info: InfoType) => ElementProps<L>
 }
 
-export const Checkbox = memoForwardRef(function Checkbox<I extends Element, L extends Element>({
+export const Checkbox = memo(function Checkbox<I extends Element, L extends Element>({
     checked,
     disabled,
     tagLabel,
     labelPosition,
     tagInput,
     ariaLabel,
-    onCheckedChange,
     longPressThreshold,
     excludeSpace,
-    render
-}: CheckboxProps<I, L>, ref: Ref<any>) {
+    imperativeHandle,
+    render,
+    onCheckedChange,
+    ...void1
+}: CheckboxProps<I, L>) {
+    assertEmptyObject(void1);
 
-    const checkbox = useCheckbox<LabelPosition, I, L>({
-        checkboxLikeParameters: { checked: checked ?? false, disabled: disabled ?? false },
-        checkboxParameters: { onCheckedChange },
-        labelParameters: { ariaLabel: ariaLabel, labelPosition, tagInput, tagLabel },
-        pressParameters: { excludeSpace, longPressThreshold }
-    });
+    return useComponent(
+        imperativeHandle,
+        render,
+        null,
+        useCheckbox<LabelPosition, I, L>({
+            checkboxLikeParameters: { checked, disabled: disabled ?? false },
+            labelParameters: { ariaLabel: ariaLabel, labelPosition, tagInput, tagLabel },
+            pressParameters: { excludeSpace, longPressThreshold },
+            checkboxParameters: { onCheckedChange }
+        }));
 
-    useImperativeHandle(ref!, () => checkbox);
-
-    return render(checkbox);
 });

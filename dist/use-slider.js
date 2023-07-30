@@ -1,4 +1,4 @@
-import { generateRandomId, monitorCallCount, useManagedChild, useManagedChildren } from "preact-prop-helpers";
+import { assertEmptyObject, generateRandomId, monitorCallCount, useManagedChild, useManagedChildren } from "preact-prop-helpers";
 import { useMemo, useRef } from "preact/hooks";
 import { enhanceEvent, EventDetail, Prefices } from "./props.js";
 /**
@@ -29,18 +29,16 @@ export function useSlider({ sliderParameters: { max, min }, managedChildrenParam
 /**
  * @compositeParams
  */
-export function useSliderThumb({ info, context: { sliderContext: { max: maxParent, min: minParent }, ...context }, sliderThumbParameters }) {
-    const { index } = info;
+export function useSliderThumb({ sliderThumbParameters: { tag, value, max: maxOverride, min: minOverride, valueText, label, onValueChange, ...void2 }, info, context: { sliderContext: { max: maxParent, min: minParent }, ...context }, ...void1 }) {
     monitorCallCount(useSliderThumb);
-    const { managedChildReturn } = useManagedChild({ info: info, context });
+    const { managedChildReturn } = useManagedChild({ info, context });
     const { getChildren: _getThumbs } = managedChildReturn;
-    const { tag, value, max: maxOverride, min: minOverride, onValueChange, valueText, label } = sliderThumbParameters;
     const min = (minOverride ?? minParent);
     const max = (maxOverride ?? maxParent);
     let newProps = (tag == "input" ?
         { min, max, value, type: "range" } :
         { "aria-valuemax": max, "aria-valuemin": min, "aria-valuenow": value });
-    newProps = { ...newProps, "aria-label": label, "aria-valuetext": valueText, style: { "--range-value": `${value}`, "--range-value-text": `${valueText}` } };
+    newProps = { ...newProps, "aria-label": label, "aria-valuetext": valueText ?? undefined, style: { "--range-value": `${value}`, "--range-value-text": `${valueText}` } };
     if (tag == "input") {
         newProps.onInput = e => {
             onValueChange?.(enhanceEvent(e, { value: e.currentTarget.valueAsNumber }));
@@ -49,6 +47,8 @@ export function useSliderThumb({ info, context: { sliderContext: { max: maxParen
     else {
         throw new Error("Unimplemented");
     }
+    assertEmptyObject(void1);
+    assertEmptyObject(void2);
     return {
         sliderThumbReturn: {
             min,

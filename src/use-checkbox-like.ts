@@ -1,4 +1,4 @@
-import { assertEmptyObject, ElementProps, focus, JSX, monitorCallCount, TargetedOmit, TargetedPick, useMergedProps, usePress, UsePressParameters, UsePressReturnType, UseRefElementReturnType, useStableCallback } from "preact-prop-helpers";
+import { assertEmptyObject, ElementProps, focus, JSX, monitorCallCount, PressEventReason, TargetedOmit, TargetedPick, useMergedProps, usePress, UsePressParameters, UsePressReturnType, UseRefElementReturnType, useStableCallback } from "preact-prop-helpers";
 import { useEffect } from "preact/hooks";
 import { DisabledType, OmitStrong } from "./props.js";
 import { LabelPosition, useLabel, UseLabelParameters, UseLabelReturnType } from "./use-label.js";
@@ -11,21 +11,21 @@ function preventDefault(e: Event) {
 
 export type CheckboxCheckedType = boolean | "mixed";
 
-export interface UseCheckboxLikeParametersSelf {
+export interface UseCheckboxLikeParametersSelf<C extends CheckboxCheckedType> {
 
     /** The role attribute to use, when applicable */
     role: JSX.AriaRole;
     disabled: DisabledType;
-    checked: CheckboxCheckedType;
-    onInput(event: Event): void;
+    checked: C;
+    //onInput(event: Event): void;
 }
 
-export interface UseCheckboxLikeParameters<LP extends LabelPosition, InputType extends Element, LabelType extends Element> extends 
+export interface UseCheckboxLikeParameters<LP extends LabelPosition, InputType extends Element, LabelType extends Element, C extends CheckboxCheckedType> extends 
 OmitStrong<UseLabelParameters<LP, InputType, LabelType>, "labelParameters">,
 TargetedOmit<UseLabelParameters<LP, InputType, LabelType>, "labelParameters", "onLabelClick">,
-TargetedPick<UsePressParameters<any>, "pressParameters", "longPressThreshold" | "excludeSpace">
+TargetedPick<UsePressParameters<any>, "pressParameters", "longPressThreshold" | "excludeSpace" | "onPressSync">
 {
-    checkboxLikeParameters: UseCheckboxLikeParametersSelf;
+    checkboxLikeParameters: UseCheckboxLikeParametersSelf<C>;
 
 
     refElementLabelReturn: UseRefElementReturnType<LabelType>["refElementReturn"];
@@ -59,16 +59,16 @@ export interface UseCheckboxLikeReturnType<InputType extends Element, LabelType 
  * 
  * @compositeParams
  */
-export function useCheckboxLike<LP extends LabelPosition, InputType extends Element, LabelType extends Element>({
+export function useCheckboxLike<LP extends LabelPosition, InputType extends Element, LabelType extends Element, C extends CheckboxCheckedType>({
     labelParameters,
     randomIdInputParameters,
     randomIdLabelParameters,
-    checkboxLikeParameters: { checked, disabled, onInput: onInputSync, role, ...void1 },
+    checkboxLikeParameters: { checked, disabled, role, ...void1 },
     refElementInputReturn,
     refElementLabelReturn,
-    pressParameters: { excludeSpace, longPressThreshold, ...void2 },
+    pressParameters: { excludeSpace, longPressThreshold, onPressSync: onInputSync,  ...void2 },
      ...void3
-}: UseCheckboxLikeParameters<LP, InputType, LabelType>): UseCheckboxLikeReturnType<InputType, LabelType> {
+}: UseCheckboxLikeParameters<LP, InputType, LabelType, C>): UseCheckboxLikeReturnType<InputType, LabelType> {
     monitorCallCount(useCheckboxLike);
 
     const { getElement: getInputElement } = refElementInputReturn;
@@ -100,7 +100,7 @@ export function useCheckboxLike<LP extends LabelPosition, InputType extends Elem
             onLabelClick: useStableCallback((e) => {
                 if (!disabled && tagInput != "input" && tagLabel != "label" && labelPosition != "separate") {
                     focusSelf();
-                    onInputSync(e);
+                    onInputSync?.(e as PressEventReason<any>);
                 }
             })
         },
