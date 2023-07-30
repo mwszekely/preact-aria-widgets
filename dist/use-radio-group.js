@@ -1,4 +1,4 @@
-import { EventDetail, assertEmptyObject, focus, monitorCallCount, useCompleteListNavigationChild, useCompleteListNavigationDeclarative, useMergedProps, useRefElement, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
+import { EventDetail, assertEmptyObject, focus, monitorCallCount, useCompleteListNavigationChild, useCompleteListNavigationDeclarative, useMergedProps, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
 import { useEffect, useLayoutEffect, useMemo, useRef } from "preact/hooks";
 import { Prefices, enhanceEvent } from "./props.js";
 import { useCheckboxLike } from "./use-checkbox-like.js";
@@ -21,20 +21,6 @@ export function useRadioGroup({ labelParameters, radioGroupParameters: { name, s
     useEffect(() => {
         setSelectedIndex(nameToIndex.current.get(selectedValue) ?? null);
     }, [selectedValue]);
-    /*const {
-        asyncHandlerReturn,
-        propsProgressIndicator,
-        propsProgressRegion,
-        propsProgressLabel: propsProgressLabel
-    } = useProgressWithHandler<TargetedRadioChangeEvent<V>, V | null, ProgressIndicatorType, ProgressLabelType>({
-        asyncHandlerParameters: {
-            ...asyncHandlerParameters,
-            capture: useCallback((e: TargetedRadioChangeEvent<V>) => { return getEventDetail<RadioChangeEventDetail<V>>(e).selectedValue as V; }, [])
-        },
-        labelParameters,
-        progressIndicatorParameters,
-        progressWithHandlerParameters
-    });*/
     const { propsInput: propsGroup1, propsLabel } = useLabelSynthetic({
         labelParameters: {
             onLabelClick: useStableCallback(() => {
@@ -119,7 +105,6 @@ export function useRadio({ radioParameters: { value, ...void5 }, checkboxLikePar
     });*/
     const { name, indexToName, nameToIndex } = context.radioContext;
     const { tagInput, labelPosition } = labelParameters;
-    const getValue = useStableGetter(value);
     const { propsChild: listNavigationSingleSelectionChildProps, propsTabbable, singleSelectionChildReturn, pressParameters: { onPressSync, excludeSpace, ...void2 }, ...listNavRet } = useCompleteListNavigationChild({
         info: {
             focusSelf: useStableCallback((e) => { return checkboxLikeRet.checkboxLikeReturn.focusSelf(); }),

@@ -1,4 +1,4 @@
-import { CompleteListNavigationContext, ElementProps, EventDetail, Nullable, TargetedOmit, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildInfoKeysParameters, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationDeclarativeReturnType, UseCompleteListNavigationParameters, UseGenericChildParameters, assertEmptyObject, focus, monitorCallCount, useCompleteListNavigationChild, useCompleteListNavigationDeclarative, useMergedProps, useRefElement, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
+import { CompleteListNavigationContext, ElementProps, EventDetail, Nullable, TargetedOmit, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildInfoKeysParameters, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationDeclarativeReturnType, UseCompleteListNavigationParameters, UseGenericChildParameters, assertEmptyObject, focus, monitorCallCount, useCompleteListNavigationChild, useCompleteListNavigationDeclarative, useMergedProps, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
 import { useEffect, useLayoutEffect, useMemo, useRef } from "preact/hooks";
 import { EnhancedEventHandler, OmitStrong, Prefices, TargetedEnhancedEvent, enhanceEvent } from "./props.js";
 import { UseCheckboxLikeParameters, UseCheckboxLikeReturnType, useCheckboxLike } from "./use-checkbox-like.js";
@@ -100,21 +100,6 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
     useEffect(() => {
         setSelectedIndex(nameToIndex.current.get(selectedValue!) ?? null);
     }, [selectedValue]);
-
-    /*const {
-        asyncHandlerReturn,
-        propsProgressIndicator,
-        propsProgressRegion,
-        propsProgressLabel: propsProgressLabel
-    } = useProgressWithHandler<TargetedRadioChangeEvent<V>, V | null, ProgressIndicatorType, ProgressLabelType>({
-        asyncHandlerParameters: {
-            ...asyncHandlerParameters,
-            capture: useCallback((e: TargetedRadioChangeEvent<V>) => { return getEventDetail<RadioChangeEventDetail<V>>(e).selectedValue as V; }, [])
-        },
-        labelParameters,
-        progressIndicatorParameters,
-        progressWithHandlerParameters
-    });*/
 
     const {
         propsInput: propsGroup1,
@@ -248,7 +233,7 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
 
     const { tagInput, labelPosition } = labelParameters;
 
-    const getValue = useStableGetter(value);
+    
     const {
         propsChild: listNavigationSingleSelectionChildProps,
         propsTabbable,
