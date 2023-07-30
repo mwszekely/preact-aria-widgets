@@ -1,9 +1,13 @@
 import { ElementProps, Nullable, TargetedOmit } from "preact-prop-helpers";
 import { EnhancedEventHandler, OmitStrong, TargetedEnhancedEvent } from "./props.js";
-import { UseCheckboxLikeParameters, UseCheckboxLikeReturnType } from "./use-checkbox-like.js";
+import { CheckboxCheckedType, UseCheckboxLikeParameters, UseCheckboxLikeReturnType } from "./use-checkbox-like.js";
 import { LabelPosition } from "./use-label.js";
 export interface CheckboxChangeEventDetail {
+    /**
+     * This is always a `true`/`false` value, instead of including `"mixed"`
+     */
     checked: boolean;
+    previous: CheckboxCheckedType;
 }
 export type TargetedCheckboxChangeEvent = TargetedEnhancedEvent<Event, CheckboxChangeEventDetail>;
 export type CheckboxChangeEventHandler = EnhancedEventHandler<Event, CheckboxChangeEventDetail>;

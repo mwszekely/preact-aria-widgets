@@ -19,7 +19,7 @@ export function useCheckbox({ checkboxLikeParameters: { checked, disabled, ...vo
         refElementLabelReturn,
         checkboxLikeParameters: { role: "checkbox", checked, disabled },
         pressParameters: {
-            onPressSync: useStableCallback(e => { onCheckedChange?.(enhanceEvent(e, { checked: !checked })); }),
+            onPressSync: useStableCallback(e => { onCheckedChange?.(enhanceEvent(e, { checked: !checked, previous: checked })); }),
             ...pressParameters,
         },
         labelParameters,

@@ -5703,7 +5703,7 @@ function useCheckbox({ checkboxLikeParameters: { checked, disabled, ...void2 }, 
         refElementLabelReturn,
         checkboxLikeParameters: { role: "checkbox", checked, disabled },
         pressParameters: {
-            onPressSync: useStableCallback(e => { onCheckedChange?.(enhanceEvent(e, { checked: !checked })); }),
+            onPressSync: useStableCallback(e => { onCheckedChange?.(enhanceEvent(e, { checked: !checked, previous: checked })); }),
             ...pressParameters,
         },
         labelParameters,
@@ -6017,11 +6017,11 @@ function useListboxItem({ context: { listboxContext: { selectionLimit }, ...cont
 }
 
 /**
- * A menu surface is what handles user interaction with an interactive but transient surface (like a menu or a popup).
+ * A menu surface is what handles user interaction with an interactive but transient surface (like a menu or a popup, but not something potentially modal like a dialog).
  *
  * @remarks The keyboard (etc.) interactions are shared among a lot of widgets, and the opening button has some ARIA properties that need setting.
  *
- * Related to menus, which are a menu contained within a menu surface. Not related to menubars -- menus contain menubars, but not all menubars are contained within a menu or its surface.
+ * Related to **menus**, which are a **menubar** contained within a **menu surface**.
  *
  * @compositeParams
  */
@@ -6101,10 +6101,9 @@ function useFocusSentinel({ focusSentinel: { open, onClose, sendFocusToMenu } })
 }
 
 /**
- * Implements a [Toolbar](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/) pattern.
+ * Implements a [Toolbar](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/) pattern, which is a collection of widgets in an expected order with a label (visible or hidden) and with the usual keyboard navigation stuff.
  *
- * @remarks A toolbar is just a collection of widgets in an expected order with a label (visible or hidden) and with the usual keyboard navigation stuff.
- *
+ * @remarks
  * The main difference between a toolbar and a menubar is that a menubar contains purely static menuitems,
  * but a toolbar is the more general case, being able to contain anything at all.
  * A menubar is implemented as a special case of a toolbar, and a menu is implemented as a specialized menubar.
@@ -7179,7 +7178,7 @@ function useToast({ toastParameters: { politeness, timeout, children }, info: { 
  *
  * @compositeParams
  */
-function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType, hoverDelay }, activeElementParameters, escapeDismissParameters }) {
+function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType, hoverDelay }, activeElementParameters, escapeDismissParameters, ...void1 }) {
     monitorCallCount(useTooltip);
     useGlobalHandler(window, "mouseout", T$1((e) => {
         console.log(e);
@@ -7267,7 +7266,7 @@ function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType, hoverD
         escapeDismissParameters: {
             dismissEscapeActive: true,
             onDismissEscape: null,
-            parentDepth: 1
+            ...escapeDismissParameters
         },
     });
     const otherPopupProps = {

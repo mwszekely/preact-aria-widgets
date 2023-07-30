@@ -3,6 +3,20 @@ import { StateUpdater, useCallback, useEffect, useLayoutEffect, useRef } from "p
 import { EnhancedEventHandler, OmitStrong, TargetedEnhancedEvent } from "./props.js";
 import { CheckboxCheckedType } from "./use-checkbox-like.js";
 
+/**
+ * 
+ * As a general reminder,
+ * 
+ * A checkbox group contains several parts:
+ * 
+ * * The group
+ * * The checkbox parent
+ * * Multiple checkbox children
+ * * Each of those parent/child checkboxes themselves *separately* calls useCheckbox (useCheckbox isn't called by any of these hooks)
+ * 
+ */
+const _comment = undefined;
+
 export interface CheckboxGroupChangeEventDetail {
     childrenChecked: boolean | Map<number, boolean | "mixed">;
 }

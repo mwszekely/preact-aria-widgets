@@ -1,10 +1,15 @@
 import { ElementProps, Nullable, TargetedOmit, assertEmptyObject, enhanceEvent, monitorCallCount, useMergedProps, useRefElement, useStableCallback } from "preact-prop-helpers";
 import { EnhancedEventHandler, OmitStrong, Prefices, TargetedEnhancedEvent } from "./props.js";
-import { UseCheckboxLikeParameters, UseCheckboxLikeReturnType, useCheckboxLike } from "./use-checkbox-like.js";
+import { CheckboxCheckedType, UseCheckboxLikeParameters, UseCheckboxLikeReturnType, useCheckboxLike } from "./use-checkbox-like.js";
 import { LabelPosition } from "./use-label.js";
 
 export interface CheckboxChangeEventDetail {
+    /**
+     * This is always a `true`/`false` value, instead of including `"mixed"`
+     */
     checked: boolean;
+
+    previous: CheckboxCheckedType;
 };
 
 // These are not typed because they could come from the input OR the label.
@@ -70,7 +75,7 @@ export function useCheckbox<LP extends LabelPosition, InputType extends Element,
         refElementLabelReturn,
         checkboxLikeParameters: { role: "checkbox", checked, disabled },
         pressParameters: {
-            onPressSync: useStableCallback(e => { onCheckedChange?.(enhanceEvent(e, { checked: !checked })) }),
+            onPressSync: useStableCallback(e => { onCheckedChange?.(enhanceEvent(e, { checked: !checked, previous: checked })) }),
             ...pressParameters,
         },
         labelParameters,

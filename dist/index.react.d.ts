@@ -399,7 +399,11 @@ declare function useCheckboxGroupParent<TCE extends Element>({ context: { checkb
  */
 declare function useCheckboxGroupChild<TCE extends Element>({ checkboxGroupChildParameters, context, info: { focusSelf, getSortValue, index, unselectable, untabbable, ...void3 }, textContentParameters, hasCurrentFocusParameters, refElementParameters, ...void4 }: UseCheckboxGroupChildParameters<TCE>): UseCheckboxGroupChildReturnType<TCE>;
 interface CheckboxChangeEventDetail {
+    /**
+     * This is always a `true`/`false` value, instead of including `"mixed"`
+     */
     checked: boolean;
+    previous: CheckboxCheckedType;
 }
 // These are not typed because they could come from the input OR the label.
 type TargetedCheckboxChangeEvent = TargetedEnhancedEvent<Event, CheckboxChangeEventDetail>;
@@ -532,6 +536,13 @@ declare function useListbox<ListElement extends Element, ListItemElement extends
 declare function useListboxItem<ListItemElement extends Element, M extends ListboxInfo<ListItemElement> = ListboxInfo<ListItemElement>>({ context: { listboxContext: { selectionLimit }, ...context }, listboxParameters: { selected, onMultiSelect }, pressParameters: { allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, ...void1 }, ...restParams }: UseListboxItemParameters<ListItemElement, M>): UseListboxItemReturnType<ListItemElement, M>;
 interface UseGridlistContext<GridlistRowElement extends Element, RM extends GridlistRowInfo<GridlistRowElement>> extends CompleteGridNavigationRowContext<GridlistRowElement, RM> {
     gridlistRowContext: {
+        /**
+         * If this is a list that allows selection, this controls whether it's single-selection or multi-selection.
+         *
+         * Single-selection requires that you pass in a `selectedIndex` and listen for changes.
+         *
+         * Multi-selection requires each child pass its own `selected` boolean prop and listen for changes to itself.
+         */
         selectionLimit: "single" | "multi" | "none";
     };
 }
@@ -550,7 +561,7 @@ interface UseGridlistRowReturnType<GridlistRowElement extends Element, GridlistC
 }
 interface UseGridlistRowParametersSelf {
     /**
-     * When the `selectionLimit` is `"single"`, this must be `null`.
+     * **Multi-selection** only! When the `selectionLimit` is `"single"`, this must be `null`.
      */
     selected: Nullable<boolean>;
 }
@@ -613,11 +624,11 @@ interface UseMenuSurfaceReturnType<MenuSurfaceElement extends Element, MenuTarge
     refElementSourceReturn: UseModalReturnType<null, MenuTriggerElement, MenuSurfaceElement>["refElementSourceReturn"];
 }
 /**
- * A menu surface is what handles user interaction with an interactive but transient surface (like a menu or a popup).
+ * A menu surface is what handles user interaction with an interactive but transient surface (like a menu or a popup, but not something potentially modal like a dialog).
  *
  * @remarks The keyboard (etc.) interactions are shared among a lot of widgets, and the opening button has some ARIA properties that need setting.
  *
- * Related to menus, which are a menu contained within a menu surface. Not related to menubars -- menus contain menubars, but not all menubars are contained within a menu or its surface.
+ * Related to **menus**, which are a **menubar** contained within a **menu surface**.
  *
  * @compositeParams
  */
@@ -692,10 +703,9 @@ interface UseToolbarChildParameters<E extends Element, M extends UseToolbarSubIn
 interface UseToolbarChildReturnType<ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends UseCompleteListNavigationChildReturnType<ChildElement, M> {
 }
 /**
- * Implements a [Toolbar](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/) pattern.
+ * Implements a [Toolbar](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/) pattern, which is a collection of widgets in an expected order with a label (visible or hidden) and with the usual keyboard navigation stuff.
  *
- * @remarks A toolbar is just a collection of widgets in an expected order with a label (visible or hidden) and with the usual keyboard navigation stuff.
- *
+ * @remarks
  * The main difference between a toolbar and a menubar is that a menubar contains purely static menuitems,
  * but a toolbar is the more general case, being able to contain anything at all.
  * A menubar is implemented as a special case of a toolbar, and a menu is implemented as a specialized menubar.
@@ -709,7 +719,7 @@ declare function useToolbar<ContainerElement extends Element, ChildElement exten
  * @compositeParams
  */
 declare function useToolbarChild<ChildElement extends Element>({ info, toolbarChildParameters: { disabledProp }, ...args }: UseToolbarChildParameters<ChildElement, UseToolbarSubInfo<ChildElement>>): UseToolbarChildReturnType<ChildElement, UseToolbarSubInfo<ChildElement>>;
-interface UseMenubarContext<ContainerElement extends Element, ChildElement extends Element, M extends UseMenubarSubInfo<ChildElement>> extends UseToolbarContext<ChildElement, M> {
+interface UseMenubarContext<ChildElement extends Element, M extends UseMenubarSubInfo<ChildElement>> extends UseToolbarContext<ChildElement, M> {
 }
 interface UseMenubarSubInfo<ChildElement extends Element> extends UseToolbarSubInfo<ChildElement> {
 }
@@ -727,7 +737,7 @@ interface UseMenubarItemParameters<MenuItemElement extends Element, M extends Us
 }
 interface UseMenubarReturnType<MenuParentElement extends Element, MenuItemElement extends Element, LabelElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseToolbarReturnType<MenuParentElement, MenuItemElement, LabelElement, M>, "propsToolbar"> {
     propsMenubar: ElementProps<MenuParentElement>;
-    context: UseMenubarContext<MenuParentElement, MenuItemElement, M>;
+    context: UseMenubarContext<MenuItemElement, M>;
 }
 interface UseMenubarItemReturnType<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseToolbarChildReturnType<MenuItemElement, M>, "propsChild" | "propsTabbable" | "pressParameters">, UsePressReturnType<MenuItemElement> {
 }
@@ -747,7 +757,7 @@ declare function useMenubar<MenuParentElement extends Element, MenuItemElement e
  * @compositeParams
  */
 declare function useMenubarChild<MenuItemElement extends Element>({ menuItemParameters: { onPress: opu, role }, pressParameters: { onPressingChange, ...void1 }, ...restParams }: UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenubarItemReturnType<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>;
-interface UseMenuContext<ContainerElement extends Element, ChildElement extends Element, M extends UseMenubarSubInfo<ChildElement>> extends UseMenubarContext<ContainerElement, ChildElement, M> {
+interface UseMenuContext<ChildElement extends Element, M extends UseMenubarSubInfo<ChildElement>> extends UseMenubarContext<ChildElement, M> {
     menu: {
         closeFromMenuItemClicked(e: EventType<any, any>): void;
     };
@@ -765,16 +775,12 @@ interface UseMenuParametersSelf {
     openDirection: "down" | "up" | "left" | "right" | null;
 }
 interface UseMenuParameters<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuButtonElement extends Element, MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "toolbarParameters" | "labelParameters">, TargetedOmit<UseMenuSurfaceParameters<MenuSurfaceElement, MenuButtonElement>, "menuSurfaceParameters", "role" | "surfaceId">, TargetedOmit<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "toolbarParameters", "role">, TargetedOmit<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "toolbarParameters", "role">, TargetedOmit<UseMenuSurfaceParameters<MenuParentElement, MenuButtonElement>, "escapeDismissParameters", never>, Pick<UseMenuSurfaceParameters<MenuSurfaceElement, MenuButtonElement>, "activeElementParameters" | "dismissParameters" | "modalParameters"> {
-    /*dismissParameters: UseMenuSurfaceParameters<MenuSurfaceElement, MenuButtonElement>["dismissParameters"] & {
-    onClose(reason: "escape" | "backdrop" | "lost-focus" | "item-clicked"): void;
-    }*/
-    //escapeDismissParameters: UseMenuSurfaceParameters<MenuSurfaceElement, MenuButtonElement>["escapeDismissParameters"];
     menuParameters: UseMenuParametersSelf;
 }
 interface UseMenuItemParameters<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseMenubarItemParameters<MenuItemElement, M> {
 }
 interface UseMenuReturnType<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseMenuSurfaceReturnType<MenuSurfaceElement, MenuParentElement, MenuButtonElement>, OmitStrong<UseMenubarReturnType<MenuParentElement, MenuItemElement, MenuButtonElement, M>, "propsMenubar" | "propsLabel"> {
-    context: UseMenuContext<MenuParentElement, MenuItemElement, M>;
+    context: UseMenuContext<MenuItemElement, M>;
 }
 interface MenuItemReturnTypeSelf {
     /**
@@ -800,7 +806,7 @@ interface UseMenuItemReturnType<MenuItemElement extends Element, M extends UseMe
  */
 declare function useMenu<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element>({ dismissParameters, escapeDismissParameters, menuParameters: { openDirection, onOpen }, menuSurfaceParameters, activeElementParameters, toolbarParameters, modalParameters, ...restParams }: UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenuReturnType<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement, UseMenubarSubInfo<MenuItemElement>>;
 interface UseMenuItemParameters<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseMenubarItemParameters<MenuItemElement, M> {
-    context: UseMenuContext<any, MenuItemElement, M>;
+    context: UseMenuContext<MenuItemElement, M>;
 }
 /**
  * @compositeParams
@@ -1281,7 +1287,7 @@ type TooltipState = `${"hovering" | "focused"}-${"popup" | "trigger"}` | null;
  *
  * @compositeParams
  */
-declare function useTooltip<TriggerType extends Element, PopupType extends Element>({ tooltipParameters: { onStatus, tooltipSemanticType, hoverDelay }, activeElementParameters, escapeDismissParameters }: UseTooltipParameters<TriggerType, PopupType>): UseTooltipReturnType<TriggerType, PopupType>;
+declare function useTooltip<TriggerType extends Element, PopupType extends Element>({ tooltipParameters: { onStatus, tooltipSemanticType, hoverDelay }, activeElementParameters, escapeDismissParameters, ...void1 }: UseTooltipParameters<TriggerType, PopupType>): UseTooltipReturnType<TriggerType, PopupType>;
 interface UseTooltipReturnTypeSelf {
     getState(): TooltipState;
     stateIsFocus(): boolean;
@@ -1421,7 +1427,7 @@ type MenubarProps<MenuParentElement extends Element, MenuItemElement extends Ele
 type MenubarItemProps<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> = GenericComponentProps<UseMenubarItemReturnType<MenuItemElement, M>, Get6<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "menuItemParameters", "textContentParameters", "pressParameters", "info", "refElementParameters", "hasCurrentFocusParameters">, "index" | "getSortValue"> & {
     info?: OmitStrong$0<M, keyof UseMenubarSubInfo<MenuItemElement>>;
 };
-declare const MenubarItemContext: import("preact").Context<UseMenubarContext<any, any, any>>;
+declare const MenubarItemContext: import("preact").Context<UseMenubarContext<any, any>>;
 declare const Menubar: <ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({ render, collator, disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, staggered, noTypeahead, untabbable, onTabbableIndexChange, compare, getIndex, disabled, selectedIndex, onSelectedIndexChange, typeaheadTimeout, role, ariaLabel, ariaPropName, selectionMode, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, ...void1 }: MenubarProps<ContainerElement, ChildElement, LabelElement, UseMenubarSubInfo<ChildElement>>) => import("preact").JSX.Element;
 declare function MenubarItem<MenuItemElement extends Element>({ index, render, focusSelf, untabbable, getText, unselectable, onPress, getSortValue, onPressingChange, role, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, info: uinfo }: MenubarItemProps<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): import("preact").JSX.Element;
 type MenuProps<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> = GenericComponentProps<UseMenuReturnType<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement, M>, Get16<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, M>, "menuParameters", "menuSurfaceParameters", "linearNavigationParameters", "rovingTabIndexParameters", "typeaheadNavigationParameters", "dismissParameters", "staggeredChildrenParameters", "escapeDismissParameters", "rearrangeableChildrenParameters", "sortableChildrenParameters", "toolbarParameters", "singleSelectionParameters", "activeElementParameters", "refElementParameters", "dismissParameters", "modalParameters">, "active" | "onDismiss" | "openDirection" | "orientation" | "onOpen">;

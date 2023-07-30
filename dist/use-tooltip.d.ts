@@ -36,7 +36,7 @@ export type TooltipState = `${"hovering" | "focused"}-${"popup" | "trigger"}` | 
  *
  * @compositeParams
  */
-export declare function useTooltip<TriggerType extends Element, PopupType extends Element>({ tooltipParameters: { onStatus, tooltipSemanticType, hoverDelay }, activeElementParameters, escapeDismissParameters }: UseTooltipParameters<TriggerType, PopupType>): UseTooltipReturnType<TriggerType, PopupType>;
+export declare function useTooltip<TriggerType extends Element, PopupType extends Element>({ tooltipParameters: { onStatus, tooltipSemanticType, hoverDelay }, activeElementParameters, escapeDismissParameters, ...void1 }: UseTooltipParameters<TriggerType, PopupType>): UseTooltipReturnType<TriggerType, PopupType>;
 export interface UseTooltipReturnTypeSelf {
     getState(): TooltipState;
     stateIsFocus(): boolean;

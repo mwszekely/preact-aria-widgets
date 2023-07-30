@@ -1,6 +1,19 @@
 import { assertEmptyObject, focus, monitorCallCount, returnFalse, returnNull, returnZero, useCompleteListNavigation, useCompleteListNavigationChild, useMemoObject, useMergedProps, usePassiveState, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
 import { useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
 /**
+ *
+ * As a general reminder,
+ *
+ * A checkbox group contains several parts:
+ *
+ * * The group
+ * * The checkbox parent
+ * * Multiple checkbox children
+ * * Each of those parent/child checkboxes themselves *separately* calls useCheckbox (useCheckbox isn't called by any of these hooks)
+ *
+ */
+const _comment = undefined;
+/**
  * Allows a parent checkbox to control a number of child checkboxes, in accordance with the [Checkbox](https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/) pattern.
  *
  * @compositeParams

@@ -18,7 +18,7 @@ export type MenubarItemProps<MenuItemElement extends Element, M extends UseMenub
     "index" | "getSortValue"
 > & { info?: OmitStrong<M, keyof UseMenubarSubInfo<MenuItemElement>>; };
 
-export const MenubarItemContext = createContext<UseMenubarContext<any, any, any>>(null!);
+export const MenubarItemContext = createContext<UseMenubarContext<any, any>>(null!);
 
 export const Menubar = memo(function Menubar<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({
     render,

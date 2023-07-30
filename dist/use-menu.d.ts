@@ -2,7 +2,7 @@ import { EventType, TargetedOmit } from "preact-prop-helpers";
 import { OmitStrong } from "./props.js";
 import { UseMenuSurfaceParameters, UseMenuSurfaceReturnType } from "./use-menu-surface.js";
 import { UseMenubarContext, UseMenubarItemParameters, UseMenubarItemReturnType, UseMenubarParameters, UseMenubarReturnType, UseMenubarSubInfo } from "./use-menubar.js";
-export interface UseMenuContext<ContainerElement extends Element, ChildElement extends Element, M extends UseMenubarSubInfo<ChildElement>> extends UseMenubarContext<ContainerElement, ChildElement, M> {
+export interface UseMenuContext<ChildElement extends Element, M extends UseMenubarSubInfo<ChildElement>> extends UseMenubarContext<ChildElement, M> {
     menu: {
         closeFromMenuItemClicked(e: EventType<any, any>): void;
     };
@@ -25,7 +25,7 @@ export interface UseMenuParameters<MenuSurfaceElement extends Element, MenuParen
 export interface UseMenuItemParameters<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseMenubarItemParameters<MenuItemElement, M> {
 }
 export interface UseMenuReturnType<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseMenuSurfaceReturnType<MenuSurfaceElement, MenuParentElement, MenuButtonElement>, OmitStrong<UseMenubarReturnType<MenuParentElement, MenuItemElement, MenuButtonElement, M>, "propsMenubar" | "propsLabel"> {
-    context: UseMenuContext<MenuParentElement, MenuItemElement, M>;
+    context: UseMenuContext<MenuItemElement, M>;
 }
 export interface MenuItemReturnTypeSelf {
     /**
@@ -51,7 +51,7 @@ export interface UseMenuItemReturnType<MenuItemElement extends Element, M extend
  */
 export declare function useMenu<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element>({ dismissParameters, escapeDismissParameters, menuParameters: { openDirection, onOpen }, menuSurfaceParameters, activeElementParameters, toolbarParameters, modalParameters, ...restParams }: UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenuReturnType<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement, UseMenubarSubInfo<MenuItemElement>>;
 export interface UseMenuItemParameters<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseMenubarItemParameters<MenuItemElement, M> {
-    context: UseMenuContext<any, MenuItemElement, M>;
+    context: UseMenuContext<MenuItemElement, M>;
 }
 /**
  * @compositeParams

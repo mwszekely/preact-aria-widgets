@@ -3,7 +3,7 @@ import { OmitStrong } from "./props.js";
 import { UseMenuSurfaceParameters, UseMenuSurfaceReturnType, useMenuSurface } from "./use-menu-surface.js";
 import { UseMenubarContext, UseMenubarItemParameters, UseMenubarItemReturnType, UseMenubarParameters, UseMenubarReturnType, UseMenubarSubInfo, useMenubar, useMenubarChild } from "./use-menubar.js";
 
-export interface UseMenuContext<ContainerElement extends Element, ChildElement extends Element, M extends UseMenubarSubInfo<ChildElement>> extends UseMenubarContext<ContainerElement, ChildElement, M> {
+export interface UseMenuContext<ChildElement extends Element, M extends UseMenubarSubInfo<ChildElement>> extends UseMenubarContext<ChildElement, M> {
     menu: { closeFromMenuItemClicked(e: EventType<any, any>): void; }
 }
 export interface UseMenuParametersSelf {
@@ -27,10 +27,6 @@ export interface UseMenuParameters<MenuSurfaceElement extends Element, MenuParen
     TargetedOmit<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "toolbarParameters", "role">,
     TargetedOmit<UseMenuSurfaceParameters<MenuParentElement, MenuButtonElement>, "escapeDismissParameters", never>,
     Pick<UseMenuSurfaceParameters<MenuSurfaceElement, MenuButtonElement>, "activeElementParameters" | "dismissParameters" | "modalParameters"> {
-    /*dismissParameters: UseMenuSurfaceParameters<MenuSurfaceElement, MenuButtonElement>["dismissParameters"] & {
-        onClose(reason: "escape" | "backdrop" | "lost-focus" | "item-clicked"): void;
-    }*/
-    //escapeDismissParameters: UseMenuSurfaceParameters<MenuSurfaceElement, MenuButtonElement>["escapeDismissParameters"];
 
     menuParameters: UseMenuParametersSelf;
 }
@@ -39,7 +35,7 @@ export interface UseMenuItemParameters<MenuItemElement extends Element, M extend
 }
 
 export interface UseMenuReturnType<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseMenuSurfaceReturnType<MenuSurfaceElement, MenuParentElement, MenuButtonElement>, OmitStrong<UseMenubarReturnType<MenuParentElement, MenuItemElement, MenuButtonElement, M>, "propsMenubar" | "propsLabel"> {
-    context: UseMenuContext<MenuParentElement, MenuItemElement, M>;
+    context: UseMenuContext<MenuItemElement, M>;
 }
 
 export interface MenuItemReturnTypeSelf {
@@ -159,9 +155,9 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
     return {
         ...restRet,
         ...restRet2,
-        context: useMemoObject<UseMenuContext<MenuParentElement, MenuItemElement, M>>({
+        context: useMemoObject<UseMenuContext<MenuItemElement, M>>({
             ...context,
-            menu: useMemoObject<UseMenuContext<MenuParentElement, MenuItemElement, M>["menu"]>({
+            menu: useMemoObject<UseMenuContext<MenuItemElement, M>["menu"]>({
                 closeFromMenuItemClicked: useStableCallback((e) => {
                     dismissParameters.onDismiss(e, "item-clicked" as never);    // TODO
                 })
@@ -176,7 +172,7 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
 }
 
 export interface UseMenuItemParameters<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseMenubarItemParameters<MenuItemElement, M> {
-    context: UseMenuContext<any, MenuItemElement, M>;
+    context: UseMenuContext<MenuItemElement, M>;
 }
 
 /**

@@ -1,4 +1,4 @@
-import { DismissListenerTypes, ElementProps, focus, monitorCallCount, returnNull, TargetedPick, useDismiss, UseDismissParameters, UseEscapeDismissParameters, useGlobalHandler, useHasCurrentFocus, useMergedProps, usePassiveState, useRandomId, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
+import { assertEmptyObject, DismissListenerTypes, ElementProps, focus, monitorCallCount, returnNull, TargetedPick, useDismiss, UseDismissParameters, UseEscapeDismissParameters, useGlobalHandler, useHasCurrentFocus, useMergedProps, usePassiveState, useRandomId, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
 import { useCallback, useRef } from "preact/hooks";
 import { Prefices } from "./props.js";
 
@@ -55,7 +55,8 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
         hoverDelay
     },
     activeElementParameters,
-    escapeDismissParameters
+    escapeDismissParameters,
+    ...void1
 }: UseTooltipParameters<TriggerType, PopupType>): UseTooltipReturnType<TriggerType, PopupType> {
     monitorCallCount(useTooltip);
 
@@ -169,7 +170,7 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
         escapeDismissParameters: {
             dismissEscapeActive: true,
             onDismissEscape: null,
-            parentDepth: 1
+            ...escapeDismissParameters
         },
     });
 
@@ -196,6 +197,7 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
         }
     }), { capture: true, passive: true })
 
+    assertEmptyObject(void1);
 
     return {
         propsPopup: useMergedProps<PopupType>(popupRefProps, propsPopup, popupFocusReturn.propsStable, { role: "tooltip" }, otherPopupProps, propsStablePopup),

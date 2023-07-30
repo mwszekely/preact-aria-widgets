@@ -50,10 +50,9 @@ export interface UseToolbarChildParameters<E extends Element, M extends UseToolb
 export interface UseToolbarChildReturnType<ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends UseCompleteListNavigationChildReturnType<ChildElement, M> {
 }
 /**
- * Implements a [Toolbar](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/) pattern.
+ * Implements a [Toolbar](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/) pattern, which is a collection of widgets in an expected order with a label (visible or hidden) and with the usual keyboard navigation stuff.
  *
- * @remarks A toolbar is just a collection of widgets in an expected order with a label (visible or hidden) and with the usual keyboard navigation stuff.
- *
+ * @remarks
  * The main difference between a toolbar and a menubar is that a menubar contains purely static menuitems,
  * but a toolbar is the more general case, being able to contain anything at all.
  * A menubar is implemented as a special case of a toolbar, and a menu is implemented as a specialized menubar.

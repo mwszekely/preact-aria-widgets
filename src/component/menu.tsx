@@ -22,7 +22,7 @@ export type MenuItemProps<MenuItemElement extends Element, M extends UseMenubarS
 const UntabbableContext = createContext(false);
 const AriaPropNameContext = createContext<UseMenuParameters<any, any, any, any, any>["singleSelectionParameters"]["ariaPropName"]>("aria-selected")
 const SelectionModeContext = createContext<UseMenuParameters<any, any, any, any, any>["singleSelectionParameters"]["selectionMode"]>("focus");
-const MenuItemContext = createContext<UseMenuContext<any, any, any>>(null!);
+const MenuItemContext = createContext<UseMenuContext<any, any>>(null!);
 
 export function Menu<SurfaceElement extends Element, ParentElement extends Element, ChildElement extends Element, ButtonElement extends Element>({
     collator,

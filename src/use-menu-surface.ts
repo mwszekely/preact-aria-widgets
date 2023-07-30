@@ -32,11 +32,11 @@ export interface UseMenuSurfaceReturnType<MenuSurfaceElement extends Element, Me
 
 
 /**
- * A menu surface is what handles user interaction with an interactive but transient surface (like a menu or a popup).
+ * A menu surface is what handles user interaction with an interactive but transient surface (like a menu or a popup, but not something potentially modal like a dialog).
  * 
  * @remarks The keyboard (etc.) interactions are shared among a lot of widgets, and the opening button has some ARIA properties that need setting.
  * 
- * Related to menus, which are a menu contained within a menu surface. Not related to menubars -- menus contain menubars, but not all menubars are contained within a menu or its surface.
+ * Related to **menus**, which are a **menubar** contained within a **menu surface**.
  * 
  * @compositeParams
  */

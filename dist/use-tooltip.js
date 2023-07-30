@@ -1,4 +1,4 @@
-import { focus, monitorCallCount, returnNull, useDismiss, useGlobalHandler, useHasCurrentFocus, useMergedProps, usePassiveState, useRandomId, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
+import { assertEmptyObject, focus, monitorCallCount, returnNull, useDismiss, useGlobalHandler, useHasCurrentFocus, useMergedProps, usePassiveState, useRandomId, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
 import { useCallback, useRef } from "preact/hooks";
 import { Prefices } from "./props.js";
 /**
@@ -8,7 +8,7 @@ import { Prefices } from "./props.js";
  *
  * @compositeParams
  */
-export function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType, hoverDelay }, activeElementParameters, escapeDismissParameters }) {
+export function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType, hoverDelay }, activeElementParameters, escapeDismissParameters, ...void1 }) {
     monitorCallCount(useTooltip);
     useGlobalHandler(window, "mouseout", useCallback((e) => {
         console.log(e);
@@ -96,7 +96,7 @@ export function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType,
         escapeDismissParameters: {
             dismissEscapeActive: true,
             onDismissEscape: null,
-            parentDepth: 1
+            ...escapeDismissParameters
         },
     });
     const otherPopupProps = {
@@ -119,6 +119,7 @@ export function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType,
             onHoverChanged(false, "popup");
         }
     }), { capture: true, passive: true });
+    assertEmptyObject(void1);
     return {
         propsPopup: useMergedProps(popupRefProps, propsPopup, popupFocusReturn.propsStable, { role: "tooltip" }, otherPopupProps, propsStablePopup),
         propsTrigger: useMergedProps(triggerRefProps, propsTrigger, triggerFocusReturn.propsStable, { onClick: useStableCallback(e => focus(e.currentTarget)) }, otherTriggerProps, propsStableSource),

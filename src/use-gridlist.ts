@@ -32,7 +32,16 @@ import { UseLabelSyntheticParameters, useLabelSynthetic } from "./use-label.js";
 import { UseListboxParameters, UseListboxParametersSelf } from "./use-listbox.js";
 
 export interface UseGridlistContext<GridlistRowElement extends Element, RM extends GridlistRowInfo<GridlistRowElement>> extends CompleteGridNavigationRowContext<GridlistRowElement, RM> {
-    gridlistRowContext: { selectionLimit: "single" | "multi" | "none" }
+    gridlistRowContext: {
+        /**
+         * If this is a list that allows selection, this controls whether it's single-selection or multi-selection.
+         * 
+         * Single-selection requires that you pass in a `selectedIndex` and listen for changes.
+         * 
+         * Multi-selection requires each child pass its own `selected` boolean prop and listen for changes to itself.
+         */
+        selectionLimit: "single" | "multi" | "none";
+    }
 }
 
 export interface UseGridlistRowContext<CellElement extends Element, M extends GridlistCellInfo<CellElement>> extends CompleteGridNavigationCellContext<CellElement, M> {
@@ -61,7 +70,7 @@ export interface UseGridlistRowReturnType<GridlistRowElement extends Element, Gr
 
 export interface UseGridlistRowParametersSelf {
     /**
-     * When the `selectionLimit` is `"single"`, this must be `null`.
+     * **Multi-selection** only! When the `selectionLimit` is `"single"`, this must be `null`.
      */
     selected: Nullable<boolean>;
 }
