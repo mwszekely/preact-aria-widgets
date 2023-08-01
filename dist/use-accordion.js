@@ -20,7 +20,7 @@ export function useAccordion({ accordionParameters: { initialIndex, localStorage
         initialIndex = localStorageIndex;
     const { managedChildrenReturn, context: { managedChildContext } } = useManagedChildren({
         managedChildrenParameters: {
-            onChildrenMountChange: useStableCallback((m, u) => { ocmc2(); ocmc1?.(m, u); }),
+            onChildrenMountChange: useStableCallback((m, u) => { ocmc2(undefined); ocmc1?.(m, u); }),
             onAfterChildLayoutEffect,
             onChildrenCountChange,
             ...managedChildrenParameters
@@ -75,8 +75,8 @@ export function useAccordion({ accordionParameters: { initialIndex, localStorage
             }
         })
     });
-    const changeExpandedIndex = useStableCallback((value) => {
-        changeExpandedIndexLocalOnly(value);
+    const changeExpandedIndex = useStableCallback((value, r) => {
+        changeExpandedIndexLocalOnly(value, r);
         setLocalStorageIndex(value);
     });
     const rovingTabIndexReturn = useMemoObject({
@@ -149,9 +149,9 @@ export function useAccordionSection({ buttonParameters: { disabled, tagButton, o
         refElementReturn: { getElement: useStableCallback(() => { return refElementHeaderButtonReturn.getElement(); }) },
         hasCurrentFocusParameters: {
             onCurrentFocusedChanged: null,
-            onCurrentFocusedInnerChanged: useStableCallback(focused => {
+            onCurrentFocusedInnerChanged: useStableCallback((focused, prev) => {
                 if (focused) {
-                    setCurrentFocusedIndex(index);
+                    setCurrentFocusedIndex(index, undefined);
                     setMostRecentlyTabbed(true);
                 }
             })
@@ -190,11 +190,11 @@ export function useAccordionSection({ buttonParameters: { disabled, tagButton, o
             disabled,
             tagButton,
             onPressSync: (e) => {
-                setCurrentFocusedIndex(index);
+                setCurrentFocusedIndex(index, e);
                 if (getOpenFromParent())
-                    changeExpandedIndex(null);
+                    changeExpandedIndex(null, e);
                 else
-                    changeExpandedIndex(index);
+                    changeExpandedIndex(index, e);
                 userOnPress?.(e);
             },
             ...buttonParameters

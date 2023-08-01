@@ -326,13 +326,13 @@ export function useCheckboxGroupParent<TCE extends Element>({
 
     const [ariaControls, setControls] = useState("");
     useLayoutEffect(() => {
-        setControlsSetterOnParentCheckbox(() => setControls);
+        setControlsSetterOnParentCheckbox(() => setControls, undefined);
     }, [setControls]);
     monitorCallCount(useCheckboxGroupParent);
 
     const [checked, setChecked] = useState<CheckboxCheckedType>(false);
     useEffect(() => {
-        setSetParentCheckboxChecked(() => setChecked);
+        setSetParentCheckboxChecked(() => setChecked, undefined);
     }, [])
 
     const checkboxGroupParentReturn = { checked, onParentCheckedChange: onCheckboxGroupParentInput, getPercent: useStableCallback(() => { return getPercentChecked(getTotalChecked(), getTotalChildren()) }) };
@@ -383,7 +383,7 @@ export function useCheckboxGroupChild<TCE extends Element>({
     const getChecked = useStableGetter(checked);
     const [getLastUserChecked, setLastUserChecked] = usePassiveState<boolean | "mixed", Event>(null, returnFalse);
     const onChildCheckedChange = useStableCallback((checked: CheckboxCheckedType) => {
-        setLastUserChecked(checked);
+        setLastUserChecked(checked, undefined);
     });
 
     const onControlIdChanged = useCallback((next: string | undefined, prev: string | undefined) => {
@@ -394,20 +394,20 @@ export function useCheckboxGroupChild<TCE extends Element>({
             allIds.add(next);
 
         if (!!next || !!prev) {
-            setUpdateIndex(i => ((i ?? 0) + 1));
+            setUpdateIndex(i => ((i ?? 0) + 1), undefined);
         }
     }, []);
 
     useEffect(() => {
-        setTotalChildren(c => ((c ?? 0) + 1));
-        return () => setTotalChildren(c => ((c ?? 0) - 1));
+        setTotalChildren(c => ((c ?? 0) + 1), undefined);
+        return () => setTotalChildren(c => ((c ?? 0) - 1), undefined);
     }, [])
 
 
     useEffect(() => {
         if (checked) {
-            setTotalChecked(c => ((c ?? 0) + 1));
-            return () => setTotalChecked(c => ((c ?? 0) - 1));
+            setTotalChecked(c => ((c ?? 0) + 1), undefined);
+            return () => setTotalChecked(c => ((c ?? 0) - 1), undefined);
         }
     }, [checked]);
 

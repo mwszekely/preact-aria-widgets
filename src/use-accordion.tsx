@@ -143,7 +143,7 @@ export function useAccordion<HeaderButtonElement extends Element>({
 
     const { managedChildrenReturn, context: { managedChildContext } } = useManagedChildren<M>({
         managedChildrenParameters: {
-            onChildrenMountChange: useStableCallback<OnChildrenMountChange<number>>((m, u) => { ocmc2(); ocmc1?.(m, u); }),
+            onChildrenMountChange: useStableCallback<OnChildrenMountChange<number>>((m, u) => { ocmc2(undefined!); ocmc1?.(m, u); }),
             onAfterChildLayoutEffect,
             onChildrenCountChange,
             ...managedChildrenParameters
@@ -204,12 +204,12 @@ export function useAccordion<HeaderButtonElement extends Element>({
         })
     });
 
-    const changeExpandedIndex = useStableCallback<typeof changeExpandedIndexLocalOnly>((value) => {
-        changeExpandedIndexLocalOnly(value);
+    const changeExpandedIndex = useStableCallback<typeof changeExpandedIndexLocalOnly>((value, r) => {
+        changeExpandedIndexLocalOnly(value, r);
         setLocalStorageIndex(value);
     });
 
-    const rovingTabIndexReturn = useMemoObject({
+    const rovingTabIndexReturn = useMemoObject<UseTypeaheadNavigationParameters<any>["rovingTabIndexReturn"]>({
         getTabbableIndex: getTabbedIndex,
         setTabbableIndex: changeTabbedIndex
     })
@@ -314,9 +314,9 @@ export function useAccordionSection<HeaderContainerElement extends Element, Head
         refElementReturn: { getElement: useStableCallback(() => { return refElementHeaderButtonReturn.getElement() }) },
         hasCurrentFocusParameters: {
             onCurrentFocusedChanged: null,
-            onCurrentFocusedInnerChanged: useStableCallback(focused => {
+            onCurrentFocusedInnerChanged: useStableCallback((focused, prev) => {
                 if (focused) {
-                    setCurrentFocusedIndex(index);
+                    setCurrentFocusedIndex(index, undefined);
                     setMostRecentlyTabbed(true);
                 }
             })
@@ -367,11 +367,11 @@ export function useAccordionSection<HeaderContainerElement extends Element, Head
             disabled, 
             tagButton, 
             onPressSync: (e) => {
-                setCurrentFocusedIndex(index);
+                setCurrentFocusedIndex(index, e);
                 if (getOpenFromParent())
-                    changeExpandedIndex(null);
+                    changeExpandedIndex(null, e);
                 else
-                    changeExpandedIndex(index);
+                    changeExpandedIndex(index, e);
 
                 userOnPress?.(e);
             },

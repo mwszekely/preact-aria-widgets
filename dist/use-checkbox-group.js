@@ -140,12 +140,12 @@ export function useCheckboxGroupParent({ context: { checkboxGroupParentContext: 
     });
     const [ariaControls, setControls] = useState("");
     useLayoutEffect(() => {
-        setControlsSetterOnParentCheckbox(() => setControls);
+        setControlsSetterOnParentCheckbox(() => setControls, undefined);
     }, [setControls]);
     monitorCallCount(useCheckboxGroupParent);
     const [checked, setChecked] = useState(false);
     useEffect(() => {
-        setSetParentCheckboxChecked(() => setChecked);
+        setSetParentCheckboxChecked(() => setChecked, undefined);
     }, []);
     const checkboxGroupParentReturn = { checked, onParentCheckedChange: onCheckboxGroupParentInput, getPercent: useStableCallback(() => { return getPercentChecked(getTotalChecked(), getTotalChildren()); }) };
     return {
@@ -183,7 +183,7 @@ export function useCheckboxGroupChild({ checkboxGroupChildParameters, context, i
     const getChecked = useStableGetter(checked);
     const [getLastUserChecked, setLastUserChecked] = usePassiveState(null, returnFalse);
     const onChildCheckedChange = useStableCallback((checked) => {
-        setLastUserChecked(checked);
+        setLastUserChecked(checked, undefined);
     });
     const onControlIdChanged = useCallback((next, prev) => {
         if (prev)
@@ -191,17 +191,17 @@ export function useCheckboxGroupChild({ checkboxGroupChildParameters, context, i
         if (next)
             allIds.add(next);
         if (!!next || !!prev) {
-            setUpdateIndex(i => ((i ?? 0) + 1));
+            setUpdateIndex(i => ((i ?? 0) + 1), undefined);
         }
     }, []);
     useEffect(() => {
-        setTotalChildren(c => ((c ?? 0) + 1));
-        return () => setTotalChildren(c => ((c ?? 0) - 1));
+        setTotalChildren(c => ((c ?? 0) + 1), undefined);
+        return () => setTotalChildren(c => ((c ?? 0) - 1), undefined);
     }, []);
     useEffect(() => {
         if (checked) {
-            setTotalChecked(c => ((c ?? 0) + 1));
-            return () => setTotalChecked(c => ((c ?? 0) - 1));
+            setTotalChecked(c => ((c ?? 0) + 1), undefined);
+            return () => setTotalChecked(c => ((c ?? 0) - 1), undefined);
         }
     }, [checked]);
     const { hasCurrentFocusReturn, managedChildReturn, refElementReturn, textContentReturn, propsChild, propsTabbable, singleSelectionChildReturn: _singleSelectionChildReturn, staggeredChildReturn, paginatedChildReturn, rovingTabIndexChildReturn, pressParameters, ...void2 } = useCompleteListNavigationChild({

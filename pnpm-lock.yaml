@@ -2,8 +2,8 @@ lockfileVersion: '6.0'
 
 dependencies:
   clsx:
-    specifier: ^1.2.1
-    version: 1.2.1
+    specifier: ^2.0.0
+    version: 2.0.0
   lodash-es:
     specifier: ^4.17.21
     version: 4.17.21
@@ -12,42 +12,42 @@ dependencies:
     version: 10.13.2
   preact-prop-helpers:
     specifier: github:mwszekely/preact-prop-helpers
-    version: github.com/mwszekely/preact-prop-helpers/29f63aee10bbd2b3360a3ce9f5e2e15b24721063(preact@10.13.2)(react-dom@18.2.0)(react@18.2.0)
+    version: github.com/mwszekely/preact-prop-helpers/d71273ffd205a6f177b6a0e04b95495723d9608d(preact@10.13.2)(react-dom@18.2.0)(react@18.2.0)
 
 devDependencies:
   '@playwright/test':
-    specifier: ^1.35.1
-    version: 1.35.1
+    specifier: ^1.36.2
+    version: 1.36.2
   '@rollup/plugin-commonjs':
     specifier: ^25.0.3
-    version: 25.0.3(rollup@3.26.3)
+    version: 25.0.3(rollup@3.27.0)
   '@rollup/plugin-node-resolve':
     specifier: ^15.1.0
-    version: 15.1.0(rollup@3.26.3)
+    version: 15.1.0(rollup@3.27.0)
   '@rollup/plugin-replace':
     specifier: ^5.0.2
-    version: 5.0.2(rollup@3.26.3)
+    version: 5.0.2(rollup@3.27.0)
   '@rollup/plugin-typescript':
     specifier: ^11.1.2
-    version: 11.1.2(rollup@3.26.3)(typescript@5.1.3)
+    version: 11.1.2(rollup@3.27.0)(typescript@5.1.6)
   '@types/lodash-es':
-    specifier: ^4.17.7
-    version: 4.17.7
+    specifier: ^4.17.8
+    version: 4.17.8
   npm-run-all:
     specifier: ^4.1.5
     version: 4.1.5
   rollup:
-    specifier: ^3.26.3
-    version: 3.26.3
+    specifier: ^3.27.0
+    version: 3.27.0
   rollup-plugin-sourcemaps:
     specifier: ^0.6.3
-    version: 0.6.3(rollup@3.26.3)
+    version: 0.6.3(rollup@3.27.0)
   rollup-plugin-ts:
     specifier: ^3.2.0
-    version: 3.2.0(rollup@3.26.3)(typescript@5.1.3)
+    version: 3.2.0(rollup@3.27.0)(typescript@5.1.6)
   typescript:
-    specifier: ^5.1.3
-    version: 5.1.3
+    specifier: ^5.1.6
+    version: 5.1.6
 
 packages:
 
@@ -59,18 +59,18 @@ packages:
     resolution: {integrity: sha512-sDz0Yjj8m+VTWPiC0TF28rLMCDS2fJTZZmDpFMx5Y0H4NVGzqOs30l4pV8Tpexen4GyT+wYCNjedY8pTNjiW7Q==}
     dev: true
 
-  /@playwright/test@1.35.1:
-    resolution: {integrity: sha512-b5YoFe6J9exsMYg0pQAobNDR85T1nLumUYgUTtKm4d21iX2L7WqKq9dW8NGJ+2vX0etZd+Y7UeuqsxDXm9+5ZA==}
+  /@playwright/test@1.36.2:
+    resolution: {integrity: sha512-2rVZeyPRjxfPH6J0oGJqE8YxiM1IBRyM8hyrXYK7eSiAqmbNhxwcLa7dZ7fy9Kj26V7FYia5fh9XJRq4Dqme+g==}
     engines: {node: '>=16'}
     hasBin: true
     dependencies:
       '@types/node': 20.4.5
-      playwright-core: 1.35.1
+      playwright-core: 1.36.2
     optionalDependencies:
       fsevents: 2.3.2
     dev: true
 
-  /@rollup/plugin-commonjs@25.0.3(rollup@3.26.3):
+  /@rollup/plugin-commonjs@25.0.3(rollup@3.27.0):
     resolution: {integrity: sha512-uBdtWr/H3BVcgm97MUdq2oJmqBR23ny1hOrWe2PKo9FTbjsGqg32jfasJUKYAI5ouqacjRnj65mBB/S79F+GQA==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -79,16 +79,16 @@ packages:
       rollup:
         optional: true
     dependencies:
-      '@rollup/pluginutils': 5.0.2(rollup@3.26.3)
+      '@rollup/pluginutils': 5.0.2(rollup@3.27.0)
       commondir: 1.0.1
       estree-walker: 2.0.2
       glob: 8.1.0
       is-reference: 1.2.1
       magic-string: 0.27.0
-      rollup: 3.26.3
+      rollup: 3.27.0
     dev: true
 
-  /@rollup/plugin-node-resolve@15.1.0(rollup@3.26.3):
+  /@rollup/plugin-node-resolve@15.1.0(rollup@3.27.0):
     resolution: {integrity: sha512-xeZHCgsiZ9pzYVgAo9580eCGqwh/XCEUM9q6iQfGNocjgkufHAqC3exA+45URvhiYV8sBF9RlBai650eNs7AsA==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -97,16 +97,16 @@ packages:
       rollup:
         optional: true
     dependencies:
-      '@rollup/pluginutils': 5.0.2(rollup@3.26.3)
+      '@rollup/pluginutils': 5.0.2(rollup@3.27.0)
       '@types/resolve': 1.20.2
       deepmerge: 4.3.1
       is-builtin-module: 3.2.1
       is-module: 1.0.0
       resolve: 1.22.2
-      rollup: 3.26.3
+      rollup: 3.27.0
     dev: true
 
-  /@rollup/plugin-replace@5.0.2(rollup@3.26.3):
+  /@rollup/plugin-replace@5.0.2(rollup@3.27.0):
     resolution: {integrity: sha512-M9YXNekv/C/iHHK+cvORzfRYfPbq0RDD8r0G+bMiTXjNGKulPnCT9O3Ss46WfhI6ZOCgApOP7xAdmCQJ+U2LAA==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -115,12 +115,12 @@ packages:
       rollup:
         optional: true
     dependencies:
-      '@rollup/pluginutils': 5.0.2(rollup@3.26.3)
+      '@rollup/pluginutils': 5.0.2(rollup@3.27.0)
       magic-string: 0.27.0
-      rollup: 3.26.3
+      rollup: 3.27.0
     dev: true
 
-  /@rollup/plugin-typescript@11.1.2(rollup@3.26.3)(typescript@5.1.3):
+  /@rollup/plugin-typescript@11.1.2(rollup@3.27.0)(typescript@5.1.6):
     resolution: {integrity: sha512-0ghSOCMcA7fl1JM+0gYRf+Q/HWyg+zg7/gDSc+fRLmlJWcW5K1I+CLRzaRhXf4Y3DRyPnnDo4M2ktw+a6JcDEg==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -133,13 +133,13 @@ packages:
       tslib:
         optional: true
     dependencies:
-      '@rollup/pluginutils': 5.0.2(rollup@3.26.3)
+      '@rollup/pluginutils': 5.0.2(rollup@3.27.0)
       resolve: 1.22.2
-      rollup: 3.26.3
-      typescript: 5.1.3
+      rollup: 3.27.0
+      typescript: 5.1.6
     dev: true
 
-  /@rollup/pluginutils@3.1.0(rollup@3.26.3):
+  /@rollup/pluginutils@3.1.0(rollup@3.27.0):
     resolution: {integrity: sha512-GksZ6pr6TpIjHm8h9lSQ8pi8BE9VeubNT0OMJ3B5uZJ8pz73NPiqOtCog/x2/QzM1ENChPKxMDhiQuRHsqc+lg==}
     engines: {node: '>= 8.0.0'}
     peerDependencies:
@@ -148,10 +148,10 @@ packages:
       '@types/estree': 0.0.39
       estree-walker: 1.0.1
       picomatch: 2.3.1
-      rollup: 3.26.3
+      rollup: 3.27.0
     dev: true
 
-  /@rollup/pluginutils@5.0.2(rollup@3.26.3):
+  /@rollup/pluginutils@5.0.2(rollup@3.27.0):
     resolution: {integrity: sha512-pTd9rIsP92h+B6wWwFbW8RkZv4hiR/xKsqre4SIuAOaOEQRxi0lqLke9k2/7WegC85GgUs9pjmOjCUi3In4vwA==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -163,7 +163,7 @@ packages:
       '@types/estree': 1.0.1
       estree-walker: 2.0.2
       picomatch: 2.3.1
-      rollup: 3.26.3
+      rollup: 3.27.0
     dev: true
 
   /@types/estree@0.0.39:
@@ -174,8 +174,8 @@ packages:
     resolution: {integrity: sha512-LG4opVs2ANWZ1TJoKc937iMmNstM/d0ae1vNbnBvBhqCSezgVUOzcLCqbI5elV8Vy6WKwKjaqR+zO9VKirBBCA==}
     dev: true
 
-  /@types/lodash-es@4.17.7:
-    resolution: {integrity: sha512-z0ptr6UI10VlU6l5MYhGwS4mC8DZyYer2mCoyysZtSF7p26zOX8UpbrV0YpNYLGS8K4PUFIyEr62IMFFjveSiQ==}
+  /@types/lodash-es@4.17.8:
+    resolution: {integrity: sha512-euY3XQcZmIzSy7YH5+Unb3b2X12Wtk54YWINBvvGQ5SmMvwb11JQskGsfkH/5HXK77Kr8GF0wkVDIxzAisWtog==}
     dependencies:
       '@types/lodash': 4.14.196
     dev: true
@@ -284,23 +284,23 @@ packages:
       '@types/object-path': 0.11.1
       '@types/semver': 7.5.0
       '@types/ua-parser-js': 0.7.36
-      browserslist: 4.21.9
-      caniuse-lite: 1.0.30001517
+      browserslist: 4.21.10
+      caniuse-lite: 1.0.30001518
       isbot: 3.6.13
       object-path: 0.11.8
       semver: 7.5.4
       ua-parser-js: 1.0.35
     dev: true
 
-  /browserslist@4.21.9:
-    resolution: {integrity: sha512-M0MFoZzbUrRU4KNfCrDLnvyE7gub+peetoTid3TBIqtunaDJyXlwhakT+/VkvSXcfIzFfK/nkCs4nmyTmxdNSg==}
+  /browserslist@4.21.10:
+    resolution: {integrity: sha512-bipEBdZfVH5/pwrvqc+Ub0kUPVfGUhlKxbvfD+z1BDnPEO/X98ruXGA1WP5ASpAFKan7Qr6j736IacbZQuAlKQ==}
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001517
-      electron-to-chromium: 1.4.476
+      caniuse-lite: 1.0.30001518
+      electron-to-chromium: 1.4.478
       node-releases: 2.0.13
-      update-browserslist-db: 1.0.11(browserslist@4.21.9)
+      update-browserslist-db: 1.0.11(browserslist@4.21.10)
     dev: true
 
   /builtin-modules@3.3.0:
@@ -315,8 +315,8 @@ packages:
       get-intrinsic: 1.2.1
     dev: true
 
-  /caniuse-lite@1.0.30001517:
-    resolution: {integrity: sha512-Vdhm5S11DaFVLlyiKu4hiUTkpZu+y1KA/rZZqVQfOD5YdDT/eQKlkt7NaE0WGOFgX32diqt9MiP9CAiFeRklaA==}
+  /caniuse-lite@1.0.30001518:
+    resolution: {integrity: sha512-rup09/e3I0BKjncL+FesTayKtPrdwKhUufQFd3riFw1hHg8JmIFoInYfB102cFcY/pPgGmdyl/iy+jgiDi2vdA==}
     dev: true
 
   /chalk@2.4.2:
@@ -327,11 +327,6 @@ packages:
       escape-string-regexp: 1.0.5
       supports-color: 5.5.0
     dev: true
-
-  /clsx@1.2.1:
-    resolution: {integrity: sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==}
-    engines: {node: '>=6'}
-    dev: false
 
   /clsx@2.0.0:
     resolution: {integrity: sha512-rQ1+kcj+ttHG0MKVGBUXwayCCF1oh39BF5COIpRzuCEv8Mwjv0XucrI2ExNTOn9IlLifGClWQcU9BrZORvtw6Q==}
@@ -352,14 +347,14 @@ packages:
     resolution: {integrity: sha512-W9pAhw0ja1Edb5GVdIF1mjZw/ASI0AlShXM83UUGe2DVr5TdAPEA1OA8m/g8zWp9x6On7gqufY+FatDbC3MDQg==}
     dev: true
 
-  /compatfactory@2.0.9(typescript@5.1.3):
+  /compatfactory@2.0.9(typescript@5.1.6):
     resolution: {integrity: sha512-fvO+AWcmbO7P1S+A3mwm3IGr74eHMeq5ZLhNhyNQc9mVDNHT4oe0Gg0ksdIFFNXLK7k7Z/TYcLAUSQdRgh1bsA==}
     engines: {node: '>=14.9.0'}
     peerDependencies:
       typescript: '>=3.x || >= 4.x'
     dependencies:
       helpertypes: 0.0.19
-      typescript: 5.1.3
+      typescript: 5.1.6
     dev: true
 
   /concat-map@0.0.1:
@@ -402,8 +397,8 @@ packages:
       object-keys: 1.1.1
     dev: true
 
-  /electron-to-chromium@1.4.476:
-    resolution: {integrity: sha512-gzWl1m8pNy+5Kj17XcziNcbOhripjTqR2wAQmtdlFUngPYuFy7zUpJScVQAvCvQSFHNk3mS5fetNKW6BSpytFg==}
+  /electron-to-chromium@1.4.478:
+    resolution: {integrity: sha512-qjTA8djMXd+ruoODDFGnRCRBpID+AAfYWCyGtYTNhsuwxI19s8q19gbjKTwRS5z/LyVf5wICaIiPQGLekmbJbA==}
     dev: true
 
   /error-ex@1.3.2:
@@ -937,8 +932,8 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
-  /playwright-core@1.35.1:
-    resolution: {integrity: sha512-pNXb6CQ7OqmGDRspEjlxE49w+4YtR6a3X6mT1hZXeJHWmsEz7SunmvZeiG/+y1yyMZdHnnn73WKYdtV1er0Xyg==}
+  /playwright-core@1.36.2:
+    resolution: {integrity: sha512-sQYZt31dwkqxOrP7xy2ggDfEzUxM1lodjhsQ3NMMv5uGTRDsLxU0e4xf4wwMkF2gplIxf17QMBCodSFgm6bFVQ==}
     engines: {node: '>=16'}
     hasBin: true
     dev: true
@@ -991,7 +986,7 @@ packages:
       supports-preserve-symlinks-flag: 1.0.0
     dev: true
 
-  /rollup-plugin-sourcemaps@0.6.3(rollup@3.26.3):
+  /rollup-plugin-sourcemaps@0.6.3(rollup@3.27.0):
     resolution: {integrity: sha512-paFu+nT1xvuO1tPFYXGe+XnQvg4Hjqv/eIhG8i5EspfYYPBKL57X7iVbfv55aNVASg3dzWvES9dmWsL2KhfByw==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
@@ -1001,12 +996,12 @@ packages:
       '@types/node':
         optional: true
     dependencies:
-      '@rollup/pluginutils': 3.1.0(rollup@3.26.3)
-      rollup: 3.26.3
+      '@rollup/pluginutils': 3.1.0(rollup@3.27.0)
+      rollup: 3.27.0
       source-map-resolve: 0.6.0
     dev: true
 
-  /rollup-plugin-ts@3.2.0(rollup@3.26.3)(typescript@5.1.3):
+  /rollup-plugin-ts@3.2.0(rollup@3.27.0)(typescript@5.1.6):
     resolution: {integrity: sha512-KkTLVifkUexEiAXS9VtSjDrjKr0TyusmNJpb2ZTAzI9VuPumSu4AktIaVNnwv70iUEitHwZtET7OAM+5n1u1tg==}
     engines: {node: '>=14.9.0', npm: '>=7.0.0', pnpm: '>=3.2.0', yarn: '>=1.13'}
     peerDependencies:
@@ -1035,22 +1030,22 @@ packages:
       '@swc/helpers':
         optional: true
     dependencies:
-      '@rollup/pluginutils': 5.0.2(rollup@3.26.3)
+      '@rollup/pluginutils': 5.0.2(rollup@3.27.0)
       '@wessberg/stringutil': 1.0.19
       ansi-colors: 4.1.3
-      browserslist: 4.21.9
+      browserslist: 4.21.10
       browserslist-generator: 2.0.3
-      compatfactory: 2.0.9(typescript@5.1.3)
+      compatfactory: 2.0.9(typescript@5.1.6)
       crosspath: 2.0.0
       magic-string: 0.27.0
-      rollup: 3.26.3
-      ts-clone-node: 2.0.4(typescript@5.1.3)
+      rollup: 3.27.0
+      ts-clone-node: 2.0.4(typescript@5.1.6)
       tslib: 2.6.1
-      typescript: 5.1.3
+      typescript: 5.1.6
     dev: true
 
-  /rollup@3.26.3:
-    resolution: {integrity: sha512-7Tin0C8l86TkpcMtXvQu6saWH93nhG3dGQ1/+l5V2TDMceTxO7kDiK6GzbfLWNNxqJXm591PcEZUozZm51ogwQ==}
+  /rollup@3.27.0:
+    resolution: {integrity: sha512-aOltLCrYZ0FhJDm7fCqwTjIUEVjWjcydKBV/Zeid6Mn8BWgDCUBBWT5beM5ieForYNo/1ZHuGJdka26kvQ3Gzg==}
     engines: {node: '>=14.18.0', npm: '>=8.0.0'}
     hasBin: true
     optionalDependencies:
@@ -1203,14 +1198,14 @@ packages:
     resolution: {integrity: sha512-Cat63mxsVJlzYvN51JmVXIgNoUokrIaT2zLclCXjRd8boZ0004U4KCs/sToJ75C6sdlByWxpYnb5Boif1VSFew==}
     dev: false
 
-  /ts-clone-node@2.0.4(typescript@5.1.3):
+  /ts-clone-node@2.0.4(typescript@5.1.6):
     resolution: {integrity: sha512-eG6FAgmQsenhIJOIFhUcO6yyYejBKZIKcI3y21jiQmIOrth5pD6GElyPAyeihbPSyBs3u/9PVNXy+5I7jGy8jA==}
     engines: {node: '>=14.9.0'}
     peerDependencies:
       typescript: ^3.x || ^4.x
     dependencies:
-      compatfactory: 2.0.9(typescript@5.1.3)
-      typescript: 5.1.3
+      compatfactory: 2.0.9(typescript@5.1.6)
+      typescript: 5.1.6
     dev: true
 
   /tslib@2.6.1:
@@ -1255,8 +1250,8 @@ packages:
       is-typed-array: 1.1.12
     dev: true
 
-  /typescript@5.1.3:
-    resolution: {integrity: sha512-XH627E9vkeqhlZFQuL+UsyAXEnibT0kWR2FWONlr4sTjvxyJYnyefgrkyECLzM5NenmKzRAy2rR/OlYLA1HkZw==}
+  /typescript@5.1.6:
+    resolution: {integrity: sha512-zaWCozRZ6DLEWAWFrVDz1H6FVXzUSfTy5FUMWsQlU8Ym5JP9eO4xkTIROFCQvhQf61z6O/G6ugw3SgAnvvm+HA==}
     engines: {node: '>=14.17'}
     hasBin: true
     dev: true
@@ -1274,13 +1269,13 @@ packages:
       which-boxed-primitive: 1.0.2
     dev: true
 
-  /update-browserslist-db@1.0.11(browserslist@4.21.9):
+  /update-browserslist-db@1.0.11(browserslist@4.21.10):
     resolution: {integrity: sha512-dCwEFf0/oT85M1fHBg4F0jtLwJrutGoHSQXCh7u4o2t1drG+c0a9Flnqww6XUKSfQMPpJBRjU8d4RXB09qtvaA==}
     hasBin: true
     peerDependencies:
       browserslist: '>= 4.21.0'
     dependencies:
-      browserslist: 4.21.9
+      browserslist: 4.21.10
       escalade: 3.1.1
       picocolors: 1.0.0
     dev: true
@@ -1346,9 +1341,9 @@ packages:
     version: 1.0.0
     dev: false
 
-  github.com/mwszekely/preact-prop-helpers/29f63aee10bbd2b3360a3ce9f5e2e15b24721063(preact@10.13.2)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {tarball: https://codeload.github.com/mwszekely/preact-prop-helpers/tar.gz/29f63aee10bbd2b3360a3ce9f5e2e15b24721063}
-    id: github.com/mwszekely/preact-prop-helpers/29f63aee10bbd2b3360a3ce9f5e2e15b24721063
+  github.com/mwszekely/preact-prop-helpers/d71273ffd205a6f177b6a0e04b95495723d9608d(preact@10.13.2)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {tarball: https://codeload.github.com/mwszekely/preact-prop-helpers/tar.gz/d71273ffd205a6f177b6a0e04b95495723d9608d}
+    id: github.com/mwszekely/preact-prop-helpers/d71273ffd205a6f177b6a0e04b95495723d9608d
     name: preact-prop-helpers
     version: 0.0.1
     peerDependencies:

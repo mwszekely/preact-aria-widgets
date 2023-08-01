@@ -22,7 +22,7 @@ export function useTabs({ labelParameters, linearNavigationParameters, singleSel
     // Those are in useTabList itself.
     const { context: managedChildContext, managedChildrenReturn: panelChildrenReturn } = useManagedChildren({
         managedChildrenParameters: {
-            onChildrenMountChange: useStableCallback((_m, _u) => { reevaluateClosestFit(); })
+            onChildrenMountChange: useStableCallback((_m, _u) => { reevaluateClosestFit(undefined); })
         }
     });
     const { changeIndex: changeVisiblePanel, getCurrentIndex: getVisibleIndex, reevaluateClosestFit } = useChildrenFlag({
@@ -36,7 +36,7 @@ export function useTabs({ labelParameters, linearNavigationParameters, singleSel
         onIndexChange: null
     });
     useLayoutEffect(() => {
-        changeVisiblePanel(initiallySelectedIndex ?? null);
+        changeVisiblePanel(initiallySelectedIndex ?? null, undefined);
     }, []);
     const { propsInput, propsLabel, randomIdInputReturn: { id: _inputId }, randomIdLabelReturn: { id: _labelId }, } = useLabelSynthetic({
         labelParameters: { ...labelParameters, onLabelClick: useStableCallback(() => listNavRet1.rovingTabIndexReturn.focusSelf()) },
@@ -49,9 +49,9 @@ export function useTabs({ labelParameters, linearNavigationParameters, singleSel
         singleSelectionParameters: {
             onSelectedIndexChange: useStableCallback((e) => {
                 ssi?.(e);
-                changeVisiblePanel(e[EventDetail].selectedIndex);
+                changeVisiblePanel(e[EventDetail].selectedIndex, e);
                 setLocalStorageIndex(e[EventDetail].selectedIndex);
-                changeSelectedIndex(e[EventDetail].selectedIndex);
+                changeSelectedIndex(e[EventDetail].selectedIndex, e);
             }),
             ariaPropName: "aria-selected",
             selectionMode: selectionMode ?? "focus",

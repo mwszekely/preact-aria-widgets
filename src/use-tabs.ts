@@ -127,7 +127,7 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
     const { context: managedChildContext, managedChildrenReturn: panelChildrenReturn } = useManagedChildren<TabPanelInfo>({
         managedChildrenParameters: {
 
-            onChildrenMountChange: useStableCallback<OnChildrenMountChange<number>>((_m, _u) => { reevaluateClosestFit(); })
+            onChildrenMountChange: useStableCallback<OnChildrenMountChange<number>>((_m, _u) => { reevaluateClosestFit(undefined!); })
         }
     });
 
@@ -143,7 +143,7 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
     });
 
     useLayoutEffect(() => {
-        changeVisiblePanel(initiallySelectedIndex ?? null);
+        changeVisiblePanel(initiallySelectedIndex ?? null, undefined!);
     }, [])
 
     const {
@@ -168,9 +168,9 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
         singleSelectionParameters: {
             onSelectedIndexChange: useStableCallback((e) => {
                 ssi?.(e);
-                changeVisiblePanel(e[EventDetail].selectedIndex);
+                changeVisiblePanel(e[EventDetail].selectedIndex, e);
                 setLocalStorageIndex(e[EventDetail].selectedIndex);
-                changeSelectedIndex(e[EventDetail].selectedIndex);
+                changeSelectedIndex(e[EventDetail].selectedIndex, e);
             }),
             ariaPropName: "aria-selected",
             selectionMode: selectionMode ?? "focus",
