@@ -1,4 +1,4 @@
-import { ElementProps, TargetedPick, UseDismissParameters, UseEscapeDismissParameters } from "preact-prop-helpers";
+import { ElementProps, TargetedPick, UseDismissParameters, UseEscapeDismissParameters, UsePressReturnType } from "preact-prop-helpers";
 export type TooltipStatus = "hover" | "focus" | null;
 export interface UseTooltipParametersSelf {
     /**
@@ -24,8 +24,9 @@ export interface UseTooltipParametersSelf {
      * Default is 0.
      */
     hoverDelay: number | null;
+    usesLongPress: boolean;
 }
-export interface UseTooltipParameters<TriggerType extends Element, PopupType extends Element> extends TargetedPick<UseEscapeDismissParameters<PopupType, true>, "escapeDismissParameters", "getDocument" | "parentDepth">, Pick<UseDismissParameters<any>, "activeElementParameters"> {
+export interface UseTooltipParameters<TriggerType extends Element, PopupType extends Element> extends TargetedPick<UseEscapeDismissParameters<PopupType, true>, "escapeDismissParameters", "getDocument" | "parentDepth">, TargetedPick<UsePressReturnType<TriggerType>, "pressReturn", "longPress">, Pick<UseDismissParameters<any>, "activeElementParameters"> {
     tooltipParameters: UseTooltipParametersSelf;
 }
 export type TooltipState = `${"hovering" | "focused"}-${"popup" | "trigger"}` | null;
@@ -36,7 +37,7 @@ export type TooltipState = `${"hovering" | "focused"}-${"popup" | "trigger"}` | 
  *
  * @compositeParams
  */
-export declare function useTooltip<TriggerType extends Element, PopupType extends Element>({ tooltipParameters: { onStatus, tooltipSemanticType, hoverDelay }, activeElementParameters, escapeDismissParameters, ...void1 }: UseTooltipParameters<TriggerType, PopupType>): UseTooltipReturnType<TriggerType, PopupType>;
+export declare function useTooltip<TriggerType extends Element, PopupType extends Element>({ tooltipParameters: { onStatus, tooltipSemanticType, hoverDelay, usesLongPress }, activeElementParameters, escapeDismissParameters, pressReturn: { longPress, ...void2 }, ...void1 }: UseTooltipParameters<TriggerType, PopupType>): UseTooltipReturnType<TriggerType, PopupType>;
 export interface UseTooltipReturnTypeSelf {
     getState(): TooltipState;
 }

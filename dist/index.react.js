@@ -515,8 +515,7 @@ function useBackdropDismiss({ backdropDismissParameters: { dismissBackdropActive
 const EventDetail = Symbol("event-detail");
 function enhanceEvent(e, detail) {
     const event = (e ?? {});
-    event[EventDetail] ??= {};
-    Object.assign(event[EventDetail], detail);
+    event[EventDetail] = detail;
     return event;
 }
 
@@ -7184,6 +7183,27 @@ function useToast({ toastParameters: { politeness, timeout, children }, info: { 
     };
 }
 
+// Intentionally (?) unused
+matchMedia("(any-hover: hover)");
+// Track if the current input has hover capabilities
+// (This is responsive to whatever the "primary" device is)
+let mediaQuery = matchMedia("(hover: hover)");
+let pageCurrentlyUsingHover = mediaQuery.matches;
+let allCallbacks = new Set();
+mediaQuery.onchange = ev => { pageCurrentlyUsingHover = ev.matches; allCallbacks.forEach(fn => fn(ev.matches)); };
+//setTimeout(() => alert(`Hover: ${pageCurrentlyUsingHover.toString()}`), 1000);
+/*
+//let delayedAlert2 = debounce(delayedAlert3, 4000);
+let messages = new Set<string>();
+const delayedAlert2 = debounce(function delayedAlert3() {
+    alert([...messages].join("\n"));
+    messages.clear();
+}, 2500);
+
+function delayedAlert(message: string) {
+    messages.add(message);
+    delayedAlert2();
+}*/
 /**
  * Implements a [Tooltip](https://www.w3.org/WAI/ARIA/apg/patterns/tooltip/) pattern.
  *
@@ -7191,13 +7211,19 @@ function useToast({ toastParameters: { politeness, timeout, children }, info: { 
  *
  * @compositeParams
  */
-function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType, hoverDelay }, activeElementParameters, escapeDismissParameters, ...void1 }) {
+function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType, hoverDelay, usesLongPress }, activeElementParameters, escapeDismissParameters, pressReturn: { longPress, ...void2 }, ...void1 }) {
     monitorCallCount(useTooltip);
     useGlobalHandler(window, "mouseout", T$1((e) => {
         console.log(e);
         if (e.relatedTarget == null)
             onHoverChanged(false, "popup");
     }, []));
+    const [usesHover, setUsesHover] = useState(pageCurrentlyUsingHover);
+    p(() => {
+        let handler = (ev) => { setUsesHover(ev.matches); };
+        mediaQuery.addEventListener("change", handler, { passive: true });
+        return () => mediaQuery.removeEventListener("change", handler, {});
+    });
     /**
      * Whether the hover/focus-popup/trigger state we have results in us showing this tooltip.
      *
@@ -7205,6 +7231,7 @@ function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType, hoverD
      */
     const [openLocal, setOpenLocal] = useState(false);
     const [getState, setState] = usePassiveState(useStableCallback((nextState, prevState) => {
+        //delayedAlert(`${prevState ?? "null"} to ${nextState}`);
         if (hoverTimeoutHandle.current) {
             clearTimeout(hoverTimeoutHandle.current);
             hoverTimeoutHandle.current = null;
@@ -7229,26 +7256,32 @@ function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType, hoverD
     let { propsReferencer: propsTrigger, propsSource: propsPopup } = useRandomId({ randomIdParameters: { prefix: Prefices.tooltip, otherReferencerProp: (tooltipSemanticType == "description" ? "aria-describedby" : "aria-labelledby") } });
     const { refElementReturn: { getElement: getTriggerElement }, propsStable: triggerRefProps } = useRefElement({ refElementParameters: {} });
     const { refElementReturn: { getElement: getPopupElement }, propsStable: popupRefProps } = useRefElement({ refElementParameters: {} });
-    //let inputState = useRef<"hover" | "keyboard" | "longpress">()
-    //const stateIsMouse = useCallback(() => (getState()?.startsWith("h") || false), []);
-    //const stateIsFocus = useCallback(() => (getState()?.startsWith("f") || false), []);
     let inputState = _$1(null);
     let hoverTimeoutHandle = _$1(null);
     const onHoverChanged = useStableCallback((hovering, which) => {
         if (hoverTimeoutHandle.current)
             clearTimeout(hoverTimeoutHandle.current);
+        //delayedAlert(`onHoverChanged(${hovering.toString()}, ${which}) with inputState == ${inputState.current}`)
+        // Ignore emulated cursor hover events when we're not even using a pointer
+        // if ()
+        //    return;
         if (hovering) {
             inputState.current = "hover";
-            hoverTimeoutHandle.current = setTimeout(() => {
-                setState(`hovering-${which}`);
-                hoverTimeoutHandle.current = null;
-            }, hoverDelay || 0);
+            if (usesLongPress && !usesHover) ;
+            else {
+                hoverTimeoutHandle.current = setTimeout(() => {
+                    setState(`hovering-${which}`);
+                    hoverTimeoutHandle.current = null;
+                }, hoverDelay || 0);
+            }
         }
         else {
             setState(null);
+            inputState.current = null;
         }
     });
     const onCurrentFocusedInnerChanged = T$1((focused, which) => {
+        // delayedAlert(`onFocusedChanged(${focused.toString()}, ${which}) with inputState == ${inputState.current}`)
         if (inputState.current != "hover") {
             if (focused) {
                 inputState.current = 'focus';
@@ -7256,10 +7289,12 @@ function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType, hoverD
             }
             else {
                 setState(null);
+                inputState.current = null;
             }
         }
         else {
             setState(null);
+            inputState.current = null;
         }
     }, []);
     const onTriggerCurrentFocusedInnerChanged = T$1((focused) => onCurrentFocusedInnerChanged(focused, "trigger"), [onCurrentFocusedInnerChanged]);
@@ -7295,8 +7330,26 @@ function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType, hoverD
     const otherTriggerProps = {
         onPointerEnter: T$1(() => { onHoverChanged(true, "trigger"); }, []),
         onPointerUp: T$1(() => { onHoverChanged(false, "trigger"); }, []),
-        onClick: T$1((e) => { onHoverChanged(true, "trigger"); if (e.currentTarget && "focus" in e.currentTarget)
-            focus(e.currentTarget); }, []),
+        onClick: useStableCallback((e) => {
+            // When we click/tap the trigger,
+            // if we can't hover it
+            if (!usesHover) {
+                // We can't hover the trigger we just tapped
+                if (usesLongPress) ;
+                else {
+                    // Presumably static text content or something else -- focus it so the tooltip will show
+                    onCurrentFocusedInnerChanged(true, "trigger");
+                    focus(e.currentTarget);
+                }
+            }
+            else {
+                // We're using a mouse or other hovering pointer (so not a stylus/touchscreen)
+                onHoverChanged(true, "trigger");
+            }
+            /*onHoverChanged(true, "trigger");
+            if (e.currentTarget && "focus" in e.currentTarget)
+            focus(e.currentTarget as HTMLElement); */
+        }),
         //onPointerLeave: useCallback(() => { onHoverChanged(false, "trigger") }, [])
     };
     useGlobalHandler(document, "pointermove", !openLocal ? null : (e => {
@@ -7309,6 +7362,17 @@ function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType, hoverD
             onHoverChanged(false, "popup");
         }
     }), { capture: true, passive: true });
+    p(() => {
+        // When a long press starts, if we use those and we're on a touch device,
+        // then show the tooltip by focusing the trigger.
+        if (usesLongPress && !usesHover) {
+            if (longPress) {
+                inputState.current = null;
+                onCurrentFocusedInnerChanged(true, "trigger");
+                focus(getTriggerElement());
+            }
+        }
+    }, [longPress, usesHover, usesLongPress]);
     return {
         propsPopup: useMergedProps(popupRefProps, propsPopup, popupFocusReturn.propsStable, { role: "tooltip" }, otherPopupProps, propsStablePopup),
         propsTrigger: useMergedProps(triggerRefProps, propsTrigger, triggerFocusReturn.propsStable, { onClick: useStableCallback(e => focus(e.currentTarget)) }, otherTriggerProps, propsStableSource),
@@ -8337,7 +8401,7 @@ function ToolbarChild({ index, render, focusSelf, getSortValue, getText, unselec
     return (o(_$2, { children: render(info) }));
 }
 
-const Tooltip = memo(function TooltipU({ onStatus, getDocument, parentDepth, hoverDelay, render, imperativeHandle, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, tooltipSemanticType, ...void1 }) {
+const Tooltip = memo(function TooltipU({ onStatus, getDocument, parentDepth, hoverDelay, render, imperativeHandle, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, tooltipSemanticType, usesLongPress, longPress, ...void1 }) {
     const defaultParentDepth = q$1(ParentDepthContext);
     let myDepth = (parentDepth ?? defaultParentDepth) + 1;
     return (o(ParentDepthContext.Provider, { value: myDepth, children: useComponent(imperativeHandle, render, null, useTooltip({
@@ -8354,8 +8418,10 @@ const Tooltip = memo(function TooltipU({ onStatus, getDocument, parentDepth, hov
             tooltipParameters: {
                 onStatus,
                 tooltipSemanticType,
-                hoverDelay: hoverDelay ?? null
-            }
+                hoverDelay: hoverDelay ?? null,
+                usesLongPress: usesLongPress || false
+            },
+            pressReturn: { longPress: longPress || false }
         })) }));
 });
 

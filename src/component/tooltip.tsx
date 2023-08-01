@@ -1,12 +1,12 @@
 import { assertEmptyObject, memo } from "preact-prop-helpers";
 import { useContext } from "preact/compat";
-import { Get3 } from "../props.js";
+import { Get4 } from "../props.js";
 import { UseTooltipParameters, UseTooltipReturnType, useTooltip } from "../use-tooltip.js";
 import { GenericComponentProps, ParentDepthContext, useComponent, useDefault } from "./util.js";
 
 export type TooltipProps<TriggerType extends Element, PopupType extends Element> = GenericComponentProps<
     UseTooltipReturnType<TriggerType, PopupType>,
-    Get3<UseTooltipParameters<TriggerType, PopupType>, "escapeDismissParameters", "tooltipParameters", "activeElementParameters">,
+    Get4<UseTooltipParameters<TriggerType, PopupType>, "escapeDismissParameters", "tooltipParameters", "activeElementParameters", "pressReturn">,
     "tooltipSemanticType" | "onStatus"
 >;
 
@@ -21,6 +21,8 @@ export const Tooltip = memo(function TooltipU<TriggerType extends Element, Popup
     onLastActiveElementChange,
     onWindowFocusedChange,
     tooltipSemanticType,
+    usesLongPress,
+    longPress,
     ...void1
 }: TooltipProps<TriggerType, PopupType>) {
 
@@ -48,8 +50,10 @@ export const Tooltip = memo(function TooltipU<TriggerType extends Element, Popup
                     tooltipParameters: {
                         onStatus,
                         tooltipSemanticType,
-                        hoverDelay: hoverDelay ?? null
-                    }
+                        hoverDelay: hoverDelay ?? null,
+                        usesLongPress: usesLongPress || false
+                    },
+                    pressReturn: { longPress: longPress || false }
                 }))}
         </ParentDepthContext.Provider>
     )

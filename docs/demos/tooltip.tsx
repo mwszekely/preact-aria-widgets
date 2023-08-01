@@ -1,4 +1,5 @@
 
+import { useMergedProps, usePress, useRefElement } from "preact-prop-helpers";
 import { useState } from "preact/hooks";
 import { Tooltip, TooltipStatus, useDefaultRenderPortal } from "../../dist/index.js";
 
@@ -11,6 +12,7 @@ export function Blurb() {
                 <li>The tooltip stays shown when it itself is hovered/focused as well, so that the text inside can be selected</li>
                 <li>Moving the mouse between the trigger and the tooltip has some tolerance associated with immediately hiding the tooltip.</li>
                 <li>Hovering, focusing, and re-hovering can each have a custom delay associated with it</li>
+                <li>When not using a pointer that can hover, tooltips can be activated with a long press (from `usePress`, used by buttons, checkboxes, list items, etc.)</li>
             </ul>
             <p><strong>Things <em>not</em> handled:</strong></p>
             <ul>
@@ -27,25 +29,46 @@ export function Code() {
 
 export function Demo() {
 
-    const [tooltipStatus, setTooltipStatus] = useState<TooltipStatus>(null);
+    const [tooltipStatusText, setTooltipStatusText] = useState<TooltipStatus>(null);
+    const [tooltipStatusButton, setTooltipStatusButton] = useState<TooltipStatus>(null);
+    const { propsStable, refElementReturn } = useRefElement<HTMLButtonElement>({ refElementParameters: {} })
+    const { pressReturn, props } = usePress<HTMLButtonElement>({ pressParameters: { allowRepeatPresses: false, excludeEnter: null, excludePointer: null, excludeSpace: null, focusSelf: e => e.focus(), longPressThreshold: 1000, onPressingChange: null, onPressSync: () => alert("Button clicked") }, refElementReturn })
 
     return (
         <>
             <Blurb />
             <Code />
             <div>
-                The following text triggers a tooltip: <Tooltip<HTMLSpanElement, HTMLDivElement> 
-                tooltipSemanticType="description"
-                onStatus={setTooltipStatus}
-                hoverDelay={500}
-                render={info => {
-                    return <>
-                        <span tabIndex={0} {...info.propsTrigger}>Tooltip-triggering text that is hoverable and focusable: </span>
-                        {useDefaultRenderPortal({
-                            portalId: "portal",
-                            children: <div {...info.propsPopup} hidden={!tooltipStatus}>This text describes the triggering text in more detail.</div>
-                        })}</>
-                }} />
+                The following text triggers a tooltip:
+                <Tooltip<HTMLSpanElement, HTMLDivElement>
+                    tooltipSemanticType="description"
+                    onStatus={setTooltipStatusText}
+                    hoverDelay={500}
+                    render={info => {
+                        return <>
+                            <span tabIndex={0} {...info.propsTrigger}>Tooltip-triggering text that is hoverable and focusable: </span>
+                            {useDefaultRenderPortal({
+                                portalId: "portal",
+                                children: <div {...info.propsPopup} hidden={!tooltipStatusText}>This text describes the triggering text in more detail.</div>
+                            })}</>
+                    }} />
+            </div>
+            <div>
+                Also, this is a button with a tooltip. It behaves slightly differently:
+                <Tooltip<HTMLButtonElement, HTMLDivElement>
+                    tooltipSemanticType="description"
+                    onStatus={setTooltipStatusButton}
+                    hoverDelay={500}
+                    usesLongPress={true}
+                    longPress={pressReturn.longPress}
+                    render={info => {
+                        return <>
+                            <button {...useMergedProps(info.propsTrigger, propsStable, props)}>Button with a tooltip </button>
+                            {useDefaultRenderPortal({
+                                portalId: "portal",
+                                children: <div {...info.propsPopup} hidden={!tooltipStatusButton}>Tooltip for the button</div>
+                            })}</>
+                    }} />
             </div>
         </>
     )

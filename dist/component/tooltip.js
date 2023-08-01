@@ -3,7 +3,7 @@ import { assertEmptyObject, memo } from "preact-prop-helpers";
 import { useContext } from "preact/compat";
 import { useTooltip } from "../use-tooltip.js";
 import { ParentDepthContext, useComponent, useDefault } from "./util.js";
-export const Tooltip = memo(function TooltipU({ onStatus, getDocument, parentDepth, hoverDelay, render, imperativeHandle, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, tooltipSemanticType, ...void1 }) {
+export const Tooltip = memo(function TooltipU({ onStatus, getDocument, parentDepth, hoverDelay, render, imperativeHandle, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, tooltipSemanticType, usesLongPress, longPress, ...void1 }) {
     const defaultParentDepth = useContext(ParentDepthContext);
     let myDepth = (parentDepth ?? defaultParentDepth) + 1;
     assertEmptyObject(void1);
@@ -21,8 +21,10 @@ export const Tooltip = memo(function TooltipU({ onStatus, getDocument, parentDep
             tooltipParameters: {
                 onStatus,
                 tooltipSemanticType,
-                hoverDelay: hoverDelay ?? null
-            }
+                hoverDelay: hoverDelay ?? null,
+                usesLongPress: usesLongPress || false
+            },
+            pressReturn: { longPress: longPress || false }
         })) }));
 });
 //# sourceMappingURL=tooltip.js.map

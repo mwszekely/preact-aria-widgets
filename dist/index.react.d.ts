@@ -1275,11 +1275,25 @@ interface UseTooltipParametersSelf {
      * Default is 0.
      */
     hoverDelay: number | null;
+    usesLongPress: boolean;
 }
-interface UseTooltipParameters<TriggerType extends Element, PopupType extends Element> extends TargetedPick<UseEscapeDismissParameters<PopupType, true>, "escapeDismissParameters", "getDocument" | "parentDepth">, Pick<UseDismissParameters<any>, "activeElementParameters"> {
+interface UseTooltipParameters<TriggerType extends Element, PopupType extends Element> extends TargetedPick<UseEscapeDismissParameters<PopupType, true>, "escapeDismissParameters", "getDocument" | "parentDepth">, TargetedPick<UsePressReturnType<TriggerType>, "pressReturn", "longPress">, Pick<UseDismissParameters<any>, "activeElementParameters"> {
     tooltipParameters: UseTooltipParametersSelf;
 }
 type TooltipState = `${"hovering" | "focused"}-${"popup" | "trigger"}` | null;
+//setTimeout(() => alert(`Hover: ${pageCurrentlyUsingHover.toString()}`), 1000);
+/*
+//let delayedAlert2 = debounce(delayedAlert3, 4000);
+let messages = new Set<string>();
+const delayedAlert2 = debounce(function delayedAlert3() {
+alert([...messages].join("\n"));
+messages.clear();
+}, 2500);
+
+function delayedAlert(message: string) {
+messages.add(message);
+delayedAlert2();
+}*/
 /**
  * Implements a [Tooltip](https://www.w3.org/WAI/ARIA/apg/patterns/tooltip/) pattern.
  *
@@ -1287,7 +1301,7 @@ type TooltipState = `${"hovering" | "focused"}-${"popup" | "trigger"}` | null;
  *
  * @compositeParams
  */
-declare function useTooltip<TriggerType extends Element, PopupType extends Element>({ tooltipParameters: { onStatus, tooltipSemanticType, hoverDelay }, activeElementParameters, escapeDismissParameters, ...void1 }: UseTooltipParameters<TriggerType, PopupType>): UseTooltipReturnType<TriggerType, PopupType>;
+declare function useTooltip<TriggerType extends Element, PopupType extends Element>({ tooltipParameters: { onStatus, tooltipSemanticType, hoverDelay, usesLongPress }, activeElementParameters, escapeDismissParameters, pressReturn: { longPress, ...void2 }, ...void1 }: UseTooltipParameters<TriggerType, PopupType>): UseTooltipReturnType<TriggerType, PopupType>;
 interface UseTooltipReturnTypeSelf {
     getState(): TooltipState;
 }
@@ -1495,8 +1509,8 @@ type ToolbarChildProps<ToolbarChildElement extends Element, M extends UseToolbar
 };
 declare const Toolbar: <ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({ render, role, collator, disableHomeEndKeys, disabled, compare, getIndex, navigatePastEnd, navigatePastStart, pageNavigationSize, selectedIndex, onSelectedIndexChange, orientation, noTypeahead, onTabbableIndexChange, typeaheadTimeout, staggered, ariaLabel, ariaPropName, selectionMode, untabbable, onNavigateLinear, onNavigateTypeahead, onElementChange, onMount, onUnmount }: ToolbarProps<ContainerElement, ChildElement, LabelElement, UseToolbarSubInfo<ChildElement>>, ref?: Ref<any>) => import("preact").JSX.Element;
 declare function ToolbarChild<ToolbarChildElement extends Element>({ index, render, focusSelf, getSortValue, getText, unselectable, disabledProp, untabbable, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, imperativeHandle, info }: ToolbarChildProps<ToolbarChildElement, UseToolbarSubInfo<ToolbarChildElement>>): import("preact").JSX.Element;
-type TooltipProps<TriggerType extends Element, PopupType extends Element> = GenericComponentProps<UseTooltipReturnType<TriggerType, PopupType>, Get3<UseTooltipParameters<TriggerType, PopupType>, "escapeDismissParameters", "tooltipParameters", "activeElementParameters">, "tooltipSemanticType" | "onStatus">;
-declare const Tooltip: <TriggerType extends Element, PopupType extends Element>({ onStatus, getDocument, parentDepth, hoverDelay, render, imperativeHandle, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, tooltipSemanticType, ...void1 }: TooltipProps<TriggerType, PopupType>) => import("preact-prop-helpers").JSX.Element;
+type TooltipProps<TriggerType extends Element, PopupType extends Element> = GenericComponentProps<UseTooltipReturnType<TriggerType, PopupType>, Get4<UseTooltipParameters<TriggerType, PopupType>, "escapeDismissParameters", "tooltipParameters", "activeElementParameters", "pressReturn">, "tooltipSemanticType" | "onStatus">;
+declare const Tooltip: <TriggerType extends Element, PopupType extends Element>({ onStatus, getDocument, parentDepth, hoverDelay, render, imperativeHandle, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, tooltipSemanticType, usesLongPress, longPress, ...void1 }: TooltipProps<TriggerType, PopupType>) => import("preact-prop-helpers").JSX.Element;
 declare module 'preact' {
     namespace h {
         namespace JSX {
