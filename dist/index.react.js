@@ -515,7 +515,8 @@ function useBackdropDismiss({ backdropDismissParameters: { dismissBackdropActive
 const EventDetail = Symbol("event-detail");
 function enhanceEvent(e, detail) {
     const event = (e ?? {});
-    event[EventDetail] = detail;
+    event[EventDetail] ??= {};
+    Object.assign(event[EventDetail], detail);
     return event;
 }
 
@@ -7208,6 +7209,8 @@ function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType, hoverD
             clearTimeout(hoverTimeoutHandle.current);
             hoverTimeoutHandle.current = null;
         }
+        if (nextState == null)
+            inputState.current = null;
         switch (nextState) {
             case "focused-popup":
             case "focused-trigger":
@@ -7226,13 +7229,16 @@ function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType, hoverD
     let { propsReferencer: propsTrigger, propsSource: propsPopup } = useRandomId({ randomIdParameters: { prefix: Prefices.tooltip, otherReferencerProp: (tooltipSemanticType == "description" ? "aria-describedby" : "aria-labelledby") } });
     const { refElementReturn: { getElement: getTriggerElement }, propsStable: triggerRefProps } = useRefElement({ refElementParameters: {} });
     const { refElementReturn: { getElement: getPopupElement }, propsStable: popupRefProps } = useRefElement({ refElementParameters: {} });
-    const stateIsMouse = T$1(() => (getState()?.startsWith("h") || false), []);
-    const stateIsFocus = T$1(() => (getState()?.startsWith("f") || false), []);
+    //let inputState = useRef<"hover" | "keyboard" | "longpress">()
+    //const stateIsMouse = useCallback(() => (getState()?.startsWith("h") || false), []);
+    //const stateIsFocus = useCallback(() => (getState()?.startsWith("f") || false), []);
+    let inputState = _$1(null);
     let hoverTimeoutHandle = _$1(null);
     const onHoverChanged = useStableCallback((hovering, which) => {
         if (hoverTimeoutHandle.current)
             clearTimeout(hoverTimeoutHandle.current);
         if (hovering) {
+            inputState.current = "hover";
             hoverTimeoutHandle.current = setTimeout(() => {
                 setState(`hovering-${which}`);
                 hoverTimeoutHandle.current = null;
@@ -7243,8 +7249,9 @@ function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType, hoverD
         }
     });
     const onCurrentFocusedInnerChanged = T$1((focused, which) => {
-        if (!stateIsMouse()) {
+        if (inputState.current != "hover") {
             if (focused) {
+                inputState.current = 'focus';
                 setState(`focused-${which}`);
             }
             else {
@@ -7254,7 +7261,7 @@ function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType, hoverD
         else {
             setState(null);
         }
-    }, [stateIsMouse]);
+    }, []);
     const onTriggerCurrentFocusedInnerChanged = T$1((focused) => onCurrentFocusedInnerChanged(focused, "trigger"), [onCurrentFocusedInnerChanged]);
     const onPopupCurrentFocusedInnerChanged = T$1((focused) => onCurrentFocusedInnerChanged(focused, "popup"), [onCurrentFocusedInnerChanged]);
     const { hasCurrentFocusReturn: triggerFocusReturn } = useHasCurrentFocus({ hasCurrentFocusParameters: { onCurrentFocusedChanged: null, onCurrentFocusedInnerChanged: onTriggerCurrentFocusedInnerChanged }, refElementReturn: { getElement: getTriggerElement } });
@@ -7287,7 +7294,8 @@ function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType, hoverD
     };
     const otherTriggerProps = {
         onPointerEnter: T$1(() => { onHoverChanged(true, "trigger"); }, []),
-        onClick: T$1((e) => { if (e.currentTarget && "focus" in e.currentTarget)
+        onPointerUp: T$1(() => { onHoverChanged(false, "trigger"); }, []),
+        onClick: T$1((e) => { onHoverChanged(true, "trigger"); if (e.currentTarget && "focus" in e.currentTarget)
             focus(e.currentTarget); }, []),
         //onPointerLeave: useCallback(() => { onHoverChanged(false, "trigger") }, [])
     };
@@ -7297,7 +7305,7 @@ function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType, hoverD
         const mouseElement = e.target;
         let overPopup = (popupElement?.contains(mouseElement));
         let overTrigger = (triggerElement?.contains(mouseElement));
-        if (!overPopup && !overTrigger && stateIsMouse()) {
+        if (!overPopup && !overTrigger && inputState.current == 'hover') {
             onHoverChanged(false, "popup");
         }
     }), { capture: true, passive: true });
@@ -7306,8 +7314,8 @@ function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType, hoverD
         propsTrigger: useMergedProps(triggerRefProps, propsTrigger, triggerFocusReturn.propsStable, { onClick: useStableCallback(e => focus(e.currentTarget)) }, otherTriggerProps, propsStableSource),
         tooltipReturn: {
             getState,
-            stateIsFocus,
-            stateIsMouse
+            //stateIsFocus,
+            //stateIsMouse
         }
     };
 }

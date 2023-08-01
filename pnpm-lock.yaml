@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 dependencies:
   clsx:
     specifier: ^2.0.0
@@ -12,7 +16,7 @@ dependencies:
     version: 10.13.2
   preact-prop-helpers:
     specifier: github:mwszekely/preact-prop-helpers
-    version: github.com/mwszekely/preact-prop-helpers/e99a5897e1c84d0b94c4fd8947674dede99586ec(preact@10.13.2)(react-dom@18.2.0)(react@18.2.0)
+    version: github.com/mwszekely/preact-prop-helpers/a4e782a4c7d59da3905f54a4c6a5c74e38dd85ce(preact@10.13.2)(react-dom@18.2.0)(react@18.2.0)
 
 devDependencies:
   '@playwright/test':
@@ -298,7 +302,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001518
-      electron-to-chromium: 1.4.478
+      electron-to-chromium: 1.4.480
       node-releases: 2.0.13
       update-browserslist-db: 1.0.11(browserslist@4.21.10)
     dev: true
@@ -397,8 +401,8 @@ packages:
       object-keys: 1.1.1
     dev: true
 
-  /electron-to-chromium@1.4.478:
-    resolution: {integrity: sha512-qjTA8djMXd+ruoODDFGnRCRBpID+AAfYWCyGtYTNhsuwxI19s8q19gbjKTwRS5z/LyVf5wICaIiPQGLekmbJbA==}
+  /electron-to-chromium@1.4.480:
+    resolution: {integrity: sha512-IXTgg+bITkQv/FLP9FjX6f9KFCs5hQWeh5uNSKxB9mqYj/JXhHDbu+ekS43LVvbkL3eW6/oZy4+r9Om6lan1Uw==}
     dev: true
 
   /error-ex@1.3.2:
@@ -1341,9 +1345,9 @@ packages:
     version: 1.0.0
     dev: false
 
-  github.com/mwszekely/preact-prop-helpers/e99a5897e1c84d0b94c4fd8947674dede99586ec(preact@10.13.2)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {tarball: https://codeload.github.com/mwszekely/preact-prop-helpers/tar.gz/e99a5897e1c84d0b94c4fd8947674dede99586ec}
-    id: github.com/mwszekely/preact-prop-helpers/e99a5897e1c84d0b94c4fd8947674dede99586ec
+  github.com/mwszekely/preact-prop-helpers/a4e782a4c7d59da3905f54a4c6a5c74e38dd85ce(preact@10.13.2)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {tarball: https://codeload.github.com/mwszekely/preact-prop-helpers/tar.gz/a4e782a4c7d59da3905f54a4c6a5c74e38dd85ce}
+    id: github.com/mwszekely/preact-prop-helpers/a4e782a4c7d59da3905f54a4c6a5c74e38dd85ce
     name: preact-prop-helpers
     version: 0.0.1
     peerDependencies:

@@ -80,6 +80,9 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
             hoverTimeoutHandle.current = null;
         }
 
+        if (nextState == null)
+            inputState.current = null;
+
         switch (nextState) {
             case "focused-popup":
             case "focused-trigger":
@@ -107,8 +110,10 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
     const { refElementReturn: { getElement: getTriggerElement }, propsStable: triggerRefProps } = useRefElement<TriggerType>({ refElementParameters: {} });
     const { refElementReturn: { getElement: getPopupElement }, propsStable: popupRefProps } = useRefElement<PopupType>({ refElementParameters: {} });
 
-    const stateIsMouse = useCallback(() => (getState()?.startsWith("h") || false), []);
-    const stateIsFocus = useCallback(() => (getState()?.startsWith("f") || false), []);
+    //let inputState = useRef<"hover" | "keyboard" | "longpress">()
+    //const stateIsMouse = useCallback(() => (getState()?.startsWith("h") || false), []);
+    //const stateIsFocus = useCallback(() => (getState()?.startsWith("f") || false), []);
+    let inputState = useRef<"hover" | "focus" | null>(null);
 
     let hoverTimeoutHandle = useRef(null as number | null);
     const onHoverChanged = useStableCallback((hovering: boolean, which: "popup" | "trigger") => {
@@ -116,6 +121,8 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
             clearTimeout(hoverTimeoutHandle.current);
 
         if (hovering) {
+            inputState.current = "hover";
+
             hoverTimeoutHandle.current = setTimeout(() => {
                 setState(`hovering-${which}`);
                 hoverTimeoutHandle.current = null;
@@ -127,8 +134,9 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
     })
 
     const onCurrentFocusedInnerChanged = useCallback((focused: boolean, which: "popup" | "trigger") => {
-        if (!stateIsMouse()) {
+        if (inputState.current != "hover") {
             if (focused) {
+                inputState.current = 'focus';
                 setState(`focused-${which}`);
             }
             else {
@@ -138,7 +146,7 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
         else {
             setState(null);
         }
-    }, [stateIsMouse]);
+    }, []);
 
     const onTriggerCurrentFocusedInnerChanged = useCallback((focused: boolean) => onCurrentFocusedInnerChanged(focused, "trigger"), [onCurrentFocusedInnerChanged]);
     const onPopupCurrentFocusedInnerChanged = useCallback((focused: boolean) => onCurrentFocusedInnerChanged(focused, "popup"), [onCurrentFocusedInnerChanged]);
@@ -182,7 +190,8 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
     }
     const otherTriggerProps = {
         onPointerEnter: useCallback(() => { onHoverChanged(true, "trigger") }, []),
-        onClick: useCallback((e: MouseEvent) => { if (e.currentTarget && "focus" in e.currentTarget) focus(e.currentTarget as HTMLElement); }, []),
+        onPointerUp: useCallback(() => { onHoverChanged(false, "trigger") }, []),
+        onClick: useCallback((e: MouseEvent) => { onHoverChanged(true, "trigger"); if (e.currentTarget && "focus" in e.currentTarget) focus(e.currentTarget as HTMLElement); }, []),
         //onPointerLeave: useCallback(() => { onHoverChanged(false, "trigger") }, [])
     }
 
@@ -192,7 +201,7 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
         const mouseElement = e.target as Node | null;
         let overPopup = (popupElement?.contains(mouseElement))
         let overTrigger = (triggerElement?.contains(mouseElement))
-        if (!overPopup && !overTrigger && stateIsMouse()) {
+        if (!overPopup && !overTrigger && inputState.current == 'hover') {
             onHoverChanged(false, "popup");
         }
     }), { capture: true, passive: true })
@@ -204,16 +213,16 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
         propsTrigger: useMergedProps<TriggerType>(triggerRefProps, propsTrigger, triggerFocusReturn.propsStable, { onClick: useStableCallback(e => focus(e.currentTarget as Element as HTMLElement)) }, otherTriggerProps, propsStableSource),
         tooltipReturn: {
             getState,
-            stateIsFocus,
-            stateIsMouse
+            //stateIsFocus,
+            //stateIsMouse
         }
     }
 }
 
 export interface UseTooltipReturnTypeSelf {
     getState(): TooltipState;
-    stateIsFocus(): boolean;
-    stateIsMouse(): boolean;
+    //stateIsFocus(): boolean;
+    //stateIsMouse(): boolean;
 }
 
 export interface UseTooltipReturnType<TriggerType extends Element, PopupType extends Element> {
