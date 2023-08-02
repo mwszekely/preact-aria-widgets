@@ -1,4 +1,4 @@
-import { focus, monitorCallCount, useCompleteListNavigationChild, useCompleteListNavigationDeclarative, useMemoObject, useMergedProps } from "preact-prop-helpers";
+import { assertEmptyObject, focus, monitorCallCount, useCompleteListNavigationChild, useCompleteListNavigationDeclarative, useMemoObject, useMergedProps } from "preact-prop-helpers";
 import { Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
 ;
@@ -14,20 +14,28 @@ import { useLabelSynthetic } from "./use-label.js";
  *
  * @compositeParams
  */
-export function useToolbar({ linearNavigationParameters, toolbarParameters: { orientation, role, selectedIndex, onSelectedIndexChange, disabled }, labelParameters, rovingTabIndexParameters, ...listNavParameters }) {
+export function useToolbar({ linearNavigationParameters, toolbarParameters: { orientation, role, selectedIndex, onSelectedIndexChange, disabled, selectionLimit, ...void1 }, labelParameters, rovingTabIndexParameters, singleSelectionParameters: { selectionMode, ...singleSelectionParameters }, ...listNavParameters }) {
     monitorCallCount(useToolbar);
+    if (selectionLimit != 'single') {
+        console.assert(selectedIndex == null);
+        console.assert(selectionMode == 'disabled');
+        selectedIndex = null;
+        selectionMode = 'disabled';
+    }
     const { context, props, ...listNavReturn } = useCompleteListNavigationDeclarative({
         ...listNavParameters,
         rovingTabIndexParameters: { ...rovingTabIndexParameters, untabbable: disabled, focusSelfParent: focus },
         singleSelectionDeclarativeParameters: { selectedIndex, onSelectedIndexChange: disabled ? null : onSelectedIndexChange },
         paginatedChildrenParameters: { paginationMax: null, paginationMin: null },
         linearNavigationParameters: { ...linearNavigationParameters, arrowKeyDirection: orientation },
+        singleSelectionParameters: { selectionMode, ...singleSelectionParameters },
     });
     const { propsInput: propsToolbar, propsLabel, randomIdInputReturn, randomIdLabelReturn } = useLabelSynthetic({
         labelParameters: { ...labelParameters, onLabelClick: listNavReturn.rovingTabIndexReturn.focusSelf },
         randomIdInputParameters: { prefix: Prefices.toolbar },
         randomIdLabelParameters: { prefix: Prefices.toolbarLabel }
     });
+    assertEmptyObject(void1);
     // Note: We return tabIndex=-1 (when not disabled) because some browsers (at least Firefox) seem to add role=toolbar to the tab order?
     // Probably needs a bit more digging because this feels like a bit of a blunt fix.
     return {
@@ -47,9 +55,9 @@ export function useToolbar({ linearNavigationParameters, toolbarParameters: { or
 /**
  * @compositeParams
  */
-export function useToolbarChild({ info, toolbarChildParameters: { disabledProp }, ...args }) {
+export function useToolbarChild({ context: { toolbarContext, ...context }, info, toolbarChildParameters: { disabledProp }, ...args }) {
     monitorCallCount(useToolbarChild);
-    const { propsChild, propsTabbable, ...listNavReturn } = useCompleteListNavigationChild({ info, ...args });
+    const { propsChild, propsTabbable, ...listNavReturn } = useCompleteListNavigationChild({ info, context, ...args });
     return {
         propsChild: useMergedProps(propsChild, { [disabledProp]: info.unselectable ? true : undefined }),
         propsTabbable,

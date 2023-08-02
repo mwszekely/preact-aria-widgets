@@ -10,7 +10,7 @@ import { GenericComponentProps, ParentDepthContext, useComponent, useDefault } f
 export type MenuProps<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> = GenericComponentProps<
     UseMenuReturnType<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement, M>,
     Get16<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, M>, "menuParameters", "menuSurfaceParameters", "linearNavigationParameters", "rovingTabIndexParameters", "typeaheadNavigationParameters", "dismissParameters", "staggeredChildrenParameters", "escapeDismissParameters", "rearrangeableChildrenParameters", "sortableChildrenParameters", "toolbarParameters", "singleSelectionParameters", "activeElementParameters", "refElementParameters", "dismissParameters", "modalParameters">,
-    "active" | "onDismiss" | "openDirection" | "orientation" | "onOpen"
+    "active" | "onDismiss" | "openDirection" | "orientation" | "onOpen" | "selectionLimit"
 >;
 
 export type MenuItemProps<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> = GenericComponentProps<
@@ -32,6 +32,7 @@ export function Menu<SurfaceElement extends Element, ParentElement extends Eleme
     orientation,
     ariaPropName,
     selectionMode,
+    selectionLimit,
     untabbable,
 
     active,
@@ -134,7 +135,8 @@ export function Menu<SurfaceElement extends Element, ParentElement extends Eleme
                                     orientation,
                                     selectedIndex,
                                     onSelectedIndexChange,
-                                    disabled: disabled || false
+                                    disabled: disabled || false,
+                                    selectionLimit
                                 },
                                 singleSelectionParameters: {
                                     ariaPropName: ariaPropName || "aria-selected",

@@ -9,7 +9,7 @@ import { GenericComponentProps, useDefault } from "./util.js";
 export type MenubarProps<MenuParentElement extends Element, MenuItemElement extends Element, LabelElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> = GenericComponentProps<
     UseMenubarReturnType<MenuParentElement, MenuItemElement, LabelElement, M>,
     Get10<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "linearNavigationParameters", "rovingTabIndexParameters", "typeaheadNavigationParameters", "rearrangeableChildrenParameters", "sortableChildrenParameters", "staggeredChildrenParameters", "labelParameters", "toolbarParameters", "singleSelectionParameters", "refElementParameters">,
-    "orientation" | "ariaLabel"
+    "orientation" | "ariaLabel" | "selectionLimit"
 >;
 
 export type MenubarItemProps<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> = GenericComponentProps<
@@ -47,7 +47,8 @@ export const Menubar = memo(function Menubar<ContainerElement extends Element, C
     imperativeHandle,
     onElementChange, 
     onMount, 
-    onUnmount ,
+    onUnmount,
+    selectionLimit,
     ...void1
 }: MenubarProps<ContainerElement, ChildElement, LabelElement, UseMenubarSubInfo<ChildElement>>) {
     ariaPropName ||= "aria-selected";
@@ -66,6 +67,7 @@ export const Menubar = memo(function Menubar<ContainerElement extends Element, C
         toolbarParameters: {
             orientation,
             selectedIndex,
+            selectionLimit,
             onSelectedIndexChange,
             role: role ?? "menubar",
             disabled: disabled || false

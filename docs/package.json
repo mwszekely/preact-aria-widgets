@@ -4,7 +4,7 @@
     "type": "module",
     "description": "Demo page for preact-aria-widgets",
     "main": "index.tsx",
-    "packageManager": "pnpm@8.6.0",
+    "packageManager": "pnpm@8.6.11",
     "browserslist": "defaults, iOS >= 12",
     "scripts": {
         "build": "npx npm-run-all --npm-path npm -sc build:js",

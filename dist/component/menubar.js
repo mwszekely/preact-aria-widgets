@@ -6,7 +6,7 @@ import { useContextWithWarning } from "../props.js";
 import { useMenubar, useMenubarChild } from "../use-menubar.js";
 import { useDefault } from "./util.js";
 export const MenubarItemContext = createContext(null);
-export const Menubar = memo(function Menubar({ render, collator, disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, staggered, noTypeahead, untabbable, onTabbableIndexChange, compare, getIndex, disabled, selectedIndex, onSelectedIndexChange, typeaheadTimeout, role, ariaLabel, ariaPropName, selectionMode, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, ...void1 }) {
+export const Menubar = memo(function Menubar({ render, collator, disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, staggered, noTypeahead, untabbable, onTabbableIndexChange, compare, getIndex, disabled, selectedIndex, onSelectedIndexChange, typeaheadTimeout, role, ariaLabel, ariaPropName, selectionMode, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, selectionLimit, ...void1 }) {
     ariaPropName ||= "aria-selected";
     selectionMode ||= "activation";
     untabbable ||= false;
@@ -22,6 +22,7 @@ export const Menubar = memo(function Menubar({ render, collator, disableHomeEndK
         toolbarParameters: {
             orientation,
             selectedIndex,
+            selectionLimit,
             onSelectedIndexChange,
             role: role ?? "menubar",
             disabled: disabled || false

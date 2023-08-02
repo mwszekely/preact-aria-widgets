@@ -39,7 +39,7 @@ export declare const ContextDefaults: {
     getDocument: Context<() => Document>;
     focusOpener: Context<(e: any) => void>;
     getText: Context<(e: any) => string | null>;
-    selectionMode: Context<"focus" | "disabled" | "activation">;
+    selectionMode: Context<"disabled" | "focus" | "activation">;
 };
 type DefaultExcepts = keyof typeof ContextDefaults;
 type ContextType<T extends Context<any>> = T extends Context<infer C> ? C : unknown;

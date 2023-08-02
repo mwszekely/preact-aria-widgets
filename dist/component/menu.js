@@ -9,7 +9,7 @@ const UntabbableContext = createContext(false);
 const AriaPropNameContext = createContext("aria-selected");
 const SelectionModeContext = createContext("focus");
 const MenuItemContext = createContext(null);
-export function Menu({ collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, orientation, ariaPropName, selectionMode, untabbable, active, onDismiss, onElementChange, onMount, onUnmount, openDirection, onTabbableIndexChange, compare, getIndex, selectedIndex, navigatePastEnd, navigatePastStart, onSelectedIndexChange, pageNavigationSize, parentDepth, disabled, staggered, onOpen, onNavigateLinear, onNavigateTypeahead, getDocument, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, render, imperativeHandle, ...void1 }) {
+export function Menu({ collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, orientation, ariaPropName, selectionMode, selectionLimit, untabbable, active, onDismiss, onElementChange, onMount, onUnmount, openDirection, onTabbableIndexChange, compare, getIndex, selectedIndex, navigatePastEnd, navigatePastStart, onSelectedIndexChange, pageNavigationSize, parentDepth, disabled, staggered, onOpen, onNavigateLinear, onNavigateTypeahead, getDocument, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, render, imperativeHandle, ...void1 }) {
     const defaultParentDepth = useContext(ParentDepthContext);
     let myDepth = (parentDepth ?? defaultParentDepth) + 1;
     ariaPropName ||= "aria-selected";
@@ -62,7 +62,8 @@ export function Menu({ collator, disableHomeEndKeys, noTypeahead, typeaheadTimeo
                             orientation,
                             selectedIndex,
                             onSelectedIndexChange,
-                            disabled: disabled || false
+                            disabled: disabled || false,
+                            selectionLimit
                         },
                         singleSelectionParameters: {
                             ariaPropName: ariaPropName || "aria-selected",

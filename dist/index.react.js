@@ -515,7 +515,8 @@ function useBackdropDismiss({ backdropDismissParameters: { dismissBackdropActive
 const EventDetail = Symbol("event-detail");
 function enhanceEvent(e, detail) {
     const event = (e ?? {});
-    event[EventDetail] = detail;
+    event[EventDetail] ??= {};
+    Object.assign(event[EventDetail], detail);
     return event;
 }
 
@@ -2607,7 +2608,9 @@ function useSingleSelectionChild({ context: { singleSelectionContext: { getSelec
         }
     });
     const onPressSync = useStableCallback((e) => {
-        if (selectionMode == 'activation' && !unselectable)
+        // We allow press events for selectionMode == 'focus' because
+        // press generally causes a focus anyway (except when it doesn't, iOS Safari...)
+        if (selectionMode != 'disabled' && !unselectable)
             onSelectedIndexChange(enhanceEvent(e, { selectedIndex: index }));
     });
     const propParts = ariaPropName?.split("-") ?? [];
@@ -6124,14 +6127,21 @@ function useFocusSentinel({ focusSentinel: { open, onClose, sendFocusToMenu } })
  *
  * @compositeParams
  */
-function useToolbar({ linearNavigationParameters, toolbarParameters: { orientation, role, selectedIndex, onSelectedIndexChange, disabled }, labelParameters, rovingTabIndexParameters, ...listNavParameters }) {
+function useToolbar({ linearNavigationParameters, toolbarParameters: { orientation, role, selectedIndex, onSelectedIndexChange, disabled, selectionLimit, ...void1 }, labelParameters, rovingTabIndexParameters, singleSelectionParameters: { selectionMode, ...singleSelectionParameters }, ...listNavParameters }) {
     monitorCallCount(useToolbar);
+    if (selectionLimit != 'single') {
+        console.assert(selectedIndex == null);
+        console.assert(selectionMode == 'disabled');
+        selectedIndex = null;
+        selectionMode = 'disabled';
+    }
     const { context, props, ...listNavReturn } = useCompleteListNavigationDeclarative({
         ...listNavParameters,
         rovingTabIndexParameters: { ...rovingTabIndexParameters, untabbable: disabled, focusSelfParent: focus },
         singleSelectionDeclarativeParameters: { selectedIndex, onSelectedIndexChange: disabled ? null : onSelectedIndexChange },
         paginatedChildrenParameters: { paginationMax: null, paginationMin: null },
         linearNavigationParameters: { ...linearNavigationParameters, arrowKeyDirection: orientation },
+        singleSelectionParameters: { selectionMode, ...singleSelectionParameters },
     });
     const { propsInput: propsToolbar, propsLabel, randomIdInputReturn, randomIdLabelReturn } = useLabelSynthetic({
         labelParameters: { ...labelParameters, onLabelClick: listNavReturn.rovingTabIndexReturn.focusSelf },
@@ -6157,9 +6167,9 @@ function useToolbar({ linearNavigationParameters, toolbarParameters: { orientati
 /**
  * @compositeParams
  */
-function useToolbarChild({ info, toolbarChildParameters: { disabledProp }, ...args }) {
+function useToolbarChild({ context: { toolbarContext, ...context }, info, toolbarChildParameters: { disabledProp }, ...args }) {
     monitorCallCount(useToolbarChild);
-    const { propsChild, propsTabbable, ...listNavReturn } = useCompleteListNavigationChild({ info, ...args });
+    const { propsChild, propsTabbable, ...listNavReturn } = useCompleteListNavigationChild({ info, context, ...args });
     return {
         propsChild: useMergedProps(propsChild, { [disabledProp]: info.unselectable ? true : undefined }),
         propsTabbable,
@@ -7892,7 +7902,7 @@ const UntabbableContext$2 = F$2(false);
 const AriaPropNameContext$1 = F$2("aria-selected");
 const SelectionModeContext$2 = F$2("focus");
 const MenuItemContext = F$2(null);
-function Menu({ collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, orientation, ariaPropName, selectionMode, untabbable, active, onDismiss, onElementChange, onMount, onUnmount, openDirection, onTabbableIndexChange, compare, getIndex, selectedIndex, navigatePastEnd, navigatePastStart, onSelectedIndexChange, pageNavigationSize, parentDepth, disabled, staggered, onOpen, onNavigateLinear, onNavigateTypeahead, getDocument, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, render, imperativeHandle, ...void1 }) {
+function Menu({ collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, orientation, ariaPropName, selectionMode, selectionLimit, untabbable, active, onDismiss, onElementChange, onMount, onUnmount, openDirection, onTabbableIndexChange, compare, getIndex, selectedIndex, navigatePastEnd, navigatePastStart, onSelectedIndexChange, pageNavigationSize, parentDepth, disabled, staggered, onOpen, onNavigateLinear, onNavigateTypeahead, getDocument, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, render, imperativeHandle, ...void1 }) {
     const defaultParentDepth = q$1(ParentDepthContext);
     let myDepth = (parentDepth ?? defaultParentDepth) + 1;
     ariaPropName ||= "aria-selected";
@@ -7944,7 +7954,8 @@ function Menu({ collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, ori
                             orientation,
                             selectedIndex,
                             onSelectedIndexChange,
-                            disabled: disabled || false
+                            disabled: disabled || false,
+                            selectionLimit
                         },
                         singleSelectionParameters: {
                             ariaPropName: ariaPropName || "aria-selected",
@@ -7980,7 +7991,7 @@ function MenuItem({ index, untabbable, getSortValue, onPress, getText, role, foc
 }
 
 const MenubarItemContext = F$2(null);
-const Menubar = memo(function Menubar({ render, collator, disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, staggered, noTypeahead, untabbable, onTabbableIndexChange, compare, getIndex, disabled, selectedIndex, onSelectedIndexChange, typeaheadTimeout, role, ariaLabel, ariaPropName, selectionMode, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, ...void1 }) {
+const Menubar = memo(function Menubar({ render, collator, disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, staggered, noTypeahead, untabbable, onTabbableIndexChange, compare, getIndex, disabled, selectedIndex, onSelectedIndexChange, typeaheadTimeout, role, ariaLabel, ariaPropName, selectionMode, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, selectionLimit, ...void1 }) {
     ariaPropName ||= "aria-selected";
     selectionMode ||= "activation";
     untabbable ||= false;
@@ -7995,6 +8006,7 @@ const Menubar = memo(function Menubar({ render, collator, disableHomeEndKeys, na
         toolbarParameters: {
             orientation,
             selectedIndex,
+            selectionLimit,
             onSelectedIndexChange,
             role: role ?? "menubar",
             disabled: disabled || false
@@ -8342,41 +8354,40 @@ const UntabbableContext = F$2(false);
 const AriaPropNameContext = F$2("aria-selected");
 const SelectionModeContext = F$2("focus");
 const ToolbarContext = F$2(null);
-const Toolbar = memo(function ToolbarU({ render, role, collator, disableHomeEndKeys, disabled, compare, getIndex, navigatePastEnd, navigatePastStart, pageNavigationSize, selectedIndex, onSelectedIndexChange, orientation, noTypeahead, onTabbableIndexChange, typeaheadTimeout, staggered, ariaLabel, ariaPropName, selectionMode, untabbable, onNavigateLinear, onNavigateTypeahead, onElementChange, onMount, onUnmount }, ref) {
+const Toolbar = memo(function ToolbarU({ render, role, collator, disableHomeEndKeys, disabled, compare, getIndex, navigatePastEnd, navigatePastStart, pageNavigationSize, selectedIndex, onSelectedIndexChange, orientation, noTypeahead, onTabbableIndexChange, typeaheadTimeout, staggered, ariaLabel, ariaPropName, selectionMode, untabbable, onNavigateLinear, onNavigateTypeahead, onElementChange, onMount, onUnmount, selectionLimit, imperativeHandle, ...void1 }) {
     ariaPropName ??= "aria-selected";
     selectionMode ??= "activation";
     untabbable ||= false;
-    const listboxReturnType = useToolbar({
-        rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
-        sortableChildrenParameters: { compare: compare },
-        linearNavigationParameters: {
-            onNavigateLinear,
-            disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
-            navigatePastEnd: navigatePastEnd ?? "wrap",
-            navigatePastStart: navigatePastStart ?? "wrap",
-            pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
-        },
-        toolbarParameters: {
-            orientation,
-            disabled: disabled || false,
-            role: role ?? "toolbar",
-            selectedIndex,
-            onSelectedIndexChange
-        },
-        staggeredChildrenParameters: { staggered: staggered || false },
-        rovingTabIndexParameters: { onTabbableIndexChange, untabbable },
-        typeaheadNavigationParameters: {
-            onNavigateTypeahead,
-            collator: useDefault("collator", collator),
-            noTypeahead: useDefault("noTypeahead", noTypeahead),
-            typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
-        },
-        labelParameters: { ariaLabel },
-        singleSelectionParameters: { ariaPropName: ariaPropName, selectionMode },
-        refElementParameters: { onElementChange, onMount, onUnmount },
-    });
-    A(ref, () => listboxReturnType);
-    return (o(AriaPropNameContext.Provider, { value: ariaPropName, children: o(SelectionModeContext.Provider, { value: selectionMode, children: o(UntabbableContext.Provider, { value: untabbable, children: o(ToolbarContext.Provider, { value: listboxReturnType.context, children: render(listboxReturnType) }) }) }) }));
+    return (o(AriaPropNameContext.Provider, { value: ariaPropName, children: o(SelectionModeContext.Provider, { value: selectionMode, children: o(UntabbableContext.Provider, { value: untabbable, children: useComponent(imperativeHandle, render, ToolbarContext, useToolbar({
+                    rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
+                    sortableChildrenParameters: { compare: compare },
+                    linearNavigationParameters: {
+                        onNavigateLinear,
+                        disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
+                        navigatePastEnd: navigatePastEnd ?? "wrap",
+                        navigatePastStart: navigatePastStart ?? "wrap",
+                        pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
+                    },
+                    toolbarParameters: {
+                        orientation,
+                        disabled: disabled || false,
+                        role: role ?? "toolbar",
+                        selectedIndex,
+                        onSelectedIndexChange,
+                        selectionLimit
+                    },
+                    staggeredChildrenParameters: { staggered: staggered || false },
+                    rovingTabIndexParameters: { onTabbableIndexChange, untabbable },
+                    typeaheadNavigationParameters: {
+                        onNavigateTypeahead,
+                        collator: useDefault("collator", collator),
+                        noTypeahead: useDefault("noTypeahead", noTypeahead),
+                        typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
+                    },
+                    labelParameters: { ariaLabel },
+                    singleSelectionParameters: { ariaPropName: ariaPropName, selectionMode },
+                    refElementParameters: { onElementChange, onMount, onUnmount },
+                })) }) }) }));
 });
 function ToolbarChild({ index, render, focusSelf, getSortValue, getText, unselectable, disabledProp, untabbable, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, imperativeHandle, info: uinfo }) {
     const context = useContextWithWarning(ToolbarContext, "toolbar");
