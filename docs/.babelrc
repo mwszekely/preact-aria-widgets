@@ -1,4 +1,8 @@
 {
+    // TODO: "compact" is needed do unminify the extremely large generated file,
+    // but it's extremely large because of the Temporal polyfill, which is kinda lame.
+    // In theory we shouldn't need this to pretty-print bundle.js.
+    "compact": false,
     "comments": true,
     "sourceMaps": true,
     "presets": [

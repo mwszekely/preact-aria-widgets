@@ -54,6 +54,7 @@ export function Demo() {
                     onDismiss={() => setOpen(false)}
                     active={open}
                     ariaPropName={null}
+                    selectionLimit="none"
                     selectionMode="disabled"
                     openDirection="down"
                     render={info => {

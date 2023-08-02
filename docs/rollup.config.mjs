@@ -10,7 +10,7 @@ const extensions = [".js", ".jsx", ".ts", ".tsx"];
 
 /** @type {import('rollup').RollupOptions} */
 export default {
-    input: "main.tsx",
+    input: "index.tsx",
     output: {
         file: "bundle.js",
         format: "iife",
