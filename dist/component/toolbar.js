@@ -1,19 +1,16 @@
-import { jsx as _jsx, Fragment as _Fragment } from "preact/jsx-runtime";
+import { jsx as _jsx } from "preact/jsx-runtime";
 import { createContext } from "preact";
-import { focus, memo } from "preact-prop-helpers";
+import { assertEmptyObject, focus, memo } from "preact-prop-helpers";
 import { useCallback, useImperativeHandle } from "preact/hooks";
 import { useContextWithWarning } from "../props.js";
 import { useToolbar, useToolbarChild } from "../use-toolbar.js";
-import { useDefault } from "./util.js";
+import { useComponent, useDefault } from "./util.js";
 // TODO: Are there performance/sanity implications for having one context per primitive?
 const UntabbableContext = createContext(false);
-const AriaPropNameContext = createContext("aria-selected");
-const SelectionModeContext = createContext("focus");
+//const AriaPropNameContext = createContext<UseToolbarParameters<any, any, any>["singleSelectionParameters"]["singleSelectionAriaPropName"]>("aria-selected")
+//const SelectionModeContext = createContext<UseToolbarParameters<any, any, any>["singleSelectionParameters"]["singleSelectionMode"]>("focus");
 const ToolbarContext = createContext(null);
-export const Toolbar = memo(function ToolbarU({ render, role, collator, disableHomeEndKeys, disabled, compare, getIndex, navigatePastEnd, navigatePastStart, pageNavigationSize, selectedIndex, onSelectedIndexChange, orientation, noTypeahead, onTabbableIndexChange, typeaheadTimeout, staggered, ariaLabel, ariaPropName, selectionMode, untabbable, onNavigateLinear, onNavigateTypeahead, onElementChange, onMount, onUnmount }, ref) {
-    ariaPropName ??= "aria-selected";
-    selectionMode ??= "activation";
-    untabbable ||= false;
+export const Toolbar = memo(function ToolbarU({ render, role, collator, disableHomeEndKeys, disabled, compare, getIndex, navigatePastEnd, navigatePastStart, pageNavigationSize, singleSelectedIndex, onSingleSelectedIndexChange, orientation, noTypeahead, onTabbableIndexChange, typeaheadTimeout, staggered, ariaLabel, imperativeHandle, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, singleSelectionAriaPropName, singleSelectionMode, untabbable, onNavigateLinear, onNavigateTypeahead, onElementChange, onMount, onUnmount }, ref) {
     const listboxReturnType = useToolbar({
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
         sortableChildrenParameters: { compare: compare },
@@ -28,11 +25,11 @@ export const Toolbar = memo(function ToolbarU({ render, role, collator, disableH
             orientation,
             disabled: disabled || false,
             role: role ?? "toolbar",
-            selectedIndex,
-            onSelectedIndexChange
+            singleSelectedIndex,
+            onSingleSelectedIndexChange
         },
         staggeredChildrenParameters: { staggered: staggered || false },
-        rovingTabIndexParameters: { onTabbableIndexChange, untabbable },
+        rovingTabIndexParameters: { onTabbableIndexChange, untabbable: untabbable || false },
         typeaheadNavigationParameters: {
             onNavigateTypeahead,
             collator: useDefault("collator", collator),
@@ -40,33 +37,33 @@ export const Toolbar = memo(function ToolbarU({ render, role, collator, disableH
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
         },
         labelParameters: { ariaLabel },
-        singleSelectionParameters: { ariaPropName: ariaPropName, selectionMode },
+        singleSelectionParameters: { singleSelectionAriaPropName, singleSelectionMode: useDefault("singleSelectionMode", singleSelectionMode) },
+        multiSelectionParameters: { multiSelectionAriaPropName, multiSelectionMode: useDefault("multiSelectionMode", multiSelectionMode), onSelectionChange },
         refElementParameters: { onElementChange, onMount, onUnmount },
     });
     useImperativeHandle(ref, () => listboxReturnType);
-    return (_jsx(AriaPropNameContext.Provider, { value: ariaPropName, children: _jsx(SelectionModeContext.Provider, { value: selectionMode, children: _jsx(UntabbableContext.Provider, { value: untabbable, children: _jsx(ToolbarContext.Provider, { value: listboxReturnType.context, children: render(listboxReturnType) }) }) }) }));
+    return (_jsx(ToolbarContext.Provider, { value: listboxReturnType.context, children: render(listboxReturnType) }));
 });
-export function ToolbarChild({ index, render, focusSelf, getSortValue, getText, unselectable, disabledProp, untabbable, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, imperativeHandle, info: uinfo }) {
+export function ToolbarChild({ index, render, focusSelf, getSortValue, getText, disabledProp, untabbable, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, imperativeHandle, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, ...void1 }) {
     const context = useContextWithWarning(ToolbarContext, "toolbar");
-    console.assert(context != null, `This ToolbarChild is not contained within a Toolbar`);
     const focusSelfDefault = useCallback((e) => { focus(e); }, []);
     focusSelf ??= focusSelfDefault;
-    const info = useToolbarChild({
+    assertEmptyObject(void1);
+    return useComponent(imperativeHandle, render, null, useToolbarChild({
         context,
         toolbarChildParameters: { disabledProp },
         info: {
             index,
             focusSelf,
-            unselectable: unselectable || false,
             untabbable: untabbable || false,
             getSortValue
         },
         textContentParameters: { getText: useDefault("getText", getText) },
         hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged },
-        refElementParameters: { onElementChange, onMount, onUnmount }
-    });
-    useImperativeHandle(imperativeHandle, () => info);
-    return (_jsx(_Fragment, { children: render(info) }));
+        refElementParameters: { onElementChange, onMount, onUnmount },
+        singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false },
+        multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false, initiallyMultiSelected: initiallyMultiSelected || false, onMultiSelectChange }
+    }));
 }
 ;
 //# sourceMappingURL=toolbar.js.map

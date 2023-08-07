@@ -1,24 +1,24 @@
 import { Context, createContext } from "preact";
-import { assertEmptyObject, focus, memo, OmitStrong, useStableCallback } from "preact-prop-helpers";
-import { Get10, Get2, Get4, Get6, useContextWithWarning } from "../props.js";
-import { TableCellInfo, TableRowInfo, useTable, useTableCell, UseTableCellParameters, UseTableCellReturnType, UseTableContext, UseTableParameters, UseTableReturnType, useTableRow, UseTableRowContext, UseTableRowParameters, UseTableRowReturnType, useTableSection, UseTableSectionContext, UseTableSectionParameters, UseTableSectionReturnType } from "../use-table.js";
+import { OmitStrong, assertEmptyObject, focus, memo, useStableCallback } from "preact-prop-helpers";
+import { Get12, Get4, Get8, useContextWithWarning } from "../props.js";
+import { TableCellInfo, TableRowInfo, UseTableCellParameters, UseTableCellReturnType, UseTableContext, UseTableParameters, UseTableReturnType, UseTableRowContext, UseTableRowParameters, UseTableRowReturnType, UseTableSectionContext, UseTableSectionParameters, UseTableSectionReturnType, useTable, useTableCell, useTableRow, useTableSection } from "../use-table.js";
 import { GenericComponentProps, useComponent, useDefault } from "./util.js";
 
 export type TableProps<TableElement extends Element, LabelElement extends Element> = GenericComponentProps<
     UseTableReturnType<TableElement, LabelElement>,
-    Get2<UseTableParameters<TableElement, LabelElement>, "labelParameters", "tableParameters">,
-    "selectionLimit" | "tagTable"
+    Get4<UseTableParameters<TableElement, LabelElement>, "labelParameters", "tableParameters", "singleSelectionParameters", "multiSelectionParameters">,
+    "tagTable"
 >;
 
 export type TableSectionProps<SectionElement extends Element, RowElement extends Element, RM extends TableRowInfo<RowElement> = TableRowInfo<RowElement>> = GenericComponentProps<
     UseTableSectionReturnType<SectionElement, RowElement, RM>,
-    Get10<UseTableSectionParameters<SectionElement, RowElement, RM>, "gridNavigationParameters", "linearNavigationParameters", "rearrangeableChildrenParameters", "rovingTabIndexParameters", "singleSelectionParameters", "typeaheadNavigationParameters", "paginatedChildrenParameters", "staggeredChildrenParameters", "tableSectionParameters", "refElementParameters">,
+    Get12<UseTableSectionParameters<SectionElement, RowElement, RM>, "gridNavigationParameters", "linearNavigationParameters", "rearrangeableChildrenParameters", "rovingTabIndexParameters", "singleSelectionParameters", "typeaheadNavigationParameters", "paginatedChildrenParameters", "staggeredChildrenParameters", "tableSectionParameters", "refElementParameters", "singleSelectionParameters", "multiSelectionParameters">,
     "tagTableSection" | "location"
 >;
 
 export type TableRowProps<RowElement extends Element, CellElement extends Element, RM extends TableRowInfo<RowElement>, CM extends TableCellInfo<CellElement>> = GenericComponentProps<
     UseTableRowReturnType<RowElement, CellElement, RM, CM>,
-    Get6<UseTableRowParameters<RowElement, CellElement, TableRowInfo<RowElement>, CM>, "textContentParameters", "tableRowParameters", "linearNavigationParameters", "rovingTabIndexParameters", "info", "hasCurrentFocusParameters">,
+    Get8<UseTableRowParameters<RowElement, CellElement, TableRowInfo<RowElement>, CM>, "textContentParameters", "tableRowParameters", "linearNavigationParameters", "rovingTabIndexParameters", "info", "hasCurrentFocusParameters", "singleSelectionChildParameters", "multiSelectionChildParameters">,
     "index" | "tagTableRow"
 > & { info?: OmitStrong<RM, keyof TableRowInfo<RowElement>> };
 
@@ -35,29 +35,34 @@ const TableRowContext = createContext<UseTableRowContext<any, TableCellInfo<any>
 
 export const Table = memo(function Table<TableElement extends Element, LabelElement extends Element>({
     ariaLabel,
-    selectionLimit,
+    singleSelectionMode,
+    multiSelectionMode,
     tagTable,
     imperativeHandle,
-    render
+    render,
+    ...void1
 }: TableProps<TableElement, LabelElement>) {
+    assertEmptyObject(void1);
     return useComponent(
         imperativeHandle,
         render,
         TableContext,
         useTable<TableElement, LabelElement>({
             labelParameters: { ariaLabel },
-            tableParameters: { selectionLimit, tagTable, }
+            tableParameters: { tagTable, },
+            singleSelectionParameters: { singleSelectionMode: singleSelectionMode || "disabled" },
+            multiSelectionParameters: { multiSelectionMode: multiSelectionMode || "disabled" },
         }));
 })
 
 export const TableSection = memo(function TableSection<SectionElement extends Element, RowElement extends Element, CellElement extends Element>({
     disableHomeEndKeys,
     getIndex,
-    initiallySelectedIndex,
+    initiallySingleSelectedIndex,
     untabbable,
     navigatePastEnd,
     navigatePastStart,
-    onSelectedIndexChange,
+    onSingleSelectedIndexChange,
     onTabbableColumnChange,
     onTabbableIndexChange,
     pageNavigationSize,
@@ -66,8 +71,10 @@ export const TableSection = memo(function TableSection<SectionElement extends El
     staggered,
     render,
     location,
-    ariaPropName,
-    selectionMode,
+    imperativeHandle,
+    multiSelectionAriaPropName,
+    onSelectionChange,
+    singleSelectionAriaPropName,
     onNavigateLinear,
     collator,
     noTypeahead,
@@ -76,62 +83,62 @@ export const TableSection = memo(function TableSection<SectionElement extends El
     tagTableSection,
     onElementChange,
     onMount,
-    onUnmount
+    onUnmount,
+    ...void1
 }: TableSectionProps<SectionElement, RowElement, TableRowInfo<RowElement>>) {
-    untabbable = (untabbable ?? false);
-    ariaPropName ??= "aria-selected";
-    selectionMode ??= "activation";
-
-    const info = useTableSection<SectionElement, RowElement, CellElement>({
-        gridNavigationParameters: {
-            onTabbableColumnChange: onTabbableColumnChange
-        },
-        staggeredChildrenParameters: {
-            staggered: staggered || false
-        },
-        typeaheadNavigationParameters: {
-            onNavigateTypeahead,
-            collator: useDefault("collator", collator),
-            noTypeahead: useDefault("noTypeahead", noTypeahead),
-            typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
-        },
-        linearNavigationParameters: {
-            onNavigateLinear,
-            disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
-            navigatePastEnd: navigatePastEnd ?? "wrap",
-            navigatePastStart: navigatePastStart ?? "wrap",
-            pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
-        },
-        paginatedChildrenParameters: {
-            paginationMax,
-            paginationMin,
-        },
-        rearrangeableChildrenParameters: {
-            getIndex: useDefault("getIndex", getIndex)
-        },
-        rovingTabIndexParameters: {
-            onTabbableIndexChange,
-            untabbable
-        },
-        singleSelectionParameters: {
-            initiallySelectedIndex,
-            onSelectedIndexChange,
-            ariaPropName,
-            selectionMode
-        },
-        context: useContextWithWarning(TableContext, "table"),
-        tableSectionParameters: {
-            tagTableSection, 
-            location
-        },
-        refElementParameters: { onElementChange, onMount, onUnmount }
-    })
-
-    return (
-        <TableSectionContext.Provider value={info.context}>
-            {render(info)}
-        </TableSectionContext.Provider>
-    )
+    assertEmptyObject(void1);
+    return useComponent(
+        imperativeHandle,
+        render,
+        TableSectionContext,
+        useTableSection<SectionElement, RowElement, CellElement>({
+            gridNavigationParameters: {
+                onTabbableColumnChange: onTabbableColumnChange
+            },
+            staggeredChildrenParameters: {
+                staggered: staggered || false
+            },
+            typeaheadNavigationParameters: {
+                onNavigateTypeahead,
+                collator: useDefault("collator", collator),
+                noTypeahead: useDefault("noTypeahead", noTypeahead),
+                typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
+            },
+            linearNavigationParameters: {
+                onNavigateLinear,
+                disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
+                navigatePastEnd: navigatePastEnd ?? "wrap",
+                navigatePastStart: navigatePastStart ?? "wrap",
+                pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
+            },
+            paginatedChildrenParameters: {
+                paginationMax,
+                paginationMin,
+            },
+            rearrangeableChildrenParameters: {
+                getIndex: useDefault("getIndex", getIndex)
+            },
+            rovingTabIndexParameters: {
+                onTabbableIndexChange,
+                untabbable: untabbable || false,
+            },
+            singleSelectionParameters: {
+                initiallySingleSelectedIndex,
+                onSingleSelectedIndexChange,
+                singleSelectionAriaPropName
+            },
+            multiSelectionParameters: {
+                multiSelectionAriaPropName,
+                onSelectionChange,
+            },
+            context: useContextWithWarning(TableContext, "table"),
+            tableSectionParameters: {
+                tagTableSection,
+                location
+            },
+            refElementParameters: { onElementChange, onMount, onUnmount }
+        })
+    );
 });
 
 export const TableRow = memo(function TableRow<RowElement extends Element, CellElement extends Element>({
@@ -142,7 +149,6 @@ export const TableRow = memo(function TableRow<RowElement extends Element, CellE
     navigatePastEnd,
     navigatePastStart,
     selected,
-    unselectable,
     initiallyTabbedIndex,
     untabbable,
     info,
@@ -150,6 +156,10 @@ export const TableRow = memo(function TableRow<RowElement extends Element, CellE
     onCurrentFocusedChanged,
     onCurrentFocusedInnerChanged,
     render,
+    initiallyMultiSelected,
+    multiSelectionDisabled,
+    onMultiSelectChange,
+    singleSelectionDisabled,
     ...void1
 }: TableRowProps<RowElement, CellElement, TableRowInfo<RowElement>, TableCellInfo<CellElement>>) {
 
@@ -162,7 +172,6 @@ export const TableRow = memo(function TableRow<RowElement extends Element, CellE
         useTableRow({
             info: {
                 index,
-                unselectable: unselectable || false,
                 untabbable: untabbable || false,
                 ...info
             },
@@ -187,6 +196,8 @@ export const TableRow = memo(function TableRow<RowElement extends Element, CellE
                 initiallyTabbedIndex: initiallyTabbedIndex ?? null,
                 untabbable: untabbable || false
             },
+            singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false },
+            multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false, initiallyMultiSelected: initiallyMultiSelected || false, onMultiSelectChange }
         }));
 })
 

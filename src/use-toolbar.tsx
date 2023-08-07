@@ -19,12 +19,12 @@ export interface UseToolbarParametersSelf<ContainerElement extends Element, Chil
     /**
      * Optional; Only used if you need single selection logic.
      */
-    selectedIndex: MakeSingleSelectionDeclarativeParameters<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>>["singleSelectionDeclarativeParameters"]["selectedIndex"];
+    singleSelectedIndex: MakeSingleSelectionDeclarativeParameters<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>>["singleSelectionDeclarativeParameters"]["singleSelectedIndex"];
 
     /**
      * Optional; Only used if you need single selection logic.
      */
-    onSelectedIndexChange: MakeSingleSelectionDeclarativeParameters<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>>["singleSelectionDeclarativeParameters"]["onSelectedIndexChange"];
+    onSingleSelectedIndexChange: MakeSingleSelectionDeclarativeParameters<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>>["singleSelectionDeclarativeParameters"]["onSingleSelectedIndexChange"];
 
     /**
      * When true, none of the children will be selectable or focusable.
@@ -84,7 +84,7 @@ export interface UseToolbarChildReturnType<ChildElement extends Element, M exten
  */
 export function useToolbar<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({
     linearNavigationParameters,
-    toolbarParameters: { orientation, role, selectedIndex, onSelectedIndexChange, disabled },
+    toolbarParameters: { orientation, role, singleSelectedIndex, onSingleSelectedIndexChange, disabled },
     labelParameters,
     rovingTabIndexParameters,
     ...listNavParameters
@@ -100,7 +100,7 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
     } = useCompleteListNavigationDeclarative<ContainerElement, ChildElement, M>({
         ...listNavParameters,
         rovingTabIndexParameters: { ...rovingTabIndexParameters, untabbable: disabled, focusSelfParent: focus },
-        singleSelectionDeclarativeParameters: { selectedIndex, onSelectedIndexChange: disabled ? null : onSelectedIndexChange },
+        singleSelectionDeclarativeParameters: { singleSelectedIndex, onSingleSelectedIndexChange: disabled ? null : onSingleSelectedIndexChange },
         paginatedChildrenParameters: { paginationMax: null, paginationMin: null },
         linearNavigationParameters: { ...linearNavigationParameters, arrowKeyDirection: orientation },
     });
@@ -141,7 +141,7 @@ export function useToolbarChild<ChildElement extends Element>({ info, toolbarChi
     } = useCompleteListNavigationChild<ChildElement, UseToolbarSubInfo<ChildElement>>({ info, ...args });
 
     return {
-        propsChild: useMergedProps(propsChild, { [disabledProp as never]: info.unselectable ? true : undefined }),
+        propsChild: useMergedProps(propsChild, { [disabledProp as never]: (args.singleSelectionChildParameters.singleSelectionDisabled || args.multiSelectionChildParameters.multiSelectionDisabled) ? true : undefined }),
         propsTabbable,
         ...listNavReturn
     }

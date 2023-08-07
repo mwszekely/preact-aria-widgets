@@ -60,8 +60,9 @@ export interface UseCheckboxGroupChildParametersSelf {
 }
 
 export interface UseCheckboxGroupChildParameters<TCE extends Element> extends
-    UseGenericChildParameters<CheckboxGroupContext<TCE>, Pick<CheckboxGroupInfo<TCE>, "index" | "focusSelf" | "untabbable" | "unselectable" | "getSortValue">>,
-    OmitStrong<UseCompleteListNavigationChildParameters<TCE, CheckboxGroupInfo<TCE>>, "context" | "info"> {
+    UseGenericChildParameters<CheckboxGroupContext<TCE>, Pick<CheckboxGroupInfo<TCE>, "index" | "focusSelf" | "untabbable" | "getSortValue">>,
+    OmitStrong<UseCompleteListNavigationChildParameters<TCE, CheckboxGroupInfo<TCE>>, "context" | "info" | "singleSelectionChildParameters" | "multiSelectionChildParameters">,
+    TargetedOmit<UseCompleteListNavigationChildParameters<TCE, CheckboxGroupInfo<TCE>>, "multiSelectionChildParameters", "initiallyMultiSelected"> {
     checkboxGroupChildParameters: UseCheckboxGroupChildParametersSelf;
 }
 export interface UseCheckboxGroupChildReturnTypeSelf {
@@ -82,7 +83,7 @@ export interface UseCheckboxGroupReturnType<GroupElement extends Element, TCE ex
 }
 
 export interface UseCheckboxGroupParentParameters<TCE extends Element> extends
-    UseGenericChildParameters<CheckboxGroupContext<TCE>, Pick<CheckboxGroupInfo<TCE>, "index" | "focusSelf" | "untabbable" | "unselectable" | "getSortValue">>,
+    UseGenericChildParameters<CheckboxGroupContext<TCE>, Pick<CheckboxGroupInfo<TCE>, "index" | "focusSelf" | "untabbable" | "getSortValue">>,
     OmitStrong<UseCompleteListNavigationChildParameters<TCE, CheckboxGroupInfo<TCE>>, "context" | "info"> {
 }
 
@@ -145,8 +146,14 @@ export interface CheckboxGroupContext<TCE extends Element> extends CompleteListN
 export function useCheckboxGroup<GroupElement extends Element, TCE extends Element>({
     linearNavigationParameters,
     rovingTabIndexParameters,
-    checkboxGroupParameters: { orientation },
-    ...listNavParameters
+    checkboxGroupParameters: { orientation, ...void2 },
+    multiSelectionParameters,
+    rearrangeableChildrenParameters,
+    refElementParameters,
+    sortableChildrenParameters,
+    staggeredChildrenParameters,
+    typeaheadNavigationParameters,
+    ...void1
 }: UseCheckboxGroupParameters<GroupElement, TCE>): UseCheckboxGroupReturnType<GroupElement, TCE> {
     monitorCallCount(useCheckboxGroup);
 
@@ -163,17 +170,27 @@ export function useCheckboxGroup<GroupElement extends Element, TCE extends Eleme
         sortableChildrenReturn,
         typeaheadNavigationReturn,
         childrenHaveFocusReturn,
+        multiSelectionReturn,
+        ...void3
     } = useCompleteListNavigation<GroupElement, TCE, CheckboxGroupInfo<TCE>>({
         linearNavigationParameters: { arrowKeyDirection: orientation, ...linearNavigationParameters },
         rovingTabIndexParameters: { focusSelfParent: focus, ...rovingTabIndexParameters },
-        singleSelectionParameters: { initiallySelectedIndex: null, onSelectedIndexChange: null, ariaPropName: null, selectionMode: "disabled" },
+        singleSelectionParameters: { initiallySingleSelectedIndex: null, onSingleSelectedIndexChange: null, singleSelectionAriaPropName: null, singleSelectionMode: "disabled" },
         paginatedChildrenParameters: { paginationMax: null, paginationMin: null },
-        ...listNavParameters
+        multiSelectionParameters,
+        rearrangeableChildrenParameters,
+        refElementParameters,
+        sortableChildrenParameters,
+        staggeredChildrenParameters,
+        typeaheadNavigationParameters
     });
 
     const { getChildren } = managedChildrenReturn;
     const children = getChildren();
 
+    assertEmptyObject(void1);
+    assertEmptyObject(void2);
+    assertEmptyObject(void3);
 
     // Keep track of all child IDs, and any time any of them change, 
     // generate a new string with all of them concatenated together
@@ -266,7 +283,8 @@ export function useCheckboxGroup<GroupElement extends Element, TCE extends Eleme
         sortableChildrenReturn,
         managedChildrenReturn,
         rovingTabIndexReturn,
-        typeaheadNavigationReturn
+        typeaheadNavigationReturn,
+        multiSelectionReturn
     };
 }
 
@@ -292,7 +310,10 @@ export function useCheckboxGroupParent<TCE extends Element>({
     info,
     hasCurrentFocusParameters,
     refElementParameters,
-    textContentParameters
+    textContentParameters,
+    multiSelectionChildParameters,
+    singleSelectionChildParameters,
+    ...void1
 }: UseCheckboxGroupParentParameters<TCE>): UseCheckboxGroupParentReturnType<TCE> {
     type M = CheckboxGroupInfo<TCE>;
 
@@ -308,6 +329,8 @@ export function useCheckboxGroupParent<TCE extends Element>({
         rovingTabIndexChildReturn,
         staggeredChildReturn,
         singleSelectionChildReturn,
+        multiSelectionChildReturn,
+        ...void2
     } = useCompleteListNavigationChild<TCE, M>({
         context,
         hasCurrentFocusParameters,
@@ -321,8 +344,13 @@ export function useCheckboxGroupParent<TCE extends Element>({
             setCheckedFromParentInput: null,
             getChecked: null
         },
-        textContentParameters
+        textContentParameters,
+        multiSelectionChildParameters,
+        singleSelectionChildParameters
     });
+
+    assertEmptyObject(void1);
+    assertEmptyObject(void2);
 
     const [ariaControls, setControls] = useState("");
     useLayoutEffect(() => {
@@ -348,7 +376,8 @@ export function useCheckboxGroupParent<TCE extends Element>({
         rovingTabIndexChildReturn,
         paginatedChildReturn,
         singleSelectionChildReturn,
-        pressParameters
+        pressParameters,
+        multiSelectionChildReturn
     }
 }
 
@@ -369,10 +398,11 @@ export function useCheckboxGroupParent<TCE extends Element>({
 export function useCheckboxGroupChild<TCE extends Element>({
     checkboxGroupChildParameters,
     context,
-    info: { focusSelf, getSortValue, index, unselectable, untabbable, ...void3 },
+    info: { focusSelf, getSortValue, index, untabbable, ...void3 },
     textContentParameters,
     hasCurrentFocusParameters,
     refElementParameters,
+    multiSelectionChildParameters: { multiSelectionDisabled, onMultiSelectChange, ...void5 },
     ...void4
 }: UseCheckboxGroupChildParameters<TCE>): UseCheckboxGroupChildReturnType<TCE> {
     const { checkboxGroupChildrenContext: { allIds, setUpdateIndex, setTotalChildren, setTotalChecked, } } = context;
@@ -423,6 +453,7 @@ export function useCheckboxGroupChild<TCE extends Element>({
         paginatedChildReturn,
         rovingTabIndexChildReturn,
         pressParameters,
+        multiSelectionChildReturn,
         ...void2
     } = useCompleteListNavigationChild<TCE, CheckboxGroupInfo<TCE>>({
         info: {
@@ -433,19 +464,21 @@ export function useCheckboxGroupChild<TCE extends Element>({
             focusSelf,
             getSortValue,
             index,
-            unselectable,
             untabbable
         },
         context,
         textContentParameters,
         hasCurrentFocusParameters,
         refElementParameters,
+        singleSelectionChildParameters: { singleSelectionDisabled: true },
+        multiSelectionChildParameters: { initiallyMultiSelected: !!checked, multiSelectionDisabled, onMultiSelectChange }
     });
 
     assertEmptyObject(void1);
     assertEmptyObject(void2);
     assertEmptyObject(void3);
     assertEmptyObject(void4);
+    assertEmptyObject(void5);
 
     return {
         checkboxGroupChildReturn: {
@@ -462,6 +495,7 @@ export function useCheckboxGroupChild<TCE extends Element>({
         propsTabbable,
         pressParameters,
         rovingTabIndexChildReturn,
+        multiSelectionChildReturn,
     }
 }
 

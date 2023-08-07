@@ -11,8 +11,11 @@ import { useLabelSynthetic } from "./use-label.js";
  * @hasChild {@link useTableRow}
  * @hasChild {@link useTableCell}
  */
-export function useTable({ labelParameters, tableParameters: { selectionLimit, tagTable }, }) {
+export function useTable({ labelParameters, tableParameters: { tagTable }, singleSelectionParameters: { singleSelectionMode, ...void1 }, multiSelectionParameters: { multiSelectionMode, ...void2 }, ...void3 }) {
     monitorCallCount(useTable);
+    assertEmptyObject(void1);
+    assertEmptyObject(void2);
+    assertEmptyObject(void3);
     // This is the function that, when called, sorts the body's children.
     // It's here to coordinate among multiple table sections (i.e. the head sorts the body, but they're siblings to each other, so we need to take care that)
     // TODO: This...should probably be useManagedChildren
@@ -56,14 +59,16 @@ export function useTable({ labelParameters, tableParameters: { selectionLimit, t
         randomIdLabelParameters: { prefix: Prefices.tableLabel }
     });
     return {
-        propsTable: useMergedProps({ role: tagTable == "table" ? undefined : "grid", "aria-multiselectable": (selectionLimit == "multi" ? "true" : undefined) }, propsLabelList),
+        propsTable: useMergedProps({ role: tagTable == "table" ? undefined : "grid", "aria-multiselectable": (multiSelectionMode != "disabled" ? "true" : undefined) }, propsLabelList),
         propsLabel: propsLabelLabel,
         context: useMemoObject({
             tableContext: useMemoObject({
                 sortByColumn,
                 setSortBodyFunction: setSortBody,
                 getCurrentSortColumn: getSortColumn,
-                getCurrentSortDirection: getSortDirection
+                getCurrentSortDirection: getSortDirection,
+                singleSelectionMode,
+                multiSelectionMode
             })
         })
     };
@@ -94,12 +99,13 @@ const naturalSectionTypes = new Set(["thead", "tbody", "tfoot"]);
 /**
  * @compositeParams
  */
-export function useTableSection({ linearNavigationParameters, rovingTabIndexParameters, singleSelectionParameters, gridNavigationParameters, rearrangeableChildrenParameters, paginatedChildrenParameters, staggeredChildrenParameters, tableSectionParameters: { tagTableSection, location }, typeaheadNavigationParameters, context: { tableContext }, refElementParameters, ...void1 }) {
+export function useTableSection({ linearNavigationParameters, rovingTabIndexParameters, singleSelectionParameters, multiSelectionParameters, gridNavigationParameters, rearrangeableChildrenParameters, paginatedChildrenParameters, staggeredChildrenParameters, tableSectionParameters: { tagTableSection, location }, typeaheadNavigationParameters, context: { tableContext, ...void3 }, refElementParameters, ...void1 }) {
     monitorCallCount(useTableSection);
-    const { childrenHaveFocusReturn, context, linearNavigationReturn, managedChildrenReturn, props: { ...props }, rovingTabIndexReturn, singleSelectionReturn, typeaheadNavigationReturn, staggeredChildrenReturn, rearrangeableChildrenReturn, paginatedChildrenReturn, sortableChildrenReturn, ...void2 } = useCompleteGridNavigation({
+    const { childrenHaveFocusReturn, context, linearNavigationReturn, managedChildrenReturn, props: { ...props }, rovingTabIndexReturn, singleSelectionReturn, multiSelectionReturn, typeaheadNavigationReturn, staggeredChildrenReturn, rearrangeableChildrenReturn, paginatedChildrenReturn, sortableChildrenReturn, ...void2 } = useCompleteGridNavigation({
         linearNavigationParameters,
         rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
-        singleSelectionParameters,
+        singleSelectionParameters: { ...singleSelectionParameters, singleSelectionMode: tableContext.singleSelectionMode },
+        multiSelectionParameters: { ...multiSelectionParameters, multiSelectionMode: tableContext.multiSelectionMode },
         paginatedChildrenParameters,
         staggeredChildrenParameters,
         sortableChildrenParameters: {
@@ -124,6 +130,7 @@ export function useTableSection({ linearNavigationParameters, rovingTabIndexPara
     });
     assertEmptyObject(void1);
     assertEmptyObject(void2);
+    assertEmptyObject(void3);
     return {
         childrenHaveFocusReturn,
         context: {
@@ -135,6 +142,7 @@ export function useTableSection({ linearNavigationParameters, rovingTabIndexPara
         managedChildrenReturn,
         rovingTabIndexReturn,
         singleSelectionReturn,
+        multiSelectionReturn,
         rearrangeableChildrenReturn,
         sortableChildrenReturn,
         typeaheadNavigationReturn,
@@ -145,7 +153,7 @@ export function useTableSection({ linearNavigationParameters, rovingTabIndexPara
 /**
  * @compositeParams
  */
-export function useTableRow({ info, textContentParameters, context: cx1, tableRowParameters: { selected }, linearNavigationParameters, rovingTabIndexParameters, hasCurrentFocusParameters, ...void1 }) {
+export function useTableRow({ info, textContentParameters, context: cx1, tableRowParameters: { selected }, linearNavigationParameters, rovingTabIndexParameters, hasCurrentFocusParameters, singleSelectionChildParameters, multiSelectionChildParameters, ...void1 }) {
     monitorCallCount(useTableRow);
     assertEmptyObject(void1);
     const { context: cx2, managedChildrenReturn, props: { ...props }, ...restRet
@@ -157,19 +165,21 @@ export function useTableRow({ info, textContentParameters, context: cx1, tableRo
         info,
         linearNavigationParameters,
         rovingTabIndexParameters,
-        gridNavigationSingleSelectionSortableRowParameters: { getSortableColumnIndex: cx1.tableContext.getCurrentSortColumn },
+        singleSelectionChildParameters,
+        multiSelectionChildParameters,
+        gridNavigationSelectionSortableRowParameters: { getSortableColumnIndex: cx1.tableContext.getCurrentSortColumn },
         typeaheadNavigationParameters: { noTypeahead: true, collator: null, typeaheadTimeout: Infinity, onNavigateTypeahead: null }
     });
     props.role = "row";
     // TODO: Unneeded?
     if (selected) {
-        switch (cx1.singleSelectionContext.ariaPropName) {
+        switch (cx1.singleSelectionContext.singleSelectionAriaPropName) {
             case "aria-checked":
             case "aria-pressed":
             case "aria-selected":
-                props[cx1.singleSelectionContext.ariaPropName ?? "aria-selected"] = "true";
+                props[cx1.singleSelectionContext.singleSelectionAriaPropName ?? "aria-selected"] = "true";
             default: {
-                console.assert(false, cx1.singleSelectionContext.ariaPropName + " is not valid for multi-select -- prefer checked, selected, or pressed");
+                console.assert(false, cx1.singleSelectionContext.singleSelectionAriaPropName + " is not valid for multi-select -- prefer checked, selected, or pressed");
             }
         }
     }

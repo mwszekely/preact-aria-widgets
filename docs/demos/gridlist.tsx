@@ -99,11 +99,11 @@ export function Demo() {
             <div>
                 <Gridlist<HTMLUListElement, HTMLLIElement, HTMLDivElement, HTMLLabelElement>
                     ariaLabel={null}
-                    ariaPropName="aria-selected"
+                    singleSelectionAriaPropName="aria-selected"
                     groupingType="without-groups"
-                    selectionLimit="single"
-                    selectedIndex={selectedIndex}
-                    onSelectedIndexChange={e => setSelectedIndex(e[EventDetail].selectedIndex)}
+                    singleSelectionMode="activation"
+                    singleSelectedIndex={selectedIndex}
+                    onSingleSelectedIndexChange={e => setSelectedIndex(e[EventDetail].selectedIndex)}
                     render={infoGridlist => {
                         return (
                             <>
@@ -114,7 +114,6 @@ export function Demo() {
                                             <GridlistRow<HTMLLIElement, HTMLDivElement>
                                                 selected={null}
                                                 index={i}
-                                                unselectable={false}
                                                 render={info => {
                                                     return (
                                                         <li {...info.props}><DemoGridlistChild1 row={i} />{i != 2 && <DemoGridlistChild2 tabbable={info.rovingTabIndexChildReturn.tabbable} />}</li>

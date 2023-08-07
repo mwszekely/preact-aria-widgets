@@ -16,11 +16,8 @@ export function defaultRenderGridlistChild({ tagGridlistChild, makePropsGridlist
         return createElement(tagGridlistChild, (makePropsGridlistChild(info)));
     };
 }
-export const Gridlist = (function Gridlist({ collator, disableHomeEndKeys, noTypeahead, onTabbableIndexChange, groupingType, typeaheadTimeout, selectedIndex, navigatePastEnd, navigatePastStart, onSelectedIndexChange, pageNavigationSize, selectionLimit, untabbable, paginationMax, paginationMin, staggered, compare, getIndex, onTabbableColumnChange, ariaLabel, orientation, ariaPropName, selectionMode, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, render, ...void1 }) {
+export const Gridlist = (function Gridlist({ collator, disableHomeEndKeys, noTypeahead, onTabbableIndexChange, groupingType, typeaheadTimeout, singleSelectedIndex, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, pageNavigationSize, untabbable, paginationMax, paginationMin, staggered, compare, getIndex, onTabbableColumnChange, ariaLabel, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, render, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, singleSelectionAriaPropName, singleSelectionMode, ...void1 }) {
     assertEmptyObject(void1);
-    untabbable ??= false;
-    ariaPropName ??= "aria-selected";
-    selectionMode ??= "activation";
     return useComponent(imperativeHandle, render, GridlistContext, useGridlist({
         linearNavigationParameters: {
             onNavigateLinear,
@@ -31,7 +28,7 @@ export const Gridlist = (function Gridlist({ collator, disableHomeEndKeys, noTyp
         },
         rovingTabIndexParameters: {
             onTabbableIndexChange,
-            untabbable
+            untabbable: untabbable || false
         },
         staggeredChildrenParameters: { staggered: staggered || false },
         typeaheadNavigationParameters: {
@@ -41,11 +38,7 @@ export const Gridlist = (function Gridlist({ collator, disableHomeEndKeys, noTyp
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout),
         },
         listboxParameters: {
-            selectionLimit,
-            groupingType,
-            selectedIndex,
-            onSelectedIndexChange,
-            orientation: orientation ?? "vertical"
+            groupingType
         },
         gridNavigationParameters: {
             onTabbableColumnChange,
@@ -63,18 +56,20 @@ export const Gridlist = (function Gridlist({ collator, disableHomeEndKeys, noTyp
             paginationMax,
             paginationMin
         },
-        singleSelectionParameters: { ariaPropName, selectionMode },
+        singleSelectionParameters: { singleSelectionAriaPropName, singleSelectionMode: singleSelectionMode || "disabled" },
+        multiSelectionParameters: { multiSelectionAriaPropName, multiSelectionMode: multiSelectionMode || "disabled", onSelectionChange },
+        singleSelectionDeclarativeParameters: { onSingleSelectedIndexChange, singleSelectedIndex },
         refElementParameters: { onElementChange, onMount, onUnmount }
     }));
 });
-export const GridlistRow = memo(function GridlistRowU({ index, collator, unselectable, untabbable, navigatePastEnd, navigatePastStart, noTypeahead, onTabbableIndexChange, selected, typeaheadTimeout, getText, render, initiallyTabbedIndex, onNavigateTypeahead, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, info: uinfo }) {
+export const GridlistRow = memo(function GridlistRowU({ index, collator, untabbable, navigatePastEnd, navigatePastStart, noTypeahead, onTabbableIndexChange, selected, typeaheadTimeout, getText, render, initiallyTabbedIndex, onNavigateTypeahead, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, ...void1 }) {
     const context = useContextWithWarning(GridlistContext, "gridlist");
     console.assert(context != null, `This GridlistRow is not contained within a Gridlist`);
+    assertEmptyObject(void1);
     return useComponent(imperativeHandle, render, GridlistRowContext, useGridlistRow({
         info: {
             index,
             untabbable: untabbable || false,
-            unselectable: unselectable || false,
             ...uinfo
         },
         context,
@@ -99,7 +94,9 @@ export const GridlistRow = memo(function GridlistRowU({ index, collator, unselec
             noTypeahead: useDefault("noTypeahead", noTypeahead),
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
         },
-        gridNavigationSingleSelectionSortableRowParameters: { getSortableColumnIndex: returnZero }
+        gridNavigationSelectionSortableRowParameters: { getSortableColumnIndex: returnZero },
+        singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false },
+        multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false, initiallyMultiSelected: initiallyMultiSelected || false, onMultiSelectChange }
     }));
 });
 export const GridlistChild = memo(function GridlistChild({ index, colSpan, focusSelf, untabbable, getText, onPressSync, longPressThreshold, onPressingChange, render, getSortValue, imperativeHandle, info: subInfo }) {

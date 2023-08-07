@@ -34,7 +34,7 @@ export const RadioGroup = memo(function RadioGroup({ render, name, collator, dis
         refElementParameters: { onElementChange, onMount, onUnmount },
     }));
 });
-export const Radio = memo(function Radio({ unselectable, disabled, index, render, value, ariaLabel, labelPosition, untabbable, tagInput, tagLabel, getText, longPressThreshold, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, imperativeHandle, ...void1 }) {
+export const Radio = memo(function Radio({ disabled, index, render, value, ariaLabel, labelPosition, untabbable, tagInput, tagLabel, getText, longPressThreshold, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, imperativeHandle, ...void1 }) {
     assertEmptyObject(void1);
     const context = useContextWithWarning(RadioContext, "radio group");
     console.assert(context != null, `This Radio is not contained within a RadioGroup`);
@@ -42,7 +42,7 @@ export const Radio = memo(function Radio({ unselectable, disabled, index, render
     return useComponent(imperativeHandle, render, null, useRadio({
         radioParameters: { value },
         checkboxLikeParameters: { disabled: disabled ?? false },
-        info: { index, untabbable: untabbable || false, unselectable: !!unselectable, getSortValue: getValue },
+        info: { index, untabbable: untabbable || false, getSortValue: getValue },
         context,
         labelParameters: { ariaLabel, labelPosition, tagInput, tagLabel },
         textContentParameters: { getText: useDefault("getText", getText) },

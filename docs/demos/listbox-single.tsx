@@ -11,10 +11,8 @@ const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
             index={index}
             focusSelf={e => e.focus()}
             getSortValue={returnZero}
-            unselectable={false}
-            selected={null}
             render={info => {
-                const selected = info.singleSelectionChildReturn.selected;
+                const selected = info.singleSelectionChildReturn.singleSelected;
                 // defaultRenderListboxSingleItem({ tagListItem: "li", makePropsListItem: ({ singleSelection: { selected } }) => ({ children: `List item #${index}${selected ? " (selected)" : ""}` }) })
                 return (
                     <li {...useMergedProps(info.props)}>{`List item #${index}${selected ? " (selected)" : ""}`}</li>
@@ -62,9 +60,9 @@ function ListboxDemo({ count, label }: { count: number, label: ComponentChildren
     const [selectedIndex, setSelectedIndex] = useState<null | number>(null);
     return (
         <Listbox<HTMLOListElement, HTMLLIElement, HTMLLabelElement>
-            selectedIndex={selectedIndex}
-            onSelectedIndexChange={e => setSelectedIndex(e[EventDetail].selectedIndex)}
-            ariaPropName="aria-selected"
+            singleSelectedIndex={selectedIndex}
+            onSingleSelectedIndexChange={e => setSelectedIndex(e[EventDetail].selectedIndex)}
+            singleSelectionAriaPropName="aria-selected"
 
             render={info => {
                 return (
@@ -80,10 +78,9 @@ function ListboxDemo({ count, label }: { count: number, label: ComponentChildren
                     </>
                 )
             }}
-            selectionMode="activation"
+            singleSelectionMode="activation"
             ariaLabel={null}
             orientation="vertical"
-            selectionLimit="single"
         />
     )
 }
@@ -103,7 +100,6 @@ export function Demo() {
             <div>
                 <GroupedListbox<HTMLLabelElement>
                     orientation="vertical"
-                    selectionLimit="single"
                     ariaLabel={null}
                     render={info => {
                         return (

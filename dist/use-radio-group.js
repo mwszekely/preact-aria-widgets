@@ -37,15 +37,16 @@ export function useRadioGroup({ labelParameters, radioGroupParameters: { name, s
         else
         asyncHandlerReturn.syncHandler(null);
     }, [selectedValue])*/
-    const { context, props: propsGroup2, singleSelectionReturn, managedChildrenReturn, rovingTabIndexReturn, linearNavigationReturn, paginatedChildrenReturn, rearrangeableChildrenReturn, sortableChildrenReturn, staggeredChildrenReturn, typeaheadNavigationReturn, childrenHaveFocusReturn, ...void3 } = useCompleteListNavigationDeclarative({
+    const { context, props: propsGroup2, singleSelectionReturn, multiSelectionReturn, managedChildrenReturn, rovingTabIndexReturn, linearNavigationReturn, paginatedChildrenReturn, rearrangeableChildrenReturn, sortableChildrenReturn, staggeredChildrenReturn, typeaheadNavigationReturn, childrenHaveFocusReturn, ...void3 } = useCompleteListNavigationDeclarative({
         singleSelectionDeclarativeParameters: {
-            selectedIndex,
-            onSelectedIndexChange: useStableCallback((e) => {
+            singleSelectedIndex: selectedIndex,
+            onSingleSelectedIndexChange: useStableCallback((e) => {
                 setSelectedIndex(e[EventDetail].selectedIndex);
                 onSelectedValueChange?.(enhanceEvent(e, { selectedValue: indexToName.current.get(e[EventDetail].selectedIndex) }));
             }),
         },
-        singleSelectionParameters: { selectionMode: "focus", ariaPropName: null },
+        singleSelectionParameters: { singleSelectionMode: "focus", singleSelectionAriaPropName: null },
+        multiSelectionParameters: { multiSelectionMode: "disabled", multiSelectionAriaPropName: null, onSelectionChange: null },
         paginatedChildrenParameters: { paginationMin: null, paginationMax: null },
         rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
         linearNavigationParameters,
@@ -113,14 +114,16 @@ export function useRadio({ radioParameters: { value, ...void5 }, checkboxLikePar
         context,
         textContentParameters,
         hasCurrentFocusParameters,
-        refElementParameters
+        refElementParameters,
+        singleSelectionChildParameters: { singleSelectionDisabled: !!disabled },
+        multiSelectionChildParameters: { initiallyMultiSelected: false, multiSelectionDisabled: true, onMultiSelectChange: null }
     });
     assertEmptyObject(void1);
     assertEmptyObject(void2);
     assertEmptyObject(void3);
     assertEmptyObject(void4);
     assertEmptyObject(void5);
-    const { selected: checked } = singleSelectionChildReturn;
+    const { singleSelected: checked } = singleSelectionChildReturn;
     const { refElementReturn: refElementInputReturn, propsStable: propsRefInput } = useRefElement({ refElementParameters: {} });
     const { refElementReturn: refElementLabelReturn, propsStable: propsRefLabel } = useRefElement({ refElementParameters: {} });
     const { propsInput, propsLabel, ...checkboxLikeRet } = useCheckboxLike({

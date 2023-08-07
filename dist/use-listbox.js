@@ -1,4 +1,4 @@
-import { assertEmptyObject, enhanceEvent, focus, monitorCallCount, useCompleteListNavigationChild, useCompleteListNavigationDeclarative, useEnsureStability, useMemoObject, useMergedProps, usePress, useStableCallback } from "preact-prop-helpers";
+import { assertEmptyObject, focus, monitorCallCount, useCompleteListNavigationChildDeclarative, useCompleteListNavigationDeclarative, useMemoObject, useMergedProps, usePress, useStableCallback } from "preact-prop-helpers";
 import { EventDetail, Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
 /**
@@ -12,9 +12,12 @@ import { useLabelSynthetic } from "./use-label.js";
  *
  * @hasChild {@link useListboxItem}
  */
-export function useListbox({ labelParameters, listboxParameters: { selectionLimit, groupingType, selectedIndex, onSelectedIndexChange, orientation }, linearNavigationParameters, singleSelectionParameters: { ariaPropName, selectionMode }, rovingTabIndexParameters, ...restParams }) {
+export function useListbox({ labelParameters, listboxParameters: { groupingType, orientation }, linearNavigationParameters, singleSelectionParameters: { singleSelectionAriaPropName, singleSelectionMode, ...void1 }, multiSelectionParameters: { multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, ...void2 }, singleSelectionDeclarativeParameters: { onSingleSelectedIndexChange, singleSelectedIndex, ...void3 }, rovingTabIndexParameters, ...restParams }) {
     monitorCallCount(useListbox);
-    useEnsureStability("useListbox", selectionLimit);
+    //useEnsureStability("useListbox", selectionLimit);
+    assertEmptyObject(void1);
+    assertEmptyObject(void2);
+    assertEmptyObject(void3);
     const { propsInput: propsLabelList, propsLabel: propsLabelLabel, randomIdInputReturn: { id: _inputId }, randomIdLabelReturn: { id: _labelId } } = useLabelSynthetic({
         labelParameters: {
             ...labelParameters,
@@ -27,9 +30,10 @@ export function useListbox({ labelParameters, listboxParameters: { selectionLimi
     });
     let { context, props: { ...props }, rovingTabIndexReturn, singleSelectionReturn, ...restRet } = useCompleteListNavigationDeclarative({
         rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
-        singleSelectionDeclarativeParameters: { selectedIndex, onSelectedIndexChange },
-        singleSelectionParameters: { ariaPropName: ariaPropName || "aria-selected", selectionMode: selectionMode },
+        singleSelectionDeclarativeParameters: { onSingleSelectedIndexChange, singleSelectedIndex },
+        singleSelectionParameters: { singleSelectionAriaPropName: singleSelectionAriaPropName || "aria-selected", singleSelectionMode },
         linearNavigationParameters: { arrowKeyDirection: orientation, ...linearNavigationParameters },
+        multiSelectionParameters: { multiSelectionAriaPropName, multiSelectionMode, onSelectionChange },
         ...restParams
     });
     if (groupingType == "group")
@@ -43,44 +47,41 @@ export function useListbox({ labelParameters, listboxParameters: { selectionLimi
     else {
         props.role = "listbox";
     }
-    if (selectionLimit == "multi")
-        console.assert(singleSelectionReturn.getSelectedIndex() == null);
+    //if (selectionLimit == "multi")
+    //    console.assert(singleSelectionReturn.getSingleSelectedIndex() == null)
     return {
         ...restRet,
         context: useMemoObject({
             ...context,
             listboxContext: useMemoObject({
-                selectionLimit
+            //selectionLimit
             })
         }),
         rovingTabIndexReturn,
-        propsListbox: useMergedProps(props, propsLabelList, { "aria-multiselectable": (selectionLimit == "multi" ? "true" : undefined) }),
+        propsListbox: useMergedProps(props, propsLabelList, { "aria-multiselectable": (multiSelectionMode != "disabled" ? true : undefined) }),
         propsListboxLabel: propsLabelLabel
     };
 }
 /**
  * @compositeParams
  */
-export function useListboxItem({ context: { listboxContext: { selectionLimit }, ...context }, listboxParameters: { selected, onMultiSelect }, pressParameters: { allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, ...void1 }, ...restParams }) {
+export function useListboxItem({ context: { listboxContext: {}, ...context }, listboxParameters: {}, pressParameters: { allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, ...void1 }, singleSelectionChildParameters: { singleSelectionDisabled }, ...restParams }) {
     monitorCallCount(useListboxItem);
-    const { propsChild, propsTabbable, refElementReturn, pressParameters: { onPressSync, excludeSpace, ...void2 }, ...restRet } = useCompleteListNavigationChild({
+    const { propsChild, propsTabbable, refElementReturn, pressParameters: { onPressSync, excludeSpace, ...void2 }, ...restRet } = useCompleteListNavigationChildDeclarative({
         context,
+        singleSelectionChildParameters: { singleSelectionDisabled },
         ...restParams
     });
     assertEmptyObject(void1);
     assertEmptyObject(void2);
-    if (selectionLimit == "single")
-        console.assert(selected == null);
+    //if (context.multiSelectionContext.multiSelectionMode == "disabled")
+    //    console.assert(selected == null);
     propsChild.role = "option";
-    propsChild["aria-disabled"] = restParams.info.unselectable ? "true" : undefined;
+    propsChild["aria-disabled"] = singleSelectionDisabled ? "true" : undefined;
     const { pressReturn, props: propsPress } = usePress({
         refElementReturn,
         pressParameters: {
-            onPressSync: useStableCallback((e) => {
-                onPressSync?.(e);
-                if (selectionLimit == "multi")
-                    onMultiSelect?.(enhanceEvent(e, { selected: !selected }));
-            }),
+            onPressSync,
             focusSelf: restParams.info.focusSelf,
             excludeSpace,
             allowRepeatPresses,

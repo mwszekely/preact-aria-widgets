@@ -1,15 +1,12 @@
-import { jsx as _jsx, Fragment as _Fragment } from "preact/jsx-runtime";
+import { jsx as _jsx } from "preact/jsx-runtime";
 import { createContext } from "preact";
 import { assertEmptyObject, focus, memo } from "preact-prop-helpers";
 import { useCallback, useImperativeHandle } from "preact/hooks";
 import { useContextWithWarning } from "../props.js";
 import { useMenubar, useMenubarChild } from "../use-menubar.js";
-import { useDefault } from "./util.js";
+import { useComponent, useDefault } from "./util.js";
 export const MenubarItemContext = createContext(null);
-export const Menubar = memo(function Menubar({ render, collator, disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, staggered, noTypeahead, untabbable, onTabbableIndexChange, compare, getIndex, disabled, selectedIndex, onSelectedIndexChange, typeaheadTimeout, role, ariaLabel, ariaPropName, selectionMode, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, ...void1 }) {
-    ariaPropName ||= "aria-selected";
-    selectionMode ||= "activation";
-    untabbable ||= false;
+export const Menubar = memo(function Menubar({ render, collator, disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, staggered, noTypeahead, untabbable, onTabbableIndexChange, compare, getIndex, disabled, singleSelectedIndex, onSingleSelectedIndexChange, typeaheadTimeout, role, ariaLabel, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, singleSelectionAriaPropName, singleSelectionMode, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, ...void1 }) {
     assertEmptyObject(void1);
     const info = useMenubar({
         linearNavigationParameters: {
@@ -21,13 +18,14 @@ export const Menubar = memo(function Menubar({ render, collator, disableHomeEndK
         },
         toolbarParameters: {
             orientation,
-            selectedIndex,
-            onSelectedIndexChange,
+            singleSelectedIndex,
+            onSingleSelectedIndexChange,
             role: role ?? "menubar",
             disabled: disabled || false
         },
         rovingTabIndexParameters: {
-            onTabbableIndexChange, untabbable
+            onTabbableIndexChange,
+            untabbable: untabbable || false
         },
         typeaheadNavigationParameters: {
             onNavigateTypeahead,
@@ -48,28 +46,33 @@ export const Menubar = memo(function Menubar({ render, collator, disableHomeEndK
             ariaLabel
         },
         singleSelectionParameters: {
-            ariaPropName,
-            selectionMode
+            singleSelectionAriaPropName,
+            singleSelectionMode: singleSelectionMode || "activation",
+        },
+        multiSelectionParameters: {
+            multiSelectionAriaPropName,
+            multiSelectionMode: multiSelectionMode || "activation",
+            onSelectionChange
         },
         refElementParameters: { onElementChange, onMount, onUnmount }
     });
     useImperativeHandle(imperativeHandle, () => info);
     return (_jsx(MenubarItemContext.Provider, { value: info.context, children: render(info) }));
 });
-export function MenubarItem({ index, render, focusSelf, untabbable, getText, unselectable, onPress, getSortValue, onPressingChange, role, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, info: uinfo }) {
-    const context = (useContextWithWarning(MenubarItemContext, "menubar"));
+export function MenubarItem({ index, render, focusSelf, untabbable, getText, onPress, getSortValue, onPressingChange, role, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, ...void1 }) {
     const defaultFocusSelf = useCallback((e) => focus(e), []);
-    const info = useMenubarChild({
-        info: { index, untabbable: untabbable || false, unselectable: unselectable || false, focusSelf: focusSelf ?? defaultFocusSelf, getSortValue, ...uinfo },
-        context,
+    assertEmptyObject(void1);
+    return useComponent(imperativeHandle, render, null, useMenubarChild({
+        info: { index, untabbable: untabbable || false, focusSelf: focusSelf ?? defaultFocusSelf, getSortValue, ...uinfo },
+        context: useContextWithWarning(MenubarItemContext, "menubar"),
         textContentParameters: { getText: useDefault("getText", getText) },
         menuItemParameters: { onPress: onPress ?? null, role: role ?? "menuitem" },
         pressParameters: { onPressingChange },
         hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged },
-        refElementParameters: { onElementChange, onMount, onUnmount }
-    });
-    useImperativeHandle(imperativeHandle, () => info);
-    return (_jsx(_Fragment, { children: render(info) }));
+        refElementParameters: { onElementChange, onMount, onUnmount },
+        singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false },
+        multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false, initiallyMultiSelected: initiallyMultiSelected || false, onMultiSelectChange }
+    }));
 }
 ;
 //# sourceMappingURL=menubar.js.map

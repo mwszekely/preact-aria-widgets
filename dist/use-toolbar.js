@@ -14,12 +14,12 @@ import { useLabelSynthetic } from "./use-label.js";
  *
  * @compositeParams
  */
-export function useToolbar({ linearNavigationParameters, toolbarParameters: { orientation, role, selectedIndex, onSelectedIndexChange, disabled }, labelParameters, rovingTabIndexParameters, ...listNavParameters }) {
+export function useToolbar({ linearNavigationParameters, toolbarParameters: { orientation, role, singleSelectedIndex, onSingleSelectedIndexChange, disabled }, labelParameters, rovingTabIndexParameters, ...listNavParameters }) {
     monitorCallCount(useToolbar);
     const { context, props, ...listNavReturn } = useCompleteListNavigationDeclarative({
         ...listNavParameters,
         rovingTabIndexParameters: { ...rovingTabIndexParameters, untabbable: disabled, focusSelfParent: focus },
-        singleSelectionDeclarativeParameters: { selectedIndex, onSelectedIndexChange: disabled ? null : onSelectedIndexChange },
+        singleSelectionDeclarativeParameters: { singleSelectedIndex, onSingleSelectedIndexChange: disabled ? null : onSingleSelectedIndexChange },
         paginatedChildrenParameters: { paginationMax: null, paginationMin: null },
         linearNavigationParameters: { ...linearNavigationParameters, arrowKeyDirection: orientation },
     });
@@ -51,7 +51,7 @@ export function useToolbarChild({ info, toolbarChildParameters: { disabledProp }
     monitorCallCount(useToolbarChild);
     const { propsChild, propsTabbable, ...listNavReturn } = useCompleteListNavigationChild({ info, ...args });
     return {
-        propsChild: useMergedProps(propsChild, { [disabledProp]: info.unselectable ? true : undefined }),
+        propsChild: useMergedProps(propsChild, { [disabledProp]: (args.singleSelectionChildParameters.singleSelectionDisabled || args.multiSelectionChildParameters.multiSelectionDisabled) ? true : undefined }),
         propsTabbable,
         ...listNavReturn
     };
