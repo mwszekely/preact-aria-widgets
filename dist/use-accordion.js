@@ -5,9 +5,11 @@ import { useButton } from "./use-button.js";
 /**
  * Implements an [Accordion](https://www.w3.org/WAI/ARIA/apg/patterns/accordion/) pattern.
  *
- * @remarks For some reason, accordions don't have a parent element, and don't have a roving tab index, but do implement keyboard navigation.
+ * @remarks Accordions can be single-select or multi-select. For multi-select accordions, give each child its own `open` prop. For single-select accordions, just have their `open` prop be `null`.
  *
- * This makes their implementation a little bit messy. Each child individually handles keyboard navigation even though the parent orchestrates it.
+ * For some reason, accordions don't require a parent element, and don't have a roving tab index, but do implement keyboard navigation.
+ *
+ * This makes their implementation a little bit messy. Each child individually handles keyboard navigation even though the parent component (but not element) orchestrates it.
  *
  * @compositeParams
  *
@@ -35,7 +37,7 @@ export function useAccordion({ accordionParameters: { initialIndex, localStorage
         }
         return false;
     }, []);
-    const { propsStable, refElementReturn: { getElement } } = useRefElement({ refElementParameters });
+    //const { propsStable, refElementReturn: { getElement } } = useRefElement<any>({ refElementParameters })
     // Keep track of the one expanded index (if there is only one expanded index)
     const { changeIndex: changeExpandedIndexLocalOnly, getCurrentIndex: getCurrentExpandedIndex } = useChildrenFlag({
         initialIndex,
@@ -64,11 +66,19 @@ export function useAccordion({ accordionParameters: { initialIndex, localStorage
             }
         }, []),
         onClosestFit: useStableCallback((index) => {
+            // After needing to do a closest fit, we still need to handle focus:
             if (document.activeElement == null || document.activeElement == document.body) {
                 if (index != null) {
-                    const element = getChildren().getAt(index)?.getElement();
-                    if (index == null)
-                        findBackupFocus(getElement()).focus();
+                    let backupIndex = 0;
+                    let usedBackup = false;
+                    let element = getChildren().getAt(index)?.getElement();
+                    while (element == null && backupIndex <= getChildren().getHighestIndex()) {
+                        element = getChildren().getAt(backupIndex)?.getElement();
+                        ++backupIndex;
+                        usedBackup = true;
+                    }
+                    if (usedBackup)
+                        findBackupFocus(element).focus();
                     else if (element)
                         getChildren().getAt(index)?.focusSelf(element);
                 }
@@ -101,12 +111,11 @@ export function useAccordion({ accordionParameters: { initialIndex, localStorage
     assertEmptyObject(void1);
     assertEmptyObject(void2);
     return {
-        props: propsStable,
         typeaheadNavigationReturn,
         context: useMemoObject({
             managedChildContext,
             typeaheadNavigationContext,
-            accordionSectionParameters: useMemoObject({
+            accordionSectionContext: useMemoObject({
                 changeExpandedIndex,
                 changeTabbedIndex,
                 getExpandedIndex: getCurrentExpandedIndex,
@@ -136,11 +145,11 @@ export function useAccordion({ accordionParameters: { initialIndex, localStorage
 /**
  * @compositeParams
  */
-export function useAccordionSection({ buttonParameters: { disabled, tagButton, onPressSync: userOnPress, ...buttonParameters }, accordionSectionParameters: { open: openFromUser, bodyRole, ...accordionSectionParameters }, info: { index, untabbable, ...void4 }, textContentParameters: { getText, ...textContentParameters }, context, refElementBodyParameters, refElementHeaderButtonParameters, pressParameters: { focusSelf, ...pressParameters }, ...void1 }) {
+export function useAccordionSection({ buttonParameters: { disabled, tagButton, onPressSync: userOnPress, ...buttonParameters }, accordionSectionParameters: { open: openFromUser, bodyRole, ...void3 }, info: { index, untabbable, ...void4 }, textContentParameters: { getText, ...void5 }, context, refElementBodyParameters, refElementHeaderButtonParameters, pressParameters: { focusSelf, ...pressParameters }, ...void1 }) {
     monitorCallCount(useAccordionSection);
     const [openFromParent, setOpenFromParent, getOpenFromParent] = useState(null);
     const [mostRecentlyTabbed, setMostRecentlyTabbed, getMostRecentlyTabbed] = useState(null);
-    const { accordionSectionParameters: { changeExpandedIndex, changeTabbedIndex: setCurrentFocusedIndex, getTabbedIndex: getCurrentFocusedIndex, stableTypeaheadProps }, linearNavigationParameters, rovingTabIndexReturn, } = context;
+    const { accordionSectionContext: { changeExpandedIndex, changeTabbedIndex: setCurrentFocusedIndex, getTabbedIndex: getCurrentFocusedIndex, stableTypeaheadProps }, linearNavigationParameters, rovingTabIndexReturn, } = context;
     const { randomIdReturn: _bodyIdReturn, propsSource: propsBodySource, propsReferencer: propsHeadReferencer } = useRandomId({ randomIdParameters: { prefix: Prefices.accordionSectionHeaderButton, otherReferencerProp: "aria-controls" } });
     const { randomIdReturn: _headIdReturn, propsSource: propsHeadSource, propsReferencer: propsBodyReferencer } = useRandomId({ randomIdParameters: { prefix: Prefices.accordionSectionBody, otherReferencerProp: "aria-labelledby" } });
     const open = ((openFromUser ?? openFromParent) ?? false);
@@ -211,9 +220,9 @@ export function useAccordionSection({ buttonParameters: { disabled, tagButton, o
     });
     assertEmptyObject(void1);
     assertEmptyObject(void2);
-    assertEmptyObject(accordionSectionParameters);
+    assertEmptyObject(void3);
     assertEmptyObject(void4);
-    assertEmptyObject(textContentParameters);
+    assertEmptyObject(void5);
     assertEmptyObject(pressParameters);
     assertEmptyObject(buttonParameters);
     assertEmptyObject(void9);

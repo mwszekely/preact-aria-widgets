@@ -5444,7 +5444,7 @@ const Prefices = {
 /**
  * Implements a [Button](https://www.w3.org/WAI/ARIA/apg/patterns/button/) pattern.
  *
- * @remarks The press handler can be async or sync&mdash;either way, pass it to `asyncHandlerParameters.asyncHandler`
+ * @remarks The press handler is sync by default. See `useProgressWithHandler` to turn an async function into a sync function with a progress bar.
  *
  * @compositeParams
  */
@@ -5482,9 +5482,11 @@ function useButton({ buttonParameters: { tagButton, disabled, pressed, role, onP
 /**
  * Implements an [Accordion](https://www.w3.org/WAI/ARIA/apg/patterns/accordion/) pattern.
  *
- * @remarks For some reason, accordions don't have a parent element, and don't have a roving tab index, but do implement keyboard navigation.
+ * @remarks Accordions can be single-select or multi-select. For multi-select accordions, give each child its own `open` prop. For single-select accordions, just have their `open` prop be `null`.
  *
- * This makes their implementation a little bit messy. Each child individually handles keyboard navigation even though the parent orchestrates it.
+ * For some reason, accordions don't require a parent element, and don't have a roving tab index, but do implement keyboard navigation.
+ *
+ * This makes their implementation a little bit messy. Each child individually handles keyboard navigation even though the parent component (but not element) orchestrates it.
  *
  * @compositeParams
  *
@@ -5512,7 +5514,7 @@ function useAccordion({ accordionParameters: { initialIndex, localStorageKey, or
         }
         return false;
     }, []);
-    const { propsStable, refElementReturn: { getElement } } = useRefElement({ refElementParameters });
+    //const { propsStable, refElementReturn: { getElement } } = useRefElement<any>({ refElementParameters })
     // Keep track of the one expanded index (if there is only one expanded index)
     const { changeIndex: changeExpandedIndexLocalOnly, getCurrentIndex: getCurrentExpandedIndex } = useChildrenFlag({
         initialIndex,
@@ -5541,11 +5543,19 @@ function useAccordion({ accordionParameters: { initialIndex, localStorageKey, or
             }
         }, []),
         onClosestFit: useStableCallback((index) => {
+            // After needing to do a closest fit, we still need to handle focus:
             if (document.activeElement == null || document.activeElement == document.body) {
                 if (index != null) {
-                    const element = getChildren().getAt(index)?.getElement();
-                    if (index == null)
-                        findBackupFocus(getElement()).focus();
+                    let backupIndex = 0;
+                    let usedBackup = false;
+                    let element = getChildren().getAt(index)?.getElement();
+                    while (element == null && backupIndex <= getChildren().getHighestIndex()) {
+                        element = getChildren().getAt(backupIndex)?.getElement();
+                        ++backupIndex;
+                        usedBackup = true;
+                    }
+                    if (usedBackup)
+                        findBackupFocus(element).focus();
                     else if (element)
                         getChildren().getAt(index)?.focusSelf(element);
                 }
@@ -5572,12 +5582,11 @@ function useAccordion({ accordionParameters: { initialIndex, localStorageKey, or
         }
     });
     return {
-        props: propsStable,
         typeaheadNavigationReturn,
         context: useMemoObject({
             managedChildContext,
             typeaheadNavigationContext,
-            accordionSectionParameters: useMemoObject({
+            accordionSectionContext: useMemoObject({
                 changeExpandedIndex,
                 changeTabbedIndex,
                 getExpandedIndex: getCurrentExpandedIndex,
@@ -5607,11 +5616,11 @@ function useAccordion({ accordionParameters: { initialIndex, localStorageKey, or
 /**
  * @compositeParams
  */
-function useAccordionSection({ buttonParameters: { disabled, tagButton, onPressSync: userOnPress, ...buttonParameters }, accordionSectionParameters: { open: openFromUser, bodyRole, ...accordionSectionParameters }, info: { index, untabbable, ...void4 }, textContentParameters: { getText, ...textContentParameters }, context, refElementBodyParameters, refElementHeaderButtonParameters, pressParameters: { focusSelf, ...pressParameters }, ...void1 }) {
+function useAccordionSection({ buttonParameters: { disabled, tagButton, onPressSync: userOnPress, ...buttonParameters }, accordionSectionParameters: { open: openFromUser, bodyRole, ...void3 }, info: { index, untabbable, ...void4 }, textContentParameters: { getText, ...void5 }, context, refElementBodyParameters, refElementHeaderButtonParameters, pressParameters: { focusSelf, ...pressParameters }, ...void1 }) {
     monitorCallCount(useAccordionSection);
     const [openFromParent, setOpenFromParent, getOpenFromParent] = useState(null);
     const [mostRecentlyTabbed, setMostRecentlyTabbed, getMostRecentlyTabbed] = useState(null);
-    const { accordionSectionParameters: { changeExpandedIndex, changeTabbedIndex: setCurrentFocusedIndex, getTabbedIndex: getCurrentFocusedIndex, stableTypeaheadProps }, linearNavigationParameters, rovingTabIndexReturn, } = context;
+    const { accordionSectionContext: { changeExpandedIndex, changeTabbedIndex: setCurrentFocusedIndex, getTabbedIndex: getCurrentFocusedIndex, stableTypeaheadProps }, linearNavigationParameters, rovingTabIndexReturn, } = context;
     const { randomIdReturn: _bodyIdReturn, propsSource: propsBodySource, propsReferencer: propsHeadReferencer } = useRandomId({ randomIdParameters: { prefix: Prefices.accordionSectionHeaderButton, otherReferencerProp: "aria-controls" } });
     const { randomIdReturn: _headIdReturn, propsSource: propsHeadSource, propsReferencer: propsBodyReferencer } = useRandomId({ randomIdParameters: { prefix: Prefices.accordionSectionBody, otherReferencerProp: "aria-labelledby" } });
     const open = ((openFromUser ?? openFromParent) ?? false);
@@ -5703,6 +5712,19 @@ function useAccordionSection({ buttonParameters: { disabled, tagButton, onPressS
 
 /**
  * Allows a parent checkbox to control a number of child checkboxes, in accordance with the [Checkbox](https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/) pattern.
+ *
+ * @remarks `useCheckboxGroup` and its child hooks **do not** call `useCheckbox`. These hooks are for creating CheckboxGroup-like functionality&mdash;in theory, this could be implemented in a listbox.
+ *
+ * A checkbox group is made up of the "Parent" checkbox and the "Child" checkboxes.  Of course, all of them are children of the group as a whole, but the "Parent" checkbox is the one that, when clicked, toggles the checked state of all the "Child" checkboxes.
+ *
+ * A checkbox group's parent, when clicked, toggles between three states:
+ * ```md-literal
+ * * Unchecked (all children become unchecked)
+ * * Mixed (all children become the last user-input value)
+ * * Checked (all children become checked)
+ * ```
+ *
+ * This functions even if it takes an `async` amount of time to complete the "cause the child checkbox to change its state" action.
  *
  * @compositeParams
  *
@@ -5999,7 +6021,9 @@ function preventDefault(e) {
     e.preventDefault();
 }
 /**
- * Handles any component where there's:
+ * Handles any component that's "checkbox-like" (checkboxes, radios, switches, etc.)
+ *
+ * @remarks Handles any component where there's:
  * ```md-literal
  * 1. Some kind of an on/off binary/trinary input element that needs event handlers
  * 2. Some kind of label for that input element
@@ -6403,16 +6427,9 @@ function useListbox({ labelParameters, listboxParameters: { groupingType, orient
     else {
         props.role = "listbox";
     }
-    //if (selectionLimit == "multi")
-    //    console.assert(singleSelectionReturn.getSingleSelectedIndex() == null)
     return {
         ...restRet,
-        context: useMemoObject({
-            ...context,
-            listboxContext: useMemoObject({
-            //selectionLimit
-            })
-        }),
+        context,
         rovingTabIndexReturn,
         propsListbox: useMergedProps(props, propsLabelList, { "aria-multiselectable": (multiSelectionMode != "disabled" ? true : undefined) }),
         propsListboxLabel: propsLabelLabel
@@ -6421,15 +6438,13 @@ function useListbox({ labelParameters, listboxParameters: { groupingType, orient
 /**
  * @compositeParams
  */
-function useListboxItem({ context: { listboxContext: {}, ...context }, listboxParameters: {}, pressParameters: { allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, ...void1 }, singleSelectionChildParameters: { singleSelectionDisabled }, ...restParams }) {
+function useListboxItem({ context, listboxParameters: {}, pressParameters: { allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, ...void1 }, singleSelectionChildParameters: { singleSelectionDisabled }, ...restParams }) {
     monitorCallCount(useListboxItem);
     const { propsChild, propsTabbable, refElementReturn, pressParameters: { onPressSync, excludeSpace, ...void2 }, ...restRet } = useCompleteListNavigationChildDeclarative({
         context,
         singleSelectionChildParameters: { singleSelectionDisabled },
         ...restParams
     });
-    //if (context.multiSelectionContext.multiSelectionMode == "disabled")
-    //    console.assert(selected == null);
     propsChild.role = "option";
     propsChild["aria-disabled"] = singleSelectionDisabled ? "true" : undefined;
     const { pressReturn, props: propsPress } = usePress({
@@ -6510,7 +6525,7 @@ function useMenuSurface({ dismissParameters, focusTrapParameters, activeElementP
     };
 }
 /**
- * A focus sentinal is a hidden but focusable element that comes at the start or end
+ * A focus sentinel is a hidden but focusable element that comes at the start or end
  * of the out-of-place-focusable component that, when activated or focused over, closes the component
  * (if focused within 100ms of the open prop changing, instead of
  * closing, focusing the sentinel immediately asks it to focus itself).
@@ -6843,7 +6858,8 @@ function useProgress({ labelParameters, progressIndicatorParameters: { max, valu
 /**
  * Provides props for a progress bar based on the progress of an async event handler, and notifies ATs when the operation has started/finished.
  *
- * @remarks
+ * @remarks This hook is meant to be combined with other hooks, generally wrapping around the other hook.
+ * You don't actually need an entire progress bar element as long as your `notify*` parameters are good.
  *
  * @compositeParams
  */
@@ -6890,6 +6906,8 @@ function useProgressWithHandler({ labelParameters, progressIndicatorParameters, 
 
 /**
  * Implements a [Radio Group](https://www.w3.org/WAI/ARIA/apg/patterns/radio/) pattern.
+ *
+ * @remarks Which radio is the selected one is controlled by the `selectedValue` parameter on the parent.
  *
  * @compositeParams
  *
@@ -6977,6 +6995,8 @@ function useRadioGroup({ labelParameters, radioGroupParameters: { name, selected
     };
 }
 /**
+ * Implements a single radio button, as part of a radio group.
+ *
  * @compositeParams
  */
 function useRadio({ radioParameters: { value, ...void5 }, checkboxLikeParameters: { disabled, ...void4 }, labelParameters, info, context, textContentParameters, pressParameters: { longPressThreshold, ...void3 }, hasCurrentFocusParameters, refElementParameters, ...void1 }) {
@@ -7101,6 +7121,8 @@ function useSliderThumb({ sliderThumbParameters: { tag, value, max: maxOverride,
 
 /**
  * Creates a sortable data table in a [Grid](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) pattern.
+ *
+ * @remarks Note that in many cases this is overkill. If you don't need sorting and navigation between cells of interactive content, then you can just use a regular &lt;table&gt;
  *
  * @compositeParams
  *
@@ -7307,6 +7329,9 @@ function useTableCell({ tableCellParameters: { tagTableCell }, info, ...p }) {
 /**
  * Implements a [Tabs](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/) pattern.
  *
+ * @remarks Tabs consist of both a list of tabs and a list of tab panels.
+ * A Tab and a TabPanel that share the same index are linked together; when that tab is selected that panel is shown.
+ *
  * @compositeParams
  *
  * @hasChild {@link useTab}
@@ -7392,6 +7417,10 @@ function useTabs({ labelParameters, linearNavigationParameters, singleSelectionP
     };
 }
 /**
+ * Implements a single tab of a Tabs component.
+ *
+ * The index that this child uses controls which TabPanel it shows when selected.
+ *
  * @compositeParams
  */
 function useTab({ info: { focusSelf: focusSelfParent, index, untabbable, getSortValue, ...info }, textContentParameters, pressParameters: { focusSelf: focusSelfChild, longPressThreshold, onPressingChange, ...void2 }, context, hasCurrentFocusParameters, refElementParameters, singleSelectionChildParameters, ...void3 }) {
@@ -7424,6 +7453,11 @@ function useTab({ info: { focusSelf: focusSelfParent, index, untabbable, getSort
     };
 }
 /**
+ * Implements the TabPanel a Tab controls.
+ *
+ * @remarks A hidden tab panel is made `inert` so that it cannot be interacted with, so you can just set `opacity: 0` on your hidden panels if that's how you want to style them.
+ * They'll still be properly removed from the tab order (i.e. you don't **also** need `display: none`).
+ *
  * @compositeParams
  */
 function useTabPanel({ info, context }) {

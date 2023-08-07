@@ -46,7 +46,7 @@ export interface UseButtonReturnType<ButtonElement extends Element> extends UseP
 /**
  * Implements a [Button](https://www.w3.org/WAI/ARIA/apg/patterns/button/) pattern.
  *
- * @remarks The press handler can be async or sync&mdash;either way, pass it to `asyncHandlerParameters.asyncHandler`
+ * @remarks The press handler is sync by default. See `useProgressWithHandler` to turn an async function into a sync function with a progress bar.
  *
  * @compositeParams
  */

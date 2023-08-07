@@ -135,7 +135,8 @@ export interface UseProgressWithHandlerReturnType<EventType, CaptureType, Indica
 /**
  * Provides props for a progress bar based on the progress of an async event handler, and notifies ATs when the operation has started/finished.
  * 
- * @remarks
+ * @remarks This hook is meant to be combined with other hooks, generally wrapping around the other hook.
+ * You don't actually need an entire progress bar element as long as your `notify*` parameters are good.
  * 
  * @compositeParams
  */

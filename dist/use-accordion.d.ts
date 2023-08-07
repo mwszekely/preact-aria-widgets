@@ -4,6 +4,8 @@ import { UseButtonParameters, UseButtonReturnType } from "./use-button.js";
 export interface UseAccordionParametersSelf {
     /**
      * Almost all Accordions are `"vertical"`, but you certainly can have a `"horizontal"` Accordion if you want.
+     *
+     * @remarks This subsumes (and replaces) `linearNavigationParameters.arrowKeyDirection`.
      */
     orientation: Nullable<"vertical" | "horizontal">;
     /** For a one-at-a-time accordion, which index is initially opened? */
@@ -24,7 +26,6 @@ export interface UseAccordionReturnType<HeaderButtonElement extends Element, M e
     /** @stable */
     accordionReturn: UseAccordionReturnTypeSelf;
     context: UseAccordionContext<HeaderButtonElement, M>;
-    props: ElementProps<any>;
 }
 export interface UseAccordionSectionInfo<E extends Element> extends ManagedChildInfo<number> {
     setOpenFromParent(open: boolean): void;
@@ -46,7 +47,10 @@ export interface UseAccordionSectionParametersSelf {
      * set the parent's index to null and toggle this `true`/`false` when the button's pressed
      */
     open: boolean | null | undefined;
-    /** Generally `"region"` */
+    /**
+     * Generally `"region"`.
+     *
+     */
     bodyRole: JSX.AriaRole;
 }
 export interface UseAccordionSectionParameters<HeaderButtonElement extends Element, BodyElement extends Element, M extends UseAccordionSectionInfo<HeaderButtonElement>> extends UseGenericChildParameters<UseAccordionContext<HeaderButtonElement, M>, Pick<M, "index" | "untabbable">>, OmitStrong<UseTypeaheadNavigationChildParameters<HeaderButtonElement>, "info" | "refElementReturn" | "context">, OmitStrong<UseManagedChildParameters<M>, "info">, TargetedPick<UsePressParameters<HeaderButtonElement>, "pressParameters", "focusSelf">, TargetedOmit<UseButtonParameters<HeaderButtonElement>, "buttonParameters", "pressed" | "role"> {
@@ -76,16 +80,18 @@ export interface UseAccordionContextSelf<HeaderButtonElement extends Element> {
     stableTypeaheadProps: ElementProps<HeaderButtonElement>;
 }
 export interface UseAccordionContext<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo<HeaderButtonElement>> extends UseManagedChildrenContext<M>, UseTypeaheadNavigationContext {
-    accordionSectionParameters: UseAccordionContextSelf<HeaderButtonElement>;
+    accordionSectionContext: UseAccordionContextSelf<HeaderButtonElement>;
     linearNavigationParameters: UseLinearNavigationParameters<HeaderButtonElement, HeaderButtonElement>["linearNavigationParameters"];
     rovingTabIndexReturn: UseLinearNavigationParameters<HeaderButtonElement, HeaderButtonElement>["rovingTabIndexReturn"];
 }
 /**
  * Implements an [Accordion](https://www.w3.org/WAI/ARIA/apg/patterns/accordion/) pattern.
  *
- * @remarks For some reason, accordions don't have a parent element, and don't have a roving tab index, but do implement keyboard navigation.
+ * @remarks Accordions can be single-select or multi-select. For multi-select accordions, give each child its own `open` prop. For single-select accordions, just have their `open` prop be `null`.
  *
- * This makes their implementation a little bit messy. Each child individually handles keyboard navigation even though the parent orchestrates it.
+ * For some reason, accordions don't require a parent element, and don't have a roving tab index, but do implement keyboard navigation.
+ *
+ * This makes their implementation a little bit messy. Each child individually handles keyboard navigation even though the parent component (but not element) orchestrates it.
  *
  * @compositeParams
  *
@@ -95,5 +101,5 @@ export declare function useAccordion<HeaderButtonElement extends Element>({ acco
 /**
  * @compositeParams
  */
-export declare function useAccordionSection<HeaderContainerElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element>({ buttonParameters: { disabled, tagButton, onPressSync: userOnPress, ...buttonParameters }, accordionSectionParameters: { open: openFromUser, bodyRole, ...accordionSectionParameters }, info: { index, untabbable, ...void4 }, textContentParameters: { getText, ...textContentParameters }, context, refElementBodyParameters, refElementHeaderButtonParameters, pressParameters: { focusSelf, ...pressParameters }, ...void1 }: UseAccordionSectionParameters<HeaderButtonElement, BodyElement, UseAccordionSectionInfo<HeaderButtonElement>>): UseAccordionSectionReturnType<HeaderContainerElement, HeaderButtonElement, BodyElement>;
+export declare function useAccordionSection<HeaderContainerElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element>({ buttonParameters: { disabled, tagButton, onPressSync: userOnPress, ...buttonParameters }, accordionSectionParameters: { open: openFromUser, bodyRole, ...void3 }, info: { index, untabbable, ...void4 }, textContentParameters: { getText, ...void5 }, context, refElementBodyParameters, refElementHeaderButtonParameters, pressParameters: { focusSelf, ...pressParameters }, ...void1 }: UseAccordionSectionParameters<HeaderButtonElement, BodyElement, UseAccordionSectionInfo<HeaderButtonElement>>): UseAccordionSectionReturnType<HeaderContainerElement, HeaderButtonElement, BodyElement>;
 //# sourceMappingURL=use-accordion.d.ts.map

@@ -6,6 +6,8 @@ import { UseButtonParameters, UseButtonReturnType, useButton } from "./use-butto
 export interface UseAccordionParametersSelf {
     /**
      * Almost all Accordions are `"vertical"`, but you certainly can have a `"horizontal"` Accordion if you want.
+     * 
+     * @remarks This subsumes (and replaces) `linearNavigationParameters.arrowKeyDirection`.
      */
     orientation: Nullable<"vertical" | "horizontal">;
 
@@ -38,7 +40,6 @@ export interface UseAccordionReturnType<HeaderButtonElement extends Element, M e
     /** @stable */
     accordionReturn: UseAccordionReturnTypeSelf;
     context: UseAccordionContext<HeaderButtonElement, M>;
-    props: ElementProps<any>;
 }
 
 
@@ -63,7 +64,10 @@ export interface UseAccordionSectionParametersSelf {
      * set the parent's index to null and toggle this `true`/`false` when the button's pressed
      */
     open: boolean | null | undefined;
-    /** Generally `"region"` */
+    /** 
+     * Generally `"region"`.
+     * 
+     */
     bodyRole: JSX.AriaRole;
 }
 
@@ -110,7 +114,10 @@ export interface UseAccordionContextSelf<HeaderButtonElement extends Element> {
 }
 
 export interface UseAccordionContext<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo<HeaderButtonElement>> extends UseManagedChildrenContext<M>, UseTypeaheadNavigationContext {
-    accordionSectionParameters: UseAccordionContextSelf<HeaderButtonElement>;
+    accordionSectionContext: UseAccordionContextSelf<HeaderButtonElement>;
+
+    // These are here because there's no parent element -- the child handles these.
+    // Accordions are a bit odd.
     linearNavigationParameters: UseLinearNavigationParameters<HeaderButtonElement, HeaderButtonElement>["linearNavigationParameters"];
     rovingTabIndexReturn: UseLinearNavigationParameters<HeaderButtonElement, HeaderButtonElement>["rovingTabIndexReturn"];
 }
@@ -118,9 +125,11 @@ export interface UseAccordionContext<HeaderButtonElement extends Element, M exte
 /**
  * Implements an [Accordion](https://www.w3.org/WAI/ARIA/apg/patterns/accordion/) pattern.
  * 
- * @remarks For some reason, accordions don't have a parent element, and don't have a roving tab index, but do implement keyboard navigation.
+ * @remarks Accordions can be single-select or multi-select. For multi-select accordions, give each child its own `open` prop. For single-select accordions, just have their `open` prop be `null`.
  * 
- * This makes their implementation a little bit messy. Each child individually handles keyboard navigation even though the parent orchestrates it.
+ * For some reason, accordions don't require a parent element, and don't have a roving tab index, but do implement keyboard navigation.
+ * 
+ * This makes their implementation a little bit messy. Each child individually handles keyboard navigation even though the parent component (but not element) orchestrates it.
  * 
  * @compositeParams
  * 
@@ -161,7 +170,7 @@ export function useAccordion<HeaderButtonElement extends Element>({
         return false;
     }, []);
 
-    const { propsStable, refElementReturn: { getElement } } = useRefElement<any>({ refElementParameters })
+    //const { propsStable, refElementReturn: { getElement } } = useRefElement<any>({ refElementParameters })
 
     // Keep track of the one expanded index (if there is only one expanded index)
     const { changeIndex: changeExpandedIndexLocalOnly, getCurrentIndex: getCurrentExpandedIndex } = useChildrenFlag<M, Event>({
@@ -192,11 +201,20 @@ export function useAccordion<HeaderButtonElement extends Element>({
             }
         }, []),
         onClosestFit: useStableCallback((index) => {
+            
+            // After needing to do a closest fit, we still need to handle focus:
             if (document.activeElement == null || document.activeElement == document.body) {
                 if (index != null) {
-                    const element = getChildren().getAt(index)?.getElement();
-                    if (index == null)
-                        findBackupFocus(getElement()!).focus();
+                    let backupIndex = 0;
+                    let usedBackup = false;
+                    let element = getChildren().getAt(index)?.getElement();
+                    while (element == null && backupIndex <= getChildren().getHighestIndex()) {
+                        element = getChildren().getAt(backupIndex)?.getElement();
+                        ++backupIndex;
+                        usedBackup = true;
+                    }
+                    if (usedBackup)
+                        findBackupFocus(element!).focus();
                     else if (element)
                         getChildren().getAt(index)?.focusSelf(element);
                 }
@@ -239,14 +257,11 @@ export function useAccordion<HeaderButtonElement extends Element>({
     assertEmptyObject(void2);
 
     return {
-        props: propsStable,
         typeaheadNavigationReturn,
         context: useMemoObject<UseAccordionContext<HeaderButtonElement, M>>({
-
-
             managedChildContext,
             typeaheadNavigationContext,
-            accordionSectionParameters: useMemoObject({
+            accordionSectionContext: useMemoObject<UseAccordionContextSelf<HeaderButtonElement>>({
                 changeExpandedIndex,
                 changeTabbedIndex,
                 getExpandedIndex: getCurrentExpandedIndex,
@@ -278,10 +293,10 @@ export function useAccordion<HeaderButtonElement extends Element>({
  * @compositeParams
  */
 export function useAccordionSection<HeaderContainerElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element>({
-    buttonParameters: { disabled, tagButton, onPressSync: userOnPress,  ...buttonParameters },
-    accordionSectionParameters: { open: openFromUser, bodyRole, ...accordionSectionParameters },
+    buttonParameters: { disabled, tagButton, onPressSync: userOnPress, ...buttonParameters },
+    accordionSectionParameters: { open: openFromUser, bodyRole, ...void3 },
     info: { index, untabbable, ...void4 },
-    textContentParameters: { getText, ...textContentParameters },
+    textContentParameters: { getText, ...void5 },
     context,
     refElementBodyParameters,
     refElementHeaderButtonParameters,
@@ -295,7 +310,7 @@ export function useAccordionSection<HeaderContainerElement extends Element, Head
     const [mostRecentlyTabbed, setMostRecentlyTabbed, getMostRecentlyTabbed] = useState<boolean | null>(null);
 
     const {
-        accordionSectionParameters: {
+        accordionSectionContext: {
             changeExpandedIndex,
             changeTabbedIndex: setCurrentFocusedIndex,
             getTabbedIndex: getCurrentFocusedIndex,
@@ -361,11 +376,11 @@ export function useAccordionSection<HeaderContainerElement extends Element, Head
         refElementReturn: refElementHeaderButtonReturn,
         ...void12
     }: UseButtonReturnType<HeaderButtonElement> = useButton<HeaderButtonElement>({
-        buttonParameters: { 
-            pressed: null, 
-            role: "button", 
-            disabled, 
-            tagButton, 
+        buttonParameters: {
+            pressed: null,
+            role: "button",
+            disabled,
+            tagButton,
             onPressSync: (e) => {
                 setCurrentFocusedIndex(index, e);
                 if (getOpenFromParent())
@@ -375,24 +390,25 @@ export function useAccordionSection<HeaderContainerElement extends Element, Head
 
                 userOnPress?.(e);
             },
-            ...buttonParameters 
+            ...buttonParameters
         },
-        pressParameters: { 
-            excludeSpace, 
-            focusSelf, 
-            allowRepeatPresses: false, 
-            longPressThreshold: null, 
-            onPressingChange: null, 
-            ...pressParameters },
+        pressParameters: {
+            excludeSpace,
+            focusSelf,
+            allowRepeatPresses: false,
+            longPressThreshold: null,
+            onPressingChange: null,
+            ...pressParameters
+        },
         refElementParameters: refElementHeaderButtonParameters
     });
 
 
     assertEmptyObject(void1);
     assertEmptyObject(void2);
-    assertEmptyObject(accordionSectionParameters);
+    assertEmptyObject(void3);
     assertEmptyObject(void4);
-    assertEmptyObject(textContentParameters);
+    assertEmptyObject(void5);
 
     assertEmptyObject(pressParameters);
     assertEmptyObject(buttonParameters);

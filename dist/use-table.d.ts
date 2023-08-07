@@ -80,6 +80,8 @@ interface SortInfo {
 /**
  * Creates a sortable data table in a [Grid](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) pattern.
  *
+ * @remarks Note that in many cases this is overkill. If you don't need sorting and navigation between cells of interactive content, then you can just use a regular &lt;table&gt;
+ *
  * @compositeParams
  *
  * @hasChild {@link useTableSection}

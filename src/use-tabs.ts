@@ -98,6 +98,9 @@ export type UseTabListLabel<LabelElement extends Element> = (args: UseTabLabelPa
 /**
  * Implements a [Tabs](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/) pattern.
  * 
+ * @remarks Tabs consist of both a list of tabs and a list of tab panels. 
+ * A Tab and a TabPanel that share the same index are linked together; when that tab is selected that panel is shown.
+ * 
  * @compositeParams
  * 
  * @hasChild {@link useTab}
@@ -216,6 +219,10 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
 }
 
 /**
+ * Implements a single tab of a Tabs component.
+ * 
+ * The index that this child uses controls which TabPanel it shows when selected.
+ * 
  * @compositeParams
  */
 export function useTab<TabElement extends Element>({
@@ -271,6 +278,11 @@ export function useTab<TabElement extends Element>({
 
 
 /**
+ * Implements the TabPanel a Tab controls.
+ * 
+ * @remarks A hidden tab panel is made `inert` so that it cannot be interacted with, so you can just set `opacity: 0` on your hidden panels if that's how you want to style them. 
+ * They'll still be properly removed from the tab order (i.e. you don't **also** need `display: none`).
+ * 
  * @compositeParams
  */
 export function useTabPanel<PanelElement extends Element>({ info, context }: UseTabPanelParameters<TabPanelInfo>): UseTabPanelReturnType<PanelElement> {

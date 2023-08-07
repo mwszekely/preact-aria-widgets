@@ -1,4 +1,4 @@
-import { ElementProps, JSX, ManagedChildInfo, Nullable, PassiveStateUpdater, PersistentStates, TargetedOmit, TargetedPick, UseGenericChildParameters, UseHasCurrentFocusReturnType, UseLinearNavigationParameters, UseLinearNavigationReturnType, UseManagedChildParameters, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, UsePressParameters, UseRefElementParameters, UseRefElementReturnTypeSelf, UseTextContentReturnType, UseTypeaheadNavigationChildParameters, UseTypeaheadNavigationChildReturnType, UseTypeaheadNavigationContext, UseTypeaheadNavigationParameters, UseTypeaheadNavigationReturnType, PressEventReason, UsePressReturnType, UseRefElementReturnType, EnhancedEventHandler, TargetedEnhancedEvent, CompleteListNavigationContext, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseRandomDualIdsParameters, UseRandomDualIdsReturnType, UseModalParameters, UseModalReturnType, CompleteGridNavigationCellContext, CompleteGridNavigationRowContext, ExtendMerge, UseCompleteGridNavigationCellInfo, UseCompleteGridNavigationCellParameters, UseCompleteGridNavigationCellReturnType, UseCompleteGridNavigationDeclarativeParameters, UseCompleteGridNavigationReturnType, UseCompleteGridNavigationRowInfo, UseCompleteGridNavigationRowParameters, UseCompleteGridNavigationRowReturnType, EventType, UseCompleteListNavigationChildDeclarativeParameters, UseCompleteListNavigationChildDeclarativeReturnType, UseCompleteListNavigationDeclarativeParameters, EventDetail, MakeSingleSelectionDeclarativeParameters, MakeSingleSelectionDeclarativeReturnType, UseRandomIdReturnType, VNode, UseAsyncHandlerParameters, UseAsyncHandlerReturnType, UseCompleteListNavigationChildInfoKeysParameters, UseCompleteListNavigationDeclarativeReturnType, UseManagedChildReturnType, SingleSelectionContextSelf, UseCompleteGridNavigationCellInfoKeysParameters, UseCompleteGridNavigationParameters, UseMultiSelectionContextSelf, UseDismissParameters, UseEscapeDismissParameters, GetIndex } from "preact-prop-helpers";
+import { ElementProps, JSX, ManagedChildInfo, Nullable, PassiveStateUpdater, PersistentStates, TargetedOmit, TargetedPick, UseGenericChildParameters, UseHasCurrentFocusReturnType, UseLinearNavigationParameters, UseLinearNavigationReturnType, UseManagedChildParameters, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, UsePressParameters, UseRefElementParameters, UseRefElementReturnTypeSelf, UseTextContentReturnType, UseTypeaheadNavigationChildParameters, UseTypeaheadNavigationChildReturnType, UseTypeaheadNavigationContext, UseTypeaheadNavigationParameters, UseTypeaheadNavigationReturnType, PressEventReason, UsePressReturnType, UseRefElementReturnType, EnhancedEventHandler, TargetedEnhancedEvent, CompleteListNavigationContext, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseRandomDualIdsParameters, UseRandomDualIdsReturnType, UseModalParameters, UseModalReturnType, CompleteGridNavigationCellContext, CompleteGridNavigationRowContext, ExtendMerge, UseCompleteGridNavigationCellInfo, UseCompleteGridNavigationCellParameters, UseCompleteGridNavigationCellReturnType, UseCompleteGridNavigationDeclarativeParameters, UseCompleteGridNavigationReturnType, UseCompleteGridNavigationRowInfo, UseCompleteGridNavigationRowInfoKeysParameters, UseCompleteGridNavigationRowParameters, UseCompleteGridNavigationRowReturnType, EventType, UseCompleteListNavigationChildDeclarativeParameters, UseCompleteListNavigationChildDeclarativeReturnType, UseCompleteListNavigationChildInfoKeysParameters, UseCompleteListNavigationDeclarativeParameters, EventDetail, MakeSingleSelectionDeclarativeParameters, MakeSingleSelectionDeclarativeReturnType, UseRandomIdReturnType, VNode, UseAsyncHandlerParameters, UseAsyncHandlerReturnType, UseCompleteListNavigationDeclarativeReturnType, UseManagedChildReturnType, SingleSelectionContextSelf, UseCompleteGridNavigationCellInfoKeysParameters, UseCompleteGridNavigationParameters, UseMultiSelectionContextSelf, UseDismissParameters, UseEscapeDismissParameters, GetIndex } from "preact-prop-helpers";
 import { OmitStrong as OmitStrong$0 } from "preact-prop-helpers";
 import { h, Ref, ComponentChildren, Context, createElement, RenderableProps } from "preact";
 import { VNode as VNode$0 } from "preact";
@@ -100,7 +100,7 @@ interface UseButtonReturnType<ButtonElement extends Element> extends UsePressRet
 /**
  * Implements a [Button](https://www.w3.org/WAI/ARIA/apg/patterns/button/) pattern.
  *
- * @remarks The press handler can be async or sync&mdash;either way, pass it to `asyncHandlerParameters.asyncHandler`
+ * @remarks The press handler is sync by default. See `useProgressWithHandler` to turn an async function into a sync function with a progress bar.
  *
  * @compositeParams
  */
@@ -108,6 +108,8 @@ declare function useButton<ButtonElement extends Element>({ buttonParameters: { 
 interface UseAccordionParametersSelf {
     /**
      * Almost all Accordions are `"vertical"`, but you certainly can have a `"horizontal"` Accordion if you want.
+     *
+     * @remarks This subsumes (and replaces) `linearNavigationParameters.arrowKeyDirection`.
      */
     orientation: Nullable<"vertical" | "horizontal">;
     /** For a one-at-a-time accordion, which index is initially opened? */
@@ -128,7 +130,6 @@ interface UseAccordionReturnType<HeaderButtonElement extends Element, M extends 
     /** @stable */
     accordionReturn: UseAccordionReturnTypeSelf;
     context: UseAccordionContext<HeaderButtonElement, M>;
-    props: ElementProps<any>;
 }
 interface UseAccordionSectionInfo<E extends Element> extends ManagedChildInfo<number> {
     setOpenFromParent(open: boolean): void;
@@ -150,7 +151,10 @@ interface UseAccordionSectionParametersSelf {
      * set the parent's index to null and toggle this `true`/`false` when the button's pressed
      */
     open: boolean | null | undefined;
-    /** Generally `"region"` */
+    /**
+     * Generally `"region"`.
+     *
+     */
     bodyRole: JSX.AriaRole;
 }
 interface UseAccordionSectionParameters<HeaderButtonElement extends Element, BodyElement extends Element, M extends UseAccordionSectionInfo<HeaderButtonElement>> extends UseGenericChildParameters<UseAccordionContext<HeaderButtonElement, M>, Pick<M, "index" | "untabbable">>, OmitStrong<UseTypeaheadNavigationChildParameters<HeaderButtonElement>, "info" | "refElementReturn" | "context">, OmitStrong<UseManagedChildParameters<M>, "info">, TargetedPick<UsePressParameters<HeaderButtonElement>, "pressParameters", "focusSelf">, TargetedOmit<UseButtonParameters<HeaderButtonElement>, "buttonParameters", "pressed" | "role"> {
@@ -180,16 +184,20 @@ interface UseAccordionContextSelf<HeaderButtonElement extends Element> {
     stableTypeaheadProps: ElementProps<HeaderButtonElement>;
 }
 interface UseAccordionContext<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo<HeaderButtonElement>> extends UseManagedChildrenContext<M>, UseTypeaheadNavigationContext {
-    accordionSectionParameters: UseAccordionContextSelf<HeaderButtonElement>;
+    accordionSectionContext: UseAccordionContextSelf<HeaderButtonElement>;
+    // These are here because there's no parent element -- the child handles these.
+    // Accordions are a bit odd.
     linearNavigationParameters: UseLinearNavigationParameters<HeaderButtonElement, HeaderButtonElement>["linearNavigationParameters"];
     rovingTabIndexReturn: UseLinearNavigationParameters<HeaderButtonElement, HeaderButtonElement>["rovingTabIndexReturn"];
 }
 /**
  * Implements an [Accordion](https://www.w3.org/WAI/ARIA/apg/patterns/accordion/) pattern.
  *
- * @remarks For some reason, accordions don't have a parent element, and don't have a roving tab index, but do implement keyboard navigation.
+ * @remarks Accordions can be single-select or multi-select. For multi-select accordions, give each child its own `open` prop. For single-select accordions, just have their `open` prop be `null`.
  *
- * This makes their implementation a little bit messy. Each child individually handles keyboard navigation even though the parent orchestrates it.
+ * For some reason, accordions don't require a parent element, and don't have a roving tab index, but do implement keyboard navigation.
+ *
+ * This makes their implementation a little bit messy. Each child individually handles keyboard navigation even though the parent component (but not element) orchestrates it.
  *
  * @compositeParams
  *
@@ -199,7 +207,7 @@ declare function useAccordion<HeaderButtonElement extends Element>({ accordionPa
 /**
  * @compositeParams
  */
-declare function useAccordionSection<HeaderContainerElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element>({ buttonParameters: { disabled, tagButton, onPressSync: userOnPress, ...buttonParameters }, accordionSectionParameters: { open: openFromUser, bodyRole, ...accordionSectionParameters }, info: { index, untabbable, ...void4 }, textContentParameters: { getText, ...textContentParameters }, context, refElementBodyParameters, refElementHeaderButtonParameters, pressParameters: { focusSelf, ...pressParameters }, ...void1 }: UseAccordionSectionParameters<HeaderButtonElement, BodyElement, UseAccordionSectionInfo<HeaderButtonElement>>): UseAccordionSectionReturnType<HeaderContainerElement, HeaderButtonElement, BodyElement>;
+declare function useAccordionSection<HeaderContainerElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element>({ buttonParameters: { disabled, tagButton, onPressSync: userOnPress, ...buttonParameters }, accordionSectionParameters: { open: openFromUser, bodyRole, ...void3 }, info: { index, untabbable, ...void4 }, textContentParameters: { getText, ...void5 }, context, refElementBodyParameters, refElementHeaderButtonParameters, pressParameters: { focusSelf, ...pressParameters }, ...void1 }: UseAccordionSectionParameters<HeaderButtonElement, BodyElement, UseAccordionSectionInfo<HeaderButtonElement>>): UseAccordionSectionReturnType<HeaderContainerElement, HeaderButtonElement, BodyElement>;
 type LabelPosition = "separate" | "wrapping" | "none";
 type FocusableLabelElement<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element> = LP extends "wrapping" ? LabelElement : InputElement;
 interface UseLabelParametersSelf<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element> {
@@ -249,7 +257,9 @@ type CheckboxCheckedType = boolean | "mixed";
 interface UseCheckboxLikeParametersSelf<C extends CheckboxCheckedType> {
     /** The role attribute to use, when applicable */
     role: JSX.AriaRole;
+    /** Disables this checkbox-like */
     disabled: DisabledType;
+    /** Controls the checked state of this checkbox-like */
     checked: C;
 }
 interface UseCheckboxLikeParameters<LP extends LabelPosition, InputType extends Element, LabelType extends Element, C extends CheckboxCheckedType> extends OmitStrong<UseLabelParameters<LP, InputType, LabelType>, "labelParameters">, TargetedOmit<UseLabelParameters<LP, InputType, LabelType>, "labelParameters", "onLabelClick">, TargetedPick<UsePressParameters<any>, "pressParameters", "longPressThreshold" | "excludeSpace" | "onPressSync"> {
@@ -276,7 +286,9 @@ interface UseCheckboxLikeReturnType<InputType extends Element, LabelType extends
     checkboxLikeReturn: UseCheckboxLikeReturnTypeSelf;
 }
 /**
- * Handles any component where there's:
+ * Handles any component that's "checkbox-like" (checkboxes, radios, switches, etc.)
+ *
+ * @remarks Handles any component where there's:
  * ```md-literal
  * 1. Some kind of an on/off binary/trinary input element that needs event handlers
  * 2. Some kind of label for that input element
@@ -327,7 +339,6 @@ interface UseCheckboxGroupChildReturnTypeSelf {
 interface UseCheckboxGroupChildReturnType<TCE extends Element> extends OmitStrong<UseCompleteListNavigationChildReturnType<TCE, CheckboxGroupInfo<TCE>>, "singleSelectionChildReturn"> {
     checkboxGroupChildReturn: UseCheckboxGroupChildReturnTypeSelf;
 }
-//export type UseCheckboxGroupChild<InputElement extends Element, LabelElement extends Element, TCE extends InputElement | LabelElement, M extends CheckboxGroupInfo<TCE>> = (args: UseCheckboxGroupChildParameters<TCE, M>) => UseCheckboxGroupChildReturnType<TCE, M>
 interface UseCheckboxGroupReturnType<GroupElement extends Element, TCE extends Element> extends OmitStrong<UseCompleteListNavigationReturnType<GroupElement, TCE, CheckboxGroupInfo<TCE>>, "context"> {
     context: CheckboxGroupContext<TCE>;
 }
@@ -371,6 +382,19 @@ interface CheckboxGroupContext<TCE extends Element> extends CompleteListNavigati
 }
 /**
  * Allows a parent checkbox to control a number of child checkboxes, in accordance with the [Checkbox](https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/) pattern.
+ *
+ * @remarks `useCheckboxGroup` and its child hooks **do not** call `useCheckbox`. These hooks are for creating CheckboxGroup-like functionality&mdash;in theory, this could be implemented in a listbox.
+ *
+ * A checkbox group is made up of the "Parent" checkbox and the "Child" checkboxes.  Of course, all of them are children of the group as a whole, but the "Parent" checkbox is the one that, when clicked, toggles the checked state of all the "Child" checkboxes.
+ *
+ * A checkbox group's parent, when clicked, toggles between three states:
+ * ```md-literal
+ * * Unchecked (all children become unchecked)
+ * * Mixed (all children become the last user-input value)
+ * * Checked (all children become checked)
+ * ```
+ *
+ * This functions even if it takes an `async` amount of time to complete the "cause the child checkbox to change its state" action.
  *
  * @compositeParams
  *
@@ -468,16 +492,10 @@ type ListboxMultiSelectEvent<E extends EventTarget> = {
         selected: boolean;
     };
 } & Pick<EventType<E, Event>, "target" | "currentTarget">;
-interface UseListboxContext<ListElement extends Element, ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends CompleteListNavigationContext<ListItemElement, M> {
-    listboxContext: {};
+interface UseListboxContext<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends CompleteListNavigationContext<ListItemElement, M> {
 }
-interface UseListboxParametersSelf<ListElement extends Element, ListItemElement extends Element, _LabelElement extends Element, M extends ListboxInfo<ListItemElement>> {
+interface UseListboxParametersSelf {
     orientation: "horizontal" | "vertical";
-    /**
-     * Only used when `groupingType` is `"without-groups"` or `"group"`
-     */
-    //selectedIndex: number | null;
-    //onSelectedIndexChange: UseSingleSelectionDeclarativeParameters<ListItemElement>["singleSelectionDeclarativeParameters"]["onSelectedIndexChange"] //PassiveStateUpdater<number | null, Event> | null;
     /**
      * * `"without-groups"`: This is a listbox with no groups
      * * `"with-groups"`: This is a listbox that is grouped into 2 or more labelled sections. In this case, **all navigation and selection is disabled** (meaning you can pass whatever you'd like to them, it's all ignored) and delegated to the child `group`s.
@@ -488,20 +506,19 @@ interface UseListboxParametersSelf<ListElement extends Element, ListItemElement 
     groupingType: "with-groups" | "without-groups" | "group";
 }
 interface UseListboxParameters<ListElement extends Element, ListItemElement extends Element, _LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationDeclarativeParameters<ListElement, ListItemElement, M>, "rovingTabIndexParameters" | "linearNavigationParameters" | "singleSelectionParameters">, TargetedOmit<UseLabelSyntheticParameters, "labelParameters", "onLabelClick">, TargetedOmit<UseCompleteListNavigationParameters<ListElement, ListItemElement, M>, "rovingTabIndexParameters", "focusSelfParent">, TargetedOmit<UseCompleteListNavigationParameters<ListElement, ListItemElement, M>, "linearNavigationParameters", "arrowKeyDirection">, TargetedPick<UseCompleteListNavigationParameters<ListElement, ListItemElement, M>, "singleSelectionParameters", "singleSelectionAriaPropName" | "singleSelectionMode"> {
-    listboxParameters: UseListboxParametersSelf<ListElement, ListItemElement, _LabelElement, M>;
+    listboxParameters: UseListboxParametersSelf;
 }
 interface UseListboxReturnType<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationReturnType<ListElement, ListItemElement, M>, "singleSelectionReturn" | "props"> {
     propsListbox: ElementProps<ListElement>;
     propsListboxLabel: ElementProps<LabelElement>;
-    context: UseListboxContext<ListElement, ListItemElement, M>;
+    context: UseListboxContext<ListItemElement, M>;
 }
 interface UseListboxItemReturnType<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationChildDeclarativeReturnType<ListItemElement, M>, "propsChild" | "propsTabbable" | "pressParameters">, UsePressReturnType<ListItemElement> {
 }
-interface UseListboxItemParametersSelf<ListItemElement extends Element> {
+interface UseListboxItemParametersSelf {
 }
-interface UseListboxItemParameters<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends UseCompleteListNavigationChildDeclarativeParameters<ListItemElement, M>, TargetedOmit<UsePressParameters<ListItemElement>, "pressParameters", "excludeSpace" | "onPressSync" | "focusSelf"> {
-    listboxParameters: UseListboxItemParametersSelf<ListItemElement>;
-    context: UseListboxContext<any, ListItemElement, M>;
+interface UseListboxItemParameters<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends UseGenericChildParameters<UseListboxContext<ListItemElement, M>, Pick<M, UseCompleteListNavigationChildInfoKeysParameters<M>>>, UseCompleteListNavigationChildDeclarativeParameters<ListItemElement, M>, TargetedOmit<UsePressParameters<ListItemElement>, "pressParameters", "excludeSpace" | "onPressSync" | "focusSelf"> {
+    listboxParameters: UseListboxItemParametersSelf;
 }
 interface ListboxInfo<ListItemElement extends Element> extends UseCompleteListNavigationChildInfo<ListItemElement> {
 }
@@ -520,13 +537,12 @@ declare function useListbox<ListElement extends Element, ListItemElement extends
 /**
  * @compositeParams
  */
-declare function useListboxItem<ListItemElement extends Element, M extends ListboxInfo<ListItemElement> = ListboxInfo<ListItemElement>>({ context: { listboxContext: {}, ...context }, listboxParameters: {}, pressParameters: { allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, ...void1 }, singleSelectionChildParameters: { singleSelectionDisabled }, ...restParams }: UseListboxItemParameters<ListItemElement, M>): UseListboxItemReturnType<ListItemElement, M>;
+declare function useListboxItem<ListItemElement extends Element, M extends ListboxInfo<ListItemElement> = ListboxInfo<ListItemElement>>({ context, listboxParameters: {}, pressParameters: { allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, ...void1 }, singleSelectionChildParameters: { singleSelectionDisabled }, ...restParams }: UseListboxItemParameters<ListItemElement, M>): UseListboxItemReturnType<ListItemElement, M>;
 interface UseGridlistContext<GridlistRowElement extends Element, RM extends GridlistRowInfo<GridlistRowElement>> extends CompleteGridNavigationRowContext<GridlistRowElement, RM> {
-    gridlistRowContext: {};
 }
 interface UseGridlistRowContext<CellElement extends Element, M extends GridlistCellInfo<CellElement>> extends CompleteGridNavigationCellContext<CellElement, M> {
 }
-interface UseGridlistParametersSelf<GridlistElement extends Element, GridlistRowElement extends Element, LabelElement extends Element, RM extends GridlistRowInfo<GridlistRowElement>> extends UseListboxParametersSelf<GridlistElement, GridlistRowElement, LabelElement, RM> {
+interface UseGridlistParametersSelf extends UseListboxParametersSelf {
 }
 interface UseGridlistParameters<GridlistElement extends Element, GridlistRowElement extends Element, LabelElement extends Element, RM extends GridlistRowInfo<GridlistRowElement>> extends OmitStrong<UseCompleteGridNavigationDeclarativeParameters<GridlistElement, GridlistRowElement, RM>, "rovingTabIndexParameters">, TargetedOmit<UseCompleteGridNavigationDeclarativeParameters<GridlistElement, GridlistRowElement, RM>, "rovingTabIndexParameters", "focusSelfParent">, TargetedOmit<UseLabelSyntheticParameters, "labelParameters", "onLabelClick">, TargetedOmit<UseListboxParameters<GridlistElement, GridlistRowElement, LabelElement, RM>, "listboxParameters", "orientation"> {
 }
@@ -543,8 +559,7 @@ interface UseGridlistRowParametersSelf {
      */
     selected: Nullable<boolean>;
 }
-interface UseGridlistRowParameters<GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends OmitStrong<UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, never> {
-    context: UseGridlistContext<GridlistRowElement, RM>;
+interface UseGridlistRowParameters<GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends UseGenericChildParameters<UseGridlistContext<GridlistRowElement, RM>, Pick<RM, UseCompleteGridNavigationRowInfoKeysParameters<RM>>>, OmitStrong<UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, never> {
     gridlistRowParameters: UseGridlistRowParametersSelf;
 }
 interface UseGridlistCellReturnType<GridlistCellElement extends Element, CM extends GridlistCellInfo<GridlistCellElement>> extends OmitStrong<ExtendMerge<UseCompleteGridNavigationCellReturnType<GridlistCellElement, CM>, Pick<UsePressReturnType<GridlistCellElement>, "pressReturn">>, "props"> {
@@ -619,7 +634,7 @@ interface UseFocusSentinelParameters {
     };
 }
 /**
- * A focus sentinal is a hidden but focusable element that comes at the start or end
+ * A focus sentinel is a hidden but focusable element that comes at the start or end
  * of the out-of-place-focusable component that, when activated or focused over, closes the component
  * (if focused within 100ms of the open prop changing, instead of
  * closing, focusing the sentinel immediately asks it to focus itself).
@@ -860,7 +875,8 @@ interface UseProgressWithHandlerReturnType<EventType, CaptureType, IndicatorElem
 /**
  * Provides props for a progress bar based on the progress of an async event handler, and notifies ATs when the operation has started/finished.
  *
- * @remarks
+ * @remarks This hook is meant to be combined with other hooks, generally wrapping around the other hook.
+ * You don't actually need an entire progress bar element as long as your `notify*` parameters are good.
  *
  * @compositeParams
  */
@@ -907,6 +923,8 @@ interface RadioSubInfo<TabbableChildElement extends Element, V extends string | 
 /**
  * Implements a [Radio Group](https://www.w3.org/WAI/ARIA/apg/patterns/radio/) pattern.
  *
+ * @remarks Which radio is the selected one is controlled by the `selectedValue` parameter on the parent.
+ *
  * @compositeParams
  *
  * @hasChild {@link useRadio}
@@ -917,6 +935,8 @@ interface UseRadioReturnType<LP extends LabelPosition, V extends string | number
     propsLabel: ElementProps<IL>;
 }
 /**
+ * Implements a single radio button, as part of a radio group.
+ *
  * @compositeParams
  */
 declare function useRadio<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element, V extends string | number>({ radioParameters: { value, ...void5 }, checkboxLikeParameters: { disabled, ...void4 }, labelParameters, info, context, textContentParameters, pressParameters: { longPressThreshold, ...void3 }, hasCurrentFocusParameters, refElementParameters, ...void1 }: UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>): UseRadioReturnType<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>;
@@ -1065,6 +1085,8 @@ interface SortInfo {
 /**
  * Creates a sortable data table in a [Grid](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) pattern.
  *
+ * @remarks Note that in many cases this is overkill. If you don't need sorting and navigation between cells of interactive content, then you can just use a regular &lt;table&gt;
+ *
  * @compositeParams
  *
  * @hasChild {@link useTableSection}
@@ -1154,6 +1176,9 @@ type UseTabListLabel<LabelElement extends Element> = (args: UseTabLabelParameter
 /**
  * Implements a [Tabs](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/) pattern.
  *
+ * @remarks Tabs consist of both a list of tabs and a list of tab panels.
+ * A Tab and a TabPanel that share the same index are linked together; when that tab is selected that panel is shown.
+ *
  * @compositeParams
  *
  * @hasChild {@link useTab}
@@ -1161,10 +1186,19 @@ type UseTabListLabel<LabelElement extends Element> = (args: UseTabLabelParameter
  */
 declare function useTabs<TabListElement extends Element, TabElement extends Element, LabelElement extends Element>({ labelParameters, linearNavigationParameters, singleSelectionParameters: { initiallySingleSelectedIndex, onSingleSelectedIndexChange: ssi, singleSelectionMode, ...singleSelectionParameters }, tabsParameters: { orientation, role, localStorageKey }, rovingTabIndexParameters, ...restParams }: UseTabsParameters<TabListElement, TabElement, TabInfo<TabElement>>): UseTabsReturnType<TabListElement, TabElement, LabelElement, TabInfo<TabElement>>;
 /**
+ * Implements a single tab of a Tabs component.
+ *
+ * The index that this child uses controls which TabPanel it shows when selected.
+ *
  * @compositeParams
  */
 declare function useTab<TabElement extends Element>({ info: { focusSelf: focusSelfParent, index, untabbable, getSortValue, ...info }, textContentParameters, pressParameters: { focusSelf: focusSelfChild, longPressThreshold, onPressingChange, ...void2 }, context, hasCurrentFocusParameters, refElementParameters, singleSelectionChildParameters, ...void3 }: UseTabParameters<TabElement, TabInfo<TabElement>>): UseTabReturnType<TabElement, TabInfo<TabElement>>;
 /**
+ * Implements the TabPanel a Tab controls.
+ *
+ * @remarks A hidden tab panel is made `inert` so that it cannot be interacted with, so you can just set `opacity: 0` on your hidden panels if that's how you want to style them.
+ * They'll still be properly removed from the tab order (i.e. you don't **also** need `display: none`).
+ *
  * @compositeParams
  */
 declare function useTabPanel<PanelElement extends Element>({ info, context }: UseTabPanelParameters<TabPanelInfo>): UseTabPanelReturnType<PanelElement>;

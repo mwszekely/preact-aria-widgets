@@ -12,8 +12,10 @@ import {
     UseCompleteGridNavigationDeclarativeParameters,
     UseCompleteGridNavigationReturnType,
     UseCompleteGridNavigationRowInfo,
+    UseCompleteGridNavigationRowInfoKeysParameters,
     UseCompleteGridNavigationRowParameters,
     UseCompleteGridNavigationRowReturnType,
+    UseGenericChildParameters,
     UsePressParameters,
     UsePressReturnType,
     assertEmptyObject,
@@ -31,23 +33,14 @@ import { UseLabelSyntheticParameters, useLabelSynthetic } from "./use-label.js";
 import { UseListboxParameters, UseListboxParametersSelf } from "./use-listbox.js";
 
 export interface UseGridlistContext<GridlistRowElement extends Element, RM extends GridlistRowInfo<GridlistRowElement>> extends CompleteGridNavigationRowContext<GridlistRowElement, RM> {
-    gridlistRowContext: {
-        /**
-         * If this is a list that allows selection, this controls whether it's single-selection or multi-selection.
-         * 
-         * Single-selection requires that you pass in a `selectedIndex` and listen for changes.
-         * 
-         * Multi-selection requires each child pass its own `selected` boolean prop and listen for changes to itself.
-         */
-        //selectionLimit: "single" | "multi" | "none";
-    }
+    //gridlistRowContext: { }
 }
 
 export interface UseGridlistRowContext<CellElement extends Element, M extends GridlistCellInfo<CellElement>> extends CompleteGridNavigationCellContext<CellElement, M> {
 
 }
 
-export interface UseGridlistParametersSelf<GridlistElement extends Element, GridlistRowElement extends Element, LabelElement extends Element, RM extends GridlistRowInfo<GridlistRowElement>> extends UseListboxParametersSelf<GridlistElement, GridlistRowElement, LabelElement, RM> {
+export interface UseGridlistParametersSelf extends UseListboxParametersSelf {
 
 }
 
@@ -75,9 +68,8 @@ export interface UseGridlistRowParametersSelf {
 }
 
 export interface UseGridlistRowParameters<GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends
+    UseGenericChildParameters<UseGridlistContext<GridlistRowElement, RM>, Pick<RM, UseCompleteGridNavigationRowInfoKeysParameters<RM>>>,
     OmitStrong<UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, never> {
-
-    context: UseGridlistContext<GridlistRowElement, RM>;
     gridlistRowParameters: UseGridlistRowParametersSelf;
 }
 
@@ -131,7 +123,7 @@ export function useGridlist<GridlistElement extends Element, GridlistRowElement 
     monitorCallCount(useGridlist);
     assertEmptyObject(void1);
     assertEmptyObject(void2);
-    
+
     const {
         propsInput: propsLabelList,
         propsLabel: propsLabelLabel,
@@ -219,7 +211,6 @@ export function useGridlistRow<GridlistRowElement extends Element, GridlistCellE
     monitorCallCount(useGridlistRow);
     type RM = GridlistRowInfo<GridlistRowElement>;
     type CM = GridlistCellInfo<GridlistCellElement>;
-    const { gridlistRowContext: {  } } = cx1;
     const {
         context: cx2,
         hasCurrentFocusReturn,
@@ -237,7 +228,6 @@ export function useGridlistRow<GridlistRowElement extends Element, GridlistCellE
         pressParameters,
         multiSelectionChildReturn,
         ...void2
-
     } = useCompleteGridNavigationRow<GridlistRowElement, GridlistCellElement, RM, CM>({
         linearNavigationParameters,
         info,
@@ -246,7 +236,7 @@ export function useGridlistRow<GridlistRowElement extends Element, GridlistCellE
         textContentParameters,
         typeaheadNavigationParameters,
         hasCurrentFocusParameters,
-        
+
         singleSelectionChildParameters,
         multiSelectionChildParameters,
         gridNavigationSelectionSortableRowParameters,

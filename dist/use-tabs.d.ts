@@ -71,6 +71,9 @@ export type UseTabListLabel<LabelElement extends Element> = (args: UseTabLabelPa
 /**
  * Implements a [Tabs](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/) pattern.
  *
+ * @remarks Tabs consist of both a list of tabs and a list of tab panels.
+ * A Tab and a TabPanel that share the same index are linked together; when that tab is selected that panel is shown.
+ *
  * @compositeParams
  *
  * @hasChild {@link useTab}
@@ -78,10 +81,19 @@ export type UseTabListLabel<LabelElement extends Element> = (args: UseTabLabelPa
  */
 export declare function useTabs<TabListElement extends Element, TabElement extends Element, LabelElement extends Element>({ labelParameters, linearNavigationParameters, singleSelectionParameters: { initiallySingleSelectedIndex, onSingleSelectedIndexChange: ssi, singleSelectionMode, ...singleSelectionParameters }, tabsParameters: { orientation, role, localStorageKey }, rovingTabIndexParameters, ...restParams }: UseTabsParameters<TabListElement, TabElement, TabInfo<TabElement>>): UseTabsReturnType<TabListElement, TabElement, LabelElement, TabInfo<TabElement>>;
 /**
+ * Implements a single tab of a Tabs component.
+ *
+ * The index that this child uses controls which TabPanel it shows when selected.
+ *
  * @compositeParams
  */
 export declare function useTab<TabElement extends Element>({ info: { focusSelf: focusSelfParent, index, untabbable, getSortValue, ...info }, textContentParameters, pressParameters: { focusSelf: focusSelfChild, longPressThreshold, onPressingChange, ...void2 }, context, hasCurrentFocusParameters, refElementParameters, singleSelectionChildParameters, ...void3 }: UseTabParameters<TabElement, TabInfo<TabElement>>): UseTabReturnType<TabElement, TabInfo<TabElement>>;
 /**
+ * Implements the TabPanel a Tab controls.
+ *
+ * @remarks A hidden tab panel is made `inert` so that it cannot be interacted with, so you can just set `opacity: 0` on your hidden panels if that's how you want to style them.
+ * They'll still be properly removed from the tab order (i.e. you don't **also** need `display: none`).
+ *
  * @compositeParams
  */
 export declare function useTabPanel<PanelElement extends Element>({ info, context }: UseTabPanelParameters<TabPanelInfo>): UseTabPanelReturnType<PanelElement>;

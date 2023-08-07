@@ -72,6 +72,8 @@ export interface RadioSubInfo<TabbableChildElement extends Element, V extends st
 /**
  * Implements a [Radio Group](https://www.w3.org/WAI/ARIA/apg/patterns/radio/) pattern.
  * 
+ * @remarks Which radio is the selected one is controlled by the `selectedValue` parameter on the parent.
+ * 
  * @compositeParams
  * 
  * @hasChild {@link useRadio}
@@ -208,6 +210,8 @@ export interface UseRadioReturnType<LP extends LabelPosition, V extends string |
 
 
 /**
+ * Implements a single radio button, as part of a radio group.
+ * 
  * @compositeParams
  */
 export function useRadio<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element, V extends string | number>({

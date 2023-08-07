@@ -32,7 +32,7 @@ export interface ListboxItemProps<ListItemElement extends Element, M extends Lis
         "index" | "getSortValue"> {
 }
 
-const ListboxContext = createContext<UseListboxContext<any, any, any>>(null!);
+const ListboxContext = createContext<UseListboxContext<any, any>>(null!);
 
 const ListboxGroupContext = createContext<null | UseListboxReturnType<any, any, any, any>>(null);
 export const GroupedListbox = memo(function GroupedListbox<LabelElement extends Element>({

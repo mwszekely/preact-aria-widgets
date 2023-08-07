@@ -1,11 +1,21 @@
 {
     "typescript.tsdk": "node_modules/typescript/lib",
     "cSpell.words": [
-        "Gridlist",
+        "gridcell",
+        "gridlist",
+        "haspopup",
+        "labelledby",
         "Listbox",
+        "multiselectable",
         "preact",
+        "prefices",
         "rearrangeable",
+        "referencer",
+        "rowgroup",
+        "tablist",
+        "tabpanel",
         "typeahead",
-        "unselectable"
+        "unselectable",
+        "untabbable"
     ]
 }

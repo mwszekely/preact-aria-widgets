@@ -83,6 +83,19 @@ export interface CheckboxGroupContext<TCE extends Element> extends CompleteListN
 /**
  * Allows a parent checkbox to control a number of child checkboxes, in accordance with the [Checkbox](https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/) pattern.
  *
+ * @remarks `useCheckboxGroup` and its child hooks **do not** call `useCheckbox`. These hooks are for creating CheckboxGroup-like functionality&mdash;in theory, this could be implemented in a listbox.
+ *
+ * A checkbox group is made up of the "Parent" checkbox and the "Child" checkboxes.  Of course, all of them are children of the group as a whole, but the "Parent" checkbox is the one that, when clicked, toggles the checked state of all the "Child" checkboxes.
+ *
+ * A checkbox group's parent, when clicked, toggles between three states:
+ * ```md-literal
+ * * Unchecked (all children become unchecked)
+ * * Mixed (all children become the last user-input value)
+ * * Checked (all children become checked)
+ * ```
+ *
+ * This functions even if it takes an `async` amount of time to complete the "cause the child checkbox to change its state" action.
+ *
  * @compositeParams
  *
  * @hasChild {@link useCheckboxGroupParent}

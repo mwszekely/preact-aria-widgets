@@ -5,7 +5,9 @@ function preventDefault(e) {
     e.preventDefault();
 }
 /**
- * Handles any component where there's:
+ * Handles any component that's "checkbox-like" (checkboxes, radios, switches, etc.)
+ *
+ * @remarks Handles any component where there's:
  * ```md-literal
  * 1. Some kind of an on/off binary/trinary input element that needs event handlers
  * 2. Some kind of label for that input element

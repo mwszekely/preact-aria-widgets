@@ -121,7 +121,7 @@ export interface UseFocusSentinelParameters {
 
 
 /**
- * A focus sentinal is a hidden but focusable element that comes at the start or end 
+ * A focus sentinel is a hidden but focusable element that comes at the start or end 
  * of the out-of-place-focusable component that, when activated or focused over, closes the component
  * (if focused within 100ms of the open prop changing, instead of
  * closing, focusing the sentinel immediately asks it to focus itself).

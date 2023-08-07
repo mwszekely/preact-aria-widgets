@@ -7,6 +7,8 @@ import { useLabelSynthetic } from "./use-label.js";
 /**
  * Implements a [Radio Group](https://www.w3.org/WAI/ARIA/apg/patterns/radio/) pattern.
  *
+ * @remarks Which radio is the selected one is controlled by the `selectedValue` parameter on the parent.
+ *
  * @compositeParams
  *
  * @hasChild {@link useRadio}
@@ -96,6 +98,8 @@ export function useRadioGroup({ labelParameters, radioGroupParameters: { name, s
     };
 }
 /**
+ * Implements a single radio button, as part of a radio group.
+ *
  * @compositeParams
  */
 export function useRadio({ radioParameters: { value, ...void5 }, checkboxLikeParameters: { disabled, ...void4 }, labelParameters, info, context, textContentParameters, pressParameters: { longPressThreshold, ...void3 }, hasCurrentFocusParameters, refElementParameters, ...void1 }) {
