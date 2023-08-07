@@ -85,7 +85,7 @@ export function Demo() {
 }
 
 const DemoTab = memo(function DemoTab({ i }: { i: number }) {
-    return <Tab<HTMLLIElement> focusSelf={e => e.focus()} key={i} index={i} render={info => <li {...info.props} style={{marginLeft: "2em"}}>Tab #{i} (offset: {info.singleSelectionChildReturn.selectedOffset ?? "null"}) {info.singleSelectionChildReturn.selected && "(visible)"}</li>} getSortValue={returnZero} />
+    return <Tab<HTMLLIElement> focusSelf={e => e.focus()} key={i} index={i} render={info => <li {...info.props} style={{marginLeft: "2em"}}>Tab #{i} (offset: {info.singleSelectionChildReturn.singleSelectedOffset ?? "null"}) {info.singleSelectionChildReturn.singleSelected && "(visible)"}</li>} getSortValue={returnZero} />
 })
 
 const DemoTabPanel = memo(function DemoTabPanel({ i }: { i: number }) {

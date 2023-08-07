@@ -6,11 +6,15 @@ import {
     JSX,
     Nullable,
     PassiveStateUpdater,
+    SingleSelectionContextSelf,
     TargetedOmit,
+    TargetedPick,
     UseCompleteGridNavigationCellInfo, UseCompleteGridNavigationCellInfoKeysParameters, UseCompleteGridNavigationCellParameters, UseCompleteGridNavigationCellReturnType, UseCompleteGridNavigationParameters,
     UseCompleteGridNavigationReturnType,
     UseCompleteGridNavigationRowInfo, UseCompleteGridNavigationRowParameters, UseCompleteGridNavigationRowReturnType,
+    UseCompleteListNavigationParameters,
     UseGenericChildParameters,
+    UseMultiSelectionContextSelf,
     assertEmptyObject,
     focus,
     monitorCallCount,
@@ -24,9 +28,8 @@ import {
 import { useCallback, useEffect } from "preact/hooks";
 import { ElementToTag, OmitStrong, Prefices } from "./props.js";
 import { UseLabelSyntheticParameters, useLabelSynthetic } from "./use-label.js";
-import { UseListboxParameters } from "./use-listbox.js";
 
-export interface UseTableContextSelf {
+export interface UseTableContextSelf extends Pick<SingleSelectionContextSelf, "singleSelectionMode">, Pick<UseMultiSelectionContextSelf, "multiSelectionMode"> {
     setSortBodyFunction: PassiveStateUpdater<() => void, never>;
     sortByColumn(column: number): SortInfo;
     getCurrentSortColumn(): number | null;
@@ -46,7 +49,9 @@ export interface UseTableSectionParametersSelf<TableSectionElement extends Eleme
 }
 
 export interface UseTableSectionParameters<TableSectionElement extends Element, TableRowElement extends Element, RM extends TableRowInfo<TableRowElement>> extends
-    OmitStrong<UseCompleteGridNavigationParameters<TableSectionElement, TableRowElement, RM>, "rovingTabIndexParameters" | "sortableChildrenParameters">,
+    OmitStrong<UseCompleteGridNavigationParameters<TableSectionElement, TableRowElement, RM>, "rovingTabIndexParameters" | "sortableChildrenParameters" | "singleSelectionParameters" | "multiSelectionParameters">,
+    TargetedOmit<UseCompleteGridNavigationParameters<TableSectionElement, TableRowElement, RM>, "singleSelectionParameters", "singleSelectionMode">,
+    TargetedOmit<UseCompleteGridNavigationParameters<TableSectionElement, TableRowElement, RM>, "multiSelectionParameters", "multiSelectionMode">,
     TargetedOmit<UseCompleteGridNavigationParameters<TableSectionElement, TableRowElement, RM>, "rovingTabIndexParameters", "focusSelfParent"> {
     tableSectionParameters: UseTableSectionParametersSelf<TableSectionElement>;
     context: UseTableContext;
@@ -67,7 +72,7 @@ export interface UseTableRowParametersSelf<TableRowElement extends Element> {
     tagTableRow: ElementToTag<TableRowElement>;
 }
 export interface UseTableRowParameters<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement>, CM extends TableCellInfo<TableCellElement>> extends
-    OmitStrong<UseCompleteGridNavigationRowParameters<TableRowElement, TableCellElement, RM, CM>, "gridNavigationSingleSelectionSortableRowParameters" | "rovingTabIndexParameters" | "typeaheadNavigationParameters" | "context" | "info">,
+    OmitStrong<UseCompleteGridNavigationRowParameters<TableRowElement, TableCellElement, RM, CM>, "gridNavigationSelectionSortableRowParameters" | "rovingTabIndexParameters" | "typeaheadNavigationParameters" | "context" | "info">,
     TargetedOmit<UseCompleteGridNavigationRowParameters<TableRowElement, TableCellElement, RM, CM>, "rovingTabIndexParameters", never> {
     context: UseTableSectionContext<TableRowElement, RM>;
     tableRowParameters: UseTableRowParametersSelf<TableRowElement>;
@@ -104,11 +109,13 @@ export interface TableCellInfo<TableCellElement extends Element> extends UseComp
 }
 
 export interface UseTableParameters<TableElement extends Element, LabelElement extends Element> extends
+    TargetedPick<UseCompleteListNavigationParameters<any, any, any>, "singleSelectionParameters", "singleSelectionMode">,
+    TargetedPick<UseCompleteListNavigationParameters<any, any, any>, "multiSelectionParameters", "multiSelectionMode">,
     TargetedOmit<UseLabelSyntheticParameters, "labelParameters", "onLabelClick"> {
     tableParameters: UseTableParametersSelf<TableElement, LabelElement>;
 }
 
-export interface UseTableParametersSelf<TableElement extends Element, LabelElement extends Element> extends Pick<UseListboxParameters<TableElement, any, LabelElement, any>["listboxParameters"], "selectionLimit"> {
+export interface UseTableParametersSelf<TableElement extends Element, LabelElement extends Element> {
     tagTable: ElementToTag<TableElement>;
 }
 
@@ -131,15 +138,22 @@ interface SortInfo { column: number, direction: SortDirection }
  */
 export function useTable<TableElement extends Element, LabelElement extends Element>({
     labelParameters,
-    tableParameters: { selectionLimit, tagTable },
+    tableParameters: { tagTable },
+    singleSelectionParameters: { singleSelectionMode, ...void1 },
+    multiSelectionParameters: { multiSelectionMode, ...void2 },
+    ...void3
 }: UseTableParameters<TableElement, LabelElement>): UseTableReturnType<TableElement, LabelElement> {
     monitorCallCount(useTable);
+
+    assertEmptyObject(void1);
+    assertEmptyObject(void2);
+    assertEmptyObject(void3);
 
     // This is the function that, when called, sorts the body's children.
     // It's here to coordinate among multiple table sections (i.e. the head sorts the body, but they're siblings to each other, so we need to take care that)
     // TODO: This...should probably be useManagedChildren
     const [getSortBody, setSortBody] = usePassiveState<() => void, never>(null, returnNull as (() => never));
-    
+
     const [sortDirection, setSortDirection, getSortDirection] = useState<SortDirection>("ascending");
     const [sortColumn, setSortColumn, getSortColumn] = useState<number | null>(null);
 
@@ -159,7 +173,7 @@ export function useTable<TableElement extends Element, LabelElement extends Elem
         let nextSortDirection = getSortDirection();
         let nextSortIndex = getSortColumn();
         if (column == nextSortIndex) {
-            setSortDirection(nextSortDirection = (nextSortDirection == "ascending"? "descending" : "ascending"));
+            setSortDirection(nextSortDirection = (nextSortDirection == "ascending" ? "descending" : "ascending"));
         }
         else {
             setSortColumn(nextSortIndex = column);
@@ -189,15 +203,17 @@ export function useTable<TableElement extends Element, LabelElement extends Elem
     });
 
     return {
-        propsTable: useMergedProps({ role: tagTable == "table" ? undefined : "grid", "aria-multiselectable": (selectionLimit == "multi" ? "true" : undefined) }, propsLabelList),
+        propsTable: useMergedProps({ role: tagTable == "table" ? undefined : "grid", "aria-multiselectable": (multiSelectionMode != "disabled" ? "true" : undefined) }, propsLabelList),
         propsLabel: propsLabelLabel,
-        context: useMemoObject<UseTableContext>({ 
-            tableContext: useMemoObject<UseTableContextSelf>({ 
-                sortByColumn, 
-                setSortBodyFunction: setSortBody, 
+        context: useMemoObject<UseTableContext>({
+            tableContext: useMemoObject<UseTableContextSelf>({
+                sortByColumn,
+                setSortBodyFunction: setSortBody,
                 getCurrentSortColumn: getSortColumn,
-                getCurrentSortDirection: getSortDirection
-            }) 
+                getCurrentSortDirection: getSortDirection,
+                singleSelectionMode,
+                multiSelectionMode
+            })
         })
     }
 }
@@ -236,13 +252,14 @@ export function useTableSection<TableSectionElement extends Element, TableRowEle
     linearNavigationParameters,
     rovingTabIndexParameters,
     singleSelectionParameters,
+    multiSelectionParameters,
     gridNavigationParameters,
     rearrangeableChildrenParameters,
     paginatedChildrenParameters,
     staggeredChildrenParameters,
     tableSectionParameters: { tagTableSection, location },
     typeaheadNavigationParameters,
-    context: { tableContext },
+    context: { tableContext, ...void3 },
     refElementParameters,
     ...void1
 }: UseTableSectionParameters<TableSectionElement, TableRowElement, TableRowInfo<TableRowElement>>): UseTableSectionReturnType<TableSectionElement, TableRowElement, TableRowInfo<TableRowElement>> {
@@ -257,6 +274,7 @@ export function useTableSection<TableSectionElement extends Element, TableRowEle
         props: { ...props },
         rovingTabIndexReturn,
         singleSelectionReturn,
+        multiSelectionReturn,
         typeaheadNavigationReturn,
         staggeredChildrenReturn,
         rearrangeableChildrenReturn,
@@ -266,7 +284,8 @@ export function useTableSection<TableSectionElement extends Element, TableRowEle
     } = useCompleteGridNavigation<TableSectionElement, TableRowElement, TableCellElement, RM>({
         linearNavigationParameters,
         rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
-        singleSelectionParameters,
+        singleSelectionParameters: { ...singleSelectionParameters, singleSelectionMode: tableContext.singleSelectionMode },
+        multiSelectionParameters: { ...multiSelectionParameters, multiSelectionMode: tableContext.multiSelectionMode },
         paginatedChildrenParameters,
         staggeredChildrenParameters,
         sortableChildrenParameters: {
@@ -296,6 +315,7 @@ export function useTableSection<TableSectionElement extends Element, TableRowEle
 
     assertEmptyObject(void1);
     assertEmptyObject(void2);
+    assertEmptyObject(void3);
 
     return {
         childrenHaveFocusReturn,
@@ -308,6 +328,7 @@ export function useTableSection<TableSectionElement extends Element, TableRowEle
         managedChildrenReturn,
         rovingTabIndexReturn,
         singleSelectionReturn,
+        multiSelectionReturn,
         rearrangeableChildrenReturn,
         sortableChildrenReturn,
         typeaheadNavigationReturn,
@@ -327,6 +348,8 @@ export function useTableRow<TableRowElement extends Element, TableCellElement ex
     linearNavigationParameters,
     rovingTabIndexParameters,
     hasCurrentFocusParameters,
+    singleSelectionChildParameters,
+    multiSelectionChildParameters,
 
     ...void1
 
@@ -350,7 +373,9 @@ export function useTableRow<TableRowElement extends Element, TableCellElement ex
         info,
         linearNavigationParameters,
         rovingTabIndexParameters,
-        gridNavigationSingleSelectionSortableRowParameters: { getSortableColumnIndex: cx1.tableContext.getCurrentSortColumn },
+        singleSelectionChildParameters,
+        multiSelectionChildParameters,
+        gridNavigationSelectionSortableRowParameters: { getSortableColumnIndex: cx1.tableContext.getCurrentSortColumn },
         typeaheadNavigationParameters: { noTypeahead: true, collator: null, typeaheadTimeout: Infinity, onNavigateTypeahead: null }
     }
     );
@@ -358,13 +383,13 @@ export function useTableRow<TableRowElement extends Element, TableCellElement ex
     props.role = "row";
     // TODO: Unneeded?
     if (selected) {
-        switch (cx1.singleSelectionContext.ariaPropName) {
+        switch (cx1.singleSelectionContext.singleSelectionAriaPropName) {
             case "aria-checked":
             case "aria-pressed":
             case "aria-selected":
-                props[cx1.singleSelectionContext.ariaPropName ?? "aria-selected"] = "true";
+                props[cx1.singleSelectionContext.singleSelectionAriaPropName ?? "aria-selected"] = "true";
             default: {
-                console.assert(false, cx1.singleSelectionContext.ariaPropName + " is not valid for multi-select -- prefer checked, selected, or pressed");
+                console.assert(false, cx1.singleSelectionContext.singleSelectionAriaPropName + " is not valid for multi-select -- prefer checked, selected, or pressed");
             }
 
         }

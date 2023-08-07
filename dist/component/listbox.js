@@ -8,7 +8,7 @@ import { useListbox, useListboxItem } from "../use-listbox.js";
 import { useComponent, useDefault } from "./util.js";
 const ListboxContext = createContext(null);
 const ListboxGroupContext = createContext(null);
-export const GroupedListbox = memo(function GroupedListbox({ ariaLabel, selectionLimit, orientation, render, onElementChange, onMount, onUnmount }) {
+export const GroupedListbox = memo(function GroupedListbox({ ariaLabel, orientation, render, onElementChange, onMount, onUnmount }) {
     const info = useListbox({
         labelParameters: { ariaLabel },
         linearNavigationParameters: {
@@ -20,7 +20,7 @@ export const GroupedListbox = memo(function GroupedListbox({ ariaLabel, selectio
         },
         staggeredChildrenParameters: { staggered: false },
         paginatedChildrenParameters: { paginationMax: null, paginationMin: null },
-        listboxParameters: { selectionLimit, groupingType: "with-groups", selectedIndex: null, onSelectedIndexChange: null, orientation: orientation ?? "vertical" },
+        listboxParameters: { groupingType: "with-groups", orientation: orientation ?? "vertical" },
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", undefined) },
         rovingTabIndexParameters: { onTabbableIndexChange: null, untabbable: false },
         sortableChildrenParameters: { compare: null },
@@ -31,15 +31,14 @@ export const GroupedListbox = memo(function GroupedListbox({ ariaLabel, selectio
             onNavigateTypeahead: null
         },
         refElementParameters: { onElementChange, onMount, onUnmount },
-        singleSelectionParameters: { ariaPropName: null, selectionMode: "disabled" }
+        singleSelectionParameters: { singleSelectionMode: "disabled", singleSelectionAriaPropName: null },
+        multiSelectionParameters: { multiSelectionMode: "disabled", multiSelectionAriaPropName: null, onSelectionChange: null },
+        singleSelectionDeclarativeParameters: { onSingleSelectedIndexChange: null, singleSelectedIndex: null }
     });
     return (_jsx(ListboxGroupContext.Provider, { value: info, children: render(info) }));
 });
-export const Listbox = memo(function Listbox({ ariaLabel, collator, compare, disableHomeEndKeys, getIndex, selectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSelectedIndexChange, onTabbableIndexChange, staggered, pageNavigationSize, paginationMax, paginationMin, selectionLimit, untabbable, typeaheadTimeout, orientation, ariaPropName, selectionMode, onNavigateLinear, onNavigateTypeahead, onElementChange, onMount, onUnmount, render, imperativeHandle, ...void1 }) {
+export const Listbox = memo(function Listbox({ ariaLabel, collator, compare, disableHomeEndKeys, getIndex, singleSelectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSingleSelectedIndexChange, onTabbableIndexChange, staggered, pageNavigationSize, paginationMax, paginationMin, untabbable, typeaheadTimeout, orientation, onNavigateLinear, onNavigateTypeahead, onElementChange, onMount, onUnmount, render, imperativeHandle, singleSelectionAriaPropName, singleSelectionMode, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, ...void1 }) {
     const listboxGroupInfo = useContext(ListboxGroupContext);
-    ariaPropName ||= "aria-selected";
-    selectionMode ||= "activation";
-    untabbable ||= false;
     assertEmptyObject(void1);
     return useComponent(imperativeHandle, render, ListboxContext, useListbox({
         labelParameters: { ariaLabel },
@@ -58,10 +57,7 @@ export const Listbox = memo(function Listbox({ ariaLabel, collator, compare, dis
             paginationMin
         },
         listboxParameters: {
-            selectionLimit,
             groupingType: listboxGroupInfo == null ? "without-groups" : "group",
-            selectedIndex,
-            onSelectedIndexChange,
             orientation: orientation ?? "vertical"
         },
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
@@ -77,10 +73,12 @@ export const Listbox = memo(function Listbox({ ariaLabel, collator, compare, dis
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
         },
         refElementParameters: { onElementChange, onMount, onUnmount },
-        singleSelectionParameters: { ariaPropName, selectionMode }
+        singleSelectionParameters: { singleSelectionAriaPropName, singleSelectionMode: singleSelectionMode || "disabled" },
+        singleSelectionDeclarativeParameters: { onSingleSelectedIndexChange, singleSelectedIndex },
+        multiSelectionParameters: { multiSelectionAriaPropName, multiSelectionMode: multiSelectionMode || "disabled", onSelectionChange }
     }));
 });
-export const ListboxItem = memo(function ListboxItem({ unselectable, getText, untabbable, index, render, selected, getSortValue, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, onMultiSelect, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, imperativeHandle, ...void1 }) {
+export const ListboxItem = memo(function ListboxItem({ getText, untabbable, index, render, getSortValue, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, imperativeHandle, multiSelectionDisabled, singleSelectionDisabled, multiSelected, onMultiSelectedChange, ...void1 }) {
     const context = useContextWithWarning(ListboxContext, "listbox");
     console.assert(context != null, `This ListboxItem is not contained within a Listbox`);
     const focusSelfDefault = useCallback((e) => { focus(e); }, []);
@@ -89,16 +87,18 @@ export const ListboxItem = memo(function ListboxItem({ unselectable, getText, un
         info: {
             index,
             untabbable: untabbable || false,
-            unselectable: unselectable || false,
             focusSelf: focusSelf ?? focusSelfDefault,
             getSortValue
         },
         context,
-        listboxParameters: { selected, onMultiSelect },
+        listboxParameters: {},
         pressParameters: { allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange },
         textContentParameters: { getText: useDefault("getText", getText) },
         hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged, },
-        refElementParameters: { onElementChange, onMount, onUnmount }
+        refElementParameters: { onElementChange, onMount, onUnmount },
+        singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false },
+        multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false },
+        multiSelectionChildDeclarativeParameters: { onMultiSelectedChange, multiSelected: multiSelected || false },
     }));
 });
 //# sourceMappingURL=listbox.js.map

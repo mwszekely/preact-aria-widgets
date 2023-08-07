@@ -5,73 +5,74 @@ import { useCallback, useContext } from "preact/hooks";
 import { useContextWithWarning } from "../props.js";
 import { useMenu, useMenuItem } from "../use-menu.js";
 import { ParentDepthContext, useComponent, useDefault } from "./util.js";
-const UntabbableContext = createContext(false);
-const AriaPropNameContext = createContext("aria-selected");
-const SelectionModeContext = createContext("focus");
 const MenuItemContext = createContext(null);
-export function Menu({ collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, orientation, ariaPropName, selectionMode, selectionLimit, untabbable, active, onDismiss, onElementChange, onMount, onUnmount, openDirection, onTabbableIndexChange, compare, getIndex, selectedIndex, navigatePastEnd, navigatePastStart, onSelectedIndexChange, pageNavigationSize, parentDepth, disabled, staggered, onOpen, onNavigateLinear, onNavigateTypeahead, getDocument, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, render, imperativeHandle, ...void1 }) {
+export function Menu({ collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, orientation, singleSelectionAriaPropName, singleSelectionMode, untabbable, active, onDismiss, onElementChange, onMount, onUnmount, openDirection, onTabbableIndexChange, compare, getIndex, singleSelectedIndex, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, pageNavigationSize, parentDepth, disabled, staggered, onOpen, onNavigateLinear, onNavigateTypeahead, getDocument, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, render, imperativeHandle, ...void1 }) {
     const defaultParentDepth = useContext(ParentDepthContext);
     let myDepth = (parentDepth ?? defaultParentDepth) + 1;
-    ariaPropName ||= "aria-selected";
-    selectionMode ||= "activation";
     untabbable ||= false;
     assertEmptyObject(void1);
-    return (_jsx(AriaPropNameContext.Provider, { value: ariaPropName, children: _jsx(SelectionModeContext.Provider, { value: selectionMode, children: _jsx(UntabbableContext.Provider, { value: untabbable, children: _jsx(ParentDepthContext.Provider, { value: myDepth, children: useComponent(imperativeHandle, render, MenuItemContext, useMenu({
-                        linearNavigationParameters: {
-                            onNavigateLinear,
-                            disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
-                            pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize),
-                            navigatePastEnd: navigatePastEnd ?? "wrap",
-                            navigatePastStart: navigatePastStart ?? "wrap"
-                        },
-                        staggeredChildrenParameters: {
-                            staggered: staggered || false
-                        },
-                        escapeDismissParameters: { parentDepth: parentDepth || 1, },
-                        dismissParameters: { onDismiss },
-                        modalParameters: { active },
-                        refElementParameters: { onElementChange, onMount, onUnmount },
-                        activeElementParameters: {
-                            getDocument: useDefault("getDocument", getDocument),
-                            onActiveElementChange,
-                            onLastActiveElementChange,
-                            onWindowFocusedChange
-                        },
-                        rearrangeableChildrenParameters: {
-                            getIndex: useDefault("getIndex", getIndex)
-                        },
-                        sortableChildrenParameters: {
-                            compare
-                        },
-                        menuParameters: {
-                            openDirection,
-                            onOpen
-                        },
-                        menuSurfaceParameters: {},
-                        rovingTabIndexParameters: {
-                            onTabbableIndexChange,
-                            untabbable: untabbable
-                        },
-                        typeaheadNavigationParameters: {
-                            onNavigateTypeahead,
-                            collator: useDefault("collator", collator),
-                            noTypeahead: useDefault("noTypeahead", noTypeahead),
-                            typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
-                        },
-                        toolbarParameters: {
-                            orientation,
-                            selectedIndex,
-                            onSelectedIndexChange,
-                            disabled: disabled || false,
-                            selectionLimit
-                        },
-                        singleSelectionParameters: {
-                            ariaPropName: ariaPropName || "aria-selected",
-                            selectionMode: selectionMode || "activation"
-                        }
-                    })) }) }) }) }));
+    return (_jsx(ParentDepthContext.Provider, { value: myDepth, children: useComponent(imperativeHandle, render, MenuItemContext, useMenu({
+            linearNavigationParameters: {
+                onNavigateLinear,
+                disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
+                pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize),
+                navigatePastEnd: navigatePastEnd ?? "wrap",
+                navigatePastStart: navigatePastStart ?? "wrap"
+            },
+            staggeredChildrenParameters: {
+                staggered: staggered || false
+            },
+            escapeDismissParameters: { parentDepth: parentDepth || 1, },
+            dismissParameters: { onDismiss },
+            modalParameters: { active },
+            refElementParameters: { onElementChange, onMount, onUnmount },
+            activeElementParameters: {
+                getDocument: useDefault("getDocument", getDocument),
+                onActiveElementChange,
+                onLastActiveElementChange,
+                onWindowFocusedChange
+            },
+            rearrangeableChildrenParameters: {
+                getIndex: useDefault("getIndex", getIndex)
+            },
+            sortableChildrenParameters: {
+                compare
+            },
+            menuParameters: {
+                openDirection,
+                onOpen
+            },
+            menuSurfaceParameters: {},
+            rovingTabIndexParameters: {
+                onTabbableIndexChange,
+                untabbable: untabbable
+            },
+            typeaheadNavigationParameters: {
+                onNavigateTypeahead,
+                collator: useDefault("collator", collator),
+                noTypeahead: useDefault("noTypeahead", noTypeahead),
+                typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
+            },
+            toolbarParameters: {
+                orientation,
+                disabled: disabled || false
+            },
+            singleSelectionParameters: {
+                singleSelectionAriaPropName: singleSelectionAriaPropName || "aria-selected",
+                singleSelectionMode: singleSelectionMode || "disabled",
+            },
+            multiSelectionParameters: {
+                multiSelectionAriaPropName,
+                multiSelectionMode: multiSelectionMode || "disabled",
+                onSelectionChange
+            },
+            singleSelectionDeclarativeParameters: {
+                singleSelectedIndex,
+                onSingleSelectedIndexChange,
+            }
+        })) }));
 }
-export function MenuItem({ index, untabbable, getSortValue, onPress, getText, role, focusSelf, unselectable, onPressingChange, render, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, info: uinfo, ...void1 }) {
+export function MenuItem({ index, untabbable, getSortValue, onPress, getText, role, focusSelf, onPressingChange, render, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, ...void1 }) {
     const context = useContextWithWarning(MenuItemContext, "menu");
     const defaultFocusSelf = useCallback((e) => focus(e), []);
     assertEmptyObject(void1);
@@ -79,7 +80,6 @@ export function MenuItem({ index, untabbable, getSortValue, onPress, getText, ro
         info: {
             index,
             untabbable: untabbable || false,
-            unselectable: unselectable || false,
             focusSelf: focusSelf ?? defaultFocusSelf,
             getSortValue,
         },
@@ -96,6 +96,8 @@ export function MenuItem({ index, untabbable, getSortValue, onPress, getText, ro
         },
         hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged },
         refElementParameters: { onElementChange, onMount, onUnmount },
+        singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false },
+        multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false, initiallyMultiSelected: initiallyMultiSelected || false, onMultiSelectChange }
     })));
 }
 ;

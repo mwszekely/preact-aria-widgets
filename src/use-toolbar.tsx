@@ -1,4 +1,4 @@
-import { CompleteListNavigationContext, ElementProps, JSX, MakeSingleSelectionDeclarativeParameters, MakeSingleSelectionDeclarativeReturnType, TargetedOmit, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseRandomIdReturnType, assertEmptyObject, focus, monitorCallCount, useCompleteListNavigationChild, useCompleteListNavigationDeclarative, useMemoObject, useMergedProps } from "preact-prop-helpers";
+import { CompleteListNavigationContext, ElementProps, JSX, MakeSingleSelectionDeclarativeParameters, MakeSingleSelectionDeclarativeReturnType, TargetedOmit, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseRandomIdReturnType, focus, monitorCallCount, useCompleteListNavigationChild, useCompleteListNavigationDeclarative, useMemoObject, useMergedProps } from "preact-prop-helpers";
 import { OmitStrong, Prefices } from "./props.js";
 import { UseLabelSyntheticParameters, useLabelSynthetic } from "./use-label.js";
 
@@ -11,26 +11,11 @@ export interface UseToolbarParametersSelf<ContainerElement extends Element, Chil
     orientation: "horizontal" | "vertical";
 
     /**
-     * Manages how single-selection works. Notably, `aria-pressed` is only specified on children when `selectionLimit` is `"single"`.
-     */
-    selectionLimit: "single" | "multi" | "none";
-
-    /**
      * Should be "toolbar" for toolbars, 
      * `null` if someone else takes care of the role (TODO: it's still labelled in this case, what does this mean?), 
      * and whatever string is applicable otherwise.
      */
     role: JSX.AriaRole | null;
-
-    /**
-     * Optional; Only used if you need single selection logic.
-     */
-    selectedIndex: MakeSingleSelectionDeclarativeParameters<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>>["singleSelectionDeclarativeParameters"]["selectedIndex"];
-
-    /**
-     * Optional; Only used if you need single selection logic.
-     */
-    onSelectedIndexChange: MakeSingleSelectionDeclarativeParameters<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>>["singleSelectionDeclarativeParameters"]["onSelectedIndexChange"];
 
     /**
      * When true, none of the children will be selectable or focusable.
@@ -41,7 +26,7 @@ export interface UseToolbarParametersSelf<ContainerElement extends Element, Chil
 }
 
 export interface UseToolbarParameters<ContainerElement extends Element, ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends
-    OmitStrong<MakeSingleSelectionDeclarativeParameters<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>>, "rovingTabIndexParameters" | "singleSelectionDeclarativeParameters" | "paginatedChildrenParameters" | "linearNavigationParameters" | "singleSelectionReturn">,
+    OmitStrong<MakeSingleSelectionDeclarativeParameters<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>>, "rovingTabIndexParameters" | "paginatedChildrenParameters" | "linearNavigationParameters" | "singleSelectionReturn">,
     TargetedOmit<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>, "rovingTabIndexParameters", "focusSelfParent">,
     TargetedOmit<UseLabelSyntheticParameters, "labelParameters", "onLabelClick">,
     TargetedOmit<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>, "linearNavigationParameters", "arrowKeyDirection"> {
@@ -91,21 +76,19 @@ export interface UseToolbarChildReturnType<ChildElement extends Element, M exten
  */
 export function useToolbar<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({
     linearNavigationParameters,
-    toolbarParameters: { orientation, role, selectedIndex, onSelectedIndexChange, disabled, selectionLimit, ...void1 },
+    toolbarParameters: { orientation, role, disabled },
     labelParameters,
     rovingTabIndexParameters,
-    singleSelectionParameters: { selectionMode, ...singleSelectionParameters },
+    singleSelectionParameters,
+    singleSelectionDeclarativeParameters,
     ...listNavParameters
 }: UseToolbarParameters<ContainerElement, ChildElement, UseToolbarSubInfo<ChildElement>>): UseToolbarReturnType<ContainerElement, ChildElement, LabelElement, UseToolbarSubInfo<ChildElement>> {
     type M = UseToolbarSubInfo<ChildElement>;
 
     monitorCallCount(useToolbar);
 
-    if (selectionLimit != 'single') {
-        console.assert(selectedIndex == null);
-        console.assert(selectionMode == 'disabled');
-        selectedIndex = null;
-        selectionMode = 'disabled';
+    if (singleSelectionDeclarativeParameters.singleSelectedIndex !== undefined) {
+        console.assert(singleSelectionParameters.singleSelectionMode != "disabled");
     }
 
     const {
@@ -115,10 +98,10 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
     } = useCompleteListNavigationDeclarative<ContainerElement, ChildElement, M>({
         ...listNavParameters,
         rovingTabIndexParameters: { ...rovingTabIndexParameters, untabbable: disabled, focusSelfParent: focus },
-        singleSelectionDeclarativeParameters: { selectedIndex, onSelectedIndexChange: disabled ? null : onSelectedIndexChange },
+        singleSelectionDeclarativeParameters,
         paginatedChildrenParameters: { paginationMax: null, paginationMin: null },
         linearNavigationParameters: { ...linearNavigationParameters, arrowKeyDirection: orientation },
-        singleSelectionParameters: { selectionMode, ...singleSelectionParameters },
+        singleSelectionParameters,
     });
 
     const { propsInput: propsToolbar, propsLabel, randomIdInputReturn, randomIdLabelReturn } = useLabelSynthetic<ContainerElement, LabelElement>({
@@ -126,8 +109,6 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
         randomIdInputParameters: { prefix: Prefices.toolbar },
         randomIdLabelParameters: { prefix: Prefices.toolbarLabel }
     });
-
-    assertEmptyObject(void1);
 
     // Note: We return tabIndex=-1 (when not disabled) because some browsers (at least Firefox) seem to add role=toolbar to the tab order?
     // Probably needs a bit more digging because this feels like a bit of a blunt fix.
@@ -160,7 +141,7 @@ export function useToolbarChild<ChildElement extends Element>({ context: { toolb
     } = useCompleteListNavigationChild<ChildElement, UseToolbarSubInfo<ChildElement>>({ info, context, ...args });
 
     return {
-        propsChild: useMergedProps(propsChild, { [disabledProp as never]: info.unselectable ? true : undefined }),
+        propsChild: useMergedProps(propsChild, { [disabledProp as never]: (args.singleSelectionChildParameters.singleSelectionDisabled || args.multiSelectionChildParameters.multiSelectionDisabled) ? true : undefined }),
         propsTabbable,
         ...listNavReturn
     }

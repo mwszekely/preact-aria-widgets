@@ -17,7 +17,7 @@ export interface UseRadioGroupParametersSelf<V extends string | number> {
 }
 
 export interface UseRadioGroupParameters<V extends string | number, GroupElement extends Element, _GroupLabelElement extends Element, TabbableChildElement extends Element, M extends RadioSubInfo<TabbableChildElement, V> = RadioSubInfo<TabbableChildElement, V>> extends
-    OmitStrong<UseCompleteListNavigationParameters<GroupElement, TabbableChildElement, M>, "rovingTabIndexParameters" | "paginatedChildrenParameters" | "singleSelectionParameters">,
+    OmitStrong<UseCompleteListNavigationParameters<GroupElement, TabbableChildElement, M>, "rovingTabIndexParameters" | "paginatedChildrenParameters" | "singleSelectionParameters" | "multiSelectionParameters">,
     TargetedOmit<UseCompleteListNavigationParameters<GroupElement, TabbableChildElement, any>, "rovingTabIndexParameters", "focusSelfParent">,
     TargetedOmit<UseLabelSyntheticParameters, "labelParameters", "onLabelClick"> {
     radioGroupParameters: UseRadioGroupParametersSelf<V>;
@@ -31,7 +31,7 @@ export interface UseRadioParametersSelf<V extends string | number> {
 
 export interface UseRadioParameters<LP extends LabelPosition, V extends string | number, InputElement extends Element, LabelElement extends Element, M extends RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>> extends
     UseGenericChildParameters<RadioContext<V, FocusableLabelElement<LP, InputElement, LabelElement>, M>, Pick<M, Exclude<UseCompleteListNavigationChildInfoKeysParameters<M>, "focusSelf">>>,
-    OmitStrong<UseCompleteListNavigationChildParameters<FocusableLabelElement<LP, InputElement, LabelElement>, M>, "info" | "context">,
+    OmitStrong<UseCompleteListNavigationChildParameters<FocusableLabelElement<LP, InputElement, LabelElement>, M>, "info" | "context" | "multiSelectionChildParameters" | "singleSelectionChildParameters">,
     TargetedOmit<UseCompleteListNavigationChildParameters<FocusableLabelElement<LP, InputElement, LabelElement>, M>, "info", "focusSelf">,
     TargetedOmit<UseCheckboxLikeParameters<LP, InputElement, LabelElement, boolean>, "labelParameters", never>,
     TargetedOmit<UseCheckboxLikeParameters<LP, InputElement, LabelElement, boolean>, "pressParameters", "excludeSpace" | "onPressSync">,
@@ -56,7 +56,7 @@ export interface UseRadioGroupReturnTypeSelf {
 }
 
 export interface UseRadioGroupReturnType<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, TabbableChildElement extends Element, M extends RadioSubInfo<TabbableChildElement, V> = RadioSubInfo<TabbableChildElement, V>> extends
-    OmitStrong<UseCompleteListNavigationDeclarativeReturnType<GroupElement, TabbableChildElement, M>, "context" | "props"> {
+    OmitStrong<UseCompleteListNavigationDeclarativeReturnType<GroupElement, TabbableChildElement, M>, "context" | "props" | "multiSelectionReturn"> {
     radioGroupReturn: UseRadioGroupReturnTypeSelf;
     propsRadioGroup: ElementProps<GroupElement>;
     propsRadioGroupLabel: ElementProps<GroupLabelElement>;
@@ -125,6 +125,7 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
         context,
         props: propsGroup2,
         singleSelectionReturn,
+        multiSelectionReturn,
         managedChildrenReturn,
         rovingTabIndexReturn,
         linearNavigationReturn,
@@ -137,13 +138,14 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
         ...void3
     } = useCompleteListNavigationDeclarative<G, TCE, M>({
         singleSelectionDeclarativeParameters: {
-            selectedIndex,
-            onSelectedIndexChange: useStableCallback((e) => {
+            singleSelectedIndex: selectedIndex,
+            onSingleSelectedIndexChange: useStableCallback((e) => {
                 setSelectedIndex(e[EventDetail].selectedIndex);
                 onSelectedValueChange?.(enhanceEvent(e, { selectedValue: indexToName.current.get(e[EventDetail].selectedIndex) }));
             }),
         },
-        singleSelectionParameters: { selectionMode: "focus", ariaPropName: null },
+        singleSelectionParameters: { singleSelectionMode: "focus", singleSelectionAriaPropName: null },
+        multiSelectionParameters: { multiSelectionMode: "disabled", multiSelectionAriaPropName: null, onSelectionChange: null },
         paginatedChildrenParameters: { paginationMin: null, paginationMax: null },
         rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
         linearNavigationParameters,
@@ -233,7 +235,7 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
 
     const { tagInput, labelPosition } = labelParameters;
 
-    
+
     const {
         propsChild: listNavigationSingleSelectionChildProps,
         propsTabbable,
@@ -248,7 +250,9 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
         context,
         textContentParameters,
         hasCurrentFocusParameters,
-        refElementParameters
+        refElementParameters,
+        singleSelectionChildParameters: { singleSelectionDisabled: !!disabled },
+        multiSelectionChildParameters: { initiallyMultiSelected: false, multiSelectionDisabled: true, onMultiSelectChange: null }
     });
 
     assertEmptyObject(void1);
@@ -258,7 +262,7 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
     assertEmptyObject(void5);
 
 
-    const { selected: checked } = singleSelectionChildReturn;
+    const { singleSelected: checked } = singleSelectionChildReturn;
 
     const { refElementReturn: refElementInputReturn, propsStable: propsRefInput } = useRefElement<InputElement>({ refElementParameters: {} });
     const { refElementReturn: refElementLabelReturn, propsStable: propsRefLabel } = useRefElement<LabelElement>({ refElementParameters: {} });

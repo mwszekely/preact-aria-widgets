@@ -1,25 +1,25 @@
 import { createContext } from "preact";
 import { assertEmptyObject, memo } from "preact-prop-helpers";
-import { Get4, Get5, Get9, useContextWithWarning } from "../props.js";
+import { Get10, Get6, useContextWithWarning } from "../props.js";
 import { CheckboxGroupContext, CheckboxGroupInfo, UseCheckboxGroupChildParameters, UseCheckboxGroupChildReturnType, UseCheckboxGroupParameters, UseCheckboxGroupParentParameters, UseCheckboxGroupParentReturnType, UseCheckboxGroupReturnType, useCheckboxGroup, useCheckboxGroupChild, useCheckboxGroupParent } from "../use-checkbox-group.js";
 import { GenericComponentProps, useComponent, useDefault } from "./util.js";
 
 export type CheckboxGroupProps<ParentElement extends Element, TabbableChildElement extends Element> = GenericComponentProps<
     UseCheckboxGroupReturnType<ParentElement, TabbableChildElement>,
-    Get9<UseCheckboxGroupParameters<ParentElement, TabbableChildElement>, "linearNavigationParameters", "checkboxGroupParameters", "rearrangeableChildrenParameters", "sortableChildrenParameters", "typeaheadNavigationParameters", "staggeredChildrenParameters", "rovingTabIndexParameters", "rovingTabIndexParameters", "refElementParameters">,
+    Get10<UseCheckboxGroupParameters<ParentElement, TabbableChildElement>, "linearNavigationParameters", "checkboxGroupParameters", "rearrangeableChildrenParameters", "sortableChildrenParameters", "typeaheadNavigationParameters", "staggeredChildrenParameters", "rovingTabIndexParameters", "rovingTabIndexParameters", "refElementParameters", "multiSelectionParameters">,
     never
 >;
 
 export type CheckboxGroupParentProps<TCE extends Element> = GenericComponentProps<
     UseCheckboxGroupParentReturnType<TCE>,
-    Get4<UseCheckboxGroupParentParameters<TCE>, "textContentParameters", "info", "refElementParameters", "hasCurrentFocusParameters">,
+    Get6<UseCheckboxGroupParentParameters<TCE>, "textContentParameters", "info", "refElementParameters", "hasCurrentFocusParameters", "singleSelectionChildParameters", "multiSelectionChildParameters">,
     "index" | "getSortValue" | "focusSelf"
 >// & { info?: OmitStrong<M, keyof CheckboxGroupInfo<TCE>> };
 
 
 export type CheckboxGroupChildProps<TCE extends Element> = GenericComponentProps<
     UseCheckboxGroupChildReturnType<TCE>,
-    Get5<UseCheckboxGroupChildParameters<TCE>, "checkboxGroupChildParameters", "textContentParameters", "info", "refElementParameters", "hasCurrentFocusParameters">,
+    Get6<UseCheckboxGroupChildParameters<TCE>, "checkboxGroupChildParameters", "textContentParameters", "info", "refElementParameters", "hasCurrentFocusParameters","multiSelectionChildParameters">,
     "index" | "getSortValue" | "focusSelf" | "checked" | "onChangeFromParent"
 >// & { info?: OmitStrong<M, keyof CheckboxGroupInfo<TCE>> };
 
@@ -47,6 +47,9 @@ export const CheckboxGroup = memo(function CheckboxGroup<ParentElement extends E
     onElementChange,
     onMount,
     onUnmount,
+    multiSelectionAriaPropName,
+    multiSelectionMode,
+    onSelectionChange,
     ...void1
 }: CheckboxGroupProps<ParentElement, TabbableChildElement>) {
 
@@ -86,7 +89,8 @@ export const CheckboxGroup = memo(function CheckboxGroup<ParentElement extends E
                 noTypeahead: useDefault("noTypeahead", noTypeahead),
                 typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
             },
-            refElementParameters: { onElementChange, onMount, onUnmount }
+            refElementParameters: { onElementChange, onMount, onUnmount },
+            multiSelectionParameters: { multiSelectionAriaPropName, multiSelectionMode: multiSelectionMode || "activation", onSelectionChange }
         }));
 });
 
@@ -96,7 +100,6 @@ export const CheckboxGroupParent = memo(function CheckboxGroupParent<TCE extends
     focusSelf,
     untabbable,
     getSortValue,
-    unselectable,
     imperativeHandle,
     getText,
     onCurrentFocusedChanged,
@@ -104,6 +107,10 @@ export const CheckboxGroupParent = memo(function CheckboxGroupParent<TCE extends
     onElementChange,
     onMount,
     onUnmount,
+    initiallyMultiSelected,
+    multiSelectionDisabled,
+    onMultiSelectChange,
+    singleSelectionDisabled,
     //info,
     ..._rest
 }: CheckboxGroupParentProps<TCE>) {
@@ -118,7 +125,6 @@ export const CheckboxGroupParent = memo(function CheckboxGroupParent<TCE extends
             useCheckboxGroupParent<TCE>({
                 info: {
                     index,
-                    unselectable: unselectable || false,
                     untabbable: untabbable || false,
                     focusSelf,
                     getSortValue,
@@ -128,7 +134,9 @@ export const CheckboxGroupParent = memo(function CheckboxGroupParent<TCE extends
                     getText: useDefault("getText", getText)
                 },
                 hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged },
-                refElementParameters: { onElementChange, onMount, onUnmount }
+                refElementParameters: { onElementChange, onMount, onUnmount },
+                multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false, initiallyMultiSelected: initiallyMultiSelected || false, onMultiSelectChange },
+                singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false }
             }))
     );
 })
@@ -142,7 +150,6 @@ export const CheckboxGroupChild = (function CheckboxGroupChild<TCE extends Eleme
     untabbable,
     getText,
     focusSelf,
-    unselectable,
     //info,
     imperativeHandle,
     onCurrentFocusedChanged,
@@ -150,7 +157,8 @@ export const CheckboxGroupChild = (function CheckboxGroupChild<TCE extends Eleme
     onElementChange,
     onMount,
     onUnmount,
-
+    multiSelectionDisabled,
+    onMultiSelectChange,
     ...void1
 }: CheckboxGroupChildProps<TCE>) {
 
@@ -169,7 +177,6 @@ export const CheckboxGroupChild = (function CheckboxGroupChild<TCE extends Eleme
             info: {
                 index,
                 untabbable: untabbable || false,
-                unselectable: unselectable || false,
                 focusSelf,
                 getSortValue
             },
@@ -185,6 +192,7 @@ export const CheckboxGroupChild = (function CheckboxGroupChild<TCE extends Eleme
                 onElementChange,
                 onMount,
                 onUnmount
-            }
+            },
+            multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false, onMultiSelectChange },
         }));
 });

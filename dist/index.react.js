@@ -1142,12 +1142,9 @@ function useLinearNavigation({ linearNavigationParameters: { getLowestIndex, get
     const stableProps = useRef(useTagProps({
         onKeyDown: useStableCallback((e) => {
             // Not handled by typeahead (i.e. assume this is a keyboard shortcut)
-            if (e.ctrlKey || e.metaKey)
+            // TODO: ctrlKey was here too, but multi-selection uses that when in focus-selection mode.
+            if (e.metaKey)
                 return;
-            //const info = getLogicalDirectionInfo();
-            //const arrowKeyDirection = getArrowKeyDirection();
-            //const disableHomeEndKeys = getDisableHomeEndKeys();
-            //const pageNavigationSize = getPageNavigationSize();
             const allowsVerticalNavigation = (arrowKeyDirection == "vertical" || arrowKeyDirection == "either");
             const allowsHorizontalNavigation = (arrowKeyDirection == "horizontal" || arrowKeyDirection == "either");
             let childRange = (getHighestIndex() - getLowestIndex());
@@ -1533,6 +1530,7 @@ function useChildrenFlag({ getChildren, initialIndex, closestFit, onClosestFit, 
                 return requestedIndex;
             }
             else {
+                console.assert(closestFit);
                 console.assert(typeof requestedIndex == "number", "closestFit can only be used when each child has a numeric index, and cannot be used when children use string indices instead.");
                 const closestFitIndex = getClosestFit(requestedIndex);
                 setCurrentIndex(closestFitIndex, reason);
@@ -1776,13 +1774,11 @@ function useRovingTabIndex({ managedChildrenReturn: { getChildren }, rovingTabIn
             // focus the child because focus wasn't within the list). 
             // It's also just consistent. 
             tabIndex: untabbable ? 0 : -1,
-            // TODO: When a hidden child is clicked, some browsers focus the parent, just because it's got a role and a tabindex.
-            // But this won't work to avoid that, because it messes with grid navigation
+            // When a hidden child is clicked, some browsers focus the parent, just because it's got a role and a tabindex.
             onFocus: useStableCallback((e) => {
                 const parentElement = getElement();
                 console.assert(!!parentElement);
                 if (e.target == getElement()) {
-                    debugger;
                     if (!untabbable) {
                         focusSelf(false, e);
                     }
@@ -2138,7 +2134,7 @@ function useListNavigation({ linearNavigationParameters, typeaheadNavigationPara
     // Merge the props while keeping them stable
     // (TODO: We run this merge logic every render but only need the first render's result because it's stable)
     const p = useMergedProps(propsStableTN, propsStableLN);
-    const propsStable = useRef(p);
+    useRef(p);
     return {
         managedChildrenParameters,
         rovingTabIndexReturn,
@@ -2148,8 +2144,7 @@ function useListNavigation({ linearNavigationParameters, typeaheadNavigationPara
             ...contextTypeahead
         }),
         linearNavigationReturn,
-        propsStableParentOrChild: propsStable.current,
-        propsParent: propsRTI
+        props: useMergedProps(propsStableLN, propsStableTN, propsRTI)
     };
 }
 /**
@@ -2191,7 +2186,7 @@ function useGridNavigation({ gridNavigationParameters: { onTabbableColumnChange,
         let t = (listNavigationParameters.rovingTabIndexParameters.initiallyTabbedIndex ?? 0);
         return { actual: t, ideal: t };
     }));
-    const { linearNavigationReturn, rovingTabIndexReturn, typeaheadNavigationReturn, managedChildrenParameters, context: { rovingTabIndexContext, typeaheadNavigationContext }, propsParent, propsStableParentOrChild, ...void1 } = useListNavigation({
+    const { linearNavigationReturn, rovingTabIndexReturn, typeaheadNavigationReturn, managedChildrenParameters, context: { rovingTabIndexContext, typeaheadNavigationContext }, props, ...void1 } = useListNavigation({
         linearNavigationParameters: { arrowKeyDirection: "vertical", ...linearNavigationParameters },
         ...listNavigationParameters
     });
@@ -2202,8 +2197,7 @@ function useGridNavigation({ gridNavigationParameters: { onTabbableColumnChange,
         setTabbableColumn
     });
     return {
-        propsParent,
-        propsStableParentOrChild,
+        props,
         managedChildrenParameters,
         context: useMemoObject({
             gridNavigationRowContext,
@@ -2270,7 +2264,7 @@ refElementReturn, ...void1 }) {
     const focusSelf = whenThisRowIsFocused;
     const { props: propsLNC, info: { getLocallyTabbable, setLocallyTabbable, ...void2 }, hasCurrentFocusParameters, pressParameters, rovingTabIndexChildReturn, textContentReturn, ...void6 } = useListNavigationChild({ info: { index, untabbable }, refElementReturn, textContentParameters, context: contextFromParent });
     const allChildCellsAreUntabbable = !rovingTabIndexChildReturn.tabbable;
-    const { propsStableParentOrChild: propsLN, propsParent: propsLN2, context: contextULN, linearNavigationReturn, managedChildrenParameters, rovingTabIndexReturn, typeaheadNavigationReturn, ...void5 } = useListNavigation({
+    const { props: propsLN, context: contextULN, linearNavigationReturn, managedChildrenParameters, rovingTabIndexReturn, typeaheadNavigationReturn, ...void5 } = useListNavigation({
         managedChildrenReturn,
         refElementReturn,
         typeaheadNavigationParameters,
@@ -2308,8 +2302,8 @@ refElementReturn, ...void1 }) {
     // TODO: propsLN2 (awful name) is just the tabIndex=0 or -1 from rovingTabIndex, which flips around when `untabbable` flips.
     // We can ignore it here, because our tabIndex is entirely controlled by our own list navigation,
     // but it shouldn't just be ignored wholesale like this.
-    propsLN2.tabIndex = propsLN.tabIndex ?? propsLNC.tabIndex;
-    const props = useMergedProps(propsLN, propsLN2, propsLNC, {
+    propsLN.tabIndex = propsLN.tabIndex ?? propsLNC.tabIndex;
+    const props = useMergedProps(propsLN, propsLNC, {
         // Ensure that if the browser focuses the row for whatever reason, we transfer the focus to a child cell.
         onFocus: useStableCallback(e => whenThisRowIsFocused(e.currentTarget))
     });
@@ -2371,6 +2365,18 @@ function useGridNavigationCell({ context: { gridNavigationCellContext: { getRowI
 }
 
 /**
+ * Returns a function that will, when called, force the component
+ * that uses this hook to re-render itself.
+ *
+ * @remarks It's a bit smelly, so best to use sparingly.
+ */
+function useForceUpdate() {
+    monitorCallCount(useForceUpdate);
+    const [, set] = useState$1(0);
+    return useRef(() => set(i => ++i)).current;
+}
+
+/**
  * Hook that allows for the **direct descendant** children of this component to be re-ordered and sorted.
  *
  * @remarks *This is **separate** from "managed" children, which can be any level of child needed! Sortable/rearrangeable children must be **direct descendants** of the parent that uses this hook!*
@@ -2421,7 +2427,8 @@ function useRearrangeableChildren({ rearrangeableChildrenParameters: { getIndex,
     // this hook, but it's tbody that actually needs updating), we need to remotely
     // get and set a forceUpdate function.
     //const [getForceUpdate, setForceUpdate] = usePassiveState<null | (() => void)>(null, returnNull);
-    const [getForceUpdate, setForceUpdate] = usePassiveState(null, returnNull);
+    //const [getForceUpdate, setForceUpdate] = usePassiveState<null | (() => void), never>(null, returnNull);
+    const forceUpdateRef = useRef(null);
     const rearrange = useCallback((originalRows, sortedRows) => {
         mangleMap.current.clear();
         demangleMap.current.clear();
@@ -2435,11 +2442,14 @@ function useRearrangeableChildren({ rearrangeableChildrenParameters: { getIndex,
             }
         }
         onRearrangedGetter()?.();
-        getForceUpdate()?.();
+        forceUpdateRef.current?.();
     }, []);
     const useRearrangedChildren = useCallback(function useRearrangedChildren(children) {
         monitorCallCount(useRearrangedChildren);
         console.assert(Array.isArray(children));
+        const forceUpdate = useForceUpdate();
+        console.assert(forceUpdateRef.current == null || forceUpdateRef.current == forceUpdate);
+        forceUpdateRef.current = forceUpdate; // TODO: Mutation during render? I mean, not really -- it's always the same value...right?
         return children
             .slice()
             .map(child => ({ child, mangledIndex: indexMangler(getIndex(child)), demangledIndex: getIndex(child) }))
@@ -2533,6 +2543,288 @@ function defaultCompare(lhs, rhs) {
 }
 
 /**
+ * Allows a parent to track the changes made to multi-selection children.
+ *
+ * @remarks Beyond just giving each child the ability to track its own selected state, the parent can change all children at once.
+ * Pressing <kbd>Ctrl</kbd>+<kbd>A</kbd> will select all children, for example.
+ *
+ * This is not exclusive with {@link useSingleSelection}, you can use both at once if you have a use case for it.
+ *
+ * @compositeParams
+ *
+ * @hasChild {@link useMultiSelectionChild}
+ */
+function useMultiSelection({ multiSelectionParameters: { onSelectionChange, multiSelectionAriaPropName, multiSelectionMode, ...void3 }, managedChildrenReturn: { getChildren, ...void1 }, childrenHaveFocusReturn: { getAnyFocused, ...void4 }, ...void2 }) {
+    // By having both we get the total number of children for free, even if there are holes in the array.
+    // TODO: useManagedChildren should do that by default??
+    const selectedIndices = useRef(new Set());
+    const unselectedIndices = useRef(new Set());
+    const startOfShiftSelect = useRef(null);
+    // Why these are needed:
+    // When in focus mode, there's no way to determine whether these keys are held down during the focus event.
+    // That's all. Wow.
+    let shiftKeyHeld = useRef(false);
+    let ctrlKeyHeld = useRef(false);
+    // When a child changes selection state, it calls this function.
+    const notifyParentOfChildSelectChange = useStableCallback((event, index, selected, previous) => {
+        console.assert(selected != previous);
+        if (selected == undefined) {
+            // This child is unmounting itself.
+            if (previous === true) {
+                console.assert(selectedIndices.current.has(index), `The selected child at index ${index} is unmounting itself, but the parent was unaware of it being selected.`);
+                selectedIndices.current.delete(index);
+            }
+            else if (previous === false) {
+                console.assert(unselectedIndices.current.has(index), `The selected child at index ${index} is unmounting itself, but the parent was unaware of it being selected.`);
+                unselectedIndices.current.delete(index);
+            }
+            else {
+                console.assert(false, `The child at index ${index} was not selected or unselected but a secret third thing: ${selected}`);
+            }
+        }
+        else if (selected) {
+            if (previous != undefined) {
+                console.assert(unselectedIndices.current.has(index), `The multi-select child at index ${index} changed to selected even though it was not unselected before, somehow.`);
+                unselectedIndices.current.delete(index);
+            }
+            console.assert(!selectedIndices.current.has(index), `The multi-select child at index ${index} changed to selected even though there is already a selected child with that index.`);
+            selectedIndices.current.add(index);
+            startOfShiftSelect.current = index;
+        }
+        else {
+            if (previous != undefined) {
+                console.assert(selectedIndices.current.has(index), `The multi-select child at index ${index} changed to unselected even though it was not selected before, somehow.`);
+                selectedIndices.current.delete(index);
+            }
+            console.assert(!unselectedIndices.current.has(index), `The multi-select child at index ${index} was marked as unselected even though there is already an unselected child with that index.`);
+            unselectedIndices.current.add(index);
+        }
+        const childCount = (selectedIndices.current.size + unselectedIndices.current.size);
+        const selectedPercent = (selectedIndices.current.size / (childCount));
+        console.assert(selectedPercent >= 0 && selectedPercent <= 1);
+        onSelectionChange?.(enhanceEvent(event, { selectedPercent, selectedIndices: selectedIndices.current }));
+    });
+    const changeAllChildren = useStableCallback((event, shouldBeSelected) => {
+        getChildren().forEach(child => {
+            if (!child.getMultiSelectionDisabled()) {
+                child.setSelectedFromParent(event, shouldBeSelected(child.index));
+            }
+        });
+    });
+    const doContiguousSelection = useStableCallback((event, endIndex) => {
+        let originalEnd = endIndex;
+        let temp = 0;
+        let startIndex = startOfShiftSelect.current || 0; // TODO: Is || 0 correct here? Probably, right?
+        if (startIndex <= endIndex) {
+            // Never include the child that started this contiguous selection, only the children beyond it.
+            ++startIndex;
+        }
+        else {
+            // Never include the child that started(/ended) this contiguous selection, only the children beyond it.
+            --startIndex;
+            temp = endIndex;
+            endIndex = startIndex;
+            startIndex = temp;
+        }
+        console.assert(startIndex <= endIndex);
+        if (startIndex <= endIndex) {
+            changeAllChildren(event, (childIndex) => {
+                if (childIndex >= startIndex && childIndex <= endIndex) {
+                    // If this child is within the range, toggle it.
+                    return !getChildren().getAt(childIndex)?.getMultiSelected();
+                }
+                else {
+                    return !!getChildren().getAt(childIndex)?.getMultiSelected();
+                }
+            });
+        }
+        startOfShiftSelect.current = originalEnd;
+    });
+    const onCompositeFocusChange = useStableCallback((anyFocused, prevAnyFocused, event) => {
+        if (!anyFocused) {
+            ctrlKeyHeld.current = shiftKeyHeld.current = false;
+        }
+    });
+    let nextCtrlAIsUndo = useRef(false);
+    useGlobalHandler(document, "keydown", useStableCallback((e) => {
+        shiftKeyHeld.current = (e.shiftKey || e.key == 'Shift');
+        ctrlKeyHeld.current = (e.ctrlKey || e.key == 'Control');
+        // Only do CTRL+A handling if the control is focused
+        if (getAnyFocused()) {
+            // Listen for CTRL+A
+            if (e.code == "KeyA" && e.ctrlKey && !e.repeat) {
+                // Only perform this logic if multi-selection is enabled
+                if (multiSelectionMode != "disabled") {
+                    changeAllChildren(e, !nextCtrlAIsUndo.current ? returnTrue : returnFalse);
+                    e.preventDefault();
+                    e.stopPropagation();
+                    // TODO: This should update in more places
+                    nextCtrlAIsUndo.current = !nextCtrlAIsUndo.current;
+                }
+            }
+        }
+    }), { capture: true });
+    useGlobalHandler(document, "keyup", (e) => {
+        if (e.key == 'Shift')
+            shiftKeyHeld.current = false;
+        if (e.key == 'Control')
+            ctrlKeyHeld.current = false;
+    }, { passive: true, capture: true });
+    return {
+        context: useMemoObject({
+            multiSelectionContext: useMemoObject({
+                doContiguousSelection,
+                notifyParentOfChildSelectChange,
+                multiSelectionAriaPropName,
+                multiSelectionMode,
+                changeAllChildren,
+                getCtrlKeyDown: useCallback(() => ctrlKeyHeld.current, []),
+                getShiftKeyDown: useCallback(() => shiftKeyHeld.current, []),
+                getAnyFocused
+            })
+        }),
+        childrenHaveFocusParameters: { onCompositeFocusChange },
+        multiSelectionReturn: {},
+        propsStable: useMemoObject({})
+    };
+}
+/**
+ *
+ * @compositeParams
+ */
+function useMultiSelectionChild({ info: { index, ...void4 }, multiSelectionChildParameters: { initiallyMultiSelected, onMultiSelectChange, multiSelectionDisabled, ...void1 }, context: { multiSelectionContext: { notifyParentOfChildSelectChange, multiSelectionAriaPropName, multiSelectionMode, doContiguousSelection, changeAllChildren, getCtrlKeyDown, getShiftKeyDown, getAnyFocused, ...void5 }, ...void3 }, ...void2 }) {
+    const getIndex = useStableGetter(index);
+    // When we're in focus-selection mode, focusing any child deselects everything and selects JUST that child.
+    // But that's really annoying for when you tab into the component, so it's only enabled when you're navigating WITHIN the component
+    // (e.g. we only do that "reset everything" selection stuff when the component already had focus and that focus simply moved to a different child)
+    // The exception is press events, because a click can come from anywhere, focusing a child even if focus is elsewhere (or the window doesn't even have focus!)
+    // So when a press event happens during focus-selection mode, we disable the disabling with this flag.
+    const pressFreebie = useRef(false);
+    const onPressSync = (e) => {
+        if (!multiSelectionDisabled) {
+            if (multiSelectionMode == "activation") {
+                if (e.shiftKey) {
+                    doContiguousSelection(e, index);
+                }
+                else {
+                    onMultiSelectChange?.(enhanceEvent(e, { multiSelected: !getLocalSelected() }));
+                }
+            }
+            else {
+                if (e.ctrlKey) {
+                    onMultiSelectChange?.(enhanceEvent(e, { multiSelected: !getLocalSelected() }));
+                }
+                else {
+                    pressFreebie.current = true;
+                    focus(e.currentTarget);
+                    onCurrentFocusedInnerChanged(true, false, e);
+                }
+            }
+        }
+    };
+    const [localSelected, setLocalSelected, getLocalSelected] = useState(initiallyMultiSelected ?? false);
+    const changeMultiSelected = useStableCallback((e, selected) => {
+        console.assert(selected != null);
+        console.assert(!multiSelectionDisabled);
+        // We're selected now (because someone told us we are, this hook doesn't call this function directly)
+        //
+        // So update our own internal state so we can re-render with the correct props,
+        // and also notify the parent (in case the parent is listening for changes in some way)
+        let prevSelected = getLocalSelected();
+        if (prevSelected != selected) {
+            setLocalSelected(selected);
+            notifyParentOfChildSelectChange(e, index, selected, prevSelected);
+        }
+    });
+    useLayoutEffect(() => {
+        notifyParentOfChildSelectChange(null, getIndex(), getLocalSelected(), undefined);
+        return () => notifyParentOfChildSelectChange(null, getIndex(), undefined, getLocalSelected());
+    }, []);
+    const onCurrentFocusedInnerChanged = useStableCallback((focused, prev, event) => {
+        if (focused) {
+            if (multiSelectionMode == "focus") {
+                let any = getAnyFocused();
+                console.log("any focused: ", any);
+                // Wow, it's the worst selection mode.
+                const subSelectionMode = (getShiftKeyDown() ? "toggle" : getCtrlKeyDown() ? "skip" : "set");
+                let newIndex = index;
+                switch (subSelectionMode) {
+                    case "set":
+                        if (any || pressFreebie.current) {
+                            changeAllChildren(event, index => (index == newIndex));
+                        }
+                        break;
+                    case "toggle":
+                        doContiguousSelection(event, index);
+                        //onMultiSelectChange?.(enhanceEvent(event, { multiSelected: !localSelected }));
+                        //doContiguousSelection
+                        //setSelectedFromParent(event!, getLocalSelected())
+                        break;
+                    case "skip":
+                        debugger;
+                        break;
+                }
+                /*if (getShiftKeyDown()) {
+                    onMultiSelectChange?.(enhanceEvent(event, { multiSelected: !localSelected }));
+                }
+                else {
+                    changeAllChildren(event!, i => (i == index));
+                }*/
+            }
+        }
+        pressFreebie.current = false;
+    });
+    const setSelectedFromParent = useStableCallback((event, multiSelected) => {
+        console.assert(onMultiSelectChange != null);
+        onMultiSelectChange?.(enhanceEvent(event, { multiSelected }));
+    });
+    return {
+        multiSelectionChildReturn: {
+            changeMultiSelected,
+            multiSelected: localSelected,
+            getMultiSelected: getLocalSelected,
+            multiSelectionMode
+        },
+        pressParameters: {
+            onPressSync
+        },
+        hasCurrentFocusParameters: {
+            onCurrentFocusedInnerChanged
+        },
+        props: { [multiSelectionAriaPropName || "aria-selected"]: localSelected ? "true" : "false" },
+        info: {
+            getMultiSelected: getLocalSelected,
+            setSelectedFromParent,
+            getMultiSelectionDisabled: useStableGetter(multiSelectionDisabled)
+        }
+    };
+}
+/**
+ *
+ * @compositeParams
+ */
+function useMultiSelectionChildDeclarative({ multiSelectionChildDeclarativeParameters: { onMultiSelectedChange, multiSelected, ...void3 }, multiSelectionChildReturn: { changeMultiSelected, ...void2 }, ...void1 }) {
+    let s = (multiSelected || false);
+    let reasonRef = useRef(undefined);
+    useEffect(() => {
+        changeMultiSelected(reasonRef.current, s);
+    }, [s]);
+    const omsc = useStableCallback((e) => {
+        reasonRef.current = e;
+        return onMultiSelectedChange?.(e);
+    });
+    const setSelectedFromParent = useStableCallback((event, multiSelected) => {
+        onMultiSelectedChange?.(enhanceEvent(event, { multiSelected }));
+    });
+    return {
+        multiSelectionChildParameters: {
+            onMultiSelectChange: omsc
+        },
+        info: { setSelectedFromParent }
+    };
+}
+
+/**
  * Allows a single child among all children to be the "selected" child (which can be different from the "focused" child).
  *
  * @remarks If you need multi-select instead of single-select and you're using this hook (e.g. as part of {@link useCompleteListNavigation}), you can disable the single-selection behavior either by setting the selected index to `null` or.
@@ -2541,10 +2833,10 @@ function defaultCompare(lhs, rhs) {
  *
  * @compositeParams
  */
-function useSingleSelection({ managedChildrenReturn: { getChildren, ...void1 }, rovingTabIndexReturn: { setTabbableIndex, ...void2 }, singleSelectionParameters: { onSelectedIndexChange: onSelectedIndexChange_U, initiallySelectedIndex, ariaPropName, selectionMode, ...void3 }, ...void4 }) {
+function useSingleSelection({ managedChildrenReturn: { getChildren, ...void1 }, rovingTabIndexReturn: { setTabbableIndex, ...void2 }, singleSelectionParameters: { onSingleSelectedIndexChange: onSelectedIndexChange_U, initiallySingleSelectedIndex, singleSelectionAriaPropName, singleSelectionMode, ...void3 }, ...void4 }) {
     monitorCallCount(useSingleSelection);
-    const onSelectedIndexChange = useStableCallback(onSelectedIndexChange_U ?? noop$1);
-    const getSelectedAt = useCallback((m) => { return m.getSelected(); }, []);
+    const onSingleSelectedIndexChange = useStableCallback(onSelectedIndexChange_U ?? noop$1);
+    const getSelectedAt = useCallback((m) => { return m.getSingleSelected(); }, []);
     const setSelectedAt = useCallback((m, t, newSelectedIndex, prevSelectedIndex) => {
         if (m.untabbable) {
             console.assert(false);
@@ -2555,13 +2847,13 @@ function useSingleSelection({ managedChildrenReturn: { getChildren, ...void1 }, 
             console.assert(t == false);
         if (t)
             console.assert(newSelectedIndex === m.index);
-        m.setLocalSelected(t, direction);
+        m.setLocalSingleSelected(t, direction);
     }, []);
-    const isSelectedValid = useCallback((m) => { return !m.unselectable; }, []);
-    const { changeIndex: changeSelectedIndex, getCurrentIndex: getSelectedIndex } = useChildrenFlag({
+    const isSelectedValid = useCallback((m) => { return !m.untabbable; }, []);
+    const { changeIndex: changeSingleSelectedIndex, getCurrentIndex: getSingleSelectedIndex } = useChildrenFlag({
         getChildren,
         onIndexChange: null,
-        initialIndex: initiallySelectedIndex,
+        initialIndex: initiallySingleSelectedIndex,
         getAt: getSelectedAt,
         setAt: setSelectedAt,
         isValid: isSelectedValid,
@@ -2570,21 +2862,21 @@ function useSingleSelection({ managedChildrenReturn: { getChildren, ...void1 }, 
     });
     return {
         singleSelectionReturn: useMemoObject({
-            getSelectedIndex,
-            changeSelectedIndex
+            getSingleSelectedIndex,
+            changeSingleSelectedIndex
         }),
         context: useMemoObject({
             singleSelectionContext: useMemoObject({
-                getSelectedIndex,
-                onSelectedIndexChange,
-                ariaPropName,
-                selectionMode
+                getSingleSelectedIndex,
+                onSingleSelectedIndexChange,
+                singleSelectionAriaPropName,
+                singleSelectionMode
             }),
         }),
         childrenHaveFocusParameters: {
             onCompositeFocusChange: useStableCallback((anyFocused, prev, reason) => {
                 if (!anyFocused) {
-                    const selectedIndex = getSelectedIndex();
+                    const selectedIndex = getSingleSelectedIndex();
                     if (selectedIndex != null)
                         setTabbableIndex(selectedIndex, reason, false);
                 }
@@ -2597,39 +2889,45 @@ function useSingleSelection({ managedChildrenReturn: { getChildren, ...void1 }, 
  *
  * @compositeParams
  */
-function useSingleSelectionChild({ context: { singleSelectionContext: { getSelectedIndex, onSelectedIndexChange, ariaPropName, selectionMode, ...void1 }, ...void2 }, info: { index, unselectable, ...void3 }, ...void4 }) {
+function useSingleSelectionChild({ singleSelectionChildParameters: { singleSelectionDisabled, ...void5 }, context: { singleSelectionContext: { getSingleSelectedIndex, onSingleSelectedIndexChange, singleSelectionAriaPropName: ariaPropName, singleSelectionMode, ...void1 }, ...void2 }, info: { index, untabbable, ...void3 }, ...void4 }) {
     monitorCallCount(useSingleSelectionChild);
-    useEnsureStability("useSingleSelectionChild", getSelectedIndex, onSelectedIndexChange);
-    const [localSelected, setLocalSelected, getLocalSelected] = useState(getSelectedIndex() == index);
-    const [direction, setDirection, getDirection] = useState(getSelectedIndex() == null ? null : (getSelectedIndex() - index));
+    useEnsureStability("useSingleSelectionChild", getSingleSelectedIndex, onSingleSelectedIndexChange);
+    const [localSelected, setLocalSelected, getLocalSelected] = useState(getSingleSelectedIndex() == index);
+    const [direction, setDirection, getDirection] = useState(getSingleSelectedIndex() == null ? null : (getSingleSelectedIndex() - index));
     const onCurrentFocusedInnerChanged = useStableCallback((focused, _prev, e) => {
-        if (selectionMode == 'focus' && focused && !unselectable) {
-            onSelectedIndexChange(enhanceEvent(e, { selectedIndex: index }));
+        if (!singleSelectionDisabled && singleSelectionMode == 'focus' && focused && !untabbable) {
+            onSingleSelectedIndexChange(enhanceEvent(e, { selectedIndex: index }));
         }
     });
     const onPressSync = useStableCallback((e) => {
         // We allow press events for selectionMode == 'focus' because
         // press generally causes a focus anyway (except when it doesn't, iOS Safari...)
-        if (selectionMode != 'disabled' && !unselectable)
-            onSelectedIndexChange(enhanceEvent(e, { selectedIndex: index }));
+        if (!singleSelectionDisabled && !untabbable) {
+            if (singleSelectionMode == 'activation')
+                onSingleSelectedIndexChange(enhanceEvent(e, { selectedIndex: index }));
+        }
+        else {
+            focus(e.currentTarget);
+        }
     });
     const propParts = ariaPropName?.split("-") ?? [];
     return {
         info: {
-            setLocalSelected: useStableCallback((selected, direction) => {
+            setLocalSingleSelected: useStableCallback((selected, direction) => {
                 setLocalSelected(selected);
                 setDirection(direction);
             }),
-            getSelected: getLocalSelected,
-            selected: localSelected,
+            getSingleSelected: getLocalSelected,
+            singleSelected: localSelected,
         },
         singleSelectionChildReturn: {
-            selected: localSelected,
-            getSelected: getLocalSelected,
-            selectedOffset: direction,
-            getSelectedOffset: getDirection,
+            singleSelected: localSelected,
+            getSingleSelected: getLocalSelected,
+            singleSelectedOffset: direction,
+            singleSelectionMode,
+            getSingleSelectedOffset: getDirection
         },
-        props: useTagProps(ariaPropName == null || selectionMode == "disabled" ? {} : {
+        props: useTagProps(ariaPropName == null || singleSelectionMode == "disabled" ? {} : {
             [`${propParts[0]}-${propParts[1]}`]: (localSelected ? (propParts[1] == "current" ? `${propParts[2]}` : `true`) : "false")
         }, "data-single-selection-child"),
         hasCurrentFocusParameters: { onCurrentFocusedInnerChanged },
@@ -2639,86 +2937,153 @@ function useSingleSelectionChild({ context: { singleSelectionContext: { getSelec
 /**
  * Let's face it, declarative is nicer to use than imperative, so this is a shortcut.
  */
-function useSingleSelectionDeclarative({ singleSelectionReturn: { changeSelectedIndex }, singleSelectionDeclarativeParameters: { selectedIndex, onSelectedIndexChange } }) {
-    let s = (selectedIndex ?? null);
+function useSingleSelectionDeclarative({ singleSelectionReturn: { changeSingleSelectedIndex }, singleSelectionDeclarativeParameters: { singleSelectedIndex, onSingleSelectedIndexChange } }) {
+    let s = (singleSelectedIndex ?? null);
     let reasonRef = useRef(undefined);
-    useEffect(() => { changeSelectedIndex(s, reasonRef.current); }, [s]);
+    useEffect(() => { changeSingleSelectedIndex(s, reasonRef.current); }, [s]);
     const osic = useCallback((e) => {
         reasonRef.current = e;
-        return onSelectedIndexChange?.(e);
-    }, [onSelectedIndexChange]);
-    return { singleSelectionParameters: { onSelectedIndexChange: osic } };
+        return onSingleSelectedIndexChange?.(e);
+    }, [onSingleSelectedIndexChange]);
+    return { singleSelectionParameters: { onSingleSelectedIndexChange: osic } };
 }
 
 /**
- * Combines {@link useGridNavigation} and {@link useSingleSelection}.
+ * Allows the children of this component to be selected, either with a `singleSelectedIndex` prop on the parent, or via each child's individual `multiSelected` prop.
  *
- * @remarks The single-selection behavior is optional, if you decide you need multi-selection instead within the same component.
+ * @remarks Single-selection and multi-selection are not mutually exclusive, though the cases where you would want both are uncommon.
  *
- * @hasChild {@link useGridNavigationSingleSelectionRow}
- * @hasChild {@link useGridNavigationSingleSelectionCell}
+ * Most of the time, you'll want to pick and choose one mode to work with:
+ *
+ * ```md-literal
+ * * Single-selection is controlled by the parent -- it receives a `singleSelectedIndex` parameter that represents the currently selected child and handles all the logic related to coordinating the deselection of the old child.
+ * * Multi-selection is controlled by each individual child -- they have a `multiSelected` parameter that can be optionally reported back to the parent (so it can show the % of all children selected, or similar)
+ * ```
+ *
+ * @see {@link useSingleSelection}
+ * @see {@link useMultiSelection}
+ *
+ * @compositeParams
+ *
+ * @hasChild {@link useSelectionChild}
+ */
+function useSelection({ managedChildrenReturn, multiSelectionParameters, childrenHaveFocusReturn, rovingTabIndexReturn, singleSelectionParameters }) {
+    const { childrenHaveFocusParameters: { onCompositeFocusChange: ocfc1, ...void3 }, context: contextSS, singleSelectionReturn, ...void1 } = useSingleSelection({ managedChildrenReturn, rovingTabIndexReturn, singleSelectionParameters });
+    const { childrenHaveFocusParameters: { onCompositeFocusChange: ocfc2, ...void4 }, context: contextMS, multiSelectionReturn, propsStable, ...void2 } = useMultiSelection({ managedChildrenReturn, multiSelectionParameters, childrenHaveFocusReturn });
+    return {
+        propsStable,
+        childrenHaveFocusParameters: { onCompositeFocusChange: useStableCallback((...a) => { ocfc1(...a); ocfc2(...a); }) },
+        context: useMemoObject({ ...contextSS, ...contextMS }),
+        multiSelectionReturn,
+        singleSelectionReturn
+    };
+}
+/**
  *
  * @compositeParams
  */
-function useGridNavigationSingleSelection({ gridNavigationParameters, linearNavigationParameters, rovingTabIndexParameters, managedChildrenReturn, typeaheadNavigationParameters, singleSelectionParameters, refElementReturn, paginatedChildrenParameters, rearrangeableChildrenReturn, ...void2 }) {
-    monitorCallCount(useGridNavigationSingleSelection);
-    const { context: { gridNavigationRowContext, rovingTabIndexContext, typeaheadNavigationContext }, linearNavigationReturn, managedChildrenParameters, propsParent, propsStableParentOrChild, rovingTabIndexReturn, typeaheadNavigationReturn, } = useGridNavigation({
+function useSelectionChild({ context, info: { index, untabbable, ...void2 }, singleSelectionChildParameters, multiSelectionChildParameters, ...void3 }) {
+    const { props: p1, hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic1 }, pressParameters: { onPressSync: opc1 }, info: { getSingleSelected, setLocalSingleSelected, singleSelected, ...void1 }, singleSelectionChildReturn, } = useSingleSelectionChild({ context, info: { index, untabbable }, singleSelectionChildParameters });
+    const { props: p2, hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic2 }, pressParameters: { onPressSync: opc2 }, multiSelectionChildReturn, info: { getMultiSelected, setSelectedFromParent, getMultiSelectionDisabled, ...void5 }, ...void4 } = useMultiSelectionChild({ context, info: { index }, multiSelectionChildParameters });
+    return {
+        hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: useStableCallback((...a) => { ocfic1(...a); ocfic2(...a); }) },
+        info: {
+            getMultiSelected,
+            setSelectedFromParent,
+            getSingleSelected,
+            setLocalSingleSelected,
+            singleSelected,
+            getMultiSelectionDisabled,
+        },
+        multiSelectionChildReturn,
+        pressParameters: { onPressSync: useStableCallback((...a) => { opc1(...a); opc2(...a); }) },
+        props: useMergedProps(p1, p2),
+        singleSelectionChildReturn
+    };
+}
+function useSelectionDeclarative(args) {
+    return useSingleSelectionDeclarative(args);
+}
+function useSelectionChildDeclarative(args) {
+    return useMultiSelectionChildDeclarative(args);
+}
+
+/**
+ * Combines {@link useGridNavigation} and {@link useSelection}.
+ *
+ * @remarks The -selection behavior is optional, if you decide you need multi-selection instead within the same component.
+ *
+ * @hasChild {@link useGridNavigationSelectionRow}
+ * @hasChild {@link useGridNavigationSelectionCell}
+ *
+ * @compositeParams
+ */
+function useGridNavigationSelection({ gridNavigationParameters, linearNavigationParameters, rovingTabIndexParameters, managedChildrenReturn, typeaheadNavigationParameters, singleSelectionParameters, multiSelectionParameters, refElementReturn, paginatedChildrenParameters, rearrangeableChildrenReturn, childrenHaveFocusReturn, ...void2 }) {
+    monitorCallCount(useGridNavigationSelection);
+    const { context: { gridNavigationRowContext, rovingTabIndexContext, typeaheadNavigationContext }, linearNavigationReturn, managedChildrenParameters, props, rovingTabIndexReturn, typeaheadNavigationReturn, } = useGridNavigation({
         gridNavigationParameters,
         linearNavigationParameters,
         managedChildrenReturn,
-        rovingTabIndexParameters,
+        rovingTabIndexParameters: { ...rovingTabIndexParameters, initiallyTabbedIndex: singleSelectionParameters.initiallySingleSelectedIndex || 0 },
         typeaheadNavigationParameters,
         paginatedChildrenParameters,
         rearrangeableChildrenReturn,
         refElementReturn
     });
-    const { childrenHaveFocusParameters, context: { singleSelectionContext }, singleSelectionReturn, } = useSingleSelection({
+    const { childrenHaveFocusParameters, context: { singleSelectionContext, multiSelectionContext }, multiSelectionReturn, propsStable, singleSelectionReturn, ...void1 } = useSelection({
         managedChildrenReturn,
         rovingTabIndexReturn,
-        singleSelectionParameters
+        singleSelectionParameters,
+        multiSelectionParameters,
+        childrenHaveFocusReturn
     });
     return {
         context: useMemoObject({
             gridNavigationRowContext,
             rovingTabIndexContext,
             singleSelectionContext,
+            multiSelectionContext,
             typeaheadNavigationContext
         }),
         childrenHaveFocusParameters,
         linearNavigationReturn,
         managedChildrenParameters,
-        propsParent,
-        propsStableParentOrChild,
+        props: useMergedProps(props, propsStable),
         rovingTabIndexReturn,
         singleSelectionReturn,
+        multiSelectionReturn,
         typeaheadNavigationReturn
     };
 }
 /**
  * @compositeParams
  */
-function useGridNavigationSingleSelectionRow({ info: mcp1, linearNavigationParameters, managedChildrenReturn, refElementReturn, rovingTabIndexParameters, textContentParameters, typeaheadNavigationParameters, context, ...void1 }) {
-    monitorCallCount(useGridNavigationSingleSelectionRow);
-    const { hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic1, ...void6 }, info: { getSelected, selected, setLocalSelected, ...void8 }, props: propsSingleSelection, singleSelectionChildReturn, pressParameters: { onPressSync, ...void4 }, ...void2 } = useSingleSelectionChild({ info: mcp1, context });
+function useGridNavigationSelectionRow({ info: mcp1, linearNavigationParameters, managedChildrenReturn, refElementReturn, rovingTabIndexParameters, textContentParameters, typeaheadNavigationParameters, context, singleSelectionChildParameters, multiSelectionChildParameters, ...void1 }) {
+    monitorCallCount(useGridNavigationSelectionRow);
+    const { hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic1, ...void6 }, info: { getSingleSelected, setLocalSingleSelected, singleSelected, getMultiSelected, setSelectedFromParent, getMultiSelectionDisabled, ...void8 }, props: propsSelection, singleSelectionChildReturn, multiSelectionChildReturn, pressParameters: { onPressSync, ...void4 }, ...void2 } = useSelectionChild({ info: mcp1, context, singleSelectionChildParameters, multiSelectionChildParameters });
     const { hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic2, ...void7 }, info: { focusSelf, getLocallyTabbable, setLocallyTabbable, ...void9 }, props: propsGridNavigation, linearNavigationReturn, managedChildrenParameters, pressParameters: { excludeSpace, ...void5 }, rovingTabIndexChildReturn, rovingTabIndexReturn, textContentReturn, typeaheadNavigationReturn, context: contextGridNavigation, ...void3 } = useGridNavigationRow({ context, linearNavigationParameters, info: mcp1, managedChildrenReturn, refElementReturn, rovingTabIndexParameters, textContentParameters, typeaheadNavigationParameters });
     return {
-        context: { ...contextGridNavigation, singleSelectionContext: context.singleSelectionContext },
+        context: contextGridNavigation,
         linearNavigationReturn,
         info: {
             getLocallyTabbable,
-            getSelected,
-            selected,
+            getSingleSelected,
+            singleSelected,
             setLocallyTabbable,
-            setLocalSelected,
-            focusSelf
+            setLocalSingleSelected,
+            focusSelf,
+            getMultiSelected,
+            setSelectedFromParent,
+            getMultiSelectionDisabled
         },
         managedChildrenParameters,
         pressParameters: { onPressSync, excludeSpace },
         hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: useStableCallback((hasFocus, hadFocus, reason) => { ocfic1?.(hasFocus, hadFocus, reason); ocfic2?.(hasFocus, hadFocus, reason); }) },
-        props: useMergedProps(propsGridNavigation, propsSingleSelection),
+        props: useMergedProps(propsGridNavigation, propsSelection),
         rovingTabIndexChildReturn,
         rovingTabIndexReturn,
         singleSelectionChildReturn,
+        multiSelectionChildReturn,
         textContentReturn,
         typeaheadNavigationReturn
     };
@@ -2726,24 +3091,24 @@ function useGridNavigationSingleSelectionRow({ info: mcp1, linearNavigationParam
 /**
  * @compositeParams
  */
-function useGridNavigationSingleSelectionCell(p) {
-    monitorCallCount(useGridNavigationSingleSelectionCell);
+function useGridNavigationSelectionCell(p) {
+    monitorCallCount(useGridNavigationSelectionCell);
     return useGridNavigationCell(p);
 }
 
 /**
- * Combines {@link useGridNavigation}, {@link useSingleSelection}, and {@link useSortableChildren}.
+ * Combines {@link useGridNavigation}, {@link useSelection}, and {@link useSortableChildren}.
  *
  * @remarks This is a separate hook because {@link useSortableChildren} imposes unique requirements to the structure of your `children`.
  *
- * @hasChild {@link useGridNavigationSingleSelectionSortableRow}
+ * @hasChild {@link useGridNavigationSelectionSortableRow}
  *
  * @compositeParams
  */
-function useGridNavigationSingleSelectionSortable({ rearrangeableChildrenParameters, sortableChildrenParameters, linearNavigationParameters, managedChildrenReturn, gridNavigationParameters, paginatedChildrenParameters, refElementReturn, rovingTabIndexParameters, singleSelectionParameters, typeaheadNavigationParameters, ...void1 }) {
-    monitorCallCount(useGridNavigationSingleSelectionSortable);
+function useGridNavigationSelectionSortable({ rearrangeableChildrenParameters, sortableChildrenParameters, linearNavigationParameters, managedChildrenReturn, gridNavigationParameters, paginatedChildrenParameters, refElementReturn, rovingTabIndexParameters, singleSelectionParameters, multiSelectionParameters, typeaheadNavigationParameters, childrenHaveFocusReturn, ...void1 }) {
+    monitorCallCount(useGridNavigationSelectionSortable);
     const { rearrangeableChildrenReturn, sortableChildrenReturn } = useSortableChildren({ rearrangeableChildrenParameters, sortableChildrenParameters, managedChildrenReturn });
-    const gnr = useGridNavigationSingleSelection({
+    const gnr = useGridNavigationSelection({
         rearrangeableChildrenReturn,
         linearNavigationParameters,
         managedChildrenReturn,
@@ -2752,7 +3117,9 @@ function useGridNavigationSingleSelectionSortable({ rearrangeableChildrenParamet
         refElementReturn,
         rovingTabIndexParameters,
         singleSelectionParameters,
-        typeaheadNavigationParameters
+        multiSelectionParameters,
+        typeaheadNavigationParameters,
+        childrenHaveFocusReturn
     });
     return {
         rearrangeableChildrenReturn,
@@ -2765,8 +3132,8 @@ function useGridNavigationSingleSelectionSortable({ rearrangeableChildrenParamet
  *
  * @compositeParams
  */
-function useGridNavigationSingleSelectionSortableRow({ context: ctxIncoming, info: { index, unselectable, untabbable, ...void2 }, linearNavigationParameters, managedChildrenReturn, refElementReturn, rovingTabIndexParameters, textContentParameters, typeaheadNavigationParameters, gridNavigationSingleSelectionSortableRowParameters: { getSortableColumnIndex: getSortableColumnIndexUnstable, ...void5 }, ...void1 }) {
-    monitorCallCount(useGridNavigationSingleSelectionSortableRow);
+function useGridNavigationSelectionSortableRow({ context: ctxIncoming, info: { index, untabbable, ...void2 }, linearNavigationParameters, managedChildrenReturn, refElementReturn, rovingTabIndexParameters, textContentParameters, typeaheadNavigationParameters, gridNavigationSelectionSortableRowParameters: { getSortableColumnIndex: getSortableColumnIndexUnstable, ...void5 }, singleSelectionChildParameters, multiSelectionChildParameters, ...void1 }) {
+    monitorCallCount(useGridNavigationSelectionSortableRow);
     const getSortableColumnIndex = useStableCallback(getSortableColumnIndexUnstable);
     const getSortValue = useCallback(() => {
         let rows = managedChildrenReturn.getChildren();
@@ -2774,18 +3141,20 @@ function useGridNavigationSingleSelectionSortableRow({ context: ctxIncoming, inf
         let cell = rows.getAt(columnIndex);
         return cell?.getSortValue();
     }, []);
-    const { info: { getLocallyTabbable, getSelected, selected, setLocalSelected, setLocallyTabbable, focusSelf, ...void4 }, context: ctxOutgoing, hasCurrentFocusParameters, linearNavigationReturn, managedChildrenParameters, pressParameters, props, rovingTabIndexChildReturn, rovingTabIndexReturn, singleSelectionChildReturn, textContentReturn, typeaheadNavigationReturn, ...void3 } = useGridNavigationSingleSelectionRow({
+    const { info: { getLocallyTabbable, getSingleSelected, getMultiSelected, setSelectedFromParent, singleSelected, setLocalSingleSelected, setLocallyTabbable, focusSelf, getMultiSelectionDisabled, ...void4 }, context: ctxOutgoing, hasCurrentFocusParameters, linearNavigationReturn, managedChildrenParameters, pressParameters, props, rovingTabIndexChildReturn, rovingTabIndexReturn, singleSelectionChildReturn, multiSelectionChildReturn, textContentReturn, typeaheadNavigationReturn, ...void3 } = useGridNavigationSelectionRow({
         context: ctxIncoming,
-        info: { index, unselectable, untabbable },
+        info: { index, untabbable },
         linearNavigationParameters,
         managedChildrenReturn,
         refElementReturn,
         rovingTabIndexParameters,
         textContentParameters,
-        typeaheadNavigationParameters
+        typeaheadNavigationParameters,
+        singleSelectionChildParameters,
+        multiSelectionChildParameters
     });
     return {
-        info: { getLocallyTabbable, getSelected, selected, setLocallyTabbable, setLocalSelected, getSortValue, focusSelf },
+        info: { getLocallyTabbable, getMultiSelected, setSelectedFromParent, getSingleSelected, getMultiSelectionDisabled, singleSelected, setLocallyTabbable, setLocalSingleSelected, getSortValue, focusSelf },
         context: ctxOutgoing,
         hasCurrentFocusParameters,
         linearNavigationReturn,
@@ -2795,6 +3164,7 @@ function useGridNavigationSingleSelectionSortableRow({ context: ctxIncoming, inf
         rovingTabIndexChildReturn,
         rovingTabIndexReturn,
         singleSelectionChildReturn,
+        multiSelectionChildReturn,
         textContentReturn,
         typeaheadNavigationReturn
     };
@@ -2802,9 +3172,9 @@ function useGridNavigationSingleSelectionSortableRow({ context: ctxIncoming, inf
 /**
  * @compositeParams
  */
-function useGridNavigationSingleSelectionSortableCell({ context, gridNavigationCellParameters, info: { index, untabbable, ...void2 }, refElementReturn, textContentParameters, ...void1 }) {
-    monitorCallCount(useGridNavigationSingleSelectionSortableCell);
-    return useGridNavigationSingleSelectionCell({
+function useGridNavigationSelectionSortableCell({ context, gridNavigationCellParameters, info: { index, untabbable, ...void2 }, refElementReturn, textContentParameters, ...void1 }) {
+    monitorCallCount(useGridNavigationSelectionSortableCell);
+    return useGridNavigationSelectionCell({
         context,
         info: { index, untabbable },
         gridNavigationCellParameters,
@@ -2814,18 +3184,32 @@ function useGridNavigationSingleSelectionSortableCell({ context, gridNavigationC
 }
 
 /**
- * Combines {@link useListNavigation} and {@link useSingleSelection}.
+ * Combines {@link useListNavigation} and {@link useSelection}.
  *
- * @remarks The single-selection behavior is optional, if you decide you need multi-selection instead within the same component.
+ * @remarks The -selection behavior is optional, if you decide you need multi-selection instead within the same component.
  *
- * @hasChild {@link useListNavigationSingleSelectionChild}
+ * @hasChild {@link useListNavigationSelectionChild}
  *
  * @compositeParams
  */
-function useListNavigationSingleSelection({ linearNavigationParameters, rovingTabIndexParameters, typeaheadNavigationParameters, singleSelectionParameters, managedChildrenReturn, refElementReturn, paginatedChildrenParameters, rearrangeableChildrenReturn, ...void3 }) {
-    monitorCallCount(useListNavigationSingleSelection);
-    const { context: contextLN, propsParent, propsStableParentOrChild, rovingTabIndexReturn, ...retLN } = useListNavigation({ linearNavigationParameters, rovingTabIndexParameters, paginatedChildrenParameters, typeaheadNavigationParameters, managedChildrenReturn, refElementReturn, rearrangeableChildrenReturn });
-    const { context: contextSS, ...retSS } = useSingleSelection({ rovingTabIndexReturn, managedChildrenReturn, singleSelectionParameters });
+function useListNavigationSelection({ linearNavigationParameters, rovingTabIndexParameters, typeaheadNavigationParameters, singleSelectionParameters, multiSelectionParameters, managedChildrenReturn, refElementReturn, paginatedChildrenParameters, rearrangeableChildrenReturn, childrenHaveFocusReturn, ...void3 }) {
+    monitorCallCount(useListNavigationSelection);
+    const { context: contextSS, propsStable, ...retSS } = useSelection({
+        childrenHaveFocusReturn,
+        rovingTabIndexReturn: { setTabbableIndex: useStableCallback((...a) => { rovingTabIndexReturn.setTabbableIndex(...a); }) },
+        managedChildrenReturn,
+        singleSelectionParameters,
+        multiSelectionParameters
+    });
+    const { context: contextLN, props, rovingTabIndexReturn, ...retLN } = useListNavigation({
+        rovingTabIndexParameters: { ...rovingTabIndexParameters, initiallyTabbedIndex: singleSelectionParameters.initiallySingleSelectedIndex || 0 },
+        linearNavigationParameters,
+        paginatedChildrenParameters,
+        typeaheadNavigationParameters,
+        managedChildrenReturn,
+        refElementReturn,
+        rearrangeableChildrenReturn
+    });
     return {
         rovingTabIndexReturn,
         ...retSS,
@@ -2834,18 +3218,19 @@ function useListNavigationSingleSelection({ linearNavigationParameters, rovingTa
             ...contextLN,
             ...contextSS
         }),
-        propsStableParentOrChild: propsStableParentOrChild,
-        propsParent: propsParent,
+        props: useMergedProps(props, propsStable)
     };
 }
 /**
  * @compositeParams
  */
-function useListNavigationSingleSelectionChild({ info: { index, untabbable, unselectable, ...void2 }, context, refElementReturn, textContentParameters, ...void1 }) {
-    monitorCallCount(useListNavigationSingleSelectionChild);
-    const { hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic2, ...void3 }, info: infoSS, singleSelectionChildReturn, props: propsSS, pressParameters: { onPressSync }, ...void9 } = useSingleSelectionChild({
-        info: { index, unselectable },
+function useListNavigationSelectionChild({ info: { index, untabbable, ...void2 }, context, refElementReturn, textContentParameters, singleSelectionChildParameters, multiSelectionChildParameters, ...void1 }) {
+    monitorCallCount(useListNavigationSelectionChild);
+    const { hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic2, ...void3 }, info: infoSS, multiSelectionChildReturn, singleSelectionChildReturn, props: propsSS, pressParameters: { onPressSync }, ...void9 } = useSelectionChild({
+        info: { index, untabbable },
         context,
+        multiSelectionChildParameters,
+        singleSelectionChildParameters
     });
     const { hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic1, ...void6 }, pressParameters: { excludeSpace }, rovingTabIndexChildReturn, textContentReturn, props: propsLN, info: infoLN, ...void8 } = useListNavigationChild({
         info: { index, untabbable },
@@ -2863,6 +3248,7 @@ function useListNavigationSingleSelectionChild({ info: { index, untabbable, unse
         pressParameters: { onPressSync, excludeSpace },
         info: { ...infoSS, ...infoLN },
         rovingTabIndexChildReturn,
+        multiSelectionChildReturn,
         singleSelectionChildReturn,
         textContentReturn,
         propsChild: propsSS,
@@ -2871,22 +3257,21 @@ function useListNavigationSingleSelectionChild({ info: { index, untabbable, unse
 }
 
 /**
- * Combines {@link useListNavigation}, {@link useSingleSelection}, and {@link useSortableChildren}.
+ * Combines {@link useListNavigation}, {@link useSelection}, and {@link useSortableChildren}.
  *
  * @remarks This is a separate hook because {@link useSortableChildren} imposes unique requirements to the structure of your `children`.
  *
- * @hasChild {@link useListNavigationSingleSelectionSortableChild}
+ * @hasChild {@link useListNavigationSelectionSortableChild}
  *
  * @compositeParams
  */
-function useListNavigationSingleSelectionSortable({ linearNavigationParameters, rovingTabIndexParameters, typeaheadNavigationParameters, singleSelectionParameters, managedChildrenReturn, rearrangeableChildrenParameters, sortableChildrenParameters, refElementReturn, paginatedChildrenParameters, ...void3 }) {
-    monitorCallCount(useListNavigationSingleSelectionSortable);
+function useListNavigationSelectionSortable({ linearNavigationParameters, rovingTabIndexParameters, typeaheadNavigationParameters, singleSelectionParameters, multiSelectionParameters, managedChildrenReturn, rearrangeableChildrenParameters, sortableChildrenParameters, refElementReturn, paginatedChildrenParameters, childrenHaveFocusReturn, ...void3 }) {
+    monitorCallCount(useListNavigationSelectionSortable);
     const { rearrangeableChildrenReturn, sortableChildrenReturn, ...void1 } = useSortableChildren({ rearrangeableChildrenParameters, sortableChildrenParameters, managedChildrenReturn });
-    const { propsParent, propsStableParentOrChild, context, ...restLN } = useListNavigationSingleSelection({ linearNavigationParameters, rearrangeableChildrenReturn, rovingTabIndexParameters, typeaheadNavigationParameters, singleSelectionParameters, managedChildrenReturn, refElementReturn, paginatedChildrenParameters });
+    const { props, context, ...restLN } = useListNavigationSelection({ childrenHaveFocusReturn, linearNavigationParameters, rearrangeableChildrenReturn, rovingTabIndexParameters, typeaheadNavigationParameters, singleSelectionParameters, multiSelectionParameters, managedChildrenReturn, refElementReturn, paginatedChildrenParameters });
     return {
         context,
-        propsParent,
-        propsStableParentOrChild,
+        props,
         rearrangeableChildrenReturn,
         sortableChildrenReturn,
         ...restLN
@@ -2895,13 +3280,15 @@ function useListNavigationSingleSelectionSortable({ linearNavigationParameters, 
 /**
  * @compositeParams
  */
-function useListNavigationSingleSelectionSortableChild({ info, context, refElementReturn, textContentParameters, ...void1 }) {
-    monitorCallCount(useListNavigationSingleSelectionSortableChild);
-    return useListNavigationSingleSelectionChild({
+function useListNavigationSelectionSortableChild({ info, context, refElementReturn, textContentParameters, singleSelectionChildParameters, multiSelectionChildParameters, ...void1 }) {
+    monitorCallCount(useListNavigationSelectionSortableChild);
+    return useListNavigationSelectionChild({
         info,
         context,
         refElementReturn,
         textContentParameters,
+        singleSelectionChildParameters,
+        multiSelectionChildParameters
     });
 }
 
@@ -3513,7 +3900,7 @@ function useChildrenHaveFocus(args) {
     const [_getFocusCount, setFocusCount] = usePassiveState(useStableCallback((anyFocused, anyPreviouslyFocused, e) => {
         console.assert(anyFocused >= 0 && anyFocused <= 1);
         setAnyFocused(!!(anyFocused && !anyPreviouslyFocused), e);
-    }));
+    }), returnZero, setTimeout); // setTimeout is used for the debounce to be somewhat generous with timing, and to guard against the default being runImmediately...
     return {
         childrenHaveFocusReturn: { getAnyFocused },
         context: useMemoObject({ childrenHaveFocusChildContext: useMemoObject({ setFocusCount }) }),
@@ -3589,7 +3976,7 @@ function useHasCurrentFocus(args) {
  * @hasChild {@link useCompleteGridNavigationRow}
  * @hasChild {@link useCompleteGridNavigationCell}
  */
-function useCompleteGridNavigation({ gridNavigationParameters, linearNavigationParameters, rovingTabIndexParameters, singleSelectionParameters, typeaheadNavigationParameters, sortableChildrenParameters, rearrangeableChildrenParameters, paginatedChildrenParameters, staggeredChildrenParameters, refElementParameters, ...void1 }) {
+function useCompleteGridNavigation({ gridNavigationParameters, linearNavigationParameters, rovingTabIndexParameters, singleSelectionParameters, multiSelectionParameters, typeaheadNavigationParameters, sortableChildrenParameters, rearrangeableChildrenParameters, paginatedChildrenParameters, staggeredChildrenParameters, refElementParameters, ...void1 }) {
     monitorCallCount(useCompleteGridNavigation);
     const getChildren = useCallback(() => managedChildrenReturn.getChildren(), []);
     const getLowestChildIndex = useCallback(() => getChildren().getLowestIndex(), []);
@@ -3603,12 +3990,13 @@ function useCompleteGridNavigation({ gridNavigationParameters, linearNavigationP
         return true;
     }, []);
     const { refElementReturn, propsStable, ...void2 } = useRefElement({ refElementParameters });
-    const { childrenHaveFocusParameters, managedChildrenParameters, context: { gridNavigationRowContext, rovingTabIndexContext, singleSelectionContext, typeaheadNavigationContext }, rearrangeableChildrenReturn, propsParent, propsStableParentOrChild, rovingTabIndexReturn, linearNavigationReturn, singleSelectionReturn, sortableChildrenReturn, typeaheadNavigationReturn, ...void3 } = useGridNavigationSingleSelectionSortable({
+    const { childrenHaveFocusParameters, managedChildrenParameters, context: { gridNavigationRowContext, rovingTabIndexContext, singleSelectionContext, multiSelectionContext, typeaheadNavigationContext }, rearrangeableChildrenReturn, props, rovingTabIndexReturn, linearNavigationReturn, singleSelectionReturn, multiSelectionReturn, sortableChildrenReturn, typeaheadNavigationReturn, ...void3 } = useGridNavigationSelectionSortable({
         gridNavigationParameters,
         linearNavigationParameters: { getLowestIndex: getLowestChildIndex, getHighestIndex: getHighestChildIndex, isValidForLinearNavigation: isValidForNavigation, ...linearNavigationParameters },
         managedChildrenReturn: { getChildren },
-        rovingTabIndexParameters: { initiallyTabbedIndex: singleSelectionParameters.initiallySelectedIndex, untabbableBehavior: "focus-parent", ...rovingTabIndexParameters },
+        rovingTabIndexParameters: { untabbableBehavior: "focus-parent", ...rovingTabIndexParameters },
         singleSelectionParameters,
+        multiSelectionParameters,
         typeaheadNavigationParameters: { isValidForTypeaheadNavigation: isValidForNavigation, ...typeaheadNavigationParameters },
         paginatedChildrenParameters,
         refElementReturn,
@@ -3616,6 +4004,7 @@ function useCompleteGridNavigation({ gridNavigationParameters, linearNavigationP
             onRearranged: useStableCallback(() => { refreshPagination(paginatedChildrenParameters.paginationMin, paginatedChildrenParameters.paginationMax); }),
             ...rearrangeableChildrenParameters
         },
+        childrenHaveFocusReturn: { getAnyFocused: useStableCallback(() => childrenHaveFocusReturn.getAnyFocused()) },
         sortableChildrenParameters
     });
     const { indexDemangler } = rearrangeableChildrenReturn;
@@ -3626,6 +4015,7 @@ function useCompleteGridNavigation({ gridNavigationParameters, linearNavigationP
     const { context: { staggeredChildContext }, staggeredChildrenReturn } = useStaggeredChildren({ managedChildrenReturn, staggeredChildrenParameters });
     const context = useMemoObject({
         singleSelectionContext,
+        multiSelectionContext,
         managedChildContext,
         rovingTabIndexContext,
         typeaheadNavigationContext,
@@ -3636,7 +4026,7 @@ function useCompleteGridNavigation({ gridNavigationParameters, linearNavigationP
     });
     return {
         context,
-        props: useMergedProps(propsParent, propsStable, propsStableParentOrChild),
+        props: useMergedProps(props, propsStable),
         managedChildrenReturn,
         rearrangeableChildrenReturn,
         staggeredChildrenReturn,
@@ -3645,6 +4035,7 @@ function useCompleteGridNavigation({ gridNavigationParameters, linearNavigationP
         paginatedChildrenReturn,
         linearNavigationReturn,
         singleSelectionReturn,
+        multiSelectionReturn,
         sortableChildrenReturn,
         typeaheadNavigationReturn
     };
@@ -3652,12 +4043,11 @@ function useCompleteGridNavigation({ gridNavigationParameters, linearNavigationP
 /**
  * @compositeParams
  */
-function useCompleteGridNavigationRow({ info: { index, unselectable, untabbable, ...customUserInfo }, context: contextIncomingForRowAsChildOfTable, textContentParameters, linearNavigationParameters, rovingTabIndexParameters, typeaheadNavigationParameters, gridNavigationSingleSelectionSortableRowParameters, hasCurrentFocusParameters: { onCurrentFocusedChanged: ocfc1, onCurrentFocusedInnerChanged: ocfic3, ...void5 }, ...void1 }) {
+function useCompleteGridNavigationRow({ info: { index, untabbable, ...customUserInfo }, context: contextIncomingForRowAsChildOfTable, textContentParameters, linearNavigationParameters, rovingTabIndexParameters, typeaheadNavigationParameters, gridNavigationSelectionSortableRowParameters, hasCurrentFocusParameters: { onCurrentFocusedChanged: ocfc1, onCurrentFocusedInnerChanged: ocfic3, ...void5 }, singleSelectionChildParameters, multiSelectionChildParameters, ...void1 }) {
     monitorCallCount(useCompleteGridNavigationRow);
     const { info: infoPaginatedChild, paginatedChildReturn, props: paginationProps, ...void7 } = usePaginatedChild({ info: { index }, context: contextIncomingForRowAsChildOfTable });
     const { info: infoStaggeredChild, staggeredChildReturn, props: staggeredProps, ...void8 } = useStaggeredChild({ info: { index }, context: contextIncomingForRowAsChildOfTable });
     untabbable ||= (paginatedChildReturn.hideBecausePaginated || staggeredChildReturn.hideBecauseStaggered);
-    unselectable ||= untabbable;
     const getChildren = useCallback(() => managedChildrenReturn.getChildren(), []);
     const getHighestChildIndex = useCallback(() => getChildren().getHighestIndex(), []);
     const getLowestChildIndex = useCallback(() => getChildren().getLowestIndex(), []);
@@ -3670,23 +4060,24 @@ function useCompleteGridNavigationRow({ info: { index, unselectable, untabbable,
         return true;
     }, []);
     const { refElementReturn, propsStable, ...void6 } = useRefElement({ refElementParameters: {} });
-    const r = useGridNavigationSingleSelectionSortableRow({
+    const r = useGridNavigationSelectionSortableRow({
         rovingTabIndexParameters,
         typeaheadNavigationParameters: { isValidForTypeaheadNavigation: isValidForNavigation, ...typeaheadNavigationParameters },
         linearNavigationParameters: { isValidForLinearNavigation: isValidForNavigation, getHighestIndex: getHighestChildIndex, getLowestIndex: getLowestChildIndex, ...linearNavigationParameters },
         managedChildrenReturn: { getChildren },
         refElementReturn,
         context: contextIncomingForRowAsChildOfTable,
-        info: { index, unselectable, untabbable },
+        info: { index, untabbable },
         textContentParameters,
-        gridNavigationSingleSelectionSortableRowParameters,
+        gridNavigationSelectionSortableRowParameters,
+        singleSelectionChildParameters,
+        multiSelectionChildParameters
     });
-    const { linearNavigationReturn, managedChildrenParameters, pressParameters, rovingTabIndexChildReturn, rovingTabIndexReturn, singleSelectionChildReturn, textContentReturn, typeaheadNavigationReturn, context: contextGNR, info: infoRowReturn, props: p3, hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic1, ...void3 }, ...void2 } = r;
+    const { linearNavigationReturn, managedChildrenParameters, pressParameters, rovingTabIndexChildReturn, rovingTabIndexReturn, singleSelectionChildReturn, multiSelectionChildReturn, textContentReturn, typeaheadNavigationReturn, context: contextGNR, info: infoRowReturn, props: p3, hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic1, ...void3 }, ...void2 } = r;
     const { context: contextMC, managedChildrenReturn } = useManagedChildren({ managedChildrenParameters });
     const completeInfo = {
         getElement: refElementReturn.getElement,
         index,
-        unselectable,
         untabbable,
         ...infoRowReturn,
         ...infoPaginatedChild,
@@ -3721,6 +4112,7 @@ function useCompleteGridNavigationRow({ info: { index, unselectable, untabbable,
         rovingTabIndexChildReturn,
         rovingTabIndexReturn,
         singleSelectionChildReturn,
+        multiSelectionChildReturn,
         textContentReturn,
         typeaheadNavigationReturn,
         props,
@@ -3732,7 +4124,7 @@ function useCompleteGridNavigationRow({ info: { index, unselectable, untabbable,
 function useCompleteGridNavigationCell({ gridNavigationCellParameters, context, textContentParameters, info: { focusSelf, index, untabbable, getSortValue, ...customUserInfo }, ...void1 }) {
     monitorCallCount(useCompleteGridNavigationCell);
     const { refElementReturn, propsStable } = useRefElement({ refElementParameters: {} });
-    const { hasCurrentFocusParameters, rovingTabIndexChildReturn, textContentReturn, pressParameters: { excludeSpace: es1 }, props: propsRti, info: info2, ...void2 } = useGridNavigationSingleSelectionSortableCell({
+    const { hasCurrentFocusParameters, rovingTabIndexChildReturn, textContentReturn, pressParameters: { excludeSpace: es1 }, props: propsRti, info: info2, ...void2 } = useGridNavigationSelectionSortableCell({
         gridNavigationCellParameters,
         info: { index, untabbable },
         context,
@@ -3767,22 +4159,26 @@ function useCompleteGridNavigationCell({ gridNavigationCellParameters, context, 
         textContentReturn
     };
 }
-function useCompleteGridNavigationDeclarative({ gridNavigationParameters, linearNavigationParameters, paginatedChildrenParameters, rearrangeableChildrenParameters, rovingTabIndexParameters, singleSelectionDeclarativeParameters, sortableChildrenParameters, staggeredChildrenParameters, typeaheadNavigationParameters, singleSelectionParameters, refElementParameters, ...void1 }) {
+function useCompleteGridNavigationDeclarative({ gridNavigationParameters, linearNavigationParameters, paginatedChildrenParameters, rearrangeableChildrenParameters, rovingTabIndexParameters, singleSelectionDeclarativeParameters, multiSelectionParameters, sortableChildrenParameters, staggeredChildrenParameters, typeaheadNavigationParameters, singleSelectionParameters, refElementParameters, ...void1 }) {
     const ret = useCompleteGridNavigation({
         linearNavigationParameters,
         paginatedChildrenParameters,
         rearrangeableChildrenParameters,
         rovingTabIndexParameters,
-        singleSelectionParameters: { initiallySelectedIndex: singleSelectionDeclarativeParameters.selectedIndex, onSelectedIndexChange: useStableCallback((...e) => onSelectedIndexChange?.(...e)), ...singleSelectionParameters },
+        singleSelectionParameters: { initiallySingleSelectedIndex: singleSelectionDeclarativeParameters.singleSelectedIndex, onSingleSelectedIndexChange: useStableCallback((...e) => onSingleSelectedIndexChange?.(...e)), ...singleSelectionParameters },
+        multiSelectionParameters,
         sortableChildrenParameters,
         staggeredChildrenParameters,
         refElementParameters,
         typeaheadNavigationParameters,
         gridNavigationParameters,
     });
-    const { singleSelectionParameters: { onSelectedIndexChange } } = useSingleSelectionDeclarative({ singleSelectionDeclarativeParameters, singleSelectionReturn: ret.singleSelectionReturn });
-    const { singleSelectionReturn: { getSelectedIndex }, ...ret2 } = ret;
-    return { ...ret2, singleSelectionReturn: { getSelectedIndex } };
+    const { singleSelectionParameters: { onSingleSelectedIndexChange } } = useSelectionDeclarative({
+        singleSelectionDeclarativeParameters,
+        singleSelectionReturn: ret.singleSelectionReturn
+    });
+    const { singleSelectionReturn: { getSingleSelectedIndex }, ...ret2 } = ret;
+    return { ...ret2, singleSelectionReturn: { getSingleSelectedIndex } };
 }
 
 /**
@@ -3795,9 +4191,8 @@ function useCompleteGridNavigationDeclarative({ gridNavigationParameters, linear
  *
  * @compositeParams
  */
-function useCompleteListNavigation({ linearNavigationParameters, rearrangeableChildrenParameters, sortableChildrenParameters, typeaheadNavigationParameters, rovingTabIndexParameters, singleSelectionParameters, paginatedChildrenParameters, staggeredChildrenParameters, refElementParameters, ...void1 }) {
+function useCompleteListNavigation({ linearNavigationParameters, rearrangeableChildrenParameters, sortableChildrenParameters, typeaheadNavigationParameters, rovingTabIndexParameters, singleSelectionParameters, multiSelectionParameters, paginatedChildrenParameters, staggeredChildrenParameters, refElementParameters, ...void1 }) {
     monitorCallCount(useCompleteListNavigation);
-    const { initiallySelectedIndex } = singleSelectionParameters;
     const getChildren = useCallback(() => managedChildrenReturn.getChildren(), []);
     const getLowestIndex = useCallback(() => getChildren().getLowestIndex(), []);
     const getHighestIndex = useCallback(() => getChildren().getHighestIndex(), []);
@@ -3810,19 +4205,21 @@ function useCompleteListNavigation({ linearNavigationParameters, rearrangeableCh
         return true;
     }, []);
     const { propsStable: propsRef, refElementReturn } = useRefElement({ refElementParameters });
-    const { childrenHaveFocusParameters, managedChildrenParameters: { onChildrenMountChange, ...mcp1 }, context: { rovingTabIndexContext, singleSelectionContext, typeaheadNavigationContext }, linearNavigationReturn, rovingTabIndexReturn, singleSelectionReturn, typeaheadNavigationReturn, rearrangeableChildrenReturn, sortableChildrenReturn, propsParent, propsStableParentOrChild, ...void2 } = useListNavigationSingleSelectionSortable({
+    const { childrenHaveFocusParameters, managedChildrenParameters: { onChildrenMountChange, ...mcp1 }, context: { rovingTabIndexContext, singleSelectionContext, multiSelectionContext, typeaheadNavigationContext }, linearNavigationReturn, rovingTabIndexReturn, singleSelectionReturn, multiSelectionReturn, typeaheadNavigationReturn, rearrangeableChildrenReturn, sortableChildrenReturn, props, ...void2 } = useListNavigationSelectionSortable({
         managedChildrenReturn: { getChildren },
         linearNavigationParameters: { getLowestIndex, getHighestIndex, isValidForLinearNavigation: isValidForNavigation, ...linearNavigationParameters },
         typeaheadNavigationParameters: { isValidForTypeaheadNavigation: isValidForNavigation, ...typeaheadNavigationParameters },
-        rovingTabIndexParameters: { initiallyTabbedIndex: initiallySelectedIndex, untabbableBehavior: "focus-parent", ...rovingTabIndexParameters },
+        rovingTabIndexParameters: { untabbableBehavior: "focus-parent", ...rovingTabIndexParameters },
         singleSelectionParameters,
+        multiSelectionParameters,
         rearrangeableChildrenParameters: {
             onRearranged: useStableCallback(() => { refreshPagination(paginatedChildrenParameters.paginationMin, paginatedChildrenParameters.paginationMax); }),
             ...rearrangeableChildrenParameters
         },
         paginatedChildrenParameters,
         refElementReturn,
-        sortableChildrenParameters
+        sortableChildrenParameters,
+        childrenHaveFocusReturn: { getAnyFocused: useStableCallback(() => childrenHaveFocusReturn.getAnyFocused()) }
     });
     const { context: { childrenHaveFocusChildContext }, childrenHaveFocusReturn } = useChildrenHaveFocus({ childrenHaveFocusParameters });
     const { paginatedChildrenReturn, paginatedChildrenReturn: { refreshPagination }, managedChildrenParameters: mcp2, context: { paginatedChildContext } } = usePaginatedChildren({ refElementReturn, managedChildrenReturn: { getChildren: useStableCallback(() => managedChildrenReturn.getChildren()) }, rovingTabIndexReturn, paginatedChildrenParameters, rearrangeableChildrenReturn: { indexDemangler: rearrangeableChildrenReturn.indexDemangler } });
@@ -3841,12 +4238,13 @@ function useCompleteListNavigation({ linearNavigationParameters, rearrangeableCh
         paginatedChildContext,
         rovingTabIndexContext,
         singleSelectionContext,
+        multiSelectionContext,
         staggeredChildContext,
-        typeaheadNavigationContext
+        typeaheadNavigationContext,
     }));
     return {
         context,
-        props: useMergedProps(propsParent, propsRef, propsStableParentOrChild),
+        props: useMergedProps(props, propsRef),
         managedChildrenReturn,
         rearrangeableChildrenReturn,
         staggeredChildrenReturn,
@@ -3855,6 +4253,7 @@ function useCompleteListNavigation({ linearNavigationParameters, rearrangeableCh
         linearNavigationReturn,
         rovingTabIndexReturn,
         singleSelectionReturn,
+        multiSelectionReturn,
         typeaheadNavigationReturn,
         childrenHaveFocusReturn
     };
@@ -3863,23 +4262,20 @@ function useCompleteListNavigation({ linearNavigationParameters, rearrangeableCh
  *
  * @compositeParams
  */
-function useCompleteListNavigationChild({ info: { index, focusSelf, unselectable, untabbable, getSortValue, ...customUserInfo }, // The "...info" is empty if M is the same as UCLNCI<ChildElement>.
-textContentParameters, refElementParameters, hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged: ocfic3, ...void7 }, context: { managedChildContext, rovingTabIndexContext, paginatedChildContext, staggeredChildContext, singleSelectionContext, typeaheadNavigationContext, childrenHaveFocusChildContext, ...void5 }, ...void1 }) {
+function useCompleteListNavigationChild({ info: { index, focusSelf, untabbable, getSortValue, ...customUserInfo }, // The "...info" is empty if M is the same as UCLNCI<ChildElement>.
+textContentParameters, refElementParameters, hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged: ocfic3, ...void7 }, singleSelectionChildParameters, multiSelectionChildParameters, context: { managedChildContext, rovingTabIndexContext, paginatedChildContext, staggeredChildContext, singleSelectionContext, multiSelectionContext, typeaheadNavigationContext, childrenHaveFocusChildContext, ...void5 }, ...void1 }) {
     monitorCallCount(useCompleteListNavigationChild);
     const { info: infoFromPaginated, paginatedChildReturn, paginatedChildReturn: { hideBecausePaginated }, props: paginationProps } = usePaginatedChild({ info: { index }, context: { paginatedChildContext } });
     const { info: infoFromStaggered, staggeredChildReturn, staggeredChildReturn: { hideBecauseStaggered }, props: staggeredProps } = useStaggeredChild({ info: { index }, context: { staggeredChildContext } });
     // TODO: uPC and pSC can't exactly return `{ info: { untabbable: false } }`, or can they...? 
     // (Really it's more about *should* they -- I don't like this hook doing more than just calling sub-hooks, but where else does this logic take place if not here?)
     untabbable ||= (hideBecausePaginated || hideBecauseStaggered);
-    unselectable ||= (hideBecausePaginated || hideBecauseStaggered);
-    // TODO: I feel like this needs stronger justification. It's probably correct but why is it here of all places?
-    // I.E. shouldn't it be in useListNavigationSingleSelection?
-    if (untabbable)
-        unselectable = true;
     const { refElementReturn, propsStable, ...void6 } = useRefElement({ refElementParameters });
-    const { hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic1, ...void3 }, pressParameters: { excludeSpace, onPressSync, ...void2 }, textContentReturn, singleSelectionChildReturn, info: infoFromListNav, rovingTabIndexChildReturn, propsChild, propsTabbable, ...void4 } = useListNavigationSingleSelectionSortableChild({
-        info: { index, unselectable, untabbable },
-        context: { rovingTabIndexContext, singleSelectionContext, typeaheadNavigationContext },
+    const { hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic1, ...void3 }, pressParameters: { excludeSpace, onPressSync, ...void2 }, textContentReturn, singleSelectionChildReturn, multiSelectionChildReturn, info: infoFromListNav, rovingTabIndexChildReturn, propsChild, propsTabbable, ...void4 } = useListNavigationSelectionSortableChild({
+        info: { index, untabbable },
+        context: { rovingTabIndexContext, singleSelectionContext, multiSelectionContext, typeaheadNavigationContext },
+        singleSelectionChildParameters,
+        multiSelectionChildParameters,
         refElementReturn,
         textContentParameters
     });
@@ -3888,7 +4284,6 @@ textContentParameters, refElementParameters, hasCurrentFocusParameters: { onCurr
         focusSelf,
         getElement: refElementReturn.getElement,
         getSortValue,
-        unselectable,
         untabbable,
         ...infoFromStaggered,
         ...infoFromPaginated,
@@ -3919,6 +4314,7 @@ textContentParameters, refElementParameters, hasCurrentFocusParameters: { onCurr
         textContentReturn,
         refElementReturn,
         singleSelectionChildReturn,
+        multiSelectionChildReturn,
         hasCurrentFocusReturn,
         managedChildReturn,
         paginatedChildReturn,
@@ -3926,26 +4322,35 @@ textContentParameters, refElementParameters, hasCurrentFocusParameters: { onCurr
         rovingTabIndexChildReturn
     };
 }
-function useCompleteListNavigationDeclarative({ linearNavigationParameters, paginatedChildrenParameters, rearrangeableChildrenParameters, rovingTabIndexParameters, singleSelectionDeclarativeParameters, sortableChildrenParameters, staggeredChildrenParameters, typeaheadNavigationParameters, singleSelectionParameters, refElementParameters, ...void1 }) {
+function useCompleteListNavigationDeclarative({ singleSelectionParameters, singleSelectionDeclarativeParameters, ...rest }) {
     const ret = useCompleteListNavigation({
-        linearNavigationParameters,
-        paginatedChildrenParameters,
-        rearrangeableChildrenParameters,
-        rovingTabIndexParameters,
-        refElementParameters,
         singleSelectionParameters: {
-            initiallySelectedIndex: singleSelectionDeclarativeParameters.selectedIndex,
+            initiallySingleSelectedIndex: singleSelectionDeclarativeParameters.singleSelectedIndex,
             // Needs to be a (stable) callback because of declaration order
-            onSelectedIndexChange: useStableCallback((...e) => onSelectedIndexChange?.(...e)),
+            onSingleSelectedIndexChange: useStableCallback((...e) => onSingleSelectedIndexChange?.(...e)),
             ...singleSelectionParameters
         },
-        sortableChildrenParameters,
-        staggeredChildrenParameters,
-        typeaheadNavigationParameters
+        ...rest
     });
-    const { singleSelectionParameters: { onSelectedIndexChange } } = useSingleSelectionDeclarative({ singleSelectionDeclarativeParameters, singleSelectionReturn: ret.singleSelectionReturn });
-    const { singleSelectionReturn: { getSelectedIndex }, ...ret2 } = ret;
-    return { ...ret2, singleSelectionReturn: { getSelectedIndex } };
+    const { singleSelectionParameters: { onSingleSelectedIndexChange, ...void3 }, ...void2 } = useSelectionDeclarative({ singleSelectionDeclarativeParameters, singleSelectionReturn: ret.singleSelectionReturn });
+    const { singleSelectionReturn: { getSingleSelectedIndex }, ...ret2 } = ret;
+    return { ...ret2, singleSelectionReturn: { getSingleSelectedIndex } };
+}
+function useCompleteListNavigationChildDeclarative({ multiSelectionChildParameters, multiSelectionChildDeclarativeParameters: { multiSelected, onMultiSelectedChange }, ...rest }) {
+    const ret = useCompleteListNavigationChild({
+        multiSelectionChildParameters: {
+            initiallyMultiSelected: multiSelected,
+            onMultiSelectChange: useStableCallback((e) => { onMultiSelectChange(e); }),
+            ...multiSelectionChildParameters
+        },
+        ...rest
+    });
+    const { multiSelectionChildParameters: { onMultiSelectChange }, info, ...void2 } = useSelectionChildDeclarative({
+        multiSelectionChildDeclarativeParameters: { onMultiSelectedChange, multiSelected },
+        multiSelectionChildReturn: ret.multiSelectionChildReturn
+    });
+    const { multiSelectionChildReturn, ...ret2 } = ret;
+    return { ...ret2, multiSelectionChildReturn };
 }
 
 /**
@@ -5304,14 +5709,19 @@ function useAccordionSection({ buttonParameters: { disabled, tagButton, onPressS
  * @hasChild {@link useCheckboxGroupParent}
  * @hasChild {@link useCheckboxGroupChild}
  */
-function useCheckboxGroup({ linearNavigationParameters, rovingTabIndexParameters, checkboxGroupParameters: { orientation }, ...listNavParameters }) {
+function useCheckboxGroup({ linearNavigationParameters, rovingTabIndexParameters, checkboxGroupParameters: { orientation, ...void2 }, multiSelectionParameters, rearrangeableChildrenParameters, refElementParameters, sortableChildrenParameters, staggeredChildrenParameters, typeaheadNavigationParameters, ...void1 }) {
     monitorCallCount(useCheckboxGroup);
-    const { context, linearNavigationReturn, managedChildrenReturn, props, rearrangeableChildrenReturn, rovingTabIndexReturn, singleSelectionReturn, staggeredChildrenReturn, paginatedChildrenReturn, sortableChildrenReturn, typeaheadNavigationReturn, childrenHaveFocusReturn, } = useCompleteListNavigation({
+    const { context, linearNavigationReturn, managedChildrenReturn, props, rearrangeableChildrenReturn, rovingTabIndexReturn, singleSelectionReturn, staggeredChildrenReturn, paginatedChildrenReturn, sortableChildrenReturn, typeaheadNavigationReturn, childrenHaveFocusReturn, multiSelectionReturn, ...void3 } = useCompleteListNavigation({
         linearNavigationParameters: { arrowKeyDirection: orientation, ...linearNavigationParameters },
         rovingTabIndexParameters: { focusSelfParent: focus, ...rovingTabIndexParameters },
-        singleSelectionParameters: { initiallySelectedIndex: null, onSelectedIndexChange: null, ariaPropName: null, selectionMode: "disabled" },
+        singleSelectionParameters: { initiallySingleSelectedIndex: null, onSingleSelectedIndexChange: null, singleSelectionAriaPropName: null, singleSelectionMode: "disabled" },
         paginatedChildrenParameters: { paginationMax: null, paginationMin: null },
-        ...listNavParameters
+        multiSelectionParameters,
+        rearrangeableChildrenParameters,
+        refElementParameters,
+        sortableChildrenParameters,
+        staggeredChildrenParameters,
+        typeaheadNavigationParameters
     });
     const { getChildren } = managedChildrenReturn;
     const children = getChildren();
@@ -5398,7 +5808,8 @@ function useCheckboxGroup({ linearNavigationParameters, rovingTabIndexParameters
         sortableChildrenReturn,
         managedChildrenReturn,
         rovingTabIndexReturn,
-        typeaheadNavigationReturn
+        typeaheadNavigationReturn,
+        multiSelectionReturn
     };
 }
 /**
@@ -5406,8 +5817,8 @@ function useCheckboxGroup({ linearNavigationParameters, rovingTabIndexParameters
  *
  * @compositeParams
  */
-function useCheckboxGroupParent({ context: { checkboxGroupParentContext: { setControlsSetterOnParentCheckbox, setSetParentCheckboxChecked, getPercentChecked, getTotalChecked, getTotalChildren, onCheckboxGroupParentInput }, ...context }, info, hasCurrentFocusParameters, refElementParameters, textContentParameters }) {
-    const { hasCurrentFocusReturn, managedChildReturn, pressParameters, textContentReturn, refElementReturn, propsChild, propsTabbable, paginatedChildReturn, rovingTabIndexChildReturn, staggeredChildReturn, singleSelectionChildReturn, } = useCompleteListNavigationChild({
+function useCheckboxGroupParent({ context: { checkboxGroupParentContext: { setControlsSetterOnParentCheckbox, setSetParentCheckboxChecked, getPercentChecked, getTotalChecked, getTotalChildren, onCheckboxGroupParentInput }, ...context }, info, hasCurrentFocusParameters, refElementParameters, textContentParameters, multiSelectionChildParameters, singleSelectionChildParameters, ...void1 }) {
+    const { hasCurrentFocusReturn, managedChildReturn, pressParameters, textContentReturn, refElementReturn, propsChild, propsTabbable, paginatedChildReturn, rovingTabIndexChildReturn, staggeredChildReturn, singleSelectionChildReturn, multiSelectionChildReturn, ...void2 } = useCompleteListNavigationChild({
         context,
         hasCurrentFocusParameters,
         refElementParameters,
@@ -5419,7 +5830,9 @@ function useCheckboxGroupParent({ context: { checkboxGroupParentContext: { setCo
             setCheckedFromParentInput: null,
             getChecked: null
         },
-        textContentParameters
+        textContentParameters,
+        multiSelectionChildParameters,
+        singleSelectionChildParameters
     });
     const [ariaControls, setControls] = useState("");
     y(() => {
@@ -5443,7 +5856,8 @@ function useCheckboxGroupParent({ context: { checkboxGroupParentContext: { setCo
         rovingTabIndexChildReturn,
         paginatedChildReturn,
         singleSelectionChildReturn,
-        pressParameters
+        pressParameters,
+        multiSelectionChildReturn
     };
 }
 /**
@@ -5459,7 +5873,7 @@ function useCheckboxGroupParent({ context: { checkboxGroupParentContext: { setCo
  *
  * @compositeParams
  */
-function useCheckboxGroupChild({ checkboxGroupChildParameters, context, info: { focusSelf, getSortValue, index, unselectable, untabbable, ...void3 }, textContentParameters, hasCurrentFocusParameters, refElementParameters, ...void4 }) {
+function useCheckboxGroupChild({ checkboxGroupChildParameters, context, info: { focusSelf, getSortValue, index, untabbable, ...void3 }, textContentParameters, hasCurrentFocusParameters, refElementParameters, multiSelectionChildParameters: { multiSelectionDisabled, onMultiSelectChange, ...void5 }, ...void4 }) {
     const { checkboxGroupChildrenContext: { allIds, setUpdateIndex, setTotalChildren, setTotalChecked, } } = context;
     monitorCallCount(useCheckboxGroupChild);
     const { checked, onChangeFromParent, ...void1 } = checkboxGroupChildParameters;
@@ -5487,7 +5901,7 @@ function useCheckboxGroupChild({ checkboxGroupChildParameters, context, info: { 
             return () => setTotalChecked(c => ((c ?? 0) - 1), undefined);
         }
     }, [checked]);
-    const { hasCurrentFocusReturn, managedChildReturn, refElementReturn, textContentReturn, propsChild, propsTabbable, singleSelectionChildReturn: _singleSelectionChildReturn, staggeredChildReturn, paginatedChildReturn, rovingTabIndexChildReturn, pressParameters, ...void2 } = useCompleteListNavigationChild({
+    const { hasCurrentFocusReturn, managedChildReturn, refElementReturn, textContentReturn, propsChild, propsTabbable, singleSelectionChildReturn: _singleSelectionChildReturn, staggeredChildReturn, paginatedChildReturn, rovingTabIndexChildReturn, pressParameters, multiSelectionChildReturn, ...void2 } = useCompleteListNavigationChild({
         info: {
             checkboxChildType: "child",
             getLastUserChecked,
@@ -5496,13 +5910,14 @@ function useCheckboxGroupChild({ checkboxGroupChildParameters, context, info: { 
             focusSelf,
             getSortValue,
             index,
-            unselectable,
             untabbable
         },
         context,
         textContentParameters,
         hasCurrentFocusParameters,
         refElementParameters,
+        singleSelectionChildParameters: { singleSelectionDisabled: true },
+        multiSelectionChildParameters: { initiallyMultiSelected: !!checked, multiSelectionDisabled, onMultiSelectChange }
     });
     return {
         checkboxGroupChildReturn: {
@@ -5519,6 +5934,7 @@ function useCheckboxGroupChild({ checkboxGroupChildParameters, context, info: { 
         propsTabbable,
         pressParameters,
         rovingTabIndexChildReturn,
+        multiSelectionChildReturn,
     };
 }
 
@@ -5814,7 +6230,7 @@ function useDrawer({ dismissParameters, escapeDismissParameters, focusTrapParame
 }
 
 /**
- * Implements a gridlist, which is a hybrid of a [Listbox](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/) and a [Grid](https://www.w3.org/WAI/ARIA/apg/patterns/grid/).
+ * Implements a gridlist, effectively a [Listbox](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/) enhanced with the capabilities of a [Grid](https://www.w3.org/WAI/ARIA/apg/patterns/grid/).
  *
  * @remarks A Listbox is a very limited structure, essentially being just a list with no further interactive content allowed.
  *
@@ -5825,7 +6241,7 @@ function useDrawer({ dismissParameters, escapeDismissParameters, focusTrapParame
  * @hasChild {@link useGridlistRow}
  * @hasChild {@link useGridlistCell}
  */
-function useGridlist({ labelParameters, listboxParameters: { selectionLimit, groupingType, selectedIndex, onSelectedIndexChange }, rovingTabIndexParameters, ...restParams }) {
+function useGridlist({ labelParameters, listboxParameters: { groupingType, ...void1 }, rovingTabIndexParameters, singleSelectionParameters, gridNavigationParameters, linearNavigationParameters, multiSelectionParameters, paginatedChildrenParameters, rearrangeableChildrenParameters, refElementParameters, sortableChildrenParameters, staggeredChildrenParameters, typeaheadNavigationParameters, singleSelectionDeclarativeParameters, ...void2 }) {
     monitorCallCount(useGridlist);
     const { propsInput: propsLabelList, propsLabel: propsLabelLabel, randomIdInputReturn: { id: _gridlistId }, randomIdLabelReturn: { id: _labelId } } = useLabelSynthetic({
         labelParameters: {
@@ -5838,15 +6254,24 @@ function useGridlist({ labelParameters, listboxParameters: { selectionLimit, gro
         randomIdLabelParameters: { prefix: Prefices.gridlistLabel }
     });
     const { context, props, rovingTabIndexReturn, singleSelectionReturn, ...restRet } = useCompleteGridNavigationDeclarative({
-        singleSelectionDeclarativeParameters: { selectedIndex: selectedIndex, onSelectedIndexChange },
+        singleSelectionDeclarativeParameters,
         rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
-        ...restParams
+        gridNavigationParameters,
+        linearNavigationParameters,
+        multiSelectionParameters,
+        paginatedChildrenParameters,
+        rearrangeableChildrenParameters,
+        refElementParameters,
+        singleSelectionParameters,
+        sortableChildrenParameters,
+        staggeredChildrenParameters,
+        typeaheadNavigationParameters
     });
-    let propsGridlist = useMergedProps(props, propsLabelList, { "aria-multiselectable": (selectionLimit == "multi" ? "true" : undefined) });
+    let propsGridlist = useMergedProps(props, propsLabelList, { "aria-multiselectable": (context.multiSelectionContext.multiSelectionMode != "disabled" ? "true" : undefined) });
     let fullContext = useMemoObject({
         ...context,
         gridlistRowContext: useMemoObject({
-            selectionLimit
+        //selectionLimit
         })
     });
     if (groupingType == "group")
@@ -5860,8 +6285,6 @@ function useGridlist({ labelParameters, listboxParameters: { selectionLimit, gro
     else {
         propsGridlist.role = "grid";
     }
-    if (selectionLimit == "multi")
-        console.assert(singleSelectionReturn.getSelectedIndex() == null);
     return {
         context: fullContext,
         rovingTabIndexReturn,
@@ -5874,10 +6297,9 @@ function useGridlist({ labelParameters, listboxParameters: { selectionLimit, gro
  * @compositeParams
  *
  */
-function useGridlistRow({ gridlistRowParameters: { selected }, linearNavigationParameters, context: cx1, info, rovingTabIndexParameters, textContentParameters, typeaheadNavigationParameters, hasCurrentFocusParameters, gridNavigationSingleSelectionSortableRowParameters, ...void1 }) {
+function useGridlistRow({ gridlistRowParameters: { selected }, linearNavigationParameters, context: cx1, info, rovingTabIndexParameters, textContentParameters, typeaheadNavigationParameters, hasCurrentFocusParameters, singleSelectionChildParameters, multiSelectionChildParameters, gridNavigationSelectionSortableRowParameters, ...void1 }) {
     monitorCallCount(useGridlistRow);
-    const { gridlistRowContext: { selectionLimit } } = cx1;
-    const { context: cx2, hasCurrentFocusReturn, linearNavigationReturn, managedChildReturn, managedChildrenReturn, paginatedChildReturn, props, rovingTabIndexChildReturn, rovingTabIndexReturn, singleSelectionChildReturn, staggeredChildReturn, textContentReturn, typeaheadNavigationReturn, pressParameters, ...void2 } = useCompleteGridNavigationRow({
+    const { context: cx2, hasCurrentFocusReturn, linearNavigationReturn, managedChildReturn, managedChildrenReturn, paginatedChildReturn, props, rovingTabIndexChildReturn, rovingTabIndexReturn, singleSelectionChildReturn, staggeredChildReturn, textContentReturn, typeaheadNavigationReturn, pressParameters, multiSelectionChildReturn, ...void2 } = useCompleteGridNavigationRow({
         linearNavigationParameters,
         info,
         context: cx1,
@@ -5885,10 +6307,12 @@ function useGridlistRow({ gridlistRowParameters: { selected }, linearNavigationP
         textContentParameters,
         typeaheadNavigationParameters,
         hasCurrentFocusParameters,
-        gridNavigationSingleSelectionSortableRowParameters,
+        singleSelectionChildParameters,
+        multiSelectionChildParameters,
+        gridNavigationSelectionSortableRowParameters,
     });
     // `selected` should only be true/false for multi-selection
-    if (selectionLimit != "multi")
+    if (cx1.multiSelectionContext.multiSelectionMode == "disabled")
         console.assert(selected == null);
     props.role = "row";
     return {
@@ -5900,6 +6324,7 @@ function useGridlistRow({ gridlistRowParameters: { selected }, linearNavigationP
         rovingTabIndexChildReturn,
         rovingTabIndexReturn,
         singleSelectionChildReturn,
+        multiSelectionChildReturn,
         staggeredChildReturn,
         textContentReturn,
         typeaheadNavigationReturn,
@@ -5947,9 +6372,8 @@ function useGridlistCell({ pressParameters: { onPressSync, longPressThreshold, o
  *
  * @hasChild {@link useListboxItem}
  */
-function useListbox({ labelParameters, listboxParameters: { selectionLimit, groupingType, selectedIndex, onSelectedIndexChange, orientation }, linearNavigationParameters, singleSelectionParameters: { ariaPropName, selectionMode }, rovingTabIndexParameters, ...restParams }) {
+function useListbox({ labelParameters, listboxParameters: { groupingType, orientation }, linearNavigationParameters, singleSelectionParameters: { singleSelectionAriaPropName, singleSelectionMode, ...void1 }, multiSelectionParameters: { multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, ...void2 }, singleSelectionDeclarativeParameters: { onSingleSelectedIndexChange, singleSelectedIndex, ...void3 }, rovingTabIndexParameters, ...restParams }) {
     monitorCallCount(useListbox);
-    useEnsureStability("useListbox", selectionLimit);
     const { propsInput: propsLabelList, propsLabel: propsLabelLabel, randomIdInputReturn: { id: _inputId }, randomIdLabelReturn: { id: _labelId } } = useLabelSynthetic({
         labelParameters: {
             ...labelParameters,
@@ -5962,9 +6386,10 @@ function useListbox({ labelParameters, listboxParameters: { selectionLimit, grou
     });
     let { context, props: { ...props }, rovingTabIndexReturn, singleSelectionReturn, ...restRet } = useCompleteListNavigationDeclarative({
         rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
-        singleSelectionDeclarativeParameters: { selectedIndex, onSelectedIndexChange },
-        singleSelectionParameters: { ariaPropName: ariaPropName || "aria-selected", selectionMode: selectionMode },
+        singleSelectionDeclarativeParameters: { onSingleSelectedIndexChange, singleSelectedIndex },
+        singleSelectionParameters: { singleSelectionAriaPropName: singleSelectionAriaPropName || "aria-selected", singleSelectionMode },
         linearNavigationParameters: { arrowKeyDirection: orientation, ...linearNavigationParameters },
+        multiSelectionParameters: { multiSelectionAriaPropName, multiSelectionMode, onSelectionChange },
         ...restParams
     });
     if (groupingType == "group")
@@ -5978,42 +6403,39 @@ function useListbox({ labelParameters, listboxParameters: { selectionLimit, grou
     else {
         props.role = "listbox";
     }
-    if (selectionLimit == "multi")
-        console.assert(singleSelectionReturn.getSelectedIndex() == null);
+    //if (selectionLimit == "multi")
+    //    console.assert(singleSelectionReturn.getSingleSelectedIndex() == null)
     return {
         ...restRet,
         context: useMemoObject({
             ...context,
             listboxContext: useMemoObject({
-                selectionLimit
+            //selectionLimit
             })
         }),
         rovingTabIndexReturn,
-        propsListbox: useMergedProps(props, propsLabelList, { "aria-multiselectable": (selectionLimit == "multi" ? "true" : undefined) }),
+        propsListbox: useMergedProps(props, propsLabelList, { "aria-multiselectable": (multiSelectionMode != "disabled" ? true : undefined) }),
         propsListboxLabel: propsLabelLabel
     };
 }
 /**
  * @compositeParams
  */
-function useListboxItem({ context: { listboxContext: { selectionLimit }, ...context }, listboxParameters: { selected, onMultiSelect }, pressParameters: { allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, ...void1 }, ...restParams }) {
+function useListboxItem({ context: { listboxContext: {}, ...context }, listboxParameters: {}, pressParameters: { allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, ...void1 }, singleSelectionChildParameters: { singleSelectionDisabled }, ...restParams }) {
     monitorCallCount(useListboxItem);
-    const { propsChild, propsTabbable, refElementReturn, pressParameters: { onPressSync, excludeSpace, ...void2 }, ...restRet } = useCompleteListNavigationChild({
+    const { propsChild, propsTabbable, refElementReturn, pressParameters: { onPressSync, excludeSpace, ...void2 }, ...restRet } = useCompleteListNavigationChildDeclarative({
         context,
+        singleSelectionChildParameters: { singleSelectionDisabled },
         ...restParams
     });
-    if (selectionLimit == "single")
-        console.assert(selected == null);
+    //if (context.multiSelectionContext.multiSelectionMode == "disabled")
+    //    console.assert(selected == null);
     propsChild.role = "option";
-    propsChild["aria-disabled"] = restParams.info.unselectable ? "true" : undefined;
+    propsChild["aria-disabled"] = singleSelectionDisabled ? "true" : undefined;
     const { pressReturn, props: propsPress } = usePress({
         refElementReturn,
         pressParameters: {
-            onPressSync: useStableCallback((e) => {
-                onPressSync?.(e);
-                if (selectionLimit == "multi")
-                    onMultiSelect?.(enhanceEvent(e, { selected: !selected }));
-            }),
+            onPressSync,
             focusSelf: restParams.info.focusSelf,
             excludeSpace,
             allowRepeatPresses,
@@ -6127,21 +6549,18 @@ function useFocusSentinel({ focusSentinel: { open, onClose, sendFocusToMenu } })
  *
  * @compositeParams
  */
-function useToolbar({ linearNavigationParameters, toolbarParameters: { orientation, role, selectedIndex, onSelectedIndexChange, disabled, selectionLimit, ...void1 }, labelParameters, rovingTabIndexParameters, singleSelectionParameters: { selectionMode, ...singleSelectionParameters }, ...listNavParameters }) {
+function useToolbar({ linearNavigationParameters, toolbarParameters: { orientation, role, disabled }, labelParameters, rovingTabIndexParameters, singleSelectionParameters, singleSelectionDeclarativeParameters, ...listNavParameters }) {
     monitorCallCount(useToolbar);
-    if (selectionLimit != 'single') {
-        console.assert(selectedIndex == null);
-        console.assert(selectionMode == 'disabled');
-        selectedIndex = null;
-        selectionMode = 'disabled';
+    if (singleSelectionDeclarativeParameters.singleSelectedIndex !== undefined) {
+        console.assert(singleSelectionParameters.singleSelectionMode != "disabled");
     }
     const { context, props, ...listNavReturn } = useCompleteListNavigationDeclarative({
         ...listNavParameters,
         rovingTabIndexParameters: { ...rovingTabIndexParameters, untabbable: disabled, focusSelfParent: focus },
-        singleSelectionDeclarativeParameters: { selectedIndex, onSelectedIndexChange: disabled ? null : onSelectedIndexChange },
+        singleSelectionDeclarativeParameters,
         paginatedChildrenParameters: { paginationMax: null, paginationMin: null },
         linearNavigationParameters: { ...linearNavigationParameters, arrowKeyDirection: orientation },
-        singleSelectionParameters: { selectionMode, ...singleSelectionParameters },
+        singleSelectionParameters,
     });
     const { propsInput: propsToolbar, propsLabel, randomIdInputReturn, randomIdLabelReturn } = useLabelSynthetic({
         labelParameters: { ...labelParameters, onLabelClick: listNavReturn.rovingTabIndexReturn.focusSelf },
@@ -6171,7 +6590,7 @@ function useToolbarChild({ context: { toolbarContext, ...context }, info, toolba
     monitorCallCount(useToolbarChild);
     const { propsChild, propsTabbable, ...listNavReturn } = useCompleteListNavigationChild({ info, context, ...args });
     return {
-        propsChild: useMergedProps(propsChild, { [disabledProp]: info.unselectable ? true : undefined }),
+        propsChild: useMergedProps(propsChild, { [disabledProp]: (args.singleSelectionChildParameters.singleSelectionDisabled || args.multiSelectionChildParameters.multiSelectionDisabled) ? true : undefined }),
         propsTabbable,
         ...listNavReturn
     };
@@ -6502,15 +6921,16 @@ function useRadioGroup({ labelParameters, radioGroupParameters: { name, selected
         else
         asyncHandlerReturn.syncHandler(null);
     }, [selectedValue])*/
-    const { context, props: propsGroup2, singleSelectionReturn, managedChildrenReturn, rovingTabIndexReturn, linearNavigationReturn, paginatedChildrenReturn, rearrangeableChildrenReturn, sortableChildrenReturn, staggeredChildrenReturn, typeaheadNavigationReturn, childrenHaveFocusReturn, ...void3 } = useCompleteListNavigationDeclarative({
+    const { context, props: propsGroup2, singleSelectionReturn, multiSelectionReturn, managedChildrenReturn, rovingTabIndexReturn, linearNavigationReturn, paginatedChildrenReturn, rearrangeableChildrenReturn, sortableChildrenReturn, staggeredChildrenReturn, typeaheadNavigationReturn, childrenHaveFocusReturn, ...void3 } = useCompleteListNavigationDeclarative({
         singleSelectionDeclarativeParameters: {
-            selectedIndex,
-            onSelectedIndexChange: useStableCallback((e) => {
+            singleSelectedIndex: selectedIndex,
+            onSingleSelectedIndexChange: useStableCallback((e) => {
                 setSelectedIndex(e[EventDetail].selectedIndex);
                 onSelectedValueChange?.(enhanceEvent(e, { selectedValue: indexToName.current.get(e[EventDetail].selectedIndex) }));
             }),
         },
-        singleSelectionParameters: { selectionMode: "focus", ariaPropName: null },
+        singleSelectionParameters: { singleSelectionMode: "focus", singleSelectionAriaPropName: null },
+        multiSelectionParameters: { multiSelectionMode: "disabled", multiSelectionAriaPropName: null, onSelectionChange: null },
         paginatedChildrenParameters: { paginationMin: null, paginationMax: null },
         rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
         linearNavigationParameters,
@@ -6575,9 +6995,11 @@ function useRadio({ radioParameters: { value, ...void5 }, checkboxLikeParameters
         context,
         textContentParameters,
         hasCurrentFocusParameters,
-        refElementParameters
+        refElementParameters,
+        singleSelectionChildParameters: { singleSelectionDisabled: !!disabled },
+        multiSelectionChildParameters: { initiallyMultiSelected: false, multiSelectionDisabled: true, onMultiSelectChange: null }
     });
-    const { selected: checked } = singleSelectionChildReturn;
+    const { singleSelected: checked } = singleSelectionChildReturn;
     const { refElementReturn: refElementInputReturn, propsStable: propsRefInput } = useRefElement({ refElementParameters: {} });
     const { refElementReturn: refElementLabelReturn, propsStable: propsRefLabel } = useRefElement({ refElementParameters: {} });
     const { propsInput, propsLabel, ...checkboxLikeRet } = useCheckboxLike({
@@ -6686,7 +7108,7 @@ function useSliderThumb({ sliderThumbParameters: { tag, value, max: maxOverride,
  * @hasChild {@link useTableRow}
  * @hasChild {@link useTableCell}
  */
-function useTable({ labelParameters, tableParameters: { selectionLimit, tagTable }, }) {
+function useTable({ labelParameters, tableParameters: { tagTable }, singleSelectionParameters: { singleSelectionMode, ...void1 }, multiSelectionParameters: { multiSelectionMode, ...void2 }, ...void3 }) {
     monitorCallCount(useTable);
     // This is the function that, when called, sorts the body's children.
     // It's here to coordinate among multiple table sections (i.e. the head sorts the body, but they're siblings to each other, so we need to take care that)
@@ -6731,14 +7153,16 @@ function useTable({ labelParameters, tableParameters: { selectionLimit, tagTable
         randomIdLabelParameters: { prefix: Prefices.tableLabel }
     });
     return {
-        propsTable: useMergedProps({ role: tagTable == "table" ? undefined : "grid", "aria-multiselectable": (selectionLimit == "multi" ? "true" : undefined) }, propsLabelList),
+        propsTable: useMergedProps({ role: tagTable == "table" ? undefined : "grid", "aria-multiselectable": (multiSelectionMode != "disabled" ? "true" : undefined) }, propsLabelList),
         propsLabel: propsLabelLabel,
         context: useMemoObject({
             tableContext: useMemoObject({
                 sortByColumn,
                 setSortBodyFunction: setSortBody,
                 getCurrentSortColumn: getSortColumn,
-                getCurrentSortDirection: getSortDirection
+                getCurrentSortDirection: getSortDirection,
+                singleSelectionMode,
+                multiSelectionMode
             })
         })
     };
@@ -6769,12 +7193,13 @@ const naturalSectionTypes = new Set(["thead", "tbody", "tfoot"]);
 /**
  * @compositeParams
  */
-function useTableSection({ linearNavigationParameters, rovingTabIndexParameters, singleSelectionParameters, gridNavigationParameters, rearrangeableChildrenParameters, paginatedChildrenParameters, staggeredChildrenParameters, tableSectionParameters: { tagTableSection, location }, typeaheadNavigationParameters, context: { tableContext }, refElementParameters, ...void1 }) {
+function useTableSection({ linearNavigationParameters, rovingTabIndexParameters, singleSelectionParameters, multiSelectionParameters, gridNavigationParameters, rearrangeableChildrenParameters, paginatedChildrenParameters, staggeredChildrenParameters, tableSectionParameters: { tagTableSection, location }, typeaheadNavigationParameters, context: { tableContext, ...void3 }, refElementParameters, ...void1 }) {
     monitorCallCount(useTableSection);
-    const { childrenHaveFocusReturn, context, linearNavigationReturn, managedChildrenReturn, props: { ...props }, rovingTabIndexReturn, singleSelectionReturn, typeaheadNavigationReturn, staggeredChildrenReturn, rearrangeableChildrenReturn, paginatedChildrenReturn, sortableChildrenReturn, ...void2 } = useCompleteGridNavigation({
+    const { childrenHaveFocusReturn, context, linearNavigationReturn, managedChildrenReturn, props: { ...props }, rovingTabIndexReturn, singleSelectionReturn, multiSelectionReturn, typeaheadNavigationReturn, staggeredChildrenReturn, rearrangeableChildrenReturn, paginatedChildrenReturn, sortableChildrenReturn, ...void2 } = useCompleteGridNavigation({
         linearNavigationParameters,
         rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
-        singleSelectionParameters,
+        singleSelectionParameters: { ...singleSelectionParameters, singleSelectionMode: tableContext.singleSelectionMode },
+        multiSelectionParameters: { ...multiSelectionParameters, multiSelectionMode: tableContext.multiSelectionMode },
         paginatedChildrenParameters,
         staggeredChildrenParameters,
         sortableChildrenParameters: {
@@ -6808,6 +7233,7 @@ function useTableSection({ linearNavigationParameters, rovingTabIndexParameters,
         managedChildrenReturn,
         rovingTabIndexReturn,
         singleSelectionReturn,
+        multiSelectionReturn,
         rearrangeableChildrenReturn,
         sortableChildrenReturn,
         typeaheadNavigationReturn,
@@ -6818,7 +7244,7 @@ function useTableSection({ linearNavigationParameters, rovingTabIndexParameters,
 /**
  * @compositeParams
  */
-function useTableRow({ info, textContentParameters, context: cx1, tableRowParameters: { selected }, linearNavigationParameters, rovingTabIndexParameters, hasCurrentFocusParameters, ...void1 }) {
+function useTableRow({ info, textContentParameters, context: cx1, tableRowParameters: { selected }, linearNavigationParameters, rovingTabIndexParameters, hasCurrentFocusParameters, singleSelectionChildParameters, multiSelectionChildParameters, ...void1 }) {
     monitorCallCount(useTableRow);
     const { context: cx2, managedChildrenReturn, props: { ...props }, ...restRet
     // props
@@ -6829,19 +7255,21 @@ function useTableRow({ info, textContentParameters, context: cx1, tableRowParame
         info,
         linearNavigationParameters,
         rovingTabIndexParameters,
-        gridNavigationSingleSelectionSortableRowParameters: { getSortableColumnIndex: cx1.tableContext.getCurrentSortColumn },
+        singleSelectionChildParameters,
+        multiSelectionChildParameters,
+        gridNavigationSelectionSortableRowParameters: { getSortableColumnIndex: cx1.tableContext.getCurrentSortColumn },
         typeaheadNavigationParameters: { noTypeahead: true, collator: null, typeaheadTimeout: Infinity, onNavigateTypeahead: null }
     });
     props.role = "row";
     // TODO: Unneeded?
     if (selected) {
-        switch (cx1.singleSelectionContext.ariaPropName) {
+        switch (cx1.singleSelectionContext.singleSelectionAriaPropName) {
             case "aria-checked":
             case "aria-pressed":
             case "aria-selected":
-                props[cx1.singleSelectionContext.ariaPropName ?? "aria-selected"] = "true";
+                props[cx1.singleSelectionContext.singleSelectionAriaPropName ?? "aria-selected"] = "true";
             default: {
-                console.assert(false, cx1.singleSelectionContext.ariaPropName + " is not valid for multi-select -- prefer checked, selected, or pressed");
+                console.assert(false, cx1.singleSelectionContext.singleSelectionAriaPropName + " is not valid for multi-select -- prefer checked, selected, or pressed");
             }
         }
     }
@@ -6884,11 +7312,11 @@ function useTableCell({ tableCellParameters: { tagTableCell }, info, ...p }) {
  * @hasChild {@link useTab}
  * @hasChild {@link useTabPanel}
  */
-function useTabs({ labelParameters, linearNavigationParameters, singleSelectionParameters: { initiallySelectedIndex, onSelectedIndexChange: ssi, selectionMode, ...singleSelectionParameters }, tabsParameters: { orientation, role, localStorageKey }, rovingTabIndexParameters, ...restParams }) {
+function useTabs({ labelParameters, linearNavigationParameters, singleSelectionParameters: { initiallySingleSelectedIndex, onSingleSelectedIndexChange: ssi, singleSelectionMode, ...singleSelectionParameters }, tabsParameters: { orientation, role, localStorageKey }, rovingTabIndexParameters, ...restParams }) {
     monitorCallCount(useTabs);
     const [localStorageIndex, setLocalStorageIndex] = usePersistentState(localStorageKey ?? null, 0);
     if (localStorageIndex != null)
-        initiallySelectedIndex = localStorageIndex;
+        initiallySingleSelectedIndex = localStorageIndex;
     const baseId = generateRandomId("aria-tabs-");
     const getTabId = T$1((index) => { return baseId + "-tab-" + index; }, []);
     const getPanelId = T$1((index) => { return baseId + "-panel-" + index; }, []);
@@ -6910,7 +7338,7 @@ function useTabs({ labelParameters, linearNavigationParameters, singleSelectionP
         onIndexChange: null
     });
     y(() => {
-        changeVisiblePanel(initiallySelectedIndex ?? null, undefined);
+        changeVisiblePanel(initiallySingleSelectedIndex ?? null, undefined);
     }, []);
     const { propsInput, propsLabel, randomIdInputReturn: { id: _inputId }, randomIdLabelReturn: { id: _labelId }, } = useLabelSynthetic({
         labelParameters: { ...labelParameters, onLabelClick: useStableCallback(() => listNavRet1.rovingTabIndexReturn.focusSelf()) },
@@ -6921,21 +7349,26 @@ function useTabs({ labelParameters, linearNavigationParameters, singleSelectionP
         linearNavigationParameters: { arrowKeyDirection: orientation, ...linearNavigationParameters },
         rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
         singleSelectionParameters: {
-            onSelectedIndexChange: useStableCallback((e) => {
+            onSingleSelectedIndexChange: useStableCallback((e) => {
                 ssi?.(e);
                 changeVisiblePanel(e[EventDetail].selectedIndex, e);
                 setLocalStorageIndex(e[EventDetail].selectedIndex);
-                changeSelectedIndex(e[EventDetail].selectedIndex, e);
+                changeSingleSelectedIndex(e[EventDetail].selectedIndex, e);
             }),
-            ariaPropName: "aria-selected",
-            selectionMode: selectionMode ?? "focus",
-            initiallySelectedIndex: initiallySelectedIndex ?? null,
+            singleSelectionAriaPropName: "aria-selected",
+            singleSelectionMode: singleSelectionMode ?? "focus",
+            initiallySingleSelectedIndex: initiallySingleSelectedIndex ?? null,
             ...singleSelectionParameters
+        },
+        multiSelectionParameters: {
+            multiSelectionAriaPropName: null,
+            multiSelectionMode: "disabled",
+            onSelectionChange: null
         },
         paginatedChildrenParameters: { paginationMax: null, paginationMin: null },
         ...restParams
     });
-    const { singleSelectionReturn: { changeSelectedIndex } } = listNavRet1;
+    const { singleSelectionReturn: { changeSingleSelectedIndex } } = listNavRet1;
     return {
         contextPanels: useMemoObject({
             ...managedChildContext,
@@ -6943,12 +7376,12 @@ function useTabs({ labelParameters, linearNavigationParameters, singleSelectionP
                 getPanelId,
                 getTabId,
                 getVisibleIndex,
-                setSelectedIndex: changeSelectedIndex
+                setSelectedIndex: changeSingleSelectedIndex
             })
         }),
         contextTabs: useMemoObject({
             ...context,
-            tabsContext: useMemoObject({ getTabId, getPanelId, getVisibleIndex, setSelectedIndex: changeSelectedIndex })
+            tabsContext: useMemoObject({ getTabId, getPanelId, getVisibleIndex, setSelectedIndex: changeSingleSelectedIndex })
         }),
         propsContainer: useMergedProps(listNavigationSingleSelectionProps, propsInput, {
             role: (role ?? "tablist"),
@@ -6961,16 +7394,18 @@ function useTabs({ labelParameters, linearNavigationParameters, singleSelectionP
 /**
  * @compositeParams
  */
-function useTab({ info: { focusSelf: focusSelfParent, index, unselectable, untabbable, getSortValue, ...info }, textContentParameters, pressParameters: { focusSelf: focusSelfChild, longPressThreshold, onPressingChange, ...void2 }, context, hasCurrentFocusParameters, refElementParameters, ...void3 }) {
+function useTab({ info: { focusSelf: focusSelfParent, index, untabbable, getSortValue, ...info }, textContentParameters, pressParameters: { focusSelf: focusSelfChild, longPressThreshold, onPressingChange, ...void2 }, context, hasCurrentFocusParameters, refElementParameters, singleSelectionChildParameters, ...void3 }) {
     const { propsChild: listNavigationSingleSelectionChildProps, propsTabbable, pressParameters: { onPressSync, excludeSpace, ...void1 }, refElementReturn, ...listNavRet2 } = useCompleteListNavigationChild({
         context,
-        info: { index, focusSelf: focusSelfParent, getSortValue, unselectable, untabbable, ...info },
+        info: { index, focusSelf: focusSelfParent, getSortValue, untabbable, ...info },
         textContentParameters,
         hasCurrentFocusParameters,
-        refElementParameters
+        refElementParameters,
+        singleSelectionChildParameters,
+        multiSelectionChildParameters: { initiallyMultiSelected: false, multiSelectionDisabled: true, onMultiSelectChange: null },
     });
     const { pressReturn, props: propsPressStable } = usePress({ pressParameters: { onPressSync, focusSelf: focusSelfChild, allowRepeatPresses: false, excludeEnter: returnFalse, excludePointer: returnFalse, excludeSpace: returnFalse, longPressThreshold, onPressingChange }, refElementReturn });
-    const { singleSelectionChildReturn: { selected }, rovingTabIndexChildReturn: { tabbable } } = listNavRet2;
+    const { singleSelectionChildReturn: { singleSelected }, rovingTabIndexChildReturn: { tabbable } } = listNavRet2;
     const { getPanelId, getTabId } = context.tabsContext;
     const panelId = getPanelId(index);
     const tabId = getTabId(index);
@@ -6980,7 +7415,7 @@ function useTab({ info: { focusSelf: focusSelfParent, index, unselectable, untab
         refElementReturn,
         props: useMergedProps(propsPressStable, listNavigationSingleSelectionChildProps, propsTabbable, {
             "data-tabbable": tabbable.toString(),
-            "data-selected": selected.toString(),
+            "data-selected": singleSelected.toString(),
             role: "tab",
             "aria-controls": panelId,
             id: tabId
@@ -7427,7 +7862,8 @@ const ContextDefaults = {
     getDocument: F$2(() => globalThis.document),
     focusOpener: F$2((e) => focus(e)),
     getText: F$2((e) => (e?.textContent ?? "")),
-    selectionMode: F$2("activation"),
+    singleSelectionMode: F$2("activation"),
+    multiSelectionMode: F$2("activation"),
 };
 function useDefault(context, userValue) {
     const defaultValue = q$1(ContextDefaults[context]);
@@ -7486,7 +7922,7 @@ const Button = memo(function Button({ tagButton, pressed, render, disabled, onEl
 });
 
 const UseCheckboxGroupChildContext = F$2(null);
-const CheckboxGroup = memo(function CheckboxGroup({ render, collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, onTabbableIndexChange, compare, staggered, getIndex, untabbable, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, ...void1 }) {
+const CheckboxGroup = memo(function CheckboxGroup({ render, collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, onTabbableIndexChange, compare, staggered, getIndex, untabbable, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, ...void1 }) {
     return useComponent(imperativeHandle, render, UseCheckboxGroupChildContext, useCheckboxGroup({
         linearNavigationParameters: {
             onNavigateLinear,
@@ -7517,10 +7953,11 @@ const CheckboxGroup = memo(function CheckboxGroup({ render, collator, disableHom
             noTypeahead: useDefault("noTypeahead", noTypeahead),
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
         },
-        refElementParameters: { onElementChange, onMount, onUnmount }
+        refElementParameters: { onElementChange, onMount, onUnmount },
+        multiSelectionParameters: { multiSelectionAriaPropName, multiSelectionMode: multiSelectionMode || "activation", onSelectionChange }
     }));
 });
-const CheckboxGroupParent = memo(function CheckboxGroupParent({ render, index, focusSelf, untabbable, getSortValue, unselectable, imperativeHandle, getText, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, 
+const CheckboxGroupParent = memo(function CheckboxGroupParent({ render, index, focusSelf, untabbable, getSortValue, imperativeHandle, getText, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, 
 //info,
 ..._rest }) {
     const context = useContextWithWarning(UseCheckboxGroupChildContext, "checkbox group");
@@ -7528,7 +7965,6 @@ const CheckboxGroupParent = memo(function CheckboxGroupParent({ render, index, f
     return (useComponent(imperativeHandle, render, null, useCheckboxGroupParent({
         info: {
             index,
-            unselectable: unselectable || false,
             untabbable: untabbable || false,
             focusSelf,
             getSortValue,
@@ -7538,12 +7974,14 @@ const CheckboxGroupParent = memo(function CheckboxGroupParent({ render, index, f
             getText: useDefault("getText", getText)
         },
         hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged },
-        refElementParameters: { onElementChange, onMount, onUnmount }
+        refElementParameters: { onElementChange, onMount, onUnmount },
+        multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false, initiallyMultiSelected: initiallyMultiSelected || false, onMultiSelectChange },
+        singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false }
     })));
 });
-const CheckboxGroupChild = (function CheckboxGroupChild({ index, render, checked, onChangeFromParent, getSortValue, untabbable, getText, focusSelf, unselectable, 
+const CheckboxGroupChild = (function CheckboxGroupChild({ index, render, checked, onChangeFromParent, getSortValue, untabbable, getText, focusSelf, 
 //info,
-imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, ...void1 }) {
+imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, multiSelectionDisabled, onMultiSelectChange, ...void1 }) {
     return useComponent(imperativeHandle, render, null, useCheckboxGroupChild({
         checkboxGroupChildParameters: {
             checked: checked,
@@ -7552,7 +7990,6 @@ imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onEleme
         info: {
             index,
             untabbable: untabbable || false,
-            unselectable: unselectable || false,
             focusSelf,
             getSortValue
         },
@@ -7568,7 +8005,8 @@ imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onEleme
             onElementChange,
             onMount,
             onUnmount
-        }
+        },
+        multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false, onMultiSelectChange },
     }));
 });
 
@@ -7667,10 +8105,7 @@ function defaultRenderGridlistChild({ tagGridlistChild, makePropsGridlistChild }
         return y$1(tagGridlistChild, (makePropsGridlistChild(info)));
     };
 }
-const Gridlist = (function Gridlist({ collator, disableHomeEndKeys, noTypeahead, onTabbableIndexChange, groupingType, typeaheadTimeout, selectedIndex, navigatePastEnd, navigatePastStart, onSelectedIndexChange, pageNavigationSize, selectionLimit, untabbable, paginationMax, paginationMin, staggered, compare, getIndex, onTabbableColumnChange, ariaLabel, orientation, ariaPropName, selectionMode, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, render, ...void1 }) {
-    untabbable ??= false;
-    ariaPropName ??= "aria-selected";
-    selectionMode ??= "activation";
+const Gridlist = (function Gridlist({ collator, disableHomeEndKeys, noTypeahead, onTabbableIndexChange, groupingType, typeaheadTimeout, singleSelectedIndex, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, pageNavigationSize, untabbable, paginationMax, paginationMin, staggered, compare, getIndex, onTabbableColumnChange, ariaLabel, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, render, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, singleSelectionAriaPropName, singleSelectionMode, ...void1 }) {
     return useComponent(imperativeHandle, render, GridlistContext, useGridlist({
         linearNavigationParameters: {
             onNavigateLinear,
@@ -7681,7 +8116,7 @@ const Gridlist = (function Gridlist({ collator, disableHomeEndKeys, noTypeahead,
         },
         rovingTabIndexParameters: {
             onTabbableIndexChange,
-            untabbable
+            untabbable: untabbable || false
         },
         staggeredChildrenParameters: { staggered: staggered || false },
         typeaheadNavigationParameters: {
@@ -7691,11 +8126,7 @@ const Gridlist = (function Gridlist({ collator, disableHomeEndKeys, noTypeahead,
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout),
         },
         listboxParameters: {
-            selectionLimit,
-            groupingType,
-            selectedIndex,
-            onSelectedIndexChange,
-            orientation: orientation ?? "vertical"
+            groupingType
         },
         gridNavigationParameters: {
             onTabbableColumnChange,
@@ -7713,18 +8144,19 @@ const Gridlist = (function Gridlist({ collator, disableHomeEndKeys, noTypeahead,
             paginationMax,
             paginationMin
         },
-        singleSelectionParameters: { ariaPropName, selectionMode },
+        singleSelectionParameters: { singleSelectionAriaPropName, singleSelectionMode: singleSelectionMode || "disabled" },
+        multiSelectionParameters: { multiSelectionAriaPropName, multiSelectionMode: multiSelectionMode || "disabled", onSelectionChange },
+        singleSelectionDeclarativeParameters: { onSingleSelectedIndexChange, singleSelectedIndex },
         refElementParameters: { onElementChange, onMount, onUnmount }
     }));
 });
-const GridlistRow = memo(function GridlistRowU({ index, collator, unselectable, untabbable, navigatePastEnd, navigatePastStart, noTypeahead, onTabbableIndexChange, selected, typeaheadTimeout, getText, render, initiallyTabbedIndex, onNavigateTypeahead, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, info: uinfo }) {
+const GridlistRow = memo(function GridlistRowU({ index, collator, untabbable, navigatePastEnd, navigatePastStart, noTypeahead, onTabbableIndexChange, selected, typeaheadTimeout, getText, render, initiallyTabbedIndex, onNavigateTypeahead, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, ...void1 }) {
     const context = useContextWithWarning(GridlistContext, "gridlist");
     console.assert(context != null, `This GridlistRow is not contained within a Gridlist`);
     return useComponent(imperativeHandle, render, GridlistRowContext, useGridlistRow({
         info: {
             index,
             untabbable: untabbable || false,
-            unselectable: unselectable || false,
             ...uinfo
         },
         context,
@@ -7749,7 +8181,9 @@ const GridlistRow = memo(function GridlistRowU({ index, collator, unselectable, 
             noTypeahead: useDefault("noTypeahead", noTypeahead),
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
         },
-        gridNavigationSingleSelectionSortableRowParameters: { getSortableColumnIndex: returnZero }
+        gridNavigationSelectionSortableRowParameters: { getSortableColumnIndex: returnZero },
+        singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false },
+        multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false, initiallyMultiSelected: initiallyMultiSelected || false, onMultiSelectChange }
     }));
 });
 const GridlistChild = memo(function GridlistChild({ index, colSpan, focusSelf, untabbable, getText, onPressSync, longPressThreshold, onPressingChange, render, getSortValue, imperativeHandle, info: subInfo }) {
@@ -7806,7 +8240,7 @@ const HeadingReset = x(function HeadingReset({ newLevel, children }) {
 
 const ListboxContext = F$2(null);
 const ListboxGroupContext = F$2(null);
-const GroupedListbox = x(function GroupedListbox({ ariaLabel, selectionLimit, orientation, render, onElementChange, onMount, onUnmount }) {
+const GroupedListbox = x(function GroupedListbox({ ariaLabel, orientation, render, onElementChange, onMount, onUnmount }) {
     const info = useListbox({
         labelParameters: { ariaLabel },
         linearNavigationParameters: {
@@ -7818,7 +8252,7 @@ const GroupedListbox = x(function GroupedListbox({ ariaLabel, selectionLimit, or
         },
         staggeredChildrenParameters: { staggered: false },
         paginatedChildrenParameters: { paginationMax: null, paginationMin: null },
-        listboxParameters: { selectionLimit, groupingType: "with-groups", selectedIndex: null, onSelectedIndexChange: null, orientation: orientation ?? "vertical" },
+        listboxParameters: { groupingType: "with-groups", orientation: orientation ?? "vertical" },
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", undefined) },
         rovingTabIndexParameters: { onTabbableIndexChange: null, untabbable: false },
         sortableChildrenParameters: { compare: null },
@@ -7829,15 +8263,14 @@ const GroupedListbox = x(function GroupedListbox({ ariaLabel, selectionLimit, or
             onNavigateTypeahead: null
         },
         refElementParameters: { onElementChange, onMount, onUnmount },
-        singleSelectionParameters: { ariaPropName: null, selectionMode: "disabled" }
+        singleSelectionParameters: { singleSelectionMode: "disabled", singleSelectionAriaPropName: null },
+        multiSelectionParameters: { multiSelectionMode: "disabled", multiSelectionAriaPropName: null, onSelectionChange: null },
+        singleSelectionDeclarativeParameters: { onSingleSelectedIndexChange: null, singleSelectedIndex: null }
     });
     return (o(ListboxGroupContext.Provider, { value: info, children: render(info) }));
 });
-const Listbox = x(function Listbox({ ariaLabel, collator, compare, disableHomeEndKeys, getIndex, selectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSelectedIndexChange, onTabbableIndexChange, staggered, pageNavigationSize, paginationMax, paginationMin, selectionLimit, untabbable, typeaheadTimeout, orientation, ariaPropName, selectionMode, onNavigateLinear, onNavigateTypeahead, onElementChange, onMount, onUnmount, render, imperativeHandle, ...void1 }) {
+const Listbox = x(function Listbox({ ariaLabel, collator, compare, disableHomeEndKeys, getIndex, singleSelectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSingleSelectedIndexChange, onTabbableIndexChange, staggered, pageNavigationSize, paginationMax, paginationMin, untabbable, typeaheadTimeout, orientation, onNavigateLinear, onNavigateTypeahead, onElementChange, onMount, onUnmount, render, imperativeHandle, singleSelectionAriaPropName, singleSelectionMode, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, ...void1 }) {
     const listboxGroupInfo = q$1(ListboxGroupContext);
-    ariaPropName ||= "aria-selected";
-    selectionMode ||= "activation";
-    untabbable ||= false;
     return useComponent(imperativeHandle, render, ListboxContext, useListbox({
         labelParameters: { ariaLabel },
         staggeredChildrenParameters: {
@@ -7855,10 +8288,7 @@ const Listbox = x(function Listbox({ ariaLabel, collator, compare, disableHomeEn
             paginationMin
         },
         listboxParameters: {
-            selectionLimit,
             groupingType: listboxGroupInfo == null ? "without-groups" : "group",
-            selectedIndex,
-            onSelectedIndexChange,
             orientation: orientation ?? "vertical"
         },
         rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
@@ -7874,10 +8304,12 @@ const Listbox = x(function Listbox({ ariaLabel, collator, compare, disableHomeEn
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
         },
         refElementParameters: { onElementChange, onMount, onUnmount },
-        singleSelectionParameters: { ariaPropName, selectionMode }
+        singleSelectionParameters: { singleSelectionAriaPropName, singleSelectionMode: singleSelectionMode || "disabled" },
+        singleSelectionDeclarativeParameters: { onSingleSelectedIndexChange, singleSelectedIndex },
+        multiSelectionParameters: { multiSelectionAriaPropName, multiSelectionMode: multiSelectionMode || "disabled", onSelectionChange }
     }));
 });
-const ListboxItem = x(function ListboxItem({ unselectable, getText, untabbable, index, render, selected, getSortValue, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, onMultiSelect, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, imperativeHandle, ...void1 }) {
+const ListboxItem = x(function ListboxItem({ getText, untabbable, index, render, getSortValue, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, imperativeHandle, multiSelectionDisabled, singleSelectionDisabled, multiSelected, onMultiSelectedChange, ...void1 }) {
     const context = useContextWithWarning(ListboxContext, "listbox");
     console.assert(context != null, `This ListboxItem is not contained within a Listbox`);
     const focusSelfDefault = T$1((e) => { focus(e); }, []);
@@ -7885,92 +8317,94 @@ const ListboxItem = x(function ListboxItem({ unselectable, getText, untabbable, 
         info: {
             index,
             untabbable: untabbable || false,
-            unselectable: unselectable || false,
             focusSelf: focusSelf ?? focusSelfDefault,
             getSortValue
         },
         context,
-        listboxParameters: { selected, onMultiSelect },
+        listboxParameters: {},
         pressParameters: { allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange },
         textContentParameters: { getText: useDefault("getText", getText) },
         hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged, },
-        refElementParameters: { onElementChange, onMount, onUnmount }
+        refElementParameters: { onElementChange, onMount, onUnmount },
+        singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false },
+        multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false },
+        multiSelectionChildDeclarativeParameters: { onMultiSelectedChange, multiSelected: multiSelected || false },
     }));
 });
 
-const UntabbableContext$2 = F$2(false);
-const AriaPropNameContext$1 = F$2("aria-selected");
-const SelectionModeContext$2 = F$2("focus");
 const MenuItemContext = F$2(null);
-function Menu({ collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, orientation, ariaPropName, selectionMode, selectionLimit, untabbable, active, onDismiss, onElementChange, onMount, onUnmount, openDirection, onTabbableIndexChange, compare, getIndex, selectedIndex, navigatePastEnd, navigatePastStart, onSelectedIndexChange, pageNavigationSize, parentDepth, disabled, staggered, onOpen, onNavigateLinear, onNavigateTypeahead, getDocument, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, render, imperativeHandle, ...void1 }) {
+function Menu({ collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, orientation, singleSelectionAriaPropName, singleSelectionMode, untabbable, active, onDismiss, onElementChange, onMount, onUnmount, openDirection, onTabbableIndexChange, compare, getIndex, singleSelectedIndex, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, pageNavigationSize, parentDepth, disabled, staggered, onOpen, onNavigateLinear, onNavigateTypeahead, getDocument, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, render, imperativeHandle, ...void1 }) {
     const defaultParentDepth = q$1(ParentDepthContext);
     let myDepth = (parentDepth ?? defaultParentDepth) + 1;
-    ariaPropName ||= "aria-selected";
-    selectionMode ||= "activation";
     untabbable ||= false;
-    return (o(AriaPropNameContext$1.Provider, { value: ariaPropName, children: o(SelectionModeContext$2.Provider, { value: selectionMode, children: o(UntabbableContext$2.Provider, { value: untabbable, children: o(ParentDepthContext.Provider, { value: myDepth, children: useComponent(imperativeHandle, render, MenuItemContext, useMenu({
-                        linearNavigationParameters: {
-                            onNavigateLinear,
-                            disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
-                            pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize),
-                            navigatePastEnd: navigatePastEnd ?? "wrap",
-                            navigatePastStart: navigatePastStart ?? "wrap"
-                        },
-                        staggeredChildrenParameters: {
-                            staggered: staggered || false
-                        },
-                        escapeDismissParameters: { parentDepth: parentDepth || 1, },
-                        dismissParameters: { onDismiss },
-                        modalParameters: { active },
-                        refElementParameters: { onElementChange, onMount, onUnmount },
-                        activeElementParameters: {
-                            getDocument: useDefault("getDocument", getDocument),
-                            onActiveElementChange,
-                            onLastActiveElementChange,
-                            onWindowFocusedChange
-                        },
-                        rearrangeableChildrenParameters: {
-                            getIndex: useDefault("getIndex", getIndex)
-                        },
-                        sortableChildrenParameters: {
-                            compare
-                        },
-                        menuParameters: {
-                            openDirection,
-                            onOpen
-                        },
-                        menuSurfaceParameters: {},
-                        rovingTabIndexParameters: {
-                            onTabbableIndexChange,
-                            untabbable: untabbable
-                        },
-                        typeaheadNavigationParameters: {
-                            onNavigateTypeahead,
-                            collator: useDefault("collator", collator),
-                            noTypeahead: useDefault("noTypeahead", noTypeahead),
-                            typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
-                        },
-                        toolbarParameters: {
-                            orientation,
-                            selectedIndex,
-                            onSelectedIndexChange,
-                            disabled: disabled || false,
-                            selectionLimit
-                        },
-                        singleSelectionParameters: {
-                            ariaPropName: ariaPropName || "aria-selected",
-                            selectionMode: selectionMode || "activation"
-                        }
-                    })) }) }) }) }));
+    return (o(ParentDepthContext.Provider, { value: myDepth, children: useComponent(imperativeHandle, render, MenuItemContext, useMenu({
+            linearNavigationParameters: {
+                onNavigateLinear,
+                disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
+                pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize),
+                navigatePastEnd: navigatePastEnd ?? "wrap",
+                navigatePastStart: navigatePastStart ?? "wrap"
+            },
+            staggeredChildrenParameters: {
+                staggered: staggered || false
+            },
+            escapeDismissParameters: { parentDepth: parentDepth || 1, },
+            dismissParameters: { onDismiss },
+            modalParameters: { active },
+            refElementParameters: { onElementChange, onMount, onUnmount },
+            activeElementParameters: {
+                getDocument: useDefault("getDocument", getDocument),
+                onActiveElementChange,
+                onLastActiveElementChange,
+                onWindowFocusedChange
+            },
+            rearrangeableChildrenParameters: {
+                getIndex: useDefault("getIndex", getIndex)
+            },
+            sortableChildrenParameters: {
+                compare
+            },
+            menuParameters: {
+                openDirection,
+                onOpen
+            },
+            menuSurfaceParameters: {},
+            rovingTabIndexParameters: {
+                onTabbableIndexChange,
+                untabbable: untabbable
+            },
+            typeaheadNavigationParameters: {
+                onNavigateTypeahead,
+                collator: useDefault("collator", collator),
+                noTypeahead: useDefault("noTypeahead", noTypeahead),
+                typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
+            },
+            toolbarParameters: {
+                orientation,
+                disabled: disabled || false
+            },
+            singleSelectionParameters: {
+                singleSelectionAriaPropName: singleSelectionAriaPropName || "aria-selected",
+                singleSelectionMode: singleSelectionMode || "disabled",
+            },
+            multiSelectionParameters: {
+                multiSelectionAriaPropName,
+                multiSelectionMode: multiSelectionMode || "disabled",
+                onSelectionChange
+            },
+            singleSelectionDeclarativeParameters: {
+                singleSelectedIndex,
+                onSingleSelectedIndexChange,
+            }
+        })) }));
 }
-function MenuItem({ index, untabbable, getSortValue, onPress, getText, role, focusSelf, unselectable, onPressingChange, render, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, info: uinfo, ...void1 }) {
+function MenuItem({ index, untabbable, getSortValue, onPress, getText, role, focusSelf, onPressingChange, render, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, ...void1 }) {
     const context = useContextWithWarning(MenuItemContext, "menu");
     const defaultFocusSelf = T$1((e) => focus(e), []);
     return (useComponent(imperativeHandle, render, null, useMenuItem({
         info: {
             index,
             untabbable: untabbable || false,
-            unselectable: unselectable || false,
             focusSelf: focusSelf ?? defaultFocusSelf,
             getSortValue,
         },
@@ -7987,14 +8421,13 @@ function MenuItem({ index, untabbable, getSortValue, onPress, getText, role, foc
         },
         hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged },
         refElementParameters: { onElementChange, onMount, onUnmount },
+        singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false },
+        multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false, initiallyMultiSelected: initiallyMultiSelected || false, onMultiSelectChange }
     })));
 }
 
 const MenubarItemContext = F$2(null);
-const Menubar = memo(function Menubar({ render, collator, disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, staggered, noTypeahead, untabbable, onTabbableIndexChange, compare, getIndex, disabled, selectedIndex, onSelectedIndexChange, typeaheadTimeout, role, ariaLabel, ariaPropName, selectionMode, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, selectionLimit, ...void1 }) {
-    ariaPropName ||= "aria-selected";
-    selectionMode ||= "activation";
-    untabbable ||= false;
+const Menubar = memo(function Menubar({ render, collator, disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, staggered, noTypeahead, untabbable, onTabbableIndexChange, compare, getIndex, disabled, singleSelectedIndex, onSingleSelectedIndexChange, typeaheadTimeout, role, ariaLabel, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, singleSelectionAriaPropName, singleSelectionMode, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, ...void1 }) {
     const info = useMenubar({
         linearNavigationParameters: {
             onNavigateLinear,
@@ -8005,14 +8438,12 @@ const Menubar = memo(function Menubar({ render, collator, disableHomeEndKeys, na
         },
         toolbarParameters: {
             orientation,
-            selectedIndex,
-            selectionLimit,
-            onSelectedIndexChange,
             role: role ?? "menubar",
             disabled: disabled || false
         },
         rovingTabIndexParameters: {
-            onTabbableIndexChange, untabbable
+            onTabbableIndexChange,
+            untabbable: untabbable || false
         },
         typeaheadNavigationParameters: {
             onNavigateTypeahead,
@@ -8033,28 +8464,36 @@ const Menubar = memo(function Menubar({ render, collator, disableHomeEndKeys, na
             ariaLabel
         },
         singleSelectionParameters: {
-            ariaPropName,
-            selectionMode
+            singleSelectionAriaPropName,
+            singleSelectionMode: singleSelectionMode || "activation",
+        },
+        multiSelectionParameters: {
+            multiSelectionAriaPropName,
+            multiSelectionMode: multiSelectionMode || "activation",
+            onSelectionChange
+        },
+        singleSelectionDeclarativeParameters: {
+            singleSelectedIndex,
+            onSingleSelectedIndexChange
         },
         refElementParameters: { onElementChange, onMount, onUnmount }
     });
     A(imperativeHandle, () => info);
     return (o(MenubarItemContext.Provider, { value: info.context, children: render(info) }));
 });
-function MenubarItem({ index, render, focusSelf, untabbable, getText, unselectable, onPress, getSortValue, onPressingChange, role, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, info: uinfo }) {
-    const context = (useContextWithWarning(MenubarItemContext, "menubar"));
+function MenubarItem({ index, render, focusSelf, untabbable, getText, onPress, getSortValue, onPressingChange, role, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, ...void1 }) {
     const defaultFocusSelf = T$1((e) => focus(e), []);
-    const info = useMenubarChild({
-        info: { index, untabbable: untabbable || false, unselectable: unselectable || false, focusSelf: focusSelf ?? defaultFocusSelf, getSortValue, ...uinfo },
-        context,
+    return useComponent(imperativeHandle, render, null, useMenubarChild({
+        info: { index, untabbable: untabbable || false, focusSelf: focusSelf ?? defaultFocusSelf, getSortValue, ...uinfo },
+        context: useContextWithWarning(MenubarItemContext, "menubar"),
         textContentParameters: { getText: useDefault("getText", getText) },
         menuItemParameters: { onPress: onPress ?? null, role: role ?? "menuitem" },
         pressParameters: { onPressingChange },
         hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged },
-        refElementParameters: { onElementChange, onMount, onUnmount }
-    });
-    A(imperativeHandle, () => info);
-    return (o(_$2, { children: render(info) }));
+        refElementParameters: { onElementChange, onMount, onUnmount },
+        singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false },
+        multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false, initiallyMultiSelected: initiallyMultiSelected || false, onMultiSelectChange }
+    }));
 }
 
 const Progress = memo(function Progress({ tagProgressIndicator, ariaLabel, max, render, value, valueText, imperativeHandle, ...void1 }) {
@@ -8107,14 +8546,14 @@ const RadioGroup = memo(function RadioGroup({ render, name, collator, disableHom
         refElementParameters: { onElementChange, onMount, onUnmount },
     }));
 });
-const Radio = memo(function Radio({ unselectable, disabled, index, render, value, ariaLabel, labelPosition, untabbable, tagInput, tagLabel, getText, longPressThreshold, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, imperativeHandle, ...void1 }) {
+const Radio = memo(function Radio({ disabled, index, render, value, ariaLabel, labelPosition, untabbable, tagInput, tagLabel, getText, longPressThreshold, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, imperativeHandle, ...void1 }) {
     const context = useContextWithWarning(RadioContext, "radio group");
     console.assert(context != null, `This Radio is not contained within a RadioGroup`);
     const getValue = useStableGetter(value);
     return useComponent(imperativeHandle, render, null, useRadio({
         radioParameters: { value },
         checkboxLikeParameters: { disabled: disabled ?? false },
-        info: { index, untabbable: untabbable || false, unselectable: !!unselectable, getSortValue: getValue },
+        info: { index, untabbable: untabbable || false, getSortValue: getValue },
         context,
         labelParameters: { ariaLabel, labelPosition, tagInput, tagLabel },
         textContentParameters: { getText: useDefault("getText", getText) },
@@ -8142,17 +8581,16 @@ function SliderThumb({ label, tag, value, max, min, index, render, valueText, im
 const TableContext = F$2(null);
 const TableSectionContext = F$2(null);
 const TableRowContext = F$2(null);
-const Table = memo(function Table({ ariaLabel, selectionLimit, tagTable, imperativeHandle, render }) {
+const Table = memo(function Table({ ariaLabel, singleSelectionMode, multiSelectionMode, tagTable, imperativeHandle, render, ...void1 }) {
     return useComponent(imperativeHandle, render, TableContext, useTable({
         labelParameters: { ariaLabel },
-        tableParameters: { selectionLimit, tagTable, }
+        tableParameters: { tagTable, },
+        singleSelectionParameters: { singleSelectionMode: singleSelectionMode || "disabled" },
+        multiSelectionParameters: { multiSelectionMode: multiSelectionMode || "disabled" },
     }));
 });
-const TableSection = memo(function TableSection({ disableHomeEndKeys, getIndex, initiallySelectedIndex, untabbable, navigatePastEnd, navigatePastStart, onSelectedIndexChange, onTabbableColumnChange, onTabbableIndexChange, pageNavigationSize, paginationMax, paginationMin, staggered, render, location, ariaPropName, selectionMode, onNavigateLinear, collator, noTypeahead, onNavigateTypeahead, typeaheadTimeout, tagTableSection, onElementChange, onMount, onUnmount }) {
-    untabbable = (untabbable ?? false);
-    ariaPropName ??= "aria-selected";
-    selectionMode ??= "activation";
-    const info = useTableSection({
+const TableSection = memo(function TableSection({ disableHomeEndKeys, getIndex, initiallySingleSelectedIndex, untabbable, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, onTabbableColumnChange, onTabbableIndexChange, pageNavigationSize, paginationMax, paginationMin, staggered, render, location, imperativeHandle, multiSelectionAriaPropName, onSelectionChange, singleSelectionAriaPropName, onNavigateLinear, collator, noTypeahead, onNavigateTypeahead, typeaheadTimeout, tagTableSection, onElementChange, onMount, onUnmount, ...void1 }) {
+    return useComponent(imperativeHandle, render, TableSectionContext, useTableSection({
         gridNavigationParameters: {
             onTabbableColumnChange: onTabbableColumnChange
         },
@@ -8181,13 +8619,16 @@ const TableSection = memo(function TableSection({ disableHomeEndKeys, getIndex, 
         },
         rovingTabIndexParameters: {
             onTabbableIndexChange,
-            untabbable
+            untabbable: untabbable || false,
         },
         singleSelectionParameters: {
-            initiallySelectedIndex,
-            onSelectedIndexChange,
-            ariaPropName,
-            selectionMode
+            initiallySingleSelectedIndex,
+            onSingleSelectedIndexChange,
+            singleSelectionAriaPropName
+        },
+        multiSelectionParameters: {
+            multiSelectionAriaPropName,
+            onSelectionChange,
         },
         context: useContextWithWarning(TableContext, "table"),
         tableSectionParameters: {
@@ -8195,14 +8636,12 @@ const TableSection = memo(function TableSection({ disableHomeEndKeys, getIndex, 
             location
         },
         refElementParameters: { onElementChange, onMount, onUnmount }
-    });
-    return (o(TableSectionContext.Provider, { value: info.context, children: render(info) }));
+    }));
 });
-const TableRow = memo(function TableRow({ index, getText, tagTableRow, onTabbableIndexChange, navigatePastEnd, navigatePastStart, selected, unselectable, initiallyTabbedIndex, untabbable, info, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, render, ...void1 }) {
+const TableRow = memo(function TableRow({ index, getText, tagTableRow, onTabbableIndexChange, navigatePastEnd, navigatePastStart, selected, initiallyTabbedIndex, untabbable, info, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, render, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, ...void1 }) {
     return useComponent(imperativeHandle, render, TableRowContext, useTableRow({
         info: {
             index,
-            unselectable: unselectable || false,
             untabbable: untabbable || false,
             ...info
         },
@@ -8227,6 +8666,8 @@ const TableRow = memo(function TableRow({ index, getText, tagTableRow, onTabbabl
             initiallyTabbedIndex: initiallyTabbedIndex ?? null,
             untabbable: untabbable || false
         },
+        singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false },
+        multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false, initiallyMultiSelected: initiallyMultiSelected || false, onMultiSelectChange }
     }));
 });
 const TableCell = memo(function TableCell({ index, getText, focusSelf, untabbable, tagTableCell, render, colSpan, imperativeHandle, getSortValue, info, ...void1 }) {
@@ -8253,11 +8694,10 @@ const TableCell = memo(function TableCell({ index, getText, focusSelf, untabbabl
 
 const TabsContext = F$2(null);
 const TabPanelsContext = F$2(null);
-const UntabbableContext$1 = F$2(false);
-const SelectionModeContext$1 = F$2("focus");
-const Tabs = memo(function Tabs({ ariaLabel, collator, compare, disableHomeEndKeys, getIndex, initiallySelectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSelectedIndexChange, onTabbableIndexChange, orientation, staggered, pageNavigationSize, localStorageKey, selectionMode, untabbable, typeaheadTimeout, role, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, render, ...void1 }) {
+//const UntabbableContext = createContext(false);
+//const SelectionModeContext = createContext<NonNullable<UseTabsParameters<any, any, any>["singleSelectionParameters"]["selectionMode"]>>("focus");
+const Tabs = memo(function Tabs({ ariaLabel, collator, compare, disableHomeEndKeys, getIndex, initiallySingleSelectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSingleSelectedIndexChange, onTabbableIndexChange, orientation, staggered, pageNavigationSize, localStorageKey, singleSelectionMode, untabbable, typeaheadTimeout, role, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, render, ...void1 }) {
     untabbable ??= false;
-    selectionMode ??= "focus";
     const info = useTabs({
         labelParameters: { ariaLabel },
         staggeredChildrenParameters: { staggered: staggered || false },
@@ -8273,7 +8713,7 @@ const Tabs = memo(function Tabs({ ariaLabel, collator, compare, disableHomeEndKe
             onTabbableIndexChange,
             untabbable
         },
-        singleSelectionParameters: { initiallySelectedIndex, onSelectedIndexChange, selectionMode },
+        singleSelectionParameters: { initiallySingleSelectedIndex, onSingleSelectedIndexChange, singleSelectionMode: singleSelectionMode || "focus" },
         sortableChildrenParameters: { compare },
         tabsParameters: {
             orientation,
@@ -8290,16 +8730,15 @@ const Tabs = memo(function Tabs({ ariaLabel, collator, compare, disableHomeEndKe
     });
     const { contextPanels, contextTabs } = info;
     A(imperativeHandle, () => info);
-    return (o(UntabbableContext$1.Provider, { value: untabbable, children: o(SelectionModeContext$1.Provider, { value: selectionMode, children: o(TabsContext.Provider, { value: contextTabs, children: o(TabPanelsContext.Provider, { value: contextPanels, children: render(info) }) }) }) }));
+    return (o(TabsContext.Provider, { value: contextTabs, children: o(TabPanelsContext.Provider, { value: contextPanels, children: render(info) }) }));
 });
-function Tab({ unselectable, focusSelf, untabbable, index, getText, render, longPressThreshold, onPressingChange, getSortValue, imperativeHandle, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, info: uinfo }) {
+function Tab({ focusSelf, untabbable, index, getText, render, longPressThreshold, onPressingChange, getSortValue, imperativeHandle, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, singleSelectionDisabled, info: uinfo, ...void1 }) {
     const context = useContextWithWarning(TabsContext, "tabs");
     console.assert(context != null, `This Tab is not contained within a Tabs component`);
     const focusSelfDefault = T$1((e) => { focus(e); }, []);
     return useComponent(imperativeHandle, render, null, useTab({
         info: {
             index,
-            unselectable: unselectable || false,
             untabbable: untabbable || false,
             focusSelf: focusSelf ?? focusSelfDefault,
             getSortValue,
@@ -8309,7 +8748,8 @@ function Tab({ unselectable, focusSelf, untabbable, index, getText, render, long
         hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged },
         refElementParameters: { onElementChange, onMount, onUnmount },
         pressParameters: { focusSelf: focusSelfDefault, longPressThreshold, onPressingChange },
-        textContentParameters: { getText: useDefault("getText", getText) }
+        textContentParameters: { getText: useDefault("getText", getText) },
+        singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false, }
     }));
 }
 function TabPanel({ index, render, info: uinfo }) {
@@ -8350,66 +8790,60 @@ function Toast({ render, index, timeout, politeness, children, info, imperativeH
 }
 
 // TODO: Are there performance/sanity implications for having one context per primitive?
-const UntabbableContext = F$2(false);
-const AriaPropNameContext = F$2("aria-selected");
-const SelectionModeContext = F$2("focus");
+F$2(false);
+//const AriaPropNameContext = createContext<UseToolbarParameters<any, any, any>["singleSelectionParameters"]["singleSelectionAriaPropName"]>("aria-selected")
+//const SelectionModeContext = createContext<UseToolbarParameters<any, any, any>["singleSelectionParameters"]["singleSelectionMode"]>("focus");
 const ToolbarContext = F$2(null);
-const Toolbar = memo(function ToolbarU({ render, role, collator, disableHomeEndKeys, disabled, compare, getIndex, navigatePastEnd, navigatePastStart, pageNavigationSize, selectedIndex, onSelectedIndexChange, orientation, noTypeahead, onTabbableIndexChange, typeaheadTimeout, staggered, ariaLabel, ariaPropName, selectionMode, untabbable, onNavigateLinear, onNavigateTypeahead, onElementChange, onMount, onUnmount, selectionLimit, imperativeHandle, ...void1 }) {
-    ariaPropName ??= "aria-selected";
-    selectionMode ??= "activation";
-    untabbable ||= false;
-    return (o(AriaPropNameContext.Provider, { value: ariaPropName, children: o(SelectionModeContext.Provider, { value: selectionMode, children: o(UntabbableContext.Provider, { value: untabbable, children: useComponent(imperativeHandle, render, ToolbarContext, useToolbar({
-                    rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
-                    sortableChildrenParameters: { compare: compare },
-                    linearNavigationParameters: {
-                        onNavigateLinear,
-                        disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
-                        navigatePastEnd: navigatePastEnd ?? "wrap",
-                        navigatePastStart: navigatePastStart ?? "wrap",
-                        pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
-                    },
-                    toolbarParameters: {
-                        orientation,
-                        disabled: disabled || false,
-                        role: role ?? "toolbar",
-                        selectedIndex,
-                        onSelectedIndexChange,
-                        selectionLimit
-                    },
-                    staggeredChildrenParameters: { staggered: staggered || false },
-                    rovingTabIndexParameters: { onTabbableIndexChange, untabbable },
-                    typeaheadNavigationParameters: {
-                        onNavigateTypeahead,
-                        collator: useDefault("collator", collator),
-                        noTypeahead: useDefault("noTypeahead", noTypeahead),
-                        typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
-                    },
-                    labelParameters: { ariaLabel },
-                    singleSelectionParameters: { ariaPropName: ariaPropName, selectionMode },
-                    refElementParameters: { onElementChange, onMount, onUnmount },
-                })) }) }) }));
+const Toolbar = memo(function ToolbarU({ render, role, collator, disableHomeEndKeys, disabled, compare, getIndex, navigatePastEnd, navigatePastStart, pageNavigationSize, singleSelectedIndex, onSingleSelectedIndexChange, orientation, noTypeahead, onTabbableIndexChange, typeaheadTimeout, staggered, ariaLabel, imperativeHandle, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, singleSelectionAriaPropName, singleSelectionMode, untabbable, onNavigateLinear, onNavigateTypeahead, onElementChange, onMount, onUnmount }, ref) {
+    return (useComponent(imperativeHandle, render, ToolbarContext, useToolbar({
+        rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
+        sortableChildrenParameters: { compare: compare },
+        linearNavigationParameters: {
+            onNavigateLinear,
+            disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
+            navigatePastEnd: navigatePastEnd ?? "wrap",
+            navigatePastStart: navigatePastStart ?? "wrap",
+            pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
+        },
+        toolbarParameters: {
+            orientation,
+            disabled: disabled || false,
+            role: role ?? "toolbar",
+        },
+        staggeredChildrenParameters: { staggered: staggered || false },
+        rovingTabIndexParameters: { onTabbableIndexChange, untabbable: untabbable || false },
+        typeaheadNavigationParameters: {
+            onNavigateTypeahead,
+            collator: useDefault("collator", collator),
+            noTypeahead: useDefault("noTypeahead", noTypeahead),
+            typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
+        },
+        labelParameters: { ariaLabel },
+        singleSelectionParameters: { singleSelectionAriaPropName, singleSelectionMode },
+        multiSelectionParameters: { multiSelectionAriaPropName, multiSelectionMode, onSelectionChange },
+        singleSelectionDeclarativeParameters: { singleSelectedIndex, onSingleSelectedIndexChange },
+        refElementParameters: { onElementChange, onMount, onUnmount },
+    })));
 });
-function ToolbarChild({ index, render, focusSelf, getSortValue, getText, unselectable, disabledProp, untabbable, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, imperativeHandle, info: uinfo }) {
+function ToolbarChild({ index, render, focusSelf, getSortValue, getText, disabledProp, untabbable, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, imperativeHandle, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, ...void1 }) {
     const context = useContextWithWarning(ToolbarContext, "toolbar");
-    console.assert(context != null, `This ToolbarChild is not contained within a Toolbar`);
     const focusSelfDefault = T$1((e) => { focus(e); }, []);
     focusSelf ??= focusSelfDefault;
-    const info = useToolbarChild({
+    return useComponent(imperativeHandle, render, null, useToolbarChild({
         context,
         toolbarChildParameters: { disabledProp },
         info: {
             index,
             focusSelf,
-            unselectable: unselectable || false,
             untabbable: untabbable || false,
             getSortValue
         },
         textContentParameters: { getText: useDefault("getText", getText) },
         hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged },
-        refElementParameters: { onElementChange, onMount, onUnmount }
-    });
-    A(imperativeHandle, () => info);
-    return (o(_$2, { children: render(info) }));
+        refElementParameters: { onElementChange, onMount, onUnmount },
+        singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false },
+        multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false, initiallyMultiSelected: initiallyMultiSelected || false, onMultiSelectChange }
+    }));
 }
 
 const Tooltip = memo(function TooltipU({ onStatus, getDocument, parentDepth, hoverDelay, render, imperativeHandle, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, tooltipSemanticType, usesLongPress, longPress, ...void1 }) {

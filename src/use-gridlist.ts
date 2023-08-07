@@ -10,7 +10,6 @@ import {
     UseCompleteGridNavigationCellParameters,
     UseCompleteGridNavigationCellReturnType,
     UseCompleteGridNavigationDeclarativeParameters,
-    UseCompleteGridNavigationParameters,
     UseCompleteGridNavigationReturnType,
     UseCompleteGridNavigationRowInfo,
     UseCompleteGridNavigationRowParameters,
@@ -40,7 +39,7 @@ export interface UseGridlistContext<GridlistRowElement extends Element, RM exten
          * 
          * Multi-selection requires each child pass its own `selected` boolean prop and listen for changes to itself.
          */
-        selectionLimit: "single" | "multi" | "none";
+        //selectionLimit: "single" | "multi" | "none";
     }
 }
 
@@ -53,10 +52,10 @@ export interface UseGridlistParametersSelf<GridlistElement extends Element, Grid
 }
 
 export interface UseGridlistParameters<GridlistElement extends Element, GridlistRowElement extends Element, LabelElement extends Element, RM extends GridlistRowInfo<GridlistRowElement>> extends
-    OmitStrong<UseCompleteGridNavigationDeclarativeParameters<GridlistElement, GridlistRowElement, RM>, "singleSelectionDeclarativeParameters" | "rovingTabIndexParameters">,
-    TargetedOmit<UseCompleteGridNavigationParameters<GridlistElement, GridlistRowElement, RM>, "rovingTabIndexParameters", "focusSelfParent">,
+    OmitStrong<UseCompleteGridNavigationDeclarativeParameters<GridlistElement, GridlistRowElement, RM>, "rovingTabIndexParameters">,
+    TargetedOmit<UseCompleteGridNavigationDeclarativeParameters<GridlistElement, GridlistRowElement, RM>, "rovingTabIndexParameters", "focusSelfParent">,
     TargetedOmit<UseLabelSyntheticParameters, "labelParameters", "onLabelClick">,
-    Pick<UseListboxParameters<GridlistElement, GridlistRowElement, LabelElement, RM>, "listboxParameters"> {
+    TargetedOmit<UseListboxParameters<GridlistElement, GridlistRowElement, LabelElement, RM>, "listboxParameters", "orientation"> {
 
 }
 export interface UseGridlistReturnType<GridlistElement extends Element, GridlistRowElement extends Element, GridlistCellElement extends Element, LabelElement extends Element, RM extends GridlistRowInfo<GridlistRowElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends OmitStrong<UseCompleteGridNavigationReturnType<GridlistElement, GridlistRowElement, RM>, "singleSelectionReturn" | "props"> {
@@ -98,7 +97,7 @@ export interface GridlistRowInfo<GridlistRowElement extends Element> extends Use
 export interface GridlistCellInfo<GridlistCellElement extends Element> extends UseCompleteGridNavigationCellInfo<GridlistCellElement> { }
 
 /**
- * Implements a gridlist, which is a hybrid of a [Listbox](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/) and a [Grid](https://www.w3.org/WAI/ARIA/apg/patterns/grid/).
+ * Implements a gridlist, effectively a [Listbox](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/) enhanced with the capabilities of a [Grid](https://www.w3.org/WAI/ARIA/apg/patterns/grid/).
  * 
  * @remarks A Listbox is a very limited structure, essentially being just a list with no further interactive content allowed.
  * 
@@ -112,14 +111,27 @@ export interface GridlistCellInfo<GridlistCellElement extends Element> extends U
 export function useGridlist<GridlistElement extends Element, GridlistRowElement extends Element, GridlistCellElement extends Element, LabelElement extends Element>({
     labelParameters,
 
-    listboxParameters: { selectionLimit, groupingType, selectedIndex, onSelectedIndexChange },
+    listboxParameters: { groupingType, ...void1 },
     rovingTabIndexParameters,
-    ...restParams
+    singleSelectionParameters,
+    gridNavigationParameters,
+    linearNavigationParameters,
+    multiSelectionParameters,
+    paginatedChildrenParameters,
+    rearrangeableChildrenParameters,
+    refElementParameters,
+    sortableChildrenParameters,
+    staggeredChildrenParameters,
+    typeaheadNavigationParameters,
+    singleSelectionDeclarativeParameters,
+    ...void2
 }: UseGridlistParameters<GridlistElement, GridlistRowElement, LabelElement, GridlistRowInfo<GridlistRowElement>>): UseGridlistReturnType<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, GridlistRowInfo<GridlistRowElement>, GridlistCellInfo<GridlistCellElement>> {
     type RM = GridlistRowInfo<GridlistRowElement>;
     type CM = GridlistCellInfo<GridlistCellElement>;
     monitorCallCount(useGridlist);
-
+    assertEmptyObject(void1);
+    assertEmptyObject(void2);
+    
     const {
         propsInput: propsLabelList,
         propsLabel: propsLabelLabel,
@@ -142,18 +154,27 @@ export function useGridlist<GridlistElement extends Element, GridlistRowElement 
         singleSelectionReturn,
         ...restRet
     } = useCompleteGridNavigationDeclarative<GridlistElement, GridlistRowElement, GridlistCellElement, RM, CM>({
-        singleSelectionDeclarativeParameters: { selectedIndex: selectedIndex, onSelectedIndexChange },
+        singleSelectionDeclarativeParameters,
         rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
-        ...restParams
+        gridNavigationParameters,
+        linearNavigationParameters,
+        multiSelectionParameters,
+        paginatedChildrenParameters,
+        rearrangeableChildrenParameters,
+        refElementParameters,
+        singleSelectionParameters,
+        sortableChildrenParameters,
+        staggeredChildrenParameters,
+        typeaheadNavigationParameters
     });
 
-    let propsGridlist = useMergedProps(props, propsLabelList, { "aria-multiselectable": (selectionLimit == "multi" ? "true" : undefined) });
+    let propsGridlist = useMergedProps(props, propsLabelList, { "aria-multiselectable": (context.multiSelectionContext.multiSelectionMode != "disabled" ? "true" : undefined) });
 
 
     let fullContext = useMemoObject({
         ...context,
         gridlistRowContext: useMemoObject({
-            selectionLimit
+            //selectionLimit
         })
     });
     if (groupingType == "group")
@@ -167,9 +188,6 @@ export function useGridlist<GridlistElement extends Element, GridlistRowElement 
     else {
         propsGridlist.role = "grid";
     }
-
-    if (selectionLimit == "multi")
-        console.assert(singleSelectionReturn.getSelectedIndex() == null)
 
     return {
         context: fullContext,
@@ -193,13 +211,15 @@ export function useGridlistRow<GridlistRowElement extends Element, GridlistCellE
     textContentParameters,
     typeaheadNavigationParameters,
     hasCurrentFocusParameters,
-    gridNavigationSingleSelectionSortableRowParameters,
+    singleSelectionChildParameters,
+    multiSelectionChildParameters,
+    gridNavigationSelectionSortableRowParameters,
     ...void1
 }: UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, GridlistRowInfo<GridlistRowElement>, GridlistCellInfo<GridlistCellElement>>): UseGridlistRowReturnType<GridlistRowElement, GridlistCellElement, GridlistRowInfo<GridlistRowElement>, GridlistCellInfo<GridlistCellElement>> {
     monitorCallCount(useGridlistRow);
     type RM = GridlistRowInfo<GridlistRowElement>;
     type CM = GridlistCellInfo<GridlistCellElement>;
-    const { gridlistRowContext: { selectionLimit } } = cx1;
+    const { gridlistRowContext: {  } } = cx1;
     const {
         context: cx2,
         hasCurrentFocusReturn,
@@ -215,6 +235,7 @@ export function useGridlistRow<GridlistRowElement extends Element, GridlistCellE
         textContentReturn,
         typeaheadNavigationReturn,
         pressParameters,
+        multiSelectionChildReturn,
         ...void2
 
     } = useCompleteGridNavigationRow<GridlistRowElement, GridlistCellElement, RM, CM>({
@@ -225,11 +246,14 @@ export function useGridlistRow<GridlistRowElement extends Element, GridlistCellE
         textContentParameters,
         typeaheadNavigationParameters,
         hasCurrentFocusParameters,
-        gridNavigationSingleSelectionSortableRowParameters,
+        
+        singleSelectionChildParameters,
+        multiSelectionChildParameters,
+        gridNavigationSelectionSortableRowParameters,
     });
 
     // `selected` should only be true/false for multi-selection
-    if (selectionLimit != "multi")
+    if (cx1.multiSelectionContext.multiSelectionMode == "disabled")
         console.assert(selected == null);
 
     props.role = "row";
@@ -246,6 +270,7 @@ export function useGridlistRow<GridlistRowElement extends Element, GridlistCellE
         rovingTabIndexChildReturn,
         rovingTabIndexReturn,
         singleSelectionChildReturn,
+        multiSelectionChildReturn,
         staggeredChildReturn,
         textContentReturn,
         typeaheadNavigationReturn,

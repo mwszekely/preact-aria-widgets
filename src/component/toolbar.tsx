@@ -1,26 +1,26 @@
-import { createContext } from "preact";
+import { createContext, Ref } from "preact";
 import { assertEmptyObject, focus, memo } from "preact-prop-helpers";
-import { useCallback, useImperativeHandle } from "preact/hooks";
-import { Get10, Get5, OmitStrong, useContextWithWarning } from "../props.js";
-import { UseToolbarChildParameters, UseToolbarChildReturnType, UseToolbarContext, UseToolbarParameters, UseToolbarReturnType, UseToolbarSubInfo, useToolbar, useToolbarChild } from "../use-toolbar.js";
+import { useCallback } from "preact/hooks";
+import { Get13, Get7, OmitStrong, useContextWithWarning } from "../props.js";
+import { useToolbar, useToolbarChild, UseToolbarChildParameters, UseToolbarChildReturnType, UseToolbarContext, UseToolbarParameters, UseToolbarReturnType, UseToolbarSubInfo } from "../use-toolbar.js";
 import { GenericComponentProps, useComponent, useDefault } from "./util.js";
 
 export type ToolbarProps<ToolbarContainerElement extends Element, ToolbarChildElement extends Element, LabelElement extends Element, M extends UseToolbarSubInfo<ToolbarChildElement>> = GenericComponentProps<
     UseToolbarReturnType<ToolbarContainerElement, ToolbarChildElement, LabelElement, M>,
-    Get10<UseToolbarParameters<ToolbarContainerElement, ToolbarChildElement, M>, "linearNavigationParameters", "rovingTabIndexParameters", "typeaheadNavigationParameters", "sortableChildrenParameters", "rearrangeableChildrenParameters", "labelParameters", "staggeredChildrenParameters", "toolbarParameters", "singleSelectionParameters", "refElementParameters">,
-    "orientation" | "ariaLabel" | "selectionLimit"
+    Get13<UseToolbarParameters<ToolbarContainerElement, ToolbarChildElement, M>, "linearNavigationParameters", "rovingTabIndexParameters", "typeaheadNavigationParameters", "sortableChildrenParameters", "rearrangeableChildrenParameters", "labelParameters", "staggeredChildrenParameters", "toolbarParameters", "singleSelectionParameters", "refElementParameters", "singleSelectionParameters", "multiSelectionParameters", "singleSelectionDeclarativeParameters">,
+    "orientation" | "ariaLabel" | "singleSelectionMode" | "multiSelectionMode" 
 >;
 
 export type ToolbarChildProps<ToolbarChildElement extends Element, M extends UseToolbarSubInfo<ToolbarChildElement>> = GenericComponentProps<
     UseToolbarChildReturnType<ToolbarChildElement, UseToolbarSubInfo<ToolbarChildElement>>,
-    Get5<UseToolbarChildParameters<ToolbarChildElement, UseToolbarSubInfo<ToolbarChildElement>>, "textContentParameters", "toolbarChildParameters", "info", "hasCurrentFocusParameters", "refElementParameters">,
+    Get7<UseToolbarChildParameters<ToolbarChildElement, UseToolbarSubInfo<ToolbarChildElement>>, "textContentParameters", "toolbarChildParameters", "info", "hasCurrentFocusParameters", "refElementParameters", "singleSelectionChildParameters", "multiSelectionChildParameters">,
     "disabledProp" | "getSortValue" | "index"
 > & { info?: OmitStrong<M, keyof UseToolbarSubInfo<ToolbarChildElement>> };
 
 // TODO: Are there performance/sanity implications for having one context per primitive?
 const UntabbableContext = createContext(false);
-const AriaPropNameContext = createContext<UseToolbarParameters<any, any, any>["singleSelectionParameters"]["ariaPropName"]>("aria-selected")
-const SelectionModeContext = createContext<UseToolbarParameters<any, any, any>["singleSelectionParameters"]["selectionMode"]>("focus");
+//const AriaPropNameContext = createContext<UseToolbarParameters<any, any, any>["singleSelectionParameters"]["singleSelectionAriaPropName"]>("aria-selected")
+//const SelectionModeContext = createContext<UseToolbarParameters<any, any, any>["singleSelectionParameters"]["singleSelectionMode"]>("focus");
 const ToolbarContext = createContext<UseToolbarContext<any, any>>(null!);
 
 export const Toolbar = memo(function ToolbarU<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({
@@ -34,73 +34,63 @@ export const Toolbar = memo(function ToolbarU<ContainerElement extends Element, 
     navigatePastEnd,
     navigatePastStart,
     pageNavigationSize,
-    selectedIndex,
-    onSelectedIndexChange,
+    singleSelectedIndex,
+    onSingleSelectedIndexChange,
     orientation,
     noTypeahead,
     onTabbableIndexChange,
     typeaheadTimeout,
     staggered,
     ariaLabel,
-    ariaPropName,
-    selectionMode,
+    imperativeHandle,
+    multiSelectionAriaPropName,
+    multiSelectionMode,
+    onSelectionChange,
+    singleSelectionAriaPropName,
+    singleSelectionMode,
     untabbable,
     onNavigateLinear,
     onNavigateTypeahead,
     onElementChange,
     onMount,
-    onUnmount,
-    selectionLimit,
-    imperativeHandle,
-    ...void1
-}: ToolbarProps<ContainerElement, ChildElement, LabelElement, UseToolbarSubInfo<ChildElement>>) {
-    ariaPropName ??= "aria-selected";
-    selectionMode ??= "activation";
-    untabbable ||= false;
-
-    assertEmptyObject(void1);
+    onUnmount
+}: ToolbarProps<ContainerElement, ChildElement, LabelElement, UseToolbarSubInfo<ChildElement>>, ref?: Ref<any>) {
 
     return (
-        <AriaPropNameContext.Provider value={ariaPropName}>
-            <SelectionModeContext.Provider value={selectionMode}>
-                <UntabbableContext.Provider value={untabbable}>
-                    {useComponent<UseToolbarReturnType<ContainerElement, ChildElement, LabelElement, UseToolbarSubInfo<ChildElement>>>(
-                        imperativeHandle,
-                        render,
-                        ToolbarContext,
-                        useToolbar<ContainerElement, ChildElement, LabelElement>({
-                            rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
-                            sortableChildrenParameters: { compare: compare },
-                            linearNavigationParameters: {
-                                onNavigateLinear,
-                                disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
-                                navigatePastEnd: navigatePastEnd ?? "wrap",
-                                navigatePastStart: navigatePastStart ?? "wrap",
-                                pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
-                            },
-                            toolbarParameters: {
-                                orientation,
-                                disabled: disabled || false,
-                                role: role ?? "toolbar",
-                                selectedIndex,
-                                onSelectedIndexChange,
-                                selectionLimit
-                            },
-                            staggeredChildrenParameters: { staggered: staggered || false },
-                            rovingTabIndexParameters: { onTabbableIndexChange, untabbable },
-                            typeaheadNavigationParameters: {
-                                onNavigateTypeahead,
-                                collator: useDefault("collator", collator),
-                                noTypeahead: useDefault("noTypeahead", noTypeahead),
-                                typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
-                            },
-                            labelParameters: { ariaLabel },
-                            singleSelectionParameters: { ariaPropName: ariaPropName, selectionMode },
-                            refElementParameters: { onElementChange, onMount, onUnmount },
-                        }))}
-                </UntabbableContext.Provider>
-            </SelectionModeContext.Provider>
-        </AriaPropNameContext.Provider>
+        useComponent<UseToolbarReturnType<ContainerElement, ChildElement, LabelElement, UseToolbarSubInfo<ChildElement>>>(
+            imperativeHandle,
+            render,
+            ToolbarContext,
+            useToolbar<ContainerElement, ChildElement, LabelElement>({
+                rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
+                sortableChildrenParameters: { compare: compare },
+                linearNavigationParameters: {
+                    onNavigateLinear,
+                    disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
+                    navigatePastEnd: navigatePastEnd ?? "wrap",
+                    navigatePastStart: navigatePastStart ?? "wrap",
+                    pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
+                },
+                toolbarParameters: {
+                    orientation,
+                    disabled: disabled || false,
+                    role: role ?? "toolbar",
+
+                },
+                staggeredChildrenParameters: { staggered: staggered || false },
+                rovingTabIndexParameters: { onTabbableIndexChange, untabbable: untabbable || false },
+                typeaheadNavigationParameters: {
+                    onNavigateTypeahead,
+                    collator: useDefault("collator", collator),
+                    noTypeahead: useDefault("noTypeahead", noTypeahead),
+                    typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
+                },
+                labelParameters: { ariaLabel },
+                singleSelectionParameters: { singleSelectionAriaPropName, singleSelectionMode },
+                multiSelectionParameters: { multiSelectionAriaPropName, multiSelectionMode, onSelectionChange },
+                singleSelectionDeclarativeParameters: { singleSelectedIndex, onSingleSelectedIndexChange },
+                refElementParameters: { onElementChange, onMount, onUnmount },
+            }))
     )
 })
 
@@ -111,7 +101,6 @@ export function ToolbarChild<ToolbarChildElement extends Element>({
     focusSelf,
     getSortValue,
     getText,
-    unselectable,
     disabledProp,
     untabbable,
     onElementChange,
@@ -120,31 +109,36 @@ export function ToolbarChild<ToolbarChildElement extends Element>({
     onCurrentFocusedChanged,
     onCurrentFocusedInnerChanged,
     imperativeHandle,
-    info: uinfo
+    info: uinfo,
+    initiallyMultiSelected,
+    multiSelectionDisabled,
+    onMultiSelectChange,
+    singleSelectionDisabled,
+    ...void1
 }: ToolbarChildProps<ToolbarChildElement, UseToolbarSubInfo<ToolbarChildElement>>) {
     const context = useContextWithWarning(ToolbarContext, "toolbar") as UseToolbarContext<ToolbarChildElement, UseToolbarSubInfo<ToolbarChildElement>>;
-    console.assert(context != null, `This ToolbarChild is not contained within a Toolbar`);
     const focusSelfDefault = useCallback((e: any) => { focus(e); }, []);
     focusSelf ??= focusSelfDefault;
 
-    const info = useToolbarChild<ToolbarChildElement>({
-        context,
-        toolbarChildParameters: { disabledProp },
-        info: {
-            index,
-            focusSelf,
-            unselectable: unselectable || false,
-            untabbable: untabbable || false,
-            getSortValue
-        },
-        textContentParameters: { getText: useDefault("getText", getText) },
-        hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged },
-        refElementParameters: { onElementChange, onMount, onUnmount }
-    });
+    assertEmptyObject(void1);
 
-    useImperativeHandle(imperativeHandle!, () => info);
-
-    return (
-        <>{render(info)}</>
-    )
+    return useComponent(
+        imperativeHandle,
+        render,
+        null,
+        useToolbarChild<ToolbarChildElement>({
+            context,
+            toolbarChildParameters: { disabledProp },
+            info: {
+                index,
+                focusSelf,
+                untabbable: untabbable || false,
+                getSortValue
+            },
+            textContentParameters: { getText: useDefault("getText", getText) },
+            hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged },
+            refElementParameters: { onElementChange, onMount, onUnmount },
+            singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false },
+            multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false, initiallyMultiSelected: initiallyMultiSelected || false, onMultiSelectChange }
+        }));
 };

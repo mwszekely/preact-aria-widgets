@@ -36,7 +36,8 @@ export const ContextDefaults = {
     getDocument: createContext(() => globalThis.document),
     focusOpener: createContext((e) => focus(e)),
     getText: createContext((e) => (e?.textContent ?? "")),
-    selectionMode: createContext("activation"),
+    singleSelectionMode: createContext("activation"),
+    multiSelectionMode: createContext("activation"),
 };
 export function useDefault(context, userValue) {
     const defaultValue = useContext(ContextDefaults[context]);

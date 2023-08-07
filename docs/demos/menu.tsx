@@ -10,7 +10,6 @@ function DemoListItem({ index }: { index: number }) {
             getSortValue={returnZero}
             role="menuitem"
             onPress={e => alert(`Menu item #${index} pressed`)}
-            unselectable={false}
             render={info => <li {...info.props}>{`Menu item #${index}`}</li>}
         />
     )
@@ -53,9 +52,6 @@ export function Demo() {
                     onOpen={() => setOpen(true)}
                     onDismiss={() => setOpen(false)}
                     active={open}
-                    ariaPropName={null}
-                    selectionLimit="none"
-                    selectionMode="disabled"
                     openDirection="down"
                     render={info => {
                         return (

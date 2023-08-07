@@ -10,11 +10,11 @@ import { useLabelSynthetic } from "./use-label.js";
  * @hasChild {@link useTab}
  * @hasChild {@link useTabPanel}
  */
-export function useTabs({ labelParameters, linearNavigationParameters, singleSelectionParameters: { initiallySelectedIndex, onSelectedIndexChange: ssi, selectionMode, ...singleSelectionParameters }, tabsParameters: { orientation, role, localStorageKey }, rovingTabIndexParameters, ...restParams }) {
+export function useTabs({ labelParameters, linearNavigationParameters, singleSelectionParameters: { initiallySingleSelectedIndex, onSingleSelectedIndexChange: ssi, singleSelectionMode, ...singleSelectionParameters }, tabsParameters: { orientation, role, localStorageKey }, rovingTabIndexParameters, ...restParams }) {
     monitorCallCount(useTabs);
     const [localStorageIndex, setLocalStorageIndex] = usePersistentState(localStorageKey ?? null, 0);
     if (localStorageIndex != null)
-        initiallySelectedIndex = localStorageIndex;
+        initiallySingleSelectedIndex = localStorageIndex;
     const baseId = generateRandomId("aria-tabs-");
     const getTabId = useCallback((index) => { return baseId + "-tab-" + index; }, []);
     const getPanelId = useCallback((index) => { return baseId + "-panel-" + index; }, []);
@@ -36,7 +36,7 @@ export function useTabs({ labelParameters, linearNavigationParameters, singleSel
         onIndexChange: null
     });
     useLayoutEffect(() => {
-        changeVisiblePanel(initiallySelectedIndex ?? null, undefined);
+        changeVisiblePanel(initiallySingleSelectedIndex ?? null, undefined);
     }, []);
     const { propsInput, propsLabel, randomIdInputReturn: { id: _inputId }, randomIdLabelReturn: { id: _labelId }, } = useLabelSynthetic({
         labelParameters: { ...labelParameters, onLabelClick: useStableCallback(() => listNavRet1.rovingTabIndexReturn.focusSelf()) },
@@ -47,21 +47,26 @@ export function useTabs({ labelParameters, linearNavigationParameters, singleSel
         linearNavigationParameters: { arrowKeyDirection: orientation, ...linearNavigationParameters },
         rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
         singleSelectionParameters: {
-            onSelectedIndexChange: useStableCallback((e) => {
+            onSingleSelectedIndexChange: useStableCallback((e) => {
                 ssi?.(e);
                 changeVisiblePanel(e[EventDetail].selectedIndex, e);
                 setLocalStorageIndex(e[EventDetail].selectedIndex);
-                changeSelectedIndex(e[EventDetail].selectedIndex, e);
+                changeSingleSelectedIndex(e[EventDetail].selectedIndex, e);
             }),
-            ariaPropName: "aria-selected",
-            selectionMode: selectionMode ?? "focus",
-            initiallySelectedIndex: initiallySelectedIndex ?? null,
+            singleSelectionAriaPropName: "aria-selected",
+            singleSelectionMode: singleSelectionMode ?? "focus",
+            initiallySingleSelectedIndex: initiallySingleSelectedIndex ?? null,
             ...singleSelectionParameters
+        },
+        multiSelectionParameters: {
+            multiSelectionAriaPropName: null,
+            multiSelectionMode: "disabled",
+            onSelectionChange: null
         },
         paginatedChildrenParameters: { paginationMax: null, paginationMin: null },
         ...restParams
     });
-    const { singleSelectionReturn: { changeSelectedIndex } } = listNavRet1;
+    const { singleSelectionReturn: { changeSingleSelectedIndex } } = listNavRet1;
     return {
         contextPanels: useMemoObject({
             ...managedChildContext,
@@ -69,12 +74,12 @@ export function useTabs({ labelParameters, linearNavigationParameters, singleSel
                 getPanelId,
                 getTabId,
                 getVisibleIndex,
-                setSelectedIndex: changeSelectedIndex
+                setSelectedIndex: changeSingleSelectedIndex
             })
         }),
         contextTabs: useMemoObject({
             ...context,
-            tabsContext: useMemoObject({ getTabId, getPanelId, getVisibleIndex, setSelectedIndex: changeSelectedIndex })
+            tabsContext: useMemoObject({ getTabId, getPanelId, getVisibleIndex, setSelectedIndex: changeSingleSelectedIndex })
         }),
         propsContainer: useMergedProps(listNavigationSingleSelectionProps, propsInput, {
             role: (role ?? "tablist"),
@@ -87,16 +92,18 @@ export function useTabs({ labelParameters, linearNavigationParameters, singleSel
 /**
  * @compositeParams
  */
-export function useTab({ info: { focusSelf: focusSelfParent, index, unselectable, untabbable, getSortValue, ...info }, textContentParameters, pressParameters: { focusSelf: focusSelfChild, longPressThreshold, onPressingChange, ...void2 }, context, hasCurrentFocusParameters, refElementParameters, ...void3 }) {
+export function useTab({ info: { focusSelf: focusSelfParent, index, untabbable, getSortValue, ...info }, textContentParameters, pressParameters: { focusSelf: focusSelfChild, longPressThreshold, onPressingChange, ...void2 }, context, hasCurrentFocusParameters, refElementParameters, singleSelectionChildParameters, ...void3 }) {
     const { propsChild: listNavigationSingleSelectionChildProps, propsTabbable, pressParameters: { onPressSync, excludeSpace, ...void1 }, refElementReturn, ...listNavRet2 } = useCompleteListNavigationChild({
         context,
-        info: { index, focusSelf: focusSelfParent, getSortValue, unselectable, untabbable, ...info },
+        info: { index, focusSelf: focusSelfParent, getSortValue, untabbable, ...info },
         textContentParameters,
         hasCurrentFocusParameters,
-        refElementParameters
+        refElementParameters,
+        singleSelectionChildParameters,
+        multiSelectionChildParameters: { initiallyMultiSelected: false, multiSelectionDisabled: true, onMultiSelectChange: null },
     });
     const { pressReturn, props: propsPressStable } = usePress({ pressParameters: { onPressSync, focusSelf: focusSelfChild, allowRepeatPresses: false, excludeEnter: returnFalse, excludePointer: returnFalse, excludeSpace: returnFalse, longPressThreshold, onPressingChange }, refElementReturn });
-    const { singleSelectionChildReturn: { selected }, rovingTabIndexChildReturn: { tabbable } } = listNavRet2;
+    const { singleSelectionChildReturn: { singleSelected }, rovingTabIndexChildReturn: { tabbable } } = listNavRet2;
     const { getPanelId, getTabId } = context.tabsContext;
     const panelId = getPanelId(index);
     const tabId = getTabId(index);
@@ -109,7 +116,7 @@ export function useTab({ info: { focusSelf: focusSelfParent, index, unselectable
         refElementReturn,
         props: useMergedProps(propsPressStable, listNavigationSingleSelectionChildProps, propsTabbable, {
             "data-tabbable": tabbable.toString(),
-            "data-selected": selected.toString(),
+            "data-selected": singleSelected.toString(),
             role: "tab",
             "aria-controls": panelId,
             id: tabId

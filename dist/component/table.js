@@ -1,4 +1,3 @@
-import { jsx as _jsx } from "preact/jsx-runtime";
 import { createContext } from "preact";
 import { assertEmptyObject, focus, memo, useStableCallback } from "preact-prop-helpers";
 import { useContextWithWarning } from "../props.js";
@@ -7,17 +6,18 @@ import { useComponent, useDefault } from "./util.js";
 const TableContext = createContext(null);
 const TableSectionContext = createContext(null);
 const TableRowContext = createContext(null);
-export const Table = memo(function Table({ ariaLabel, selectionLimit, tagTable, imperativeHandle, render }) {
+export const Table = memo(function Table({ ariaLabel, singleSelectionMode, multiSelectionMode, tagTable, imperativeHandle, render, ...void1 }) {
+    assertEmptyObject(void1);
     return useComponent(imperativeHandle, render, TableContext, useTable({
         labelParameters: { ariaLabel },
-        tableParameters: { selectionLimit, tagTable, }
+        tableParameters: { tagTable, },
+        singleSelectionParameters: { singleSelectionMode: singleSelectionMode || "disabled" },
+        multiSelectionParameters: { multiSelectionMode: multiSelectionMode || "disabled" },
     }));
 });
-export const TableSection = memo(function TableSection({ disableHomeEndKeys, getIndex, initiallySelectedIndex, untabbable, navigatePastEnd, navigatePastStart, onSelectedIndexChange, onTabbableColumnChange, onTabbableIndexChange, pageNavigationSize, paginationMax, paginationMin, staggered, render, location, ariaPropName, selectionMode, onNavigateLinear, collator, noTypeahead, onNavigateTypeahead, typeaheadTimeout, tagTableSection, onElementChange, onMount, onUnmount }) {
-    untabbable = (untabbable ?? false);
-    ariaPropName ??= "aria-selected";
-    selectionMode ??= "activation";
-    const info = useTableSection({
+export const TableSection = memo(function TableSection({ disableHomeEndKeys, getIndex, initiallySingleSelectedIndex, untabbable, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, onTabbableColumnChange, onTabbableIndexChange, pageNavigationSize, paginationMax, paginationMin, staggered, render, location, imperativeHandle, multiSelectionAriaPropName, onSelectionChange, singleSelectionAriaPropName, onNavigateLinear, collator, noTypeahead, onNavigateTypeahead, typeaheadTimeout, tagTableSection, onElementChange, onMount, onUnmount, ...void1 }) {
+    assertEmptyObject(void1);
+    return useComponent(imperativeHandle, render, TableSectionContext, useTableSection({
         gridNavigationParameters: {
             onTabbableColumnChange: onTabbableColumnChange
         },
@@ -46,13 +46,16 @@ export const TableSection = memo(function TableSection({ disableHomeEndKeys, get
         },
         rovingTabIndexParameters: {
             onTabbableIndexChange,
-            untabbable
+            untabbable: untabbable || false,
         },
         singleSelectionParameters: {
-            initiallySelectedIndex,
-            onSelectedIndexChange,
-            ariaPropName,
-            selectionMode
+            initiallySingleSelectedIndex,
+            onSingleSelectedIndexChange,
+            singleSelectionAriaPropName
+        },
+        multiSelectionParameters: {
+            multiSelectionAriaPropName,
+            onSelectionChange,
         },
         context: useContextWithWarning(TableContext, "table"),
         tableSectionParameters: {
@@ -60,15 +63,13 @@ export const TableSection = memo(function TableSection({ disableHomeEndKeys, get
             location
         },
         refElementParameters: { onElementChange, onMount, onUnmount }
-    });
-    return (_jsx(TableSectionContext.Provider, { value: info.context, children: render(info) }));
+    }));
 });
-export const TableRow = memo(function TableRow({ index, getText, tagTableRow, onTabbableIndexChange, navigatePastEnd, navigatePastStart, selected, unselectable, initiallyTabbedIndex, untabbable, info, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, render, ...void1 }) {
+export const TableRow = memo(function TableRow({ index, getText, tagTableRow, onTabbableIndexChange, navigatePastEnd, navigatePastStart, selected, initiallyTabbedIndex, untabbable, info, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, render, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, ...void1 }) {
     assertEmptyObject(void1);
     return useComponent(imperativeHandle, render, TableRowContext, useTableRow({
         info: {
             index,
-            unselectable: unselectable || false,
             untabbable: untabbable || false,
             ...info
         },
@@ -93,6 +94,8 @@ export const TableRow = memo(function TableRow({ index, getText, tagTableRow, on
             initiallyTabbedIndex: initiallyTabbedIndex ?? null,
             untabbable: untabbable || false
         },
+        singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false },
+        multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false, initiallyMultiSelected: initiallyMultiSelected || false, onMultiSelectChange }
     }));
 });
 export const TableCell = memo(function TableCell({ index, getText, focusSelf, untabbable, tagTableCell, render, colSpan, imperativeHandle, getSortValue, info, ...void1 }) {

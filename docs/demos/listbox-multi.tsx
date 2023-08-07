@@ -11,11 +11,10 @@ const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
 
     return (
         <ListboxItem<HTMLLIElement>
-            selected={selected}
+            multiSelected={selected}
             index={index}
-            unselectable={false}
             getSortValue={returnZero}
-            onMultiSelect={e => setSelected(e[EventDetail].selected)}
+            onMultiSelectedChange={e => setSelected(e[EventDetail].multiSelected)}
 
             render={info => {
                 return (
@@ -64,11 +63,11 @@ export function Demo() {
             <label><input type="number" min={0} value={count} onInput={e => setCount(e.currentTarget.valueAsNumber)} /> # of list items</label>
             <div>
                 <Listbox<HTMLUListElement, HTMLLIElement, HTMLLabelElement> 
-                selectedIndex={null} 
+                singleSelectedIndex={null} 
                 ariaLabel={null} 
-                ariaPropName="aria-selected"
+                multiSelectionAriaPropName="aria-selected"
                 orientation="vertical" 
-                selectionLimit="multi" 
+                multiSelectionMode="activation" 
                 render={info => {
                     return (
                         <>

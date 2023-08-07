@@ -61,9 +61,8 @@ export function Demo() {
                 <Toolbar<HTMLDivElement, HTMLButtonElement, HTMLLabelElement>
                     orientation="horizontal"
                     role="toolbar"
-                    ariaPropName="aria-pressed"
-                    selectionMode="activation"
-                    selectionLimit="single"
+                    singleSelectionAriaPropName="aria-pressed"
+                    singleSelectionMode="activation"
                     ariaLabel={null}
                     render={(info) => <>
                         <label {...info.propsLabel}>Toolbar demo</label>

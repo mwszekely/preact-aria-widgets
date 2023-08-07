@@ -1,7 +1,7 @@
 import { createContext } from "preact";
 import { assertEmptyObject, focus, memo, OmitStrong } from "preact-prop-helpers";
 import { useCallback, useImperativeHandle } from "preact/hooks";
-import { Get, Get11, Get5, useContextWithWarning } from "../props.js";
+import { Get, Get11, Get6, useContextWithWarning } from "../props.js";
 import { TabInfo, TabPanelInfo, useTab, useTabPanel, UseTabPanelParameters, UseTabPanelReturnType, UseTabPanelsContext, UseTabParameters, UseTabReturnType, useTabs, UseTabsContext, UseTabsParameters, UseTabsReturnType } from "../use-tabs.js";
 import { GenericComponentProps, useComponent, useDefault } from "./util.js";
 
@@ -14,7 +14,7 @@ export type TabsProps<TabContainerElement extends Element, TabElement extends El
 
 export type TabProps<TabElement extends Element, M extends TabInfo<TabElement> = TabInfo<TabElement>> = GenericComponentProps<
     UseTabReturnType<TabElement, M>,
-    Get5<UseTabParameters<TabElement, TabInfo<TabElement>>, "pressParameters", "textContentParameters", "info", "hasCurrentFocusParameters", "refElementParameters">,
+    Get6<UseTabParameters<TabElement, TabInfo<TabElement>>, "pressParameters", "textContentParameters", "info", "hasCurrentFocusParameters", "refElementParameters", "singleSelectionChildParameters">,
     "index" | "getSortValue"
 > & { info?: OmitStrong<M, keyof TabInfo<TabElement>>; };
 
@@ -27,8 +27,8 @@ export type TabPanelProps<PanelElement extends Element, M extends TabPanelInfo =
 
 const TabsContext = createContext<UseTabsContext<any, any>>(null!);
 const TabPanelsContext = createContext<UseTabPanelsContext<any>>(null!);
-const UntabbableContext = createContext(false);
-const SelectionModeContext = createContext<NonNullable<UseTabsParameters<any, any, any>["singleSelectionParameters"]["selectionMode"]>>("focus");
+//const UntabbableContext = createContext(false);
+//const SelectionModeContext = createContext<NonNullable<UseTabsParameters<any, any, any>["singleSelectionParameters"]["selectionMode"]>>("focus");
 
 export const Tabs = memo(function Tabs<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element>({
     ariaLabel,
@@ -36,31 +36,30 @@ export const Tabs = memo(function Tabs<TabContainerElement extends Element, TabE
     compare,
     disableHomeEndKeys,
     getIndex,
-    initiallySelectedIndex,
+    initiallySingleSelectedIndex,
     navigatePastEnd,
     navigatePastStart,
     noTypeahead,
-    onSelectedIndexChange,
+    onSingleSelectedIndexChange,
     onTabbableIndexChange,
     orientation,
     staggered,
     pageNavigationSize,
     localStorageKey,
-    selectionMode,
+    singleSelectionMode,
     untabbable,
     typeaheadTimeout,
     role,
     onNavigateLinear,
     onNavigateTypeahead,
     imperativeHandle,
-    onElementChange, 
-    onMount, 
+    onElementChange,
+    onMount,
     onUnmount,
     render,
     ...void1
 }: TabsProps<TabContainerElement, TabElement, TabLabelElement>) {
     untabbable ??= false;
-    selectionMode ??= "focus";
     assertEmptyObject(void1);
     const info = useTabs<TabContainerElement, TabElement, TabLabelElement>({
         labelParameters: { ariaLabel },
@@ -77,11 +76,11 @@ export const Tabs = memo(function Tabs<TabContainerElement extends Element, TabE
             onTabbableIndexChange,
             untabbable
         },
-        singleSelectionParameters: { initiallySelectedIndex, onSelectedIndexChange, selectionMode },
+        singleSelectionParameters: { initiallySingleSelectedIndex, onSingleSelectedIndexChange, singleSelectionMode: singleSelectionMode || "focus" },
         sortableChildrenParameters: { compare },
-        tabsParameters: { 
-            orientation, 
-            role, 
+        tabsParameters: {
+            orientation,
+            role,
             localStorageKey
         },
         typeaheadNavigationParameters: {
@@ -98,20 +97,15 @@ export const Tabs = memo(function Tabs<TabContainerElement extends Element, TabE
     useImperativeHandle(imperativeHandle!, () => info);
 
     return (
-        <UntabbableContext.Provider value={untabbable}>
-            <SelectionModeContext.Provider value={selectionMode}>
-                <TabsContext.Provider value={contextTabs}>
-                    <TabPanelsContext.Provider value={contextPanels}>
-                        {render(info)}
-                    </TabPanelsContext.Provider>
-                </TabsContext.Provider>
-            </SelectionModeContext.Provider>
-        </UntabbableContext.Provider>
+        <TabsContext.Provider value={contextTabs}>
+            <TabPanelsContext.Provider value={contextPanels}>
+                {render(info)}
+            </TabPanelsContext.Provider>
+        </TabsContext.Provider>
     )
 })
 
 export function Tab<E extends Element>({
-    unselectable,
     focusSelf,
     untabbable,
     index,
@@ -121,14 +115,17 @@ export function Tab<E extends Element>({
     onPressingChange,
     getSortValue,
     imperativeHandle,
-    onElementChange, 
-    onMount, 
+    onElementChange,
+    onMount,
     onUnmount,
-    onCurrentFocusedChanged, 
+    onCurrentFocusedChanged,
     onCurrentFocusedInnerChanged,
-    info: uinfo
+    singleSelectionDisabled,
+    info: uinfo,
+    ...void1
 }: TabProps<E, TabInfo<E>>) {
-    
+
+    assertEmptyObject(void1);
     const context = useContextWithWarning(TabsContext, "tabs");
     console.assert(context != null, `This Tab is not contained within a Tabs component`);
     const focusSelfDefault = useCallback((e: any) => { focus(e); }, []);
@@ -139,7 +136,6 @@ export function Tab<E extends Element>({
         useTab<E>({
             info: {
                 index,
-                unselectable: unselectable || false,
                 untabbable: untabbable || false,
                 focusSelf: focusSelf ?? focusSelfDefault,
                 getSortValue,
@@ -149,7 +145,8 @@ export function Tab<E extends Element>({
             hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged },
             refElementParameters: { onElementChange, onMount, onUnmount },
             pressParameters: { focusSelf: focusSelfDefault, longPressThreshold, onPressingChange },
-            textContentParameters: { getText: useDefault("getText", getText) }
+            textContentParameters: { getText: useDefault("getText", getText) },
+            singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false, }
         }));
 }
 

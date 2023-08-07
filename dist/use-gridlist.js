@@ -2,7 +2,7 @@ import { assertEmptyObject, focus, monitorCallCount, useCompleteGridNavigationCe
 import { Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
 /**
- * Implements a gridlist, which is a hybrid of a [Listbox](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/) and a [Grid](https://www.w3.org/WAI/ARIA/apg/patterns/grid/).
+ * Implements a gridlist, effectively a [Listbox](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/) enhanced with the capabilities of a [Grid](https://www.w3.org/WAI/ARIA/apg/patterns/grid/).
  *
  * @remarks A Listbox is a very limited structure, essentially being just a list with no further interactive content allowed.
  *
@@ -13,8 +13,10 @@ import { useLabelSynthetic } from "./use-label.js";
  * @hasChild {@link useGridlistRow}
  * @hasChild {@link useGridlistCell}
  */
-export function useGridlist({ labelParameters, listboxParameters: { selectionLimit, groupingType, selectedIndex, onSelectedIndexChange }, rovingTabIndexParameters, ...restParams }) {
+export function useGridlist({ labelParameters, listboxParameters: { groupingType, ...void1 }, rovingTabIndexParameters, singleSelectionParameters, gridNavigationParameters, linearNavigationParameters, multiSelectionParameters, paginatedChildrenParameters, rearrangeableChildrenParameters, refElementParameters, sortableChildrenParameters, staggeredChildrenParameters, typeaheadNavigationParameters, singleSelectionDeclarativeParameters, ...void2 }) {
     monitorCallCount(useGridlist);
+    assertEmptyObject(void1);
+    assertEmptyObject(void2);
     const { propsInput: propsLabelList, propsLabel: propsLabelLabel, randomIdInputReturn: { id: _gridlistId }, randomIdLabelReturn: { id: _labelId } } = useLabelSynthetic({
         labelParameters: {
             ...labelParameters,
@@ -26,15 +28,24 @@ export function useGridlist({ labelParameters, listboxParameters: { selectionLim
         randomIdLabelParameters: { prefix: Prefices.gridlistLabel }
     });
     const { context, props, rovingTabIndexReturn, singleSelectionReturn, ...restRet } = useCompleteGridNavigationDeclarative({
-        singleSelectionDeclarativeParameters: { selectedIndex: selectedIndex, onSelectedIndexChange },
+        singleSelectionDeclarativeParameters,
         rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
-        ...restParams
+        gridNavigationParameters,
+        linearNavigationParameters,
+        multiSelectionParameters,
+        paginatedChildrenParameters,
+        rearrangeableChildrenParameters,
+        refElementParameters,
+        singleSelectionParameters,
+        sortableChildrenParameters,
+        staggeredChildrenParameters,
+        typeaheadNavigationParameters
     });
-    let propsGridlist = useMergedProps(props, propsLabelList, { "aria-multiselectable": (selectionLimit == "multi" ? "true" : undefined) });
+    let propsGridlist = useMergedProps(props, propsLabelList, { "aria-multiselectable": (context.multiSelectionContext.multiSelectionMode != "disabled" ? "true" : undefined) });
     let fullContext = useMemoObject({
         ...context,
         gridlistRowContext: useMemoObject({
-            selectionLimit
+        //selectionLimit
         })
     });
     if (groupingType == "group")
@@ -48,8 +59,6 @@ export function useGridlist({ labelParameters, listboxParameters: { selectionLim
     else {
         propsGridlist.role = "grid";
     }
-    if (selectionLimit == "multi")
-        console.assert(singleSelectionReturn.getSelectedIndex() == null);
     return {
         context: fullContext,
         rovingTabIndexReturn,
@@ -62,10 +71,10 @@ export function useGridlist({ labelParameters, listboxParameters: { selectionLim
  * @compositeParams
  *
  */
-export function useGridlistRow({ gridlistRowParameters: { selected }, linearNavigationParameters, context: cx1, info, rovingTabIndexParameters, textContentParameters, typeaheadNavigationParameters, hasCurrentFocusParameters, gridNavigationSingleSelectionSortableRowParameters, ...void1 }) {
+export function useGridlistRow({ gridlistRowParameters: { selected }, linearNavigationParameters, context: cx1, info, rovingTabIndexParameters, textContentParameters, typeaheadNavigationParameters, hasCurrentFocusParameters, singleSelectionChildParameters, multiSelectionChildParameters, gridNavigationSelectionSortableRowParameters, ...void1 }) {
     monitorCallCount(useGridlistRow);
-    const { gridlistRowContext: { selectionLimit } } = cx1;
-    const { context: cx2, hasCurrentFocusReturn, linearNavigationReturn, managedChildReturn, managedChildrenReturn, paginatedChildReturn, props, rovingTabIndexChildReturn, rovingTabIndexReturn, singleSelectionChildReturn, staggeredChildReturn, textContentReturn, typeaheadNavigationReturn, pressParameters, ...void2 } = useCompleteGridNavigationRow({
+    const { gridlistRowContext: {} } = cx1;
+    const { context: cx2, hasCurrentFocusReturn, linearNavigationReturn, managedChildReturn, managedChildrenReturn, paginatedChildReturn, props, rovingTabIndexChildReturn, rovingTabIndexReturn, singleSelectionChildReturn, staggeredChildReturn, textContentReturn, typeaheadNavigationReturn, pressParameters, multiSelectionChildReturn, ...void2 } = useCompleteGridNavigationRow({
         linearNavigationParameters,
         info,
         context: cx1,
@@ -73,10 +82,12 @@ export function useGridlistRow({ gridlistRowParameters: { selected }, linearNavi
         textContentParameters,
         typeaheadNavigationParameters,
         hasCurrentFocusParameters,
-        gridNavigationSingleSelectionSortableRowParameters,
+        singleSelectionChildParameters,
+        multiSelectionChildParameters,
+        gridNavigationSelectionSortableRowParameters,
     });
     // `selected` should only be true/false for multi-selection
-    if (selectionLimit != "multi")
+    if (cx1.multiSelectionContext.multiSelectionMode == "disabled")
         console.assert(selected == null);
     props.role = "row";
     assertEmptyObject(void1);
@@ -90,6 +101,7 @@ export function useGridlistRow({ gridlistRowParameters: { selected }, linearNavi
         rovingTabIndexChildReturn,
         rovingTabIndexReturn,
         singleSelectionChildReturn,
+        multiSelectionChildReturn,
         staggeredChildReturn,
         textContentReturn,
         typeaheadNavigationReturn,

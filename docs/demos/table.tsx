@@ -112,7 +112,7 @@ export function Demo() {
             <div>
                 <Table<HTMLTableElement, HTMLLabelElement>
                     ariaLabel={null}
-                    selectionLimit="multi"
+                    multiSelectionMode="activation"
                     tagTable="table"
                     render={infoTable => {
                         return (
@@ -143,7 +143,7 @@ export function Demo() {
                                     <TableSection<HTMLTableSectionElement, HTMLTableRowElement, HTMLTableCellElement>
                                         tagTableSection="tbody"
                                         location="body"
-                                        ariaPropName="aria-selected"
+                                        multiSelectionAriaPropName="aria-selected"
                                         render={infoSection => {
                                             return (
                                                 <tbody {...infoSection.propsTableSection}>
