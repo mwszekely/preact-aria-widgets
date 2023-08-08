@@ -31,5 +31,5 @@ export declare function useNotificationProvider({ targetAssertive, targetPolite 
     };
     children: import("preact-prop-helpers").JSX.Element;
 };
-export declare function useNotify(): (mode: "polite" | "assertive", content: import("preact-prop-helpers").JSX.Element) => void;
+export declare function useNotify(): (mode: "assertive" | "polite", content: import("preact-prop-helpers").JSX.Element) => void;
 //# sourceMappingURL=use-notify.d.ts.map
