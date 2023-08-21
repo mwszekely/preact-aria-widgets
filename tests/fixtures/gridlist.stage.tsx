@@ -16,10 +16,9 @@ export function TestBasesGridlist() {
             <Gridlist<HTMLTableElement, HTMLTableRowElement, HTMLTableCellElement, HTMLLabelElement>
                 ariaLabel={"Gridlist test"}
                 groupingType="without-groups"
-                orientation={orientation}
-                selectedIndex={null}
-                selectionLimit="none"
-                ariaPropName="aria-selected"
+                singleSelectedIndex={null}
+                singleSelectionMode="disabled"
+                singleSelectionAriaPropName="aria-selected"
 
                 render={gridInfo => {
                     return (

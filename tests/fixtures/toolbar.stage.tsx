@@ -11,11 +11,13 @@ export function TestBasesToolbar() {
     return (
         <TestItem>
             <Toolbar<HTMLUListElement, HTMLLIElement, HTMLLabelElement>
-                ariaPropName="aria-selected"
+                singleSelectionAriaPropName="aria-selected"
+                multiSelectionMode="disabled"
+                singleSelectionMode="activation"
                 disabled={disabled}
                 ariaLabel="Toolbar"
                 orientation="horizontal"
-                selectedIndex={selectedIndex}
+                singleSelectedIndex={selectedIndex}
                 render={info => {
                     return (
                         <>

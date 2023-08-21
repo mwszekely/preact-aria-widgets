@@ -7,6 +7,8 @@ import { assertEmptyObject, enhanceEvent, monitorCallCount, returnFalse, useMerg
  * @compositeParams
  */
 export function useButton({ buttonParameters: { tagButton, disabled, pressed, role, onPressSync, ...void1 }, pressParameters: { focusSelf, allowRepeatPresses, longPressThreshold, onPressingChange, excludeSpace, ...void3 }, refElementParameters, ...void2 }) {
+    if (tagButton != "button")
+        debugger;
     monitorCallCount(useButton);
     const { refElementReturn, propsStable: propsRef, ...void5 } = useRefElement({ refElementParameters });
     const { pressReturn, props: propsPress, ...void4 } = usePress({
@@ -29,7 +31,7 @@ export function useButton({ buttonParameters: { tagButton, disabled, pressed, ro
     });
     const baseProps = { "aria-pressed": (pressed === true ? "true" : pressed === false ? "false" : undefined) };
     const buttonProps = { ...baseProps, disabled: (disabled && disabled != "soft") ? true : false, "aria-disabled": (disabled === 'soft' ? 'true' : undefined), role: role == "button" ? undefined : role };
-    const divProps = { ...baseProps, tabIndex: (disabled === "hard" ? -1 : 0), role, "aria-disabled": disabled ? "true" : undefined };
+    const divProps = { ...baseProps, tabIndex: (disabled === "hard" ? -1 : 0), role: role || "button", "aria-disabled": disabled ? "true" : undefined };
     assertEmptyObject(void1);
     assertEmptyObject(void2);
     assertEmptyObject(void3);

@@ -3,6 +3,7 @@ import { OmitStrong as OmitStrong$0 } from "preact-prop-helpers";
 import { h, Ref, ComponentChildren, Context, createElement, RenderableProps } from "preact";
 import { VNode as VNode$0 } from "preact";
 import { StateUpdater } from "preact/hooks";
+import { UseCompleteListNavigationChildDeclarativeReturnType as UseCompleteListNavigationChildDeclarativeReturnType$0 } from "preact-prop-helpers/react";
 type RefFromTag<T extends keyof h.JSX.IntrinsicElements> = NonNullable<h.JSX.IntrinsicElements[T]["ref"]> & Ref<any>;
 type ElementFromRef<R extends Ref<any>> = R extends Ref<infer E> ? E : EventTarget;
 type ElementFromTag<T extends keyof h.JSX.IntrinsicElements> = ElementFromRef<RefFromTag<T>>;
@@ -929,8 +930,8 @@ interface RadioSubInfo<TabbableChildElement extends Element, V extends string | 
  *
  * @hasChild {@link useRadio}
  */
-declare function useRadioGroup<V extends string | number, G extends Element, GL extends Element, TCE extends Element>({ labelParameters, radioGroupParameters: { name, selectedValue, onSelectedValueChange, ...void2 }, rovingTabIndexParameters, linearNavigationParameters, rearrangeableChildrenParameters, sortableChildrenParameters, staggeredChildrenParameters, typeaheadNavigationParameters, refElementParameters, ...void1 }: UseRadioGroupParameters<V, G, GL, TCE, RadioSubInfo<TCE, V>>): UseRadioGroupReturnType<V, G, GL, TCE, RadioSubInfo<TCE, V>>;
-interface UseRadioReturnType<LP extends LabelPosition, V extends string | number, I extends Element, IL extends Element, M extends RadioSubInfo<FocusableLabelElement<LP, I, IL>, V>> extends OmitStrong<UseCompleteListNavigationChildReturnType<FocusableLabelElement<LP, I, IL>, M>, "propsChild" | "propsTabbable" | "pressParameters">, UseCheckboxLikeReturnType<I, IL> {
+declare function useRadioGroup<V extends string | number, G extends Element, GL extends Element, TCE extends Element, M extends RadioSubInfo<TCE, V> = RadioSubInfo<TCE, V>>({ labelParameters, radioGroupParameters: { name, selectedValue, onSelectedValueChange, ...void2 }, rovingTabIndexParameters, linearNavigationParameters, rearrangeableChildrenParameters, sortableChildrenParameters, staggeredChildrenParameters, typeaheadNavigationParameters, refElementParameters, ...void1 }: UseRadioGroupParameters<V, G, GL, TCE, M>): UseRadioGroupReturnType<V, G, GL, TCE, M>;
+interface UseRadioReturnType<LP extends LabelPosition, V extends string | number, I extends Element, IL extends Element, M extends RadioSubInfo<FocusableLabelElement<LP, I, IL>, V>> extends OmitStrong<UseCompleteListNavigationChildDeclarativeReturnType$0<FocusableLabelElement<LP, I, IL>, M>, "propsChild" | "propsTabbable" | "pressParameters">, UseCheckboxLikeReturnType<I, IL> {
     propsInput: ElementProps<I>;
     propsLabel: ElementProps<IL>;
 }
@@ -939,7 +940,7 @@ interface UseRadioReturnType<LP extends LabelPosition, V extends string | number
  *
  * @compositeParams
  */
-declare function useRadio<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element, V extends string | number>({ radioParameters: { value, ...void5 }, checkboxLikeParameters: { disabled, ...void4 }, labelParameters, info, context, textContentParameters, pressParameters: { longPressThreshold, ...void3 }, hasCurrentFocusParameters, refElementParameters, ...void1 }: UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>): UseRadioReturnType<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>;
+declare function useRadio<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element, V extends string | number, M extends RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V> = RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>({ radioParameters: { value, ...void5 }, checkboxLikeParameters: { disabled, ...void4 }, labelParameters, info, context, textContentParameters, pressParameters: { longPressThreshold, ...void3 }, hasCurrentFocusParameters, refElementParameters, ...void1 }: UseRadioParameters<LP, V, InputElement, LabelElement, M>): UseRadioReturnType<LP, V, InputElement, LabelElement, M>;
 type RangeChangeEvent<E extends EventTarget> = {
     [EventDetail]: {
         value: number;
@@ -1534,6 +1535,40 @@ declare module 'preact' {
  *
  * Preact props that implement ARIA-compliant widgets in the style of `preact-prop-helpers` (i.e. hooks that swizzle parameters and returns back and forth).
  * **No CSS is provided** &ndash; this library is intended for wiring up event handlers, HTML/ARIA attributes, labels, and so on, but each hook gives you the information you need to create appropriate e.g. `class` values to style your own components.
+ *
+ * For example, this is a partial example of using the `Gridlist` component:
+ *
+ * ```typescript
+ * <Gridlist<HTMLUListElement, HTMLLIElement, HTMLDivElement, HTMLLabelElement>
+ *     // Many of these props are taken **directly** from `preact-prop-helpers`
+ *     singleSelectedIndex={selectedIndex}
+ *     onSingleSelectedIndexChange={e => setSelectedIndex(e[EventDetail].selectedIndex)}
+ *     singleSelectionAriaPropName="aria-selected"
+ *     singleSelectionMode="activation"
+ *
+ *     // These are specific to a `Gridlist`
+ *     ariaLabel={null}
+ *     groupingType="without-groups"
+ *
+ *     // Every component takes a `render` prop that actually returns the JSX to render
+ *     render={infoGridlist => {
+ *         // infoGridList includes everything that useGridNavigationComplete from `preact-prop-helpers`
+ *         // plus some extra information from useGridlist in this library.
+ *         // Like with preact-prop-helpers, spread the appropriate props onto elements and return them.
+ *         return (
+ *             <>
+ *                 <label {...info.propsGridlistLabel}>Gridlist</label>
+ *                 <div {...info.propsGridlist}>{children}</div>
+ *             </>
+ *         )
+ *
+ *         // There are **a lot** of useful return values that you can use when rendering
+ *         // the component to the DOM. Again, most of them borrow heavily from preact-prop-helpers
+ *         // and return many of the exact same values.
+ *         infoGridlist.rovingTabIndexReturn.getTabbableIndex();
+ *         return
+ *     } />
+ * ```
  *
  * This library is split into two parts: hook implementations and component implementations.
  * They are near identical, with the components providing a nicer user interface.

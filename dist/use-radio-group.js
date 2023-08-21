@@ -1,4 +1,4 @@
-import { EventDetail, assertEmptyObject, focus, monitorCallCount, useCompleteListNavigationChild, useCompleteListNavigationDeclarative, useMergedProps, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
+import { EventDetail, assertEmptyObject, focus, monitorCallCount, useCompleteListNavigationChildDeclarative, useCompleteListNavigationDeclarative, useMergedProps, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
 import { useEffect, useLayoutEffect, useMemo, useRef } from "preact/hooks";
 import { Prefices, enhanceEvent } from "./props.js";
 import { useCheckboxLike } from "./use-checkbox-like.js";
@@ -110,7 +110,7 @@ export function useRadio({ radioParameters: { value, ...void5 }, checkboxLikePar
     });*/
     const { name, indexToName, nameToIndex } = context.radioContext;
     const { tagInput, labelPosition } = labelParameters;
-    const { propsChild: listNavigationSingleSelectionChildProps, propsTabbable, singleSelectionChildReturn, pressParameters: { onPressSync, excludeSpace, ...void2 }, ...listNavRet } = useCompleteListNavigationChild({
+    const { pressParameters: { excludeSpace, onPressSync }, singleSelectionChildReturn, propsTabbable, propsChild: listNavigationSingleSelectionChildProps, ...listNavRet } = useCompleteListNavigationChildDeclarative({
         info: {
             focusSelf: useStableCallback((e) => { return checkboxLikeRet.checkboxLikeReturn.focusSelf(); }),
             ...info
@@ -120,10 +120,10 @@ export function useRadio({ radioParameters: { value, ...void5 }, checkboxLikePar
         hasCurrentFocusParameters,
         refElementParameters,
         singleSelectionChildParameters: { singleSelectionDisabled: !!disabled },
-        multiSelectionChildParameters: { initiallyMultiSelected: false, multiSelectionDisabled: true, onMultiSelectChange: null }
+        multiSelectionChildParameters: { multiSelectionDisabled: true },
+        multiSelectionChildDeclarativeParameters: { multiSelected: false, onMultiSelectedChange: null }
     });
     assertEmptyObject(void1);
-    assertEmptyObject(void2);
     assertEmptyObject(void3);
     assertEmptyObject(void4);
     assertEmptyObject(void5);
@@ -163,12 +163,13 @@ export function useRadio({ radioParameters: { value, ...void5 }, checkboxLikePar
     const propsInput2 = useMergedProps(propsRefInput, labelPosition != "wrapping" ? propsIfInputHandlesFocus : propsInput);
     const propsIfLabelHandlesFocus = useMergedProps(listNavigationSingleSelectionChildProps, propsTabbable, propsLabel);
     const propsLabel2 = useMergedProps(propsRefLabel, labelPosition == "wrapping" ? propsIfLabelHandlesFocus : propsLabel);
-    return {
+    const ret = {
         propsInput: propsInput2,
         propsLabel: propsLabel2,
         singleSelectionChildReturn,
         ...checkboxLikeRet,
         ...listNavRet
     };
+    return ret;
 }
 //# sourceMappingURL=use-radio-group.js.map

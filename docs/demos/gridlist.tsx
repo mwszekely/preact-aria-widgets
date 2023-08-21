@@ -105,6 +105,7 @@ export function Demo() {
                     singleSelectedIndex={selectedIndex}
                     onSingleSelectedIndexChange={e => setSelectedIndex(e[EventDetail].selectedIndex)}
                     render={infoGridlist => {
+                        infoGridlist.rovingTabIndexReturn.getTabbableIndex();
                         return (
                             <>
                                 <label {...infoGridlist.propsGridlistLabel}>Gridlist demo</label>

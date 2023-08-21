@@ -3,6 +3,40 @@
  * 
  * Preact props that implement ARIA-compliant widgets in the style of `preact-prop-helpers` (i.e. hooks that swizzle parameters and returns back and forth).  
  * **No CSS is provided** &ndash; this library is intended for wiring up event handlers, HTML/ARIA attributes, labels, and so on, but each hook gives you the information you need to create appropriate e.g. `class` values to style your own components.
+ * 
+ * For example, this is a partial example of using the `Gridlist` component:
+ * 
+ * ```typescript
+ * <Gridlist<HTMLUListElement, HTMLLIElement, HTMLDivElement, HTMLLabelElement>
+ *     // Many of these props are taken **directly** from `preact-prop-helpers`
+ *     singleSelectedIndex={selectedIndex}
+ *     onSingleSelectedIndexChange={e => setSelectedIndex(e[EventDetail].selectedIndex)}
+ *     singleSelectionAriaPropName="aria-selected"
+ *     singleSelectionMode="activation"
+ * 
+ *     // These are specific to a `Gridlist`
+ *     ariaLabel={null}
+ *     groupingType="without-groups"
+ * 
+ *     // Every component takes a `render` prop that actually returns the JSX to render
+ *     render={infoGridlist => {
+ *         // infoGridList includes everything that useGridNavigationComplete from `preact-prop-helpers`
+ *         // plus some extra information from useGridlist in this library.
+ *         // Like with preact-prop-helpers, spread the appropriate props onto elements and return them.
+ *         return (
+ *             <>
+ *                 <label {...info.propsGridlistLabel}>Gridlist</label>
+ *                 <div {...info.propsGridlist}>{children}</div>
+ *             </>
+ *         )
+ * 
+ *         // There are **a lot** of useful return values that you can use when rendering
+ *         // the component to the DOM. Again, most of them borrow heavily from preact-prop-helpers
+ *         // and return many of the exact same values.
+ *         infoGridlist.rovingTabIndexReturn.getTabbableIndex();
+ *         return
+ *     } />
+ * ```
  *
  * This library is split into two parts: hook implementations and component implementations. 
  * They are near identical, with the components providing a nicer user interface. 

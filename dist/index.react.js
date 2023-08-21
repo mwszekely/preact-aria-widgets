@@ -126,14 +126,14 @@ const EventMapping = {
 // (i.e. in a way that doesn't throw an error but has isDevMode be a constant)
 globalThis["process"] ??= {};
 globalThis["process"]["env"] ??= {};
-globalThis["process"]["env"]["NODE_ENV"] ??= "production";
+globalThis["process"]["env"]["NODE_ENV"] = (globalThis["process"]["env"]["NODE_ENV"] || "production");
 /**
  * Controls other development hooks by checking the value of a global variable called `process.env.NODE_ENV`.
  *
- * @remarks Bundlers like Rollup will actually noop-out development code if `process.env.NODE_ENV !== "development"`
+ * @remarks Bundlers like Rollup will actually no-op out development code if `process.env.NODE_ENV !== "development"`
  * (which, of course, covers the default case where `process.env.NODE_ENV` just doesn't exist).
  */
-const BuildMode = (process.env.NODE_ENV === 'development') ? "development" : "production";
+const BuildMode = globalThis["process"]["env"]["NODE_ENV"];
 
 // TODO: This shouldn't be in every build, I don't think it's in core-js? I think?
 // And it's extremely small anyway and basically does nothing.
@@ -5449,6 +5449,8 @@ const Prefices = {
  * @compositeParams
  */
 function useButton({ buttonParameters: { tagButton, disabled, pressed, role, onPressSync, ...void1 }, pressParameters: { focusSelf, allowRepeatPresses, longPressThreshold, onPressingChange, excludeSpace, ...void3 }, refElementParameters, ...void2 }) {
+    if (tagButton != "button")
+        debugger;
     monitorCallCount(useButton);
     const { refElementReturn, propsStable: propsRef, ...void5 } = useRefElement({ refElementParameters });
     const { pressReturn, props: propsPress, ...void4 } = usePress({
@@ -5471,7 +5473,7 @@ function useButton({ buttonParameters: { tagButton, disabled, pressed, role, onP
     });
     const baseProps = { "aria-pressed": (pressed === true ? "true" : pressed === false ? "false" : undefined) };
     const buttonProps = { ...baseProps, disabled: (disabled && disabled != "soft") ? true : false, "aria-disabled": (disabled === 'soft' ? 'true' : undefined), role: role == "button" ? undefined : role };
-    const divProps = { ...baseProps, tabIndex: (disabled === "hard" ? -1 : 0), role, "aria-disabled": disabled ? "true" : undefined };
+    const divProps = { ...baseProps, tabIndex: (disabled === "hard" ? -1 : 0), role: role || "button", "aria-disabled": disabled ? "true" : undefined };
     return {
         pressReturn,
         props: useMergedProps(propsPress, propsRef, (tagButton == 'button' ? buttonProps : divProps)),
@@ -7007,7 +7009,7 @@ function useRadio({ radioParameters: { value, ...void5 }, checkboxLikeParameters
     });*/
     const { name, indexToName, nameToIndex } = context.radioContext;
     const { tagInput, labelPosition } = labelParameters;
-    const { propsChild: listNavigationSingleSelectionChildProps, propsTabbable, singleSelectionChildReturn, pressParameters: { onPressSync, excludeSpace, ...void2 }, ...listNavRet } = useCompleteListNavigationChild({
+    const { pressParameters: { excludeSpace, onPressSync }, singleSelectionChildReturn, propsTabbable, propsChild: listNavigationSingleSelectionChildProps, ...listNavRet } = useCompleteListNavigationChildDeclarative({
         info: {
             focusSelf: useStableCallback((e) => { return checkboxLikeRet.checkboxLikeReturn.focusSelf(); }),
             ...info
@@ -7017,7 +7019,8 @@ function useRadio({ radioParameters: { value, ...void5 }, checkboxLikeParameters
         hasCurrentFocusParameters,
         refElementParameters,
         singleSelectionChildParameters: { singleSelectionDisabled: !!disabled },
-        multiSelectionChildParameters: { initiallyMultiSelected: false, multiSelectionDisabled: true, onMultiSelectChange: null }
+        multiSelectionChildParameters: { multiSelectionDisabled: true },
+        multiSelectionChildDeclarativeParameters: { multiSelected: false, onMultiSelectedChange: null }
     });
     const { singleSelected: checked } = singleSelectionChildReturn;
     const { refElementReturn: refElementInputReturn, propsStable: propsRefInput } = useRefElement({ refElementParameters: {} });
@@ -7055,13 +7058,14 @@ function useRadio({ radioParameters: { value, ...void5 }, checkboxLikeParameters
     const propsInput2 = useMergedProps(propsRefInput, labelPosition != "wrapping" ? propsIfInputHandlesFocus : propsInput);
     const propsIfLabelHandlesFocus = useMergedProps(listNavigationSingleSelectionChildProps, propsTabbable, propsLabel);
     const propsLabel2 = useMergedProps(propsRefLabel, labelPosition == "wrapping" ? propsIfLabelHandlesFocus : propsLabel);
-    return {
+    const ret = {
         propsInput: propsInput2,
         propsLabel: propsLabel2,
         singleSelectionChildReturn,
         ...checkboxLikeRet,
         ...listNavRet
     };
+    return ret;
 }
 
 /**

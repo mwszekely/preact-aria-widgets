@@ -12,8 +12,9 @@ export function TestBasesAccordion() {
             <Accordion
                 orientation={orientation}
                 render={accordionInfo => {
+                    
                     return (
-                        <div data-accordion {...accordionInfo.props}>
+                        <div data-accordion>
                             {Array.from(function* () {
                                 for (let i = 0; i < childCount; ++i) {
                                     yield <Child index={i} />

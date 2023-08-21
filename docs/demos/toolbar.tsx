@@ -63,6 +63,7 @@ export function Demo() {
                     role="toolbar"
                     singleSelectionAriaPropName="aria-pressed"
                     singleSelectionMode="activation"
+                    multiSelectionMode="disabled"
                     ariaLabel={null}
                     render={(info) => <>
                         <label {...info.propsLabel}>Toolbar demo</label>
