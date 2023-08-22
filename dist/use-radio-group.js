@@ -13,7 +13,7 @@ import { useLabelSynthetic } from "./use-label.js";
  *
  * @hasChild {@link useRadio}
  */
-export function useRadioGroup({ labelParameters, radioGroupParameters: { name, selectedValue, onSelectedValueChange, ...void2 }, rovingTabIndexParameters, linearNavigationParameters, rearrangeableChildrenParameters, sortableChildrenParameters, staggeredChildrenParameters, typeaheadNavigationParameters, refElementParameters, ...void1 }) {
+export function useRadioGroup({ labelParameters, radioGroupParameters: { name, selectedValue, onSelectedValueChange, ...void2 }, rovingTabIndexParameters, linearNavigationParameters, rearrangeableChildrenParameters, sortableChildrenParameters, staggeredChildrenParameters, typeaheadNavigationParameters, refElementParameters, singleSelectionParameters: { singleSelectionMode, ...void4 }, ...void1 }) {
     monitorCallCount(useRadioGroup);
     // TODO: The way this is structured causes 1 extra re-render on the parent
     // when the selectedValue changes to selectedIndex.
@@ -47,7 +47,7 @@ export function useRadioGroup({ labelParameters, radioGroupParameters: { name, s
                 onSelectedValueChange?.(enhanceEvent(e, { selectedValue: indexToName.current.get(e[EventDetail].selectedIndex) }));
             }),
         },
-        singleSelectionParameters: { singleSelectionMode: "focus", singleSelectionAriaPropName: null },
+        singleSelectionParameters: { singleSelectionMode, singleSelectionAriaPropName: null },
         multiSelectionParameters: { multiSelectionMode: "disabled", multiSelectionAriaPropName: null, onSelectionChange: null },
         paginatedChildrenParameters: { paginationMin: null, paginationMax: null },
         rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
@@ -77,6 +77,7 @@ export function useRadioGroup({ labelParameters, radioGroupParameters: { name, s
     assertEmptyObject(void1);
     assertEmptyObject(void2);
     assertEmptyObject(void3);
+    assertEmptyObject(void4);
     return {
         propsRadioGroup,
         propsRadioGroupLabel: propsLabel,
@@ -105,9 +106,6 @@ export function useRadioGroup({ labelParameters, radioGroupParameters: { name, s
 export function useRadio({ radioParameters: { value, ...void5 }, checkboxLikeParameters: { disabled, ...void4 }, labelParameters, info, context, textContentParameters, pressParameters: { longPressThreshold, ...void3 }, hasCurrentFocusParameters, refElementParameters, ...void1 }) {
     monitorCallCount(useRadio);
     const index = info.index;
-    /*const onInput = useStableCallback((e: EventType<InputElement, Event>) => {
-        onPressSync?.(e as PressEventReason<any>);
-    });*/
     const { name, indexToName, nameToIndex } = context.radioContext;
     const { tagInput, labelPosition } = labelParameters;
     const { pressParameters: { excludeSpace, onPressSync }, singleSelectionChildReturn, propsTabbable, propsChild: listNavigationSingleSelectionChildProps, ...listNavRet } = useCompleteListNavigationChildDeclarative({

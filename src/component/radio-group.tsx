@@ -1,18 +1,17 @@
 import { createContext } from "preact";
 import { assertEmptyObject, memo, useStableGetter } from "preact-prop-helpers";
-import { Get10, Get7, useContextWithWarning } from "../props.js";
+import { Get11, Get7, useContextWithWarning } from "../props.js";
 import { FocusableLabelElement, LabelPosition } from "../use-label.js";
 import { RadioContext, RadioSubInfo, UseRadioGroupParameters, UseRadioGroupReturnType, UseRadioParameters, UseRadioReturnType, useRadio, useRadioGroup } from "../use-radio-group.js";
 import { GenericComponentProps, PartialExcept, useComponent, useDefault } from "./util.js";
 
 interface RadioGroupPropsBase<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, TabbableChildElement extends Element> extends
-    Get10<UseRadioGroupParameters<V, GroupElement, GroupLabelElement, TabbableChildElement>, "radioGroupParameters", "linearNavigationParameters", "labelParameters", "radioGroupParameters", "rearrangeableChildrenParameters", "staggeredChildrenParameters", "sortableChildrenParameters", "rovingTabIndexParameters", "typeaheadNavigationParameters", "refElementParameters"> {
+    Get11<UseRadioGroupParameters<V, GroupElement, GroupLabelElement, TabbableChildElement>, "radioGroupParameters", "linearNavigationParameters", "labelParameters", "radioGroupParameters", "rearrangeableChildrenParameters", "staggeredChildrenParameters", "sortableChildrenParameters", "rovingTabIndexParameters", "typeaheadNavigationParameters", "refElementParameters", "singleSelectionParameters"> {
 }
 
 interface RadioPropsBase<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element, V extends string | number> extends
     Get7<UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>, "radioParameters", "checkboxLikeParameters", "labelParameters", "textContentParameters", "pressParameters", "hasCurrentFocusParameters", "refElementParameters">,
     Pick<RadioSubInfo<any, V>, "index" | "untabbable"> {
-    //focusSelf?: UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>["info"]["focusSelf"];
 }
 
 export interface RadioGroupProps<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, TabbableChildElement extends Element> extends GenericComponentProps<
@@ -54,6 +53,7 @@ export const RadioGroup = memo(function RadioGroup<V extends string | number, Gr
     onUnmount,
     imperativeHandle,
     onSelectedValueChange,
+    singleSelectionMode,
     ...void1
 }: RadioGroupProps<V, GroupElement, GroupLabelElement, TabbableChildElement>) {
     untabbable ??= false;
@@ -64,6 +64,7 @@ export const RadioGroup = memo(function RadioGroup<V extends string | number, Gr
         render,
         RadioContext,
         useRadioGroup<V, GroupElement, GroupLabelElement, TabbableChildElement>({
+            singleSelectionParameters: { singleSelectionMode: singleSelectionMode ?? "focus" },
             linearNavigationParameters: {
                 onNavigateLinear,
                 arrowKeyDirection: arrowKeyDirection ?? "either",

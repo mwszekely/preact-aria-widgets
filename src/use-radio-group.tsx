@@ -20,6 +20,7 @@ export interface UseRadioGroupParametersSelf<V extends string | number> {
 export interface UseRadioGroupParameters<V extends string | number, GroupElement extends Element, _GroupLabelElement extends Element, TabbableChildElement extends Element, M extends RadioSubInfo<TabbableChildElement, V> = RadioSubInfo<TabbableChildElement, V>> extends
     OmitStrong<UseCompleteListNavigationParameters<GroupElement, TabbableChildElement, M>, "rovingTabIndexParameters" | "paginatedChildrenParameters" | "singleSelectionParameters" | "multiSelectionParameters">,
     TargetedOmit<UseCompleteListNavigationParameters<GroupElement, TabbableChildElement, any>, "rovingTabIndexParameters", "focusSelfParent">,
+    TargetedOmit<UseCompleteListNavigationParameters<GroupElement, TabbableChildElement, any>, "singleSelectionParameters", "initiallySingleSelectedIndex" | "onSingleSelectedIndexChange" | "singleSelectionAriaPropName">,
     TargetedOmit<UseLabelSyntheticParameters, "labelParameters", "onLabelClick"> {
     radioGroupParameters: UseRadioGroupParametersSelf<V>;
 }
@@ -89,6 +90,7 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
     staggeredChildrenParameters,
     typeaheadNavigationParameters,
     refElementParameters,
+    singleSelectionParameters: { singleSelectionMode, ...void4 },
     ...void1
 }: UseRadioGroupParameters<V, G, GL, TCE, M>): UseRadioGroupReturnType<V, G, GL, TCE, M> {
     monitorCallCount(useRadioGroup);
@@ -146,7 +148,7 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
                 onSelectedValueChange?.(enhanceEvent(e, { selectedValue: indexToName.current.get(e[EventDetail].selectedIndex) }));
             }),
         },
-        singleSelectionParameters: { singleSelectionMode: "focus", singleSelectionAriaPropName: null },
+        singleSelectionParameters: { singleSelectionMode, singleSelectionAriaPropName: null },
         multiSelectionParameters: { multiSelectionMode: "disabled", multiSelectionAriaPropName: null, onSelectionChange: null },
         paginatedChildrenParameters: { paginationMin: null, paginationMax: null },
         rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
@@ -180,6 +182,7 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
     assertEmptyObject(void1);
     assertEmptyObject(void2);
     assertEmptyObject(void3);
+    assertEmptyObject(void4);
 
     return {
         propsRadioGroup,
@@ -230,9 +233,6 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
     monitorCallCount(useRadio);
     type TabbableChildElement = FocusableLabelElement<LP, InputElement, LabelElement>;
     const index = info.index;
-    /*const onInput = useStableCallback((e: EventType<InputElement, Event>) => {
-        onPressSync?.(e as PressEventReason<any>);
-    });*/
 
     const { name, indexToName, nameToIndex } = context.radioContext
 

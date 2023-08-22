@@ -126,14 +126,14 @@ const EventMapping = {
 // (i.e. in a way that doesn't throw an error but has isDevMode be a constant)
 globalThis["process"] ??= {};
 globalThis["process"]["env"] ??= {};
-globalThis["process"]["env"]["NODE_ENV"] = (globalThis["process"]["env"]["NODE_ENV"] || "production");
+globalThis["process"]["env"]["NODE_ENV"] ??= "production";
 /**
  * Controls other development hooks by checking the value of a global variable called `process.env.NODE_ENV`.
  *
- * @remarks Bundlers like Rollup will actually no-op out development code if `process.env.NODE_ENV !== "development"`
+ * @remarks Bundlers like Rollup will actually noop-out development code if `process.env.NODE_ENV !== "development"`
  * (which, of course, covers the default case where `process.env.NODE_ENV` just doesn't exist).
  */
-const BuildMode = globalThis["process"]["env"]["NODE_ENV"];
+const BuildMode = (process.env.NODE_ENV === 'development') ? "development" : "production";
 
 // TODO: This shouldn't be in every build, I don't think it's in core-js? I think?
 // And it's extremely small anyway and basically does nothing.
@@ -6915,7 +6915,7 @@ function useProgressWithHandler({ labelParameters, progressIndicatorParameters, 
  *
  * @hasChild {@link useRadio}
  */
-function useRadioGroup({ labelParameters, radioGroupParameters: { name, selectedValue, onSelectedValueChange, ...void2 }, rovingTabIndexParameters, linearNavigationParameters, rearrangeableChildrenParameters, sortableChildrenParameters, staggeredChildrenParameters, typeaheadNavigationParameters, refElementParameters, ...void1 }) {
+function useRadioGroup({ labelParameters, radioGroupParameters: { name, selectedValue, onSelectedValueChange, ...void2 }, rovingTabIndexParameters, linearNavigationParameters, rearrangeableChildrenParameters, sortableChildrenParameters, staggeredChildrenParameters, typeaheadNavigationParameters, refElementParameters, singleSelectionParameters: { singleSelectionMode, ...void4 }, ...void1 }) {
     monitorCallCount(useRadioGroup);
     // TODO: The way this is structured causes 1 extra re-render on the parent
     // when the selectedValue changes to selectedIndex.
@@ -6949,7 +6949,7 @@ function useRadioGroup({ labelParameters, radioGroupParameters: { name, selected
                 onSelectedValueChange?.(enhanceEvent(e, { selectedValue: indexToName.current.get(e[EventDetail].selectedIndex) }));
             }),
         },
-        singleSelectionParameters: { singleSelectionMode: "focus", singleSelectionAriaPropName: null },
+        singleSelectionParameters: { singleSelectionMode, singleSelectionAriaPropName: null },
         multiSelectionParameters: { multiSelectionMode: "disabled", multiSelectionAriaPropName: null, onSelectionChange: null },
         paginatedChildrenParameters: { paginationMin: null, paginationMax: null },
         rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
@@ -7004,9 +7004,6 @@ function useRadioGroup({ labelParameters, radioGroupParameters: { name, selected
 function useRadio({ radioParameters: { value, ...void5 }, checkboxLikeParameters: { disabled, ...void4 }, labelParameters, info, context, textContentParameters, pressParameters: { longPressThreshold, ...void3 }, hasCurrentFocusParameters, refElementParameters, ...void1 }) {
     monitorCallCount(useRadio);
     const index = info.index;
-    /*const onInput = useStableCallback((e: EventType<InputElement, Event>) => {
-        onPressSync?.(e as PressEventReason<any>);
-    });*/
     const { name, indexToName, nameToIndex } = context.radioContext;
     const { tagInput, labelPosition } = labelParameters;
     const { pressParameters: { excludeSpace, onPressSync }, singleSelectionChildReturn, propsTabbable, propsChild: listNavigationSingleSelectionChildProps, ...listNavRet } = useCompleteListNavigationChildDeclarative({
@@ -8555,9 +8552,10 @@ const ProgressWithHandler = memo(function ProgressWithHandler({ ariaLabel, forci
 });
 
 const RadioContext = F$2(null);
-const RadioGroup = memo(function RadioGroup({ render, name, collator, disableHomeEndKeys, arrowKeyDirection, noTypeahead, typeaheadTimeout, ariaLabel, compare, staggered, getIndex, navigatePastEnd, navigatePastStart, selectedValue, untabbable, onTabbableIndexChange, onNavigateLinear, onNavigateTypeahead, pageNavigationSize, onElementChange, onMount, onUnmount, imperativeHandle, onSelectedValueChange, ...void1 }) {
+const RadioGroup = memo(function RadioGroup({ render, name, collator, disableHomeEndKeys, arrowKeyDirection, noTypeahead, typeaheadTimeout, ariaLabel, compare, staggered, getIndex, navigatePastEnd, navigatePastStart, selectedValue, untabbable, onTabbableIndexChange, onNavigateLinear, onNavigateTypeahead, pageNavigationSize, onElementChange, onMount, onUnmount, imperativeHandle, onSelectedValueChange, singleSelectionMode, ...void1 }) {
     untabbable ??= false;
     return useComponent(imperativeHandle, render, RadioContext, useRadioGroup({
+        singleSelectionParameters: { singleSelectionMode: singleSelectionMode ?? "focus" },
         linearNavigationParameters: {
             onNavigateLinear,
             arrowKeyDirection: arrowKeyDirection ?? "either",
