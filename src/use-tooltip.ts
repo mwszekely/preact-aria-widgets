@@ -90,7 +90,6 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
     monitorCallCount(useTooltip);
 
     useGlobalHandler(window, "mouseout", useCallback((e: MouseEvent) => {
-        console.log(e);
         if (e.relatedTarget == null)
             onHoverChanged(false, "popup");
     }, []));

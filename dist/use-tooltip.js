@@ -32,7 +32,6 @@ function delayedAlert(message: string) {
 export function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType, hoverDelay, usesLongPress }, activeElementParameters, escapeDismissParameters, pressReturn: { longPress, ...void2 }, ...void1 }) {
     monitorCallCount(useTooltip);
     useGlobalHandler(window, "mouseout", useCallback((e) => {
-        console.log(e);
         if (e.relatedTarget == null)
             onHoverChanged(false, "popup");
     }, []));

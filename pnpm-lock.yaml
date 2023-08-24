@@ -16,7 +16,7 @@ dependencies:
     version: 10.13.2
   preact-prop-helpers:
     specifier: github:mwszekely/preact-prop-helpers
-    version: github.com/mwszekely/preact-prop-helpers/a38107944c472dc4340e635e10685b45574d295f(preact@10.13.2)(react-dom@18.2.0)(react@18.2.0)
+    version: github.com/mwszekely/preact-prop-helpers/eb4985402c95c977e92a0be3eff4fd2123f97362(preact@10.13.2)(react-dom@18.2.0)(react@18.2.0)
 
 devDependencies:
   '@playwright/test':
@@ -59,8 +59,8 @@ packages:
     resolution: {integrity: sha512-eF2rxCRulEKXHTRiDrDy6erMYWqNw4LPdQ8UQA4huuxaQsVeRPFl2oM8oDGxMFhJUWZf9McpLtJasDDZb/Bpeg==}
     dev: true
 
-  /@mdn/browser-compat-data@5.3.11:
-    resolution: {integrity: sha512-jczDSsCfDeAdGAaUPA/r7G2lFjVz/oE1qClHkM5zw8fw+Vod1RMlwlF//UMgbe/V8G57RYe7UXGpTmiWjFg3Cg==}
+  /@mdn/browser-compat-data@5.3.12:
+    resolution: {integrity: sha512-EXEsNCIoNlS4Rqe/7k6du0yVnrKBMn0mPSgUn/e4VJ042h8SaRkV0qLbVu+ohwnkwzL2LQjRRAqpu6uOmJT8DQ==}
     dev: true
 
   /@playwright/test@1.36.2:
@@ -68,7 +68,7 @@ packages:
     engines: {node: '>=16'}
     hasBin: true
     dependencies:
-      '@types/node': 20.5.1
+      '@types/node': 20.5.4
       playwright-core: 1.36.2
     optionalDependencies:
       fsevents: 2.3.2
@@ -192,8 +192,8 @@ packages:
     resolution: {integrity: sha512-w+tIMs3rq2afQdsPJlODhoUEKzFP1ayaoyl1CcnwtIlsVe7K7bA1NGm4s3PraqTLlXnbIN84zuBlxBWo1u9BLw==}
     dev: true
 
-  /@types/node@20.5.1:
-    resolution: {integrity: sha512-4tT2UrL5LBqDwoed9wZ6N3umC4Yhz3W3FloMmiiG4JwmUJWpie0c7lcnUNd4gtMKuDEO4wRVS8B6Xa0uMRsMKg==}
+  /@types/node@20.5.4:
+    resolution: {integrity: sha512-Y9vbIAoM31djQZrPYjpTLo0XlaSwOIsrlfE3LpulZeRblttsLQRFRlBAppW0LOxyT3ALj2M5vU1ucQQayQH3jA==}
     dev: true
 
   /@types/object-path@0.11.1:
@@ -284,7 +284,7 @@ packages:
     resolution: {integrity: sha512-ZFz4mAOgqm0cbwKaZsfJbYDbTXGoPANlte7qRsRJOfjB9KmmISQrXJxAVrnXG8C8v/QHNzXyeJt0Cfcks6zZvQ==}
     engines: {node: '>=16.15.1', npm: '>=7.0.0', pnpm: '>=3.2.0', yarn: '>=1.13'}
     dependencies:
-      '@mdn/browser-compat-data': 5.3.11
+      '@mdn/browser-compat-data': 5.3.12
       '@types/object-path': 0.11.1
       '@types/semver': 7.5.0
       '@types/ua-parser-js': 0.7.36
@@ -302,7 +302,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001522
-      electron-to-chromium: 1.4.497
+      electron-to-chromium: 1.4.500
       node-releases: 2.0.13
       update-browserslist-db: 1.0.11(browserslist@4.21.10)
     dev: true
@@ -401,8 +401,8 @@ packages:
       object-keys: 1.1.1
     dev: true
 
-  /electron-to-chromium@1.4.497:
-    resolution: {integrity: sha512-9cvj6XkrgyxDySKJWYVIyq7p9bOAkH3M3jANgvWNX/F2jIAfbBN4oBNLJg1i68I8wAKVuih2IL4y1n9hqbL3Aw==}
+  /electron-to-chromium@1.4.500:
+    resolution: {integrity: sha512-P38NO8eOuWOKY1sQk5yE0crNtrjgjJj6r3NrbIKtG18KzCHmHE2Bt+aQA7/y0w3uYsHWxDa6icOohzjLJ4vJ4A==}
     dev: true
 
   /error-ex@1.3.2:
@@ -1360,9 +1360,9 @@ packages:
     version: 1.0.0
     dev: false
 
-  github.com/mwszekely/preact-prop-helpers/a38107944c472dc4340e635e10685b45574d295f(preact@10.13.2)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {tarball: https://codeload.github.com/mwszekely/preact-prop-helpers/tar.gz/a38107944c472dc4340e635e10685b45574d295f}
-    id: github.com/mwszekely/preact-prop-helpers/a38107944c472dc4340e635e10685b45574d295f
+  github.com/mwszekely/preact-prop-helpers/eb4985402c95c977e92a0be3eff4fd2123f97362(preact@10.13.2)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {tarball: https://codeload.github.com/mwszekely/preact-prop-helpers/tar.gz/eb4985402c95c977e92a0be3eff4fd2123f97362}
+    id: github.com/mwszekely/preact-prop-helpers/eb4985402c95c977e92a0be3eff4fd2123f97362
     name: preact-prop-helpers
     version: 0.0.1
     peerDependencies:
