@@ -74,16 +74,18 @@ export function useProgressWithHandler({ labelParameters, progressIndicatorParam
     assertEmptyObject(void2);
     const notify = useNotify();
     const asyncInfo = useAsyncHandler({
-        ...asyncHandlerParameters, asyncHandler: async (...args) => {
+        ...asyncHandlerParameters,
+        asyncHandler: (...args) => {
             try {
                 let promiseOrValue = asyncHandler?.(...args);
                 if (promiseOrValue && "then" in promiseOrValue) {
                     if (notifyPending)
                         notify("assertive", notifyPending);
-                    let value = await promiseOrValue;
-                    if (notifySuccess)
-                        notify("assertive", notifySuccess);
-                    return value;
+                    return promiseOrValue.then((value) => {
+                        if (notifySuccess)
+                            notify("assertive", notifySuccess);
+                        return value;
+                    });
                 }
                 return promiseOrValue;
             }

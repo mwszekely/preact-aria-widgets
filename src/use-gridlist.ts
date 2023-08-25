@@ -278,7 +278,7 @@ export function useGridlistRow<GridlistRowElement extends Element, GridlistCellE
 export function useGridlistCell<GridlistCellElement extends Element>({ pressParameters: { onPressSync, longPressThreshold, onPressingChange, ...void1 }, ...p }: UseGridlistCellParameters<GridlistCellElement, GridlistCellInfo<GridlistCellElement>>): UseGridlistCellReturnType<GridlistCellElement, GridlistCellInfo<GridlistCellElement>> {
     monitorCallCount(useGridlistCell);
 
-    const { props, ...info } = useCompleteGridNavigationCell<GridlistCellElement, GridlistCellInfo<GridlistCellElement>>(p);
+    const { props, refElementReturn, ...info } = useCompleteGridNavigationCell<GridlistCellElement, GridlistCellInfo<GridlistCellElement>>(p);
 
     assertEmptyObject(void1);
 
@@ -287,7 +287,7 @@ export function useGridlistCell<GridlistCellElement extends Element>({ pressPara
         props: propsPress
     } = usePress({
         pressParameters: { onPressSync, focusSelf: p.info.focusSelf, allowRepeatPresses: false, excludeEnter: null, excludePointer: null, excludeSpace: info.pressParameters.excludeSpace, longPressThreshold, onPressingChange },
-        refElementReturn: info.refElementReturn
+        refElementReturn,
     })
 
     return {
@@ -295,6 +295,7 @@ export function useGridlistCell<GridlistCellElement extends Element>({ pressPara
         propsPress,
         propsCell: { role: "gridcell" },
         propsTabbable: props,
+        refElementReturn,
         pressReturn
     }
 

@@ -126,14 +126,14 @@ const EventMapping = {
 // (i.e. in a way that doesn't throw an error but has isDevMode be a constant)
 globalThis["process"] ??= {};
 globalThis["process"]["env"] ??= {};
+globalThis["process"]["env"]["NODE_ENV"] ??= "production";
 /**
  * Controls other development hooks by checking the value of a global variable called `process.env.NODE_ENV`.
  *
- * @remarks Bundlers like Rollup will actually no-op out development code if `process.env.NODE_ENV !== "development"`
+ * @remarks Bundlers like Rollup will actually noop-out development code if `process.env.NODE_ENV !== "development"`
  * (which, of course, covers the default case where `process.env.NODE_ENV` just doesn't exist).
  */
-const BuildMode = process.env.NODE_ENV || "production";
-process.env.NODE_ENV = BuildMode;
+const BuildMode = (process.env.NODE_ENV === 'development') ? "development" : "production";
 
 // TODO: This shouldn't be in every build, I don't think it's in core-js? I think?
 // And it's extremely small anyway and basically does nothing.
@@ -2299,13 +2299,15 @@ refElementReturn, ...void1 }) {
         setTabbableColumn,
         setTabbableCell: setTabbableIndex
     });
-    // These will often have conflicting values, but we always use -1 for rows no matter what,
-    // so instead of negotiating a resolution we can just give a straight answer.
-    propsLN.tabIndex = propsLNC.tabIndex = -1;
+    // TODO: propsLN2 (awful name) is just the tabIndex=0 or -1 from rovingTabIndex, which flips around when `untabbable` flips.
+    // We can ignore it here, because our tabIndex is entirely controlled by our own list navigation,
+    // but it shouldn't just be ignored wholesale like this.
+    propsLN.tabIndex = propsLN.tabIndex ?? propsLNC.tabIndex;
     const props = useMergedProps(propsLN, propsLNC, {
         // Ensure that if the browser focuses the row for whatever reason, we transfer the focus to a child cell.
         onFocus: useStableCallback(e => whenThisRowIsFocused(e.currentTarget))
     });
+    props.tabIndex = -1;
     const contextToChildren = useMemoObject({
         gridNavigationCellContext,
         ...contextULN
@@ -2789,7 +2791,7 @@ function useMultiSelectionChild({ info: { index, ...void4 }, multiSelectionChild
         hasCurrentFocusParameters: {
             onCurrentFocusedInnerChanged
         },
-        props: { [multiSelectionAriaPropName || "aria-selected"]: multiSelectionMode == "disabled" ? undefined : (localSelected ? "true" : "false") },
+        props: { [multiSelectionAriaPropName || "aria-selected"]: localSelected ? "true" : "false" },
         info: {
             getMultiSelected: getLocalSelected,
             setSelectedFromParent,
@@ -4705,58 +4707,9 @@ function useAsyncHandler({ asyncHandler, capture: originalCapture, ...restAsyncO
     };
 }
 
-function pressLog(...args) {
-    if (window.__log_press_events)
-        console.log(...args);
-}
 function supportsPointerEvents() {
     return ("onpointerup" in window);
 }
-// All our checking for pointerdown and up doesn't mean anything if it's
-// a programmatic onClick event, which could come from any non-user source.
-// We want to handle those just like GUI clicks, but we don't want to double-up on press events.
-// So if we handle a press from pointerup, we ignore any subsequent click events, at least for a tick.
-//
-// Also, this is global to handle the following situation:
-// A button is tapped
-// Some heavy rendering-logic is done and the page jumps around
-// Now there's a new button underneath the user's finger
-// And it receives a click event just cause.
-// ...at the end of the day, globals are the best way to coordinate this simple state between disparate components.
-// But TODO because it doesn't work well it this library is used multiple times on the same page.
-let justHandledManualClickEvent = false;
-let manualClickTimeout1 = null;
-let manualClickTimeout2 = null;
-function onHandledManualClickEvent() {
-    pressLog("manual-click");
-    justHandledManualClickEvent = true;
-    if (manualClickTimeout1 != null)
-        clearTimeout(manualClickTimeout1);
-    if (manualClickTimeout2 != null)
-        clearTimeout(manualClickTimeout2);
-    // The timeout is somewhat generous here because when the "emulated" click event finally comes along
-    // (i.e. after all the pointer events have finished) it will also clear this. 
-    // This is mostly as a backup safety net.
-    manualClickTimeout1 = setTimeout(() => {
-        pressLog("manual-click halfway");
-        // This is split into two halves for task-ordering reasons.
-        // Namely we'd like one of these to be scheduled **after** some amount of heavy work was scheduled
-        // Because the task queue is FIFO at **scheduling** time, not at the **scheduled** time.
-        manualClickTimeout2 = setTimeout(() => {
-            pressLog("manual-click clear");
-            justHandledManualClickEvent = false;
-        }, 50);
-    }, 200);
-}
-document.addEventListener("click", (e) => {
-    if (justHandledManualClickEvent) {
-        justHandledManualClickEvent = false;
-        manualClickTimeout1 != null && clearTimeout(manualClickTimeout1);
-        manualClickTimeout2 != null && clearTimeout(manualClickTimeout2);
-        e.preventDefault();
-        e.stopPropagation();
-    }
-}, { capture: true });
 /**
  * Adds the necessary event handlers to create a "press"-like event for
  * any element, whether it's a native &lt;button&gt; or regular &lt;div&gt;,
@@ -4818,6 +4771,18 @@ function usePress(args) {
      * Because for some reason, pointerleave (etc.) aren't fired until *after* pointerup, no matter what.
      *
      */
+    // All our checking for pointerdown and up doesn't mean anything if it's
+    // a programmatic onClick event, which could come from any non-user source.
+    // We want to handle those just like GUI clicks, but we don't want to double-up on press events.
+    // So if we handle a press from pointerup, we ignore any subsequent click events, at least for a tick.
+    const [getJustHandled, setJustHandled] = usePassiveState(useStableCallback((justHandled, _p, reason) => {
+        if (justHandled) {
+            const h = setTimeout(() => {
+                setJustHandled(false, reason);
+            }, 1);
+            return clearTimeout(h);
+        }
+    }), returnFalse);
     const [longPress, setLongPress] = useState(null);
     const [waitingForSpaceUp, setWaitingForSpaceUp, getWaitingForSpaceUp] = useState(false);
     const [pointerDownStartedHere, setPointerDownStartedHere, getPointerDownStartedHere] = useState(false);
@@ -4834,7 +4799,6 @@ function usePress(args) {
             focusSelf(element);
     });
     const onTouchMove = useCallback((e) => {
-        pressLog("touchmove", e);
         e.preventDefault();
         e.stopPropagation();
         const element = getElement();
@@ -4856,13 +4820,12 @@ function usePress(args) {
         setHovering(hoveringAtAnyPoint);
     }, []);
     const onTouchEnd = useCallback((e) => {
-        pressLog("touchend", e);
         e.preventDefault();
         e.stopPropagation();
         const hovering = getHovering();
         const pointerDownStartedHere = getPointerDownStartedHere();
+        setJustHandled(true, e);
         if (pointerDownStartedHere && hovering) {
-            onHandledManualClickEvent();
             handlePress(e);
         }
         setWaitingForSpaceUp(false);
@@ -4871,7 +4834,6 @@ function usePress(args) {
         setIsPressing(false, e);
     }, []);
     const onPointerDown = useStableCallback((e) => {
-        pressLog("pointerdown", e);
         if (!excludePointer()) {
             if ((e.buttons & 1)) {
                 e.preventDefault();
@@ -4887,7 +4849,6 @@ function usePress(args) {
         }
     });
     const onPointerMove = useStableCallback((e) => {
-        pressLog("pointermove", e);
         let listeningForPress = getPointerDownStartedHere();
         // If we're hovering over this element and not holding down the mouse button (or whatever other primary button)
         // then we're definitely not in a press anymore (if we could we'd just wait for onPointerUp, but it could happen outside this element)
@@ -4904,12 +4865,11 @@ function usePress(args) {
         }
     });
     const onPointerUp = useCallback((e) => {
-        pressLog("pointerup", e);
         const hovering = getHovering();
         const pointerDownStartedHere = getPointerDownStartedHere();
         if (!excludePointer()) {
+            setJustHandled(true, e);
             if (pointerDownStartedHere && hovering) {
-                onHandledManualClickEvent();
                 handlePress(e);
                 e.preventDefault();
                 e.stopPropagation();
@@ -4922,11 +4882,9 @@ function usePress(args) {
         setIsPressing(false, e);
     }, []);
     const onPointerEnter = useCallback((_e) => {
-        pressLog("pointerenter", _e);
         setHovering(true);
     }, []);
     const onPointerLeave = useCallback((_e) => {
-        pressLog("pointerleave", _e);
         setHovering(false);
         setLongPress(false);
     }, []);
@@ -4947,7 +4905,6 @@ function usePress(args) {
         triggerIndex: longPress ? true : (pointerDownStartedHere && getHovering())
     });
     const handlePress = useStableCallback((e) => {
-        pressLog("handlepress", e);
         setWaitingForSpaceUp(false);
         setHovering(false);
         setPointerDownStartedHere(false);
@@ -4993,7 +4950,6 @@ function usePress(args) {
         }
     });
     const onKeyDown = useStableCallback((e) => {
-        pressLog("keydown", e);
         if (onPressSync) {
             if (e.key == " " && !excludeSpace()) {
                 // We don't actually activate it on a space keydown
@@ -5012,7 +4968,6 @@ function usePress(args) {
         }
     });
     const onKeyUp = useStableCallback((e) => {
-        pressLog("keyup", e);
         const waitingForSpaceUp = getWaitingForSpaceUp();
         if (waitingForSpaceUp && e.key == " " && !excludeSpace()) {
             handlePress(e);
@@ -5020,11 +4975,9 @@ function usePress(args) {
         }
     });
     const onClick = useStableCallback((e) => {
-        pressLog("click", e);
-        // We should rarely get here. Most of the events do `preventDefault` which stops click from being called,
-        // but we can still get here if the actual `click()` member is called, for example, and we need to react appropriately.
         const element = getElement();
         if (onPressSync) {
+            e.preventDefault();
             if (e.detail > 1) {
                 if ("stopImmediatePropagation" in e)
                     e.stopImmediatePropagation();
@@ -5032,37 +4985,32 @@ function usePress(args) {
             }
             else {
                 // Listen for "programmatic" click events.
-                if (justHandledManualClickEvent) {
-                    // This is probably the click event after the end of all the pointerdownupleavemoveenter soup.
-                    // Clear the flag a little early.
-                    justHandledManualClickEvent = false;
-                }
-                else {
-                    console.assert(justHandledManualClickEvent == false, "Logic???");
-                    // Ignore stray click events that were't fired ON OR WITHIN on this element
-                    // ("on or within" because sometimes a button's got a label that's a different element than the button)
-                    if ((e.target && element?.contains(e.target))) {
-                        if (getHovering()) ;
-                        else {
-                            // Intentional, for now. Programmatic clicks shouldn't happen in most cases.
-                            // TODO: Remove this when I'm confident stray clicks won't be handled.
-                            /* eslint-disable no-debugger */
-                            debugger;
-                            console.log("onclick was fired and will be handled as it doesn't look like it came from a pointer event", e);
-                            console.assert(justHandledManualClickEvent == false, "Logic???");
-                        }
-                        setIsPressing(true, e);
-                        requestAnimationFrame(() => {
-                            setIsPressing(false, e);
-                        });
+                if (
+                // Ignore the click events that were *just* handled with pointerup
+                getJustHandled() == false &&
+                    // Ignore stray click events that were't fired SPECIFICALLY on this element
+                    e.target == element &&
+                    // Ignore click events that were fired on a radio that just became checked
+                    // (Whenever the `checked` property is changed, all browsers fire a `click` event, no matter the reason for the change,
+                    // but since everything's declarative and *we* were the reason for the change, 
+                    // this will always be a duplicate event related to whatever we just did.)
+                    element?.tagName == 'input' && element.type == 'radio' && element.checked) {
+                    // Intentional, for now. Programmatic clicks shouldn't happen in most cases.
+                    // TODO: Remove this when I'm confident stray clicks won't be handled.
+                    /* eslint-disable no-debugger */
+                    debugger;
+                    console.log("onclick was fired and will be handled as it doesn't look like it came from a pointer event", e);
+                    setIsPressing(true, e);
+                    requestAnimationFrame(() => {
+                        setIsPressing(false, e);
                         handlePress(e);
-                    }
+                    });
+                    handlePress(e);
                 }
             }
         }
     });
     const onFocusOut = useStableCallback((e) => {
-        pressLog("focusout", e);
         setWaitingForSpaceUp(false);
         setIsPressing(false, e);
     });
@@ -6417,16 +6365,17 @@ function useGridlistRow({ gridlistRowParameters: { selected }, linearNavigationP
  */
 function useGridlistCell({ pressParameters: { onPressSync, longPressThreshold, onPressingChange, ...void1 }, ...p }) {
     monitorCallCount(useGridlistCell);
-    const { props, ...info } = useCompleteGridNavigationCell(p);
+    const { props, refElementReturn, ...info } = useCompleteGridNavigationCell(p);
     const { pressReturn, props: propsPress } = usePress({
         pressParameters: { onPressSync, focusSelf: p.info.focusSelf, allowRepeatPresses: false, excludeEnter: null, excludePointer: null, excludeSpace: info.pressParameters.excludeSpace, longPressThreshold, onPressingChange },
-        refElementReturn: info.refElementReturn
+        refElementReturn,
     });
     return {
         ...info,
         propsPress,
         propsCell: { role: "gridcell" },
         propsTabbable: props,
+        refElementReturn,
         pressReturn
     };
 }
@@ -6921,16 +6870,18 @@ function useProgressWithHandler({ labelParameters, progressIndicatorParameters, 
     monitorCallCount(useProgressWithHandler);
     const notify = useNotify();
     const asyncInfo = useAsyncHandler({
-        ...asyncHandlerParameters, asyncHandler: async (...args) => {
+        ...asyncHandlerParameters,
+        asyncHandler: (...args) => {
             try {
                 let promiseOrValue = asyncHandler?.(...args);
                 if (promiseOrValue && "then" in promiseOrValue) {
                     if (notifyPending)
                         notify("assertive", notifyPending);
-                    let value = await promiseOrValue;
-                    if (notifySuccess)
-                        notify("assertive", notifySuccess);
-                    return value;
+                    return promiseOrValue.then((value) => {
+                        if (notifySuccess)
+                            notify("assertive", notifySuccess);
+                        return value;
+                    });
                 }
                 return promiseOrValue;
             }
