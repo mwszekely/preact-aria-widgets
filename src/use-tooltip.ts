@@ -1,4 +1,4 @@
-import { assertEmptyObject, DismissListenerTypes, ElementProps, focus, monitorCallCount, returnNull, TargetedPick, useDismiss, UseDismissParameters, UseEscapeDismissParameters, useGlobalHandler, useHasCurrentFocus, useMergedProps, usePassiveState, UsePressReturnType, useRandomId, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
+import { assertEmptyObject, DismissListenerTypes, ElementProps, focus, monitored, returnNull, TargetedPick, useDismiss, UseDismissParameters, UseEscapeDismissParameters, useGlobalHandler, useHasCurrentFocus, useMergedProps, usePassiveState, UsePressReturnType, useRandomId, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
 import { useCallback, useEffect, useRef } from "preact/hooks";
 import { Prefices } from "./props.js";
 
@@ -75,7 +75,7 @@ function delayedAlert(message: string) {
  * 
  * @compositeParams
  */
-export function useTooltip<TriggerType extends Element, PopupType extends Element>({
+export const useTooltip = monitored(function useTooltip<TriggerType extends Element, PopupType extends Element>({
     tooltipParameters: {
         onStatus,
         tooltipSemanticType,
@@ -87,7 +87,6 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
     pressReturn: { longPress, ...void2 },
     ...void1
 }: UseTooltipParameters<TriggerType, PopupType>): UseTooltipReturnType<TriggerType, PopupType> {
-    monitorCallCount(useTooltip);
 
     useGlobalHandler(window, "mouseout", useCallback((e: MouseEvent) => {
         if (e.relatedTarget == null)
@@ -181,7 +180,7 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
 
     const onCurrentFocusedInnerChanged = useCallback((focused: boolean, which: "popup" | "trigger") => {
 
-       // delayedAlert(`onFocusedChanged(${focused.toString()}, ${which}) with inputState == ${inputState.current}`)
+        // delayedAlert(`onFocusedChanged(${focused.toString()}, ${which}) with inputState == ${inputState.current}`)
 
         if (inputState.current != "hover") {
             if (focused) {
@@ -301,7 +300,7 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
             //stateIsMouse
         }
     }
-}
+})
 
 export interface UseTooltipReturnTypeSelf {
     getState(): TooltipState;

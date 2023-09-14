@@ -1,4 +1,4 @@
-import { focus, monitorCallCount, useCompleteListNavigationChild, useCompleteListNavigationDeclarative, useMemoObject, useMergedProps } from "preact-prop-helpers";
+import { focus, monitored, useCompleteListNavigationChild, useCompleteListNavigationDeclarative, useMemoObject, useMergedProps } from "preact-prop-helpers";
 import { Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
 ;
@@ -14,8 +14,7 @@ import { useLabelSynthetic } from "./use-label.js";
  *
  * @compositeParams
  */
-export function useToolbar({ linearNavigationParameters, toolbarParameters: { orientation, role, disabled }, labelParameters, rovingTabIndexParameters, singleSelectionParameters, singleSelectionDeclarativeParameters, ...listNavParameters }) {
-    monitorCallCount(useToolbar);
+export const useToolbar = monitored(function useToolbar({ linearNavigationParameters, toolbarParameters: { orientation, role, disabled }, labelParameters, rovingTabIndexParameters, singleSelectionParameters, singleSelectionDeclarativeParameters, ...listNavParameters }) {
     if (singleSelectionDeclarativeParameters.singleSelectedIndex !== undefined) {
         console.assert(singleSelectionParameters.singleSelectionMode != "disabled");
     }
@@ -47,17 +46,16 @@ export function useToolbar({ linearNavigationParameters, toolbarParameters: { or
         randomIdLabelReturn,
         ...listNavReturn
     };
-}
+});
 /**
  * @compositeParams
  */
-export function useToolbarChild({ context: { toolbarContext, ...context }, info, toolbarChildParameters: { disabledProp }, ...args }) {
-    monitorCallCount(useToolbarChild);
+export const useToolbarChild = monitored(function useToolbarChild({ context: { toolbarContext, ...context }, info, toolbarChildParameters: { disabledProp }, ...args }) {
     const { propsChild, propsTabbable, ...listNavReturn } = useCompleteListNavigationChild({ info, context, ...args });
     return {
         propsChild: useMergedProps(propsChild, { [disabledProp]: (args.singleSelectionChildParameters.singleSelectionDisabled || args.multiSelectionChildParameters.multiSelectionDisabled) ? true : undefined }),
         propsTabbable,
         ...listNavReturn
     };
-}
+});
 //# sourceMappingURL=use-toolbar.js.map

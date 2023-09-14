@@ -7,8 +7,8 @@
     "packageManager": "pnpm@8.6.11",
     "browserslist": "defaults, iOS >= 12",
     "scripts": {
-        "watch": "npx esbuild ./index.tsx --bundle --outfile=bundle.js --format=iife --sourcemap --minify-identifiers --minify-syntax --watch",
-        "build": "npx esbuild ./index.tsx --bundle --outfile=bundle.js --format=iife --sourcemap --minify-identifiers --minify-syntax --analyze",
+        "watch": "npx esbuild ./index.tsx --bundle --outfile=bundle.js --format=iife --sourcemap --watch",
+        "build": "npx esbuild ./index.tsx --bundle --outfile=bundle.js --format=iife --sourcemap --analyze",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "author": "",

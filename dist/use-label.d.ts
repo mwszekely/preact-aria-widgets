@@ -44,5 +44,5 @@ export interface UseLabelSyntheticParameters extends TargetedPick<UseLabelParame
  *
  * @compositeParams
  */
-export declare function useLabelSynthetic<InputElement extends Element, LabelElement extends Element>({ labelParameters: { ariaLabel, onLabelClick }, ...rest }: UseLabelSyntheticParameters): UseLabelReturnType<InputElement, LabelElement>;
+export declare const useLabelSynthetic: <InputElement extends Element, LabelElement extends Element>({ labelParameters: { ariaLabel, onLabelClick }, ...rest }: UseLabelSyntheticParameters) => UseLabelReturnType<InputElement, LabelElement>;
 //# sourceMappingURL=use-label.d.ts.map

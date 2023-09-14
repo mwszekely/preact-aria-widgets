@@ -20,7 +20,8 @@ import {
     UsePressReturnType,
     assertEmptyObject,
     focus,
-    monitorCallCount, useCompleteGridNavigationCell,
+    monitored,
+    useCompleteGridNavigationCell,
     useCompleteGridNavigationDeclarative,
     useCompleteGridNavigationRow,
     useMemoObject,
@@ -100,7 +101,7 @@ export interface GridlistCellInfo<GridlistCellElement extends Element> extends U
  * @hasChild {@link useGridlistRow}
  * @hasChild {@link useGridlistCell}
  */
-export function useGridlist<GridlistElement extends Element, GridlistRowElement extends Element, GridlistCellElement extends Element, LabelElement extends Element>({
+export const useGridlist = monitored(function useGridlist<GridlistElement extends Element, GridlistRowElement extends Element, GridlistCellElement extends Element, LabelElement extends Element>({
     labelParameters,
 
     listboxParameters: { groupingType, ...void1 },
@@ -120,7 +121,7 @@ export function useGridlist<GridlistElement extends Element, GridlistRowElement 
 }: UseGridlistParameters<GridlistElement, GridlistRowElement, LabelElement, GridlistRowInfo<GridlistRowElement>>): UseGridlistReturnType<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, GridlistRowInfo<GridlistRowElement>, GridlistCellInfo<GridlistCellElement>> {
     type RM = GridlistRowInfo<GridlistRowElement>;
     type CM = GridlistCellInfo<GridlistCellElement>;
-    monitorCallCount(useGridlist);
+
     assertEmptyObject(void1);
     assertEmptyObject(void2);
 
@@ -188,13 +189,13 @@ export function useGridlist<GridlistElement extends Element, GridlistRowElement 
         propsGridlistLabel: propsLabelLabel,
         ...restRet
     }
-}
+})
 
 /**
  * @compositeParams
  * 
  */
-export function useGridlistRow<GridlistRowElement extends Element, GridlistCellElement extends Element>({
+export const useGridlistRow = monitored(function useGridlistRow<GridlistRowElement extends Element, GridlistCellElement extends Element>({
     gridlistRowParameters: { selected },
     linearNavigationParameters,
     context: cx1,
@@ -208,7 +209,7 @@ export function useGridlistRow<GridlistRowElement extends Element, GridlistCellE
     gridNavigationSelectionSortableRowParameters,
     ...void1
 }: UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, GridlistRowInfo<GridlistRowElement>, GridlistCellInfo<GridlistCellElement>>): UseGridlistRowReturnType<GridlistRowElement, GridlistCellElement, GridlistRowInfo<GridlistRowElement>, GridlistCellInfo<GridlistCellElement>> {
-    monitorCallCount(useGridlistRow);
+
     type RM = GridlistRowInfo<GridlistRowElement>;
     type CM = GridlistCellInfo<GridlistCellElement>;
     const {
@@ -269,15 +270,13 @@ export function useGridlistRow<GridlistRowElement extends Element, GridlistCellE
         props
 
     }
-}
+})
 
 /**
  * @compositeParams
  * 
  */
-export function useGridlistCell<GridlistCellElement extends Element>({ pressParameters: { onPressSync, longPressThreshold, onPressingChange, ...void1 }, ...p }: UseGridlistCellParameters<GridlistCellElement, GridlistCellInfo<GridlistCellElement>>): UseGridlistCellReturnType<GridlistCellElement, GridlistCellInfo<GridlistCellElement>> {
-    monitorCallCount(useGridlistCell);
-
+export const useGridlistCell = monitored(function useGridlistCell<GridlistCellElement extends Element>({ pressParameters: { onPressSync, longPressThreshold, onPressingChange, ...void1 }, ...p }: UseGridlistCellParameters<GridlistCellElement, GridlistCellInfo<GridlistCellElement>>): UseGridlistCellReturnType<GridlistCellElement, GridlistCellInfo<GridlistCellElement>> {
     const { props, refElementReturn, ...info } = useCompleteGridNavigationCell<GridlistCellElement, GridlistCellInfo<GridlistCellElement>>(p);
 
     assertEmptyObject(void1);
@@ -299,7 +298,7 @@ export function useGridlistCell<GridlistCellElement extends Element>({ pressPara
         pressReturn
     }
 
-}
+})
 
 /*interface UseGridlistSectionParameters {
     gridlistSectionParameters: {

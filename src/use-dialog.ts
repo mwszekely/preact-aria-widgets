@@ -1,5 +1,5 @@
 
-import { assertEmptyObject, ElementProps, findFirstFocusable, monitorCallCount, TargetedOmit, useMergedProps, useModal, UseModalParameters, UseModalReturnType, useStableCallback } from "preact-prop-helpers";
+import { assertEmptyObject, ElementProps, findFirstFocusable, monitored, TargetedOmit, useMergedProps, useModal, UseModalParameters, UseModalReturnType, useStableCallback } from "preact-prop-helpers";
 import { OmitStrong, Prefices } from "./props.js";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
 
@@ -24,18 +24,17 @@ export interface UseDialogReturnType<FocusContainerElement extends Element, Sour
  * 
  * @compositeParams
  */
-export function useDialog<FocusContainerElement extends Element, SourceElement extends Element, DialogElement extends Element, TitleElement extends Element>({ 
-    dismissParameters, 
-    escapeDismissParameters, 
-    focusTrapParameters, 
+export const useDialog = monitored(function useDialog<FocusContainerElement extends Element, SourceElement extends Element, DialogElement extends Element, TitleElement extends Element>({
+    dismissParameters,
+    escapeDismissParameters,
+    focusTrapParameters,
     activeElementParameters,
     backdropDismissParameters,
     modalParameters,
     refElementParameters,
     labelParameters,
     ...void1
- }: UseDialogParameters<DialogElement, TitleElement>): UseDialogReturnType<FocusContainerElement, SourceElement, DialogElement, TitleElement> {
-    monitorCallCount(useDialog);
+}: UseDialogParameters<DialogElement, TitleElement>): UseDialogReturnType<FocusContainerElement, SourceElement, DialogElement, TitleElement> {
 
     const {
         propsFocusContainer,
@@ -64,7 +63,7 @@ export function useDialog<FocusContainerElement extends Element, SourceElement e
         ...void3
     } = useLabelSynthetic<DialogElement, TitleElement>({
         labelParameters: {
-            ...labelParameters, 
+            ...labelParameters,
             onLabelClick: useStableCallback(() => {
                 const e = refElementPopupReturn.getElement();
                 focusTrapParameters.focusPopup(e, () => (findFirstFocusable(e!) as HTMLElement | null));
@@ -86,4 +85,4 @@ export function useDialog<FocusContainerElement extends Element, SourceElement e
         refElementPopupReturn,
         refElementSourceReturn
     }
-}
+})

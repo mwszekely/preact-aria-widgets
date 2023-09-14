@@ -1,4 +1,4 @@
-import { assertEmptyObject, focus, monitorCallCount, useCompleteListNavigationChildDeclarative, useCompleteListNavigationDeclarative, useMergedProps, usePress, useStableCallback } from "preact-prop-helpers";
+import { assertEmptyObject, focus, monitored, useCompleteListNavigationChildDeclarative, useCompleteListNavigationDeclarative, useMergedProps, usePress, useStableCallback } from "preact-prop-helpers";
 import { EventDetail, Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
 /**
@@ -12,8 +12,7 @@ import { useLabelSynthetic } from "./use-label.js";
  *
  * @hasChild {@link useListboxItem}
  */
-export function useListbox({ labelParameters, listboxParameters: { groupingType, orientation }, linearNavigationParameters, singleSelectionParameters: { singleSelectionAriaPropName, singleSelectionMode, ...void1 }, multiSelectionParameters: { multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, ...void2 }, singleSelectionDeclarativeParameters: { onSingleSelectedIndexChange, singleSelectedIndex, ...void3 }, rovingTabIndexParameters, ...restParams }) {
-    monitorCallCount(useListbox);
+export const useListbox = monitored(function useListbox({ labelParameters, listboxParameters: { groupingType, orientation }, linearNavigationParameters, singleSelectionParameters: { singleSelectionAriaPropName, singleSelectionMode, ...void1 }, multiSelectionParameters: { multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, ...void2 }, singleSelectionDeclarativeParameters: { onSingleSelectedIndexChange, singleSelectedIndex, ...void3 }, rovingTabIndexParameters, ...restParams }) {
     assertEmptyObject(void1);
     assertEmptyObject(void2);
     assertEmptyObject(void3);
@@ -53,12 +52,11 @@ export function useListbox({ labelParameters, listboxParameters: { groupingType,
         propsListbox: useMergedProps(props, propsLabelList, { "aria-multiselectable": (multiSelectionMode != "disabled" ? true : undefined) }),
         propsListboxLabel: propsLabelLabel
     };
-}
+});
 /**
  * @compositeParams
  */
-export function useListboxItem({ context, listboxParameters: {}, pressParameters: { allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, ...void1 }, singleSelectionChildParameters: { singleSelectionDisabled }, ...restParams }) {
-    monitorCallCount(useListboxItem);
+export const useListboxItem = monitored(function useListboxItem({ context, listboxParameters: {}, pressParameters: { allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, ...void1 }, singleSelectionChildParameters: { singleSelectionDisabled }, ...restParams }) {
     const { propsChild, propsTabbable, refElementReturn, pressParameters: { onPressSync, excludeSpace, ...void2 }, ...restRet } = useCompleteListNavigationChildDeclarative({
         context,
         singleSelectionChildParameters: { singleSelectionDisabled },
@@ -87,5 +85,5 @@ export function useListboxItem({ context, listboxParameters: {}, pressParameters
         props: useMergedProps(propsChild, propsTabbable, propsPress),
         ...restRet
     };
-}
+});
 //# sourceMappingURL=use-listbox.js.map

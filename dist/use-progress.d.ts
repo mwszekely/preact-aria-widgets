@@ -20,7 +20,7 @@ export interface UseProgressReturnType<ProgressElement extends Element, Progress
  *
  * @compositeParams
  */
-export declare function useProgress<ProgressElement extends Element, LabelElement extends Element>({ labelParameters, progressIndicatorParameters: { max, value, valueText, tagProgressIndicator, ...void1 }, ...void2 }: UseProgressParameters<ProgressElement, LabelElement>): UseProgressReturnType<ProgressElement, LabelElement>;
+export declare const useProgress: <ProgressElement extends Element, LabelElement extends Element>({ labelParameters, progressIndicatorParameters: { max, value, valueText, tagProgressIndicator, ...void1 }, ...void2 }: UseProgressParameters<ProgressElement, LabelElement>) => UseProgressReturnType<ProgressElement, LabelElement>;
 export interface UseProgressWithHandlerParametersSelf {
     /** If true, the progress bar will always read as at least having an indeterminate value. Nothing is announced to ATs when this changes. */
     forciblyPending: Nullable<boolean>;
@@ -49,5 +49,5 @@ export interface UseProgressWithHandlerReturnType<EventType, CaptureType, Indica
  *
  * @compositeParams
  */
-export declare function useProgressWithHandler<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element>({ labelParameters, progressIndicatorParameters, asyncHandlerParameters: { asyncHandler, ...asyncHandlerParameters }, progressWithHandlerParameters: { forciblyPending, notifyFailure, notifyPending, notifySuccess, ...void1 }, ...void2 }: UseProgressWithHandlerParameters<EventType, CaptureType, IndicatorElement, LabelElement>): UseProgressWithHandlerReturnType<EventType, CaptureType, IndicatorElement, LabelElement>;
+export declare const useProgressWithHandler: <EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element>({ labelParameters, progressIndicatorParameters, asyncHandlerParameters: { asyncHandler, ...asyncHandlerParameters }, progressWithHandlerParameters: { forciblyPending, notifyFailure, notifyPending, notifySuccess, ...void1 }, ...void2 }: UseProgressWithHandlerParameters<EventType, CaptureType, IndicatorElement, LabelElement>) => UseProgressWithHandlerReturnType<EventType, CaptureType, IndicatorElement, LabelElement>;
 //# sourceMappingURL=use-progress.d.ts.map

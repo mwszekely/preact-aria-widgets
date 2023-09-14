@@ -1,4 +1,4 @@
-import { assertEmptyObject, ElementProps, focus, JSX, monitorCallCount, PressEventReason, TargetedOmit, TargetedPick, useMergedProps, usePress, UsePressParameters, UsePressReturnType, UseRefElementReturnType, useStableCallback } from "preact-prop-helpers";
+import { assertEmptyObject, ElementProps, focus, JSX, monitored, PressEventReason, TargetedOmit, TargetedPick, useMergedProps, usePress, UsePressParameters, UsePressReturnType, UseRefElementReturnType, useStableCallback } from "preact-prop-helpers";
 import { useEffect } from "preact/hooks";
 import { DisabledType, OmitStrong } from "./props.js";
 import { LabelPosition, useLabel, UseLabelParameters, UseLabelReturnType } from "./use-label.js";
@@ -21,11 +21,10 @@ export interface UseCheckboxLikeParametersSelf<C extends CheckboxCheckedType> {
     checked: C;
 }
 
-export interface UseCheckboxLikeParameters<LP extends LabelPosition, InputType extends Element, LabelType extends Element, C extends CheckboxCheckedType> extends 
-OmitStrong<UseLabelParameters<LP, InputType, LabelType>, "labelParameters">,
-TargetedOmit<UseLabelParameters<LP, InputType, LabelType>, "labelParameters", "onLabelClick">,
-TargetedPick<UsePressParameters<any>, "pressParameters", "longPressThreshold" | "excludeSpace" | "onPressSync">
-{
+export interface UseCheckboxLikeParameters<LP extends LabelPosition, InputType extends Element, LabelType extends Element, C extends CheckboxCheckedType> extends
+    OmitStrong<UseLabelParameters<LP, InputType, LabelType>, "labelParameters">,
+    TargetedOmit<UseLabelParameters<LP, InputType, LabelType>, "labelParameters", "onLabelClick">,
+    TargetedPick<UsePressParameters<any>, "pressParameters", "longPressThreshold" | "excludeSpace" | "onPressSync"> {
     checkboxLikeParameters: UseCheckboxLikeParametersSelf<C>;
 
 
@@ -62,17 +61,16 @@ export interface UseCheckboxLikeReturnType<InputType extends Element, LabelType 
  * 
  * @compositeParams
  */
-export function useCheckboxLike<LP extends LabelPosition, InputType extends Element, LabelType extends Element, C extends CheckboxCheckedType>({
+export const useCheckboxLike = monitored(function useCheckboxLike<LP extends LabelPosition, InputType extends Element, LabelType extends Element, C extends CheckboxCheckedType>({
     labelParameters,
     randomIdInputParameters,
     randomIdLabelParameters,
     checkboxLikeParameters: { checked, disabled, role, ...void1 },
     refElementInputReturn,
     refElementLabelReturn,
-    pressParameters: { excludeSpace, longPressThreshold, onPressSync: onInputSync,  ...void2 },
-     ...void3
+    pressParameters: { excludeSpace, longPressThreshold, onPressSync: onInputSync, ...void2 },
+    ...void3
 }: UseCheckboxLikeParameters<LP, InputType, LabelType, C>): UseCheckboxLikeReturnType<InputType, LabelType> {
-    monitorCallCount(useCheckboxLike);
 
     const { getElement: getInputElement } = refElementInputReturn;
     const { getElement: getLabelElement } = refElementLabelReturn;
@@ -213,7 +211,7 @@ export function useCheckboxLike<LP extends LabelPosition, InputType extends Elem
         checkboxLikeReturn: { focusSelf },
         pressReturn
     }
-}
+})
 
 
 

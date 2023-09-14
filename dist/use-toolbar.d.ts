@@ -55,9 +55,9 @@ export interface UseToolbarChildReturnType<ChildElement extends Element, M exten
  *
  * @compositeParams
  */
-export declare function useToolbar<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({ linearNavigationParameters, toolbarParameters: { orientation, role, disabled }, labelParameters, rovingTabIndexParameters, singleSelectionParameters, singleSelectionDeclarativeParameters, ...listNavParameters }: UseToolbarParameters<ContainerElement, ChildElement, UseToolbarSubInfo<ChildElement>>): UseToolbarReturnType<ContainerElement, ChildElement, LabelElement, UseToolbarSubInfo<ChildElement>>;
+export declare const useToolbar: <ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({ linearNavigationParameters, toolbarParameters: { orientation, role, disabled }, labelParameters, rovingTabIndexParameters, singleSelectionParameters, singleSelectionDeclarativeParameters, ...listNavParameters }: UseToolbarParameters<ContainerElement, ChildElement, UseToolbarSubInfo<ChildElement>>) => UseToolbarReturnType<ContainerElement, ChildElement, LabelElement, UseToolbarSubInfo<ChildElement>>;
 /**
  * @compositeParams
  */
-export declare function useToolbarChild<ChildElement extends Element>({ context: { toolbarContext, ...context }, info, toolbarChildParameters: { disabledProp }, ...args }: UseToolbarChildParameters<ChildElement, UseToolbarSubInfo<ChildElement>>): UseToolbarChildReturnType<ChildElement, UseToolbarSubInfo<ChildElement>>;
+export declare const useToolbarChild: <ChildElement extends Element>({ context: { toolbarContext, ...context }, info, toolbarChildParameters: { disabledProp }, ...args }: UseToolbarChildParameters<ChildElement, UseToolbarSubInfo<ChildElement>>) => UseToolbarChildReturnType<ChildElement, UseToolbarSubInfo<ChildElement>>;
 //# sourceMappingURL=use-toolbar.d.ts.map

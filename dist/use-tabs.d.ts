@@ -79,7 +79,7 @@ export type UseTabListLabel<LabelElement extends Element> = (args: UseTabLabelPa
  * @hasChild {@link useTab}
  * @hasChild {@link useTabPanel}
  */
-export declare function useTabs<TabListElement extends Element, TabElement extends Element, LabelElement extends Element>({ labelParameters, linearNavigationParameters, singleSelectionParameters: { initiallySingleSelectedIndex, onSingleSelectedIndexChange: ssi, singleSelectionMode, ...singleSelectionParameters }, tabsParameters: { orientation, role, localStorageKey }, rovingTabIndexParameters, ...restParams }: UseTabsParameters<TabListElement, TabElement, TabInfo<TabElement>>): UseTabsReturnType<TabListElement, TabElement, LabelElement, TabInfo<TabElement>>;
+export declare const useTabs: <TabListElement extends Element, TabElement extends Element, LabelElement extends Element>({ labelParameters, linearNavigationParameters, singleSelectionParameters: { initiallySingleSelectedIndex, onSingleSelectedIndexChange: ssi, singleSelectionMode, ...singleSelectionParameters }, tabsParameters: { orientation, role, localStorageKey }, rovingTabIndexParameters, ...restParams }: UseTabsParameters<TabListElement, TabElement, TabInfo<TabElement>>) => UseTabsReturnType<TabListElement, TabElement, LabelElement, TabInfo<TabElement>>;
 /**
  * Implements a single tab of a Tabs component.
  *
@@ -87,7 +87,7 @@ export declare function useTabs<TabListElement extends Element, TabElement exten
  *
  * @compositeParams
  */
-export declare function useTab<TabElement extends Element>({ info: { focusSelf: focusSelfParent, index, untabbable, getSortValue, ...info }, textContentParameters, pressParameters: { focusSelf: focusSelfChild, longPressThreshold, onPressingChange, ...void2 }, context, hasCurrentFocusParameters, refElementParameters, singleSelectionChildParameters, ...void3 }: UseTabParameters<TabElement, TabInfo<TabElement>>): UseTabReturnType<TabElement, TabInfo<TabElement>>;
+export declare const useTab: <TabElement extends Element>({ info: { focusSelf: focusSelfParent, index, untabbable, getSortValue, ...info }, textContentParameters, pressParameters: { focusSelf: focusSelfChild, longPressThreshold, onPressingChange, ...void2 }, context, hasCurrentFocusParameters, refElementParameters, singleSelectionChildParameters, ...void3 }: UseTabParameters<TabElement, TabInfo<TabElement>>) => UseTabReturnType<TabElement, TabInfo<TabElement>>;
 /**
  * Implements the TabPanel a Tab controls.
  *
@@ -96,6 +96,6 @@ export declare function useTab<TabElement extends Element>({ info: { focusSelf: 
  *
  * @compositeParams
  */
-export declare function useTabPanel<PanelElement extends Element>({ info, context }: UseTabPanelParameters<TabPanelInfo>): UseTabPanelReturnType<PanelElement>;
+export declare const useTabPanel: <PanelElement extends Element>({ info, context }: UseTabPanelParameters<TabPanelInfo>) => UseTabPanelReturnType<PanelElement>;
 export {};
 //# sourceMappingURL=use-tabs.d.ts.map

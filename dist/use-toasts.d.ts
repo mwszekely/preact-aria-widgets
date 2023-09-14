@@ -51,9 +51,9 @@ export interface ToastsContext<M extends ToastInfo> extends UseManagedChildrenCo
  *
  * @hasChild {@link useToast}
  */
-export declare function useToasts<ContainerType extends Element>({ managedChildrenParameters: { onChildrenMountChange: ocmu, onAfterChildLayoutEffect }, toastsParameters: { visibleCount } }: UseToastsParameters): UseToastsReturnType<ContainerType, ToastInfo>;
+export declare const useToasts: <ContainerType extends Element>({ managedChildrenParameters: { onChildrenMountChange: ocmu, onAfterChildLayoutEffect }, toastsParameters: { visibleCount } }: UseToastsParameters) => UseToastsReturnType<ContainerType, ToastInfo>;
 /**
  * @compositeParams
  */
-export declare function useToast<E extends Element>({ toastParameters: { politeness, timeout, children }, info: { index, ...info }, context }: UseToastParameters<ToastInfo>): UseToastReturnType<E, ToastInfo>;
+export declare const useToast: <E extends Element>({ toastParameters: { politeness, timeout, children }, info: { index, ...info }, context }: UseToastParameters<ToastInfo>) => UseToastReturnType<E, ToastInfo>;
 //# sourceMappingURL=use-toasts.d.ts.map

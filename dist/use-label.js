@@ -1,4 +1,4 @@
-import { monitorCallCount, returnTrue, useMergedProps, usePress, useRandomDualIds, useRefElement } from "preact-prop-helpers";
+import { monitored, returnTrue, useMergedProps, usePress, useRandomDualIds, useRefElement } from "preact-prop-helpers";
 import { noop } from "./props.js";
 /**
  * @compositeParams
@@ -53,8 +53,7 @@ export function useLabel({ randomIdInputParameters, randomIdLabelParameters, lab
  *
  * @compositeParams
  */
-export function useLabelSynthetic({ labelParameters: { ariaLabel, onLabelClick }, ...rest }) {
-    monitorCallCount(useLabelSynthetic);
+export const useLabelSynthetic = monitored(function useLabelSynthetic({ labelParameters: { ariaLabel, onLabelClick }, ...rest }) {
     return useLabel({
         labelParameters: {
             ariaLabel,
@@ -65,5 +64,5 @@ export function useLabelSynthetic({ labelParameters: { ariaLabel, onLabelClick }
         },
         ...rest
     });
-}
+});
 //# sourceMappingURL=use-label.js.map

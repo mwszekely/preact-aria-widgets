@@ -1,4 +1,4 @@
-import { assertEmptyObject, monitorCallCount, useAsyncHandler, useMergedProps } from "preact-prop-helpers";
+import { assertEmptyObject, monitored, useAsyncHandler, useMergedProps } from "preact-prop-helpers";
 import { Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
 import { useNotify } from "./use-notify.js";
@@ -7,8 +7,7 @@ import { useNotify } from "./use-notify.js";
  *
  * @compositeParams
  */
-export function useProgress({ labelParameters, progressIndicatorParameters: { max, value, valueText, tagProgressIndicator, ...void1 }, ...void2 }) {
-    monitorCallCount(useProgress);
+export const useProgress = monitored(function useProgress({ labelParameters, progressIndicatorParameters: { max, value, valueText, tagProgressIndicator, ...void1 }, ...void2 }) {
     const { propsInput, propsLabel, randomIdInputReturn, randomIdLabelReturn, pressReturn, ...void3 } = useLabelSynthetic({
         labelParameters: { ...labelParameters, onLabelClick: null },
         randomIdInputParameters: { prefix: Prefices.progressIndicator },
@@ -59,7 +58,7 @@ export function useProgress({ labelParameters, progressIndicatorParameters: { ma
         randomIdLabelReturn,
         pressReturn,
     };
-}
+});
 /**
  * Provides props for a progress bar based on the progress of an async event handler, and notifies ATs when the operation has started/finished.
  *
@@ -68,8 +67,7 @@ export function useProgress({ labelParameters, progressIndicatorParameters: { ma
  *
  * @compositeParams
  */
-export function useProgressWithHandler({ labelParameters, progressIndicatorParameters, asyncHandlerParameters: { asyncHandler, ...asyncHandlerParameters }, progressWithHandlerParameters: { forciblyPending, notifyFailure, notifyPending, notifySuccess, ...void1 }, ...void2 }) {
-    monitorCallCount(useProgressWithHandler);
+export const useProgressWithHandler = monitored(function useProgressWithHandler({ labelParameters, progressIndicatorParameters, asyncHandlerParameters: { asyncHandler, ...asyncHandlerParameters }, progressWithHandlerParameters: { forciblyPending, notifyFailure, notifyPending, notifySuccess, ...void1 }, ...void2 }) {
     assertEmptyObject(void1);
     assertEmptyObject(void2);
     const notify = useNotify();
@@ -111,5 +109,5 @@ export function useProgressWithHandler({ labelParameters, progressIndicatorParam
         propsProgressRegion,
         asyncHandlerReturn: asyncInfo
     };
-}
+});
 //# sourceMappingURL=use-progress.js.map

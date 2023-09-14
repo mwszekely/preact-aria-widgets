@@ -34,9 +34,9 @@ export interface UseMenubarItemReturnType<MenuItemElement extends Element, M ext
  *
  * @compositeParams
  */
-export declare function useMenubar<MenuParentElement extends Element, MenuItemElement extends Element, LabelElement extends Element>(args: UseMenubarParameters<MenuParentElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenubarReturnType<MenuParentElement, MenuItemElement, LabelElement, UseMenubarSubInfo<MenuItemElement>>;
+export declare const useMenubar: <MenuParentElement extends Element, MenuItemElement extends Element, LabelElement extends Element>(args: UseMenubarParameters<MenuParentElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>) => UseMenubarReturnType<MenuParentElement, MenuItemElement, LabelElement, UseMenubarSubInfo<MenuItemElement>>;
 /**
  * @compositeParams
  */
-export declare function useMenubarChild<MenuItemElement extends Element>({ menuItemParameters: { onPress: opu, role }, pressParameters: { onPressingChange, ...void1 }, ...restParams }: UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenubarItemReturnType<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>;
+export declare const useMenubarChild: <MenuItemElement extends Element>({ menuItemParameters: { onPress: opu, role }, pressParameters: { onPressingChange, ...void1 }, ...restParams }: UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>) => UseMenubarItemReturnType<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>;
 //# sourceMappingURL=use-menubar.d.ts.map

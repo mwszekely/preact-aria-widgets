@@ -1,5 +1,5 @@
 import { jsx as _jsx } from "preact/jsx-runtime";
-import { findFirstFocusable, focus, monitorCallCount, useGlobalHandler, useManagedChild, useManagedChildren, useMergedProps, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
+import { findFirstFocusable, focus, monitored, useGlobalHandler, useManagedChild, useManagedChildren, useMergedProps, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
 import { useCallback, useEffect, useRef } from "preact/hooks";
 import { useNotify } from "./use-notify.js";
 /**
@@ -9,8 +9,7 @@ import { useNotify } from "./use-notify.js";
  *
  * @hasChild {@link useToast}
  */
-export function useToasts({ managedChildrenParameters: { onChildrenMountChange: ocmu, onAfterChildLayoutEffect }, toastsParameters: { visibleCount } }) {
-    monitorCallCount(useToasts);
+export const useToasts = monitored(function useToasts({ managedChildrenParameters: { onChildrenMountChange: ocmu, onAfterChildLayoutEffect }, toastsParameters: { visibleCount } }) {
     // Normally, this does just look like [0, 1, 2, 3], etc
     // so it could be just an index to the current toast,
     // but if we dismiss toasts out of order, it's [0, 2, 3] or something.
@@ -92,13 +91,12 @@ export function useToasts({ managedChildrenParameters: { onChildrenMountChange: 
         managedChildrenReturn,
         props
     };
-}
+});
 /**
  * @compositeParams
  */
-export function useToast({ toastParameters: { politeness, timeout, children }, info: { index, ...info }, context }) {
+export const useToast = monitored(function useToast({ toastParameters: { politeness, timeout, children }, info: { index, ...info }, context }) {
     const { getMaxVisibleCount, onAnyToastDismissed, onAnyToastMounted } = context.toastContext;
-    monitorCallCount(useToast);
     const [numberOfToastsAheadOfUs, setNumberOfToastsAheadOfUs] = useState(Infinity);
     const getIndex = useStableGetter(index);
     const [dismissed2, setDismissed2, getDismissed2] = useState(false);
@@ -157,5 +155,5 @@ export function useToast({ toastParameters: { politeness, timeout, children }, i
         managedChildReturn,
         props: propsStable
     };
-}
+});
 //# sourceMappingURL=use-toasts.js.map

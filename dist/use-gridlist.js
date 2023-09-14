@@ -1,4 +1,4 @@
-import { assertEmptyObject, focus, monitorCallCount, useCompleteGridNavigationCell, useCompleteGridNavigationDeclarative, useCompleteGridNavigationRow, useMemoObject, useMergedProps, usePress, useStableCallback } from "preact-prop-helpers";
+import { assertEmptyObject, focus, monitored, useCompleteGridNavigationCell, useCompleteGridNavigationDeclarative, useCompleteGridNavigationRow, useMemoObject, useMergedProps, usePress, useStableCallback } from "preact-prop-helpers";
 import { Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
 /**
@@ -13,8 +13,7 @@ import { useLabelSynthetic } from "./use-label.js";
  * @hasChild {@link useGridlistRow}
  * @hasChild {@link useGridlistCell}
  */
-export function useGridlist({ labelParameters, listboxParameters: { groupingType, ...void1 }, rovingTabIndexParameters, singleSelectionParameters, gridNavigationParameters, linearNavigationParameters, multiSelectionParameters, paginatedChildrenParameters, rearrangeableChildrenParameters, refElementParameters, sortableChildrenParameters, staggeredChildrenParameters, typeaheadNavigationParameters, singleSelectionDeclarativeParameters, ...void2 }) {
-    monitorCallCount(useGridlist);
+export const useGridlist = monitored(function useGridlist({ labelParameters, listboxParameters: { groupingType, ...void1 }, rovingTabIndexParameters, singleSelectionParameters, gridNavigationParameters, linearNavigationParameters, multiSelectionParameters, paginatedChildrenParameters, rearrangeableChildrenParameters, refElementParameters, sortableChildrenParameters, staggeredChildrenParameters, typeaheadNavigationParameters, singleSelectionDeclarativeParameters, ...void2 }) {
     assertEmptyObject(void1);
     assertEmptyObject(void2);
     const { propsInput: propsLabelList, propsLabel: propsLabelLabel, randomIdInputReturn: { id: _gridlistId }, randomIdLabelReturn: { id: _labelId } } = useLabelSynthetic({
@@ -66,13 +65,12 @@ export function useGridlist({ labelParameters, listboxParameters: { groupingType
         propsGridlistLabel: propsLabelLabel,
         ...restRet
     };
-}
+});
 /**
  * @compositeParams
  *
  */
-export function useGridlistRow({ gridlistRowParameters: { selected }, linearNavigationParameters, context: cx1, info, rovingTabIndexParameters, textContentParameters, typeaheadNavigationParameters, hasCurrentFocusParameters, singleSelectionChildParameters, multiSelectionChildParameters, gridNavigationSelectionSortableRowParameters, ...void1 }) {
-    monitorCallCount(useGridlistRow);
+export const useGridlistRow = monitored(function useGridlistRow({ gridlistRowParameters: { selected }, linearNavigationParameters, context: cx1, info, rovingTabIndexParameters, textContentParameters, typeaheadNavigationParameters, hasCurrentFocusParameters, singleSelectionChildParameters, multiSelectionChildParameters, gridNavigationSelectionSortableRowParameters, ...void1 }) {
     const { context: cx2, hasCurrentFocusReturn, linearNavigationReturn, managedChildReturn, managedChildrenReturn, paginatedChildReturn, props, rovingTabIndexChildReturn, rovingTabIndexReturn, singleSelectionChildReturn, staggeredChildReturn, textContentReturn, typeaheadNavigationReturn, pressParameters, multiSelectionChildReturn, ...void2 } = useCompleteGridNavigationRow({
         linearNavigationParameters,
         info,
@@ -108,13 +106,12 @@ export function useGridlistRow({ gridlistRowParameters: { selected }, linearNavi
         hasCurrentFocusReturn,
         props
     };
-}
+});
 /**
  * @compositeParams
  *
  */
-export function useGridlistCell({ pressParameters: { onPressSync, longPressThreshold, onPressingChange, ...void1 }, ...p }) {
-    monitorCallCount(useGridlistCell);
+export const useGridlistCell = monitored(function useGridlistCell({ pressParameters: { onPressSync, longPressThreshold, onPressingChange, ...void1 }, ...p }) {
     const { props, refElementReturn, ...info } = useCompleteGridNavigationCell(p);
     assertEmptyObject(void1);
     const { pressReturn, props: propsPress } = usePress({
@@ -129,7 +126,7 @@ export function useGridlistCell({ pressParameters: { onPressSync, longPressThres
         refElementReturn,
         pressReturn
     };
-}
+});
 /*interface UseGridlistSectionParameters {
     gridlistSectionParameters: {
         compareRows: (lhsIndex: number, rhsIndex: number) => number;

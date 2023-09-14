@@ -1,4 +1,4 @@
-import { assertEmptyObject, focus, monitorCallCount, returnFalse, useMergedProps, usePress, useStableCallback } from "preact-prop-helpers";
+import { assertEmptyObject, focus, monitored, returnFalse, useMergedProps, usePress, useStableCallback } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { useToolbar, useToolbarChild } from "./use-toolbar.js";
 /**
@@ -12,19 +12,17 @@ import { useToolbar, useToolbarChild } from "./use-toolbar.js";
  *
  * @compositeParams
  */
-export function useMenubar(args) {
-    monitorCallCount(useMenubar);
+export const useMenubar = monitored(function useMenubar(args) {
     const { propsToolbar: propsMenubar, ...restReturn } = useToolbar(args);
     return {
         propsMenubar,
         ...restReturn
     };
-}
+});
 /**
  * @compositeParams
  */
-export function useMenubarChild({ menuItemParameters: { onPress: opu, role }, pressParameters: { onPressingChange, ...void1 }, ...restParams }) {
-    monitorCallCount(useMenubarChild);
+export const useMenubarChild = monitored(function useMenubarChild({ menuItemParameters: { onPress: opu, role }, pressParameters: { onPressingChange, ...void1 }, ...restParams }) {
     const focusSelf = useCallback((e) => focus(e), []);
     assertEmptyObject(void1);
     const { propsChild, propsTabbable, pressParameters: { onPressSync, excludeSpace }, ...restRet } = useToolbarChild({
@@ -52,5 +50,5 @@ export function useMenubarChild({ menuItemParameters: { onPress: opu, role }, pr
         pressReturn,
         ...restRet
     };
-}
+});
 //# sourceMappingURL=use-menubar.js.map

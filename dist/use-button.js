@@ -1,4 +1,4 @@
-import { assertEmptyObject, enhanceEvent, monitorCallCount, returnFalse, useMergedProps, usePress, useRefElement, useStableCallback } from "preact-prop-helpers";
+import { assertEmptyObject, enhanceEvent, monitored, returnFalse, useMergedProps, usePress, useRefElement, useStableCallback } from "preact-prop-helpers";
 /**
  * Implements a [Button](https://www.w3.org/WAI/ARIA/apg/patterns/button/) pattern.
  *
@@ -6,10 +6,9 @@ import { assertEmptyObject, enhanceEvent, monitorCallCount, returnFalse, useMerg
  *
  * @compositeParams
  */
-export function useButton({ buttonParameters: { tagButton, disabled, pressed, role, onPressSync, ...void1 }, pressParameters: { focusSelf, allowRepeatPresses, longPressThreshold, onPressingChange, excludeSpace, ...void3 }, refElementParameters, ...void2 }) {
-    if (tagButton != "button")
-        debugger;
-    monitorCallCount(useButton);
+export const useButton = monitored(function useButton({ buttonParameters: { tagButton, disabled, pressed, role, onPressSync, ...void1 }, pressParameters: { focusSelf, allowRepeatPresses, longPressThreshold, onPressingChange, excludeSpace, ...void3 }, refElementParameters, ...void2 }) {
+    //if (tagButton != "button")
+    //    debugger;
     const { refElementReturn, propsStable: propsRef, ...void5 } = useRefElement({ refElementParameters });
     const { pressReturn, props: propsPress, ...void4 } = usePress({
         refElementReturn,
@@ -42,5 +41,5 @@ export function useButton({ buttonParameters: { tagButton, disabled, pressed, ro
         props: useMergedProps(propsPress, propsRef, (tagButton == 'button' ? buttonProps : divProps)),
         refElementReturn,
     };
-}
+});
 //# sourceMappingURL=use-button.js.map

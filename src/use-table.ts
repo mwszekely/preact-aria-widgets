@@ -17,7 +17,7 @@ import {
     UseMultiSelectionContextSelf,
     assertEmptyObject,
     focus,
-    monitorCallCount,
+    monitored,
     returnNull,
     useCompleteGridNavigation,
     useCompleteGridNavigationCell,
@@ -138,14 +138,13 @@ interface SortInfo { column: number, direction: SortDirection }
  * @hasChild {@link useTableRow}
  * @hasChild {@link useTableCell}
  */
-export function useTable<TableElement extends Element, LabelElement extends Element>({
+export const useTable = monitored(function useTable<TableElement extends Element, LabelElement extends Element>({
     labelParameters,
     tableParameters: { tagTable },
     singleSelectionParameters: { singleSelectionMode, ...void1 },
     multiSelectionParameters: { multiSelectionMode, ...void2 },
     ...void3
 }: UseTableParameters<TableElement, LabelElement>): UseTableReturnType<TableElement, LabelElement> {
-    monitorCallCount(useTable);
 
     assertEmptyObject(void1);
     assertEmptyObject(void2);
@@ -218,7 +217,8 @@ export function useTable<TableElement extends Element, LabelElement extends Elem
             })
         })
     }
-}
+})
+
 function fuzzyCompare(lhs: any, rhs: any): number {
     if (lhs === rhs)
         return 0;
@@ -250,7 +250,7 @@ const naturalSectionTypes = new Set<keyof JSX.IntrinsicElements>(["thead", "tbod
 /**
  * @compositeParams
  */
-export function useTableSection<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element>({
+export const useTableSection = monitored(function useTableSection<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element>({
     linearNavigationParameters,
     rovingTabIndexParameters,
     singleSelectionParameters,
@@ -265,7 +265,6 @@ export function useTableSection<TableSectionElement extends Element, TableRowEle
     refElementParameters,
     ...void1
 }: UseTableSectionParameters<TableSectionElement, TableRowElement, TableRowInfo<TableRowElement>>): UseTableSectionReturnType<TableSectionElement, TableRowElement, TableRowInfo<TableRowElement>> {
-    monitorCallCount(useTableSection);
     type RM = TableRowInfo<TableRowElement>;
 
     const {
@@ -337,12 +336,12 @@ export function useTableSection<TableSectionElement extends Element, TableRowEle
         paginatedChildrenReturn,
         propsTableSection: props
     }
-}
+})
 
 /**
  * @compositeParams
  */
-export function useTableRow<TableRowElement extends Element, TableCellElement extends Element>({
+export const useTableRow = monitored(function useTableRow<TableRowElement extends Element, TableCellElement extends Element>({
     info,
     textContentParameters,
     context: cx1,
@@ -358,7 +357,6 @@ export function useTableRow<TableRowElement extends Element, TableCellElement ex
 }: UseTableRowParameters<TableRowElement, TableCellElement, TableRowInfo<TableRowElement>, TableCellInfo<TableCellElement>>): UseTableRowReturnType<TableRowElement, TableCellElement, TableRowInfo<TableRowElement>, TableCellInfo<TableCellElement>> {
     type RM = TableRowInfo<TableRowElement>;
     type CM = TableCellInfo<TableCellElement>;
-    monitorCallCount(useTableRow);
     assertEmptyObject(void1);
 
     const {
@@ -408,17 +406,16 @@ export function useTableRow<TableRowElement extends Element, TableCellElement ex
 
 
     }
-}
+})
 
 /**
  * @compositeParams
  */
-export function useTableCell<TableCellElement extends Element>({
+export const useTableCell = monitored(function useTableCell<TableCellElement extends Element>({
     tableCellParameters: { tagTableCell },
     info,
     ...p
 }: UseTableCellParameters<TableCellElement, TableCellInfo<TableCellElement>>): UseTableCellReturnType<TableCellElement, TableCellInfo<TableCellElement>> {
-    monitorCallCount(useTableCell);
 
     const { props, ...ret } = useCompleteGridNavigationCell<TableCellElement, TableCellInfo<TableCellElement>>({
         info,
@@ -434,4 +431,4 @@ export function useTableCell<TableCellElement extends Element>({
             }, [])
         }
     };
-}
+})

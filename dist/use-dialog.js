@@ -1,4 +1,4 @@
-import { assertEmptyObject, findFirstFocusable, monitorCallCount, useMergedProps, useModal, useStableCallback } from "preact-prop-helpers";
+import { assertEmptyObject, findFirstFocusable, monitored, useMergedProps, useModal, useStableCallback } from "preact-prop-helpers";
 import { Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
 /**
@@ -6,8 +6,7 @@ import { useLabelSynthetic } from "./use-label.js";
  *
  * @compositeParams
  */
-export function useDialog({ dismissParameters, escapeDismissParameters, focusTrapParameters, activeElementParameters, backdropDismissParameters, modalParameters, refElementParameters, labelParameters, ...void1 }) {
-    monitorCallCount(useDialog);
+export const useDialog = monitored(function useDialog({ dismissParameters, escapeDismissParameters, focusTrapParameters, activeElementParameters, backdropDismissParameters, modalParameters, refElementParameters, labelParameters, ...void1 }) {
     const { propsFocusContainer, propsStablePopup, propsStableSource, refElementPopupReturn, refElementSourceReturn, ...void2 } = useModal({
         dismissParameters: { dismissActive: true, ...dismissParameters },
         backdropDismissParameters: { onDismissBackdrop: null, ...backdropDismissParameters },
@@ -40,5 +39,5 @@ export function useDialog({ dismissParameters, escapeDismissParameters, focusTra
         refElementPopupReturn,
         refElementSourceReturn
     };
-}
+});
 //# sourceMappingURL=use-dialog.js.map

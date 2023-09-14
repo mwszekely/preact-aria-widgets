@@ -1,4 +1,4 @@
-import { assertEmptyObject, ElementProps, findFirstFocusable, monitorCallCount, TargetedOmit, useMergedProps, useModal, UseModalParameters, UseModalReturnType, useStableCallback } from "preact-prop-helpers";
+import { assertEmptyObject, ElementProps, findFirstFocusable, monitored, TargetedOmit, useMergedProps, useModal, UseModalParameters, UseModalReturnType, useStableCallback } from "preact-prop-helpers";
 import { OmitStrong, Prefices } from "./props.js";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
 
@@ -23,19 +23,18 @@ export interface UseDrawerReturnType<FocusContainerElement extends Element, Sour
  * 
  * @compositeParams
  */
-export function useDrawer<FocusContainerElement extends Element, SourceElement extends Element, PopupElement extends Element, TitleElement extends Element>({ 
-    dismissParameters, 
-    escapeDismissParameters, 
-    focusTrapParameters, 
+export const useDrawer = monitored(function useDrawer<FocusContainerElement extends Element, SourceElement extends Element, PopupElement extends Element, TitleElement extends Element>({
+    dismissParameters,
+    escapeDismissParameters,
+    focusTrapParameters,
     activeElementParameters,
-    labelParameters ,
+    labelParameters,
     backdropDismissParameters,
     lostFocusDismissParameters,
     modalParameters,
     refElementParameters,
     ...void1
 }: UseDrawerParameters<PopupElement, TitleElement>): UseDrawerReturnType<FocusContainerElement, SourceElement, PopupElement, TitleElement> {
-    monitorCallCount(useDrawer);
 
     const {
         propsFocusContainer,
@@ -86,6 +85,6 @@ export function useDrawer<FocusContainerElement extends Element, SourceElement e
         refElementPopupReturn,
         refElementSourceReturn
     }
-}
+})
 
 

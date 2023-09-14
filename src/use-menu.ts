@@ -1,4 +1,4 @@
-import { EventType, TargetedOmit, monitorCallCount, useMemoObject, useMergedProps, useStableCallback } from "preact-prop-helpers";
+import { EventType, TargetedOmit, monitored, useMemoObject, useMergedProps, useStableCallback } from "preact-prop-helpers";
 import { OmitStrong } from "./props.js";
 import { UseMenuSurfaceParameters, UseMenuSurfaceReturnType, useMenuSurface } from "./use-menu-surface.js";
 import { UseMenubarContext, UseMenubarItemParameters, UseMenubarItemReturnType, UseMenubarParameters, UseMenubarReturnType, UseMenubarSubInfo, useMenubar, useMenubarChild } from "./use-menubar.js";
@@ -34,7 +34,7 @@ export interface UseMenuItemParameters<MenuItemElement extends Element, M extend
 
 }
 
-export interface UseMenuReturnType<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends 
+export interface UseMenuReturnType<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends
     UseMenuSurfaceReturnType<MenuSurfaceElement, MenuParentElement, MenuButtonElement>, OmitStrong<UseMenubarReturnType<MenuParentElement, MenuItemElement, MenuButtonElement, M>, "propsMenubar" | "propsLabel"> {
     context: UseMenuContext<MenuItemElement, M>;
 }
@@ -63,7 +63,7 @@ export interface UseMenuItemReturnType<MenuItemElement extends Element, M extend
  * 
  * @compositeParams 
  */
-export function useMenu<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element>({
+export const useMenu = monitored(function useMenu<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element>({
     dismissParameters,
     escapeDismissParameters,
     menuParameters: { openDirection, onOpen },
@@ -75,8 +75,6 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
     ...restParams
 }: UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenuReturnType<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement, UseMenubarSubInfo<MenuItemElement>> {
     type M = UseMenubarSubInfo<MenuItemElement>;
-
-    monitorCallCount(useMenu);
 
     const {
         context,
@@ -170,7 +168,7 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
         propsTarget: useMergedProps(propsTarget, propsMenubar),
         propsTrigger: useMergedProps({ onKeyDown }, propsTrigger, propsButtonAsMenuLabel),
     }
-}
+})
 
 export interface UseMenuItemParameters<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseMenubarItemParameters<MenuItemElement, M> {
     context: UseMenuContext<MenuItemElement, M>;
@@ -179,8 +177,7 @@ export interface UseMenuItemParameters<MenuItemElement extends Element, M extend
 /**
  * @compositeParams
  */
-export function useMenuItem<MenuItemElement extends Element>(p: UseMenuItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenuItemReturnType<MenuItemElement, UseMenubarSubInfo<MenuItemElement>> {
-    monitorCallCount(useMenuItem);
+export const useMenuItem = monitored(function useMenuItem<MenuItemElement extends Element>(p: UseMenuItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenuItemReturnType<MenuItemElement, UseMenubarSubInfo<MenuItemElement>> {
 
     type M = UseMenubarSubInfo<MenuItemElement>;
 
@@ -190,4 +187,4 @@ export function useMenuItem<MenuItemElement extends Element>(p: UseMenuItemParam
         ...ret,
         menuItemReturn: { closeMenu: p.context.menu.closeFromMenuItemClicked }
     }
-}
+})

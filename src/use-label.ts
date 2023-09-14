@@ -1,4 +1,4 @@
-import { monitorCallCount, returnTrue, TargetedPick, useMergedProps, usePress, UsePressReturnType, useRandomDualIds, UseRandomDualIdsParameters, UseRandomDualIdsReturnType, useRefElement } from "preact-prop-helpers";
+import { monitored, returnTrue, TargetedPick, useMergedProps, usePress, UsePressReturnType, useRandomDualIds, UseRandomDualIdsParameters, UseRandomDualIdsReturnType, useRefElement } from "preact-prop-helpers";
 import { ElementToTag, noop, OmitStrong } from "./props.js";
 
 export type LabelPosition = "separate" | "wrapping" | "none";
@@ -112,11 +112,10 @@ export interface UseLabelSyntheticParameters extends TargetedPick<UseLabelParame
  * 
  * @compositeParams
  */
-export function useLabelSynthetic<InputElement extends Element, LabelElement extends Element>({
+export const useLabelSynthetic = monitored(function useLabelSynthetic<InputElement extends Element, LabelElement extends Element>({
     labelParameters: { ariaLabel, onLabelClick },
     ...rest
 }: UseLabelSyntheticParameters) {
-    monitorCallCount(useLabelSynthetic);
 
     return useLabel<LabelPosition, InputElement, LabelElement>({
         labelParameters: {
@@ -128,6 +127,5 @@ export function useLabelSynthetic<InputElement extends Element, LabelElement ext
         },
         ...rest
     })
-
-}
+})
 

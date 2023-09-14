@@ -1,4 +1,4 @@
-import { assertEmptyObject, focus, generateRandomId, monitorCallCount, returnFalse, returnTrue, useChildrenFlag, useCompleteListNavigation, useCompleteListNavigationChild, useManagedChild, useManagedChildren, useMemoObject, useMergedProps, usePersistentState, usePress, useStableCallback, useState } from "preact-prop-helpers";
+import { assertEmptyObject, focus, generateRandomId, monitored, returnFalse, returnTrue, useChildrenFlag, useCompleteListNavigation, useCompleteListNavigationChild, useManagedChild, useManagedChildren, useMemoObject, useMergedProps, usePersistentState, usePress, useStableCallback, useState } from "preact-prop-helpers";
 import { useCallback, useLayoutEffect } from "preact/hooks";
 import { EventDetail, Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
@@ -13,8 +13,7 @@ import { useLabelSynthetic } from "./use-label.js";
  * @hasChild {@link useTab}
  * @hasChild {@link useTabPanel}
  */
-export function useTabs({ labelParameters, linearNavigationParameters, singleSelectionParameters: { initiallySingleSelectedIndex, onSingleSelectedIndexChange: ssi, singleSelectionMode, ...singleSelectionParameters }, tabsParameters: { orientation, role, localStorageKey }, rovingTabIndexParameters, ...restParams }) {
-    monitorCallCount(useTabs);
+export const useTabs = monitored(function useTabs({ labelParameters, linearNavigationParameters, singleSelectionParameters: { initiallySingleSelectedIndex, onSingleSelectedIndexChange: ssi, singleSelectionMode, ...singleSelectionParameters }, tabsParameters: { orientation, role, localStorageKey }, rovingTabIndexParameters, ...restParams }) {
     const [localStorageIndex, setLocalStorageIndex] = usePersistentState(localStorageKey ?? null, 0);
     if (localStorageIndex != null)
         initiallySingleSelectedIndex = localStorageIndex;
@@ -91,7 +90,7 @@ export function useTabs({ labelParameters, linearNavigationParameters, singleSel
         propsLabel,
         ...listNavRet1
     };
-}
+});
 /**
  * Implements a single tab of a Tabs component.
  *
@@ -99,7 +98,7 @@ export function useTabs({ labelParameters, linearNavigationParameters, singleSel
  *
  * @compositeParams
  */
-export function useTab({ info: { focusSelf: focusSelfParent, index, untabbable, getSortValue, ...info }, textContentParameters, pressParameters: { focusSelf: focusSelfChild, longPressThreshold, onPressingChange, ...void2 }, context, hasCurrentFocusParameters, refElementParameters, singleSelectionChildParameters, ...void3 }) {
+export const useTab = monitored(function useTab({ info: { focusSelf: focusSelfParent, index, untabbable, getSortValue, ...info }, textContentParameters, pressParameters: { focusSelf: focusSelfChild, longPressThreshold, onPressingChange, ...void2 }, context, hasCurrentFocusParameters, refElementParameters, singleSelectionChildParameters, ...void3 }) {
     const { propsChild: listNavigationSingleSelectionChildProps, propsTabbable, pressParameters: { onPressSync, excludeSpace, ...void1 }, refElementReturn, ...listNavRet2 } = useCompleteListNavigationChild({
         context,
         info: { index, focusSelf: focusSelfParent, getSortValue, untabbable, ...info },
@@ -117,7 +116,6 @@ export function useTab({ info: { focusSelf: focusSelfParent, index, untabbable, 
     assertEmptyObject(void1);
     assertEmptyObject(void2);
     assertEmptyObject(void3);
-    monitorCallCount(useTab);
     return {
         pressReturn,
         refElementReturn,
@@ -130,7 +128,7 @@ export function useTab({ info: { focusSelf: focusSelfParent, index, untabbable, 
         }),
         ...listNavRet2
     };
-}
+});
 /**
  * Implements the TabPanel a Tab controls.
  *
@@ -139,9 +137,8 @@ export function useTab({ info: { focusSelf: focusSelfParent, index, untabbable, 
  *
  * @compositeParams
  */
-export function useTabPanel({ info, context }) {
+export const useTabPanel = monitored(function useTabPanel({ info, context }) {
     const { index } = info;
-    monitorCallCount(useTabPanel);
     const { tabPanelContext: { getVisibleIndex: g, getPanelId, getTabId } } = context;
     //const [correspondingTabId, setCorrespondingTabId] = useState<string | null>(null);
     const [lastKnownVisibleIndex, setLastKnownVisibleIndex, getLastKnownVisibleIndex] = useState(g());
@@ -182,5 +179,5 @@ export function useTabPanel({ info, context }) {
             getVisible: useStableCallback(() => { return getLastKnownVisibleIndex() === index; })
         }
     };
-}
+});
 //# sourceMappingURL=use-tabs.js.map

@@ -13,5 +13,5 @@ export interface UseDialogReturnType<FocusContainerElement extends Element, Sour
  *
  * @compositeParams
  */
-export declare function useDialog<FocusContainerElement extends Element, SourceElement extends Element, DialogElement extends Element, TitleElement extends Element>({ dismissParameters, escapeDismissParameters, focusTrapParameters, activeElementParameters, backdropDismissParameters, modalParameters, refElementParameters, labelParameters, ...void1 }: UseDialogParameters<DialogElement, TitleElement>): UseDialogReturnType<FocusContainerElement, SourceElement, DialogElement, TitleElement>;
+export declare const useDialog: <FocusContainerElement extends Element, SourceElement extends Element, DialogElement extends Element, TitleElement extends Element>({ dismissParameters, escapeDismissParameters, focusTrapParameters, activeElementParameters, backdropDismissParameters, modalParameters, refElementParameters, labelParameters, ...void1 }: UseDialogParameters<DialogElement, TitleElement>) => UseDialogReturnType<FocusContainerElement, SourceElement, DialogElement, TitleElement>;
 //# sourceMappingURL=use-dialog.d.ts.map

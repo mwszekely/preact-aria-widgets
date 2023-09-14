@@ -1,4 +1,4 @@
-import { CompleteListNavigationContext, ElementProps, Nullable, PassiveStateUpdater, TargetedOmit, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseGenericChildParameters, assertEmptyObject, focus, monitorCallCount, returnFalse, returnNull, returnZero, useCompleteListNavigation, useCompleteListNavigationChild, useMemoObject, useMergedProps, usePassiveState, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
+import { CompleteListNavigationContext, ElementProps, Nullable, PassiveStateUpdater, TargetedOmit, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseGenericChildParameters, assertEmptyObject, focus, monitored, returnFalse, returnNull, returnZero, useCompleteListNavigation, useCompleteListNavigationChild, useMemoObject, useMergedProps, usePassiveState, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
 import { StateUpdater, useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
 import { EnhancedEventHandler, OmitStrong, TargetedEnhancedEvent } from "./props.js";
 import { CheckboxCheckedType } from "./use-checkbox-like.js";
@@ -154,7 +154,7 @@ export interface CheckboxGroupContext<TCE extends Element> extends CompleteListN
  * @hasChild {@link useCheckboxGroupParent}
  * @hasChild {@link useCheckboxGroupChild}
  */
-export function useCheckboxGroup<GroupElement extends Element, TCE extends Element>({
+export const useCheckboxGroup = monitored(function useCheckboxGroup<GroupElement extends Element, TCE extends Element>({
     linearNavigationParameters,
     rovingTabIndexParameters,
     checkboxGroupParameters: { orientation, ...void2 },
@@ -166,7 +166,6 @@ export function useCheckboxGroup<GroupElement extends Element, TCE extends Eleme
     typeaheadNavigationParameters,
     ...void1
 }: UseCheckboxGroupParameters<GroupElement, TCE>): UseCheckboxGroupReturnType<GroupElement, TCE> {
-    monitorCallCount(useCheckboxGroup);
 
     const {
         context,
@@ -297,7 +296,7 @@ export function useCheckboxGroup<GroupElement extends Element, TCE extends Eleme
         typeaheadNavigationReturn,
         multiSelectionReturn
     };
-}
+})
 
 
 
@@ -306,7 +305,7 @@ export function useCheckboxGroup<GroupElement extends Element, TCE extends Eleme
  * 
  * @compositeParams
  */
-export function useCheckboxGroupParent<TCE extends Element>({
+export const useCheckboxGroupParent = monitored(function useCheckboxGroupParent<TCE extends Element>({
     context: {
         checkboxGroupParentContext: {
             setControlsSetterOnParentCheckbox,
@@ -367,7 +366,6 @@ export function useCheckboxGroupParent<TCE extends Element>({
     useLayoutEffect(() => {
         setControlsSetterOnParentCheckbox(() => setControls, undefined);
     }, [setControls]);
-    monitorCallCount(useCheckboxGroupParent);
 
     const [checked, setChecked] = useState<CheckboxCheckedType>(false);
     useEffect(() => {
@@ -390,7 +388,7 @@ export function useCheckboxGroupParent<TCE extends Element>({
         pressParameters,
         multiSelectionChildReturn
     }
-}
+})
 
 
 /**
@@ -406,7 +404,7 @@ export function useCheckboxGroupParent<TCE extends Element>({
  * 
  * @compositeParams
  */
-export function useCheckboxGroupChild<TCE extends Element>({
+export const useCheckboxGroupChild = monitored(function useCheckboxGroupChild<TCE extends Element>({
     checkboxGroupChildParameters,
     context,
     info: { focusSelf, getSortValue, index, untabbable, ...void3 },
@@ -418,7 +416,6 @@ export function useCheckboxGroupChild<TCE extends Element>({
 }: UseCheckboxGroupChildParameters<TCE>): UseCheckboxGroupChildReturnType<TCE> {
     const { checkboxGroupChildrenContext: { allIds, setUpdateIndex, setTotalChildren, setTotalChecked, } } = context;
     type M = CheckboxGroupInfo<TCE>;
-    monitorCallCount(useCheckboxGroupChild);
 
     const { checked, onChangeFromParent, ...void1 } = checkboxGroupChildParameters;
     const getChecked = useStableGetter(checked);
@@ -508,5 +505,5 @@ export function useCheckboxGroupChild<TCE extends Element>({
         rovingTabIndexChildReturn,
         multiSelectionChildReturn,
     }
-}
+})
 

@@ -1,5 +1,5 @@
 import { Fragment as _Fragment, jsxs as _jsxs } from "preact/jsx-runtime";
-import { createContext, monitorCallCount, usePortalChildren } from "preact-prop-helpers";
+import { createContext, monitored, usePortalChildren } from "preact-prop-helpers";
 import { useCallback, useMemo } from "preact/hooks";
 import { useContextWithWarning } from "./props.js";
 export const NotificationProviderContext = createContext(null);
@@ -16,8 +16,7 @@ export const NotificationProviderContext = createContext(null);
  *
  * @hasChild {@link useNotify}
  */
-export function useNotificationProvider({ targetAssertive, targetPolite }) {
-    monitorCallCount(useNotificationProvider);
+export const useNotificationProvider = monitored(function useNotificationProvider({ targetAssertive, targetPolite }) {
     const { children: childrenPolite, pushChild: notifyPolite, portalElement: politeElement } = usePortalChildren({ target: targetPolite });
     const { children: childrenAssertive, pushChild: notifyAssertive, portalElement: assertiveElement } = usePortalChildren({ target: targetAssertive });
     console.assert(politeElement?.getAttribute("aria-live") == "polite");
@@ -30,9 +29,8 @@ export function useNotificationProvider({ targetAssertive, targetPolite }) {
         context: useMemo(() => ({ notify }), [notify]),
         children: (_jsxs(_Fragment, { children: [childrenPolite, childrenAssertive] }))
     };
-}
+});
 export function useNotify() {
-    monitorCallCount(useNotify);
     return useContextWithWarning(NotificationProviderContext, "notification provider").notify;
 }
 //# sourceMappingURL=use-notify.js.map

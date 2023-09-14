@@ -1,4 +1,4 @@
-import { assertEmptyObject, generateRandomId, monitorCallCount, useManagedChild, useManagedChildren } from "preact-prop-helpers";
+import { assertEmptyObject, generateRandomId, monitored, useManagedChild, useManagedChildren } from "preact-prop-helpers";
 import { useMemo, useRef } from "preact/hooks";
 import { enhanceEvent, EventDetail, Prefices } from "./props.js";
 /**
@@ -8,8 +8,7 @@ import { enhanceEvent, EventDetail, Prefices } from "./props.js";
  *
  * @hasChild {@link useSliderThumb}
  */
-export function useSlider({ sliderParameters: { max, min }, managedChildrenParameters }) {
-    monitorCallCount(useSlider);
+export const useSlider = monitored(function useSlider({ sliderParameters: { max, min }, managedChildrenParameters }) {
     const { context, managedChildrenReturn } = useManagedChildren({ managedChildrenParameters });
     const baseIdRef = useRef(null);
     if (baseIdRef.current === null)
@@ -25,12 +24,11 @@ export function useSlider({ sliderParameters: { max, min }, managedChildrenParam
         }), [min, max]),
         managedChildrenReturn
     };
-}
+});
 /**
  * @compositeParams
  */
-export function useSliderThumb({ sliderThumbParameters: { tag, value, max: maxOverride, min: minOverride, valueText, label, onValueChange, ...void2 }, info, context: { sliderContext: { max: maxParent, min: minParent }, ...context }, ...void1 }) {
-    monitorCallCount(useSliderThumb);
+export const useSliderThumb = monitored(function useSliderThumb({ sliderThumbParameters: { tag, value, max: maxOverride, min: minOverride, valueText, label, onValueChange, ...void2 }, info, context: { sliderContext: { max: maxParent, min: minParent }, ...context }, ...void1 }) {
     const { managedChildReturn } = useManagedChild({ info, context });
     const { getChildren: _getThumbs } = managedChildReturn;
     const min = (minOverride ?? minParent);
@@ -57,5 +55,5 @@ export function useSliderThumb({ sliderThumbParameters: { tag, value, max: maxOv
         managedChildReturn,
         propsSliderThumb: newProps
     };
-}
+});
 //# sourceMappingURL=use-slider.js.map

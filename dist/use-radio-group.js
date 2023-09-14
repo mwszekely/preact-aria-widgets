@@ -1,4 +1,4 @@
-import { EventDetail, assertEmptyObject, focus, monitorCallCount, useCompleteListNavigationChildDeclarative, useCompleteListNavigationDeclarative, useMergedProps, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
+import { EventDetail, assertEmptyObject, focus, monitored, useCompleteListNavigationChildDeclarative, useCompleteListNavigationDeclarative, useMergedProps, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
 import { useEffect, useLayoutEffect, useMemo, useRef } from "preact/hooks";
 import { Prefices, enhanceEvent } from "./props.js";
 import { useCheckboxLike } from "./use-checkbox-like.js";
@@ -13,8 +13,7 @@ import { useLabelSynthetic } from "./use-label.js";
  *
  * @hasChild {@link useRadio}
  */
-export function useRadioGroup({ labelParameters, radioGroupParameters: { name, selectedValue, onSelectedValueChange, ...void2 }, rovingTabIndexParameters, linearNavigationParameters, rearrangeableChildrenParameters, sortableChildrenParameters, staggeredChildrenParameters, typeaheadNavigationParameters, refElementParameters, singleSelectionParameters: { singleSelectionMode, ...void4 }, ...void1 }) {
-    monitorCallCount(useRadioGroup);
+export const useRadioGroup = monitored(function useRadioGroup({ labelParameters, radioGroupParameters: { name, selectedValue, onSelectedValueChange, ...void2 }, rovingTabIndexParameters, linearNavigationParameters, rearrangeableChildrenParameters, sortableChildrenParameters, staggeredChildrenParameters, typeaheadNavigationParameters, refElementParameters, singleSelectionParameters: { singleSelectionMode, ...void4 }, ...void1 }) {
     // TODO: The way this is structured causes 1 extra re-render on the parent
     // when the selectedValue changes to selectedIndex.
     const [selectedIndex, setSelectedIndex] = useState(null);
@@ -33,12 +32,6 @@ export function useRadioGroup({ labelParameters, radioGroupParameters: { name, s
         randomIdLabelParameters: { prefix: Prefices.radioGroupLabel, },
         randomIdInputParameters: { prefix: Prefices.radioGroup }
     });
-    /*useLayoutEffect(() => {
-        if (selectedValue != null)
-        asyncHandlerReturn.syncHandler(nameToIndex.current.get(selectedValue) ?? null);
-        else
-        asyncHandlerReturn.syncHandler(null);
-    }, [selectedValue])*/
     const { context, props: propsGroup2, singleSelectionReturn, multiSelectionReturn, managedChildrenReturn, rovingTabIndexReturn, linearNavigationReturn, paginatedChildrenReturn, rearrangeableChildrenReturn, sortableChildrenReturn, staggeredChildrenReturn, typeaheadNavigationReturn, childrenHaveFocusReturn, ...void3 } = useCompleteListNavigationDeclarative({
         singleSelectionDeclarativeParameters: {
             singleSelectedIndex: selectedIndex,
@@ -58,21 +51,6 @@ export function useRadioGroup({ labelParameters, radioGroupParameters: { name, s
         typeaheadNavigationParameters,
         refElementParameters
     });
-    /*const { singleSelectionParameters: { onSelectedIndexChange } } = useSingleSelectionDeclarative<G, TCE, M>({
-        singleSelectionReturn: {
-            changeSelectedIndex: useStableCallback((s, r) => {
-                singleSelectionReturn.changeSelectedIndex(s, r);
-            })
-        },
-        singleSelectionDeclarativeParameters: {
-            selectedIndex,
-            onSelectedIndexChange: useStableCallback((e) => {
-                let i = e[EventDetail].selectedIndex;
-                let value = i == undefined ? undefined : indexToName.current.get(i);
-                onSelectedValueChange?.(enhanceEvent(e, { selectedValue: value }));
-            })
-        }
-    })*/
     const propsRadioGroup = useMergedProps(propsGroup1, propsGroup2, { role: "radiogroup" });
     assertEmptyObject(void1);
     assertEmptyObject(void2);
@@ -97,14 +75,13 @@ export function useRadioGroup({ labelParameters, radioGroupParameters: { name, s
             radioContext: { name, indexToName: indexToName.current, nameToIndex: nameToIndex.current }
         }), [name]),
     };
-}
+});
 /**
  * Implements a single radio button, as part of a radio group.
  *
  * @compositeParams
  */
-export function useRadio({ radioParameters: { value, ...void5 }, checkboxLikeParameters: { disabled, ...void4 }, labelParameters, info, context, textContentParameters, pressParameters: { longPressThreshold, ...void3 }, hasCurrentFocusParameters, refElementParameters, ...void1 }) {
-    monitorCallCount(useRadio);
+export const useRadio = monitored(function useRadio({ radioParameters: { value, ...void5 }, checkboxLikeParameters: { disabled, ...void4 }, labelParameters, info, context, textContentParameters, pressParameters: { longPressThreshold, ...void3 }, hasCurrentFocusParameters, refElementParameters, ...void1 }) {
     const index = info.index;
     const { name, indexToName, nameToIndex } = context.radioContext;
     const { tagInput, labelPosition } = labelParameters;
@@ -169,5 +146,5 @@ export function useRadio({ radioParameters: { value, ...void5 }, checkboxLikePar
         ...listNavRet
     };
     return ret;
-}
+});
 //# sourceMappingURL=use-radio-group.js.map

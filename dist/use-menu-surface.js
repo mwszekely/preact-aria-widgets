@@ -1,4 +1,4 @@
-import { assertEmptyObject, findFirstFocusable, focus, monitorCallCount, useMergedProps, useModal, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
+import { assertEmptyObject, findFirstFocusable, focus, monitored, useMergedProps, useModal, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
 /**
  * A menu surface is what handles user interaction with an interactive but transient surface (like a menu or a popup, but not something potentially modal like a dialog).
  *
@@ -8,8 +8,7 @@ import { assertEmptyObject, findFirstFocusable, focus, monitorCallCount, useMerg
  *
  * @compositeParams
  */
-export function useMenuSurface({ dismissParameters, focusTrapParameters, activeElementParameters, menuSurfaceParameters: { role, surfaceId, ...void1 }, modalParameters, escapeDismissParameters, ...void2 }) {
-    monitorCallCount(useMenuSurface);
+export const useMenuSurface = monitored(function useMenuSurface({ dismissParameters, focusTrapParameters, activeElementParameters, menuSurfaceParameters: { role, surfaceId, ...void1 }, modalParameters, escapeDismissParameters, ...void2 }) {
     const { refElementReturn: { getElement: getButtonElement }, propsStable: propsRefTrigger, ...void4 } = useRefElement({ refElementParameters: { onElementChange: undefined } });
     const { refElementReturn: { getElement: getMenuElement, ...void5 }, propsStable: propsRefSurface, ...void6 } = useRefElement({ refElementParameters: { onElementChange: undefined } });
     const { propsFocusContainer, propsStablePopup: propsPopup, propsStableSource: ps2, refElementPopupReturn, refElementSourceReturn } = useModal({
@@ -59,7 +58,7 @@ export function useMenuSurface({ dismissParameters, focusTrapParameters, activeE
         refElementPopupReturn,
         refElementSourceReturn
     };
-}
+});
 /**
  * A focus sentinel is a hidden but focusable element that comes at the start or end
  * of the out-of-place-focusable component that, when activated or focused over, closes the component
@@ -73,8 +72,7 @@ export function useMenuSurface({ dismissParameters, focusTrapParameters, activeE
  *
  * @compositeParams
  */
-export function useFocusSentinel({ focusSentinel: { open, onClose, sendFocusToMenu } }) {
-    monitorCallCount(useFocusSentinel);
+export const useFocusSentinel = monitored(function useFocusSentinel({ focusSentinel: { open, onClose, sendFocusToMenu } }) {
     const getSendFocusWithinMenu = useStableGetter(sendFocusToMenu);
     const stableOnClose = useStableCallback(onClose);
     const [sentinelIsActive, setSentinelIsActive] = useState(false);
@@ -86,5 +84,5 @@ export function useFocusSentinel({ focusSentinel: { open, onClose, sendFocusToMe
         onFocus,
         onClick
     };
-}
+});
 //# sourceMappingURL=use-menu-surface.js.map

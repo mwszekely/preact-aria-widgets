@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { assertEmptyObject, ElementProps, generateRandomId, ManagedChildInfo, monitorCallCount, Nullable, UseGenericChildParameters, useManagedChild, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, UseManagedChildReturnType } from "preact-prop-helpers";
+import { assertEmptyObject, ElementProps, generateRandomId, ManagedChildInfo, monitored, Nullable, UseGenericChildParameters, useManagedChild, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, UseManagedChildReturnType } from "preact-prop-helpers";
 import { useMemo, useRef } from "preact/hooks";
 import { enhanceEvent, EventDetail, Prefices, TagSensitiveProps } from "./props.js";
 
@@ -31,9 +31,9 @@ export interface UseSliderThumbParametersSelf<E extends Element> extends TagSens
 
 export interface UseSliderThumbParameters<ThumbElement extends Element, M extends SliderThumbInfo = SliderThumbInfo> extends
     UseGenericChildParameters<SliderContext<M>, Pick<M, "index">>
-    //OmitStrong<UseProgressWithHandlerParameters<RangeChangeEvent<ThumbElement>, number>, "asyncHandlerParameters">,
-    //TargetedOmit<UseProgressWithHandlerParameters<RangeChangeEvent<ThumbElement>, number>, "asyncHandlerParameters", "capture
-    {
+//OmitStrong<UseProgressWithHandlerParameters<RangeChangeEvent<ThumbElement>, number>, "asyncHandlerParameters">,
+//TargetedOmit<UseProgressWithHandlerParameters<RangeChangeEvent<ThumbElement>, number>, "asyncHandlerParameters", "capture
+{
     sliderThumbParameters: UseSliderThumbParametersSelf<ThumbElement>;
 }
 
@@ -53,8 +53,8 @@ export interface UseSliderThumbReturnTypeSelf {
     max: number;
 }
 
-export interface UseSliderThumbReturnType<E extends Element, M extends SliderThumbInfo = SliderThumbInfo> extends 
-UseManagedChildReturnType<M> {
+export interface UseSliderThumbReturnType<E extends Element, M extends SliderThumbInfo = SliderThumbInfo> extends
+    UseManagedChildReturnType<M> {
     sliderThumbReturn: UseSliderThumbReturnTypeSelf;
     propsSliderThumb: ElementProps<E>;
 }
@@ -84,8 +84,7 @@ export interface SliderContext<M extends SliderThumbInfo> extends UseManagedChil
  * 
  * @hasChild {@link useSliderThumb}
  */
-export function useSlider<M extends SliderThumbInfo>({ sliderParameters: { max, min }, managedChildrenParameters }: UseSliderParameters<M>): UseSliderReturnType<M> {
-    monitorCallCount(useSlider);
+export const useSlider = monitored(function useSlider<M extends SliderThumbInfo>({ sliderParameters: { max, min }, managedChildrenParameters }: UseSliderParameters<M>): UseSliderReturnType<M> {
     const { context, managedChildrenReturn } = useManagedChildren<M>({ managedChildrenParameters });
 
     const baseIdRef = useRef<string>(null! as "");
@@ -103,19 +102,18 @@ export function useSlider<M extends SliderThumbInfo>({ sliderParameters: { max, 
         }), [min, max]),
         managedChildrenReturn
     };
-}
+})
 
 
 /**
  * @compositeParams
  */
-export function useSliderThumb<ThumbElement extends Element>({
+export const useSliderThumb = monitored(function useSliderThumb<ThumbElement extends Element>({
     sliderThumbParameters: { tag, value, max: maxOverride, min: minOverride, valueText, label, onValueChange, ...void2 },
     info,
     context: { sliderContext: { max: maxParent, min: minParent }, ...context },
     ...void1
 }: UseSliderThumbParameters<ThumbElement>): UseSliderThumbReturnType<ThumbElement> {
-    monitorCallCount(useSliderThumb);
     const { managedChildReturn } = useManagedChild<SliderThumbInfo>({ info, context });
     const { getChildren: _getThumbs } = managedChildReturn;
 
@@ -148,4 +146,4 @@ export function useSliderThumb<ThumbElement extends Element>({
         managedChildReturn,
         propsSliderThumb: newProps
     }
-}
+})

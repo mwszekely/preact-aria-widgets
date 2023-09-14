@@ -1,4 +1,4 @@
-import { ElementProps, Nullable, TargetedOmit, assertEmptyObject, enhanceEvent, monitorCallCount, useMergedProps, useRefElement, useStableCallback } from "preact-prop-helpers";
+import { ElementProps, Nullable, TargetedOmit, assertEmptyObject, enhanceEvent, monitored, useMergedProps, useRefElement, useStableCallback } from "preact-prop-helpers";
 import { EnhancedEventHandler, OmitStrong, Prefices, TargetedEnhancedEvent } from "./props.js";
 import { CheckboxCheckedType, UseCheckboxLikeParameters, UseCheckboxLikeReturnType, useCheckboxLike } from "./use-checkbox-like.js";
 import { LabelPosition } from "./use-label.js";
@@ -42,14 +42,13 @@ export interface UseCheckboxReturnType<InputType extends Element, LabelType exte
  * 
  * @compositeParams
  */
-export function useCheckbox<LP extends LabelPosition, InputType extends Element, LabelType extends Element>({
+export const useCheckbox = monitored(function useCheckbox<LP extends LabelPosition, InputType extends Element, LabelType extends Element>({
     checkboxLikeParameters: { checked, disabled, ...void2 },
     checkboxParameters: { onCheckedChange, ...void4 },
     labelParameters,
     pressParameters,
     ...void1
 }: UseCheckboxParameters<LP, InputType, LabelType>): UseCheckboxReturnType<InputType, LabelType> {
-    monitorCallCount(useCheckbox);
 
     const { tagInput, labelPosition } = labelParameters;
 
@@ -100,4 +99,4 @@ export function useCheckbox<LP extends LabelPosition, InputType extends Element,
         randomIdLabelReturn
     };
 
-}
+})

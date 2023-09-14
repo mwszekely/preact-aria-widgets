@@ -1,4 +1,4 @@
-import { CompleteListNavigationContext, ElementProps, JSX, MakeSingleSelectionDeclarativeParameters, MakeSingleSelectionDeclarativeReturnType, TargetedOmit, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseRandomIdReturnType, focus, monitorCallCount, useCompleteListNavigationChild, useCompleteListNavigationDeclarative, useMemoObject, useMergedProps } from "preact-prop-helpers";
+import { CompleteListNavigationContext, ElementProps, JSX, MakeSingleSelectionDeclarativeParameters, MakeSingleSelectionDeclarativeReturnType, TargetedOmit, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseRandomIdReturnType, focus, monitored, useCompleteListNavigationChild, useCompleteListNavigationDeclarative, useMemoObject, useMergedProps } from "preact-prop-helpers";
 import { OmitStrong, Prefices } from "./props.js";
 import { UseLabelSyntheticParameters, useLabelSynthetic } from "./use-label.js";
 
@@ -74,7 +74,7 @@ export interface UseToolbarChildReturnType<ChildElement extends Element, M exten
  * 
  * @compositeParams
  */
-export function useToolbar<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({
+export const useToolbar = monitored(function useToolbar<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({
     linearNavigationParameters,
     toolbarParameters: { orientation, role, disabled },
     labelParameters,
@@ -84,8 +84,6 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
     ...listNavParameters
 }: UseToolbarParameters<ContainerElement, ChildElement, UseToolbarSubInfo<ChildElement>>): UseToolbarReturnType<ContainerElement, ChildElement, LabelElement, UseToolbarSubInfo<ChildElement>> {
     type M = UseToolbarSubInfo<ChildElement>;
-
-    monitorCallCount(useToolbar);
 
     if (singleSelectionDeclarativeParameters.singleSelectedIndex !== undefined) {
         console.assert(singleSelectionParameters.singleSelectionMode != "disabled");
@@ -125,15 +123,13 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
         randomIdLabelReturn,
         ...listNavReturn
     }
-}
+})
 
 
 /**
  * @compositeParams
  */
-export function useToolbarChild<ChildElement extends Element>({ context: { toolbarContext, ...context }, info, toolbarChildParameters: { disabledProp }, ...args }: UseToolbarChildParameters<ChildElement, UseToolbarSubInfo<ChildElement>>): UseToolbarChildReturnType<ChildElement, UseToolbarSubInfo<ChildElement>> {
-    monitorCallCount(useToolbarChild);
-
+export const useToolbarChild = monitored(function useToolbarChild<ChildElement extends Element>({ context: { toolbarContext, ...context }, info, toolbarChildParameters: { disabledProp }, ...args }: UseToolbarChildParameters<ChildElement, UseToolbarSubInfo<ChildElement>>): UseToolbarChildReturnType<ChildElement, UseToolbarSubInfo<ChildElement>> {
     const {
         propsChild,
         propsTabbable,
@@ -145,4 +141,4 @@ export function useToolbarChild<ChildElement extends Element>({ context: { toolb
         propsTabbable,
         ...listNavReturn
     }
-}
+})

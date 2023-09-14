@@ -15,7 +15,8 @@ import {
     UsePressParameters,
     UsePressReturnType,
     assertEmptyObject,
-    focus, monitorCallCount,
+    focus,
+    monitored,
     useCompleteListNavigationChildDeclarative,
     useCompleteListNavigationDeclarative,
     useMergedProps,
@@ -91,7 +92,7 @@ export interface ListboxInfo<ListItemElement extends Element> extends UseComplet
  * 
  * @hasChild {@link useListboxItem}
  */
-export function useListbox<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element>({
+export const useListbox = monitored(function useListbox<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element>({
     labelParameters,
     listboxParameters: { groupingType, orientation },
     linearNavigationParameters,
@@ -101,7 +102,7 @@ export function useListbox<ListElement extends Element, ListItemElement extends 
     rovingTabIndexParameters,
     ...restParams
 }: UseListboxParameters<ListElement, ListItemElement, LabelElement, ListboxInfo<ListItemElement>>): UseListboxReturnType<ListElement, ListItemElement, LabelElement, ListboxInfo<ListItemElement>> {
-    monitorCallCount(useListbox);
+
     assertEmptyObject(void1);
     assertEmptyObject(void2);
     assertEmptyObject(void3);
@@ -157,20 +158,18 @@ export function useListbox<ListElement extends Element, ListItemElement extends 
         propsListbox: useMergedProps(props, propsLabelList, { "aria-multiselectable": (multiSelectionMode != "disabled" ? true : undefined) }),
         propsListboxLabel: propsLabelLabel
     }
-}
+})
 
 /**
  * @compositeParams
  */
-export function useListboxItem<ListItemElement extends Element, M extends ListboxInfo<ListItemElement> = ListboxInfo<ListItemElement>>({
+export const useListboxItem = monitored(function useListboxItem<ListItemElement extends Element, M extends ListboxInfo<ListItemElement> = ListboxInfo<ListItemElement>>({
     context,
     listboxParameters: { },
     pressParameters: { allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, ...void1 },
     singleSelectionChildParameters: { singleSelectionDisabled },
     ...restParams
 }: UseListboxItemParameters<ListItemElement, M>): UseListboxItemReturnType<ListItemElement, M> {
-    monitorCallCount(useListboxItem);
-
 
     const {
         propsChild,
@@ -210,4 +209,4 @@ export function useListboxItem<ListItemElement extends Element, M extends Listbo
         props: useMergedProps(propsChild, propsTabbable, propsPress),
         ...restRet
     }
-}
+})

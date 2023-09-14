@@ -1,5 +1,5 @@
 import { ComponentChildren } from "preact";
-import { ElementProps, ManagedChildInfo, Nullable, UseGenericChildParameters, UseManagedChildParameters, UseManagedChildReturnType, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, findFirstFocusable, focus, monitorCallCount, useGlobalHandler, useManagedChild, useManagedChildren, useMergedProps, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
+import { ElementProps, ManagedChildInfo, Nullable, UseGenericChildParameters, UseManagedChildParameters, UseManagedChildReturnType, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, findFirstFocusable, focus, monitored, useGlobalHandler, useManagedChild, useManagedChildren, useMergedProps, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
 import { StateUpdater, useCallback, useEffect, useRef } from "preact/hooks";
 import { OmitStrong } from "./props.js";
 import { useNotify } from "./use-notify.js";
@@ -68,8 +68,7 @@ export interface ToastsContext<M extends ToastInfo> extends UseManagedChildrenCo
  * 
  * @hasChild {@link useToast}
  */
-export function useToasts<ContainerType extends Element>({ managedChildrenParameters: { onChildrenMountChange: ocmu, onAfterChildLayoutEffect }, toastsParameters: { visibleCount } }: UseToastsParameters): UseToastsReturnType<ContainerType, ToastInfo> {
-    monitorCallCount(useToasts);
+export const useToasts = monitored(function useToasts<ContainerType extends Element>({ managedChildrenParameters: { onChildrenMountChange: ocmu, onAfterChildLayoutEffect }, toastsParameters: { visibleCount } }: UseToastsParameters): UseToastsReturnType<ContainerType, ToastInfo> {
 
     // Normally, this does just look like [0, 1, 2, 3], etc
     // so it could be just an index to the current toast,
@@ -173,14 +172,13 @@ export function useToasts<ContainerType extends Element>({ managedChildrenParame
         props
 
     };
-}
+})
 
 /**
  * @compositeParams
  */
-export function useToast<E extends Element>({ toastParameters: { politeness, timeout, children }, info: { index, ...info }, context }: UseToastParameters<ToastInfo>): UseToastReturnType<E, ToastInfo> {
+export const useToast = monitored(function useToast<E extends Element>({ toastParameters: { politeness, timeout, children }, info: { index, ...info }, context }: UseToastParameters<ToastInfo>): UseToastReturnType<E, ToastInfo> {
     const { getMaxVisibleCount, onAnyToastDismissed, onAnyToastMounted } = context.toastContext;
-    monitorCallCount(useToast);
     const [numberOfToastsAheadOfUs, setNumberOfToastsAheadOfUs] = useState(Infinity);
     const getIndex = useStableGetter(index);
     const [dismissed2, setDismissed2, getDismissed2] = useState(false);
@@ -252,4 +250,4 @@ export function useToast<E extends Element>({ toastParameters: { politeness, tim
         managedChildReturn,
         props: propsStable
     }
-}
+})

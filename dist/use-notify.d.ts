@@ -24,7 +24,7 @@ export declare const NotificationProviderContext: import("preact").Context<Notif
  *
  * @hasChild {@link useNotify}
  */
-export declare function useNotificationProvider({ targetAssertive, targetPolite }: NotificationProviderProps): {
+export declare const useNotificationProvider: ({ targetAssertive, targetPolite }: NotificationProviderProps) => {
     notify: (mode: "polite" | "assertive", child: VNode) => number;
     context: {
         notify: (mode: "polite" | "assertive", child: VNode) => number;

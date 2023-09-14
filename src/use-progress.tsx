@@ -1,4 +1,4 @@
-import { assertEmptyObject, ElementProps, monitorCallCount, Nullable, TargetedOmit, TargetedPick, useAsyncHandler, UseAsyncHandlerParameters, UseAsyncHandlerReturnType, useMergedProps, VNode } from "preact-prop-helpers";
+import { assertEmptyObject, ElementProps, monitored, Nullable, TargetedOmit, TargetedPick, useAsyncHandler, UseAsyncHandlerParameters, UseAsyncHandlerReturnType, useMergedProps, VNode } from "preact-prop-helpers";
 import { ElementToTag, OmitStrong, Prefices } from "./props.js";
 import { UseLabelReturnType, useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
 import { useNotify } from "./use-notify.js";
@@ -27,7 +27,7 @@ export interface UseProgressReturnType<ProgressElement extends Element, Progress
  * 
  * @compositeParams
  */
-export function useProgress<ProgressElement extends Element, LabelElement extends Element>({
+export const useProgress = monitored(function useProgress<ProgressElement extends Element, LabelElement extends Element>({
     labelParameters,
     progressIndicatorParameters: {
         max,
@@ -38,8 +38,6 @@ export function useProgress<ProgressElement extends Element, LabelElement extend
     },
     ...void2
 }: UseProgressParameters<ProgressElement, LabelElement>): UseProgressReturnType<ProgressElement, LabelElement> {
-
-    monitorCallCount(useProgress);
 
     const {
         propsInput,
@@ -105,7 +103,7 @@ export function useProgress<ProgressElement extends Element, LabelElement extend
         randomIdLabelReturn,
         pressReturn,
     }
-}
+})
 
 export interface UseProgressWithHandlerParametersSelf {
     /** If true, the progress bar will always read as at least having an indeterminate value. Nothing is announced to ATs when this changes. */
@@ -140,21 +138,20 @@ export interface UseProgressWithHandlerReturnType<EventType, CaptureType, Indica
  * 
  * @compositeParams
  */
-export function useProgressWithHandler<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element>({
+export const useProgressWithHandler = monitored(function useProgressWithHandler<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element>({
     labelParameters,
     progressIndicatorParameters,
     asyncHandlerParameters: { asyncHandler, ...asyncHandlerParameters },
     progressWithHandlerParameters: { forciblyPending, notifyFailure, notifyPending, notifySuccess, ...void1 },
     ...void2
 }: UseProgressWithHandlerParameters<EventType, CaptureType, IndicatorElement, LabelElement>): UseProgressWithHandlerReturnType<EventType, CaptureType, IndicatorElement, LabelElement> {
-    monitorCallCount(useProgressWithHandler);
     assertEmptyObject(void1);
     assertEmptyObject(void2);
 
     const notify = useNotify();
 
     const asyncInfo = useAsyncHandler({
-        ...asyncHandlerParameters, 
+        ...asyncHandlerParameters,
         asyncHandler: (...args) => {
             try {
                 let promiseOrValue = asyncHandler?.(...args);
@@ -198,6 +195,6 @@ export function useProgressWithHandler<EventType, CaptureType, IndicatorElement 
         propsProgressRegion,
         asyncHandlerReturn: asyncInfo
     }
-}
+})
 
 

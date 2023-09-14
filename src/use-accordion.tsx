@@ -1,5 +1,5 @@
 import { identity } from "lodash-es";
-import { ElementProps, EventType, JSX, ManagedChildInfo, Nullable, OnChildrenMountChange, PassiveStateUpdater, PersistentStates, TargetedOmit, TargetedPick, UseGenericChildParameters, UseHasCurrentFocusReturnType, UseLinearNavigationParameters, UseLinearNavigationReturnType, UseManagedChildParameters, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, UsePressParameters, UseRefElementParameters, UseRefElementReturnTypeSelf, UseTextContentReturnType, UseTypeaheadNavigationChildParameters, UseTypeaheadNavigationChildReturnType, UseTypeaheadNavigationContext, UseTypeaheadNavigationParameters, UseTypeaheadNavigationReturnType, assertEmptyObject, findBackupFocus, monitorCallCount, useCallback, useChildrenFlag, useHasCurrentFocus, useLinearNavigation, useManagedChild, useManagedChildren, useMemoObject, useMergedProps, usePersistentState, useRandomId, useRefElement, useStableCallback, useState, useTypeaheadNavigation, useTypeaheadNavigationChild } from "preact-prop-helpers";
+import { ElementProps, EventType, JSX, ManagedChildInfo, Nullable, OnChildrenMountChange, PassiveStateUpdater, PersistentStates, TargetedOmit, TargetedPick, UseGenericChildParameters, UseHasCurrentFocusReturnType, UseLinearNavigationParameters, UseLinearNavigationReturnType, UseManagedChildParameters, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, UsePressParameters, UseRefElementParameters, UseRefElementReturnTypeSelf, UseTextContentReturnType, UseTypeaheadNavigationChildParameters, UseTypeaheadNavigationChildReturnType, UseTypeaheadNavigationContext, UseTypeaheadNavigationParameters, UseTypeaheadNavigationReturnType, assertEmptyObject, findBackupFocus, monitored, useCallback, useChildrenFlag, useHasCurrentFocus, useLinearNavigation, useManagedChild, useManagedChildren, useMemoObject, useMergedProps, usePersistentState, useRandomId, useRefElement, useStableCallback, useState, useTypeaheadNavigation, useTypeaheadNavigationChild } from "preact-prop-helpers";
 import { DisabledType, OmitStrong, Prefices } from "./props.js";
 import { UseButtonParameters, UseButtonReturnType, useButton } from "./use-button.js";
 
@@ -135,7 +135,7 @@ export interface UseAccordionContext<HeaderButtonElement extends Element, M exte
  * 
  * @hasChild {@link useAccordionSection}
  */
-export function useAccordion<HeaderButtonElement extends Element>({
+export const useAccordion = monitored( function useAccordion<HeaderButtonElement extends Element>({
     accordionParameters: { initialIndex, localStorageKey, orientation, ...accordionParameters },
     typeaheadNavigationParameters: { collator, noTypeahead, onNavigateTypeahead, typeaheadTimeout, ...typeaheadNavigationParameters },
     linearNavigationParameters: { disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize, onNavigateLinear, ...linearNavigationParameters },
@@ -145,7 +145,6 @@ export function useAccordion<HeaderButtonElement extends Element>({
 }: UseAccordionParameters<HeaderButtonElement, UseAccordionSectionInfo<HeaderButtonElement>>): UseAccordionReturnType<HeaderButtonElement, UseAccordionSectionInfo<HeaderButtonElement>> {
     type M = UseAccordionSectionInfo<HeaderButtonElement>;
 
-    monitorCallCount(useAccordion);
     const [localStorageIndex, setLocalStorageIndex] = usePersistentState<never, number | null>(localStorageKey ?? null, initialIndex ?? null);
     if (localStorageIndex != null)
         initialIndex = localStorageIndex;
@@ -287,12 +286,12 @@ export function useAccordion<HeaderButtonElement extends Element>({
         managedChildrenReturn,
         accordionReturn: useMemoObject({ changeExpandedIndex })
     };
-}
+})
 
 /**
  * @compositeParams
  */
-export function useAccordionSection<HeaderContainerElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element>({
+export const useAccordionSection = monitored( function useAccordionSection<HeaderContainerElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element>({
     buttonParameters: { disabled, tagButton, onPressSync: userOnPress, ...buttonParameters },
     accordionSectionParameters: { open: openFromUser, bodyRole, ...void3 },
     info: { index, untabbable, ...void4 },
@@ -303,7 +302,7 @@ export function useAccordionSection<HeaderContainerElement extends Element, Head
     pressParameters: { focusSelf, ...pressParameters },
     ...void1
 }: UseAccordionSectionParameters<HeaderButtonElement, BodyElement, UseAccordionSectionInfo<HeaderButtonElement>>): UseAccordionSectionReturnType<HeaderContainerElement, HeaderButtonElement, BodyElement> {
-    monitorCallCount(useAccordionSection);
+
     type M = UseAccordionSectionInfo<HeaderButtonElement>
 
     const [openFromParent, setOpenFromParent, getOpenFromParent] = useState<boolean | null>(null);
@@ -450,4 +449,4 @@ export function useAccordionSection<HeaderContainerElement extends Element, Head
         propsHeader: {}    // This is intentionally empty, it's just a reminder that there *does* need to be a header that contains the button.
 
     };
-}
+})

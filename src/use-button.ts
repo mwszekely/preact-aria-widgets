@@ -1,4 +1,4 @@
-import { ElementProps, JSX, Nullable, PressEventReason, TargetedOmit, UsePressParameters, UsePressReturnType, UseRefElementParameters, UseRefElementReturnType, assertEmptyObject, enhanceEvent, monitorCallCount, returnFalse, useMergedProps, usePress, useRefElement, useStableCallback } from "preact-prop-helpers";
+import { ElementProps, JSX, Nullable, PressEventReason, TargetedOmit, UsePressParameters, UsePressReturnType, UseRefElementParameters, UseRefElementReturnType, assertEmptyObject, enhanceEvent, monitored, returnFalse, useMergedProps, usePress, useRefElement, useStableCallback } from "preact-prop-helpers";
 import { DisabledType, ElementToTag, EnhancedEventHandler, OmitStrong, TargetedEnhancedEvent } from "./props.js";
 
 export interface ButtonPressEventDetail {
@@ -65,15 +65,14 @@ export interface UseButtonReturnType<ButtonElement extends Element> extends
  * 
  * @compositeParams
  */
-export function useButton<ButtonElement extends Element>({
+export const useButton = monitored( function useButton<ButtonElement extends Element>({
     buttonParameters: { tagButton, disabled, pressed, role,  onPressSync, ...void1 },
     pressParameters: { focusSelf, allowRepeatPresses, longPressThreshold, onPressingChange, excludeSpace, ...void3 },
     refElementParameters,
     ...void2
 }: UseButtonParameters<ButtonElement>): UseButtonReturnType<ButtonElement> {
-    if (tagButton != "button")
-        debugger;
-    monitorCallCount(useButton);
+    //if (tagButton != "button")
+    //    debugger;
 
     const { refElementReturn, propsStable: propsRef, ...void5 } = useRefElement<ButtonElement>({ refElementParameters });
     const { pressReturn, props: propsPress, ...void4 } = usePress<ButtonElement>({
@@ -110,6 +109,6 @@ export function useButton<ButtonElement extends Element>({
         props: useMergedProps<ButtonElement>(propsPress, propsRef, (tagButton == 'button' ? buttonProps : divProps) as ElementProps<ButtonElement>),
         refElementReturn,
     }
-}
+})
 
 

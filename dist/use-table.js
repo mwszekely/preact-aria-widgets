@@ -1,4 +1,4 @@
-import { assertEmptyObject, focus, monitorCallCount, returnNull, useCompleteGridNavigation, useCompleteGridNavigationCell, useCompleteGridNavigationRow, useMemoObject, useMergedProps, usePassiveState, useStableCallback, useState } from "preact-prop-helpers";
+import { assertEmptyObject, focus, monitored, returnNull, useCompleteGridNavigation, useCompleteGridNavigationCell, useCompleteGridNavigationRow, useMemoObject, useMergedProps, usePassiveState, useStableCallback, useState } from "preact-prop-helpers";
 import { useCallback, useEffect } from "preact/hooks";
 import { Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
@@ -13,8 +13,7 @@ import { useLabelSynthetic } from "./use-label.js";
  * @hasChild {@link useTableRow}
  * @hasChild {@link useTableCell}
  */
-export function useTable({ labelParameters, tableParameters: { tagTable }, singleSelectionParameters: { singleSelectionMode, ...void1 }, multiSelectionParameters: { multiSelectionMode, ...void2 }, ...void3 }) {
-    monitorCallCount(useTable);
+export const useTable = monitored(function useTable({ labelParameters, tableParameters: { tagTable }, singleSelectionParameters: { singleSelectionMode, ...void1 }, multiSelectionParameters: { multiSelectionMode, ...void2 }, ...void3 }) {
     assertEmptyObject(void1);
     assertEmptyObject(void2);
     assertEmptyObject(void3);
@@ -74,7 +73,7 @@ export function useTable({ labelParameters, tableParameters: { tagTable }, singl
             })
         })
     };
-}
+});
 function fuzzyCompare(lhs, rhs) {
     if (lhs === rhs)
         return 0;
@@ -101,8 +100,7 @@ const naturalSectionTypes = new Set(["thead", "tbody", "tfoot"]);
 /**
  * @compositeParams
  */
-export function useTableSection({ linearNavigationParameters, rovingTabIndexParameters, singleSelectionParameters, multiSelectionParameters, gridNavigationParameters, rearrangeableChildrenParameters, paginatedChildrenParameters, staggeredChildrenParameters, tableSectionParameters: { tagTableSection, location }, typeaheadNavigationParameters, context: { tableContext, ...void3 }, refElementParameters, ...void1 }) {
-    monitorCallCount(useTableSection);
+export const useTableSection = monitored(function useTableSection({ linearNavigationParameters, rovingTabIndexParameters, singleSelectionParameters, multiSelectionParameters, gridNavigationParameters, rearrangeableChildrenParameters, paginatedChildrenParameters, staggeredChildrenParameters, tableSectionParameters: { tagTableSection, location }, typeaheadNavigationParameters, context: { tableContext, ...void3 }, refElementParameters, ...void1 }) {
     const { childrenHaveFocusReturn, context, linearNavigationReturn, managedChildrenReturn, props: { ...props }, rovingTabIndexReturn, singleSelectionReturn, multiSelectionReturn, typeaheadNavigationReturn, staggeredChildrenReturn, rearrangeableChildrenReturn, paginatedChildrenReturn, sortableChildrenReturn, ...void2 } = useCompleteGridNavigation({
         linearNavigationParameters,
         rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
@@ -151,12 +149,11 @@ export function useTableSection({ linearNavigationParameters, rovingTabIndexPara
         paginatedChildrenReturn,
         propsTableSection: props
     };
-}
+});
 /**
  * @compositeParams
  */
-export function useTableRow({ info, textContentParameters, context: cx1, tableRowParameters: { selected }, linearNavigationParameters, rovingTabIndexParameters, hasCurrentFocusParameters, singleSelectionChildParameters, multiSelectionChildParameters, ...void1 }) {
-    monitorCallCount(useTableRow);
+export const useTableRow = monitored(function useTableRow({ info, textContentParameters, context: cx1, tableRowParameters: { selected }, linearNavigationParameters, rovingTabIndexParameters, hasCurrentFocusParameters, singleSelectionChildParameters, multiSelectionChildParameters, ...void1 }) {
     assertEmptyObject(void1);
     const { context: cx2, managedChildrenReturn, props: { ...props }, ...restRet
     // props
@@ -194,12 +191,11 @@ export function useTableRow({ info, textContentParameters, context: cx1, tableRo
         managedChildrenReturn,
         ...restRet
     };
-}
+});
 /**
  * @compositeParams
  */
-export function useTableCell({ tableCellParameters: { tagTableCell }, info, ...p }) {
-    monitorCallCount(useTableCell);
+export const useTableCell = monitored(function useTableCell({ tableCellParameters: { tagTableCell }, info, ...p }) {
     const { props, ...ret } = useCompleteGridNavigationCell({
         info,
         ...p
@@ -214,5 +210,5 @@ export function useTableCell({ tableCellParameters: { tagTableCell }, info, ...p
             }, [])
         }
     };
-}
+});
 //# sourceMappingURL=use-table.js.map

@@ -105,7 +105,7 @@ interface UseButtonReturnType<ButtonElement extends Element> extends UsePressRet
  *
  * @compositeParams
  */
-declare function useButton<ButtonElement extends Element>({ buttonParameters: { tagButton, disabled, pressed, role, onPressSync, ...void1 }, pressParameters: { focusSelf, allowRepeatPresses, longPressThreshold, onPressingChange, excludeSpace, ...void3 }, refElementParameters, ...void2 }: UseButtonParameters<ButtonElement>): UseButtonReturnType<ButtonElement>;
+declare const useButton: <ButtonElement extends Element>({ buttonParameters: { tagButton, disabled, pressed, role, onPressSync, ...void1 }, pressParameters: { focusSelf, allowRepeatPresses, longPressThreshold, onPressingChange, excludeSpace, ...void3 }, refElementParameters, ...void2 }: UseButtonParameters<ButtonElement>) => UseButtonReturnType<ButtonElement>;
 interface UseAccordionParametersSelf {
     /**
      * Almost all Accordions are `"vertical"`, but you certainly can have a `"horizontal"` Accordion if you want.
@@ -204,11 +204,11 @@ interface UseAccordionContext<HeaderButtonElement extends Element, M extends Use
  *
  * @hasChild {@link useAccordionSection}
  */
-declare function useAccordion<HeaderButtonElement extends Element>({ accordionParameters: { initialIndex, localStorageKey, orientation, ...accordionParameters }, typeaheadNavigationParameters: { collator, noTypeahead, onNavigateTypeahead, typeaheadTimeout, ...typeaheadNavigationParameters }, linearNavigationParameters: { disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize, onNavigateLinear, ...linearNavigationParameters }, managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange: ocmc1, onChildrenCountChange, ...managedChildrenParameters }, refElementParameters, ...void1 }: UseAccordionParameters<HeaderButtonElement, UseAccordionSectionInfo<HeaderButtonElement>>): UseAccordionReturnType<HeaderButtonElement, UseAccordionSectionInfo<HeaderButtonElement>>;
+declare const useAccordion: <HeaderButtonElement extends Element>({ accordionParameters: { initialIndex, localStorageKey, orientation, ...accordionParameters }, typeaheadNavigationParameters: { collator, noTypeahead, onNavigateTypeahead, typeaheadTimeout, ...typeaheadNavigationParameters }, linearNavigationParameters: { disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize, onNavigateLinear, ...linearNavigationParameters }, managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange: ocmc1, onChildrenCountChange, ...managedChildrenParameters }, refElementParameters, ...void1 }: UseAccordionParameters<HeaderButtonElement, UseAccordionSectionInfo<HeaderButtonElement>>) => UseAccordionReturnType<HeaderButtonElement, UseAccordionSectionInfo<HeaderButtonElement>>;
 /**
  * @compositeParams
  */
-declare function useAccordionSection<HeaderContainerElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element>({ buttonParameters: { disabled, tagButton, onPressSync: userOnPress, ...buttonParameters }, accordionSectionParameters: { open: openFromUser, bodyRole, ...void3 }, info: { index, untabbable, ...void4 }, textContentParameters: { getText, ...void5 }, context, refElementBodyParameters, refElementHeaderButtonParameters, pressParameters: { focusSelf, ...pressParameters }, ...void1 }: UseAccordionSectionParameters<HeaderButtonElement, BodyElement, UseAccordionSectionInfo<HeaderButtonElement>>): UseAccordionSectionReturnType<HeaderContainerElement, HeaderButtonElement, BodyElement>;
+declare const useAccordionSection: <HeaderContainerElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element>({ buttonParameters: { disabled, tagButton, onPressSync: userOnPress, ...buttonParameters }, accordionSectionParameters: { open: openFromUser, bodyRole, ...void3 }, info: { index, untabbable, ...void4 }, textContentParameters: { getText, ...void5 }, context, refElementBodyParameters, refElementHeaderButtonParameters, pressParameters: { focusSelf, ...pressParameters }, ...void1 }: UseAccordionSectionParameters<HeaderButtonElement, BodyElement, UseAccordionSectionInfo<HeaderButtonElement>>) => UseAccordionSectionReturnType<HeaderContainerElement, HeaderButtonElement, BodyElement>;
 type LabelPosition = "separate" | "wrapping" | "none";
 type FocusableLabelElement<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element> = LP extends "wrapping" ? LabelElement : InputElement;
 interface UseLabelParametersSelf<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element> {
@@ -253,7 +253,7 @@ interface UseLabelSyntheticParameters extends TargetedPick<UseLabelParameters<La
  *
  * @compositeParams
  */
-declare function useLabelSynthetic<InputElement extends Element, LabelElement extends Element>({ labelParameters: { ariaLabel, onLabelClick }, ...rest }: UseLabelSyntheticParameters): UseLabelReturnType<InputElement, LabelElement>;
+declare const useLabelSynthetic: <InputElement extends Element, LabelElement extends Element>({ labelParameters: { ariaLabel, onLabelClick }, ...rest }: UseLabelSyntheticParameters) => UseLabelReturnType<InputElement, LabelElement>;
 type CheckboxCheckedType = boolean | "mixed";
 interface UseCheckboxLikeParametersSelf<C extends CheckboxCheckedType> {
     /** The role attribute to use, when applicable */
@@ -299,7 +299,7 @@ interface UseCheckboxLikeReturnType<InputType extends Element, LabelType extends
  *
  * @compositeParams
  */
-declare function useCheckboxLike<LP extends LabelPosition, InputType extends Element, LabelType extends Element, C extends CheckboxCheckedType>({ labelParameters, randomIdInputParameters, randomIdLabelParameters, checkboxLikeParameters: { checked, disabled, role, ...void1 }, refElementInputReturn, refElementLabelReturn, pressParameters: { excludeSpace, longPressThreshold, onPressSync: onInputSync, ...void2 }, ...void3 }: UseCheckboxLikeParameters<LP, InputType, LabelType, C>): UseCheckboxLikeReturnType<InputType, LabelType>;
+declare const useCheckboxLike: <LP extends LabelPosition, InputType extends Element, LabelType extends Element, C extends CheckboxCheckedType>({ labelParameters, randomIdInputParameters, randomIdLabelParameters, checkboxLikeParameters: { checked, disabled, role, ...void1 }, refElementInputReturn, refElementLabelReturn, pressParameters: { excludeSpace, longPressThreshold, onPressSync: onInputSync, ...void2 }, ...void3 }: UseCheckboxLikeParameters<LP, InputType, LabelType, C>) => UseCheckboxLikeReturnType<InputType, LabelType>;
 interface CheckboxGroupChangeEventDetail {
     childrenChecked: boolean | Map<number, boolean | "mixed">;
 }
@@ -402,13 +402,13 @@ interface CheckboxGroupContext<TCE extends Element> extends CompleteListNavigati
  * @hasChild {@link useCheckboxGroupParent}
  * @hasChild {@link useCheckboxGroupChild}
  */
-declare function useCheckboxGroup<GroupElement extends Element, TCE extends Element>({ linearNavigationParameters, rovingTabIndexParameters, checkboxGroupParameters: { orientation, ...void2 }, multiSelectionParameters, rearrangeableChildrenParameters, refElementParameters, sortableChildrenParameters, staggeredChildrenParameters, typeaheadNavigationParameters, ...void1 }: UseCheckboxGroupParameters<GroupElement, TCE>): UseCheckboxGroupReturnType<GroupElement, TCE>;
+declare const useCheckboxGroup: <GroupElement extends Element, TCE extends Element>({ linearNavigationParameters, rovingTabIndexParameters, checkboxGroupParameters: { orientation, ...void2 }, multiSelectionParameters, rearrangeableChildrenParameters, refElementParameters, sortableChildrenParameters, staggeredChildrenParameters, typeaheadNavigationParameters, ...void1 }: UseCheckboxGroupParameters<GroupElement, TCE>) => UseCheckboxGroupReturnType<GroupElement, TCE>;
 /**
  * Implements the logic for the parent checkbox (but not the checkbox itself).
  *
  * @compositeParams
  */
-declare function useCheckboxGroupParent<TCE extends Element>({ context: { checkboxGroupParentContext: { setControlsSetterOnParentCheckbox, setSetParentCheckboxChecked, getPercentChecked, getTotalChecked, getTotalChildren, onCheckboxGroupParentInput }, ...context }, info, hasCurrentFocusParameters, refElementParameters, textContentParameters, multiSelectionChildParameters, singleSelectionChildParameters, ...void1 }: UseCheckboxGroupParentParameters<TCE>): UseCheckboxGroupParentReturnType<TCE>;
+declare const useCheckboxGroupParent: <TCE extends Element>({ context: { checkboxGroupParentContext: { setControlsSetterOnParentCheckbox, setSetParentCheckboxChecked, getPercentChecked, getTotalChecked, getTotalChildren, onCheckboxGroupParentInput }, ...context }, info, hasCurrentFocusParameters, refElementParameters, textContentParameters, multiSelectionChildParameters, singleSelectionChildParameters, ...void1 }: UseCheckboxGroupParentParameters<TCE>) => UseCheckboxGroupParentReturnType<TCE>;
 /**
  * Implements the "child" part of a checkbox group.
  *
@@ -422,7 +422,7 @@ declare function useCheckboxGroupParent<TCE extends Element>({ context: { checkb
  *
  * @compositeParams
  */
-declare function useCheckboxGroupChild<TCE extends Element>({ checkboxGroupChildParameters, context, info: { focusSelf, getSortValue, index, untabbable, ...void3 }, textContentParameters, hasCurrentFocusParameters, refElementParameters, multiSelectionChildParameters: { multiSelectionDisabled, onMultiSelectChange, ...void5 }, ...void4 }: UseCheckboxGroupChildParameters<TCE>): UseCheckboxGroupChildReturnType<TCE>;
+declare const useCheckboxGroupChild: <TCE extends Element>({ checkboxGroupChildParameters, context, info: { focusSelf, getSortValue, index, untabbable, ...void3 }, textContentParameters, hasCurrentFocusParameters, refElementParameters, multiSelectionChildParameters: { multiSelectionDisabled, onMultiSelectChange, ...void5 }, ...void4 }: UseCheckboxGroupChildParameters<TCE>) => UseCheckboxGroupChildReturnType<TCE>;
 interface CheckboxChangeEventDetail {
     /**
      * This is always a `true`/`false` value, instead of including `"mixed"`
@@ -454,7 +454,7 @@ interface UseCheckboxReturnType<InputType extends Element, LabelType extends Ele
  *
  * @compositeParams
  */
-declare function useCheckbox<LP extends LabelPosition, InputType extends Element, LabelType extends Element>({ checkboxLikeParameters: { checked, disabled, ...void2 }, checkboxParameters: { onCheckedChange, ...void4 }, labelParameters, pressParameters, ...void1 }: UseCheckboxParameters<LP, InputType, LabelType>): UseCheckboxReturnType<InputType, LabelType>;
+declare const useCheckbox: <LP extends LabelPosition, InputType extends Element, LabelType extends Element>({ checkboxLikeParameters: { checked, disabled, ...void2 }, checkboxParameters: { onCheckedChange, ...void4 }, labelParameters, pressParameters, ...void1 }: UseCheckboxParameters<LP, InputType, LabelType>) => UseCheckboxReturnType<InputType, LabelType>;
 interface UseDialogParameters<_DialogElement extends Element, _TitleElement extends Element> extends OmitStrong<UseModalParameters<"escape" | "backdrop">, "focusTrapParameters" | "dismissParameters" | "backdropDismissParameters" | "escapeDismissParameters" | "lostFocusDismissParameters">, TargetedOmit<UseModalParameters<"escape" | "backdrop">, "focusTrapParameters", "trapActive" | "onlyMoveFocus">, TargetedOmit<UseModalParameters<"escape" | "backdrop">, "dismissParameters", "dismissActive">, TargetedOmit<UseModalParameters<"escape" | "backdrop">, "backdropDismissParameters", "onDismissBackdrop">, TargetedOmit<UseModalParameters<"escape" | "backdrop">, "escapeDismissParameters", "onDismissEscape">, 
 //TargetedOmit<UseModalParameters<"escape" | "backdrop">, "lostFocusDismissParameters", "onDismissLostFocus">,
 TargetedOmit<UseLabelSyntheticParameters, "labelParameters", "onLabelClick"> {
@@ -469,7 +469,7 @@ interface UseDialogReturnType<FocusContainerElement extends Element, SourceEleme
  *
  * @compositeParams
  */
-declare function useDialog<FocusContainerElement extends Element, SourceElement extends Element, DialogElement extends Element, TitleElement extends Element>({ dismissParameters, escapeDismissParameters, focusTrapParameters, activeElementParameters, backdropDismissParameters, modalParameters, refElementParameters, labelParameters, ...void1 }: UseDialogParameters<DialogElement, TitleElement>): UseDialogReturnType<FocusContainerElement, SourceElement, DialogElement, TitleElement>;
+declare const useDialog: <FocusContainerElement extends Element, SourceElement extends Element, DialogElement extends Element, TitleElement extends Element>({ dismissParameters, escapeDismissParameters, focusTrapParameters, activeElementParameters, backdropDismissParameters, modalParameters, refElementParameters, labelParameters, ...void1 }: UseDialogParameters<DialogElement, TitleElement>) => UseDialogReturnType<FocusContainerElement, SourceElement, DialogElement, TitleElement>;
 interface UseDrawerParameters<_DialogElement extends Element, _TitleElement extends Element> extends OmitStrong<UseModalParameters<"escape" | "backdrop" | "lost-focus">, "focusTrapParameters" | "backdropDismissParameters" | "dismissParameters" | "escapeDismissParameters" | "lostFocusDismissParameters">, TargetedOmit<UseLabelSyntheticParameters, "labelParameters", "onLabelClick">, TargetedOmit<UseModalParameters<"escape" | "backdrop" | "lost-focus">, "focusTrapParameters", "onlyMoveFocus">, TargetedOmit<UseModalParameters<"escape" | "backdrop" | "lost-focus">, "dismissParameters", "dismissActive">, TargetedOmit<UseModalParameters<"escape" | "backdrop" | "lost-focus">, "backdropDismissParameters", "onDismissBackdrop">, TargetedOmit<UseModalParameters<"escape" | "backdrop" | "lost-focus">, "escapeDismissParameters", "onDismissEscape">, TargetedOmit<UseModalParameters<"escape" | "backdrop" | "lost-focus">, "lostFocusDismissParameters", "onDismissLostFocus"> {
 }
 interface UseDrawerReturnType<FocusContainerElement extends Element, SourceElement extends Element, DrawerElement extends Element, TitleElement extends Element> extends OmitStrong<UseModalReturnType<FocusContainerElement, SourceElement, DrawerElement>, "propsStableSource" | "propsStablePopup"> {
@@ -482,7 +482,7 @@ interface UseDrawerReturnType<FocusContainerElement extends Element, SourceEleme
  *
  * @compositeParams
  */
-declare function useDrawer<FocusContainerElement extends Element, SourceElement extends Element, PopupElement extends Element, TitleElement extends Element>({ dismissParameters, escapeDismissParameters, focusTrapParameters, activeElementParameters, labelParameters, backdropDismissParameters, lostFocusDismissParameters, modalParameters, refElementParameters, ...void1 }: UseDrawerParameters<PopupElement, TitleElement>): UseDrawerReturnType<FocusContainerElement, SourceElement, PopupElement, TitleElement>;
+declare const useDrawer: <FocusContainerElement extends Element, SourceElement extends Element, PopupElement extends Element, TitleElement extends Element>({ dismissParameters, escapeDismissParameters, focusTrapParameters, activeElementParameters, labelParameters, backdropDismissParameters, lostFocusDismissParameters, modalParameters, refElementParameters, ...void1 }: UseDrawerParameters<PopupElement, TitleElement>) => UseDrawerReturnType<FocusContainerElement, SourceElement, PopupElement, TitleElement>;
 type ListboxSingleSelectEvent<E extends EventTarget> = {
     [EventDetail]: {
         selectedIndex: number;
@@ -534,11 +534,11 @@ interface ListboxInfo<ListItemElement extends Element> extends UseCompleteListNa
  *
  * @hasChild {@link useListboxItem}
  */
-declare function useListbox<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element>({ labelParameters, listboxParameters: { groupingType, orientation }, linearNavigationParameters, singleSelectionParameters: { singleSelectionAriaPropName, singleSelectionMode, ...void1 }, multiSelectionParameters: { multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, ...void2 }, singleSelectionDeclarativeParameters: { onSingleSelectedIndexChange, singleSelectedIndex, ...void3 }, rovingTabIndexParameters, ...restParams }: UseListboxParameters<ListElement, ListItemElement, LabelElement, ListboxInfo<ListItemElement>>): UseListboxReturnType<ListElement, ListItemElement, LabelElement, ListboxInfo<ListItemElement>>;
+declare const useListbox: <ListElement extends Element, ListItemElement extends Element, LabelElement extends Element>({ labelParameters, listboxParameters: { groupingType, orientation }, linearNavigationParameters, singleSelectionParameters: { singleSelectionAriaPropName, singleSelectionMode, ...void1 }, multiSelectionParameters: { multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, ...void2 }, singleSelectionDeclarativeParameters: { onSingleSelectedIndexChange, singleSelectedIndex, ...void3 }, rovingTabIndexParameters, ...restParams }: UseListboxParameters<ListElement, ListItemElement, LabelElement, ListboxInfo<ListItemElement>>) => UseListboxReturnType<ListElement, ListItemElement, LabelElement, ListboxInfo<ListItemElement>>;
 /**
  * @compositeParams
  */
-declare function useListboxItem<ListItemElement extends Element, M extends ListboxInfo<ListItemElement> = ListboxInfo<ListItemElement>>({ context, listboxParameters: {}, pressParameters: { allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, ...void1 }, singleSelectionChildParameters: { singleSelectionDisabled }, ...restParams }: UseListboxItemParameters<ListItemElement, M>): UseListboxItemReturnType<ListItemElement, M>;
+declare const useListboxItem: <ListItemElement extends Element, M extends ListboxInfo<ListItemElement> = ListboxInfo<ListItemElement>>({ context, listboxParameters: {}, pressParameters: { allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, ...void1 }, singleSelectionChildParameters: { singleSelectionDisabled }, ...restParams }: UseListboxItemParameters<ListItemElement, M>) => UseListboxItemReturnType<ListItemElement, M>;
 interface UseGridlistContext<GridlistRowElement extends Element, RM extends GridlistRowInfo<GridlistRowElement>> extends CompleteGridNavigationRowContext<GridlistRowElement, RM> {
 }
 interface UseGridlistRowContext<CellElement extends Element, M extends GridlistCellInfo<CellElement>> extends CompleteGridNavigationCellContext<CellElement, M> {
@@ -586,17 +586,17 @@ interface GridlistCellInfo<GridlistCellElement extends Element> extends UseCompl
  * @hasChild {@link useGridlistRow}
  * @hasChild {@link useGridlistCell}
  */
-declare function useGridlist<GridlistElement extends Element, GridlistRowElement extends Element, GridlistCellElement extends Element, LabelElement extends Element>({ labelParameters, listboxParameters: { groupingType, ...void1 }, rovingTabIndexParameters, singleSelectionParameters, gridNavigationParameters, linearNavigationParameters, multiSelectionParameters, paginatedChildrenParameters, rearrangeableChildrenParameters, refElementParameters, sortableChildrenParameters, staggeredChildrenParameters, typeaheadNavigationParameters, singleSelectionDeclarativeParameters, ...void2 }: UseGridlistParameters<GridlistElement, GridlistRowElement, LabelElement, GridlistRowInfo<GridlistRowElement>>): UseGridlistReturnType<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, GridlistRowInfo<GridlistRowElement>, GridlistCellInfo<GridlistCellElement>>;
+declare const useGridlist: <GridlistElement extends Element, GridlistRowElement extends Element, GridlistCellElement extends Element, LabelElement extends Element>({ labelParameters, listboxParameters: { groupingType, ...void1 }, rovingTabIndexParameters, singleSelectionParameters, gridNavigationParameters, linearNavigationParameters, multiSelectionParameters, paginatedChildrenParameters, rearrangeableChildrenParameters, refElementParameters, sortableChildrenParameters, staggeredChildrenParameters, typeaheadNavigationParameters, singleSelectionDeclarativeParameters, ...void2 }: UseGridlistParameters<GridlistElement, GridlistRowElement, LabelElement, GridlistRowInfo<GridlistRowElement>>) => UseGridlistReturnType<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, GridlistRowInfo<GridlistRowElement>, GridlistCellInfo<GridlistCellElement>>;
 /**
  * @compositeParams
  *
  */
-declare function useGridlistRow<GridlistRowElement extends Element, GridlistCellElement extends Element>({ gridlistRowParameters: { selected }, linearNavigationParameters, context: cx1, info, rovingTabIndexParameters, textContentParameters, typeaheadNavigationParameters, hasCurrentFocusParameters, singleSelectionChildParameters, multiSelectionChildParameters, gridNavigationSelectionSortableRowParameters, ...void1 }: UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, GridlistRowInfo<GridlistRowElement>, GridlistCellInfo<GridlistCellElement>>): UseGridlistRowReturnType<GridlistRowElement, GridlistCellElement, GridlistRowInfo<GridlistRowElement>, GridlistCellInfo<GridlistCellElement>>;
+declare const useGridlistRow: <GridlistRowElement extends Element, GridlistCellElement extends Element>({ gridlistRowParameters: { selected }, linearNavigationParameters, context: cx1, info, rovingTabIndexParameters, textContentParameters, typeaheadNavigationParameters, hasCurrentFocusParameters, singleSelectionChildParameters, multiSelectionChildParameters, gridNavigationSelectionSortableRowParameters, ...void1 }: UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, GridlistRowInfo<GridlistRowElement>, GridlistCellInfo<GridlistCellElement>>) => UseGridlistRowReturnType<GridlistRowElement, GridlistCellElement, GridlistRowInfo<GridlistRowElement>, GridlistCellInfo<GridlistCellElement>>;
 /**
  * @compositeParams
  *
  */
-declare function useGridlistCell<GridlistCellElement extends Element>({ pressParameters: { onPressSync, longPressThreshold, onPressingChange, ...void1 }, ...p }: UseGridlistCellParameters<GridlistCellElement, GridlistCellInfo<GridlistCellElement>>): UseGridlistCellReturnType<GridlistCellElement, GridlistCellInfo<GridlistCellElement>>;
+declare const useGridlistCell: <GridlistCellElement extends Element>({ pressParameters: { onPressSync, longPressThreshold, onPressingChange, ...void1 }, ...p }: UseGridlistCellParameters<GridlistCellElement, GridlistCellInfo<GridlistCellElement>>) => UseGridlistCellReturnType<GridlistCellElement, GridlistCellInfo<GridlistCellElement>>;
 interface UseMenuSurfaceParametersSelf {
     /**
      * What role the surface fulfills.
@@ -626,7 +626,7 @@ interface UseMenuSurfaceReturnType<MenuSurfaceElement extends Element, MenuTarge
  *
  * @compositeParams
  */
-declare function useMenuSurface<MenuSurfaceElement extends Element, MenuTargetElement extends Element, MenuTriggerElement extends Element>({ dismissParameters, focusTrapParameters, activeElementParameters, menuSurfaceParameters: { role, surfaceId, ...void1 }, modalParameters, escapeDismissParameters, ...void2 }: UseMenuSurfaceParameters<MenuSurfaceElement, MenuTriggerElement>): UseMenuSurfaceReturnType<MenuSurfaceElement, MenuTargetElement, MenuTriggerElement>;
+declare const useMenuSurface: <MenuSurfaceElement extends Element, MenuTargetElement extends Element, MenuTriggerElement extends Element>({ dismissParameters, focusTrapParameters, activeElementParameters, menuSurfaceParameters: { role, surfaceId, ...void1 }, modalParameters, escapeDismissParameters, ...void2 }: UseMenuSurfaceParameters<MenuSurfaceElement, MenuTriggerElement>) => UseMenuSurfaceReturnType<MenuSurfaceElement, MenuTargetElement, MenuTriggerElement>;
 interface UseFocusSentinelParameters {
     focusSentinel: {
         sendFocusToMenu: () => void;
@@ -647,7 +647,7 @@ interface UseFocusSentinelParameters {
  *
  * @compositeParams
  */
-declare function useFocusSentinel<E extends Element>({ focusSentinel: { open, onClose, sendFocusToMenu } }: UseFocusSentinelParameters): ElementProps<E>;
+declare const useFocusSentinel: <E extends Element>({ focusSentinel: { open, onClose, sendFocusToMenu } }: UseFocusSentinelParameters) => ElementProps<E>;
 interface UseToolbarParametersSelf<ContainerElement extends Element, ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> {
     /** Primarily controls arrow key direction for navigation */
     orientation: "horizontal" | "vertical";
@@ -702,11 +702,11 @@ interface UseToolbarChildReturnType<ChildElement extends Element, M extends UseT
  *
  * @compositeParams
  */
-declare function useToolbar<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({ linearNavigationParameters, toolbarParameters: { orientation, role, disabled }, labelParameters, rovingTabIndexParameters, singleSelectionParameters, singleSelectionDeclarativeParameters, ...listNavParameters }: UseToolbarParameters<ContainerElement, ChildElement, UseToolbarSubInfo<ChildElement>>): UseToolbarReturnType<ContainerElement, ChildElement, LabelElement, UseToolbarSubInfo<ChildElement>>;
+declare const useToolbar: <ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({ linearNavigationParameters, toolbarParameters: { orientation, role, disabled }, labelParameters, rovingTabIndexParameters, singleSelectionParameters, singleSelectionDeclarativeParameters, ...listNavParameters }: UseToolbarParameters<ContainerElement, ChildElement, UseToolbarSubInfo<ChildElement>>) => UseToolbarReturnType<ContainerElement, ChildElement, LabelElement, UseToolbarSubInfo<ChildElement>>;
 /**
  * @compositeParams
  */
-declare function useToolbarChild<ChildElement extends Element>({ context: { toolbarContext, ...context }, info, toolbarChildParameters: { disabledProp }, ...args }: UseToolbarChildParameters<ChildElement, UseToolbarSubInfo<ChildElement>>): UseToolbarChildReturnType<ChildElement, UseToolbarSubInfo<ChildElement>>;
+declare const useToolbarChild: <ChildElement extends Element>({ context: { toolbarContext, ...context }, info, toolbarChildParameters: { disabledProp }, ...args }: UseToolbarChildParameters<ChildElement, UseToolbarSubInfo<ChildElement>>) => UseToolbarChildReturnType<ChildElement, UseToolbarSubInfo<ChildElement>>;
 interface UseMenubarContext<ChildElement extends Element, M extends UseMenubarSubInfo<ChildElement>> extends UseToolbarContext<ChildElement, M> {
 }
 interface UseMenubarSubInfo<ChildElement extends Element> extends UseToolbarSubInfo<ChildElement> {
@@ -740,11 +740,11 @@ interface UseMenubarItemReturnType<MenuItemElement extends Element, M extends Us
  *
  * @compositeParams
  */
-declare function useMenubar<MenuParentElement extends Element, MenuItemElement extends Element, LabelElement extends Element>(args: UseMenubarParameters<MenuParentElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenubarReturnType<MenuParentElement, MenuItemElement, LabelElement, UseMenubarSubInfo<MenuItemElement>>;
+declare const useMenubar: <MenuParentElement extends Element, MenuItemElement extends Element, LabelElement extends Element>(args: UseMenubarParameters<MenuParentElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>) => UseMenubarReturnType<MenuParentElement, MenuItemElement, LabelElement, UseMenubarSubInfo<MenuItemElement>>;
 /**
  * @compositeParams
  */
-declare function useMenubarChild<MenuItemElement extends Element>({ menuItemParameters: { onPress: opu, role }, pressParameters: { onPressingChange, ...void1 }, ...restParams }: UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenubarItemReturnType<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>;
+declare const useMenubarChild: <MenuItemElement extends Element>({ menuItemParameters: { onPress: opu, role }, pressParameters: { onPressingChange, ...void1 }, ...restParams }: UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>) => UseMenubarItemReturnType<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>;
 interface UseMenuContext<ChildElement extends Element, M extends UseMenubarSubInfo<ChildElement>> extends UseMenubarContext<ChildElement, M> {
     menu: {
         closeFromMenuItemClicked(e: EventType<any, any>): void;
@@ -792,14 +792,14 @@ interface UseMenuItemReturnType<MenuItemElement extends Element, M extends UseMe
  *
  * @compositeParams
  */
-declare function useMenu<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element>({ dismissParameters, escapeDismissParameters, menuParameters: { openDirection, onOpen }, menuSurfaceParameters, activeElementParameters, toolbarParameters, modalParameters, ...restParams }: UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenuReturnType<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement, UseMenubarSubInfo<MenuItemElement>>;
+declare const useMenu: <MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element>({ dismissParameters, escapeDismissParameters, menuParameters: { openDirection, onOpen }, menuSurfaceParameters, activeElementParameters, toolbarParameters, modalParameters, ...restParams }: UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>) => UseMenuReturnType<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement, UseMenubarSubInfo<MenuItemElement>>;
 interface UseMenuItemParameters<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseMenubarItemParameters<MenuItemElement, M> {
     context: UseMenuContext<MenuItemElement, M>;
 }
 /**
  * @compositeParams
  */
-declare function useMenuItem<MenuItemElement extends Element>(p: UseMenuItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenuItemReturnType<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>;
+declare const useMenuItem: <MenuItemElement extends Element>(p: UseMenuItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>) => UseMenuItemReturnType<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>;
 interface NotificationProviderProps {
     targetAssertive: string | Element;
     targetPolite: string | Element;
@@ -825,7 +825,7 @@ declare const NotificationProviderContext: import("preact").Context<Notification
  *
  * @hasChild {@link useNotify}
  */
-declare function useNotificationProvider({ targetAssertive, targetPolite }: NotificationProviderProps): {
+declare const useNotificationProvider: ({ targetAssertive, targetPolite }: NotificationProviderProps) => {
     notify: (mode: "polite" | "assertive", child: VNode) => number;
     context: {
         notify: (mode: "polite" | "assertive", child: VNode) => number;
@@ -852,7 +852,7 @@ interface UseProgressReturnType<ProgressElement extends Element, ProgressLabelEl
  *
  * @compositeParams
  */
-declare function useProgress<ProgressElement extends Element, LabelElement extends Element>({ labelParameters, progressIndicatorParameters: { max, value, valueText, tagProgressIndicator, ...void1 }, ...void2 }: UseProgressParameters<ProgressElement, LabelElement>): UseProgressReturnType<ProgressElement, LabelElement>;
+declare const useProgress: <ProgressElement extends Element, LabelElement extends Element>({ labelParameters, progressIndicatorParameters: { max, value, valueText, tagProgressIndicator, ...void1 }, ...void2 }: UseProgressParameters<ProgressElement, LabelElement>) => UseProgressReturnType<ProgressElement, LabelElement>;
 interface UseProgressWithHandlerParametersSelf {
     /** If true, the progress bar will always read as at least having an indeterminate value. Nothing is announced to ATs when this changes. */
     forciblyPending: Nullable<boolean>;
@@ -881,7 +881,7 @@ interface UseProgressWithHandlerReturnType<EventType, CaptureType, IndicatorElem
  *
  * @compositeParams
  */
-declare function useProgressWithHandler<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element>({ labelParameters, progressIndicatorParameters, asyncHandlerParameters: { asyncHandler, ...asyncHandlerParameters }, progressWithHandlerParameters: { forciblyPending, notifyFailure, notifyPending, notifySuccess, ...void1 }, ...void2 }: UseProgressWithHandlerParameters<EventType, CaptureType, IndicatorElement, LabelElement>): UseProgressWithHandlerReturnType<EventType, CaptureType, IndicatorElement, LabelElement>;
+declare const useProgressWithHandler: <EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element>({ labelParameters, progressIndicatorParameters, asyncHandlerParameters: { asyncHandler, ...asyncHandlerParameters }, progressWithHandlerParameters: { forciblyPending, notifyFailure, notifyPending, notifySuccess, ...void1 }, ...void2 }: UseProgressWithHandlerParameters<EventType, CaptureType, IndicatorElement, LabelElement>) => UseProgressWithHandlerReturnType<EventType, CaptureType, IndicatorElement, LabelElement>;
 interface RadioChangeEventDetail<V extends number | string> {
     selectedValue: V | undefined;
 }
@@ -930,7 +930,7 @@ interface RadioSubInfo<TabbableChildElement extends Element, V extends string | 
  *
  * @hasChild {@link useRadio}
  */
-declare function useRadioGroup<V extends string | number, G extends Element, GL extends Element, TCE extends Element, M extends RadioSubInfo<TCE, V> = RadioSubInfo<TCE, V>>({ labelParameters, radioGroupParameters: { name, selectedValue, onSelectedValueChange, ...void2 }, rovingTabIndexParameters, linearNavigationParameters, rearrangeableChildrenParameters, sortableChildrenParameters, staggeredChildrenParameters, typeaheadNavigationParameters, refElementParameters, singleSelectionParameters: { singleSelectionMode, ...void4 }, ...void1 }: UseRadioGroupParameters<V, G, GL, TCE, M>): UseRadioGroupReturnType<V, G, GL, TCE, M>;
+declare const useRadioGroup: <V extends string | number, G extends Element, GL extends Element, TCE extends Element, M extends RadioSubInfo<TCE, V> = RadioSubInfo<TCE, V>>({ labelParameters, radioGroupParameters: { name, selectedValue, onSelectedValueChange, ...void2 }, rovingTabIndexParameters, linearNavigationParameters, rearrangeableChildrenParameters, sortableChildrenParameters, staggeredChildrenParameters, typeaheadNavigationParameters, refElementParameters, singleSelectionParameters: { singleSelectionMode, ...void4 }, ...void1 }: UseRadioGroupParameters<V, G, GL, TCE, M>) => UseRadioGroupReturnType<V, G, GL, TCE, M>;
 interface UseRadioReturnType<LP extends LabelPosition, V extends string | number, I extends Element, IL extends Element, M extends RadioSubInfo<FocusableLabelElement<LP, I, IL>, V>> extends OmitStrong<UseCompleteListNavigationChildDeclarativeReturnType$0<FocusableLabelElement<LP, I, IL>, M>, "propsChild" | "propsTabbable" | "pressParameters">, UseCheckboxLikeReturnType<I, IL> {
     propsInput: ElementProps<I>;
     propsLabel: ElementProps<IL>;
@@ -940,7 +940,7 @@ interface UseRadioReturnType<LP extends LabelPosition, V extends string | number
  *
  * @compositeParams
  */
-declare function useRadio<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element, V extends string | number, M extends RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V> = RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>({ radioParameters: { value, ...void5 }, checkboxLikeParameters: { disabled, ...void4 }, labelParameters, info, context, textContentParameters, pressParameters: { longPressThreshold, ...void3 }, hasCurrentFocusParameters, refElementParameters, ...void1 }: UseRadioParameters<LP, V, InputElement, LabelElement, M>): UseRadioReturnType<LP, V, InputElement, LabelElement, M>;
+declare const useRadio: <LP extends LabelPosition, InputElement extends Element, LabelElement extends Element, V extends string | number, M extends RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V> = RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>({ radioParameters: { value, ...void5 }, checkboxLikeParameters: { disabled, ...void4 }, labelParameters, info, context, textContentParameters, pressParameters: { longPressThreshold, ...void3 }, hasCurrentFocusParameters, refElementParameters, ...void1 }: UseRadioParameters<LP, V, InputElement, LabelElement, M>) => UseRadioReturnType<LP, V, InputElement, LabelElement, M>;
 type RangeChangeEvent<E extends EventTarget> = {
     [EventDetail]: {
         value: number;
@@ -1002,11 +1002,11 @@ interface SliderContext<M extends SliderThumbInfo> extends UseManagedChildrenCon
  *
  * @hasChild {@link useSliderThumb}
  */
-declare function useSlider<M extends SliderThumbInfo>({ sliderParameters: { max, min }, managedChildrenParameters }: UseSliderParameters<M>): UseSliderReturnType<M>;
+declare const useSlider: <M extends SliderThumbInfo>({ sliderParameters: { max, min }, managedChildrenParameters }: UseSliderParameters<M>) => UseSliderReturnType<M>;
 /**
  * @compositeParams
  */
-declare function useSliderThumb<ThumbElement extends Element>({ sliderThumbParameters: { tag, value, max: maxOverride, min: minOverride, valueText, label, onValueChange, ...void2 }, info, context: { sliderContext: { max: maxParent, min: minParent }, ...context }, ...void1 }: UseSliderThumbParameters<ThumbElement>): UseSliderThumbReturnType<ThumbElement>;
+declare const useSliderThumb: <ThumbElement extends Element>({ sliderThumbParameters: { tag, value, max: maxOverride, min: minOverride, valueText, label, onValueChange, ...void2 }, info, context: { sliderContext: { max: maxParent, min: minParent }, ...context }, ...void1 }: UseSliderThumbParameters<ThumbElement, SliderThumbInfo>) => UseSliderThumbReturnType<ThumbElement, SliderThumbInfo>;
 interface UseTableContextSelf extends Pick<SingleSelectionContextSelf, "singleSelectionMode">, Pick<UseMultiSelectionContextSelf, "multiSelectionMode"> {
     setSortBodyFunction: PassiveStateUpdater<() => void, never>;
     sortByColumn(column: number): SortInfo;
@@ -1094,19 +1094,19 @@ interface SortInfo {
  * @hasChild {@link useTableRow}
  * @hasChild {@link useTableCell}
  */
-declare function useTable<TableElement extends Element, LabelElement extends Element>({ labelParameters, tableParameters: { tagTable }, singleSelectionParameters: { singleSelectionMode, ...void1 }, multiSelectionParameters: { multiSelectionMode, ...void2 }, ...void3 }: UseTableParameters<TableElement, LabelElement>): UseTableReturnType<TableElement, LabelElement>;
+declare const useTable: <TableElement extends Element, LabelElement extends Element>({ labelParameters, tableParameters: { tagTable }, singleSelectionParameters: { singleSelectionMode, ...void1 }, multiSelectionParameters: { multiSelectionMode, ...void2 }, ...void3 }: UseTableParameters<TableElement, LabelElement>) => UseTableReturnType<TableElement, LabelElement>;
 /**
  * @compositeParams
  */
-declare function useTableSection<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element>({ linearNavigationParameters, rovingTabIndexParameters, singleSelectionParameters, multiSelectionParameters, gridNavigationParameters, rearrangeableChildrenParameters, paginatedChildrenParameters, staggeredChildrenParameters, tableSectionParameters: { tagTableSection, location }, typeaheadNavigationParameters, context: { tableContext, ...void3 }, refElementParameters, ...void1 }: UseTableSectionParameters<TableSectionElement, TableRowElement, TableRowInfo<TableRowElement>>): UseTableSectionReturnType<TableSectionElement, TableRowElement, TableRowInfo<TableRowElement>>;
+declare const useTableSection: <TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element>({ linearNavigationParameters, rovingTabIndexParameters, singleSelectionParameters, multiSelectionParameters, gridNavigationParameters, rearrangeableChildrenParameters, paginatedChildrenParameters, staggeredChildrenParameters, tableSectionParameters: { tagTableSection, location }, typeaheadNavigationParameters, context: { tableContext, ...void3 }, refElementParameters, ...void1 }: UseTableSectionParameters<TableSectionElement, TableRowElement, TableRowInfo<TableRowElement>>) => UseTableSectionReturnType<TableSectionElement, TableRowElement, TableRowInfo<TableRowElement>>;
 /**
  * @compositeParams
  */
-declare function useTableRow<TableRowElement extends Element, TableCellElement extends Element>({ info, textContentParameters, context: cx1, tableRowParameters: { selected }, linearNavigationParameters, rovingTabIndexParameters, hasCurrentFocusParameters, singleSelectionChildParameters, multiSelectionChildParameters, ...void1 }: UseTableRowParameters<TableRowElement, TableCellElement, TableRowInfo<TableRowElement>, TableCellInfo<TableCellElement>>): UseTableRowReturnType<TableRowElement, TableCellElement, TableRowInfo<TableRowElement>, TableCellInfo<TableCellElement>>;
+declare const useTableRow: <TableRowElement extends Element, TableCellElement extends Element>({ info, textContentParameters, context: cx1, tableRowParameters: { selected }, linearNavigationParameters, rovingTabIndexParameters, hasCurrentFocusParameters, singleSelectionChildParameters, multiSelectionChildParameters, ...void1 }: UseTableRowParameters<TableRowElement, TableCellElement, TableRowInfo<TableRowElement>, TableCellInfo<TableCellElement>>) => UseTableRowReturnType<TableRowElement, TableCellElement, TableRowInfo<TableRowElement>, TableCellInfo<TableCellElement>>;
 /**
  * @compositeParams
  */
-declare function useTableCell<TableCellElement extends Element>({ tableCellParameters: { tagTableCell }, info, ...p }: UseTableCellParameters<TableCellElement, TableCellInfo<TableCellElement>>): UseTableCellReturnType<TableCellElement, TableCellInfo<TableCellElement>>;
+declare const useTableCell: <TableCellElement extends Element>({ tableCellParameters: { tagTableCell }, info, ...p }: UseTableCellParameters<TableCellElement, TableCellInfo<TableCellElement>>) => UseTableCellReturnType<TableCellElement, TableCellInfo<TableCellElement>>;
 interface TabPanelInfo extends ManagedChildInfo<number> {
     getVisible(): boolean;
     setVisibleIndex: (newIndex: number | null, previousIndex: number | null) => void;
@@ -1185,7 +1185,7 @@ type UseTabListLabel<LabelElement extends Element> = (args: UseTabLabelParameter
  * @hasChild {@link useTab}
  * @hasChild {@link useTabPanel}
  */
-declare function useTabs<TabListElement extends Element, TabElement extends Element, LabelElement extends Element>({ labelParameters, linearNavigationParameters, singleSelectionParameters: { initiallySingleSelectedIndex, onSingleSelectedIndexChange: ssi, singleSelectionMode, ...singleSelectionParameters }, tabsParameters: { orientation, role, localStorageKey }, rovingTabIndexParameters, ...restParams }: UseTabsParameters<TabListElement, TabElement, TabInfo<TabElement>>): UseTabsReturnType<TabListElement, TabElement, LabelElement, TabInfo<TabElement>>;
+declare const useTabs: <TabListElement extends Element, TabElement extends Element, LabelElement extends Element>({ labelParameters, linearNavigationParameters, singleSelectionParameters: { initiallySingleSelectedIndex, onSingleSelectedIndexChange: ssi, singleSelectionMode, ...singleSelectionParameters }, tabsParameters: { orientation, role, localStorageKey }, rovingTabIndexParameters, ...restParams }: UseTabsParameters<TabListElement, TabElement, TabInfo<TabElement>>) => UseTabsReturnType<TabListElement, TabElement, LabelElement, TabInfo<TabElement>>;
 /**
  * Implements a single tab of a Tabs component.
  *
@@ -1193,7 +1193,7 @@ declare function useTabs<TabListElement extends Element, TabElement extends Elem
  *
  * @compositeParams
  */
-declare function useTab<TabElement extends Element>({ info: { focusSelf: focusSelfParent, index, untabbable, getSortValue, ...info }, textContentParameters, pressParameters: { focusSelf: focusSelfChild, longPressThreshold, onPressingChange, ...void2 }, context, hasCurrentFocusParameters, refElementParameters, singleSelectionChildParameters, ...void3 }: UseTabParameters<TabElement, TabInfo<TabElement>>): UseTabReturnType<TabElement, TabInfo<TabElement>>;
+declare const useTab: <TabElement extends Element>({ info: { focusSelf: focusSelfParent, index, untabbable, getSortValue, ...info }, textContentParameters, pressParameters: { focusSelf: focusSelfChild, longPressThreshold, onPressingChange, ...void2 }, context, hasCurrentFocusParameters, refElementParameters, singleSelectionChildParameters, ...void3 }: UseTabParameters<TabElement, TabInfo<TabElement>>) => UseTabReturnType<TabElement, TabInfo<TabElement>>;
 /**
  * Implements the TabPanel a Tab controls.
  *
@@ -1202,7 +1202,7 @@ declare function useTab<TabElement extends Element>({ info: { focusSelf: focusSe
  *
  * @compositeParams
  */
-declare function useTabPanel<PanelElement extends Element>({ info, context }: UseTabPanelParameters<TabPanelInfo>): UseTabPanelReturnType<PanelElement>;
+declare const useTabPanel: <PanelElement extends Element>({ info, context }: UseTabPanelParameters<TabPanelInfo>) => UseTabPanelReturnType<PanelElement>;
 interface UseToastsParametersSelf {
     visibleCount: number; // The maximum number of toasts that are shown at one time (used for automatic management of when to show toasts, i.e. don't show this toast if 2 are already on-screen -- 1 is a good default)
 }
@@ -1252,11 +1252,11 @@ interface ToastsContext<M extends ToastInfo> extends UseManagedChildrenContext<M
  *
  * @hasChild {@link useToast}
  */
-declare function useToasts<ContainerType extends Element>({ managedChildrenParameters: { onChildrenMountChange: ocmu, onAfterChildLayoutEffect }, toastsParameters: { visibleCount } }: UseToastsParameters): UseToastsReturnType<ContainerType, ToastInfo>;
+declare const useToasts: <ContainerType extends Element>({ managedChildrenParameters: { onChildrenMountChange: ocmu, onAfterChildLayoutEffect }, toastsParameters: { visibleCount } }: UseToastsParameters) => UseToastsReturnType<ContainerType, ToastInfo>;
 /**
  * @compositeParams
  */
-declare function useToast<E extends Element>({ toastParameters: { politeness, timeout, children }, info: { index, ...info }, context }: UseToastParameters<ToastInfo>): UseToastReturnType<E, ToastInfo>;
+declare const useToast: <E extends Element>({ toastParameters: { politeness, timeout, children }, info: { index, ...info }, context }: UseToastParameters<ToastInfo>) => UseToastReturnType<E, ToastInfo>;
 type TooltipStatus = "hover" | "focus" | null;
 interface UseTooltipParametersSelf {
     /**
@@ -1308,7 +1308,7 @@ delayedAlert2();
  *
  * @compositeParams
  */
-declare function useTooltip<TriggerType extends Element, PopupType extends Element>({ tooltipParameters: { onStatus, tooltipSemanticType, hoverDelay, usesLongPress }, activeElementParameters, escapeDismissParameters, pressReturn: { longPress, ...void2 }, ...void1 }: UseTooltipParameters<TriggerType, PopupType>): UseTooltipReturnType<TriggerType, PopupType>;
+declare const useTooltip: <TriggerType extends Element, PopupType extends Element>({ tooltipParameters: { onStatus, tooltipSemanticType, hoverDelay, usesLongPress }, activeElementParameters, escapeDismissParameters, pressReturn: { longPress, ...void2 }, ...void1 }: UseTooltipParameters<TriggerType, PopupType>) => UseTooltipReturnType<TriggerType, PopupType>;
 interface UseTooltipReturnTypeSelf {
     getState(): TooltipState;
 }

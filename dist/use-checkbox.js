@@ -1,4 +1,4 @@
-import { assertEmptyObject, enhanceEvent, monitorCallCount, useMergedProps, useRefElement, useStableCallback } from "preact-prop-helpers";
+import { assertEmptyObject, enhanceEvent, monitored, useMergedProps, useRefElement, useStableCallback } from "preact-prop-helpers";
 import { Prefices } from "./props.js";
 import { useCheckboxLike } from "./use-checkbox-like.js";
 ;
@@ -7,8 +7,7 @@ import { useCheckboxLike } from "./use-checkbox-like.js";
  *
  * @compositeParams
  */
-export function useCheckbox({ checkboxLikeParameters: { checked, disabled, ...void2 }, checkboxParameters: { onCheckedChange, ...void4 }, labelParameters, pressParameters, ...void1 }) {
-    monitorCallCount(useCheckbox);
+export const useCheckbox = monitored(function useCheckbox({ checkboxLikeParameters: { checked, disabled, ...void2 }, checkboxParameters: { onCheckedChange, ...void4 }, labelParameters, pressParameters, ...void1 }) {
     const { tagInput, labelPosition } = labelParameters;
     const { refElementReturn: refElementInputReturn, propsStable: propsRefInput } = useRefElement({ refElementParameters: {} });
     const { refElementReturn: refElementLabelReturn, propsStable: propsRefLabel } = useRefElement({ refElementParameters: {} });
@@ -41,5 +40,5 @@ export function useCheckbox({ checkboxLikeParameters: { checked, disabled, ...vo
         randomIdInputReturn,
         randomIdLabelReturn
     };
-}
+});
 //# sourceMappingURL=use-checkbox.js.map

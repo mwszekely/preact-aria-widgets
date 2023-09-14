@@ -60,9 +60,9 @@ export interface SliderContext<M extends SliderThumbInfo> extends UseManagedChil
  *
  * @hasChild {@link useSliderThumb}
  */
-export declare function useSlider<M extends SliderThumbInfo>({ sliderParameters: { max, min }, managedChildrenParameters }: UseSliderParameters<M>): UseSliderReturnType<M>;
+export declare const useSlider: <M extends SliderThumbInfo>({ sliderParameters: { max, min }, managedChildrenParameters }: UseSliderParameters<M>) => UseSliderReturnType<M>;
 /**
  * @compositeParams
  */
-export declare function useSliderThumb<ThumbElement extends Element>({ sliderThumbParameters: { tag, value, max: maxOverride, min: minOverride, valueText, label, onValueChange, ...void2 }, info, context: { sliderContext: { max: maxParent, min: minParent }, ...context }, ...void1 }: UseSliderThumbParameters<ThumbElement>): UseSliderThumbReturnType<ThumbElement>;
+export declare const useSliderThumb: <ThumbElement extends Element>({ sliderThumbParameters: { tag, value, max: maxOverride, min: minOverride, valueText, label, onValueChange, ...void2 }, info, context: { sliderContext: { max: maxParent, min: minParent }, ...context }, ...void1 }: UseSliderThumbParameters<ThumbElement, SliderThumbInfo>) => UseSliderThumbReturnType<ThumbElement, SliderThumbInfo>;
 //# sourceMappingURL=use-slider.d.ts.map

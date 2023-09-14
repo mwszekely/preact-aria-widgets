@@ -1,4 +1,4 @@
-import { assertEmptyObject, focus, monitorCallCount, useMergedProps, usePress, useStableCallback } from "preact-prop-helpers";
+import { assertEmptyObject, focus, monitored, useMergedProps, usePress, useStableCallback } from "preact-prop-helpers";
 import { useEffect } from "preact/hooks";
 import { useLabel } from "./use-label.js";
 function preventDefault(e) {
@@ -17,8 +17,7 @@ function preventDefault(e) {
  *
  * @compositeParams
  */
-export function useCheckboxLike({ labelParameters, randomIdInputParameters, randomIdLabelParameters, checkboxLikeParameters: { checked, disabled, role, ...void1 }, refElementInputReturn, refElementLabelReturn, pressParameters: { excludeSpace, longPressThreshold, onPressSync: onInputSync, ...void2 }, ...void3 }) {
-    monitorCallCount(useCheckboxLike);
+export const useCheckboxLike = monitored(function useCheckboxLike({ labelParameters, randomIdInputParameters, randomIdLabelParameters, checkboxLikeParameters: { checked, disabled, role, ...void1 }, refElementInputReturn, refElementLabelReturn, pressParameters: { excludeSpace, longPressThreshold, onPressSync: onInputSync, ...void2 }, ...void3 }) {
     const { getElement: getInputElement } = refElementInputReturn;
     const { getElement: getLabelElement } = refElementLabelReturn;
     const { tagInput, tagLabel, labelPosition } = labelParameters;
@@ -136,5 +135,5 @@ export function useCheckboxLike({ labelParameters, randomIdInputParameters, rand
         checkboxLikeReturn: { focusSelf },
         pressReturn
     };
-}
+});
 //# sourceMappingURL=use-checkbox-like.js.map

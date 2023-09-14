@@ -88,18 +88,18 @@ interface SortInfo {
  * @hasChild {@link useTableRow}
  * @hasChild {@link useTableCell}
  */
-export declare function useTable<TableElement extends Element, LabelElement extends Element>({ labelParameters, tableParameters: { tagTable }, singleSelectionParameters: { singleSelectionMode, ...void1 }, multiSelectionParameters: { multiSelectionMode, ...void2 }, ...void3 }: UseTableParameters<TableElement, LabelElement>): UseTableReturnType<TableElement, LabelElement>;
+export declare const useTable: <TableElement extends Element, LabelElement extends Element>({ labelParameters, tableParameters: { tagTable }, singleSelectionParameters: { singleSelectionMode, ...void1 }, multiSelectionParameters: { multiSelectionMode, ...void2 }, ...void3 }: UseTableParameters<TableElement, LabelElement>) => UseTableReturnType<TableElement, LabelElement>;
 /**
  * @compositeParams
  */
-export declare function useTableSection<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element>({ linearNavigationParameters, rovingTabIndexParameters, singleSelectionParameters, multiSelectionParameters, gridNavigationParameters, rearrangeableChildrenParameters, paginatedChildrenParameters, staggeredChildrenParameters, tableSectionParameters: { tagTableSection, location }, typeaheadNavigationParameters, context: { tableContext, ...void3 }, refElementParameters, ...void1 }: UseTableSectionParameters<TableSectionElement, TableRowElement, TableRowInfo<TableRowElement>>): UseTableSectionReturnType<TableSectionElement, TableRowElement, TableRowInfo<TableRowElement>>;
+export declare const useTableSection: <TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element>({ linearNavigationParameters, rovingTabIndexParameters, singleSelectionParameters, multiSelectionParameters, gridNavigationParameters, rearrangeableChildrenParameters, paginatedChildrenParameters, staggeredChildrenParameters, tableSectionParameters: { tagTableSection, location }, typeaheadNavigationParameters, context: { tableContext, ...void3 }, refElementParameters, ...void1 }: UseTableSectionParameters<TableSectionElement, TableRowElement, TableRowInfo<TableRowElement>>) => UseTableSectionReturnType<TableSectionElement, TableRowElement, TableRowInfo<TableRowElement>>;
 /**
  * @compositeParams
  */
-export declare function useTableRow<TableRowElement extends Element, TableCellElement extends Element>({ info, textContentParameters, context: cx1, tableRowParameters: { selected }, linearNavigationParameters, rovingTabIndexParameters, hasCurrentFocusParameters, singleSelectionChildParameters, multiSelectionChildParameters, ...void1 }: UseTableRowParameters<TableRowElement, TableCellElement, TableRowInfo<TableRowElement>, TableCellInfo<TableCellElement>>): UseTableRowReturnType<TableRowElement, TableCellElement, TableRowInfo<TableRowElement>, TableCellInfo<TableCellElement>>;
+export declare const useTableRow: <TableRowElement extends Element, TableCellElement extends Element>({ info, textContentParameters, context: cx1, tableRowParameters: { selected }, linearNavigationParameters, rovingTabIndexParameters, hasCurrentFocusParameters, singleSelectionChildParameters, multiSelectionChildParameters, ...void1 }: UseTableRowParameters<TableRowElement, TableCellElement, TableRowInfo<TableRowElement>, TableCellInfo<TableCellElement>>) => UseTableRowReturnType<TableRowElement, TableCellElement, TableRowInfo<TableRowElement>, TableCellInfo<TableCellElement>>;
 /**
  * @compositeParams
  */
-export declare function useTableCell<TableCellElement extends Element>({ tableCellParameters: { tagTableCell }, info, ...p }: UseTableCellParameters<TableCellElement, TableCellInfo<TableCellElement>>): UseTableCellReturnType<TableCellElement, TableCellInfo<TableCellElement>>;
+export declare const useTableCell: <TableCellElement extends Element>({ tableCellParameters: { tagTableCell }, info, ...p }: UseTableCellParameters<TableCellElement, TableCellInfo<TableCellElement>>) => UseTableCellReturnType<TableCellElement, TableCellInfo<TableCellElement>>;
 export {};
 //# sourceMappingURL=use-table.d.ts.map

@@ -1,4 +1,4 @@
-import { assertEmptyObject, ElementProps, EventType, findFirstFocusable, focus, monitorCallCount, TargetedOmit, useMergedProps, useModal, UseModalParameters, UseModalReturnType, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
+import { assertEmptyObject, ElementProps, EventType, findFirstFocusable, focus, monitored, TargetedOmit, useMergedProps, useModal, UseModalParameters, UseModalReturnType, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
 import { OmitStrong } from "./props.js";
 
 export interface UseMenuSurfaceParametersSelf {
@@ -40,7 +40,7 @@ export interface UseMenuSurfaceReturnType<MenuSurfaceElement extends Element, Me
  * 
  * @compositeParams
  */
-export function useMenuSurface<MenuSurfaceElement extends Element, MenuTargetElement extends Element, MenuTriggerElement extends Element>({
+export const useMenuSurface = monitored(function useMenuSurface<MenuSurfaceElement extends Element, MenuTargetElement extends Element, MenuTriggerElement extends Element>({
     dismissParameters,
     focusTrapParameters,
     activeElementParameters,
@@ -49,8 +49,6 @@ export function useMenuSurface<MenuSurfaceElement extends Element, MenuTargetEle
     escapeDismissParameters,
     ...void2
 }: UseMenuSurfaceParameters<MenuSurfaceElement, MenuTriggerElement>): UseMenuSurfaceReturnType<MenuSurfaceElement, MenuTargetElement, MenuTriggerElement> {
-    monitorCallCount(useMenuSurface);
-
     const { refElementReturn: { getElement: getButtonElement }, propsStable: propsRefTrigger, ...void4 } = useRefElement<MenuTriggerElement>({ refElementParameters: { onElementChange: undefined } });
     const { refElementReturn: { getElement: getMenuElement, ...void5 }, propsStable: propsRefSurface, ...void6 } = useRefElement<MenuSurfaceElement>({ refElementParameters: { onElementChange: undefined } });
 
@@ -113,7 +111,7 @@ export function useMenuSurface<MenuSurfaceElement extends Element, MenuTargetEle
         refElementPopupReturn,
         refElementSourceReturn
     }
-}
+})
 
 export interface UseFocusSentinelParameters {
     focusSentinel: { sendFocusToMenu: () => void; open: boolean; onClose(e: EventType<any, any>): void; };
@@ -133,8 +131,7 @@ export interface UseFocusSentinelParameters {
  * 
  * @compositeParams
  */
-export function useFocusSentinel<E extends Element>({ focusSentinel: { open, onClose, sendFocusToMenu } }: UseFocusSentinelParameters): ElementProps<E> {
-    monitorCallCount(useFocusSentinel);
+export const useFocusSentinel = monitored(function useFocusSentinel<E extends Element>({ focusSentinel: { open, onClose, sendFocusToMenu } }: UseFocusSentinelParameters): ElementProps<E> {
     const getSendFocusWithinMenu = useStableGetter(sendFocusToMenu);
     const stableOnClose = useStableCallback(onClose);
 
@@ -150,4 +147,4 @@ export function useFocusSentinel<E extends Element>({ focusSentinel: { open, onC
         onFocus,
         onClick
     };
-}
+})

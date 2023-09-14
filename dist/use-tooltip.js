@@ -1,4 +1,4 @@
-import { assertEmptyObject, focus, monitorCallCount, returnNull, useDismiss, useGlobalHandler, useHasCurrentFocus, useMergedProps, usePassiveState, useRandomId, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
+import { assertEmptyObject, focus, monitored, returnNull, useDismiss, useGlobalHandler, useHasCurrentFocus, useMergedProps, usePassiveState, useRandomId, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
 import { useCallback, useEffect, useRef } from "preact/hooks";
 import { Prefices } from "./props.js";
 // Intentionally (?) unused
@@ -29,8 +29,7 @@ function delayedAlert(message: string) {
  *
  * @compositeParams
  */
-export function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType, hoverDelay, usesLongPress }, activeElementParameters, escapeDismissParameters, pressReturn: { longPress, ...void2 }, ...void1 }) {
-    monitorCallCount(useTooltip);
+export const useTooltip = monitored(function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType, hoverDelay, usesLongPress }, activeElementParameters, escapeDismissParameters, pressReturn: { longPress, ...void2 }, ...void1 }) {
     useGlobalHandler(window, "mouseout", useCallback((e) => {
         if (e.relatedTarget == null)
             onHoverChanged(false, "popup");
@@ -206,5 +205,5 @@ export function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType,
             //stateIsMouse
         }
     };
-}
+});
 //# sourceMappingURL=use-tooltip.js.map

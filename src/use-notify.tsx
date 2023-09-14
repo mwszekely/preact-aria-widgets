@@ -1,4 +1,4 @@
-import { createContext, monitorCallCount, usePortalChildren, VNode } from "preact-prop-helpers";
+import { createContext, monitored, usePortalChildren, VNode } from "preact-prop-helpers";
 import { useCallback, useMemo } from "preact/hooks";
 import { useContextWithWarning } from "./props.js";
 
@@ -31,8 +31,7 @@ export const NotificationProviderContext = createContext<NotificationProviderCon
  * 
  * @hasChild {@link useNotify}
  */
-export function useNotificationProvider({ targetAssertive, targetPolite }: NotificationProviderProps) {
-    monitorCallCount(useNotificationProvider);
+export const useNotificationProvider = monitored(function useNotificationProvider({ targetAssertive, targetPolite }: NotificationProviderProps) {
 
     const { children: childrenPolite, pushChild: notifyPolite, portalElement: politeElement } = usePortalChildren({ target: targetPolite });
     const { children: childrenAssertive, pushChild: notifyAssertive, portalElement: assertiveElement } = usePortalChildren({ target: targetAssertive });
@@ -53,10 +52,8 @@ export function useNotificationProvider({ targetAssertive, targetPolite }: Notif
             </>
         )
     }
-}
+})
 
 export function useNotify() {
-    monitorCallCount(useNotify);
-
     return useContextWithWarning(NotificationProviderContext, "notification provider").notify;
 }

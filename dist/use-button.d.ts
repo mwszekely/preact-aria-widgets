@@ -50,5 +50,5 @@ export interface UseButtonReturnType<ButtonElement extends Element> extends UseP
  *
  * @compositeParams
  */
-export declare function useButton<ButtonElement extends Element>({ buttonParameters: { tagButton, disabled, pressed, role, onPressSync, ...void1 }, pressParameters: { focusSelf, allowRepeatPresses, longPressThreshold, onPressingChange, excludeSpace, ...void3 }, refElementParameters, ...void2 }: UseButtonParameters<ButtonElement>): UseButtonReturnType<ButtonElement>;
+export declare const useButton: <ButtonElement extends Element>({ buttonParameters: { tagButton, disabled, pressed, role, onPressSync, ...void1 }, pressParameters: { focusSelf, allowRepeatPresses, longPressThreshold, onPressingChange, excludeSpace, ...void3 }, refElementParameters, ...void2 }: UseButtonParameters<ButtonElement>) => UseButtonReturnType<ButtonElement>;
 //# sourceMappingURL=use-button.d.ts.map

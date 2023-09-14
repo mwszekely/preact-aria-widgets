@@ -1,4 +1,4 @@
-import { monitorCallCount, useMemoObject, useMergedProps, useStableCallback } from "preact-prop-helpers";
+import { monitored, useMemoObject, useMergedProps, useStableCallback } from "preact-prop-helpers";
 import { useMenuSurface } from "./use-menu-surface.js";
 import { useMenubar, useMenubarChild } from "./use-menubar.js";
 /**
@@ -12,8 +12,7 @@ import { useMenubar, useMenubarChild } from "./use-menubar.js";
  *
  * @compositeParams
  */
-export function useMenu({ dismissParameters, escapeDismissParameters, menuParameters: { openDirection, onOpen }, menuSurfaceParameters, activeElementParameters, toolbarParameters, modalParameters, ...restParams }) {
-    monitorCallCount(useMenu);
+export const useMenu = monitored(function useMenu({ dismissParameters, escapeDismissParameters, menuParameters: { openDirection, onOpen }, menuSurfaceParameters, activeElementParameters, toolbarParameters, modalParameters, ...restParams }) {
     const { context, propsLabel: propsButtonAsMenuLabel, propsMenubar, randomIdInputReturn, rovingTabIndexReturn, ...restRet } = useMenubar({
         toolbarParameters: { role: "menu", ...toolbarParameters },
         labelParameters: { ariaLabel: null },
@@ -89,16 +88,15 @@ export function useMenu({ dismissParameters, escapeDismissParameters, menuParame
         propsTarget: useMergedProps(propsTarget, propsMenubar),
         propsTrigger: useMergedProps({ onKeyDown }, propsTrigger, propsButtonAsMenuLabel),
     };
-}
+});
 /**
  * @compositeParams
  */
-export function useMenuItem(p) {
-    monitorCallCount(useMenuItem);
+export const useMenuItem = monitored(function useMenuItem(p) {
     const ret = useMenubarChild(p);
     return {
         ...ret,
         menuItemReturn: { closeMenu: p.context.menu.closeFromMenuItemClicked }
     };
-}
+});
 //# sourceMappingURL=use-menu.js.map

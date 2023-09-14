@@ -45,5 +45,5 @@ export interface UseCheckboxLikeReturnType<InputType extends Element, LabelType 
  *
  * @compositeParams
  */
-export declare function useCheckboxLike<LP extends LabelPosition, InputType extends Element, LabelType extends Element, C extends CheckboxCheckedType>({ labelParameters, randomIdInputParameters, randomIdLabelParameters, checkboxLikeParameters: { checked, disabled, role, ...void1 }, refElementInputReturn, refElementLabelReturn, pressParameters: { excludeSpace, longPressThreshold, onPressSync: onInputSync, ...void2 }, ...void3 }: UseCheckboxLikeParameters<LP, InputType, LabelType, C>): UseCheckboxLikeReturnType<InputType, LabelType>;
+export declare const useCheckboxLike: <LP extends LabelPosition, InputType extends Element, LabelType extends Element, C extends CheckboxCheckedType>({ labelParameters, randomIdInputParameters, randomIdLabelParameters, checkboxLikeParameters: { checked, disabled, role, ...void1 }, refElementInputReturn, refElementLabelReturn, pressParameters: { excludeSpace, longPressThreshold, onPressSync: onInputSync, ...void2 }, ...void3 }: UseCheckboxLikeParameters<LP, InputType, LabelType, C>) => UseCheckboxLikeReturnType<InputType, LabelType>;
 //# sourceMappingURL=use-checkbox-like.d.ts.map
