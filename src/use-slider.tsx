@@ -1,7 +1,20 @@
 import { h } from "preact";
-import { assertEmptyObject, ElementProps, generateRandomId, ManagedChildInfo, monitored, Nullable, UseGenericChildParameters, useManagedChild, useManagedChildren, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, UseManagedChildReturnType } from "preact-prop-helpers";
+import {
+    assertEmptyObject,
+    ElementProps,
+    generateRandomId,
+    ManagedChildInfo,
+    Nullable,
+    UseGenericChildParameters,
+    useManagedChild,
+    useManagedChildren,
+    UseManagedChildrenContext,
+    UseManagedChildrenParameters,
+    UseManagedChildrenReturnType,
+    UseManagedChildReturnType
+} from "preact-prop-helpers";
 import { useMemo, useRef } from "preact/hooks";
-import { enhanceEvent, EventDetail, Prefices, TagSensitiveProps } from "./props.js";
+import { enhanceEvent, EventDetail, monitored, Prefices, TagSensitiveProps } from "./props.js";
 
 
 

@@ -1,5 +1,21 @@
-import { assertEmptyObject, ElementProps, monitored, Nullable, TargetedOmit, TargetedPick, useAsyncHandler, UseAsyncHandlerParameters, UseAsyncHandlerReturnType, useMergedProps, VNode } from "preact-prop-helpers";
-import { ElementToTag, OmitStrong, Prefices } from "./props.js";
+import {
+    assertEmptyObject,
+    ElementProps,
+    Nullable,
+    TargetedOmit,
+    TargetedPick,
+    useAsyncHandler,
+    UseAsyncHandlerParameters,
+    UseAsyncHandlerReturnType,
+    useMergedProps,
+    VNode
+} from "preact-prop-helpers";
+import {
+    ElementToTag,
+    monitored,
+    OmitStrong,
+    Prefices
+} from "./props.js";
 import { UseLabelReturnType, useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
 import { useNotify } from "./use-notify.js";
 

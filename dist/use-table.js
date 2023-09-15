@@ -1,6 +1,6 @@
-import { assertEmptyObject, focus, monitored, returnNull, useCompleteGridNavigation, useCompleteGridNavigationCell, useCompleteGridNavigationRow, useMemoObject, useMergedProps, usePassiveState, useStableCallback, useState } from "preact-prop-helpers";
+import { assertEmptyObject, focus, returnNull, useCompleteGridNavigation, useCompleteGridNavigationCell, useCompleteGridNavigationRow, useMemoObject, useMergedProps, usePassiveState, useStableCallback, useState } from "preact-prop-helpers";
 import { useCallback, useEffect } from "preact/hooks";
-import { Prefices } from "./props.js";
+import { Prefices, monitored } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
 /**
  * Creates a sortable data table in a [Grid](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) pattern.

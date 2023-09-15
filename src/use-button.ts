@@ -1,5 +1,22 @@
-import { ElementProps, JSX, Nullable, PressEventReason, TargetedOmit, UsePressParameters, UsePressReturnType, UseRefElementParameters, UseRefElementReturnType, assertEmptyObject, enhanceEvent, monitored, returnFalse, useMergedProps, usePress, useRefElement, useStableCallback } from "preact-prop-helpers";
-import { DisabledType, ElementToTag, EnhancedEventHandler, OmitStrong, TargetedEnhancedEvent } from "./props.js";
+import {
+    ElementProps,
+    JSX,
+    Nullable,
+    PressEventReason,
+    TargetedOmit,
+    UsePressParameters,
+    UsePressReturnType,
+    UseRefElementParameters,
+    UseRefElementReturnType,
+    assertEmptyObject,
+    enhanceEvent,
+    returnFalse,
+    useMergedProps,
+    usePress,
+    useRefElement,
+    useStableCallback
+} from "preact-prop-helpers";
+import { DisabledType, ElementToTag, EnhancedEventHandler, OmitStrong, TargetedEnhancedEvent, monitored } from "./props.js";
 
 export interface ButtonPressEventDetail {
     pressed: boolean | undefined;
@@ -65,8 +82,8 @@ export interface UseButtonReturnType<ButtonElement extends Element> extends
  * 
  * @compositeParams
  */
-export const useButton = monitored( function useButton<ButtonElement extends Element>({
-    buttonParameters: { tagButton, disabled, pressed, role,  onPressSync, ...void1 },
+export const useButton = monitored(function useButton<ButtonElement extends Element>({
+    buttonParameters: { tagButton, disabled, pressed, role, onPressSync, ...void1 },
     pressParameters: { focusSelf, allowRepeatPresses, longPressThreshold, onPressingChange, excludeSpace, ...void3 },
     refElementParameters,
     ...void2
@@ -80,7 +97,7 @@ export const useButton = monitored( function useButton<ButtonElement extends Ele
         pressParameters: {
             onPressSync: useStableCallback((e) => {
                 if (!disabled) {
-                    const p = (pressed == null? undefined : !pressed);
+                    const p = (pressed == null ? undefined : !pressed);
                     onPressSync?.(enhanceEvent(e, { pressed: p }))
                 }
             }),

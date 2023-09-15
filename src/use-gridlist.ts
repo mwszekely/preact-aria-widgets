@@ -20,7 +20,6 @@ import {
     UsePressReturnType,
     assertEmptyObject,
     focus,
-    monitored,
     useCompleteGridNavigationCell,
     useCompleteGridNavigationDeclarative,
     useCompleteGridNavigationRow,
@@ -29,7 +28,7 @@ import {
     usePress,
     useStableCallback
 } from "preact-prop-helpers";
-import { OmitStrong, Prefices } from "./props.js";
+import { OmitStrong, Prefices, monitored } from "./props.js";
 import { UseLabelSyntheticParameters, useLabelSynthetic } from "./use-label.js";
 import { UseListboxParameters, UseListboxParametersSelf } from "./use-listbox.js";
 

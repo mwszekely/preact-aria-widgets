@@ -1,6 +1,25 @@
-import { assertEmptyObject, DismissListenerTypes, ElementProps, focus, monitored, returnNull, TargetedPick, useDismiss, UseDismissParameters, UseEscapeDismissParameters, useGlobalHandler, useHasCurrentFocus, useMergedProps, usePassiveState, UsePressReturnType, useRandomId, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
+import {
+    assertEmptyObject,
+    DismissListenerTypes,
+    ElementProps,
+    focus,
+    returnNull,
+    TargetedPick,
+    useDismiss,
+    UseDismissParameters,
+    UseEscapeDismissParameters,
+    useGlobalHandler,
+    useHasCurrentFocus,
+    useMergedProps,
+    usePassiveState,
+    UsePressReturnType,
+    useRandomId,
+    useRefElement,
+    useStableCallback,
+    useState
+} from "preact-prop-helpers";
 import { useCallback, useEffect, useRef } from "preact/hooks";
-import { Prefices } from "./props.js";
+import { monitored, Prefices } from "./props.js";
 
 export type TooltipStatus = "hover" | "focus" | null;
 

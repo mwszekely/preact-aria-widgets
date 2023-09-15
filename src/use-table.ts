@@ -9,24 +9,32 @@ import {
     SingleSelectionContextSelf,
     TargetedOmit,
     TargetedPick,
-    UseCompleteGridNavigationCellInfo, UseCompleteGridNavigationCellInfoKeysParameters, UseCompleteGridNavigationCellParameters, UseCompleteGridNavigationCellReturnType, UseCompleteGridNavigationParameters,
+    UseCompleteGridNavigationCellInfo,
+    UseCompleteGridNavigationCellInfoKeysParameters,
+    UseCompleteGridNavigationCellParameters,
+    UseCompleteGridNavigationCellReturnType,
+    UseCompleteGridNavigationParameters,
     UseCompleteGridNavigationReturnType,
-    UseCompleteGridNavigationRowInfo, UseCompleteGridNavigationRowParameters, UseCompleteGridNavigationRowReturnType,
+    UseCompleteGridNavigationRowInfo,
+    UseCompleteGridNavigationRowParameters,
+    UseCompleteGridNavigationRowReturnType,
     UseCompleteListNavigationParameters,
     UseGenericChildParameters,
     UseMultiSelectionContextSelf,
     assertEmptyObject,
     focus,
-    monitored,
     returnNull,
     useCompleteGridNavigation,
     useCompleteGridNavigationCell,
     useCompleteGridNavigationRow,
     useMemoObject,
-    useMergedProps, usePassiveState, useStableCallback, useState
+    useMergedProps,
+    usePassiveState,
+    useStableCallback,
+    useState
 } from "preact-prop-helpers";
 import { useCallback, useEffect } from "preact/hooks";
-import { ElementToTag, OmitStrong, Prefices } from "./props.js";
+import { ElementToTag, OmitStrong, Prefices, monitored } from "./props.js";
 import { UseLabelSyntheticParameters, useLabelSynthetic } from "./use-label.js";
 
 export interface UseTableContextSelf extends Pick<SingleSelectionContextSelf, "singleSelectionMode">, Pick<UseMultiSelectionContextSelf, "multiSelectionMode"> {

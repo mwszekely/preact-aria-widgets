@@ -1,5 +1,15 @@
-import { assertEmptyObject, ElementProps, findFirstFocusable, monitored, TargetedOmit, useMergedProps, useModal, UseModalParameters, UseModalReturnType, useStableCallback } from "preact-prop-helpers";
-import { OmitStrong, Prefices } from "./props.js";
+import {
+    assertEmptyObject,
+    ElementProps,
+    findFirstFocusable,
+    TargetedOmit,
+    useMergedProps,
+    useModal,
+    UseModalParameters,
+    UseModalReturnType,
+    useStableCallback
+} from "preact-prop-helpers";
+import { monitored, OmitStrong, Prefices } from "./props.js";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
 
 export interface UseDrawerParameters<_DialogElement extends Element, _TitleElement extends Element> extends

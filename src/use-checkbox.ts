@@ -1,5 +1,14 @@
-import { ElementProps, Nullable, TargetedOmit, assertEmptyObject, enhanceEvent, monitored, useMergedProps, useRefElement, useStableCallback } from "preact-prop-helpers";
-import { EnhancedEventHandler, OmitStrong, Prefices, TargetedEnhancedEvent } from "./props.js";
+import {
+    ElementProps,
+    Nullable,
+    TargetedOmit,
+    assertEmptyObject,
+    enhanceEvent,
+    useMergedProps,
+    useRefElement,
+    useStableCallback
+} from "preact-prop-helpers";
+import { EnhancedEventHandler, OmitStrong, Prefices, TargetedEnhancedEvent, monitored } from "./props.js";
 import { CheckboxCheckedType, UseCheckboxLikeParameters, UseCheckboxLikeReturnType, useCheckboxLike } from "./use-checkbox-like.js";
 import { LabelPosition } from "./use-label.js";
 

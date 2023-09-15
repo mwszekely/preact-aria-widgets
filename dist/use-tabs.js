@@ -1,6 +1,6 @@
-import { assertEmptyObject, focus, generateRandomId, monitored, returnFalse, returnTrue, useChildrenFlag, useCompleteListNavigation, useCompleteListNavigationChild, useManagedChild, useManagedChildren, useMemoObject, useMergedProps, usePersistentState, usePress, useStableCallback, useState } from "preact-prop-helpers";
+import { assertEmptyObject, focus, generateRandomId, returnFalse, returnTrue, useChildrenFlag, useCompleteListNavigation, useCompleteListNavigationChild, useManagedChild, useManagedChildren, useMemoObject, useMergedProps, usePersistentState, usePress, useStableCallback, useState } from "preact-prop-helpers";
 import { useCallback, useLayoutEffect } from "preact/hooks";
-import { EventDetail, Prefices } from "./props.js";
+import { EventDetail, Prefices, monitored } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
 /**
  * Implements a [Tabs](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/) pattern.

@@ -16,14 +16,13 @@ import {
     UsePressReturnType,
     assertEmptyObject,
     focus,
-    monitored,
     useCompleteListNavigationChildDeclarative,
     useCompleteListNavigationDeclarative,
     useMergedProps,
     usePress,
     useStableCallback
 } from "preact-prop-helpers";
-import { EventDetail, OmitStrong, Prefices } from "./props.js";
+import { EventDetail, OmitStrong, Prefices, monitored } from "./props.js";
 import { UseLabelSyntheticParameters, useLabelSynthetic } from "./use-label.js";
 
 export type ListboxSingleSelectEvent<E extends EventTarget> = { [EventDetail]: { selectedIndex: number } } & Pick<EventType<E, Event>, "target" | "currentTarget">;

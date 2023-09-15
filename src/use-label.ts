@@ -1,5 +1,15 @@
-import { monitored, returnTrue, TargetedPick, useMergedProps, usePress, UsePressReturnType, useRandomDualIds, UseRandomDualIdsParameters, UseRandomDualIdsReturnType, useRefElement } from "preact-prop-helpers";
-import { ElementToTag, noop, OmitStrong } from "./props.js";
+import {
+    returnTrue,
+    TargetedPick,
+    useMergedProps,
+    usePress,
+    UsePressReturnType,
+    useRandomDualIds,
+    UseRandomDualIdsParameters,
+    UseRandomDualIdsReturnType,
+    useRefElement
+} from "preact-prop-helpers";
+import { ElementToTag, monitored, noop, OmitStrong } from "./props.js";
 
 export type LabelPosition = "separate" | "wrapping" | "none";
 export type FocusableLabelElement<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element> = LP extends "wrapping" ? LabelElement : InputElement;

@@ -1,4 +1,6 @@
 import "core-js";
+import "preact/debug";
+
 import { render } from "preact";
 import { Heading, NotificationProviderContext, setDebugLogging, useNotificationProvider } from "../dist/index.js";
 import * as Accordion from "./demos/accordion.js";

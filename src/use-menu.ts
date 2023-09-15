@@ -1,5 +1,11 @@
-import { EventType, TargetedOmit, monitored, useMemoObject, useMergedProps, useStableCallback } from "preact-prop-helpers";
-import { OmitStrong } from "./props.js";
+import {
+    EventType,
+    TargetedOmit,
+    useMemoObject,
+    useMergedProps,
+    useStableCallback
+} from "preact-prop-helpers";
+import { OmitStrong, monitored } from "./props.js";
 import { UseMenuSurfaceParameters, UseMenuSurfaceReturnType, useMenuSurface } from "./use-menu-surface.js";
 import { UseMenubarContext, UseMenubarItemParameters, UseMenubarItemReturnType, UseMenubarParameters, UseMenubarReturnType, UseMenubarSubInfo, useMenubar, useMenubarChild } from "./use-menubar.js";
 
@@ -71,7 +77,6 @@ export const useMenu = monitored(function useMenu<MenuSurfaceElement extends Ele
     activeElementParameters,
     toolbarParameters,
     modalParameters,
-
     ...restParams
 }: UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenuReturnType<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement, UseMenubarSubInfo<MenuItemElement>> {
     type M = UseMenubarSubInfo<MenuItemElement>;

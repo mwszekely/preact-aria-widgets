@@ -122,77 +122,6 @@ const EventMapping = {
     ...EventMapping$1,
 };
 
-// Get/set the value of process?.env?.NODE_ENV delicately (also fun fact @rollup/plugin-replace works in comments!)
-// (i.e. in a way that doesn't throw an error)
-globalThis["process"] ??= {};
-globalThis["process"]["env"] ??= {};
-globalThis["process"]["env"]["NODE_ENV"] = process.env.NODE_ENV;
-// The above statement looks redundant, but it ensures that manual
-// reads to `process.env.NODE_ENV` work regardless of if the bundler 
-// replaces `process.env.NODE_ENV` with the string `"development"` or not.
-
-// TODO: This shouldn't be in every build, I don't think it's in core-js? I think?
-// And it's extremely small anyway and basically does nothing.
-window.requestIdleCallback ??= (callback) => {
-    return setTimeout(() => { callback({ didTimeout: false, timeRemaining: () => { return 0; }, }); }, 5);
-};
-let timeoutHandle = null;
-let i$1 = 0;
-function monitored(hook) {
-    const h = hook;
-    if (process.env.NODE_ENV === 'development') {
-        return (function (...args) {
-            const r = useRef(++i$1);
-            monitorCallCount(h);
-            const start = performance.mark(`${h.name}-start-${r.current}`);
-            const ret = h(...args);
-            const end = performance.mark(`${h.name}-end-${r.current}`);
-            performance.measure(h.name, start.name, end.name);
-            return ret;
-        });
-    }
-    else {
-        return hook;
-    }
-}
-/**
- * When called inside a hook, monitors each call of that hook and prints the results to a table once things settle.
- *
- * @remarks Re-renders and such are all collected together when the table is printed to the console with `requestIdleCallback`.
- */
-function monitorCallCount(hook) {
-    if (process.env.NODE_ENV !== 'development')
-        return;
-    const name = hook.name;
-    if (filters.has(name))
-        return;
-    console.assert(name.length > 0);
-    window._hookCallCount ??= { callCounts: {} };
-    window._hookCallCount.callCounts[name] ??= { moment: 0, total: 0 };
-    window._hookCallCount.callCounts[name].moment += 1;
-    window._hookCallCount.callCounts[name].total += 1;
-    if (timeoutHandle == null) {
-        timeoutHandle = requestIdleCallback(() => {
-            //console.log((window as WindowWithHookCallCount)._hookCallCount.callCountsMoment);
-            //(window as WindowWithHookCallCount)._hookCallCount.callCountsMoment = {};
-            const o = Object.entries(window._hookCallCount.callCounts)
-                .map(([hook, counts]) => { return { Hook: hook || "?", Now: counts?.moment || 0, Total: counts?.total || 0 }; })
-                .filter(({ Now }) => { return !!Now; })
-                .sort(({ Now: lhsM }, { Now: rhsM }) => {
-                if (!lhsM && !rhsM)
-                    return 0;
-                lhsM ||= Infinity;
-                rhsM ||= Infinity;
-                return lhsM - rhsM;
-            });
-            console.table(o, ['Hook', 'Now', 'Total']);
-            Object.entries(window._hookCallCount.callCounts).forEach(([, counts]) => { counts.moment = 0; });
-            timeoutHandle = null;
-        });
-    }
-}
-const filters = new Set();
-
 /**
  * Debug hook. Given a value or set of values, emits a console error if any of them change from one render to the next.
  *
@@ -242,7 +171,7 @@ function useEnsureStability(parentHookName, ...values) {
  * @param customDebounceRendering - By default, changes to passive state are delayed by one tick so that we only check for changes in a similar way to Preact. You can override this to, for example, always run immediately instead.
  * @returns
  */
-const usePassiveState = monitored(function usePassiveState(onChange, getInitialValue, customDebounceRendering) {
+function usePassiveState(onChange, getInitialValue, customDebounceRendering) {
     //let [id, ,getId] = useState(() => generateRandomId());
     const valueRef = useRef(Unset$2);
     const reasonRef = useRef(Unset$2);
@@ -335,7 +264,7 @@ const usePassiveState = monitored(function usePassiveState(onChange, getInitialV
         //valueRef.current = nextValue;
     }, []);
     return [getValue, setValue];
-});
+}
 const Unset$2 = Symbol();
 // Easy constants for getInitialValue
 function returnTrue() { return true; }
@@ -355,7 +284,7 @@ const Unset$1 = Symbol("unset");
  * @remarks This uses `options.diffed` in order to run before everything, even
  * ref assignment. This means this getter is safe to use anywhere ***except the render phase***.
  */
-const useStableGetter = monitored(function useStableGetter(value) {
+const useStableGetter = (function useStableGetter(value) {
     const ref = useRef(Unset$1);
     useInsertionEffect((() => { ref.current = value; }), [value]);
     return useCallback(() => {
@@ -385,7 +314,7 @@ function setIsStableGetter(obj) {
  * empty dependency array, but with the associated stable typing. In this case, you ***must*** ensure that it
  * truly has no dependencies/only stable dependencies!!
  */
-const useStableCallback = monitored(function useStableCallback(fn, noDeps) {
+const useStableCallback = (function useStableCallback(fn, noDeps) {
     useEnsureStability("useStableCallback", noDeps == null, noDeps?.length, isStableGetter());
     if (isStableGetter())
         return fn;
@@ -400,6 +329,85 @@ const useStableCallback = monitored(function useStableCallback(fn, noDeps) {
         return setIsStableGetter(useCallback(fn, []));
     }
 });
+
+// Get/set the value of process?.env?.NODE_ENV delicately (also fun fact @rollup/plugin-replace works in comments!)
+// (i.e. in a way that doesn't throw an error)
+globalThis["process"] ??= {};
+globalThis["process"]["env"] ??= {};
+globalThis["process"]["env"]["NODE_ENV"] = process.env.NODE_ENV;
+// The above statement looks redundant, but it ensures that manual
+// reads to `process.env.NODE_ENV` work regardless of if the bundler 
+// replaces `process.env.NODE_ENV` with the string `"development"` or not.
+
+// TODO: This shouldn't be in every build, I don't think it's in core-js? I think?
+// And it's extremely small anyway and basically does nothing.
+window.requestIdleCallback ??= (callback) => {
+    return setTimeout(() => { callback({ didTimeout: false, timeRemaining: () => { return 0; }, }); }, 5);
+};
+let timeoutHandle = null;
+let i$1 = 0;
+/**
+ * Adds a function to your browser's Performance tab, under "markers", so you can watch the call stack more clearly than random interval sampling.
+ *
+ * @remarks Important for Typescript: If passed a generic function its types may be slightly erased (see usePersistentState). No clue why or what's happening.
+ *
+ * @param hook
+ * @returns
+ */
+function monitored(hook) {
+    const h = hook;
+    if (process.env.NODE_ENV === 'development') {
+        return (function (...args) {
+            const r = useRef(++i$1);
+            monitorCallCount(h);
+            const start = performance.mark(`${h.name}-start-${r.current}`);
+            const ret = h(...args);
+            const end = performance.mark(`${h.name}-end-${r.current}`);
+            performance.measure(h.name, start.name, end.name);
+            return ret;
+        });
+    }
+    else {
+        return hook;
+    }
+}
+/**
+ * When called inside a hook, monitors each call of that hook and prints the results to a table once things settle.
+ *
+ * @remarks Re-renders and such are all collected together when the table is printed to the console with `requestIdleCallback`.
+ */
+function monitorCallCount(hook) {
+    if (process.env.NODE_ENV !== 'development')
+        return;
+    const name = hook.name;
+    if (filters.has(name))
+        return;
+    console.assert(name.length > 0);
+    window._hookCallCount ??= { callCounts: {} };
+    window._hookCallCount.callCounts[name] ??= { moment: 0, total: 0 };
+    window._hookCallCount.callCounts[name].moment += 1;
+    window._hookCallCount.callCounts[name].total += 1;
+    if (timeoutHandle == null) {
+        timeoutHandle = requestIdleCallback(() => {
+            //console.log((window as WindowWithHookCallCount)._hookCallCount.callCountsMoment);
+            //(window as WindowWithHookCallCount)._hookCallCount.callCountsMoment = {};
+            const o = Object.entries(window._hookCallCount.callCounts)
+                .map(([hook, counts]) => { return { Hook: hook || "?", Now: counts?.moment || 0, Total: counts?.total || 0 }; })
+                .filter(({ Now }) => { return !!Now; })
+                .sort(({ Now: lhsM }, { Now: rhsM }) => {
+                if (!lhsM && !rhsM)
+                    return 0;
+                lhsM ||= Infinity;
+                rhsM ||= Infinity;
+                return lhsM - rhsM;
+            });
+            console.table(o, ['Hook', 'Now', 'Total']);
+            Object.entries(window._hookCallCount.callCounts).forEach(([, counts]) => { counts.moment = 0; });
+            timeoutHandle = null;
+        });
+    }
+}
+const filters = new Set();
 
 /**
  * Allows attaching an event handler to any *non-Preact* element, and removing it when the component using the hook unmounts. The callback does not need to be stable across renders.
@@ -646,7 +654,7 @@ const useLostFocusDismiss = monitored(function useLostFocusDismiss({ refElementP
  *
  * TODO: This could accept a variable number of arguments to be consistent with useMergedProps, but I feel like it might be a performance hit.
  */
-const useMergedChildren = monitored(function useMergedChildren(lhs, rhs) {
+const useMergedChildren = (function useMergedChildren(lhs, rhs) {
     if (lhs == null && rhs == null) {
         return undefined;
     }
@@ -666,7 +674,7 @@ const useMergedChildren = monitored(function useMergedChildren(lhs, rhs) {
  *
  * @remarks Duplicate classes are removed (order doesn't matter anyway).
  */
-const useMergedClasses = monitored(function useMergedClasses(...classes) {
+const useMergedClasses = (function useMergedClasses(...classes) {
     // Note: For the sake of forward compatibility, this function is labelled as
     // a hook, but as it uses no other hooks it technically isn't one.
     let classesSet = new Set();
@@ -700,7 +708,7 @@ function processRef(instance, ref) {
  *
  * @remarks Or just use {@link useMergedProps}
  */
-const useMergedRefs = monitored(function useMergedRefs(rhs, lhs) {
+const useMergedRefs = (function useMergedRefs(rhs, lhs) {
     // This *must* be stable in order to prevent repeated reset `null` calls after every render.
     const combined = useStableCallback(function combined(current) {
         processRef(current, lhs);
@@ -731,7 +739,7 @@ function styleStringToObject(style) {
  * @param obj - The CSS properties you want added to the user-given style
  * @returns A CSS object containing the properties of both objects.
  */
-const useMergedStyles = monitored(function useMergedStyles(lhs, rhs) {
+const useMergedStyles = (function useMergedStyles(lhs, rhs) {
     // Easy case, when there are no styles to merge return nothing.
     if (!lhs && !rhs)
         return undefined;
@@ -783,7 +791,7 @@ let log = console.warn;
  *
  * @returns A single object with all the provided props merged into one.
  */
-const useMergedProps = monitored(function useMergedProps(...allProps) {
+const useMergedProps = (function useMergedProps(...allProps) {
     useEnsureStability("useMergedProps", allProps.length);
     let ret = {};
     for (let nextProps of allProps) {
@@ -792,7 +800,7 @@ const useMergedProps = monitored(function useMergedProps(...allProps) {
     return ret;
 });
 const knowns = new Set(["children", "ref", "className", "class", "style"]);
-const mergeUnknown = monitored(function mergeUnknown(key, lhsValue, rhsValue) {
+const mergeUnknown = (function mergeUnknown(key, lhsValue, rhsValue) {
     if (typeof lhsValue === "function" || typeof rhsValue === "function") {
         // They're both functions that can be merged (or one's a function and the other's null).
         // Not an *easy* case, but a well-defined one.
@@ -831,7 +839,7 @@ const mergeUnknown = monitored(function mergeUnknown(key, lhsValue, rhsValue) {
  * This is one of the most commonly called functions in this and consumer libraries,
  * so it trades a bit of readability for speed (i.e. we don't decompose objects and just do regular property access, iterate with `for...in`, instead of `Object.entries`, etc.)
  */
-const useMergedPropsHelper = monitored(function useMergedPropsHelper(target, mods) {
+const useMergedPropsHelper = (function useMergedPropsHelper(target, mods) {
     target.ref = useMergedRefs(target.ref, mods.ref);
     target.style = useMergedStyles(target.style, mods.style);
     target.className = useMergedClasses(target["class"], target.className, mods["class"], mods.className);
@@ -853,7 +861,7 @@ const useMergedPropsHelper = monitored(function useMergedPropsHelper(target, mod
         target[rhsKey] = mergeUnknown(rhsKey, target[rhsKey], mods[rhsKey]);
     }
 });
-const mergeFunctions = monitored(function mergeFunctions(lhs, rhs) {
+const mergeFunctions = (function mergeFunctions(lhs, rhs) {
     if (!lhs)
         return rhs;
     if (!rhs)
@@ -1549,7 +1557,7 @@ function useChildrenFlag({ getChildren, initialIndex, closestFit, onClosestFit, 
  *
  * @param initialState - Same as the built-in `setState`'s
  */
-const useState = monitored(function useState(initialState) {
+function useState(initialState) {
     const getStack = useStack();
     // We keep both, but override the `setState` functionality
     const [state, setStateP] = useState$1(initialState);
@@ -1583,7 +1591,7 @@ const useState = monitored(function useState(initialState) {
     }, []);
     const getState = useCallback(() => { return ref.current; }, []);
     return [state, setState, getState];
-});
+}
 
 /**
  * Implements a roving tabindex system where only one "focusable"
@@ -6169,7 +6177,7 @@ function storeToLocalStorage(key, value, converter = JSON.stringify, storage = l
  * @param toString -
  * @returns
  */
-const usePersistentState = monitored(function usePersistentState(key, initialValue, fromString = JSON.parse, toString = JSON.stringify, storage = localStorage) {
+function usePersistentState(key, initialValue, fromString = JSON.parse, toString = JSON.stringify, storage = localStorage) {
     const [localCopy, setLocalCopy, getLocalCopy] = useState(() => ((key ? (getFromLocalStorage(key, fromString, storage)) : null) ?? initialValue));
     const getInitialValue = useStableGetter(initialValue);
     // Ensure that if our key changes, we also update `localCopy` to match.
@@ -6206,7 +6214,7 @@ const usePersistentState = monitored(function usePersistentState(key, initialVal
         return trueValue ?? localCopy;
     });
     return [localCopy, setValueWrapper, getValue];
-});
+}
 
 var n,l$1,u$1,t$1,r$1,o$2,f$1,e$1,c$1={},s=[],a$1=/acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i;function h(n,l){for(var u in l)n[u]=l[u];return n}function v$1(n){var l=n.parentNode;l&&l.removeChild(n);}function y$1(l,u,i){var t,r,o,f={};for(o in u)"key"==o?t=u[o]:"ref"==o?r=u[o]:f[o]=u[o];if(arguments.length>2&&(f.children=arguments.length>3?n.call(arguments,2):i),"function"==typeof l&&null!=l.defaultProps)for(o in l.defaultProps)void 0===f[o]&&(f[o]=l.defaultProps[o]);return p$1(l,f,t,r,null)}function p$1(n,i,t,r,o){var f={type:n,props:i,key:t,ref:r,__k:null,__:null,__b:0,__e:null,__d:void 0,__c:null,__h:null,constructor:void 0,__v:null==o?++u$1:o};return null==o&&null!=l$1.vnode&&l$1.vnode(f),f}function _$2(n){return n.children}function k$1(n,l){this.props=n,this.context=l;}function b$1(n,l){if(null==l)return n.__?b$1(n.__,n.__.__k.indexOf(n)+1):null;for(var u;l<n.__k.length;l++)if(null!=(u=n.__k[l])&&null!=u.__e)return u.__e;return "function"==typeof n.type?b$1(n):null}function g$2(n){var l,u;if(null!=(n=n.__)&&null!=n.__c){for(n.__e=n.__c.base=null,l=0;l<n.__k.length;l++)if(null!=(u=n.__k[l])&&null!=u.__e){n.__e=n.__c.base=u.__e;break}return g$2(n)}}function m$1(n){(!n.__d&&(n.__d=!0)&&t$1.push(n)&&!w$2.__r++||r$1!==l$1.debounceRendering)&&((r$1=l$1.debounceRendering)||o$2)(w$2);}function w$2(){var n,l,u,i,r,o,e,c;for(t$1.sort(f$1);n=t$1.shift();)n.__d&&(l=t$1.length,i=void 0,r=void 0,e=(o=(u=n).__v).__e,(c=u.__P)&&(i=[],(r=h({},o)).__v=o.__v+1,L$1(c,o,r,u.__n,void 0!==c.ownerSVGElement,null!=o.__h?[e]:null,i,null==e?b$1(o):e,o.__h),M(i,o),o.__e!=e&&g$2(o)),t$1.length>l&&t$1.sort(f$1));w$2.__r=0;}function x$1(n,l,u,i,t,r,o,f,e,a){var h,v,y,d,k,g,m,w=i&&i.__k||s,x=w.length;for(u.__k=[],h=0;h<l.length;h++)if(null!=(d=u.__k[h]=null==(d=l[h])||"boolean"==typeof d||"function"==typeof d?null:"string"==typeof d||"number"==typeof d||"bigint"==typeof d?p$1(null,d,null,null,d):Array.isArray(d)?p$1(_$2,{children:d},null,null,null):d.__b>0?p$1(d.type,d.props,d.key,d.ref?d.ref:null,d.__v):d)){if(d.__=u,d.__b=u.__b+1,null===(y=w[h])||y&&d.key==y.key&&d.type===y.type)w[h]=void 0;else for(v=0;v<x;v++){if((y=w[v])&&d.key==y.key&&d.type===y.type){w[v]=void 0;break}y=null;}L$1(n,d,y=y||c$1,t,r,o,f,e,a),k=d.__e,(v=d.ref)&&y.ref!=v&&(m||(m=[]),y.ref&&m.push(y.ref,null,d),m.push(v,d.__c||k,d)),null!=k?(null==g&&(g=k),"function"==typeof d.type&&d.__k===y.__k?d.__d=e=A$1(d,e,n):e=C$1(n,d,y,w,k,e),"function"==typeof u.type&&(u.__d=e)):e&&y.__e==e&&e.parentNode!=n&&(e=b$1(y));}for(u.__e=g,h=x;h--;)null!=w[h]&&("function"==typeof u.type&&null!=w[h].__e&&w[h].__e==u.__d&&(u.__d=$$1(i).nextSibling),S(w[h],w[h]));if(m)for(h=0;h<m.length;h++)O(m[h],m[++h],m[++h]);}function A$1(n,l,u){for(var i,t=n.__k,r=0;t&&r<t.length;r++)(i=t[r])&&(i.__=n,l="function"==typeof i.type?A$1(i,l,u):C$1(u,i,i,t,i.__e,l));return l}function P$1(n,l){return l=l||[],null==n||"boolean"==typeof n||(Array.isArray(n)?n.some(function(n){P$1(n,l);}):l.push(n)),l}function C$1(n,l,u,i,t,r){var o,f,e;if(void 0!==l.__d)o=l.__d,l.__d=void 0;else if(null==u||t!=r||null==t.parentNode)n:if(null==r||r.parentNode!==n)n.appendChild(t),o=null;else {for(f=r,e=0;(f=f.nextSibling)&&e<i.length;e+=1)if(f==t)break n;n.insertBefore(t,r),o=r;}return void 0!==o?o:t.nextSibling}function $$1(n){var l,u,i;if(null==n.type||"string"==typeof n.type)return n.__e;if(n.__k)for(l=n.__k.length-1;l>=0;l--)if((u=n.__k[l])&&(i=$$1(u)))return i;return null}function H$1(n,l,u,i,t){var r;for(r in u)"children"===r||"key"===r||r in l||T$2(n,r,null,u[r],i);for(r in l)t&&"function"!=typeof l[r]||"children"===r||"key"===r||"value"===r||"checked"===r||u[r]===l[r]||T$2(n,r,l[r],u[r],i);}function I$1(n,l,u){"-"===l[0]?n.setProperty(l,null==u?"":u):n[l]=null==u?"":"number"!=typeof u||a$1.test(l)?u:u+"px";}function T$2(n,l,u,i,t){var r;n:if("style"===l)if("string"==typeof u)n.style.cssText=u;else {if("string"==typeof i&&(n.style.cssText=i=""),i)for(l in i)u&&l in u||I$1(n.style,l,"");if(u)for(l in u)i&&u[l]===i[l]||I$1(n.style,l,u[l]);}else if("o"===l[0]&&"n"===l[1])r=l!==(l=l.replace(/Capture$/,"")),l=l.toLowerCase()in n?l.toLowerCase().slice(2):l.slice(2),n.l||(n.l={}),n.l[l+r]=u,u?i||n.addEventListener(l,r?z$2:j$2,r):n.removeEventListener(l,r?z$2:j$2,r);else if("dangerouslySetInnerHTML"!==l){if(t)l=l.replace(/xlink(H|:h)/,"h").replace(/sName$/,"s");else if("width"!==l&&"height"!==l&&"href"!==l&&"list"!==l&&"form"!==l&&"tabIndex"!==l&&"download"!==l&&l in n)try{n[l]=null==u?"":u;break n}catch(n){}"function"==typeof u||(null==u||!1===u&&"-"!==l[4]?n.removeAttribute(l):n.setAttribute(l,u));}}function j$2(n){return this.l[n.type+!1](l$1.event?l$1.event(n):n)}function z$2(n){return this.l[n.type+!0](l$1.event?l$1.event(n):n)}function L$1(n,u,i,t,r,o,f,e,c){var s,a,v,y,p,d,b,g,m,w,A,P,C,$,H,I=u.type;if(void 0!==u.constructor)return null;null!=i.__h&&(c=i.__h,e=u.__e=i.__e,u.__h=null,o=[e]),(s=l$1.__b)&&s(u);try{n:if("function"==typeof I){if(g=u.props,m=(s=I.contextType)&&t[s.__c],w=s?m?m.props.value:s.__:t,i.__c?b=(a=u.__c=i.__c).__=a.__E:("prototype"in I&&I.prototype.render?u.__c=a=new I(g,w):(u.__c=a=new k$1(g,w),a.constructor=I,a.render=q$2),m&&m.sub(a),a.props=g,a.state||(a.state={}),a.context=w,a.__n=t,v=a.__d=!0,a.__h=[],a._sb=[]),null==a.__s&&(a.__s=a.state),null!=I.getDerivedStateFromProps&&(a.__s==a.state&&(a.__s=h({},a.__s)),h(a.__s,I.getDerivedStateFromProps(g,a.__s))),y=a.props,p=a.state,a.__v=u,v)null==I.getDerivedStateFromProps&&null!=a.componentWillMount&&a.componentWillMount(),null!=a.componentDidMount&&a.__h.push(a.componentDidMount);else {if(null==I.getDerivedStateFromProps&&g!==y&&null!=a.componentWillReceiveProps&&a.componentWillReceiveProps(g,w),!a.__e&&null!=a.shouldComponentUpdate&&!1===a.shouldComponentUpdate(g,a.__s,w)||u.__v===i.__v){for(u.__v!==i.__v&&(a.props=g,a.state=a.__s,a.__d=!1),a.__e=!1,u.__e=i.__e,u.__k=i.__k,u.__k.forEach(function(n){n&&(n.__=u);}),A=0;A<a._sb.length;A++)a.__h.push(a._sb[A]);a._sb=[],a.__h.length&&f.push(a);break n}null!=a.componentWillUpdate&&a.componentWillUpdate(g,a.__s,w),null!=a.componentDidUpdate&&a.__h.push(function(){a.componentDidUpdate(y,p,d);});}if(a.context=w,a.props=g,a.__P=n,P=l$1.__r,C=0,"prototype"in I&&I.prototype.render){for(a.state=a.__s,a.__d=!1,P&&P(u),s=a.render(a.props,a.state,a.context),$=0;$<a._sb.length;$++)a.__h.push(a._sb[$]);a._sb=[];}else do{a.__d=!1,P&&P(u),s=a.render(a.props,a.state,a.context),a.state=a.__s;}while(a.__d&&++C<25);a.state=a.__s,null!=a.getChildContext&&(t=h(h({},t),a.getChildContext())),v||null==a.getSnapshotBeforeUpdate||(d=a.getSnapshotBeforeUpdate(y,p)),H=null!=s&&s.type===_$2&&null==s.key?s.props.children:s,x$1(n,Array.isArray(H)?H:[H],u,i,t,r,o,f,e,c),a.base=u.__e,u.__h=null,a.__h.length&&f.push(a),b&&(a.__E=a.__=null),a.__e=!1;}else null==o&&u.__v===i.__v?(u.__k=i.__k,u.__e=i.__e):u.__e=N(i.__e,u,i,t,r,o,f,c);(s=l$1.diffed)&&s(u);}catch(n){u.__v=null,(c||null!=o)&&(u.__e=e,u.__h=!!c,o[o.indexOf(e)]=null),l$1.__e(n,u,i);}}function M(n,u){l$1.__c&&l$1.__c(u,n),n.some(function(u){try{n=u.__h,u.__h=[],n.some(function(n){n.call(u);});}catch(n){l$1.__e(n,u.__v);}});}function N(l,u,i,t,r,o,f,e){var s,a,h,y=i.props,p=u.props,d=u.type,_=0;if("svg"===d&&(r=!0),null!=o)for(;_<o.length;_++)if((s=o[_])&&"setAttribute"in s==!!d&&(d?s.localName===d:3===s.nodeType)){l=s,o[_]=null;break}if(null==l){if(null===d)return document.createTextNode(p);l=r?document.createElementNS("http://www.w3.org/2000/svg",d):document.createElement(d,p.is&&p),o=null,e=!1;}if(null===d)y===p||e&&l.data===p||(l.data=p);else {if(o=o&&n.call(l.childNodes),a=(y=i.props||c$1).dangerouslySetInnerHTML,h=p.dangerouslySetInnerHTML,!e){if(null!=o)for(y={},_=0;_<l.attributes.length;_++)y[l.attributes[_].name]=l.attributes[_].value;(h||a)&&(h&&(a&&h.__html==a.__html||h.__html===l.innerHTML)||(l.innerHTML=h&&h.__html||""));}if(H$1(l,p,y,r,e),h)u.__k=[];else if(_=u.props.children,x$1(l,Array.isArray(_)?_:[_],u,i,t,r&&"foreignObject"!==d,o,f,o?o[0]:i.__k&&b$1(i,0),e),null!=o)for(_=o.length;_--;)null!=o[_]&&v$1(o[_]);e||("value"in p&&void 0!==(_=p.value)&&(_!==l.value||"progress"===d&&!_||"option"===d&&_!==y.value)&&T$2(l,"value",_,y.value,!1),"checked"in p&&void 0!==(_=p.checked)&&_!==l.checked&&T$2(l,"checked",_,y.checked,!1));}return l}function O(n,u,i){try{"function"==typeof n?n(u):n.current=u;}catch(n){l$1.__e(n,i);}}function S(n,u,i){var t,r;if(l$1.unmount&&l$1.unmount(n),(t=n.ref)&&(t.current&&t.current!==n.__e||O(t,null,u)),null!=(t=n.__c)){if(t.componentWillUnmount)try{t.componentWillUnmount();}catch(n){l$1.__e(n,u);}t.base=t.__P=null,n.__c=void 0;}if(t=n.__k)for(r=0;r<t.length;r++)t[r]&&S(t[r],u,i||"function"!=typeof n.type);i||null==n.__e||v$1(n.__e),n.__=n.__e=n.__d=void 0;}function q$2(n,l,u){return this.constructor(n,u)}function B$1(u,i,t){var r,o,f;l$1.__&&l$1.__(u,i),o=(r="function"==typeof t)?null:t&&t.__k||i.__k,f=[],L$1(i,u=(!r&&t||i).__k=y$1(_$2,null,[u]),o||c$1,c$1,void 0!==i.ownerSVGElement,!r&&t?[t]:o?null:i.firstChild?n.call(i.childNodes):null,f,!r&&t?t:o?o.__e:i.firstChild,r),M(f,u);}function F$2(n,l){var u={__c:l="__cC"+e$1++,__:n,Consumer:function(n,l){return n.children(l)},Provider:function(n){var u,i;return this.getChildContext||(u=[],(i={})[l]=this,this.getChildContext=function(){return i},this.shouldComponentUpdate=function(n){this.props.value!==n.value&&u.some(function(n){n.__e=!0,m$1(n);});},this.sub=function(n){u.push(n);var l=n.componentWillUnmount;n.componentWillUnmount=function(){u.splice(u.indexOf(n),1),l&&l.call(n);};}),n.children}};return u.Provider.__=u.Consumer.contextType=u}n=s.slice,l$1={__e:function(n,l,u,i){for(var t,r,o;l=l.__;)if((t=l.__c)&&!t.__)try{if((r=t.constructor)&&null!=r.getDerivedStateFromError&&(t.setState(r.getDerivedStateFromError(n)),o=t.__d),null!=t.componentDidCatch&&(t.componentDidCatch(n,i||{}),o=t.__d),o)return t.__E=t}catch(l){n=l;}throw n}},u$1=0,k$1.prototype.setState=function(n,l){var u;u=null!=this.__s&&this.__s!==this.state?this.__s:this.__s=h({},this.state),"function"==typeof n&&(n=n(h({},u),this.props)),n&&h(u,n),null!=n&&this.__v&&(l&&this._sb.push(l),m$1(this));},k$1.prototype.forceUpdate=function(n){this.__v&&(this.__e=!0,n&&this.__h.push(n),m$1(this));},k$1.prototype.render=_$2,t$1=[],o$2="function"==typeof Promise?Promise.prototype.then.bind(Promise.resolve()):setTimeout,f$1=function(n,l){return n.__v.__b-l.__v.__b},w$2.__r=0,e$1=0;
 

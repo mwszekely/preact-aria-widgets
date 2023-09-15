@@ -1,5 +1,5 @@
-import { assertEmptyObject, findFirstFocusable, monitored, useMergedProps, useModal, useStableCallback } from "preact-prop-helpers";
-import { Prefices } from "./props.js";
+import { assertEmptyObject, findFirstFocusable, useMergedProps, useModal, useStableCallback } from "preact-prop-helpers";
+import { monitored, Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
 /**
  * Implements a drawer, which is a specific kind of [Dialog](https://www.w3.org/WAI/ARIA/apg/patterns/dialog/).

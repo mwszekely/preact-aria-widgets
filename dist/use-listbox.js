@@ -1,5 +1,5 @@
-import { assertEmptyObject, focus, monitored, useCompleteListNavigationChildDeclarative, useCompleteListNavigationDeclarative, useMergedProps, usePress, useStableCallback } from "preact-prop-helpers";
-import { EventDetail, Prefices } from "./props.js";
+import { assertEmptyObject, focus, useCompleteListNavigationChildDeclarative, useCompleteListNavigationDeclarative, useMergedProps, usePress, useStableCallback } from "preact-prop-helpers";
+import { EventDetail, Prefices, monitored } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
 /**
  * Implements a [Listbox](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/) pattern.

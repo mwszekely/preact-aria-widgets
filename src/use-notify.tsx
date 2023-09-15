@@ -1,6 +1,10 @@
-import { createContext, monitored, usePortalChildren, VNode } from "preact-prop-helpers";
+import {
+    createContext,
+    usePortalChildren,
+    VNode
+} from "preact-prop-helpers";
 import { useCallback, useMemo } from "preact/hooks";
-import { useContextWithWarning } from "./props.js";
+import { monitored, useContextWithWarning } from "./props.js";
 
 export interface NotificationProviderProps {
     targetAssertive: string | Element;

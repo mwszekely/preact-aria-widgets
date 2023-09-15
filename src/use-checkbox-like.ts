@@ -1,6 +1,20 @@
-import { assertEmptyObject, ElementProps, focus, JSX, monitored, PressEventReason, TargetedOmit, TargetedPick, useMergedProps, usePress, UsePressParameters, UsePressReturnType, UseRefElementReturnType, useStableCallback } from "preact-prop-helpers";
+import {
+    assertEmptyObject,
+    ElementProps,
+    focus,
+    JSX,
+    PressEventReason,
+    TargetedOmit,
+    TargetedPick,
+    useMergedProps,
+    usePress,
+    UsePressParameters,
+    UsePressReturnType,
+    UseRefElementReturnType,
+    useStableCallback
+} from "preact-prop-helpers";
 import { useEffect } from "preact/hooks";
-import { DisabledType, OmitStrong } from "./props.js";
+import { DisabledType, monitored, OmitStrong } from "./props.js";
 import { LabelPosition, useLabel, UseLabelParameters, UseLabelReturnType } from "./use-label.js";
 
 

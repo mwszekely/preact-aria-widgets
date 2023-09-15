@@ -1,6 +1,6 @@
-import { assertEmptyObject, focus, monitored, returnNull, useDismiss, useGlobalHandler, useHasCurrentFocus, useMergedProps, usePassiveState, useRandomId, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
+import { assertEmptyObject, focus, returnNull, useDismiss, useGlobalHandler, useHasCurrentFocus, useMergedProps, usePassiveState, useRandomId, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
 import { useCallback, useEffect, useRef } from "preact/hooks";
-import { Prefices } from "./props.js";
+import { monitored, Prefices } from "./props.js";
 // Intentionally (?) unused
 let hasHover2 = matchMedia("(any-hover: hover)");
 // Track if the current input has hover capabilities

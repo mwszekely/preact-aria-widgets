@@ -1,5 +1,5 @@
-import { assertEmptyObject, monitored, useAsyncHandler, useMergedProps } from "preact-prop-helpers";
-import { Prefices } from "./props.js";
+import { assertEmptyObject, useAsyncHandler, useMergedProps } from "preact-prop-helpers";
+import { monitored, Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
 import { useNotify } from "./use-notify.js";
 /**
