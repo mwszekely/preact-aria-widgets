@@ -23,6 +23,15 @@ export function useComponent(imperativeHandle, render, Context, info) {
         return render(info);
     }
 }
+export function useComponentC(imperativeHandle, render, Context, info) {
+    useImperativeHandle(imperativeHandle, () => info);
+    if (Context) {
+        return _jsx(Context.Provider, { value: info.context, children: render(info) });
+    }
+    else {
+        return render(info);
+    }
+}
 export const ContextDefaults = {
     collator: createContext(null),
     pageNavigationSize: createContext(0.1),

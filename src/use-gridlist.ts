@@ -54,7 +54,7 @@ export interface UseGridlistParameters<GridlistElement extends Element, Gridlist
 export interface UseGridlistReturnType<GridlistElement extends Element, GridlistRowElement extends Element, GridlistCellElement extends Element, LabelElement extends Element, RM extends GridlistRowInfo<GridlistRowElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends OmitStrong<UseCompleteGridNavigationReturnType<GridlistElement, GridlistRowElement, RM>, "singleSelectionReturn" | "props"> {
     propsGridlist: ElementProps<GridlistElement>;
     propsGridlistLabel: ElementProps<LabelElement>;
-    context: UseGridlistContext<GridlistRowElement, RM>;
+    contextChildren: UseGridlistContext<GridlistRowElement, RM>;
 }
 export interface UseGridlistRowReturnType<GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends OmitStrong<UseCompleteGridNavigationRowReturnType<GridlistRowElement, GridlistCellElement, RM, CM>, never> {
 
@@ -110,10 +110,7 @@ export const useGridlist = monitored(function useGridlist<GridlistElement extend
     linearNavigationParameters,
     multiSelectionParameters,
     paginatedChildrenParameters,
-    rearrangeableChildrenParameters,
     refElementParameters,
-    sortableChildrenParameters,
-    staggeredChildrenParameters,
     typeaheadNavigationParameters,
     singleSelectionDeclarativeParameters,
     ...void2
@@ -140,7 +137,7 @@ export const useGridlist = monitored(function useGridlist<GridlistElement extend
         randomIdLabelParameters: { prefix: Prefices.gridlistLabel }
     });
     const {
-        context,
+        contextChildren,
         props,
         rovingTabIndexReturn,
         singleSelectionReturn,
@@ -152,19 +149,16 @@ export const useGridlist = monitored(function useGridlist<GridlistElement extend
         linearNavigationParameters,
         multiSelectionParameters,
         paginatedChildrenParameters,
-        rearrangeableChildrenParameters,
         refElementParameters,
         singleSelectionParameters,
-        sortableChildrenParameters,
-        staggeredChildrenParameters,
         typeaheadNavigationParameters
     });
 
-    let propsGridlist = useMergedProps(props, propsLabelList, { "aria-multiselectable": (context.multiSelectionContext.multiSelectionMode != "disabled" ? "true" : undefined) });
+    let propsGridlist = useMergedProps(props, propsLabelList, { "aria-multiselectable": (contextChildren.multiSelectionContext.multiSelectionMode != "disabled" ? "true" : undefined) });
 
 
     let fullContext = useMemoObject({
-        ...context,
+        ...contextChildren,
         gridlistRowContext: useMemoObject({
             //selectionLimit
         })
@@ -182,7 +176,7 @@ export const useGridlist = monitored(function useGridlist<GridlistElement extend
     }
 
     return {
-        context: fullContext,
+        contextChildren: fullContext,
         rovingTabIndexReturn,
         propsGridlist,
         propsGridlistLabel: propsLabelLabel,
@@ -205,7 +199,6 @@ export const useGridlistRow = monitored(function useGridlistRow<GridlistRowEleme
     hasCurrentFocusParameters,
     singleSelectionChildParameters,
     multiSelectionChildParameters,
-    gridNavigationSelectionSortableRowParameters,
     ...void1
 }: UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, GridlistRowInfo<GridlistRowElement>, GridlistCellInfo<GridlistCellElement>>): UseGridlistRowReturnType<GridlistRowElement, GridlistCellElement, GridlistRowInfo<GridlistRowElement>, GridlistCellInfo<GridlistCellElement>> {
 
@@ -217,12 +210,10 @@ export const useGridlistRow = monitored(function useGridlistRow<GridlistRowEleme
         linearNavigationReturn,
         managedChildReturn,
         managedChildrenReturn,
-        paginatedChildReturn,
         props,
         rovingTabIndexChildReturn,
         rovingTabIndexReturn,
         singleSelectionChildReturn,
-        staggeredChildReturn,
         textContentReturn,
         typeaheadNavigationReturn,
         pressParameters,
@@ -239,7 +230,6 @@ export const useGridlistRow = monitored(function useGridlistRow<GridlistRowEleme
 
         singleSelectionChildParameters,
         multiSelectionChildParameters,
-        gridNavigationSelectionSortableRowParameters,
     });
 
     // `selected` should only be true/false for multi-selection
@@ -256,12 +246,10 @@ export const useGridlistRow = monitored(function useGridlistRow<GridlistRowEleme
         linearNavigationReturn,
         managedChildrenReturn,
         managedChildReturn,
-        paginatedChildReturn,
         rovingTabIndexChildReturn,
         rovingTabIndexReturn,
         singleSelectionChildReturn,
         multiSelectionChildReturn,
-        staggeredChildReturn,
         textContentReturn,
         typeaheadNavigationReturn,
         context: cx2,

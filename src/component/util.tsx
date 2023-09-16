@@ -24,6 +24,15 @@ export function useComponent<R>(imperativeHandle: Nullable<Ref<R>>, render: (inf
         return render(info);
     }
 }
+export function useComponentC<R>(imperativeHandle: Nullable<Ref<R>>, render: (info: R) => VNode, Context: null | Context<(R extends {contextChildren?: infer C}? C : unknown)>, info: R) {
+    useImperativeHandle(imperativeHandle!, () => info);
+    if (Context) {
+        return <Context.Provider value={(info as { context?: any }).context}>{render(info)}</Context.Provider>
+    }
+    else {
+        return render(info);
+    }
+}
 
 /**
  * Quickly puts together component props from the hook it's based on.

@@ -127,7 +127,7 @@ declare module 'preact' {
         namespace JSX {
             /* eslint-disable @typescript-eslint/no-unused-vars */
             interface HTMLAttributes<RefType extends EventTarget = EventTarget> {
-                inert?: undefined | Signalish<boolean>;
+                inert?: boolean | SignalLike<boolean | undefined> | undefined;
             }
         }
     }

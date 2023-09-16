@@ -14,7 +14,7 @@ import { useMenubar, useMenubarChild } from "./use-menubar.js";
  * @compositeParams
  */
 export const useMenu = monitored(function useMenu({ dismissParameters, escapeDismissParameters, menuParameters: { openDirection, onOpen }, menuSurfaceParameters, activeElementParameters, toolbarParameters, modalParameters, ...restParams }) {
-    const { context, propsLabel: propsButtonAsMenuLabel, propsMenubar, randomIdInputReturn, rovingTabIndexReturn, ...restRet } = useMenubar({
+    const { contextChildren, propsLabel: propsButtonAsMenuLabel, propsMenubar, randomIdInputReturn, rovingTabIndexReturn, ...restRet } = useMenubar({
         toolbarParameters: { role: "menu", ...toolbarParameters },
         labelParameters: { ariaLabel: null },
         ...restParams
@@ -75,8 +75,8 @@ export const useMenu = monitored(function useMenu({ dismissParameters, escapeDis
     return {
         ...restRet,
         ...restRet2,
-        context: useMemoObject({
-            ...context,
+        contextChildren: useMemoObject({
+            ...contextChildren,
             menu: useMemoObject({
                 closeFromMenuItemClicked: useStableCallback((e) => {
                     dismissParameters.onDismiss(e, "item-clicked"); // TODO

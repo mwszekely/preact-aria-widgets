@@ -61,7 +61,7 @@ export interface UseTabsParameters<TabContainerElement extends Element, TabEleme
     tabsParameters: UseTabsParametersSelf;
 }
 export interface UseTabParameters<TabElement extends Element, M extends TabInfo<TabElement>> extends
-    UseGenericChildParameters<UseTabsContext<TabElement, M>, Pick<TabInfo<TabElement>, "index" | "focusSelf" | "untabbable" | "getSortValue">>,
+    UseGenericChildParameters<UseTabsContext<TabElement, M>, Pick<TabInfo<TabElement>, "index" | "focusSelf" | "untabbable">>,
     OmitStrong<UseCompleteListNavigationChildParameters<TabElement, M>, "context" | "info" | "multiSelectionChildParameters">,
     TargetedOmit<UsePressParameters<TabElement>, "pressParameters", "excludeEnter" | "excludePointer" | "excludeSpace" | "allowRepeatPresses" | "onPressSync"> {
 
@@ -118,7 +118,7 @@ export interface UseTabLabelReturnTypeWithHooks<LabelElement extends Element> ex
     useTabListLabelProps: (props: ElementProps<LabelElement>) => ElementProps<LabelElement>;
 }
 
-export interface UseTabsReturnType<TabContainerElement extends Element, TabElement extends Element, LabelElement extends Element, M extends TabInfo<TabElement> = TabInfo<TabElement>> extends OmitStrong<UseCompleteListNavigationReturnType<TabContainerElement, TabElement, M>, "props" | "context"> {
+export interface UseTabsReturnType<TabContainerElement extends Element, TabElement extends Element, LabelElement extends Element, M extends TabInfo<TabElement> = TabInfo<TabElement>> extends OmitStrong<UseCompleteListNavigationReturnType<TabContainerElement, TabElement, M>, "props" | "contextChildren"> {
     propsContainer: ElementProps<TabContainerElement>;
     propsLabel: ElementProps<LabelElement>;
     contextPanels: UseTabPanelsContext<TabPanelInfo>;
@@ -197,7 +197,7 @@ export const useTabs = monitored(function useTabs<TabListElement extends Element
 
     const {
         props: listNavigationSingleSelectionProps,
-        context,
+        contextChildren,
         ...listNavRet1
     } = useCompleteListNavigation<TabListElement, TabElement, TabInfo<TabElement>>({
         linearNavigationParameters: { arrowKeyDirection: orientation, ...linearNavigationParameters },
@@ -237,7 +237,7 @@ export const useTabs = monitored(function useTabs<TabListElement extends Element
             })
         }),
         contextTabs: useMemoObject({
-            ...context,
+            ...contextChildren,
             tabsContext: useMemoObject({ getTabId, getPanelId, getVisibleIndex, setSelectedIndex: changeSingleSelectedIndex })
         }),
         propsContainer: useMergedProps(
@@ -260,7 +260,7 @@ export const useTabs = monitored(function useTabs<TabListElement extends Element
  * @compositeParams
  */
 export const useTab = monitored(function useTab<TabElement extends Element>({
-    info: { focusSelf: focusSelfParent, index, untabbable, getSortValue, ...info },
+    info: { focusSelf: focusSelfParent, index, untabbable, ...info },
     textContentParameters,
     pressParameters: { focusSelf: focusSelfChild, longPressThreshold, onPressingChange, ...void2 },
     context,
@@ -272,7 +272,7 @@ export const useTab = monitored(function useTab<TabElement extends Element>({
 
     const { propsChild: listNavigationSingleSelectionChildProps, propsTabbable, pressParameters: { onPressSync, excludeSpace, ...void1 }, refElementReturn, ...listNavRet2 } = useCompleteListNavigationChild({
         context,
-        info: { index, focusSelf: focusSelfParent, getSortValue, untabbable, ...info },
+        info: { index, focusSelf: focusSelfParent, untabbable, ...info },
         textContentParameters,
         hasCurrentFocusParameters,
         refElementParameters,

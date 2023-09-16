@@ -30,7 +30,7 @@ export interface UseListboxParameters<ListElement extends Element, ListItemEleme
 export interface UseListboxReturnType<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationReturnType<ListElement, ListItemElement, M>, "singleSelectionReturn" | "props"> {
     propsListbox: ElementProps<ListElement>;
     propsListboxLabel: ElementProps<LabelElement>;
-    context: UseListboxContext<ListItemElement, M>;
+    contextChildren: UseListboxContext<ListItemElement, M>;
 }
 export interface UseListboxItemReturnType<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationChildDeclarativeReturnType<ListItemElement, M>, "propsChild" | "propsTabbable" | "pressParameters">, UsePressReturnType<ListItemElement> {
 }

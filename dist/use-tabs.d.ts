@@ -20,7 +20,7 @@ export interface UseTabsParametersSelf {
 export interface UseTabsParameters<TabContainerElement extends Element, TabElement extends Element, M extends TabInfo<TabElement>> extends UseTabListParameters<TabContainerElement, TabElement, M>, TargetedOmit<UseLabelSyntheticParameters, "labelParameters", "onLabelClick"> {
     tabsParameters: UseTabsParametersSelf;
 }
-export interface UseTabParameters<TabElement extends Element, M extends TabInfo<TabElement>> extends UseGenericChildParameters<UseTabsContext<TabElement, M>, Pick<TabInfo<TabElement>, "index" | "focusSelf" | "untabbable" | "getSortValue">>, OmitStrong<UseCompleteListNavigationChildParameters<TabElement, M>, "context" | "info" | "multiSelectionChildParameters">, TargetedOmit<UsePressParameters<TabElement>, "pressParameters", "excludeEnter" | "excludePointer" | "excludeSpace" | "allowRepeatPresses" | "onPressSync"> {
+export interface UseTabParameters<TabElement extends Element, M extends TabInfo<TabElement>> extends UseGenericChildParameters<UseTabsContext<TabElement, M>, Pick<TabInfo<TabElement>, "index" | "focusSelf" | "untabbable">>, OmitStrong<UseCompleteListNavigationChildParameters<TabElement, M>, "context" | "info" | "multiSelectionChildParameters">, TargetedOmit<UsePressParameters<TabElement>, "pressParameters", "excludeEnter" | "excludePointer" | "excludeSpace" | "allowRepeatPresses" | "onPressSync"> {
 }
 export interface UseTabPanelParameters<M extends TabPanelInfo> extends UseGenericChildParameters<UseTabPanelsContext<M>, Pick<M, "index">>, OmitStrong<UseManagedChildParameters<M>, "context" | "info"> {
 }
@@ -58,7 +58,7 @@ export interface UseTabListLabelReturnTypeInfo {
 export interface UseTabLabelReturnTypeWithHooks<LabelElement extends Element> extends UseTabListLabelReturnTypeInfo {
     useTabListLabelProps: (props: ElementProps<LabelElement>) => ElementProps<LabelElement>;
 }
-export interface UseTabsReturnType<TabContainerElement extends Element, TabElement extends Element, LabelElement extends Element, M extends TabInfo<TabElement> = TabInfo<TabElement>> extends OmitStrong<UseCompleteListNavigationReturnType<TabContainerElement, TabElement, M>, "props" | "context"> {
+export interface UseTabsReturnType<TabContainerElement extends Element, TabElement extends Element, LabelElement extends Element, M extends TabInfo<TabElement> = TabInfo<TabElement>> extends OmitStrong<UseCompleteListNavigationReturnType<TabContainerElement, TabElement, M>, "props" | "contextChildren"> {
     propsContainer: ElementProps<TabContainerElement>;
     propsLabel: ElementProps<LabelElement>;
     contextPanels: UseTabPanelsContext<TabPanelInfo>;
@@ -87,7 +87,7 @@ export declare const useTabs: <TabListElement extends Element, TabElement extend
  *
  * @compositeParams
  */
-export declare const useTab: <TabElement extends Element>({ info: { focusSelf: focusSelfParent, index, untabbable, getSortValue, ...info }, textContentParameters, pressParameters: { focusSelf: focusSelfChild, longPressThreshold, onPressingChange, ...void2 }, context, hasCurrentFocusParameters, refElementParameters, singleSelectionChildParameters, ...void3 }: UseTabParameters<TabElement, TabInfo<TabElement>>) => UseTabReturnType<TabElement, TabInfo<TabElement>>;
+export declare const useTab: <TabElement extends Element>({ info: { focusSelf: focusSelfParent, index, untabbable, ...info }, textContentParameters, pressParameters: { focusSelf: focusSelfChild, longPressThreshold, onPressingChange, ...void2 }, context, hasCurrentFocusParameters, refElementParameters, singleSelectionChildParameters, ...void3 }: UseTabParameters<TabElement, TabInfo<TabElement>>) => UseTabReturnType<TabElement, TabInfo<TabElement>>;
 /**
  * Implements the TabPanel a Tab controls.
  *

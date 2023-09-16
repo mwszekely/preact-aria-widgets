@@ -6,7 +6,7 @@ import { useContextWithWarning } from "../props.js";
 import { useMenubar, useMenubarChild } from "../use-menubar.js";
 import { useComponent, useDefault } from "./util.js";
 export const MenubarItemContext = createContext(null);
-export const Menubar = memo(function Menubar({ render, collator, disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, staggered, noTypeahead, untabbable, onTabbableIndexChange, compare, getIndex, disabled, singleSelectedIndex, onSingleSelectedIndexChange, typeaheadTimeout, role, ariaLabel, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, singleSelectionAriaPropName, singleSelectionMode, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, ...void1 }) {
+export const Menubar = memo(function Menubar({ render, collator, disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, noTypeahead, untabbable, onTabbableIndexChange, disabled, singleSelectedIndex, onSingleSelectedIndexChange, typeaheadTimeout, role, ariaLabel, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, singleSelectionAriaPropName, singleSelectionMode, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, ...void1 }) {
     assertEmptyObject(void1);
     const info = useMenubar({
         linearNavigationParameters: {
@@ -31,15 +31,6 @@ export const Menubar = memo(function Menubar({ render, collator, disableHomeEndK
             noTypeahead: useDefault("noTypeahead", noTypeahead),
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
         },
-        rearrangeableChildrenParameters: {
-            getIndex: useDefault("getIndex", getIndex)
-        },
-        staggeredChildrenParameters: {
-            staggered: staggered || false
-        },
-        sortableChildrenParameters: {
-            compare,
-        },
         labelParameters: {
             ariaLabel
         },
@@ -59,13 +50,13 @@ export const Menubar = memo(function Menubar({ render, collator, disableHomeEndK
         refElementParameters: { onElementChange, onMount, onUnmount }
     });
     useImperativeHandle(imperativeHandle, () => info);
-    return (_jsx(MenubarItemContext.Provider, { value: info.context, children: render(info) }));
+    return (_jsx(MenubarItemContext.Provider, { value: info.contextChildren, children: render(info) }));
 });
-export function MenubarItem({ index, render, focusSelf, untabbable, getText, onPress, getSortValue, onPressingChange, role, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, ...void1 }) {
+export function MenubarItem({ index, render, focusSelf, untabbable, getText, onPress, onPressingChange, role, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, ...void1 }) {
     const defaultFocusSelf = useCallback((e) => focus(e), []);
     assertEmptyObject(void1);
     return useComponent(imperativeHandle, render, null, useMenubarChild({
-        info: { index, untabbable: untabbable || false, focusSelf: focusSelf ?? defaultFocusSelf, getSortValue, ...uinfo },
+        info: { index, untabbable: untabbable || false, focusSelf: focusSelf ?? defaultFocusSelf, ...uinfo },
         context: useContextWithWarning(MenubarItemContext, "menubar"),
         textContentParameters: { getText: useDefault("getText", getText) },
         menuItemParameters: { onPress: onPress ?? null, role: role ?? "menuitem" },

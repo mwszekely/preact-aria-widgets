@@ -2,12 +2,12 @@ import { createContext } from "preact";
 import { assertEmptyObject, memo, useStableGetter } from "preact-prop-helpers";
 import { useContextWithWarning } from "../props.js";
 import { useRadio, useRadioGroup } from "../use-radio-group.js";
-import { useComponent, useDefault } from "./util.js";
+import { useComponent, useComponentC, useDefault } from "./util.js";
 const RadioContext = createContext(null);
-export const RadioGroup = memo(function RadioGroup({ render, name, collator, disableHomeEndKeys, arrowKeyDirection, noTypeahead, typeaheadTimeout, ariaLabel, compare, staggered, getIndex, navigatePastEnd, navigatePastStart, selectedValue, untabbable, onTabbableIndexChange, onNavigateLinear, onNavigateTypeahead, pageNavigationSize, onElementChange, onMount, onUnmount, imperativeHandle, onSelectedValueChange, singleSelectionMode, ...void1 }) {
+export const RadioGroup = memo(function RadioGroup({ render, name, collator, disableHomeEndKeys, arrowKeyDirection, noTypeahead, typeaheadTimeout, ariaLabel, navigatePastEnd, navigatePastStart, selectedValue, untabbable, onTabbableIndexChange, onNavigateLinear, onNavigateTypeahead, pageNavigationSize, onElementChange, onMount, onUnmount, imperativeHandle, onSelectedValueChange, singleSelectionMode, ...void1 }) {
     untabbable ??= false;
     assertEmptyObject(void1);
-    return useComponent(imperativeHandle, render, RadioContext, useRadioGroup({
+    return useComponentC(imperativeHandle, render, RadioContext, useRadioGroup({
         singleSelectionParameters: { singleSelectionMode: singleSelectionMode ?? "focus" },
         linearNavigationParameters: {
             onNavigateLinear,
@@ -17,10 +17,7 @@ export const RadioGroup = memo(function RadioGroup({ render, name, collator, dis
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
             pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
         },
-        staggeredChildrenParameters: { staggered: staggered || false },
         labelParameters: { ariaLabel },
-        rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
-        sortableChildrenParameters: { compare },
         radioGroupParameters: { name, selectedValue, onSelectedValueChange },
         rovingTabIndexParameters: {
             onTabbableIndexChange,
@@ -43,7 +40,7 @@ export const Radio = memo(function Radio({ disabled, index, render, value, ariaL
     return useComponent(imperativeHandle, render, null, useRadio({
         radioParameters: { value },
         checkboxLikeParameters: { disabled: disabled ?? false },
-        info: { index, untabbable: untabbable || false, getSortValue: getValue },
+        info: { index, untabbable: untabbable || false },
         context,
         labelParameters: { ariaLabel, labelPosition, tagInput, tagLabel },
         textContentParameters: { getText: useDefault("getText", getText) },

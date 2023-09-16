@@ -120,7 +120,7 @@ declare module 'preact' {
     namespace h {
         namespace JSX {
             interface HTMLAttributes<RefType extends EventTarget = EventTarget> {
-                inert?: undefined | Signalish<boolean>;
+                inert?: boolean | SignalLike<boolean | undefined> | undefined;
             }
         }
     }

@@ -56,7 +56,7 @@ export interface UseToolbarReturnType<ContainerElement extends Element, ChildEle
     propsLabel: ElementProps<LabelElement>;
     randomIdInputReturn: UseRandomIdReturnType<ContainerElement, LabelElement>["randomIdReturn"];
     randomIdLabelReturn: UseRandomIdReturnType<LabelElement, ContainerElement>["randomIdReturn"];
-    context: UseToolbarContext<ChildElement, M>;
+    contextChildren: UseToolbarContext<ChildElement, M>;
 }
 
 export interface UseToolbarSubInfo<ChildElement extends Element> extends UseCompleteListNavigationChildInfo<ChildElement> {
@@ -108,7 +108,8 @@ export const useToolbar = monitored(function useToolbar<ContainerElement extends
     }
 
     const {
-        context,
+        contextChildren,
+        contextProcessing,
         props,
         ...listNavReturn
     } = useCompleteListNavigationDeclarative<ContainerElement, ChildElement, M>({
@@ -129,7 +130,8 @@ export const useToolbar = monitored(function useToolbar<ContainerElement extends
     // Note: We return tabIndex=-1 (when not disabled) because some browsers (at least Firefox) seem to add role=toolbar to the tab order?
     // Probably needs a bit more digging because this feels like a bit of a blunt fix.
     return {
-        context: useMemoObject({ ...context, toolbarContext: useMemoObject<UseToolbarContextSelf>({}) }),
+        contextChildren: useMemoObject({ ...contextChildren, toolbarContext: useMemoObject<UseToolbarContextSelf>({}) }),
+        contextProcessing,
         propsLabel,
         propsToolbar: useMergedProps({
             ...propsToolbar,

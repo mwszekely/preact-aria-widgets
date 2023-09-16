@@ -4,23 +4,20 @@ import { assertEmptyObject, focus } from "preact-prop-helpers";
 import { useCallback, useContext } from "preact/hooks";
 import { useContextWithWarning } from "../props.js";
 import { useMenu, useMenuItem } from "../use-menu.js";
-import { ParentDepthContext, useComponent, useDefault } from "./util.js";
+import { ParentDepthContext, useComponent, useComponentC, useDefault } from "./util.js";
 const MenuItemContext = createContext(null);
-export function Menu({ collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, orientation, singleSelectionAriaPropName, singleSelectionMode, untabbable, active, onDismiss, onElementChange, onMount, onUnmount, openDirection, onTabbableIndexChange, compare, getIndex, singleSelectedIndex, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, pageNavigationSize, parentDepth, disabled, staggered, onOpen, onNavigateLinear, onNavigateTypeahead, getDocument, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, render, imperativeHandle, ...void1 }) {
+export function Menu({ collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, orientation, singleSelectionAriaPropName, singleSelectionMode, untabbable, active, onDismiss, onElementChange, onMount, onUnmount, openDirection, onTabbableIndexChange, singleSelectedIndex, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, pageNavigationSize, parentDepth, disabled, onOpen, onNavigateLinear, onNavigateTypeahead, getDocument, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, render, imperativeHandle, ...void1 }) {
     const defaultParentDepth = useContext(ParentDepthContext);
     let myDepth = (parentDepth ?? defaultParentDepth) + 1;
     untabbable ||= false;
     assertEmptyObject(void1);
-    return (_jsx(ParentDepthContext.Provider, { value: myDepth, children: useComponent(imperativeHandle, render, MenuItemContext, useMenu({
+    return (_jsx(ParentDepthContext.Provider, { value: myDepth, children: useComponentC(imperativeHandle, render, MenuItemContext, useMenu({
             linearNavigationParameters: {
                 onNavigateLinear,
                 disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
                 pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize),
                 navigatePastEnd: navigatePastEnd ?? "wrap",
                 navigatePastStart: navigatePastStart ?? "wrap"
-            },
-            staggeredChildrenParameters: {
-                staggered: staggered || false
             },
             escapeDismissParameters: { parentDepth: parentDepth || 1, },
             dismissParameters: { onDismiss },
@@ -31,12 +28,6 @@ export function Menu({ collator, disableHomeEndKeys, noTypeahead, typeaheadTimeo
                 onActiveElementChange,
                 onLastActiveElementChange,
                 onWindowFocusedChange
-            },
-            rearrangeableChildrenParameters: {
-                getIndex: useDefault("getIndex", getIndex)
-            },
-            sortableChildrenParameters: {
-                compare
             },
             menuParameters: {
                 openDirection,
@@ -72,7 +63,7 @@ export function Menu({ collator, disableHomeEndKeys, noTypeahead, typeaheadTimeo
             }
         })) }));
 }
-export function MenuItem({ index, untabbable, getSortValue, onPress, getText, role, focusSelf, onPressingChange, render, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, ...void1 }) {
+export function MenuItem({ index, untabbable, onPress, getText, role, focusSelf, onPressingChange, render, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, ...void1 }) {
     const context = useContextWithWarning(MenuItemContext, "menu");
     const defaultFocusSelf = useCallback((e) => focus(e), []);
     assertEmptyObject(void1);
@@ -80,8 +71,7 @@ export function MenuItem({ index, untabbable, getSortValue, onPress, getText, ro
         info: {
             index,
             untabbable: untabbable || false,
-            focusSelf: focusSelf ?? defaultFocusSelf,
-            getSortValue,
+            focusSelf: focusSelf ?? defaultFocusSelf
         },
         context,
         textContentParameters: {

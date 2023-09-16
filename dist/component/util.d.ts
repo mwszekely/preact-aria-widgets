@@ -12,6 +12,9 @@ import { GetIndex, Nullable, VNode } from "preact-prop-helpers";
 export declare function useComponent<R>(imperativeHandle: Nullable<Ref<R>>, render: (info: R) => VNode, Context: null | Context<(R extends {
     context?: infer C;
 } ? C : unknown)>, info: R): import("preact").JSX.Element;
+export declare function useComponentC<R>(imperativeHandle: Nullable<Ref<R>>, render: (info: R) => VNode, Context: null | Context<(R extends {
+    contextChildren?: infer C;
+} ? C : unknown)>, info: R): import("preact").JSX.Element;
 /**
  * Quickly puts together component props from the hook it's based on.
  *
@@ -39,8 +42,8 @@ export declare const ContextDefaults: {
     getDocument: Context<() => Document>;
     focusOpener: Context<(e: any) => void>;
     getText: Context<(e: any) => string | null>;
-    singleSelectionMode: Context<"disabled" | "focus" | "activation">;
-    multiSelectionMode: Context<"disabled" | "focus" | "activation">;
+    singleSelectionMode: Context<"focus" | "activation" | "disabled">;
+    multiSelectionMode: Context<"focus" | "activation" | "disabled">;
 };
 type DefaultExcepts = keyof typeof ContextDefaults;
 type ContextType<T extends Context<any>> = T extends Context<infer C> ? C : unknown;

@@ -78,13 +78,13 @@ export interface UseRadioGroupReturnTypeSelf {
 }
 
 export interface UseRadioGroupReturnType<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, TabbableChildElement extends Element, M extends RadioSubInfo<TabbableChildElement, V> = RadioSubInfo<TabbableChildElement, V>> extends
-    OmitStrong<UseCompleteListNavigationDeclarativeReturnType<GroupElement, TabbableChildElement, M>, "context" | "props" | "multiSelectionReturn"> {
+    OmitStrong<UseCompleteListNavigationDeclarativeReturnType<GroupElement, TabbableChildElement, M>, "contextProcessing" | "props" | "multiSelectionReturn"> {
     radioGroupReturn: UseRadioGroupReturnTypeSelf;
     propsRadioGroup: ElementProps<GroupElement>;
     propsRadioGroupLabel: ElementProps<GroupLabelElement>;
 
     // override
-    context: RadioContext<V, TabbableChildElement, M>;
+    contextChildren: RadioContext<V, TabbableChildElement, M>;
 }
 
 export interface RadioSubInfo<TabbableChildElement extends Element, V extends string | number> extends UseCompleteListNavigationChildInfo<TabbableChildElement> {
@@ -105,9 +105,6 @@ export const useRadioGroup = monitored(function useRadioGroup<V extends string |
     radioGroupParameters: { name, selectedValue, onSelectedValueChange, ...void2 },
     rovingTabIndexParameters,
     linearNavigationParameters,
-    rearrangeableChildrenParameters,
-    sortableChildrenParameters,
-    staggeredChildrenParameters,
     typeaheadNavigationParameters,
     refElementParameters,
     singleSelectionParameters: { singleSelectionMode, ...void4 },
@@ -138,19 +135,18 @@ export const useRadioGroup = monitored(function useRadioGroup<V extends string |
         });
 
     const {
-        context,
+        contextChildren,
         props: propsGroup2,
         singleSelectionReturn,
         multiSelectionReturn,
         managedChildrenReturn,
         rovingTabIndexReturn,
         linearNavigationReturn,
-        paginatedChildrenReturn,
         rearrangeableChildrenReturn,
-        sortableChildrenReturn,
-        staggeredChildrenReturn,
         typeaheadNavigationReturn,
         childrenHaveFocusReturn,
+        contextProcessing,
+        refElementReturn,
         ...void3
     } = useCompleteListNavigationDeclarative<G, TCE, M>({
         singleSelectionDeclarativeParameters: {
@@ -165,9 +161,6 @@ export const useRadioGroup = monitored(function useRadioGroup<V extends string |
         paginatedChildrenParameters: { paginationMin: null, paginationMax: null },
         rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
         linearNavigationParameters,
-        rearrangeableChildrenParameters,
-        sortableChildrenParameters,
-        staggeredChildrenParameters,
         typeaheadNavigationParameters,
         refElementParameters
     });
@@ -185,17 +178,15 @@ export const useRadioGroup = monitored(function useRadioGroup<V extends string |
         propsRadioGroupLabel: propsLabel,
         rovingTabIndexReturn,
         linearNavigationReturn,
-        paginatedChildrenReturn,
+        refElementReturn,
         managedChildrenReturn,
         radioGroupReturn: { selectedIndex },
         singleSelectionReturn,
         rearrangeableChildrenReturn,
-        sortableChildrenReturn,
-        staggeredChildrenReturn,
         typeaheadNavigationReturn,
         childrenHaveFocusReturn,
-        context: useMemo(() => ({
-            ...context,
+        contextChildren: useMemo(() => ({
+            ...contextChildren,
             radioContext: { name, indexToName: indexToName.current, nameToIndex: nameToIndex.current }
         }), [name]),
     }

@@ -1,22 +1,22 @@
 import { createContext } from "preact";
 import { assertEmptyObject, focus, OmitStrong } from "preact-prop-helpers";
 import { useCallback, useContext } from "preact/hooks";
-import { Get18, useContextWithWarning } from "../props.js";
+import { Get15, useContextWithWarning } from "../props.js";
 import { useMenu, UseMenuContext, useMenuItem, UseMenuItemReturnType, UseMenuParameters, UseMenuReturnType } from "../use-menu.js";
 import { UseMenubarSubInfo } from "../use-menubar.js";
 import { MenubarItemProps } from "./menubar.js";
-import { GenericComponentProps, ParentDepthContext, useComponent, useDefault } from "./util.js";
+import { GenericComponentProps, ParentDepthContext, useComponent, useComponentC, useDefault } from "./util.js";
 
 export type MenuProps<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> = GenericComponentProps<
     UseMenuReturnType<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement, M>,
-    Get18<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, M>, "menuParameters", "menuSurfaceParameters", "linearNavigationParameters", "rovingTabIndexParameters", "typeaheadNavigationParameters", "dismissParameters", "staggeredChildrenParameters", "escapeDismissParameters", "rearrangeableChildrenParameters", "sortableChildrenParameters", "toolbarParameters", "singleSelectionParameters", "activeElementParameters", "refElementParameters", "dismissParameters", "modalParameters", "multiSelectionParameters", "singleSelectionDeclarativeParameters">,
+    Get15<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, M>, "menuParameters", "menuSurfaceParameters", "linearNavigationParameters", "rovingTabIndexParameters", "typeaheadNavigationParameters", "dismissParameters", "escapeDismissParameters", "toolbarParameters", "singleSelectionParameters", "activeElementParameters", "refElementParameters", "dismissParameters", "modalParameters", "multiSelectionParameters", "singleSelectionDeclarativeParameters">,
     "active" | "onDismiss" | "openDirection" | "orientation" | "onOpen"
 >;
 
 export type MenuItemProps<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> = GenericComponentProps<
     UseMenuItemReturnType<MenuItemElement, M>,
     MenubarItemProps<MenuItemElement, M>,
-    "index" | "getSortValue"
+    "index"
 > & { info?: OmitStrong<M, keyof UseMenubarSubInfo<MenuItemElement>>; };
 
 const MenuItemContext = createContext<UseMenuContext<any, any>>(null!);
@@ -40,8 +40,6 @@ export function Menu<SurfaceElement extends Element, ParentElement extends Eleme
     openDirection,
 
     onTabbableIndexChange,
-    compare,
-    getIndex,
     singleSelectedIndex,
     navigatePastEnd,
     navigatePastStart,
@@ -52,7 +50,6 @@ export function Menu<SurfaceElement extends Element, ParentElement extends Eleme
     pageNavigationSize,
     parentDepth,
     disabled,
-    staggered,
     onOpen,
     onNavigateLinear,
     onNavigateTypeahead,
@@ -78,7 +75,7 @@ export function Menu<SurfaceElement extends Element, ParentElement extends Eleme
 
     return (
         <ParentDepthContext.Provider value={myDepth}>
-            {useComponent(
+            {useComponentC(
                 imperativeHandle,
                 render,
                 MenuItemContext,
@@ -90,9 +87,6 @@ export function Menu<SurfaceElement extends Element, ParentElement extends Eleme
                         navigatePastEnd: navigatePastEnd ?? "wrap",
                         navigatePastStart: navigatePastStart ?? "wrap"
                     },
-                    staggeredChildrenParameters: {
-                        staggered: staggered || false
-                    },
                     escapeDismissParameters: { parentDepth: parentDepth || 1, },
                     dismissParameters: { onDismiss },
                     modalParameters: { active },
@@ -102,13 +96,6 @@ export function Menu<SurfaceElement extends Element, ParentElement extends Eleme
                         onActiveElementChange,
                         onLastActiveElementChange,
                         onWindowFocusedChange
-                    },
-                    rearrangeableChildrenParameters: {
-                        getIndex: useDefault("getIndex", getIndex)
-                    },
-
-                    sortableChildrenParameters: {
-                        compare
                     },
                     menuParameters: {
                         openDirection,
@@ -151,7 +138,6 @@ export function Menu<SurfaceElement extends Element, ParentElement extends Eleme
 export function MenuItem<MenuItemElement extends Element>({
     index,
     untabbable,
-    getSortValue,
     onPress,
     getText,
     role,
@@ -184,8 +170,7 @@ export function MenuItem<MenuItemElement extends Element>({
                 info: {
                     index,
                     untabbable: untabbable || false,
-                    focusSelf: focusSelf ?? defaultFocusSelf,
-                    getSortValue,
+                    focusSelf: focusSelf ?? defaultFocusSelf
                 },
                 context,
                 textContentParameters: {

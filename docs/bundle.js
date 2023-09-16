@@ -1091,13 +1091,13 @@
       var push = uncurryThis([].push);
       module2.exports = function(object, names) {
         var O2 = toIndexedObject(object);
-        var i5 = 0;
+        var i4 = 0;
         var result = [];
         var key;
         for (key in O2)
           !hasOwn(hiddenKeys, key) && hasOwn(O2, key) && push(result, key);
-        while (names.length > i5)
-          if (hasOwn(O2, key = names[i5++])) {
+        while (names.length > i4)
+          if (hasOwn(O2, key = names[i4++])) {
             ~indexOf(result, key) || push(result, key);
           }
         return result;
@@ -1172,8 +1172,8 @@
         var keys2 = ownKeys(source);
         var defineProperty = definePropertyModule.f;
         var getOwnPropertyDescriptor = getOwnPropertyDescriptorModule.f;
-        for (var i5 = 0; i5 < keys2.length; i5++) {
-          var key = keys2[i5];
+        for (var i4 = 0; i4 < keys2.length; i4++) {
+          var key = keys2[i4];
           if (!hasOwn(target, key) && !(exceptions && hasOwn(exceptions, key))) {
             defineProperty(target, key, getOwnPropertyDescriptor(source, key));
           }
@@ -2123,8 +2123,8 @@
           return;
         var rawLength = replacer.length;
         var keys2 = [];
-        for (var i5 = 0; i5 < rawLength; i5++) {
-          var element = replacer[i5];
+        for (var i4 = 0; i4 < rawLength; i4++) {
+          var element = replacer[i4];
           if (typeof element == "string")
             push(keys2, element);
           else if (typeof element == "number" || classof(element) == "Number" || classof(element) == "String")
@@ -2641,8 +2641,8 @@
         if (!FORCED)
           return OriginalError;
         var BaseError = getBuiltIn("Error");
-        var WrappedError = wrapper(function(a4, b3) {
-          var message = normalizeStringArgument(IS_AGGREGATE_ERROR ? b3 : a4, void 0);
+        var WrappedError = wrapper(function(a4, b4) {
+          var message = normalizeStringArgument(IS_AGGREGATE_ERROR ? b4 : a4, void 0);
           var result = IS_AGGREGATE_ERROR ? new OriginalError(a4) : new OriginalError();
           if (message !== void 0)
             createNonEnumerableProperty(result, "message", message);
@@ -3198,9 +3198,9 @@
           var O2 = toObject(this);
           var A3 = arraySpeciesCreate(O2, 0);
           var n2 = 0;
-          var i5, k4, length, len, E2;
-          for (i5 = -1, length = arguments.length; i5 < length; i5++) {
-            E2 = i5 === -1 ? O2 : arguments[i5];
+          var i4, k4, length, len, E2;
+          for (i4 = -1, length = arguments.length; i4 < length; i4++) {
+            E2 = i4 === -1 ? O2 : arguments[i4];
             if (isConcatSpreadable(E2)) {
               len = lengthOfArrayLike(E2);
               doesNotExceedSafeInteger(n2 + len);
@@ -4172,8 +4172,8 @@
           var len = lengthOfArrayLike(O2);
           var argCount = arguments.length;
           doesNotExceedSafeInteger(len + argCount);
-          for (var i5 = 0; i5 < argCount; i5++) {
-            O2[len] = arguments[i5];
+          for (var i4 = 0; i4 < argCount; i4++) {
+            O2[len] = arguments[i4];
             len++;
           }
           setArrayLength(O2, len);
@@ -4199,20 +4199,20 @@
           var self2 = IndexedObject(O2);
           var length = lengthOfArrayLike(O2);
           var index = IS_RIGHT ? length - 1 : 0;
-          var i5 = IS_RIGHT ? -1 : 1;
+          var i4 = IS_RIGHT ? -1 : 1;
           if (argumentsLength < 2)
             while (true) {
               if (index in self2) {
                 memo = self2[index];
-                index += i5;
+                index += i4;
                 break;
               }
-              index += i5;
+              index += i4;
               if (IS_RIGHT ? index < 0 : length <= index) {
                 throw $TypeError("Reduce of empty array with no initial value");
               }
             }
-          for (; IS_RIGHT ? index >= 0 : length > index; index += i5)
+          for (; IS_RIGHT ? index >= 0 : length > index; index += i4)
             if (index in self2) {
               memo = callbackfn(memo, self2[index], index, O2);
             }
@@ -4381,15 +4381,15 @@
       };
       var insertionSort = function(array, comparefn) {
         var length = array.length;
-        var i5 = 1;
+        var i4 = 1;
         var element, j4;
-        while (i5 < length) {
-          j4 = i5;
-          element = array[i5];
+        while (i4 < length) {
+          j4 = i4;
+          element = array[i4];
           while (j4 && comparefn(array[j4 - 1], element) > 0) {
             array[j4] = array[--j4];
           }
-          if (j4 !== i5++)
+          if (j4 !== i4++)
             array[j4] = element;
         }
         return array;
@@ -4496,8 +4496,8 @@
             test.push({ k: chr + index, v: value });
           }
         }
-        test.sort(function(a4, b3) {
-          return b3.v - a4.v;
+        test.sort(function(a4, b4) {
+          return b4.v - a4.v;
         });
         for (index = 0; index < test.length; index++) {
           chr = test[index].k.charAt(0);
@@ -5135,8 +5135,8 @@
           throw RangeError2(WRONG_INDEX);
         var bytes = store.bytes;
         var start = intIndex + store.byteOffset;
-        for (var i5 = 0; i5 < count; i5++)
-          bytes[start + i5] = pack[boolIsLittleEndian ? i5 : count - i5 - 1];
+        for (var i4 = 0; i4 < count; i4++)
+          bytes[start + i4] = pack[boolIsLittleEndian ? i4 : count - i4 - 1];
       };
       if (!NATIVE_ARRAY_BUFFER) {
         $ArrayBuffer = function ArrayBuffer2(length) {
@@ -5931,8 +5931,8 @@
       var factories = {};
       var construct = function(C3, argsLength, args) {
         if (!hasOwn(factories, argsLength)) {
-          for (var list = [], i5 = 0; i5 < argsLength; i5++)
-            list[i5] = "a[" + i5 + "]";
+          for (var list = [], i4 = 0; i4 < argsLength; i4++)
+            list[i4] = "a[" + i4 + "]";
           factories[argsLength] = $Function("C,a", "return new C(" + join(list, ",") + ")");
         }
         return factories[argsLength](C3, args);
@@ -6154,9 +6154,9 @@
         if (getOwnPropertyNames(test).length) {
           getOwnPropertyNamesModule.f = function(it) {
             var result = getOwnPropertyNames(it);
-            for (var i5 = 0, length = result.length; i5 < length; i5++) {
-              if (result[i5] === METADATA) {
-                splice(result, i5, 1);
+            for (var i4 = 0, length = result.length; i4 < length; i4++) {
+              if (result[i4] === METADATA) {
+                splice(result, i4, 1);
                 break;
               }
             }
@@ -6717,12 +6717,12 @@
         // eslint-disable-next-line no-unused-vars -- required for `.length`
         hypot: function hypot(value1, value2) {
           var sum = 0;
-          var i5 = 0;
+          var i4 = 0;
           var aLen = arguments.length;
           var larg = 0;
           var arg, div;
-          while (i5 < aLen) {
-            arg = abs(arguments[i5++]);
+          while (i4 < aLen) {
+            arg = abs(arguments[i4++]);
             if (larg < arg) {
               div = larg / arg;
               sum = sum * div * div + 1;
@@ -6856,8 +6856,8 @@
         tanh: function tanh(x4) {
           var n2 = +x4;
           var a4 = expm1(n2);
-          var b3 = expm1(-n2);
-          return a4 == Infinity ? 1 : b3 == Infinity ? -1 : (a4 - b3) / (exp(n2) + exp(-n2));
+          var b4 = expm1(-n2);
+          return a4 == Infinity ? 1 : b4 == Infinity ? -1 : (a4 - b4) / (exp(n2) + exp(-n2));
         }
       });
     }
@@ -7271,7 +7271,7 @@
           if (ROUNDS_PROPERLY)
             return nativeToExponential(x4, f4);
           var s4 = "";
-          var m3 = "";
+          var m4 = "";
           var e3 = 0;
           var c4 = "";
           var d4 = "";
@@ -7281,7 +7281,7 @@
           }
           if (x4 === 0) {
             e3 = 0;
-            m3 = repeat("0", f4 + 1);
+            m4 = repeat("0", f4 + 1);
           } else {
             var l4 = log10(x4);
             e3 = floor(l4);
@@ -7295,10 +7295,10 @@
               n2 /= 10;
               e3 += 1;
             }
-            m3 = $String(n2);
+            m4 = $String(n2);
           }
           if (f4 !== 0) {
-            m3 = stringSlice(m3, 0, 1) + "." + stringSlice(m3, 1);
+            m4 = stringSlice(m4, 0, 1) + "." + stringSlice(m4, 1);
           }
           if (e3 === 0) {
             c4 = "+";
@@ -7307,8 +7307,8 @@
             c4 = e3 > 0 ? "+" : "-";
             d4 = $String(abs(e3));
           }
-          m3 += "e" + c4 + d4;
-          return s4 + m3;
+          m4 += "e" + c4 + d4;
+          return s4 + m4;
         }
       });
     }
@@ -7653,11 +7653,11 @@
           var keys2 = objectKeys(O2);
           var IE_WORKAROUND = IE_BUG && objectGetPrototypeOf(O2) === null;
           var length = keys2.length;
-          var i5 = 0;
+          var i4 = 0;
           var result = [];
           var key;
-          while (length > i5) {
-            key = keys2[i5++];
+          while (length > i4) {
+            key = keys2[i4++];
             if (!DESCRIPTORS || (IE_WORKAROUND ? key in O2 : propertyIsEnumerable2(O2, key))) {
               push(result, TO_ENTRIES ? [key, O2[key]] : O2[key]);
             }
@@ -8387,9 +8387,9 @@
   var require_host_report_errors = __commonJS({
     "node_modules/.pnpm/core-js@3.32.0/node_modules/core-js/internals/host-report-errors.js"(exports2, module2) {
       "use strict";
-      module2.exports = function(a4, b3) {
+      module2.exports = function(a4, b4) {
         try {
-          arguments.length == 1 ? console.error(a4) : console.error(a4, b3);
+          arguments.length == 1 ? console.error(a4) : console.error(a4, b4);
         } catch (error) {
         }
       };
@@ -8918,9 +8918,9 @@
       var newPromiseCapabilityModule = require_new_promise_capability();
       var FORCED_PROMISE_CONSTRUCTOR = require_promise_constructor_detection().CONSTRUCTOR;
       $3({ target: "Promise", stat: true, forced: FORCED_PROMISE_CONSTRUCTOR }, {
-        reject: function reject(r4) {
+        reject: function reject(r5) {
           var capability = newPromiseCapabilityModule.f(this);
-          call(capability.reject, void 0, r4);
+          call(capability.reject, void 0, r5);
           return capability.promise;
         }
       });
@@ -9845,7 +9845,7 @@
           var state = getInternalState(re);
           var str = toString(string);
           var raw = state.raw;
-          var result, reCopy, lastIndex, match, i5, object, group;
+          var result, reCopy, lastIndex, match, i4, object, group;
           if (raw) {
             raw.lastIndex = re.lastIndex;
             result = call(patchedExec, raw, str);
@@ -9890,16 +9890,16 @@
           }
           if (NPCG_INCLUDED && match && match.length > 1) {
             call(nativeReplace, match[0], reCopy, function() {
-              for (i5 = 1; i5 < arguments.length - 2; i5++) {
-                if (arguments[i5] === void 0)
-                  match[i5] = void 0;
+              for (i4 = 1; i4 < arguments.length - 2; i4++) {
+                if (arguments[i4] === void 0)
+                  match[i4] = void 0;
               }
             });
           }
           if (match && groups) {
             match.groups = object = create(null);
-            for (i5 = 0; i5 < groups.length; i5++) {
-              group = groups[i5];
+            for (i4 = 0; i4 < groups.length; i4++) {
+              group = groups[i4];
               object[group[0]] = match[group[1]];
             }
           }
@@ -10248,13 +10248,13 @@
         fromCodePoint: function fromCodePoint(x4) {
           var elements = [];
           var length = arguments.length;
-          var i5 = 0;
+          var i4 = 0;
           var code;
-          while (length > i5) {
-            code = +arguments[i5++];
+          while (length > i4) {
+            code = +arguments[i4++];
             if (toAbsoluteIndex(code, 1114111) !== code)
               throw $RangeError(code + " is not a valid code point");
-            elements[i5] = code < 65536 ? fromCharCode(code) : fromCharCode(((code -= 65536) >> 10) + 55296, code % 1024 + 56320);
+            elements[i4] = code < 65536 ? fromCharCode(code) : fromCharCode(((code -= 65536) >> 10) + 55296, code % 1024 + 56320);
           }
           return join(elements, "");
         }
@@ -10298,11 +10298,11 @@
         isWellFormed: function isWellFormed() {
           var S2 = toString(requireObjectCoercible(this));
           var length = S2.length;
-          for (var i5 = 0; i5 < length; i5++) {
-            var charCode = charCodeAt(S2, i5);
+          for (var i4 = 0; i4 < length; i4++) {
+            var charCode = charCodeAt(S2, i4);
             if ((charCode & 63488) != 55296)
               continue;
-            if (charCode >= 56320 || ++i5 >= length || (charCodeAt(S2, i5) & 64512) != 56320)
+            if (charCode >= 56320 || ++i4 >= length || (charCodeAt(S2, i4) & 64512) != 56320)
               return false;
           }
           return true;
@@ -10659,13 +10659,13 @@
             return "";
           var argumentsLength = arguments.length;
           var elements = [];
-          var i5 = 0;
+          var i4 = 0;
           while (true) {
-            push(elements, toString(rawTemplate[i5++]));
-            if (i5 === literalSegments)
+            push(elements, toString(rawTemplate[i4++]));
+            if (i4 === literalSegments)
               return join(elements, "");
-            if (i5 < argumentsLength)
-              push(elements, toString(arguments[i5]));
+            if (i4 < argumentsLength)
+              push(elements, toString(arguments[i4]));
           }
         }
       });
@@ -10698,7 +10698,7 @@
       var SUBSTITUTION_SYMBOLS_NO_NAMED = /\$([$&'`]|\d{1,2})/g;
       module2.exports = function(matched, str, position, captures, namedCaptures, replacement) {
         var tailPos = position + matched.length;
-        var m3 = captures.length;
+        var m4 = captures.length;
         var symbols = SUBSTITUTION_SYMBOLS_NO_NAMED;
         if (namedCaptures !== void 0) {
           namedCaptures = toObject(namedCaptures);
@@ -10722,11 +10722,11 @@
               var n2 = +ch;
               if (n2 === 0)
                 return match;
-              if (n2 > m3) {
+              if (n2 > m4) {
                 var f4 = floor(n2 / 10);
                 if (f4 === 0)
                   return match;
-                if (f4 <= m3)
+                if (f4 <= m4)
                   return captures[f4 - 1] === void 0 ? charAt(ch, 1) : captures[f4 - 1] + charAt(ch, 1);
                 return match;
               }
@@ -10829,8 +10829,8 @@
             }
             var accumulatedResult = "";
             var nextSourcePosition = 0;
-            for (var i5 = 0; i5 < results.length; i5++) {
-              result = results[i5];
+            for (var i4 = 0; i4 < results.length; i4++) {
+              result = results[i4];
               var matched = toString(result[0]);
               var position = max(min(toIntegerOrInfinity(result.index), S2.length), 0);
               var captures = [];
@@ -11100,8 +11100,8 @@
                 push(A3, stringSlice(S2, p4, q4));
                 if (A3.length === lim)
                   return A3;
-                for (var i5 = 1; i5 <= z4.length - 1; i5++) {
-                  push(A3, z4[i5]);
+                for (var i4 = 1; i4 <= z4.length - 1; i4++) {
+                  push(A3, z4[i4]);
                   if (A3.length === lim)
                     return A3;
                 }
@@ -11208,15 +11208,15 @@
             return call($toWellFormed, S2);
           var length = S2.length;
           var result = $Array(length);
-          for (var i5 = 0; i5 < length; i5++) {
-            var charCode = charCodeAt(S2, i5);
+          for (var i4 = 0; i4 < length; i4++) {
+            var charCode = charCodeAt(S2, i4);
             if ((charCode & 63488) != 55296)
-              result[i5] = charAt(S2, i5);
-            else if (charCode >= 56320 || i5 + 1 >= length || (charCodeAt(S2, i5 + 1) & 64512) != 56320)
-              result[i5] = REPLACEMENT_CHARACTER;
+              result[i4] = charAt(S2, i4);
+            else if (charCode >= 56320 || i4 + 1 >= length || (charCodeAt(S2, i4 + 1) & 64512) != 56320)
+              result[i4] = REPLACEMENT_CHARACTER;
             else {
-              result[i5] = charAt(S2, i5);
-              result[++i5] = charAt(S2, i5);
+              result[i4] = charAt(S2, i4);
+              result[++i4] = charAt(S2, i4);
             }
           }
           return join(result, "");
@@ -11674,7 +11674,7 @@
         var mapfn = argumentsLength > 1 ? arguments[1] : void 0;
         var mapping = mapfn !== void 0;
         var iteratorMethod = getIteratorMethod(O2);
-        var i5, length, result, thisIsBigIntArray, value, step, iterator, next;
+        var i4, length, result, thisIsBigIntArray, value, step, iterator, next;
         if (iteratorMethod && !isArrayIteratorMethod(iteratorMethod)) {
           iterator = getIterator(O2, iteratorMethod);
           next = iterator.next;
@@ -11689,9 +11689,9 @@
         length = lengthOfArrayLike(O2);
         result = new (aTypedArrayConstructor(C3))(length);
         thisIsBigIntArray = isBigIntArray(result);
-        for (i5 = 0; length > i5; i5++) {
-          value = mapping ? mapfn(O2[i5], i5) : O2[i5];
-          result[i5] = thisIsBigIntArray ? toBigInt(value) : +value;
+        for (i4 = 0; length > i4; i4++) {
+          value = mapping ? mapfn(O2[i4], i4) : O2[i4];
+          result[i4] = thisIsBigIntArray ? toBigInt(value) : +value;
         }
         return result;
       };
@@ -12547,8 +12547,8 @@
           array[index] = 515 - index;
           expected[index] = index - 2 * mod + 3;
         }
-        nativeSort(array, function(a4, b3) {
-          return (a4 / 4 | 0) - (b3 / 4 | 0);
+        nativeSort(array, function(a4, b4) {
+          return (a4 / 4 | 0) - (b4 / 4 | 0);
         });
         for (index = 0; index < 516; index++) {
           if (array[index] !== expected[index])
@@ -13955,10 +13955,10 @@
         var options = preserveResizability && !fixedLength && maxByteLength ? { maxByteLength: maxByteLength(newBuffer) } : void 0;
         var newNewBuffer = new ArrayBuffer2(newByteLength, options);
         var a4 = new DataView2(newBuffer);
-        var b3 = new DataView2(newNewBuffer);
+        var b4 = new DataView2(newNewBuffer);
         var copyLength = min(newByteLength, byteLength);
-        for (var i5 = 0; i5 < copyLength; i5++)
-          setInt8(b3, i5, getInt8(a4, i5));
+        for (var i4 = 0; i4 < copyLength; i4++)
+          setInt8(b4, i4, getInt8(a4, i4));
         return newNewBuffer;
       };
     }
@@ -14096,7 +14096,7 @@
             if (!DESCRIPTORS)
               asyncDisposableStack.disposed = true;
             var stack = internalState.stack;
-            var i5 = stack.length;
+            var i4 = stack.length;
             var thrown = false;
             var suppressed;
             var handleError = function(result) {
@@ -14109,9 +14109,9 @@
               loop();
             };
             var loop = function() {
-              if (i5) {
-                var disposeMethod = stack[--i5];
-                stack[i5] = null;
+              if (i4) {
+                var disposeMethod = stack[--i4];
+                stack[i4] = null;
                 try {
                   Promise2.resolve(disposeMethod()).then(loop, handleError);
                 } catch (error) {
@@ -15091,8 +15091,8 @@
       Node2.prototype.get = function(key, initializer) {
         return this[key] || (this[key] = initializer());
       };
-      Node2.prototype.next = function(i5, it, IS_OBJECT) {
-        var store = IS_OBJECT ? this.objectsByIndex[i5] || (this.objectsByIndex[i5] = new WeakMap2()) : this.primitives || (this.primitives = new Map2());
+      Node2.prototype.next = function(i4, it, IS_OBJECT) {
+        var store = IS_OBJECT ? this.objectsByIndex[i4] || (this.objectsByIndex[i4] = new WeakMap2()) : this.primitives || (this.primitives = new Map2());
         var entry = store.get(it);
         if (!entry)
           store.set(it, entry = new Node2());
@@ -15102,16 +15102,16 @@
       module2.exports = function() {
         var active = root2;
         var length = arguments.length;
-        var i5, it;
-        for (i5 = 0; i5 < length; i5++) {
-          if (isObject2(it = arguments[i5]))
-            active = active.next(i5, it, true);
+        var i4, it;
+        for (i4 = 0; i4 < length; i4++) {
+          if (isObject2(it = arguments[i4]))
+            active = active.next(i4, it, true);
         }
         if (this === $Object && active === root2)
           throw $TypeError("Composite keys must contain a non-primitive component");
-        for (i5 = 0; i5 < length; i5++) {
-          if (!isObject2(it = arguments[i5]))
-            active = active.next(i5, it, false);
+        for (i4 = 0; i4 < length; i4++) {
+          if (!isObject2(it = arguments[i4]))
+            active = active.next(i4, it, false);
         }
         return active;
       };
@@ -15285,12 +15285,12 @@
           if (!DESCRIPTORS)
             this.disposed = true;
           var stack = internalState.stack;
-          var i5 = stack.length;
+          var i4 = stack.length;
           var thrown = false;
           var suppressed;
-          while (i5) {
-            var disposeMethod = stack[--i5];
-            stack[i5] = null;
+          while (i4) {
+            var disposeMethod = stack[--i4];
+            stack[i4] = null;
             try {
               disposeMethod();
             } catch (errorResult) {
@@ -16121,39 +16121,39 @@
       };
       var IS_4_HEX_DIGITS = /^[\da-f]{4}$/i;
       var IS_C0_CONTROL_CODE = /^[\u0000-\u001F]$/;
-      module2.exports = function(source, i5) {
+      module2.exports = function(source, i4) {
         var unterminated = true;
         var value = "";
-        while (i5 < source.length) {
-          var chr = at(source, i5);
+        while (i4 < source.length) {
+          var chr = at(source, i4);
           if (chr == "\\") {
-            var twoChars = slice(source, i5, i5 + 2);
+            var twoChars = slice(source, i4, i4 + 2);
             if (hasOwn(codePoints, twoChars)) {
               value += codePoints[twoChars];
-              i5 += 2;
+              i4 += 2;
             } else if (twoChars == "\\u") {
-              i5 += 2;
-              var fourHexDigits = slice(source, i5, i5 + 4);
+              i4 += 2;
+              var fourHexDigits = slice(source, i4, i4 + 4);
               if (!exec(IS_4_HEX_DIGITS, fourHexDigits))
-                throw $SyntaxError("Bad Unicode escape at: " + i5);
+                throw $SyntaxError("Bad Unicode escape at: " + i4);
               value += fromCharCode($parseInt(fourHexDigits, 16));
-              i5 += 4;
+              i4 += 4;
             } else
               throw $SyntaxError('Unknown escape sequence: "' + twoChars + '"');
           } else if (chr == '"') {
             unterminated = false;
-            i5++;
+            i4++;
             break;
           } else {
             if (exec(IS_C0_CONTROL_CODE, chr))
-              throw $SyntaxError("Bad control character in string literal at: " + i5);
+              throw $SyntaxError("Bad control character in string literal at: " + i4);
             value += chr;
-            i5++;
+            i4++;
           }
         }
         if (unterminated)
-          throw $SyntaxError("Unterminated string at: " + i5);
-        return { value, end: i5 };
+          throw $SyntaxError("Unterminated string at: " + i4);
+        return { value, end: i4 };
       };
     }
   });
@@ -16209,21 +16209,21 @@
         var val = holder[name];
         var unmodified = node && val === node.value;
         var context = unmodified && typeof node.source == "string" ? { source: node.source } : {};
-        var elementRecordsLen, keys2, len, i5, P3;
+        var elementRecordsLen, keys2, len, i4, P3;
         if (isObject2(val)) {
           var nodeIsArray = isArray2(val);
           var nodes = unmodified ? node.nodes : nodeIsArray ? [] : {};
           if (nodeIsArray) {
             elementRecordsLen = nodes.length;
             len = lengthOfArrayLike(val);
-            for (i5 = 0; i5 < len; i5++) {
-              internalizeProperty(val, i5, internalize(val, "" + i5, reviver, i5 < elementRecordsLen ? nodes[i5] : void 0));
+            for (i4 = 0; i4 < len; i4++) {
+              internalizeProperty(val, i4, internalize(val, "" + i4, reviver, i4 < elementRecordsLen ? nodes[i4] : void 0));
             }
           } else {
             keys2 = enumerableOwnProperties(val);
             len = lengthOfArrayLike(keys2);
-            for (i5 = 0; i5 < len; i5++) {
-              P3 = keys2[i5];
+            for (i4 = 0; i4 < len; i4++) {
+              P3 = keys2[i4];
               internalizeProperty(val, P3, internalize(val, P3, reviver, hasOwn(nodes, P3) ? nodes[P3] : void 0));
             }
           }
@@ -16257,9 +16257,9 @@
         },
         parse: function() {
           var source = this.source;
-          var i5 = this.skip(IS_WHITESPACE, this.index);
-          var fork = this.fork(i5);
-          var chr = at(source, i5);
+          var i4 = this.skip(IS_WHITESPACE, this.index);
+          var fork = this.fork(i4);
+          var chr = at(source, i4);
           if (exec(IS_NUMBER_START, chr))
             return fork.number();
           switch (chr) {
@@ -16276,68 +16276,68 @@
             case "n":
               return fork.keyword(null);
           }
-          throw SyntaxError2('Unexpected character: "' + chr + '" at: ' + i5);
+          throw SyntaxError2('Unexpected character: "' + chr + '" at: ' + i4);
         },
         node: function(type, value, start, end, nodes) {
           return new Node2(value, end, type ? null : slice(this.source, start, end), nodes);
         },
         object: function() {
           var source = this.source;
-          var i5 = this.index + 1;
+          var i4 = this.index + 1;
           var expectKeypair = false;
           var object = {};
           var nodes = {};
-          while (i5 < source.length) {
-            i5 = this.until(['"', "}"], i5);
-            if (at(source, i5) == "}" && !expectKeypair) {
-              i5++;
+          while (i4 < source.length) {
+            i4 = this.until(['"', "}"], i4);
+            if (at(source, i4) == "}" && !expectKeypair) {
+              i4++;
               break;
             }
-            var result = this.fork(i5).string();
+            var result = this.fork(i4).string();
             var key = result.value;
-            i5 = result.end;
-            i5 = this.until([":"], i5) + 1;
-            i5 = this.skip(IS_WHITESPACE, i5);
-            result = this.fork(i5).parse();
+            i4 = result.end;
+            i4 = this.until([":"], i4) + 1;
+            i4 = this.skip(IS_WHITESPACE, i4);
+            result = this.fork(i4).parse();
             createProperty(nodes, key, result);
             createProperty(object, key, result.value);
-            i5 = this.until([",", "}"], result.end);
-            var chr = at(source, i5);
+            i4 = this.until([",", "}"], result.end);
+            var chr = at(source, i4);
             if (chr == ",") {
               expectKeypair = true;
-              i5++;
+              i4++;
             } else if (chr == "}") {
-              i5++;
+              i4++;
               break;
             }
           }
-          return this.node(OBJECT, object, this.index, i5, nodes);
+          return this.node(OBJECT, object, this.index, i4, nodes);
         },
         array: function() {
           var source = this.source;
-          var i5 = this.index + 1;
+          var i4 = this.index + 1;
           var expectElement = false;
           var array = [];
           var nodes = [];
-          while (i5 < source.length) {
-            i5 = this.skip(IS_WHITESPACE, i5);
-            if (at(source, i5) == "]" && !expectElement) {
-              i5++;
+          while (i4 < source.length) {
+            i4 = this.skip(IS_WHITESPACE, i4);
+            if (at(source, i4) == "]" && !expectElement) {
+              i4++;
               break;
             }
-            var result = this.fork(i5).parse();
+            var result = this.fork(i4).parse();
             push(nodes, result);
             push(array, result.value);
-            i5 = this.until([",", "]"], result.end);
-            if (at(source, i5) == ",") {
+            i4 = this.until([",", "]"], result.end);
+            if (at(source, i4) == ",") {
               expectElement = true;
-              i5++;
-            } else if (at(source, i5) == "]") {
-              i5++;
+              i4++;
+            } else if (at(source, i4) == "]") {
+              i4++;
               break;
             }
           }
-          return this.node(OBJECT, array, this.index, i5, nodes);
+          return this.node(OBJECT, array, this.index, i4, nodes);
         },
         string: function() {
           var index = this.index;
@@ -16347,27 +16347,27 @@
         number: function() {
           var source = this.source;
           var startIndex = this.index;
-          var i5 = startIndex;
-          if (at(source, i5) == "-")
-            i5++;
-          if (at(source, i5) == "0")
-            i5++;
-          else if (exec(IS_NON_ZERO_DIGIT, at(source, i5)))
-            i5 = this.skip(IS_DIGIT, ++i5);
+          var i4 = startIndex;
+          if (at(source, i4) == "-")
+            i4++;
+          if (at(source, i4) == "0")
+            i4++;
+          else if (exec(IS_NON_ZERO_DIGIT, at(source, i4)))
+            i4 = this.skip(IS_DIGIT, ++i4);
           else
-            throw SyntaxError2("Failed to parse number at: " + i5);
-          if (at(source, i5) == ".")
-            i5 = this.skip(IS_DIGIT, ++i5);
-          if (at(source, i5) == "e" || at(source, i5) == "E") {
-            i5++;
-            if (at(source, i5) == "+" || at(source, i5) == "-")
-              i5++;
-            var exponentStartIndex = i5;
-            i5 = this.skip(IS_DIGIT, i5);
-            if (exponentStartIndex == i5)
-              throw SyntaxError2("Failed to parse number's exponent value at: " + i5);
+            throw SyntaxError2("Failed to parse number at: " + i4);
+          if (at(source, i4) == ".")
+            i4 = this.skip(IS_DIGIT, ++i4);
+          if (at(source, i4) == "e" || at(source, i4) == "E") {
+            i4++;
+            if (at(source, i4) == "+" || at(source, i4) == "-")
+              i4++;
+            var exponentStartIndex = i4;
+            i4 = this.skip(IS_DIGIT, i4);
+            if (exponentStartIndex == i4)
+              throw SyntaxError2("Failed to parse number's exponent value at: " + i4);
           }
-          return this.node(PRIMITIVE, Number2(slice(source, startIndex, i5)), startIndex, i5);
+          return this.node(PRIMITIVE, Number2(slice(source, startIndex, i4)), startIndex, i4);
         },
         keyword: function(value) {
           var keyword = "" + value;
@@ -16377,20 +16377,20 @@
             throw SyntaxError2("Failed to parse value at: " + index);
           return this.node(PRIMITIVE, value, index, endIndex);
         },
-        skip: function(regex, i5) {
+        skip: function(regex, i4) {
           var source = this.source;
-          for (; i5 < source.length; i5++)
-            if (!exec(regex, at(source, i5)))
+          for (; i4 < source.length; i4++)
+            if (!exec(regex, at(source, i4)))
               break;
-          return i5;
+          return i4;
         },
-        until: function(array, i5) {
-          i5 = this.skip(IS_WHITESPACE, i5);
-          var chr = at(this.source, i5);
+        until: function(array, i4) {
+          i4 = this.skip(IS_WHITESPACE, i4);
+          var chr = at(this.source, i4);
           for (var j4 = 0; j4 < array.length; j4++)
             if (array[j4] == chr)
-              return i5;
-          throw SyntaxError2('Unexpected character: "' + chr + '" at: ' + i5);
+              return i4;
+          throw SyntaxError2('Unexpected character: "' + chr + '" at: ' + i4);
         }
       };
       var NO_SOURCE_SUPPORT = fails(function() {
@@ -16472,13 +16472,13 @@
               return json;
             var result = "";
             var length = json.length;
-            for (var i5 = 0; i5 < length; i5++) {
-              var chr = at(json, i5);
+            for (var i4 = 0; i4 < length; i4++) {
+              var chr = at(json, i4);
               if (chr == '"') {
-                var end = parseJSONString(json, ++i5).end - 1;
-                var string = slice(json, i5, end);
+                var end = parseJSONString(json, ++i4).end - 1;
+                var string = slice(json, i4, end);
                 result += slice(string, 0, MARK_LENGTH) == MARK ? rawStrings[slice(string, MARK_LENGTH)] : '"' + string + '"';
-                i5 = end;
+                i4 = end;
               } else
                 result += chr;
             }
@@ -16862,9 +16862,9 @@
         merge: function merge(iterable) {
           var map2 = aMap(this);
           var argumentsLength = arguments.length;
-          var i5 = 0;
-          while (i5 < argumentsLength) {
-            iterate(arguments[i5++], function(key, value) {
+          var i4 = 0;
+          while (i4 < argumentsLength) {
+            iterate(arguments[i4++], function(key, value) {
               set(map2, key, value);
             }, { AS_ENTRIES: true });
           }
@@ -17744,8 +17744,8 @@
           while (index < length)
             items[index] = arguments[index++];
           return new C3(function(observer) {
-            for (var i5 = 0; i5 < length; i5++) {
-              observer.next(items[i5]);
+            for (var i4 = 0; i4 < length; i4++) {
+              observer.next(items[i4]);
               if (observer.closed)
                 return;
             }
@@ -18951,16 +18951,16 @@
           return "";
         var argumentsLength = arguments.length;
         var elements = [];
-        var i5 = 0;
+        var i4 = 0;
         while (true) {
-          var nextVal = cookedTemplate[i5++];
+          var nextVal = cookedTemplate[i4++];
           if (nextVal === void 0)
             throw $TypeError("Incorrect template");
           push(elements, toString(nextVal));
-          if (i5 === literalSegments)
+          if (i4 === literalSegments)
             return join(elements, "");
-          if (i5 < argumentsLength)
-            push(elements, toString(arguments[i5]));
+          if (i4 < argumentsLength)
+            push(elements, toString(arguments[i4]));
         }
       };
     }
@@ -19065,13 +19065,13 @@
       module2.exports = function(raw) {
         var out = "";
         var start = 0;
-        var i5 = 0;
+        var i4 = 0;
         var n2;
-        while ((i5 = stringIndexOf(raw, "\\", i5)) > -1) {
-          out += stringSlice(raw, start, i5);
-          if (++i5 === raw.length)
+        while ((i4 = stringIndexOf(raw, "\\", i4)) > -1) {
+          out += stringSlice(raw, start, i4);
+          if (++i4 === raw.length)
             return;
-          var next = charAt(raw, i5++);
+          var next = charAt(raw, i4++);
           switch (next) {
             case "b":
               out += "\b";
@@ -19092,34 +19092,34 @@
               out += "\r";
               break;
             case "\r":
-              if (i5 < raw.length && charAt(raw, i5) === "\n")
-                ++i5;
+              if (i4 < raw.length && charAt(raw, i4) === "\n")
+                ++i4;
             case "\n":
             case "\u2028":
             case "\u2029":
               break;
             case "0":
-              if (isDigit(raw, i5))
+              if (isDigit(raw, i4))
                 return;
               out += "\0";
               break;
             case "x":
-              n2 = parseHex(raw, i5, i5 + 2);
+              n2 = parseHex(raw, i4, i4 + 2);
               if (n2 === -1)
                 return;
-              i5 += 2;
+              i4 += 2;
               out += fromCharCode(n2);
               break;
             case "u":
-              if (i5 < raw.length && charAt(raw, i5) === "{") {
-                var end = stringIndexOf(raw, "}", ++i5);
+              if (i4 < raw.length && charAt(raw, i4) === "{") {
+                var end = stringIndexOf(raw, "}", ++i4);
                 if (end === -1)
                   return;
-                n2 = parseHex(raw, i5, end);
-                i5 = end + 1;
+                n2 = parseHex(raw, i4, end);
+                i4 = end + 1;
               } else {
-                n2 = parseHex(raw, i5, i5 + 4);
-                i5 += 4;
+                n2 = parseHex(raw, i4, i4 + 4);
+                i4 += 4;
               }
               if (n2 === -1 || n2 > 1114111)
                 return;
@@ -19130,7 +19130,7 @@
                 return;
               out += next;
           }
-          start = i5;
+          start = i4;
         }
         return out + stringSlice(raw, start);
       };
@@ -19197,21 +19197,21 @@
         var length = lengthOfArrayLike(t3);
         var blocks = $Array(length);
         var dedented = $Array(length);
-        var i5 = 0;
+        var i4 = 0;
         var lines, common;
         if (!length)
           throw $TypeError(INVALID_TAG);
-        for (; i5 < length; i5++) {
-          var element = t3[i5];
+        for (; i4 < length; i4++) {
+          var element = t3[i4];
           if (typeof element == "string")
-            blocks[i5] = split(element, NEW_LINE);
+            blocks[i4] = split(element, NEW_LINE);
           else
             throw $TypeError(INVALID_TAG);
         }
-        for (i5 = 0; i5 < length; i5++) {
-          var lastSplit = i5 + 1 === length;
-          lines = blocks[i5];
-          if (i5 === 0) {
+        for (i4 = 0; i4 < length; i4++) {
+          var lastSplit = i4 + 1 === length;
+          lines = blocks[i4];
+          if (i4 === 0) {
             if (lines.length === 1 || lines[0].length > 0) {
               throw $TypeError(INVALID_OPENING_LINE);
             }
@@ -19236,28 +19236,28 @@
           }
         }
         var count = common ? common.length : 0;
-        for (i5 = 0; i5 < length; i5++) {
-          lines = blocks[i5];
+        for (i4 = 0; i4 < length; i4++) {
+          lines = blocks[i4];
           for (var quasi = lines[0], k4 = 1; k4 < lines.length; k4 += 2) {
             quasi += lines[k4] + stringSlice(lines[k4 + 1], count);
           }
-          dedented[i5] = quasi;
+          dedented[i4] = quasi;
         }
         return dedented;
       };
-      var commonLeadingIndentation = function(a4, b3) {
-        if (b3 === void 0 || a4 === b3)
+      var commonLeadingIndentation = function(a4, b4) {
+        if (b4 === void 0 || a4 === b4)
           return a4;
-        var i5 = 0;
-        for (var len = min(a4.length, b3.length); i5 < len; i5++) {
-          if (charAt(a4, i5) !== charAt(b3, i5))
+        var i4 = 0;
+        for (var len = min(a4.length, b4.length); i4 < len; i4++) {
+          if (charAt(a4, i4) !== charAt(b4, i4))
             break;
         }
-        return stringSlice(a4, 0, i5);
+        return stringSlice(a4, 0, i4);
       };
       var cookStrings = function(raw) {
-        for (var i5 = 0, length = raw.length, result = $Array(length); i5 < length; i5++) {
-          result[i5] = parse(raw[i5]);
+        for (var i4 = 0, length = raw.length, result = $Array(length); i4 < length; i4++) {
+          result[i4] = parse(raw[i4]);
         }
         return result;
       };
@@ -19409,16 +19409,16 @@
       var getOwnPropertyNames = getBuiltIn("Object", "getOwnPropertyNames");
       var thisSymbolValue = uncurryThis(Symbol3.prototype.valueOf);
       var WellKnownSymbolsStore = shared("wks");
-      for (i5 = 0, symbolKeys = getOwnPropertyNames(Symbol3), symbolKeysLength = symbolKeys.length; i5 < symbolKeysLength; i5++) {
+      for (i4 = 0, symbolKeys = getOwnPropertyNames(Symbol3), symbolKeysLength = symbolKeys.length; i4 < symbolKeysLength; i4++) {
         try {
-          symbolKey = symbolKeys[i5];
+          symbolKey = symbolKeys[i4];
           if (isSymbol2(Symbol3[symbolKey]))
             wellKnownSymbol(symbolKey);
         } catch (error) {
         }
       }
       var symbolKey;
-      var i5;
+      var i4;
       var symbolKeys;
       var symbolKeysLength;
       module2.exports = function isWellKnownSymbol(value) {
@@ -19674,9 +19674,9 @@
           if (insertCount) {
             convertedItems = new C3(insertCount);
             thisIsBigIntArray = isBigIntArray(convertedItems);
-            for (var i5 = 2; i5 < argumentsLength; i5++) {
-              value = arguments[i5];
-              convertedItems[i5 - 2] = thisIsBigIntArray ? toBigInt(value) : +value;
+            for (var i4 = 2; i4 < argumentsLength; i4++) {
+              value = arguments[i4];
+              convertedItems[i4 - 2] = thisIsBigIntArray ? toBigInt(value) : +value;
             }
           }
         }
@@ -20677,7 +20677,7 @@
         if (mapHas(map2, value))
           return mapGet(map2, value);
         var type = $type || classof(value);
-        var clone, length, options, source, target, i5;
+        var clone, length, options, source, target, i4;
         if (type === "SharedArrayBuffer") {
           if (nativeRestrictedStructuredClone)
             clone = nativeRestrictedStructuredClone(value);
@@ -20696,8 +20696,8 @@
               clone = new ArrayBuffer(length, options);
               source = new DataView2(value);
               target = new DataView2(clone);
-              for (i5 = 0; i5 < length; i5++) {
-                target.setUint8(i5, source.getUint8(i5));
+              for (i4 = 0; i4 < length; i4++) {
+                target.setUint8(i4, source.getUint8(i4));
               }
             }
           } catch (error) {
@@ -20729,7 +20729,7 @@
         } else
           map2 = new Map2();
         var type = classof(value);
-        var C3, name, cloned, dataTransfer, i5, length, keys2, key;
+        var C3, name, cloned, dataTransfer, i4, length, keys2, key;
         switch (type) {
           case "Array":
             cloned = Array2(lengthOfArrayLike(value));
@@ -20837,8 +20837,8 @@
           case "FileList":
             dataTransfer = createDataTransfer();
             if (dataTransfer) {
-              for (i5 = 0, length = lengthOfArrayLike(value); i5 < length; i5++) {
-                dataTransfer.items.add(structuredCloneInternal(value[i5], map2, transferredBuffers));
+              for (i4 = 0, length = lengthOfArrayLike(value); i4 < length; i4++) {
+                dataTransfer.items.add(structuredCloneInternal(value[i4], map2, transferredBuffers));
               }
               cloned = dataTransfer.files;
             } else
@@ -20940,8 +20940,8 @@
           case "Array":
           case "Object":
             keys2 = objectKeys(value);
-            for (i5 = 0, length = lengthOfArrayLike(keys2); i5 < length; i5++) {
-              key = keys2[i5];
+            for (i4 = 0, length = lengthOfArrayLike(keys2); i4 < length; i4++) {
+              key = keys2[i4];
               createProperty(cloned, key, structuredCloneInternal(value[key], map2, transferredBuffers));
             }
             break;
@@ -20975,7 +20975,7 @@
           return value;
         if (mapHas(map2, value))
           return mapGet(map2, value);
-        var type, object, metadata, i5, length, keys2, key, replacement;
+        var type, object, metadata, i4, length, keys2, key, replacement;
         if (value instanceof Placeholder) {
           type = value.type;
           object = value.object;
@@ -21005,8 +21005,8 @@
             case "Array":
             case "Object":
               keys2 = objectKeys(value);
-              for (i5 = 0, length = lengthOfArrayLike(keys2); i5 < length; i5++) {
-                key = keys2[i5];
+              for (i4 = 0, length = lengthOfArrayLike(keys2); i4 < length; i4++) {
+                key = keys2[i4];
                 value[key] = replacePlaceholders(value[key], map2);
               }
               break;
@@ -21045,12 +21045,12 @@
         iterate(rawTransfer, function(value2) {
           push(transfer, anObject(value2));
         });
-        var i5 = 0;
+        var i4 = 0;
         var length = lengthOfArrayLike(transfer);
         var buffers = [];
         var value, type, C3, transferred, canvas, context;
-        while (i5 < length) {
-          value = transfer[i5++];
+        while (i4 < length) {
+          value = transfer[i4++];
           type = classof(value);
           if (type === "ArrayBuffer") {
             push(buffers, value);
@@ -21099,11 +21099,11 @@
         return buffers;
       };
       var tryToTransferBuffers = function(transfer, map2) {
-        var i5 = 0;
+        var i4 = 0;
         var length = lengthOfArrayLike(transfer);
         var value, transferred;
-        while (i5 < length) {
-          value = transfer[i5++];
+        while (i4 < length) {
+          value = transfer[i4++];
           if (mapHas(map2, value))
             throw new DOMException("Duplicate transferable", DATA_CLONE_ERROR);
           if (PROPER_TRANSFER) {
@@ -21270,9 +21270,9 @@
         var n2 = initialN;
         var delta = 0;
         var bias = initialBias;
-        var i5, currentValue;
-        for (i5 = 0; i5 < input.length; i5++) {
-          currentValue = input[i5];
+        var i4, currentValue;
+        for (i4 = 0; i4 < input.length; i4++) {
+          currentValue = input[i4];
           if (currentValue < 128) {
             push(output, fromCharCode(currentValue));
           }
@@ -21283,21 +21283,21 @@
           push(output, delimiter);
         }
         while (handledCPCount < inputLength) {
-          var m3 = maxInt;
-          for (i5 = 0; i5 < input.length; i5++) {
-            currentValue = input[i5];
-            if (currentValue >= n2 && currentValue < m3) {
-              m3 = currentValue;
+          var m4 = maxInt;
+          for (i4 = 0; i4 < input.length; i4++) {
+            currentValue = input[i4];
+            if (currentValue >= n2 && currentValue < m4) {
+              m4 = currentValue;
             }
           }
           var handledCPCountPlusOne = handledCPCount + 1;
-          if (m3 - n2 > floor((maxInt - delta) / handledCPCountPlusOne)) {
+          if (m4 - n2 > floor((maxInt - delta) / handledCPCountPlusOne)) {
             throw $RangeError(OVERFLOW_ERROR);
           }
-          delta += (m3 - n2) * handledCPCountPlusOne;
-          n2 = m3;
-          for (i5 = 0; i5 < input.length; i5++) {
-            currentValue = input[i5];
+          delta += (m4 - n2) * handledCPCountPlusOne;
+          n2 = m4;
+          for (i4 = 0; i4 < input.length; i4++) {
+            currentValue = input[i4];
             if (currentValue < n2 && ++delta > maxInt) {
               throw $RangeError(OVERFLOW_ERROR);
             }
@@ -21328,9 +21328,9 @@
       module2.exports = function(input) {
         var encoded = [];
         var labels = split(replace(toLowerCase(input), regexSeparators, "."), ".");
-        var i5, label;
-        for (i5 = 0; i5 < labels.length; i5++) {
-          label = labels[i5];
+        var i4, label;
+        for (i4 = 0; i4 < labels.length; i4++) {
+          label = labels[i4];
           push(encoded, exec(regexNonASCII, label) ? "xn--" + encode(label) : label);
         }
         return join(encoded, ".");
@@ -21644,8 +21644,8 @@
         // https://url.spec.whatwg.org/#dom-urlsearchparams-sort
         sort: function sort() {
           var state = getInternalParamsState(this);
-          arraySort(state.entries, function(a4, b3) {
-            return a4.key > b3.key ? 1 : -1;
+          arraySort(state.entries, function(a4, b4) {
+            return a4.key > b4.key ? 1 : -1;
           });
           state.updateURL();
         },
@@ -22262,8 +22262,8 @@
                     buffer = "%40" + buffer;
                   seenAt = true;
                   bufferCodePoints = arrayFrom(buffer);
-                  for (var i5 = 0; i5 < bufferCodePoints.length; i5++) {
-                    var codePoint = bufferCodePoints[i5];
+                  for (var i4 = 0; i4 < bufferCodePoints.length; i4++) {
+                    var codePoint = bufferCodePoints[i4];
                     if (codePoint == ":" && !seenPasswordToken) {
                       seenPasswordToken = true;
                       continue;
@@ -22609,8 +22609,8 @@
           if (this.cannotHaveUsernamePasswordPort())
             return;
           this.username = "";
-          for (var i5 = 0; i5 < codePoints.length; i5++) {
-            this.username += percentEncode(codePoints[i5], userinfoPercentEncodeSet);
+          for (var i4 = 0; i4 < codePoints.length; i4++) {
+            this.username += percentEncode(codePoints[i4], userinfoPercentEncodeSet);
           }
         },
         // https://url.spec.whatwg.org/#dom-url-password
@@ -22622,8 +22622,8 @@
           if (this.cannotHaveUsernamePasswordPort())
             return;
           this.password = "";
-          for (var i5 = 0; i5 < codePoints.length; i5++) {
-            this.password += percentEncode(codePoints[i5], userinfoPercentEncodeSet);
+          for (var i4 = 0; i4 < codePoints.length; i4++) {
+            this.password += percentEncode(codePoints[i4], userinfoPercentEncodeSet);
           }
         },
         // https://url.spec.whatwg.org/#dom-url-host
@@ -23428,56 +23428,57 @@
   // index.tsx
   var import_core_js = __toESM(require_core_js(), 1);
 
-  // ../node_modules/.pnpm/preact@10.13.2/node_modules/preact/dist/preact.module.js
+  // ../node_modules/.pnpm/preact@10.17.1/node_modules/preact/dist/preact.module.js
   var n;
   var l;
   var u;
-  var i;
   var t;
-  var r;
+  var i;
   var o;
+  var r;
   var f;
   var e;
   var c = {};
   var s = [];
   var a = /acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i;
-  function h(n2, l4) {
+  var h = Array.isArray;
+  function v(n2, l4) {
     for (var u4 in l4)
       n2[u4] = l4[u4];
     return n2;
   }
-  function v(n2) {
+  function p(n2) {
     var l4 = n2.parentNode;
     l4 && l4.removeChild(n2);
   }
-  function y(l4, u4, i5) {
-    var t3, r4, o5, f4 = {};
-    for (o5 in u4)
-      "key" == o5 ? t3 = u4[o5] : "ref" == o5 ? r4 = u4[o5] : f4[o5] = u4[o5];
-    if (arguments.length > 2 && (f4.children = arguments.length > 3 ? n.call(arguments, 2) : i5), "function" == typeof l4 && null != l4.defaultProps)
-      for (o5 in l4.defaultProps)
-        void 0 === f4[o5] && (f4[o5] = l4.defaultProps[o5]);
-    return p(l4, f4, t3, r4, null);
+  function y(l4, u4, t3) {
+    var i4, o5, r5, f4 = {};
+    for (r5 in u4)
+      "key" == r5 ? i4 = u4[r5] : "ref" == r5 ? o5 = u4[r5] : f4[r5] = u4[r5];
+    if (arguments.length > 2 && (f4.children = arguments.length > 3 ? n.call(arguments, 2) : t3), "function" == typeof l4 && null != l4.defaultProps)
+      for (r5 in l4.defaultProps)
+        void 0 === f4[r5] && (f4[r5] = l4.defaultProps[r5]);
+    return d(l4, f4, i4, o5, null);
   }
-  function p(n2, i5, t3, r4, o5) {
-    var f4 = { type: n2, props: i5, key: t3, ref: r4, __k: null, __: null, __b: 0, __e: null, __d: void 0, __c: null, __h: null, constructor: void 0, __v: null == o5 ? ++u : o5 };
-    return null == o5 && null != l.vnode && l.vnode(f4), f4;
+  function d(n2, t3, i4, o5, r5) {
+    var f4 = { type: n2, props: t3, key: i4, ref: o5, __k: null, __: null, __b: 0, __e: null, __d: void 0, __c: null, __h: null, constructor: void 0, __v: null == r5 ? ++u : r5 };
+    return null == r5 && null != l.vnode && l.vnode(f4), f4;
   }
-  function _(n2) {
+  function k(n2) {
     return n2.children;
   }
-  function k(n2, l4) {
+  function b(n2, l4) {
     this.props = n2, this.context = l4;
   }
-  function b(n2, l4) {
+  function g(n2, l4) {
     if (null == l4)
-      return n2.__ ? b(n2.__, n2.__.__k.indexOf(n2) + 1) : null;
+      return n2.__ ? g(n2.__, n2.__.__k.indexOf(n2) + 1) : null;
     for (var u4; l4 < n2.__k.length; l4++)
       if (null != (u4 = n2.__k[l4]) && null != u4.__e)
         return u4.__e;
-    return "function" == typeof n2.type ? b(n2) : null;
+    return "function" == typeof n2.type ? g(n2) : null;
   }
-  function g(n2) {
+  function m(n2) {
     var l4, u4;
     if (null != (n2 = n2.__) && null != n2.__c) {
       for (n2.__e = n2.__c.base = null, l4 = 0; l4 < n2.__k.length; l4++)
@@ -23485,107 +23486,87 @@
           n2.__e = n2.__c.base = u4.__e;
           break;
         }
-      return g(n2);
+      return m(n2);
     }
   }
-  function m(n2) {
-    (!n2.__d && (n2.__d = true) && t.push(n2) && !w.__r++ || r !== l.debounceRendering) && ((r = l.debounceRendering) || o)(w);
+  function w(n2) {
+    (!n2.__d && (n2.__d = true) && i.push(n2) && !x.__r++ || o !== l.debounceRendering) && ((o = l.debounceRendering) || r)(x);
   }
-  function w() {
-    var n2, l4, u4, i5, r4, o5, e3, c4;
-    for (t.sort(f); n2 = t.shift(); )
-      n2.__d && (l4 = t.length, i5 = void 0, r4 = void 0, e3 = (o5 = (u4 = n2).__v).__e, (c4 = u4.__P) && (i5 = [], (r4 = h({}, o5)).__v = o5.__v + 1, L(c4, o5, r4, u4.__n, void 0 !== c4.ownerSVGElement, null != o5.__h ? [e3] : null, i5, null == e3 ? b(o5) : e3, o5.__h), M(i5, o5), o5.__e != e3 && g(o5)), t.length > l4 && t.sort(f));
-    w.__r = 0;
+  function x() {
+    var n2, l4, u4, t3, o5, r5, e3, c4, s4;
+    for (i.sort(f); n2 = i.shift(); )
+      n2.__d && (l4 = i.length, t3 = void 0, o5 = void 0, r5 = void 0, c4 = (e3 = (u4 = n2).__v).__e, (s4 = u4.__P) && (t3 = [], o5 = [], (r5 = v({}, e3)).__v = e3.__v + 1, L(s4, e3, r5, u4.__n, void 0 !== s4.ownerSVGElement, null != e3.__h ? [c4] : null, t3, null == c4 ? g(e3) : c4, e3.__h, o5), M(t3, e3, o5), e3.__e != c4 && m(e3)), i.length > l4 && i.sort(f));
+    x.__r = 0;
   }
-  function x(n2, l4, u4, i5, t3, r4, o5, f4, e3, a4) {
-    var h4, v4, y4, d4, k4, g4, m3, w4 = i5 && i5.__k || s, x4 = w4.length;
-    for (u4.__k = [], h4 = 0; h4 < l4.length; h4++)
-      if (null != (d4 = u4.__k[h4] = null == (d4 = l4[h4]) || "boolean" == typeof d4 || "function" == typeof d4 ? null : "string" == typeof d4 || "number" == typeof d4 || "bigint" == typeof d4 ? p(null, d4, null, null, d4) : Array.isArray(d4) ? p(_, { children: d4 }, null, null, null) : d4.__b > 0 ? p(d4.type, d4.props, d4.key, d4.ref ? d4.ref : null, d4.__v) : d4)) {
-        if (d4.__ = u4, d4.__b = u4.__b + 1, null === (y4 = w4[h4]) || y4 && d4.key == y4.key && d4.type === y4.type)
-          w4[h4] = void 0;
-        else
-          for (v4 = 0; v4 < x4; v4++) {
-            if ((y4 = w4[v4]) && d4.key == y4.key && d4.type === y4.type) {
-              w4[v4] = void 0;
-              break;
-            }
-            y4 = null;
-          }
-        L(n2, d4, y4 = y4 || c, t3, r4, o5, f4, e3, a4), k4 = d4.__e, (v4 = d4.ref) && y4.ref != v4 && (m3 || (m3 = []), y4.ref && m3.push(y4.ref, null, d4), m3.push(v4, d4.__c || k4, d4)), null != k4 ? (null == g4 && (g4 = k4), "function" == typeof d4.type && d4.__k === y4.__k ? d4.__d = e3 = A(d4, e3, n2) : e3 = C(n2, d4, y4, w4, k4, e3), "function" == typeof u4.type && (u4.__d = e3)) : e3 && y4.__e == e3 && e3.parentNode != n2 && (e3 = b(y4));
-      }
-    for (u4.__e = g4, h4 = x4; h4--; )
-      null != w4[h4] && ("function" == typeof u4.type && null != w4[h4].__e && w4[h4].__e == u4.__d && (u4.__d = $(i5).nextSibling), S(w4[h4], w4[h4]));
-    if (m3)
-      for (h4 = 0; h4 < m3.length; h4++)
-        O(m3[h4], m3[++h4], m3[++h4]);
+  function P(n2, l4, u4, t3, i4, o5, r5, f4, e3, a4, v4) {
+    var p4, y4, _4, b4, m4, w4, x4, P3, C3, H3 = 0, I3 = t3 && t3.__k || s, T4 = I3.length, j4 = T4, z4 = l4.length;
+    for (u4.__k = [], p4 = 0; p4 < z4; p4++)
+      null != (b4 = u4.__k[p4] = null == (b4 = l4[p4]) || "boolean" == typeof b4 || "function" == typeof b4 ? null : "string" == typeof b4 || "number" == typeof b4 || "bigint" == typeof b4 ? d(null, b4, null, null, b4) : h(b4) ? d(k, { children: b4 }, null, null, null) : b4.__b > 0 ? d(b4.type, b4.props, b4.key, b4.ref ? b4.ref : null, b4.__v) : b4) ? (b4.__ = u4, b4.__b = u4.__b + 1, -1 === (P3 = A(b4, I3, x4 = p4 + H3, j4)) ? _4 = c : (_4 = I3[P3] || c, I3[P3] = void 0, j4--), L(n2, b4, _4, i4, o5, r5, f4, e3, a4, v4), m4 = b4.__e, (y4 = b4.ref) && _4.ref != y4 && (_4.ref && O(_4.ref, null, b4), v4.push(y4, b4.__c || m4, b4)), null != m4 && (null == w4 && (w4 = m4), (C3 = _4 === c || null === _4.__v) ? -1 == P3 && H3-- : P3 !== x4 && (P3 === x4 + 1 ? H3++ : P3 > x4 ? j4 > z4 - x4 ? H3 += P3 - x4 : H3-- : H3 = P3 < x4 && P3 == x4 - 1 ? P3 - x4 : 0), x4 = p4 + H3, "function" != typeof b4.type || P3 === x4 && _4.__k !== b4.__k ? "function" == typeof b4.type || P3 === x4 && !C3 ? void 0 !== b4.__d ? (e3 = b4.__d, b4.__d = void 0) : e3 = m4.nextSibling : e3 = S(n2, m4, e3) : e3 = $(b4, e3, n2), "function" == typeof u4.type && (u4.__d = e3))) : (_4 = I3[p4]) && null == _4.key && _4.__e && (_4.__e == e3 && (e3 = g(_4)), q(_4, _4, false), I3[p4] = null);
+    for (u4.__e = w4, p4 = T4; p4--; )
+      null != I3[p4] && ("function" == typeof u4.type && null != I3[p4].__e && I3[p4].__e == u4.__d && (u4.__d = I3[p4].__e.nextSibling), q(I3[p4], I3[p4]));
   }
-  function A(n2, l4, u4) {
-    for (var i5, t3 = n2.__k, r4 = 0; t3 && r4 < t3.length; r4++)
-      (i5 = t3[r4]) && (i5.__ = n2, l4 = "function" == typeof i5.type ? A(i5, l4, u4) : C(u4, i5, i5, t3, i5.__e, l4));
+  function $(n2, l4, u4) {
+    for (var t3, i4 = n2.__k, o5 = 0; i4 && o5 < i4.length; o5++)
+      (t3 = i4[o5]) && (t3.__ = n2, l4 = "function" == typeof t3.type ? $(t3, l4, u4) : S(u4, t3.__e, l4));
     return l4;
   }
-  function P(n2, l4) {
-    return l4 = l4 || [], null == n2 || "boolean" == typeof n2 || (Array.isArray(n2) ? n2.some(function(n3) {
-      P(n3, l4);
+  function C(n2, l4) {
+    return l4 = l4 || [], null == n2 || "boolean" == typeof n2 || (h(n2) ? n2.some(function(n3) {
+      C(n3, l4);
     }) : l4.push(n2)), l4;
   }
-  function C(n2, l4, u4, i5, t3, r4) {
-    var o5, f4, e3;
-    if (void 0 !== l4.__d)
-      o5 = l4.__d, l4.__d = void 0;
-    else if (null == u4 || t3 != r4 || null == t3.parentNode)
-      n:
-        if (null == r4 || r4.parentNode !== n2)
-          n2.appendChild(t3), o5 = null;
-        else {
-          for (f4 = r4, e3 = 0; (f4 = f4.nextSibling) && e3 < i5.length; e3 += 1)
-            if (f4 == t3)
-              break n;
-          n2.insertBefore(t3, r4), o5 = r4;
+  function S(n2, l4, u4) {
+    return null == u4 || u4.parentNode !== n2 ? n2.insertBefore(l4, null) : l4 == u4 && null != l4.parentNode || n2.insertBefore(l4, u4), l4.nextSibling;
+  }
+  function A(n2, l4, u4, t3) {
+    var i4 = n2.key, o5 = n2.type, r5 = u4 - 1, f4 = u4 + 1, e3 = l4[u4];
+    if (null === e3 || e3 && i4 == e3.key && o5 === e3.type)
+      return u4;
+    if (t3 > (null != e3 ? 1 : 0))
+      for (; r5 >= 0 || f4 < l4.length; ) {
+        if (r5 >= 0) {
+          if ((e3 = l4[r5]) && i4 == e3.key && o5 === e3.type)
+            return r5;
+          r5--;
         }
-    return void 0 !== o5 ? o5 : t3.nextSibling;
+        if (f4 < l4.length) {
+          if ((e3 = l4[f4]) && i4 == e3.key && o5 === e3.type)
+            return f4;
+          f4++;
+        }
+      }
+    return -1;
   }
-  function $(n2) {
-    var l4, u4, i5;
-    if (null == n2.type || "string" == typeof n2.type)
-      return n2.__e;
-    if (n2.__k) {
-      for (l4 = n2.__k.length - 1; l4 >= 0; l4--)
-        if ((u4 = n2.__k[l4]) && (i5 = $(u4)))
-          return i5;
-    }
-    return null;
-  }
-  function H(n2, l4, u4, i5, t3) {
-    var r4;
-    for (r4 in u4)
-      "children" === r4 || "key" === r4 || r4 in l4 || T(n2, r4, null, u4[r4], i5);
-    for (r4 in l4)
-      t3 && "function" != typeof l4[r4] || "children" === r4 || "key" === r4 || "value" === r4 || "checked" === r4 || u4[r4] === l4[r4] || T(n2, r4, l4[r4], u4[r4], i5);
+  function H(n2, l4, u4, t3, i4) {
+    var o5;
+    for (o5 in u4)
+      "children" === o5 || "key" === o5 || o5 in l4 || T(n2, o5, null, u4[o5], t3);
+    for (o5 in l4)
+      i4 && "function" != typeof l4[o5] || "children" === o5 || "key" === o5 || "value" === o5 || "checked" === o5 || u4[o5] === l4[o5] || T(n2, o5, l4[o5], u4[o5], t3);
   }
   function I(n2, l4, u4) {
     "-" === l4[0] ? n2.setProperty(l4, null == u4 ? "" : u4) : n2[l4] = null == u4 ? "" : "number" != typeof u4 || a.test(l4) ? u4 : u4 + "px";
   }
-  function T(n2, l4, u4, i5, t3) {
-    var r4;
+  function T(n2, l4, u4, t3, i4) {
+    var o5;
     n:
       if ("style" === l4)
         if ("string" == typeof u4)
           n2.style.cssText = u4;
         else {
-          if ("string" == typeof i5 && (n2.style.cssText = i5 = ""), i5)
-            for (l4 in i5)
+          if ("string" == typeof t3 && (n2.style.cssText = t3 = ""), t3)
+            for (l4 in t3)
               u4 && l4 in u4 || I(n2.style, l4, "");
           if (u4)
             for (l4 in u4)
-              i5 && u4[l4] === i5[l4] || I(n2.style, l4, u4[l4]);
+              t3 && u4[l4] === t3[l4] || I(n2.style, l4, u4[l4]);
         }
       else if ("o" === l4[0] && "n" === l4[1])
-        r4 = l4 !== (l4 = l4.replace(/Capture$/, "")), l4 = l4.toLowerCase() in n2 ? l4.toLowerCase().slice(2) : l4.slice(2), n2.l || (n2.l = {}), n2.l[l4 + r4] = u4, u4 ? i5 || n2.addEventListener(l4, r4 ? z : j, r4) : n2.removeEventListener(l4, r4 ? z : j, r4);
+        o5 = l4 !== (l4 = l4.replace(/(PointerCapture)$|Capture$/, "$1")), l4 = l4.toLowerCase() in n2 ? l4.toLowerCase().slice(2) : l4.slice(2), n2.l || (n2.l = {}), n2.l[l4 + o5] = u4, u4 ? t3 || n2.addEventListener(l4, o5 ? z : j, o5) : n2.removeEventListener(l4, o5 ? z : j, o5);
       else if ("dangerouslySetInnerHTML" !== l4) {
-        if (t3)
+        if (i4)
           l4 = l4.replace(/xlink(H|:h)/, "h").replace(/sName$/, "s");
-        else if ("width" !== l4 && "height" !== l4 && "href" !== l4 && "list" !== l4 && "form" !== l4 && "tabIndex" !== l4 && "download" !== l4 && l4 in n2)
+        else if ("width" !== l4 && "height" !== l4 && "href" !== l4 && "list" !== l4 && "form" !== l4 && "tabIndex" !== l4 && "download" !== l4 && "rowSpan" !== l4 && "colSpan" !== l4 && l4 in n2)
           try {
             n2[l4] = null == u4 ? "" : u4;
             break n;
@@ -23600,46 +23581,48 @@
   function z(n2) {
     return this.l[n2.type + true](l.event ? l.event(n2) : n2);
   }
-  function L(n2, u4, i5, t3, r4, o5, f4, e3, c4) {
-    var s4, a4, v4, y4, p4, d4, b3, g4, m3, w4, A3, P3, C3, $3, H3, I3 = u4.type;
+  function L(n2, u4, t3, i4, o5, r5, f4, e3, c4, s4) {
+    var a4, p4, y4, d4, _4, g4, m4, w4, x4, $3, C3, S2, A3, H3, I3, T4 = u4.type;
     if (void 0 !== u4.constructor)
       return null;
-    null != i5.__h && (c4 = i5.__h, e3 = u4.__e = i5.__e, u4.__h = null, o5 = [e3]), (s4 = l.__b) && s4(u4);
-    try {
-      n:
-        if ("function" == typeof I3) {
-          if (g4 = u4.props, m3 = (s4 = I3.contextType) && t3[s4.__c], w4 = s4 ? m3 ? m3.props.value : s4.__ : t3, i5.__c ? b3 = (a4 = u4.__c = i5.__c).__ = a4.__E : ("prototype" in I3 && I3.prototype.render ? u4.__c = a4 = new I3(g4, w4) : (u4.__c = a4 = new k(g4, w4), a4.constructor = I3, a4.render = q), m3 && m3.sub(a4), a4.props = g4, a4.state || (a4.state = {}), a4.context = w4, a4.__n = t3, v4 = a4.__d = true, a4.__h = [], a4._sb = []), null == a4.__s && (a4.__s = a4.state), null != I3.getDerivedStateFromProps && (a4.__s == a4.state && (a4.__s = h({}, a4.__s)), h(a4.__s, I3.getDerivedStateFromProps(g4, a4.__s))), y4 = a4.props, p4 = a4.state, a4.__v = u4, v4)
-            null == I3.getDerivedStateFromProps && null != a4.componentWillMount && a4.componentWillMount(), null != a4.componentDidMount && a4.__h.push(a4.componentDidMount);
+    null != t3.__h && (c4 = t3.__h, e3 = u4.__e = t3.__e, u4.__h = null, r5 = [e3]), (a4 = l.__b) && a4(u4);
+    n:
+      if ("function" == typeof T4)
+        try {
+          if (w4 = u4.props, x4 = (a4 = T4.contextType) && i4[a4.__c], $3 = a4 ? x4 ? x4.props.value : a4.__ : i4, t3.__c ? m4 = (p4 = u4.__c = t3.__c).__ = p4.__E : ("prototype" in T4 && T4.prototype.render ? u4.__c = p4 = new T4(w4, $3) : (u4.__c = p4 = new b(w4, $3), p4.constructor = T4, p4.render = B), x4 && x4.sub(p4), p4.props = w4, p4.state || (p4.state = {}), p4.context = $3, p4.__n = i4, y4 = p4.__d = true, p4.__h = [], p4._sb = []), null == p4.__s && (p4.__s = p4.state), null != T4.getDerivedStateFromProps && (p4.__s == p4.state && (p4.__s = v({}, p4.__s)), v(p4.__s, T4.getDerivedStateFromProps(w4, p4.__s))), d4 = p4.props, _4 = p4.state, p4.__v = u4, y4)
+            null == T4.getDerivedStateFromProps && null != p4.componentWillMount && p4.componentWillMount(), null != p4.componentDidMount && p4.__h.push(p4.componentDidMount);
           else {
-            if (null == I3.getDerivedStateFromProps && g4 !== y4 && null != a4.componentWillReceiveProps && a4.componentWillReceiveProps(g4, w4), !a4.__e && null != a4.shouldComponentUpdate && false === a4.shouldComponentUpdate(g4, a4.__s, w4) || u4.__v === i5.__v) {
-              for (u4.__v !== i5.__v && (a4.props = g4, a4.state = a4.__s, a4.__d = false), a4.__e = false, u4.__e = i5.__e, u4.__k = i5.__k, u4.__k.forEach(function(n3) {
+            if (null == T4.getDerivedStateFromProps && w4 !== d4 && null != p4.componentWillReceiveProps && p4.componentWillReceiveProps(w4, $3), !p4.__e && (null != p4.shouldComponentUpdate && false === p4.shouldComponentUpdate(w4, p4.__s, $3) || u4.__v === t3.__v)) {
+              for (u4.__v !== t3.__v && (p4.props = w4, p4.state = p4.__s, p4.__d = false), u4.__e = t3.__e, u4.__k = t3.__k, u4.__k.forEach(function(n3) {
                 n3 && (n3.__ = u4);
-              }), A3 = 0; A3 < a4._sb.length; A3++)
-                a4.__h.push(a4._sb[A3]);
-              a4._sb = [], a4.__h.length && f4.push(a4);
+              }), C3 = 0; C3 < p4._sb.length; C3++)
+                p4.__h.push(p4._sb[C3]);
+              p4._sb = [], p4.__h.length && f4.push(p4);
               break n;
             }
-            null != a4.componentWillUpdate && a4.componentWillUpdate(g4, a4.__s, w4), null != a4.componentDidUpdate && a4.__h.push(function() {
-              a4.componentDidUpdate(y4, p4, d4);
+            null != p4.componentWillUpdate && p4.componentWillUpdate(w4, p4.__s, $3), null != p4.componentDidUpdate && p4.__h.push(function() {
+              p4.componentDidUpdate(d4, _4, g4);
             });
           }
-          if (a4.context = w4, a4.props = g4, a4.__P = n2, P3 = l.__r, C3 = 0, "prototype" in I3 && I3.prototype.render) {
-            for (a4.state = a4.__s, a4.__d = false, P3 && P3(u4), s4 = a4.render(a4.props, a4.state, a4.context), $3 = 0; $3 < a4._sb.length; $3++)
-              a4.__h.push(a4._sb[$3]);
-            a4._sb = [];
+          if (p4.context = $3, p4.props = w4, p4.__P = n2, p4.__e = false, S2 = l.__r, A3 = 0, "prototype" in T4 && T4.prototype.render) {
+            for (p4.state = p4.__s, p4.__d = false, S2 && S2(u4), a4 = p4.render(p4.props, p4.state, p4.context), H3 = 0; H3 < p4._sb.length; H3++)
+              p4.__h.push(p4._sb[H3]);
+            p4._sb = [];
           } else
             do {
-              a4.__d = false, P3 && P3(u4), s4 = a4.render(a4.props, a4.state, a4.context), a4.state = a4.__s;
-            } while (a4.__d && ++C3 < 25);
-          a4.state = a4.__s, null != a4.getChildContext && (t3 = h(h({}, t3), a4.getChildContext())), v4 || null == a4.getSnapshotBeforeUpdate || (d4 = a4.getSnapshotBeforeUpdate(y4, p4)), H3 = null != s4 && s4.type === _ && null == s4.key ? s4.props.children : s4, x(n2, Array.isArray(H3) ? H3 : [H3], u4, i5, t3, r4, o5, f4, e3, c4), a4.base = u4.__e, u4.__h = null, a4.__h.length && f4.push(a4), b3 && (a4.__E = a4.__ = null), a4.__e = false;
-        } else
-          null == o5 && u4.__v === i5.__v ? (u4.__k = i5.__k, u4.__e = i5.__e) : u4.__e = N(i5.__e, u4, i5, t3, r4, o5, f4, c4);
-      (s4 = l.diffed) && s4(u4);
-    } catch (n3) {
-      u4.__v = null, (c4 || null != o5) && (u4.__e = e3, u4.__h = !!c4, o5[o5.indexOf(e3)] = null), l.__e(n3, u4, i5);
-    }
+              p4.__d = false, S2 && S2(u4), a4 = p4.render(p4.props, p4.state, p4.context), p4.state = p4.__s;
+            } while (p4.__d && ++A3 < 25);
+          p4.state = p4.__s, null != p4.getChildContext && (i4 = v(v({}, i4), p4.getChildContext())), y4 || null == p4.getSnapshotBeforeUpdate || (g4 = p4.getSnapshotBeforeUpdate(d4, _4)), P(n2, h(I3 = null != a4 && a4.type === k && null == a4.key ? a4.props.children : a4) ? I3 : [I3], u4, t3, i4, o5, r5, f4, e3, c4, s4), p4.base = u4.__e, u4.__h = null, p4.__h.length && f4.push(p4), m4 && (p4.__E = p4.__ = null);
+        } catch (n3) {
+          u4.__v = null, (c4 || null != r5) && (u4.__e = e3, u4.__h = !!c4, r5[r5.indexOf(e3)] = null), l.__e(n3, u4, t3);
+        }
+      else
+        null == r5 && u4.__v === t3.__v ? (u4.__k = t3.__k, u4.__e = t3.__e) : u4.__e = N(t3.__e, u4, t3, i4, o5, r5, f4, c4, s4);
+    (a4 = l.diffed) && a4(u4);
   }
-  function M(n2, u4) {
+  function M(n2, u4, t3) {
+    for (var i4 = 0; i4 < t3.length; i4++)
+      O(t3[i4], t3[++i4], t3[++i4]);
     l.__c && l.__c(u4, n2), n2.some(function(u5) {
       try {
         n2 = u5.__h, u5.__h = [], n2.some(function(n3) {
@@ -23650,84 +23633,84 @@
       }
     });
   }
-  function N(l4, u4, i5, t3, r4, o5, f4, e3) {
-    var s4, a4, h4, y4 = i5.props, p4 = u4.props, d4 = u4.type, _4 = 0;
-    if ("svg" === d4 && (r4 = true), null != o5) {
-      for (; _4 < o5.length; _4++)
-        if ((s4 = o5[_4]) && "setAttribute" in s4 == !!d4 && (d4 ? s4.localName === d4 : 3 === s4.nodeType)) {
-          l4 = s4, o5[_4] = null;
+  function N(l4, u4, t3, i4, o5, r5, f4, e3, s4) {
+    var a4, v4, y4, d4 = t3.props, _4 = u4.props, k4 = u4.type, b4 = 0;
+    if ("svg" === k4 && (o5 = true), null != r5) {
+      for (; b4 < r5.length; b4++)
+        if ((a4 = r5[b4]) && "setAttribute" in a4 == !!k4 && (k4 ? a4.localName === k4 : 3 === a4.nodeType)) {
+          l4 = a4, r5[b4] = null;
           break;
         }
     }
     if (null == l4) {
-      if (null === d4)
-        return document.createTextNode(p4);
-      l4 = r4 ? document.createElementNS("http://www.w3.org/2000/svg", d4) : document.createElement(d4, p4.is && p4), o5 = null, e3 = false;
+      if (null === k4)
+        return document.createTextNode(_4);
+      l4 = o5 ? document.createElementNS("http://www.w3.org/2000/svg", k4) : document.createElement(k4, _4.is && _4), r5 = null, e3 = false;
     }
-    if (null === d4)
-      y4 === p4 || e3 && l4.data === p4 || (l4.data = p4);
+    if (null === k4)
+      d4 === _4 || e3 && l4.data === _4 || (l4.data = _4);
     else {
-      if (o5 = o5 && n.call(l4.childNodes), a4 = (y4 = i5.props || c).dangerouslySetInnerHTML, h4 = p4.dangerouslySetInnerHTML, !e3) {
-        if (null != o5)
-          for (y4 = {}, _4 = 0; _4 < l4.attributes.length; _4++)
-            y4[l4.attributes[_4].name] = l4.attributes[_4].value;
-        (h4 || a4) && (h4 && (a4 && h4.__html == a4.__html || h4.__html === l4.innerHTML) || (l4.innerHTML = h4 && h4.__html || ""));
+      if (r5 = r5 && n.call(l4.childNodes), v4 = (d4 = t3.props || c).dangerouslySetInnerHTML, y4 = _4.dangerouslySetInnerHTML, !e3) {
+        if (null != r5)
+          for (d4 = {}, b4 = 0; b4 < l4.attributes.length; b4++)
+            d4[l4.attributes[b4].name] = l4.attributes[b4].value;
+        (y4 || v4) && (y4 && (v4 && y4.__html == v4.__html || y4.__html === l4.innerHTML) || (l4.innerHTML = y4 && y4.__html || ""));
       }
-      if (H(l4, p4, y4, r4, e3), h4)
+      if (H(l4, _4, d4, o5, e3), y4)
         u4.__k = [];
-      else if (_4 = u4.props.children, x(l4, Array.isArray(_4) ? _4 : [_4], u4, i5, t3, r4 && "foreignObject" !== d4, o5, f4, o5 ? o5[0] : i5.__k && b(i5, 0), e3), null != o5)
-        for (_4 = o5.length; _4--; )
-          null != o5[_4] && v(o5[_4]);
-      e3 || ("value" in p4 && void 0 !== (_4 = p4.value) && (_4 !== l4.value || "progress" === d4 && !_4 || "option" === d4 && _4 !== y4.value) && T(l4, "value", _4, y4.value, false), "checked" in p4 && void 0 !== (_4 = p4.checked) && _4 !== l4.checked && T(l4, "checked", _4, y4.checked, false));
+      else if (P(l4, h(b4 = u4.props.children) ? b4 : [b4], u4, t3, i4, o5 && "foreignObject" !== k4, r5, f4, r5 ? r5[0] : t3.__k && g(t3, 0), e3, s4), null != r5)
+        for (b4 = r5.length; b4--; )
+          null != r5[b4] && p(r5[b4]);
+      e3 || ("value" in _4 && void 0 !== (b4 = _4.value) && (b4 !== l4.value || "progress" === k4 && !b4 || "option" === k4 && b4 !== d4.value) && T(l4, "value", b4, d4.value, false), "checked" in _4 && void 0 !== (b4 = _4.checked) && b4 !== l4.checked && T(l4, "checked", b4, d4.checked, false));
     }
     return l4;
   }
-  function O(n2, u4, i5) {
+  function O(n2, u4, t3) {
     try {
       "function" == typeof n2 ? n2(u4) : n2.current = u4;
     } catch (n3) {
-      l.__e(n3, i5);
+      l.__e(n3, t3);
     }
   }
-  function S(n2, u4, i5) {
-    var t3, r4;
-    if (l.unmount && l.unmount(n2), (t3 = n2.ref) && (t3.current && t3.current !== n2.__e || O(t3, null, u4)), null != (t3 = n2.__c)) {
-      if (t3.componentWillUnmount)
+  function q(n2, u4, t3) {
+    var i4, o5;
+    if (l.unmount && l.unmount(n2), (i4 = n2.ref) && (i4.current && i4.current !== n2.__e || O(i4, null, u4)), null != (i4 = n2.__c)) {
+      if (i4.componentWillUnmount)
         try {
-          t3.componentWillUnmount();
+          i4.componentWillUnmount();
         } catch (n3) {
           l.__e(n3, u4);
         }
-      t3.base = t3.__P = null, n2.__c = void 0;
+      i4.base = i4.__P = null, n2.__c = void 0;
     }
-    if (t3 = n2.__k)
-      for (r4 = 0; r4 < t3.length; r4++)
-        t3[r4] && S(t3[r4], u4, i5 || "function" != typeof n2.type);
-    i5 || null == n2.__e || v(n2.__e), n2.__ = n2.__e = n2.__d = void 0;
+    if (i4 = n2.__k)
+      for (o5 = 0; o5 < i4.length; o5++)
+        i4[o5] && q(i4[o5], u4, t3 || "function" != typeof n2.type);
+    t3 || null == n2.__e || p(n2.__e), n2.__ = n2.__e = n2.__d = void 0;
   }
-  function q(n2, l4, u4) {
+  function B(n2, l4, u4) {
     return this.constructor(n2, u4);
   }
-  function B(u4, i5, t3) {
-    var r4, o5, f4;
-    l.__ && l.__(u4, i5), o5 = (r4 = "function" == typeof t3) ? null : t3 && t3.__k || i5.__k, f4 = [], L(i5, u4 = (!r4 && t3 || i5).__k = y(_, null, [u4]), o5 || c, c, void 0 !== i5.ownerSVGElement, !r4 && t3 ? [t3] : o5 ? null : i5.firstChild ? n.call(i5.childNodes) : null, f4, !r4 && t3 ? t3 : o5 ? o5.__e : i5.firstChild, r4), M(f4, u4);
+  function D(u4, t3, i4) {
+    var o5, r5, f4, e3;
+    l.__ && l.__(u4, t3), r5 = (o5 = "function" == typeof i4) ? null : i4 && i4.__k || t3.__k, f4 = [], e3 = [], L(t3, u4 = (!o5 && i4 || t3).__k = y(k, null, [u4]), r5 || c, c, void 0 !== t3.ownerSVGElement, !o5 && i4 ? [i4] : r5 ? null : t3.firstChild ? n.call(t3.childNodes) : null, f4, !o5 && i4 ? i4 : r5 ? r5.__e : t3.firstChild, o5, e3), M(f4, u4, e3);
   }
-  function E(l4, u4, i5) {
-    var t3, r4, o5, f4 = h({}, l4.props);
-    for (o5 in u4)
-      "key" == o5 ? t3 = u4[o5] : "ref" == o5 ? r4 = u4[o5] : f4[o5] = u4[o5];
-    return arguments.length > 2 && (f4.children = arguments.length > 3 ? n.call(arguments, 2) : i5), p(l4.type, f4, t3 || l4.key, r4 || l4.ref, null);
+  function F(l4, u4, t3) {
+    var i4, o5, r5, f4, e3 = v({}, l4.props);
+    for (r5 in l4.type && l4.type.defaultProps && (f4 = l4.type.defaultProps), u4)
+      "key" == r5 ? i4 = u4[r5] : "ref" == r5 ? o5 = u4[r5] : e3[r5] = void 0 === u4[r5] && void 0 !== f4 ? f4[r5] : u4[r5];
+    return arguments.length > 2 && (e3.children = arguments.length > 3 ? n.call(arguments, 2) : t3), d(l4.type, e3, i4 || l4.key, o5 || l4.ref, null);
   }
-  function F(n2, l4) {
+  function G(n2, l4) {
     var u4 = { __c: l4 = "__cC" + e++, __: n2, Consumer: function(n3, l5) {
       return n3.children(l5);
     }, Provider: function(n3) {
-      var u5, i5;
-      return this.getChildContext || (u5 = [], (i5 = {})[l4] = this, this.getChildContext = function() {
-        return i5;
+      var u5, t3;
+      return this.getChildContext || (u5 = [], (t3 = {})[l4] = this, this.getChildContext = function() {
+        return t3;
       }, this.shouldComponentUpdate = function(n4) {
         this.props.value !== n4.value && u5.some(function(n5) {
-          n5.__e = true, m(n5);
+          n5.__e = true, w(n5);
         });
       }, this.sub = function(n4) {
         u5.push(n4);
@@ -23739,98 +23722,124 @@
     } };
     return u4.Provider.__ = u4.Consumer.contextType = u4;
   }
-  n = s.slice, l = { __e: function(n2, l4, u4, i5) {
-    for (var t3, r4, o5; l4 = l4.__; )
-      if ((t3 = l4.__c) && !t3.__)
+  n = s.slice, l = { __e: function(n2, l4, u4, t3) {
+    for (var i4, o5, r5; l4 = l4.__; )
+      if ((i4 = l4.__c) && !i4.__)
         try {
-          if ((r4 = t3.constructor) && null != r4.getDerivedStateFromError && (t3.setState(r4.getDerivedStateFromError(n2)), o5 = t3.__d), null != t3.componentDidCatch && (t3.componentDidCatch(n2, i5 || {}), o5 = t3.__d), o5)
-            return t3.__E = t3;
+          if ((o5 = i4.constructor) && null != o5.getDerivedStateFromError && (i4.setState(o5.getDerivedStateFromError(n2)), r5 = i4.__d), null != i4.componentDidCatch && (i4.componentDidCatch(n2, t3 || {}), r5 = i4.__d), r5)
+            return i4.__E = i4;
         } catch (l5) {
           n2 = l5;
         }
     throw n2;
-  } }, u = 0, i = function(n2) {
+  } }, u = 0, t = function(n2) {
     return null != n2 && void 0 === n2.constructor;
-  }, k.prototype.setState = function(n2, l4) {
+  }, b.prototype.setState = function(n2, l4) {
     var u4;
-    u4 = null != this.__s && this.__s !== this.state ? this.__s : this.__s = h({}, this.state), "function" == typeof n2 && (n2 = n2(h({}, u4), this.props)), n2 && h(u4, n2), null != n2 && this.__v && (l4 && this._sb.push(l4), m(this));
-  }, k.prototype.forceUpdate = function(n2) {
-    this.__v && (this.__e = true, n2 && this.__h.push(n2), m(this));
-  }, k.prototype.render = _, t = [], o = "function" == typeof Promise ? Promise.prototype.then.bind(Promise.resolve()) : setTimeout, f = function(n2, l4) {
+    u4 = null != this.__s && this.__s !== this.state ? this.__s : this.__s = v({}, this.state), "function" == typeof n2 && (n2 = n2(v({}, u4), this.props)), n2 && v(u4, n2), null != n2 && this.__v && (l4 && this._sb.push(l4), w(this));
+  }, b.prototype.forceUpdate = function(n2) {
+    this.__v && (this.__e = true, n2 && this.__h.push(n2), w(this));
+  }, b.prototype.render = k, i = [], r = "function" == typeof Promise ? Promise.prototype.then.bind(Promise.resolve()) : setTimeout, f = function(n2, l4) {
     return n2.__v.__b - l4.__v.__b;
-  }, w.__r = 0, e = 0;
+  }, x.__r = 0, e = 0;
 
-  // ../node_modules/.pnpm/preact@10.13.2/node_modules/preact/devtools/dist/devtools.module.js
-  "undefined" != typeof window && window.__PREACT_DEVTOOLS__ && window.__PREACT_DEVTOOLS__.attachPreact("10.13.2", l, { Fragment: _, Component: k });
+  // ../node_modules/.pnpm/preact@10.17.1/node_modules/preact/devtools/dist/devtools.module.js
+  "undefined" != typeof window && window.__PREACT_DEVTOOLS__ && window.__PREACT_DEVTOOLS__.attachPreact("10.17.1", l, { Fragment: k, Component: b });
 
-  // ../node_modules/.pnpm/preact@10.13.2/node_modules/preact/debug/dist/debug.module.js
-  var o2 = {};
-  function a2(e3) {
-    return e3.type === _ ? "Fragment" : "function" == typeof e3.type ? e3.type.displayName || e3.type.name : "string" == typeof e3.type ? e3.type : "#text";
+  // ../node_modules/.pnpm/preact@10.17.1/node_modules/preact/debug/dist/debug.module.js
+  function o2(n2, t3) {
+    (null == t3 || t3 > n2.length) && (t3 = n2.length);
+    for (var e3 = 0, o5 = new Array(t3); e3 < t3; e3++)
+      o5[e3] = n2[e3];
+    return o5;
   }
-  var i2 = [];
-  var c2 = [];
+  function r2(n2, t3) {
+    var e3 = "undefined" != typeof Symbol && n2[Symbol.iterator] || n2["@@iterator"];
+    if (e3)
+      return (e3 = e3.call(n2)).next.bind(e3);
+    if (Array.isArray(n2) || (e3 = function(n3, t4) {
+      if (n3) {
+        if ("string" == typeof n3)
+          return o2(n3, t4);
+        var e4 = Object.prototype.toString.call(n3).slice(8, -1);
+        return "Object" === e4 && n3.constructor && (e4 = n3.constructor.name), "Map" === e4 || "Set" === e4 ? Array.from(n3) : "Arguments" === e4 || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(e4) ? o2(n3, t4) : void 0;
+      }
+    }(n2)) || t3 && n2 && "number" == typeof n2.length) {
+      e3 && (n2 = e3);
+      var r5 = 0;
+      return function() {
+        return r5 >= n2.length ? { done: true } : { done: false, value: n2[r5++] };
+      };
+    }
+    throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+  }
+  var a2 = {};
+  function c2(t3) {
+    return t3.type === k ? "Fragment" : "function" == typeof t3.type ? t3.type.displayName || t3.type.name : "string" == typeof t3.type ? t3.type : "#text";
+  }
+  var u2 = [];
+  var l2 = [];
   function s2() {
-    return i2.length > 0 ? i2[i2.length - 1] : null;
+    return u2.length > 0 ? u2[u2.length - 1] : null;
   }
-  var u2 = false;
-  function l2(e3) {
-    return "function" == typeof e3.type && e3.type != _;
+  var f2 = false;
+  function d2(t3) {
+    return "function" == typeof t3.type && t3.type != k;
   }
-  function f2(n2) {
-    for (var e3 = [n2], t3 = n2; null != t3.__o; )
-      e3.push(t3.__o), t3 = t3.__o;
-    return e3.reduce(function(n3, e4) {
-      n3 += "  in " + a2(e4);
-      var t4 = e4.__source;
-      return t4 ? n3 += " (at " + t4.fileName + ":" + t4.lineNumber + ")" : u2 || (u2 = true, console.warn("Add @babel/plugin-transform-react-jsx-source to get a more detailed component stack. Note that you should not add it to production builds of your App for bundle size reasons.")), n3 + "\n";
+  function p2(n2) {
+    for (var t3 = [n2], e3 = n2; null != e3.__o; )
+      t3.push(e3.__o), e3 = e3.__o;
+    return t3.reduce(function(n3, t4) {
+      n3 += "  in " + c2(t4);
+      var e4 = t4.__source;
+      return e4 ? n3 += " (at " + e4.fileName + ":" + e4.lineNumber + ")" : f2 || (f2 = true, console.warn("Add @babel/plugin-transform-react-jsx-source to get a more detailed component stack. Note that you should not add it to production builds of your App for bundle size reasons.")), n3 + "\n";
     }, "");
   }
-  var p2 = "function" == typeof WeakMap;
-  function d(n2) {
-    return n2 ? "function" == typeof n2.type ? d(n2.__) : n2 : {};
-  }
-  var h2 = k.prototype.setState;
-  k.prototype.setState = function(n2, e3) {
-    return null == this.__v && null == this.state && console.warn('Calling "this.setState" inside the constructor of a component is a no-op and might be a bug in your application. Instead, set "this.state = {}" directly.\n\n' + f2(s2())), h2.call(this, n2, e3);
-  };
-  var y2 = k.prototype.forceUpdate;
+  var h2 = "function" == typeof WeakMap;
   function v2(n2) {
-    var e3 = n2.props, t3 = a2(n2), o5 = "";
-    for (var r4 in e3)
-      if (e3.hasOwnProperty(r4) && "children" !== r4) {
-        var i5 = e3[r4];
-        "function" == typeof i5 && (i5 = "function " + (i5.displayName || i5.name) + "() {}"), i5 = Object(i5) !== i5 || i5.toString ? i5 + "" : Object.prototype.toString.call(i5), o5 += " " + r4 + "=" + JSON.stringify(i5);
-      }
-    var c4 = e3.children;
-    return "<" + t3 + o5 + (c4 && c4.length ? ">..</" + t3 + ">" : " />");
+    return n2 ? "function" == typeof n2.type ? null === n2.__ ? null !== n2.__e && null !== n2.__e.parentNode ? n2.__e.parentNode.localName : "" : v2(n2.__) : n2.type : "";
   }
-  k.prototype.forceUpdate = function(n2) {
-    return null == this.__v ? console.warn('Calling "this.forceUpdate" inside the constructor of a component is a no-op and might be a bug in your application.\n\n' + f2(s2())) : null == this.__P && console.warn(`Can't call "this.forceUpdate" on an unmounted component. This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and asynchronous tasks in the componentWillUnmount method.
+  var y2 = b.prototype.setState;
+  b.prototype.setState = function(n2, t3) {
+    return null == this.__v && null == this.state && console.warn('Calling "this.setState" inside the constructor of a component is a no-op and might be a bug in your application. Instead, set "this.state = {}" directly.\n\n' + p2(s2())), y2.call(this, n2, t3);
+  };
+  var m2 = b.prototype.forceUpdate;
+  function b2(n2) {
+    var t3 = n2.props, e3 = c2(n2), o5 = "";
+    for (var r5 in t3)
+      if (t3.hasOwnProperty(r5) && "children" !== r5) {
+        var a4 = t3[r5];
+        "function" == typeof a4 && (a4 = "function " + (a4.displayName || a4.name) + "() {}"), a4 = Object(a4) !== a4 || a4.toString ? a4 + "" : Object.prototype.toString.call(a4), o5 += " " + r5 + "=" + JSON.stringify(a4);
+      }
+    var i4 = t3.children;
+    return "<" + e3 + o5 + (i4 && i4.length ? ">..</" + e3 + ">" : " />");
+  }
+  b.prototype.forceUpdate = function(n2) {
+    return null == this.__v ? console.warn('Calling "this.forceUpdate" inside the constructor of a component is a no-op and might be a bug in your application.\n\n' + p2(s2())) : null == this.__P && console.warn(`Can't call "this.forceUpdate" on an unmounted component. This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and asynchronous tasks in the componentWillUnmount method.
 
-` + f2(this.__v)), y2.call(this, n2);
+` + p2(this.__v)), m2.call(this, n2);
   }, function() {
     !function() {
-      var n3 = l.__b, t4 = l.diffed, o5 = l.__, r5 = l.vnode, a4 = l.__r;
+      var n3 = l.__b, e4 = l.diffed, o6 = l.__, r5 = l.vnode, a4 = l.__r;
       l.diffed = function(n4) {
-        l2(n4) && c2.pop(), i2.pop(), t4 && t4(n4);
-      }, l.__b = function(e3) {
-        l2(e3) && i2.push(e3), n3 && n3(e3);
-      }, l.__ = function(n4, e3) {
-        c2 = [], o5 && o5(n4, e3);
+        d2(n4) && l2.pop(), u2.pop(), e4 && e4(n4);
+      }, l.__b = function(t3) {
+        d2(t3) && u2.push(t3), n3 && n3(t3);
+      }, l.__ = function(n4, t3) {
+        l2 = [], o6 && o6(n4, t3);
       }, l.vnode = function(n4) {
-        n4.__o = c2.length > 0 ? c2[c2.length - 1] : null, r5 && r5(n4);
+        n4.__o = l2.length > 0 ? l2[l2.length - 1] : null, r5 && r5(n4);
       }, l.__r = function(n4) {
-        l2(n4) && c2.push(n4), a4 && a4(n4);
+        d2(n4) && l2.push(n4), a4 && a4(n4);
       };
     }();
-    var n2 = false, t3 = l.__b, r4 = l.diffed, s4 = l.vnode, u4 = l.__e, h4 = l.__, y4 = l.__h, m3 = p2 ? { useEffect: /* @__PURE__ */ new WeakMap(), useLayoutEffect: /* @__PURE__ */ new WeakMap(), lazyPropTypes: /* @__PURE__ */ new WeakMap() } : null, b3 = [];
-    l.__e = function(n3, e3, t4, o5) {
-      if (e3 && e3.__c && "function" == typeof n3.then) {
+    var n2 = false, e3 = l.__b, o5 = l.diffed, i4 = l.vnode, s4 = l.__r, f4 = l.__e, y4 = l.__, m4 = l.__h, w4 = l.__c, g4 = h2 ? { useEffect: /* @__PURE__ */ new WeakMap(), useLayoutEffect: /* @__PURE__ */ new WeakMap(), lazyPropTypes: /* @__PURE__ */ new WeakMap() } : null, E2 = [], k4 = [];
+    l.__e = function(n3, t3, e4, o6) {
+      if (t3 && t3.__c && "function" == typeof n3.then) {
         var r5 = n3;
-        n3 = new Error("Missing Suspense. The throwing component was: " + a2(e3));
-        for (var i5 = e3; i5; i5 = i5.__)
-          if (i5.__c && i5.__c.__c) {
+        n3 = new Error("Missing Suspense. The throwing component was: " + c2(t3));
+        for (var a4 = t3; a4; a4 = a4.__)
+          if (a4.__c && a4.__c.__c) {
             n3 = r5;
             break;
           }
@@ -23838,118 +23847,141 @@
           throw n3;
       }
       try {
-        (o5 = o5 || {}).componentStack = f2(e3), u4(n3, e3, t4, o5), "function" != typeof n3.then && setTimeout(function() {
+        (o6 = o6 || {}).componentStack = p2(t3), f4(n3, t3, e4, o6), "function" != typeof n3.then && setTimeout(function() {
           throw n3;
         });
       } catch (n4) {
         throw n4;
       }
-    }, l.__ = function(n3, e3) {
-      if (!e3)
+    }, l.__ = function(n3, t3) {
+      if (!t3)
         throw new Error("Undefined parent passed to render(), this is the second argument.\nCheck if the element is available in the DOM/has the correct id.");
-      var t4;
-      switch (e3.nodeType) {
+      var e4;
+      switch (t3.nodeType) {
         case 1:
         case 11:
         case 9:
-          t4 = true;
+          e4 = true;
           break;
         default:
-          t4 = false;
+          e4 = false;
       }
-      if (!t4) {
-        var o5 = a2(n3);
-        throw new Error("Expected a valid HTML node as a second argument to render.	Received " + e3 + " instead: render(<" + o5 + " />, " + e3 + ");");
+      if (!e4) {
+        var o6 = c2(n3);
+        throw new Error("Expected a valid HTML node as a second argument to render.	Received " + t3 + " instead: render(<" + o6 + " />, " + t3 + ");");
       }
-      h4 && h4(n3, e3);
-    }, l.__b = function(e3) {
-      var r5 = e3.type, i5 = d(e3.__);
-      if (n2 = true, void 0 === r5)
-        throw new Error("Undefined component passed to createElement()\n\nYou likely forgot to export your component or might have mixed up default and named imports" + v2(e3) + "\n\n" + f2(e3));
-      if (null != r5 && "object" == typeof r5) {
-        if (void 0 !== r5.__k && void 0 !== r5.__e)
-          throw new Error("Invalid type passed to createElement(): " + r5 + "\n\nDid you accidentally pass a JSX literal as JSX twice?\n\n  let My" + a2(e3) + " = " + v2(r5) + ";\n  let vnode = <My" + a2(e3) + " />;\n\nThis usually happens when you export a JSX literal and not the component.\n\n" + f2(e3));
-        throw new Error("Invalid type passed to createElement(): " + (Array.isArray(r5) ? "array" : r5));
+      y4 && y4(n3, t3);
+    }, l.__b = function(t3) {
+      var o6 = t3.type;
+      if ("string" != typeof o6 || "thead" !== o6 && "tfoot" !== o6 && "tbody" !== o6 && "tr" !== o6 && "td" !== o6 && "th" !== o6 || k4.push(t3), n2 = true, void 0 === o6)
+        throw new Error("Undefined component passed to createElement()\n\nYou likely forgot to export your component or might have mixed up default and named imports" + b2(t3) + "\n\n" + p2(t3));
+      if (null != o6 && "object" == typeof o6) {
+        if (void 0 !== o6.__k && void 0 !== o6.__e)
+          throw new Error("Invalid type passed to createElement(): " + o6 + "\n\nDid you accidentally pass a JSX literal as JSX twice?\n\n  let My" + c2(t3) + " = " + b2(o6) + ";\n  let vnode = <My" + c2(t3) + " />;\n\nThis usually happens when you export a JSX literal and not the component.\n\n" + p2(t3));
+        throw new Error("Invalid type passed to createElement(): " + (Array.isArray(o6) ? "array" : o6));
       }
-      if ("thead" !== r5 && "tfoot" !== r5 && "tbody" !== r5 || "table" === i5.type ? "tr" === r5 && "thead" !== i5.type && "tfoot" !== i5.type && "tbody" !== i5.type && "table" !== i5.type ? console.error("Improper nesting of table. Your <tr> should have a <thead/tbody/tfoot/table> parent." + v2(e3) + "\n\n" + f2(e3)) : "td" === r5 && "tr" !== i5.type ? console.error("Improper nesting of table. Your <td> should have a <tr> parent." + v2(e3) + "\n\n" + f2(e3)) : "th" === r5 && "tr" !== i5.type && console.error("Improper nesting of table. Your <th> should have a <tr>." + v2(e3) + "\n\n" + f2(e3)) : console.error("Improper nesting of table. Your <thead/tbody/tfoot> should have a <table> parent." + v2(e3) + "\n\n" + f2(e3)), void 0 !== e3.ref && "function" != typeof e3.ref && "object" != typeof e3.ref && !("$$typeof" in e3))
-        throw new Error(`Component's "ref" property should be a function, or an object created by createRef(), but got [` + typeof e3.ref + "] instead\n" + v2(e3) + "\n\n" + f2(e3));
-      if ("string" == typeof e3.type) {
-        for (var c4 in e3.props)
-          if ("o" === c4[0] && "n" === c4[1] && "function" != typeof e3.props[c4] && null != e3.props[c4])
-            throw new Error(`Component's "` + c4 + '" property should be a function, but got [' + typeof e3.props[c4] + "] instead\n" + v2(e3) + "\n\n" + f2(e3));
+      if (void 0 !== t3.ref && "function" != typeof t3.ref && "object" != typeof t3.ref && !("$$typeof" in t3))
+        throw new Error(`Component's "ref" property should be a function, or an object created by createRef(), but got [` + typeof t3.ref + "] instead\n" + b2(t3) + "\n\n" + p2(t3));
+      if ("string" == typeof t3.type) {
+        for (var r5 in t3.props)
+          if ("o" === r5[0] && "n" === r5[1] && "function" != typeof t3.props[r5] && null != t3.props[r5])
+            throw new Error(`Component's "` + r5 + '" property should be a function, but got [' + typeof t3.props[r5] + "] instead\n" + b2(t3) + "\n\n" + p2(t3));
       }
-      if ("function" == typeof e3.type && e3.type.propTypes) {
-        if ("Lazy" === e3.type.displayName && m3 && !m3.lazyPropTypes.has(e3.type)) {
-          var s5 = "PropTypes are not supported on lazy(). Use propTypes on the wrapped component itself. ";
+      if ("function" == typeof t3.type && t3.type.propTypes) {
+        if ("Lazy" === t3.type.displayName && g4 && !g4.lazyPropTypes.has(t3.type)) {
+          var i5 = "PropTypes are not supported on lazy(). Use propTypes on the wrapped component itself. ";
           try {
-            var u5 = e3.type();
-            m3.lazyPropTypes.set(e3.type, true), console.warn(s5 + "Component wrapped in lazy() is " + a2(u5));
+            var u4 = t3.type();
+            g4.lazyPropTypes.set(t3.type, true), console.warn(i5 + "Component wrapped in lazy() is " + c2(u4));
           } catch (n3) {
-            console.warn(s5 + "We will log the wrapped component's name once it is loaded.");
+            console.warn(i5 + "We will log the wrapped component's name once it is loaded.");
           }
         }
-        var l4 = e3.props;
-        e3.type.__f && delete (l4 = function(n3, e4) {
-          for (var t4 in e4)
-            n3[t4] = e4[t4];
+        var l4 = t3.props;
+        t3.type.__f && delete (l4 = function(n3, t4) {
+          for (var e4 in t4)
+            n3[e4] = t4[e4];
           return n3;
-        }({}, l4)).ref, function(n3, e4, t4, r6, a4) {
-          Object.keys(n3).forEach(function(t5) {
+        }({}, l4)).ref, function(n3, t4, e4, o7, r6) {
+          Object.keys(n3).forEach(function(e5) {
             var i6;
             try {
-              i6 = n3[t5](e4, t5, r6, "prop", null, "SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED");
+              i6 = n3[e5](t4, e5, o7, "prop", null, "SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED");
             } catch (n4) {
               i6 = n4;
             }
-            i6 && !(i6.message in o2) && (o2[i6.message] = true, console.error("Failed prop type: " + i6.message + (a4 && "\n" + a4() || "")));
+            i6 && !(i6.message in a2) && (a2[i6.message] = true, console.error("Failed prop type: " + i6.message + (r6 && "\n" + r6() || "")));
           });
-        }(e3.type.propTypes, l4, 0, a2(e3), function() {
-          return f2(e3);
+        }(t3.type.propTypes, l4, 0, c2(t3), function() {
+          return p2(t3);
         });
       }
-      t3 && t3(e3);
-    }, l.__h = function(e3, t4, o5) {
-      if (!e3 || !n2)
+      e3 && e3(t3);
+    }, l.__r = function(t3) {
+      s4 && s4(t3), n2 = true;
+    }, l.__h = function(t3, e4, o6) {
+      if (!t3 || !n2)
         throw new Error("Hook can only be invoked from render methods.");
-      y4 && y4(e3, t4, o5);
+      m4 && m4(t3, e4, o6);
     };
-    var w4 = function(n3, e3) {
+    var _4 = function(n3, t3) {
       return { get: function() {
-        var t4 = "get" + n3 + e3;
-        b3 && b3.indexOf(t4) < 0 && (b3.push(t4), console.warn("getting vnode." + n3 + " is deprecated, " + e3));
+        var e4 = "get" + n3 + t3;
+        E2 && E2.indexOf(e4) < 0 && (E2.push(e4), console.warn("getting vnode." + n3 + " is deprecated, " + t3));
       }, set: function() {
-        var t4 = "set" + n3 + e3;
-        b3 && b3.indexOf(t4) < 0 && (b3.push(t4), console.warn("setting vnode." + n3 + " is not allowed, " + e3));
+        var e4 = "set" + n3 + t3;
+        E2 && E2.indexOf(e4) < 0 && (E2.push(e4), console.warn("setting vnode." + n3 + " is not allowed, " + t3));
       } };
-    }, g4 = { nodeName: w4("nodeName", "use vnode.type"), attributes: w4("attributes", "use vnode.props"), children: w4("children", "use vnode.props.children") }, E2 = Object.create({}, g4);
+    }, j4 = { nodeName: _4("nodeName", "use vnode.type"), attributes: _4("attributes", "use vnode.props"), children: _4("children", "use vnode.props.children") }, I3 = Object.create({}, j4);
     l.vnode = function(n3) {
-      var e3 = n3.props;
-      if (null !== n3.type && null != e3 && ("__source" in e3 || "__self" in e3)) {
-        var t4 = n3.props = {};
-        for (var o5 in e3) {
-          var r5 = e3[o5];
-          "__source" === o5 ? n3.__source = r5 : "__self" === o5 ? n3.__self = r5 : t4[o5] = r5;
+      var t3 = n3.props;
+      if (null !== n3.type && null != t3 && ("__source" in t3 || "__self" in t3)) {
+        var e4 = n3.props = {};
+        for (var o6 in t3) {
+          var r5 = t3[o6];
+          "__source" === o6 ? n3.__source = r5 : "__self" === o6 ? n3.__self = r5 : e4[o6] = r5;
         }
       }
-      n3.__proto__ = E2, s4 && s4(n3);
-    }, l.diffed = function(e3) {
-      if (e3.__k && e3.__k.forEach(function(n3) {
+      n3.__proto__ = I3, i4 && i4(n3);
+    }, l.diffed = function(t3) {
+      if (t3.__k && t3.__k.forEach(function(n3) {
         if ("object" == typeof n3 && n3 && void 0 === n3.type) {
-          var t5 = Object.keys(n3).join(",");
-          throw new Error("Objects are not valid as a child. Encountered an object with the keys {" + t5 + "}.\n\n" + f2(e3));
+          var e5 = Object.keys(n3).join(",");
+          throw new Error("Objects are not valid as a child. Encountered an object with the keys {" + e5 + "}.\n\n" + p2(t3));
         }
-      }), n2 = false, r4 && r4(e3), null != e3.__k)
-        for (var t4 = [], o5 = 0; o5 < e3.__k.length; o5++) {
-          var a4 = e3.__k[o5];
-          if (a4 && null != a4.key) {
-            var i5 = a4.key;
-            if (-1 !== t4.indexOf(i5)) {
-              console.error('Following component has two or more children with the same key attribute: "' + i5 + '". This may cause glitches and misbehavior in rendering process. Component: \n\n' + v2(e3) + "\n\n" + f2(e3));
+      }), n2 = false, o5 && o5(t3), null != t3.__k)
+        for (var e4 = [], a4 = 0; a4 < t3.__k.length; a4++) {
+          var i5 = t3.__k[a4];
+          if (i5 && null != i5.key) {
+            var u4 = i5.key;
+            if (-1 !== e4.indexOf(u4)) {
+              console.error('Following component has two or more children with the same key attribute: "' + u4 + '". This may cause glitches and misbehavior in rendering process. Component: \n\n' + b2(t3) + "\n\n" + p2(t3));
               break;
             }
-            t4.push(i5);
+            e4.push(u4);
           }
         }
+      if (null != t3.__c && null != t3.__c.__H) {
+        var l4 = t3.__c.__H.__;
+        if (l4)
+          for (var s5 = 0; s5 < l4.length; s5 += 1) {
+            var f5 = l4[s5];
+            if (f5.__H) {
+              for (var d4, h4 = r2(f5.__H); !(d4 = h4()).done; )
+                if ((y5 = d4.value) != y5) {
+                  var v4 = c2(t3);
+                  throw new Error("Invalid argument passed to hook. Hooks should not be called with NaN in the dependency array. Hook index " + s5 + " in component " + v4 + " was called with NaN.");
+                }
+            }
+          }
+      }
+      var y5;
+    }, l.__c = function(n3, t3) {
+      for (var e4 = 0; e4 < k4.length; e4++) {
+        var o6 = k4[e4], r5 = o6.type, a4 = v2(o6.__);
+        "thead" !== r5 && "tfoot" !== r5 && "tbody" !== r5 || "table" === a4 ? "tr" === r5 && "thead" !== a4 && "tfoot" !== a4 && "tbody" !== a4 && "table" !== a4 ? console.error("Improper nesting of table. Your <tr> should have a <thead/tbody/tfoot/table> parent." + b2(o6) + "\n\n" + p2(o6)) : "td" === r5 && "tr" !== a4 ? console.error("Improper nesting of table. Your <td> should have a <tr> parent." + b2(o6) + "\n\n" + p2(o6)) : "th" === r5 && "tr" !== a4 && console.error("Improper nesting of table. Your <th> should have a <tr>." + b2(o6) + "\n\n" + p2(o6)) : console.error("Improper nesting of table. Your <thead/tbody/tfoot> should have a <table> parent." + b2(o6) + "\n\n" + p2(o6));
+      }
+      k4 = [], w4 && w4(n3, t3);
     };
   }();
 
@@ -24461,11 +24493,11 @@
   }
   var shuffle_default = shuffle;
 
-  // ../node_modules/.pnpm/preact@10.13.2/node_modules/preact/hooks/dist/hooks.module.js
+  // ../node_modules/.pnpm/preact@10.17.1/node_modules/preact/hooks/dist/hooks.module.js
   var t2;
-  var r2;
+  var r3;
   var u3;
-  var i3;
+  var i2;
   var o3 = 0;
   var f3 = [];
   var c3 = [];
@@ -24473,22 +24505,22 @@
   var a3 = l.__r;
   var v3 = l.diffed;
   var l3 = l.__c;
-  var m2 = l.unmount;
-  function d2(t3, u4) {
-    l.__h && l.__h(r2, t3, o3 || u4), o3 = 0;
-    var i5 = r2.__H || (r2.__H = { __: [], __h: [] });
-    return t3 >= i5.__.length && i5.__.push({ __V: c3 }), i5.__[t3];
+  var m3 = l.unmount;
+  function d3(t3, u4) {
+    l.__h && l.__h(r3, t3, o3 || u4), o3 = 0;
+    var i4 = r3.__H || (r3.__H = { __: [], __h: [] });
+    return t3 >= i4.__.length && i4.__.push({ __V: c3 }), i4.__[t3];
   }
   function h3(n2) {
     return o3 = 1, s3(B2, n2);
   }
-  function s3(n2, u4, i5) {
-    var o5 = d2(t2++, 2);
-    if (o5.t = n2, !o5.__c && (o5.__ = [i5 ? i5(u4) : B2(void 0, u4), function(n3) {
-      var t3 = o5.__N ? o5.__N[0] : o5.__[0], r4 = o5.t(t3, n3);
-      t3 !== r4 && (o5.__N = [r4, o5.__[1]], o5.__c.setState({}));
-    }], o5.__c = r2, !r2.u)) {
-      var f4 = function(n3, t3, r4) {
+  function s3(n2, u4, i4) {
+    var o5 = d3(t2++, 2);
+    if (o5.t = n2, !o5.__c && (o5.__ = [i4 ? i4(u4) : B2(void 0, u4), function(n3) {
+      var t3 = o5.__N ? o5.__N[0] : o5.__[0], r5 = o5.t(t3, n3);
+      t3 !== r5 && (o5.__N = [r5, o5.__[1]], o5.__c.setState({}));
+    }], o5.__c = r3, !r3.u)) {
+      var f4 = function(n3, t3, r5) {
         if (!o5.__c.__H)
           return true;
         var u5 = o5.__c.__H.__.filter(function(n4) {
@@ -24497,52 +24529,52 @@
         if (u5.every(function(n4) {
           return !n4.__N;
         }))
-          return !c4 || c4.call(this, n3, t3, r4);
-        var i6 = false;
+          return !c4 || c4.call(this, n3, t3, r5);
+        var i5 = false;
         return u5.forEach(function(n4) {
           if (n4.__N) {
             var t4 = n4.__[0];
-            n4.__ = n4.__N, n4.__N = void 0, t4 !== n4.__[0] && (i6 = true);
+            n4.__ = n4.__N, n4.__N = void 0, t4 !== n4.__[0] && (i5 = true);
           }
-        }), !(!i6 && o5.__c.props === n3) && (!c4 || c4.call(this, n3, t3, r4));
+        }), !(!i5 && o5.__c.props === n3) && (!c4 || c4.call(this, n3, t3, r5));
       };
-      r2.u = true;
-      var c4 = r2.shouldComponentUpdate, e3 = r2.componentWillUpdate;
-      r2.componentWillUpdate = function(n3, t3, r4) {
+      r3.u = true;
+      var c4 = r3.shouldComponentUpdate, e3 = r3.componentWillUpdate;
+      r3.componentWillUpdate = function(n3, t3, r5) {
         if (this.__e) {
           var u5 = c4;
-          c4 = void 0, f4(n3, t3, r4), c4 = u5;
+          c4 = void 0, f4(n3, t3, r5), c4 = u5;
         }
-        e3 && e3.call(this, n3, t3, r4);
-      }, r2.shouldComponentUpdate = f4;
+        e3 && e3.call(this, n3, t3, r5);
+      }, r3.shouldComponentUpdate = f4;
     }
     return o5.__N || o5.__;
   }
-  function p3(u4, i5) {
-    var o5 = d2(t2++, 3);
-    !l.__s && z2(o5.__H, i5) && (o5.__ = u4, o5.i = i5, r2.__H.__h.push(o5));
+  function p3(u4, i4) {
+    var o5 = d3(t2++, 3);
+    !l.__s && z2(o5.__H, i4) && (o5.__ = u4, o5.i = i4, r3.__H.__h.push(o5));
   }
-  function y3(u4, i5) {
-    var o5 = d2(t2++, 4);
-    !l.__s && z2(o5.__H, i5) && (o5.__ = u4, o5.i = i5, r2.__h.push(o5));
+  function y3(u4, i4) {
+    var o5 = d3(t2++, 4);
+    !l.__s && z2(o5.__H, i4) && (o5.__ = u4, o5.i = i4, r3.__h.push(o5));
   }
-  function _2(n2) {
+  function _(n2) {
     return o3 = 5, F2(function() {
       return { current: n2 };
     }, []);
   }
-  function A2(n2, t3, r4) {
+  function A2(n2, t3, r5) {
     o3 = 6, y3(function() {
       return "function" == typeof n2 ? (n2(t3()), function() {
         return n2(null);
       }) : n2 ? (n2.current = t3(), function() {
         return n2.current = null;
       }) : void 0;
-    }, null == r4 ? r4 : r4.concat(n2));
+    }, null == r5 ? r5 : r5.concat(n2));
   }
-  function F2(n2, r4) {
-    var u4 = d2(t2++, 7);
-    return z2(u4.__H, r4) ? (u4.__V = n2(), u4.i = r4, u4.__h = n2, u4.__V) : u4.__;
+  function F2(n2, r5) {
+    var u4 = d3(t2++, 7);
+    return z2(u4.__H, r5) ? (u4.__V = n2(), u4.i = r5, u4.__h = n2, u4.__V) : u4.__;
   }
   function T2(n2, t3) {
     return o3 = 8, F2(function() {
@@ -24550,90 +24582,90 @@
     }, t3);
   }
   function q2(n2) {
-    var u4 = r2.context[n2.__c], i5 = d2(t2++, 9);
-    return i5.c = n2, u4 ? (null == i5.__ && (i5.__ = true, u4.sub(r2)), u4.props.value) : n2.__;
+    var u4 = r3.context[n2.__c], i4 = d3(t2++, 9);
+    return i4.c = n2, u4 ? (null == i4.__ && (i4.__ = true, u4.sub(r3)), u4.props.value) : n2.__;
   }
   function V() {
-    var n2 = d2(t2++, 11);
+    var n2 = d3(t2++, 11);
     if (!n2.__) {
-      for (var u4 = r2.__v; null !== u4 && !u4.__m && null !== u4.__; )
+      for (var u4 = r3.__v; null !== u4 && !u4.__m && null !== u4.__; )
         u4 = u4.__;
-      var i5 = u4.__m || (u4.__m = [0, 0]);
-      n2.__ = "P" + i5[0] + "-" + i5[1]++;
+      var i4 = u4.__m || (u4.__m = [0, 0]);
+      n2.__ = "P" + i4[0] + "-" + i4[1]++;
     }
     return n2.__;
   }
-  function b2() {
+  function b3() {
     for (var t3; t3 = f3.shift(); )
       if (t3.__P && t3.__H)
         try {
           t3.__H.__h.forEach(k2), t3.__H.__h.forEach(w2), t3.__H.__h = [];
-        } catch (r4) {
-          t3.__H.__h = [], l.__e(r4, t3.__v);
+        } catch (r5) {
+          t3.__H.__h = [], l.__e(r5, t3.__v);
         }
   }
   l.__b = function(n2) {
-    r2 = null, e2 && e2(n2);
+    r3 = null, e2 && e2(n2);
   }, l.__r = function(n2) {
     a3 && a3(n2), t2 = 0;
-    var i5 = (r2 = n2.__c).__H;
-    i5 && (u3 === r2 ? (i5.__h = [], r2.__h = [], i5.__.forEach(function(n3) {
+    var i4 = (r3 = n2.__c).__H;
+    i4 && (u3 === r3 ? (i4.__h = [], r3.__h = [], i4.__.forEach(function(n3) {
       n3.__N && (n3.__ = n3.__N), n3.__V = c3, n3.__N = n3.i = void 0;
-    })) : (i5.__h.forEach(k2), i5.__h.forEach(w2), i5.__h = [])), u3 = r2;
+    })) : (i4.__h.forEach(k2), i4.__h.forEach(w2), i4.__h = [], t2 = 0)), u3 = r3;
   }, l.diffed = function(t3) {
     v3 && v3(t3);
     var o5 = t3.__c;
-    o5 && o5.__H && (o5.__H.__h.length && (1 !== f3.push(o5) && i3 === l.requestAnimationFrame || ((i3 = l.requestAnimationFrame) || j2)(b2)), o5.__H.__.forEach(function(n2) {
+    o5 && o5.__H && (o5.__H.__h.length && (1 !== f3.push(o5) && i2 === l.requestAnimationFrame || ((i2 = l.requestAnimationFrame) || j2)(b3)), o5.__H.__.forEach(function(n2) {
       n2.i && (n2.__H = n2.i), n2.__V !== c3 && (n2.__ = n2.__V), n2.i = void 0, n2.__V = c3;
-    })), u3 = r2 = null;
-  }, l.__c = function(t3, r4) {
-    r4.some(function(t4) {
+    })), u3 = r3 = null;
+  }, l.__c = function(t3, r5) {
+    r5.some(function(t4) {
       try {
         t4.__h.forEach(k2), t4.__h = t4.__h.filter(function(n2) {
           return !n2.__ || w2(n2);
         });
       } catch (u4) {
-        r4.some(function(n2) {
+        r5.some(function(n2) {
           n2.__h && (n2.__h = []);
-        }), r4 = [], l.__e(u4, t4.__v);
+        }), r5 = [], l.__e(u4, t4.__v);
       }
-    }), l3 && l3(t3, r4);
+    }), l3 && l3(t3, r5);
   }, l.unmount = function(t3) {
-    m2 && m2(t3);
-    var r4, u4 = t3.__c;
+    m3 && m3(t3);
+    var r5, u4 = t3.__c;
     u4 && u4.__H && (u4.__H.__.forEach(function(n2) {
       try {
         k2(n2);
       } catch (n3) {
-        r4 = n3;
+        r5 = n3;
       }
-    }), u4.__H = void 0, r4 && l.__e(r4, u4.__v));
+    }), u4.__H = void 0, r5 && l.__e(r5, u4.__v));
   };
   var g2 = "function" == typeof requestAnimationFrame;
   function j2(n2) {
-    var t3, r4 = function() {
+    var t3, r5 = function() {
       clearTimeout(u4), g2 && cancelAnimationFrame(t3), setTimeout(n2);
-    }, u4 = setTimeout(r4, 100);
-    g2 && (t3 = requestAnimationFrame(r4));
+    }, u4 = setTimeout(r5, 100);
+    g2 && (t3 = requestAnimationFrame(r5));
   }
   function k2(n2) {
-    var t3 = r2, u4 = n2.__c;
-    "function" == typeof u4 && (n2.__c = void 0, u4()), r2 = t3;
+    var t3 = r3, u4 = n2.__c;
+    "function" == typeof u4 && (n2.__c = void 0, u4()), r3 = t3;
   }
   function w2(n2) {
-    var t3 = r2;
-    n2.__c = n2.__(), r2 = t3;
+    var t3 = r3;
+    n2.__c = n2.__(), r3 = t3;
   }
   function z2(n2, t3) {
-    return !n2 || n2.length !== t3.length || t3.some(function(t4, r4) {
-      return t4 !== n2[r4];
+    return !n2 || n2.length !== t3.length || t3.some(function(t4, r5) {
+      return t4 !== n2[r5];
     });
   }
   function B2(n2, t3) {
     return "function" == typeof t3 ? t3(n2) : t3;
   }
 
-  // ../node_modules/.pnpm/preact@10.13.2/node_modules/preact/compat/dist/compat.module.js
+  // ../node_modules/.pnpm/preact@10.17.1/node_modules/preact/compat/dist/compat.module.js
   function g3(n2, t3) {
     for (var e3 in t3)
       n2[e3] = t3[e3];
@@ -24643,8 +24675,8 @@
     for (var e3 in n2)
       if ("__source" !== e3 && !(e3 in t3))
         return true;
-    for (var r4 in t3)
-      if ("__source" !== r4 && n2[r4] !== t3[r4])
+    for (var r5 in t3)
+      if ("__source" !== r5 && n2[r5] !== t3[r5])
         return true;
     return false;
   }
@@ -24652,16 +24684,16 @@
     this.props = n2;
   }
   function x3(n2, e3) {
-    function r4(n3) {
-      var t3 = this.props.ref, r5 = t3 == n3.ref;
-      return !r5 && t3 && (t3.call ? t3(null) : t3.current = null), e3 ? !e3(this.props, n3) || !r5 : C2(this.props, n3);
+    function r5(n3) {
+      var t3 = this.props.ref, r6 = t3 == n3.ref;
+      return !r6 && t3 && (t3.call ? t3(null) : t3.current = null), e3 ? !e3(this.props, n3) || !r6 : C2(this.props, n3);
     }
     function u4(e4) {
-      return this.shouldComponentUpdate = r4, y(n2, e4);
+      return this.shouldComponentUpdate = r5, y(n2, e4);
     }
     return u4.displayName = "Memo(" + (n2.displayName || n2.name) + ")", u4.prototype.isReactComponent = true, u4.__f = true, u4;
   }
-  (w3.prototype = new k()).isPureReactComponent = true, w3.prototype.shouldComponentUpdate = function(n2, t3) {
+  (w3.prototype = new b()).isPureReactComponent = true, w3.prototype.shouldComponentUpdate = function(n2, t3) {
     return C2(this.props, n2) || C2(this.state, t3);
   };
   var R = l.__b;
@@ -24677,31 +24709,31 @@
     return t3.$$typeof = N2, t3.render = t3, t3.prototype.isReactComponent = t3.__f = true, t3.displayName = "ForwardRef(" + (n2.displayName || n2.name) + ")", t3;
   }
   var T3 = l.__e;
-  l.__e = function(n2, t3, e3, r4) {
+  l.__e = function(n2, t3, e3, r5) {
     if (n2.then) {
       for (var u4, o5 = t3; o5 = o5.__; )
         if ((u4 = o5.__c) && u4.__c)
           return null == t3.__e && (t3.__e = e3.__e, t3.__k = e3.__k), u4.__c(n2, t3);
     }
-    T3(n2, t3, e3, r4);
+    T3(n2, t3, e3, r5);
   };
-  var I2 = l.unmount;
-  function L2(n2, t3, e3) {
+  var F3 = l.unmount;
+  function I2(n2, t3, e3) {
     return n2 && (n2.__c && n2.__c.__H && (n2.__c.__H.__.forEach(function(n3) {
       "function" == typeof n3.__c && n3.__c();
     }), n2.__c.__H = null), null != (n2 = g3({}, n2)).__c && (n2.__c.__P === e3 && (n2.__c.__P = t3), n2.__c = null), n2.__k = n2.__k && n2.__k.map(function(n3) {
-      return L2(n3, t3, e3);
+      return I2(n3, t3, e3);
     })), n2;
   }
-  function U(n2, t3, e3) {
+  function L2(n2, t3, e3) {
     return n2 && (n2.__v = null, n2.__k = n2.__k && n2.__k.map(function(n3) {
-      return U(n3, t3, e3);
+      return L2(n3, t3, e3);
     }), n2.__c && n2.__c.__P === t3 && (n2.__e && e3.insertBefore(n2.__e, n2.__d), n2.__c.__e = true, n2.__c.__P = e3)), n2;
   }
-  function D2() {
+  function U() {
     this.__u = 0, this.t = null, this.__b = null;
   }
-  function F3(n2) {
+  function D2(n2) {
     var t3 = n2.__.__c;
     return t3 && t3.__a && t3.__a(n2);
   }
@@ -24710,38 +24742,38 @@
   }
   l.unmount = function(n2) {
     var t3 = n2.__c;
-    t3 && t3.__R && t3.__R(), t3 && true === n2.__h && (n2.type = null), I2 && I2(n2);
-  }, (D2.prototype = new k()).__c = function(n2, t3) {
-    var e3 = t3.__c, r4 = this;
-    null == r4.t && (r4.t = []), r4.t.push(e3);
-    var u4 = F3(r4.__v), o5 = false, i5 = function() {
+    t3 && t3.__R && t3.__R(), t3 && true === n2.__h && (n2.type = null), F3 && F3(n2);
+  }, (U.prototype = new b()).__c = function(n2, t3) {
+    var e3 = t3.__c, r5 = this;
+    null == r5.t && (r5.t = []), r5.t.push(e3);
+    var u4 = D2(r5.__v), o5 = false, i4 = function() {
       o5 || (o5 = true, e3.__R = null, u4 ? u4(l4) : l4());
     };
-    e3.__R = i5;
+    e3.__R = i4;
     var l4 = function() {
-      if (!--r4.__u) {
-        if (r4.state.__a) {
-          var n3 = r4.state.__a;
-          r4.__v.__k[0] = U(n3, n3.__c.__P, n3.__c.__O);
+      if (!--r5.__u) {
+        if (r5.state.__a) {
+          var n3 = r5.state.__a;
+          r5.__v.__k[0] = L2(n3, n3.__c.__P, n3.__c.__O);
         }
         var t4;
-        for (r4.setState({ __a: r4.__b = null }); t4 = r4.t.pop(); )
+        for (r5.setState({ __a: r5.__b = null }); t4 = r5.t.pop(); )
           t4.forceUpdate();
       }
     }, c4 = true === t3.__h;
-    r4.__u++ || c4 || r4.setState({ __a: r4.__b = r4.__v.__k[0] }), n2.then(i5, i5);
-  }, D2.prototype.componentWillUnmount = function() {
+    r5.__u++ || c4 || r5.setState({ __a: r5.__b = r5.__v.__k[0] }), n2.then(i4, i4);
+  }, U.prototype.componentWillUnmount = function() {
     this.t = [];
-  }, D2.prototype.render = function(n2, e3) {
+  }, U.prototype.render = function(n2, e3) {
     if (this.__b) {
       if (this.__v.__k) {
-        var r4 = document.createElement("div"), o5 = this.__v.__k[0].__c;
-        this.__v.__k[0] = L2(this.__b, r4, o5.__O = o5.__P);
+        var r5 = document.createElement("div"), o5 = this.__v.__k[0].__c;
+        this.__v.__k[0] = I2(this.__b, r5, o5.__O = o5.__P);
       }
       this.__b = null;
     }
-    var i5 = e3.__a && y(_, null, n2.fallback);
-    return i5 && (i5.__h = null), [y(_, null, e3.__a ? null : n2.children), i5];
+    var i4 = e3.__a && y(k, null, n2.fallback);
+    return i4 && (i4.__h = null), [y(k, null, e3.__a ? null : n2.children), i4];
   };
   var W = function(n2, t3, e3) {
     if (++e3[1] === e3[0] && n2.o.delete(t3), n2.props.revealOrder && ("t" !== n2.props.revealOrder[0] || !n2.o.size))
@@ -24759,32 +24791,32 @@
     }, n2.children;
   }
   function j3(n2) {
-    var e3 = this, r4 = n2.i;
+    var e3 = this, r5 = n2.i;
     e3.componentWillUnmount = function() {
-      B(null, e3.l), e3.l = null, e3.i = null;
-    }, e3.i && e3.i !== r4 && e3.componentWillUnmount(), n2.__v ? (e3.l || (e3.i = r4, e3.l = { nodeType: 1, parentNode: r4, childNodes: [], appendChild: function(n3) {
+      D(null, e3.l), e3.l = null, e3.i = null;
+    }, e3.i && e3.i !== r5 && e3.componentWillUnmount(), e3.l || (e3.i = r5, e3.l = { nodeType: 1, parentNode: r5, childNodes: [], appendChild: function(n3) {
       this.childNodes.push(n3), e3.i.appendChild(n3);
     }, insertBefore: function(n3, t3) {
       this.childNodes.push(n3), e3.i.appendChild(n3);
     }, removeChild: function(n3) {
       this.childNodes.splice(this.childNodes.indexOf(n3) >>> 1, 1), e3.i.removeChild(n3);
-    } }), B(y(P2, { context: e3.context }, n2.__v), e3.l)) : e3.l && e3.componentWillUnmount();
+    } }), D(y(P2, { context: e3.context }, n2.__v), e3.l);
   }
   function z3(n2, e3) {
-    var r4 = y(j3, { __v: n2, i: e3 });
-    return r4.containerInfo = e3, r4;
+    var r5 = y(j3, { __v: n2, i: e3 });
+    return r5.containerInfo = e3, r5;
   }
-  (V2.prototype = new k()).__a = function(n2) {
-    var t3 = this, e3 = F3(t3.__v), r4 = t3.o.get(n2);
-    return r4[0]++, function(u4) {
+  (V2.prototype = new b()).__a = function(n2) {
+    var t3 = this, e3 = D2(t3.__v), r5 = t3.o.get(n2);
+    return r5[0]++, function(u4) {
       var o5 = function() {
-        t3.props.revealOrder ? (r4.push(u4), W(t3, n2, r4)) : u4();
+        t3.props.revealOrder ? (r5.push(u4), W(t3, n2, r5)) : u4();
       };
       e3 ? e3(o5) : o5();
     };
   }, V2.prototype.render = function(n2) {
     this.u = null, this.o = /* @__PURE__ */ new Map();
-    var t3 = P(n2.children);
+    var t3 = C(n2.children);
     n2.revealOrder && "b" === n2.revealOrder[0] && t3.reverse();
     for (var e3 = t3.length; e3--; )
       this.o.set(t3[e3], this.u = [1, 0, this.u]);
@@ -24796,15 +24828,15 @@
     });
   };
   var B3 = "undefined" != typeof Symbol && Symbol.for && Symbol.for("react.element") || 60103;
-  var H2 = /^(?:accent|alignment|arabic|baseline|cap|clip(?!PathU)|color|dominant|fill|flood|font|glyph(?!R)|horiz|image|letter|lighting|marker(?!H|W|U)|overline|paint|pointer|shape|stop|strikethrough|stroke|text(?!L)|transform|underline|unicode|units|v|vector|vert|word|writing|x(?!C))[A-Z]/;
+  var H2 = /^(?:accent|alignment|arabic|baseline|cap|clip(?!PathU)|color|dominant|fill|flood|font|glyph(?!R)|horiz|image(!S)|letter|lighting|marker(?!H|W|U)|overline|paint|pointer|shape|stop|strikethrough|stroke|text(?!L)|transform|underline|unicode|units|v|vector|vert|word|writing|x(?!C))[A-Z]/;
   var Z = /^on(Ani|Tra|Tou|BeforeInp|Compo)/;
   var Y = /[A-Z0-9]/g;
   var $2 = "undefined" != typeof document;
   var q3 = function(n2) {
     return ("undefined" != typeof Symbol && "symbol" == typeof Symbol() ? /fil|che|rad/ : /fil|che|ra/).test(n2);
   };
-  k.prototype.isReactComponent = {}, ["componentWillMount", "componentWillReceiveProps", "componentWillUpdate"].forEach(function(t3) {
-    Object.defineProperty(k.prototype, t3, { configurable: true, get: function() {
+  b.prototype.isReactComponent = {}, ["componentWillMount", "componentWillReceiveProps", "componentWillUpdate"].forEach(function(t3) {
+    Object.defineProperty(b.prototype, t3, { configurable: true, get: function() {
       return this["UNSAFE_" + t3];
     }, set: function(n2) {
       Object.defineProperty(this, t3, { configurable: true, writable: true, value: n2 });
@@ -24831,15 +24863,15 @@
     "string" == typeof n2.type && function(n3) {
       var t3 = n3.props, e3 = n3.type, u4 = {};
       for (var o5 in t3) {
-        var i5 = t3[o5];
-        if (!("value" === o5 && "defaultValue" in t3 && null == i5 || $2 && "children" === o5 && "noscript" === e3 || "class" === o5 || "className" === o5)) {
+        var i4 = t3[o5];
+        if (!("value" === o5 && "defaultValue" in t3 && null == i4 || $2 && "children" === o5 && "noscript" === e3 || "class" === o5 || "className" === o5)) {
           var l4 = o5.toLowerCase();
-          "defaultValue" === o5 && "value" in t3 && null == t3.value ? o5 = "value" : "download" === o5 && true === i5 ? i5 = "" : "ondoubleclick" === l4 ? o5 = "ondblclick" : "onchange" !== l4 || "input" !== e3 && "textarea" !== e3 || q3(t3.type) ? "onfocus" === l4 ? o5 = "onfocusin" : "onblur" === l4 ? o5 = "onfocusout" : Z.test(o5) ? o5 = l4 : -1 === e3.indexOf("-") && H2.test(o5) ? o5 = o5.replace(Y, "-$&").toLowerCase() : null === i5 && (i5 = void 0) : l4 = o5 = "oninput", "oninput" === l4 && u4[o5 = l4] && (o5 = "oninputCapture"), u4[o5] = i5;
+          "defaultValue" === o5 && "value" in t3 && null == t3.value ? o5 = "value" : "download" === o5 && true === i4 ? i4 = "" : "ondoubleclick" === l4 ? o5 = "ondblclick" : "onchange" !== l4 || "input" !== e3 && "textarea" !== e3 || q3(t3.type) ? "onfocus" === l4 ? o5 = "onfocusin" : "onblur" === l4 ? o5 = "onfocusout" : Z.test(o5) ? o5 = l4 : -1 === e3.indexOf("-") && H2.test(o5) ? o5 = o5.replace(Y, "-$&").toLowerCase() : null === i4 && (i4 = void 0) : l4 = o5 = "oninput", "oninput" === l4 && u4[o5 = l4] && (o5 = "oninputCapture"), u4[o5] = i4;
         }
       }
-      "select" == e3 && u4.multiple && Array.isArray(u4.value) && (u4.value = P(t3.children).forEach(function(n4) {
+      "select" == e3 && u4.multiple && Array.isArray(u4.value) && (u4.value = C(t3.children).forEach(function(n4) {
         n4.props.selected = -1 != u4.value.indexOf(n4.props.value);
-      })), "select" == e3 && null != u4.defaultValue && (u4.value = P(t3.children).forEach(function(n4) {
+      })), "select" == e3 && null != u4.defaultValue && (u4.value = C(t3.children).forEach(function(n4) {
         n4.props.selected = u4.multiple ? -1 != u4.defaultValue.indexOf(n4.props.value) : u4.defaultValue == n4.props.value;
       })), t3.class && !t3.className ? (u4.class = t3.class, Object.defineProperty(u4, "className", en)) : (t3.className && !t3.class || t3.class && t3.className) && (u4.class = u4.className = t3.className), n3.props = u4;
     }(n2), n2.$$typeof = B3, rn && rn(n2);
@@ -24855,7 +24887,7 @@
     null != e3 && "textarea" === n2.type && "value" in t3 && t3.value !== e3.value && (e3.value = null == t3.value ? "" : t3.value), tn = null;
   };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/util/lib-shared.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/util/lib-shared.js
   var EventMapping = {
     abort: "onAbort",
     animationend: "onAnimationEnd",
@@ -24942,6 +24974,7 @@
     fullscreenerror: null,
     ratechange: null,
     resize: null,
+    scrollend: null,
     securitypolicyviolation: null,
     selectionchange: null,
     selectstart: null,
@@ -24955,7 +24988,7 @@
     webkittransitionend: null
   };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/util/use-before-layout-effect.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/util/use-before-layout-effect.js
   var toRun = /* @__PURE__ */ new Map();
   var commitName = "diffed";
   var newCommit = (vnode, ...args) => {
@@ -24980,7 +25013,7 @@
     return next;
   }
   var useBeforeLayoutEffect = function useBeforeLayoutEffect2(effect, inputs) {
-    const ref = _2(null);
+    const ref = _(null);
     ref.current ??= nextId();
     const id = ref.current;
     if (effect)
@@ -24992,7 +25025,7 @@
     return !!(!oldArgs || oldArgs.length !== newArgs?.length || newArgs?.some((arg, index) => arg !== oldArgs[index]));
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/util/lib-preact.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/util/lib-preact.js
   function debounceRendering(f4) {
     (l.debounceRendering ?? queueMicrotask)(f4);
   }
@@ -25007,34 +25040,34 @@
     ...EventMapping
   };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/preact-extensions/use-passive-state.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/preact-extensions/use-passive-state.js
   function useEnsureStability(parentHookName, ...values2) {
     if (false)
       return;
-    const helperToEnsureStability = _2([]);
-    const shownError = _2([]);
+    const helperToEnsureStability = _([]);
+    const shownError = _([]);
     useHelper(values2.length, -1);
     values2.forEach(useHelper);
     return;
-    function useHelper(value, i5) {
-      const index = i5 + 1;
+    function useHelper(value, i4) {
+      const index = i4 + 1;
       if (helperToEnsureStability.current[index] === void 0)
         helperToEnsureStability.current[index] = value;
       if (helperToEnsureStability.current[index] != value) {
         if (!shownError.current[index]) {
           debugger;
-          console.error(`The hook ${parentHookName} requires some or all of its arguments remain stable across each render; please check the ${i5}-indexed argument (${i5 >= 0 ? JSON.stringify(values2[i5]) : "the number of supposedly stable elements"}).`);
+          console.error(`The hook ${parentHookName} requires some or all of its arguments remain stable across each render; please check the ${i4}-indexed argument (${i4 >= 0 ? JSON.stringify(values2[i4]) : "the number of supposedly stable elements"}).`);
           shownError.current[index] = true;
         }
       }
     }
   }
-  function usePassiveState(onChange, getInitialValue, customDebounceRendering) {
-    const valueRef = _2(Unset);
-    const reasonRef = _2(Unset);
-    const warningRef = _2(false);
-    const dependencyToCompareAgainst = _2(Unset);
-    const cleanupCallbackRef = _2(void 0);
+  var usePassiveState = function usePassiveState2(onChange, getInitialValue, customDebounceRendering) {
+    const valueRef = _(Unset);
+    const reasonRef = _(Unset);
+    const warningRef = _(false);
+    const dependencyToCompareAgainst = _(Unset);
+    const cleanupCallbackRef = _(void 0);
     useEnsureStability("usePassiveState", onChange, getInitialValue, customDebounceRendering);
     const onShouldCleanUp = T2(() => {
       const cleanupCallback = cleanupCallbackRef.current;
@@ -25092,7 +25125,7 @@
       }
     }, []);
     return [getValue, setValue];
-  }
+  };
   var Unset = Symbol();
   function returnTrue() {
     return true;
@@ -25110,10 +25143,10 @@
     f4();
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/preact-extensions/use-stable-getter.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/preact-extensions/use-stable-getter.js
   var Unset2 = Symbol("unset");
   var useStableGetter = function useStableGetter2(value) {
-    const ref = _2(Unset2);
+    const ref = _(Unset2);
     useBeforeLayoutEffect(() => {
       ref.current = value;
     }, [value]);
@@ -25130,7 +25163,7 @@
     }, Object.values(t3));
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/preact-extensions/use-stable-callback.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/preact-extensions/use-stable-callback.js
   var map = /* @__PURE__ */ new WeakMap();
   function isStableGetter(obj) {
     return false;
@@ -25156,12 +25189,12 @@
     }
   };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/util/mode.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/util/mode.js
   globalThis["process"] ??= {};
   globalThis["process"]["env"] ??= {};
   globalThis["process"]["env"]["NODE_ENV"] = "development";
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/util/use-call-count.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/util/use-call-count.js
   window.requestIdleCallback ??= (callback) => {
     return setTimeout(() => {
       callback({ didTimeout: false, timeRemaining: () => {
@@ -25170,16 +25203,16 @@
     }, 5);
   };
   var timeoutHandle = null;
-  var i4 = 0;
+  var i3 = 0;
   function monitored(hook) {
     const h4 = hook;
     if (true) {
       return function(...args) {
-        const r4 = _2(++i4);
+        const r5 = _(++i3);
         monitorCallCount(h4);
-        const start = performance.mark(`${h4.name}-start-${r4.current}`);
+        const start = performance.mark(`${h4.name}-start-${r5.current}`);
         const ret = h4(...args);
-        const end = performance.mark(`${h4.name}-end-${r4.current}`);
+        const end = performance.mark(`${h4.name}-end-${r5.current}`);
         performance.measure(h4.name, start.name, end.name);
         return ret;
       };
@@ -25222,7 +25255,7 @@
   var filterAll = false;
   var filters = /* @__PURE__ */ new Set();
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/dom-helpers/use-event-handler.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/dom-helpers/use-event-handler.js
   var useGlobalHandler = monitored(function useGlobalHandler2(target, type, handler, options, mode) {
     mode ||= "grouped";
     useEnsureStability("useGlobalHandler", mode);
@@ -25284,11 +25317,11 @@
     }, [target, type, stableHandler]);
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/util/assert.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/util/assert.js
   function assertEmptyObject(_a) {
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/component-detail/dismissal/use-backdrop-dismiss.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/component-detail/dismissal/use-backdrop-dismiss.js
   var useBackdropDismiss = monitored(function useBackdropDismiss2({ backdropDismissParameters: { dismissBackdropActive: open, onDismissBackdrop: onCloseUnstable, ...void1 }, refElementPopupReturn: { getElement, ...void3 }, ...void2 }) {
     assertEmptyObject(void1);
     assertEmptyObject(void2);
@@ -25311,7 +25344,7 @@
     useGlobalHandler(window, "touchstart", open ? onBackdropClick : null, { capture: true });
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/util/event.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/util/event.js
   var EventDetail = Symbol("event-detail");
   function getEventDetail(e3) {
     return e3[EventDetail];
@@ -25323,7 +25356,7 @@
     return event;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/component-detail/dismissal/use-escape-dismiss.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/component-detail/dismissal/use-escape-dismiss.js
   var MagicWindowKey = "__preact-prop-helpers-escape-key-dismiss__";
   function getElementDepth(element) {
     let depth = 0;
@@ -25399,7 +25432,7 @@
     }, [open]);
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/component-detail/dismissal/use-lost-focus-dismiss.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/component-detail/dismissal/use-lost-focus-dismiss.js
   var useLostFocusDismiss = monitored(function useLostFocusDismiss2({ refElementPopupReturn: { getElement: getPopupElement, ...void3 }, refElementSourceReturn, lostFocusDismissParameters: { dismissLostFocusActive: open, onDismissLostFocus: onClose, ...void4 }, ...void1 }) {
     const { getElement: getSourceElement, ...void2 } = refElementSourceReturn ?? {};
     assertEmptyObject(void1);
@@ -25422,7 +25455,7 @@
     return { activeElementParameters: { onLastActiveElementChange } };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/dom-helpers/use-merged-children.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/dom-helpers/use-merged-children.js
   var useMergedChildren = function useMergedChildren2(lhs, rhs) {
     if (lhs == null && rhs == null) {
       return void 0;
@@ -25431,11 +25464,11 @@
     } else if (rhs == null) {
       return lhs;
     } else {
-      return y(_, {}, lhs, rhs);
+      return y(k, {}, lhs, rhs);
     }
   };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/dom-helpers/use-merged-classes.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/dom-helpers/use-merged-classes.js
   var useMergedClasses = function useMergedClasses2(...classes) {
     let classesSet = /* @__PURE__ */ new Set();
     for (let c4 of classes) {
@@ -25449,7 +25482,7 @@
     }
   };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/dom-helpers/use-merged-refs.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/dom-helpers/use-merged-refs.js
   function processRef(instance, ref) {
     if (typeof ref === "function") {
       ref(instance);
@@ -25476,7 +25509,7 @@
     }
   };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/dom-helpers/use-merged-styles.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/dom-helpers/use-merged-styles.js
   function styleStringToObject(style) {
     return Object.fromEntries(style.split(";").map((statement) => statement.split(":")));
   }
@@ -25505,16 +25538,16 @@
     };
   };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/dom-helpers/use-merged-props.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/dom-helpers/use-merged-props.js
   var log = console.warn;
-  var useMergedProps = function useMergedProps2(...allProps) {
+  var useMergedProps = monitored(function useMergedProps2(...allProps) {
     useEnsureStability("useMergedProps", allProps.length);
     let ret = {};
     for (let nextProps of allProps) {
       useMergedPropsHelper(ret, nextProps);
     }
     return ret;
-  };
+  });
   var knowns = /* @__PURE__ */ new Set(["children", "ref", "className", "class", "style"]);
   var mergeUnknown = function mergeUnknown2(key, lhsValue, rhsValue) {
     if (typeof lhsValue === "function" || typeof rhsValue === "function") {
@@ -25622,15 +25655,15 @@
     return isInput(node) && node.type === "hidden";
   };
   var isDetailsWithSummary = function isDetailsWithSummary2(node) {
-    var r4 = node.tagName === "DETAILS" && Array.prototype.slice.apply(node.children).some(function(child) {
+    var r5 = node.tagName === "DETAILS" && Array.prototype.slice.apply(node.children).some(function(child) {
       return child.tagName === "SUMMARY";
     });
-    return r4;
+    return r5;
   };
   var getCheckedRadio = function getCheckedRadio2(nodes, form) {
-    for (var i5 = 0; i5 < nodes.length; i5++) {
-      if (nodes[i5].checked && nodes[i5].form === form) {
-        return nodes[i5];
+    for (var i4 = 0; i4 < nodes.length; i4++) {
+      if (nodes[i4].checked && nodes[i4].form === form) {
+        return nodes[i4];
       }
     }
   };
@@ -25727,8 +25760,8 @@
       var parentNode = node.parentElement;
       while (parentNode) {
         if (parentNode.tagName === "FIELDSET" && parentNode.disabled) {
-          for (var i5 = 0; i5 < parentNode.children.length; i5++) {
-            var child = parentNode.children.item(i5);
+          for (var i4 = 0; i4 < parentNode.children.length; i4++) {
+            var child = parentNode.children.item(i4);
             if (child.tagName === "LEGEND") {
               return matches.call(parentNode, "fieldset[disabled] *") ? true : !child.contains(node);
             }
@@ -25778,7 +25811,7 @@
     return isNodeMatchingSelectorFocusable(options, node);
   };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/util/stack.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/util/stack.js
   function generateStack() {
     if (window._generate_setState_stacks) {
       try {
@@ -25799,7 +25832,7 @@
     }
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/util/focus.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/util/focus.js
   function focus(e3) {
     if (window.LOG_FOCUS_CHANGES === true) {
       console.log(`Focus changed to ${(e3?.tagName || "").toLowerCase().padStart(6)}:`, e3);
@@ -25842,14 +25875,14 @@
     return bestCandidateAfter ?? bestCandidateBefore ?? document2.body;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/timing/use-timeout.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/timing/use-timeout.js
   var useTimeout = monitored(function useTimeout2({ timeout, callback, triggerIndex }) {
     const stableCallback = useStableCallback(() => {
       startTimeRef.current = null;
       callback();
     });
     const getTimeout = useStableGetter(timeout);
-    const startTimeRef = _2(null);
+    const startTimeRef = _(null);
     const timeoutIsNull = timeout == null;
     p3(() => {
       if (!timeoutIsNull) {
@@ -25872,7 +25905,7 @@
     return { getElapsedTime, getRemainingTime };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/util/use-tag-props.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/util/use-tag-props.js
   var idIndex = 0;
   function useTagProps(props, tag) {
     if (window._generate_useTagProps_tags) {
@@ -25904,7 +25937,7 @@
     }
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/component-detail/keyboard-navigation/use-linear-navigation.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/component-detail/keyboard-navigation/use-linear-navigation.js
   var useLinearNavigation = function useLinearNavigation2({ linearNavigationParameters: { getLowestIndex, getHighestIndex, isValidForLinearNavigation, navigatePastEnd, navigatePastStart, onNavigateLinear, arrowKeyDirection, disableHomeEndKeys, pageNavigationSize, ...void4 }, rovingTabIndexReturn: { getTabbableIndex, setTabbableIndex, ...void5 }, paginatedChildrenParameters: { paginationMax, paginationMin, ...void2 }, rearrangeableChildrenReturn: { indexDemangler, indexMangler, ...void3 }, ...void1 }) {
     let getPaginatedRange = useStableGetter(paginationMax == null || paginationMin == null ? null : paginationMax - paginationMin);
     assertEmptyObject(void1);
@@ -25978,7 +26011,7 @@
     const navigateToPrev = useStableCallback((e3, fromUserInteraction) => {
       return navigateRelative2(e3, -1, fromUserInteraction, "single");
     });
-    const stableProps = _2(useTagProps({
+    const stableProps = _(useTagProps({
       onKeyDown: useStableCallback((e3) => {
         if (e3.metaKey)
           return;
@@ -26082,7 +26115,7 @@
     }
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/preact-extensions/use-managed-children.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/preact-extensions/use-managed-children.js
   var useManagedChildren = monitored(function useManagedChildren2(parentParameters) {
     const { managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange, onChildrenCountChange }, ...rest } = parentParameters;
     assertEmptyObject(rest);
@@ -26093,7 +26126,7 @@
     const getLowestIndex = T2(() => {
       return managedChildrenArray.current.lowestIndex;
     }, []);
-    const managedChildrenArray = _2({ arr: [], rec: {}, highestIndex: 0, lowestIndex: 0 });
+    const managedChildrenArray = _({ arr: [], rec: {}, highestIndex: 0, lowestIndex: 0 });
     const forEachChild = T2((f4) => {
       for (const child of managedChildrenArray.current.arr) {
         if (child) {
@@ -26115,23 +26148,7 @@
       else
         return managedChildrenArray.current.rec[index];
     }, []);
-    const hasRemoteULEChildMounted = _2(null);
-    const remoteULEChildChangedCausers = _2(/* @__PURE__ */ new Set());
-    const remoteULEChildChanged = T2((index) => {
-      if (remoteULEChildChangedCausers.current.size == 0) {
-        if (onAfterChildLayoutEffect != null) {
-          debounceRendering(() => {
-            onAfterChildLayoutEffect?.(remoteULEChildChangedCausers.current);
-            remoteULEChildChangedCausers.current.clear();
-          });
-        }
-      }
-      remoteULEChildChangedCausers.current.add(index);
-      return () => {
-      };
-    }, [
-      /* Must remain stable */
-    ]);
+    const hasRemoteULEChildMounted = _(null);
     const remoteULEChildMounted = T2((index, mounted) => {
       if (!hasRemoteULEChildMounted.current) {
         hasRemoteULEChildMounted.current = {
@@ -26178,9 +26195,9 @@
       _arraySlice: T2(() => {
         let ret = managedChildrenArray.current.arr.slice();
         const max = getHighestIndex();
-        for (let i5 = 0; i5 <= max; ++i5) {
-          if (ret[i5] == null)
-            ret[i5] = { index: i5 };
+        for (let i4 = 0; i4 <= max; ++i4) {
+          if (ret[i4] == null)
+            ret[i4] = { index: i4 };
         }
         return ret;
       }, [])
@@ -26191,7 +26208,7 @@
         managedChildContext: useMemoObject({
           managedChildrenArray: managedChildrenArray.current,
           remoteULEChildMounted,
-          remoteULEChildChanged,
+          //remoteULEChildChanged,
           getChildren
         })
       }),
@@ -26199,18 +26216,17 @@
     };
   });
   var useManagedChild = monitored(function useManagedChild2({ context, info }) {
-    const { managedChildContext: { getChildren, managedChildrenArray, remoteULEChildMounted, remoteULEChildChanged } } = context ?? { managedChildContext: {} };
+    const { managedChildContext: { getChildren, managedChildrenArray, remoteULEChildMounted } } = context ?? { managedChildContext: {} };
     const index = info.index;
     y3(() => {
-      if (managedChildrenArray == null || remoteULEChildChanged == null)
+      if (managedChildrenArray == null)
         return;
       if (typeof index == "number") {
         managedChildrenArray.arr[index] = { ...info };
       } else {
         managedChildrenArray.rec[index] = { ...info };
       }
-      return remoteULEChildChanged(index);
-    }, [...Object.entries(info).flat(9)]);
+    });
     y3(() => {
       remoteULEChildMounted?.(index, true);
       return () => remoteULEChildMounted?.(index, false);
@@ -26265,7 +26281,7 @@
         }
       }
     });
-    const reasonRef = _2(void 0);
+    const reasonRef = _(void 0);
     const changeIndex = T2((arg, reason) => {
       const children = getChildren();
       const requestedIndex = arg instanceof Function ? arg(getRequestedIndex()) : arg;
@@ -26316,12 +26332,12 @@
     return { changeIndex, reevaluateClosestFit, getCurrentIndex };
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/preact-extensions/use-state.js
-  function useState(initialState) {
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/preact-extensions/use-state.js
+  var useState = function useState2(initialState) {
     const getStack = useStack();
     const [state, setStateP] = h3(initialState);
-    const ref = _2(state);
-    const setState = T2((value) => {
+    const ref = _(state);
+    const setState = _((value) => {
       if (true) {
         window._setState_stack = getStack();
       }
@@ -26342,18 +26358,18 @@
         ref.current = value;
         setStateP(value);
       }
-    }, []);
+    });
     const getState = T2(() => {
       return ref.current;
     }, []);
-    return [state, setState, getState];
-  }
+    return [state, setState.current, getState];
+  };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/component-detail/keyboard-navigation/use-roving-tabindex.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/component-detail/keyboard-navigation/use-roving-tabindex.js
   var useRovingTabIndex = monitored(function useRovingTabIndex2({ managedChildrenReturn: { getChildren }, rovingTabIndexParameters: { focusSelfParent: focusSelfParentUnstable, untabbable, untabbableBehavior, initiallyTabbedIndex, onTabbableIndexChange }, refElementReturn: { getElement }, ...void1 }) {
     const focusSelfParent = useStableCallback(focusSelfParentUnstable);
     untabbableBehavior ||= "focus-parent";
-    const lastFocused = _2(null);
+    const lastFocused = _(null);
     assertEmptyObject(void1);
     const getInitiallyTabbedIndex = useStableGetter(initiallyTabbedIndex);
     const getUntabbable = useStableGetter(untabbable);
@@ -26415,9 +26431,9 @@
     });
     const { changeIndex: changeTabbableIndex, getCurrentIndex: getTabbableIndex, reevaluateClosestFit } = useChildrenFlag({
       initialIndex: initiallyTabbedIndex ?? (untabbable ? null : 0),
-      onIndexChange: useStableCallback((n2, p4, r4) => {
+      onIndexChange: useStableCallback((n2, p4, r5) => {
         if (!(n2 == null && untabbable) && n2 != getLastNonNullIndex())
-          onTabbableIndexChange?.(n2, p4, r4);
+          onTabbableIndexChange?.(n2, p4, r5);
       }),
       getChildren,
       closestFit: true,
@@ -26528,7 +26544,7 @@
     };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/dom-helpers/use-text-content.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/dom-helpers/use-text-content.js
   var useTextContent = monitored(function useTextContent2({ refElementReturn: { getElement }, textContentParameters: { getText, onTextContentChange } }) {
     const [getTextContent, setTextContent] = usePassiveState(onTextContentChange, returnNull, runImmediately);
     p3(() => {
@@ -26543,7 +26559,7 @@
     return { textContentReturn: { getTextContent } };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/component-detail/keyboard-navigation/use-typeahead-navigation.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/component-detail/keyboard-navigation/use-typeahead-navigation.js
   var useTypeaheadNavigation = monitored(function useTypeaheadNavigation2({ typeaheadNavigationParameters: { collator, typeaheadTimeout, noTypeahead, isValidForTypeaheadNavigation, onNavigateTypeahead, ...void3 }, rovingTabIndexReturn: { getTabbableIndex: getIndex, setTabbableIndex: setIndex, ...void1 }, ...void2 }) {
     assertEmptyObject(void1);
     assertEmptyObject(void2);
@@ -26556,7 +26572,7 @@
       updateBasedOnTypeaheadChange(currentTypeahead, reason);
       return () => clearTimeout(handle);
     }));
-    const sortedTypeaheadInfo = _2([]);
+    const sortedTypeaheadInfo = _([]);
     const [typeaheadStatus, setTypeaheadStatus] = useState("none");
     const [, setImeActive, getImeActive] = useState(false);
     const [nextTypeaheadChar, setNextTypeaheadChar] = useState(null);
@@ -26589,7 +26605,7 @@
       return lhs - rhs;
     });
     const isDisabled = useStableGetter(noTypeahead);
-    const propsStable = _2(useTagProps({
+    const propsStable = _(useTagProps({
       onKeyDown: useStableCallback((e3) => {
         if (isDisabled())
           return;
@@ -26655,22 +26671,22 @@
               return;
             if (lowestUnsortedIndexAll == null || u4 < lowestUnsortedIndexAll) {
               lowestUnsortedIndexAll = u4;
-              lowestSortedIndexAll = i5;
+              lowestSortedIndexAll = i4;
             }
             if ((lowestUnsortedIndexNext == null || u4 < lowestUnsortedIndexNext) && u4 > (getIndex() ?? -Infinity)) {
               lowestUnsortedIndexNext = u4;
-              lowestSortedIndexNext = i5;
+              lowestSortedIndexNext = i4;
             }
           };
-          let i5 = sortedTypeaheadIndex;
-          while (i5 >= 0 && typeaheadComparator(currentTypeahead, sortedTypeaheadInfo.current[i5]) == 0) {
-            updateBestFit(sortedTypeaheadInfo.current[i5].unsortedIndex);
-            --i5;
+          let i4 = sortedTypeaheadIndex;
+          while (i4 >= 0 && typeaheadComparator(currentTypeahead, sortedTypeaheadInfo.current[i4]) == 0) {
+            updateBestFit(sortedTypeaheadInfo.current[i4].unsortedIndex);
+            --i4;
           }
-          i5 = sortedTypeaheadIndex;
-          while (i5 < sortedTypeaheadInfo.current.length && typeaheadComparator(currentTypeahead, sortedTypeaheadInfo.current[i5]) == 0) {
-            updateBestFit(sortedTypeaheadInfo.current[i5].unsortedIndex);
-            ++i5;
+          i4 = sortedTypeaheadIndex;
+          while (i4 < sortedTypeaheadInfo.current.length && typeaheadComparator(currentTypeahead, sortedTypeaheadInfo.current[i4]) == 0) {
+            updateBestFit(sortedTypeaheadInfo.current[i4].unsortedIndex);
+            ++i4;
           }
           let toSet = null;
           if (lowestUnsortedIndexNext !== null)
@@ -26737,7 +26753,7 @@
     return -firstIndex - 1;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/component-detail/keyboard-navigation/use-list-navigation-partial.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/component-detail/keyboard-navigation/use-list-navigation-partial.js
   var useListNavigation = monitored(function useListNavigation2({ linearNavigationParameters, typeaheadNavigationParameters, rovingTabIndexParameters, managedChildrenReturn, refElementReturn, paginatedChildrenParameters, rearrangeableChildrenReturn, ...void1 }) {
     const { props: propsRTI, rovingTabIndexReturn, managedChildrenParameters, context: contextRovingTabIndex, ...void2 } = useRovingTabIndex({ managedChildrenReturn, rovingTabIndexParameters, refElementReturn });
     const { propsStable: propsStableTN, typeaheadNavigationReturn, context: contextTypeahead, ...void3 } = useTypeaheadNavigation({ rovingTabIndexReturn, typeaheadNavigationParameters });
@@ -26747,7 +26763,7 @@
     assertEmptyObject(void3);
     assertEmptyObject(void4);
     const p4 = useMergedProps(propsStableTN, propsStableLN);
-    const propsStable = _2(p4);
+    const propsStable = _(p4);
     return {
       managedChildrenParameters,
       rovingTabIndexReturn,
@@ -26772,7 +26788,7 @@
     };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/component-detail/keyboard-navigation/use-grid-navigation-partial.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/component-detail/keyboard-navigation/use-grid-navigation-partial.js
   var useGridNavigation = monitored(function useGridNavigation2({ gridNavigationParameters: { onTabbableColumnChange, ...void3 }, linearNavigationParameters, ...listNavigationParameters }) {
     const [getTabbableColumn, setTabbableColumn] = usePassiveState(onTabbableColumnChange, useStableCallback(() => {
       let t3 = listNavigationParameters.rovingTabIndexParameters.initiallyTabbedIndex ?? 0;
@@ -26860,9 +26876,9 @@
         focusSelfParent: whenThisRowIsFocused,
         untabbable: allChildCellsAreUntabbable || rowIsUntabbableAndSoAreCells,
         initiallyTabbedIndex,
-        onTabbableIndexChange: useStableCallback((v4, p4, r4) => {
-          setTabbableColumn({ ideal: v4, actual: v4 }, r4);
-          onTabbableIndexChange?.(v4, p4, r4);
+        onTabbableIndexChange: useStableCallback((v4, p4, r5) => {
+          setTabbableColumn({ ideal: v4, actual: v4 }, r5);
+          onTabbableIndexChange?.(v4, p4, r5);
         })
       },
       linearNavigationParameters: {
@@ -26955,17 +26971,143 @@
     };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/preact-extensions/use-force-update.js
-  var useForceUpdate = monitored(function useForceUpdate2() {
-    const [, set] = h3(0);
-    return _2(() => set((i5) => ++i5)).current;
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/component-detail/processed-children/use-paginated-children.js
+  var usePaginatedChildren = monitored(function usePaginatedChildren2({ managedChildrenReturn: { getChildren }, rearrangeableChildrenReturn: { indexDemangler }, paginatedChildrenParameters: { paginationMax, paginationMin, childCount }, rovingTabIndexReturn: { getTabbableIndex, setTabbableIndex }, childrenHaveFocusReturn: { getAnyFocused } }) {
+    const parentIsPaginated = paginationMin != null || paginationMax != null;
+    const lastPagination = _({ paginationMax: null, paginationMin: null });
+    const refreshPagination = T2((paginationMin2, paginationMax2) => {
+      const childMax = getChildren().getHighestIndex() + 1;
+      const childMin = getChildren().getLowestIndex();
+      for (let i4 = childMin; i4 <= childMax; ++i4) {
+        const visible = i4 >= (paginationMin2 ?? -Infinity) && i4 < (paginationMax2 ?? Infinity);
+        getChildren().getAt(indexDemangler(i4))?.setPaginationVisible(visible);
+        if (visible && (paginationMax2 != null || paginationMin2 != null))
+          getChildren().getAt(indexDemangler(i4))?.setChildCountIfPaginated(getChildren().getHighestIndex() + 1);
+      }
+    }, [
+      /* Must be empty */
+    ]);
+    p3(() => {
+      let tabbableIndex = getTabbableIndex();
+      if (tabbableIndex != null) {
+        let shouldFocus = getAnyFocused() || false;
+        setTimeout(() => {
+          if (paginationMin != null && tabbableIndex < paginationMin) {
+            setTabbableIndex(paginationMin, void 0, shouldFocus);
+          } else if (paginationMax != null && tabbableIndex >= paginationMax) {
+            let next = paginationMax - 1;
+            if (next == -1)
+              next = null;
+            setTabbableIndex(next, void 0, shouldFocus);
+          }
+        }, 1);
+      }
+      refreshPagination(paginationMin, paginationMax);
+      lastPagination.current.paginationMax = paginationMax ?? null;
+      lastPagination.current.paginationMin = paginationMin ?? null;
+    }, [paginationMax, paginationMin]);
+    const pmin = _(paginationMin);
+    const pmax = _(paginationMax);
+    pmin.current = paginationMin;
+    pmax.current = paginationMax;
+    const getDefaultPaginationVisible = T2((i4) => {
+      return i4 >= (pmin.current ?? -Infinity) && i4 < (pmax.current ?? Infinity);
+    }, []);
+    const paginatedChildContext = F2(() => ({
+      parentIsPaginated,
+      getDefaultPaginationVisible
+    }), [parentIsPaginated]);
+    const getPaginationMin = useStableGetter(paginationMin);
+    const getPaginationMax = useStableGetter(paginationMax);
+    y3(() => {
+      const paginationMin2 = getPaginationMin();
+      const paginationMax2 = getPaginationMax();
+      const count = childCount ?? 0;
+      if (paginationMax2 != null || paginationMin2 != null) {
+        const min = paginationMin2 ?? 0;
+        const max = paginationMax2 ?? count;
+        for (let i4 = min; i4 < max; ++i4) {
+          getChildren().getAt(i4)?.setChildCountIfPaginated(count);
+        }
+      }
+    }, [childCount]);
+    return {
+      context: F2(() => ({ paginatedChildContext }), [paginatedChildContext]),
+      paginatedChildrenReturn: { refreshPagination }
+    };
+  });
+  var usePaginatedChild = monitored(function usePaginatedChild2({ info: { index }, context: { paginatedChildContext: { parentIsPaginated, getDefaultPaginationVisible } } }) {
+    const [childCountIfPaginated, setChildCountIfPaginated] = useState(null);
+    const [paginatedVisible, setPaginatedVisible] = useState(parentIsPaginated ? getDefaultPaginationVisible(index) : true);
+    return {
+      props: useTagProps(!parentIsPaginated ? {} : { "aria-setsize": childCountIfPaginated ?? void 0, "aria-posinset": index + 1 }, "data-paginated-children-child"),
+      paginatedChildReturn: {
+        /*paginatedVisible,*/
+        parentIsPaginated,
+        hideBecausePaginated: parentIsPaginated ? !paginatedVisible : false
+      },
+      info: {
+        setPaginationVisible: setPaginatedVisible,
+        setChildCountIfPaginated
+      }
+    };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/component-detail/use-sortable-children.js
-  var useRearrangeableChildren = monitored(function useRearrangeableChildren2({ rearrangeableChildrenParameters: { getIndex, onRearranged }, managedChildrenReturn: { getChildren } }) {
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/preact-extensions/use-force-update.js
+  var useForceUpdate = monitored(function useForceUpdate2() {
+    const [, set] = h3(0);
+    return _(() => set((i4) => ++i4)).current;
+  });
+
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/component-detail/processed-children/use-rearrangeable-children.js
+  function useCreateProcessedChildrenContext() {
+    const sortRef = _(null);
+    const shuffleRef = _(null);
+    const reverseRef = _(null);
+    const rearrangeRef = _(null);
+    const indexManglerRef = _(null);
+    const indexDemanglerRef = _(null);
+    const indexMangler = useStableCallback((i4) => {
+      return (indexManglerRef.current ?? identity_default)(i4);
+    }, []);
+    const indexDemangler = useStableCallback((i4) => {
+      return (indexDemanglerRef.current ?? identity_default)(i4);
+    }, []);
+    const sort = useStableCallback((i4) => {
+      return (sortRef.current ?? identity_default)(i4);
+    }, []);
+    const shuffle2 = useStableCallback(() => {
+      return (shuffleRef.current ?? identity_default)();
+    }, []);
+    const reverse = useStableCallback(() => {
+      return (reverseRef.current ?? identity_default)();
+    }, []);
+    const rearrange = useStableCallback((original, ordered) => {
+      (rearrangeRef.current ?? noop_default)(original, ordered);
+    }, []);
+    const rearrangeableChildrenContext = useMemoObject({
+      provideManglers: useStableCallback(({ indexDemangler: indexDemangler2, indexMangler: indexMangler2, reverse: reverse2, shuffle: shuffle3, sort: sort2 }) => {
+        indexManglerRef.current = indexMangler2;
+        indexDemanglerRef.current = indexDemangler2;
+        reverseRef.current = reverse2;
+        shuffleRef.current = shuffle3;
+        sortRef.current = sort2;
+      })
+    });
+    return {
+      context: useMemoObject({ rearrangeableChildrenContext }),
+      indexDemangler,
+      indexMangler,
+      rearrange,
+      reverse,
+      shuffle: shuffle2,
+      sort
+    };
+  }
+  var useRearrangeableChildren = monitored(function useRearrangeableChildren2({ rearrangeableChildrenParameters: { getIndex, onRearranged, compare: userCompare, children, adjust }, managedChildrenReturn: { getChildren }, context: { rearrangeableChildrenContext: { provideManglers } } }) {
     useEnsureStability("useRearrangeableChildren", getIndex);
-    const mangleMap = _2(/* @__PURE__ */ new Map());
-    const demangleMap = _2(/* @__PURE__ */ new Map());
+    const mangleMap = _(/* @__PURE__ */ new Map());
+    const demangleMap = _(/* @__PURE__ */ new Map());
     const indexMangler = T2((n2) => mangleMap.current.get(n2) ?? n2, []);
     const indexDemangler = T2((n2) => demangleMap.current.get(n2) ?? n2, []);
     const onRearrangedGetter = useStableGetter(onRearranged);
@@ -26985,7 +27127,7 @@
     }, [
       /* Must remain stable */
     ]);
-    const forceUpdateRef = _2(null);
+    const forceUpdateRef = _(null);
     const rearrange = T2((originalRows, sortedRows) => {
       mangleMap.current.clear();
       demangleMap.current.clear();
@@ -26999,44 +27141,7 @@
       onRearrangedGetter()?.();
       forceUpdateRef.current?.();
     }, []);
-    const useRearrangedChildren = T2(monitored(function useRearrangedChildren2(children) {
-      console.assert(Array.isArray(children));
-      const forceUpdate = useForceUpdate();
-      console.assert(forceUpdateRef.current == null || forceUpdateRef.current == forceUpdate);
-      forceUpdateRef.current = forceUpdate;
-      return children.slice().map((child) => ({ child, mangledIndex: indexMangler(getIndex(child)), demangledIndex: getIndex(child) })).sort((lhs, rhs) => {
-        return lhs.mangledIndex - rhs.mangledIndex;
-      }).map(({ child, mangledIndex, demangledIndex }) => {
-        return y(child.type, { ...child.props, key: demangledIndex, "data-mangled-index": mangledIndex, "data-demangled-index": demangledIndex });
-      });
-    }), []);
-    const toJsonArray = T2((transform) => {
-      const managedRows = getChildren();
-      return managedRows._arraySlice().map((child) => {
-        if (transform)
-          return transform(child);
-        else
-          return child.getSortValue();
-      });
-    }, []);
-    return {
-      rearrangeableChildrenReturn: {
-        indexMangler,
-        indexDemangler,
-        //mangleMap,
-        //demangleMap,
-        rearrange,
-        shuffle: shuffle2,
-        reverse,
-        useRearrangedChildren,
-        toJsonArray
-      }
-    };
-  });
-  var useSortableChildren = monitored(function useSortableChildren2({ rearrangeableChildrenParameters, sortableChildrenParameters: { compare: userCompare }, managedChildrenReturn: { getChildren } }) {
     const getCompare = useStableGetter(userCompare ?? defaultCompare);
-    const { rearrangeableChildrenReturn } = useRearrangeableChildren({ rearrangeableChildrenParameters, managedChildrenReturn: { getChildren } });
-    const { rearrange } = rearrangeableChildrenReturn;
     const sort = T2((direction) => {
       const managedRows = getChildren();
       const compare = getCompare();
@@ -27053,13 +27158,47 @@
     }, [
       /* Must remain stable */
     ]);
+    console.assert(Array.isArray(children));
+    const forceUpdate = useForceUpdate();
+    console.assert(forceUpdateRef.current == null || forceUpdateRef.current == forceUpdate);
+    forceUpdateRef.current = forceUpdate;
+    let sorted = children.slice().map((child) => {
+      const mangledIndex = (child == null ? null : indexMangler(getIndex(child))) ?? null;
+      const demangledIndex = (child == null ? null : getIndex(child)) ?? null;
+      return {
+        child,
+        sort: mangledIndex ?? -1,
+        mangledIndex,
+        demangledIndex
+      };
+    }).sort((lhs, rhs) => lhs.sort - rhs.sort).map(({ child, mangledIndex, demangledIndex }) => {
+      if (child)
+        return (adjust || identity_default)(y(child.type, { ...child.props, key: demangledIndex }), { mangledIndex, demangledIndex }) ?? null;
+      return null;
+    });
+    y3(() => {
+      provideManglers({
+        indexDemangler,
+        indexMangler,
+        reverse,
+        shuffle: shuffle2,
+        sort
+      });
+    }, []);
     return {
-      sortableChildrenReturn: { sort },
-      rearrangeableChildrenReturn
+      rearrangeableChildrenReturn: {
+        indexMangler,
+        indexDemangler,
+        rearrange,
+        shuffle: shuffle2,
+        reverse,
+        sort,
+        children: sorted
+      }
     };
   });
   function defaultCompare(lhs, rhs) {
-    return compare1(lhs?.getSortValue(), rhs?.getSortValue());
+    return compare1(lhs?.index, rhs?.index);
     function compare1(lhs2, rhs2) {
       if (lhs2 == null || rhs2 == null) {
         if (lhs2 == null)
@@ -27071,17 +27210,223 @@
     }
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/component-detail/use-multi-selection.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/component-detail/processed-children/use-staggered-children.js
+  var useStaggeredChildren = monitored(function useStaggeredChildren2({ managedChildrenReturn: { getChildren }, staggeredChildrenParameters: { staggered, childCount } }) {
+    const [currentlyStaggering, setCurrentlyStaggering] = useState(staggered);
+    const getTargetStaggerIndex = useStableGetter((childCount || 0) - 1);
+    const timeoutHandle2 = _(-1);
+    const resetEmergencyTimeout = T2(() => {
+      if (timeoutHandle2.current != -1)
+        clearTimeout(timeoutHandle2.current);
+      timeoutHandle2.current = setTimeout(() => {
+        timeoutHandle2.current = setTimeout(() => {
+          timeoutHandle2.current = -1;
+          let target = getTargetStaggerIndex();
+          setDisplayedStaggerIndex((prev) => Math.min(target || 0, (prev || 0) + 1));
+        }, 10);
+      }, 100);
+    }, [
+      /* Must be empty */
+    ]);
+    p3(() => {
+      if (timeoutHandle2.current == -1) {
+        resetEmergencyTimeout();
+        let current = getDisplayedStaggerIndex();
+        let next = Math.min(childCount ?? 0, (current ?? 0) + 1);
+        setDisplayedStaggerIndex(next);
+      }
+    }, [childCount]);
+    const [getDisplayedStaggerIndex, setDisplayedStaggerIndex] = usePassiveState(T2((newIndex, prevIndex) => {
+      if (newIndex == null || !s4.current) {
+        return;
+      }
+      setCurrentlyStaggering(newIndex < (getTargetStaggerIndex() ?? 0));
+      queueMicrotask(() => {
+        for (let i4 = (prevIndex ?? 0) - 1; i4 <= newIndex; ++i4) {
+          getChildren().getAt(i4)?.setStaggeredVisible(true);
+        }
+      });
+      resetEmergencyTimeout();
+    }, [
+      /* Must be empty */
+    ]), returnNull);
+    const parentIsStaggered = !!staggered;
+    const getChildCount = useStableGetter(childCount);
+    const childCallsThisToTellTheParentToMountTheNextOne = T2((justMountedChildIndex) => {
+      setDisplayedStaggerIndex((prevIndex) => {
+        let next = Math.min(
+          getTargetStaggerIndex() ?? 0,
+          // Don't go higher than the highest child
+          1 + Math.max(prevIndex ?? 0, justMountedChildIndex)
+          // Go one higher than the child that just mounted itself or any previously mounted child (TODO: Is that last bit working as intended?)
+        );
+        let s5 = 0;
+        while (next < (getChildCount() || 0) && getChildren().getAt(next)?.getStaggeredVisible()) {
+          ++next;
+          ++s5;
+        }
+        return next;
+      });
+    }, []);
+    const s4 = _(parentIsStaggered);
+    s4.current = parentIsStaggered;
+    const getDefaultStaggeredVisible = T2((i4) => {
+      if (s4.current) {
+        const staggerIndex = getDisplayedStaggerIndex();
+        if (staggerIndex == null)
+          return false;
+        return i4 < staggerIndex;
+      } else {
+        return true;
+      }
+    }, []);
+    const staggeredChildContext = F2(() => ({
+      parentIsStaggered,
+      childCallsThisToTellTheParentToMountTheNextOne,
+      getDefaultStaggeredVisible
+    }), [parentIsStaggered]);
+    return {
+      staggeredChildrenReturn: { stillStaggering: currentlyStaggering },
+      context: F2(() => ({
+        staggeredChildContext
+      }), [staggeredChildContext])
+    };
+  });
+  var useStaggeredChild = monitored(function useStaggeredChild2({ info: { index }, refElementReturn: { getElement }, context: { staggeredChildContext: { parentIsStaggered, getDefaultStaggeredVisible, childCallsThisToTellTheParentToMountTheNextOne } } }) {
+    const [staggeredVisible, setStaggeredVisible, getStaggeredVisible] = useState(getDefaultStaggeredVisible(index));
+    const becauseScreen = _(false);
+    const [getOnScreen, setOnScreen] = usePassiveState(useStableCallback((next, prev, reason) => {
+      if (staggeredVisible)
+        return;
+      if (next) {
+        setStaggeredVisible(true);
+        becauseScreen.current = true;
+      }
+    }), returnFalse);
+    p3(() => {
+      const element = getElement();
+      if (!staggeredVisible && element) {
+        let observer = new IntersectionObserver(debounce_default((entries) => {
+          let onScreen = false;
+          for (const entry of entries) {
+            if (entry.isIntersecting) {
+              onScreen = true;
+              break;
+            }
+          }
+          setOnScreen(onScreen);
+        }, 50, { leading: false, trailing: true }), { threshold: [0] });
+        observer.observe(element);
+        return () => observer.disconnect();
+      }
+    }, [index, staggeredVisible]);
+    let timeoutRef = _(-1);
+    p3(() => {
+      if (!becauseScreen.current) {
+        if (timeoutRef.current != -1)
+          clearTimeout(timeoutRef.current);
+        timeoutRef.current = setTimeout(() => {
+          timeoutRef.current = setTimeout(() => {
+            if (parentIsStaggered && staggeredVisible) {
+              childCallsThisToTellTheParentToMountTheNextOne(index);
+            } else if (!parentIsStaggered) {
+              childCallsThisToTellTheParentToMountTheNextOne(index);
+            }
+          }, 10);
+        }, 100);
+      }
+    }, [index, parentIsStaggered && staggeredVisible]);
+    return {
+      props: useTagProps(!parentIsStaggered ? {} : { "aria-busy": (!staggeredVisible).toString() }, "data-staggered-children-child"),
+      staggeredChildReturn: { parentIsStaggered, hideBecauseStaggered: parentIsStaggered ? !staggeredVisible : false },
+      info: { setStaggeredVisible, getStaggeredVisible }
+    };
+  });
+
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/component-detail/processed-children/use-processed-children.js
+  var useProcessedChildren = monitored(function useProcessedChildren2({ rearrangeableChildrenParameters: { onRearranged, children: childrenUnsorted, ...rearrangeableChildrenParameters }, paginatedChildrenParameters, staggeredChildrenParameters, context, managedChildrenParameters }) {
+    const childCount = childrenUnsorted.length;
+    const { paginationMax, paginationMin } = paginatedChildrenParameters;
+    const { staggered } = staggeredChildrenParameters;
+    const { context: { managedChildContext }, managedChildrenReturn } = useManagedChildren({ managedChildrenParameters });
+    const { rearrangeableChildrenReturn } = useRearrangeableChildren({
+      rearrangeableChildrenParameters: {
+        onRearranged: useStableCallback(() => {
+          refreshPagination(paginationMin, paginationMax);
+          onRearranged?.();
+        }),
+        children: childrenUnsorted,
+        ...rearrangeableChildrenParameters
+      },
+      managedChildrenReturn,
+      context
+    });
+    const { paginatedChildrenReturn, paginatedChildrenReturn: { refreshPagination }, context: { paginatedChildContext } } = usePaginatedChildren({
+      managedChildrenReturn: { getChildren: useStableCallback(() => managedChildContext.getChildren()) },
+      rovingTabIndexReturn: context.processedChildrenContext,
+      childrenHaveFocusReturn: context.processedChildrenContext,
+      paginatedChildrenParameters: { paginationMax, paginationMin, childCount },
+      rearrangeableChildrenReturn
+    });
+    const { context: { staggeredChildContext }, staggeredChildrenReturn } = useStaggeredChildren({
+      managedChildrenReturn: { getChildren: useStableCallback(() => managedChildContext.getChildren()) },
+      staggeredChildrenParameters: { staggered, childCount }
+    });
+    return {
+      rearrangeableChildrenReturn,
+      staggeredChildrenReturn,
+      paginatedChildrenReturn,
+      context: useMemoObject({
+        staggeredChildContext,
+        paginatedChildContext,
+        managedChildContext
+      })
+    };
+  });
+  var useProcessedChild = monitored(function useProcessedChild2({ context, info: { index }, processedChildParameters: { children: childrenIn }, refElementReturn: { getElement } }) {
+    const { paginatedChildContext, staggeredChildContext } = context;
+    const { info: { setChildCountIfPaginated, setPaginationVisible }, paginatedChildReturn, props: propsPaginated } = usePaginatedChild({ context: { paginatedChildContext }, info: { index } });
+    const { info: { setStaggeredVisible, getStaggeredVisible }, staggeredChildReturn, props: propsStaggered } = useStaggeredChild({ context: { staggeredChildContext }, info: { index }, refElementReturn: { getElement } });
+    const { managedChildReturn } = useManagedChild({
+      context,
+      info: {
+        index,
+        setChildCountIfPaginated,
+        setPaginationVisible,
+        setStaggeredVisible,
+        getStaggeredVisible
+      }
+    });
+    const { hideBecausePaginated } = paginatedChildReturn;
+    const { hideBecauseStaggered } = staggeredChildReturn;
+    let children = childrenIn;
+    let hiding = hideBecausePaginated || hideBecauseStaggered;
+    if (hiding) {
+      children = null;
+    }
+    const propsRet = useMergedProps(propsStaggered, propsPaginated);
+    return {
+      props: propsRet,
+      managedChildReturn,
+      paginatedChildReturn,
+      staggeredChildReturn,
+      processedChildReturn: {
+        children
+      }
+    };
+  });
+
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/component-detail/selection/use-multi-selection.js
   function useMultiSelection({ multiSelectionParameters: { onSelectionChange, multiSelectionAriaPropName, multiSelectionMode, ...void3 }, managedChildrenReturn: { getChildren, ...void1 }, childrenHaveFocusReturn: { getAnyFocused, ...void4 }, ...void2 }) {
-    const selectedIndices = _2(/* @__PURE__ */ new Set());
-    const unselectedIndices = _2(/* @__PURE__ */ new Set());
+    const selectedIndices = _(/* @__PURE__ */ new Set());
+    const unselectedIndices = _(/* @__PURE__ */ new Set());
     assertEmptyObject(void1);
     assertEmptyObject(void2);
     assertEmptyObject(void3);
     assertEmptyObject(void4);
-    const startOfShiftSelect = _2(null);
-    let shiftKeyHeld = _2(false);
-    let ctrlKeyHeld = _2(false);
+    const startOfShiftSelect = _(null);
+    let shiftKeyHeld = _(false);
+    let ctrlKeyHeld = _(false);
     const notifyParentOfChildSelectChange = useStableCallback((event, index, selected, previous) => {
       console.assert(selected != previous);
       if (selected == void 0) {
@@ -27151,7 +27496,7 @@
         ctrlKeyHeld.current = shiftKeyHeld.current = false;
       }
     });
-    let nextCtrlAIsUndo = _2(false);
+    let nextCtrlAIsUndo = _(false);
     useGlobalHandler(document, "keydown", useStableCallback((e3) => {
       shiftKeyHeld.current = e3.shiftKey || e3.key == "Shift";
       ctrlKeyHeld.current = e3.ctrlKey || e3.key == "Control";
@@ -27192,7 +27537,7 @@
   }
   function useMultiSelectionChild({ info: { index, ...void4 }, multiSelectionChildParameters: { initiallyMultiSelected, onMultiSelectChange, multiSelectionDisabled, ...void1 }, context: { multiSelectionContext: { notifyParentOfChildSelectChange, multiSelectionAriaPropName, multiSelectionMode, doContiguousSelection, changeAllChildren, getCtrlKeyDown, getShiftKeyDown, getAnyFocused, ...void5 }, ...void3 }, ...void2 }) {
     const getIndex = useStableGetter(index);
-    const pressFreebie = _2(false);
+    const pressFreebie = _(false);
     const onPressSync = (e3) => {
       if (!multiSelectionDisabled) {
         if (multiSelectionMode == "activation") {
@@ -27282,7 +27627,7 @@
   }
   function useMultiSelectionChildDeclarative({ multiSelectionChildDeclarativeParameters: { onMultiSelectedChange, multiSelected, ...void3 }, multiSelectionChildReturn: { changeMultiSelected, ...void2 }, ...void1 }) {
     let s4 = multiSelected || false;
-    let reasonRef = _2(void 0);
+    let reasonRef = _(void 0);
     p3(() => {
       changeMultiSelected(reasonRef.current, s4);
     }, [s4]);
@@ -27304,30 +27649,30 @@
     };
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/component-detail/use-single-selection.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/component-detail/selection/use-single-selection.js
   var useSingleSelection = monitored(function useSingleSelection2({ managedChildrenReturn: { getChildren, ...void1 }, rovingTabIndexReturn: { setTabbableIndex, ...void2 }, singleSelectionParameters: { onSingleSelectedIndexChange: onSelectedIndexChange_U, initiallySingleSelectedIndex, singleSelectionAriaPropName, singleSelectionMode, ...void3 }, ...void4 }) {
     assertEmptyObject(void1);
     assertEmptyObject(void2);
     assertEmptyObject(void3);
     assertEmptyObject(void4);
     const onSingleSelectedIndexChange = useStableCallback(onSelectedIndexChange_U ?? noop_default);
-    const getSelectedAt = T2((m3) => {
-      return m3.getSingleSelected();
+    const getSelectedAt = T2((m4) => {
+      return m4.getSingleSelected();
     }, []);
-    const setSelectedAt = T2((m3, t3, newSelectedIndex, prevSelectedIndex) => {
-      if (m3.untabbable) {
+    const setSelectedAt = T2((m4, t3, newSelectedIndex, prevSelectedIndex) => {
+      if (m4.untabbable) {
         console.assert(false);
       }
-      const directionComparison = newSelectedIndex == m3.index ? prevSelectedIndex : newSelectedIndex;
-      const direction = directionComparison == null ? null : m3.index - directionComparison;
+      const directionComparison = newSelectedIndex == m4.index ? prevSelectedIndex : newSelectedIndex;
+      const direction = directionComparison == null ? null : m4.index - directionComparison;
       if (newSelectedIndex == null)
         console.assert(t3 == false);
       if (t3)
-        console.assert(newSelectedIndex === m3.index);
-      m3.setLocalSingleSelected(t3, direction);
+        console.assert(newSelectedIndex === m4.index);
+      m4.setLocalSingleSelected(t3, direction);
     }, []);
-    const isSelectedValid = T2((m3) => {
-      return !m3.untabbable;
+    const isSelectedValid = T2((m4) => {
+      return !m4.untabbable;
     }, []);
     const { changeIndex: changeSingleSelectedIndex, getCurrentIndex: getSingleSelectedIndex } = useChildrenFlag({
       getChildren,
@@ -27411,7 +27756,7 @@
   });
   function useSingleSelectionDeclarative({ singleSelectionReturn: { changeSingleSelectedIndex }, singleSelectionDeclarativeParameters: { singleSelectedIndex, onSingleSelectedIndexChange } }) {
     let s4 = singleSelectedIndex ?? null;
-    let reasonRef = _2(void 0);
+    let reasonRef = _(void 0);
     p3(() => {
       changeSingleSelectedIndex(s4, reasonRef.current);
     }, [s4]);
@@ -27422,7 +27767,7 @@
     return { singleSelectionParameters: { onSingleSelectedIndexChange: osic } };
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/component-detail/use-selection.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/component-detail/selection/use-selection.js
   function useSelection({ managedChildrenReturn, multiSelectionParameters, childrenHaveFocusReturn, rovingTabIndexReturn, singleSelectionParameters }) {
     const { childrenHaveFocusParameters: { onCompositeFocusChange: ocfc1, ...void3 }, context: contextSS, singleSelectionReturn, ...void1 } = useSingleSelection({ managedChildrenReturn, rovingTabIndexReturn, singleSelectionParameters });
     const { childrenHaveFocusParameters: { onCompositeFocusChange: ocfc2, ...void4 }, context: contextMS, multiSelectionReturn, propsStable, ...void2 } = useMultiSelection({ managedChildrenReturn, multiSelectionParameters, childrenHaveFocusReturn });
@@ -27478,264 +27823,9 @@
     return useMultiSelectionChildDeclarative(args);
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/component-detail/keyboard-navigation/use-grid-navigation-selection.js
-  var useGridNavigationSelection = monitored(function useGridNavigationSelection2({ gridNavigationParameters, linearNavigationParameters, rovingTabIndexParameters, managedChildrenReturn, typeaheadNavigationParameters, singleSelectionParameters, multiSelectionParameters, refElementReturn, paginatedChildrenParameters, rearrangeableChildrenReturn, childrenHaveFocusReturn, ...void2 }) {
-    const { context: { gridNavigationRowContext, rovingTabIndexContext, typeaheadNavigationContext }, linearNavigationReturn, managedChildrenParameters, props, rovingTabIndexReturn, typeaheadNavigationReturn } = useGridNavigation({
-      gridNavigationParameters,
-      linearNavigationParameters,
-      managedChildrenReturn,
-      rovingTabIndexParameters: { ...rovingTabIndexParameters, initiallyTabbedIndex: singleSelectionParameters.initiallySingleSelectedIndex || 0 },
-      typeaheadNavigationParameters,
-      paginatedChildrenParameters,
-      rearrangeableChildrenReturn,
-      refElementReturn
-    });
-    const { childrenHaveFocusParameters, context: { singleSelectionContext, multiSelectionContext }, multiSelectionReturn, propsStable, singleSelectionReturn, ...void1 } = useSelection({
-      managedChildrenReturn,
-      rovingTabIndexReturn,
-      singleSelectionParameters,
-      multiSelectionParameters,
-      childrenHaveFocusReturn
-    });
-    assertEmptyObject(void1);
-    assertEmptyObject(void2);
-    return {
-      context: useMemoObject({
-        gridNavigationRowContext,
-        rovingTabIndexContext,
-        singleSelectionContext,
-        multiSelectionContext,
-        typeaheadNavigationContext
-      }),
-      childrenHaveFocusParameters,
-      linearNavigationReturn,
-      managedChildrenParameters,
-      props: useMergedProps(props, propsStable),
-      rovingTabIndexReturn,
-      singleSelectionReturn,
-      multiSelectionReturn,
-      typeaheadNavigationReturn
-    };
-  });
-  var useGridNavigationSelectionRow = monitored(function useGridNavigationSelectionRow2({ info: mcp1, linearNavigationParameters, managedChildrenReturn, refElementReturn, rovingTabIndexParameters, textContentParameters, typeaheadNavigationParameters, context, singleSelectionChildParameters, multiSelectionChildParameters, ...void1 }) {
-    const { hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic1, ...void6 }, info: { getSingleSelected, setLocalSingleSelected, singleSelected, getMultiSelected, setSelectedFromParent, getMultiSelectionDisabled, ...void8 }, props: propsSelection, singleSelectionChildReturn, multiSelectionChildReturn, pressParameters: { onPressSync, ...void4 }, ...void2 } = useSelectionChild({ info: mcp1, context, singleSelectionChildParameters, multiSelectionChildParameters });
-    const { hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic2, ...void7 }, info: { focusSelf, getLocallyTabbable, setLocallyTabbable, ...void9 }, props: propsGridNavigation, linearNavigationReturn, managedChildrenParameters, pressParameters: { excludeSpace, ...void5 }, rovingTabIndexChildReturn, rovingTabIndexReturn, textContentReturn, typeaheadNavigationReturn, context: contextGridNavigation, ...void3 } = useGridNavigationRow({ context, linearNavigationParameters, info: mcp1, managedChildrenReturn, refElementReturn, rovingTabIndexParameters, textContentParameters, typeaheadNavigationParameters });
-    assertEmptyObject(void1);
-    assertEmptyObject(void2);
-    assertEmptyObject(void3);
-    assertEmptyObject(void4);
-    assertEmptyObject(void5);
-    assertEmptyObject(void6);
-    assertEmptyObject(void7);
-    assertEmptyObject(void8);
-    assertEmptyObject(void9);
-    return {
-      context: contextGridNavigation,
-      linearNavigationReturn,
-      info: {
-        getLocallyTabbable,
-        getSingleSelected,
-        singleSelected,
-        setLocallyTabbable,
-        setLocalSingleSelected,
-        focusSelf,
-        getMultiSelected,
-        setSelectedFromParent,
-        getMultiSelectionDisabled
-      },
-      managedChildrenParameters,
-      pressParameters: { onPressSync, excludeSpace },
-      hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: useStableCallback((hasFocus, hadFocus, reason) => {
-        ocfic1?.(hasFocus, hadFocus, reason);
-        ocfic2?.(hasFocus, hadFocus, reason);
-      }) },
-      props: useMergedProps(propsGridNavigation, propsSelection),
-      rovingTabIndexChildReturn,
-      rovingTabIndexReturn,
-      singleSelectionChildReturn,
-      multiSelectionChildReturn,
-      textContentReturn,
-      typeaheadNavigationReturn
-    };
-  });
-  var useGridNavigationSelectionCell = monitored(function useGridNavigationSelectionCell2(p4) {
-    return useGridNavigationCell(p4);
-  });
-
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/component-detail/keyboard-navigation/use-grid-navigation-selection-sortable.js
-  var useGridNavigationSelectionSortable = function useGridNavigationSelectionSortable2({ rearrangeableChildrenParameters, sortableChildrenParameters, linearNavigationParameters, managedChildrenReturn, gridNavigationParameters, paginatedChildrenParameters, refElementReturn, rovingTabIndexParameters, singleSelectionParameters, multiSelectionParameters, typeaheadNavigationParameters, childrenHaveFocusReturn, ...void1 }) {
-    const { rearrangeableChildrenReturn, sortableChildrenReturn } = useSortableChildren({ rearrangeableChildrenParameters, sortableChildrenParameters, managedChildrenReturn });
-    const gnr = useGridNavigationSelection({
-      rearrangeableChildrenReturn,
-      linearNavigationParameters,
-      managedChildrenReturn,
-      gridNavigationParameters,
-      paginatedChildrenParameters,
-      refElementReturn,
-      rovingTabIndexParameters,
-      singleSelectionParameters,
-      multiSelectionParameters,
-      typeaheadNavigationParameters,
-      childrenHaveFocusReturn
-    });
-    assertEmptyObject(void1);
-    return {
-      rearrangeableChildrenReturn,
-      sortableChildrenReturn,
-      ...gnr
-    };
-  };
-  var useGridNavigationSelectionSortableRow = function useGridNavigationSelectionSortableRow2({ context: ctxIncoming, info: { index, untabbable, ...void2 }, linearNavigationParameters, managedChildrenReturn, refElementReturn, rovingTabIndexParameters, textContentParameters, typeaheadNavigationParameters, gridNavigationSelectionSortableRowParameters: { getSortableColumnIndex: getSortableColumnIndexUnstable, ...void5 }, singleSelectionChildParameters, multiSelectionChildParameters, ...void1 }) {
-    const getSortableColumnIndex = useStableCallback(getSortableColumnIndexUnstable);
-    const getSortValue = T2(() => {
-      let rows = managedChildrenReturn.getChildren();
-      let columnIndex = getSortableColumnIndex() || 0;
-      let cell = rows.getAt(columnIndex);
-      return cell?.getSortValue();
-    }, []);
-    const { info: { getLocallyTabbable, getSingleSelected, getMultiSelected, setSelectedFromParent, singleSelected, setLocalSingleSelected, setLocallyTabbable, focusSelf, getMultiSelectionDisabled, ...void4 }, context: ctxOutgoing, hasCurrentFocusParameters, linearNavigationReturn, managedChildrenParameters, pressParameters, props, rovingTabIndexChildReturn, rovingTabIndexReturn, singleSelectionChildReturn, multiSelectionChildReturn, textContentReturn, typeaheadNavigationReturn, ...void3 } = useGridNavigationSelectionRow({
-      context: ctxIncoming,
-      info: { index, untabbable },
-      linearNavigationParameters,
-      managedChildrenReturn,
-      refElementReturn,
-      rovingTabIndexParameters,
-      textContentParameters,
-      typeaheadNavigationParameters,
-      singleSelectionChildParameters,
-      multiSelectionChildParameters
-    });
-    assertEmptyObject(void1);
-    assertEmptyObject(void2);
-    assertEmptyObject(void3);
-    assertEmptyObject(void4);
-    assertEmptyObject(void5);
-    return {
-      info: { getLocallyTabbable, getMultiSelected, setSelectedFromParent, getSingleSelected, getMultiSelectionDisabled, singleSelected, setLocallyTabbable, setLocalSingleSelected, getSortValue, focusSelf },
-      context: ctxOutgoing,
-      hasCurrentFocusParameters,
-      linearNavigationReturn,
-      managedChildrenParameters,
-      pressParameters,
-      props,
-      rovingTabIndexChildReturn,
-      rovingTabIndexReturn,
-      singleSelectionChildReturn,
-      multiSelectionChildReturn,
-      textContentReturn,
-      typeaheadNavigationReturn
-    };
-  };
-  var useGridNavigationSelectionSortableCell = function useGridNavigationSelectionSortableCell2({ context, gridNavigationCellParameters, info: { index, untabbable, ...void2 }, refElementReturn, textContentParameters, ...void1 }) {
-    assertEmptyObject(void1);
-    assertEmptyObject(void2);
-    return useGridNavigationSelectionCell({
-      context,
-      info: { index, untabbable },
-      gridNavigationCellParameters,
-      refElementReturn,
-      textContentParameters
-    });
-  };
-
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/component-detail/keyboard-navigation/use-list-navigation-selection.js
-  var useListNavigationSelection = monitored(function useListNavigationSelection2({ linearNavigationParameters, rovingTabIndexParameters, typeaheadNavigationParameters, singleSelectionParameters, multiSelectionParameters, managedChildrenReturn, refElementReturn, paginatedChildrenParameters, rearrangeableChildrenReturn, childrenHaveFocusReturn, ...void3 }) {
-    const { context: contextSS, propsStable, ...retSS } = useSelection({
-      childrenHaveFocusReturn,
-      rovingTabIndexReturn: { setTabbableIndex: useStableCallback((...a4) => {
-        rovingTabIndexReturn.setTabbableIndex(...a4);
-      }) },
-      managedChildrenReturn,
-      singleSelectionParameters,
-      multiSelectionParameters
-    });
-    const { context: contextLN, props, rovingTabIndexReturn, ...retLN } = useListNavigation({
-      rovingTabIndexParameters: { ...rovingTabIndexParameters, initiallyTabbedIndex: singleSelectionParameters.initiallySingleSelectedIndex || 0 },
-      linearNavigationParameters,
-      paginatedChildrenParameters,
-      typeaheadNavigationParameters,
-      managedChildrenReturn,
-      refElementReturn,
-      rearrangeableChildrenReturn
-    });
-    assertEmptyObject(void3);
-    return {
-      rovingTabIndexReturn,
-      ...retSS,
-      ...retLN,
-      context: useMemoObject({
-        ...contextLN,
-        ...contextSS
-      }),
-      props: useMergedProps(props, propsStable)
-    };
-  });
-  var useListNavigationSelectionChild = monitored(function useListNavigationSelectionChild2({ info: { index, untabbable, ...void2 }, context, refElementReturn, textContentParameters, singleSelectionChildParameters, multiSelectionChildParameters, ...void1 }) {
-    const { hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic2, ...void3 }, info: infoSS, multiSelectionChildReturn, singleSelectionChildReturn, props: propsSS, pressParameters: { onPressSync }, ...void9 } = useSelectionChild({
-      info: { index, untabbable },
-      context,
-      multiSelectionChildParameters,
-      singleSelectionChildParameters
-    });
-    const { hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic1, ...void6 }, pressParameters: { excludeSpace }, rovingTabIndexChildReturn, textContentReturn, props: propsLN, info: infoLN, ...void8 } = useListNavigationChild({
-      info: { index, untabbable },
-      context,
-      refElementReturn,
-      textContentParameters
-    });
-    assertEmptyObject(void1);
-    assertEmptyObject(void2);
-    assertEmptyObject(void3);
-    assertEmptyObject(void6);
-    assertEmptyObject(void8);
-    assertEmptyObject(void9);
-    return {
-      hasCurrentFocusParameters: {
-        onCurrentFocusedInnerChanged: useStableCallback((focused, previouslyFocused, e3) => {
-          ocfic1?.(focused, previouslyFocused, e3);
-          ocfic2?.(focused, previouslyFocused, e3);
-        })
-      },
-      pressParameters: { onPressSync, excludeSpace },
-      info: { ...infoSS, ...infoLN },
-      rovingTabIndexChildReturn,
-      multiSelectionChildReturn,
-      singleSelectionChildReturn,
-      textContentReturn,
-      propsChild: propsSS,
-      propsTabbable: propsLN
-    };
-  });
-
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/component-detail/keyboard-navigation/use-list-navigation-selection-sortable.js
-  var useListNavigationSelectionSortable = monitored(function useListNavigationSelectionSortable2({ linearNavigationParameters, rovingTabIndexParameters, typeaheadNavigationParameters, singleSelectionParameters, multiSelectionParameters, managedChildrenReturn, rearrangeableChildrenParameters, sortableChildrenParameters, refElementReturn, paginatedChildrenParameters, childrenHaveFocusReturn, ...void3 }) {
-    const { rearrangeableChildrenReturn, sortableChildrenReturn, ...void1 } = useSortableChildren({ rearrangeableChildrenParameters, sortableChildrenParameters, managedChildrenReturn });
-    const { props, context, ...restLN } = useListNavigationSelection({ childrenHaveFocusReturn, linearNavigationParameters, rearrangeableChildrenReturn, rovingTabIndexParameters, typeaheadNavigationParameters, singleSelectionParameters, multiSelectionParameters, managedChildrenReturn, refElementReturn, paginatedChildrenParameters });
-    assertEmptyObject(void1);
-    assertEmptyObject(void3);
-    return {
-      context,
-      props,
-      rearrangeableChildrenReturn,
-      sortableChildrenReturn,
-      ...restLN
-    };
-  });
-  var useListNavigationSelectionSortableChild = monitored(function useListNavigationSelectionSortableChild2({ info, context, refElementReturn, textContentParameters, singleSelectionChildParameters, multiSelectionChildParameters, ...void1 }) {
-    assertEmptyObject(void1);
-    return useListNavigationSelectionChild({
-      info,
-      context,
-      refElementReturn,
-      textContentParameters,
-      singleSelectionChildParameters,
-      multiSelectionChildParameters
-    });
-  });
-
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/dom-helpers/use-ref-element.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/dom-helpers/use-ref-element.js
   var useRefElement = monitored(function useRefElement2(args) {
-    const nonElementWarn = _2(false);
+    const nonElementWarn = _(false);
     if (nonElementWarn.current) {
       nonElementWarn.current = false;
       console.assert(false, `useRefElement was used on a component that didn't forward its ref onto a DOM element, so it's attached to that component's VNode instead.`);
@@ -27755,7 +27845,7 @@
       return cleanup;
     }, []);
     const [getElement, setElement] = usePassiveState(handler, returnNull, runImmediately);
-    const propsStable = _2(useTagProps({ ref: setElement }, "data-use-ref-element"));
+    const propsStable = _(useTagProps({ ref: setElement }, "data-use-ref-element"));
     return {
       propsStable: propsStable.current,
       refElementReturn: {
@@ -27794,7 +27884,7 @@
     }
   };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/observers/use-active-element.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/observers/use-active-element.js
   var activeElementUpdaters = /* @__PURE__ */ new Map();
   var lastActiveElementUpdaters = /* @__PURE__ */ new Map();
   var windowFocusedUpdaters = /* @__PURE__ */ new Map();
@@ -27869,7 +27959,7 @@
     return { activeElementReturn: { getActiveElement, getLastActiveElement, getWindowFocused } };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/component-detail/use-dismiss.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/component-detail/use-dismiss.js
   var useDismiss = monitored(function useDismiss2({ dismissParameters: { dismissActive, onDismiss, ...void3 }, backdropDismissParameters: { dismissBackdropActive, onDismissBackdrop, ...void6 }, lostFocusDismissParameters: { dismissLostFocusActive, onDismissLostFocus, ...void7 }, escapeDismissParameters: { dismissEscapeActive, onDismissEscape, parentDepth, ...void2 }, activeElementParameters: { getDocument: getDocument2, onActiveElementChange, onLastActiveElementChange: olaec1, onWindowFocusedChange, ...void5 }, ...void4 }) {
     const { refElementReturn: refElementSourceReturn, propsStable: propsStableSource } = useRefElement({ refElementParameters: {} });
     const { refElementReturn: refElementPopupReturn, propsStable: propsStablePopup } = useRefElement({ refElementParameters: {} });
@@ -27908,9 +27998,9 @@
     });
     const { activeElementReturn: { getActiveElement: _getActiveElement, getLastActiveElement: _getLastActiveElement, getWindowFocused: _getWindowFocused } } = useActiveElement({
       activeElementParameters: {
-        onLastActiveElementChange: useStableCallback((a4, b3, r4) => {
-          olaec2?.(a4, b3, r4);
-          olaec1?.(a4, b3, r4);
+        onLastActiveElementChange: useStableCallback((a4, b4, r5) => {
+          olaec2?.(a4, b4, r5);
+          olaec1?.(a4, b4, r5);
         }),
         onActiveElementChange,
         onWindowFocusedChange,
@@ -27976,12 +28066,12 @@
         this[_blockingElements].push(element);
       }
       remove(element) {
-        const i5 = this[_blockingElements].indexOf(element);
-        if (i5 === -1) {
+        const i4 = this[_blockingElements].indexOf(element);
+        if (i4 === -1) {
           return false;
         }
-        this[_blockingElements].splice(i5, 1);
-        if (i5 === this[_blockingElements].length) {
+        this[_blockingElements].splice(i4, 1);
+        if (i4 === this[_blockingElements].length) {
           this[_topChanged](this.top);
         }
         return true;
@@ -28017,16 +28107,16 @@
           this[_inertSiblings](newParents, toSkip, toKeepInert);
           return;
         }
-        let i5 = oldParents.length - 1;
+        let i4 = oldParents.length - 1;
         let j4 = newParents.length - 1;
-        while (i5 > 0 && j4 > 0 && oldParents[i5] === newParents[j4]) {
-          i5--;
+        while (i4 > 0 && j4 > 0 && oldParents[i4] === newParents[j4]) {
+          i4--;
           j4--;
         }
-        if (oldParents[i5] !== newParents[j4]) {
-          this[_swapInertedSibling](oldParents[i5], newParents[j4]);
+        if (oldParents[i4] !== newParents[j4]) {
+          this[_swapInertedSibling](oldParents[i4], newParents[j4]);
         }
-        i5 > 0 && this[_restoreInertedSiblings](oldParents.slice(0, i5));
+        i4 > 0 && this[_restoreInertedSiblings](oldParents.slice(0, i4));
         j4 > 0 && this[_inertSiblings](newParents.slice(0, j4), toSkip, null);
       }
       /**
@@ -28119,8 +28209,8 @@
           const idx = target === document.body ? parents.length : parents.indexOf(target);
           const inertedChild = parents[idx - 1];
           const inertedSiblings = inertedChild[_siblingsToRestore];
-          for (let i5 = 0; i5 < mutation.removedNodes.length; i5++) {
-            const sibling = mutation.removedNodes[i5];
+          for (let i4 = 0; i4 < mutation.removedNodes.length; i4++) {
+            const sibling = mutation.removedNodes[i4];
             if (sibling === inertedChild) {
               console.info("Detected removal of the top Blocking Element.");
               this.pop();
@@ -28131,8 +28221,8 @@
               inertedSiblings.delete(sibling);
             }
           }
-          for (let i5 = 0; i5 < mutation.addedNodes.length; i5++) {
-            const sibling = mutation.addedNodes[i5];
+          for (let i4 = 0; i4 < mutation.addedNodes.length; i4++) {
+            const sibling = mutation.addedNodes[i4];
             if (!this[_isInertable](sibling)) {
               continue;
             }
@@ -28183,13 +28273,13 @@
           return null;
         }
         const result = /* @__PURE__ */ new Set();
-        let i5;
+        let i4;
         let j4;
         let nodes;
         const slots = shadowRoot.querySelectorAll("slot");
         if (slots.length && slots[0].assignedNodes) {
-          for (i5 = 0; i5 < slots.length; i5++) {
-            nodes = slots[i5].assignedNodes({
+          for (i4 = 0; i4 < slots.length; i4++) {
+            nodes = slots[i4].assignedNodes({
               flatten: true
             });
             for (j4 = 0; j4 < nodes.length; j4++) {
@@ -28208,8 +28298,8 @@
   // ../node_modules/.pnpm/wicg-inert@3.1.2/node_modules/wicg-inert/dist/inert.esm.js
   var _createClass = function() {
     function defineProperties(target, props) {
-      for (var i5 = 0; i5 < props.length; i5++) {
-        var descriptor = props[i5];
+      for (var i4 = 0; i4 < props.length; i4++) {
+        var descriptor = props[i4];
         descriptor.enumerable = descriptor.enumerable || false;
         descriptor.configurable = true;
         if ("value" in descriptor)
@@ -28757,8 +28847,8 @@
             element
           );
           var distributedNodes = content.getDistributedNodes ? content.getDistributedNodes() : [];
-          for (var i5 = 0; i5 < distributedNodes.length; i5++) {
-            composedTreeWalk(distributedNodes[i5], callback, shadowRootAncestor);
+          for (var i4 = 0; i4 < distributedNodes.length; i4++) {
+            composedTreeWalk(distributedNodes[i4], callback, shadowRootAncestor);
           }
           return;
         }
@@ -28806,14 +28896,14 @@
   })();
 
   // ../node_modules/.pnpm/clsx@2.0.0/node_modules/clsx/dist/clsx.mjs
-  function r3(e3) {
+  function r4(e3) {
     var t3, f4, n2 = "";
     if ("string" == typeof e3 || "number" == typeof e3)
       n2 += e3;
     else if ("object" == typeof e3)
       if (Array.isArray(e3))
         for (t3 = 0; t3 < e3.length; t3++)
-          e3[t3] && (f4 = r3(e3[t3])) && (n2 && (n2 += " "), n2 += f4);
+          e3[t3] && (f4 = r4(e3[t3])) && (n2 && (n2 += " "), n2 += f4);
       else
         for (t3 in e3)
           e3[t3] && (n2 && (n2 += " "), n2 += t3);
@@ -28821,11 +28911,11 @@
   }
   function clsx() {
     for (var e3, t3, f4 = 0, n2 = ""; f4 < arguments.length; )
-      (e3 = arguments[f4++]) && (t3 = r3(e3)) && (n2 && (n2 += " "), n2 += t3);
+      (e3 = arguments[f4++]) && (t3 = r4(e3)) && (n2 && (n2 += " "), n2 += t3);
     return n2;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/dom-helpers/use-document-class.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/dom-helpers/use-document-class.js
   function getDocument(element) {
     return element?.ownerDocument ?? document ?? window.document ?? globalThis.document;
   }
@@ -28842,7 +28932,7 @@
     }, [className, active, element]);
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/dom-helpers/use-blocking-element.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/dom-helpers/use-blocking-element.js
   function blockingElements() {
     return getDocument().$blockingElements;
   }
@@ -28884,7 +28974,7 @@
     return { getTop, getLastActiveWhenClosed, getLastActiveWhenOpen };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/component-detail/use-focus-trap.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/component-detail/use-focus-trap.js
   var useFocusTrap = monitored(function useFocusTrap2({ focusTrapParameters: { onlyMoveFocus, trapActive, focusPopup: focusSelfUnstable, focusOpener: focusOpenerUnstable }, activeElementParameters, refElementReturn }) {
     const focusSelf = useStableCallback(focusSelfUnstable);
     const focusOpener = useStableCallback(focusOpenerUnstable);
@@ -28935,170 +29025,160 @@
     return firstFocusable;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/component-detail/use-paginated-children.js
-  var usePaginatedChildren = monitored(function usePaginatedChildren2({ managedChildrenReturn: { getChildren }, rearrangeableChildrenReturn: { indexDemangler }, paginatedChildrenParameters: { paginationMax, paginationMin }, rovingTabIndexReturn: { getTabbableIndex, setTabbableIndex }, refElementReturn: { getElement } }) {
-    const [childCount, setChildCount] = useState(null);
-    const parentIsPaginated = paginationMin != null || paginationMax != null;
-    const lastPagination = _2({ paginationMax: null, paginationMin: null });
-    const refreshPagination = T2((paginationMin2, paginationMax2) => {
-      const childMax = getChildren().getHighestIndex() + 1;
-      const childMin = getChildren().getLowestIndex();
-      for (let i5 = childMin; i5 <= childMax; ++i5) {
-        const visible = i5 >= (paginationMin2 ?? -Infinity) && i5 < (paginationMax2 ?? Infinity);
-        getChildren().getAt(indexDemangler(i5))?.setPaginationVisible(visible);
-        if (visible && (paginationMax2 != null || paginationMin2 != null))
-          getChildren().getAt(indexDemangler(i5))?.setChildCountIfPaginated(getChildren().getHighestIndex() + 1);
-      }
-    }, [
-      /* Must be empty */
-    ]);
-    p3(() => {
-      let tabbableIndex = getTabbableIndex();
-      if (tabbableIndex != null) {
-        let shouldFocus = getElement()?.contains(document.activeElement) || false;
-        setTimeout(() => {
-          if (paginationMin != null && tabbableIndex < paginationMin) {
-            setTabbableIndex(paginationMin, void 0, shouldFocus);
-          } else if (paginationMax != null && tabbableIndex >= paginationMax) {
-            let next = paginationMax - 1;
-            if (next == -1)
-              next = null;
-            setTabbableIndex(next, void 0, shouldFocus);
-          }
-        }, 1);
-      }
-      refreshPagination(paginationMin, paginationMax);
-      lastPagination.current.paginationMax = paginationMax ?? null;
-      lastPagination.current.paginationMin = paginationMin ?? null;
-    }, [paginationMax, paginationMin]);
-    const getDefaultPaginationVisible = T2((i5) => {
-      return i5 >= (paginationMin ?? -Infinity) && i5 < (paginationMax ?? Infinity);
-    }, []);
-    const paginatedChildContext = F2(() => ({
-      parentIsPaginated,
-      getDefaultPaginationVisible
-    }), [parentIsPaginated]);
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/component-detail/use-grid-navigation-selection.js
+  var useGridNavigationSelection = monitored(function useGridNavigationSelection2({ gridNavigationParameters, linearNavigationParameters, rovingTabIndexParameters, managedChildrenReturn, typeaheadNavigationParameters, singleSelectionParameters, multiSelectionParameters, refElementReturn, paginatedChildrenParameters, rearrangeableChildrenReturn, childrenHaveFocusReturn, ...void2 }) {
+    const { context: { gridNavigationRowContext, rovingTabIndexContext, typeaheadNavigationContext }, linearNavigationReturn, managedChildrenParameters, props, rovingTabIndexReturn, typeaheadNavigationReturn } = useGridNavigation({
+      gridNavigationParameters,
+      linearNavigationParameters,
+      managedChildrenReturn,
+      rovingTabIndexParameters: { ...rovingTabIndexParameters, initiallyTabbedIndex: singleSelectionParameters.initiallySingleSelectedIndex || 0 },
+      typeaheadNavigationParameters,
+      paginatedChildrenParameters,
+      rearrangeableChildrenReturn,
+      refElementReturn
+    });
+    const { childrenHaveFocusParameters, context: { singleSelectionContext, multiSelectionContext }, multiSelectionReturn, propsStable, singleSelectionReturn, ...void1 } = useSelection({
+      managedChildrenReturn,
+      rovingTabIndexReturn,
+      singleSelectionParameters,
+      multiSelectionParameters,
+      childrenHaveFocusReturn
+    });
+    assertEmptyObject(void1);
+    assertEmptyObject(void2);
     return {
-      context: F2(() => ({ paginatedChildContext }), [paginatedChildContext]),
-      managedChildrenParameters: {
-        onChildrenCountChange: useStableCallback((count) => {
-          if (paginationMax != null || paginationMin != null) {
-            setChildCount(count);
-            const min = paginationMin ?? 0;
-            const max = paginationMax ?? count;
-            for (let i5 = min; i5 < max; ++i5) {
-              getChildren().getAt(i5)?.setChildCountIfPaginated(count);
-            }
-          } else {
-            setChildCount(null);
-          }
+      context: useMemoObject({
+        gridNavigationRowContext,
+        rovingTabIndexContext,
+        singleSelectionContext,
+        multiSelectionContext,
+        typeaheadNavigationContext
+      }),
+      childrenHaveFocusParameters,
+      linearNavigationReturn,
+      managedChildrenParameters,
+      props: useMergedProps(props, propsStable),
+      rovingTabIndexReturn,
+      singleSelectionReturn,
+      multiSelectionReturn,
+      typeaheadNavigationReturn
+    };
+  });
+  var useGridNavigationSelectionRow = monitored(function useGridNavigationSelectionRow2({ info: mcp1, linearNavigationParameters, managedChildrenReturn, refElementReturn, rovingTabIndexParameters, textContentParameters, typeaheadNavigationParameters, context, singleSelectionChildParameters, multiSelectionChildParameters, ...void1 }) {
+    const { hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic1, ...void6 }, info: { getSingleSelected, setLocalSingleSelected, singleSelected, getMultiSelected, setSelectedFromParent, getMultiSelectionDisabled, ...void8 }, props: propsSelection, singleSelectionChildReturn, multiSelectionChildReturn, pressParameters: { onPressSync, ...void4 }, ...void2 } = useSelectionChild({ info: mcp1, context, singleSelectionChildParameters, multiSelectionChildParameters });
+    const { hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic2, ...void7 }, info: { focusSelf, getLocallyTabbable, setLocallyTabbable, ...void9 }, props: propsGridNavigation, linearNavigationReturn, managedChildrenParameters, pressParameters: { excludeSpace, ...void5 }, rovingTabIndexChildReturn, rovingTabIndexReturn, textContentReturn, typeaheadNavigationReturn, context: contextGridNavigation, ...void3 } = useGridNavigationRow({ context, linearNavigationParameters, info: mcp1, managedChildrenReturn, refElementReturn, rovingTabIndexParameters, textContentParameters, typeaheadNavigationParameters });
+    assertEmptyObject(void1);
+    assertEmptyObject(void2);
+    assertEmptyObject(void3);
+    assertEmptyObject(void4);
+    assertEmptyObject(void5);
+    assertEmptyObject(void6);
+    assertEmptyObject(void7);
+    assertEmptyObject(void8);
+    assertEmptyObject(void9);
+    return {
+      context: contextGridNavigation,
+      linearNavigationReturn,
+      info: {
+        getLocallyTabbable,
+        getSingleSelected,
+        singleSelected,
+        setLocallyTabbable,
+        setLocalSingleSelected,
+        focusSelf,
+        getMultiSelected,
+        setSelectedFromParent,
+        getMultiSelectionDisabled
+      },
+      managedChildrenParameters,
+      pressParameters: { onPressSync, excludeSpace },
+      hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: useStableCallback((hasFocus, hadFocus, reason) => {
+        ocfic1?.(hasFocus, hadFocus, reason);
+        ocfic2?.(hasFocus, hadFocus, reason);
+      }) },
+      props: useMergedProps(propsGridNavigation, propsSelection),
+      rovingTabIndexChildReturn,
+      rovingTabIndexReturn,
+      singleSelectionChildReturn,
+      multiSelectionChildReturn,
+      textContentReturn,
+      typeaheadNavigationReturn
+    };
+  });
+  var useGridNavigationSelectionCell = monitored(function useGridNavigationSelectionCell2(p4) {
+    return useGridNavigationCell(p4);
+  });
+
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/component-detail/use-list-navigation-selection.js
+  var useListNavigationSelection = monitored(function useListNavigationSelection2({ linearNavigationParameters, rovingTabIndexParameters, typeaheadNavigationParameters, singleSelectionParameters, multiSelectionParameters, managedChildrenReturn, refElementReturn, paginatedChildrenParameters, rearrangeableChildrenReturn, childrenHaveFocusReturn, ...void3 }) {
+    const { context: contextSS, propsStable, ...retSS } = useSelection({
+      childrenHaveFocusReturn,
+      rovingTabIndexReturn: { setTabbableIndex: useStableCallback((...a4) => {
+        rovingTabIndexReturn.setTabbableIndex(...a4);
+      }) },
+      managedChildrenReturn,
+      singleSelectionParameters,
+      multiSelectionParameters
+    });
+    const { context: contextLN, props, rovingTabIndexReturn, ...retLN } = useListNavigation({
+      rovingTabIndexParameters: { ...rovingTabIndexParameters, initiallyTabbedIndex: singleSelectionParameters.initiallySingleSelectedIndex || 0 },
+      linearNavigationParameters,
+      paginatedChildrenParameters,
+      typeaheadNavigationParameters,
+      managedChildrenReturn,
+      refElementReturn,
+      rearrangeableChildrenReturn
+    });
+    assertEmptyObject(void3);
+    return {
+      rovingTabIndexReturn,
+      ...retSS,
+      ...retLN,
+      context: useMemoObject({
+        ...contextLN,
+        ...contextSS
+      }),
+      props: useMergedProps(props, propsStable)
+    };
+  });
+  var useListNavigationSelectionChild = monitored(function useListNavigationSelectionChild2({ info: { index, untabbable, ...void2 }, context, refElementReturn, textContentParameters, singleSelectionChildParameters, multiSelectionChildParameters, ...void1 }) {
+    const { hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic2, ...void3 }, info: infoSS, multiSelectionChildReturn, singleSelectionChildReturn, props: propsSS, pressParameters: { onPressSync }, ...void9 } = useSelectionChild({
+      info: { index, untabbable },
+      context,
+      multiSelectionChildParameters,
+      singleSelectionChildParameters
+    });
+    const { hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic1, ...void6 }, pressParameters: { excludeSpace }, rovingTabIndexChildReturn, textContentReturn, props: propsLN, info: infoLN, ...void8 } = useListNavigationChild({
+      info: { index, untabbable },
+      context,
+      refElementReturn,
+      textContentParameters
+    });
+    assertEmptyObject(void1);
+    assertEmptyObject(void2);
+    assertEmptyObject(void3);
+    assertEmptyObject(void6);
+    assertEmptyObject(void8);
+    assertEmptyObject(void9);
+    return {
+      hasCurrentFocusParameters: {
+        onCurrentFocusedInnerChanged: useStableCallback((focused, previouslyFocused, e3) => {
+          ocfic1?.(focused, previouslyFocused, e3);
+          ocfic2?.(focused, previouslyFocused, e3);
         })
       },
-      paginatedChildrenReturn: { refreshPagination, childCount }
-    };
-  });
-  var usePaginatedChild = monitored(function usePaginatedChild2({ info: { index }, context: { paginatedChildContext: { parentIsPaginated, getDefaultPaginationVisible } } }) {
-    const [childCountIfPaginated, setChildCountIfPaginated] = useState(null);
-    const [paginatedVisible, setPaginatedVisible] = useState(parentIsPaginated ? getDefaultPaginationVisible(index) : true);
-    return {
-      props: useTagProps(!parentIsPaginated ? {} : { "aria-setsize": childCountIfPaginated ?? void 0, "aria-posinset": index + 1 }, "data-paginated-children-child"),
-      paginatedChildReturn: {
-        /*paginatedVisible,*/
-        parentIsPaginated,
-        hideBecausePaginated: parentIsPaginated ? !paginatedVisible : false
-      },
-      info: {
-        setPaginationVisible: setPaginatedVisible,
-        setChildCountIfPaginated
-      }
+      pressParameters: { onPressSync, excludeSpace },
+      info: { ...infoSS, ...infoLN },
+      rovingTabIndexChildReturn,
+      multiSelectionChildReturn,
+      singleSelectionChildReturn,
+      textContentReturn,
+      propsChild: propsSS,
+      propsTabbable: propsLN
     };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/component-detail/use-staggered-children.js
-  var useStaggeredChildren = monitored(function useStaggeredChildren2({ managedChildrenReturn: { getChildren }, staggeredChildrenParameters: { staggered } }) {
-    const [currentlyStaggering, setCurrentlyStaggering] = useState(staggered);
-    const timeoutHandle2 = _2(-1);
-    const resetEmergencyTimeout = T2(() => {
-      if (timeoutHandle2.current != -1)
-        clearTimeout(timeoutHandle2.current);
-      timeoutHandle2.current = setTimeout(() => {
-        timeoutHandle2.current = -1;
-        let target = getTargetStaggerIndex();
-        if (target != null)
-          setDisplayedStaggerIndex((c4) => Math.min(target, (c4 ?? 0) + 1));
-      }, 50);
-    }, [
-      /* Must be empty */
-    ]);
-    const [getTargetStaggerIndex, setTargetStaggerIndex] = usePassiveState(T2((newIndex, _prevIndex) => {
-      if (timeoutHandle2.current == -1) {
-        resetEmergencyTimeout();
-        setDisplayedStaggerIndex((c4) => Math.min(newIndex ?? 0, (c4 ?? 0) + 1));
-      }
-    }, [
-      /* Must be empty */
-    ]), returnNull);
-    const [getDisplayedStaggerIndex, setDisplayedStaggerIndex] = usePassiveState(T2((newIndex, prevIndex) => {
-      if (newIndex == null || !s4.current) {
-        return;
-      }
-      setCurrentlyStaggering(newIndex < (getTargetStaggerIndex() ?? 0));
-      for (let i5 = prevIndex ?? 0; i5 < newIndex; ++i5) {
-        getChildren().getAt(i5)?.setStaggeredVisible(true);
-      }
-      resetEmergencyTimeout();
-    }, [
-      /* Must be empty */
-    ]), returnNull);
-    const parentIsStaggered = !!staggered;
-    const childCallsThisToTellTheParentToMountTheNextOne = T2((index) => {
-      setDisplayedStaggerIndex((s5) => Math.min(getTargetStaggerIndex() ?? 0, 1 + Math.max(s5 ?? 0, index + 1)));
-    }, []);
-    const childCallsThisToTellTheParentTheHighestIndex = T2((mountedIndex) => {
-      setTargetStaggerIndex((i5) => Math.max(i5 ?? 0, 1 + mountedIndex));
-    }, []);
-    const s4 = _2(parentIsStaggered);
-    s4.current = parentIsStaggered;
-    const getDefaultStaggeredVisible = T2((i5) => {
-      if (s4.current) {
-        const staggerIndex = getDisplayedStaggerIndex();
-        if (staggerIndex == null)
-          return false;
-        return i5 < staggerIndex;
-      } else {
-        return true;
-      }
-    }, []);
-    const staggeredChildContext = F2(() => ({
-      parentIsStaggered,
-      childCallsThisToTellTheParentToMountTheNextOne,
-      childCallsThisToTellTheParentTheHighestIndex,
-      getDefaultStaggeredVisible
-    }), [parentIsStaggered]);
-    return {
-      staggeredChildrenReturn: { stillStaggering: currentlyStaggering },
-      context: F2(() => ({
-        staggeredChildContext
-      }), [staggeredChildContext])
-    };
-  });
-  var useStaggeredChild = monitored(function useStaggeredChild2({ info: { index }, context: { staggeredChildContext: { parentIsStaggered, childCallsThisToTellTheParentTheHighestIndex, getDefaultStaggeredVisible, childCallsThisToTellTheParentToMountTheNextOne } } }) {
-    const [staggeredVisible, setStaggeredVisible] = useState(getDefaultStaggeredVisible(index));
-    y3(() => {
-      childCallsThisToTellTheParentTheHighestIndex(index);
-    }, [index]);
-    p3(() => {
-      if (parentIsStaggered && staggeredVisible)
-        childCallsThisToTellTheParentToMountTheNextOne(index);
-    }, [index, parentIsStaggered && staggeredVisible]);
-    return {
-      props: useTagProps(!parentIsStaggered ? {} : { "aria-busy": (!staggeredVisible).toString() }, "data-staggered-children-child"),
-      staggeredChildReturn: { parentIsStaggered, hideBecauseStaggered: parentIsStaggered ? !staggeredVisible : false },
-      info: { setStaggeredVisible }
-    };
-  });
-
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/observers/use-children-have-focus.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/observers/use-children-have-focus.js
   var useChildrenHaveFocus = monitored(function useChildrenHaveFocus2(args) {
     const { childrenHaveFocusParameters: { onCompositeFocusChange } } = args;
     const [getAnyFocused, setAnyFocused] = usePassiveState(onCompositeFocusChange, returnFalse, runImmediately);
@@ -29125,7 +29205,7 @@
     };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/observers/use-has-current-focus.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/observers/use-has-current-focus.js
   var useHasCurrentFocus = monitored(function useHasCurrentFocus2(args) {
     const { hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged }, refElementReturn: { getElement } } = args;
     useEnsureStability("useHasCurrentFocus", onCurrentFocusedChanged, onCurrentFocusedInnerChanged, getElement);
@@ -29145,7 +29225,7 @@
         setFocusedInner(false, void 0);
       };
     }, []);
-    const propsStable = _2({
+    const propsStable = _({
       [onfocusin]: onFocusIn,
       [onfocusout]: onFocusOut
     });
@@ -29158,14 +29238,14 @@
     };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/component-use/use-grid-navigation-complete.js
-  var useCompleteGridNavigation = monitored(function useCompleteGridNavigation2({ gridNavigationParameters, linearNavigationParameters, rovingTabIndexParameters, singleSelectionParameters, multiSelectionParameters, typeaheadNavigationParameters, sortableChildrenParameters, rearrangeableChildrenParameters, paginatedChildrenParameters, staggeredChildrenParameters, refElementParameters, ...void1 }) {
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/component-use/use-grid-navigation-complete.js
+  var useCompleteGridNavigation = monitored(function useCompleteGridNavigation2({ gridNavigationParameters, linearNavigationParameters, rovingTabIndexParameters, singleSelectionParameters, multiSelectionParameters, typeaheadNavigationParameters, paginatedChildrenParameters, refElementParameters, ...void1 }) {
     assertEmptyObject(void1);
     const getChildren = T2(() => managedChildrenReturn.getChildren(), []);
     const getLowestChildIndex = T2(() => getChildren().getLowestIndex(), []);
     const getHighestChildIndex = T2(() => getChildren().getHighestIndex(), []);
-    const isValidForNavigation = T2((i5) => {
-      const child = getChildren().getAt(i5);
+    const isValidForNavigation = T2((i4) => {
+      const child = getChildren().getAt(i4);
       if (child == null)
         return false;
       if (child.untabbable)
@@ -29173,31 +29253,28 @@
       return true;
     }, []);
     const { refElementReturn, propsStable, ...void2 } = useRefElement({ refElementParameters });
-    const { childrenHaveFocusParameters, managedChildrenParameters, context: { gridNavigationRowContext, rovingTabIndexContext, singleSelectionContext, multiSelectionContext, typeaheadNavigationContext }, rearrangeableChildrenReturn, props, rovingTabIndexReturn, linearNavigationReturn, singleSelectionReturn, multiSelectionReturn, sortableChildrenReturn, typeaheadNavigationReturn, ...void3 } = useGridNavigationSelectionSortable({
+    const { context: contextProcessing, indexDemangler, indexMangler, rearrange, reverse, shuffle: shuffle2, sort } = useCreateProcessedChildrenContext();
+    const getAnyFocused = useStableCallback(() => childrenHaveFocusReturn.getAnyFocused());
+    const { childrenHaveFocusParameters, managedChildrenParameters, context: { gridNavigationRowContext, rovingTabIndexContext, singleSelectionContext, multiSelectionContext, typeaheadNavigationContext }, props, rovingTabIndexReturn, linearNavigationReturn, singleSelectionReturn, multiSelectionReturn, typeaheadNavigationReturn, ...void3 } = useGridNavigationSelection({
       gridNavigationParameters,
+      singleSelectionParameters,
+      multiSelectionParameters,
+      paginatedChildrenParameters,
+      refElementReturn,
       linearNavigationParameters: { getLowestIndex: getLowestChildIndex, getHighestIndex: getHighestChildIndex, isValidForLinearNavigation: isValidForNavigation, ...linearNavigationParameters },
       managedChildrenReturn: { getChildren },
       rovingTabIndexParameters: { untabbableBehavior: "focus-parent", ...rovingTabIndexParameters },
-      singleSelectionParameters,
-      multiSelectionParameters,
       typeaheadNavigationParameters: { isValidForTypeaheadNavigation: isValidForNavigation, ...typeaheadNavigationParameters },
-      paginatedChildrenParameters,
-      refElementReturn,
-      rearrangeableChildrenParameters: {
-        onRearranged: useStableCallback(() => {
-          refreshPagination(paginatedChildrenParameters.paginationMin, paginatedChildrenParameters.paginationMax);
-        }),
-        ...rearrangeableChildrenParameters
-      },
-      childrenHaveFocusReturn: { getAnyFocused: useStableCallback(() => childrenHaveFocusReturn.getAnyFocused()) },
-      sortableChildrenParameters
+      childrenHaveFocusReturn: { getAnyFocused },
+      rearrangeableChildrenReturn: { indexDemangler, indexMangler }
     });
-    const { indexDemangler } = rearrangeableChildrenReturn;
     const { context: { childrenHaveFocusChildContext }, childrenHaveFocusReturn } = useChildrenHaveFocus({ childrenHaveFocusParameters });
-    const mcr = useManagedChildren({ managedChildrenParameters: { onChildrenCountChange: useStableCallback((c4) => onChildrenCountChange?.(c4)), ...managedChildrenParameters } });
-    const { context: { managedChildContext }, managedChildrenReturn } = mcr;
-    const { paginatedChildrenReturn, paginatedChildrenReturn: { refreshPagination }, managedChildrenParameters: { onChildrenCountChange }, context: { paginatedChildContext } } = usePaginatedChildren({ refElementReturn, managedChildrenReturn, paginatedChildrenParameters, rovingTabIndexReturn, rearrangeableChildrenReturn: { indexDemangler } });
-    const { context: { staggeredChildContext }, staggeredChildrenReturn } = useStaggeredChildren({ managedChildrenReturn, staggeredChildrenParameters });
+    const { context: { managedChildContext }, managedChildrenReturn } = useManagedChildren({ managedChildrenParameters });
+    const { getTabbableIndex, setTabbableIndex } = rovingTabIndexReturn;
+    const c22 = useMemoObject({
+      processedChildrenContext: useMemoObject({ getTabbableIndex, setTabbableIndex, getAnyFocused }),
+      ...contextProcessing
+    });
     const context = useMemoObject({
       singleSelectionContext,
       multiSelectionContext,
@@ -29205,38 +29282,48 @@
       rovingTabIndexContext,
       typeaheadNavigationContext,
       childrenHaveFocusChildContext,
-      paginatedChildContext,
-      staggeredChildContext,
-      gridNavigationRowContext
+      gridNavigationRowContext,
+      contextProcessing: c22
     });
     assertEmptyObject(void1);
     assertEmptyObject(void2);
     assertEmptyObject(void3);
     return {
-      context,
+      contextChildren: context,
+      contextProcessing: c22,
       props: useMergedProps(props, propsStable),
+      refElementReturn,
       managedChildrenReturn,
-      rearrangeableChildrenReturn,
-      staggeredChildrenReturn,
       rovingTabIndexReturn,
       childrenHaveFocusReturn,
-      paginatedChildrenReturn,
       linearNavigationReturn,
       singleSelectionReturn,
       multiSelectionReturn,
-      sortableChildrenReturn,
-      typeaheadNavigationReturn
+      typeaheadNavigationReturn,
+      rearrangeableChildrenReturn: { rearrange, reverse, shuffle: shuffle2, sort }
     };
   });
-  var useCompleteGridNavigationRow = monitored(function useCompleteGridNavigationRow2({ info: { index, untabbable, ...customUserInfo }, context: contextIncomingForRowAsChildOfTable, textContentParameters, linearNavigationParameters, rovingTabIndexParameters, typeaheadNavigationParameters, gridNavigationSelectionSortableRowParameters, hasCurrentFocusParameters: { onCurrentFocusedChanged: ocfc1, onCurrentFocusedInnerChanged: ocfic3, ...void5 }, singleSelectionChildParameters, multiSelectionChildParameters, ...void1 }) {
-    const { info: infoPaginatedChild, paginatedChildReturn, props: paginationProps, ...void7 } = usePaginatedChild({ info: { index }, context: contextIncomingForRowAsChildOfTable });
-    const { info: infoStaggeredChild, staggeredChildReturn, props: staggeredProps, ...void8 } = useStaggeredChild({ info: { index }, context: contextIncomingForRowAsChildOfTable });
-    untabbable ||= paginatedChildReturn.hideBecausePaginated || staggeredChildReturn.hideBecauseStaggered;
+  var useCompleteGridNavigationRows = monitored(function useCompleteGridNavigationRows2({ context, paginatedChildrenParameters, rearrangeableChildrenParameters, staggeredChildrenParameters, managedChildrenParameters }) {
+    const { context: contextRPS, paginatedChildrenReturn, rearrangeableChildrenReturn, staggeredChildrenReturn } = useProcessedChildren({
+      paginatedChildrenParameters,
+      rearrangeableChildrenParameters,
+      staggeredChildrenParameters,
+      managedChildrenParameters,
+      context
+    });
+    return {
+      context: contextRPS,
+      paginatedChildrenReturn,
+      rearrangeableChildrenReturn,
+      staggeredChildrenReturn
+    };
+  });
+  var useCompleteGridNavigationRow = monitored(function useCompleteGridNavigationRow2({ info: { index, untabbable, ...customUserInfo }, context: contextIncomingForRowAsChildOfTable, textContentParameters, linearNavigationParameters, rovingTabIndexParameters, typeaheadNavigationParameters, hasCurrentFocusParameters: { onCurrentFocusedChanged: ocfc1, onCurrentFocusedInnerChanged: ocfic3, ...void5 }, singleSelectionChildParameters, multiSelectionChildParameters, ...void1 }) {
     const getChildren = T2(() => managedChildrenReturn.getChildren(), []);
     const getHighestChildIndex = T2(() => getChildren().getHighestIndex(), []);
     const getLowestChildIndex = T2(() => getChildren().getLowestIndex(), []);
-    const isValidForNavigation = T2((i5) => {
-      const child = getChildren().getAt(i5);
+    const isValidForNavigation = T2((i4) => {
+      const child = getChildren().getAt(i4);
       if (child == null)
         return false;
       if (child.untabbable)
@@ -29244,7 +29331,7 @@
       return true;
     }, []);
     const { refElementReturn, propsStable, ...void6 } = useRefElement({ refElementParameters: {} });
-    const r4 = useGridNavigationSelectionSortableRow({
+    const parameters = {
       rovingTabIndexParameters,
       typeaheadNavigationParameters: { isValidForTypeaheadNavigation: isValidForNavigation, ...typeaheadNavigationParameters },
       linearNavigationParameters: { isValidForLinearNavigation: isValidForNavigation, getHighestIndex: getHighestChildIndex, getLowestIndex: getLowestChildIndex, ...linearNavigationParameters },
@@ -29253,20 +29340,17 @@
       context: contextIncomingForRowAsChildOfTable,
       info: { index, untabbable },
       textContentParameters,
-      gridNavigationSelectionSortableRowParameters,
       singleSelectionChildParameters,
       multiSelectionChildParameters
-    });
-    const { linearNavigationReturn, managedChildrenParameters, pressParameters, rovingTabIndexChildReturn, rovingTabIndexReturn, singleSelectionChildReturn, multiSelectionChildReturn, textContentReturn, typeaheadNavigationReturn, context: contextGNR, info: infoRowReturn, props: p32, hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic1, ...void3 }, ...void2 } = r4;
-    const { context: contextMC, managedChildrenReturn } = useManagedChildren({ managedChildrenParameters });
+    };
+    const { linearNavigationReturn, managedChildrenParameters, pressParameters, rovingTabIndexChildReturn, rovingTabIndexReturn, singleSelectionChildReturn, multiSelectionChildReturn, textContentReturn, typeaheadNavigationReturn, context: contextGNR, info: infoRowReturn, props: p32, hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic1, ...void3 }, ...void2 } = useGridNavigationSelectionRow(parameters);
     const completeInfo = {
       getElement: refElementReturn.getElement,
       index,
       untabbable,
-      ...infoRowReturn,
-      ...infoPaginatedChild,
-      ...infoStaggeredChild
+      ...infoRowReturn
     };
+    const { context: contextMC, managedChildrenReturn } = useManagedChildren({ managedChildrenParameters });
     const { managedChildReturn, ...void4 } = useManagedChild({ context: contextIncomingForRowAsChildOfTable, info: { ...completeInfo, ...customUserInfo } });
     const context = useMemoObject({
       ...contextGNR,
@@ -29282,23 +29366,19 @@
         })
       }
     });
-    const props = useMergedProps(propsStable, p32, hasCurrentFocusReturn.propsStable, paginationProps, staggeredProps);
+    const props = useMergedProps(propsStable, p32, hasCurrentFocusReturn.propsStable);
     assertEmptyObject(void1);
     assertEmptyObject(void2);
     assertEmptyObject(void3);
     assertEmptyObject(void4);
     assertEmptyObject(void5);
     assertEmptyObject(void6);
-    assertEmptyObject(void7);
-    assertEmptyObject(void8);
     return {
       pressParameters,
       hasCurrentFocusReturn,
       managedChildrenReturn,
       context,
       managedChildReturn,
-      staggeredChildReturn,
-      paginatedChildReturn,
       linearNavigationReturn,
       rovingTabIndexChildReturn,
       rovingTabIndexReturn,
@@ -29309,9 +29389,9 @@
       props
     };
   });
-  var useCompleteGridNavigationCell = monitored(function useCompleteGridNavigationCell2({ gridNavigationCellParameters, context, textContentParameters, info: { focusSelf, index, untabbable, getSortValue, ...customUserInfo }, ...void1 }) {
+  var useCompleteGridNavigationCell = monitored(function useCompleteGridNavigationCell2({ gridNavigationCellParameters, context, textContentParameters, info: { focusSelf, index, untabbable, ...customUserInfo }, ...void1 }) {
     const { refElementReturn, propsStable } = useRefElement({ refElementParameters: {} });
-    const { hasCurrentFocusParameters, rovingTabIndexChildReturn, textContentReturn, pressParameters: { excludeSpace: es1 }, props: propsRti, info: info2, ...void2 } = useGridNavigationSelectionSortableCell({
+    const { hasCurrentFocusParameters, rovingTabIndexChildReturn, textContentReturn, pressParameters: { excludeSpace: es1 }, props: propsRti, info: info2, ...void2 } = useGridNavigationSelectionCell({
       gridNavigationCellParameters,
       info: { index, untabbable },
       context,
@@ -29328,7 +29408,6 @@
       refElementReturn
     });
     const baseInfo = {
-      getSortValue,
       getElement: refElementReturn.getElement,
       getLocallyTabbable: rovingTabIndexChildReturn.getTabbable,
       setLocallyTabbable: info2.setLocallyTabbable,
@@ -29348,37 +29427,39 @@
       textContentReturn
     };
   });
-  function useCompleteGridNavigationDeclarative({ gridNavigationParameters, linearNavigationParameters, paginatedChildrenParameters, rearrangeableChildrenParameters, rovingTabIndexParameters, singleSelectionDeclarativeParameters, multiSelectionParameters, sortableChildrenParameters, staggeredChildrenParameters, typeaheadNavigationParameters, singleSelectionParameters, refElementParameters, ...void1 }) {
-    const ret = useCompleteGridNavigation({
-      linearNavigationParameters,
-      paginatedChildrenParameters,
-      rearrangeableChildrenParameters,
-      rovingTabIndexParameters,
-      singleSelectionParameters: { initiallySingleSelectedIndex: singleSelectionDeclarativeParameters.singleSelectedIndex, onSingleSelectedIndexChange: useStableCallback((...e3) => onSingleSelectedIndexChange?.(...e3)), ...singleSelectionParameters },
-      multiSelectionParameters,
-      sortableChildrenParameters,
-      staggeredChildrenParameters,
-      refElementParameters,
-      typeaheadNavigationParameters,
-      gridNavigationParameters
+  function useCompleteGridNavigationDeclarative({ singleSelectionDeclarativeParameters, singleSelectionParameters, ...normalGridNavParameters }) {
+    const ret2 = useCompleteGridNavigation({
+      singleSelectionParameters: {
+        initiallySingleSelectedIndex: singleSelectionDeclarativeParameters.singleSelectedIndex,
+        onSingleSelectedIndexChange: useStableCallback((...e3) => onSingleSelectedIndexChange?.(...e3)),
+        ...singleSelectionParameters
+      },
+      ...normalGridNavParameters
     });
     const { singleSelectionParameters: { onSingleSelectedIndexChange } } = useSelectionDeclarative({
       singleSelectionDeclarativeParameters,
-      singleSelectionReturn: ret.singleSelectionReturn
+      singleSelectionReturn: ret2.singleSelectionReturn
     });
-    const { singleSelectionReturn: { getSingleSelectedIndex }, ...ret2 } = ret;
-    assertEmptyObject(void1);
-    return { ...ret2, singleSelectionReturn: { getSingleSelectedIndex } };
+    return ret2;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/component-use/use-list-navigation-complete.js
-  var useCompleteListNavigation = function useCompleteListNavigation2({ linearNavigationParameters, rearrangeableChildrenParameters, sortableChildrenParameters, typeaheadNavigationParameters, rovingTabIndexParameters, singleSelectionParameters, multiSelectionParameters, paginatedChildrenParameters, staggeredChildrenParameters, refElementParameters, ...void1 }) {
-    const { initiallySingleSelectedIndex } = singleSelectionParameters;
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/component-use/use-list-navigation-complete.js
+  var useCompleteListNavigation = monitored(function useCompleteListNavigation2({
+    linearNavigationParameters,
+    typeaheadNavigationParameters,
+    rovingTabIndexParameters,
+    singleSelectionParameters,
+    multiSelectionParameters,
+    paginatedChildrenParameters,
+    //staggeredChildrenParameters,
+    refElementParameters,
+    ...void1
+  }) {
     const getChildren = T2(() => managedChildrenReturn.getChildren(), []);
     const getLowestIndex = T2(() => getChildren().getLowestIndex(), []);
     const getHighestIndex = T2(() => getChildren().getHighestIndex(), []);
-    const isValidForNavigation = T2((i5) => {
-      const child = getChildren().getAt(i5);
+    const isValidForNavigation = T2((i4) => {
+      const child = getChildren().getAt(i4);
       if (!child)
         return false;
       if (child.untabbable)
@@ -29386,79 +29467,85 @@
       return true;
     }, []);
     const { propsStable: propsRef, refElementReturn } = useRefElement({ refElementParameters });
-    const { childrenHaveFocusParameters, managedChildrenParameters: { onChildrenMountChange, ...mcp1 }, context: { rovingTabIndexContext, singleSelectionContext, multiSelectionContext, typeaheadNavigationContext }, linearNavigationReturn, rovingTabIndexReturn, singleSelectionReturn, multiSelectionReturn, typeaheadNavigationReturn, rearrangeableChildrenReturn, sortableChildrenReturn, props, ...void2 } = useListNavigationSelectionSortable({
+    const { context: contextProcessing, indexDemangler, indexMangler, rearrange, reverse, shuffle: shuffle2, sort } = useCreateProcessedChildrenContext();
+    const { childrenHaveFocusParameters, managedChildrenParameters: { onChildrenMountChange, ...mcp1 }, context: { rovingTabIndexContext, singleSelectionContext, multiSelectionContext, typeaheadNavigationContext }, linearNavigationReturn, rovingTabIndexReturn, singleSelectionReturn, multiSelectionReturn, typeaheadNavigationReturn, props, ...void2 } = useListNavigationSelection({
       managedChildrenReturn: { getChildren },
       linearNavigationParameters: { getLowestIndex, getHighestIndex, isValidForLinearNavigation: isValidForNavigation, ...linearNavigationParameters },
       typeaheadNavigationParameters: { isValidForTypeaheadNavigation: isValidForNavigation, ...typeaheadNavigationParameters },
       rovingTabIndexParameters: { untabbableBehavior: "focus-parent", ...rovingTabIndexParameters },
       singleSelectionParameters,
       multiSelectionParameters,
-      rearrangeableChildrenParameters: {
-        onRearranged: useStableCallback(() => {
-          refreshPagination(paginatedChildrenParameters.paginationMin, paginatedChildrenParameters.paginationMax);
-        }),
-        ...rearrangeableChildrenParameters
-      },
       paginatedChildrenParameters,
       refElementReturn,
-      sortableChildrenParameters,
-      childrenHaveFocusReturn: { getAnyFocused: useStableCallback(() => childrenHaveFocusReturn.getAnyFocused()) }
+      childrenHaveFocusReturn: { getAnyFocused: useStableCallback(() => childrenHaveFocusReturn.getAnyFocused()) },
+      rearrangeableChildrenReturn: { indexDemangler, indexMangler }
     });
     const { context: { childrenHaveFocusChildContext }, childrenHaveFocusReturn } = useChildrenHaveFocus({ childrenHaveFocusParameters });
-    const { paginatedChildrenReturn, paginatedChildrenReturn: { refreshPagination }, managedChildrenParameters: mcp2, context: { paginatedChildContext } } = usePaginatedChildren({ refElementReturn, managedChildrenReturn: { getChildren: useStableCallback(() => managedChildrenReturn.getChildren()) }, rovingTabIndexReturn, paginatedChildrenParameters, rearrangeableChildrenReturn: { indexDemangler: rearrangeableChildrenReturn.indexDemangler } });
-    const { context: { staggeredChildContext }, staggeredChildrenReturn } = useStaggeredChildren({ managedChildrenReturn: { getChildren: useStableCallback(() => managedChildrenReturn.getChildren()) }, staggeredChildrenParameters });
     const mcr = useManagedChildren({
       managedChildrenParameters: {
         onChildrenMountChange,
-        ...mcp2,
         ...mcp1
       }
     });
-    const { context: { managedChildContext }, managedChildrenReturn } = mcr;
-    const context = useMemoObject(useMemoObject({
+    const { context: { managedChildContext: managedChildRTIContext }, managedChildrenReturn } = mcr;
+    const { getTabbableIndex, setTabbableIndex } = rovingTabIndexReturn;
+    const { getAnyFocused } = childrenHaveFocusReturn;
+    const contextChildren = useMemoObject({
       childrenHaveFocusChildContext,
-      managedChildContext,
-      paginatedChildContext,
       rovingTabIndexContext,
       singleSelectionContext,
       multiSelectionContext,
-      staggeredChildContext,
-      typeaheadNavigationContext
-    }));
+      typeaheadNavigationContext,
+      managedChildContext: managedChildRTIContext
+    });
     assertEmptyObject(void1);
     assertEmptyObject(void2);
     return {
-      context,
+      contextChildren,
+      contextProcessing: useMemoObject({
+        processedChildrenContext: useMemoObject({ getTabbableIndex, setTabbableIndex, getAnyFocused }),
+        ...contextProcessing
+      }),
       props: useMergedProps(props, propsRef),
       managedChildrenReturn,
-      rearrangeableChildrenReturn,
-      staggeredChildrenReturn,
-      paginatedChildrenReturn,
-      sortableChildrenReturn,
       linearNavigationReturn,
       rovingTabIndexReturn,
       singleSelectionReturn,
       multiSelectionReturn,
       typeaheadNavigationReturn,
-      childrenHaveFocusReturn
+      childrenHaveFocusReturn,
+      refElementReturn,
+      rearrangeableChildrenReturn: { reverse, shuffle: shuffle2, rearrange, sort }
     };
-  };
+  });
+  var useCompleteListNavigationChildren = monitored(function useCompleteListNavigationChildren2({ context, paginatedChildrenParameters, rearrangeableChildrenParameters, staggeredChildrenParameters, managedChildrenParameters }) {
+    const { context: contextRPS, paginatedChildrenReturn, rearrangeableChildrenReturn, staggeredChildrenReturn } = useProcessedChildren({
+      paginatedChildrenParameters,
+      rearrangeableChildrenParameters,
+      staggeredChildrenParameters,
+      managedChildrenParameters,
+      context
+    });
+    return {
+      context: contextRPS,
+      paginatedChildrenReturn,
+      rearrangeableChildrenReturn,
+      staggeredChildrenReturn
+    };
+  });
   var useCompleteListNavigationChild = monitored(function useCompleteListNavigationChild2({
-    info: { index, focusSelf, untabbable, getSortValue, ...customUserInfo },
+    info: { index, focusSelf, untabbable, ...customUserInfo },
     // The "...info" is empty if M is the same as UCLNCI<ChildElement>.
     textContentParameters,
     refElementParameters,
     hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged: ocfic3, ...void7 },
     singleSelectionChildParameters,
     multiSelectionChildParameters,
-    context: { managedChildContext, rovingTabIndexContext, paginatedChildContext, staggeredChildContext, singleSelectionContext, multiSelectionContext, typeaheadNavigationContext, childrenHaveFocusChildContext, ...void5 },
+    context: { managedChildContext, rovingTabIndexContext, singleSelectionContext, multiSelectionContext, typeaheadNavigationContext, childrenHaveFocusChildContext, ...void5 },
     ...void1
   }) {
-    const { info: infoFromPaginated, paginatedChildReturn, paginatedChildReturn: { hideBecausePaginated }, props: paginationProps } = usePaginatedChild({ info: { index }, context: { paginatedChildContext } });
-    const { info: infoFromStaggered, staggeredChildReturn, staggeredChildReturn: { hideBecauseStaggered }, props: staggeredProps } = useStaggeredChild({ info: { index }, context: { staggeredChildContext } });
-    untabbable ||= hideBecausePaginated || hideBecauseStaggered;
     const { refElementReturn, propsStable, ...void6 } = useRefElement({ refElementParameters });
-    const { hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic1, ...void3 }, pressParameters: { excludeSpace, onPressSync, ...void2 }, textContentReturn, singleSelectionChildReturn, multiSelectionChildReturn, info: infoFromListNav, rovingTabIndexChildReturn, propsChild, propsTabbable, ...void4 } = useListNavigationSelectionSortableChild({
+    const { hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic1, ...void3 }, pressParameters: { excludeSpace, onPressSync, ...void2 }, textContentReturn, singleSelectionChildReturn, multiSelectionChildReturn, info: infoFromListNav, rovingTabIndexChildReturn, propsChild, propsTabbable, ...void4 } = useListNavigationSelectionChild({
       info: { index, untabbable },
       context: { rovingTabIndexContext, singleSelectionContext, multiSelectionContext, typeaheadNavigationContext },
       singleSelectionChildParameters,
@@ -29470,10 +29557,7 @@
       index,
       focusSelf,
       getElement: refElementReturn.getElement,
-      getSortValue,
       untabbable,
-      ...infoFromStaggered,
-      ...infoFromPaginated,
       ...infoFromListNav
     };
     const { managedChildReturn } = useManagedChild({ context: { managedChildContext }, info: { ...allStandardInfo, ...customUserInfo } });
@@ -29490,7 +29574,7 @@
       },
       refElementReturn
     });
-    const props = useMergedProps(propsStable, hasCurrentFocusReturn.propsStable, propsChild, paginationProps, staggeredProps);
+    const props = useMergedProps(propsStable, hasCurrentFocusReturn.propsStable, propsChild);
     assertEmptyObject(void1);
     assertEmptyObject(void2);
     assertEmptyObject(void3);
@@ -29511,8 +29595,6 @@
       multiSelectionChildReturn,
       hasCurrentFocusReturn,
       managedChildReturn,
-      paginatedChildReturn,
-      staggeredChildReturn,
       rovingTabIndexChildReturn
     };
   });
@@ -29552,7 +29634,7 @@
     return { ...ret2, multiSelectionChildReturn };
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/component-use/use-modal.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/component-use/use-modal.js
   var useModal = monitored(function useModal2({ dismissParameters: { dismissActive, onDismiss, ...void2 }, escapeDismissParameters: { dismissEscapeActive, onDismissEscape, parentDepth, ...void3 }, focusTrapParameters: { trapActive, ...focusTrapParameters }, activeElementParameters: { getDocument: getDocument2, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, ...void4 }, backdropDismissParameters: { dismissBackdropActive, onDismissBackdrop, ...void5 }, lostFocusDismissParameters: { dismissLostFocusActive, onDismissLostFocus, ...void6 }, refElementParameters: { onElementChange, onMount, onUnmount, ...void7 }, modalParameters: { active: modalActive, ...void8 }, ...void1 }) {
     const { refElementPopupReturn, refElementSourceReturn, propsStablePopup, propsStableSource } = useDismiss({
       dismissParameters: { dismissActive: dismissActive && modalActive, onDismiss },
@@ -29626,11 +29708,11 @@
       }
       if (isPromise(promiseOrReturn)) {
         onInvoked?.("async");
-        promiseOrReturn.then((r4) => {
+        promiseOrReturn.then((r5) => {
           onResolve?.();
           onHasResult?.(true);
-          onReturnValue?.(r4);
-          return r4;
+          onReturnValue?.(r5);
+          return r5;
         }).catch((e3) => {
           onReject?.();
           onHasError?.(true);
@@ -29686,7 +29768,7 @@
     };
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/preact-extensions/use-async.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/preact-extensions/use-async.js
   function identityCapture(...t3) {
     return t3;
   }
@@ -29761,7 +29843,7 @@
     };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/dom-helpers/use-async-handler.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/dom-helpers/use-async-handler.js
   var useAsyncHandler = monitored(function useAsyncHandler2({ asyncHandler, capture: originalCapture, ...restAsyncOptions }) {
     const [currentCapture, setCurrentCapture, getCurrentCapture] = useState(void 0);
     const [hasCapture, setHasCapture] = useState(false);
@@ -29779,7 +29861,7 @@
     };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/component-use/use-press.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/component-use/use-press.js
   function pressLog(...args) {
     if (window.__log_press_events)
       console.log(...args);
@@ -30052,12 +30134,12 @@
   var pulse = "vibrate" in navigator && navigator.vibrate instanceof Function ? () => navigator.vibrate(10) : () => {
   };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/component-use/use-random-id.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/component-use/use-random-id.js
   var useRandomId = monitored(function useRandomId2({ randomIdParameters: { prefix, otherReferencerProp } }) {
     const id = prefix + V();
     useEnsureStability("useRandomId", prefix, id);
-    const referencerElementProps = _2(otherReferencerProp == null ? {} : { [otherReferencerProp]: id });
-    const sourceElementProps = _2({ id });
+    const referencerElementProps = _(otherReferencerProp == null ? {} : { [otherReferencerProp]: id });
+    const sourceElementProps = _({ id });
     useEnsureStability("useRandomIdReferencerElement", otherReferencerProp);
     return {
       propsReferencer: referencerElementProps.current,
@@ -30068,7 +30150,7 @@
     };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/component-use/use-random-dual-ids.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/component-use/use-random-dual-ids.js
   var useRandomDualIds = monitored(function useRandomDualIds2({ randomIdInputParameters, randomIdLabelParameters }) {
     const { randomIdReturn: randomIdInputReturn, propsReferencer: propsLabelAsReferencer, propsSource: propsInputAsSource } = useRandomId({ randomIdParameters: randomIdInputParameters });
     const { randomIdReturn: randomIdLabelReturn, propsReferencer: propsInputAsReferencer, propsSource: propsLabelAsSource } = useRandomId({ randomIdParameters: randomIdLabelParameters });
@@ -30080,7 +30162,7 @@
     };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/dom-helpers/use-draggable.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/dom-helpers/use-draggable.js
   var useDraggable = monitored(function useDraggable2({ effectAllowed, data, dragImage, dragImageXOffset, dragImageYOffset }) {
     const [dragging, setDragging, getDragging] = useState(false);
     const [lastDropEffect, setLastDropEffect, getLastDropEffect] = useState(null);
@@ -30121,7 +30203,7 @@
     return ret;
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/dom-helpers/use-droppable.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/dom-helpers/use-droppable.js
   var DroppableFileError = class extends Error {
     fileName;
     errorType;
@@ -30137,7 +30219,7 @@
     const [droppedFiles, setDroppedFiles] = useState(null);
     const [droppedStrings, setDroppedStrings] = useState(null);
     const [dropError, setDropError] = useState(void 0);
-    const dropPromisesRef = _2([]);
+    const dropPromisesRef = _([]);
     const [currentPromiseIndex, setCurrentPromiseIndex, getCurrentPromiseIndex] = useState(-1);
     const [promiseCount, setPromiseCount, getPromiseCount] = useState(0);
     p3(() => {
@@ -30145,7 +30227,7 @@
       const promiseCount2 = getPromiseCount();
       if (promiseCount2 > 0) {
         if (currentPromiseIndex2 + 1 < promiseCount2) {
-          setCurrentPromiseIndex((i5) => ++i5);
+          setCurrentPromiseIndex((i4) => ++i4);
         }
       }
     }, [promiseCount]);
@@ -30161,7 +30243,7 @@
           const currentPromiseIndex2 = getCurrentPromiseIndex();
           const promiseCount2 = getPromiseCount();
           if (currentPromiseIndex2 + 1 < promiseCount2) {
-            setCurrentPromiseIndex((i5) => ++i5);
+            setCurrentPromiseIndex((i4) => ++i4);
           }
         });
       }
@@ -30226,7 +30308,7 @@
         }
       }
       dropPromisesRef.current.push(Promise.all(allPromises).then(() => {
-        setPromiseCount((i5) => ++i5);
+        setPromiseCount((i4) => ++i4);
         setDropError(null);
         return {
           strings: dropData,
@@ -30234,12 +30316,12 @@
         };
       }).catch((ex) => {
         debugger;
-        setPromiseCount((i5) => ++i5);
+        setPromiseCount((i4) => ++i4);
         setDropError(ex);
         return null;
       }));
     });
-    const propsStable = _2({ onDragEnter, onDragLeave, onDragOver, onDrop });
+    const propsStable = _({ onDragEnter, onDragLeave, onDragOver, onDrop });
     return {
       propsStable: propsStable.current,
       filesForConsideration,
@@ -30250,7 +30332,7 @@
     };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/dom-helpers/use-hide-scroll.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/dom-helpers/use-hide-scroll.js
   var useHideScroll = monitored(function useHideScroll2(hideScroll) {
     const [getScrollbarWidth, setScrollbarWidth] = usePassiveState(null);
     const [getScrollbarHeight, setScrollbarHeight] = usePassiveState(null);
@@ -30292,7 +30374,7 @@
     return { getScrollbarWidth, getScrollbarHeight };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/dom-helpers/use-imperative-props.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/dom-helpers/use-imperative-props.js
   var templateElement = null;
   function htmlToElement(parent, html) {
     const document2 = parent.ownerDocument;
@@ -30302,7 +30384,7 @@
   }
   var ImperativeElement = x3(k3(ImperativeElementU));
   var useImperativeProps = monitored(function useImperativeProps2({ refElementReturn: { getElement } }) {
-    const currentImperativeProps = _2({ className: /* @__PURE__ */ new Set(), style: {}, children: null, html: null, others: {} });
+    const currentImperativeProps = _({ className: /* @__PURE__ */ new Set(), style: {}, children: null, html: null, others: {} });
     const hasClass = T2((cls) => {
       return currentImperativeProps.current.className.has(cls);
     }, []);
@@ -30389,7 +30471,7 @@
       }
     }, []);
     return {
-      imperativePropsReturn: _2({
+      imperativePropsReturn: _({
         hasClass,
         setClass,
         setStyle,
@@ -30410,7 +30492,7 @@
     return y(Tag, useMergedProps(propsStable, imperativeProps, props, { ref }));
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/util/random-id.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/util/random-id.js
   var Table = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-";
   function base64(value) {
     return Table[value];
@@ -30425,7 +30507,7 @@
     return `${prefix ?? "id-"}${random64Bits().map((n2) => base64(n2)).join("")}`;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/dom-helpers/use-portal-children.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/dom-helpers/use-portal-children.js
   var usePortalChildren = monitored(function usePortalChildren2({ target }) {
     const [pushChild, setPushChild] = useState(null);
     const [updateChild, setUpdateChild] = useState(null);
@@ -30456,7 +30538,7 @@
     const pushChild = T2((child) => {
       const randomKey = generateRandomId();
       let index = getChildren().length;
-      setChildren((prev) => [...prev, E(child, { key: randomKey, index })]);
+      setChildren((prev) => [...prev, F(child, { key: randomKey, index })]);
       return index;
     }, []);
     const updateChild = T2((index, child) => {
@@ -30465,7 +30547,7 @@
       if (key) {
         setChildren((prev) => {
           let newChildren = prev.slice();
-          newChildren.splice(index, 1, E(child, { key, index }));
+          newChildren.splice(index, 1, F(child, { key, index }));
           return newChildren;
         });
         return index;
@@ -30492,15 +30574,15 @@
     y3(() => {
       setRemoveChild((_4) => removeChild);
     }, [removeChild]);
-    return y(_, {}, children);
+    return y(k, {}, children);
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/observers/use-element-size.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/observers/use-element-size.js
   var useElementSize = monitored(function useElementSize2({ elementSizeParameters: { getObserveBox, onSizeChange }, refElementParameters }) {
     const { onElementChange, onMount, onUnmount } = refElementParameters || {};
     useEnsureStability("useElementSize", getObserveBox, onSizeChange, onElementChange, onMount, onUnmount);
     const [getSize, setSize] = usePassiveState(onSizeChange, returnNull, runImmediately);
-    const currentObserveBox = _2(void 0);
+    const currentObserveBox = _(void 0);
     const needANewObserver = T2((element, observeBox) => {
       if (element) {
         const document2 = getDocument(element);
@@ -30525,9 +30607,9 @@
     }, []);
     const { refElementReturn, ...rest } = useRefElement({
       refElementParameters: {
-        onElementChange: T2((e3, p4, r4) => {
+        onElementChange: T2((e3, p4, r5) => {
           needANewObserver(e3, getObserveBox?.());
-          onElementChange?.(e3, p4, r4);
+          onElementChange?.(e3, p4, r5);
         }, []),
         onMount,
         onUnmount
@@ -30547,7 +30629,7 @@
     };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/observers/use-has-last-focus.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/observers/use-has-last-focus.js
   var useHasLastFocus = monitored(function useHasLastFocus2(args) {
     const { refElementReturn: { getElement }, activeElementParameters: { onLastActiveElementChange, ...activeElementParameters }, hasLastFocusParameters: { onLastFocusedChanged, onLastFocusedInnerChanged, ...void1 } } = args;
     assertEmptyObject(void1);
@@ -30582,7 +30664,7 @@
     };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/observers/use-logical-direction.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/observers/use-logical-direction.js
   function capitalize(str) {
     return str[0].toUpperCase() + str.substring(1);
   }
@@ -30800,9 +30882,9 @@
     "sideways-rl": SidewaysRl
   };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/observers/use-media-query.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/observers/use-media-query.js
   var useMediaQuery = monitored(function useMediaQuery2(query, defaultGuess) {
-    const queryList = _2();
+    const queryList = _();
     const [matches2, setMatches, getMatches] = useState(defaultGuess ?? null);
     console.assert(!query || query.startsWith("("));
     y3(() => {
@@ -30822,7 +30904,7 @@
     };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/observers/use-mutation-observer.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/observers/use-mutation-observer.js
   var useMutationObserver = monitored(function useMutationObserver2({ refElementParameters, mutationObserverParameters: { attributeFilter, subtree, onChildList, characterDataOldValue, onCharacterData, onAttributes, attributeOldValue } }) {
     const { onElementChange, ...rest } = refElementParameters || {};
     if (typeof attributeFilter === "string")
@@ -30878,8 +30960,8 @@
     }, [attributeKey, attributeOldValue, characterDataOldValue, subtree]);
     const { refElementReturn, propsStable } = useRefElement({
       refElementParameters: {
-        onElementChange: useStableCallback((e3, p4, r4) => {
-          onElementChange?.(e3, p4, r4);
+        onElementChange: useStableCallback((e3, p4, r5) => {
+          onElementChange?.(e3, p4, r5);
           onNeedMutationObserverReset(e3);
         }),
         ...rest
@@ -30892,7 +30974,7 @@
     };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/observers/use-url.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/observers/use-url.js
   var useUrl = monitored(function useUrl2(onUrlChange) {
     const [getUrl, setUrl] = usePassiveState(useStableCallback(onUrlChange), T2(() => window.location.toString(), []));
     useGlobalHandler(window, "hashchange", (e3) => {
@@ -30916,22 +30998,22 @@
     }, [])];
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/preact-extensions/use-async-effect.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/preact-extensions/use-async-effect.js
   var useAsyncEffect = monitored(function useAsyncEffect2(effect, inputs, options) {
     const { syncHandler, ...rest } = useAsync(effect, { ...options, capture: null, debounce: null, throttle: null });
     p3(syncHandler, inputs);
     return rest;
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/preact-extensions/use-effect-debug.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/preact-extensions/use-effect-debug.js
   var useEffectDebug = monitored(function useEffectDebug2(effect, inputs, impl = p3) {
-    const prevInputs = _2(void 0);
+    const prevInputs = _(void 0);
     const effect2 = () => {
       const changes = [];
       if (inputs && prevInputs.current) {
-        for (let i5 = 0; i5 < Math.max(prevInputs.current.length, inputs.length); ++i5) {
-          if (prevInputs.current[i5] != inputs[i5])
-            changes[i5] = { from: prevInputs.current[i5], to: inputs[i5] };
+        for (let i4 = 0; i4 < Math.max(prevInputs.current.length, inputs.length); ++i4) {
+          if (prevInputs.current[i4] != inputs[i4])
+            changes[i4] = { from: prevInputs.current[i4], to: inputs[i4] };
         }
       }
       const ret = effect(prevInputs.current, changes);
@@ -30941,12 +31023,12 @@
     impl(effect2, inputs);
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/preact-extensions/use-layout-effect-debug.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/preact-extensions/use-layout-effect-debug.js
   var useLayoutEffectDebug = monitored(function useLayoutEffectDebug2(effect, inputs) {
     return useEffectDebug(effect, inputs, y3);
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/preact-extensions/use-persistent-state.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/preact-extensions/use-persistent-state.js
   function getFromLocalStorage(key, converter = JSON.parse, storage = localStorage) {
     try {
       const item = storage.getItem(key);
@@ -30968,7 +31050,7 @@
       debugger;
     }
   }
-  function usePersistentState(key, initialValue, fromString = JSON.parse, toString = JSON.stringify, storage = localStorage) {
+  var usePersistentState = monitored(function usePersistentState2(key, initialValue, fromString = JSON.parse, toString = JSON.stringify, storage = localStorage) {
     const [localCopy, setLocalCopy, getLocalCopy] = useState(() => (key ? getFromLocalStorage(key, fromString, storage) : null) ?? initialValue);
     const getInitialValue = useStableGetter(initialValue);
     y3(() => {
@@ -31001,23 +31083,23 @@
       return trueValue ?? localCopy;
     });
     return [localCopy, setValueWrapper, getValue];
-  }
+  });
 
-  // ../node_modules/.pnpm/preact@10.13.2/node_modules/preact/jsx-runtime/dist/jsxRuntime.module.js
+  // ../node_modules/.pnpm/preact@10.17.1/node_modules/preact/jsx-runtime/dist/jsxRuntime.module.js
   var _3 = 0;
   function o4(o5, e3, n2, t3, f4, l4) {
     var s4, u4, a4 = {};
     for (u4 in e3)
       "ref" == u4 ? s4 = e3[u4] : a4[u4] = e3[u4];
-    var i5 = { type: o5, props: a4, key: n2, ref: s4, __k: null, __: null, __b: 0, __e: null, __d: void 0, __c: null, __h: null, constructor: void 0, __v: --_3, __source: f4, __self: l4 };
+    var i4 = { type: o5, props: a4, key: n2, ref: s4, __k: null, __: null, __b: 0, __e: null, __d: void 0, __c: null, __h: null, constructor: void 0, __v: --_3, __source: f4, __self: l4 };
     if ("function" == typeof o5 && (s4 = o5.defaultProps))
       for (u4 in s4)
         void 0 === a4[u4] && (a4[u4] = s4[u4]);
-    return l.vnode && l.vnode(i5), i5;
+    return l.vnode && l.vnode(i4), i4;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/timing/use-animation-frame.js
-  var SharedAnimationFrameContext = F(null);
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/timing/use-animation-frame.js
+  var SharedAnimationFrameContext = G(null);
   var useAnimationFrame = monitored(function useAnimationFrame2({ callback }) {
     const stableCallback = useStableCallback(callback ?? noop_default);
     const hasCallback = callback != null;
@@ -31042,7 +31124,7 @@
     }, [sharedAnimationFrameContext, hasCallback]);
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@cfeb44f9a291ff24d9920344fe1b242a39668902_preact@10.1_honmjhp2a5tlns3di3ectfqoua/node_modules/preact-prop-helpers/dist/timing/use-interval.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@6f9c188cda8b2ff712b60a3b2a36224f942a3df2_preact@10.1_xjlbsvesrh6b6uksolo6nlm5hy/node_modules/preact-prop-helpers/dist/timing/use-interval.js
   var useInterval = monitored(function useInterval2({ interval, callback }) {
     const stableCallback = useStableCallback(callback);
     const getInterval = useStableGetter(interval);
@@ -31154,9 +31236,9 @@
       initialIndex = localStorageIndex;
     const { managedChildrenReturn, context: { managedChildContext } } = useManagedChildren({
       managedChildrenParameters: {
-        onChildrenMountChange: useStableCallback((m3, u4) => {
+        onChildrenMountChange: useStableCallback((m4, u4) => {
           ocmc2(void 0);
-          ocmc1?.(m3, u4);
+          ocmc1?.(m4, u4);
         }),
         onAfterChildLayoutEffect,
         onChildrenCountChange,
@@ -31197,11 +31279,11 @@
       }, []),
       isValid: isValidByChild,
       closestFit: true,
-      onIndexChange: T2((i5) => {
-        if (i5 != null) {
-          const element = getChildren().getAt(i5)?.getElement();
+      onIndexChange: T2((i4) => {
+        if (i4 != null) {
+          const element = getChildren().getAt(i4)?.getElement();
           if (element)
-            getChildren().getAt(i5)?.focusSelf(element);
+            getChildren().getAt(i4)?.focusSelf(element);
         }
       }, []),
       onClosestFit: useStableCallback((index) => {
@@ -31223,8 +31305,8 @@
         }
       })
     });
-    const changeExpandedIndex = useStableCallback((value, r4) => {
-      changeExpandedIndexLocalOnly(value, r4);
+    const changeExpandedIndex = useStableCallback((value, r5) => {
+      changeExpandedIndexLocalOnly(value, r5);
       setLocalStorageIndex(value);
     });
     const rovingTabIndexReturn = useMemoObject({
@@ -31390,25 +31472,21 @@
   });
 
   // ../dist/use-checkbox-group.js
-  var useCheckboxGroup = monitored(function useCheckboxGroup2({ linearNavigationParameters, rovingTabIndexParameters, checkboxGroupParameters: { orientation, ...void2 }, multiSelectionParameters, rearrangeableChildrenParameters, refElementParameters, sortableChildrenParameters, staggeredChildrenParameters, typeaheadNavigationParameters, ...void1 }) {
-    const { context, linearNavigationReturn, managedChildrenReturn, props, rearrangeableChildrenReturn, rovingTabIndexReturn, singleSelectionReturn, staggeredChildrenReturn, paginatedChildrenReturn, sortableChildrenReturn, typeaheadNavigationReturn, childrenHaveFocusReturn, multiSelectionReturn, ...void3 } = useCompleteListNavigation({
+  var useCheckboxGroup = monitored(function useCheckboxGroup2({ linearNavigationParameters, rovingTabIndexParameters, checkboxGroupParameters: { orientation, ...void2 }, multiSelectionParameters, refElementParameters, typeaheadNavigationParameters, ...void1 }) {
+    const { contextChildren, contextProcessing, linearNavigationReturn, managedChildrenReturn, props, rearrangeableChildrenReturn, rovingTabIndexReturn, singleSelectionReturn, typeaheadNavigationReturn, childrenHaveFocusReturn, multiSelectionReturn, refElementReturn, ...void3 } = useCompleteListNavigation({
       linearNavigationParameters: { arrowKeyDirection: orientation, ...linearNavigationParameters },
       rovingTabIndexParameters: { focusSelfParent: focus, ...rovingTabIndexParameters },
       singleSelectionParameters: { initiallySingleSelectedIndex: null, onSingleSelectedIndexChange: null, singleSelectionAriaPropName: null, singleSelectionMode: "disabled" },
       paginatedChildrenParameters: { paginationMax: null, paginationMin: null },
       multiSelectionParameters,
-      rearrangeableChildrenParameters,
       refElementParameters,
-      sortableChildrenParameters,
-      staggeredChildrenParameters,
       typeaheadNavigationParameters
     });
     const { getChildren } = managedChildrenReturn;
     const children = getChildren();
     assertEmptyObject(void1);
     assertEmptyObject(void2);
-    assertEmptyObject(void3);
-    const allIds = _2(/* @__PURE__ */ new Set());
+    const allIds = _(/* @__PURE__ */ new Set());
     const updateParentControlIds = useStableCallback((setter) => {
       setter?.(Array.from(allIds.current).join(" "));
     });
@@ -31470,10 +31548,11 @@
       await Promise.all(promises);
     }, []);
     return {
+      refElementReturn,
       linearNavigationReturn,
       childrenHaveFocusReturn,
       context: useMemoObject({
-        ...context,
+        ...contextChildren,
         checkboxGroupChildrenContext: useMemoObject({
           setUpdateIndex,
           allIds: allIds.current,
@@ -31490,11 +31569,8 @@
         })
       }),
       props,
-      staggeredChildrenReturn,
-      paginatedChildrenReturn,
       rearrangeableChildrenReturn,
       singleSelectionReturn,
-      sortableChildrenReturn,
       managedChildrenReturn,
       rovingTabIndexReturn,
       typeaheadNavigationReturn,
@@ -31502,7 +31578,7 @@
     };
   });
   var useCheckboxGroupParent = monitored(function useCheckboxGroupParent2({ context: { checkboxGroupParentContext: { setControlsSetterOnParentCheckbox, setSetParentCheckboxChecked, getPercentChecked, getTotalChecked, getTotalChildren, onCheckboxGroupParentInput }, ...context }, info, hasCurrentFocusParameters, refElementParameters, textContentParameters, multiSelectionChildParameters, singleSelectionChildParameters, ...void1 }) {
-    const { hasCurrentFocusReturn, managedChildReturn, pressParameters, textContentReturn, refElementReturn, propsChild, propsTabbable, paginatedChildReturn, rovingTabIndexChildReturn, staggeredChildReturn, singleSelectionChildReturn, multiSelectionChildReturn, ...void2 } = useCompleteListNavigationChild({
+    const { hasCurrentFocusReturn, managedChildReturn, pressParameters, textContentReturn, refElementReturn, propsChild, propsTabbable, rovingTabIndexChildReturn, singleSelectionChildReturn, multiSelectionChildReturn, ...void2 } = useCompleteListNavigationChild({
       context,
       hasCurrentFocusParameters,
       refElementParameters,
@@ -31536,18 +31612,16 @@
       hasCurrentFocusReturn,
       managedChildReturn,
       textContentReturn,
-      staggeredChildReturn,
       refElementReturn,
       propsChild: useMergedProps({ "aria-controls": ariaControls }, propsChild),
       propsTabbable,
       rovingTabIndexChildReturn,
-      paginatedChildReturn,
       singleSelectionChildReturn,
       pressParameters,
       multiSelectionChildReturn
     };
   });
-  var useCheckboxGroupChild = monitored(function useCheckboxGroupChild2({ checkboxGroupChildParameters, context, info: { focusSelf, getSortValue, index, untabbable, ...void3 }, textContentParameters, hasCurrentFocusParameters, refElementParameters, multiSelectionChildParameters: { multiSelectionDisabled, onMultiSelectChange, ...void5 }, ...void4 }) {
+  var useCheckboxGroupChild = monitored(function useCheckboxGroupChild2({ checkboxGroupChildParameters, context, info: { focusSelf, index, untabbable, ...void3 }, textContentParameters, hasCurrentFocusParameters, refElementParameters, multiSelectionChildParameters: { multiSelectionDisabled, onMultiSelectChange, ...void5 }, ...void4 }) {
     const { checkboxGroupChildrenContext: { allIds, setUpdateIndex, setTotalChildren, setTotalChecked } } = context;
     const { checked, onChangeFromParent, ...void1 } = checkboxGroupChildParameters;
     const getChecked = useStableGetter(checked);
@@ -31561,7 +31635,7 @@
       if (next)
         allIds.add(next);
       if (!!next || !!prev) {
-        setUpdateIndex((i5) => (i5 ?? 0) + 1, void 0);
+        setUpdateIndex((i4) => (i4 ?? 0) + 1, void 0);
       }
     }, []);
     p3(() => {
@@ -31574,14 +31648,13 @@
         return () => setTotalChecked((c4) => (c4 ?? 0) - 1, void 0);
       }
     }, [checked]);
-    const { hasCurrentFocusReturn, managedChildReturn, refElementReturn, textContentReturn, propsChild, propsTabbable, singleSelectionChildReturn: _singleSelectionChildReturn, staggeredChildReturn, paginatedChildReturn, rovingTabIndexChildReturn, pressParameters, multiSelectionChildReturn, ...void2 } = useCompleteListNavigationChild({
+    const { hasCurrentFocusReturn, managedChildReturn, refElementReturn, textContentReturn, propsChild, propsTabbable, singleSelectionChildReturn: _singleSelectionChildReturn, rovingTabIndexChildReturn, pressParameters, multiSelectionChildReturn, ...void2 } = useCompleteListNavigationChild({
       info: {
         checkboxChildType: "child",
         getLastUserChecked,
         getChecked,
         setCheckedFromParentInput: onChangeFromParent,
         focusSelf,
-        getSortValue,
         index,
         untabbable
       },
@@ -31605,8 +31678,6 @@
       textContentReturn,
       hasCurrentFocusReturn,
       managedChildReturn,
-      staggeredChildReturn,
-      paginatedChildReturn,
       refElementReturn,
       propsChild,
       propsTabbable,
@@ -31878,7 +31949,7 @@
   });
 
   // ../dist/use-gridlist.js
-  var useGridlist = monitored(function useGridlist2({ labelParameters, listboxParameters: { groupingType, ...void1 }, rovingTabIndexParameters, singleSelectionParameters, gridNavigationParameters, linearNavigationParameters, multiSelectionParameters, paginatedChildrenParameters, rearrangeableChildrenParameters, refElementParameters, sortableChildrenParameters, staggeredChildrenParameters, typeaheadNavigationParameters, singleSelectionDeclarativeParameters, ...void2 }) {
+  var useGridlist = monitored(function useGridlist2({ labelParameters, listboxParameters: { groupingType, ...void1 }, rovingTabIndexParameters, singleSelectionParameters, gridNavigationParameters, linearNavigationParameters, multiSelectionParameters, paginatedChildrenParameters, refElementParameters, typeaheadNavigationParameters, singleSelectionDeclarativeParameters, ...void2 }) {
     assertEmptyObject(void1);
     assertEmptyObject(void2);
     const { propsInput: propsLabelList, propsLabel: propsLabelLabel, randomIdInputReturn: { id: _gridlistId }, randomIdLabelReturn: { id: _labelId } } = useLabelSynthetic({
@@ -31891,23 +31962,20 @@
       randomIdInputParameters: { prefix: Prefices.gridlist },
       randomIdLabelParameters: { prefix: Prefices.gridlistLabel }
     });
-    const { context, props, rovingTabIndexReturn, singleSelectionReturn, ...restRet } = useCompleteGridNavigationDeclarative({
+    const { contextChildren, props, rovingTabIndexReturn, singleSelectionReturn, ...restRet } = useCompleteGridNavigationDeclarative({
       singleSelectionDeclarativeParameters,
       rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
       gridNavigationParameters,
       linearNavigationParameters,
       multiSelectionParameters,
       paginatedChildrenParameters,
-      rearrangeableChildrenParameters,
       refElementParameters,
       singleSelectionParameters,
-      sortableChildrenParameters,
-      staggeredChildrenParameters,
       typeaheadNavigationParameters
     });
-    let propsGridlist = useMergedProps(props, propsLabelList, { "aria-multiselectable": context.multiSelectionContext.multiSelectionMode != "disabled" ? "true" : void 0 });
+    let propsGridlist = useMergedProps(props, propsLabelList, { "aria-multiselectable": contextChildren.multiSelectionContext.multiSelectionMode != "disabled" ? "true" : void 0 });
     let fullContext = useMemoObject({
-      ...context,
+      ...contextChildren,
       gridlistRowContext: useMemoObject({
         //selectionLimit
       })
@@ -31921,15 +31989,15 @@
       propsGridlist.role = "grid";
     }
     return {
-      context: fullContext,
+      contextChildren: fullContext,
       rovingTabIndexReturn,
       propsGridlist,
       propsGridlistLabel: propsLabelLabel,
       ...restRet
     };
   });
-  var useGridlistRow = monitored(function useGridlistRow2({ gridlistRowParameters: { selected }, linearNavigationParameters, context: cx1, info, rovingTabIndexParameters, textContentParameters, typeaheadNavigationParameters, hasCurrentFocusParameters, singleSelectionChildParameters, multiSelectionChildParameters, gridNavigationSelectionSortableRowParameters, ...void1 }) {
-    const { context: cx2, hasCurrentFocusReturn, linearNavigationReturn, managedChildReturn, managedChildrenReturn, paginatedChildReturn, props, rovingTabIndexChildReturn, rovingTabIndexReturn, singleSelectionChildReturn, staggeredChildReturn, textContentReturn, typeaheadNavigationReturn, pressParameters, multiSelectionChildReturn, ...void2 } = useCompleteGridNavigationRow({
+  var useGridlistRow = monitored(function useGridlistRow2({ gridlistRowParameters: { selected }, linearNavigationParameters, context: cx1, info, rovingTabIndexParameters, textContentParameters, typeaheadNavigationParameters, hasCurrentFocusParameters, singleSelectionChildParameters, multiSelectionChildParameters, ...void1 }) {
+    const { context: cx2, hasCurrentFocusReturn, linearNavigationReturn, managedChildReturn, managedChildrenReturn, props, rovingTabIndexChildReturn, rovingTabIndexReturn, singleSelectionChildReturn, textContentReturn, typeaheadNavigationReturn, pressParameters, multiSelectionChildReturn, ...void2 } = useCompleteGridNavigationRow({
       linearNavigationParameters,
       info,
       context: cx1,
@@ -31938,8 +32006,7 @@
       typeaheadNavigationParameters,
       hasCurrentFocusParameters,
       singleSelectionChildParameters,
-      multiSelectionChildParameters,
-      gridNavigationSelectionSortableRowParameters
+      multiSelectionChildParameters
     });
     if (cx1.multiSelectionContext.multiSelectionMode == "disabled")
       console.assert(selected == null);
@@ -31951,12 +32018,10 @@
       linearNavigationReturn,
       managedChildrenReturn,
       managedChildReturn,
-      paginatedChildReturn,
       rovingTabIndexChildReturn,
       rovingTabIndexReturn,
       singleSelectionChildReturn,
       multiSelectionChildReturn,
-      staggeredChildReturn,
       textContentReturn,
       typeaheadNavigationReturn,
       context: cx2,
@@ -31996,7 +32061,7 @@
       randomIdInputParameters: { prefix: Prefices.listbox },
       randomIdLabelParameters: { prefix: Prefices.listboxLabel }
     });
-    let { context, props: { ...props }, rovingTabIndexReturn, singleSelectionReturn, ...restRet } = useCompleteListNavigationDeclarative({
+    let { contextChildren, contextProcessing, props: { ...props }, rovingTabIndexReturn, singleSelectionReturn, ...restRet } = useCompleteListNavigationDeclarative({
       rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
       singleSelectionDeclarativeParameters: { onSingleSelectedIndexChange, singleSelectedIndex },
       singleSelectionParameters: { singleSelectionAriaPropName: singleSelectionAriaPropName || "aria-selected", singleSelectionMode },
@@ -32008,13 +32073,15 @@
       props.role = "group";
     else if (groupingType == "with-groups") {
       props = { role: "listbox" };
-      context = null;
+      contextChildren = null;
+      contextProcessing = null;
     } else {
       props.role = "listbox";
     }
     return {
       ...restRet,
-      context,
+      contextChildren,
+      contextProcessing,
       rovingTabIndexReturn,
       propsListbox: useMergedProps(props, propsLabelList, { "aria-multiselectable": multiSelectionMode != "disabled" ? true : void 0 }),
       propsListboxLabel: propsLabelLabel
@@ -32128,7 +32195,7 @@
     if (singleSelectionDeclarativeParameters.singleSelectedIndex !== void 0) {
       console.assert(singleSelectionParameters.singleSelectionMode != "disabled");
     }
-    const { context, props, ...listNavReturn } = useCompleteListNavigationDeclarative({
+    const { contextChildren, contextProcessing, props, ...listNavReturn } = useCompleteListNavigationDeclarative({
       ...listNavParameters,
       rovingTabIndexParameters: { ...rovingTabIndexParameters, untabbable: disabled, focusSelfParent: focus },
       singleSelectionDeclarativeParameters,
@@ -32142,7 +32209,8 @@
       randomIdLabelParameters: { prefix: Prefices.toolbarLabel }
     });
     return {
-      context: useMemoObject({ ...context, toolbarContext: useMemoObject({}) }),
+      contextChildren: useMemoObject({ ...contextChildren, toolbarContext: useMemoObject({}) }),
+      contextProcessing,
       propsLabel,
       propsToolbar: useMergedProps({
         ...propsToolbar,
@@ -32205,7 +32273,7 @@
 
   // ../dist/use-menu.js
   var useMenu = monitored(function useMenu2({ dismissParameters, escapeDismissParameters, menuParameters: { openDirection, onOpen }, menuSurfaceParameters, activeElementParameters, toolbarParameters, modalParameters, ...restParams }) {
-    const { context, propsLabel: propsButtonAsMenuLabel, propsMenubar, randomIdInputReturn, rovingTabIndexReturn, ...restRet } = useMenubar({
+    const { contextChildren, propsLabel: propsButtonAsMenuLabel, propsMenubar, randomIdInputReturn, rovingTabIndexReturn, ...restRet } = useMenubar({
       toolbarParameters: { role: "menu", ...toolbarParameters },
       labelParameters: { ariaLabel: null },
       ...restParams
@@ -32268,8 +32336,8 @@
     return {
       ...restRet,
       ...restRet2,
-      context: useMemoObject({
-        ...context,
+      contextChildren: useMemoObject({
+        ...contextChildren,
         menu: useMemoObject({
           closeFromMenuItemClicked: useStableCallback((e3) => {
             dismissParameters.onDismiss(e3, "item-clicked");
@@ -32292,7 +32360,7 @@
   });
 
   // ../dist/use-notify.js
-  var NotificationProviderContext = F(null);
+  var NotificationProviderContext = G(null);
   var useNotificationProvider = monitored(function useNotificationProvider2({ targetAssertive, targetPolite }) {
     const { children: childrenPolite, pushChild: notifyPolite, portalElement: politeElement } = usePortalChildren({ target: targetPolite });
     const { children: childrenAssertive, pushChild: notifyAssertive, portalElement: assertiveElement } = usePortalChildren({ target: targetAssertive });
@@ -32304,7 +32372,7 @@
     return {
       notify,
       context: F2(() => ({ notify }), [notify]),
-      children: o4(_, { children: [childrenPolite, childrenAssertive] })
+      children: o4(k, { children: [childrenPolite, childrenAssertive] })
     };
   });
   function useNotify() {
@@ -32403,10 +32471,10 @@
   });
 
   // ../dist/use-radio-group.js
-  var useRadioGroup = monitored(function useRadioGroup2({ labelParameters, radioGroupParameters: { name, selectedValue, onSelectedValueChange, ...void2 }, rovingTabIndexParameters, linearNavigationParameters, rearrangeableChildrenParameters, sortableChildrenParameters, staggeredChildrenParameters, typeaheadNavigationParameters, refElementParameters, singleSelectionParameters: { singleSelectionMode, ...void4 }, ...void1 }) {
+  var useRadioGroup = monitored(function useRadioGroup2({ labelParameters, radioGroupParameters: { name, selectedValue, onSelectedValueChange, ...void2 }, rovingTabIndexParameters, linearNavigationParameters, typeaheadNavigationParameters, refElementParameters, singleSelectionParameters: { singleSelectionMode, ...void4 }, ...void1 }) {
     const [selectedIndex, setSelectedIndex] = useState(null);
-    const nameToIndex = _2(/* @__PURE__ */ new Map());
-    const indexToName = _2(/* @__PURE__ */ new Map());
+    const nameToIndex = _(/* @__PURE__ */ new Map());
+    const indexToName = _(/* @__PURE__ */ new Map());
     p3(() => {
       setSelectedIndex(nameToIndex.current.get(selectedValue) ?? null);
     }, [selectedValue]);
@@ -32420,7 +32488,7 @@
       randomIdLabelParameters: { prefix: Prefices.radioGroupLabel },
       randomIdInputParameters: { prefix: Prefices.radioGroup }
     });
-    const { context, props: propsGroup2, singleSelectionReturn, multiSelectionReturn, managedChildrenReturn, rovingTabIndexReturn, linearNavigationReturn, paginatedChildrenReturn, rearrangeableChildrenReturn, sortableChildrenReturn, staggeredChildrenReturn, typeaheadNavigationReturn, childrenHaveFocusReturn, ...void3 } = useCompleteListNavigationDeclarative({
+    const { contextChildren, props: propsGroup2, singleSelectionReturn, multiSelectionReturn, managedChildrenReturn, rovingTabIndexReturn, linearNavigationReturn, rearrangeableChildrenReturn, typeaheadNavigationReturn, childrenHaveFocusReturn, contextProcessing, refElementReturn, ...void3 } = useCompleteListNavigationDeclarative({
       singleSelectionDeclarativeParameters: {
         singleSelectedIndex: selectedIndex,
         onSingleSelectedIndexChange: useStableCallback((e3) => {
@@ -32433,9 +32501,6 @@
       paginatedChildrenParameters: { paginationMin: null, paginationMax: null },
       rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
       linearNavigationParameters,
-      rearrangeableChildrenParameters,
-      sortableChildrenParameters,
-      staggeredChildrenParameters,
       typeaheadNavigationParameters,
       refElementParameters
     });
@@ -32449,17 +32514,15 @@
       propsRadioGroupLabel: propsLabel,
       rovingTabIndexReturn,
       linearNavigationReturn,
-      paginatedChildrenReturn,
+      refElementReturn,
       managedChildrenReturn,
       radioGroupReturn: { selectedIndex },
       singleSelectionReturn,
       rearrangeableChildrenReturn,
-      sortableChildrenReturn,
-      staggeredChildrenReturn,
       typeaheadNavigationReturn,
       childrenHaveFocusReturn,
-      context: F2(() => ({
-        ...context,
+      contextChildren: F2(() => ({
+        ...contextChildren,
         radioContext: { name, indexToName: indexToName.current, nameToIndex: nameToIndex.current }
       }), [name])
     };
@@ -32535,7 +32598,7 @@
   // ../dist/use-slider.js
   var useSlider = monitored(function useSlider2({ sliderParameters: { max, min }, managedChildrenParameters }) {
     const { context, managedChildrenReturn } = useManagedChildren({ managedChildrenParameters });
-    const baseIdRef = _2(null);
+    const baseIdRef = _(null);
     if (baseIdRef.current === null)
       baseIdRef.current = generateRandomId(Prefices.sliderThumb);
     return {
@@ -32622,44 +32685,16 @@
       })
     };
   });
-  function fuzzyCompare(lhs, rhs) {
-    if (lhs === rhs)
-      return 0;
-    if (lhs == null || rhs == null) {
-      if (lhs == null && rhs != null)
-        return -1;
-      if (lhs != null && rhs == null)
-        return 1;
-      if (lhs === null && rhs === void 0)
-        return 1;
-      if (lhs === void 0 && rhs === null)
-        return -1;
-    } else {
-      if (lhs == rhs)
-        return 0;
-      if (lhs < rhs)
-        return -1;
-      return 1;
-    }
-    return 0;
-  }
   var naturalSectionTypes = /* @__PURE__ */ new Set(["thead", "tbody", "tfoot"]);
-  var useTableSection = monitored(function useTableSection2({ linearNavigationParameters, rovingTabIndexParameters, singleSelectionParameters, multiSelectionParameters, gridNavigationParameters, rearrangeableChildrenParameters, paginatedChildrenParameters, staggeredChildrenParameters, tableSectionParameters: { tagTableSection, location }, typeaheadNavigationParameters, context: { tableContext, ...void3 }, refElementParameters, ...void1 }) {
-    const { childrenHaveFocusReturn, context, linearNavigationReturn, managedChildrenReturn, props: { ...props }, rovingTabIndexReturn, singleSelectionReturn, multiSelectionReturn, typeaheadNavigationReturn, staggeredChildrenReturn, rearrangeableChildrenReturn, paginatedChildrenReturn, sortableChildrenReturn, ...void2 } = useCompleteGridNavigation({
+  var useTableSection = monitored(function useTableSection2({ linearNavigationParameters, rovingTabIndexParameters, singleSelectionParameters, multiSelectionParameters, gridNavigationParameters, paginatedChildrenParameters, tableSectionParameters: { tagTableSection, location }, typeaheadNavigationParameters, contextChildren: { tableContext, ...void3 }, refElementParameters, ...void1 }) {
+    const { childrenHaveFocusReturn, contextChildren, contextProcessing, refElementReturn, linearNavigationReturn, managedChildrenReturn, props: { ...props }, rovingTabIndexReturn, singleSelectionReturn, multiSelectionReturn, typeaheadNavigationReturn, rearrangeableChildrenReturn, ...void2 } = useCompleteGridNavigation({
       linearNavigationParameters,
       rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
       singleSelectionParameters: { ...singleSelectionParameters, singleSelectionMode: tableContext.singleSelectionMode },
       multiSelectionParameters: { ...multiSelectionParameters, multiSelectionMode: tableContext.multiSelectionMode },
       paginatedChildrenParameters,
-      staggeredChildrenParameters,
-      sortableChildrenParameters: {
-        compare: T2((lhs, rhs) => {
-          return fuzzyCompare(lhs?.getSortValue?.(), rhs?.getSortValue?.());
-        }, [])
-      },
       typeaheadNavigationParameters,
       gridNavigationParameters,
-      rearrangeableChildrenParameters,
       refElementParameters
     });
     if (!naturalSectionTypes.has(tagTableSection)) {
@@ -32669,7 +32704,7 @@
       if (location == "body") {
         tableContext.setSortBodyFunction(() => {
           return () => {
-            sortableChildrenReturn.sort(tableContext.getCurrentSortDirection());
+            rearrangeableChildrenReturn.sort(tableContext.getCurrentSortDirection());
           };
         });
       }
@@ -32679,20 +32714,19 @@
     assertEmptyObject(void3);
     return {
       childrenHaveFocusReturn,
-      context: {
-        ...context,
+      contextChildren: {
+        ...contextChildren,
         tableContext
       },
-      staggeredChildrenReturn,
+      contextProcessing,
+      refElementReturn,
       linearNavigationReturn,
       managedChildrenReturn,
       rovingTabIndexReturn,
       singleSelectionReturn,
       multiSelectionReturn,
       rearrangeableChildrenReturn,
-      sortableChildrenReturn,
       typeaheadNavigationReturn,
-      paginatedChildrenReturn,
       propsTableSection: props
     };
   });
@@ -32713,7 +32747,7 @@
       rovingTabIndexParameters,
       singleSelectionChildParameters,
       multiSelectionChildParameters,
-      gridNavigationSelectionSortableRowParameters: { getSortableColumnIndex: cx1.tableContext.getCurrentSortColumn },
+      // gridNavigationSelectionSortableRowParameters: { getSortableColumnIndex: cx1.tableContext.getCurrentSortColumn },
       typeaheadNavigationParameters: { noTypeahead: true, collator: null, typeaheadTimeout: Infinity, onNavigateTypeahead: null }
     });
     props.role = "row";
@@ -32779,11 +32813,11 @@
       closestFit: false,
       onClosestFit: null,
       initialIndex: null,
-      getAt: useStableCallback((i5) => {
-        return i5.getVisible() ?? false;
+      getAt: useStableCallback((i4) => {
+        return i4.getVisible() ?? false;
       }, []),
-      setAt: useStableCallback((i5, b3, n2, p4) => {
-        return i5.setVisibleIndex(n2, p4);
+      setAt: useStableCallback((i4, b4, n2, p4) => {
+        return i4.setVisibleIndex(n2, p4);
       }, []),
       isValid: returnTrue,
       onIndexChange: null
@@ -32796,7 +32830,7 @@
       randomIdInputParameters: { prefix: Prefices.tablist },
       randomIdLabelParameters: { prefix: Prefices.tablistLabel }
     });
-    const { props: listNavigationSingleSelectionProps, context, ...listNavRet1 } = useCompleteListNavigation({
+    const { props: listNavigationSingleSelectionProps, contextChildren, ...listNavRet1 } = useCompleteListNavigation({
       linearNavigationParameters: { arrowKeyDirection: orientation, ...linearNavigationParameters },
       rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
       singleSelectionParameters: {
@@ -32831,7 +32865,7 @@
         })
       }),
       contextTabs: useMemoObject({
-        ...context,
+        ...contextChildren,
         tabsContext: useMemoObject({ getTabId, getPanelId, getVisibleIndex, setSelectedIndex: changeSingleSelectedIndex })
       }),
       propsContainer: useMergedProps(listNavigationSingleSelectionProps, propsInput, {
@@ -32842,10 +32876,10 @@
       ...listNavRet1
     };
   });
-  var useTab = monitored(function useTab2({ info: { focusSelf: focusSelfParent, index, untabbable, getSortValue, ...info }, textContentParameters, pressParameters: { focusSelf: focusSelfChild, longPressThreshold, onPressingChange, ...void2 }, context, hasCurrentFocusParameters, refElementParameters, singleSelectionChildParameters, ...void3 }) {
+  var useTab = monitored(function useTab2({ info: { focusSelf: focusSelfParent, index, untabbable, ...info }, textContentParameters, pressParameters: { focusSelf: focusSelfChild, longPressThreshold, onPressingChange, ...void2 }, context, hasCurrentFocusParameters, refElementParameters, singleSelectionChildParameters, ...void3 }) {
     const { propsChild: listNavigationSingleSelectionChildProps, propsTabbable, pressParameters: { onPressSync, excludeSpace, ...void1 }, refElementReturn, ...listNavRet2 } = useCompleteListNavigationChild({
       context,
-      info: { index, focusSelf: focusSelfParent, getSortValue, untabbable, ...info },
+      info: { index, focusSelf: focusSelfParent, untabbable, ...info },
       textContentParameters,
       hasCurrentFocusParameters,
       refElementParameters,
@@ -32918,9 +32952,9 @@
 
   // ../dist/use-toasts.js
   var useToasts = monitored(function useToasts2({ managedChildrenParameters: { onChildrenMountChange: ocmu, onAfterChildLayoutEffect }, toastsParameters: { visibleCount } }) {
-    const currentIndexQueue = _2([]);
+    const currentIndexQueue = _([]);
     const getMaxVisibleCount = useStableGetter(visibleCount);
-    const nextIndexToStartAt = _2(0);
+    const nextIndexToStartAt = _(0);
     const { refElementReturn: { getElement }, propsStable } = useRefElement({ refElementParameters: {} });
     const { context, managedChildrenReturn, ..._childInfo } = useManagedChildren({ managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange: ocmu } });
     const { getChildren: getToastQueue } = managedChildrenReturn;
@@ -32928,8 +32962,8 @@
     const showHighestPriorityToast = T2(() => {
       const max = Math.min(getMaxVisibleCount(), currentIndexQueue.current.length);
       let start = nextIndexToStartAt.current;
-      for (let i5 = start; i5 < max; ++i5) {
-        const highestPriorityToast = toastQueue.getAt(currentIndexQueue.current[i5]);
+      for (let i4 = start; i4 < max; ++i4) {
+        const highestPriorityToast = toastQueue.getAt(currentIndexQueue.current[i4]);
         console.assert(!!highestPriorityToast);
         highestPriorityToast?.show();
       }
@@ -32941,7 +32975,7 @@
       showHighestPriorityToast();
     }, []);
     const onAnyToastDismissed = T2((_index) => {
-      const removalIndex = currentIndexQueue.current.findIndex((i5) => i5 == _index);
+      const removalIndex = currentIndexQueue.current.findIndex((i4) => i4 == _index);
       toastQueue.forEach((c4) => {
         c4.setNumberAheadOfMe((prev) => {
           if (prev < 0)
@@ -33016,7 +33050,7 @@
     }, []);
     const { managedChildReturn } = useManagedChild({ info: { index, focus: focus2, setNumberAheadOfMe: setNumberOfToastsAheadOfUs, show, ...info }, context });
     const resetDismissTimer = T2(() => {
-      setTriggerIndex((i5) => ++i5);
+      setTriggerIndex((i4) => ++i4);
     }, []);
     p3(() => {
       onAnyToastMounted(index);
@@ -33092,8 +33126,8 @@
     let { propsReferencer: propsTrigger, propsSource: propsPopup } = useRandomId({ randomIdParameters: { prefix: Prefices.tooltip, otherReferencerProp: tooltipSemanticType == "description" ? "aria-describedby" : "aria-labelledby" } });
     const { refElementReturn: { getElement: getTriggerElement }, propsStable: triggerRefProps } = useRefElement({ refElementParameters: {} });
     const { refElementReturn: { getElement: getPopupElement }, propsStable: popupRefProps } = useRefElement({ refElementParameters: {} });
-    let inputState = _2(null);
-    let hoverTimeoutHandle = _2(null);
+    let inputState = _(null);
+    let hoverTimeoutHandle = _(null);
     const onHoverChanged = useStableCallback((hovering, which) => {
       if (hoverTimeoutHandle.current)
         clearTimeout(hoverTimeoutHandle.current);
@@ -33219,29 +33253,37 @@
       return render(info);
     }
   }
+  function useComponentC(imperativeHandle, render, Context, info) {
+    A2(imperativeHandle, () => info);
+    if (Context) {
+      return o4(Context.Provider, { value: info.context, children: render(info) });
+    } else {
+      return render(info);
+    }
+  }
   var ContextDefaults = {
-    collator: F(null),
-    pageNavigationSize: F(0.1),
-    typeaheadTimeout: F(1e3),
-    focusSelf: F((e3) => e3.focus?.()),
-    noTypeahead: F(false),
-    getIndex: F((v4) => v4.props.index),
-    disableArrowKeys: F(false),
-    disableHomeEndKeys: F(false),
-    getWindow: F(() => globalThis.window),
-    getDocument: F(() => globalThis.document),
-    focusOpener: F((e3) => focus(e3)),
-    getText: F((e3) => e3?.textContent ?? ""),
-    singleSelectionMode: F("activation"),
-    multiSelectionMode: F("activation")
+    collator: G(null),
+    pageNavigationSize: G(0.1),
+    typeaheadTimeout: G(1e3),
+    focusSelf: G((e3) => e3.focus?.()),
+    noTypeahead: G(false),
+    getIndex: G((v4) => v4.props.index),
+    disableArrowKeys: G(false),
+    disableHomeEndKeys: G(false),
+    getWindow: G(() => globalThis.window),
+    getDocument: G(() => globalThis.document),
+    focusOpener: G((e3) => focus(e3)),
+    getText: G((e3) => e3?.textContent ?? ""),
+    singleSelectionMode: G("activation"),
+    multiSelectionMode: G("activation")
   };
   function useDefault(context, userValue) {
     const defaultValue = q2(ContextDefaults[context]);
     return userValue ?? defaultValue;
   }
-  var ParentDepthContext = F(0);
+  var ParentDepthContext = G(0);
   function useDefaultRenderPortal({ portalId, children }) {
-    const portalRef = _2(null);
+    const portalRef = _(null);
     portalRef.current ??= document.getElementById(portalId);
     if (portalRef.current)
       return z3(children, portalRef.current);
@@ -33250,7 +33292,7 @@
   }
 
   // ../dist/component/accordion.js
-  var AccordionSectionContext = F(null);
+  var AccordionSectionContext = G(null);
   var Accordion = x3(function Accordion2({ disableHomeEndKeys, initialIndex, onAfterChildLayoutEffect, onChildrenMountChange, navigatePastEnd, navigatePastStart, pageNavigationSize, localStorageKey, collator, noTypeahead, typeaheadTimeout, onChildrenCountChange, render, imperativeHandle, orientation, onNavigateLinear, onNavigateTypeahead, onElementChange, onMount, onUnmount, ...void1 }) {
     assertEmptyObject(void1);
     return useComponent(imperativeHandle, render, AccordionSectionContext, useAccordion({
@@ -33297,8 +33339,8 @@
   });
 
   // ../dist/component/checkbox-group.js
-  var UseCheckboxGroupChildContext = F(null);
-  var CheckboxGroup = x3(function CheckboxGroup2({ render, collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, onTabbableIndexChange, compare, staggered, getIndex, untabbable, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, ...void1 }) {
+  var UseCheckboxGroupChildContext = G(null);
+  var CheckboxGroup = x3(function CheckboxGroup2({ render, collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, onTabbableIndexChange, untabbable, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, ...void1 }) {
     assertEmptyObject(void1);
     return useComponent(imperativeHandle, render, UseCheckboxGroupChildContext, useCheckboxGroup({
       linearNavigationParameters: {
@@ -33311,18 +33353,9 @@
       checkboxGroupParameters: {
         orientation: orientation ?? "vertical"
       },
-      staggeredChildrenParameters: {
-        staggered: staggered || false
-      },
-      rearrangeableChildrenParameters: {
-        getIndex: useDefault("getIndex", getIndex)
-      },
       rovingTabIndexParameters: {
         onTabbableIndexChange,
         untabbable: untabbable || false
-      },
-      sortableChildrenParameters: {
-        compare
       },
       typeaheadNavigationParameters: {
         onNavigateTypeahead,
@@ -33339,7 +33372,6 @@
     index,
     focusSelf,
     untabbable,
-    getSortValue,
     imperativeHandle,
     getText,
     onCurrentFocusedChanged,
@@ -33360,8 +33392,7 @@
       info: {
         index,
         untabbable: untabbable || false,
-        focusSelf,
-        getSortValue
+        focusSelf
       },
       context,
       textContentParameters: {
@@ -33378,7 +33409,6 @@
     render,
     checked,
     onChangeFromParent,
-    getSortValue,
     untabbable,
     getText,
     focusSelf,
@@ -33402,8 +33432,7 @@
       info: {
         index,
         untabbable: untabbable || false,
-        focusSelf,
-        getSortValue
+        focusSelf
       },
       textContentParameters: {
         getText: useDefault("getText", getText)
@@ -33429,12 +33458,12 @@
       const { children, ...labelProps } = makePropsLabel(info);
       if (labelPosition == "wrapping") {
         const input = y(tagInput, inputProps);
-        const label = y(tagLabel, { ...labelProps, children: o4(_, { children: [input, children] }) });
-        return o4(_, { children: label });
+        const label = y(tagLabel, { ...labelProps, children: o4(k, { children: [input, children] }) });
+        return o4(k, { children: label });
       } else if (labelPosition == "separate") {
         const input = y(tagInput, inputProps);
         const label = y(tagLabel, { children, ...labelProps });
-        return o4(_, { children: [input, label] });
+        return o4(k, { children: [input, label] });
       } else {
         console.assert(!!inputProps["aria-label"]);
         return y(tagInput, inputProps);
@@ -33514,11 +33543,13 @@
   });
 
   // ../dist/component/gridlist.js
-  var GridlistContext = F(null);
-  var GridlistRowContext = F(null);
-  var Gridlist = function Gridlist2({ collator, disableHomeEndKeys, noTypeahead, onTabbableIndexChange, groupingType, typeaheadTimeout, singleSelectedIndex, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, pageNavigationSize, untabbable, paginationMax, paginationMin, staggered, compare, getIndex, onTabbableColumnChange, ariaLabel, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, render, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, singleSelectionAriaPropName, singleSelectionMode, ...void1 }) {
+  var GridlistContext = G(null);
+  var GridlistRowContext = G(null);
+  var GridlistRowsContext = G(null);
+  var ProcessedChildContext = G(null);
+  var Gridlist = x3(function Gridlist2({ collator, disableHomeEndKeys, noTypeahead, onTabbableIndexChange, groupingType, typeaheadTimeout, singleSelectedIndex, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, pageNavigationSize, untabbable, paginationMax, paginationMin, onTabbableColumnChange, ariaLabel, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, render, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, singleSelectionAriaPropName, singleSelectionMode, ...void1 }) {
     assertEmptyObject(void1);
-    return useComponent(imperativeHandle, render, GridlistContext, useGridlist({
+    return useComponentC(imperativeHandle, render, GridlistContext, useGridlist({
       linearNavigationParameters: {
         onNavigateLinear,
         disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
@@ -33530,7 +33561,6 @@
         onTabbableIndexChange,
         untabbable: untabbable || false
       },
-      staggeredChildrenParameters: { staggered: staggered || false },
       typeaheadNavigationParameters: {
         onNavigateTypeahead,
         collator: useDefault("collator", collator),
@@ -33546,12 +33576,6 @@
       labelParameters: {
         ariaLabel
       },
-      rearrangeableChildrenParameters: {
-        getIndex: useDefault("getIndex", getIndex)
-      },
-      sortableChildrenParameters: {
-        compare
-      },
       paginatedChildrenParameters: {
         paginationMax,
         paginationMin
@@ -33561,7 +33585,31 @@
       singleSelectionDeclarativeParameters: { onSingleSelectedIndexChange, singleSelectedIndex },
       refElementParameters: { onElementChange, onMount, onUnmount }
     }));
-  };
+  });
+  var GridlistRows = x3(function GridlistRows2({ render, adjust, children, compare, getIndex, imperativeHandle, onAfterChildLayoutEffect, onChildrenCountChange, onChildrenMountChange, onRearranged, paginationMax, paginationMin, staggered }) {
+    return useComponent(imperativeHandle, render, ProcessedChildContext, useCompleteGridNavigationRows({
+      context: q2(GridlistRowsContext),
+      managedChildrenParameters: {
+        onAfterChildLayoutEffect,
+        onChildrenCountChange,
+        onChildrenMountChange
+      },
+      paginatedChildrenParameters: {
+        paginationMax,
+        paginationMin
+      },
+      rearrangeableChildrenParameters: {
+        adjust,
+        children,
+        compare,
+        getIndex: useDefault("getIndex", getIndex),
+        onRearranged
+      },
+      staggeredChildrenParameters: {
+        staggered: staggered || false
+      }
+    }));
+  });
   var GridlistRow = x3(function GridlistRowU({ index, collator, untabbable, navigatePastEnd, navigatePastStart, noTypeahead, onTabbableIndexChange, selected, typeaheadTimeout, getText, render, initiallyTabbedIndex, onNavigateTypeahead, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, ...void1 }) {
     const context = useContextWithWarning(GridlistContext, "gridlist");
     console.assert(context != null, `This GridlistRow is not contained within a Gridlist`);
@@ -33594,12 +33642,11 @@
         noTypeahead: useDefault("noTypeahead", noTypeahead),
         typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
       },
-      gridNavigationSelectionSortableRowParameters: { getSortableColumnIndex: returnZero },
       singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false },
       multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false, initiallyMultiSelected: initiallyMultiSelected || false, onMultiSelectChange }
     }));
   });
-  var GridlistChild = x3(function GridlistChild2({ index, colSpan, focusSelf, untabbable, getText, onPressSync, longPressThreshold, onPressingChange, render, getSortValue, imperativeHandle, info: subInfo }) {
+  var GridlistChild = x3(function GridlistChild2({ index, colSpan, focusSelf, untabbable, getText, onPressSync, longPressThreshold, onPressingChange, render, imperativeHandle, info: subInfo }) {
     const context = useContextWithWarning(GridlistRowContext, "gridlist row");
     console.assert(context != null, `This GridlistChild is not contained within a GridlistRow that is contained within a Gridlist`);
     const defaultFocusSelf = useStableCallback((e3) => {
@@ -33609,8 +33656,7 @@
       info: {
         index,
         untabbable: untabbable || false,
-        focusSelf: focusSelf ?? defaultFocusSelf,
-        getSortValue
+        focusSelf: focusSelf ?? defaultFocusSelf
       },
       context,
       gridNavigationCellParameters: { colSpan: colSpan ?? 1 },
@@ -33625,7 +33671,7 @@
   function overwriteWithWarning(a4, ...t3) {
     return a4;
   }
-  var HeadingLevelContext = F(0);
+  var HeadingLevelContext = G(0);
   var Heading = x3(function Heading2({ children, heading, tag, ...props }) {
     const headingLevelBeforeUs = q2(HeadingLevelContext);
     const newHeadingLevel = headingLevelBeforeUs + 1;
@@ -33637,15 +33683,15 @@
         overwriteWithWarning("Heading", props, "aria-level", `${newHeadingLevel}`);
       }
     }
-    return o4(_, { children: o4(HeadingReset, { newLevel: headingLevelBeforeUs + 1, children: [y(tag, props, heading), children] }) });
+    return o4(k, { children: o4(HeadingReset, { newLevel: headingLevelBeforeUs + 1, children: [y(tag, props, heading), children] }) });
   });
   var HeadingReset = x3(function HeadingReset2({ newLevel, children }) {
     return o4(HeadingLevelContext.Provider, { value: newLevel - 1, children });
   });
 
   // ../dist/component/listbox.js
-  var ListboxContext = F(null);
-  var ListboxGroupContext = F(null);
+  var ListboxContext = G(null);
+  var ListboxGroupContext = G(null);
   var GroupedListbox = x3(function GroupedListbox2({ ariaLabel, orientation, render, onElementChange, onMount, onUnmount }) {
     const info = useListbox({
       labelParameters: { ariaLabel },
@@ -33656,12 +33702,12 @@
         pageNavigationSize: 1,
         onNavigateLinear: null
       },
-      staggeredChildrenParameters: { staggered: false },
+      //staggeredChildrenParameters: { staggered: false },
       paginatedChildrenParameters: { paginationMax: null, paginationMin: null },
       listboxParameters: { groupingType: "with-groups", orientation: orientation ?? "vertical" },
-      rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", void 0) },
+      // rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", undefined) },
       rovingTabIndexParameters: { onTabbableIndexChange: null, untabbable: false },
-      sortableChildrenParameters: { compare: null },
+      // sortableChildrenParameters: { compare: null },
       typeaheadNavigationParameters: {
         collator: null,
         noTypeahead: true,
@@ -33675,14 +33721,14 @@
     });
     return o4(ListboxGroupContext.Provider, { value: info, children: render(info) });
   });
-  var Listbox = x3(function Listbox2({ ariaLabel, collator, compare, disableHomeEndKeys, getIndex, singleSelectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSingleSelectedIndexChange, onTabbableIndexChange, staggered, pageNavigationSize, paginationMax, paginationMin, untabbable, typeaheadTimeout, orientation, onNavigateLinear, onNavigateTypeahead, onElementChange, onMount, onUnmount, render, imperativeHandle, singleSelectionAriaPropName, singleSelectionMode, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, ...void1 }) {
+  var Listbox = x3(function Listbox2({ ariaLabel, collator, disableHomeEndKeys, singleSelectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSingleSelectedIndexChange, onTabbableIndexChange, pageNavigationSize, untabbable, typeaheadTimeout, orientation, onNavigateLinear, onNavigateTypeahead, onElementChange, onMount, onUnmount, render, imperativeHandle, singleSelectionAriaPropName, singleSelectionMode, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, paginationMax, paginationMin, ...void1 }) {
     const listboxGroupInfo = q2(ListboxGroupContext);
     assertEmptyObject(void1);
-    return useComponent(imperativeHandle, render, ListboxContext, useListbox({
+    return useComponentC(imperativeHandle, render, ListboxContext, useListbox({
       labelParameters: { ariaLabel },
-      staggeredChildrenParameters: {
-        staggered: staggered || false
-      },
+      //  staggeredChildrenParameters: {
+      //      staggered: staggered || false
+      //  },
       linearNavigationParameters: {
         onNavigateLinear,
         navigatePastEnd: navigatePastEnd ?? "wrap",
@@ -33698,12 +33744,12 @@
         groupingType: listboxGroupInfo == null ? "without-groups" : "group",
         orientation: orientation ?? "vertical"
       },
-      rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
+      //   rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
       rovingTabIndexParameters: {
         onTabbableIndexChange,
         untabbable: untabbable ?? false
       },
-      sortableChildrenParameters: { compare },
+      //    sortableChildrenParameters: { compare },
       typeaheadNavigationParameters: {
         onNavigateTypeahead,
         collator: useDefault("collator", collator),
@@ -33716,7 +33762,7 @@
       multiSelectionParameters: { multiSelectionAriaPropName, multiSelectionMode: multiSelectionMode || "disabled", onSelectionChange }
     }));
   });
-  var ListboxItem = x3(function ListboxItem2({ getText, untabbable, index, render, getSortValue, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, imperativeHandle, multiSelectionDisabled, singleSelectionDisabled, multiSelected, onMultiSelectedChange, ...void1 }) {
+  var ListboxItem = x3(function ListboxItem2({ getText, untabbable, index, render, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, imperativeHandle, multiSelectionDisabled, singleSelectionDisabled, multiSelected, onMultiSelectedChange, ...void1 }) {
     const context = useContextWithWarning(ListboxContext, "listbox");
     console.assert(context != null, `This ListboxItem is not contained within a Listbox`);
     const focusSelfDefault = T2((e3) => {
@@ -33727,8 +33773,7 @@
       info: {
         index,
         untabbable: untabbable || false,
-        focusSelf: focusSelf ?? focusSelfDefault,
-        getSortValue
+        focusSelf: focusSelf ?? focusSelfDefault
       },
       context,
       listboxParameters: {},
@@ -33743,22 +33788,19 @@
   });
 
   // ../dist/component/menu.js
-  var MenuItemContext = F(null);
-  function Menu({ collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, orientation, singleSelectionAriaPropName, singleSelectionMode, untabbable, active, onDismiss, onElementChange, onMount, onUnmount, openDirection, onTabbableIndexChange, compare, getIndex, singleSelectedIndex, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, pageNavigationSize, parentDepth, disabled, staggered, onOpen, onNavigateLinear, onNavigateTypeahead, getDocument: getDocument2, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, render, imperativeHandle, ...void1 }) {
+  var MenuItemContext = G(null);
+  function Menu({ collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, orientation, singleSelectionAriaPropName, singleSelectionMode, untabbable, active, onDismiss, onElementChange, onMount, onUnmount, openDirection, onTabbableIndexChange, singleSelectedIndex, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, pageNavigationSize, parentDepth, disabled, onOpen, onNavigateLinear, onNavigateTypeahead, getDocument: getDocument2, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, render, imperativeHandle, ...void1 }) {
     const defaultParentDepth = q2(ParentDepthContext);
     let myDepth = (parentDepth ?? defaultParentDepth) + 1;
     untabbable ||= false;
     assertEmptyObject(void1);
-    return o4(ParentDepthContext.Provider, { value: myDepth, children: useComponent(imperativeHandle, render, MenuItemContext, useMenu({
+    return o4(ParentDepthContext.Provider, { value: myDepth, children: useComponentC(imperativeHandle, render, MenuItemContext, useMenu({
       linearNavigationParameters: {
         onNavigateLinear,
         disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
         pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize),
         navigatePastEnd: navigatePastEnd ?? "wrap",
         navigatePastStart: navigatePastStart ?? "wrap"
-      },
-      staggeredChildrenParameters: {
-        staggered: staggered || false
       },
       escapeDismissParameters: { parentDepth: parentDepth || 1 },
       dismissParameters: { onDismiss },
@@ -33769,12 +33811,6 @@
         onActiveElementChange,
         onLastActiveElementChange,
         onWindowFocusedChange
-      },
-      rearrangeableChildrenParameters: {
-        getIndex: useDefault("getIndex", getIndex)
-      },
-      sortableChildrenParameters: {
-        compare
       },
       menuParameters: {
         openDirection,
@@ -33810,7 +33846,7 @@
       }
     })) });
   }
-  function MenuItem({ index, untabbable, getSortValue, onPress, getText, role, focusSelf, onPressingChange, render, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, ...void1 }) {
+  function MenuItem({ index, untabbable, onPress, getText, role, focusSelf, onPressingChange, render, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, ...void1 }) {
     const context = useContextWithWarning(MenuItemContext, "menu");
     const defaultFocusSelf = T2((e3) => focus(e3), []);
     assertEmptyObject(void1);
@@ -33818,8 +33854,7 @@
       info: {
         index,
         untabbable: untabbable || false,
-        focusSelf: focusSelf ?? defaultFocusSelf,
-        getSortValue
+        focusSelf: focusSelf ?? defaultFocusSelf
       },
       context,
       textContentParameters: {
@@ -33840,8 +33875,8 @@
   }
 
   // ../dist/component/menubar.js
-  var MenubarItemContext = F(null);
-  var Menubar = x3(function Menubar2({ render, collator, disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, staggered, noTypeahead, untabbable, onTabbableIndexChange, compare, getIndex, disabled, singleSelectedIndex, onSingleSelectedIndexChange, typeaheadTimeout, role, ariaLabel, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, singleSelectionAriaPropName, singleSelectionMode, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, ...void1 }) {
+  var MenubarItemContext = G(null);
+  var Menubar = x3(function Menubar2({ render, collator, disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, noTypeahead, untabbable, onTabbableIndexChange, disabled, singleSelectedIndex, onSingleSelectedIndexChange, typeaheadTimeout, role, ariaLabel, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, singleSelectionAriaPropName, singleSelectionMode, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, ...void1 }) {
     assertEmptyObject(void1);
     const info = useMenubar({
       linearNavigationParameters: {
@@ -33866,15 +33901,6 @@
         noTypeahead: useDefault("noTypeahead", noTypeahead),
         typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
       },
-      rearrangeableChildrenParameters: {
-        getIndex: useDefault("getIndex", getIndex)
-      },
-      staggeredChildrenParameters: {
-        staggered: staggered || false
-      },
-      sortableChildrenParameters: {
-        compare
-      },
       labelParameters: {
         ariaLabel
       },
@@ -33894,7 +33920,7 @@
       refElementParameters: { onElementChange, onMount, onUnmount }
     });
     A2(imperativeHandle, () => info);
-    return o4(MenubarItemContext.Provider, { value: info.context, children: render(info) });
+    return o4(MenubarItemContext.Provider, { value: info.contextChildren, children: render(info) });
   });
 
   // ../dist/component/progress.js
@@ -33921,11 +33947,11 @@
   });
 
   // ../dist/component/radio-group.js
-  var RadioContext = F(null);
-  var RadioGroup = x3(function RadioGroup2({ render, name, collator, disableHomeEndKeys, arrowKeyDirection, noTypeahead, typeaheadTimeout, ariaLabel, compare, staggered, getIndex, navigatePastEnd, navigatePastStart, selectedValue, untabbable, onTabbableIndexChange, onNavigateLinear, onNavigateTypeahead, pageNavigationSize, onElementChange, onMount, onUnmount, imperativeHandle, onSelectedValueChange, singleSelectionMode, ...void1 }) {
+  var RadioContext = G(null);
+  var RadioGroup = x3(function RadioGroup2({ render, name, collator, disableHomeEndKeys, arrowKeyDirection, noTypeahead, typeaheadTimeout, ariaLabel, navigatePastEnd, navigatePastStart, selectedValue, untabbable, onTabbableIndexChange, onNavigateLinear, onNavigateTypeahead, pageNavigationSize, onElementChange, onMount, onUnmount, imperativeHandle, onSelectedValueChange, singleSelectionMode, ...void1 }) {
     untabbable ??= false;
     assertEmptyObject(void1);
-    return useComponent(imperativeHandle, render, RadioContext, useRadioGroup({
+    return useComponentC(imperativeHandle, render, RadioContext, useRadioGroup({
       singleSelectionParameters: { singleSelectionMode: singleSelectionMode ?? "focus" },
       linearNavigationParameters: {
         onNavigateLinear,
@@ -33935,10 +33961,7 @@
         disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
         pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
       },
-      staggeredChildrenParameters: { staggered: staggered || false },
       labelParameters: { ariaLabel },
-      rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
-      sortableChildrenParameters: { compare },
       radioGroupParameters: { name, selectedValue, onSelectedValueChange },
       rovingTabIndexParameters: {
         onTabbableIndexChange,
@@ -33961,7 +33984,7 @@
     return useComponent(imperativeHandle, render, null, useRadio({
       radioParameters: { value },
       checkboxLikeParameters: { disabled: disabled ?? false },
-      info: { index, untabbable: untabbable || false, getSortValue: getValue },
+      info: { index, untabbable: untabbable || false },
       context,
       labelParameters: { ariaLabel, labelPosition, tagInput, tagLabel },
       textContentParameters: { getText: useDefault("getText", getText) },
@@ -33972,7 +33995,7 @@
   });
 
   // ../dist/component/slider.js
-  var SliderThumbContext = F(null);
+  var SliderThumbContext = G(null);
   function Slider({ max, min, onAfterChildLayoutEffect, onChildrenMountChange, render, imperativeHandle, onChildrenCountChange, ...void1 }) {
     assertEmptyObject(void1);
     return useComponent(imperativeHandle, render, SliderThumbContext, useSlider({
@@ -33990,9 +34013,9 @@
   }
 
   // ../dist/component/table.js
-  var TableContext = F(null);
-  var TableSectionContext = F(null);
-  var TableRowContext = F(null);
+  var TableContext = G(null);
+  var TableSectionContext = G(null);
+  var TableRowContext = G(null);
   var Table2 = x3(function Table3({ ariaLabel, singleSelectionMode, multiSelectionMode, tagTable, imperativeHandle, render, ...void1 }) {
     assertEmptyObject(void1);
     return useComponent(imperativeHandle, render, TableContext, useTable({
@@ -34002,14 +34025,11 @@
       multiSelectionParameters: { multiSelectionMode: multiSelectionMode || "disabled" }
     }));
   });
-  var TableSection = x3(function TableSection2({ disableHomeEndKeys, getIndex, initiallySingleSelectedIndex, untabbable, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, onTabbableColumnChange, onTabbableIndexChange, pageNavigationSize, paginationMax, paginationMin, staggered, render, location, imperativeHandle, multiSelectionAriaPropName, onSelectionChange, singleSelectionAriaPropName, onNavigateLinear, collator, noTypeahead, onNavigateTypeahead, typeaheadTimeout, tagTableSection, onElementChange, onMount, onUnmount, ...void1 }) {
+  var TableSection = x3(function TableSection2({ disableHomeEndKeys, initiallySingleSelectedIndex, untabbable, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, onTabbableColumnChange, onTabbableIndexChange, pageNavigationSize, paginationMax, paginationMin, render, location, imperativeHandle, multiSelectionAriaPropName, onSelectionChange, singleSelectionAriaPropName, onNavigateLinear, collator, noTypeahead, onNavigateTypeahead, typeaheadTimeout, tagTableSection, onElementChange, onMount, onUnmount, ...void1 }) {
     assertEmptyObject(void1);
-    return useComponent(imperativeHandle, render, TableSectionContext, useTableSection({
+    return useComponentC(imperativeHandle, render, TableSectionContext, useTableSection({
       gridNavigationParameters: {
         onTabbableColumnChange
-      },
-      staggeredChildrenParameters: {
-        staggered: staggered || false
       },
       typeaheadNavigationParameters: {
         onNavigateTypeahead,
@@ -34028,9 +34048,6 @@
         paginationMax,
         paginationMin
       },
-      rearrangeableChildrenParameters: {
-        getIndex: useDefault("getIndex", getIndex)
-      },
       rovingTabIndexParameters: {
         onTabbableIndexChange,
         untabbable: untabbable || false
@@ -34044,7 +34061,7 @@
         multiSelectionAriaPropName,
         onSelectionChange
       },
-      context: useContextWithWarning(TableContext, "table"),
+      contextChildren: useContextWithWarning(TableContext, "table"),
       tableSectionParameters: {
         tagTableSection,
         location
@@ -34111,14 +34128,13 @@
   });
 
   // ../dist/component/tabs.js
-  var TabsContext = F(null);
-  var TabPanelsContext = F(null);
-  var Tabs = x3(function Tabs2({ ariaLabel, collator, compare, disableHomeEndKeys, getIndex, initiallySingleSelectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSingleSelectedIndexChange, onTabbableIndexChange, orientation, staggered, pageNavigationSize, localStorageKey, singleSelectionMode, untabbable, typeaheadTimeout, role, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, render, ...void1 }) {
+  var TabsContext = G(null);
+  var TabPanelsContext = G(null);
+  var Tabs = x3(function Tabs2({ ariaLabel, collator, disableHomeEndKeys, initiallySingleSelectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSingleSelectedIndexChange, onTabbableIndexChange, orientation, pageNavigationSize, localStorageKey, singleSelectionMode, untabbable, typeaheadTimeout, role, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, render, ...void1 }) {
     untabbable ??= false;
     assertEmptyObject(void1);
     const info = useTabs({
       labelParameters: { ariaLabel },
-      staggeredChildrenParameters: { staggered: staggered || false },
       linearNavigationParameters: {
         onNavigateLinear,
         disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
@@ -34126,13 +34142,11 @@
         navigatePastStart: navigatePastStart ?? "wrap",
         pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
       },
-      rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
       rovingTabIndexParameters: {
         onTabbableIndexChange,
         untabbable
       },
       singleSelectionParameters: { initiallySingleSelectedIndex, onSingleSelectedIndexChange, singleSelectionMode: singleSelectionMode || "focus" },
-      sortableChildrenParameters: { compare },
       tabsParameters: {
         orientation,
         role,
@@ -34150,7 +34164,7 @@
     A2(imperativeHandle, () => info);
     return o4(TabsContext.Provider, { value: contextTabs, children: o4(TabPanelsContext.Provider, { value: contextPanels, children: render(info) }) });
   });
-  function Tab({ focusSelf, untabbable, index, getText, render, longPressThreshold, onPressingChange, getSortValue, imperativeHandle, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, singleSelectionDisabled, info: uinfo, ...void1 }) {
+  function Tab({ focusSelf, untabbable, index, getText, render, longPressThreshold, onPressingChange, imperativeHandle, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, singleSelectionDisabled, info: uinfo, ...void1 }) {
     assertEmptyObject(void1);
     const context = useContextWithWarning(TabsContext, "tabs");
     console.assert(context != null, `This Tab is not contained within a Tabs component`);
@@ -34162,7 +34176,6 @@
         index,
         untabbable: untabbable || false,
         focusSelf: focusSelf ?? focusSelfDefault,
-        getSortValue,
         ...uinfo
       },
       context,
@@ -34183,7 +34196,7 @@
   }
 
   // ../dist/component/toasts.js
-  var ToastContext = F(null);
+  var ToastContext = G(null);
   function Toasts({ onAfterChildLayoutEffect, onChildrenMountChange, render, visibleCount, imperativeHandle, onChildrenCountChange, ...void1 }) {
     assertEmptyObject(void1);
     return useComponent(imperativeHandle, render, ToastContext, useToasts({
@@ -34213,12 +34226,10 @@
   }
 
   // ../dist/component/toolbar.js
-  var UntabbableContext = F(false);
-  var ToolbarContext = F(null);
-  var Toolbar = x3(function ToolbarU({ render, role, collator, disableHomeEndKeys, disabled, compare, getIndex, navigatePastEnd, navigatePastStart, pageNavigationSize, singleSelectedIndex, onSingleSelectedIndexChange, orientation, noTypeahead, onTabbableIndexChange, typeaheadTimeout, staggered, ariaLabel, imperativeHandle, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, singleSelectionAriaPropName, singleSelectionMode, untabbable, onNavigateLinear, onNavigateTypeahead, onElementChange, onMount, onUnmount }, ref) {
-    return useComponent(imperativeHandle, render, ToolbarContext, useToolbar({
-      rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
-      sortableChildrenParameters: { compare },
+  var UntabbableContext = G(false);
+  var ToolbarContext = G(null);
+  var Toolbar = x3(function ToolbarU({ render, role, collator, disableHomeEndKeys, disabled, navigatePastEnd, navigatePastStart, pageNavigationSize, singleSelectedIndex, onSingleSelectedIndexChange, orientation, noTypeahead, onTabbableIndexChange, typeaheadTimeout, ariaLabel, imperativeHandle, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, singleSelectionAriaPropName, singleSelectionMode, untabbable, onNavigateLinear, onNavigateTypeahead, onElementChange, onMount, onUnmount }, ref) {
+    return useComponentC(imperativeHandle, render, ToolbarContext, useToolbar({
       linearNavigationParameters: {
         onNavigateLinear,
         disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
@@ -34231,7 +34242,6 @@
         disabled: disabled || false,
         role: role ?? "toolbar"
       },
-      staggeredChildrenParameters: { staggered: staggered || false },
       rovingTabIndexParameters: { onTabbableIndexChange, untabbable: untabbable || false },
       typeaheadNavigationParameters: {
         onNavigateTypeahead,
@@ -34246,7 +34256,7 @@
       refElementParameters: { onElementChange, onMount, onUnmount }
     }));
   });
-  function ToolbarChild({ index, render, focusSelf, getSortValue, getText, disabledProp, untabbable, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, imperativeHandle, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, ...void1 }) {
+  function ToolbarChild({ index, render, focusSelf, getText, disabledProp, untabbable, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, imperativeHandle, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, ...void1 }) {
     const context = useContextWithWarning(ToolbarContext, "toolbar");
     const focusSelfDefault = T2((e3) => {
       focus(e3);
@@ -34259,8 +34269,7 @@
       info: {
         index,
         focusSelf,
-        untabbable: untabbable || false,
-        getSortValue
+        untabbable: untabbable || false
       },
       textContentParameters: { getText: useDefault("getText", getText) },
       hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged },
@@ -34310,7 +34319,7 @@
         tagButton: "button",
         open,
         disabled,
-        render: (info) => /* @__PURE__ */ o4(Heading, { ...info.propsHeader, tag: "div", heading: /* @__PURE__ */ o4(_, { children: [
+        render: (info) => /* @__PURE__ */ o4(Heading, { ...info.propsHeader, tag: "div", heading: /* @__PURE__ */ o4(k, { children: [
           /* @__PURE__ */ o4("span", { children: heading }),
           /* @__PURE__ */ o4("button", { ...info.propsHeaderButton, children: "Toggle open" })
         ] }), children: /* @__PURE__ */ o4("p", { ...info.propsBody, hidden: !info.accordionSectionReturn.expanded, children: body }) })
@@ -34318,7 +34327,7 @@
     );
   });
   function Blurb() {
-    return /* @__PURE__ */ o4(_, { children: [
+    return /* @__PURE__ */ o4(k, { children: [
       /* @__PURE__ */ o4("p", { children: [
         /* @__PURE__ */ o4("a", { href: "https://www.w3.org/WAI/ARIA/apg/patterns/accordion/", children: "In accordance with the ARIA guidelines for Accordion patterns," }),
         " this widget supports the following:"
@@ -34371,21 +34380,21 @@
   }
   function Demo() {
     const [count, setCount] = h3(5);
-    return /* @__PURE__ */ o4(_, { children: [
+    return /* @__PURE__ */ o4(k, { children: [
       /* @__PURE__ */ o4(Blurb, {}),
       /* @__PURE__ */ o4(Code, {}),
       /* @__PURE__ */ o4("label", { children: [
         /* @__PURE__ */ o4("input", { type: "number", min: 0, value: count, onInput: (e3) => setCount(e3.currentTarget.valueAsNumber) }),
         " # of accordion sections"
       ] }),
-      /* @__PURE__ */ o4(DemoAccordion, { children: /* @__PURE__ */ o4(_, { children: Array.from(function* () {
+      /* @__PURE__ */ o4(DemoAccordion, { children: /* @__PURE__ */ o4(k, { children: Array.from(function* () {
         yield /* @__PURE__ */ o4(DemoAccordionSection, { index: 0, heading: "Accordion section #0", body: "Body content #0", disabled: false });
         yield /* @__PURE__ */ o4(DemoAccordionSection, { index: 1, heading: "Accordion section #1", body: "Body content #1", disabled: false });
         yield /* @__PURE__ */ o4(DemoAccordionSection, { index: 2, heading: "Accordion section #2 (disabled)", body: "Body content #2", disabled: true });
         yield /* @__PURE__ */ o4(DemoAccordionSection, { index: 3, heading: "Accordion section #3 (forced open)", body: "Body content #3", disabled: false, open: true });
         yield /* @__PURE__ */ o4(DemoAccordionSection, { index: 4, heading: "Accordion section #4 (forced closed)", body: "Body content #4", disabled: false, open: false });
-        for (let i5 = 5; i5 < count; ++i5) {
-          yield /* @__PURE__ */ o4(DemoAccordionSection, { index: i5, heading: `Accordion section #${i5}`, body: `BodyContent #${i5}`, disabled: false });
+        for (let i4 = 5; i4 < count; ++i4) {
+          yield /* @__PURE__ */ o4(DemoAccordionSection, { index: i4, heading: `Accordion section #${i4}`, body: `BodyContent #${i4}`, disabled: false });
         }
       }()).slice(0, count) }) })
     ] });
@@ -34393,7 +34402,7 @@
 
   // demos/button.tsx
   function Blurb2() {
-    return /* @__PURE__ */ o4(_, { children: [
+    return /* @__PURE__ */ o4(k, { children: [
       /* @__PURE__ */ o4("p", { children: [
         /* @__PURE__ */ o4("a", { href: "https://www.w3.org/WAI/ARIA/apg/patterns/button/", children: "In accordance with the ARIA guidelines for Button patterns," }),
         " this widget supports the following:"
@@ -34435,7 +34444,7 @@
   }
   function Demo2() {
     const [pressed, setPressed] = useState(false);
-    return /* @__PURE__ */ o4(_, { children: [
+    return /* @__PURE__ */ o4(k, { children: [
       /* @__PURE__ */ o4(Blurb2, {}),
       /* @__PURE__ */ o4(Code2, {}),
       /* @__PURE__ */ o4(DemoButton, { disabled: false, tag: "button" }),
@@ -34451,7 +34460,7 @@
           pressed,
           onPressSync: (e3) => setPressed(e3[EventDetail].pressed),
           render: (info) => {
-            return /* @__PURE__ */ o4(_, { children: /* @__PURE__ */ o4("button", { ...info.props, children: `Toggle button (${pressed ? "pressed" : "unpressed"})` }) });
+            return /* @__PURE__ */ o4(k, { children: /* @__PURE__ */ o4("button", { ...info.props, children: `Toggle button (${pressed ? "pressed" : "unpressed"})` }) });
           }
         }
       )
@@ -34476,11 +34485,11 @@
               tagButton: Tag,
               onPressSync: progressInfo.asyncHandlerReturn.syncHandler,
               render: (info) => {
-                let progressBar = /* @__PURE__ */ o4(_, { children: [
+                let progressBar = /* @__PURE__ */ o4(k, { children: [
                   /* @__PURE__ */ o4("label", { ...progressInfo.propsProgressLabel, children: "Async handler progress" }),
                   /* @__PURE__ */ o4("progress", { ...progressInfo.propsProgressIndicator })
                 ] });
-                return /* @__PURE__ */ o4(_, { children: [
+                return /* @__PURE__ */ o4(k, { children: [
                   /* @__PURE__ */ o4(Tag, { ...info.props, children: `${Tag} ${disabled ? ` disabled (${disabled == "soft" ? "soft" : "hard"})` : ""}` }),
                   progressInfo.asyncHandlerReturn.pending && progressBar
                 ] });
@@ -34495,7 +34504,7 @@
   // demos/checkbox-group.tsx
   function DemoCheckbox({ index }) {
     const [checked, setChecked] = useState(false);
-    const ref = _2(null);
+    const ref = _(null);
     return /* @__PURE__ */ o4(
       CheckboxGroupChild,
       {
@@ -34506,7 +34515,6 @@
           await new Promise((resolve) => setTimeout(resolve, Math.random() * 2e3));
           setChecked(checked2);
         },
-        getSortValue: returnNull,
         render: (info) => {
           return /* @__PURE__ */ o4("div", { children: /* @__PURE__ */ o4(
             Checkbox,
@@ -34537,7 +34545,7 @@
     );
   }
   function Blurb3() {
-    return /* @__PURE__ */ o4(_, { children: [
+    return /* @__PURE__ */ o4(k, { children: [
       /* @__PURE__ */ o4("p", { children: [
         "Checkbox groups are an alternative to multi-select lists. There is no role of ",
         /* @__PURE__ */ o4("code", { children: "checkboxgroup" }),
@@ -34597,7 +34605,7 @@
   function Demo3() {
     const [count, setCount] = useState(5);
     const [pending, setPending] = useState(false);
-    return /* @__PURE__ */ o4(_, { children: [
+    return /* @__PURE__ */ o4(k, { children: [
       /* @__PURE__ */ o4(Blurb3, {}),
       /* @__PURE__ */ o4(Code3, {}),
       /* @__PURE__ */ o4("label", { children: [
@@ -34614,15 +34622,14 @@
           {
             orientation: "vertical",
             render: (info2) => {
-              const ref = _2(null);
+              const ref = _(null);
               return /* @__PURE__ */ o4("div", { ...info2.props, ...{
-                children: /* @__PURE__ */ o4(_, { children: [
+                children: /* @__PURE__ */ o4(k, { children: [
                   /* @__PURE__ */ o4(
                     CheckboxGroupParent,
                     {
                       index: 0,
                       focusSelf: () => ref.current?.checkboxLikeReturn.focusSelf(),
-                      getSortValue: returnNull,
                       render: (info3) => /* @__PURE__ */ o4(
                         Checkbox,
                         {
@@ -34649,9 +34656,9 @@
                       )
                     }
                   ),
-                  /* @__PURE__ */ o4("div", { style: { display: "flex", flexDirection: "column" }, children: /* @__PURE__ */ o4(_, { children: Array.from(function* () {
-                    for (let i5 = 0; i5 < count; ++i5) {
-                      yield /* @__PURE__ */ o4(DemoCheckbox, { index: i5 + 1 }, i5);
+                  /* @__PURE__ */ o4("div", { style: { display: "flex", flexDirection: "column" }, children: /* @__PURE__ */ o4(k, { children: Array.from(function* () {
+                    for (let i4 = 0; i4 < count; ++i4) {
+                      yield /* @__PURE__ */ o4(DemoCheckbox, { index: i4 + 1 }, i4);
                     }
                   }()) }) })
                 ] })
@@ -34665,7 +34672,7 @@
 
   // demos/checkbox.tsx
   function Blurb4() {
-    return /* @__PURE__ */ o4(_, { children: [
+    return /* @__PURE__ */ o4(k, { children: [
       /* @__PURE__ */ o4("p", { children: [
         /* @__PURE__ */ o4("a", { href: "https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/", children: "In accordance with the ARIA guidelines for Checkbox patterns," }),
         " this widget supports the following:"
@@ -34718,10 +34725,10 @@
   function Demo4() {
     const [checked, setChecked] = useState(false);
     const [disabled, setDisabled] = useState(false);
-    return /* @__PURE__ */ o4(_, { children: [
+    return /* @__PURE__ */ o4(k, { children: [
       /* @__PURE__ */ o4(Blurb4, {}),
       /* @__PURE__ */ o4(Code4, {}),
-      /* @__PURE__ */ o4(Checkbox, { checked: disabled, onCheckedChange: (e3) => setDisabled(e3[EventDetail].checked), ariaLabel: null, labelPosition: "separate", tagInput: "input", tagLabel: "label", render: (info) => /* @__PURE__ */ o4(_, { children: [
+      /* @__PURE__ */ o4(Checkbox, { checked: disabled, onCheckedChange: (e3) => setDisabled(e3[EventDetail].checked), ariaLabel: null, labelPosition: "separate", tagInput: "input", tagLabel: "label", render: (info) => /* @__PURE__ */ o4(k, { children: [
         /* @__PURE__ */ o4("input", { ...info.propsInput }),
         /* @__PURE__ */ o4("label", { ...info.propsLabel, children: "Disabled" })
       ] }) }),
@@ -34774,7 +34781,7 @@
 
   // demos/dialog.tsx
   function Blurb5() {
-    return /* @__PURE__ */ o4(_, { children: [
+    return /* @__PURE__ */ o4(k, { children: [
       /* @__PURE__ */ o4("p", { children: [
         /* @__PURE__ */ o4("a", { href: "https://www.w3.org/WAI/ARIA/apg/patterns/dialogmodal/", children: "In accordance with the ARIA guidelines for Modal Dialog patterns," }),
         " this widget supports the following:"
@@ -34817,7 +34824,7 @@
   }
   function Demo5() {
     const [open, setOpen] = useState(false);
-    return /* @__PURE__ */ o4(_, { children: [
+    return /* @__PURE__ */ o4(k, { children: [
       /* @__PURE__ */ o4(Blurb5, {}),
       /* @__PURE__ */ o4(Code5, {}),
       /* @__PURE__ */ o4("div", { children: /* @__PURE__ */ o4(
@@ -34836,7 +34843,7 @@
           },
           ariaLabel: null,
           render: (info) => {
-            return /* @__PURE__ */ o4(_, { children: [
+            return /* @__PURE__ */ o4(k, { children: [
               /* @__PURE__ */ o4("button", { ...info.propsSource, onClick: () => setOpen((o5) => !o5), children: "Open dialog" }),
               useDefaultRenderPortal({
                 portalId: "portal",
@@ -34855,7 +34862,7 @@
 
   // demos/gridlist.tsx
   function Blurb6() {
-    return /* @__PURE__ */ o4(_, { children: [
+    return /* @__PURE__ */ o4(k, { children: [
       /* @__PURE__ */ o4("p", { children: [
         "Because Listboxes are not allowed to contain interactive content, a Gridlist is semantically a list that ",
         /* @__PURE__ */ o4("a", { href: "https://www.w3.org/WAI/ARIA/apg/patterns/grid/", children: "complies with the ARIA pattern for grids" }),
@@ -34899,8 +34906,8 @@
     } });
   }
   function DemoGridlistChild2({ tabbable }) {
-    const cb = _2(null);
-    const [b3, setB] = useState(false);
+    const cb = _(null);
+    const [b4, setB] = useState(false);
     return /* @__PURE__ */ o4(
       GridlistChild,
       {
@@ -34918,11 +34925,11 @@
               labelPosition: "separate",
               tagInput: "input",
               tagLabel: "label",
-              checked: b3,
+              checked: b4,
               disabled: false,
               onCheckedChange: (checked) => setB(getEventDetail(checked).checked),
               render: (infoCheckbox) => {
-                return /* @__PURE__ */ o4(_, { children: /* @__PURE__ */ o4("input", { ...useMergedProps(infoCheckbox.propsInput, info.propsTabbable, info.propsPress) }) });
+                return /* @__PURE__ */ o4(k, { children: /* @__PURE__ */ o4("input", { ...useMergedProps(infoCheckbox.propsInput, info.propsTabbable, info.propsPress) }) });
               }
             }
           ) });
@@ -34933,7 +34940,7 @@
   function Demo6() {
     const [count, setCount] = useState(5);
     const [selectedIndex, setSelectedIndex] = useState(null);
-    return /* @__PURE__ */ o4(_, { children: [
+    return /* @__PURE__ */ o4(k, { children: [
       /* @__PURE__ */ o4(Blurb6, {}),
       /* @__PURE__ */ o4(Code6, {}),
       /* @__PURE__ */ o4("label", { children: [
@@ -34951,19 +34958,19 @@
           onSingleSelectedIndexChange: (e3) => setSelectedIndex(e3[EventDetail].selectedIndex),
           render: (infoGridlist) => {
             infoGridlist.rovingTabIndexReturn.getTabbableIndex();
-            return /* @__PURE__ */ o4(_, { children: [
+            return /* @__PURE__ */ o4(k, { children: [
               /* @__PURE__ */ o4("label", { ...infoGridlist.propsGridlistLabel, children: "Gridlist demo" }),
               /* @__PURE__ */ o4("ul", { ...infoGridlist.propsGridlist, children: infoGridlist.rearrangeableChildrenReturn.useRearrangedChildren(Array.from(function* () {
-                for (let i5 = 0; i5 < count; ++i5) {
+                for (let i4 = 0; i4 < count; ++i4) {
                   yield /* @__PURE__ */ o4(
                     GridlistRow,
                     {
                       selected: null,
-                      index: i5,
+                      index: i4,
                       render: (info) => {
                         return /* @__PURE__ */ o4("li", { ...info.props, children: [
-                          /* @__PURE__ */ o4(DemoGridlistChild1, { row: i5 }),
-                          i5 != 2 && /* @__PURE__ */ o4(DemoGridlistChild2, { tabbable: info.rovingTabIndexChildReturn.tabbable })
+                          /* @__PURE__ */ o4(DemoGridlistChild1, { row: i4 }),
+                          i4 != 2 && /* @__PURE__ */ o4(DemoGridlistChild2, { tabbable: info.rovingTabIndexChildReturn.tabbable })
                         ] });
                       }
                     }
@@ -34995,7 +35002,7 @@
     );
   });
   function Blurb7() {
-    return /* @__PURE__ */ o4(_, { children: [
+    return /* @__PURE__ */ o4(k, { children: [
       /* @__PURE__ */ o4("p", { children: [
         /* @__PURE__ */ o4("a", { href: "https://www.w3.org/WAI/ARIA/apg/patterns/listbox/", children: "In accordance with the ARIA guidelines for Listbox patterns," }),
         " this widget supports the following:"
@@ -35052,7 +35059,7 @@
   }
   function Demo7() {
     const [count, setCount] = useState(5);
-    return /* @__PURE__ */ o4(_, { children: [
+    return /* @__PURE__ */ o4(k, { children: [
       /* @__PURE__ */ o4(Blurb7, {}),
       /* @__PURE__ */ o4(Code7, {}),
       /* @__PURE__ */ o4("label", { children: [
@@ -35068,11 +35075,11 @@
           orientation: "vertical",
           multiSelectionMode: "activation",
           render: (info) => {
-            return /* @__PURE__ */ o4(_, { children: [
+            return /* @__PURE__ */ o4(k, { children: [
               /* @__PURE__ */ o4("label", { ...info.propsListboxLabel }),
               /* @__PURE__ */ o4("ul", { ...info.propsListbox, children: Array.from(function* () {
-                for (let i5 = 0; i5 < count; ++i5) {
-                  yield /* @__PURE__ */ o4(DemoListItem, { index: i5 }, i5);
+                for (let i4 = 0; i4 < count; ++i4) {
+                  yield /* @__PURE__ */ o4(DemoListItem, { index: i4 }, i4);
                 }
               }()) })
             ] });
@@ -35098,7 +35105,7 @@
     );
   });
   function Blurb8() {
-    return /* @__PURE__ */ o4(_, { children: [
+    return /* @__PURE__ */ o4(k, { children: [
       /* @__PURE__ */ o4("p", { children: [
         /* @__PURE__ */ o4("a", { href: "https://www.w3.org/WAI/ARIA/apg/patterns/listbox/", children: "In accordance with the ARIA guidelines for Listbox patterns," }),
         " this widget supports the following:"
@@ -35146,11 +35153,11 @@
         onSingleSelectedIndexChange: (e3) => setSelectedIndex(e3[EventDetail].selectedIndex),
         singleSelectionAriaPropName: "aria-selected",
         render: (info) => {
-          return /* @__PURE__ */ o4(_, { children: [
+          return /* @__PURE__ */ o4(k, { children: [
             /* @__PURE__ */ o4("label", { ...info.propsListboxLabel, children: label }),
             /* @__PURE__ */ o4("ol", { ...info.propsListbox, children: Array.from(function* () {
-              for (let i5 = 0; i5 < count; ++i5) {
-                yield /* @__PURE__ */ o4(DemoListItem3, { index: i5 }, i5);
+              for (let i4 = 0; i4 < count; ++i4) {
+                yield /* @__PURE__ */ o4(DemoListItem3, { index: i4 }, i4);
               }
             }()) })
           ] });
@@ -35163,7 +35170,7 @@
   }
   function Demo8() {
     const [count, setCount] = useState(5);
-    return /* @__PURE__ */ o4(_, { children: [
+    return /* @__PURE__ */ o4(k, { children: [
       /* @__PURE__ */ o4(Blurb8, {}),
       /* @__PURE__ */ o4(Code8, {}),
       /* @__PURE__ */ o4("label", { children: [
@@ -35177,7 +35184,7 @@
           orientation: "vertical",
           ariaLabel: null,
           render: (info) => {
-            return /* @__PURE__ */ o4(_, { children: [
+            return /* @__PURE__ */ o4(k, { children: [
               /* @__PURE__ */ o4("label", { ...info.propsListboxLabel, children: "Single-select listbox demo with groups" }),
               /* @__PURE__ */ o4("div", { ...info.propsListbox, children: [
                 /* @__PURE__ */ o4(ListboxDemo, { count, label: "Group #0" }),
@@ -35205,7 +35212,7 @@
     );
   }
   function Blurb9() {
-    return /* @__PURE__ */ o4(_, { children: [
+    return /* @__PURE__ */ o4(k, { children: [
       /* @__PURE__ */ o4("p", { children: [
         /* @__PURE__ */ o4("a", { href: "https://www.w3.org/WAI/ARIA/apg/patterns/listbox/", children: "In accordance with the ARIA guidelines for Listbox patterns," }),
         " this widget supports the following:"
@@ -35237,7 +35244,7 @@
   function Demo9() {
     const [count, setCount] = useState(5);
     const [open, setOpen] = useState(false);
-    return /* @__PURE__ */ o4(_, { children: [
+    return /* @__PURE__ */ o4(k, { children: [
       /* @__PURE__ */ o4(Blurb9, {}),
       /* @__PURE__ */ o4(Code9, {}),
       /* @__PURE__ */ o4("label", { children: [
@@ -35253,15 +35260,15 @@
           active: open,
           openDirection: "down",
           render: (info) => {
-            return /* @__PURE__ */ o4(_, { children: [
+            return /* @__PURE__ */ o4(k, { children: [
               /* @__PURE__ */ o4("button", { ...info.propsTrigger, onClick: () => setOpen((o5) => !o5), children: "Menu trigger" }),
               useDefaultRenderPortal({
                 portalId: "portal",
                 children: /* @__PURE__ */ o4("div", { ...info.propsSurface, hidden: !open, children: [
                   /* @__PURE__ */ o4("div", { ...info.propsSentinel }),
                   /* @__PURE__ */ o4("ul", { ...info.propsTarget, children: Array.from(function* () {
-                    for (let i5 = 0; i5 < count; ++i5) {
-                      yield /* @__PURE__ */ o4("div", { children: /* @__PURE__ */ o4(DemoListItem5, { index: i5 }, i5) });
+                    for (let i4 = 0; i4 < count; ++i4) {
+                      yield /* @__PURE__ */ o4("div", { children: /* @__PURE__ */ o4(DemoListItem5, { index: i4 }, i4) });
                     }
                   }()) }),
                   /* @__PURE__ */ o4("div", { ...info.propsSentinel })
@@ -35287,7 +35294,7 @@
         tagLabel: "label",
         ariaLabel: null,
         render: (info) => {
-          return /* @__PURE__ */ o4(_, { children: [
+          return /* @__PURE__ */ o4(k, { children: [
             /* @__PURE__ */ o4("input", { ...info.propsInput, name: "radio-demo" }),
             /* @__PURE__ */ o4("label", { ...info.propsLabel, children: [
               "Radio #",
@@ -35299,7 +35306,7 @@
     ) });
   });
   function Blurb10() {
-    return /* @__PURE__ */ o4(_, { children: [
+    return /* @__PURE__ */ o4(k, { children: [
       /* @__PURE__ */ o4("p", { children: [
         /* @__PURE__ */ o4("a", { href: "https://www.w3.org/WAI/ARIA/apg/patterns/radiobutton/", children: "In accordance with the ARIA guidelines for Radio Button patterns," }),
         " this widget supports the following:"
@@ -35342,7 +35349,7 @@
   function Demo10() {
     const [selectedValue, setSelectedValue] = useState(null);
     const [count, setCount] = useState(5);
-    return /* @__PURE__ */ o4(_, { children: [
+    return /* @__PURE__ */ o4(k, { children: [
       /* @__PURE__ */ o4(Blurb10, {}),
       /* @__PURE__ */ o4(Code10, {}),
       /* @__PURE__ */ o4("label", { children: [
@@ -35360,11 +35367,11 @@
             setSelectedValue(e3[EventDetail].selectedValue);
           },
           render: (info) => {
-            return /* @__PURE__ */ o4(_, { children: [
+            return /* @__PURE__ */ o4(k, { children: [
               /* @__PURE__ */ o4("label", { ...info.propsRadioGroupLabel, children: "Radio group demo" }),
               /* @__PURE__ */ o4("div", { ...info.propsRadioGroup, children: Array.from(function* () {
-                for (let i5 = 0; i5 < count; ++i5) {
-                  yield /* @__PURE__ */ o4(DemoRadioButton, { index: i5 }, i5);
+                for (let i4 = 0; i4 < count; ++i4) {
+                  yield /* @__PURE__ */ o4(DemoRadioButton, { index: i4 }, i4);
                 }
               }()) })
             ] });
@@ -35394,7 +35401,7 @@
     );
   }
   function Blurb11() {
-    return /* @__PURE__ */ o4(_, { children: [
+    return /* @__PURE__ */ o4(k, { children: [
       /* @__PURE__ */ o4("p", { children: [
         /* @__PURE__ */ o4("a", { href: "https://www.w3.org/WAI/ARIA/apg/patterns/listbox/", children: "In accordance with the ARIA guidelines for Listbox patterns," }),
         " this widget supports the following:"
@@ -35421,7 +35428,7 @@
   }
   function Demo11() {
     const [count, setCount] = useState(5);
-    return /* @__PURE__ */ o4(_, { children: [
+    return /* @__PURE__ */ o4(k, { children: [
       /* @__PURE__ */ o4(Blurb11, {}),
       /* @__PURE__ */ o4(Code11, {}),
       /* @__PURE__ */ o4("label", { children: [
@@ -35434,9 +35441,9 @@
           min: 0,
           max: 10,
           render: (info) => {
-            return /* @__PURE__ */ o4(_, { children: Array.from(function* () {
-              for (let i5 = 0; i5 < count; ++i5) {
-                yield /* @__PURE__ */ o4("div", { children: /* @__PURE__ */ o4(DemoSliderThumb, { index: i5 }, i5) });
+            return /* @__PURE__ */ o4(k, { children: Array.from(function* () {
+              for (let i4 = 0; i4 < count; ++i4) {
+                yield /* @__PURE__ */ o4("div", { children: /* @__PURE__ */ o4(DemoSliderThumb, { index: i4 }, i4) });
               }
             }()) });
           }
@@ -35447,7 +35454,7 @@
 
   // demos/table.tsx
   function Blurb12() {
-    return /* @__PURE__ */ o4(_, { children: [
+    return /* @__PURE__ */ o4(k, { children: [
       /* @__PURE__ */ o4("p", { children: [
         "This is an implementation of an interactive data table that complies with ",
         /* @__PURE__ */ o4("a", { href: "https://www.w3.org/WAI/ARIA/apg/patterns/table/", children: "the ARIA guidelines for Table patterns" }),
@@ -35527,9 +35534,9 @@
     );
   }
   function DemoTableCell({ index, header }) {
-    const r4 = _2(Math.random());
+    const r5 = _(Math.random());
     if (header) {
-      const ref = _2(null);
+      const ref = _(null);
       const text = `Header #${index}`;
       return /* @__PURE__ */ o4(
         TableCell,
@@ -35551,15 +35558,15 @@
         case 0:
           return /* @__PURE__ */ o4(DemoInput, { index });
         default:
-          return /* @__PURE__ */ o4(TableCell, { focusSelf: (e3) => e3.focus(), tagTableCell: "td", index, getSortValue: useStableGetter(r4.current), render: (info) => {
-            return /* @__PURE__ */ o4("td", { ...info.propsFocus, ...info.propsCell, children: r4.current.toString() });
+          return /* @__PURE__ */ o4(TableCell, { focusSelf: (e3) => e3.focus(), tagTableCell: "td", index, getSortValue: useStableGetter(r5.current), render: (info) => {
+            return /* @__PURE__ */ o4("td", { ...info.propsFocus, ...info.propsCell, children: r5.current.toString() });
           } });
       }
     }
   }
   function Demo12() {
     const [count, setCount] = useState(5);
-    return /* @__PURE__ */ o4(_, { children: [
+    return /* @__PURE__ */ o4(k, { children: [
       /* @__PURE__ */ o4(Blurb12, {}),
       /* @__PURE__ */ o4(Code12, {}),
       /* @__PURE__ */ o4("label", { children: [
@@ -35573,7 +35580,7 @@
           multiSelectionMode: "activation",
           tagTable: "table",
           render: (infoTable) => {
-            return /* @__PURE__ */ o4(_, { children: [
+            return /* @__PURE__ */ o4(k, { children: [
               /* @__PURE__ */ o4("label", { ...infoTable.propsLabel, children: "Table demo" }),
               /* @__PURE__ */ o4("table", { ...infoTable.propsTable, children: [
                 /* @__PURE__ */ o4(
@@ -35607,12 +35614,12 @@
                     multiSelectionAriaPropName: "aria-selected",
                     render: (infoSection) => {
                       return /* @__PURE__ */ o4("tbody", { ...infoSection.propsTableSection, children: infoSection.rearrangeableChildrenReturn.useRearrangedChildren(Array.from(function* () {
-                        for (let i5 = 0; i5 < count; ++i5) {
+                        for (let i4 = 0; i4 < count; ++i4) {
                           yield /* @__PURE__ */ o4(
                             TableRow,
                             {
                               tagTableRow: "tr",
-                              index: i5,
+                              index: i4,
                               render: (infoRow) => {
                                 return /* @__PURE__ */ o4("tr", { ...infoRow.props, children: [
                                   /* @__PURE__ */ o4(DemoTableCell, { index: 0 }, 0),
@@ -35621,7 +35628,7 @@
                                 ] });
                               }
                             },
-                            i5
+                            i4
                           );
                         }
                       }())) });
@@ -35638,7 +35645,7 @@
 
   // demos/tabs.tsx
   function Blurb13() {
-    return /* @__PURE__ */ o4(_, { children: [
+    return /* @__PURE__ */ o4(k, { children: [
       /* @__PURE__ */ o4("p", { children: [
         /* @__PURE__ */ o4("a", { href: "https://www.w3.org/WAI/ARIA/apg/patterns/tabpanel/", children: "In accordance with the ARIA guidelines for Tab and Tab Panel patterns," }),
         " this widget supports the following:"
@@ -35661,7 +35668,7 @@
   }
   function Demo13() {
     const [count, setCount] = useState(5);
-    return /* @__PURE__ */ o4(_, { children: [
+    return /* @__PURE__ */ o4(k, { children: [
       /* @__PURE__ */ o4(Blurb13, {}),
       /* @__PURE__ */ o4(Code13, {}),
       /* @__PURE__ */ o4("label", { children: [
@@ -35674,16 +35681,16 @@
           ariaLabel: null,
           orientation: "horizontal",
           render: (info) => {
-            return /* @__PURE__ */ o4(_, { children: [
+            return /* @__PURE__ */ o4(k, { children: [
               /* @__PURE__ */ o4("label", { ...info.propsLabel, children: "Tabs example" }),
               /* @__PURE__ */ o4("ul", { ...info.propsContainer, style: { display: "flex" }, children: Array.from(function* () {
-                for (let i5 = 0; i5 < count; ++i5) {
-                  yield /* @__PURE__ */ o4(DemoTab, { i: i5 });
+                for (let i4 = 0; i4 < count; ++i4) {
+                  yield /* @__PURE__ */ o4(DemoTab, { i: i4 });
                 }
               }()) }),
               /* @__PURE__ */ o4("div", { children: Array.from(function* () {
-                for (let i5 = 0; i5 < count; ++i5) {
-                  yield /* @__PURE__ */ o4(DemoTabPanel, { i: i5 });
+                for (let i4 = 0; i4 < count; ++i4) {
+                  yield /* @__PURE__ */ o4(DemoTabPanel, { i: i4 });
                 }
               }()) })
             ] });
@@ -35692,29 +35699,29 @@
       ) })
     ] });
   }
-  var DemoTab = x3(function DemoTab2({ i: i5 }) {
-    return /* @__PURE__ */ o4(Tab, { focusSelf: (e3) => e3.focus(), index: i5, render: (info) => /* @__PURE__ */ o4("li", { ...info.props, style: { marginLeft: "2em" }, children: [
+  var DemoTab = x3(function DemoTab2({ i: i4 }) {
+    return /* @__PURE__ */ o4(Tab, { focusSelf: (e3) => e3.focus(), index: i4, render: (info) => /* @__PURE__ */ o4("li", { ...info.props, style: { marginLeft: "2em" }, children: [
       "Tab #",
-      i5,
+      i4,
       " (offset: ",
       info.singleSelectionChildReturn.singleSelectedOffset ?? "null",
       ") ",
       info.singleSelectionChildReturn.singleSelected && "(visible)"
-    ] }), getSortValue: returnZero }, i5);
+    ] }), getSortValue: returnZero }, i4);
   });
-  var DemoTabPanel = x3(function DemoTabPanel2({ i: i5 }) {
-    return /* @__PURE__ */ o4(TabPanel, { index: i5, render: (info) => /* @__PURE__ */ o4("div", { ...info.props, hidden: !info.tabPanelReturn.visible, children: [
+  var DemoTabPanel = x3(function DemoTabPanel2({ i: i4 }) {
+    return /* @__PURE__ */ o4(TabPanel, { index: i4, render: (info) => /* @__PURE__ */ o4("div", { ...info.props, hidden: !info.tabPanelReturn.visible, children: [
       "Tab panel #",
-      i5,
+      i4,
       " (offset: ",
       info.tabPanelReturn.visibleOffset ?? "null",
       ")"
-    ] }) }, i5);
+    ] }) }, i4);
   });
 
   // demos/toast.tsx
   function Blurb14() {
-    return /* @__PURE__ */ o4(_, { children: [
+    return /* @__PURE__ */ o4(k, { children: [
       /* @__PURE__ */ o4("p", { children: /* @__PURE__ */ o4("a", { href: "https://www.w3.org/WAI/ARIA/apg/patterns/alert/", children: "Toasts (aka snackbars) are implemented using the Alert pattern." }) }),
       /* @__PURE__ */ o4("ul", { children: [
         /* @__PURE__ */ o4("li", { children: "Pushing a toasts causes its contents to be shown visibly (and audibly with a screen reader)" }),
@@ -35740,18 +35747,18 @@
     return /* @__PURE__ */ o4("code", { children: `` });
   }
   function Demo14() {
-    const currentIndex = _2(0);
+    const currentIndex = _(0);
     const [toasts, setToasts] = useState([]);
     const pushToast = T2(() => {
       const index = currentIndex.current;
       currentIndex.current += 1;
-      const c4 = /* @__PURE__ */ o4(_, { children: [
+      const c4 = /* @__PURE__ */ o4(k, { children: [
         "This the toast with an index of ",
         index,
         "."
       ] });
       const nt = /* @__PURE__ */ o4(Toast, { children: c4, index, render: ({ toastReturn: { dismiss, showing, dismissed, numberOfToastsAheadOfUs } }) => {
-        const c5 = /* @__PURE__ */ o4(_, { children: [
+        const c5 = /* @__PURE__ */ o4(k, { children: [
           "This the toast with an index of ",
           index,
           ". (#",
@@ -35766,7 +35773,7 @@
       }, timeout: null }, index);
       setToasts((t3) => [...t3, nt]);
     }, []);
-    return /* @__PURE__ */ o4(_, { children: [
+    return /* @__PURE__ */ o4(k, { children: [
       /* @__PURE__ */ o4(Blurb14, {}),
       /* @__PURE__ */ o4(Code14, {}),
       /* @__PURE__ */ o4("button", { onClick: pushToast, children: "Push a toast" }),
@@ -35802,7 +35809,7 @@
     );
   });
   function Blurb15() {
-    return /* @__PURE__ */ o4(_, { children: [
+    return /* @__PURE__ */ o4(k, { children: [
       /* @__PURE__ */ o4("p", { children: [
         /* @__PURE__ */ o4("a", { href: "https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/", children: "In accordance with the ARIA guidelines for Toolbar patterns," }),
         " this widget supports the following:"
@@ -35828,7 +35835,7 @@
   }
   function Demo15() {
     const [count, setCount] = useState(5);
-    return /* @__PURE__ */ o4(_, { children: [
+    return /* @__PURE__ */ o4(k, { children: [
       /* @__PURE__ */ o4(Blurb15, {}),
       /* @__PURE__ */ o4(Code15, {}),
       /* @__PURE__ */ o4("label", { children: [
@@ -35844,11 +35851,11 @@
           singleSelectionMode: "activation",
           multiSelectionMode: "disabled",
           ariaLabel: null,
-          render: (info) => /* @__PURE__ */ o4(_, { children: [
+          render: (info) => /* @__PURE__ */ o4(k, { children: [
             /* @__PURE__ */ o4("label", { ...info.propsLabel, children: "Toolbar demo" }),
             /* @__PURE__ */ o4("div", { ...info.propsToolbar, children: Array.from(function* () {
-              for (let i5 = 0; i5 < count; ++i5) {
-                yield /* @__PURE__ */ o4(DemoListItem6, { index: i5 }, i5);
+              for (let i4 = 0; i4 < count; ++i4) {
+                yield /* @__PURE__ */ o4(DemoListItem6, { index: i4 }, i4);
               }
             }()) })
           ] })
@@ -35859,7 +35866,7 @@
 
   // demos/tooltip.tsx
   function Blurb16() {
-    return /* @__PURE__ */ o4(_, { children: [
+    return /* @__PURE__ */ o4(k, { children: [
       /* @__PURE__ */ o4("p", { children: [
         /* @__PURE__ */ o4("a", { href: "https://www.w3.org/WAI/ARIA/apg/patterns/tooltip/", children: "Tooltips have yet to be well defined in many areas" }),
         ", but this implementation aims to support common use cases:"
@@ -35894,7 +35901,7 @@
     const [tooltipStatusButton, setTooltipStatusButton] = h3(null);
     const { propsStable, refElementReturn } = useRefElement({ refElementParameters: {} });
     const { pressReturn, props } = usePress({ pressParameters: { allowRepeatPresses: false, excludeEnter: null, excludePointer: null, excludeSpace: null, focusSelf: (e3) => e3.focus(), longPressThreshold: 1e3, onPressingChange: null, onPressSync: () => alert("Button clicked") }, refElementReturn });
-    return /* @__PURE__ */ o4(_, { children: [
+    return /* @__PURE__ */ o4(k, { children: [
       /* @__PURE__ */ o4(Blurb16, {}),
       /* @__PURE__ */ o4(Code16, {}),
       /* @__PURE__ */ o4("div", { children: [
@@ -35906,7 +35913,7 @@
             onStatus: setTooltipStatusText,
             hoverDelay: 500,
             render: (info) => {
-              return /* @__PURE__ */ o4(_, { children: [
+              return /* @__PURE__ */ o4(k, { children: [
                 /* @__PURE__ */ o4("span", { tabIndex: 0, ...info.propsTrigger, children: "Tooltip-triggering text that is hoverable and focusable: " }),
                 useDefaultRenderPortal({
                   portalId: "portal",
@@ -35928,7 +35935,7 @@
             usesLongPress: true,
             longPress: pressReturn.longPress,
             render: (info) => {
-              return /* @__PURE__ */ o4(_, { children: [
+              return /* @__PURE__ */ o4(k, { children: [
                 /* @__PURE__ */ o4("button", { ...useMergedProps(info.propsTrigger, propsStable, props), children: "Button with a tooltip " }),
                 useDefaultRenderPortal({
                   portalId: "portal",
@@ -35970,7 +35977,7 @@
     ] });
   };
   requestAnimationFrame(() => {
-    B(/* @__PURE__ */ o4(Component, {}), document.getElementById("root"));
+    D(/* @__PURE__ */ o4(Component, {}), document.getElementById("root"));
   });
 })();
 /*! Bundled license information:

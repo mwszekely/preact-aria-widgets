@@ -2,7 +2,7 @@ import { createContext } from "preact";
 import { assertEmptyObject, focus, memo, useStableCallback } from "preact-prop-helpers";
 import { useContextWithWarning } from "../props.js";
 import { useTable, useTableCell, useTableRow, useTableSection } from "../use-table.js";
-import { useComponent, useDefault } from "./util.js";
+import { useComponent, useComponentC, useDefault } from "./util.js";
 const TableContext = createContext(null);
 const TableSectionContext = createContext(null);
 const TableRowContext = createContext(null);
@@ -15,14 +15,11 @@ export const Table = memo(function Table({ ariaLabel, singleSelectionMode, multi
         multiSelectionParameters: { multiSelectionMode: multiSelectionMode || "disabled" },
     }));
 });
-export const TableSection = memo(function TableSection({ disableHomeEndKeys, getIndex, initiallySingleSelectedIndex, untabbable, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, onTabbableColumnChange, onTabbableIndexChange, pageNavigationSize, paginationMax, paginationMin, staggered, render, location, imperativeHandle, multiSelectionAriaPropName, onSelectionChange, singleSelectionAriaPropName, onNavigateLinear, collator, noTypeahead, onNavigateTypeahead, typeaheadTimeout, tagTableSection, onElementChange, onMount, onUnmount, ...void1 }) {
+export const TableSection = memo(function TableSection({ disableHomeEndKeys, initiallySingleSelectedIndex, untabbable, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, onTabbableColumnChange, onTabbableIndexChange, pageNavigationSize, paginationMax, paginationMin, render, location, imperativeHandle, multiSelectionAriaPropName, onSelectionChange, singleSelectionAriaPropName, onNavigateLinear, collator, noTypeahead, onNavigateTypeahead, typeaheadTimeout, tagTableSection, onElementChange, onMount, onUnmount, ...void1 }) {
     assertEmptyObject(void1);
-    return useComponent(imperativeHandle, render, TableSectionContext, useTableSection({
+    return useComponentC(imperativeHandle, render, TableSectionContext, useTableSection({
         gridNavigationParameters: {
             onTabbableColumnChange: onTabbableColumnChange
-        },
-        staggeredChildrenParameters: {
-            staggered: staggered || false
         },
         typeaheadNavigationParameters: {
             onNavigateTypeahead,
@@ -41,9 +38,6 @@ export const TableSection = memo(function TableSection({ disableHomeEndKeys, get
             paginationMax,
             paginationMin,
         },
-        rearrangeableChildrenParameters: {
-            getIndex: useDefault("getIndex", getIndex)
-        },
         rovingTabIndexParameters: {
             onTabbableIndexChange,
             untabbable: untabbable || false,
@@ -57,7 +51,7 @@ export const TableSection = memo(function TableSection({ disableHomeEndKeys, get
             multiSelectionAriaPropName,
             onSelectionChange,
         },
-        context: useContextWithWarning(TableContext, "table"),
+        contextChildren: useContextWithWarning(TableContext, "table"),
         tableSectionParameters: {
             tagTableSection,
             location

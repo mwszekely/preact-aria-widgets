@@ -100,22 +100,15 @@ const naturalSectionTypes = new Set(["thead", "tbody", "tfoot"]);
 /**
  * @compositeParams
  */
-export const useTableSection = monitored(function useTableSection({ linearNavigationParameters, rovingTabIndexParameters, singleSelectionParameters, multiSelectionParameters, gridNavigationParameters, rearrangeableChildrenParameters, paginatedChildrenParameters, staggeredChildrenParameters, tableSectionParameters: { tagTableSection, location }, typeaheadNavigationParameters, context: { tableContext, ...void3 }, refElementParameters, ...void1 }) {
-    const { childrenHaveFocusReturn, context, linearNavigationReturn, managedChildrenReturn, props: { ...props }, rovingTabIndexReturn, singleSelectionReturn, multiSelectionReturn, typeaheadNavigationReturn, staggeredChildrenReturn, rearrangeableChildrenReturn, paginatedChildrenReturn, sortableChildrenReturn, ...void2 } = useCompleteGridNavigation({
+export const useTableSection = monitored(function useTableSection({ linearNavigationParameters, rovingTabIndexParameters, singleSelectionParameters, multiSelectionParameters, gridNavigationParameters, paginatedChildrenParameters, tableSectionParameters: { tagTableSection, location }, typeaheadNavigationParameters, contextChildren: { tableContext, ...void3 }, refElementParameters, ...void1 }) {
+    const { childrenHaveFocusReturn, contextChildren, contextProcessing, refElementReturn, linearNavigationReturn, managedChildrenReturn, props: { ...props }, rovingTabIndexReturn, singleSelectionReturn, multiSelectionReturn, typeaheadNavigationReturn, rearrangeableChildrenReturn, ...void2 } = useCompleteGridNavigation({
         linearNavigationParameters,
         rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
         singleSelectionParameters: { ...singleSelectionParameters, singleSelectionMode: tableContext.singleSelectionMode },
         multiSelectionParameters: { ...multiSelectionParameters, multiSelectionMode: tableContext.multiSelectionMode },
         paginatedChildrenParameters,
-        staggeredChildrenParameters,
-        sortableChildrenParameters: {
-            compare: useCallback((lhs, rhs) => {
-                return fuzzyCompare(lhs?.getSortValue?.(), rhs?.getSortValue?.());
-            }, [])
-        },
         typeaheadNavigationParameters,
         gridNavigationParameters,
-        rearrangeableChildrenParameters,
         refElementParameters,
     });
     if (!naturalSectionTypes.has(tagTableSection)) {
@@ -124,7 +117,7 @@ export const useTableSection = monitored(function useTableSection({ linearNaviga
     useEffect(() => {
         if (location == "body") {
             tableContext.setSortBodyFunction(() => {
-                return () => { sortableChildrenReturn.sort(tableContext.getCurrentSortDirection()); };
+                return () => { rearrangeableChildrenReturn.sort(tableContext.getCurrentSortDirection()); };
             });
         }
     });
@@ -133,20 +126,19 @@ export const useTableSection = monitored(function useTableSection({ linearNaviga
     assertEmptyObject(void3);
     return {
         childrenHaveFocusReturn,
-        context: {
-            ...context,
+        contextChildren: {
+            ...contextChildren,
             tableContext
         },
-        staggeredChildrenReturn,
+        contextProcessing,
+        refElementReturn,
         linearNavigationReturn,
         managedChildrenReturn,
         rovingTabIndexReturn,
         singleSelectionReturn,
         multiSelectionReturn,
         rearrangeableChildrenReturn,
-        sortableChildrenReturn,
         typeaheadNavigationReturn,
-        paginatedChildrenReturn,
         propsTableSection: props
     };
 });
@@ -166,7 +158,7 @@ export const useTableRow = monitored(function useTableRow({ info, textContentPar
         rovingTabIndexParameters,
         singleSelectionChildParameters,
         multiSelectionChildParameters,
-        gridNavigationSelectionSortableRowParameters: { getSortableColumnIndex: cx1.tableContext.getCurrentSortColumn },
+        // gridNavigationSelectionSortableRowParameters: { getSortableColumnIndex: cx1.tableContext.getCurrentSortColumn },
         typeaheadNavigationParameters: { noTypeahead: true, collator: null, typeaheadTimeout: Infinity, onNavigateTypeahead: null }
     });
     props.role = "row";

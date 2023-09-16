@@ -25,7 +25,7 @@ export interface UseMenuParameters<MenuSurfaceElement extends Element, MenuParen
 export interface UseMenuItemParameters<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseMenubarItemParameters<MenuItemElement, M> {
 }
 export interface UseMenuReturnType<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseMenuSurfaceReturnType<MenuSurfaceElement, MenuParentElement, MenuButtonElement>, OmitStrong<UseMenubarReturnType<MenuParentElement, MenuItemElement, MenuButtonElement, M>, "propsMenubar" | "propsLabel"> {
-    context: UseMenuContext<MenuItemElement, M>;
+    contextChildren: UseMenuContext<MenuItemElement, M>;
 }
 export interface MenuItemReturnTypeSelf {
     /**

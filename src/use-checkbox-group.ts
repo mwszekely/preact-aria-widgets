@@ -85,7 +85,7 @@ export interface UseCheckboxGroupChildParametersSelf {
 }
 
 export interface UseCheckboxGroupChildParameters<TCE extends Element> extends
-    UseGenericChildParameters<CheckboxGroupContext<TCE>, Pick<CheckboxGroupInfo<TCE>, "index" | "focusSelf" | "untabbable" | "getSortValue">>,
+    UseGenericChildParameters<CheckboxGroupContext<TCE>, Pick<CheckboxGroupInfo<TCE>, "index" | "focusSelf" | "untabbable">>,
     OmitStrong<UseCompleteListNavigationChildParameters<TCE, CheckboxGroupInfo<TCE>>, "context" | "info" | "singleSelectionChildParameters" | "multiSelectionChildParameters">,
     TargetedOmit<UseCompleteListNavigationChildParameters<TCE, CheckboxGroupInfo<TCE>>, "multiSelectionChildParameters", "initiallyMultiSelected"> {
     checkboxGroupChildParameters: UseCheckboxGroupChildParametersSelf;
@@ -101,12 +101,12 @@ export interface UseCheckboxGroupChildReturnType<TCE extends Element> extends Om
 
 
 export interface UseCheckboxGroupReturnType<GroupElement extends Element, TCE extends Element> extends
-    OmitStrong<UseCompleteListNavigationReturnType<GroupElement, TCE, CheckboxGroupInfo<TCE>>, "context"> {
+    OmitStrong<UseCompleteListNavigationReturnType<GroupElement, TCE, CheckboxGroupInfo<TCE>>, "contextChildren" | "contextProcessing"> {
     context: CheckboxGroupContext<TCE>;
 }
 
 export interface UseCheckboxGroupParentParameters<TCE extends Element> extends
-    UseGenericChildParameters<CheckboxGroupContext<TCE>, Pick<CheckboxGroupInfo<TCE>, "index" | "focusSelf" | "untabbable" | "getSortValue">>,
+    UseGenericChildParameters<CheckboxGroupContext<TCE>, Pick<CheckboxGroupInfo<TCE>, "index" | "focusSelf" | "untabbable">>,
     OmitStrong<UseCompleteListNavigationChildParameters<TCE, CheckboxGroupInfo<TCE>>, "context" | "info"> {
 }
 
@@ -184,28 +184,24 @@ export const useCheckboxGroup = monitored(function useCheckboxGroup<GroupElement
     rovingTabIndexParameters,
     checkboxGroupParameters: { orientation, ...void2 },
     multiSelectionParameters,
-    rearrangeableChildrenParameters,
     refElementParameters,
-    sortableChildrenParameters,
-    staggeredChildrenParameters,
     typeaheadNavigationParameters,
     ...void1
 }: UseCheckboxGroupParameters<GroupElement, TCE>): UseCheckboxGroupReturnType<GroupElement, TCE> {
 
     const {
-        context,
+        contextChildren,
+        contextProcessing,
         linearNavigationReturn,
         managedChildrenReturn,
         props,
         rearrangeableChildrenReturn,
         rovingTabIndexReturn,
         singleSelectionReturn,
-        staggeredChildrenReturn,
-        paginatedChildrenReturn,
-        sortableChildrenReturn,
         typeaheadNavigationReturn,
         childrenHaveFocusReturn,
         multiSelectionReturn,
+        refElementReturn,
         ...void3
     } = useCompleteListNavigation<GroupElement, TCE, CheckboxGroupInfo<TCE>>({
         linearNavigationParameters: { arrowKeyDirection: orientation, ...linearNavigationParameters },
@@ -213,10 +209,7 @@ export const useCheckboxGroup = monitored(function useCheckboxGroup<GroupElement
         singleSelectionParameters: { initiallySingleSelectedIndex: null, onSingleSelectedIndexChange: null, singleSelectionAriaPropName: null, singleSelectionMode: "disabled" },
         paginatedChildrenParameters: { paginationMax: null, paginationMin: null },
         multiSelectionParameters,
-        rearrangeableChildrenParameters,
         refElementParameters,
-        sortableChildrenParameters,
-        staggeredChildrenParameters,
         typeaheadNavigationParameters
     });
 
@@ -225,7 +218,6 @@ export const useCheckboxGroup = monitored(function useCheckboxGroup<GroupElement
 
     assertEmptyObject(void1);
     assertEmptyObject(void2);
-    assertEmptyObject(void3);
 
     // Keep track of all child IDs, and any time any of them change, 
     // generate a new string with all of them concatenated together
@@ -291,10 +283,11 @@ export const useCheckboxGroup = monitored(function useCheckboxGroup<GroupElement
 
 
     return {
+        refElementReturn,
         linearNavigationReturn,
         childrenHaveFocusReturn,
         context: useMemoObject({
-            ...context,
+            ...contextChildren,
             checkboxGroupChildrenContext: useMemoObject({
                 setUpdateIndex,
                 allIds: allIds.current,
@@ -311,11 +304,8 @@ export const useCheckboxGroup = monitored(function useCheckboxGroup<GroupElement
             })
         }),
         props,
-        staggeredChildrenReturn,
-        paginatedChildrenReturn,
         rearrangeableChildrenReturn,
         singleSelectionReturn,
-        sortableChildrenReturn,
         managedChildrenReturn,
         rovingTabIndexReturn,
         typeaheadNavigationReturn,
@@ -360,9 +350,7 @@ export const useCheckboxGroupParent = monitored(function useCheckboxGroupParent<
         refElementReturn,
         propsChild,
         propsTabbable,
-        paginatedChildReturn,
         rovingTabIndexChildReturn,
-        staggeredChildReturn,
         singleSelectionChildReturn,
         multiSelectionChildReturn,
         ...void2
@@ -403,12 +391,10 @@ export const useCheckboxGroupParent = monitored(function useCheckboxGroupParent<
         hasCurrentFocusReturn,
         managedChildReturn,
         textContentReturn,
-        staggeredChildReturn,
         refElementReturn,
         propsChild: useMergedProps({ "aria-controls": ariaControls } as ElementProps<TCE>, propsChild),
         propsTabbable,
         rovingTabIndexChildReturn,
-        paginatedChildReturn,
         singleSelectionChildReturn,
         pressParameters,
         multiSelectionChildReturn
@@ -432,7 +418,7 @@ export const useCheckboxGroupParent = monitored(function useCheckboxGroupParent<
 export const useCheckboxGroupChild = monitored(function useCheckboxGroupChild<TCE extends Element>({
     checkboxGroupChildParameters,
     context,
-    info: { focusSelf, getSortValue, index, untabbable, ...void3 },
+    info: { focusSelf, index, untabbable, ...void3 },
     textContentParameters,
     hasCurrentFocusParameters,
     refElementParameters,
@@ -482,8 +468,6 @@ export const useCheckboxGroupChild = monitored(function useCheckboxGroupChild<TC
         propsChild,
         propsTabbable,
         singleSelectionChildReturn: _singleSelectionChildReturn,
-        staggeredChildReturn,
-        paginatedChildReturn,
         rovingTabIndexChildReturn,
         pressParameters,
         multiSelectionChildReturn,
@@ -495,7 +479,6 @@ export const useCheckboxGroupChild = monitored(function useCheckboxGroupChild<TC
             getChecked,
             setCheckedFromParentInput: onChangeFromParent,
             focusSelf,
-            getSortValue,
             index,
             untabbable
         },
@@ -521,8 +504,6 @@ export const useCheckboxGroupChild = monitored(function useCheckboxGroupChild<TC
         textContentReturn,
         hasCurrentFocusReturn,
         managedChildReturn,
-        staggeredChildReturn,
-        paginatedChildReturn,
         refElementReturn,
         propsChild,
         propsTabbable,

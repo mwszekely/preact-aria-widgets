@@ -1,13 +1,13 @@
 import { createContext } from "preact";
 import { assertEmptyObject, focus, memo, OmitStrong } from "preact-prop-helpers";
 import { useCallback, useImperativeHandle } from "preact/hooks";
-import { Get, Get11, Get6, useContextWithWarning } from "../props.js";
+import { Get, Get6, Get8, useContextWithWarning } from "../props.js";
 import { TabInfo, TabPanelInfo, useTab, useTabPanel, UseTabPanelParameters, UseTabPanelReturnType, UseTabPanelsContext, UseTabParameters, UseTabReturnType, useTabs, UseTabsContext, UseTabsParameters, UseTabsReturnType } from "../use-tabs.js";
 import { GenericComponentProps, useComponent, useDefault } from "./util.js";
 
 export type TabsProps<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element, M extends TabInfo<TabElement> = TabInfo<TabElement>> = GenericComponentProps<
     UseTabsReturnType<TabContainerElement, TabElement, TabLabelElement, M>,
-    Get11<UseTabsParameters<TabContainerElement, TabElement, M>, "labelParameters", "linearNavigationParameters", "rearrangeableChildrenParameters", "rovingTabIndexParameters", "singleSelectionParameters", "sortableChildrenParameters", "staggeredChildrenParameters", "tabsParameters", "typeaheadNavigationParameters", "singleSelectionParameters", "refElementParameters">,
+    Get8<UseTabsParameters<TabContainerElement, TabElement, M>, "labelParameters", "linearNavigationParameters", "rovingTabIndexParameters", "singleSelectionParameters", "tabsParameters", "typeaheadNavigationParameters", "singleSelectionParameters", "refElementParameters">,
     "orientation" | "ariaLabel"
 >;
 
@@ -15,7 +15,7 @@ export type TabsProps<TabContainerElement extends Element, TabElement extends El
 export type TabProps<TabElement extends Element, M extends TabInfo<TabElement> = TabInfo<TabElement>> = GenericComponentProps<
     UseTabReturnType<TabElement, M>,
     Get6<UseTabParameters<TabElement, TabInfo<TabElement>>, "pressParameters", "textContentParameters", "info", "hasCurrentFocusParameters", "refElementParameters", "singleSelectionChildParameters">,
-    "index" | "getSortValue"
+    "index"
 > & { info?: OmitStrong<M, keyof TabInfo<TabElement>>; };
 
 export type TabPanelProps<PanelElement extends Element, M extends TabPanelInfo = TabPanelInfo> = GenericComponentProps<
@@ -33,9 +33,7 @@ const TabPanelsContext = createContext<UseTabPanelsContext<any>>(null!);
 export const Tabs = memo(function Tabs<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element>({
     ariaLabel,
     collator,
-    compare,
     disableHomeEndKeys,
-    getIndex,
     initiallySingleSelectedIndex,
     navigatePastEnd,
     navigatePastStart,
@@ -43,7 +41,6 @@ export const Tabs = memo(function Tabs<TabContainerElement extends Element, TabE
     onSingleSelectedIndexChange,
     onTabbableIndexChange,
     orientation,
-    staggered,
     pageNavigationSize,
     localStorageKey,
     singleSelectionMode,
@@ -63,7 +60,6 @@ export const Tabs = memo(function Tabs<TabContainerElement extends Element, TabE
     assertEmptyObject(void1);
     const info = useTabs<TabContainerElement, TabElement, TabLabelElement>({
         labelParameters: { ariaLabel },
-        staggeredChildrenParameters: { staggered: staggered || false },
         linearNavigationParameters: {
             onNavigateLinear,
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
@@ -71,13 +67,11 @@ export const Tabs = memo(function Tabs<TabContainerElement extends Element, TabE
             navigatePastStart: navigatePastStart ?? "wrap",
             pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
         },
-        rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
         rovingTabIndexParameters: {
             onTabbableIndexChange,
             untabbable
         },
         singleSelectionParameters: { initiallySingleSelectedIndex, onSingleSelectedIndexChange, singleSelectionMode: singleSelectionMode || "focus" },
-        sortableChildrenParameters: { compare },
         tabsParameters: {
             orientation,
             role,
@@ -113,7 +107,6 @@ export function Tab<E extends Element>({
     render,
     longPressThreshold,
     onPressingChange,
-    getSortValue,
     imperativeHandle,
     onElementChange,
     onMount,
@@ -138,7 +131,6 @@ export function Tab<E extends Element>({
                 index,
                 untabbable: untabbable || false,
                 focusSelf: focusSelf ?? focusSelfDefault,
-                getSortValue,
                 ...uinfo
             },
             context,

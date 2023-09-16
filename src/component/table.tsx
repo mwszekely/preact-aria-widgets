@@ -1,8 +1,8 @@
 import { Context, createContext } from "preact";
 import { OmitStrong, assertEmptyObject, focus, memo, useStableCallback } from "preact-prop-helpers";
-import { Get12, Get4, Get8, useContextWithWarning } from "../props.js";
+import { Get10, Get4, Get8, useContextWithWarning } from "../props.js";
 import { TableCellInfo, TableRowInfo, UseTableCellParameters, UseTableCellReturnType, UseTableContext, UseTableParameters, UseTableReturnType, UseTableRowContext, UseTableRowParameters, UseTableRowReturnType, UseTableSectionContext, UseTableSectionParameters, UseTableSectionReturnType, useTable, useTableCell, useTableRow, useTableSection } from "../use-table.js";
-import { GenericComponentProps, useComponent, useDefault } from "./util.js";
+import { GenericComponentProps, useComponent, useComponentC, useDefault } from "./util.js";
 
 export type TableProps<TableElement extends Element, LabelElement extends Element> = GenericComponentProps<
     UseTableReturnType<TableElement, LabelElement>,
@@ -12,7 +12,7 @@ export type TableProps<TableElement extends Element, LabelElement extends Elemen
 
 export type TableSectionProps<SectionElement extends Element, RowElement extends Element, RM extends TableRowInfo<RowElement> = TableRowInfo<RowElement>> = GenericComponentProps<
     UseTableSectionReturnType<SectionElement, RowElement, RM>,
-    Get12<UseTableSectionParameters<SectionElement, RowElement, RM>, "gridNavigationParameters", "linearNavigationParameters", "rearrangeableChildrenParameters", "rovingTabIndexParameters", "singleSelectionParameters", "typeaheadNavigationParameters", "paginatedChildrenParameters", "staggeredChildrenParameters", "tableSectionParameters", "refElementParameters", "singleSelectionParameters", "multiSelectionParameters">,
+    Get10<UseTableSectionParameters<SectionElement, RowElement, RM>, "gridNavigationParameters", "linearNavigationParameters", "rovingTabIndexParameters", "singleSelectionParameters", "typeaheadNavigationParameters", "paginatedChildrenParameters", "tableSectionParameters", "refElementParameters", "singleSelectionParameters", "multiSelectionParameters">,
     "tagTableSection" | "location"
 >;
 
@@ -57,7 +57,6 @@ export const Table = memo(function Table<TableElement extends Element, LabelElem
 
 export const TableSection = memo(function TableSection<SectionElement extends Element, RowElement extends Element, CellElement extends Element>({
     disableHomeEndKeys,
-    getIndex,
     initiallySingleSelectedIndex,
     untabbable,
     navigatePastEnd,
@@ -68,7 +67,6 @@ export const TableSection = memo(function TableSection<SectionElement extends El
     pageNavigationSize,
     paginationMax,
     paginationMin,
-    staggered,
     render,
     location,
     imperativeHandle,
@@ -87,16 +85,13 @@ export const TableSection = memo(function TableSection<SectionElement extends El
     ...void1
 }: TableSectionProps<SectionElement, RowElement, TableRowInfo<RowElement>>) {
     assertEmptyObject(void1);
-    return useComponent(
+    return useComponentC(
         imperativeHandle,
         render,
         TableSectionContext,
         useTableSection<SectionElement, RowElement, CellElement>({
             gridNavigationParameters: {
                 onTabbableColumnChange: onTabbableColumnChange
-            },
-            staggeredChildrenParameters: {
-                staggered: staggered || false
             },
             typeaheadNavigationParameters: {
                 onNavigateTypeahead,
@@ -115,9 +110,6 @@ export const TableSection = memo(function TableSection<SectionElement extends El
                 paginationMax,
                 paginationMin,
             },
-            rearrangeableChildrenParameters: {
-                getIndex: useDefault("getIndex", getIndex)
-            },
             rovingTabIndexParameters: {
                 onTabbableIndexChange,
                 untabbable: untabbable || false,
@@ -131,7 +123,7 @@ export const TableSection = memo(function TableSection<SectionElement extends El
                 multiSelectionAriaPropName,
                 onSelectionChange,
             },
-            context: useContextWithWarning(TableContext, "table"),
+            contextChildren: useContextWithWarning(TableContext, "table"),
             tableSectionParameters: {
                 tagTableSection,
                 location

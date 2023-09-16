@@ -1,12 +1,12 @@
 import { createContext } from "preact";
 import { assertEmptyObject, memo, useStableGetter } from "preact-prop-helpers";
-import { Get11, Get7, useContextWithWarning } from "../props.js";
+import { Get7, Get8, useContextWithWarning } from "../props.js";
 import { FocusableLabelElement, LabelPosition } from "../use-label.js";
 import { RadioContext, RadioSubInfo, UseRadioGroupParameters, UseRadioGroupReturnType, UseRadioParameters, UseRadioReturnType, useRadio, useRadioGroup } from "../use-radio-group.js";
-import { GenericComponentProps, PartialExcept, useComponent, useDefault } from "./util.js";
+import { GenericComponentProps, PartialExcept, useComponent, useComponentC, useDefault } from "./util.js";
 
 interface RadioGroupPropsBase<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, TabbableChildElement extends Element> extends
-    Get11<UseRadioGroupParameters<V, GroupElement, GroupLabelElement, TabbableChildElement>, "radioGroupParameters", "linearNavigationParameters", "labelParameters", "radioGroupParameters", "rearrangeableChildrenParameters", "staggeredChildrenParameters", "sortableChildrenParameters", "rovingTabIndexParameters", "typeaheadNavigationParameters", "refElementParameters", "singleSelectionParameters"> {
+    Get8<UseRadioGroupParameters<V, GroupElement, GroupLabelElement, TabbableChildElement>, "radioGroupParameters", "linearNavigationParameters", "labelParameters", "radioGroupParameters", "rovingTabIndexParameters", "typeaheadNavigationParameters", "refElementParameters", "singleSelectionParameters"> {
 }
 
 interface RadioPropsBase<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element, V extends string | number> extends
@@ -37,9 +37,6 @@ export const RadioGroup = memo(function RadioGroup<V extends string | number, Gr
     noTypeahead,
     typeaheadTimeout,
     ariaLabel,
-    compare,
-    staggered,
-    getIndex,
     navigatePastEnd,
     navigatePastStart,
     selectedValue,
@@ -59,11 +56,11 @@ export const RadioGroup = memo(function RadioGroup<V extends string | number, Gr
     untabbable ??= false;
     assertEmptyObject(void1);
 
-    return useComponent(
+    return useComponentC<UseRadioGroupReturnType<V, GroupElement, GroupLabelElement, TabbableChildElement, RadioSubInfo<TabbableChildElement, V>>>(
         imperativeHandle,
         render,
         RadioContext,
-        useRadioGroup<V, GroupElement, GroupLabelElement, TabbableChildElement>({
+        useRadioGroup<V, GroupElement, GroupLabelElement, TabbableChildElement, RadioSubInfo<TabbableChildElement, V>>({
             singleSelectionParameters: { singleSelectionMode: singleSelectionMode ?? "focus" },
             linearNavigationParameters: {
                 onNavigateLinear,
@@ -73,10 +70,7 @@ export const RadioGroup = memo(function RadioGroup<V extends string | number, Gr
                 disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
                 pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
             },
-            staggeredChildrenParameters: { staggered: staggered || false },
             labelParameters: { ariaLabel },
-            rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
-            sortableChildrenParameters: { compare },
             radioGroupParameters: { name, selectedValue, onSelectedValueChange },
             rovingTabIndexParameters: {
                 onTabbableIndexChange,
@@ -123,7 +117,7 @@ export const Radio = memo(function Radio<LP extends LabelPosition, V extends str
         useRadio<LP, InputElement, LabelElement, V>({
             radioParameters: { value },
             checkboxLikeParameters: { disabled: disabled ?? false },
-            info: { index, untabbable: untabbable || false, getSortValue: getValue },
+            info: { index, untabbable: untabbable || false },
             context,
             labelParameters: { ariaLabel, labelPosition, tagInput, tagLabel },
             textContentParameters: { getText: useDefault("getText", getText) },

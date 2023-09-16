@@ -1,21 +1,21 @@
 import { createContext } from "preact";
 import { assertEmptyObject, focus, memo } from "preact-prop-helpers";
 import { useCallback, useImperativeHandle } from "preact/hooks";
-import { Get13, Get8, OmitStrong, useContextWithWarning } from "../props.js";
+import { Get10, Get8, OmitStrong, useContextWithWarning } from "../props.js";
 import { UseMenubarContext, UseMenubarItemParameters, UseMenubarItemReturnType, UseMenubarParameters, UseMenubarReturnType, UseMenubarSubInfo, useMenubar, useMenubarChild } from "../use-menubar.js";
 import { GenericComponentProps, useComponent, useDefault } from "./util.js";
 
 
 export type MenubarProps<MenuParentElement extends Element, MenuItemElement extends Element, LabelElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> = GenericComponentProps<
     UseMenubarReturnType<MenuParentElement, MenuItemElement, LabelElement, M>,
-    Get13<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "linearNavigationParameters", "rovingTabIndexParameters", "typeaheadNavigationParameters", "rearrangeableChildrenParameters", "sortableChildrenParameters", "staggeredChildrenParameters", "labelParameters", "toolbarParameters", "singleSelectionParameters", "refElementParameters", "singleSelectionParameters", "multiSelectionParameters", "singleSelectionDeclarativeParameters">,
+    Get10<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "linearNavigationParameters", "rovingTabIndexParameters", "typeaheadNavigationParameters", "labelParameters", "toolbarParameters", "singleSelectionParameters", "refElementParameters", "singleSelectionParameters", "multiSelectionParameters", "singleSelectionDeclarativeParameters">,
     "orientation" | "ariaLabel" | "singleSelectionMode" | "multiSelectionMode"
 >;
 
 export type MenubarItemProps<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> = GenericComponentProps<
     UseMenubarItemReturnType<MenuItemElement, M>,
     Get8<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "menuItemParameters", "textContentParameters", "pressParameters", "info", "refElementParameters", "hasCurrentFocusParameters", "singleSelectionChildParameters", "multiSelectionChildParameters">,
-    "index" | "getSortValue"
+    "index" 
 > & { info?: OmitStrong<M, keyof UseMenubarSubInfo<MenuItemElement>>; };
 
 export const MenubarItemContext = createContext<UseMenubarContext<any, any>>(null!);
@@ -28,12 +28,9 @@ export const Menubar = memo(function Menubar<ContainerElement extends Element, C
     navigatePastStart,
     pageNavigationSize,
     orientation,
-    staggered,
     noTypeahead,
     untabbable,
     onTabbableIndexChange,
-    compare,
-    getIndex,
     disabled,
     singleSelectedIndex,
     onSingleSelectedIndexChange,
@@ -78,15 +75,6 @@ export const Menubar = memo(function Menubar<ContainerElement extends Element, C
             noTypeahead: useDefault("noTypeahead", noTypeahead),
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
         },
-        rearrangeableChildrenParameters: {
-            getIndex: useDefault("getIndex", getIndex)
-        },
-        staggeredChildrenParameters: {
-            staggered: staggered || false
-        },
-        sortableChildrenParameters: {
-            compare,
-        },
         labelParameters: {
             ariaLabel
         },
@@ -109,7 +97,7 @@ export const Menubar = memo(function Menubar<ContainerElement extends Element, C
     useImperativeHandle(imperativeHandle!, () => info)
 
     return (
-        <MenubarItemContext.Provider value={info.context}>
+        <MenubarItemContext.Provider value={info.contextChildren}>
             {render(info)}
         </MenubarItemContext.Provider>
     )
@@ -123,7 +111,6 @@ export function MenubarItem<MenuItemElement extends Element>({
     untabbable,
     getText,
     onPress,
-    getSortValue,
     onPressingChange,
     role,
     imperativeHandle,
@@ -147,7 +134,7 @@ export function MenubarItem<MenuItemElement extends Element>({
         render,
         null,
         useMenubarChild<MenuItemElement>({
-            info: { index, untabbable: untabbable || false, focusSelf: focusSelf ?? defaultFocusSelf, getSortValue, ...uinfo },
+            info: { index, untabbable: untabbable || false, focusSelf: focusSelf ?? defaultFocusSelf, ...uinfo },
             context: useContextWithWarning(MenubarItemContext, "menubar"),
             textContentParameters: { getText: useDefault("getText", getText) },
             menuItemParameters: { onPress: onPress ?? null, role: role ?? "menuitem" },
