@@ -1,9 +1,9 @@
 import { createContext } from "preact";
-import { assertEmptyObject, memo, useStableGetter } from "preact-prop-helpers";
+import { UseProcessedChildrenContext, assertEmptyObject, memo, useStableGetter } from "preact-prop-helpers";
 import { Get7, Get8, useContextWithWarning } from "../props.js";
 import { FocusableLabelElement, LabelPosition } from "../use-label.js";
 import { RadioContext, RadioSubInfo, UseRadioGroupParameters, UseRadioGroupReturnType, UseRadioParameters, UseRadioReturnType, useRadio, useRadioGroup } from "../use-radio-group.js";
-import { GenericComponentProps, PartialExcept, useComponent, useComponentC, useDefault } from "./util.js";
+import { GenericComponentProps, PartialExcept, useComponent, useDefault } from "./util.js";
 
 interface RadioGroupPropsBase<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, TabbableChildElement extends Element> extends
     Get8<UseRadioGroupParameters<V, GroupElement, GroupLabelElement, TabbableChildElement>, "radioGroupParameters", "linearNavigationParameters", "labelParameters", "radioGroupParameters", "rovingTabIndexParameters", "typeaheadNavigationParameters", "refElementParameters", "singleSelectionParameters"> {
@@ -28,6 +28,8 @@ export interface RadioProps<LP extends LabelPosition, InputElement extends Eleme
 }
 
 const RadioContext = createContext<RadioContext<any, any, any>>(null!);
+const ProcessedChildrenContext = createContext<UseProcessedChildrenContext>(null!);
+
 export const RadioGroup = memo(function RadioGroup<V extends string | number, GroupElement extends HTMLElement, GroupLabelElement extends HTMLElement, TabbableChildElement extends HTMLElement>({
     render,
     name,
@@ -56,7 +58,7 @@ export const RadioGroup = memo(function RadioGroup<V extends string | number, Gr
     untabbable ??= false;
     assertEmptyObject(void1);
 
-    return useComponentC<UseRadioGroupReturnType<V, GroupElement, GroupLabelElement, TabbableChildElement, RadioSubInfo<TabbableChildElement, V>>>(
+    return useComponent<UseRadioGroupReturnType<V, GroupElement, GroupLabelElement, TabbableChildElement, RadioSubInfo<TabbableChildElement, V>>>(
         imperativeHandle,
         render,
         RadioContext,

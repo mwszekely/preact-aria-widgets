@@ -23,14 +23,16 @@ export function useComponent(imperativeHandle, render, Context, info) {
         return render(info);
     }
 }
-export function useComponentC(imperativeHandle, render, Context, info) {
+export function useComponentC(imperativeHandle, render, ContextChildren, ContextProcessing, info) {
     useImperativeHandle(imperativeHandle, () => info);
-    if (Context) {
-        return _jsx(Context.Provider, { value: info.context, children: render(info) });
+    let ch = render(info);
+    if (ContextChildren) {
+        ch = _jsx(ContextChildren.Provider, { value: info.contextChildren, children: ch });
     }
-    else {
-        return render(info);
+    if (ContextProcessing) {
+        ch = _jsx(ContextProcessing.Provider, { value: info.contextProcessing, children: ch });
     }
+    return ch;
 }
 export const ContextDefaults = {
     collator: createContext(null),

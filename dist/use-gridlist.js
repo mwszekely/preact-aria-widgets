@@ -68,7 +68,7 @@ export const useGridlist = monitored(function useGridlist({ labelParameters, lis
  *
  */
 export const useGridlistRow = monitored(function useGridlistRow({ gridlistRowParameters: { selected }, linearNavigationParameters, context: cx1, info, rovingTabIndexParameters, textContentParameters, typeaheadNavigationParameters, hasCurrentFocusParameters, singleSelectionChildParameters, multiSelectionChildParameters, ...void1 }) {
-    const { context: cx2, hasCurrentFocusReturn, linearNavigationReturn, managedChildReturn, managedChildrenReturn, props, rovingTabIndexChildReturn, rovingTabIndexReturn, singleSelectionChildReturn, textContentReturn, typeaheadNavigationReturn, pressParameters, multiSelectionChildReturn, ...void2 } = useCompleteGridNavigationRow({
+    const { context: cx2, hasCurrentFocusReturn, linearNavigationReturn, managedChildReturn, managedChildrenReturn, props, rovingTabIndexChildReturn, rovingTabIndexReturn, singleSelectionChildReturn, textContentReturn, typeaheadNavigationReturn, pressParameters, multiSelectionChildReturn, refElementReturn, ...void2 } = useCompleteGridNavigationRow({
         linearNavigationParameters,
         info,
         context: cx1,
@@ -98,6 +98,7 @@ export const useGridlistRow = monitored(function useGridlistRow({ gridlistRowPar
         typeaheadNavigationReturn,
         context: cx2,
         hasCurrentFocusReturn,
+        refElementReturn,
         props
     };
 });

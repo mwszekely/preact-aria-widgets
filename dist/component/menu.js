@@ -4,14 +4,14 @@ import { assertEmptyObject, focus } from "preact-prop-helpers";
 import { useCallback, useContext } from "preact/hooks";
 import { useContextWithWarning } from "../props.js";
 import { useMenu, useMenuItem } from "../use-menu.js";
-import { ParentDepthContext, useComponent, useComponentC, useDefault } from "./util.js";
+import { ParentDepthContext, useComponent, useDefault } from "./util.js";
 const MenuItemContext = createContext(null);
 export function Menu({ collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, orientation, singleSelectionAriaPropName, singleSelectionMode, untabbable, active, onDismiss, onElementChange, onMount, onUnmount, openDirection, onTabbableIndexChange, singleSelectedIndex, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, pageNavigationSize, parentDepth, disabled, onOpen, onNavigateLinear, onNavigateTypeahead, getDocument, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, render, imperativeHandle, ...void1 }) {
     const defaultParentDepth = useContext(ParentDepthContext);
     let myDepth = (parentDepth ?? defaultParentDepth) + 1;
     untabbable ||= false;
     assertEmptyObject(void1);
-    return (_jsx(ParentDepthContext.Provider, { value: myDepth, children: useComponentC(imperativeHandle, render, MenuItemContext, useMenu({
+    return (_jsx(ParentDepthContext.Provider, { value: myDepth, children: useComponent(imperativeHandle, render, MenuItemContext, useMenu({
             linearNavigationParameters: {
                 onNavigateLinear,
                 disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),

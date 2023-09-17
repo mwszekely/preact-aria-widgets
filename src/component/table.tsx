@@ -1,5 +1,5 @@
 import { Context, createContext } from "preact";
-import { OmitStrong, assertEmptyObject, focus, memo, useStableCallback } from "preact-prop-helpers";
+import { OmitStrong, UseProcessedChildContext, UseProcessedChildrenContext, assertEmptyObject, focus, memo, useStableCallback } from "preact-prop-helpers";
 import { Get10, Get4, Get8, useContextWithWarning } from "../props.js";
 import { TableCellInfo, TableRowInfo, UseTableCellParameters, UseTableCellReturnType, UseTableContext, UseTableParameters, UseTableReturnType, UseTableRowContext, UseTableRowParameters, UseTableRowReturnType, UseTableSectionContext, UseTableSectionParameters, UseTableSectionReturnType, useTable, useTableCell, useTableRow, useTableSection } from "../use-table.js";
 import { GenericComponentProps, useComponent, useComponentC, useDefault } from "./util.js";
@@ -31,6 +31,8 @@ export type TableCellProps<CellElement extends Element, CM extends TableCellInfo
 
 const TableContext = createContext<UseTableContext>(null!);
 const TableSectionContext = createContext<UseTableSectionContext<any, TableRowInfo<any>>>(null!);
+const TableRowsContext = createContext<UseProcessedChildrenContext>(null!);
+const ProcessedRowContext = createContext<UseProcessedChildContext<any, any>>(null!);
 const TableRowContext = createContext<UseTableRowContext<any, TableCellInfo<any>>>(null!);
 
 export const Table = memo(function Table<TableElement extends Element, LabelElement extends Element>({
@@ -89,6 +91,7 @@ export const TableSection = memo(function TableSection<SectionElement extends El
         imperativeHandle,
         render,
         TableSectionContext,
+        TableRowsContext,
         useTableSection<SectionElement, RowElement, CellElement>({
             gridNavigationParameters: {
                 onTabbableColumnChange: onTabbableColumnChange

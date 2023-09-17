@@ -5,7 +5,7 @@ import { Get15, useContextWithWarning } from "../props.js";
 import { useMenu, UseMenuContext, useMenuItem, UseMenuItemReturnType, UseMenuParameters, UseMenuReturnType } from "../use-menu.js";
 import { UseMenubarSubInfo } from "../use-menubar.js";
 import { MenubarItemProps } from "./menubar.js";
-import { GenericComponentProps, ParentDepthContext, useComponent, useComponentC, useDefault } from "./util.js";
+import { GenericComponentProps, ParentDepthContext, useComponent, useDefault } from "./util.js";
 
 export type MenuProps<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> = GenericComponentProps<
     UseMenuReturnType<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement, M>,
@@ -75,7 +75,7 @@ export function Menu<SurfaceElement extends Element, ParentElement extends Eleme
 
     return (
         <ParentDepthContext.Provider value={myDepth}>
-            {useComponentC(
+            {useComponent(
                 imperativeHandle,
                 render,
                 MenuItemContext,

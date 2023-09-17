@@ -2,12 +2,13 @@ import { createContext } from "preact";
 import { assertEmptyObject, memo, useStableGetter } from "preact-prop-helpers";
 import { useContextWithWarning } from "../props.js";
 import { useRadio, useRadioGroup } from "../use-radio-group.js";
-import { useComponent, useComponentC, useDefault } from "./util.js";
+import { useComponent, useDefault } from "./util.js";
 const RadioContext = createContext(null);
+const ProcessedChildrenContext = createContext(null);
 export const RadioGroup = memo(function RadioGroup({ render, name, collator, disableHomeEndKeys, arrowKeyDirection, noTypeahead, typeaheadTimeout, ariaLabel, navigatePastEnd, navigatePastStart, selectedValue, untabbable, onTabbableIndexChange, onNavigateLinear, onNavigateTypeahead, pageNavigationSize, onElementChange, onMount, onUnmount, imperativeHandle, onSelectedValueChange, singleSelectionMode, ...void1 }) {
     untabbable ??= false;
     assertEmptyObject(void1);
-    return useComponentC(imperativeHandle, render, RadioContext, useRadioGroup({
+    return useComponent(imperativeHandle, render, RadioContext, useRadioGroup({
         singleSelectionParameters: { singleSelectionMode: singleSelectionMode ?? "focus" },
         linearNavigationParameters: {
             onNavigateLinear,

@@ -9,8 +9,9 @@ const UntabbableContext = createContext(false);
 //const AriaPropNameContext = createContext<UseToolbarParameters<any, any, any>["singleSelectionParameters"]["singleSelectionAriaPropName"]>("aria-selected")
 //const SelectionModeContext = createContext<UseToolbarParameters<any, any, any>["singleSelectionParameters"]["singleSelectionMode"]>("focus");
 const ToolbarContext = createContext(null);
+const ProcessedChildrenContext = createContext(null);
 export const Toolbar = memo(function ToolbarU({ render, role, collator, disableHomeEndKeys, disabled, navigatePastEnd, navigatePastStart, pageNavigationSize, singleSelectedIndex, onSingleSelectedIndexChange, orientation, noTypeahead, onTabbableIndexChange, typeaheadTimeout, ariaLabel, imperativeHandle, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, singleSelectionAriaPropName, singleSelectionMode, untabbable, onNavigateLinear, onNavigateTypeahead, onElementChange, onMount, onUnmount }, ref) {
-    return (useComponentC(imperativeHandle, render, ToolbarContext, useToolbar({
+    return (useComponentC(imperativeHandle, render, ToolbarContext, ProcessedChildrenContext, useToolbar({
         linearNavigationParameters: {
             onNavigateLinear,
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),

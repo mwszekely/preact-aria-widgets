@@ -9,11 +9,13 @@ import { GetIndex, Nullable, VNode } from "preact-prop-helpers";
  * @param info The return type of the hook.
  * @returns
  */
-export declare function useComponent<R>(imperativeHandle: Nullable<Ref<R>>, render: (info: R) => VNode, Context: null | Context<(R extends {
+export declare function useComponent<R>(imperativeHandle: Nullable<Ref<R>>, render: (info: R) => VNode, Context: null | Context<(NonNullable<R> extends {
     context?: infer C;
 } ? C : unknown)>, info: R): import("preact").JSX.Element;
-export declare function useComponentC<R>(imperativeHandle: Nullable<Ref<R>>, render: (info: R) => VNode, Context: null | Context<(R extends {
+export declare function useComponentC<R>(imperativeHandle: Nullable<Ref<R>>, render: (info: R) => VNode, ContextChildren: null | Context<(R extends {
     contextChildren?: infer C;
+} ? C : unknown)>, ContextProcessing: null | Context<(R extends {
+    contextProcessing?: infer C;
 } ? C : unknown)>, info: R): import("preact").JSX.Element;
 /**
  * Quickly puts together component props from the hook it's based on.

@@ -1,5 +1,5 @@
 import { createContext, Ref } from "preact";
-import { assertEmptyObject, focus, memo } from "preact-prop-helpers";
+import { assertEmptyObject, focus, memo, UseProcessedChildrenContext } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { Get10, Get7, OmitStrong, useContextWithWarning } from "../props.js";
 import { useToolbar, useToolbarChild, UseToolbarChildParameters, UseToolbarChildReturnType, UseToolbarContext, UseToolbarParameters, UseToolbarReturnType, UseToolbarSubInfo } from "../use-toolbar.js";
@@ -22,6 +22,7 @@ const UntabbableContext = createContext(false);
 //const AriaPropNameContext = createContext<UseToolbarParameters<any, any, any>["singleSelectionParameters"]["singleSelectionAriaPropName"]>("aria-selected")
 //const SelectionModeContext = createContext<UseToolbarParameters<any, any, any>["singleSelectionParameters"]["singleSelectionMode"]>("focus");
 const ToolbarContext = createContext<UseToolbarContext<any, any>>(null!);
+const ProcessedChildrenContext = createContext<UseProcessedChildrenContext>(null!);
 
 export const Toolbar = memo(function ToolbarU<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({
     render,
@@ -58,6 +59,7 @@ export const Toolbar = memo(function ToolbarU<ContainerElement extends Element, 
             imperativeHandle,
             render,
             ToolbarContext,
+            ProcessedChildrenContext,
             useToolbar<ContainerElement, ChildElement, LabelElement>({
                 linearNavigationParameters: {
                     onNavigateLinear,

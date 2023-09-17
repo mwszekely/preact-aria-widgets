@@ -78,13 +78,13 @@ export interface UseRadioGroupReturnTypeSelf {
 }
 
 export interface UseRadioGroupReturnType<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, TabbableChildElement extends Element, M extends RadioSubInfo<TabbableChildElement, V> = RadioSubInfo<TabbableChildElement, V>> extends
-    OmitStrong<UseCompleteListNavigationDeclarativeReturnType<GroupElement, TabbableChildElement, M>, "contextProcessing" | "props" | "multiSelectionReturn"> {
+    OmitStrong<UseCompleteListNavigationDeclarativeReturnType<GroupElement, TabbableChildElement, M>, "contextChildren" | "contextProcessing" | "props" | "multiSelectionReturn"> {
     radioGroupReturn: UseRadioGroupReturnTypeSelf;
     propsRadioGroup: ElementProps<GroupElement>;
     propsRadioGroupLabel: ElementProps<GroupLabelElement>;
 
     // override
-    contextChildren: RadioContext<V, TabbableChildElement, M>;
+    context: RadioContext<V, TabbableChildElement, M>;
 }
 
 export interface RadioSubInfo<TabbableChildElement extends Element, V extends string | number> extends UseCompleteListNavigationChildInfo<TabbableChildElement> {
@@ -185,7 +185,7 @@ export const useRadioGroup = monitored(function useRadioGroup<V extends string |
         rearrangeableChildrenReturn,
         typeaheadNavigationReturn,
         childrenHaveFocusReturn,
-        contextChildren: useMemo(() => ({
+        context: useMemo(() => ({
             ...contextChildren,
             radioContext: { name, indexToName: indexToName.current, nameToIndex: nameToIndex.current }
         }), [name]),

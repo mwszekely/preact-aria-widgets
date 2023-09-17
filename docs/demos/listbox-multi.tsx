@@ -1,7 +1,7 @@
 
-import { returnZero, useMergedProps, useState } from "preact-prop-helpers";
+import { useState } from "preact-prop-helpers";
 import { memo } from "preact/compat";
-import { EventDetail, Listbox, ListboxItem } from "../../dist/index.js";
+import { EventDetail, Listbox, ListboxChildren, ListboxItem } from "../../dist/index.js";
 
 const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
     const [selected, setSelected] = useState(false);
@@ -13,12 +13,13 @@ const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
         <ListboxItem<HTMLLIElement>
             multiSelected={selected}
             index={index}
-            getSortValue={returnZero}
             onMultiSelectedChange={e => setSelected(e[EventDetail].multiSelected)}
 
             render={info => {
+                if (!info.singleSelectionChildReturn)
+                    return <li {...info.props} />
                 return (
-                    <li {...useMergedProps(info.props)}>{labelText}</li>
+                    <li {...(info.props!)}>{labelText}</li>
                 )
             }}
         />
@@ -62,24 +63,34 @@ export function Demo() {
             <Code />
             <label><input type="number" min={0} value={count} onInput={e => setCount(e.currentTarget.valueAsNumber)} /> # of list items</label>
             <div>
-                <Listbox<HTMLUListElement, HTMLLIElement, HTMLLabelElement> 
-                singleSelectedIndex={null} 
-                ariaLabel={null} 
-                multiSelectionAriaPropName="aria-selected"
-                orientation="vertical" 
-                multiSelectionMode="activation" 
-                render={info => {
-                    return (
-                        <>
-                        <label {...info.propsListboxLabel}></label>
-                        <ul {...info.propsListbox}>{Array.from((function* () {
-                            for (let i = 0; i < count; ++i) {
-                                yield <DemoListItem index={i} key={i} />
-                            }
-                        })())}</ul>
-                        </>
-                    )
-                }} />
+                <Listbox<HTMLUListElement, HTMLLIElement, HTMLLabelElement>
+                    singleSelectedIndex={null}
+                    ariaLabel={null}
+
+                    multiSelectionAriaPropName="aria-selected"
+                    orientation="vertical"
+                    multiSelectionMode="activation"
+                    render={info => {
+                        return (
+                            <>
+                                <label {...info.propsListboxLabel}></label>
+                                <ul {...info.propsListbox}>
+                                    <ListboxChildren
+                                        staggered={true}
+                                        render={info => {
+                                            return <>{info.rearrangeableChildrenReturn.children}</>
+                                        }}
+                                        children={Array.from((function* () {
+                                            for (let i = 0; i < count; ++i) {
+                                                yield <DemoListItem index={i} key={i} />
+                                            }
+                                        })())}
+
+                                    />
+                                </ul>
+                            </>
+                        )
+                    }} />
             </div>
         </>
     )

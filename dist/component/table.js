@@ -5,6 +5,8 @@ import { useTable, useTableCell, useTableRow, useTableSection } from "../use-tab
 import { useComponent, useComponentC, useDefault } from "./util.js";
 const TableContext = createContext(null);
 const TableSectionContext = createContext(null);
+const TableRowsContext = createContext(null);
+const ProcessedRowContext = createContext(null);
 const TableRowContext = createContext(null);
 export const Table = memo(function Table({ ariaLabel, singleSelectionMode, multiSelectionMode, tagTable, imperativeHandle, render, ...void1 }) {
     assertEmptyObject(void1);
@@ -17,7 +19,7 @@ export const Table = memo(function Table({ ariaLabel, singleSelectionMode, multi
 });
 export const TableSection = memo(function TableSection({ disableHomeEndKeys, initiallySingleSelectedIndex, untabbable, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, onTabbableColumnChange, onTabbableIndexChange, pageNavigationSize, paginationMax, paginationMin, render, location, imperativeHandle, multiSelectionAriaPropName, onSelectionChange, singleSelectionAriaPropName, onNavigateLinear, collator, noTypeahead, onNavigateTypeahead, typeaheadTimeout, tagTableSection, onElementChange, onMount, onUnmount, ...void1 }) {
     assertEmptyObject(void1);
-    return useComponentC(imperativeHandle, render, TableSectionContext, useTableSection({
+    return useComponentC(imperativeHandle, render, TableSectionContext, TableRowsContext, useTableSection({
         gridNavigationParameters: {
             onTabbableColumnChange: onTabbableColumnChange
         },

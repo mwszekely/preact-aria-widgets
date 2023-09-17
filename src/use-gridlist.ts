@@ -218,6 +218,7 @@ export const useGridlistRow = monitored(function useGridlistRow<GridlistRowEleme
         typeaheadNavigationReturn,
         pressParameters,
         multiSelectionChildReturn,
+        refElementReturn,
         ...void2
     } = useCompleteGridNavigationRow<GridlistRowElement, GridlistCellElement, RM, CM>({
         linearNavigationParameters,
@@ -254,6 +255,7 @@ export const useGridlistRow = monitored(function useGridlistRow<GridlistRowEleme
         typeaheadNavigationReturn,
         context: cx2,
         hasCurrentFocusReturn,
+        refElementReturn,
         props
 
     }

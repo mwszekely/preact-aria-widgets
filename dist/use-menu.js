@@ -75,7 +75,7 @@ export const useMenu = monitored(function useMenu({ dismissParameters, escapeDis
     return {
         ...restRet,
         ...restRet2,
-        contextChildren: useMemoObject({
+        context: useMemoObject({
             ...contextChildren,
             menu: useMemoObject({
                 closeFromMenuItemClicked: useStableCallback((e) => {

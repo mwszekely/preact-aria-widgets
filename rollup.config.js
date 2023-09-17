@@ -43,7 +43,7 @@ export default {
     ],
     treeshake: "recommended",
     plugins: [
-        ts(),
+        ts({ }),
         replace({
             values: {
                 "./lib-preact.js": "./lib-react.js",

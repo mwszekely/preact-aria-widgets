@@ -65,7 +65,7 @@ export const useRadioGroup = monitored(function useRadioGroup({ labelParameters,
         rearrangeableChildrenReturn,
         typeaheadNavigationReturn,
         childrenHaveFocusReturn,
-        contextChildren: useMemo(() => ({
+        context: useMemo(() => ({
             ...contextChildren,
             radioContext: { name, indexToName: indexToName.current, nameToIndex: nameToIndex.current }
         }), [name]),

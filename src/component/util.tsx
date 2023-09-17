@@ -15,7 +15,7 @@ function memoForwardRef<T extends ForwardFn<any, any>>(fn: T): T {
  * @param info The return type of the hook.
  * @returns 
  */
-export function useComponent<R>(imperativeHandle: Nullable<Ref<R>>, render: (info: R) => VNode, Context: null | Context<(R extends {context?: infer C}? C : unknown)>, info: R) {
+export function useComponent<R>(imperativeHandle: Nullable<Ref<R>>, render: (info: R) => VNode, Context: null | Context<(NonNullable<R> extends {context?: infer C}? C : unknown)>, info: R) {
     useImperativeHandle(imperativeHandle!, () => info);
     if (Context) {
         return <Context.Provider value={(info as { context?: any }).context}>{render(info)}</Context.Provider>
@@ -24,14 +24,19 @@ export function useComponent<R>(imperativeHandle: Nullable<Ref<R>>, render: (inf
         return render(info);
     }
 }
-export function useComponentC<R>(imperativeHandle: Nullable<Ref<R>>, render: (info: R) => VNode, Context: null | Context<(R extends {contextChildren?: infer C}? C : unknown)>, info: R) {
+
+export function useComponentC<R>(imperativeHandle: Nullable<Ref<R>>, render: (info: R) => VNode, ContextChildren: null | Context<(R extends {contextChildren?: infer C}? C : unknown)>, ContextProcessing: null | Context<(R extends {contextProcessing?: infer C}? C : unknown)>, info: R) {
     useImperativeHandle(imperativeHandle!, () => info);
-    if (Context) {
-        return <Context.Provider value={(info as { context?: any }).context}>{render(info)}</Context.Provider>
+    let ch = render(info);
+
+    if (ContextChildren) {
+        ch = <ContextChildren.Provider value={(info as { contextChildren?: any }).contextChildren}>{ch}</ContextChildren.Provider>
     }
-    else {
-        return render(info);
+
+    if (ContextProcessing) {
+        ch = <ContextProcessing.Provider value={(info as { contextProcessing?: any }).contextProcessing}>{ch}</ContextProcessing.Provider>
     }
+    return ch;
 }
 
 /**
