@@ -2,7 +2,7 @@ import { jsx as _jsx } from "preact/jsx-runtime";
 import { createContext } from "preact";
 import { assertEmptyObject, focus, useCompleteListNavigationChildren, useMergedProps, useProcessedChild, useRefElement, useStableCallback } from "preact-prop-helpers";
 import { memo } from "preact/compat";
-import { useCallback, useContext, useEffect } from "preact/hooks";
+import { useCallback, useContext, useEffect, useImperativeHandle } from "preact/hooks";
 import { useContextWithWarning } from "../props.js";
 import { useListbox, useListboxItem } from "../use-listbox.js";
 import { useComponent, useComponentC, useDefault } from "./util.js";
@@ -97,9 +97,7 @@ export const ListboxChildren = memo(function ListboxChildren({ children, render,
     });
     return useComponent(imperativeHandle, render, ListboxChildContext, r);
 });
-export const ListboxItem = memo(function ListboxItem({ index, render, imperativeHandle, 
-//children: childrin,
-onElementChange: oec1, onMount, onUnmount, getText, untabbable, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, multiSelectionDisabled, singleSelectionDisabled, multiSelected, onMultiSelectedChange, ...void1 }) {
+export const ListboxItem = memo(function ListboxItemOuter({ index, render, imperativeHandle, onElementChange: oec1, onMount, onUnmount, getText, untabbable, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, multiSelectionDisabled, singleSelectionDisabled, multiSelected, onMultiSelectedChange, ...void1 }) {
     const context = useContextWithWarning(ListboxContext, "listbox");
     console.assert(context != null, `This ListboxItem is not contained within a Listbox`);
     assertEmptyObject(void1);
@@ -116,21 +114,21 @@ onElementChange: oec1, onMount, onUnmount, getText, untabbable, allowRepeatPress
     });
     const { managedChildReturn: { getChildren }, paginatedChildReturn: { hideBecausePaginated, parentIsPaginated }, staggeredChildReturn: { hideBecauseStaggered, parentIsStaggered, childUseEffect } } = i2;
     const props2 = useMergedProps(props, propsStable);
+    // The odd ordering here is to avoid uncommon RoH violation
+    const processedListboxItemReturn = {
+        ...i2,
+        props: props2,
+        refElementReturn,
+        managedChildReturn: { getChildren }
+    };
+    useImperativeHandle(imperativeHandle, () => processedListboxItemReturn);
+    let retIfHidden = render(processedListboxItemReturn);
     if (hideBecausePaginated || hideBecauseStaggered) {
-        return render({
-            ...i2,
-            props: props2,
-            hasCurrentFocusReturn: undefined,
-            multiSelectionChildReturn: undefined,
-            pressReturn: undefined,
-            refElementReturn: undefined,
-            rovingTabIndexChildReturn: undefined,
-            singleSelectionChildReturn: undefined,
-            textContentReturn: undefined,
-            managedChildReturn: { getChildren }
-        });
+        return retIfHidden;
     }
-    return (_jsx(ListboxItemInner, { index: index, render: render, allowRepeatPresses: allowRepeatPresses, excludeEnter: excludeEnter, excludePointer: excludePointer, focusSelf: focusSelf, getText: getText, imperativeHandle: imperativeHandle, longPressThreshold: longPressThreshold, multiSelected: multiSelected, multiSelectionDisabled: multiSelectionDisabled, onCurrentFocusedChanged: onCurrentFocusedChanged, onCurrentFocusedInnerChanged: onCurrentFocusedInnerChanged, onMount: onMount, onMultiSelectedChange: onMultiSelectedChange, onPressingChange: onPressingChange, onUnmount: onUnmount, singleSelectionDisabled: singleSelectionDisabled, untabbable: untabbable, getChildren: getChildren, hideBecausePaginated: hideBecausePaginated, hideBecauseStaggered: hideBecauseStaggered, parentIsPaginated: parentIsPaginated, parentIsStaggered: parentIsStaggered, childUseEffect: childUseEffect, props: props2, ...void1 }));
+    else {
+        return (_jsx(ListboxItemInner, { index: index, render: render, allowRepeatPresses: allowRepeatPresses, excludeEnter: excludeEnter, excludePointer: excludePointer, focusSelf: focusSelf, getText: getText, imperativeHandle: imperativeHandle, longPressThreshold: longPressThreshold, multiSelected: multiSelected, multiSelectionDisabled: multiSelectionDisabled, onCurrentFocusedChanged: onCurrentFocusedChanged, onCurrentFocusedInnerChanged: onCurrentFocusedInnerChanged, onMount: onMount, onMultiSelectedChange: onMultiSelectedChange, onPressingChange: onPressingChange, onUnmount: onUnmount, singleSelectionDisabled: singleSelectionDisabled, untabbable: untabbable, getChildren: getChildren, hideBecausePaginated: hideBecausePaginated, hideBecauseStaggered: hideBecauseStaggered, parentIsPaginated: parentIsPaginated, parentIsStaggered: parentIsStaggered, childUseEffect: childUseEffect, props: props2, ...void1 }));
+    }
 });
 // Separated into its own component because hooks can't be if'd.
 const ListboxItemInner = memo(function ListboxItemInner({ getText, untabbable, index, render, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, imperativeHandle, multiSelectionDisabled, singleSelectionDisabled, multiSelected, onMultiSelectedChange, getChildren, hideBecausePaginated, hideBecauseStaggered, parentIsPaginated, parentIsStaggered, props: props1, childUseEffect, ...void1 }) {

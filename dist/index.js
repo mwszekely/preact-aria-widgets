@@ -107,7 +107,7 @@ export { Menubar, MenubarItem, MenubarItemContext } from "./component/menubar.js
 export { Progress, ProgressWithHandler } from "./component/progress.js";
 export { Radio, RadioGroup } from "./component/radio-group.js";
 export { Slider, SliderThumb } from "./component/slider.js";
-export { Table, TableCell, TableRow, TableSection } from "./component/table.js";
+export { Table, TableCell, TableRow, TableRows, TableSection } from "./component/table.js";
 export { Tab, TabPanel, Tabs } from "./component/tabs.js";
 export { Toast, Toasts } from "./component/toasts.js";
 export { Toolbar, ToolbarChild } from "./component/toolbar.js";

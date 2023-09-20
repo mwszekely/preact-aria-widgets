@@ -1,7 +1,8 @@
-import { createContext } from "preact";
-import { TargetedOmit, UseCompleteListNavigationChildrenInfo, UseCompleteListNavigationChildrenParameters, UseCompleteListNavigationChildrenReturnType, UseProcessedChildContext, UseProcessedChildInfo, UseProcessedChildReturnType, UseProcessedChildrenContext, UseRefElementParameters, VNode, assertEmptyObject, focus, useCompleteListNavigationChildren, useMergedProps, useProcessedChild, useRefElement, useStableCallback } from "preact-prop-helpers";
+import { Ref, createContext } from "preact";
+import { TargetedOmit, UseCompleteListNavigationChildrenInfo, UseCompleteListNavigationChildrenParameters, UseCompleteListNavigationChildrenReturnType, UsePaginatedChildParameters, UseProcessedChildContext, UseProcessedChildInfo, UseProcessedChildReturnType, UseProcessedChildrenContext, UseRefElementParameters, UseRefElementReturnType, UseStaggeredChildParameters, VNode, assertEmptyObject, focus, useCompleteListNavigationChildren, useMergedProps, useProcessedChild, useRefElement, useStableCallback } from "preact-prop-helpers";
+import { UseCompleteListNavigationChildReturnType } from "preact-prop-helpers/react";
 import { memo } from "preact/compat";
-import { useCallback, useContext, useEffect } from "preact/hooks";
+import { useCallback, useContext, useEffect, useImperativeHandle } from "preact/hooks";
 import { Get, Get10, Get3, Get4, Get7, OmitStrong, useContextWithWarning } from "../props.js";
 import { ListboxInfo, UseListboxContext, UseListboxItemParameters, UseListboxItemReturnType, UseListboxParameters, UseListboxReturnType, useListbox, useListboxItem } from "../use-listbox.js";
 import { GenericComponentProps, useComponent, useComponentC, useDefault } from "./util.js";
@@ -15,11 +16,6 @@ interface ListboxPropsBase<ListElement extends Element, ListItemElement extends 
 
 interface ListboxChildrenPropsBase<ListItemElement extends Element, M extends UseCompleteListNavigationChildrenInfo<ListItemElement> = UseCompleteListNavigationChildrenInfo<ListItemElement>> extends
     Get4<UseCompleteListNavigationChildrenParameters<ListItemElement, M>, "managedChildrenParameters", "paginatedChildrenParameters", "rearrangeableChildrenParameters", "staggeredChildrenParameters"> {
-}
-
-interface ListboxItemOuterPropsBase<ListItemElement extends Element, M extends UseProcessedChildInfo<ListItemElement> = UseProcessedChildInfo<ListItemElement>> extends
-    Get<UseRefElementParameters<ListItemElement>, "refElementParameters">,
-    Pick<M, "index"> {
 }
 
 interface ListboxItemInnerPropsBase<ListItemElement extends Element, M extends ListboxInfo<ListItemElement> = ListboxInfo<ListItemElement>> extends
@@ -42,12 +38,6 @@ export interface ListboxChildrenProps<ListItemElement extends Element, M extends
 
 type InnerOuterDifference<ListItemElement extends Element> = Get3<UseProcessedChildReturnType<ListItemElement, UseProcessedChildInfo<ListItemElement>>, "managedChildReturn", "paginatedChildReturn", "staggeredChildReturn">;
 
-interface ListboxItemOuterProps<ListItemElement extends Element, M extends UseProcessedChildInfo<ListItemElement>> extends
-    GenericComponentProps<
-        UseProcessedChildReturnType<ListItemElement, UseProcessedChildInfo<ListItemElement>> | null,
-        ListboxItemOuterPropsBase<ListItemElement, M>,
-        "index"> {
-}
 interface ListboxItemInnerProps<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends
     GenericComponentProps<
         (TargetedOmit<OmitStrong<UseProcessedChildReturnType<ListItemElement, UseProcessedChildInfo<ListItemElement>>, "managedChildReturn">, "staggeredChildReturn", "childUseEffect"> & Partial<UseListboxItemReturnType<ListItemElement, ListboxInfo<ListItemElement>>>),
@@ -217,18 +207,36 @@ export const ListboxChildren = memo(function ListboxChildren<ListItemElement ext
         r);
 })
 
+type UseProcessedListboxItemReturnType<ListboxItemElement extends Element> = OmitStrong<UseProcessedChildReturnType<ListboxItemElement, any>, "refElementParameters"> & Pick<UseRefElementReturnType<ListboxItemElement>, "refElementReturn">;
+
 export interface ListboxItemProps<ListboxItemElement extends Element> extends
-    OmitStrong<ListboxItemOuterProps<ListboxItemElement, UseProcessedChildInfo<ListboxItemElement>>, "render" | "imperativeHandle">,
-    OmitStrong<ListboxItemInnerProps<ListboxItemElement, ListboxInfo<ListboxItemElement>>, keyof InnerOuterDifference<any> | "render" | "imperativeHandle" | "props"> {
-    imperativeHandle?: UseListboxItemReturnType<ListboxItemElement, any>;// & UseProcessedChildReturnType<ListboxItemElement, any>;
-    render: (info: Partial<UseListboxItemReturnType<ListboxItemElement, any>> & OmitStrong<UseProcessedChildReturnType<ListboxItemElement, any>, "refElementParameters">) => VNode;
+    // Parameters used by the inner implementation
+    OmitStrong<ListboxItemInnerProps<ListboxItemElement, ListboxInfo<ListboxItemElement>>, keyof InnerOuterDifference<any> | "render" | "imperativeHandle" | "props">,
+
+    // Parameters used by the outer wrapper
+    Get<UseStaggeredChildParameters, "info">,
+    Get<UsePaginatedChildParameters, "info">,
+    Partial<Get<UseRefElementParameters<ListboxItemElement>, "refElementParameters">> {
+
+    // Overloaded depending on if we bail out early or not
+    imperativeHandle?:
+    Ref<UseProcessedListboxItemReturnType<ListboxItemElement>> |
+    Ref<UseProcessedListboxItemReturnType<ListboxItemElement> & UseCompleteListNavigationChildReturnType<ListboxItemElement, any>>;
+
+    // Overloaded depending on if we bail out early or not
+    render: {
+        // Called with these parameters if we bail out early due to pagination/staggering
+        (info: UseProcessedListboxItemReturnType<ListboxItemElement>): VNode;
+        // Called with these parameters if we rendered fully (i.e. this child is not currently hidden due to pagination/staggering)
+        (info: UseProcessedListboxItemReturnType<ListboxItemElement> & UseCompleteListNavigationChildReturnType<ListboxItemElement, ListboxInfo<ListboxItemElement>>): VNode;
+    }
+
 }
 
-export const ListboxItem = memo(function ListboxItem<ListboxItemElement extends Element>({
+export const ListboxItem = memo(function ListboxItemOuter<ListboxItemElement extends Element>({
     index,
     render,
     imperativeHandle,
-    //children: childrin,
     onElementChange: oec1,
     onMount,
     onUnmount,
@@ -248,6 +256,10 @@ export const ListboxItem = memo(function ListboxItem<ListboxItemElement extends 
     onMultiSelectedChange,
     ...void1
 }: ListboxItemProps<ListboxItemElement>) {
+
+    type M1 = ListboxInfo<ListboxItemElement>;
+    type M2 = UseProcessedChildInfo<ListboxItemElement>;
+
     const context = useContextWithWarning(ListboxContext, "listbox");
     console.assert(context != null, `This ListboxItem is not contained within a Listbox`);
     assertEmptyObject(void1);
@@ -263,7 +275,7 @@ export const ListboxItem = memo(function ListboxItem<ListboxItemElement extends 
         }
     });
 
-    const { props, refElementParameters: { onElementChange: oec2 }, ...i2 } = useProcessedChild<ListboxItemElement>({
+    const { props, refElementParameters: { onElementChange: oec2 }, ...i2 } = useProcessedChild<ListboxItemElement, M2>({
         context: useContextWithWarning(ListboxChildContext, "ListboxChildren"),
         info: { index }
     })
@@ -274,54 +286,54 @@ export const ListboxItem = memo(function ListboxItem<ListboxItemElement extends 
         staggeredChildReturn: { hideBecauseStaggered, parentIsStaggered, childUseEffect }
     } = i2;
 
+
     const props2 = useMergedProps(props, propsStable);
 
+    // The odd ordering here is to avoid uncommon RoH violation
+    const processedListboxItemReturn = {
+        ...i2,
+        props: props2,
+        refElementReturn,
+        managedChildReturn: { getChildren }
+    };
+    useImperativeHandle(imperativeHandle as Ref<UseProcessedListboxItemReturnType<ListboxItemElement>>, () => processedListboxItemReturn);
+    let retIfHidden = render(processedListboxItemReturn);
     if (hideBecausePaginated || hideBecauseStaggered) {
-        return render({
-            ...i2,
-            props: props2,
-            hasCurrentFocusReturn: undefined,
-            multiSelectionChildReturn: undefined,
-            pressReturn: undefined,
-            refElementReturn: undefined,
-            rovingTabIndexChildReturn: undefined,
-            singleSelectionChildReturn: undefined,
-            textContentReturn: undefined,
-            managedChildReturn: { getChildren }
-        });
+        return retIfHidden;
     }
-
-    return (
-        <ListboxItemInner
-            index={index}
-            render={render}
-            allowRepeatPresses={allowRepeatPresses}
-            excludeEnter={excludeEnter}
-            excludePointer={excludePointer}
-            focusSelf={focusSelf}
-            getText={getText}
-            imperativeHandle={imperativeHandle as any}
-            longPressThreshold={longPressThreshold}
-            multiSelected={multiSelected}
-            multiSelectionDisabled={multiSelectionDisabled}
-            onCurrentFocusedChanged={onCurrentFocusedChanged}
-            onCurrentFocusedInnerChanged={onCurrentFocusedInnerChanged}
-            onMount={onMount}
-            onMultiSelectedChange={onMultiSelectedChange}
-            onPressingChange={onPressingChange}
-            onUnmount={onUnmount}
-            singleSelectionDisabled={singleSelectionDisabled}
-            untabbable={untabbable}
-            getChildren={getChildren}
-            hideBecausePaginated={hideBecausePaginated}
-            hideBecauseStaggered={hideBecauseStaggered}
-            parentIsPaginated={parentIsPaginated}
-            parentIsStaggered={parentIsStaggered}
-            childUseEffect={childUseEffect}
-            props={props2}
-            {...void1}
-        />
-    );
+    else {
+        return (
+            <ListboxItemInner
+                index={index}
+                render={render}
+                allowRepeatPresses={allowRepeatPresses}
+                excludeEnter={excludeEnter}
+                excludePointer={excludePointer}
+                focusSelf={focusSelf}
+                getText={getText}
+                imperativeHandle={imperativeHandle as any}
+                longPressThreshold={longPressThreshold}
+                multiSelected={multiSelected}
+                multiSelectionDisabled={multiSelectionDisabled}
+                onCurrentFocusedChanged={onCurrentFocusedChanged}
+                onCurrentFocusedInnerChanged={onCurrentFocusedInnerChanged}
+                onMount={onMount}
+                onMultiSelectedChange={onMultiSelectedChange}
+                onPressingChange={onPressingChange}
+                onUnmount={onUnmount}
+                singleSelectionDisabled={singleSelectionDisabled}
+                untabbable={untabbable}
+                getChildren={getChildren}
+                hideBecausePaginated={hideBecausePaginated}
+                hideBecauseStaggered={hideBecauseStaggered}
+                parentIsPaginated={parentIsPaginated}
+                parentIsStaggered={parentIsStaggered}
+                childUseEffect={childUseEffect}
+                props={props2}
+                {...void1}
+            />
+        );
+    }
 })
 
 // Separated into its own component because hooks can't be if'd.

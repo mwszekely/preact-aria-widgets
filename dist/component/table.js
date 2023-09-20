@@ -1,5 +1,6 @@
+import { jsx as _jsx } from "preact/jsx-runtime";
 import { createContext } from "preact";
-import { assertEmptyObject, focus, memo, useStableCallback } from "preact-prop-helpers";
+import { assertEmptyObject, focus, memo, useCompleteGridNavigationRows, useContext, useEffect, useMergedProps, useProcessedChild, useRefElement, useStableCallback } from "preact-prop-helpers";
 import { useContextWithWarning } from "../props.js";
 import { useTable, useTableCell, useTableRow, useTableSection } from "../use-table.js";
 import { useComponent, useComponentC, useDefault } from "./util.js";
@@ -61,13 +62,65 @@ export const TableSection = memo(function TableSection({ disableHomeEndKeys, ini
         refElementParameters: { onElementChange, onMount, onUnmount }
     }));
 });
-export const TableRow = memo(function TableRow({ index, getText, tagTableRow, onTabbableIndexChange, navigatePastEnd, navigatePastStart, selected, initiallyTabbedIndex, untabbable, info, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, render, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, ...void1 }) {
+export const TableRows = memo(function TableRows({ render, adjust, children, compare, getIndex, imperativeHandle, onAfterChildLayoutEffect, onChildrenCountChange, onChildrenMountChange, onRearranged, paginationMax, paginationMin, staggered }) {
+    return useComponent(imperativeHandle, render, ProcessedRowContext, useCompleteGridNavigationRows({
+        context: useContext(TableRowsContext),
+        managedChildrenParameters: {
+            onAfterChildLayoutEffect,
+            onChildrenCountChange,
+            onChildrenMountChange
+        },
+        paginatedChildrenParameters: {
+            paginationMax,
+            paginationMin
+        },
+        rearrangeableChildrenParameters: {
+            adjust,
+            children,
+            compare,
+            getIndex: useDefault("getIndex", getIndex),
+            onRearranged
+        },
+        staggeredChildrenParameters: {
+            staggered: staggered || false
+        }
+    }));
+});
+export const TableRow = memo(function TableRow({ index, render, imperativeHandle, onElementChange: oec1, onMount, onUnmount, getText, untabbable, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, multiSelectionDisabled, singleSelectionDisabled, initiallyMultiSelected, initiallyTabbedIndex, navigatePastEnd, navigatePastStart, onMultiSelectChange, onTabbableIndexChange, selected, tagTableRow, ...void1 }) {
     assertEmptyObject(void1);
-    return useComponent(imperativeHandle, render, TableRowContext, useTableRow({
+    const { propsStable, refElementReturn } = useRefElement({
+        refElementParameters: {
+            onElementChange: useStableCallback((...a) => { oec1?.(...a); oec2?.(...a); }),
+            onMount,
+            onUnmount
+        }
+    });
+    const { props, refElementParameters: { onElementChange: oec2 }, ...i2 } = useProcessedChild({
+        context: useContextWithWarning(ProcessedRowContext, "ListboxChildren"),
+        info: { index }
+    });
+    const { managedChildReturn: { getChildren }, paginatedChildReturn: { hideBecausePaginated, parentIsPaginated }, staggeredChildReturn: { hideBecauseStaggered, parentIsStaggered, childUseEffect } } = i2;
+    const props2 = useMergedProps(props, propsStable);
+    const processedTableRowReturn = {
+        ...i2,
+        props: props2,
+        refElementReturn,
+        managedChildReturn: { getChildren }
+    };
+    const retIfHidden = render(processedTableRowReturn);
+    if (hideBecausePaginated || hideBecauseStaggered) {
+        return retIfHidden;
+    }
+    else {
+        return (_jsx(TableRowInner, { index: index, render: render, initiallyMultiSelected: initiallyMultiSelected, initiallyTabbedIndex: initiallyTabbedIndex, navigatePastEnd: navigatePastEnd, navigatePastStart: navigatePastStart, onMultiSelectChange: onMultiSelectChange, onTabbableIndexChange: onTabbableIndexChange, selected: selected, focusSelf: focusSelf, getText: getText, imperativeHandle: imperativeHandle, multiSelectionDisabled: multiSelectionDisabled, onCurrentFocusedChanged: onCurrentFocusedChanged, onCurrentFocusedInnerChanged: onCurrentFocusedInnerChanged, singleSelectionDisabled: singleSelectionDisabled, untabbable: untabbable, getChildren: getChildren, hideBecausePaginated: hideBecausePaginated, hideBecauseStaggered: hideBecauseStaggered, parentIsPaginated: parentIsPaginated, parentIsStaggered: parentIsStaggered, childUseEffect: childUseEffect, props: props2, ...void1 }));
+    }
+});
+const TableRowInner = memo(function TableRowInner({ index, getText, tagTableRow, onTabbableIndexChange, navigatePastEnd, navigatePastStart, selected, initiallyTabbedIndex, untabbable, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, render, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, focusSelf, childUseEffect, getChildren, hideBecausePaginated, hideBecauseStaggered, parentIsPaginated, parentIsStaggered, props: props1, ...void1 }) {
+    assertEmptyObject(void1);
+    const { props: props2, context, hasCurrentFocusReturn, linearNavigationReturn, managedChildReturn, managedChildrenReturn, multiSelectionChildReturn, pressParameters, refElementReturn, rovingTabIndexChildReturn, rovingTabIndexReturn, singleSelectionChildReturn, textContentReturn, typeaheadNavigationReturn, } = useTableRow({
         info: {
             index,
-            untabbable: untabbable || false,
-            ...info
+            untabbable: untabbable || false
         },
         context: useContextWithWarning(TableSectionContext, "table section"),
         textContentParameters: {
@@ -75,7 +128,7 @@ export const TableRow = memo(function TableRow({ index, getText, tagTableRow, on
         },
         tableRowParameters: {
             selected,
-            tagTableRow
+            tagTableRow: tagTableRow || "tr"
         },
         hasCurrentFocusParameters: {
             onCurrentFocusedChanged,
@@ -92,7 +145,26 @@ export const TableRow = memo(function TableRow({ index, getText, tagTableRow, on
         },
         singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false },
         multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false, initiallyMultiSelected: initiallyMultiSelected || false, onMultiSelectChange }
-    }));
+    });
+    useEffect(childUseEffect, [childUseEffect]);
+    return useComponent(imperativeHandle, render, TableRowContext, {
+        context,
+        hasCurrentFocusReturn,
+        linearNavigationReturn,
+        managedChildrenReturn,
+        managedChildReturn,
+        multiSelectionChildReturn,
+        pressParameters,
+        props: useMergedProps(props1, props2),
+        rovingTabIndexChildReturn,
+        rovingTabIndexReturn,
+        singleSelectionChildReturn,
+        textContentReturn,
+        typeaheadNavigationReturn,
+        refElementReturn,
+        paginatedChildReturn: { hideBecausePaginated, parentIsPaginated },
+        staggeredChildReturn: { hideBecauseStaggered, parentIsStaggered },
+    });
 });
 export const TableCell = memo(function TableCell({ index, getText, focusSelf, untabbable, tagTableCell, render, colSpan, imperativeHandle, getSortValue, info, ...void1 }) {
     const defaultFocusSelf = useStableCallback((e) => { focus(e); }, []);
