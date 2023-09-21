@@ -46,15 +46,15 @@ export interface GridlistRowProps<GridlistRowElement extends Element, GridlistCe
 
     // Overloaded depending on if we bail out early or not
     imperativeHandle?:
-    Ref<UseProcessedGridlistRowReturnType<GridlistRowElement>> |
-    Ref<UseProcessedGridlistRowReturnType<GridlistRowElement> & UseCompleteGridNavigationRowReturnType<GridlistRowElement, GridlistCellElement, RM, CM>>;
+    Ref<{ hidden: true } & UseProcessedGridlistRowReturnType<GridlistRowElement>> |
+    Ref<{ hidden?: false } & UseProcessedGridlistRowReturnType<GridlistRowElement> & UseCompleteGridNavigationRowReturnType<GridlistRowElement, GridlistCellElement, RM, CM>>;
 
     // Overloaded depending on if we bail out early or not
     render: {
         // Called with these parameters if we bail out early due to pagination/staggering
-        (info: UseProcessedGridlistRowReturnType<GridlistRowElement>): VNode;
+        (info: { hidden: true } & UseProcessedGridlistRowReturnType<GridlistRowElement>): VNode;
         // Called with these parameters if we rendered fully (i.e. this child is not currently hidden due to pagination/staggering)
-        (info: UseProcessedGridlistRowReturnType<GridlistRowElement> & UseCompleteGridNavigationRowReturnType<GridlistRowElement, GridlistCellElement, RM, CM>): VNode;
+        (info: { hidden?: false } & UseProcessedGridlistRowReturnType<GridlistRowElement> & UseCompleteGridNavigationRowReturnType<GridlistRowElement, GridlistCellElement, RM, CM>): VNode;
     }
 
 }
@@ -269,11 +269,12 @@ export const GridlistRow = memo(function GridlistRow<RowElement extends Element,
 
     const props2 = useMergedProps(props, propsStable);
     const processedGridlistRowReturn = {
+        hidden: true,
         ...i2,
         props: props2,
         refElementReturn,
         managedChildReturn: { getChildren }
-    };
+    } as const;
     const retIfHidden = render(processedGridlistRowReturn);
     if (hideBecausePaginated || hideBecauseStaggered) {
         return retIfHidden;

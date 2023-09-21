@@ -13,10 +13,18 @@ interface TableRowInnerProps<TableRowElement extends Element, TableCellElement e
 }
 type UseProcessedTableRowReturnType<TableRowElement extends Element> = OmitStrong<UseProcessedChildReturnType<TableRowElement, any>, "refElementParameters"> & Pick<UseRefElementReturnType<TableRowElement>, "refElementReturn">;
 export interface TableRowProps<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement> = TableRowInfo<TableRowElement>, CM extends TableCellInfo<TableCellElement> = TableCellInfo<TableCellElement>> extends OmitStrong<TableRowInnerProps<TableRowElement, TableCellElement, TableRowInfo<TableRowElement>>, keyof InnerOuterDifference<any> | "render" | "imperativeHandle" | "props">, Get<UseStaggeredChildParameters, "info">, Get<UsePaginatedChildParameters, "info">, Partial<Get<UseRefElementParameters<TableRowElement>, "refElementParameters">> {
-    imperativeHandle?: Ref<UseProcessedTableRowReturnType<TableRowElement>> | Ref<UseProcessedTableRowReturnType<TableRowElement> & UseCompleteGridNavigationRowReturnType<TableRowElement, TableCellElement, RM, CM>>;
+    imperativeHandle?: Ref<{
+        hidden: true;
+    } & UseProcessedTableRowReturnType<TableRowElement>> | Ref<{
+        hidden?: false;
+    } & UseProcessedTableRowReturnType<TableRowElement> & UseCompleteGridNavigationRowReturnType<TableRowElement, TableCellElement, RM, CM>>;
     render: {
-        (info: UseProcessedTableRowReturnType<TableRowElement>): VNode;
-        (info: UseProcessedTableRowReturnType<TableRowElement> & UseCompleteGridNavigationRowReturnType<TableRowElement, TableCellElement, RM, CM>): VNode;
+        (info: {
+            hidden: true;
+        } & UseProcessedTableRowReturnType<TableRowElement>): VNode;
+        (info: {
+            hidden?: false;
+        } & UseProcessedTableRowReturnType<TableRowElement> & UseCompleteGridNavigationRowReturnType<TableRowElement, TableCellElement, RM, CM>): VNode;
     };
 }
 export type TableCellProps<CellElement extends Element, CM extends TableCellInfo<CellElement>> = GenericComponentProps<UseTableCellReturnType<CellElement, CM>, Get4<UseTableCellParameters<CellElement, TableCellInfo<CellElement>>, "tableCellParameters", "gridNavigationCellParameters", "textContentParameters", "info">, "index" | "tagTableCell" | "getSortValue"> & {

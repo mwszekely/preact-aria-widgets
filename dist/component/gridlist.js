@@ -98,6 +98,7 @@ export const GridlistRow = memo(function GridlistRow({ index, render, imperative
     const { managedChildReturn: { getChildren }, paginatedChildReturn: { hideBecausePaginated, parentIsPaginated }, staggeredChildReturn: { hideBecauseStaggered, parentIsStaggered, childUseEffect } } = i2;
     const props2 = useMergedProps(props, propsStable);
     const processedGridlistRowReturn = {
+        hidden: true,
         ...i2,
         props: props2,
         refElementReturn,

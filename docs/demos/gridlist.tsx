@@ -122,6 +122,7 @@ export function Demo() {
                                                         selected={null}
                                                         index={i}
                                                         render={rowInfo => {
+                                                            
                                                             if (rowInfo.staggeredChildReturn.hideBecauseStaggered || rowInfo.paginatedChildReturn.hideBecausePaginated)
                                                                 return <li {...rowInfo.props} />
                                                             return (

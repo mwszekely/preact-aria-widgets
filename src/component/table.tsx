@@ -58,15 +58,15 @@ export interface TableRowProps<TableRowElement extends Element, TableCellElement
 
     // Overloaded depending on if we bail out early or not
     imperativeHandle?:
-    Ref<UseProcessedTableRowReturnType<TableRowElement>> |
-    Ref<UseProcessedTableRowReturnType<TableRowElement> & UseCompleteGridNavigationRowReturnType<TableRowElement, TableCellElement, RM, CM>>;
+    Ref<{ hidden: true } & UseProcessedTableRowReturnType<TableRowElement>> |
+    Ref<{ hidden?: false } & UseProcessedTableRowReturnType<TableRowElement> & UseCompleteGridNavigationRowReturnType<TableRowElement, TableCellElement, RM, CM>>;
 
     // Overloaded depending on if we bail out early or not
     render: {
         // Called with these parameters if we bail out early due to pagination/staggering
-        (info: UseProcessedTableRowReturnType<TableRowElement>): VNode;
+        (info: { hidden: true } & UseProcessedTableRowReturnType<TableRowElement>): VNode;
         // Called with these parameters if we rendered fully (i.e. this child is not currently hidden due to pagination/staggering)
-        (info: UseProcessedTableRowReturnType<TableRowElement> & UseCompleteGridNavigationRowReturnType<TableRowElement, TableCellElement, RM, CM>): VNode;
+        (info: { hidden?: false } & UseProcessedTableRowReturnType<TableRowElement> & UseCompleteGridNavigationRowReturnType<TableRowElement, TableCellElement, RM, CM>): VNode;
     }
 
 }
@@ -299,11 +299,12 @@ export const TableRow = memo(function TableRow<RowElement extends Element, CellE
 
     const props2 = useMergedProps(props, propsStable);
     const processedTableRowReturn = {
+        hidden: true,
         ...i2,
         props: props2,
         refElementReturn,
         managedChildReturn: { getChildren }
-    };
+    } as const;
     const retIfHidden = render(processedTableRowReturn);
     if (hideBecausePaginated || hideBecauseStaggered) {
         return retIfHidden;

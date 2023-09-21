@@ -220,15 +220,15 @@ export interface ListboxItemProps<ListboxItemElement extends Element> extends
 
     // Overloaded depending on if we bail out early or not
     imperativeHandle?:
-    Ref<UseProcessedListboxItemReturnType<ListboxItemElement>> |
-    Ref<UseProcessedListboxItemReturnType<ListboxItemElement> & UseCompleteListNavigationChildReturnType<ListboxItemElement, any>>;
+    Ref<{ hidden: true } & UseProcessedListboxItemReturnType<ListboxItemElement>> |
+    Ref<{ hidden?: false } & UseProcessedListboxItemReturnType<ListboxItemElement> & UseCompleteListNavigationChildReturnType<ListboxItemElement, any>>;
 
     // Overloaded depending on if we bail out early or not
     render: {
         // Called with these parameters if we bail out early due to pagination/staggering
-        (info: UseProcessedListboxItemReturnType<ListboxItemElement>): VNode;
+        (info: { hidden: true } & UseProcessedListboxItemReturnType<ListboxItemElement>): VNode;
         // Called with these parameters if we rendered fully (i.e. this child is not currently hidden due to pagination/staggering)
-        (info: UseProcessedListboxItemReturnType<ListboxItemElement> & UseCompleteListNavigationChildReturnType<ListboxItemElement, ListboxInfo<ListboxItemElement>>): VNode;
+        (info: { hidden?: false } & UseProcessedListboxItemReturnType<ListboxItemElement> & UseCompleteListNavigationChildReturnType<ListboxItemElement, ListboxInfo<ListboxItemElement>>): VNode;
     }
 
 }
@@ -291,11 +291,12 @@ export const ListboxItem = memo(function ListboxItemOuter<ListboxItemElement ext
 
     // The odd ordering here is to avoid uncommon RoH violation
     const processedListboxItemReturn = {
+        hidden: true,
         ...i2,
         props: props2,
         refElementReturn,
         managedChildReturn: { getChildren }
-    };
+    } as const;
     useImperativeHandle(imperativeHandle as Ref<UseProcessedListboxItemReturnType<ListboxItemElement>>, () => processedListboxItemReturn);
     let retIfHidden = render(processedListboxItemReturn);
     if (hideBecausePaginated || hideBecauseStaggered) {

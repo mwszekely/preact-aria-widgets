@@ -12,10 +12,18 @@ interface GridlistRowInnerProps<GridlistRowElement extends Element, GridlistCell
 }
 type UseProcessedGridlistRowReturnType<GridlistRowElement extends Element> = OmitStrong<UseProcessedChildReturnType<GridlistRowElement, any>, "refElementParameters"> & Pick<UseRefElementReturnType<GridlistRowElement>, "refElementReturn">;
 export interface GridlistRowProps<GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement> = GridlistRowInfo<GridlistRowElement>, CM extends GridlistCellInfo<GridlistCellElement> = GridlistCellInfo<GridlistCellElement>> extends OmitStrong<GridlistRowInnerProps<GridlistRowElement, GridlistCellElement, GridlistRowInfo<GridlistRowElement>>, keyof InnerOuterDifference<any> | "render" | "imperativeHandle" | "props">, Get<UseStaggeredChildParameters, "info">, Get<UsePaginatedChildParameters, "info">, Partial<Get<UseRefElementParameters<GridlistRowElement>, "refElementParameters">> {
-    imperativeHandle?: Ref<UseProcessedGridlistRowReturnType<GridlistRowElement>> | Ref<UseProcessedGridlistRowReturnType<GridlistRowElement> & UseCompleteGridNavigationRowReturnType<GridlistRowElement, GridlistCellElement, RM, CM>>;
+    imperativeHandle?: Ref<{
+        hidden: true;
+    } & UseProcessedGridlistRowReturnType<GridlistRowElement>> | Ref<{
+        hidden?: false;
+    } & UseProcessedGridlistRowReturnType<GridlistRowElement> & UseCompleteGridNavigationRowReturnType<GridlistRowElement, GridlistCellElement, RM, CM>>;
     render: {
-        (info: UseProcessedGridlistRowReturnType<GridlistRowElement>): VNode;
-        (info: UseProcessedGridlistRowReturnType<GridlistRowElement> & UseCompleteGridNavigationRowReturnType<GridlistRowElement, GridlistCellElement, RM, CM>): VNode;
+        (info: {
+            hidden: true;
+        } & UseProcessedGridlistRowReturnType<GridlistRowElement>): VNode;
+        (info: {
+            hidden?: false;
+        } & UseProcessedGridlistRowReturnType<GridlistRowElement> & UseCompleteGridNavigationRowReturnType<GridlistRowElement, GridlistCellElement, RM, CM>): VNode;
     };
 }
 export type GridlistChildProps<CellElement extends Element, CM extends GridlistCellInfo<CellElement> = GridlistCellInfo<CellElement>> = GenericComponentProps<UseGridlistCellReturnType<CellElement, CM>, Get4<UseGridlistCellParameters<CellElement, CM>, "gridNavigationCellParameters", "textContentParameters", "pressParameters", "info">, never> & {

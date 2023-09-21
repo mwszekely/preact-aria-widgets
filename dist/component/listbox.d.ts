@@ -18,15 +18,23 @@ type InnerOuterDifference<ListItemElement extends Element> = Get3<UseProcessedCh
 interface ListboxItemInnerProps<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends GenericComponentProps<(TargetedOmit<OmitStrong<UseProcessedChildReturnType<ListItemElement, UseProcessedChildInfo<ListItemElement>>, "managedChildReturn">, "staggeredChildReturn", "childUseEffect"> & Partial<UseListboxItemReturnType<ListItemElement, ListboxInfo<ListItemElement>>>), ListboxItemInnerPropsBase<ListItemElement, M>, "index">, InnerOuterDifference<ListItemElement> {
     props: UseProcessedChildReturnType<ListItemElement, UseProcessedChildInfo<ListItemElement>>["props"];
 }
-export declare const GroupedListbox: <LabelElement extends Element>({ ariaLabel, orientation, render, onElementChange, onMount, onUnmount }: Pick<ListboxProps<any, any, LabelElement, any>, "ariaLabel" | "orientation" | "onElementChange" | "onMount" | "onUnmount" | "render">) => import("preact").JSX.Element;
+export declare const GroupedListbox: <LabelElement extends Element>({ ariaLabel, orientation, render, onElementChange, onMount, onUnmount }: Pick<ListboxProps<any, any, LabelElement, any>, "orientation" | "ariaLabel" | "onElementChange" | "onMount" | "onUnmount" | "render">) => import("preact").JSX.Element;
 export declare const Listbox: <ListElement extends Element, ListItemElement extends Element, LabelElement extends Element>({ ariaLabel, collator, disableHomeEndKeys, singleSelectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSingleSelectedIndexChange, onTabbableIndexChange, pageNavigationSize, untabbable, typeaheadTimeout, orientation, onNavigateLinear, onNavigateTypeahead, onElementChange, onMount, onUnmount, render, imperativeHandle, singleSelectionAriaPropName, singleSelectionMode, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, paginationMax, paginationMin, ...void1 }: ListboxProps<ListElement, ListItemElement, LabelElement, ListboxInfo<ListItemElement>>) => import("preact").JSX.Element;
 export declare const ListboxChildren: <ListItemElement extends Element, M extends UseCompleteListNavigationChildrenInfo<ListItemElement>>({ children, render, adjust, compare, getIndex, imperativeHandle, onAfterChildLayoutEffect, onChildrenCountChange, onChildrenMountChange, onRearranged, paginationMax, paginationMin, staggered }: ListboxChildrenProps<ListItemElement, M>) => import("preact").JSX.Element;
 type UseProcessedListboxItemReturnType<ListboxItemElement extends Element> = OmitStrong<UseProcessedChildReturnType<ListboxItemElement, any>, "refElementParameters"> & Pick<UseRefElementReturnType<ListboxItemElement>, "refElementReturn">;
 export interface ListboxItemProps<ListboxItemElement extends Element> extends OmitStrong<ListboxItemInnerProps<ListboxItemElement, ListboxInfo<ListboxItemElement>>, keyof InnerOuterDifference<any> | "render" | "imperativeHandle" | "props">, Get<UseStaggeredChildParameters, "info">, Get<UsePaginatedChildParameters, "info">, Partial<Get<UseRefElementParameters<ListboxItemElement>, "refElementParameters">> {
-    imperativeHandle?: Ref<UseProcessedListboxItemReturnType<ListboxItemElement>> | Ref<UseProcessedListboxItemReturnType<ListboxItemElement> & UseCompleteListNavigationChildReturnType<ListboxItemElement, any>>;
+    imperativeHandle?: Ref<{
+        hidden: true;
+    } & UseProcessedListboxItemReturnType<ListboxItemElement>> | Ref<{
+        hidden?: false;
+    } & UseProcessedListboxItemReturnType<ListboxItemElement> & UseCompleteListNavigationChildReturnType<ListboxItemElement, any>>;
     render: {
-        (info: UseProcessedListboxItemReturnType<ListboxItemElement>): VNode;
-        (info: UseProcessedListboxItemReturnType<ListboxItemElement> & UseCompleteListNavigationChildReturnType<ListboxItemElement, ListboxInfo<ListboxItemElement>>): VNode;
+        (info: {
+            hidden: true;
+        } & UseProcessedListboxItemReturnType<ListboxItemElement>): VNode;
+        (info: {
+            hidden?: false;
+        } & UseProcessedListboxItemReturnType<ListboxItemElement> & UseCompleteListNavigationChildReturnType<ListboxItemElement, ListboxInfo<ListboxItemElement>>): VNode;
     };
 }
 export declare const ListboxItem: <ListboxItemElement extends Element>({ index, render, imperativeHandle, onElementChange: oec1, onMount, onUnmount, getText, untabbable, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, multiSelectionDisabled, singleSelectionDisabled, multiSelected, onMultiSelectedChange, ...void1 }: ListboxItemProps<ListboxItemElement>) => import("preact").JSX.Element;

@@ -102,6 +102,7 @@ export const TableRow = memo(function TableRow({ index, render, imperativeHandle
     const { managedChildReturn: { getChildren }, paginatedChildReturn: { hideBecausePaginated, parentIsPaginated }, staggeredChildReturn: { hideBecauseStaggered, parentIsStaggered, childUseEffect } } = i2;
     const props2 = useMergedProps(props, propsStable);
     const processedTableRowReturn = {
+        hidden: true,
         ...i2,
         props: props2,
         refElementReturn,

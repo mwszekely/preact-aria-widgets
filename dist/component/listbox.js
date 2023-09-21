@@ -116,6 +116,7 @@ export const ListboxItem = memo(function ListboxItemOuter({ index, render, imper
     const props2 = useMergedProps(props, propsStable);
     // The odd ordering here is to avoid uncommon RoH violation
     const processedListboxItemReturn = {
+        hidden: true,
         ...i2,
         props: props2,
         refElementReturn,
