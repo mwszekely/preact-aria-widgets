@@ -2,7 +2,8 @@ import commonjs from "@rollup/plugin-commonjs";
 import resolve from '@rollup/plugin-node-resolve';
 import replace from '@rollup/plugin-replace';
 import sourcemaps from "rollup-plugin-sourcemaps";
-import ts from 'rollup-plugin-ts'; // Used because the default TS plugin doesn't generate .d.ts files D:
+//import ts from 'rollup-plugin-ts'; // Used because the default TS plugin doesn't generate .d.ts files D:
+import ts from "@rollup/plugin-typescript";
 
 const extensions = [".js", ".jsx", ".ts", ".tsx"];
 
@@ -43,7 +44,7 @@ export default {
     ],
     treeshake: "recommended",
     plugins: [
-        ts({ }),
+        ts({ module: "NodeNext" }),
         replace({
             values: {
                 "./lib-preact.js": "./lib-react.js",

@@ -1,5 +1,5 @@
 import { Ref, VNode, createContext } from "preact";
-import { OmitStrong, TargetedOmit, UseCompleteGridNavigationRowReturnType, UseCompleteGridNavigationRowsInfo, UseCompleteGridNavigationRowsParameters, UseCompleteGridNavigationRowsReturnType, UsePaginatedChildParameters, UseProcessedChildContext, UseProcessedChildInfo, UseProcessedChildReturnType, UseProcessedChildrenContext, UseRefElementParameters, UseRefElementReturnType, UseStaggeredChildParameters, assertEmptyObject, focus, memo, useCompleteGridNavigationRows, useContext, useEffect, useMergedProps, useProcessedChild, useRefElement, useStableCallback } from "preact-prop-helpers";
+import { OmitStrong, TargetedOmit, UseCompleteGridNavigationRowReturnType, UseCompleteGridNavigationRowsInfo, UseCompleteGridNavigationRowsParameters, UseCompleteGridNavigationRowsReturnType, UsePaginatedChildParameters, UseProcessedChildContext, UseProcessedChildInfo, UseProcessedChildReturnType, UseProcessedChildrenContext, UseRefElementParameters, UseRefElementReturnType, UseStaggeredChildParameters, assertEmptyObject, focus, memo, monitored, useCompleteGridNavigationRows, useContext, useEffect, useMergedProps, useProcessedChild, useRefElement, useStableCallback } from "preact-prop-helpers";
 import { Get, Get10, Get3, Get4, Get7, useContextWithWarning } from "../props.js";
 import { TableCellInfo, TableRowInfo, UseTableCellParameters, UseTableCellReturnType, UseTableContext, UseTableParameters, UseTableReturnType, UseTableRowContext, UseTableRowParameters, UseTableRowReturnType, UseTableSectionContext, UseTableSectionParameters, UseTableSectionReturnType, useTable, useTableCell, useTableRow, useTableSection } from "../use-table.js";
 import { GenericComponentProps, useComponent, useComponentC, useDefault } from "./util.js";
@@ -84,7 +84,7 @@ const TableRowsContext = createContext<UseProcessedChildrenContext>(null!);
 const ProcessedRowContext = createContext<UseProcessedChildContext<any, any>>(null!);
 const TableRowContext = createContext<UseTableRowContext<any, TableCellInfo<any>>>(null!);
 
-export const Table = memo(function Table<TableElement extends Element, LabelElement extends Element>({
+export const Table = memo(monitored(function Table<TableElement extends Element, LabelElement extends Element>({
     ariaLabel,
     singleSelectionMode,
     multiSelectionMode,
@@ -104,9 +104,9 @@ export const Table = memo(function Table<TableElement extends Element, LabelElem
             singleSelectionParameters: { singleSelectionMode: singleSelectionMode || "disabled" },
             multiSelectionParameters: { multiSelectionMode: multiSelectionMode || "disabled" },
         }));
-})
+}))
 
-export const TableSection = memo(function TableSection<SectionElement extends Element, RowElement extends Element, CellElement extends Element>({
+export const TableSection = memo(monitored(function TableSection<SectionElement extends Element, RowElement extends Element, CellElement extends Element>({
     disableHomeEndKeys,
     initiallySingleSelectedIndex,
     untabbable,
@@ -183,7 +183,7 @@ export const TableSection = memo(function TableSection<SectionElement extends El
             refElementParameters: { onElementChange, onMount, onUnmount }
         })
     );
-});
+}));
 
 
 
@@ -200,7 +200,7 @@ export type TableRowsProps<TableRowElement extends Element> = GenericComponentPr
     "children"
 >;
 
-export const TableRows = memo(function TableRows<RowElement extends Element>({
+export const TableRows = memo(monitored(function TableRows<RowElement extends Element>({
     render,
     adjust,
     children,
@@ -241,13 +241,13 @@ export const TableRows = memo(function TableRows<RowElement extends Element>({
                 staggered: staggered || false
             }
         }))
-})
+}))
 
 
 
 
 
-export const TableRow = memo(function TableRow<RowElement extends Element, CellElement extends Element>({
+export const TableRow = memo(monitored(function TableRow<RowElement extends Element, CellElement extends Element>({
     index,
     render,
     imperativeHandle,
@@ -340,11 +340,11 @@ export const TableRow = memo(function TableRow<RowElement extends Element, CellE
             />
         );
     }
-})
+}))
 
 
 
-const TableRowInner = memo(function TableRowInner<RowElement extends Element, CellElement extends Element>({
+const TableRowInner = memo(monitored(function TableRowInner<RowElement extends Element, CellElement extends Element>({
     index,
     getText,
     tagTableRow,
@@ -446,9 +446,9 @@ const TableRowInner = memo(function TableRowInner<RowElement extends Element, Ce
             paginatedChildReturn: { hideBecausePaginated, parentIsPaginated },
             staggeredChildReturn: { hideBecauseStaggered, parentIsStaggered },
         });
-})
+}))
 
-export const TableCell = memo(function TableCell<CellElement extends Element>({
+export const TableCell = memo(monitored(function TableCell<CellElement extends Element>({
     index,
     getText,
     focusSelf,
@@ -486,5 +486,5 @@ export const TableCell = memo(function TableCell<CellElement extends Element>({
             }
         }))
 
-})
+}))
 

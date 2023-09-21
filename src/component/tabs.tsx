@@ -1,5 +1,5 @@
 import { createContext } from "preact";
-import { assertEmptyObject, focus, memo, OmitStrong } from "preact-prop-helpers";
+import { assertEmptyObject, focus, memo, monitored, OmitStrong } from "preact-prop-helpers";
 import { useCallback, useImperativeHandle } from "preact/hooks";
 import { Get, Get6, Get8, useContextWithWarning } from "../props.js";
 import { TabInfo, TabPanelInfo, useTab, useTabPanel, UseTabPanelParameters, UseTabPanelReturnType, UseTabPanelsContext, UseTabParameters, UseTabReturnType, useTabs, UseTabsContext, UseTabsParameters, UseTabsReturnType } from "../use-tabs.js";
@@ -30,7 +30,7 @@ const TabPanelsContext = createContext<UseTabPanelsContext<any>>(null!);
 //const UntabbableContext = createContext(false);
 //const SelectionModeContext = createContext<NonNullable<UseTabsParameters<any, any, any>["singleSelectionParameters"]["selectionMode"]>>("focus");
 
-export const Tabs = memo(function Tabs<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element>({
+export const Tabs = memo(monitored(function Tabs<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element>({
     ariaLabel,
     collator,
     disableHomeEndKeys,
@@ -97,9 +97,9 @@ export const Tabs = memo(function Tabs<TabContainerElement extends Element, TabE
             </TabPanelsContext.Provider>
         </TabsContext.Provider>
     )
-})
+}))
 
-export function Tab<E extends Element>({
+export const Tab = memo(monitored(function Tab<E extends Element>({
     focusSelf,
     untabbable,
     index,
@@ -140,9 +140,9 @@ export function Tab<E extends Element>({
             textContentParameters: { getText: useDefault("getText", getText) },
             singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false, }
         }));
-}
+}))
 
-export function TabPanel<E extends Element>({
+export const TabPanel = memo(monitored(function TabPanel<E extends Element>({
     index,
     render,
     info: uinfo
@@ -153,4 +153,4 @@ export function TabPanel<E extends Element>({
         info: { index, ...uinfo }
     });
     return render(info);
-}
+}))

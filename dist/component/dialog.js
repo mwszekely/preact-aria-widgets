@@ -1,9 +1,9 @@
 import { jsx as _jsx } from "preact/jsx-runtime";
-import { memo } from "preact-prop-helpers";
+import { memo, monitored } from "preact-prop-helpers";
 import { useContext } from "preact/hooks";
 import { useDialog } from "../use-dialog.js";
 import { ParentDepthContext, useComponent, useDefault } from "./util.js";
-export const Dialog = memo(function Dialog({ active, onDismiss, dismissBackdropActive, dismissEscapeActive, focusOpener, getDocument, imperativeHandle, parentDepth, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, focusPopup, ariaLabel, onElementChange, onMount, onUnmount, render }) {
+export const Dialog = memo(monitored(function Dialog({ active, onDismiss, dismissBackdropActive, dismissEscapeActive, focusOpener, getDocument, imperativeHandle, parentDepth, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, focusPopup, ariaLabel, onElementChange, onMount, onUnmount, render }) {
     const defaultParentDepth = useContext(ParentDepthContext);
     let myDepth = (parentDepth ?? defaultParentDepth) + 1;
     return (_jsx(ParentDepthContext.Provider, { value: myDepth, children: useComponent(imperativeHandle, render, null, useDialog({
@@ -30,5 +30,5 @@ export const Dialog = memo(function Dialog({ active, onDismiss, dismissBackdropA
             },
             labelParameters: { ariaLabel }
         })) }));
-});
+}));
 //# sourceMappingURL=dialog.js.map

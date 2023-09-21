@@ -1,5 +1,5 @@
 import { createContext } from "preact";
-import { assertEmptyObject, focus, memo } from "preact-prop-helpers";
+import { assertEmptyObject, focus, memo, monitored } from "preact-prop-helpers";
 import { useCallback, useImperativeHandle } from "preact/hooks";
 import { Get10, Get8, OmitStrong, useContextWithWarning } from "../props.js";
 import { UseMenubarContext, UseMenubarItemParameters, UseMenubarItemReturnType, UseMenubarParameters, UseMenubarReturnType, UseMenubarSubInfo, useMenubar, useMenubarChild } from "../use-menubar.js";
@@ -15,12 +15,12 @@ export type MenubarProps<MenuParentElement extends Element, MenuItemElement exte
 export type MenubarItemProps<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> = GenericComponentProps<
     UseMenubarItemReturnType<MenuItemElement, M>,
     Get8<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "menuItemParameters", "textContentParameters", "pressParameters", "info", "refElementParameters", "hasCurrentFocusParameters", "singleSelectionChildParameters", "multiSelectionChildParameters">,
-    "index" 
+    "index"
 > & { info?: OmitStrong<M, keyof UseMenubarSubInfo<MenuItemElement>>; };
 
 export const MenubarItemContext = createContext<UseMenubarContext<any, any>>(null!);
 
-export const Menubar = memo(function Menubar<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({
+export const Menubar = memo(monitored(function Menubar<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({
     render,
     collator,
     disableHomeEndKeys,
@@ -88,7 +88,7 @@ export const Menubar = memo(function Menubar<ContainerElement extends Element, C
             onSelectionChange
         },
         singleSelectionDeclarativeParameters: {
-            singleSelectedIndex, 
+            singleSelectedIndex,
             onSingleSelectedIndexChange
         },
         refElementParameters: { onElementChange, onMount, onUnmount }
@@ -101,10 +101,10 @@ export const Menubar = memo(function Menubar<ContainerElement extends Element, C
             {render(info)}
         </MenubarItemContext.Provider>
     )
-})
+}))
 
 
-export function MenubarItem<MenuItemElement extends Element>({
+export const MenubarItem = memo(monitored(function MenubarItem<MenuItemElement extends Element>({
     index,
     render,
     focusSelf,
@@ -145,4 +145,4 @@ export function MenubarItem<MenuItemElement extends Element>({
             multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false, initiallyMultiSelected: initiallyMultiSelected || false, onMultiSelectChange }
         })
     );
-};
+}));

@@ -1,6 +1,6 @@
 import { jsx as _jsx } from "preact/jsx-runtime";
 import { createContext } from "preact";
-import { assertEmptyObject, focus, memo } from "preact-prop-helpers";
+import { assertEmptyObject, focus, memo, monitored } from "preact-prop-helpers";
 import { useCallback, useImperativeHandle } from "preact/hooks";
 import { useContextWithWarning } from "../props.js";
 import { useTab, useTabPanel, useTabs } from "../use-tabs.js";
@@ -9,7 +9,7 @@ const TabsContext = createContext(null);
 const TabPanelsContext = createContext(null);
 //const UntabbableContext = createContext(false);
 //const SelectionModeContext = createContext<NonNullable<UseTabsParameters<any, any, any>["singleSelectionParameters"]["selectionMode"]>>("focus");
-export const Tabs = memo(function Tabs({ ariaLabel, collator, disableHomeEndKeys, initiallySingleSelectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSingleSelectedIndexChange, onTabbableIndexChange, orientation, pageNavigationSize, localStorageKey, singleSelectionMode, untabbable, typeaheadTimeout, role, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, render, ...void1 }) {
+export const Tabs = memo(monitored(function Tabs({ ariaLabel, collator, disableHomeEndKeys, initiallySingleSelectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSingleSelectedIndexChange, onTabbableIndexChange, orientation, pageNavigationSize, localStorageKey, singleSelectionMode, untabbable, typeaheadTimeout, role, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, render, ...void1 }) {
     untabbable ??= false;
     assertEmptyObject(void1);
     const info = useTabs({
@@ -42,8 +42,8 @@ export const Tabs = memo(function Tabs({ ariaLabel, collator, disableHomeEndKeys
     const { contextPanels, contextTabs } = info;
     useImperativeHandle(imperativeHandle, () => info);
     return (_jsx(TabsContext.Provider, { value: contextTabs, children: _jsx(TabPanelsContext.Provider, { value: contextPanels, children: render(info) }) }));
-});
-export function Tab({ focusSelf, untabbable, index, getText, render, longPressThreshold, onPressingChange, imperativeHandle, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, singleSelectionDisabled, info: uinfo, ...void1 }) {
+}));
+export const Tab = memo(monitored(function Tab({ focusSelf, untabbable, index, getText, render, longPressThreshold, onPressingChange, imperativeHandle, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, singleSelectionDisabled, info: uinfo, ...void1 }) {
     assertEmptyObject(void1);
     const context = useContextWithWarning(TabsContext, "tabs");
     console.assert(context != null, `This Tab is not contained within a Tabs component`);
@@ -62,13 +62,13 @@ export function Tab({ focusSelf, untabbable, index, getText, render, longPressTh
         textContentParameters: { getText: useDefault("getText", getText) },
         singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false, }
     }));
-}
-export function TabPanel({ index, render, info: uinfo }) {
+}));
+export const TabPanel = memo(monitored(function TabPanel({ index, render, info: uinfo }) {
     const context = useContextWithWarning(TabPanelsContext, "tabs");
     const info = useTabPanel({
         context,
         info: { index, ...uinfo }
     });
     return render(info);
-}
+}));
 //# sourceMappingURL=tabs.js.map

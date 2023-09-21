@@ -1,5 +1,5 @@
 import { createContext } from "preact";
-import { OmitStrong, assertEmptyObject } from "preact-prop-helpers";
+import { OmitStrong, assertEmptyObject, monitored } from "preact-prop-helpers";
 import { memo } from "preact/compat";
 import { Get5, Get6, useContextWithWarning } from "../props.js";
 import { UseAccordionContext, UseAccordionParameters, UseAccordionReturnType, UseAccordionSectionInfo, UseAccordionSectionParameters, UseAccordionSectionReturnType, useAccordion, useAccordionSection } from "../use-accordion.js";
@@ -73,7 +73,7 @@ export const Accordion = memo(function Accordion<HeaderButtonElement extends Ele
 
 })
 
-export const AccordionSection = memo(function AccordionSection<HeaderContainerElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element>({
+export const AccordionSection = memo(monitored(function AccordionSection<HeaderContainerElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element>({
     open,
     index,
     tagButton,
@@ -109,4 +109,4 @@ export const AccordionSection = memo(function AccordionSection<HeaderContainerEl
             context: useContextWithWarning(AccordionSectionContext, "accordion section"),
         })
     );
-});
+}));

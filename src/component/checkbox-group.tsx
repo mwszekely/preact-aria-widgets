@@ -1,5 +1,5 @@
 import { createContext } from "preact";
-import { assertEmptyObject, memo } from "preact-prop-helpers";
+import { assertEmptyObject, memo, monitored } from "preact-prop-helpers";
 import { Get6, Get7, useContextWithWarning } from "../props.js";
 import { CheckboxGroupContext, CheckboxGroupInfo, UseCheckboxGroupChildParameters, UseCheckboxGroupChildReturnType, UseCheckboxGroupParameters, UseCheckboxGroupParentParameters, UseCheckboxGroupParentReturnType, UseCheckboxGroupReturnType, useCheckboxGroup, useCheckboxGroupChild, useCheckboxGroupParent } from "../use-checkbox-group.js";
 import { GenericComponentProps, useComponent, useDefault } from "./util.js";
@@ -19,14 +19,14 @@ export type CheckboxGroupParentProps<TCE extends Element> = GenericComponentProp
 
 export type CheckboxGroupChildProps<TCE extends Element> = GenericComponentProps<
     UseCheckboxGroupChildReturnType<TCE>,
-    Get6<UseCheckboxGroupChildParameters<TCE>, "checkboxGroupChildParameters", "textContentParameters", "info", "refElementParameters", "hasCurrentFocusParameters","multiSelectionChildParameters">,
+    Get6<UseCheckboxGroupChildParameters<TCE>, "checkboxGroupChildParameters", "textContentParameters", "info", "refElementParameters", "hasCurrentFocusParameters", "multiSelectionChildParameters">,
     "index" | "focusSelf" | "checked" | "onChangeFromParent"
 >// & { info?: OmitStrong<M, keyof CheckboxGroupInfo<TCE>> };
 
 
 const UseCheckboxGroupChildContext = createContext<CheckboxGroupContext<any>>(null!);
 
-export const CheckboxGroup = memo(function CheckboxGroup<ParentElement extends Element, TabbableChildElement extends Element>({
+export const CheckboxGroup = memo(monitored(function CheckboxGroup<ParentElement extends Element, TabbableChildElement extends Element>({
     render,
     collator,
     disableHomeEndKeys,
@@ -80,9 +80,9 @@ export const CheckboxGroup = memo(function CheckboxGroup<ParentElement extends E
             refElementParameters: { onElementChange, onMount, onUnmount },
             multiSelectionParameters: { multiSelectionAriaPropName, multiSelectionMode: multiSelectionMode || "activation", onSelectionChange }
         }));
-});
+}));
 
-export const CheckboxGroupParent = memo(function CheckboxGroupParent<TCE extends Element>({
+export const CheckboxGroupParent = memo(monitored(function CheckboxGroupParent<TCE extends Element>({
     render,
     index,
     focusSelf,
@@ -125,9 +125,9 @@ export const CheckboxGroupParent = memo(function CheckboxGroupParent<TCE extends
                 singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false }
             }))
     );
-})
+}))
 
-export const CheckboxGroupChild = (function CheckboxGroupChild<TCE extends Element>({
+export const CheckboxGroupChild = memo(monitored(function CheckboxGroupChild<TCE extends Element>({
     index,
     render,
     checked,
@@ -179,4 +179,4 @@ export const CheckboxGroupChild = (function CheckboxGroupChild<TCE extends Eleme
             },
             multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false, onMultiSelectChange },
         }));
-});
+}));

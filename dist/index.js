@@ -99,7 +99,7 @@ export { CheckboxGroup, CheckboxGroupChild, CheckboxGroupParent } from "./compon
 export { Checkbox, defaultRenderCheckboxLike } from "./component/checkbox.js";
 export { Dialog } from "./component/dialog.js";
 export { Drawer } from "./component/drawer.js";
-export { Gridlist, GridlistChild, GridlistRow, GridlistRows, defaultRenderGridlistChild } from "./component/gridlist.js";
+export { Gridlist, GridlistChild, GridlistRow, GridlistRows } from "./component/gridlist.js";
 export { Heading, HeadingReset } from "./component/heading.js";
 export { GroupedListbox, Listbox, ListboxChildren, ListboxItem } from "./component/listbox.js";
 export { Menu, MenuItem } from "./component/menu.js";

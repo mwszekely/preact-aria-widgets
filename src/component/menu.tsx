@@ -1,5 +1,5 @@
 import { createContext } from "preact";
-import { assertEmptyObject, focus, OmitStrong } from "preact-prop-helpers";
+import { assertEmptyObject, focus, memo, monitored, OmitStrong } from "preact-prop-helpers";
 import { useCallback, useContext } from "preact/hooks";
 import { Get15, useContextWithWarning } from "../props.js";
 import { useMenu, UseMenuContext, useMenuItem, UseMenuItemReturnType, UseMenuParameters, UseMenuReturnType } from "../use-menu.js";
@@ -21,7 +21,7 @@ export type MenuItemProps<MenuItemElement extends Element, M extends UseMenubarS
 
 const MenuItemContext = createContext<UseMenuContext<any, any>>(null!);
 
-export function Menu<SurfaceElement extends Element, ParentElement extends Element, ChildElement extends Element, ButtonElement extends Element>({
+export const Menu = memo(monitored(function Menu<SurfaceElement extends Element, ParentElement extends Element, ChildElement extends Element, ButtonElement extends Element>({
     collator,
     disableHomeEndKeys,
     noTypeahead,
@@ -132,10 +132,10 @@ export function Menu<SurfaceElement extends Element, ParentElement extends Eleme
                 }))}
         </ParentDepthContext.Provider>
     )
-}
+}))
 
 
-export function MenuItem<MenuItemElement extends Element>({
+export const MenuItem = memo(monitored(function MenuItem<MenuItemElement extends Element>({
     index,
     untabbable,
     onPress,
@@ -190,4 +190,4 @@ export function MenuItem<MenuItemElement extends Element>({
             })
         )
     );
-};
+}));

@@ -1,5 +1,5 @@
 import { createContext, Ref } from "preact";
-import { assertEmptyObject, focus, memo, UseProcessedChildrenContext } from "preact-prop-helpers";
+import { assertEmptyObject, focus, memo, monitored, UseProcessedChildrenContext } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { Get10, Get7, OmitStrong, useContextWithWarning } from "../props.js";
 import { useToolbar, useToolbarChild, UseToolbarChildParameters, UseToolbarChildReturnType, UseToolbarContext, UseToolbarParameters, UseToolbarReturnType, UseToolbarSubInfo } from "../use-toolbar.js";
@@ -8,7 +8,7 @@ import { GenericComponentProps, useComponent, useComponentC, useDefault } from "
 export type ToolbarProps<ToolbarContainerElement extends Element, ToolbarChildElement extends Element, LabelElement extends Element, M extends UseToolbarSubInfo<ToolbarChildElement>> = GenericComponentProps<
     UseToolbarReturnType<ToolbarContainerElement, ToolbarChildElement, LabelElement, M>,
     Get10<UseToolbarParameters<ToolbarContainerElement, ToolbarChildElement, M>, "linearNavigationParameters", "rovingTabIndexParameters", "typeaheadNavigationParameters", "labelParameters", "toolbarParameters", "singleSelectionParameters", "refElementParameters", "singleSelectionParameters", "multiSelectionParameters", "singleSelectionDeclarativeParameters">,
-    "orientation" | "ariaLabel" | "singleSelectionMode" | "multiSelectionMode" 
+    "orientation" | "ariaLabel" | "singleSelectionMode" | "multiSelectionMode"
 >;
 
 export type ToolbarChildProps<ToolbarChildElement extends Element, M extends UseToolbarSubInfo<ToolbarChildElement>> = GenericComponentProps<
@@ -24,7 +24,7 @@ const UntabbableContext = createContext(false);
 const ToolbarContext = createContext<UseToolbarContext<any, any>>(null!);
 const ProcessedChildrenContext = createContext<UseProcessedChildrenContext>(null!);
 
-export const Toolbar = memo(function ToolbarU<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({
+export const Toolbar = memo(monitored(function ToolbarU<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({
     render,
     role,
     collator,
@@ -88,10 +88,10 @@ export const Toolbar = memo(function ToolbarU<ContainerElement extends Element, 
                 refElementParameters: { onElementChange, onMount, onUnmount },
             }))
     )
-})
+}))
 
 
-export function ToolbarChild<ToolbarChildElement extends Element>({
+export const ToolbarChild = memo(monitored(function ToolbarChild<ToolbarChildElement extends Element>({
     index,
     render,
     focusSelf,
@@ -135,4 +135,4 @@ export function ToolbarChild<ToolbarChildElement extends Element>({
             singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false },
             multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false, initiallyMultiSelected: initiallyMultiSelected || false, onMultiSelectChange }
         }));
-};
+}));

@@ -1,5 +1,5 @@
 import { createContext } from "preact";
-import { UseProcessedChildrenContext, assertEmptyObject, memo, useStableGetter } from "preact-prop-helpers";
+import { UseProcessedChildrenContext, assertEmptyObject, memo, monitored, useStableGetter } from "preact-prop-helpers";
 import { Get7, Get8, useContextWithWarning } from "../props.js";
 import { FocusableLabelElement, LabelPosition } from "../use-label.js";
 import { RadioContext, RadioSubInfo, UseRadioGroupParameters, UseRadioGroupReturnType, UseRadioParameters, UseRadioReturnType, useRadio, useRadioGroup } from "../use-radio-group.js";
@@ -30,7 +30,7 @@ export interface RadioProps<LP extends LabelPosition, InputElement extends Eleme
 const RadioContext = createContext<RadioContext<any, any, any>>(null!);
 const ProcessedChildrenContext = createContext<UseProcessedChildrenContext>(null!);
 
-export const RadioGroup = memo(function RadioGroup<V extends string | number, GroupElement extends HTMLElement, GroupLabelElement extends HTMLElement, TabbableChildElement extends HTMLElement>({
+export const RadioGroup = memo(monitored(function RadioGroup<V extends string | number, GroupElement extends HTMLElement, GroupLabelElement extends HTMLElement, TabbableChildElement extends HTMLElement>({
     render,
     name,
     collator,
@@ -86,9 +86,9 @@ export const RadioGroup = memo(function RadioGroup<V extends string | number, Gr
             },
             refElementParameters: { onElementChange, onMount, onUnmount },
         }));
-});
+}));
 
-export const Radio = memo(function Radio<LP extends LabelPosition, V extends string | number, InputElement extends Element, LabelElement extends Element>({
+export const Radio = memo(monitored(function Radio<LP extends LabelPosition, V extends string | number, InputElement extends Element, LabelElement extends Element>({
     disabled,
     index,
     render,
@@ -127,4 +127,4 @@ export const Radio = memo(function Radio<LP extends LabelPosition, V extends str
             hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged },
             refElementParameters: { onElementChange, onMount, onUnmount }
         }));
-});
+}));
