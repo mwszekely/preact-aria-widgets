@@ -1,6 +1,5 @@
 import { Ref, createContext } from "preact";
-import { TargetedOmit, UseCompleteListNavigationChildrenInfo, UseCompleteListNavigationChildrenParameters, UseCompleteListNavigationChildrenReturnType, UsePaginatedChildParameters, UseProcessedChildContext, UseProcessedChildInfo, UseProcessedChildReturnType, UseProcessedChildrenContext, UseRefElementParameters, UseRefElementReturnType, UseStaggeredChildParameters, VNode, assertEmptyObject, focus, useCompleteListNavigationChildren, useMergedProps, useProcessedChild, useRefElement, useStableCallback } from "preact-prop-helpers";
-import { UseCompleteListNavigationChildReturnType } from "preact-prop-helpers/react";
+import { TargetedOmit, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationChildrenInfo, UseCompleteListNavigationChildrenParameters, UseCompleteListNavigationChildrenReturnType, UsePaginatedChildParameters, UseProcessedChildContext, UseProcessedChildInfo, UseProcessedChildReturnType, UseProcessedChildrenContext, UseRefElementParameters, UseRefElementReturnType, UseStaggeredChildParameters, VNode, assertEmptyObject, focus, useCompleteListNavigationChildren, useMergedProps, useProcessedChild, useRefElement, useStableCallback } from "preact-prop-helpers";
 import { memo } from "preact/compat";
 import { useCallback, useContext, useEffect, useImperativeHandle } from "preact/hooks";
 import { Get, Get10, Get3, Get4, Get7, OmitStrong, useContextWithWarning } from "../props.js";

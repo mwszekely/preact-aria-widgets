@@ -4,6 +4,7 @@ import {
     EventDetail,
     Nullable,
     TargetedOmit,
+    UseCompleteListNavigationChildDeclarativeReturnType,
     UseCompleteListNavigationChildInfo,
     UseCompleteListNavigationChildInfoKeysParameters,
     UseCompleteListNavigationChildParameters,
@@ -19,7 +20,6 @@ import {
     useStableCallback,
     useState
 } from "preact-prop-helpers";
-import { UseCompleteListNavigationChildDeclarativeReturnType } from "preact-prop-helpers/react";
 import { useEffect, useLayoutEffect, useMemo, useRef } from "preact/hooks";
 import { EnhancedEventHandler, OmitStrong, Prefices, TargetedEnhancedEvent, enhanceEvent, monitored } from "./props.js";
 import { UseCheckboxLikeParameters, UseCheckboxLikeReturnType, useCheckboxLike } from "./use-checkbox-like.js";

@@ -1,5 +1,4 @@
-import { CompleteListNavigationContext, ElementProps, Nullable, TargetedOmit, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildInfoKeysParameters, UseCompleteListNavigationChildParameters, UseCompleteListNavigationDeclarativeReturnType, UseCompleteListNavigationParameters, UseGenericChildParameters } from "preact-prop-helpers";
-import { UseCompleteListNavigationChildDeclarativeReturnType } from "preact-prop-helpers/react";
+import { CompleteListNavigationContext, ElementProps, Nullable, TargetedOmit, UseCompleteListNavigationChildDeclarativeReturnType, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildInfoKeysParameters, UseCompleteListNavigationChildParameters, UseCompleteListNavigationDeclarativeReturnType, UseCompleteListNavigationParameters, UseGenericChildParameters } from "preact-prop-helpers";
 import { EnhancedEventHandler, OmitStrong, TargetedEnhancedEvent } from "./props.js";
 import { UseCheckboxLikeParameters, UseCheckboxLikeReturnType } from "./use-checkbox-like.js";
 import { FocusableLabelElement, LabelPosition, UseLabelSyntheticParameters } from "./use-label.js";

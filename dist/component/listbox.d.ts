@@ -1,6 +1,5 @@
 import { Ref } from "preact";
-import { TargetedOmit, UseCompleteListNavigationChildrenInfo, UseCompleteListNavigationChildrenParameters, UseCompleteListNavigationChildrenReturnType, UsePaginatedChildParameters, UseProcessedChildInfo, UseProcessedChildReturnType, UseRefElementParameters, UseRefElementReturnType, UseStaggeredChildParameters, VNode } from "preact-prop-helpers";
-import { UseCompleteListNavigationChildReturnType } from "preact-prop-helpers/react";
+import { TargetedOmit, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationChildrenInfo, UseCompleteListNavigationChildrenParameters, UseCompleteListNavigationChildrenReturnType, UsePaginatedChildParameters, UseProcessedChildInfo, UseProcessedChildReturnType, UseRefElementParameters, UseRefElementReturnType, UseStaggeredChildParameters, VNode } from "preact-prop-helpers";
 import { Get, Get10, Get3, Get4, Get7, OmitStrong } from "../props.js";
 import { ListboxInfo, UseListboxItemParameters, UseListboxItemReturnType, UseListboxParameters, UseListboxReturnType } from "../use-listbox.js";
 import { GenericComponentProps } from "./util.js";
