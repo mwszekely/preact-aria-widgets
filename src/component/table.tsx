@@ -133,6 +133,7 @@ export const TableSection = memo(monitored(function TableSection<SectionElement 
     onElementChange,
     onMount,
     onUnmount,
+    initiallyTabbableColumn,
     ...void1
 }: TableSectionProps<SectionElement, RowElement, TableRowInfo<RowElement>>) {
     assertEmptyObject(void1);
@@ -143,7 +144,8 @@ export const TableSection = memo(monitored(function TableSection<SectionElement 
         TableRowsContext,
         useTableSection<SectionElement, RowElement, CellElement>({
             gridNavigationParameters: {
-                onTabbableColumnChange: onTabbableColumnChange
+                onTabbableColumnChange: onTabbableColumnChange,
+                initiallyTabbableColumn: initiallyTabbableColumn || 0
             },
             typeaheadNavigationParameters: {
                 onNavigateTypeahead,

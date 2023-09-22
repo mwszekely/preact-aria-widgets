@@ -1887,9 +1887,9 @@ const useTypeaheadNavigation = monitored(function useTypeaheadNavigation({ typea
     });
     const typeaheadComparator = useStableCallback((lhs, rhs) => {
         if (typeof lhs === "string" && typeof rhs.text === "string") {
-            // During typeahead, all strings longer than ours should be truncated
-            // so that they're all considered equally by that point.
-            return comparatorShared(lhs, rhs.text.substring(0, lhs.length));
+            // TODO: Doing this substring BEFORE normalization is, like, pretty not great?
+            let trimmedRet = comparatorShared(lhs, rhs.text.substring(0, lhs.length));
+            return trimmedRet;
         }
         return lhs - rhs;
     });
@@ -1990,15 +1990,15 @@ const useTypeaheadNavigation = monitored(function useTypeaheadNavigation({ typea
                 // These two are only set for elements that are ahead of us, but the principle's the same otherwise
                 let lowestUnsortedIndexNext = null;
                 let lowestSortedIndexNext = sortedTypeaheadIndex;
-                const updateBestFit = (u) => {
-                    if (!isValidForTypeaheadNavigation(u))
+                const updateBestFit = (unsortedIndex) => {
+                    if (!isValidForTypeaheadNavigation(unsortedIndex))
                         return;
-                    if (lowestUnsortedIndexAll == null || u < lowestUnsortedIndexAll) {
-                        lowestUnsortedIndexAll = u;
+                    if (lowestUnsortedIndexAll == null || unsortedIndex < lowestUnsortedIndexAll) {
+                        lowestUnsortedIndexAll = unsortedIndex;
                         lowestSortedIndexAll = i;
                     }
-                    if ((lowestUnsortedIndexNext == null || u < lowestUnsortedIndexNext) && u > (getIndex() ?? -Infinity)) {
-                        lowestUnsortedIndexNext = u;
+                    if ((lowestUnsortedIndexNext == null || unsortedIndex < lowestUnsortedIndexNext) && unsortedIndex > (getIndex() ?? -Infinity)) {
+                        lowestUnsortedIndexNext = unsortedIndex;
                         lowestSortedIndexNext = i;
                     }
                 };
@@ -2156,9 +2156,9 @@ const useListNavigationChild = monitored(function useListNavigationChild({ info:
  * @hasChild {@link useGridNavigationRow}
  * @hasChild {@link useGridNavigationCell}
  */
-const useGridNavigation = monitored(function useGridNavigation({ gridNavigationParameters: { onTabbableColumnChange, ...void3 }, linearNavigationParameters, ...listNavigationParameters }) {
+const useGridNavigation = monitored(function useGridNavigation({ gridNavigationParameters: { onTabbableColumnChange, initiallyTabbableColumn, ...void3 }, linearNavigationParameters, ...listNavigationParameters }) {
     const [getTabbableColumn, setTabbableColumn] = usePassiveState(onTabbableColumnChange, useStableCallback(() => {
-        let t = (listNavigationParameters.rovingTabIndexParameters.initiallyTabbedIndex ?? 0);
+        let t = (initiallyTabbableColumn ?? 0);
         return { actual: t, ideal: t };
     }));
     const { linearNavigationReturn, rovingTabIndexReturn, typeaheadNavigationReturn, managedChildrenParameters, context: { rovingTabIndexContext, typeaheadNavigationContext }, props, ...void1 } = useListNavigation({
@@ -2467,11 +2467,10 @@ function useCreateProcessedChildrenContext() {
         shuffleRef.current = shuffle;
         sortRef.current = sort;
     });
-    const rearrangeableChildrenContext = useMemoObject({
-        provideManglers
-    });
+    const rearrangeableChildrenContext = useMemoObject({ provideManglers });
+    const context = useMemoObject({ rearrangeableChildrenContext });
     return {
-        context: useMemoObject({ rearrangeableChildrenContext }),
+        context,
         indexDemangler,
         indexMangler,
         rearrange,
@@ -2567,6 +2566,9 @@ const useRearrangeableChildren = monitored(function useRearrangeableChildren({ r
     let sorted = children
         .slice()
         .map(child => {
+        if (process.env.NODE_ENV === 'development' && child) {
+            console.assert(getIndex(child) != null, `getIndex(vnode) must return its 0-based numeric index (e.g. its \`index\` prop)`);
+        }
         const mangledIndex = ((child == null ? null : indexMangler(getIndex(child))) ?? null);
         const demangledIndex = ((child == null ? null : getIndex(child))) ?? null;
         return ({
@@ -2993,7 +2995,7 @@ function useMultiSelection({ multiSelectionParameters: { onSelectionChange, mult
             unselectedIndices.current.add(index);
         }
         const childCount = (selectedIndices.current.size + unselectedIndices.current.size);
-        const selectedPercent = (selectedIndices.current.size / (childCount));
+        const selectedPercent = (childCount == 0 ? 0 : (selectedIndices.current.size / (childCount)));
         console.assert(selectedPercent >= 0 && selectedPercent <= 1);
         onSelectionChange?.(enhanceEvent(event, { selectedPercent, selectedIndices: selectedIndices.current }));
     });
@@ -3086,7 +3088,6 @@ function useMultiSelection({ multiSelectionParameters: { onSelectionChange, mult
  * @compositeParams
  */
 function useMultiSelectionChild({ info: { index, ...void4 }, multiSelectionChildParameters: { initiallyMultiSelected, onMultiSelectChange, multiSelectionDisabled, ...void1 }, context: { multiSelectionContext: { notifyParentOfChildSelectChange, multiSelectionAriaPropName, multiSelectionMode, doContiguousSelection, changeAllChildren, getCtrlKeyDown, getShiftKeyDown, getAnyFocused, ...void5 }, ...void3 }, ...void2 }) {
-    const getIndex = useStableGetter(index);
     // When we're in focus-selection mode, focusing any child deselects everything and selects JUST that child.
     // But that's really annoying for when you tab into the component, so it's only enabled when you're navigating WITHIN the component
     // (e.g. we only do that "reset everything" selection stuff when the component already had focus and that focus simply moved to a different child)
@@ -3119,6 +3120,7 @@ function useMultiSelectionChild({ info: { index, ...void4 }, multiSelectionChild
     const changeMultiSelected = useStableCallback((e, selected) => {
         console.assert(selected != null);
         console.assert(!multiSelectionDisabled);
+        console.assert(multiSelectIsEnabled);
         // We're selected now (because someone told us we are, this hook doesn't call this function directly)
         //
         // So update our own internal state so we can re-render with the correct props,
@@ -3129,10 +3131,13 @@ function useMultiSelectionChild({ info: { index, ...void4 }, multiSelectionChild
             notifyParentOfChildSelectChange(e, index, selected, prevSelected);
         }
     });
+    const multiSelectIsEnabled = (multiSelectionMode != 'disabled');
     useLayoutEffect(() => {
-        notifyParentOfChildSelectChange(null, getIndex(), getLocalSelected(), undefined);
-        return () => notifyParentOfChildSelectChange(null, getIndex(), undefined, getLocalSelected());
-    }, []);
+        if (multiSelectIsEnabled) {
+            notifyParentOfChildSelectChange(null, index, getLocalSelected(), undefined);
+            return () => notifyParentOfChildSelectChange(null, index, undefined, getLocalSelected());
+        }
+    }, [index, multiSelectIsEnabled]);
     const onCurrentFocusedInnerChanged = useStableCallback((focused, prev, event) => {
         if (focused) {
             if (multiSelectionMode == "focus") {
@@ -9055,7 +9060,7 @@ const GridlistContext = G(null);
 const GridlistRowContext = G(null);
 const GridlistRowsContext = G(null);
 const ProcessedChildContext = G(null);
-const Gridlist = memo(monitored(function Gridlist({ collator, disableHomeEndKeys, noTypeahead, onTabbableIndexChange, groupingType, typeaheadTimeout, singleSelectedIndex, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, pageNavigationSize, untabbable, paginationMax, paginationMin, onTabbableColumnChange, ariaLabel, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, render, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, singleSelectionAriaPropName, singleSelectionMode, ...void1 }) {
+const Gridlist = memo(monitored(function Gridlist({ collator, disableHomeEndKeys, noTypeahead, onTabbableIndexChange, groupingType, typeaheadTimeout, singleSelectedIndex, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, pageNavigationSize, untabbable, paginationMax, paginationMin, onTabbableColumnChange, ariaLabel, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, render, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, singleSelectionAriaPropName, singleSelectionMode, initiallyTabbableColumn, ...void1 }) {
     return useComponentC(imperativeHandle, render, GridlistContext, GridlistRowsContext, useGridlist({
         linearNavigationParameters: {
             onNavigateLinear,
@@ -9079,6 +9084,7 @@ const Gridlist = memo(monitored(function Gridlist({ collator, disableHomeEndKeys
         },
         gridNavigationParameters: {
             onTabbableColumnChange,
+            initiallyTabbableColumn: initiallyTabbableColumn || 0
         },
         labelParameters: {
             ariaLabel
@@ -9647,10 +9653,11 @@ const Table = memo(monitored(function Table({ ariaLabel, singleSelectionMode, mu
         multiSelectionParameters: { multiSelectionMode: multiSelectionMode || "disabled" },
     }));
 }));
-const TableSection = memo(monitored(function TableSection({ disableHomeEndKeys, initiallySingleSelectedIndex, untabbable, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, onTabbableColumnChange, onTabbableIndexChange, pageNavigationSize, paginationMax, paginationMin, render, location, imperativeHandle, multiSelectionAriaPropName, onSelectionChange, singleSelectionAriaPropName, onNavigateLinear, collator, noTypeahead, onNavigateTypeahead, typeaheadTimeout, tagTableSection, onElementChange, onMount, onUnmount, ...void1 }) {
+const TableSection = memo(monitored(function TableSection({ disableHomeEndKeys, initiallySingleSelectedIndex, untabbable, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, onTabbableColumnChange, onTabbableIndexChange, pageNavigationSize, paginationMax, paginationMin, render, location, imperativeHandle, multiSelectionAriaPropName, onSelectionChange, singleSelectionAriaPropName, onNavigateLinear, collator, noTypeahead, onNavigateTypeahead, typeaheadTimeout, tagTableSection, onElementChange, onMount, onUnmount, initiallyTabbableColumn, ...void1 }) {
     return useComponentC(imperativeHandle, render, TableSectionContext, TableRowsContext, useTableSection({
         gridNavigationParameters: {
-            onTabbableColumnChange: onTabbableColumnChange
+            onTabbableColumnChange: onTabbableColumnChange,
+            initiallyTabbableColumn: initiallyTabbableColumn || 0
         },
         typeaheadNavigationParameters: {
             onNavigateTypeahead,

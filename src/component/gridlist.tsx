@@ -114,6 +114,7 @@ export const Gridlist = memo(monitored(function Gridlist<GridlistElement extends
     onSelectionChange,
     singleSelectionAriaPropName,
     singleSelectionMode,
+    initiallyTabbableColumn,
     ...void1
 }: GridlistProps<GridlistElement, RowElement, CellElement, LabelElement, GridlistRowInfo<RowElement>, GridlistCellInfo<CellElement>>) {
     assertEmptyObject(void1);
@@ -148,6 +149,7 @@ export const Gridlist = memo(monitored(function Gridlist<GridlistElement extends
             },
             gridNavigationParameters: {
                 onTabbableColumnChange,
+                initiallyTabbableColumn: initiallyTabbableColumn || 0
             },
             labelParameters: {
                 ariaLabel

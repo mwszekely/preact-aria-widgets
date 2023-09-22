@@ -18,11 +18,12 @@ export const Table = memo(monitored(function Table({ ariaLabel, singleSelectionM
         multiSelectionParameters: { multiSelectionMode: multiSelectionMode || "disabled" },
     }));
 }));
-export const TableSection = memo(monitored(function TableSection({ disableHomeEndKeys, initiallySingleSelectedIndex, untabbable, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, onTabbableColumnChange, onTabbableIndexChange, pageNavigationSize, paginationMax, paginationMin, render, location, imperativeHandle, multiSelectionAriaPropName, onSelectionChange, singleSelectionAriaPropName, onNavigateLinear, collator, noTypeahead, onNavigateTypeahead, typeaheadTimeout, tagTableSection, onElementChange, onMount, onUnmount, ...void1 }) {
+export const TableSection = memo(monitored(function TableSection({ disableHomeEndKeys, initiallySingleSelectedIndex, untabbable, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, onTabbableColumnChange, onTabbableIndexChange, pageNavigationSize, paginationMax, paginationMin, render, location, imperativeHandle, multiSelectionAriaPropName, onSelectionChange, singleSelectionAriaPropName, onNavigateLinear, collator, noTypeahead, onNavigateTypeahead, typeaheadTimeout, tagTableSection, onElementChange, onMount, onUnmount, initiallyTabbableColumn, ...void1 }) {
     assertEmptyObject(void1);
     return useComponentC(imperativeHandle, render, TableSectionContext, TableRowsContext, useTableSection({
         gridNavigationParameters: {
-            onTabbableColumnChange: onTabbableColumnChange
+            onTabbableColumnChange: onTabbableColumnChange,
+            initiallyTabbableColumn: initiallyTabbableColumn || 0
         },
         typeaheadNavigationParameters: {
             onNavigateTypeahead,
