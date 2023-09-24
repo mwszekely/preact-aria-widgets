@@ -1,6 +1,6 @@
 import { jsx as _jsx } from "preact/jsx-runtime";
 import { createContext, createElement } from "preact";
-import { assertEmptyObject, focus, memo, monitored, useCompleteGridNavigationRows, useMergedProps, useProcessedChild, useRefElement, useStableCallback } from "preact-prop-helpers";
+import { assertEmptyObject, focus, memo, useCompleteGridNavigationRows, useMergedProps, useProcessedChild, useRefElement, useStableCallback } from "preact-prop-helpers";
 import { useContext, useEffect, useImperativeHandle } from "preact/hooks";
 import { useContextWithWarning } from "../props.js";
 import { useGridlist, useGridlistCell, useGridlistRow } from "../use-gridlist.js";
@@ -19,7 +19,7 @@ function defaultRenderGridlistChild({ tagGridlistChild, makePropsGridlistChild }
         return createElement(tagGridlistChild, (makePropsGridlistChild(info)));
     };
 }
-export const Gridlist = memo(monitored(function Gridlist({ collator, disableHomeEndKeys, noTypeahead, onTabbableIndexChange, groupingType, typeaheadTimeout, singleSelectedIndex, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, pageNavigationSize, untabbable, paginationMax, paginationMin, onTabbableColumnChange, ariaLabel, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, render, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, singleSelectionAriaPropName, singleSelectionMode, initiallyTabbableColumn, ...void1 }) {
+export const Gridlist = memo((function Gridlist({ collator, disableHomeEndKeys, noTypeahead, onTabbableIndexChange, groupingType, typeaheadTimeout, singleSelectedIndex, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, pageNavigationSize, untabbable, paginationMax, paginationMin, onTabbableColumnChange, ariaLabel, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, render, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, singleSelectionAriaPropName, singleSelectionMode, initiallyTabbableColumn, ...void1 }) {
     assertEmptyObject(void1);
     return useComponentC(imperativeHandle, render, GridlistContext, GridlistRowsContext, useGridlist({
         linearNavigationParameters: {
@@ -59,7 +59,7 @@ export const Gridlist = memo(monitored(function Gridlist({ collator, disableHome
         refElementParameters: { onElementChange, onMount, onUnmount }
     }));
 }));
-export const GridlistRows = memo(monitored(function GridlistRows({ render, adjust, children, compare, getIndex, imperativeHandle, onAfterChildLayoutEffect, onChildrenCountChange, onChildrenMountChange, onRearranged, paginationMax, paginationMin, staggered }) {
+export const GridlistRows = memo((function GridlistRows({ render, adjust, children, compare, getIndex, imperativeHandle, onAfterChildLayoutEffect, onChildrenCountChange, onChildrenMountChange, onRearranged, paginationMax, paginationMin, staggered }) {
     return useComponent(imperativeHandle, render, ProcessedChildContext, useCompleteGridNavigationRows({
         context: useContext(GridlistRowsContext),
         managedChildrenParameters: {
@@ -83,7 +83,7 @@ export const GridlistRows = memo(monitored(function GridlistRows({ render, adjus
         }
     }));
 }));
-export const GridlistRow = memo(monitored(function GridlistRow({ index, render, imperativeHandle, onElementChange: oec1, onMount, onUnmount, getText, untabbable, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, multiSelectionDisabled, singleSelectionDisabled, collator, initiallyMultiSelected, initiallyTabbedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onMultiSelectChange, onNavigateTypeahead, onTabbableIndexChange, selected, typeaheadTimeout, ...void1 }) {
+export const GridlistRow = memo((function GridlistRow({ index, render, imperativeHandle, onElementChange: oec1, onMount, onUnmount, getText, untabbable, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, multiSelectionDisabled, singleSelectionDisabled, collator, initiallyMultiSelected, initiallyTabbedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onMultiSelectChange, onNavigateTypeahead, onTabbableIndexChange, selected, typeaheadTimeout, ...void1 }) {
     assertEmptyObject(void1);
     const { propsStable, refElementReturn } = useRefElement({
         refElementParameters: {
@@ -113,7 +113,7 @@ export const GridlistRow = memo(monitored(function GridlistRow({ index, render, 
         return (_jsx(GridlistRowInner, { index: index, render: render, collator: collator, initiallyMultiSelected: initiallyMultiSelected, initiallyTabbedIndex: initiallyTabbedIndex, navigatePastEnd: navigatePastEnd, navigatePastStart: navigatePastStart, noTypeahead: noTypeahead, onMultiSelectChange: onMultiSelectChange, onNavigateTypeahead: onNavigateTypeahead, onTabbableIndexChange: onTabbableIndexChange, selected: selected, typeaheadTimeout: typeaheadTimeout, focusSelf: focusSelf, getText: getText, imperativeHandle: imperativeHandle, multiSelectionDisabled: multiSelectionDisabled, onCurrentFocusedChanged: onCurrentFocusedChanged, onCurrentFocusedInnerChanged: onCurrentFocusedInnerChanged, singleSelectionDisabled: singleSelectionDisabled, untabbable: untabbable, getChildren: getChildren, hideBecausePaginated: hideBecausePaginated, hideBecauseStaggered: hideBecauseStaggered, parentIsPaginated: parentIsPaginated, parentIsStaggered: parentIsStaggered, childUseEffect: childUseEffect, props: props2, ...void1 }));
     }
 }));
-const GridlistRowInner = memo(monitored(function GridlistRowInner({ index, collator, untabbable, navigatePastEnd, navigatePastStart, noTypeahead, onTabbableIndexChange, selected, typeaheadTimeout, getText, render, initiallyTabbedIndex, onNavigateTypeahead, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, focusSelf, childUseEffect, getChildren, hideBecausePaginated, hideBecauseStaggered, parentIsPaginated, parentIsStaggered, props: props1, ...void1 }) {
+const GridlistRowInner = memo((function GridlistRowInner({ index, collator, untabbable, navigatePastEnd, navigatePastStart, noTypeahead, onTabbableIndexChange, selected, typeaheadTimeout, getText, render, initiallyTabbedIndex, onNavigateTypeahead, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, focusSelf, childUseEffect, getChildren, hideBecausePaginated, hideBecauseStaggered, parentIsPaginated, parentIsStaggered, props: props1, ...void1 }) {
     assertEmptyObject(void1);
     const { context, hasCurrentFocusReturn, linearNavigationReturn, managedChildReturn, managedChildrenReturn, multiSelectionChildReturn, pressParameters, props: props2, rovingTabIndexChildReturn, rovingTabIndexReturn, refElementReturn, singleSelectionChildReturn, textContentReturn, typeaheadNavigationReturn, } = useGridlistRow({
         info: {
@@ -166,7 +166,7 @@ const GridlistRowInner = memo(monitored(function GridlistRowInner({ index, colla
         staggeredChildReturn: { hideBecauseStaggered, parentIsStaggered },
     });
 }));
-export const GridlistChild = memo(monitored(function GridlistChild({ index, colSpan, focusSelf, untabbable, getText, onPressSync, longPressThreshold, onPressingChange, render, imperativeHandle, info: subInfo }) {
+export const GridlistChild = memo((function GridlistChild({ index, colSpan, focusSelf, untabbable, getText, onPressSync, longPressThreshold, onPressingChange, render, imperativeHandle, info: subInfo }) {
     const context = useContextWithWarning(GridlistRowContext, "gridlist row");
     console.assert(context != null, `This GridlistChild is not contained within a GridlistRow that is contained within a Gridlist`);
     const defaultFocusSelf = useStableCallback((e) => { focus(e); }, []);

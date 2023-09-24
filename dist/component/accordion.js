@@ -1,5 +1,5 @@
 import { createContext } from "preact";
-import { assertEmptyObject, monitored } from "preact-prop-helpers";
+import { assertEmptyObject } from "preact-prop-helpers";
 import { memo } from "preact/compat";
 import { useContextWithWarning } from "../props.js";
 import { useAccordion, useAccordionSection } from "../use-accordion.js";
@@ -26,7 +26,7 @@ export const Accordion = memo(function Accordion({ disableHomeEndKeys, initialIn
         managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange },
     })));
 });
-export const AccordionSection = memo(monitored(function AccordionSection({ open, index, tagButton, disabled, bodyRole, untabbable, getText, imperativeHandle, onPressSync, focusSelf, render, info, onElementChange, onMount, onUnmount, ...void1 }) {
+export const AccordionSection = memo((function AccordionSection({ open, index, tagButton, disabled, bodyRole, untabbable, getText, imperativeHandle, onPressSync, focusSelf, render, info, onElementChange, onMount, onUnmount, ...void1 }) {
     assertEmptyObject(void1);
     return useComponent(imperativeHandle, render, null, useAccordionSection({
         buttonParameters: { disabled: disabled ?? false, tagButton, onPressSync: onPressSync },

@@ -1,5 +1,5 @@
 import { createElement, VNode } from "preact";
-import { assertEmptyObject, ElementProps, memo, monitored } from "preact-prop-helpers";
+import { assertEmptyObject, ElementProps, memo } from "preact-prop-helpers";
 import { ElementToTag, Get4 } from "../props.js";
 import { useCheckbox, UseCheckboxParameters, UseCheckboxReturnType } from "../use-checkbox.js";
 import { LabelPosition } from "../use-label.js";
@@ -54,7 +54,7 @@ export interface DefaultRenderCheckboxLikeParameters<I extends Element, L extend
     makePropsLabel: (info: InfoType) => ElementProps<L>
 }
 
-export const Checkbox = memo(monitored(function Checkbox<I extends Element, L extends Element>({
+export const Checkbox = memo((function Checkbox<I extends Element, L extends Element>({
     checked,
     disabled,
     tagLabel,

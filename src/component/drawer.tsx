@@ -1,4 +1,4 @@
-import { assertEmptyObject, memo, monitored } from "preact-prop-helpers";
+import { assertEmptyObject, memo } from "preact-prop-helpers";
 import { useContext } from "preact/hooks";
 import { Get11 } from "../props.js";
 import { UseDrawerParameters, UseDrawerReturnType, useDrawer } from "../use-drawer.js";
@@ -10,7 +10,7 @@ export type DrawerProps<FocusContainerElement extends Element, SourceElement ext
     "ariaLabel" | "onDismiss" | "active" | "focusPopup"
 >;
 
-export const Drawer = memo(monitored(function Drawer<FocusContainerElement extends Element, SourceElement extends Element, DrawerElement extends Element, TitleElement extends Element>({
+export const Drawer = memo((function Drawer<FocusContainerElement extends Element, SourceElement extends Element, DrawerElement extends Element, TitleElement extends Element>({
 
     active,
     onDismiss,

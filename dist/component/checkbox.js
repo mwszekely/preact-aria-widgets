@@ -1,6 +1,6 @@
 import { Fragment as _Fragment, jsxs as _jsxs, jsx as _jsx } from "preact/jsx-runtime";
 import { createElement } from "preact";
-import { assertEmptyObject, memo, monitored } from "preact-prop-helpers";
+import { assertEmptyObject, memo } from "preact-prop-helpers";
 import { useCheckbox } from "../use-checkbox.js";
 import { useComponent } from "./util.js";
 export function defaultRenderCheckboxLike({ labelPosition, tagInput, tagLabel, makePropsInput, makePropsLabel }) {
@@ -23,7 +23,7 @@ export function defaultRenderCheckboxLike({ labelPosition, tagInput, tagLabel, m
         }
     };
 }
-export const Checkbox = memo(monitored(function Checkbox({ checked, disabled, tagLabel, labelPosition, tagInput, ariaLabel, longPressThreshold, excludeSpace, imperativeHandle, render, onCheckedChange, ...void1 }) {
+export const Checkbox = memo((function Checkbox({ checked, disabled, tagLabel, labelPosition, tagInput, ariaLabel, longPressThreshold, excludeSpace, imperativeHandle, render, onCheckedChange, ...void1 }) {
     assertEmptyObject(void1);
     return useComponent(imperativeHandle, render, null, useCheckbox({
         checkboxLikeParameters: { checked, disabled: disabled ?? false },

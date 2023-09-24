@@ -9883,7 +9883,7 @@
       managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange }
     }));
   });
-  var AccordionSection = x3(monitored(function AccordionSection2({ open, index, tagButton, disabled, bodyRole, untabbable, getText, imperativeHandle, onPressSync, focusSelf, render, info, onElementChange, onMount, onUnmount, ...void1 }) {
+  var AccordionSection = x3(function AccordionSection2({ open, index, tagButton, disabled, bodyRole, untabbable, getText, imperativeHandle, onPressSync, focusSelf, render, info, onElementChange, onMount, onUnmount, ...void1 }) {
     assertEmptyObject(void1);
     return useComponent(imperativeHandle, render, null, useAccordionSection({
       buttonParameters: { disabled: disabled ?? false, tagButton, onPressSync },
@@ -9895,21 +9895,21 @@
       textContentParameters: { getText: useDefault("getText", getText) },
       context: useContextWithWarning(AccordionSectionContext, "accordion section")
     }));
-  }));
+  });
 
   // ../dist/component/button.js
-  var Button = x3(monitored(function Button2({ tagButton, pressed, render, disabled, onElementChange, onMount, onUnmount, allowRepeatPresses, longPressThreshold, excludeSpace, onPressingChange, onPressSync, focusSelf, role, imperativeHandle, ...void1 }) {
+  var Button = x3(function Button2({ tagButton, pressed, render, disabled, onElementChange, onMount, onUnmount, allowRepeatPresses, longPressThreshold, excludeSpace, onPressingChange, onPressSync, focusSelf, role, imperativeHandle, ...void1 }) {
     assertEmptyObject(void1);
     return useComponent(imperativeHandle, render, null, useButton({
       buttonParameters: { onPressSync, role, tagButton, pressed, disabled },
       pressParameters: { longPressThreshold, allowRepeatPresses, excludeSpace, onPressingChange, focusSelf: useDefault("focusSelf", focusSelf) },
       refElementParameters: { onElementChange, onMount, onUnmount }
     }));
-  }));
+  });
 
   // ../dist/component/checkbox-group.js
   var UseCheckboxGroupChildContext = G(null);
-  var CheckboxGroup = x3(monitored(function CheckboxGroup2({ render, collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, onTabbableIndexChange, untabbable, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, ...void1 }) {
+  var CheckboxGroup = x3(function CheckboxGroup2({ render, collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, onTabbableIndexChange, untabbable, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, ...void1 }) {
     assertEmptyObject(void1);
     return useComponent(imperativeHandle, render, UseCheckboxGroupChildContext, useCheckboxGroup({
       linearNavigationParameters: {
@@ -9935,8 +9935,8 @@
       refElementParameters: { onElementChange, onMount, onUnmount },
       multiSelectionParameters: { multiSelectionAriaPropName, multiSelectionMode: multiSelectionMode || "activation", onSelectionChange }
     }));
-  }));
-  var CheckboxGroupParent = x3(monitored(function CheckboxGroupParent2({
+  });
+  var CheckboxGroupParent = x3(function CheckboxGroupParent2({
     render,
     index,
     focusSelf,
@@ -9972,8 +9972,8 @@
       multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false, initiallyMultiSelected: initiallyMultiSelected || false, onMultiSelectChange },
       singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false }
     }));
-  }));
-  var CheckboxGroupChild = x3(monitored(function CheckboxGroupChild2({
+  });
+  var CheckboxGroupChild = x3(function CheckboxGroupChild2({
     index,
     render,
     checked,
@@ -10018,7 +10018,7 @@
       },
       multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false, onMultiSelectChange }
     }));
-  }));
+  });
 
   // ../dist/component/checkbox.js
   function defaultRenderCheckboxLike({ labelPosition, tagInput, tagLabel, makePropsInput, makePropsLabel }) {
@@ -10039,7 +10039,7 @@
       }
     };
   }
-  var Checkbox = x3(monitored(function Checkbox2({ checked, disabled, tagLabel, labelPosition, tagInput, ariaLabel, longPressThreshold, excludeSpace, imperativeHandle, render, onCheckedChange, ...void1 }) {
+  var Checkbox = x3(function Checkbox2({ checked, disabled, tagLabel, labelPosition, tagInput, ariaLabel, longPressThreshold, excludeSpace, imperativeHandle, render, onCheckedChange, ...void1 }) {
     assertEmptyObject(void1);
     return useComponent(imperativeHandle, render, null, useCheckbox({
       checkboxLikeParameters: { checked, disabled: disabled ?? false },
@@ -10047,10 +10047,10 @@
       pressParameters: { excludeSpace, longPressThreshold },
       checkboxParameters: { onCheckedChange }
     }));
-  }));
+  });
 
   // ../dist/component/dialog.js
-  var Dialog = x3(monitored(function Dialog2({ active, onDismiss, dismissBackdropActive, dismissEscapeActive, focusOpener, getDocument: getDocument2, imperativeHandle, parentDepth, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, focusPopup, ariaLabel, onElementChange, onMount, onUnmount, render }) {
+  var Dialog = x3(function Dialog2({ active, onDismiss, dismissBackdropActive, dismissEscapeActive, focusOpener, getDocument: getDocument2, imperativeHandle, parentDepth, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, focusPopup, ariaLabel, onElementChange, onMount, onUnmount, render }) {
     const defaultParentDepth = q2(ParentDepthContext);
     let myDepth = (parentDepth ?? defaultParentDepth) + 1;
     return o4(ParentDepthContext.Provider, { value: myDepth, children: useComponent(imperativeHandle, render, null, useDialog({
@@ -10077,10 +10077,10 @@
       },
       labelParameters: { ariaLabel }
     })) });
-  }));
+  });
 
   // ../dist/component/drawer.js
-  var Drawer = x3(monitored(function Drawer2({ active, onDismiss, dismissBackdropActive, dismissEscapeActive, dismissLostFocusActive, onElementChange, onMount, onUnmount, focusOpener, focusPopup, getDocument: getDocument2, imperativeHandle, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, parentDepth, render, trapActive, ariaLabel, ...void1 }) {
+  var Drawer = x3(function Drawer2({ active, onDismiss, dismissBackdropActive, dismissEscapeActive, dismissLostFocusActive, onElementChange, onMount, onUnmount, focusOpener, focusPopup, getDocument: getDocument2, imperativeHandle, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, parentDepth, render, trapActive, ariaLabel, ...void1 }) {
     const defaultParentDepth = q2(ParentDepthContext);
     let myDepth = (parentDepth ?? defaultParentDepth) + 1;
     assertEmptyObject(void1);
@@ -10109,14 +10109,14 @@
       },
       labelParameters: { ariaLabel }
     })) });
-  }));
+  });
 
   // ../dist/component/gridlist.js
   var GridlistContext = G(null);
   var GridlistRowContext = G(null);
   var GridlistRowsContext = G(null);
   var ProcessedChildContext = G(null);
-  var Gridlist = x3(monitored(function Gridlist2({ collator, disableHomeEndKeys, noTypeahead, onTabbableIndexChange, groupingType, typeaheadTimeout, singleSelectedIndex, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, pageNavigationSize, untabbable, paginationMax, paginationMin, onTabbableColumnChange, ariaLabel, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, render, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, singleSelectionAriaPropName, singleSelectionMode, initiallyTabbableColumn, ...void1 }) {
+  var Gridlist = x3(function Gridlist2({ collator, disableHomeEndKeys, noTypeahead, onTabbableIndexChange, groupingType, typeaheadTimeout, singleSelectedIndex, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, pageNavigationSize, untabbable, paginationMax, paginationMin, onTabbableColumnChange, ariaLabel, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, render, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, singleSelectionAriaPropName, singleSelectionMode, initiallyTabbableColumn, ...void1 }) {
     assertEmptyObject(void1);
     return useComponentC(imperativeHandle, render, GridlistContext, GridlistRowsContext, useGridlist({
       linearNavigationParameters: {
@@ -10155,8 +10155,8 @@
       singleSelectionDeclarativeParameters: { onSingleSelectedIndexChange, singleSelectedIndex },
       refElementParameters: { onElementChange, onMount, onUnmount }
     }));
-  }));
-  var GridlistRows = x3(monitored(function GridlistRows2({ render, adjust, children, compare, getIndex, imperativeHandle, onAfterChildLayoutEffect, onChildrenCountChange, onChildrenMountChange, onRearranged, paginationMax, paginationMin, staggered }) {
+  });
+  var GridlistRows = x3(function GridlistRows2({ render, adjust, children, compare, getIndex, imperativeHandle, onAfterChildLayoutEffect, onChildrenCountChange, onChildrenMountChange, onRearranged, paginationMax, paginationMin, staggered }) {
     return useComponent(imperativeHandle, render, ProcessedChildContext, useCompleteGridNavigationRows({
       context: q2(GridlistRowsContext),
       managedChildrenParameters: {
@@ -10179,8 +10179,8 @@
         staggered: staggered || false
       }
     }));
-  }));
-  var GridlistRow = x3(monitored(function GridlistRow2({ index, render, imperativeHandle, onElementChange: oec1, onMount, onUnmount, getText, untabbable, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, multiSelectionDisabled, singleSelectionDisabled, collator, initiallyMultiSelected, initiallyTabbedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onMultiSelectChange, onNavigateTypeahead, onTabbableIndexChange, selected, typeaheadTimeout, ...void1 }) {
+  });
+  var GridlistRow = x3(function GridlistRow2({ index, render, imperativeHandle, onElementChange: oec1, onMount, onUnmount, getText, untabbable, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, multiSelectionDisabled, singleSelectionDisabled, collator, initiallyMultiSelected, initiallyTabbedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onMultiSelectChange, onNavigateTypeahead, onTabbableIndexChange, selected, typeaheadTimeout, ...void1 }) {
     assertEmptyObject(void1);
     const { propsStable, refElementReturn } = useRefElement({
       refElementParameters: {
@@ -10211,8 +10211,8 @@
     } else {
       return o4(GridlistRowInner, { index, render, collator, initiallyMultiSelected, initiallyTabbedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onMultiSelectChange, onNavigateTypeahead, onTabbableIndexChange, selected, typeaheadTimeout, focusSelf, getText, imperativeHandle, multiSelectionDisabled, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, singleSelectionDisabled, untabbable, getChildren, hideBecausePaginated, hideBecauseStaggered, parentIsPaginated, parentIsStaggered, childUseEffect, props: props2, ...void1 });
     }
-  }));
-  var GridlistRowInner = x3(monitored(function GridlistRowInner2({ index, collator, untabbable, navigatePastEnd, navigatePastStart, noTypeahead, onTabbableIndexChange, selected, typeaheadTimeout, getText, render, initiallyTabbedIndex, onNavigateTypeahead, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, focusSelf, childUseEffect, getChildren, hideBecausePaginated, hideBecauseStaggered, parentIsPaginated, parentIsStaggered, props: props1, ...void1 }) {
+  });
+  var GridlistRowInner = x3(function GridlistRowInner2({ index, collator, untabbable, navigatePastEnd, navigatePastStart, noTypeahead, onTabbableIndexChange, selected, typeaheadTimeout, getText, render, initiallyTabbedIndex, onNavigateTypeahead, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, focusSelf, childUseEffect, getChildren, hideBecausePaginated, hideBecauseStaggered, parentIsPaginated, parentIsStaggered, props: props1, ...void1 }) {
     assertEmptyObject(void1);
     const { context, hasCurrentFocusReturn, linearNavigationReturn, managedChildReturn, managedChildrenReturn, multiSelectionChildReturn, pressParameters, props: props2, rovingTabIndexChildReturn, rovingTabIndexReturn, refElementReturn, singleSelectionChildReturn, textContentReturn, typeaheadNavigationReturn } = useGridlistRow({
       info: {
@@ -10264,8 +10264,8 @@
       paginatedChildReturn: { hideBecausePaginated, parentIsPaginated },
       staggeredChildReturn: { hideBecauseStaggered, parentIsStaggered }
     });
-  }));
-  var GridlistChild = x3(monitored(function GridlistChild2({ index, colSpan, focusSelf, untabbable, getText, onPressSync, longPressThreshold, onPressingChange, render, imperativeHandle, info: subInfo }) {
+  });
+  var GridlistChild = x3(function GridlistChild2({ index, colSpan, focusSelf, untabbable, getText, onPressSync, longPressThreshold, onPressingChange, render, imperativeHandle, info: subInfo }) {
     const context = useContextWithWarning(GridlistRowContext, "gridlist row");
     console.assert(context != null, `This GridlistChild is not contained within a GridlistRow that is contained within a Gridlist`);
     const defaultFocusSelf = useStableCallback((e3) => {
@@ -10284,7 +10284,7 @@
     });
     A2(imperativeHandle, () => info);
     return render(info);
-  }));
+  });
 
   // ../dist/component/heading.js
   function overwriteWithWarning(a4, ...t3) {
@@ -10313,7 +10313,7 @@
   var ListboxChildrenContext = G(null);
   var ListboxChildContext = G(null);
   var ListboxGroupContext = G(null);
-  var GroupedListbox = x3(monitored(function GroupedListbox2({ ariaLabel, orientation, render, onElementChange, onMount, onUnmount }) {
+  var GroupedListbox = x3(function GroupedListbox2({ ariaLabel, orientation, render, onElementChange, onMount, onUnmount }) {
     const info = useListbox({
       labelParameters: { ariaLabel },
       linearNavigationParameters: {
@@ -10338,8 +10338,8 @@
       singleSelectionDeclarativeParameters: { onSingleSelectedIndexChange: null, singleSelectedIndex: null }
     });
     return o4(ListboxGroupContext.Provider, { value: info, children: render(info) });
-  }));
-  var Listbox = x3(monitored(function Listbox2({ ariaLabel, collator, disableHomeEndKeys, singleSelectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSingleSelectedIndexChange, onTabbableIndexChange, pageNavigationSize, untabbable, typeaheadTimeout, orientation, onNavigateLinear, onNavigateTypeahead, onElementChange, onMount, onUnmount, render, imperativeHandle, singleSelectionAriaPropName, singleSelectionMode, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, paginationMax, paginationMin, ...void1 }) {
+  });
+  var Listbox = x3(function Listbox2({ ariaLabel, collator, disableHomeEndKeys, singleSelectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSingleSelectedIndexChange, onTabbableIndexChange, pageNavigationSize, untabbable, typeaheadTimeout, orientation, onNavigateLinear, onNavigateTypeahead, onElementChange, onMount, onUnmount, render, imperativeHandle, singleSelectionAriaPropName, singleSelectionMode, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, paginationMax, paginationMin, ...void1 }) {
     const listboxGroupInfo = q2(ListboxGroupContext);
     assertEmptyObject(void1);
     return useComponentC(imperativeHandle, render, ListboxContext, ListboxChildrenContext, useListbox({
@@ -10374,8 +10374,8 @@
       singleSelectionDeclarativeParameters: { onSingleSelectedIndexChange, singleSelectedIndex },
       multiSelectionParameters: { multiSelectionAriaPropName, multiSelectionMode: multiSelectionMode || "disabled", onSelectionChange }
     }));
-  }));
-  var ListboxChildren = x3(monitored(function ListboxChildren2({ children, render, adjust, compare, getIndex, imperativeHandle, onAfterChildLayoutEffect, onChildrenCountChange, onChildrenMountChange, onRearranged, paginationMax, paginationMin, staggered }) {
+  });
+  var ListboxChildren = x3(function ListboxChildren2({ children, render, adjust, compare, getIndex, imperativeHandle, onAfterChildLayoutEffect, onChildrenCountChange, onChildrenMountChange, onRearranged, paginationMax, paginationMin, staggered }) {
     const r5 = useCompleteListNavigationChildren({
       context: q2(ListboxChildrenContext),
       managedChildrenParameters: {
@@ -10399,8 +10399,8 @@
       }
     });
     return useComponent(imperativeHandle, render, ListboxChildContext, r5);
-  }));
-  var ListboxItem = x3(monitored(function ListboxItemOuter({ index, render, imperativeHandle, onElementChange: oec1, onMount, onUnmount, getText, untabbable, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, multiSelectionDisabled, singleSelectionDisabled, multiSelected, onMultiSelectedChange, ...void1 }) {
+  });
+  var ListboxItem = x3(function ListboxItemOuter({ index, render, imperativeHandle, onElementChange: oec1, onMount, onUnmount, getText, untabbable, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, multiSelectionDisabled, singleSelectionDisabled, multiSelected, onMultiSelectedChange, ...void1 }) {
     const context = useContextWithWarning(ListboxContext, "listbox");
     console.assert(context != null, `This ListboxItem is not contained within a Listbox`);
     assertEmptyObject(void1);
@@ -10434,8 +10434,8 @@
     } else {
       return o4(ListboxItemInner, { index, render, allowRepeatPresses, excludeEnter, excludePointer, focusSelf, getText, imperativeHandle, longPressThreshold, multiSelected, multiSelectionDisabled, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onMount, onMultiSelectedChange, onPressingChange, onUnmount, singleSelectionDisabled, untabbable, getChildren, hideBecausePaginated, hideBecauseStaggered, parentIsPaginated, parentIsStaggered, childUseEffect, props: props2, ...void1 });
     }
-  }));
-  var ListboxItemInner = x3(monitored(function ListboxItemInner2({ getText, untabbable, index, render, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, imperativeHandle, multiSelectionDisabled, singleSelectionDisabled, multiSelected, onMultiSelectedChange, getChildren, hideBecausePaginated, hideBecauseStaggered, parentIsPaginated, parentIsStaggered, props: props1, childUseEffect, ...void1 }) {
+  });
+  var ListboxItemInner = x3(function ListboxItemInner2({ getText, untabbable, index, render, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, imperativeHandle, multiSelectionDisabled, singleSelectionDisabled, multiSelected, onMultiSelectedChange, getChildren, hideBecausePaginated, hideBecauseStaggered, parentIsPaginated, parentIsStaggered, props: props1, childUseEffect, ...void1 }) {
     const context = useContextWithWarning(ListboxContext, "listbox");
     console.assert(context != null, `This ListboxItem is not contained within a Listbox`);
     const focusSelfDefault = T2((e3) => {
@@ -10471,11 +10471,11 @@
       managedChildReturn,
       staggeredChildReturn: { hideBecauseStaggered, parentIsStaggered }
     });
-  }));
+  });
 
   // ../dist/component/menu.js
   var MenuItemContext = G(null);
-  var Menu = x3(monitored(function Menu2({ collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, orientation, singleSelectionAriaPropName, singleSelectionMode, untabbable, active, onDismiss, onElementChange, onMount, onUnmount, openDirection, onTabbableIndexChange, singleSelectedIndex, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, pageNavigationSize, parentDepth, disabled, onOpen, onNavigateLinear, onNavigateTypeahead, getDocument: getDocument2, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, render, imperativeHandle, ...void1 }) {
+  var Menu = x3(function Menu2({ collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, orientation, singleSelectionAriaPropName, singleSelectionMode, untabbable, active, onDismiss, onElementChange, onMount, onUnmount, openDirection, onTabbableIndexChange, singleSelectedIndex, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, pageNavigationSize, parentDepth, disabled, onOpen, onNavigateLinear, onNavigateTypeahead, getDocument: getDocument2, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, render, imperativeHandle, ...void1 }) {
     const defaultParentDepth = q2(ParentDepthContext);
     let myDepth = (parentDepth ?? defaultParentDepth) + 1;
     untabbable ||= false;
@@ -10531,8 +10531,8 @@
         onSingleSelectedIndexChange
       }
     })) });
-  }));
-  var MenuItem = x3(monitored(function MenuItem2({ index, untabbable, onPress, getText, role, focusSelf, onPressingChange, render, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, ...void1 }) {
+  });
+  var MenuItem = x3(function MenuItem2({ index, untabbable, onPress, getText, role, focusSelf, onPressingChange, render, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, ...void1 }) {
     const context = useContextWithWarning(MenuItemContext, "menu");
     const defaultFocusSelf = T2((e3) => focus(e3), []);
     assertEmptyObject(void1);
@@ -10558,11 +10558,11 @@
       singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false },
       multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false, initiallyMultiSelected: initiallyMultiSelected || false, onMultiSelectChange }
     }));
-  }));
+  });
 
   // ../dist/component/menubar.js
   var MenubarItemContext = G(null);
-  var Menubar = x3(monitored(function Menubar2({ render, collator, disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, noTypeahead, untabbable, onTabbableIndexChange, disabled, singleSelectedIndex, onSingleSelectedIndexChange, typeaheadTimeout, role, ariaLabel, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, singleSelectionAriaPropName, singleSelectionMode, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, ...void1 }) {
+  var Menubar = x3(function Menubar2({ render, collator, disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, noTypeahead, untabbable, onTabbableIndexChange, disabled, singleSelectedIndex, onSingleSelectedIndexChange, typeaheadTimeout, role, ariaLabel, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, singleSelectionAriaPropName, singleSelectionMode, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, ...void1 }) {
     assertEmptyObject(void1);
     const info = useMenubar({
       linearNavigationParameters: {
@@ -10607,8 +10607,8 @@
     });
     A2(imperativeHandle, () => info);
     return o4(MenubarItemContext.Provider, { value: info.contextChildren, children: render(info) });
-  }));
-  var MenubarItem = x3(monitored(function MenubarItem2({ index, render, focusSelf, untabbable, getText, onPress, onPressingChange, role, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, ...void1 }) {
+  });
+  var MenubarItem = x3(function MenubarItem2({ index, render, focusSelf, untabbable, getText, onPress, onPressingChange, role, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, ...void1 }) {
     const defaultFocusSelf = T2((e3) => focus(e3), []);
     assertEmptyObject(void1);
     return useComponent(imperativeHandle, render, null, useMenubarChild({
@@ -10622,10 +10622,10 @@
       singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false },
       multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false, initiallyMultiSelected: initiallyMultiSelected || false, onMultiSelectChange }
     }));
-  }));
+  });
 
   // ../dist/component/progress.js
-  var Progress = x3(monitored(function Progress2({ tagProgressIndicator, ariaLabel, max, render, value, valueText, imperativeHandle, ...void1 }) {
+  var Progress = x3(function Progress2({ tagProgressIndicator, ariaLabel, max, render, value, valueText, imperativeHandle, ...void1 }) {
     assertEmptyObject(void1);
     return useComponent(imperativeHandle, render, null, useProgress({
       labelParameters: { ariaLabel },
@@ -10636,8 +10636,8 @@
         tagProgressIndicator
       }
     }));
-  }));
-  var ProgressWithHandler = x3(monitored(function ProgressWithHandler2({ ariaLabel, forciblyPending, render, tagProgressIndicator, asyncHandler, capture, debounce: debounce2, throttle, notifyFailure, notifyPending, notifySuccess, imperativeHandle, ...void1 }) {
+  });
+  var ProgressWithHandler = x3(function ProgressWithHandler2({ ariaLabel, forciblyPending, render, tagProgressIndicator, asyncHandler, capture, debounce: debounce2, throttle, notifyFailure, notifyPending, notifySuccess, imperativeHandle, ...void1 }) {
     assertEmptyObject(void1);
     return useComponent(imperativeHandle, render, null, useProgressWithHandler({
       asyncHandlerParameters: { asyncHandler, capture, debounce: debounce2, throttle },
@@ -10645,12 +10645,12 @@
       progressIndicatorParameters: { tagProgressIndicator },
       progressWithHandlerParameters: { forciblyPending, notifyFailure, notifyPending, notifySuccess }
     }));
-  }));
+  });
 
   // ../dist/component/radio-group.js
   var RadioContext = G(null);
   var ProcessedChildrenContext = G(null);
-  var RadioGroup = x3(monitored(function RadioGroup2({ render, name, collator, disableHomeEndKeys, arrowKeyDirection, noTypeahead, typeaheadTimeout, ariaLabel, navigatePastEnd, navigatePastStart, selectedValue, untabbable, onTabbableIndexChange, onNavigateLinear, onNavigateTypeahead, pageNavigationSize, onElementChange, onMount, onUnmount, imperativeHandle, onSelectedValueChange, singleSelectionMode, ...void1 }) {
+  var RadioGroup = x3(function RadioGroup2({ render, name, collator, disableHomeEndKeys, arrowKeyDirection, noTypeahead, typeaheadTimeout, ariaLabel, navigatePastEnd, navigatePastStart, selectedValue, untabbable, onTabbableIndexChange, onNavigateLinear, onNavigateTypeahead, pageNavigationSize, onElementChange, onMount, onUnmount, imperativeHandle, onSelectedValueChange, singleSelectionMode, ...void1 }) {
     untabbable ??= false;
     assertEmptyObject(void1);
     return useComponent(imperativeHandle, render, RadioContext, useRadioGroup({
@@ -10677,8 +10677,8 @@
       },
       refElementParameters: { onElementChange, onMount, onUnmount }
     }));
-  }));
-  var Radio = x3(monitored(function Radio2({ disabled, index, render, value, ariaLabel, labelPosition, untabbable, tagInput, tagLabel, getText, longPressThreshold, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, imperativeHandle, ...void1 }) {
+  });
+  var Radio = x3(function Radio2({ disabled, index, render, value, ariaLabel, labelPosition, untabbable, tagInput, tagLabel, getText, longPressThreshold, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, imperativeHandle, ...void1 }) {
     assertEmptyObject(void1);
     const context = useContextWithWarning(RadioContext, "radio group");
     console.assert(context != null, `This Radio is not contained within a RadioGroup`);
@@ -10694,7 +10694,7 @@
       hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged },
       refElementParameters: { onElementChange, onMount, onUnmount }
     }));
-  }));
+  });
 
   // ../dist/component/slider.js
   var SliderThumbContext = G(null);
@@ -10720,7 +10720,7 @@
   var TableRowsContext = G(null);
   var ProcessedRowContext = G(null);
   var TableRowContext = G(null);
-  var Table2 = x3(monitored(function Table3({ ariaLabel, singleSelectionMode, multiSelectionMode, tagTable, imperativeHandle, render, ...void1 }) {
+  var Table2 = x3(function Table3({ ariaLabel, singleSelectionMode, multiSelectionMode, tagTable, imperativeHandle, render, ...void1 }) {
     assertEmptyObject(void1);
     return useComponent(imperativeHandle, render, TableContext, useTable({
       labelParameters: { ariaLabel },
@@ -10728,8 +10728,8 @@
       singleSelectionParameters: { singleSelectionMode: singleSelectionMode || "disabled" },
       multiSelectionParameters: { multiSelectionMode: multiSelectionMode || "disabled" }
     }));
-  }));
-  var TableSection = x3(monitored(function TableSection2({ disableHomeEndKeys, initiallySingleSelectedIndex, untabbable, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, onTabbableColumnChange, onTabbableIndexChange, pageNavigationSize, paginationMax, paginationMin, render, location, imperativeHandle, multiSelectionAriaPropName, onSelectionChange, singleSelectionAriaPropName, onNavigateLinear, collator, noTypeahead, onNavigateTypeahead, typeaheadTimeout, tagTableSection, onElementChange, onMount, onUnmount, initiallyTabbableColumn, ...void1 }) {
+  });
+  var TableSection = x3(function TableSection2({ disableHomeEndKeys, initiallySingleSelectedIndex, untabbable, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, onTabbableColumnChange, onTabbableIndexChange, pageNavigationSize, paginationMax, paginationMin, render, location, imperativeHandle, multiSelectionAriaPropName, onSelectionChange, singleSelectionAriaPropName, onNavigateLinear, collator, noTypeahead, onNavigateTypeahead, typeaheadTimeout, tagTableSection, onElementChange, onMount, onUnmount, initiallyTabbableColumn, ...void1 }) {
     assertEmptyObject(void1);
     return useComponentC(imperativeHandle, render, TableSectionContext, TableRowsContext, useTableSection({
       gridNavigationParameters: {
@@ -10773,8 +10773,8 @@
       },
       refElementParameters: { onElementChange, onMount, onUnmount }
     }));
-  }));
-  var TableRows = x3(monitored(function TableRows2({ render, adjust, children, compare, getIndex, imperativeHandle, onAfterChildLayoutEffect, onChildrenCountChange, onChildrenMountChange, onRearranged, paginationMax, paginationMin, staggered }) {
+  });
+  var TableRows = x3(function TableRows2({ render, adjust, children, compare, getIndex, imperativeHandle, onAfterChildLayoutEffect, onChildrenCountChange, onChildrenMountChange, onRearranged, paginationMax, paginationMin, staggered }) {
     return useComponent(imperativeHandle, render, ProcessedRowContext, useCompleteGridNavigationRows({
       context: q2(TableRowsContext),
       managedChildrenParameters: {
@@ -10797,8 +10797,8 @@
         staggered: staggered || false
       }
     }));
-  }));
-  var TableRow = x3(monitored(function TableRow2({ index, render, imperativeHandle, onElementChange: oec1, onMount, onUnmount, getText, untabbable, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, multiSelectionDisabled, singleSelectionDisabled, initiallyMultiSelected, initiallyTabbedIndex, navigatePastEnd, navigatePastStart, onMultiSelectChange, onTabbableIndexChange, selected, tagTableRow, ...void1 }) {
+  });
+  var TableRow = x3(function TableRow2({ index, render, imperativeHandle, onElementChange: oec1, onMount, onUnmount, getText, untabbable, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, multiSelectionDisabled, singleSelectionDisabled, initiallyMultiSelected, initiallyTabbedIndex, navigatePastEnd, navigatePastStart, onMultiSelectChange, onTabbableIndexChange, selected, tagTableRow, ...void1 }) {
     assertEmptyObject(void1);
     const { propsStable, refElementReturn } = useRefElement({
       refElementParameters: {
@@ -10829,8 +10829,8 @@
     } else {
       return o4(TableRowInner, { index, render, initiallyMultiSelected, initiallyTabbedIndex, navigatePastEnd, navigatePastStart, onMultiSelectChange, onTabbableIndexChange, selected, focusSelf, getText, imperativeHandle, multiSelectionDisabled, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, singleSelectionDisabled, untabbable, getChildren, hideBecausePaginated, hideBecauseStaggered, parentIsPaginated, parentIsStaggered, childUseEffect, props: props2, ...void1 });
     }
-  }));
-  var TableRowInner = x3(monitored(function TableRowInner2({ index, getText, tagTableRow, onTabbableIndexChange, navigatePastEnd, navigatePastStart, selected, initiallyTabbedIndex, untabbable, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, render, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, focusSelf, childUseEffect, getChildren, hideBecausePaginated, hideBecauseStaggered, parentIsPaginated, parentIsStaggered, props: props1, ...void1 }) {
+  });
+  var TableRowInner = x3(function TableRowInner2({ index, getText, tagTableRow, onTabbableIndexChange, navigatePastEnd, navigatePastStart, selected, initiallyTabbedIndex, untabbable, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, render, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, focusSelf, childUseEffect, getChildren, hideBecausePaginated, hideBecauseStaggered, parentIsPaginated, parentIsStaggered, props: props1, ...void1 }) {
     assertEmptyObject(void1);
     const { props: props2, context, hasCurrentFocusReturn, linearNavigationReturn, managedChildReturn, managedChildrenReturn, multiSelectionChildReturn, pressParameters, refElementReturn, rovingTabIndexChildReturn, rovingTabIndexReturn, singleSelectionChildReturn, textContentReturn, typeaheadNavigationReturn } = useTableRow({
       info: {
@@ -10880,8 +10880,8 @@
       paginatedChildReturn: { hideBecausePaginated, parentIsPaginated },
       staggeredChildReturn: { hideBecauseStaggered, parentIsStaggered }
     });
-  }));
-  var TableCell = x3(monitored(function TableCell2({ index, getText, focusSelf, untabbable, tagTableCell, render, colSpan, imperativeHandle, getSortValue, info, ...void1 }) {
+  });
+  var TableCell = x3(function TableCell2({ index, getText, focusSelf, untabbable, tagTableCell, render, colSpan, imperativeHandle, getSortValue, info, ...void1 }) {
     const defaultFocusSelf = useStableCallback((e3) => {
       focus(e3);
     }, []);
@@ -10904,12 +10904,12 @@
         getText: useDefault("getText", getText)
       }
     }));
-  }));
+  });
 
   // ../dist/component/tabs.js
   var TabsContext = G(null);
   var TabPanelsContext = G(null);
-  var Tabs = x3(monitored(function Tabs2({ ariaLabel, collator, disableHomeEndKeys, initiallySingleSelectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSingleSelectedIndexChange, onTabbableIndexChange, orientation, pageNavigationSize, localStorageKey, singleSelectionMode, untabbable, typeaheadTimeout, role, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, render, ...void1 }) {
+  var Tabs = x3(function Tabs2({ ariaLabel, collator, disableHomeEndKeys, initiallySingleSelectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSingleSelectedIndexChange, onTabbableIndexChange, orientation, pageNavigationSize, localStorageKey, singleSelectionMode, untabbable, typeaheadTimeout, role, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, render, ...void1 }) {
     untabbable ??= false;
     assertEmptyObject(void1);
     const info = useTabs({
@@ -10942,8 +10942,8 @@
     const { contextPanels, contextTabs } = info;
     A2(imperativeHandle, () => info);
     return o4(TabsContext.Provider, { value: contextTabs, children: o4(TabPanelsContext.Provider, { value: contextPanels, children: render(info) }) });
-  }));
-  var Tab = x3(monitored(function Tab2({ focusSelf, untabbable, index, getText, render, longPressThreshold, onPressingChange, imperativeHandle, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, singleSelectionDisabled, info: uinfo, ...void1 }) {
+  });
+  var Tab = x3(function Tab2({ focusSelf, untabbable, index, getText, render, longPressThreshold, onPressingChange, imperativeHandle, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, singleSelectionDisabled, info: uinfo, ...void1 }) {
     assertEmptyObject(void1);
     const context = useContextWithWarning(TabsContext, "tabs");
     console.assert(context != null, `This Tab is not contained within a Tabs component`);
@@ -10964,15 +10964,15 @@
       textContentParameters: { getText: useDefault("getText", getText) },
       singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false }
     }));
-  }));
-  var TabPanel = x3(monitored(function TabPanel2({ index, render, info: uinfo }) {
+  });
+  var TabPanel = x3(function TabPanel2({ index, render, info: uinfo }) {
     const context = useContextWithWarning(TabPanelsContext, "tabs");
     const info = useTabPanel({
       context,
       info: { index, ...uinfo }
     });
     return render(info);
-  }));
+  });
 
   // ../dist/component/toasts.js
   var ToastContext = G(null);
@@ -11008,7 +11008,7 @@
   var UntabbableContext = G(false);
   var ToolbarContext = G(null);
   var ProcessedChildrenContext2 = G(null);
-  var Toolbar = x3(monitored(function ToolbarU({ render, role, collator, disableHomeEndKeys, disabled, navigatePastEnd, navigatePastStart, pageNavigationSize, singleSelectedIndex, onSingleSelectedIndexChange, orientation, noTypeahead, onTabbableIndexChange, typeaheadTimeout, ariaLabel, imperativeHandle, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, singleSelectionAriaPropName, singleSelectionMode, untabbable, onNavigateLinear, onNavigateTypeahead, onElementChange, onMount, onUnmount }, ref) {
+  var Toolbar = x3(function ToolbarU({ render, role, collator, disableHomeEndKeys, disabled, navigatePastEnd, navigatePastStart, pageNavigationSize, singleSelectedIndex, onSingleSelectedIndexChange, orientation, noTypeahead, onTabbableIndexChange, typeaheadTimeout, ariaLabel, imperativeHandle, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, singleSelectionAriaPropName, singleSelectionMode, untabbable, onNavigateLinear, onNavigateTypeahead, onElementChange, onMount, onUnmount }, ref) {
     return useComponentC(imperativeHandle, render, ToolbarContext, ProcessedChildrenContext2, useToolbar({
       linearNavigationParameters: {
         onNavigateLinear,
@@ -11035,8 +11035,8 @@
       singleSelectionDeclarativeParameters: { singleSelectedIndex, onSingleSelectedIndexChange },
       refElementParameters: { onElementChange, onMount, onUnmount }
     }));
-  }));
-  var ToolbarChild = x3(monitored(function ToolbarChild2({ index, render, focusSelf, getText, disabledProp, untabbable, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, imperativeHandle, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, ...void1 }) {
+  });
+  var ToolbarChild = x3(function ToolbarChild2({ index, render, focusSelf, getText, disabledProp, untabbable, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, imperativeHandle, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, ...void1 }) {
     const context = useContextWithWarning(ToolbarContext, "toolbar");
     const focusSelfDefault = T2((e3) => {
       focus(e3);
@@ -11057,7 +11057,7 @@
       singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false },
       multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false, initiallyMultiSelected: initiallyMultiSelected || false, onMultiSelectChange }
     }));
-  }));
+  });
 
   // ../dist/component/tooltip.js
   var Tooltip = x3(function TooltipU({ onStatus, getDocument: getDocument2, parentDepth, hoverDelay, render, imperativeHandle, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, tooltipSemanticType, usesLongPress, longPress, ...void1 }) {

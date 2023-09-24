@@ -1,5 +1,5 @@
 import { Ref, createContext } from "preact";
-import { TargetedOmit, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationChildrenInfo, UseCompleteListNavigationChildrenParameters, UseCompleteListNavigationChildrenReturnType, UsePaginatedChildParameters, UseProcessedChildContext, UseProcessedChildInfo, UseProcessedChildReturnType, UseProcessedChildrenContext, UseRefElementParameters, UseRefElementReturnType, UseStaggeredChildParameters, VNode, assertEmptyObject, focus, monitored, useCompleteListNavigationChildren, useMergedProps, useProcessedChild, useRefElement, useStableCallback } from "preact-prop-helpers";
+import { TargetedOmit, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationChildrenInfo, UseCompleteListNavigationChildrenParameters, UseCompleteListNavigationChildrenReturnType, UsePaginatedChildParameters, UseProcessedChildContext, UseProcessedChildInfo, UseProcessedChildReturnType, UseProcessedChildrenContext, UseRefElementParameters, UseRefElementReturnType, UseStaggeredChildParameters, VNode, assertEmptyObject, focus, useCompleteListNavigationChildren, useMergedProps, useProcessedChild, useRefElement, useStableCallback } from "preact-prop-helpers";
 import { memo } from "preact/compat";
 import { useCallback, useContext, useEffect, useImperativeHandle } from "preact/hooks";
 import { Get, Get10, Get3, Get4, Get7, OmitStrong, useContextWithWarning } from "../props.js";
@@ -51,7 +51,7 @@ const ListboxChildrenContext = createContext<UseProcessedChildrenContext>(null!)
 const ListboxChildContext = createContext<UseProcessedChildContext<any, any>>(null!);
 
 const ListboxGroupContext = createContext<null | UseListboxReturnType<any, any, any, any>>(null);
-export const GroupedListbox = memo(monitored(function GroupedListbox<LabelElement extends Element>({
+export const GroupedListbox = memo((function GroupedListbox<LabelElement extends Element>({
     ariaLabel,
     orientation,
     render,
@@ -90,7 +90,7 @@ export const GroupedListbox = memo(monitored(function GroupedListbox<LabelElemen
 
 }))
 
-export const Listbox = memo(monitored(function Listbox<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element>({
+export const Listbox = memo((function Listbox<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element>({
     ariaLabel,
     collator,
     disableHomeEndKeys,
@@ -163,7 +163,7 @@ export const Listbox = memo(monitored(function Listbox<ListElement extends Eleme
     )
 }))
 
-export const ListboxChildren = memo(monitored(function ListboxChildren<ListItemElement extends Element, M extends UseCompleteListNavigationChildrenInfo<ListItemElement>>({
+export const ListboxChildren = memo((function ListboxChildren<ListItemElement extends Element, M extends UseCompleteListNavigationChildrenInfo<ListItemElement>>({
     children,
     render,
     adjust,
@@ -232,7 +232,7 @@ export interface ListboxItemProps<ListboxItemElement extends Element> extends
 
 }
 
-export const ListboxItem = memo(monitored(function ListboxItemOuter<ListboxItemElement extends Element>({
+export const ListboxItem = memo((function ListboxItemOuter<ListboxItemElement extends Element>({
     index,
     render,
     imperativeHandle,
@@ -337,7 +337,7 @@ export const ListboxItem = memo(monitored(function ListboxItemOuter<ListboxItemE
 }))
 
 // Separated into its own component because hooks can't be if'd.
-const ListboxItemInner = memo(monitored(function ListboxItemInner<ListboxItemElement extends Element>({
+const ListboxItemInner = memo((function ListboxItemInner<ListboxItemElement extends Element>({
     getText,
     untabbable,
     index,

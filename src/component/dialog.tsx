@@ -1,4 +1,4 @@
-import { memo, monitored } from "preact-prop-helpers";
+import { memo } from "preact-prop-helpers";
 import { useContext } from "preact/hooks";
 import { Get10 } from "../props.js";
 import { UseDialogParameters, UseDialogReturnType, useDialog } from "../use-dialog.js";
@@ -10,7 +10,7 @@ export type DialogProps<FocusContainerElement extends Element, SourceElement ext
     "ariaLabel" | "onDismiss" | "active" | "focusPopup"
 >;
 
-export const Dialog = memo(monitored(function Dialog<FocusContainerElement extends Element, SourceElement extends Element, DialogElement extends Element, TitleElement extends Element>({
+export const Dialog = memo((function Dialog<FocusContainerElement extends Element, SourceElement extends Element, DialogElement extends Element, TitleElement extends Element>({
     active,
     onDismiss,
     dismissBackdropActive,

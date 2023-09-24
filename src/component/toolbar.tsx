@@ -1,5 +1,5 @@
 import { createContext, Ref } from "preact";
-import { assertEmptyObject, focus, memo, monitored, UseProcessedChildrenContext } from "preact-prop-helpers";
+import { assertEmptyObject, focus, memo, UseProcessedChildrenContext } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { Get10, Get7, OmitStrong, useContextWithWarning } from "../props.js";
 import { useToolbar, useToolbarChild, UseToolbarChildParameters, UseToolbarChildReturnType, UseToolbarContext, UseToolbarParameters, UseToolbarReturnType, UseToolbarSubInfo } from "../use-toolbar.js";
@@ -24,7 +24,7 @@ const UntabbableContext = createContext(false);
 const ToolbarContext = createContext<UseToolbarContext<any, any>>(null!);
 const ProcessedChildrenContext = createContext<UseProcessedChildrenContext>(null!);
 
-export const Toolbar = memo(monitored(function ToolbarU<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({
+export const Toolbar = memo((function ToolbarU<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({
     render,
     role,
     collator,
@@ -91,7 +91,7 @@ export const Toolbar = memo(monitored(function ToolbarU<ContainerElement extends
 }))
 
 
-export const ToolbarChild = memo(monitored(function ToolbarChild<ToolbarChildElement extends Element>({
+export const ToolbarChild = memo((function ToolbarChild<ToolbarChildElement extends Element>({
     index,
     render,
     focusSelf,

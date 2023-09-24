@@ -1,7 +1,7 @@
-import { assertEmptyObject, memo, monitored } from "preact-prop-helpers";
+import { assertEmptyObject, memo } from "preact-prop-helpers";
 import { useProgress, useProgressWithHandler } from "../use-progress.js";
 import { useComponent } from "./util.js";
-export const Progress = memo(monitored(function Progress({ tagProgressIndicator, ariaLabel, max, render, value, valueText, imperativeHandle, ...void1 }) {
+export const Progress = memo((function Progress({ tagProgressIndicator, ariaLabel, max, render, value, valueText, imperativeHandle, ...void1 }) {
     assertEmptyObject(void1);
     return useComponent(imperativeHandle, render, null, useProgress({
         labelParameters: { ariaLabel },
@@ -13,7 +13,7 @@ export const Progress = memo(monitored(function Progress({ tagProgressIndicator,
         }
     }));
 }));
-export const ProgressWithHandler = memo(monitored(function ProgressWithHandler({ ariaLabel, forciblyPending, render, tagProgressIndicator, asyncHandler, capture, debounce, throttle, notifyFailure, notifyPending, notifySuccess, imperativeHandle, ...void1 }) {
+export const ProgressWithHandler = memo((function ProgressWithHandler({ ariaLabel, forciblyPending, render, tagProgressIndicator, asyncHandler, capture, debounce, throttle, notifyFailure, notifyPending, notifySuccess, imperativeHandle, ...void1 }) {
     assertEmptyObject(void1);
     return useComponent(imperativeHandle, render, null, useProgressWithHandler({
         asyncHandlerParameters: { asyncHandler, capture, debounce, throttle },

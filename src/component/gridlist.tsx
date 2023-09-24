@@ -1,5 +1,5 @@
 import { Ref, VNode, createContext, createElement } from "preact";
-import { ElementProps, TargetedOmit, UseCompleteGridNavigationRowReturnType, UseCompleteGridNavigationRowsInfo, UseCompleteGridNavigationRowsParameters, UseCompleteGridNavigationRowsReturnType, UsePaginatedChildParameters, UseProcessedChildContext, UseProcessedChildInfo, UseProcessedChildReturnType, UseProcessedChildrenContext, UseRefElementParameters, UseRefElementReturnType, UseStaggeredChildParameters, assertEmptyObject, focus, memo, monitored, useCompleteGridNavigationRows, useMergedProps, useProcessedChild, useRefElement, useStableCallback } from "preact-prop-helpers";
+import { ElementProps, TargetedOmit, UseCompleteGridNavigationRowReturnType, UseCompleteGridNavigationRowsInfo, UseCompleteGridNavigationRowsParameters, UseCompleteGridNavigationRowsReturnType, UsePaginatedChildParameters, UseProcessedChildContext, UseProcessedChildInfo, UseProcessedChildReturnType, UseProcessedChildrenContext, UseRefElementParameters, UseRefElementReturnType, UseStaggeredChildParameters, assertEmptyObject, focus, memo, useCompleteGridNavigationRows, useMergedProps, useProcessedChild, useRefElement, useStableCallback } from "preact-prop-helpers";
 import { useContext, useEffect, useImperativeHandle } from "preact/hooks";
 import { ElementToTag, Get, Get12, Get3, Get4, Get8, OmitStrong, useContextWithWarning } from "../props.js";
 import { GridlistCellInfo, GridlistRowInfo, UseGridlistCellParameters, UseGridlistCellReturnType, UseGridlistContext, UseGridlistParameters, UseGridlistReturnType, UseGridlistRowContext, UseGridlistRowParameters, UseGridlistRowReturnType, useGridlist, useGridlistCell, useGridlistRow } from "../use-gridlist.js";
@@ -85,7 +85,7 @@ function defaultRenderGridlistChild<CellElement extends Element, CM extends Grid
     }
 }
 
-export const Gridlist = memo(monitored(function Gridlist<GridlistElement extends Element, RowElement extends Element, CellElement extends Element, LabelElement extends Element>({
+export const Gridlist = memo((function Gridlist<GridlistElement extends Element, RowElement extends Element, CellElement extends Element, LabelElement extends Element>({
     collator,
     disableHomeEndKeys,
     noTypeahead,
@@ -172,7 +172,7 @@ export type GridlistRowsProps<GridlistRowElement extends Element> = GenericCompo
     "children"
 >;
 
-export const GridlistRows = memo(monitored(function GridlistRows<RowElement extends Element>({
+export const GridlistRows = memo((function GridlistRows<RowElement extends Element>({
     render,
     adjust,
     children,
@@ -216,7 +216,7 @@ export const GridlistRows = memo(monitored(function GridlistRows<RowElement exte
 }))
 
 
-export const GridlistRow = memo(monitored(function GridlistRow<RowElement extends Element, CellElement extends Element>({
+export const GridlistRow = memo((function GridlistRow<RowElement extends Element, CellElement extends Element>({
     index,
     render,
     imperativeHandle,
@@ -318,7 +318,7 @@ export const GridlistRow = memo(monitored(function GridlistRow<RowElement extend
     }
 }))
 
-const GridlistRowInner = memo(monitored(function GridlistRowInner<RowElement extends Element, CellElement extends Element>({
+const GridlistRowInner = memo((function GridlistRowInner<RowElement extends Element, CellElement extends Element>({
     index,
     collator,
     untabbable,
@@ -424,7 +424,7 @@ const GridlistRowInner = memo(monitored(function GridlistRowInner<RowElement ext
 }))
 
 
-export const GridlistChild = memo(monitored(function GridlistChild<CellElement extends Element>({
+export const GridlistChild = memo((function GridlistChild<CellElement extends Element>({
     index,
     colSpan,
     focusSelf,

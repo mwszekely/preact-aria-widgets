@@ -1,5 +1,5 @@
 import { createContext } from "preact";
-import { assertEmptyObject, focus, memo, monitored } from "preact-prop-helpers";
+import { assertEmptyObject, focus, memo } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { useContextWithWarning } from "../props.js";
 import { useToolbar, useToolbarChild } from "../use-toolbar.js";
@@ -10,7 +10,7 @@ const UntabbableContext = createContext(false);
 //const SelectionModeContext = createContext<UseToolbarParameters<any, any, any>["singleSelectionParameters"]["singleSelectionMode"]>("focus");
 const ToolbarContext = createContext(null);
 const ProcessedChildrenContext = createContext(null);
-export const Toolbar = memo(monitored(function ToolbarU({ render, role, collator, disableHomeEndKeys, disabled, navigatePastEnd, navigatePastStart, pageNavigationSize, singleSelectedIndex, onSingleSelectedIndexChange, orientation, noTypeahead, onTabbableIndexChange, typeaheadTimeout, ariaLabel, imperativeHandle, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, singleSelectionAriaPropName, singleSelectionMode, untabbable, onNavigateLinear, onNavigateTypeahead, onElementChange, onMount, onUnmount }, ref) {
+export const Toolbar = memo((function ToolbarU({ render, role, collator, disableHomeEndKeys, disabled, navigatePastEnd, navigatePastStart, pageNavigationSize, singleSelectedIndex, onSingleSelectedIndexChange, orientation, noTypeahead, onTabbableIndexChange, typeaheadTimeout, ariaLabel, imperativeHandle, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, singleSelectionAriaPropName, singleSelectionMode, untabbable, onNavigateLinear, onNavigateTypeahead, onElementChange, onMount, onUnmount }, ref) {
     return (useComponentC(imperativeHandle, render, ToolbarContext, ProcessedChildrenContext, useToolbar({
         linearNavigationParameters: {
             onNavigateLinear,
@@ -38,7 +38,7 @@ export const Toolbar = memo(monitored(function ToolbarU({ render, role, collator
         refElementParameters: { onElementChange, onMount, onUnmount },
     })));
 }));
-export const ToolbarChild = memo(monitored(function ToolbarChild({ index, render, focusSelf, getText, disabledProp, untabbable, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, imperativeHandle, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, ...void1 }) {
+export const ToolbarChild = memo((function ToolbarChild({ index, render, focusSelf, getText, disabledProp, untabbable, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, imperativeHandle, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, ...void1 }) {
     const context = useContextWithWarning(ToolbarContext, "toolbar");
     const focusSelfDefault = useCallback((e) => { focus(e); }, []);
     focusSelf ??= focusSelfDefault;

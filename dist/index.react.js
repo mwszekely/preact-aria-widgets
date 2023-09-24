@@ -8881,7 +8881,7 @@ const Accordion = x(function Accordion({ disableHomeEndKeys, initialIndex, onAft
         managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange },
     })));
 });
-const AccordionSection = x(monitored(function AccordionSection({ open, index, tagButton, disabled, bodyRole, untabbable, getText, imperativeHandle, onPressSync, focusSelf, render, info, onElementChange, onMount, onUnmount, ...void1 }) {
+const AccordionSection = x((function AccordionSection({ open, index, tagButton, disabled, bodyRole, untabbable, getText, imperativeHandle, onPressSync, focusSelf, render, info, onElementChange, onMount, onUnmount, ...void1 }) {
     return useComponent(imperativeHandle, render, null, useAccordionSection({
         buttonParameters: { disabled: disabled ?? false, tagButton, onPressSync: onPressSync },
         pressParameters: { focusSelf: useDefault("focusSelf", focusSelf) },
@@ -8894,7 +8894,7 @@ const AccordionSection = x(monitored(function AccordionSection({ open, index, ta
     }));
 }));
 
-const Button = memo(monitored(function Button({ tagButton, pressed, render, disabled, onElementChange, onMount, onUnmount, allowRepeatPresses, longPressThreshold, excludeSpace, onPressingChange, onPressSync, focusSelf, role, imperativeHandle, ...void1 }) {
+const Button = memo((function Button({ tagButton, pressed, render, disabled, onElementChange, onMount, onUnmount, allowRepeatPresses, longPressThreshold, excludeSpace, onPressingChange, onPressSync, focusSelf, role, imperativeHandle, ...void1 }) {
     return useComponent(imperativeHandle, render, null, useButton({
         buttonParameters: { onPressSync, role: role, tagButton, pressed, disabled },
         pressParameters: { longPressThreshold, allowRepeatPresses, excludeSpace, onPressingChange, focusSelf: useDefault("focusSelf", focusSelf) },
@@ -8903,7 +8903,7 @@ const Button = memo(monitored(function Button({ tagButton, pressed, render, disa
 }));
 
 const UseCheckboxGroupChildContext = G(null);
-const CheckboxGroup = memo(monitored(function CheckboxGroup({ render, collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, onTabbableIndexChange, untabbable, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, ...void1 }) {
+const CheckboxGroup = memo((function CheckboxGroup({ render, collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, onTabbableIndexChange, untabbable, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, ...void1 }) {
     return useComponent(imperativeHandle, render, UseCheckboxGroupChildContext, useCheckboxGroup({
         linearNavigationParameters: {
             onNavigateLinear,
@@ -8929,7 +8929,7 @@ const CheckboxGroup = memo(monitored(function CheckboxGroup({ render, collator, 
         multiSelectionParameters: { multiSelectionAriaPropName, multiSelectionMode: multiSelectionMode || "activation", onSelectionChange }
     }));
 }));
-const CheckboxGroupParent = memo(monitored(function CheckboxGroupParent({ render, index, focusSelf, untabbable, imperativeHandle, getText, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, 
+const CheckboxGroupParent = memo((function CheckboxGroupParent({ render, index, focusSelf, untabbable, imperativeHandle, getText, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, 
 //info,
 ..._rest }) {
     const context = useContextWithWarning(UseCheckboxGroupChildContext, "checkbox group");
@@ -8950,7 +8950,7 @@ const CheckboxGroupParent = memo(monitored(function CheckboxGroupParent({ render
         singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false }
     })));
 }));
-const CheckboxGroupChild = memo(monitored(function CheckboxGroupChild({ index, render, checked, onChangeFromParent, untabbable, getText, focusSelf, 
+const CheckboxGroupChild = memo((function CheckboxGroupChild({ index, render, checked, onChangeFromParent, untabbable, getText, focusSelf, 
 //info,
 imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, multiSelectionDisabled, onMultiSelectChange, ...void1 }) {
     return useComponent(imperativeHandle, render, null, useCheckboxGroupChild({
@@ -9000,7 +9000,7 @@ function defaultRenderCheckboxLike({ labelPosition, tagInput, tagLabel, makeProp
         }
     };
 }
-const Checkbox = memo(monitored(function Checkbox({ checked, disabled, tagLabel, labelPosition, tagInput, ariaLabel, longPressThreshold, excludeSpace, imperativeHandle, render, onCheckedChange, ...void1 }) {
+const Checkbox = memo((function Checkbox({ checked, disabled, tagLabel, labelPosition, tagInput, ariaLabel, longPressThreshold, excludeSpace, imperativeHandle, render, onCheckedChange, ...void1 }) {
     return useComponent(imperativeHandle, render, null, useCheckbox({
         checkboxLikeParameters: { checked, disabled: disabled ?? false },
         labelParameters: { ariaLabel: ariaLabel, labelPosition, tagInput, tagLabel },
@@ -9009,7 +9009,7 @@ const Checkbox = memo(monitored(function Checkbox({ checked, disabled, tagLabel,
     }));
 }));
 
-const Dialog = memo(monitored(function Dialog({ active, onDismiss, dismissBackdropActive, dismissEscapeActive, focusOpener, getDocument, imperativeHandle, parentDepth, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, focusPopup, ariaLabel, onElementChange, onMount, onUnmount, render }) {
+const Dialog = memo((function Dialog({ active, onDismiss, dismissBackdropActive, dismissEscapeActive, focusOpener, getDocument, imperativeHandle, parentDepth, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, focusPopup, ariaLabel, onElementChange, onMount, onUnmount, render }) {
     const defaultParentDepth = q$1(ParentDepthContext);
     let myDepth = (parentDepth ?? defaultParentDepth) + 1;
     return (o$1(ParentDepthContext.Provider, { value: myDepth, children: useComponent(imperativeHandle, render, null, useDialog({
@@ -9038,7 +9038,7 @@ const Dialog = memo(monitored(function Dialog({ active, onDismiss, dismissBackdr
         })) }));
 }));
 
-const Drawer = memo(monitored(function Drawer({ active, onDismiss, dismissBackdropActive, dismissEscapeActive, dismissLostFocusActive, onElementChange, onMount, onUnmount, focusOpener, focusPopup, getDocument, imperativeHandle, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, parentDepth, render, trapActive, ariaLabel, ...void1 }) {
+const Drawer = memo((function Drawer({ active, onDismiss, dismissBackdropActive, dismissEscapeActive, dismissLostFocusActive, onElementChange, onMount, onUnmount, focusOpener, focusPopup, getDocument, imperativeHandle, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, parentDepth, render, trapActive, ariaLabel, ...void1 }) {
     const defaultParentDepth = q$1(ParentDepthContext);
     let myDepth = (parentDepth ?? defaultParentDepth) + 1;
     return (o$1(ParentDepthContext.Provider, { value: myDepth, children: useComponent(imperativeHandle, render, null, useDrawer({
@@ -9072,7 +9072,7 @@ const GridlistContext = G(null);
 const GridlistRowContext = G(null);
 const GridlistRowsContext = G(null);
 const ProcessedChildContext = G(null);
-const Gridlist = memo(monitored(function Gridlist({ collator, disableHomeEndKeys, noTypeahead, onTabbableIndexChange, groupingType, typeaheadTimeout, singleSelectedIndex, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, pageNavigationSize, untabbable, paginationMax, paginationMin, onTabbableColumnChange, ariaLabel, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, render, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, singleSelectionAriaPropName, singleSelectionMode, initiallyTabbableColumn, ...void1 }) {
+const Gridlist = memo((function Gridlist({ collator, disableHomeEndKeys, noTypeahead, onTabbableIndexChange, groupingType, typeaheadTimeout, singleSelectedIndex, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, pageNavigationSize, untabbable, paginationMax, paginationMin, onTabbableColumnChange, ariaLabel, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, render, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, singleSelectionAriaPropName, singleSelectionMode, initiallyTabbableColumn, ...void1 }) {
     return useComponentC(imperativeHandle, render, GridlistContext, GridlistRowsContext, useGridlist({
         linearNavigationParameters: {
             onNavigateLinear,
@@ -9111,7 +9111,7 @@ const Gridlist = memo(monitored(function Gridlist({ collator, disableHomeEndKeys
         refElementParameters: { onElementChange, onMount, onUnmount }
     }));
 }));
-const GridlistRows = memo(monitored(function GridlistRows({ render, adjust, children, compare, getIndex, imperativeHandle, onAfterChildLayoutEffect, onChildrenCountChange, onChildrenMountChange, onRearranged, paginationMax, paginationMin, staggered }) {
+const GridlistRows = memo((function GridlistRows({ render, adjust, children, compare, getIndex, imperativeHandle, onAfterChildLayoutEffect, onChildrenCountChange, onChildrenMountChange, onRearranged, paginationMax, paginationMin, staggered }) {
     return useComponent(imperativeHandle, render, ProcessedChildContext, useCompleteGridNavigationRows({
         context: q$1(GridlistRowsContext),
         managedChildrenParameters: {
@@ -9135,7 +9135,7 @@ const GridlistRows = memo(monitored(function GridlistRows({ render, adjust, chil
         }
     }));
 }));
-const GridlistRow = memo(monitored(function GridlistRow({ index, render, imperativeHandle, onElementChange: oec1, onMount, onUnmount, getText, untabbable, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, multiSelectionDisabled, singleSelectionDisabled, collator, initiallyMultiSelected, initiallyTabbedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onMultiSelectChange, onNavigateTypeahead, onTabbableIndexChange, selected, typeaheadTimeout, ...void1 }) {
+const GridlistRow = memo((function GridlistRow({ index, render, imperativeHandle, onElementChange: oec1, onMount, onUnmount, getText, untabbable, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, multiSelectionDisabled, singleSelectionDisabled, collator, initiallyMultiSelected, initiallyTabbedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onMultiSelectChange, onNavigateTypeahead, onTabbableIndexChange, selected, typeaheadTimeout, ...void1 }) {
     const { propsStable, refElementReturn } = useRefElement({
         refElementParameters: {
             onElementChange: useStableCallback((...a) => { oec1?.(...a); oec2?.(...a); }),
@@ -9164,7 +9164,7 @@ const GridlistRow = memo(monitored(function GridlistRow({ index, render, imperat
         return (o$1(GridlistRowInner, { index: index, render: render, collator: collator, initiallyMultiSelected: initiallyMultiSelected, initiallyTabbedIndex: initiallyTabbedIndex, navigatePastEnd: navigatePastEnd, navigatePastStart: navigatePastStart, noTypeahead: noTypeahead, onMultiSelectChange: onMultiSelectChange, onNavigateTypeahead: onNavigateTypeahead, onTabbableIndexChange: onTabbableIndexChange, selected: selected, typeaheadTimeout: typeaheadTimeout, focusSelf: focusSelf, getText: getText, imperativeHandle: imperativeHandle, multiSelectionDisabled: multiSelectionDisabled, onCurrentFocusedChanged: onCurrentFocusedChanged, onCurrentFocusedInnerChanged: onCurrentFocusedInnerChanged, singleSelectionDisabled: singleSelectionDisabled, untabbable: untabbable, getChildren: getChildren, hideBecausePaginated: hideBecausePaginated, hideBecauseStaggered: hideBecauseStaggered, parentIsPaginated: parentIsPaginated, parentIsStaggered: parentIsStaggered, childUseEffect: childUseEffect, props: props2, ...void1 }));
     }
 }));
-const GridlistRowInner = memo(monitored(function GridlistRowInner({ index, collator, untabbable, navigatePastEnd, navigatePastStart, noTypeahead, onTabbableIndexChange, selected, typeaheadTimeout, getText, render, initiallyTabbedIndex, onNavigateTypeahead, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, focusSelf, childUseEffect, getChildren, hideBecausePaginated, hideBecauseStaggered, parentIsPaginated, parentIsStaggered, props: props1, ...void1 }) {
+const GridlistRowInner = memo((function GridlistRowInner({ index, collator, untabbable, navigatePastEnd, navigatePastStart, noTypeahead, onTabbableIndexChange, selected, typeaheadTimeout, getText, render, initiallyTabbedIndex, onNavigateTypeahead, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, focusSelf, childUseEffect, getChildren, hideBecausePaginated, hideBecauseStaggered, parentIsPaginated, parentIsStaggered, props: props1, ...void1 }) {
     const { context, hasCurrentFocusReturn, linearNavigationReturn, managedChildReturn, managedChildrenReturn, multiSelectionChildReturn, pressParameters, props: props2, rovingTabIndexChildReturn, rovingTabIndexReturn, refElementReturn, singleSelectionChildReturn, textContentReturn, typeaheadNavigationReturn, } = useGridlistRow({
         info: {
             index,
@@ -9216,7 +9216,7 @@ const GridlistRowInner = memo(monitored(function GridlistRowInner({ index, colla
         staggeredChildReturn: { hideBecauseStaggered, parentIsStaggered },
     });
 }));
-const GridlistChild = memo(monitored(function GridlistChild({ index, colSpan, focusSelf, untabbable, getText, onPressSync, longPressThreshold, onPressingChange, render, imperativeHandle, info: subInfo }) {
+const GridlistChild = memo((function GridlistChild({ index, colSpan, focusSelf, untabbable, getText, onPressSync, longPressThreshold, onPressingChange, render, imperativeHandle, info: subInfo }) {
     const context = useContextWithWarning(GridlistRowContext, "gridlist row");
     console.assert(context != null, `This GridlistChild is not contained within a GridlistRow that is contained within a Gridlist`);
     const defaultFocusSelf = useStableCallback((e) => { focus(e); }, []);
@@ -9271,7 +9271,7 @@ const ListboxContext = G(null);
 const ListboxChildrenContext = G(null);
 const ListboxChildContext = G(null);
 const ListboxGroupContext = G(null);
-const GroupedListbox = x(monitored(function GroupedListbox({ ariaLabel, orientation, render, onElementChange, onMount, onUnmount }) {
+const GroupedListbox = x((function GroupedListbox({ ariaLabel, orientation, render, onElementChange, onMount, onUnmount }) {
     const info = useListbox({
         labelParameters: { ariaLabel },
         linearNavigationParameters: {
@@ -9297,7 +9297,7 @@ const GroupedListbox = x(monitored(function GroupedListbox({ ariaLabel, orientat
     });
     return (o$1(ListboxGroupContext.Provider, { value: info, children: render(info) }));
 }));
-const Listbox = x(monitored(function Listbox({ ariaLabel, collator, disableHomeEndKeys, singleSelectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSingleSelectedIndexChange, onTabbableIndexChange, pageNavigationSize, untabbable, typeaheadTimeout, orientation, onNavigateLinear, onNavigateTypeahead, onElementChange, onMount, onUnmount, render, imperativeHandle, singleSelectionAriaPropName, singleSelectionMode, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, paginationMax, paginationMin, ...void1 }) {
+const Listbox = x((function Listbox({ ariaLabel, collator, disableHomeEndKeys, singleSelectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSingleSelectedIndexChange, onTabbableIndexChange, pageNavigationSize, untabbable, typeaheadTimeout, orientation, onNavigateLinear, onNavigateTypeahead, onElementChange, onMount, onUnmount, render, imperativeHandle, singleSelectionAriaPropName, singleSelectionMode, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, paginationMax, paginationMin, ...void1 }) {
     const listboxGroupInfo = q$1(ListboxGroupContext);
     return useComponentC(imperativeHandle, render, ListboxContext, ListboxChildrenContext, useListbox({
         labelParameters: { ariaLabel },
@@ -9332,7 +9332,7 @@ const Listbox = x(monitored(function Listbox({ ariaLabel, collator, disableHomeE
         multiSelectionParameters: { multiSelectionAriaPropName, multiSelectionMode: multiSelectionMode || "disabled", onSelectionChange }
     }));
 }));
-const ListboxChildren = x(monitored(function ListboxChildren({ children, render, adjust, compare, getIndex, imperativeHandle, onAfterChildLayoutEffect, onChildrenCountChange, onChildrenMountChange, onRearranged, paginationMax, paginationMin, staggered }) {
+const ListboxChildren = x((function ListboxChildren({ children, render, adjust, compare, getIndex, imperativeHandle, onAfterChildLayoutEffect, onChildrenCountChange, onChildrenMountChange, onRearranged, paginationMax, paginationMin, staggered }) {
     const r = useCompleteListNavigationChildren({
         context: q$1(ListboxChildrenContext),
         managedChildrenParameters: {
@@ -9357,7 +9357,7 @@ const ListboxChildren = x(monitored(function ListboxChildren({ children, render,
     });
     return useComponent(imperativeHandle, render, ListboxChildContext, r);
 }));
-const ListboxItem = x(monitored(function ListboxItemOuter({ index, render, imperativeHandle, onElementChange: oec1, onMount, onUnmount, getText, untabbable, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, multiSelectionDisabled, singleSelectionDisabled, multiSelected, onMultiSelectedChange, ...void1 }) {
+const ListboxItem = x((function ListboxItemOuter({ index, render, imperativeHandle, onElementChange: oec1, onMount, onUnmount, getText, untabbable, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, multiSelectionDisabled, singleSelectionDisabled, multiSelected, onMultiSelectedChange, ...void1 }) {
     const context = useContextWithWarning(ListboxContext, "listbox");
     console.assert(context != null, `This ListboxItem is not contained within a Listbox`);
     const { propsStable, refElementReturn } = useRefElement({
@@ -9391,7 +9391,7 @@ const ListboxItem = x(monitored(function ListboxItemOuter({ index, render, imper
     }
 }));
 // Separated into its own component because hooks can't be if'd.
-const ListboxItemInner = x(monitored(function ListboxItemInner({ getText, untabbable, index, render, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, imperativeHandle, multiSelectionDisabled, singleSelectionDisabled, multiSelected, onMultiSelectedChange, getChildren, hideBecausePaginated, hideBecauseStaggered, parentIsPaginated, parentIsStaggered, props: props1, childUseEffect, ...void1 }) {
+const ListboxItemInner = x((function ListboxItemInner({ getText, untabbable, index, render, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, imperativeHandle, multiSelectionDisabled, singleSelectionDisabled, multiSelected, onMultiSelectedChange, getChildren, hideBecausePaginated, hideBecauseStaggered, parentIsPaginated, parentIsStaggered, props: props1, childUseEffect, ...void1 }) {
     const context = useContextWithWarning(ListboxContext, "listbox");
     console.assert(context != null, `This ListboxItem is not contained within a Listbox`);
     const focusSelfDefault = T$1((e) => { focus(e); }, []);
@@ -9427,7 +9427,7 @@ const ListboxItemInner = x(monitored(function ListboxItemInner({ getText, untabb
 }));
 
 const MenuItemContext = G(null);
-const Menu = memo(monitored(function Menu({ collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, orientation, singleSelectionAriaPropName, singleSelectionMode, untabbable, active, onDismiss, onElementChange, onMount, onUnmount, openDirection, onTabbableIndexChange, singleSelectedIndex, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, pageNavigationSize, parentDepth, disabled, onOpen, onNavigateLinear, onNavigateTypeahead, getDocument, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, render, imperativeHandle, ...void1 }) {
+const Menu = memo((function Menu({ collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, orientation, singleSelectionAriaPropName, singleSelectionMode, untabbable, active, onDismiss, onElementChange, onMount, onUnmount, openDirection, onTabbableIndexChange, singleSelectedIndex, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, pageNavigationSize, parentDepth, disabled, onOpen, onNavigateLinear, onNavigateTypeahead, getDocument, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, render, imperativeHandle, ...void1 }) {
     const defaultParentDepth = q$1(ParentDepthContext);
     let myDepth = (parentDepth ?? defaultParentDepth) + 1;
     untabbable ||= false;
@@ -9483,7 +9483,7 @@ const Menu = memo(monitored(function Menu({ collator, disableHomeEndKeys, noType
             }
         })) }));
 }));
-const MenuItem = memo(monitored(function MenuItem({ index, untabbable, onPress, getText, role, focusSelf, onPressingChange, render, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, ...void1 }) {
+const MenuItem = memo((function MenuItem({ index, untabbable, onPress, getText, role, focusSelf, onPressingChange, render, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, ...void1 }) {
     const context = useContextWithWarning(MenuItemContext, "menu");
     const defaultFocusSelf = T$1((e) => focus(e), []);
     return (useComponent(imperativeHandle, render, null, useMenuItem({
@@ -9511,7 +9511,7 @@ const MenuItem = memo(monitored(function MenuItem({ index, untabbable, onPress, 
 }));
 
 const MenubarItemContext = G(null);
-const Menubar = memo(monitored(function Menubar({ render, collator, disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, noTypeahead, untabbable, onTabbableIndexChange, disabled, singleSelectedIndex, onSingleSelectedIndexChange, typeaheadTimeout, role, ariaLabel, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, singleSelectionAriaPropName, singleSelectionMode, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, ...void1 }) {
+const Menubar = memo((function Menubar({ render, collator, disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, noTypeahead, untabbable, onTabbableIndexChange, disabled, singleSelectedIndex, onSingleSelectedIndexChange, typeaheadTimeout, role, ariaLabel, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, singleSelectionAriaPropName, singleSelectionMode, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, ...void1 }) {
     const info = useMenubar({
         linearNavigationParameters: {
             onNavigateLinear,
@@ -9556,7 +9556,7 @@ const Menubar = memo(monitored(function Menubar({ render, collator, disableHomeE
     A(imperativeHandle, () => info);
     return (o$1(MenubarItemContext.Provider, { value: info.contextChildren, children: render(info) }));
 }));
-const MenubarItem = memo(monitored(function MenubarItem({ index, render, focusSelf, untabbable, getText, onPress, onPressingChange, role, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, ...void1 }) {
+const MenubarItem = memo((function MenubarItem({ index, render, focusSelf, untabbable, getText, onPress, onPressingChange, role, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, ...void1 }) {
     const defaultFocusSelf = T$1((e) => focus(e), []);
     return useComponent(imperativeHandle, render, null, useMenubarChild({
         info: { index, untabbable: untabbable || false, focusSelf: focusSelf ?? defaultFocusSelf, ...uinfo },
@@ -9571,7 +9571,7 @@ const MenubarItem = memo(monitored(function MenubarItem({ index, render, focusSe
     }));
 }));
 
-const Progress = memo(monitored(function Progress({ tagProgressIndicator, ariaLabel, max, render, value, valueText, imperativeHandle, ...void1 }) {
+const Progress = memo((function Progress({ tagProgressIndicator, ariaLabel, max, render, value, valueText, imperativeHandle, ...void1 }) {
     return useComponent(imperativeHandle, render, null, useProgress({
         labelParameters: { ariaLabel },
         progressIndicatorParameters: {
@@ -9582,7 +9582,7 @@ const Progress = memo(monitored(function Progress({ tagProgressIndicator, ariaLa
         }
     }));
 }));
-const ProgressWithHandler = memo(monitored(function ProgressWithHandler({ ariaLabel, forciblyPending, render, tagProgressIndicator, asyncHandler, capture, debounce, throttle, notifyFailure, notifyPending, notifySuccess, imperativeHandle, ...void1 }) {
+const ProgressWithHandler = memo((function ProgressWithHandler({ ariaLabel, forciblyPending, render, tagProgressIndicator, asyncHandler, capture, debounce, throttle, notifyFailure, notifyPending, notifySuccess, imperativeHandle, ...void1 }) {
     return useComponent(imperativeHandle, render, null, useProgressWithHandler({
         asyncHandlerParameters: { asyncHandler, capture, debounce, throttle },
         labelParameters: { ariaLabel },
@@ -9593,7 +9593,7 @@ const ProgressWithHandler = memo(monitored(function ProgressWithHandler({ ariaLa
 
 const RadioContext = G(null);
 G(null);
-const RadioGroup = memo(monitored(function RadioGroup({ render, name, collator, disableHomeEndKeys, arrowKeyDirection, noTypeahead, typeaheadTimeout, ariaLabel, navigatePastEnd, navigatePastStart, selectedValue, untabbable, onTabbableIndexChange, onNavigateLinear, onNavigateTypeahead, pageNavigationSize, onElementChange, onMount, onUnmount, imperativeHandle, onSelectedValueChange, singleSelectionMode, ...void1 }) {
+const RadioGroup = memo((function RadioGroup({ render, name, collator, disableHomeEndKeys, arrowKeyDirection, noTypeahead, typeaheadTimeout, ariaLabel, navigatePastEnd, navigatePastStart, selectedValue, untabbable, onTabbableIndexChange, onNavigateLinear, onNavigateTypeahead, pageNavigationSize, onElementChange, onMount, onUnmount, imperativeHandle, onSelectedValueChange, singleSelectionMode, ...void1 }) {
     untabbable ??= false;
     return useComponent(imperativeHandle, render, RadioContext, useRadioGroup({
         singleSelectionParameters: { singleSelectionMode: singleSelectionMode ?? "focus" },
@@ -9620,7 +9620,7 @@ const RadioGroup = memo(monitored(function RadioGroup({ render, name, collator, 
         refElementParameters: { onElementChange, onMount, onUnmount },
     }));
 }));
-const Radio = memo(monitored(function Radio({ disabled, index, render, value, ariaLabel, labelPosition, untabbable, tagInput, tagLabel, getText, longPressThreshold, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, imperativeHandle, ...void1 }) {
+const Radio = memo((function Radio({ disabled, index, render, value, ariaLabel, labelPosition, untabbable, tagInput, tagLabel, getText, longPressThreshold, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, imperativeHandle, ...void1 }) {
     const context = useContextWithWarning(RadioContext, "radio group");
     console.assert(context != null, `This Radio is not contained within a RadioGroup`);
     useStableGetter(value);
@@ -9657,7 +9657,7 @@ const TableSectionContext = G(null);
 const TableRowsContext = G(null);
 const ProcessedRowContext = G(null);
 const TableRowContext = G(null);
-const Table = memo(monitored(function Table({ ariaLabel, singleSelectionMode, multiSelectionMode, tagTable, imperativeHandle, render, ...void1 }) {
+const Table = memo((function Table({ ariaLabel, singleSelectionMode, multiSelectionMode, tagTable, imperativeHandle, render, ...void1 }) {
     return useComponent(imperativeHandle, render, TableContext, useTable({
         labelParameters: { ariaLabel },
         tableParameters: { tagTable, },
@@ -9665,7 +9665,7 @@ const Table = memo(monitored(function Table({ ariaLabel, singleSelectionMode, mu
         multiSelectionParameters: { multiSelectionMode: multiSelectionMode || "disabled" },
     }));
 }));
-const TableSection = memo(monitored(function TableSection({ disableHomeEndKeys, initiallySingleSelectedIndex, untabbable, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, onTabbableColumnChange, onTabbableIndexChange, pageNavigationSize, paginationMax, paginationMin, render, location, imperativeHandle, multiSelectionAriaPropName, onSelectionChange, singleSelectionAriaPropName, onNavigateLinear, collator, noTypeahead, onNavigateTypeahead, typeaheadTimeout, tagTableSection, onElementChange, onMount, onUnmount, initiallyTabbableColumn, ...void1 }) {
+const TableSection = memo((function TableSection({ disableHomeEndKeys, initiallySingleSelectedIndex, untabbable, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, onTabbableColumnChange, onTabbableIndexChange, pageNavigationSize, paginationMax, paginationMin, render, location, imperativeHandle, multiSelectionAriaPropName, onSelectionChange, singleSelectionAriaPropName, onNavigateLinear, collator, noTypeahead, onNavigateTypeahead, typeaheadTimeout, tagTableSection, onElementChange, onMount, onUnmount, initiallyTabbableColumn, ...void1 }) {
     return useComponentC(imperativeHandle, render, TableSectionContext, TableRowsContext, useTableSection({
         gridNavigationParameters: {
             onTabbableColumnChange: onTabbableColumnChange,
@@ -9709,7 +9709,7 @@ const TableSection = memo(monitored(function TableSection({ disableHomeEndKeys, 
         refElementParameters: { onElementChange, onMount, onUnmount }
     }));
 }));
-const TableRows = memo(monitored(function TableRows({ render, adjust, children, compare, getIndex, imperativeHandle, onAfterChildLayoutEffect, onChildrenCountChange, onChildrenMountChange, onRearranged, paginationMax, paginationMin, staggered }) {
+const TableRows = memo((function TableRows({ render, adjust, children, compare, getIndex, imperativeHandle, onAfterChildLayoutEffect, onChildrenCountChange, onChildrenMountChange, onRearranged, paginationMax, paginationMin, staggered }) {
     return useComponent(imperativeHandle, render, ProcessedRowContext, useCompleteGridNavigationRows({
         context: useContext(TableRowsContext),
         managedChildrenParameters: {
@@ -9733,7 +9733,7 @@ const TableRows = memo(monitored(function TableRows({ render, adjust, children, 
         }
     }));
 }));
-const TableRow = memo(monitored(function TableRow({ index, render, imperativeHandle, onElementChange: oec1, onMount, onUnmount, getText, untabbable, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, multiSelectionDisabled, singleSelectionDisabled, initiallyMultiSelected, initiallyTabbedIndex, navigatePastEnd, navigatePastStart, onMultiSelectChange, onTabbableIndexChange, selected, tagTableRow, ...void1 }) {
+const TableRow = memo((function TableRow({ index, render, imperativeHandle, onElementChange: oec1, onMount, onUnmount, getText, untabbable, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, multiSelectionDisabled, singleSelectionDisabled, initiallyMultiSelected, initiallyTabbedIndex, navigatePastEnd, navigatePastStart, onMultiSelectChange, onTabbableIndexChange, selected, tagTableRow, ...void1 }) {
     const { propsStable, refElementReturn } = useRefElement({
         refElementParameters: {
             onElementChange: useStableCallback((...a) => { oec1?.(...a); oec2?.(...a); }),
@@ -9762,7 +9762,7 @@ const TableRow = memo(monitored(function TableRow({ index, render, imperativeHan
         return (o$1(TableRowInner, { index: index, render: render, initiallyMultiSelected: initiallyMultiSelected, initiallyTabbedIndex: initiallyTabbedIndex, navigatePastEnd: navigatePastEnd, navigatePastStart: navigatePastStart, onMultiSelectChange: onMultiSelectChange, onTabbableIndexChange: onTabbableIndexChange, selected: selected, focusSelf: focusSelf, getText: getText, imperativeHandle: imperativeHandle, multiSelectionDisabled: multiSelectionDisabled, onCurrentFocusedChanged: onCurrentFocusedChanged, onCurrentFocusedInnerChanged: onCurrentFocusedInnerChanged, singleSelectionDisabled: singleSelectionDisabled, untabbable: untabbable, getChildren: getChildren, hideBecausePaginated: hideBecausePaginated, hideBecauseStaggered: hideBecauseStaggered, parentIsPaginated: parentIsPaginated, parentIsStaggered: parentIsStaggered, childUseEffect: childUseEffect, props: props2, ...void1 }));
     }
 }));
-const TableRowInner = memo(monitored(function TableRowInner({ index, getText, tagTableRow, onTabbableIndexChange, navigatePastEnd, navigatePastStart, selected, initiallyTabbedIndex, untabbable, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, render, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, focusSelf, childUseEffect, getChildren, hideBecausePaginated, hideBecauseStaggered, parentIsPaginated, parentIsStaggered, props: props1, ...void1 }) {
+const TableRowInner = memo((function TableRowInner({ index, getText, tagTableRow, onTabbableIndexChange, navigatePastEnd, navigatePastStart, selected, initiallyTabbedIndex, untabbable, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, render, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, focusSelf, childUseEffect, getChildren, hideBecausePaginated, hideBecauseStaggered, parentIsPaginated, parentIsStaggered, props: props1, ...void1 }) {
     const { props: props2, context, hasCurrentFocusReturn, linearNavigationReturn, managedChildReturn, managedChildrenReturn, multiSelectionChildReturn, pressParameters, refElementReturn, rovingTabIndexChildReturn, rovingTabIndexReturn, singleSelectionChildReturn, textContentReturn, typeaheadNavigationReturn, } = useTableRow({
         info: {
             index,
@@ -9812,7 +9812,7 @@ const TableRowInner = memo(monitored(function TableRowInner({ index, getText, ta
         staggeredChildReturn: { hideBecauseStaggered, parentIsStaggered },
     });
 }));
-const TableCell = memo(monitored(function TableCell({ index, getText, focusSelf, untabbable, tagTableCell, render, colSpan, imperativeHandle, getSortValue, info, ...void1 }) {
+const TableCell = memo((function TableCell({ index, getText, focusSelf, untabbable, tagTableCell, render, colSpan, imperativeHandle, getSortValue, info, ...void1 }) {
     const defaultFocusSelf = useStableCallback((e) => { focus(e); }, []);
     return useComponent(imperativeHandle, render, null, useTableCell({
         info: {
@@ -9838,7 +9838,7 @@ const TabsContext = G(null);
 const TabPanelsContext = G(null);
 //const UntabbableContext = createContext(false);
 //const SelectionModeContext = createContext<NonNullable<UseTabsParameters<any, any, any>["singleSelectionParameters"]["selectionMode"]>>("focus");
-const Tabs = memo(monitored(function Tabs({ ariaLabel, collator, disableHomeEndKeys, initiallySingleSelectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSingleSelectedIndexChange, onTabbableIndexChange, orientation, pageNavigationSize, localStorageKey, singleSelectionMode, untabbable, typeaheadTimeout, role, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, render, ...void1 }) {
+const Tabs = memo((function Tabs({ ariaLabel, collator, disableHomeEndKeys, initiallySingleSelectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSingleSelectedIndexChange, onTabbableIndexChange, orientation, pageNavigationSize, localStorageKey, singleSelectionMode, untabbable, typeaheadTimeout, role, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, render, ...void1 }) {
     untabbable ??= false;
     const info = useTabs({
         labelParameters: { ariaLabel },
@@ -9871,7 +9871,7 @@ const Tabs = memo(monitored(function Tabs({ ariaLabel, collator, disableHomeEndK
     A(imperativeHandle, () => info);
     return (o$1(TabsContext.Provider, { value: contextTabs, children: o$1(TabPanelsContext.Provider, { value: contextPanels, children: render(info) }) }));
 }));
-const Tab = memo(monitored(function Tab({ focusSelf, untabbable, index, getText, render, longPressThreshold, onPressingChange, imperativeHandle, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, singleSelectionDisabled, info: uinfo, ...void1 }) {
+const Tab = memo((function Tab({ focusSelf, untabbable, index, getText, render, longPressThreshold, onPressingChange, imperativeHandle, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, singleSelectionDisabled, info: uinfo, ...void1 }) {
     const context = useContextWithWarning(TabsContext, "tabs");
     console.assert(context != null, `This Tab is not contained within a Tabs component`);
     const focusSelfDefault = T$1((e) => { focus(e); }, []);
@@ -9890,7 +9890,7 @@ const Tab = memo(monitored(function Tab({ focusSelf, untabbable, index, getText,
         singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false, }
     }));
 }));
-const TabPanel = memo(monitored(function TabPanel({ index, render, info: uinfo }) {
+const TabPanel = memo((function TabPanel({ index, render, info: uinfo }) {
     const context = useContextWithWarning(TabPanelsContext, "tabs");
     const info = useTabPanel({
         context,
@@ -9933,7 +9933,7 @@ G(false);
 //const SelectionModeContext = createContext<UseToolbarParameters<any, any, any>["singleSelectionParameters"]["singleSelectionMode"]>("focus");
 const ToolbarContext = G(null);
 const ProcessedChildrenContext = G(null);
-const Toolbar = memo(monitored(function ToolbarU({ render, role, collator, disableHomeEndKeys, disabled, navigatePastEnd, navigatePastStart, pageNavigationSize, singleSelectedIndex, onSingleSelectedIndexChange, orientation, noTypeahead, onTabbableIndexChange, typeaheadTimeout, ariaLabel, imperativeHandle, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, singleSelectionAriaPropName, singleSelectionMode, untabbable, onNavigateLinear, onNavigateTypeahead, onElementChange, onMount, onUnmount }, ref) {
+const Toolbar = memo((function ToolbarU({ render, role, collator, disableHomeEndKeys, disabled, navigatePastEnd, navigatePastStart, pageNavigationSize, singleSelectedIndex, onSingleSelectedIndexChange, orientation, noTypeahead, onTabbableIndexChange, typeaheadTimeout, ariaLabel, imperativeHandle, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, singleSelectionAriaPropName, singleSelectionMode, untabbable, onNavigateLinear, onNavigateTypeahead, onElementChange, onMount, onUnmount }, ref) {
     return (useComponentC(imperativeHandle, render, ToolbarContext, ProcessedChildrenContext, useToolbar({
         linearNavigationParameters: {
             onNavigateLinear,
@@ -9961,7 +9961,7 @@ const Toolbar = memo(monitored(function ToolbarU({ render, role, collator, disab
         refElementParameters: { onElementChange, onMount, onUnmount },
     })));
 }));
-const ToolbarChild = memo(monitored(function ToolbarChild({ index, render, focusSelf, getText, disabledProp, untabbable, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, imperativeHandle, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, ...void1 }) {
+const ToolbarChild = memo((function ToolbarChild({ index, render, focusSelf, getText, disabledProp, untabbable, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, imperativeHandle, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, ...void1 }) {
     const context = useContextWithWarning(ToolbarContext, "toolbar");
     const focusSelfDefault = T$1((e) => { focus(e); }, []);
     focusSelf ??= focusSelfDefault;

@@ -1,4 +1,4 @@
-import { UseAsyncHandlerParameters, assertEmptyObject, memo, monitored } from "preact-prop-helpers";
+import { UseAsyncHandlerParameters, assertEmptyObject, memo } from "preact-prop-helpers";
 import { Get3 } from "../props.js";
 import { UseProgressParameters, UseProgressReturnType, UseProgressWithHandlerParameters, UseProgressWithHandlerReturnType, useProgress, useProgressWithHandler } from "../use-progress.js";
 import { GenericComponentProps, PartialExcept, useComponent } from "./util.js";
@@ -28,7 +28,7 @@ export interface ProgressWithHandlerProps<EventType, CaptureType, IndicatorEleme
         "capture" | "tagProgressIndicator"> {
 }
 
-export const Progress = memo(monitored(function Progress<IndicatorElement extends Element, LabelElement extends Element>({
+export const Progress = memo((function Progress<IndicatorElement extends Element, LabelElement extends Element>({
     tagProgressIndicator,
     ariaLabel,
     max,
@@ -55,7 +55,7 @@ export const Progress = memo(monitored(function Progress<IndicatorElement extend
         }));
 }))
 
-export const ProgressWithHandler = memo(monitored(function ProgressWithHandler<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element>({
+export const ProgressWithHandler = memo((function ProgressWithHandler<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element>({
     ariaLabel,
     forciblyPending,
     render,

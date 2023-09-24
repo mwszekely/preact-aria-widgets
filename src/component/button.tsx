@@ -1,4 +1,4 @@
-import { assertEmptyObject, memo, monitored } from "preact-prop-helpers";
+import { assertEmptyObject, memo } from "preact-prop-helpers";
 import { Get3 } from "../props.js";
 import { UseButtonParameters, UseButtonReturnType, useButton } from "../use-button.js";
 import { GenericComponentProps, useComponent, useDefault } from "./util.js";
@@ -9,7 +9,7 @@ export type ButtonProps<ButtonElement extends Element> = GenericComponentProps<
     "tagButton"
 >;
 
-export const Button = memo(monitored(function Button<ButtonElement extends Element>({
+export const Button = memo((function Button<ButtonElement extends Element>({
     tagButton,
     pressed,
     render,
