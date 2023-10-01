@@ -1,7 +1,7 @@
 
 import { getEventDetail, useMergedProps, useState } from "preact-prop-helpers";
 import { useRef } from "preact/compat";
-import { Checkbox, CheckboxChangeEventDetail, EventDetail, Gridlist, GridlistChild, GridlistRow, UseCheckboxReturnType } from "../../dist/index.js";
+import { Checkbox, CheckboxChangeEventDetail, EventDetail, Gridlist, GridlistChild, GridlistRow, GridlistRows, UseCheckboxReturnType } from "../../dist/index.js";
 
 function getDocument() { return window.document; }
 
@@ -44,7 +44,7 @@ function DemoGridlistChild1({ row }: { row: number }) {
     )
 }
 
-function DemoGridlistChild2({ tabbable }:{tabbable:boolean}) {
+function DemoGridlistChild2({ tabbable }: { tabbable: boolean }) {
     const cb = useRef<UseCheckboxReturnType<HTMLInputElement, HTMLLabelElement>>(null);
     const [b, setB] = useState(false);
     return (
@@ -109,30 +109,41 @@ export function Demo() {
                         return (
                             <>
                                 <label {...infoGridlist.propsGridlistLabel}>Gridlist demo</label>
-                                <ul {...infoGridlist.propsGridlist}>{infoGridlist.rearrangeableChildrenReturn.useRearrangedChildren(Array.from(function* () {
-                                    for (let i = 0; i < count; ++i) {
-                                        yield (
-                                            <GridlistRow<HTMLLIElement, HTMLDivElement>
-                                                selected={null}
-                                                index={i}
-                                                render={info => {
-                                                    return (
-                                                        <li {...info.props}><DemoGridlistChild1 row={i} />{i != 2 && <DemoGridlistChild2 tabbable={info.rovingTabIndexChildReturn.tabbable} />}</li>
-                                                    )
+                                <ul {...infoGridlist.propsGridlist}>
+                                    <GridlistRows
+                                        staggered={true}
+                                        render={rowsInfo => {
+                                            return <>{rowsInfo.rearrangeableChildrenReturn.children}</>;
+                                        }}
+                                        children={Array.from(function* () {
+                                            for (let i = 0; i < count; ++i) {
+                                                yield (
+                                                    <GridlistRow<HTMLLIElement, HTMLDivElement>
+                                                        selected={null}
+                                                        index={i}
+                                                        render={rowInfo => {
+                                                            
+                                                            if (rowInfo.staggeredChildReturn.hideBecauseStaggered || rowInfo.paginatedChildReturn.hideBecausePaginated)
+                                                                return <li {...rowInfo.props} />
+                                                            return (
+                                                                <li {...rowInfo.props}><DemoGridlistChild1 row={i} />{i != 2 && <DemoGridlistChild2 tabbable={rowInfo.rovingTabIndexChildReturn?.tabbable || false} />}</li>
+                                                            )
 
-                                                    /*
-
-                                                    defaultRenderGridlistRow({
-                                                    tagGridlistRow: "div", makePropsGridlistRow: (_info) => ({
-                                                        children: [<DemoGridlistChild1 row={i} />, <DemoGridlistChild2 />]
-                                                    })
-                                                })
-                                                
-                                                    */
-                                                }} />
-                                        )
-                                    }
-                                }()))}</ul>
+                                                            /*
+        
+                                                            defaultRenderGridlistRow({
+                                                            tagGridlistRow: "div", makePropsGridlistRow: (_info) => ({
+                                                                children: [<DemoGridlistChild1 row={i} />, <DemoGridlistChild2 />]
+                                                            })
+                                                        })
+                                                        
+                                                            */
+                                                        }} />
+                                                )
+                                            }
+                                        }())
+                                        } />
+                                </ul>
                             </>
                         )
                         /*

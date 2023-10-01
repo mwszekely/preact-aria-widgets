@@ -1,4 +1,4 @@
-import "core-js";
+//import "core-js";
 import "preact/debug";
 
 import { render } from "preact";
@@ -25,7 +25,7 @@ import * as Tooltip from "./demos/tooltip.js";
 
 //const RandomWords = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.".split(" ");
 
-(window as any)._generate_setState_stacks = true;
+//(window as any)._generate_setState_stacks = true;
 
 setDebugLogging(true)
 
@@ -43,14 +43,14 @@ const Component = () => {
                 <Heading heading="Gridlist"><Gridlist.Demo /></Heading>
                 <Heading heading="Single-select Listbox"><ListboxSingle.Demo /></Heading>
                 <Heading heading="Multi-select Listbox"><ListboxMulti.Demo /></Heading>
-                <Heading heading="Menu"><Menu.Demo /></Heading>
+                {/*<Heading heading="Menu"><Menu.Demo /></Heading>
                 <Heading heading="Radio"><Radio.Demo /></Heading>
                 <Heading heading="Slider"><Slider.Demo /></Heading>
                 <Heading heading="Toolbar"><Toolbar.Demo /></Heading>
                 <Heading heading="Toast"><Toast.Demo /></Heading>
                 <Heading heading="Tooltip"><Tooltip.Demo /></Heading>
                 <Heading heading="Tabs"><Tabs.Demo /></Heading>
-                <Heading heading="Table"><Table.Demo /></Heading>
+    <Heading heading="Table"><Table.Demo /></Heading>*/}
                 {/*
             
             */}
@@ -69,4 +69,25 @@ const Component = () => {
 
 requestAnimationFrame(() => {
     render(<Component />, document.getElementById("root")!);
+
+    console.log(
+
+        Accordion,
+        Button,
+        CheckboxGroup,
+        Checkbox,
+        Dialog,
+        Gridlist,
+        ListboxMulti,
+        ListboxSingle,
+        Menu,
+        Radio,
+        Slider,
+        Table,
+        Tabs,
+        Toast,
+        Toolbar,
+        Tooltip
+
+    )
 })

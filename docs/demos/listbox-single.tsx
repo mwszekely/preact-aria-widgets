@@ -1,8 +1,8 @@
 
 import { ComponentChildren } from "preact";
-import { EventDetail, returnZero, useMergedProps, useState } from "preact-prop-helpers";
+import { EventDetail, useMergedProps, useState } from "preact-prop-helpers";
 import { memo } from "preact/compat";
-import { GroupedListbox, Listbox, ListboxItem } from "../../dist/index.js";
+import { GroupedListbox, Listbox, ListboxChildren, ListboxItem } from "../../dist/index.js";
 
 const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
 
@@ -10,8 +10,9 @@ const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
         <ListboxItem<HTMLLIElement>
             index={index}
             focusSelf={e => e.focus()}
-            getSortValue={returnZero}
             render={info => {
+                if (!info.singleSelectionChildReturn)
+                    return <li {...info.props} />
                 const selected = info.singleSelectionChildReturn.singleSelected;
                 // defaultRenderListboxSingleItem({ tagListItem: "li", makePropsListItem: ({ singleSelection: { selected } }) => ({ children: `List item #${index}${selected ? " (selected)" : ""}` }) })
                 return (
@@ -69,11 +70,18 @@ function ListboxDemo({ count, label }: { count: number, label: ComponentChildren
                     <>
                         <label {...info.propsListboxLabel}>{label}</label>
                         <ol {...info.propsListbox}>
-                            {Array.from((function* () {
-                                for (let i = 0; i < count; ++i) {
-                                    yield <DemoListItem index={i} key={i} />
-                                }
-                            })())}
+                            <ListboxChildren
+                                staggered={true}
+                                render={info => {
+                                    return <>{info.rearrangeableChildrenReturn.children}</>
+                                }}
+                                children={Array.from((function* () {
+                                    for (let i = 0; i < count; ++i) {
+                                        yield <DemoListItem index={i} key={i} />
+                                    }
+                                })())}
+
+                            />
                         </ol>
                     </>
                 )

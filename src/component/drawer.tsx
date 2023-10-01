@@ -10,7 +10,7 @@ export type DrawerProps<FocusContainerElement extends Element, SourceElement ext
     "ariaLabel" | "onDismiss" | "active" | "focusPopup"
 >;
 
-export const Drawer = memo(function Drawer<FocusContainerElement extends Element, SourceElement extends Element, DrawerElement extends Element, TitleElement extends Element>({
+export const Drawer = memo((function Drawer<FocusContainerElement extends Element, SourceElement extends Element, DrawerElement extends Element, TitleElement extends Element>({
 
     active,
     onDismiss,
@@ -35,7 +35,7 @@ export const Drawer = memo(function Drawer<FocusContainerElement extends Element
 }: DrawerProps<FocusContainerElement, SourceElement, DrawerElement, TitleElement>) {
     const defaultParentDepth = useContext(ParentDepthContext);
     let myDepth = (parentDepth ?? defaultParentDepth) + 1;
-    
+
     assertEmptyObject(void1);
 
     return (
@@ -73,4 +73,4 @@ export const Drawer = memo(function Drawer<FocusContainerElement extends Element
         </ParentDepthContext.Provider>
     )
 
-});
+}));

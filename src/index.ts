@@ -72,48 +72,48 @@
  * @packageDocumentation
  */
 
-export { UseAccordionContext, UseAccordionContextSelf, UseAccordionParameters, UseAccordionParametersSelf, UseAccordionReturnType, UseAccordionReturnTypeSelf, UseAccordionSectionInfo, UseAccordionSectionParameters, UseAccordionSectionParametersSelf, UseAccordionSectionReturnType, UseAccordionSectionReturnTypeSelf, useAccordion, useAccordionSection } from "./use-accordion.js";
-export { ButtonPressEventDetail, ButtonPressEventHandler, TargetedButtonPressEvent, UseButtonParameters, UseButtonParametersSelf, UseButtonReturnType, useButton } from "./use-button.js";
-export { CheckboxGroupChangeEventDetail, CheckboxGroupChangeEventHandler, CheckboxGroupContext, CheckboxGroupInfo, TargetedCheckboxGroupChangeEvent, UseCheckboxGroupChildParameters, UseCheckboxGroupChildParametersSelf, UseCheckboxGroupChildReturnType, UseCheckboxGroupChildReturnTypeSelf, UseCheckboxGroupParameters, UseCheckboxGroupParametersSelf, UseCheckboxGroupParentParameters, UseCheckboxGroupParentReturnType, UseCheckboxGroupParentReturnTypeSelf, UseCheckboxGroupReturnType, useCheckboxGroup, useCheckboxGroupChild, useCheckboxGroupParent } from "./use-checkbox-group.js";
-export { CheckboxCheckedType, UseCheckboxLikeParameters, UseCheckboxLikeParametersSelf, UseCheckboxLikeReturnType, UseCheckboxLikeReturnTypeSelf, useCheckboxLike } from "./use-checkbox-like.js";
-export { CheckboxChangeEventDetail, CheckboxChangeEventHandler, TargetedCheckboxChangeEvent, UseCheckboxParameters, UseCheckboxParametersSelf, UseCheckboxReturnType, UseCheckboxReturnTypeSelf, useCheckbox } from "./use-checkbox.js";
-export { UseDialogParameters, UseDialogReturnType, useDialog } from "./use-dialog.js";
-export { UseDrawerParameters, UseDrawerReturnType, useDrawer } from "./use-drawer.js";
-export { GridlistCellInfo, GridlistRowInfo, UseGridlistCellParameters, UseGridlistCellReturnType, UseGridlistContext, UseGridlistParameters, UseGridlistParametersSelf, UseGridlistReturnType, UseGridlistRowContext, UseGridlistRowParameters, UseGridlistRowParametersSelf, UseGridlistRowReturnType, useGridlist, useGridlistCell, useGridlistRow } from "./use-gridlist.js";
-export { FocusableLabelElement, LabelPosition, UseLabelParameters, UseLabelParametersSelf, UseLabelReturnType, UseLabelSyntheticParameters, useLabel, useLabelSynthetic } from "./use-label.js";
-export { ListboxInfo, ListboxMultiSelectEvent, ListboxSingleSelectEvent, UseListboxContext, UseListboxItemParameters, UseListboxItemParametersSelf, UseListboxItemReturnType, UseListboxParameters, UseListboxParametersSelf, UseListboxReturnType, useListbox, useListboxItem } from "./use-listbox.js";
-export { UseFocusSentinelParameters, UseMenuSurfaceParameters, UseMenuSurfaceParametersSelf, UseMenuSurfaceReturnType, useFocusSentinel, useMenuSurface } from "./use-menu-surface.js";
-export { MenuItemReturnTypeSelf, UseMenuContext, UseMenuItemParameters, UseMenuItemReturnType, UseMenuParameters, UseMenuParametersSelf, UseMenuReturnType, useMenu, useMenuItem } from "./use-menu.js";
-export { UseMenubarContext, UseMenubarItemParameters, UseMenubarItemParametersSelf, UseMenubarItemReturnType, UseMenubarParameters, UseMenubarReturnType, UseMenubarSubInfo, useMenubar, useMenubarChild } from "./use-menubar.js";
-export { NotificationProviderContext, NotificationProviderProps, NotificationProviderReturnType, useNotificationProvider, useNotify } from "./use-notify.js";
-export { UseProgressParameters, UseProgressParametersSelf, UseProgressReturnType, UseProgressWithHandlerParameters, UseProgressWithHandlerParametersSelf, UseProgressWithHandlerReturnType, useProgress, useProgressWithHandler } from "./use-progress.js";
-export { RadioChangeEventDetail, RadioChangeEventHandler, RadioContext, RadioContextSelf, RadioSubInfo, TargetedRadioChangeEvent, UseRadioGroupParameters, UseRadioGroupParametersSelf, UseRadioGroupReturnType, UseRadioGroupReturnTypeSelf, UseRadioParameters, UseRadioParametersSelf, UseRadioReturnType, useRadio, useRadioGroup } from "./use-radio-group.js";
-export { RangeChangeEvent, SliderContext, SliderContextSelf, SliderThumbInfo, UseSliderParameters, UseSliderParametersSelf, UseSliderReturnType, UseSliderThumbParameters, UseSliderThumbParametersSelf, UseSliderThumbReturnType, UseSliderThumbReturnTypeSelf, useSlider, useSliderThumb } from "./use-slider.js";
-export { SortDirection, TableCellInfo, TableRowInfo, UseTableCellParameters, UseTableCellParametersSelf, UseTableCellReturnType, UseTableCellReturnTypeSelf, UseTableContext, UseTableContextSelf, UseTableParameters, UseTableParametersSelf, UseTableReturnType, UseTableRowContext, UseTableRowParameters, UseTableRowParametersSelf, UseTableRowReturnType, UseTableSectionContext, UseTableSectionParameters, UseTableSectionParametersSelf, UseTableSectionReturnType, useTable, useTableCell, useTableRow, useTableSection } from "./use-table.js";
-export { TabInfo, TabPanelInfo, TabsChangeEvent, UseTab, UseTabLabelParameters, UseTabLabelReturnTypeWithHooks, UseTabList, UseTabListLabel, UseTabListLabelReturnTypeInfo, UseTabListParameters, UseTabListReturnType, UseTabPanel, UseTabPanelParameters, UseTabPanelReturnType, UseTabPanelReturnTypeSelf, UseTabPanelsContext, UseTabParameters, UseTabReturnType, UseTabsContext, UseTabsParameters, UseTabsParametersSelf, UseTabsReturnType, useTab, useTabPanel, useTabs } from "./use-tabs.js";
-export { ToastInfo, ToastsContext, ToastsContextSelf, UseToastParameters, UseToastParametersSelf, UseToastReturnType, UseToastReturnTypeSelf, UseToastsParameters, UseToastsParametersSelf, UseToastsReturnType, useToast, useToasts } from "./use-toasts.js";
-export { UseToolbarChildParameters, UseToolbarChildParametersSelf, UseToolbarChildReturnType, UseToolbarContext, UseToolbarContextSelf, UseToolbarParameters, UseToolbarParametersSelf, UseToolbarReturnType, UseToolbarSubInfo, useToolbar, useToolbarChild } from "./use-toolbar.js";
-export { TooltipState, TooltipStatus, UseTooltipParameters, UseTooltipParametersSelf, UseTooltipReturnType, UseTooltipReturnTypeSelf, useTooltip } from "./use-tooltip.js";
+export { useAccordion, useAccordionSection, type UseAccordionContext, type UseAccordionContextSelf, type UseAccordionParameters, type UseAccordionParametersSelf, type UseAccordionReturnType, type UseAccordionReturnTypeSelf, type UseAccordionSectionInfo, type UseAccordionSectionParameters, type UseAccordionSectionParametersSelf, type UseAccordionSectionReturnType, type UseAccordionSectionReturnTypeSelf } from "./use-accordion.js";
+export { useButton, type ButtonPressEventDetail, type ButtonPressEventHandler, type TargetedButtonPressEvent, type UseButtonParameters, type UseButtonParametersSelf, type UseButtonReturnType } from "./use-button.js";
+export { useCheckboxGroup, useCheckboxGroupChild, useCheckboxGroupParent, type CheckboxGroupChangeEventDetail, type CheckboxGroupChangeEventHandler, type CheckboxGroupContext, type CheckboxGroupInfo, type TargetedCheckboxGroupChangeEvent, type UseCheckboxGroupChildParameters, type UseCheckboxGroupChildParametersSelf, type UseCheckboxGroupChildReturnType, type UseCheckboxGroupChildReturnTypeSelf, type UseCheckboxGroupParameters, type UseCheckboxGroupParametersSelf, type UseCheckboxGroupParentParameters, type UseCheckboxGroupParentReturnType, type UseCheckboxGroupParentReturnTypeSelf, type UseCheckboxGroupReturnType } from "./use-checkbox-group.js";
+export { useCheckboxLike, type CheckboxCheckedType, type UseCheckboxLikeParameters, type UseCheckboxLikeParametersSelf, type UseCheckboxLikeReturnType, type UseCheckboxLikeReturnTypeSelf } from "./use-checkbox-like.js";
+export { useCheckbox, type CheckboxChangeEventDetail, type CheckboxChangeEventHandler, type TargetedCheckboxChangeEvent, type UseCheckboxParameters, type UseCheckboxParametersSelf, type UseCheckboxReturnType, type UseCheckboxReturnTypeSelf } from "./use-checkbox.js";
+export { useDialog, type UseDialogParameters, type UseDialogReturnType } from "./use-dialog.js";
+export { useDrawer, type UseDrawerParameters, type UseDrawerReturnType } from "./use-drawer.js";
+export { useGridlist, useGridlistCell, useGridlistRow, type GridlistCellInfo, type GridlistRowInfo, type UseGridlistCellParameters, type UseGridlistCellReturnType, type UseGridlistContext, type UseGridlistParameters, type UseGridlistParametersSelf, type UseGridlistReturnType, type UseGridlistRowContext, type UseGridlistRowParameters, type UseGridlistRowParametersSelf, type UseGridlistRowReturnType } from "./use-gridlist.js";
+export { useLabel, useLabelSynthetic, type FocusableLabelElement, type LabelPosition, type UseLabelParameters, type UseLabelParametersSelf, type UseLabelReturnType, type UseLabelSyntheticParameters } from "./use-label.js";
+export { useListbox, useListboxItem, type ListboxInfo, type ListboxMultiSelectEvent, type ListboxSingleSelectEvent, type UseListboxContext, type UseListboxItemParameters, type UseListboxItemParametersSelf, type UseListboxItemReturnType, type UseListboxParameters, type UseListboxParametersSelf, type UseListboxReturnType } from "./use-listbox.js";
+export { useFocusSentinel, useMenuSurface, type UseFocusSentinelParameters, type UseMenuSurfaceParameters, type UseMenuSurfaceParametersSelf, type UseMenuSurfaceReturnType } from "./use-menu-surface.js";
+export { useMenu, useMenuItem, type MenuItemReturnTypeSelf, type UseMenuContext, type UseMenuItemParameters, type UseMenuItemReturnType, type UseMenuParameters, type UseMenuParametersSelf, type UseMenuReturnType } from "./use-menu.js";
+export { useMenubar, useMenubarChild, type UseMenubarContext, type UseMenubarItemParameters, type UseMenubarItemParametersSelf, type UseMenubarItemReturnType, type UseMenubarParameters, type UseMenubarReturnType, type UseMenubarSubInfo } from "./use-menubar.js";
+export { NotificationProviderContext, useNotificationProvider, useNotify, type NotificationProviderProps, type NotificationProviderReturnType } from "./use-notify.js";
+export { useProgress, useProgressWithHandler, type UseProgressParameters, type UseProgressParametersSelf, type UseProgressReturnType, type UseProgressWithHandlerParameters, type UseProgressWithHandlerParametersSelf, type UseProgressWithHandlerReturnType } from "./use-progress.js";
+export { useRadio, useRadioGroup, type RadioChangeEventDetail, type RadioChangeEventHandler, type RadioContext, type RadioContextSelf, type RadioSubInfo, type TargetedRadioChangeEvent, type UseRadioGroupParameters, type UseRadioGroupParametersSelf, type UseRadioGroupReturnType, type UseRadioGroupReturnTypeSelf, type UseRadioParameters, type UseRadioParametersSelf, type UseRadioReturnType } from "./use-radio-group.js";
+export { useSlider, useSliderThumb, type RangeChangeEvent, type SliderContext, type SliderContextSelf, type SliderThumbInfo, type UseSliderParameters, type UseSliderParametersSelf, type UseSliderReturnType, type UseSliderThumbParameters, type UseSliderThumbParametersSelf, type UseSliderThumbReturnType, type UseSliderThumbReturnTypeSelf } from "./use-slider.js";
+export { useTable, useTableCell, useTableRow, useTableSection, type SortDirection, type TableCellInfo, type TableRowInfo, type UseTableCellParameters, type UseTableCellParametersSelf, type UseTableCellReturnType, type UseTableCellReturnTypeSelf, type UseTableContext, type UseTableContextSelf, type UseTableParameters, type UseTableParametersSelf, type UseTableReturnType, type UseTableRowContext, type UseTableRowParameters, type UseTableRowParametersSelf, type UseTableRowReturnType, type UseTableSectionContext, type UseTableSectionParameters, type UseTableSectionParametersSelf, type UseTableSectionReturnType } from "./use-table.js";
+export { useTab, useTabPanel, useTabs, type TabInfo, type TabPanelInfo, type TabsChangeEvent, type UseTab, type UseTabLabelParameters, type UseTabLabelReturnTypeWithHooks, type UseTabList, type UseTabListLabel, type UseTabListLabelReturnTypeInfo, type UseTabListParameters, type UseTabListReturnType, type UseTabPanel, type UseTabPanelParameters, type UseTabPanelReturnType, type UseTabPanelReturnTypeSelf, type UseTabPanelsContext, type UseTabParameters, type UseTabReturnType, type UseTabsContext, type UseTabsParameters, type UseTabsParametersSelf, type UseTabsReturnType } from "./use-tabs.js";
+export { useToast, useToasts, type ToastInfo, type ToastsContext, type ToastsContextSelf, type UseToastParameters, type UseToastParametersSelf, type UseToastReturnType, type UseToastReturnTypeSelf, type UseToastsParameters, type UseToastsParametersSelf, type UseToastsReturnType } from "./use-toasts.js";
+export { useToolbar, useToolbarChild, type UseToolbarChildParameters, type UseToolbarChildParametersSelf, type UseToolbarChildReturnType, type UseToolbarContext, type UseToolbarContextSelf, type UseToolbarParameters, type UseToolbarParametersSelf, type UseToolbarReturnType, type UseToolbarSubInfo } from "./use-toolbar.js";
+export { useTooltip, type TooltipState, type TooltipStatus, type UseTooltipParameters, type UseTooltipParametersSelf, type UseTooltipReturnType, type UseTooltipReturnTypeSelf } from "./use-tooltip.js";
 
-export { Accordion, AccordionProps, AccordionSection, AccordionSectionProps } from "./component/accordion.js";
-export { Button, ButtonProps } from "./component/button.js";
-export { CheckboxGroup, CheckboxGroupChild, CheckboxGroupChildProps, CheckboxGroupParent, CheckboxGroupParentProps, CheckboxGroupProps } from "./component/checkbox-group.js";
-export { Checkbox, CheckboxProps, defaultRenderCheckboxLike } from "./component/checkbox.js";
-export { Dialog, DialogProps } from "./component/dialog.js";
-export { Drawer, DrawerProps } from "./component/drawer.js";
-export { Gridlist, GridlistChild, GridlistChildProps, GridlistProps, GridlistRow, GridlistRowProps, defaultRenderGridlistChild } from "./component/gridlist.js";
-export { Heading, HeadingProps, HeadingReset } from "./component/heading.js";
-export { GroupedListbox, Listbox, ListboxItem, ListboxItemProps, ListboxProps } from "./component/listbox.js";
-export { Menu, MenuItem, MenuItemProps, MenuProps } from "./component/menu.js";
-export { Menubar, MenubarItem, MenubarItemContext, MenubarItemProps, MenubarProps } from "./component/menubar.js";
-export { Progress, ProgressProps, ProgressWithHandler, ProgressWithHandlerProps } from "./component/progress.js";
-export { Radio, RadioGroup, RadioGroupProps, RadioProps } from "./component/radio-group.js";
-export { Slider, SliderProps, SliderThumb, SliderThumbProps } from "./component/slider.js";
-export { Table, TableCell, TableCellProps, TableProps, TableRow, TableRowProps, TableSection, TableSectionProps } from "./component/table.js";
-export { Tab, TabPanel, TabPanelProps, TabProps, Tabs, TabsProps } from "./component/tabs.js";
-export { Toast, ToastProps, Toasts, ToastsProps } from "./component/toasts.js";
-export { Toolbar, ToolbarChild, ToolbarChildProps, ToolbarProps } from "./component/toolbar.js";
-export { Tooltip, TooltipProps } from "./component/tooltip.js";
+export { Accordion, AccordionSection, type AccordionProps, type AccordionSectionProps } from "./component/accordion.js";
+export { Button, type ButtonProps } from "./component/button.js";
+export { CheckboxGroup, CheckboxGroupChild, CheckboxGroupParent, type CheckboxGroupChildProps, type CheckboxGroupParentProps, type CheckboxGroupProps } from "./component/checkbox-group.js";
+export { Checkbox, defaultRenderCheckboxLike, type CheckboxProps } from "./component/checkbox.js";
+export { Dialog, type DialogProps } from "./component/dialog.js";
+export { Drawer, type DrawerProps } from "./component/drawer.js";
+export { Gridlist, GridlistChild, GridlistRow, GridlistRows, type GridlistChildProps, type GridlistProps, type GridlistRowProps, type GridlistRowsProps } from "./component/gridlist.js";
+export { Heading, HeadingReset, type HeadingProps } from "./component/heading.js";
+export { GroupedListbox, Listbox, ListboxChildren, ListboxItem, type ListboxChildrenProps, type ListboxItemProps, type ListboxProps } from "./component/listbox.js";
+export { Menu, MenuItem, type MenuItemProps, type MenuProps } from "./component/menu.js";
+export { Menubar, MenubarItem, MenubarItemContext, type MenubarItemProps, type MenubarProps } from "./component/menubar.js";
+export { Progress, ProgressWithHandler, type ProgressProps, type ProgressWithHandlerProps } from "./component/progress.js";
+export { Radio, RadioGroup, type RadioGroupProps, type RadioProps } from "./component/radio-group.js";
+export { Slider, SliderThumb, type SliderProps, type SliderThumbProps } from "./component/slider.js";
+export { Table, TableCell, TableRow, TableRows, TableSection, type TableCellProps, type TableProps, type TableRowProps, type TableRowsProps, type TableSectionProps } from "./component/table.js";
+export { Tab, TabPanel, Tabs, type TabPanelProps, type TabProps, type TabsProps } from "./component/tabs.js";
+export { Toast, Toasts, type ToastProps, type ToastsProps } from "./component/toasts.js";
+export { Toolbar, ToolbarChild, type ToolbarChildProps, type ToolbarProps } from "./component/toolbar.js";
+export { Tooltip, type TooltipProps } from "./component/tooltip.js";
 export { useDefaultRenderPortal } from "./component/util.js";
 
 export { ParentDepthContext, useDefault } from "./component/util.js";
@@ -127,7 +127,7 @@ declare module 'preact' {
         namespace JSX {
             /* eslint-disable @typescript-eslint/no-unused-vars */
             interface HTMLAttributes<RefType extends EventTarget = EventTarget> {
-                inert?: undefined | Signalish<boolean>;
+                inert?: boolean | SignalLike<boolean | undefined> | undefined;
             }
         }
     }

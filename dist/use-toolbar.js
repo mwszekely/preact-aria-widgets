@@ -18,7 +18,7 @@ export const useToolbar = monitored(function useToolbar({ linearNavigationParame
     if (singleSelectionDeclarativeParameters.singleSelectedIndex !== undefined) {
         console.assert(singleSelectionParameters.singleSelectionMode != "disabled");
     }
-    const { context, props, ...listNavReturn } = useCompleteListNavigationDeclarative({
+    const { contextChildren, contextProcessing, props, ...listNavReturn } = useCompleteListNavigationDeclarative({
         ...listNavParameters,
         rovingTabIndexParameters: { ...rovingTabIndexParameters, untabbable: disabled, focusSelfParent: focus },
         singleSelectionDeclarativeParameters,
@@ -34,7 +34,8 @@ export const useToolbar = monitored(function useToolbar({ linearNavigationParame
     // Note: We return tabIndex=-1 (when not disabled) because some browsers (at least Firefox) seem to add role=toolbar to the tab order?
     // Probably needs a bit more digging because this feels like a bit of a blunt fix.
     return {
-        context: useMemoObject({ ...context, toolbarContext: useMemoObject({}) }),
+        contextChildren: useMemoObject({ ...contextChildren, toolbarContext: useMemoObject({}) }),
+        contextProcessing,
         propsLabel,
         propsToolbar: useMergedProps({
             ...propsToolbar,

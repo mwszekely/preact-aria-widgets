@@ -9,12 +9,11 @@ const TabsContext = createContext(null);
 const TabPanelsContext = createContext(null);
 //const UntabbableContext = createContext(false);
 //const SelectionModeContext = createContext<NonNullable<UseTabsParameters<any, any, any>["singleSelectionParameters"]["selectionMode"]>>("focus");
-export const Tabs = memo(function Tabs({ ariaLabel, collator, compare, disableHomeEndKeys, getIndex, initiallySingleSelectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSingleSelectedIndexChange, onTabbableIndexChange, orientation, staggered, pageNavigationSize, localStorageKey, singleSelectionMode, untabbable, typeaheadTimeout, role, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, render, ...void1 }) {
+export const Tabs = memo((function Tabs({ ariaLabel, collator, disableHomeEndKeys, initiallySingleSelectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSingleSelectedIndexChange, onTabbableIndexChange, orientation, pageNavigationSize, localStorageKey, singleSelectionMode, untabbable, typeaheadTimeout, role, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, render, ...void1 }) {
     untabbable ??= false;
     assertEmptyObject(void1);
     const info = useTabs({
         labelParameters: { ariaLabel },
-        staggeredChildrenParameters: { staggered: staggered || false },
         linearNavigationParameters: {
             onNavigateLinear,
             disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
@@ -22,13 +21,11 @@ export const Tabs = memo(function Tabs({ ariaLabel, collator, compare, disableHo
             navigatePastStart: navigatePastStart ?? "wrap",
             pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
         },
-        rearrangeableChildrenParameters: { getIndex: useDefault("getIndex", getIndex) },
         rovingTabIndexParameters: {
             onTabbableIndexChange,
             untabbable
         },
         singleSelectionParameters: { initiallySingleSelectedIndex, onSingleSelectedIndexChange, singleSelectionMode: singleSelectionMode || "focus" },
-        sortableChildrenParameters: { compare },
         tabsParameters: {
             orientation,
             role,
@@ -45,8 +42,8 @@ export const Tabs = memo(function Tabs({ ariaLabel, collator, compare, disableHo
     const { contextPanels, contextTabs } = info;
     useImperativeHandle(imperativeHandle, () => info);
     return (_jsx(TabsContext.Provider, { value: contextTabs, children: _jsx(TabPanelsContext.Provider, { value: contextPanels, children: render(info) }) }));
-});
-export function Tab({ focusSelf, untabbable, index, getText, render, longPressThreshold, onPressingChange, getSortValue, imperativeHandle, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, singleSelectionDisabled, info: uinfo, ...void1 }) {
+}));
+export const Tab = memo((function Tab({ focusSelf, untabbable, index, getText, render, longPressThreshold, onPressingChange, imperativeHandle, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, singleSelectionDisabled, info: uinfo, ...void1 }) {
     assertEmptyObject(void1);
     const context = useContextWithWarning(TabsContext, "tabs");
     console.assert(context != null, `This Tab is not contained within a Tabs component`);
@@ -56,7 +53,6 @@ export function Tab({ focusSelf, untabbable, index, getText, render, longPressTh
             index,
             untabbable: untabbable || false,
             focusSelf: focusSelf ?? focusSelfDefault,
-            getSortValue,
             ...uinfo
         },
         context,
@@ -66,13 +62,13 @@ export function Tab({ focusSelf, untabbable, index, getText, render, longPressTh
         textContentParameters: { getText: useDefault("getText", getText) },
         singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false, }
     }));
-}
-export function TabPanel({ index, render, info: uinfo }) {
+}));
+export const TabPanel = memo((function TabPanel({ index, render, info: uinfo }) {
     const context = useContextWithWarning(TabPanelsContext, "tabs");
     const info = useTabPanel({
         context,
         info: { index, ...uinfo }
     });
     return render(info);
-}
+}));
 //# sourceMappingURL=tabs.js.map

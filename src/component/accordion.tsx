@@ -73,7 +73,7 @@ export const Accordion = memo(function Accordion<HeaderButtonElement extends Ele
 
 })
 
-export const AccordionSection = memo(function AccordionSection<HeaderContainerElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element>({
+export const AccordionSection = memo((function AccordionSection<HeaderContainerElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element>({
     open,
     index,
     tagButton,
@@ -109,4 +109,4 @@ export const AccordionSection = memo(function AccordionSection<HeaderContainerEl
             context: useContextWithWarning(AccordionSectionContext, "accordion section"),
         })
     );
-});
+}));

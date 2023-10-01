@@ -9,7 +9,7 @@ export type ButtonProps<ButtonElement extends Element> = GenericComponentProps<
     "tagButton"
 >;
 
-export const Button = memo(function Button<ButtonElement extends Element>({
+export const Button = memo((function Button<ButtonElement extends Element>({
     tagButton,
     pressed,
     render,
@@ -39,4 +39,4 @@ export const Button = memo(function Button<ButtonElement extends Element>({
             refElementParameters: { onElementChange, onMount, onUnmount },
         })
     );
-})
+}))

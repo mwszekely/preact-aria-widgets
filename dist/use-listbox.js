@@ -26,7 +26,7 @@ export const useListbox = monitored(function useListbox({ labelParameters, listb
         randomIdInputParameters: { prefix: Prefices.listbox },
         randomIdLabelParameters: { prefix: Prefices.listboxLabel }
     });
-    let { context, props: { ...props }, rovingTabIndexReturn, singleSelectionReturn, ...restRet } = useCompleteListNavigationDeclarative({
+    let { contextChildren, contextProcessing, props: { ...props }, rovingTabIndexReturn, singleSelectionReturn, ...restRet } = useCompleteListNavigationDeclarative({
         rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
         singleSelectionDeclarativeParameters: { onSingleSelectedIndexChange, singleSelectedIndex },
         singleSelectionParameters: { singleSelectionAriaPropName: singleSelectionAriaPropName || "aria-selected", singleSelectionMode },
@@ -40,19 +40,40 @@ export const useListbox = monitored(function useListbox({ labelParameters, listb
         // Intentionally clobbering all the list navigation stuff.
         props = { role: "listbox" };
         // ...actually, context too while we're at it.
-        context = null;
+        contextChildren = null;
+        contextProcessing = null;
     }
     else {
         props.role = "listbox";
     }
     return {
         ...restRet,
-        context,
+        contextChildren,
+        contextProcessing,
         rovingTabIndexReturn,
         propsListbox: useMergedProps(props, propsLabelList, { "aria-multiselectable": (multiSelectionMode != "disabled" ? true : undefined) }),
         propsListboxLabel: propsLabelLabel
     };
 });
+/*
+export interface UseListboxChildrenParameters<TabbableChildElement extends Element, M extends UseProcessedChildInfo<TabbableChildElement>> extends    UseCompleteListNavigationChildrenParameters<TabbableChildElement, M> {
+}
+
+export const useListboxChildren = monitored(function useListboxChildren<E extends Element, M extends UseProcessedChildInfo<E>>({
+    context,
+    managedChildrenParameters,
+    paginatedChildrenParameters,
+    rearrangeableChildrenParameters,
+    staggeredChildrenParameters
+}: UseListboxChildrenParameters<E, M>) {
+    return useCompleteListNavigationChildren<E, M>({
+        context,
+        managedChildrenParameters,
+        paginatedChildrenParameters,
+        rearrangeableChildrenParameters,
+        staggeredChildrenParameters
+    });
+})*/
 /**
  * @compositeParams
  */

@@ -55,7 +55,7 @@ export interface UseListboxParameters<ListElement extends Element, ListItemEleme
 export interface UseListboxReturnType<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationReturnType<ListElement, ListItemElement, M>, "singleSelectionReturn" | "props"> {
     propsListbox: ElementProps<ListElement>;
     propsListboxLabel: ElementProps<LabelElement>;
-    context: UseListboxContext<ListItemElement, M>;
+    contextChildren: UseListboxContext<ListItemElement, M>;
 }
 export interface UseListboxItemReturnType<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationChildDeclarativeReturnType<ListItemElement, M>, "propsChild" | "propsTabbable" | "pressParameters">, UsePressReturnType<ListItemElement> { }
 
@@ -124,7 +124,8 @@ export const useListbox = monitored(function useListbox<ListElement extends Elem
         randomIdLabelParameters: { prefix: Prefices.listboxLabel }
     });
     let {
-        context,
+        contextChildren,
+        contextProcessing,
         props: { ...props },
         rovingTabIndexReturn,
         singleSelectionReturn,
@@ -144,7 +145,8 @@ export const useListbox = monitored(function useListbox<ListElement extends Elem
         // Intentionally clobbering all the list navigation stuff.
         props = { role: "listbox" };
         // ...actually, context too while we're at it.
-        context = null!
+        contextChildren = null!
+        contextProcessing = null!
     }
     else {
         props.role = "listbox";
@@ -152,12 +154,32 @@ export const useListbox = monitored(function useListbox<ListElement extends Elem
 
     return {
         ...restRet,
-        context,
+        contextChildren,
+        contextProcessing,
         rovingTabIndexReturn,
         propsListbox: useMergedProps(props, propsLabelList, { "aria-multiselectable": (multiSelectionMode != "disabled" ? true : undefined) }),
         propsListboxLabel: propsLabelLabel
     }
 })
+/*
+export interface UseListboxChildrenParameters<TabbableChildElement extends Element, M extends UseProcessedChildInfo<TabbableChildElement>> extends    UseCompleteListNavigationChildrenParameters<TabbableChildElement, M> {
+}
+
+export const useListboxChildren = monitored(function useListboxChildren<E extends Element, M extends UseProcessedChildInfo<E>>({
+    context,
+    managedChildrenParameters,
+    paginatedChildrenParameters,
+    rearrangeableChildrenParameters,
+    staggeredChildrenParameters
+}: UseListboxChildrenParameters<E, M>) {
+    return useCompleteListNavigationChildren<E, M>({
+        context,
+        managedChildrenParameters,
+        paginatedChildrenParameters,
+        rearrangeableChildrenParameters,
+        staggeredChildrenParameters
+    });
+})*/
 
 /**
  * @compositeParams

@@ -1,4 +1,4 @@
-import { returnZero, useMergedProps } from "preact-prop-helpers";
+import { useMergedProps } from "preact-prop-helpers";
 import { Toolbar, ToolbarChild } from "../../dist/index.js";
 import { TestItem, useTestSyncState } from "../util.js";
 import { fromStringBoolean, fromStringNumber } from "./base.types.js";
@@ -39,7 +39,7 @@ function TestBasesToolbarChildren({ count }: { count: number }) {
             {Array.from(function* () {
                 for (let i = 0; i < count; ++i) {
                     yield (
-                        <ToolbarChild<HTMLLIElement> index={i} disabledProp="aria-disabled" getSortValue={returnZero} render={info => <li {...useMergedProps(info.propsChild, info.propsTabbable)}>List Item #{i}</li>} />
+                        <ToolbarChild<HTMLLIElement> index={i} disabledProp="aria-disabled" render={info => <li {...useMergedProps(info.propsChild, info.propsTabbable)}>List Item #{i}</li>} />
                     );
                 }
             }())}

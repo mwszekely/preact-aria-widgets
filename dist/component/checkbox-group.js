@@ -4,7 +4,7 @@ import { useContextWithWarning } from "../props.js";
 import { useCheckboxGroup, useCheckboxGroupChild, useCheckboxGroupParent } from "../use-checkbox-group.js";
 import { useComponent, useDefault } from "./util.js";
 const UseCheckboxGroupChildContext = createContext(null);
-export const CheckboxGroup = memo(function CheckboxGroup({ render, collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, onTabbableIndexChange, compare, staggered, getIndex, untabbable, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, ...void1 }) {
+export const CheckboxGroup = memo((function CheckboxGroup({ render, collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, onTabbableIndexChange, untabbable, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, ...void1 }) {
     assertEmptyObject(void1);
     return useComponent(imperativeHandle, render, UseCheckboxGroupChildContext, useCheckboxGroup({
         linearNavigationParameters: {
@@ -17,18 +17,9 @@ export const CheckboxGroup = memo(function CheckboxGroup({ render, collator, dis
         checkboxGroupParameters: {
             orientation: orientation ?? "vertical"
         },
-        staggeredChildrenParameters: {
-            staggered: staggered || false
-        },
-        rearrangeableChildrenParameters: {
-            getIndex: useDefault("getIndex", getIndex)
-        },
         rovingTabIndexParameters: {
             onTabbableIndexChange,
             untabbable: untabbable || false
-        },
-        sortableChildrenParameters: {
-            compare,
         },
         typeaheadNavigationParameters: {
             onNavigateTypeahead,
@@ -39,8 +30,8 @@ export const CheckboxGroup = memo(function CheckboxGroup({ render, collator, dis
         refElementParameters: { onElementChange, onMount, onUnmount },
         multiSelectionParameters: { multiSelectionAriaPropName, multiSelectionMode: multiSelectionMode || "activation", onSelectionChange }
     }));
-});
-export const CheckboxGroupParent = memo(function CheckboxGroupParent({ render, index, focusSelf, untabbable, getSortValue, imperativeHandle, getText, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, 
+}));
+export const CheckboxGroupParent = memo((function CheckboxGroupParent({ render, index, focusSelf, untabbable, imperativeHandle, getText, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, 
 //info,
 ..._rest }) {
     const context = useContextWithWarning(UseCheckboxGroupChildContext, "checkbox group");
@@ -50,7 +41,6 @@ export const CheckboxGroupParent = memo(function CheckboxGroupParent({ render, i
             index,
             untabbable: untabbable || false,
             focusSelf,
-            getSortValue,
         },
         context,
         textContentParameters: {
@@ -61,8 +51,8 @@ export const CheckboxGroupParent = memo(function CheckboxGroupParent({ render, i
         multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false, initiallyMultiSelected: initiallyMultiSelected || false, onMultiSelectChange },
         singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false }
     })));
-});
-export const CheckboxGroupChild = (function CheckboxGroupChild({ index, render, checked, onChangeFromParent, getSortValue, untabbable, getText, focusSelf, 
+}));
+export const CheckboxGroupChild = memo((function CheckboxGroupChild({ index, render, checked, onChangeFromParent, untabbable, getText, focusSelf, 
 //info,
 imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, multiSelectionDisabled, onMultiSelectChange, ...void1 }) {
     assertEmptyObject(void1);
@@ -74,8 +64,7 @@ imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onEleme
         info: {
             index,
             untabbable: untabbable || false,
-            focusSelf,
-            getSortValue
+            focusSelf
         },
         textContentParameters: {
             getText: useDefault("getText", getText)
@@ -92,5 +81,5 @@ imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onEleme
         },
         multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false, onMultiSelectChange },
     }));
-});
+}));
 //# sourceMappingURL=checkbox-group.js.map

@@ -3,7 +3,7 @@ import { assertEmptyObject, memo } from "preact-prop-helpers";
 import { useContext } from "preact/hooks";
 import { useDrawer } from "../use-drawer.js";
 import { ParentDepthContext, useComponent, useDefault } from "./util.js";
-export const Drawer = memo(function Drawer({ active, onDismiss, dismissBackdropActive, dismissEscapeActive, dismissLostFocusActive, onElementChange, onMount, onUnmount, focusOpener, focusPopup, getDocument, imperativeHandle, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, parentDepth, render, trapActive, ariaLabel, ...void1 }) {
+export const Drawer = memo((function Drawer({ active, onDismiss, dismissBackdropActive, dismissEscapeActive, dismissLostFocusActive, onElementChange, onMount, onUnmount, focusOpener, focusPopup, getDocument, imperativeHandle, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, parentDepth, render, trapActive, ariaLabel, ...void1 }) {
     const defaultParentDepth = useContext(ParentDepthContext);
     let myDepth = (parentDepth ?? defaultParentDepth) + 1;
     assertEmptyObject(void1);
@@ -32,5 +32,5 @@ export const Drawer = memo(function Drawer({ active, onDismiss, dismissBackdropA
             },
             labelParameters: { ariaLabel }
         })) }));
-});
+}));
 //# sourceMappingURL=drawer.js.map

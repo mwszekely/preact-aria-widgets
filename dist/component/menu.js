@@ -1,12 +1,12 @@
 import { jsx as _jsx } from "preact/jsx-runtime";
 import { createContext } from "preact";
-import { assertEmptyObject, focus } from "preact-prop-helpers";
+import { assertEmptyObject, focus, memo } from "preact-prop-helpers";
 import { useCallback, useContext } from "preact/hooks";
 import { useContextWithWarning } from "../props.js";
 import { useMenu, useMenuItem } from "../use-menu.js";
 import { ParentDepthContext, useComponent, useDefault } from "./util.js";
 const MenuItemContext = createContext(null);
-export function Menu({ collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, orientation, singleSelectionAriaPropName, singleSelectionMode, untabbable, active, onDismiss, onElementChange, onMount, onUnmount, openDirection, onTabbableIndexChange, compare, getIndex, singleSelectedIndex, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, pageNavigationSize, parentDepth, disabled, staggered, onOpen, onNavigateLinear, onNavigateTypeahead, getDocument, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, render, imperativeHandle, ...void1 }) {
+export const Menu = memo((function Menu({ collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, orientation, singleSelectionAriaPropName, singleSelectionMode, untabbable, active, onDismiss, onElementChange, onMount, onUnmount, openDirection, onTabbableIndexChange, singleSelectedIndex, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, pageNavigationSize, parentDepth, disabled, onOpen, onNavigateLinear, onNavigateTypeahead, getDocument, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, render, imperativeHandle, ...void1 }) {
     const defaultParentDepth = useContext(ParentDepthContext);
     let myDepth = (parentDepth ?? defaultParentDepth) + 1;
     untabbable ||= false;
@@ -19,9 +19,6 @@ export function Menu({ collator, disableHomeEndKeys, noTypeahead, typeaheadTimeo
                 navigatePastEnd: navigatePastEnd ?? "wrap",
                 navigatePastStart: navigatePastStart ?? "wrap"
             },
-            staggeredChildrenParameters: {
-                staggered: staggered || false
-            },
             escapeDismissParameters: { parentDepth: parentDepth || 1, },
             dismissParameters: { onDismiss },
             modalParameters: { active },
@@ -31,12 +28,6 @@ export function Menu({ collator, disableHomeEndKeys, noTypeahead, typeaheadTimeo
                 onActiveElementChange,
                 onLastActiveElementChange,
                 onWindowFocusedChange
-            },
-            rearrangeableChildrenParameters: {
-                getIndex: useDefault("getIndex", getIndex)
-            },
-            sortableChildrenParameters: {
-                compare
             },
             menuParameters: {
                 openDirection,
@@ -71,8 +62,8 @@ export function Menu({ collator, disableHomeEndKeys, noTypeahead, typeaheadTimeo
                 onSingleSelectedIndexChange,
             }
         })) }));
-}
-export function MenuItem({ index, untabbable, getSortValue, onPress, getText, role, focusSelf, onPressingChange, render, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, ...void1 }) {
+}));
+export const MenuItem = memo((function MenuItem({ index, untabbable, onPress, getText, role, focusSelf, onPressingChange, render, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, ...void1 }) {
     const context = useContextWithWarning(MenuItemContext, "menu");
     const defaultFocusSelf = useCallback((e) => focus(e), []);
     assertEmptyObject(void1);
@@ -80,8 +71,7 @@ export function MenuItem({ index, untabbable, getSortValue, onPress, getText, ro
         info: {
             index,
             untabbable: untabbable || false,
-            focusSelf: focusSelf ?? defaultFocusSelf,
-            getSortValue,
+            focusSelf: focusSelf ?? defaultFocusSelf
         },
         context,
         textContentParameters: {
@@ -99,6 +89,5 @@ export function MenuItem({ index, untabbable, getSortValue, onPress, getText, ro
         singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false },
         multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false, initiallyMultiSelected: initiallyMultiSelected || false, onMultiSelectChange }
     })));
-}
-;
+}));
 //# sourceMappingURL=menu.js.map

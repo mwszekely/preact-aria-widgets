@@ -1,5 +1,4 @@
 import {
-    Compare,
     CompleteGridNavigationCellContext,
     CompleteGridNavigationRowContext,
     ElementProps,
@@ -57,17 +56,17 @@ export interface UseTableSectionParametersSelf<TableSectionElement extends Eleme
 }
 
 export interface UseTableSectionParameters<TableSectionElement extends Element, TableRowElement extends Element, RM extends TableRowInfo<TableRowElement>> extends
-    OmitStrong<UseCompleteGridNavigationParameters<TableSectionElement, TableRowElement, RM>, "rovingTabIndexParameters" | "sortableChildrenParameters" | "singleSelectionParameters" | "multiSelectionParameters">,
+    OmitStrong<UseCompleteGridNavigationParameters<TableSectionElement, TableRowElement, RM>, "rovingTabIndexParameters" | "singleSelectionParameters" | "multiSelectionParameters">,
     TargetedOmit<UseCompleteGridNavigationParameters<TableSectionElement, TableRowElement, RM>, "singleSelectionParameters", "singleSelectionMode">,
     TargetedOmit<UseCompleteGridNavigationParameters<TableSectionElement, TableRowElement, RM>, "multiSelectionParameters", "multiSelectionMode">,
     TargetedOmit<UseCompleteGridNavigationParameters<TableSectionElement, TableRowElement, RM>, "rovingTabIndexParameters", "focusSelfParent"> {
     tableSectionParameters: UseTableSectionParametersSelf<TableSectionElement>;
-    context: UseTableContext;
+    contextChildren: UseTableContext;
 }
 export interface UseTableSectionReturnType<TableSectionElement extends Element, TableRowElement extends Element, RM extends TableRowInfo<TableRowElement>> extends
     OmitStrong<UseCompleteGridNavigationReturnType<TableSectionElement, TableRowElement, RM>, "props"> {
     propsTableSection: ElementProps<TableSectionElement>;
-    context: UseTableSectionContext<TableRowElement, RM>;
+    contextChildren: UseTableSectionContext<TableRowElement, RM>;
 }
 export interface UseTableRowReturnType<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement>, CM extends TableCellInfo<TableCellElement>> extends OmitStrong<UseCompleteGridNavigationRowReturnType<TableRowElement, TableCellElement, RM, CM>, "context"> {
     context: UseTableRowContext<TableCellElement, CM>;
@@ -80,7 +79,7 @@ export interface UseTableRowParametersSelf<TableRowElement extends Element> {
     tagTableRow: ElementToTag<TableRowElement>;
 }
 export interface UseTableRowParameters<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement>, CM extends TableCellInfo<TableCellElement>> extends
-    OmitStrong<UseCompleteGridNavigationRowParameters<TableRowElement, TableCellElement, RM, CM>, "gridNavigationSelectionSortableRowParameters" | "rovingTabIndexParameters" | "typeaheadNavigationParameters" | "context" | "info">,
+    OmitStrong<UseCompleteGridNavigationRowParameters<TableRowElement, TableCellElement, RM, CM>, "rovingTabIndexParameters" | "typeaheadNavigationParameters" | "info">,
     TargetedOmit<UseCompleteGridNavigationRowParameters<TableRowElement, TableCellElement, RM, CM>, "rovingTabIndexParameters", never> {
     context: UseTableSectionContext<TableRowElement, RM>;
     tableRowParameters: UseTableRowParametersSelf<TableRowElement>;
@@ -264,12 +263,10 @@ export const useTableSection = monitored(function useTableSection<TableSectionEl
     singleSelectionParameters,
     multiSelectionParameters,
     gridNavigationParameters,
-    rearrangeableChildrenParameters,
     paginatedChildrenParameters,
-    staggeredChildrenParameters,
     tableSectionParameters: { tagTableSection, location },
     typeaheadNavigationParameters,
-    context: { tableContext, ...void3 },
+    contextChildren: { tableContext, ...void3 },
     refElementParameters,
     ...void1
 }: UseTableSectionParameters<TableSectionElement, TableRowElement, TableRowInfo<TableRowElement>>): UseTableSectionReturnType<TableSectionElement, TableRowElement, TableRowInfo<TableRowElement>> {
@@ -277,7 +274,9 @@ export const useTableSection = monitored(function useTableSection<TableSectionEl
 
     const {
         childrenHaveFocusReturn,
-        context,
+        contextChildren,
+        contextProcessing,
+        refElementReturn,
         linearNavigationReturn,
         managedChildrenReturn,
         props: { ...props },
@@ -285,10 +284,7 @@ export const useTableSection = monitored(function useTableSection<TableSectionEl
         singleSelectionReturn,
         multiSelectionReturn,
         typeaheadNavigationReturn,
-        staggeredChildrenReturn,
         rearrangeableChildrenReturn,
-        paginatedChildrenReturn,
-        sortableChildrenReturn,
         ...void2
     } = useCompleteGridNavigation<TableSectionElement, TableRowElement, TableCellElement, RM>({
         linearNavigationParameters,
@@ -296,15 +292,8 @@ export const useTableSection = monitored(function useTableSection<TableSectionEl
         singleSelectionParameters: { ...singleSelectionParameters, singleSelectionMode: tableContext.singleSelectionMode },
         multiSelectionParameters: { ...multiSelectionParameters, multiSelectionMode: tableContext.multiSelectionMode },
         paginatedChildrenParameters,
-        staggeredChildrenParameters,
-        sortableChildrenParameters: {
-            compare: useCallback<Compare<RM>>((lhs, rhs) => {
-                return fuzzyCompare(lhs?.getSortValue?.(), rhs?.getSortValue?.());
-            }, [])
-        },
         typeaheadNavigationParameters,
         gridNavigationParameters,
-        rearrangeableChildrenParameters,
         refElementParameters,
     });
 
@@ -317,7 +306,7 @@ export const useTableSection = monitored(function useTableSection<TableSectionEl
     useEffect(() => {
         if (location == "body") {
             tableContext.setSortBodyFunction(() => {
-                return () => { sortableChildrenReturn.sort(tableContext.getCurrentSortDirection()); }
+                return () => { rearrangeableChildrenReturn.sort(tableContext.getCurrentSortDirection()); }
             })
         }
     });
@@ -328,20 +317,19 @@ export const useTableSection = monitored(function useTableSection<TableSectionEl
 
     return {
         childrenHaveFocusReturn,
-        context: {
-            ...context,
+        contextChildren: {
+            ...contextChildren,
             tableContext
         },
-        staggeredChildrenReturn,
+        contextProcessing,
+        refElementReturn,
         linearNavigationReturn,
         managedChildrenReturn,
         rovingTabIndexReturn,
         singleSelectionReturn,
         multiSelectionReturn,
         rearrangeableChildrenReturn,
-        sortableChildrenReturn,
         typeaheadNavigationReturn,
-        paginatedChildrenReturn,
         propsTableSection: props
     }
 })
@@ -383,7 +371,7 @@ export const useTableRow = monitored(function useTableRow<TableRowElement extend
         rovingTabIndexParameters,
         singleSelectionChildParameters,
         multiSelectionChildParameters,
-        gridNavigationSelectionSortableRowParameters: { getSortableColumnIndex: cx1.tableContext.getCurrentSortColumn },
+       // gridNavigationSelectionSortableRowParameters: { getSortableColumnIndex: cx1.tableContext.getCurrentSortColumn },
         typeaheadNavigationParameters: { noTypeahead: true, collator: null, typeaheadTimeout: Infinity, onNavigateTypeahead: null }
     }
     );

@@ -41,7 +41,8 @@ export interface UseMenuItemParameters<MenuItemElement extends Element, M extend
 }
 
 export interface UseMenuReturnType<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends
-    UseMenuSurfaceReturnType<MenuSurfaceElement, MenuParentElement, MenuButtonElement>, OmitStrong<UseMenubarReturnType<MenuParentElement, MenuItemElement, MenuButtonElement, M>, "propsMenubar" | "propsLabel"> {
+    UseMenuSurfaceReturnType<MenuSurfaceElement, MenuParentElement, MenuButtonElement>, 
+    OmitStrong<UseMenubarReturnType<MenuParentElement, MenuItemElement, MenuButtonElement, M>, "propsMenubar" | "propsLabel" | "contextChildren" | "contextProcessing"> {
     context: UseMenuContext<MenuItemElement, M>;
 }
 
@@ -82,7 +83,7 @@ export const useMenu = monitored(function useMenu<MenuSurfaceElement extends Ele
     type M = UseMenubarSubInfo<MenuItemElement>;
 
     const {
-        context,
+        contextChildren,
         propsLabel: propsButtonAsMenuLabel,
         propsMenubar,
         randomIdInputReturn,
@@ -160,7 +161,7 @@ export const useMenu = monitored(function useMenu<MenuSurfaceElement extends Ele
         ...restRet,
         ...restRet2,
         context: useMemoObject<UseMenuContext<MenuItemElement, M>>({
-            ...context,
+            ...contextChildren,
             menu: useMemoObject<UseMenuContext<MenuItemElement, M>["menu"]>({
                 closeFromMenuItemClicked: useStableCallback((e) => {
                     dismissParameters.onDismiss(e, "item-clicked" as never);    // TODO
@@ -171,7 +172,7 @@ export const useMenu = monitored(function useMenu<MenuSurfaceElement extends Ele
         rovingTabIndexReturn,
         randomIdInputReturn,
         propsTarget: useMergedProps(propsTarget, propsMenubar),
-        propsTrigger: useMergedProps({ onKeyDown }, propsTrigger, propsButtonAsMenuLabel),
+        propsTrigger: useMergedProps<MenuButtonElement>({ onKeyDown }, propsTrigger, propsButtonAsMenuLabel),
     }
 })
 

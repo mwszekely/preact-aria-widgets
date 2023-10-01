@@ -1,5 +1,5 @@
 
-import { EventDetail, returnNull, useMergedProps, useStableCallback, useState } from "preact-prop-helpers";
+import { EventDetail, useMergedProps, useStableCallback, useState } from "preact-prop-helpers";
 import { useRef } from "preact/hooks";
 import { Checkbox, CheckboxCheckedType, CheckboxGroup, CheckboxGroupChild, CheckboxGroupParent, UseCheckboxReturnType, defaultRenderCheckboxLike } from "../../dist/index.js";
 
@@ -12,7 +12,6 @@ function DemoCheckbox({ index }: { index: number }) {
             index={index}
             focusSelf={() => ref.current?.checkboxLikeReturn.focusSelf()}
             onChangeFromParent={async (checked) => { await new Promise(resolve => setTimeout(resolve, Math.random() * 2000)); setChecked(checked); }}
-            getSortValue={returnNull}
             //focusSelf={useStableCallback((e) => e.focus())}
             render={(info) => {
 
@@ -91,7 +90,6 @@ export function Demo() {
                                         <CheckboxGroupParent<HTMLInputElement>
                                             index={0}
                                             focusSelf={() => ref.current?.checkboxLikeReturn.focusSelf()}
-                                            getSortValue={returnNull}
                                             render={info3 => (<Checkbox<HTMLInputElement, HTMLLabelElement>
                                                 imperativeHandle={ref}
                                                 disabled={pending}

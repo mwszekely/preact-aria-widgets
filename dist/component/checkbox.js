@@ -23,7 +23,7 @@ export function defaultRenderCheckboxLike({ labelPosition, tagInput, tagLabel, m
         }
     };
 }
-export const Checkbox = memo(function Checkbox({ checked, disabled, tagLabel, labelPosition, tagInput, ariaLabel, longPressThreshold, excludeSpace, imperativeHandle, render, onCheckedChange, ...void1 }) {
+export const Checkbox = memo((function Checkbox({ checked, disabled, tagLabel, labelPosition, tagInput, ariaLabel, longPressThreshold, excludeSpace, imperativeHandle, render, onCheckedChange, ...void1 }) {
     assertEmptyObject(void1);
     return useComponent(imperativeHandle, render, null, useCheckbox({
         checkboxLikeParameters: { checked, disabled: disabled ?? false },
@@ -31,5 +31,5 @@ export const Checkbox = memo(function Checkbox({ checked, disabled, tagLabel, la
         pressParameters: { excludeSpace, longPressThreshold },
         checkboxParameters: { onCheckedChange }
     }));
-});
+}));
 //# sourceMappingURL=checkbox.js.map

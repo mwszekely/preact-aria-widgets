@@ -45,7 +45,7 @@ export const useTabs = monitored(function useTabs({ labelParameters, linearNavig
         randomIdInputParameters: { prefix: Prefices.tablist },
         randomIdLabelParameters: { prefix: Prefices.tablistLabel },
     });
-    const { props: listNavigationSingleSelectionProps, context, ...listNavRet1 } = useCompleteListNavigation({
+    const { props: listNavigationSingleSelectionProps, contextChildren, ...listNavRet1 } = useCompleteListNavigation({
         linearNavigationParameters: { arrowKeyDirection: orientation, ...linearNavigationParameters },
         rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
         singleSelectionParameters: {
@@ -80,7 +80,7 @@ export const useTabs = monitored(function useTabs({ labelParameters, linearNavig
             })
         }),
         contextTabs: useMemoObject({
-            ...context,
+            ...contextChildren,
             tabsContext: useMemoObject({ getTabId, getPanelId, getVisibleIndex, setSelectedIndex: changeSingleSelectedIndex })
         }),
         propsContainer: useMergedProps(listNavigationSingleSelectionProps, propsInput, {
@@ -98,10 +98,10 @@ export const useTabs = monitored(function useTabs({ labelParameters, linearNavig
  *
  * @compositeParams
  */
-export const useTab = monitored(function useTab({ info: { focusSelf: focusSelfParent, index, untabbable, getSortValue, ...info }, textContentParameters, pressParameters: { focusSelf: focusSelfChild, longPressThreshold, onPressingChange, ...void2 }, context, hasCurrentFocusParameters, refElementParameters, singleSelectionChildParameters, ...void3 }) {
+export const useTab = monitored(function useTab({ info: { focusSelf: focusSelfParent, index, untabbable, ...info }, textContentParameters, pressParameters: { focusSelf: focusSelfChild, longPressThreshold, onPressingChange, ...void2 }, context, hasCurrentFocusParameters, refElementParameters, singleSelectionChildParameters, ...void3 }) {
     const { propsChild: listNavigationSingleSelectionChildProps, propsTabbable, pressParameters: { onPressSync, excludeSpace, ...void1 }, refElementReturn, ...listNavRet2 } = useCompleteListNavigationChild({
         context,
-        info: { index, focusSelf: focusSelfParent, getSortValue, untabbable, ...info },
+        info: { index, focusSelf: focusSelfParent, untabbable, ...info },
         textContentParameters,
         hasCurrentFocusParameters,
         refElementParameters,

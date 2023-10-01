@@ -13,7 +13,7 @@ import { useLabelSynthetic } from "./use-label.js";
  *
  * @hasChild {@link useRadio}
  */
-export const useRadioGroup = monitored(function useRadioGroup({ labelParameters, radioGroupParameters: { name, selectedValue, onSelectedValueChange, ...void2 }, rovingTabIndexParameters, linearNavigationParameters, rearrangeableChildrenParameters, sortableChildrenParameters, staggeredChildrenParameters, typeaheadNavigationParameters, refElementParameters, singleSelectionParameters: { singleSelectionMode, ...void4 }, ...void1 }) {
+export const useRadioGroup = monitored(function useRadioGroup({ labelParameters, radioGroupParameters: { name, selectedValue, onSelectedValueChange, ...void2 }, rovingTabIndexParameters, linearNavigationParameters, typeaheadNavigationParameters, refElementParameters, singleSelectionParameters: { singleSelectionMode, ...void4 }, ...void1 }) {
     // TODO: The way this is structured causes 1 extra re-render on the parent
     // when the selectedValue changes to selectedIndex.
     const [selectedIndex, setSelectedIndex] = useState(null);
@@ -32,7 +32,7 @@ export const useRadioGroup = monitored(function useRadioGroup({ labelParameters,
         randomIdLabelParameters: { prefix: Prefices.radioGroupLabel, },
         randomIdInputParameters: { prefix: Prefices.radioGroup }
     });
-    const { context, props: propsGroup2, singleSelectionReturn, multiSelectionReturn, managedChildrenReturn, rovingTabIndexReturn, linearNavigationReturn, paginatedChildrenReturn, rearrangeableChildrenReturn, sortableChildrenReturn, staggeredChildrenReturn, typeaheadNavigationReturn, childrenHaveFocusReturn, ...void3 } = useCompleteListNavigationDeclarative({
+    const { contextChildren, props: propsGroup2, singleSelectionReturn, multiSelectionReturn, managedChildrenReturn, rovingTabIndexReturn, linearNavigationReturn, rearrangeableChildrenReturn, typeaheadNavigationReturn, childrenHaveFocusReturn, contextProcessing, refElementReturn, ...void3 } = useCompleteListNavigationDeclarative({
         singleSelectionDeclarativeParameters: {
             singleSelectedIndex: selectedIndex,
             onSingleSelectedIndexChange: useStableCallback((e) => {
@@ -45,9 +45,6 @@ export const useRadioGroup = monitored(function useRadioGroup({ labelParameters,
         paginatedChildrenParameters: { paginationMin: null, paginationMax: null },
         rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
         linearNavigationParameters,
-        rearrangeableChildrenParameters,
-        sortableChildrenParameters,
-        staggeredChildrenParameters,
         typeaheadNavigationParameters,
         refElementParameters
     });
@@ -61,17 +58,15 @@ export const useRadioGroup = monitored(function useRadioGroup({ labelParameters,
         propsRadioGroupLabel: propsLabel,
         rovingTabIndexReturn,
         linearNavigationReturn,
-        paginatedChildrenReturn,
+        refElementReturn,
         managedChildrenReturn,
         radioGroupReturn: { selectedIndex },
         singleSelectionReturn,
         rearrangeableChildrenReturn,
-        sortableChildrenReturn,
-        staggeredChildrenReturn,
         typeaheadNavigationReturn,
         childrenHaveFocusReturn,
         context: useMemo(() => ({
-            ...context,
+            ...contextChildren,
             radioContext: { name, indexToName: indexToName.current, nameToIndex: nameToIndex.current }
         }), [name]),
     };
