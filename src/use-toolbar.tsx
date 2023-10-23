@@ -23,7 +23,7 @@ import { UseLabelSyntheticParameters, useLabelSynthetic } from "./use-label.js";
 
 
 
-export interface UseToolbarParametersSelf<ContainerElement extends Element, ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> {
+export interface UseToolbarParametersSelf {
 
     /** Primarily controls arrow key direction for navigation */
     orientation: "horizontal" | "vertical";
@@ -48,7 +48,7 @@ export interface UseToolbarParameters<ContainerElement extends Element, ChildEle
     TargetedOmit<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>, "rovingTabIndexParameters", "focusSelfParent">,
     TargetedOmit<UseLabelSyntheticParameters, "labelParameters", "onLabelClick">,
     TargetedOmit<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>, "linearNavigationParameters", "arrowKeyDirection"> {
-    toolbarParameters: UseToolbarParametersSelf<ContainerElement, ChildElement, M>;
+    toolbarParameters: UseToolbarParametersSelf;
 }
 
 export interface UseToolbarReturnType<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends OmitStrong<MakeSingleSelectionDeclarativeReturnType<UseCompleteListNavigationReturnType<ContainerElement, ChildElement, M>>, "props"> {
@@ -63,12 +63,13 @@ export interface UseToolbarSubInfo<ChildElement extends Element> extends UseComp
 
 }
 
+/* eslint-disable @typescript-eslint/no-empty-interface */
 export interface UseToolbarContextSelf /*extends Pick<UseToolbarParametersSelf<any, any, any>, "selectionLimit">*/ { }
 
 export interface UseToolbarContext<ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends
     CompleteListNavigationContext<ChildElement, M> {
     toolbarContext: UseToolbarContextSelf;
-};
+}
 
 
 export interface UseToolbarChildParametersSelf { disabledProp: "disabled" | "aria-disabled"; }
@@ -149,7 +150,8 @@ export const useToolbar = monitored(function useToolbar<ContainerElement extends
 /**
  * @compositeParams
  */
-export const useToolbarChild = monitored(function useToolbarChild<ChildElement extends Element>({ context: { toolbarContext, ...context }, info, toolbarChildParameters: { disabledProp }, ...args }: UseToolbarChildParameters<ChildElement, UseToolbarSubInfo<ChildElement>>): UseToolbarChildReturnType<ChildElement, UseToolbarSubInfo<ChildElement>> {
+export const useToolbarChild = monitored(function useToolbarChild<ChildElement extends Element>({ context, info, toolbarChildParameters: { disabledProp }, ...args }: UseToolbarChildParameters<ChildElement, UseToolbarSubInfo<ChildElement>>): UseToolbarChildReturnType<ChildElement, UseToolbarSubInfo<ChildElement>> {
+
     const {
         propsChild,
         propsTabbable,

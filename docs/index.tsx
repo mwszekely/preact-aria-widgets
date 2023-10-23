@@ -2,7 +2,7 @@
 import "preact/debug";
 
 import { render } from "preact";
-import { Heading, NotificationProviderContext, setDebugLogging, useNotificationProvider } from "../dist/index.js";
+import { Heading, NotificationProviderContext, useNotificationProvider } from "../dist/index.js";
 import * as Accordion from "./demos/accordion.js";
 import * as Button from "./demos/button.js";
 import * as CheckboxGroup from "./demos/checkbox-group.js";
@@ -27,7 +27,6 @@ import * as Tooltip from "./demos/tooltip.js";
 
 //(window as any)._generate_setState_stacks = true;
 
-setDebugLogging(true)
 
 const Component = () => {
     const { children, context } = useNotificationProvider({ targetAssertive: "aria-notifications-assertive", targetPolite: "aria-notifications-polite" })

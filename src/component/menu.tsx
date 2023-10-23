@@ -155,6 +155,7 @@ export const MenuItem = memo((function MenuItem<MenuItemElement extends Element>
     multiSelectionDisabled,
     onMultiSelectChange,
     singleSelectionDisabled,
+    onTextContentChange,
     ...void1
 }: MenuItemProps<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>) {
     const context = useContextWithWarning(MenuItemContext, "menu");
@@ -170,11 +171,13 @@ export const MenuItem = memo((function MenuItem<MenuItemElement extends Element>
                 info: {
                     index,
                     untabbable: untabbable || false,
-                    focusSelf: focusSelf ?? defaultFocusSelf
+                    focusSelf: focusSelf ?? defaultFocusSelf,
+                    ...uinfo
                 },
                 context,
                 textContentParameters: {
-                    getText: useDefault("getText", getText)
+                    getText: useDefault("getText", getText),
+                    onTextContentChange,
                 },
                 menuItemParameters: {
                     onPress,

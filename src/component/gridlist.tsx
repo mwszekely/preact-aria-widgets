@@ -1,12 +1,12 @@
-import { Ref, VNode, createContext, createElement } from "preact";
-import { ElementProps, TargetedOmit, UseCompleteGridNavigationRowReturnType, UseCompleteGridNavigationRowsInfo, UseCompleteGridNavigationRowsParameters, UseCompleteGridNavigationRowsReturnType, UsePaginatedChildParameters, UseProcessedChildContext, UseProcessedChildInfo, UseProcessedChildReturnType, UseProcessedChildrenContext, UseRefElementParameters, UseRefElementReturnType, UseStaggeredChildParameters, assertEmptyObject, focus, memo, useCompleteGridNavigationRows, useMergedProps, useProcessedChild, useRefElement, useStableCallback } from "preact-prop-helpers";
+import { Ref, VNode, createContext } from "preact";
+import { TargetedOmit, UseCompleteGridNavigationRowReturnType, UseCompleteGridNavigationRowsInfo, UseCompleteGridNavigationRowsParameters, UseCompleteGridNavigationRowsReturnType, UsePaginatedChildParameters, UseProcessedChildContext, UseProcessedChildInfo, UseProcessedChildReturnType, UseProcessedChildrenContext, UseRefElementParameters, UseRefElementReturnType, UseStaggeredChildParameters, assertEmptyObject, focus, memo, useCompleteGridNavigationRows, useMergedProps, useProcessedChild, useRefElement, useStableCallback } from "preact-prop-helpers";
 import { useContext, useEffect, useImperativeHandle } from "preact/hooks";
-import { ElementToTag, Get, Get12, Get3, Get4, Get8, OmitStrong, useContextWithWarning } from "../props.js";
+import { Get, Get12, Get3, Get4, Get8, OmitStrong, useContextWithWarning } from "../props.js";
 import { GridlistCellInfo, GridlistRowInfo, UseGridlistCellParameters, UseGridlistCellReturnType, UseGridlistContext, UseGridlistParameters, UseGridlistReturnType, UseGridlistRowContext, UseGridlistRowParameters, UseGridlistRowReturnType, useGridlist, useGridlistCell, useGridlistRow } from "../use-gridlist.js";
 import { GenericComponentProps, useComponent, useComponentC, useDefault } from "./util.js";
 
-export type GridlistProps<GridlistElement extends Element, GridlistRowElement extends Element, GridlistCellElement extends Element, LabelElement extends Element, RM extends GridlistRowInfo<GridlistRowElement> = GridlistRowInfo<GridlistRowElement>, CM extends GridlistCellInfo<GridlistCellElement> = GridlistCellInfo<GridlistCellElement>> = GenericComponentProps<
-    UseGridlistReturnType<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, RM, CM>,
+export type GridlistProps<GridlistElement extends Element, GridlistRowElement extends Element, LabelElement extends Element, RM extends GridlistRowInfo<GridlistRowElement> = GridlistRowInfo<GridlistRowElement>> = GenericComponentProps<
+    UseGridlistReturnType<GridlistElement, GridlistRowElement, LabelElement, RM>,
     Get12<UseGridlistParameters<GridlistElement, GridlistRowElement, LabelElement, RM>, "linearNavigationParameters", "rovingTabIndexParameters", "typeaheadNavigationParameters", "gridNavigationParameters", "paginatedChildrenParameters", "labelParameters", "listboxParameters", "singleSelectionParameters", "refElementParameters", "singleSelectionDeclarativeParameters", "singleSelectionParameters", "multiSelectionParameters">,
     "groupingType" | "ariaLabel" | "singleSelectedIndex"
 >;
@@ -14,17 +14,18 @@ export type GridlistProps<GridlistElement extends Element, GridlistRowElement ex
 interface GridlistRowInnerPropsBase<GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement> = GridlistRowInfo<GridlistRowElement>, CM extends GridlistCellInfo<GridlistCellElement> = GridlistCellInfo<GridlistCellElement>> extends
     Get8<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "gridlistRowParameters", "textContentParameters", "hasCurrentFocusParameters", "singleSelectionChildParameters", "multiSelectionChildParameters", "linearNavigationParameters", "typeaheadNavigationParameters", "rovingTabIndexParameters">,
     //OmitStrong<NonNullable<Get<UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, "gridlistRowParameters">>, never>,
-    Pick<RM, "index" | "focusSelf"> {
+    Pick<RM, "index"> {
 }
 
 
-type InnerOuterDifference<ListItemElement extends Element> = Get3<UseProcessedChildReturnType<ListItemElement, UseProcessedChildInfo<ListItemElement>>, "managedChildReturn", "paginatedChildReturn", "staggeredChildReturn">;
+type InnerOuterDifference<ListItemElement extends Element> = OmitStrong<Get3<UseProcessedChildReturnType<ListItemElement, UseProcessedChildInfo<ListItemElement>>, "managedChildReturn", "paginatedChildReturn", "staggeredChildReturn">, "getChildren">;
 
 interface GridlistRowInnerProps<GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement> = GridlistRowInfo<GridlistRowElement>, CM extends GridlistCellInfo<GridlistCellElement> = GridlistCellInfo<GridlistCellElement>> extends
     GenericComponentProps<
         (
             TargetedOmit<UseProcessedChildReturnType<GridlistRowElement, UseProcessedChildInfo<GridlistRowElement>>, "staggeredChildReturn", "childUseEffect"> &
-            OmitStrong<UseProcessedChildReturnType<GridlistRowElement, UseProcessedChildInfo<GridlistRowElement>>, "staggeredChildReturn" | "managedChildReturn" | "refElementParameters"> &
+            TargetedOmit<UseProcessedChildReturnType<GridlistRowElement, UseProcessedChildInfo<GridlistRowElement>>, "paginatedChildReturn", never> &
+            OmitStrong<UseProcessedChildReturnType<GridlistRowElement, UseProcessedChildInfo<GridlistRowElement>>, "staggeredChildReturn" | "managedChildReturn" | "refElementParameters" | "paginatedChildReturn"> &
             Partial<UseGridlistRowReturnType<GridlistRowElement, GridlistCellElement, RM, CM>>
         ),
         GridlistRowInnerPropsBase<GridlistRowElement, GridlistCellElement, RM, CM>,
@@ -73,18 +74,6 @@ const GridlistRowContext = createContext<UseGridlistRowContext<any, any>>(null!)
 const GridlistRowsContext = createContext<UseProcessedChildrenContext>(null!);
 const ProcessedChildContext = createContext<UseProcessedChildContext<any, any>>(null!);
 
-function defaultRenderGridlistRow<RowElement extends Element, CellElement extends Element, RM extends GridlistRowInfo<RowElement>, CM extends GridlistCellInfo<CellElement>>({ tagGridlistRow, makePropsGridlistRow }: { tagGridlistRow: ElementToTag<RowElement>, makePropsGridlistRow: (info: UseGridlistRowReturnType<RowElement, CellElement, RM, CM>) => ElementProps<RowElement> }) {
-    return function (info: UseGridlistRowReturnType<RowElement, CellElement, RM, CM>) {
-        return createElement(tagGridlistRow as never, (makePropsGridlistRow(info)));
-    }
-}
-
-function defaultRenderGridlistChild<CellElement extends Element, CM extends GridlistCellInfo<CellElement>>({ tagGridlistChild, makePropsGridlistChild }: { tagGridlistChild: ElementToTag<CellElement>, makePropsGridlistChild: (info: UseGridlistCellReturnType<CellElement, CM>) => ElementProps<CellElement> }) {
-    return function (info: UseGridlistCellReturnType<CellElement, CM>) {
-        return createElement(tagGridlistChild as never, (makePropsGridlistChild(info)));
-    }
-}
-
 export const Gridlist = memo((function Gridlist<GridlistElement extends Element, RowElement extends Element, CellElement extends Element, LabelElement extends Element>({
     collator,
     disableHomeEndKeys,
@@ -116,17 +105,15 @@ export const Gridlist = memo((function Gridlist<GridlistElement extends Element,
     singleSelectionMode,
     initiallyTabbableColumn,
     ...void1
-}: GridlistProps<GridlistElement, RowElement, CellElement, LabelElement, GridlistRowInfo<RowElement>, GridlistCellInfo<CellElement>>) {
+}: GridlistProps<GridlistElement, RowElement, LabelElement, GridlistRowInfo<RowElement>>) {
     assertEmptyObject(void1);
-    type RM = GridlistRowInfo<RowElement>;
-    type CM = GridlistCellInfo<CellElement>;
 
     return useComponentC(
         imperativeHandle,
         render,
         GridlistContext,
         GridlistRowsContext,
-        useGridlist<GridlistElement, RowElement, CellElement, LabelElement>({
+        useGridlist<GridlistElement, RowElement, LabelElement>({
             linearNavigationParameters: {
                 onNavigateLinear,
                 disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
@@ -227,7 +214,6 @@ export const GridlistRow = memo((function GridlistRow<RowElement extends Element
     untabbable,
     onCurrentFocusedChanged,
     onCurrentFocusedInnerChanged,
-    focusSelf,
     multiSelectionDisabled,
     singleSelectionDisabled,
     collator,
@@ -241,11 +227,10 @@ export const GridlistRow = memo((function GridlistRow<RowElement extends Element
     onTabbableIndexChange,
     selected,
     typeaheadTimeout,
+    onTextContentChange,
     ...void1
 }: GridlistRowProps<RowElement, CellElement>) {
     assertEmptyObject(void1);
-    type RM1 = GridlistRowInfo<RowElement>;
-    type RM2 = UseProcessedChildInfo<RowElement>;
 
     const {
         propsStable,
@@ -258,7 +243,7 @@ export const GridlistRow = memo((function GridlistRow<RowElement extends Element
         }
     });
 
-    const { props, refElementParameters: { onElementChange: oec2 }, ...i2 } = useProcessedChild<RowElement, RM2>({
+    const { props, refElementParameters: { onElementChange: oec2 }, ...i2 } = useProcessedChild<RowElement, UseProcessedChildInfo<RowElement>>({
         context: useContextWithWarning(ProcessedChildContext, "ListboxChildren"),
         info: { index }
     })
@@ -297,7 +282,6 @@ export const GridlistRow = memo((function GridlistRow<RowElement extends Element
                 onTabbableIndexChange={onTabbableIndexChange}
                 selected={selected}
                 typeaheadTimeout={typeaheadTimeout}
-                focusSelf={focusSelf}
                 getText={getText}
                 imperativeHandle={imperativeHandle as any}
                 multiSelectionDisabled={multiSelectionDisabled}
@@ -305,12 +289,12 @@ export const GridlistRow = memo((function GridlistRow<RowElement extends Element
                 onCurrentFocusedInnerChanged={onCurrentFocusedInnerChanged}
                 singleSelectionDisabled={singleSelectionDisabled}
                 untabbable={untabbable}
-                getChildren={getChildren}
                 hideBecausePaginated={hideBecausePaginated}
                 hideBecauseStaggered={hideBecauseStaggered}
                 parentIsPaginated={parentIsPaginated}
                 parentIsStaggered={parentIsStaggered}
                 childUseEffect={childUseEffect}
+                onTextContentChange={onTextContentChange}
                 props={props2}
                 {...void1}
             />
@@ -339,14 +323,13 @@ const GridlistRowInner = memo((function GridlistRowInner<RowElement extends Elem
     multiSelectionDisabled,
     onMultiSelectChange,
     singleSelectionDisabled,
-    focusSelf,
     childUseEffect,
-    getChildren,
     hideBecausePaginated,
     hideBecauseStaggered,
     parentIsPaginated,
     parentIsStaggered,
     props: props1,
+    onTextContentChange,
     ...void1
 }: GridlistRowInnerProps<RowElement, CellElement, GridlistRowInfo<RowElement>, GridlistCellInfo<CellElement>>): VNode {
     assertEmptyObject(void1);
@@ -368,12 +351,12 @@ const GridlistRowInner = memo((function GridlistRowInner<RowElement extends Elem
     } = useGridlistRow<RowElement, CellElement>({
         info: {
             index,
-            untabbable: untabbable || false,
+            untabbable: untabbable || false
             //...uinfo
         },
         context: useContextWithWarning(GridlistContext, "gridlist"),
         gridlistRowParameters: { selected },
-        textContentParameters: { getText: useDefault("getText", getText) },
+        textContentParameters: { getText: useDefault("getText", getText), onTextContentChange },
         linearNavigationParameters: {
             navigatePastEnd: navigatePastEnd ?? "wrap",
             navigatePastStart: navigatePastStart ?? "wrap"
@@ -435,6 +418,7 @@ export const GridlistChild = memo((function GridlistChild<CellElement extends El
     onPressingChange,
     render,
     imperativeHandle,
+    onTextContentChange,
     info: subInfo
 }: GridlistChildProps<CellElement, GridlistCellInfo<CellElement>>) {
     const context = (useContextWithWarning(GridlistRowContext, "gridlist row") as UseGridlistRowContext<CellElement, GridlistCellInfo<CellElement>>);
@@ -445,10 +429,11 @@ export const GridlistChild = memo((function GridlistChild<CellElement extends El
             index: index!,
             untabbable: untabbable || false,
             focusSelf: (focusSelf ?? defaultFocusSelf),
+            ...subInfo
         },
         context,
         gridNavigationCellParameters: { colSpan: colSpan ?? 1 },
-        textContentParameters: { getText: useDefault("getText", getText) },
+        textContentParameters: { getText: useDefault("getText", getText), onTextContentChange },
         pressParameters: { onPressSync, longPressThreshold, onPressingChange }
     });
 

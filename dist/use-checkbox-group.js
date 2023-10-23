@@ -36,7 +36,7 @@ const _comment = undefined;
  * @hasChild {@link useCheckboxGroupChild}
  */
 export const useCheckboxGroup = monitored(function useCheckboxGroup({ linearNavigationParameters, rovingTabIndexParameters, checkboxGroupParameters: { orientation, ...void2 }, multiSelectionParameters, refElementParameters, typeaheadNavigationParameters, ...void1 }) {
-    const { contextChildren, contextProcessing, linearNavigationReturn, managedChildrenReturn, props, rearrangeableChildrenReturn, rovingTabIndexReturn, singleSelectionReturn, typeaheadNavigationReturn, childrenHaveFocusReturn, multiSelectionReturn, refElementReturn, ...void3 } = useCompleteListNavigation({
+    const { contextChildren, contextProcessing: _contextProcessing, linearNavigationReturn, managedChildrenReturn, props, rearrangeableChildrenReturn, rovingTabIndexReturn, singleSelectionReturn, typeaheadNavigationReturn, childrenHaveFocusReturn, multiSelectionReturn, refElementReturn, ...void3 } = useCompleteListNavigation({
         linearNavigationParameters: { arrowKeyDirection: orientation, ...linearNavigationParameters },
         rovingTabIndexParameters: { focusSelfParent: focus, ...rovingTabIndexParameters },
         singleSelectionParameters: { initiallySingleSelectedIndex: null, onSingleSelectedIndexChange: null, singleSelectionAriaPropName: null, singleSelectionMode: "disabled" },
@@ -45,6 +45,7 @@ export const useCheckboxGroup = monitored(function useCheckboxGroup({ linearNavi
         refElementParameters,
         typeaheadNavigationParameters
     });
+    assertEmptyObject(void3);
     const { getChildren } = managedChildrenReturn;
     const children = getChildren();
     assertEmptyObject(void1);

@@ -35,11 +35,15 @@ export interface ListboxChildrenProps<ListItemElement extends Element, M extends
 }
 
 
-type InnerOuterDifference<ListItemElement extends Element> = Get3<UseProcessedChildReturnType<ListItemElement, UseProcessedChildInfo<ListItemElement>>, "managedChildReturn", "paginatedChildReturn", "staggeredChildReturn">;
+type InnerOuterDifference<ListItemElement extends Element> = OmitStrong<Get3<UseProcessedChildReturnType<ListItemElement, UseProcessedChildInfo<ListItemElement>>, "managedChildReturn", "paginatedChildReturn", "staggeredChildReturn">, "getChildren">;
 
 interface ListboxItemInnerProps<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends
     GenericComponentProps<
-        (TargetedOmit<OmitStrong<UseProcessedChildReturnType<ListItemElement, UseProcessedChildInfo<ListItemElement>>, "managedChildReturn">, "staggeredChildReturn", "childUseEffect"> & Partial<UseListboxItemReturnType<ListItemElement, ListboxInfo<ListItemElement>>>),
+        (
+            TargetedOmit<OmitStrong<UseProcessedChildReturnType<ListItemElement, UseProcessedChildInfo<ListItemElement>>, "managedChildReturn">, "staggeredChildReturn", "childUseEffect"> &
+            TargetedOmit<OmitStrong<UseProcessedChildReturnType<ListItemElement, UseProcessedChildInfo<ListItemElement>>, "managedChildReturn">, "paginatedChildReturn", never> &
+            Partial<UseListboxItemReturnType<ListItemElement, ListboxInfo<ListItemElement>>>
+        ),
         ListboxItemInnerPropsBase<ListItemElement, M>,
         "index">,
     InnerOuterDifference<ListItemElement> {
@@ -253,11 +257,9 @@ export const ListboxItem = memo((function ListboxItemOuter<ListboxItemElement ex
     singleSelectionDisabled,
     multiSelected,
     onMultiSelectedChange,
+    onTextContentChange,
     ...void1
 }: ListboxItemProps<ListboxItemElement>) {
-
-    type M1 = ListboxInfo<ListboxItemElement>;
-    type M2 = UseProcessedChildInfo<ListboxItemElement>;
 
     const context = useContextWithWarning(ListboxContext, "listbox");
     console.assert(context != null, `This ListboxItem is not contained within a Listbox`);
@@ -274,7 +276,7 @@ export const ListboxItem = memo((function ListboxItemOuter<ListboxItemElement ex
         }
     });
 
-    const { props, refElementParameters: { onElementChange: oec2 }, ...i2 } = useProcessedChild<ListboxItemElement, M2>({
+    const { props, refElementParameters: { onElementChange: oec2 }, ...i2 } = useProcessedChild<ListboxItemElement, UseProcessedChildInfo<ListboxItemElement>>({
         context: useContextWithWarning(ListboxChildContext, "ListboxChildren"),
         info: { index }
     })
@@ -323,12 +325,12 @@ export const ListboxItem = memo((function ListboxItemOuter<ListboxItemElement ex
                 onUnmount={onUnmount}
                 singleSelectionDisabled={singleSelectionDisabled}
                 untabbable={untabbable}
-                getChildren={getChildren}
                 hideBecausePaginated={hideBecausePaginated}
                 hideBecauseStaggered={hideBecauseStaggered}
                 parentIsPaginated={parentIsPaginated}
                 parentIsStaggered={parentIsStaggered}
                 childUseEffect={childUseEffect}
+                onTextContentChange={onTextContentChange}
                 props={props2}
                 {...void1}
             />
@@ -358,13 +360,13 @@ const ListboxItemInner = memo((function ListboxItemInner<ListboxItemElement exte
     singleSelectionDisabled,
     multiSelected,
     onMultiSelectedChange,
-    getChildren,
     hideBecausePaginated,
     hideBecauseStaggered,
     parentIsPaginated,
     parentIsStaggered,
     props: props1,
     childUseEffect,
+    onTextContentChange,
     ...void1
 }: ListboxItemInnerProps<ListboxItemElement, ListboxInfo<ListboxItemElement>>) {
     const context = useContextWithWarning(ListboxContext, "listbox");
@@ -393,7 +395,7 @@ const ListboxItemInner = memo((function ListboxItemInner<ListboxItemElement exte
         context,
         listboxParameters: {},
         pressParameters: { allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange },
-        textContentParameters: { getText: useDefault("getText", getText) },
+        textContentParameters: { getText: useDefault("getText", getText), onTextContentChange },
         hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged, },
         refElementParameters: { onElementChange, onMount, onUnmount },
         singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false },
@@ -416,5 +418,6 @@ const ListboxItemInner = memo((function ListboxItemInner<ListboxItemElement exte
             textContentReturn,
             managedChildReturn,
             staggeredChildReturn: { hideBecauseStaggered, parentIsStaggered },
+            paginatedChildReturn: { hideBecausePaginated, parentIsPaginated }
         });
 }))

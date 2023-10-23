@@ -1,5 +1,5 @@
 import { useMergedProps } from "preact-prop-helpers";
-import { Gridlist, GridlistChild, GridlistRow } from "../../dist/index.js";
+import { Gridlist, GridlistChild, GridlistRow, GridlistRows } from "../../dist/index.js";
 import { TestItem, useTestSyncState } from "../util.js";
 import { MissingIndex, fromStringNumber, fromStringString } from "./base.types.js";
 import { WithColSpanIndex, WithFocusableIndex } from "./gridlist.types.js";
@@ -25,13 +25,18 @@ export function TestBasesGridlist() {
                         <>
                             <label {...gridInfo.propsGridlistLabel}>Gridlist test</label>
                             <table data-gridlist {...gridInfo.propsGridlist}>
-                                <tbody role="rowgroup">
-                                    {Array.from(function* () {
+                                <GridlistRows
+                                    children={Array.from(function* () {
                                         for (let i = 0; i < childCount; ++i) {
                                             yield <Row index={i} />
                                         }
                                     }())}
-                                </tbody>
+                                    render={info => {
+                                        return (
+                                            <tbody role="rowgroup">{info.rearrangeableChildrenReturn.children}</tbody>
+                                        )
+                                    }}
+                                />
                             </table>
                         </>
                     )

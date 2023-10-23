@@ -51,7 +51,7 @@ export interface UseGridlistParameters<GridlistElement extends Element, Gridlist
     TargetedOmit<UseListboxParameters<GridlistElement, GridlistRowElement, LabelElement, RM>, "listboxParameters", "orientation"> {
 
 }
-export interface UseGridlistReturnType<GridlistElement extends Element, GridlistRowElement extends Element, GridlistCellElement extends Element, LabelElement extends Element, RM extends GridlistRowInfo<GridlistRowElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends OmitStrong<UseCompleteGridNavigationReturnType<GridlistElement, GridlistRowElement, RM>, "singleSelectionReturn" | "props"> {
+export interface UseGridlistReturnType<GridlistElement extends Element, GridlistRowElement extends Element, LabelElement extends Element, RM extends GridlistRowInfo<GridlistRowElement>> extends OmitStrong<UseCompleteGridNavigationReturnType<GridlistElement, GridlistRowElement, RM>, "singleSelectionReturn" | "props"> {
     propsGridlist: ElementProps<GridlistElement>;
     propsGridlistLabel: ElementProps<LabelElement>;
     contextChildren: UseGridlistContext<GridlistRowElement, RM>;
@@ -100,7 +100,7 @@ export interface GridlistCellInfo<GridlistCellElement extends Element> extends U
  * @hasChild {@link useGridlistRow}
  * @hasChild {@link useGridlistCell}
  */
-export const useGridlist = monitored(function useGridlist<GridlistElement extends Element, GridlistRowElement extends Element, GridlistCellElement extends Element, LabelElement extends Element>({
+export const useGridlist = monitored(function useGridlist<GridlistElement extends Element, GridlistRowElement extends Element, LabelElement extends Element>({
     labelParameters,
 
     listboxParameters: { groupingType, ...void1 },
@@ -114,9 +114,7 @@ export const useGridlist = monitored(function useGridlist<GridlistElement extend
     typeaheadNavigationParameters,
     singleSelectionDeclarativeParameters,
     ...void2
-}: UseGridlistParameters<GridlistElement, GridlistRowElement, LabelElement, GridlistRowInfo<GridlistRowElement>>): UseGridlistReturnType<GridlistElement, GridlistRowElement, GridlistCellElement, LabelElement, GridlistRowInfo<GridlistRowElement>, GridlistCellInfo<GridlistCellElement>> {
-    type RM = GridlistRowInfo<GridlistRowElement>;
-    type CM = GridlistCellInfo<GridlistCellElement>;
+}: UseGridlistParameters<GridlistElement, GridlistRowElement, LabelElement, GridlistRowInfo<GridlistRowElement>>): UseGridlistReturnType<GridlistElement, GridlistRowElement, LabelElement, GridlistRowInfo<GridlistRowElement>> {
 
     assertEmptyObject(void1);
     assertEmptyObject(void2);
@@ -140,9 +138,9 @@ export const useGridlist = monitored(function useGridlist<GridlistElement extend
         contextChildren,
         props,
         rovingTabIndexReturn,
-        singleSelectionReturn,
+        singleSelectionReturn: _singleSelectionReturn,
         ...restRet
-    } = useCompleteGridNavigationDeclarative<GridlistElement, GridlistRowElement, GridlistCellElement, RM, CM>({
+    } = useCompleteGridNavigationDeclarative<GridlistElement, GridlistRowElement, GridlistRowInfo<GridlistRowElement>>({
         singleSelectionDeclarativeParameters,
         rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
         gridNavigationParameters,

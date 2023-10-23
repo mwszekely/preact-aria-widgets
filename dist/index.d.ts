@@ -114,7 +114,7 @@ export { Toolbar, ToolbarChild, type ToolbarChildProps, type ToolbarProps } from
 export { Tooltip, type TooltipProps } from "./component/tooltip.js";
 export { useDefaultRenderPortal } from "./component/util.js";
 export { ParentDepthContext, useDefault } from "./component/util.js";
-export { EventDetail, setDebugLogging } from "./props.js";
+export { EventDetail } from "./props.js";
 export type { DisabledType, ElementFromTag, ElementToTag, PickByType, TagSensitiveProps } from "./props.js";
 declare module 'preact' {
     namespace h {

@@ -115,14 +115,14 @@ export interface TableCellInfo<TableCellElement extends Element> extends UseComp
     getSortValue(): unknown;
 }
 
-export interface UseTableParameters<TableElement extends Element, LabelElement extends Element> extends
+export interface UseTableParameters<TableElement extends Element> extends
     TargetedPick<UseCompleteListNavigationParameters<any, any, any>, "singleSelectionParameters", "singleSelectionMode">,
     TargetedPick<UseCompleteListNavigationParameters<any, any, any>, "multiSelectionParameters", "multiSelectionMode">,
     TargetedOmit<UseLabelSyntheticParameters, "labelParameters", "onLabelClick"> {
-    tableParameters: UseTableParametersSelf<TableElement, LabelElement>;
+    tableParameters: UseTableParametersSelf<TableElement>;
 }
 
-export interface UseTableParametersSelf<TableElement extends Element, LabelElement extends Element> {
+export interface UseTableParametersSelf<TableElement extends Element> {
     tagTable: ElementToTag<TableElement>;
 }
 
@@ -151,7 +151,7 @@ export const useTable = monitored(function useTable<TableElement extends Element
     singleSelectionParameters: { singleSelectionMode, ...void1 },
     multiSelectionParameters: { multiSelectionMode, ...void2 },
     ...void3
-}: UseTableParameters<TableElement, LabelElement>): UseTableReturnType<TableElement, LabelElement> {
+}: UseTableParameters<TableElement>): UseTableReturnType<TableElement, LabelElement> {
 
     assertEmptyObject(void1);
     assertEmptyObject(void2);
@@ -162,8 +162,8 @@ export const useTable = monitored(function useTable<TableElement extends Element
     // TODO: This...should probably be useManagedChildren
     const [getSortBody, setSortBody] = usePassiveState<() => void, never>(null, returnNull as (() => never));
 
-    const [sortDirection, setSortDirection, getSortDirection] = useState<SortDirection>("ascending");
-    const [sortColumn, setSortColumn, getSortColumn] = useState<number | null>(null);
+    const [_sortDirection, setSortDirection, getSortDirection] = useState<SortDirection>("ascending");
+    const [_sortColumn, setSortColumn, getSortColumn] = useState<number | null>(null);
 
     /*const updateSortDirection = useCallback((column: number) => {
         const { column: currentColumn, direction: currentDirection } = getSortColumn();
@@ -191,6 +191,7 @@ export const useTable = monitored(function useTable<TableElement extends Element
 
         console.assert(!!sortBody);
         if (!sortBody) {
+            /* eslint-disable no-debugger */
             debugger;
             console.error("An attempt was made to sort a table with a head but no body");
         }
@@ -226,6 +227,7 @@ export const useTable = monitored(function useTable<TableElement extends Element
     }
 })
 
+/*
 function fuzzyCompare(lhs: any, rhs: any): number {
     if (lhs === rhs)
         return 0;
@@ -250,14 +252,14 @@ function fuzzyCompare(lhs: any, rhs: any): number {
 
     return 0;
 
-}
+}*/
 const naturalSectionTypes = new Set<keyof JSX.IntrinsicElements>(["thead", "tbody", "tfoot"]);
 
 
 /**
  * @compositeParams
  */
-export const useTableSection = monitored(function useTableSection<TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element>({
+export const useTableSection = monitored(function useTableSection<TableSectionElement extends Element, TableRowElement extends Element>({
     linearNavigationParameters,
     rovingTabIndexParameters,
     singleSelectionParameters,
@@ -286,7 +288,7 @@ export const useTableSection = monitored(function useTableSection<TableSectionEl
         typeaheadNavigationReturn,
         rearrangeableChildrenReturn,
         ...void2
-    } = useCompleteGridNavigation<TableSectionElement, TableRowElement, TableCellElement, RM>({
+    } = useCompleteGridNavigation<TableSectionElement, TableRowElement, RM>({
         linearNavigationParameters,
         rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
         singleSelectionParameters: { ...singleSelectionParameters, singleSelectionMode: tableContext.singleSelectionMode },
@@ -371,7 +373,7 @@ export const useTableRow = monitored(function useTableRow<TableRowElement extend
         rovingTabIndexParameters,
         singleSelectionChildParameters,
         multiSelectionChildParameters,
-       // gridNavigationSelectionSortableRowParameters: { getSortableColumnIndex: cx1.tableContext.getCurrentSortColumn },
+        // gridNavigationSelectionSortableRowParameters: { getSortableColumnIndex: cx1.tableContext.getCurrentSortColumn },
         typeaheadNavigationParameters: { noTypeahead: true, collator: null, typeaheadTimeout: Infinity, onNavigateTypeahead: null }
     }
     );
@@ -384,6 +386,8 @@ export const useTableRow = monitored(function useTableRow<TableRowElement extend
             case "aria-pressed":
             case "aria-selected":
                 props[cx1.singleSelectionContext.singleSelectionAriaPropName ?? "aria-selected"] = "true";
+                break;
+
             default: {
                 console.assert(false, cx1.singleSelectionContext.singleSelectionAriaPropName + " is not valid for multi-select -- prefer checked, selected, or pressed");
             }

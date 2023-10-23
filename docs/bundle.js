@@ -6,7 +6,7 @@
       __defProp(target, name, { get: all[name], enumerable: true });
   };
 
-  // ../node_modules/.pnpm/preact@10.17.1/node_modules/preact/dist/preact.module.js
+  // ../node_modules/.pnpm/preact@10.18.1/node_modules/preact/dist/preact.module.js
   var n;
   var l;
   var u;
@@ -19,8 +19,8 @@
   var c = {};
   var s = [];
   var a = /acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i;
-  var h = Array.isArray;
-  function v(n2, l4) {
+  var v = Array.isArray;
+  function h(n2, l4) {
     for (var u4 in l4)
       n2[u4] = l4[u4];
     return n2;
@@ -30,17 +30,17 @@
     l4 && l4.removeChild(n2);
   }
   function y(l4, u4, t3) {
-    var i3, o5, r5, f4 = {};
-    for (r5 in u4)
-      "key" == r5 ? i3 = u4[r5] : "ref" == r5 ? o5 = u4[r5] : f4[r5] = u4[r5];
+    var i4, o5, r4, f4 = {};
+    for (r4 in u4)
+      "key" == r4 ? i4 = u4[r4] : "ref" == r4 ? o5 = u4[r4] : f4[r4] = u4[r4];
     if (arguments.length > 2 && (f4.children = arguments.length > 3 ? n.call(arguments, 2) : t3), "function" == typeof l4 && null != l4.defaultProps)
-      for (r5 in l4.defaultProps)
-        void 0 === f4[r5] && (f4[r5] = l4.defaultProps[r5]);
-    return d(l4, f4, i3, o5, null);
+      for (r4 in l4.defaultProps)
+        void 0 === f4[r4] && (f4[r4] = l4.defaultProps[r4]);
+    return d(l4, f4, i4, o5, null);
   }
-  function d(n2, t3, i3, o5, r5) {
-    var f4 = { type: n2, props: t3, key: i3, ref: o5, __k: null, __: null, __b: 0, __e: null, __d: void 0, __c: null, __h: null, constructor: void 0, __v: null == r5 ? ++u : r5 };
-    return null == r5 && null != l.vnode && l.vnode(f4), f4;
+  function d(n2, t3, i4, o5, r4) {
+    var f4 = { type: n2, props: t3, key: i4, ref: o5, __k: null, __: null, __b: 0, __e: null, __d: void 0, __c: null, __h: null, constructor: void 0, __v: null == r4 ? ++u : r4 };
+    return null == r4 && null != l.vnode && l.vnode(f4), f4;
   }
   function k(n2) {
     return n2.children;
@@ -53,7 +53,7 @@
       return n2.__ ? g(n2.__, n2.__.__k.indexOf(n2) + 1) : null;
     for (var u4; l4 < n2.__k.length; l4++)
       if (null != (u4 = n2.__k[l4]) && null != u4.__e)
-        return u4.__e;
+        return u4.__d || u4.__e;
     return "function" == typeof n2.type ? g(n2) : null;
   }
   function m(n2) {
@@ -71,25 +71,25 @@
     (!n2.__d && (n2.__d = true) && i.push(n2) && !x.__r++ || o !== l.debounceRendering) && ((o = l.debounceRendering) || r)(x);
   }
   function x() {
-    var n2, l4, u4, t3, o5, r5, e3, c5, s4;
+    var n2, l4, u4, t3, o5, r4, e3, c4, s4;
     for (i.sort(f); n2 = i.shift(); )
-      n2.__d && (l4 = i.length, t3 = void 0, o5 = void 0, r5 = void 0, c5 = (e3 = (u4 = n2).__v).__e, (s4 = u4.__P) && (t3 = [], o5 = [], (r5 = v({}, e3)).__v = e3.__v + 1, L(s4, e3, r5, u4.__n, void 0 !== s4.ownerSVGElement, null != e3.__h ? [c5] : null, t3, null == c5 ? g(e3) : c5, e3.__h, o5), M(t3, e3, o5), e3.__e != c5 && m(e3)), i.length > l4 && i.sort(f));
+      n2.__d && (l4 = i.length, t3 = void 0, o5 = void 0, r4 = void 0, c4 = (e3 = (u4 = n2).__v).__e, (s4 = u4.__P) && (t3 = [], o5 = [], (r4 = h({}, e3)).__v = e3.__v + 1, z(s4, e3, r4, u4.__n, void 0 !== s4.ownerSVGElement, null != e3.__h ? [c4] : null, t3, null == c4 ? g(e3) : c4, e3.__h, o5), L(t3, e3, o5), e3.__e != c4 && m(e3)), i.length > l4 && i.sort(f));
     x.__r = 0;
   }
-  function P(n2, l4, u4, t3, i3, o5, r5, f4, e3, a4, v4) {
-    var p4, y4, _4, b4, m4, w4, x4, P3, C3, H3 = 0, I3 = t3 && t3.__k || s, T4 = I3.length, j4 = T4, z4 = l4.length;
-    for (u4.__k = [], p4 = 0; p4 < z4; p4++)
-      null != (b4 = u4.__k[p4] = null == (b4 = l4[p4]) || "boolean" == typeof b4 || "function" == typeof b4 ? null : "string" == typeof b4 || "number" == typeof b4 || "bigint" == typeof b4 ? d(null, b4, null, null, b4) : h(b4) ? d(k, { children: b4 }, null, null, null) : b4.__b > 0 ? d(b4.type, b4.props, b4.key, b4.ref ? b4.ref : null, b4.__v) : b4) ? (b4.__ = u4, b4.__b = u4.__b + 1, -1 === (P3 = A(b4, I3, x4 = p4 + H3, j4)) ? _4 = c : (_4 = I3[P3] || c, I3[P3] = void 0, j4--), L(n2, b4, _4, i3, o5, r5, f4, e3, a4, v4), m4 = b4.__e, (y4 = b4.ref) && _4.ref != y4 && (_4.ref && O(_4.ref, null, b4), v4.push(y4, b4.__c || m4, b4)), null != m4 && (null == w4 && (w4 = m4), (C3 = _4 === c || null === _4.__v) ? -1 == P3 && H3-- : P3 !== x4 && (P3 === x4 + 1 ? H3++ : P3 > x4 ? j4 > z4 - x4 ? H3 += P3 - x4 : H3-- : H3 = P3 < x4 && P3 == x4 - 1 ? P3 - x4 : 0), x4 = p4 + H3, "function" != typeof b4.type || P3 === x4 && _4.__k !== b4.__k ? "function" == typeof b4.type || P3 === x4 && !C3 ? void 0 !== b4.__d ? (e3 = b4.__d, b4.__d = void 0) : e3 = m4.nextSibling : e3 = S(n2, m4, e3) : e3 = $(b4, e3, n2), "function" == typeof u4.type && (u4.__d = e3))) : (_4 = I3[p4]) && null == _4.key && _4.__e && (_4.__e == e3 && (e3 = g(_4)), q(_4, _4, false), I3[p4] = null);
-    for (u4.__e = w4, p4 = T4; p4--; )
-      null != I3[p4] && ("function" == typeof u4.type && null != I3[p4].__e && I3[p4].__e == u4.__d && (u4.__d = I3[p4].__e.nextSibling), q(I3[p4], I3[p4]));
+  function P(n2, l4, u4, t3, i4, o5, r4, f4, e3, a4, h4) {
+    var p4, y4, _4, b4, m4, w5, x4, P3, C3, D3 = 0, H3 = t3 && t3.__k || s, I3 = H3.length, T4 = I3, j4 = l4.length;
+    for (u4.__k = [], p4 = 0; p4 < j4; p4++)
+      null != (b4 = u4.__k[p4] = null == (b4 = l4[p4]) || "boolean" == typeof b4 || "function" == typeof b4 ? null : "string" == typeof b4 || "number" == typeof b4 || "bigint" == typeof b4 ? d(null, b4, null, null, b4) : v(b4) ? d(k, { children: b4 }, null, null, null) : b4.__b > 0 ? d(b4.type, b4.props, b4.key, b4.ref ? b4.ref : null, b4.__v) : b4) ? (b4.__ = u4, b4.__b = u4.__b + 1, -1 === (P3 = A(b4, H3, x4 = p4 + D3, T4)) ? _4 = c : (_4 = H3[P3] || c, H3[P3] = void 0, T4--), z(n2, b4, _4, i4, o5, r4, f4, e3, a4, h4), m4 = b4.__e, (y4 = b4.ref) && _4.ref != y4 && (_4.ref && N(_4.ref, null, b4), h4.push(y4, b4.__c || m4, b4)), null != m4 && (null == w5 && (w5 = m4), (C3 = _4 === c || null === _4.__v) ? -1 == P3 && D3-- : P3 !== x4 && (P3 === x4 + 1 ? D3++ : P3 > x4 ? T4 > j4 - x4 ? D3 += P3 - x4 : D3-- : D3 = P3 < x4 && P3 == x4 - 1 ? P3 - x4 : 0), x4 = p4 + D3, "function" != typeof b4.type || P3 === x4 && _4.__k !== b4.__k ? "function" == typeof b4.type || P3 === x4 && !C3 ? void 0 !== b4.__d ? (e3 = b4.__d, b4.__d = void 0) : e3 = m4.nextSibling : e3 = S(n2, m4, e3) : e3 = $(b4, e3, n2), "function" == typeof u4.type && (u4.__d = e3))) : (_4 = H3[p4]) && null == _4.key && _4.__e && (_4.__e == e3 && (_4.__ = t3, e3 = g(_4)), O(_4, _4, false), H3[p4] = null);
+    for (u4.__e = w5, p4 = I3; p4--; )
+      null != H3[p4] && ("function" == typeof u4.type && null != H3[p4].__e && H3[p4].__e == u4.__d && (u4.__d = H3[p4].__e.nextSibling), O(H3[p4], H3[p4]));
   }
   function $(n2, l4, u4) {
-    for (var t3, i3 = n2.__k, o5 = 0; i3 && o5 < i3.length; o5++)
-      (t3 = i3[o5]) && (t3.__ = n2, l4 = "function" == typeof t3.type ? $(t3, l4, u4) : S(u4, t3.__e, l4));
+    for (var t3, i4 = n2.__k, o5 = 0; i4 && o5 < i4.length; o5++)
+      (t3 = i4[o5]) && (t3.__ = n2, l4 = "function" == typeof t3.type ? $(t3, l4, u4) : S(u4, t3.__e, l4));
     return l4;
   }
   function C(n2, l4) {
-    return l4 = l4 || [], null == n2 || "boolean" == typeof n2 || (h(n2) ? n2.some(function(n3) {
+    return l4 = l4 || [], null == n2 || "boolean" == typeof n2 || (v(n2) ? n2.some(function(n3) {
       C(n3, l4);
     }) : l4.push(n2)), l4;
   }
@@ -97,35 +97,35 @@
     return null == u4 || u4.parentNode !== n2 ? n2.insertBefore(l4, null) : l4 == u4 && null != l4.parentNode || n2.insertBefore(l4, u4), l4.nextSibling;
   }
   function A(n2, l4, u4, t3) {
-    var i3 = n2.key, o5 = n2.type, r5 = u4 - 1, f4 = u4 + 1, e3 = l4[u4];
-    if (null === e3 || e3 && i3 == e3.key && o5 === e3.type)
+    var i4 = n2.key, o5 = n2.type, r4 = u4 - 1, f4 = u4 + 1, e3 = l4[u4];
+    if (null === e3 || e3 && i4 == e3.key && o5 === e3.type)
       return u4;
     if (t3 > (null != e3 ? 1 : 0))
-      for (; r5 >= 0 || f4 < l4.length; ) {
-        if (r5 >= 0) {
-          if ((e3 = l4[r5]) && i3 == e3.key && o5 === e3.type)
-            return r5;
-          r5--;
+      for (; r4 >= 0 || f4 < l4.length; ) {
+        if (r4 >= 0) {
+          if ((e3 = l4[r4]) && i4 == e3.key && o5 === e3.type)
+            return r4;
+          r4--;
         }
         if (f4 < l4.length) {
-          if ((e3 = l4[f4]) && i3 == e3.key && o5 === e3.type)
+          if ((e3 = l4[f4]) && i4 == e3.key && o5 === e3.type)
             return f4;
           f4++;
         }
       }
     return -1;
   }
-  function H(n2, l4, u4, t3, i3) {
+  function D(n2, l4, u4, t3, i4) {
     var o5;
     for (o5 in u4)
-      "children" === o5 || "key" === o5 || o5 in l4 || T(n2, o5, null, u4[o5], t3);
+      "children" === o5 || "key" === o5 || o5 in l4 || I(n2, o5, null, u4[o5], t3);
     for (o5 in l4)
-      i3 && "function" != typeof l4[o5] || "children" === o5 || "key" === o5 || "value" === o5 || "checked" === o5 || u4[o5] === l4[o5] || T(n2, o5, l4[o5], u4[o5], t3);
+      i4 && "function" != typeof l4[o5] || "children" === o5 || "key" === o5 || "value" === o5 || "checked" === o5 || u4[o5] === l4[o5] || I(n2, o5, l4[o5], u4[o5], t3);
   }
-  function I(n2, l4, u4) {
+  function H(n2, l4, u4) {
     "-" === l4[0] ? n2.setProperty(l4, null == u4 ? "" : u4) : n2[l4] = null == u4 ? "" : "number" != typeof u4 || a.test(l4) ? u4 : u4 + "px";
   }
-  function T(n2, l4, u4, t3, i3) {
+  function I(n2, l4, u4, t3, i4) {
     var o5;
     n:
       if ("style" === l4)
@@ -134,17 +134,17 @@
         else {
           if ("string" == typeof t3 && (n2.style.cssText = t3 = ""), t3)
             for (l4 in t3)
-              u4 && l4 in u4 || I(n2.style, l4, "");
+              u4 && l4 in u4 || H(n2.style, l4, "");
           if (u4)
             for (l4 in u4)
-              t3 && u4[l4] === t3[l4] || I(n2.style, l4, u4[l4]);
+              t3 && u4[l4] === t3[l4] || H(n2.style, l4, u4[l4]);
         }
       else if ("o" === l4[0] && "n" === l4[1])
-        o5 = l4 !== (l4 = l4.replace(/(PointerCapture)$|Capture$/, "$1")), l4 = l4.toLowerCase() in n2 ? l4.toLowerCase().slice(2) : l4.slice(2), n2.l || (n2.l = {}), n2.l[l4 + o5] = u4, u4 ? t3 || n2.addEventListener(l4, o5 ? z : j, o5) : n2.removeEventListener(l4, o5 ? z : j, o5);
+        o5 = l4 !== (l4 = l4.replace(/(PointerCapture)$|Capture$/, "$1")), l4 = l4.toLowerCase() in n2 ? l4.toLowerCase().slice(2) : l4.slice(2), n2.l || (n2.l = {}), n2.l[l4 + o5] = u4, u4 ? t3 ? u4.u = t3.u : (u4.u = Date.now(), n2.addEventListener(l4, o5 ? j : T, o5)) : n2.removeEventListener(l4, o5 ? j : T, o5);
       else if ("dangerouslySetInnerHTML" !== l4) {
-        if (i3)
+        if (i4)
           l4 = l4.replace(/xlink(H|:h)/, "h").replace(/sName$/, "s");
-        else if ("width" !== l4 && "height" !== l4 && "href" !== l4 && "list" !== l4 && "form" !== l4 && "tabIndex" !== l4 && "download" !== l4 && "rowSpan" !== l4 && "colSpan" !== l4 && l4 in n2)
+        else if ("width" !== l4 && "height" !== l4 && "href" !== l4 && "list" !== l4 && "form" !== l4 && "tabIndex" !== l4 && "download" !== l4 && "rowSpan" !== l4 && "colSpan" !== l4 && "role" !== l4 && l4 in n2)
           try {
             n2[l4] = null == u4 ? "" : u4;
             break n;
@@ -153,54 +153,60 @@
         "function" == typeof u4 || (null == u4 || false === u4 && "-" !== l4[4] ? n2.removeAttribute(l4) : n2.setAttribute(l4, u4));
       }
   }
-  function j(n2) {
-    return this.l[n2.type + false](l.event ? l.event(n2) : n2);
+  function T(n2) {
+    var u4 = this.l[n2.type + false];
+    if (n2.t) {
+      if (n2.t <= u4.u)
+        return;
+    } else
+      n2.t = Date.now();
+    return u4(l.event ? l.event(n2) : n2);
   }
-  function z(n2) {
+  function j(n2) {
     return this.l[n2.type + true](l.event ? l.event(n2) : n2);
   }
-  function L(n2, u4, t3, i3, o5, r5, f4, e3, c5, s4) {
-    var a4, p4, y4, d4, _4, g4, m4, w4, x4, $3, C3, S2, A3, H3, I3, T4 = u4.type;
+  function z(n2, u4, t3, i4, o5, r4, f4, e3, c4, s4) {
+    var a4, p4, y4, d4, _4, g4, m4, w5, x4, $3, C3, S2, A3, D3, H3, I3 = u4.type;
     if (void 0 !== u4.constructor)
       return null;
-    null != t3.__h && (c5 = t3.__h, e3 = u4.__e = t3.__e, u4.__h = null, r5 = [e3]), (a4 = l.__b) && a4(u4);
+    null != t3.__h && (c4 = t3.__h, e3 = u4.__e = t3.__e, u4.__h = null, r4 = [e3]), (a4 = l.__b) && a4(u4);
     n:
-      if ("function" == typeof T4)
+      if ("function" == typeof I3)
         try {
-          if (w4 = u4.props, x4 = (a4 = T4.contextType) && i3[a4.__c], $3 = a4 ? x4 ? x4.props.value : a4.__ : i3, t3.__c ? m4 = (p4 = u4.__c = t3.__c).__ = p4.__E : ("prototype" in T4 && T4.prototype.render ? u4.__c = p4 = new T4(w4, $3) : (u4.__c = p4 = new b(w4, $3), p4.constructor = T4, p4.render = B), x4 && x4.sub(p4), p4.props = w4, p4.state || (p4.state = {}), p4.context = $3, p4.__n = i3, y4 = p4.__d = true, p4.__h = [], p4._sb = []), null == p4.__s && (p4.__s = p4.state), null != T4.getDerivedStateFromProps && (p4.__s == p4.state && (p4.__s = v({}, p4.__s)), v(p4.__s, T4.getDerivedStateFromProps(w4, p4.__s))), d4 = p4.props, _4 = p4.state, p4.__v = u4, y4)
-            null == T4.getDerivedStateFromProps && null != p4.componentWillMount && p4.componentWillMount(), null != p4.componentDidMount && p4.__h.push(p4.componentDidMount);
+          if (w5 = u4.props, x4 = (a4 = I3.contextType) && i4[a4.__c], $3 = a4 ? x4 ? x4.props.value : a4.__ : i4, t3.__c ? m4 = (p4 = u4.__c = t3.__c).__ = p4.__E : ("prototype" in I3 && I3.prototype.render ? u4.__c = p4 = new I3(w5, $3) : (u4.__c = p4 = new b(w5, $3), p4.constructor = I3, p4.render = q), x4 && x4.sub(p4), p4.props = w5, p4.state || (p4.state = {}), p4.context = $3, p4.__n = i4, y4 = p4.__d = true, p4.__h = [], p4._sb = []), null == p4.__s && (p4.__s = p4.state), null != I3.getDerivedStateFromProps && (p4.__s == p4.state && (p4.__s = h({}, p4.__s)), h(p4.__s, I3.getDerivedStateFromProps(w5, p4.__s))), d4 = p4.props, _4 = p4.state, p4.__v = u4, y4)
+            null == I3.getDerivedStateFromProps && null != p4.componentWillMount && p4.componentWillMount(), null != p4.componentDidMount && p4.__h.push(p4.componentDidMount);
           else {
-            if (null == T4.getDerivedStateFromProps && w4 !== d4 && null != p4.componentWillReceiveProps && p4.componentWillReceiveProps(w4, $3), !p4.__e && (null != p4.shouldComponentUpdate && false === p4.shouldComponentUpdate(w4, p4.__s, $3) || u4.__v === t3.__v)) {
-              for (u4.__v !== t3.__v && (p4.props = w4, p4.state = p4.__s, p4.__d = false), u4.__e = t3.__e, u4.__k = t3.__k, u4.__k.forEach(function(n3) {
+            if (null == I3.getDerivedStateFromProps && w5 !== d4 && null != p4.componentWillReceiveProps && p4.componentWillReceiveProps(w5, $3), !p4.__e && (null != p4.shouldComponentUpdate && false === p4.shouldComponentUpdate(w5, p4.__s, $3) || u4.__v === t3.__v)) {
+              for (u4.__v !== t3.__v && (p4.props = w5, p4.state = p4.__s, p4.__d = false), u4.__e = t3.__e, u4.__k = t3.__k, u4.__k.forEach(function(n3) {
                 n3 && (n3.__ = u4);
               }), C3 = 0; C3 < p4._sb.length; C3++)
                 p4.__h.push(p4._sb[C3]);
               p4._sb = [], p4.__h.length && f4.push(p4);
               break n;
             }
-            null != p4.componentWillUpdate && p4.componentWillUpdate(w4, p4.__s, $3), null != p4.componentDidUpdate && p4.__h.push(function() {
+            null != p4.componentWillUpdate && p4.componentWillUpdate(w5, p4.__s, $3), null != p4.componentDidUpdate && p4.__h.push(function() {
               p4.componentDidUpdate(d4, _4, g4);
             });
           }
-          if (p4.context = $3, p4.props = w4, p4.__P = n2, p4.__e = false, S2 = l.__r, A3 = 0, "prototype" in T4 && T4.prototype.render) {
-            for (p4.state = p4.__s, p4.__d = false, S2 && S2(u4), a4 = p4.render(p4.props, p4.state, p4.context), H3 = 0; H3 < p4._sb.length; H3++)
-              p4.__h.push(p4._sb[H3]);
+          if (p4.context = $3, p4.props = w5, p4.__P = n2, p4.__e = false, S2 = l.__r, A3 = 0, "prototype" in I3 && I3.prototype.render) {
+            for (p4.state = p4.__s, p4.__d = false, S2 && S2(u4), a4 = p4.render(p4.props, p4.state, p4.context), D3 = 0; D3 < p4._sb.length; D3++)
+              p4.__h.push(p4._sb[D3]);
             p4._sb = [];
           } else
             do {
               p4.__d = false, S2 && S2(u4), a4 = p4.render(p4.props, p4.state, p4.context), p4.state = p4.__s;
             } while (p4.__d && ++A3 < 25);
-          p4.state = p4.__s, null != p4.getChildContext && (i3 = v(v({}, i3), p4.getChildContext())), y4 || null == p4.getSnapshotBeforeUpdate || (g4 = p4.getSnapshotBeforeUpdate(d4, _4)), P(n2, h(I3 = null != a4 && a4.type === k && null == a4.key ? a4.props.children : a4) ? I3 : [I3], u4, t3, i3, o5, r5, f4, e3, c5, s4), p4.base = u4.__e, u4.__h = null, p4.__h.length && f4.push(p4), m4 && (p4.__E = p4.__ = null);
+          p4.state = p4.__s, null != p4.getChildContext && (i4 = h(h({}, i4), p4.getChildContext())), y4 || null == p4.getSnapshotBeforeUpdate || (g4 = p4.getSnapshotBeforeUpdate(d4, _4)), P(n2, v(H3 = null != a4 && a4.type === k && null == a4.key ? a4.props.children : a4) ? H3 : [H3], u4, t3, i4, o5, r4, f4, e3, c4, s4), p4.base = u4.__e, u4.__h = null, p4.__h.length && f4.push(p4), m4 && (p4.__E = p4.__ = null);
         } catch (n3) {
-          u4.__v = null, (c5 || null != r5) && (u4.__e = e3, u4.__h = !!c5, r5[r5.indexOf(e3)] = null), l.__e(n3, u4, t3);
+          u4.__v = null, (c4 || null != r4) && (u4.__e = e3, u4.__h = !!c4, r4[r4.indexOf(e3)] = null), l.__e(n3, u4, t3);
         }
       else
-        null == r5 && u4.__v === t3.__v ? (u4.__k = t3.__k, u4.__e = t3.__e) : u4.__e = N(t3.__e, u4, t3, i3, o5, r5, f4, c5, s4);
+        null == r4 && u4.__v === t3.__v ? (u4.__k = t3.__k, u4.__e = t3.__e) : u4.__e = M(t3.__e, u4, t3, i4, o5, r4, f4, c4, s4);
     (a4 = l.diffed) && a4(u4);
   }
-  function M(n2, u4, t3) {
-    for (var i3 = 0; i3 < t3.length; i3++)
-      O(t3[i3], t3[++i3], t3[++i3]);
+  function L(n2, u4, t3) {
+    for (var i4 = 0; i4 < t3.length; i4++)
+      N(t3[i4], t3[++i4], t3[++i4]);
     l.__c && l.__c(u4, n2), n2.some(function(u5) {
       try {
         n2 = u5.__h, u5.__h = [], n2.some(function(n3) {
@@ -211,73 +217,73 @@
       }
     });
   }
-  function N(l4, u4, t3, i3, o5, r5, f4, e3, s4) {
-    var a4, v4, y4, d4 = t3.props, _4 = u4.props, k4 = u4.type, b4 = 0;
-    if ("svg" === k4 && (o5 = true), null != r5) {
-      for (; b4 < r5.length; b4++)
-        if ((a4 = r5[b4]) && "setAttribute" in a4 == !!k4 && (k4 ? a4.localName === k4 : 3 === a4.nodeType)) {
-          l4 = a4, r5[b4] = null;
+  function M(l4, u4, t3, i4, o5, r4, f4, e3, s4) {
+    var a4, h4, y4, d4 = t3.props, _4 = u4.props, k4 = u4.type, b4 = 0;
+    if ("svg" === k4 && (o5 = true), null != r4) {
+      for (; b4 < r4.length; b4++)
+        if ((a4 = r4[b4]) && "setAttribute" in a4 == !!k4 && (k4 ? a4.localName === k4 : 3 === a4.nodeType)) {
+          l4 = a4, r4[b4] = null;
           break;
         }
     }
     if (null == l4) {
       if (null === k4)
         return document.createTextNode(_4);
-      l4 = o5 ? document.createElementNS("http://www.w3.org/2000/svg", k4) : document.createElement(k4, _4.is && _4), r5 = null, e3 = false;
+      l4 = o5 ? document.createElementNS("http://www.w3.org/2000/svg", k4) : document.createElement(k4, _4.is && _4), r4 = null, e3 = false;
     }
     if (null === k4)
       d4 === _4 || e3 && l4.data === _4 || (l4.data = _4);
     else {
-      if (r5 = r5 && n.call(l4.childNodes), v4 = (d4 = t3.props || c).dangerouslySetInnerHTML, y4 = _4.dangerouslySetInnerHTML, !e3) {
-        if (null != r5)
+      if (r4 = r4 && n.call(l4.childNodes), h4 = (d4 = t3.props || c).dangerouslySetInnerHTML, y4 = _4.dangerouslySetInnerHTML, !e3) {
+        if (null != r4)
           for (d4 = {}, b4 = 0; b4 < l4.attributes.length; b4++)
             d4[l4.attributes[b4].name] = l4.attributes[b4].value;
-        (y4 || v4) && (y4 && (v4 && y4.__html == v4.__html || y4.__html === l4.innerHTML) || (l4.innerHTML = y4 && y4.__html || ""));
+        (y4 || h4) && (y4 && (h4 && y4.__html == h4.__html || y4.__html === l4.innerHTML) || (l4.innerHTML = y4 && y4.__html || ""));
       }
-      if (H(l4, _4, d4, o5, e3), y4)
+      if (D(l4, _4, d4, o5, e3), y4)
         u4.__k = [];
-      else if (P(l4, h(b4 = u4.props.children) ? b4 : [b4], u4, t3, i3, o5 && "foreignObject" !== k4, r5, f4, r5 ? r5[0] : t3.__k && g(t3, 0), e3, s4), null != r5)
-        for (b4 = r5.length; b4--; )
-          null != r5[b4] && p(r5[b4]);
-      e3 || ("value" in _4 && void 0 !== (b4 = _4.value) && (b4 !== l4.value || "progress" === k4 && !b4 || "option" === k4 && b4 !== d4.value) && T(l4, "value", b4, d4.value, false), "checked" in _4 && void 0 !== (b4 = _4.checked) && b4 !== l4.checked && T(l4, "checked", b4, d4.checked, false));
+      else if (P(l4, v(b4 = u4.props.children) ? b4 : [b4], u4, t3, i4, o5 && "foreignObject" !== k4, r4, f4, r4 ? r4[0] : t3.__k && g(t3, 0), e3, s4), null != r4)
+        for (b4 = r4.length; b4--; )
+          null != r4[b4] && p(r4[b4]);
+      e3 || ("value" in _4 && void 0 !== (b4 = _4.value) && (b4 !== l4.value || "progress" === k4 && !b4 || "option" === k4 && b4 !== d4.value) && I(l4, "value", b4, d4.value, false), "checked" in _4 && void 0 !== (b4 = _4.checked) && b4 !== l4.checked && I(l4, "checked", b4, d4.checked, false));
     }
     return l4;
   }
-  function O(n2, u4, t3) {
+  function N(n2, u4, t3) {
     try {
       "function" == typeof n2 ? n2(u4) : n2.current = u4;
     } catch (n3) {
       l.__e(n3, t3);
     }
   }
-  function q(n2, u4, t3) {
-    var i3, o5;
-    if (l.unmount && l.unmount(n2), (i3 = n2.ref) && (i3.current && i3.current !== n2.__e || O(i3, null, u4)), null != (i3 = n2.__c)) {
-      if (i3.componentWillUnmount)
+  function O(n2, u4, t3) {
+    var i4, o5;
+    if (l.unmount && l.unmount(n2), (i4 = n2.ref) && (i4.current && i4.current !== n2.__e || N(i4, null, u4)), null != (i4 = n2.__c)) {
+      if (i4.componentWillUnmount)
         try {
-          i3.componentWillUnmount();
+          i4.componentWillUnmount();
         } catch (n3) {
           l.__e(n3, u4);
         }
-      i3.base = i3.__P = null, n2.__c = void 0;
+      i4.base = i4.__P = null, n2.__c = void 0;
     }
-    if (i3 = n2.__k)
-      for (o5 = 0; o5 < i3.length; o5++)
-        i3[o5] && q(i3[o5], u4, t3 || "function" != typeof n2.type);
+    if (i4 = n2.__k)
+      for (o5 = 0; o5 < i4.length; o5++)
+        i4[o5] && O(i4[o5], u4, t3 || "function" != typeof n2.type);
     t3 || null == n2.__e || p(n2.__e), n2.__ = n2.__e = n2.__d = void 0;
   }
-  function B(n2, l4, u4) {
+  function q(n2, l4, u4) {
     return this.constructor(n2, u4);
   }
-  function D(u4, t3, i3) {
-    var o5, r5, f4, e3;
-    l.__ && l.__(u4, t3), r5 = (o5 = "function" == typeof i3) ? null : i3 && i3.__k || t3.__k, f4 = [], e3 = [], L(t3, u4 = (!o5 && i3 || t3).__k = y(k, null, [u4]), r5 || c, c, void 0 !== t3.ownerSVGElement, !o5 && i3 ? [i3] : r5 ? null : t3.firstChild ? n.call(t3.childNodes) : null, f4, !o5 && i3 ? i3 : r5 ? r5.__e : t3.firstChild, o5, e3), M(f4, u4, e3);
+  function B(u4, t3, i4) {
+    var o5, r4, f4, e3;
+    l.__ && l.__(u4, t3), r4 = (o5 = "function" == typeof i4) ? null : i4 && i4.__k || t3.__k, f4 = [], e3 = [], z(t3, u4 = (!o5 && i4 || t3).__k = y(k, null, [u4]), r4 || c, c, void 0 !== t3.ownerSVGElement, !o5 && i4 ? [i4] : r4 ? null : t3.firstChild ? n.call(t3.childNodes) : null, f4, !o5 && i4 ? i4 : r4 ? r4.__e : t3.firstChild, o5, e3), L(f4, u4, e3);
   }
   function F(l4, u4, t3) {
-    var i3, o5, r5, f4, e3 = v({}, l4.props);
-    for (r5 in l4.type && l4.type.defaultProps && (f4 = l4.type.defaultProps), u4)
-      "key" == r5 ? i3 = u4[r5] : "ref" == r5 ? o5 = u4[r5] : e3[r5] = void 0 === u4[r5] && void 0 !== f4 ? f4[r5] : u4[r5];
-    return arguments.length > 2 && (e3.children = arguments.length > 3 ? n.call(arguments, 2) : t3), d(l4.type, e3, i3 || l4.key, o5 || l4.ref, null);
+    var i4, o5, r4, f4, e3 = h({}, l4.props);
+    for (r4 in l4.type && l4.type.defaultProps && (f4 = l4.type.defaultProps), u4)
+      "key" == r4 ? i4 = u4[r4] : "ref" == r4 ? o5 = u4[r4] : e3[r4] = void 0 === u4[r4] && void 0 !== f4 ? f4[r4] : u4[r4];
+    return arguments.length > 2 && (e3.children = arguments.length > 3 ? n.call(arguments, 2) : t3), d(l4.type, e3, i4 || l4.key, o5 || l4.ref, null);
   }
   function G(n2, l4) {
     var u4 = { __c: l4 = "__cC" + e++, __: n2, Consumer: function(n3, l5) {
@@ -301,11 +307,11 @@
     return u4.Provider.__ = u4.Consumer.contextType = u4;
   }
   n = s.slice, l = { __e: function(n2, l4, u4, t3) {
-    for (var i3, o5, r5; l4 = l4.__; )
-      if ((i3 = l4.__c) && !i3.__)
+    for (var i4, o5, r4; l4 = l4.__; )
+      if ((i4 = l4.__c) && !i4.__)
         try {
-          if ((o5 = i3.constructor) && null != o5.getDerivedStateFromError && (i3.setState(o5.getDerivedStateFromError(n2)), r5 = i3.__d), null != i3.componentDidCatch && (i3.componentDidCatch(n2, t3 || {}), r5 = i3.__d), r5)
-            return i3.__E = i3;
+          if ((o5 = i4.constructor) && null != o5.getDerivedStateFromError && (i4.setState(o5.getDerivedStateFromError(n2)), r4 = i4.__d), null != i4.componentDidCatch && (i4.componentDidCatch(n2, t3 || {}), r4 = i4.__d), r4)
+            return i4.__E = i4;
         } catch (l5) {
           n2 = l5;
         }
@@ -314,110 +320,94 @@
     return null != n2 && void 0 === n2.constructor;
   }, b.prototype.setState = function(n2, l4) {
     var u4;
-    u4 = null != this.__s && this.__s !== this.state ? this.__s : this.__s = v({}, this.state), "function" == typeof n2 && (n2 = n2(v({}, u4), this.props)), n2 && v(u4, n2), null != n2 && this.__v && (l4 && this._sb.push(l4), w(this));
+    u4 = null != this.__s && this.__s !== this.state ? this.__s : this.__s = h({}, this.state), "function" == typeof n2 && (n2 = n2(h({}, u4), this.props)), n2 && h(u4, n2), null != n2 && this.__v && (l4 && this._sb.push(l4), w(this));
   }, b.prototype.forceUpdate = function(n2) {
     this.__v && (this.__e = true, n2 && this.__h.push(n2), w(this));
   }, b.prototype.render = k, i = [], r = "function" == typeof Promise ? Promise.prototype.then.bind(Promise.resolve()) : setTimeout, f = function(n2, l4) {
     return n2.__v.__b - l4.__v.__b;
   }, x.__r = 0, e = 0;
 
-  // ../node_modules/.pnpm/preact@10.17.1/node_modules/preact/devtools/dist/devtools.module.js
-  "undefined" != typeof window && window.__PREACT_DEVTOOLS__ && window.__PREACT_DEVTOOLS__.attachPreact("10.17.1", l, { Fragment: k, Component: b });
+  // ../node_modules/.pnpm/preact@10.18.1/node_modules/preact/devtools/dist/devtools.module.js
+  "undefined" != typeof window && window.__PREACT_DEVTOOLS__ && window.__PREACT_DEVTOOLS__.attachPreact("10.18.1", l, { Fragment: k, Component: b });
 
-  // ../node_modules/.pnpm/preact@10.17.1/node_modules/preact/debug/dist/debug.module.js
-  function o2(n2, t3) {
-    (null == t3 || t3 > n2.length) && (t3 = n2.length);
-    for (var e3 = 0, o5 = new Array(t3); e3 < t3; e3++)
-      o5[e3] = n2[e3];
-    return o5;
+  // ../node_modules/.pnpm/preact@10.18.1/node_modules/preact/debug/dist/debug.module.js
+  var o2 = {};
+  function a2(e3) {
+    return e3.type === k ? "Fragment" : "function" == typeof e3.type ? e3.type.displayName || e3.type.name : "string" == typeof e3.type ? e3.type : "#text";
   }
-  function r2(n2, t3) {
-    var e3 = "undefined" != typeof Symbol && n2[Symbol.iterator] || n2["@@iterator"];
-    if (e3)
-      return (e3 = e3.call(n2)).next.bind(e3);
-    if (Array.isArray(n2) || (e3 = function(n3, t4) {
-      if (n3) {
-        if ("string" == typeof n3)
-          return o2(n3, t4);
-        var e4 = Object.prototype.toString.call(n3).slice(8, -1);
-        return "Object" === e4 && n3.constructor && (e4 = n3.constructor.name), "Map" === e4 || "Set" === e4 ? Array.from(n3) : "Arguments" === e4 || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(e4) ? o2(n3, t4) : void 0;
-      }
-    }(n2)) || t3 && n2 && "number" == typeof n2.length) {
-      e3 && (n2 = e3);
-      var r5 = 0;
-      return function() {
-        return r5 >= n2.length ? { done: true } : { done: false, value: n2[r5++] };
-      };
-    }
-    throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+  var i2 = [];
+  var s2 = [];
+  function l2() {
+    return i2.length > 0 ? i2[i2.length - 1] : null;
   }
-  var a2 = {};
-  function c2(t3) {
-    return t3.type === k ? "Fragment" : "function" == typeof t3.type ? t3.type.displayName || t3.type.name : "string" == typeof t3.type ? t3.type : "#text";
+  var c2 = false;
+  function u2(e3) {
+    return "function" == typeof e3.type && e3.type != k;
   }
-  var u2 = [];
-  var l2 = [];
-  function s2() {
-    return u2.length > 0 ? u2[u2.length - 1] : null;
-  }
-  var f2 = false;
-  function d2(t3) {
-    return "function" == typeof t3.type && t3.type != k;
-  }
-  function p2(n2) {
-    for (var t3 = [n2], e3 = n2; null != e3.__o; )
-      t3.push(e3.__o), e3 = e3.__o;
-    return t3.reduce(function(n3, t4) {
-      n3 += "  in " + c2(t4);
-      var e4 = t4.__source;
-      return e4 ? n3 += " (at " + e4.fileName + ":" + e4.lineNumber + ")" : f2 || (f2 = true, console.warn("Add @babel/plugin-transform-react-jsx-source to get a more detailed component stack. Note that you should not add it to production builds of your App for bundle size reasons.")), n3 + "\n";
+  function f2(n2) {
+    for (var e3 = [n2], t3 = n2; null != t3.__o; )
+      e3.push(t3.__o), t3 = t3.__o;
+    return e3.reduce(function(n3, e4) {
+      n3 += "  in " + a2(e4);
+      var t4 = e4.__source;
+      return t4 ? n3 += " (at " + t4.fileName + ":" + t4.lineNumber + ")" : c2 || (c2 = true, console.warn("Add @babel/plugin-transform-react-jsx-source to get a more detailed component stack. Note that you should not add it to production builds of your App for bundle size reasons.")), n3 + "\n";
     }, "");
   }
-  var h2 = "function" == typeof WeakMap;
-  function v2(n2) {
-    return n2 ? "function" == typeof n2.type ? null === n2.__ ? null !== n2.__e && null !== n2.__e.parentNode ? n2.__e.parentNode.localName : "" : v2(n2.__) : n2.type : "";
+  var p2 = "function" == typeof WeakMap;
+  function d2(n2) {
+    var e3 = [];
+    return n2.__k ? (n2.__k.forEach(function(n3) {
+      n3 && "function" == typeof n3.type ? e3.push.apply(e3, d2(n3)) : n3 && "string" == typeof n3.type && e3.push(n3.type);
+    }), e3) : e3;
   }
-  var y2 = b.prototype.setState;
-  b.prototype.setState = function(n2, t3) {
-    return null == this.__v && null == this.state && console.warn('Calling "this.setState" inside the constructor of a component is a no-op and might be a bug in your application. Instead, set "this.state = {}" directly.\n\n' + p2(s2())), y2.call(this, n2, t3);
+  function h2(n2) {
+    return n2 ? "function" == typeof n2.type ? null === n2.__ ? null !== n2.__e && null !== n2.__e.parentNode ? n2.__e.parentNode.localName : "" : h2(n2.__) : n2.type : "";
+  }
+  var v2 = b.prototype.setState;
+  function y2(n2) {
+    return "table" === n2 || "tfoot" === n2 || "tbody" === n2 || "thead" === n2 || "td" === n2 || "tr" === n2 || "th" === n2;
+  }
+  b.prototype.setState = function(n2, e3) {
+    return null == this.__v && null == this.state && console.warn('Calling "this.setState" inside the constructor of a component is a no-op and might be a bug in your application. Instead, set "this.state = {}" directly.\n\n' + f2(l2())), v2.call(this, n2, e3);
   };
-  var m2 = b.prototype.forceUpdate;
-  function b2(n2) {
-    var t3 = n2.props, e3 = c2(n2), o5 = "";
-    for (var r5 in t3)
-      if (t3.hasOwnProperty(r5) && "children" !== r5) {
-        var a4 = t3[r5];
-        "function" == typeof a4 && (a4 = "function " + (a4.displayName || a4.name) + "() {}"), a4 = Object(a4) !== a4 || a4.toString ? a4 + "" : Object.prototype.toString.call(a4), o5 += " " + r5 + "=" + JSON.stringify(a4);
+  var m2 = /^(address|article|aside|blockquote|details|div|dl|fieldset|figcaption|figure|footer|form|h1|h2|h3|h4|h5|h6|header|hgroup|hr|main|menu|nav|ol|p|pre|search|section|table|ul)$/;
+  var b2 = b.prototype.forceUpdate;
+  function w2(n2) {
+    var e3 = n2.props, t3 = a2(n2), o5 = "";
+    for (var r4 in e3)
+      if (e3.hasOwnProperty(r4) && "children" !== r4) {
+        var i4 = e3[r4];
+        "function" == typeof i4 && (i4 = "function " + (i4.displayName || i4.name) + "() {}"), i4 = Object(i4) !== i4 || i4.toString ? i4 + "" : Object.prototype.toString.call(i4), o5 += " " + r4 + "=" + JSON.stringify(i4);
       }
-    var i3 = t3.children;
-    return "<" + e3 + o5 + (i3 && i3.length ? ">..</" + e3 + ">" : " />");
+    var s4 = e3.children;
+    return "<" + t3 + o5 + (s4 && s4.length ? ">..</" + t3 + ">" : " />");
   }
   b.prototype.forceUpdate = function(n2) {
-    return null == this.__v ? console.warn('Calling "this.forceUpdate" inside the constructor of a component is a no-op and might be a bug in your application.\n\n' + p2(s2())) : null == this.__P && console.warn(`Can't call "this.forceUpdate" on an unmounted component. This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and asynchronous tasks in the componentWillUnmount method.
+    return null == this.__v ? console.warn('Calling "this.forceUpdate" inside the constructor of a component is a no-op and might be a bug in your application.\n\n' + f2(l2())) : null == this.__P && console.warn(`Can't call "this.forceUpdate" on an unmounted component. This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and asynchronous tasks in the componentWillUnmount method.
 
-` + p2(this.__v)), m2.call(this, n2);
+` + f2(this.__v)), b2.call(this, n2);
   }, function() {
     !function() {
-      var n3 = l.__b, e4 = l.diffed, o6 = l.__, r5 = l.vnode, a4 = l.__r;
+      var n3 = l.__b, t4 = l.diffed, o5 = l.__, r5 = l.vnode, a4 = l.__r;
       l.diffed = function(n4) {
-        d2(n4) && l2.pop(), u2.pop(), e4 && e4(n4);
-      }, l.__b = function(t3) {
-        d2(t3) && u2.push(t3), n3 && n3(t3);
-      }, l.__ = function(n4, t3) {
-        l2 = [], o6 && o6(n4, t3);
+        u2(n4) && s2.pop(), i2.pop(), t4 && t4(n4);
+      }, l.__b = function(e3) {
+        u2(e3) && i2.push(e3), n3 && n3(e3);
+      }, l.__ = function(n4, e3) {
+        s2 = [], o5 && o5(n4, e3);
       }, l.vnode = function(n4) {
-        n4.__o = l2.length > 0 ? l2[l2.length - 1] : null, r5 && r5(n4);
+        n4.__o = s2.length > 0 ? s2[s2.length - 1] : null, r5 && r5(n4);
       }, l.__r = function(n4) {
-        d2(n4) && l2.push(n4), a4 && a4(n4);
+        u2(n4) && s2.push(n4), a4 && a4(n4);
       };
     }();
-    var n2 = false, e3 = l.__b, o5 = l.diffed, i3 = l.vnode, s4 = l.__r, f4 = l.__e, y4 = l.__, m4 = l.__h, w4 = l.__c, g4 = h2 ? { useEffect: /* @__PURE__ */ new WeakMap(), useLayoutEffect: /* @__PURE__ */ new WeakMap(), lazyPropTypes: /* @__PURE__ */ new WeakMap() } : null, E2 = [], k4 = [];
-    l.__e = function(n3, t3, e4, o6) {
-      if (t3 && t3.__c && "function" == typeof n3.then) {
+    var n2 = false, t3 = l.__b, r4 = l.diffed, l4 = l.vnode, c4 = l.__r, v4 = l.__e, b4 = l.__, g4 = l.__h, E2 = l.__c, k4 = p2 ? { useEffect: /* @__PURE__ */ new WeakMap(), useLayoutEffect: /* @__PURE__ */ new WeakMap(), lazyPropTypes: /* @__PURE__ */ new WeakMap() } : null, _4 = [], I3 = [];
+    l.__e = function(n3, e3, t4, o5) {
+      if (e3 && e3.__c && "function" == typeof n3.then) {
         var r5 = n3;
-        n3 = new Error("Missing Suspense. The throwing component was: " + c2(t3));
-        for (var a4 = t3; a4; a4 = a4.__)
-          if (a4.__c && a4.__c.__c) {
+        n3 = new Error("Missing Suspense. The throwing component was: " + a2(e3));
+        for (var i4 = e3; i4; i4 = i4.__)
+          if (i4.__c && i4.__c.__c) {
             n3 = r5;
             break;
           }
@@ -425,141 +415,157 @@
           throw n3;
       }
       try {
-        (o6 = o6 || {}).componentStack = p2(t3), f4(n3, t3, e4, o6), "function" != typeof n3.then && setTimeout(function() {
+        (o5 = o5 || {}).componentStack = f2(e3), v4(n3, e3, t4, o5), "function" != typeof n3.then && setTimeout(function() {
           throw n3;
         });
       } catch (n4) {
         throw n4;
       }
-    }, l.__ = function(n3, t3) {
-      if (!t3)
+    }, l.__ = function(n3, e3) {
+      if (!e3)
         throw new Error("Undefined parent passed to render(), this is the second argument.\nCheck if the element is available in the DOM/has the correct id.");
-      var e4;
-      switch (t3.nodeType) {
+      var t4;
+      switch (e3.nodeType) {
         case 1:
         case 11:
         case 9:
-          e4 = true;
+          t4 = true;
           break;
         default:
-          e4 = false;
+          t4 = false;
       }
-      if (!e4) {
-        var o6 = c2(n3);
-        throw new Error("Expected a valid HTML node as a second argument to render.	Received " + t3 + " instead: render(<" + o6 + " />, " + t3 + ");");
+      if (!t4) {
+        var o5 = a2(n3);
+        throw new Error("Expected a valid HTML node as a second argument to render.	Received " + e3 + " instead: render(<" + o5 + " />, " + e3 + ");");
       }
-      y4 && y4(n3, t3);
-    }, l.__b = function(t3) {
-      var o6 = t3.type;
-      if ("string" != typeof o6 || "thead" !== o6 && "tfoot" !== o6 && "tbody" !== o6 && "tr" !== o6 && "td" !== o6 && "th" !== o6 || k4.push(t3), n2 = true, void 0 === o6)
-        throw new Error("Undefined component passed to createElement()\n\nYou likely forgot to export your component or might have mixed up default and named imports" + b2(t3) + "\n\n" + p2(t3));
-      if (null != o6 && "object" == typeof o6) {
-        if (void 0 !== o6.__k && void 0 !== o6.__e)
-          throw new Error("Invalid type passed to createElement(): " + o6 + "\n\nDid you accidentally pass a JSX literal as JSX twice?\n\n  let My" + c2(t3) + " = " + b2(o6) + ";\n  let vnode = <My" + c2(t3) + " />;\n\nThis usually happens when you export a JSX literal and not the component.\n\n" + p2(t3));
-        throw new Error("Invalid type passed to createElement(): " + (Array.isArray(o6) ? "array" : o6));
+      b4 && b4(n3, e3);
+    }, l.__b = function(e3) {
+      var r5 = e3.type;
+      if (("string" == typeof r5 && y2(r5) || "p" === r5) && I3.push(e3), n2 = true, void 0 === r5)
+        throw new Error("Undefined component passed to createElement()\n\nYou likely forgot to export your component or might have mixed up default and named imports" + w2(e3) + "\n\n" + f2(e3));
+      if (null != r5 && "object" == typeof r5) {
+        if (void 0 !== r5.__k && void 0 !== r5.__e)
+          throw new Error("Invalid type passed to createElement(): " + r5 + "\n\nDid you accidentally pass a JSX literal as JSX twice?\n\n  let My" + a2(e3) + " = " + w2(r5) + ";\n  let vnode = <My" + a2(e3) + " />;\n\nThis usually happens when you export a JSX literal and not the component.\n\n" + f2(e3));
+        throw new Error("Invalid type passed to createElement(): " + (Array.isArray(r5) ? "array" : r5));
       }
-      if (void 0 !== t3.ref && "function" != typeof t3.ref && "object" != typeof t3.ref && !("$$typeof" in t3))
-        throw new Error(`Component's "ref" property should be a function, or an object created by createRef(), but got [` + typeof t3.ref + "] instead\n" + b2(t3) + "\n\n" + p2(t3));
-      if ("string" == typeof t3.type) {
-        for (var r5 in t3.props)
-          if ("o" === r5[0] && "n" === r5[1] && "function" != typeof t3.props[r5] && null != t3.props[r5])
-            throw new Error(`Component's "` + r5 + '" property should be a function, but got [' + typeof t3.props[r5] + "] instead\n" + b2(t3) + "\n\n" + p2(t3));
+      if (void 0 !== e3.ref && "function" != typeof e3.ref && "object" != typeof e3.ref && !("$$typeof" in e3))
+        throw new Error(`Component's "ref" property should be a function, or an object created by createRef(), but got [` + typeof e3.ref + "] instead\n" + w2(e3) + "\n\n" + f2(e3));
+      if ("string" == typeof e3.type) {
+        for (var i4 in e3.props)
+          if ("o" === i4[0] && "n" === i4[1] && "function" != typeof e3.props[i4] && null != e3.props[i4])
+            throw new Error(`Component's "` + i4 + '" property should be a function, but got [' + typeof e3.props[i4] + "] instead\n" + w2(e3) + "\n\n" + f2(e3));
       }
-      if ("function" == typeof t3.type && t3.type.propTypes) {
-        if ("Lazy" === t3.type.displayName && g4 && !g4.lazyPropTypes.has(t3.type)) {
-          var i4 = "PropTypes are not supported on lazy(). Use propTypes on the wrapped component itself. ";
+      if ("function" == typeof e3.type && e3.type.propTypes) {
+        if ("Lazy" === e3.type.displayName && k4 && !k4.lazyPropTypes.has(e3.type)) {
+          var s4 = "PropTypes are not supported on lazy(). Use propTypes on the wrapped component itself. ";
           try {
-            var u4 = t3.type();
-            g4.lazyPropTypes.set(t3.type, true), console.warn(i4 + "Component wrapped in lazy() is " + c2(u4));
+            var l5 = e3.type();
+            k4.lazyPropTypes.set(e3.type, true), console.warn(s4 + "Component wrapped in lazy() is " + a2(l5));
           } catch (n3) {
-            console.warn(i4 + "We will log the wrapped component's name once it is loaded.");
+            console.warn(s4 + "We will log the wrapped component's name once it is loaded.");
           }
         }
-        var l4 = t3.props;
-        t3.type.__f && delete (l4 = function(n3, t4) {
-          for (var e4 in t4)
-            n3[e4] = t4[e4];
+        var c5 = e3.props;
+        e3.type.__f && delete (c5 = function(n3, e4) {
+          for (var t4 in e4)
+            n3[t4] = e4[t4];
           return n3;
-        }({}, l4)).ref, function(n3, t4, e4, o7, r6) {
-          Object.keys(n3).forEach(function(e5) {
+        }({}, c5)).ref, function(n3, e4, t4, r6, a4) {
+          Object.keys(n3).forEach(function(t5) {
             var i5;
             try {
-              i5 = n3[e5](t4, e5, o7, "prop", null, "SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED");
+              i5 = n3[t5](e4, t5, r6, "prop", null, "SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED");
             } catch (n4) {
               i5 = n4;
             }
-            i5 && !(i5.message in a2) && (a2[i5.message] = true, console.error("Failed prop type: " + i5.message + (r6 && "\n" + r6() || "")));
+            i5 && !(i5.message in o2) && (o2[i5.message] = true, console.error("Failed prop type: " + i5.message + (a4 && "\n" + a4() || "")));
           });
-        }(t3.type.propTypes, l4, 0, c2(t3), function() {
-          return p2(t3);
+        }(e3.type.propTypes, c5, 0, a2(e3), function() {
+          return f2(e3);
         });
       }
-      e3 && e3(t3);
-    }, l.__r = function(t3) {
-      s4 && s4(t3), n2 = true;
-    }, l.__h = function(t3, e4, o6) {
-      if (!t3 || !n2)
+      t3 && t3(e3);
+    }, l.__r = function(e3) {
+      c4 && c4(e3), n2 = true;
+    }, l.__h = function(e3, t4, o5) {
+      if (!e3 || !n2)
         throw new Error("Hook can only be invoked from render methods.");
-      m4 && m4(t3, e4, o6);
+      g4 && g4(e3, t4, o5);
     };
-    var _4 = function(n3, t3) {
+    var T4 = function(n3, e3) {
       return { get: function() {
-        var e4 = "get" + n3 + t3;
-        E2 && E2.indexOf(e4) < 0 && (E2.push(e4), console.warn("getting vnode." + n3 + " is deprecated, " + t3));
+        var t4 = "get" + n3 + e3;
+        _4 && _4.indexOf(t4) < 0 && (_4.push(t4), console.warn("getting vnode." + n3 + " is deprecated, " + e3));
       }, set: function() {
-        var e4 = "set" + n3 + t3;
-        E2 && E2.indexOf(e4) < 0 && (E2.push(e4), console.warn("setting vnode." + n3 + " is not allowed, " + t3));
+        var t4 = "set" + n3 + e3;
+        _4 && _4.indexOf(t4) < 0 && (_4.push(t4), console.warn("setting vnode." + n3 + " is not allowed, " + e3));
       } };
-    }, j4 = { nodeName: _4("nodeName", "use vnode.type"), attributes: _4("attributes", "use vnode.props"), children: _4("children", "use vnode.props.children") }, I3 = Object.create({}, j4);
+    }, j4 = { nodeName: T4("nodeName", "use vnode.type"), attributes: T4("attributes", "use vnode.props"), children: T4("children", "use vnode.props.children") }, O2 = Object.create({}, j4);
     l.vnode = function(n3) {
-      var t3 = n3.props;
-      if (null !== n3.type && null != t3 && ("__source" in t3 || "__self" in t3)) {
-        var e4 = n3.props = {};
-        for (var o6 in t3) {
-          var r5 = t3[o6];
-          "__source" === o6 ? n3.__source = r5 : "__self" === o6 ? n3.__self = r5 : e4[o6] = r5;
+      var e3 = n3.props;
+      if (null !== n3.type && null != e3 && ("__source" in e3 || "__self" in e3)) {
+        var t4 = n3.props = {};
+        for (var o5 in e3) {
+          var r5 = e3[o5];
+          "__source" === o5 ? n3.__source = r5 : "__self" === o5 ? n3.__self = r5 : t4[o5] = r5;
         }
       }
-      n3.__proto__ = I3, i3 && i3(n3);
-    }, l.diffed = function(t3) {
-      if (t3.__k && t3.__k.forEach(function(n3) {
+      n3.__proto__ = O2, l4 && l4(n3);
+    }, l.diffed = function(e3) {
+      if (e3.__k && e3.__k.forEach(function(n3) {
         if ("object" == typeof n3 && n3 && void 0 === n3.type) {
-          var e5 = Object.keys(n3).join(",");
-          throw new Error("Objects are not valid as a child. Encountered an object with the keys {" + e5 + "}.\n\n" + p2(t3));
+          var t5 = Object.keys(n3).join(",");
+          throw new Error("Objects are not valid as a child. Encountered an object with the keys {" + t5 + "}.\n\n" + f2(e3));
         }
-      }), n2 = false, o5 && o5(t3), null != t3.__k)
-        for (var e4 = [], a4 = 0; a4 < t3.__k.length; a4++) {
-          var i4 = t3.__k[a4];
+      }), n2 = false, r4 && r4(e3), null != e3.__k)
+        for (var t4 = [], o5 = 0; o5 < e3.__k.length; o5++) {
+          var i4 = e3.__k[o5];
           if (i4 && null != i4.key) {
-            var u4 = i4.key;
-            if (-1 !== e4.indexOf(u4)) {
-              console.error('Following component has two or more children with the same key attribute: "' + u4 + '". This may cause glitches and misbehavior in rendering process. Component: \n\n' + b2(t3) + "\n\n" + p2(t3));
+            var s4 = i4.key;
+            if (-1 !== t4.indexOf(s4)) {
+              console.error('Following component has two or more children with the same key attribute: "' + s4 + '". This may cause glitches and misbehavior in rendering process. Component: \n\n' + w2(e3) + "\n\n" + f2(e3));
               break;
             }
-            e4.push(u4);
+            t4.push(s4);
           }
         }
-      if (null != t3.__c && null != t3.__c.__H) {
-        var l4 = t3.__c.__H.__;
-        if (l4)
-          for (var s5 = 0; s5 < l4.length; s5 += 1) {
-            var f5 = l4[s5];
-            if (f5.__H) {
-              for (var d4, h4 = r2(f5.__H); !(d4 = h4()).done; )
-                if ((y5 = d4.value) != y5) {
-                  var v4 = c2(t3);
-                  throw new Error("Invalid argument passed to hook. Hooks should not be called with NaN in the dependency array. Hook index " + s5 + " in component " + v4 + " was called with NaN.");
+      if (null != e3.__c && null != e3.__c.__H) {
+        var l5 = e3.__c.__H.__;
+        if (l5)
+          for (var c5 = 0; c5 < l5.length; c5 += 1) {
+            var u4 = l5[c5];
+            if (u4.__H) {
+              for (var p4 = 0; p4 < u4.__H.length; p4++)
+                if ((h4 = u4.__H[p4]) != h4) {
+                  var d4 = a2(e3);
+                  throw new Error("Invalid argument passed to hook. Hooks should not be called with NaN in the dependency array. Hook index " + c5 + " in component " + d4 + " was called with NaN.");
                 }
             }
           }
       }
-      var y5;
-    }, l.__c = function(n3, t3) {
-      for (var e4 = 0; e4 < k4.length; e4++) {
-        var o6 = k4[e4], r5 = o6.type, a4 = v2(o6.__);
-        "thead" !== r5 && "tfoot" !== r5 && "tbody" !== r5 || "table" === a4 ? "tr" === r5 && "thead" !== a4 && "tfoot" !== a4 && "tbody" !== a4 && "table" !== a4 ? console.error("Improper nesting of table. Your <tr> should have a <thead/tbody/tfoot/table> parent." + b2(o6) + "\n\n" + p2(o6)) : "td" === r5 && "tr" !== a4 ? console.error("Improper nesting of table. Your <td> should have a <tr> parent." + b2(o6) + "\n\n" + p2(o6)) : "th" === r5 && "tr" !== a4 && console.error("Improper nesting of table. Your <th> should have a <tr>." + b2(o6) + "\n\n" + p2(o6)) : console.error("Improper nesting of table. Your <thead/tbody/tfoot> should have a <table> parent." + b2(o6) + "\n\n" + p2(o6));
+      var h4;
+    }, l.__c = function(n3, e3) {
+      for (var t4 = 0; t4 < I3.length; t4++) {
+        var o5 = I3[t4], r5 = o5.type, a4 = h2(o5.__);
+        if ("table" === r5 && y2(a4))
+          console.error("Improper nesting of table. Your <table> should not have a table-node parent." + w2(o5) + "\n\n" + f2(o5));
+        else if ("thead" !== r5 && "tfoot" !== r5 && "tbody" !== r5 || "table" === a4) {
+          if ("tr" === r5 && "thead" !== a4 && "tfoot" !== a4 && "tbody" !== a4 && "table" !== a4)
+            console.error("Improper nesting of table. Your <tr> should have a <thead/tbody/tfoot/table> parent." + w2(o5) + "\n\n" + f2(o5));
+          else if ("td" === r5 && "tr" !== a4)
+            console.error("Improper nesting of table. Your <td> should have a <tr> parent." + w2(o5) + "\n\n" + f2(o5));
+          else if ("th" === r5 && "tr" !== a4)
+            console.error("Improper nesting of table. Your <th> should have a <tr>." + w2(o5) + "\n\n" + f2(o5));
+          else if ("p" === r5) {
+            var i4 = d2(o5).filter(function(n4) {
+              return m2.test(n4);
+            });
+            i4.length && console.error("Improper nesting of paragraph. Your <p> should not have " + i4.join(", ") + "as child-elements." + w2(o5) + "\n\n" + f2(o5));
+          }
+        } else
+          console.error("Improper nesting of table. Your <thead/tbody/tfoot> should have a <table> parent." + w2(o5) + "\n\n" + f2(o5));
       }
-      k4 = [], w4 && w4(n3, t3);
+      I3 = [], E2 && E2(n3, e3);
     };
   }();
 
@@ -1071,11 +1077,11 @@
   }
   var shuffle_default = shuffle;
 
-  // ../node_modules/.pnpm/preact@10.17.1/node_modules/preact/hooks/dist/hooks.module.js
+  // ../node_modules/.pnpm/preact@10.18.1/node_modules/preact/hooks/dist/hooks.module.js
   var t2;
-  var r3;
+  var r2;
   var u3;
-  var i2;
+  var i3;
   var o3 = 0;
   var f3 = [];
   var c3 = [];
@@ -1085,20 +1091,20 @@
   var l3 = l.__c;
   var m3 = l.unmount;
   function d3(t3, u4) {
-    l.__h && l.__h(r3, t3, o3 || u4), o3 = 0;
-    var i3 = r3.__H || (r3.__H = { __: [], __h: [] });
-    return t3 >= i3.__.length && i3.__.push({ __V: c3 }), i3.__[t3];
+    l.__h && l.__h(r2, t3, o3 || u4), o3 = 0;
+    var i4 = r2.__H || (r2.__H = { __: [], __h: [] });
+    return t3 >= i4.__.length && i4.__.push({ __V: c3 }), i4.__[t3];
   }
   function h3(n2) {
     return o3 = 1, s3(B2, n2);
   }
-  function s3(n2, u4, i3) {
+  function s3(n2, u4, i4) {
     var o5 = d3(t2++, 2);
-    if (o5.t = n2, !o5.__c && (o5.__ = [i3 ? i3(u4) : B2(void 0, u4), function(n3) {
-      var t3 = o5.__N ? o5.__N[0] : o5.__[0], r5 = o5.t(t3, n3);
-      t3 !== r5 && (o5.__N = [r5, o5.__[1]], o5.__c.setState({}));
-    }], o5.__c = r3, !r3.u)) {
-      var f4 = function(n3, t3, r5) {
+    if (o5.t = n2, !o5.__c && (o5.__ = [i4 ? i4(u4) : B2(void 0, u4), function(n3) {
+      var t3 = o5.__N ? o5.__N[0] : o5.__[0], r4 = o5.t(t3, n3);
+      t3 !== r4 && (o5.__N = [r4, o5.__[1]], o5.__c.setState({}));
+    }], o5.__c = r2, !r2.u)) {
+      var f4 = function(n3, t3, r4) {
         if (!o5.__c.__H)
           return true;
         var u5 = o5.__c.__H.__.filter(function(n4) {
@@ -1107,52 +1113,52 @@
         if (u5.every(function(n4) {
           return !n4.__N;
         }))
-          return !c5 || c5.call(this, n3, t3, r5);
-        var i4 = false;
+          return !c4 || c4.call(this, n3, t3, r4);
+        var i5 = false;
         return u5.forEach(function(n4) {
           if (n4.__N) {
             var t4 = n4.__[0];
-            n4.__ = n4.__N, n4.__N = void 0, t4 !== n4.__[0] && (i4 = true);
+            n4.__ = n4.__N, n4.__N = void 0, t4 !== n4.__[0] && (i5 = true);
           }
-        }), !(!i4 && o5.__c.props === n3) && (!c5 || c5.call(this, n3, t3, r5));
+        }), !(!i5 && o5.__c.props === n3) && (!c4 || c4.call(this, n3, t3, r4));
       };
-      r3.u = true;
-      var c5 = r3.shouldComponentUpdate, e3 = r3.componentWillUpdate;
-      r3.componentWillUpdate = function(n3, t3, r5) {
+      r2.u = true;
+      var c4 = r2.shouldComponentUpdate, e3 = r2.componentWillUpdate;
+      r2.componentWillUpdate = function(n3, t3, r4) {
         if (this.__e) {
-          var u5 = c5;
-          c5 = void 0, f4(n3, t3, r5), c5 = u5;
+          var u5 = c4;
+          c4 = void 0, f4(n3, t3, r4), c4 = u5;
         }
-        e3 && e3.call(this, n3, t3, r5);
-      }, r3.shouldComponentUpdate = f4;
+        e3 && e3.call(this, n3, t3, r4);
+      }, r2.shouldComponentUpdate = f4;
     }
     return o5.__N || o5.__;
   }
-  function p3(u4, i3) {
+  function p3(u4, i4) {
     var o5 = d3(t2++, 3);
-    !l.__s && z2(o5.__H, i3) && (o5.__ = u4, o5.i = i3, r3.__H.__h.push(o5));
+    !l.__s && z2(o5.__H, i4) && (o5.__ = u4, o5.i = i4, r2.__H.__h.push(o5));
   }
-  function y3(u4, i3) {
+  function y3(u4, i4) {
     var o5 = d3(t2++, 4);
-    !l.__s && z2(o5.__H, i3) && (o5.__ = u4, o5.i = i3, r3.__h.push(o5));
+    !l.__s && z2(o5.__H, i4) && (o5.__ = u4, o5.i = i4, r2.__h.push(o5));
   }
   function _(n2) {
     return o3 = 5, F2(function() {
       return { current: n2 };
     }, []);
   }
-  function A2(n2, t3, r5) {
+  function A2(n2, t3, r4) {
     o3 = 6, y3(function() {
       return "function" == typeof n2 ? (n2(t3()), function() {
         return n2(null);
       }) : n2 ? (n2.current = t3(), function() {
         return n2.current = null;
       }) : void 0;
-    }, null == r5 ? r5 : r5.concat(n2));
+    }, null == r4 ? r4 : r4.concat(n2));
   }
-  function F2(n2, r5) {
+  function F2(n2, r4) {
     var u4 = d3(t2++, 7);
-    return z2(u4.__H, r5) ? (u4.__V = n2(), u4.i = r5, u4.__h = n2, u4.__V) : u4.__;
+    return z2(u4.__H, r4) ? (u4.__V = n2(), u4.i = r4, u4.__h = n2, u4.__V) : u4.__;
   }
   function T2(n2, t3) {
     return o3 = 8, F2(function() {
@@ -1160,16 +1166,16 @@
     }, t3);
   }
   function q2(n2) {
-    var u4 = r3.context[n2.__c], i3 = d3(t2++, 9);
-    return i3.c = n2, u4 ? (null == i3.__ && (i3.__ = true, u4.sub(r3)), u4.props.value) : n2.__;
+    var u4 = r2.context[n2.__c], i4 = d3(t2++, 9);
+    return i4.c = n2, u4 ? (null == i4.__ && (i4.__ = true, u4.sub(r2)), u4.props.value) : n2.__;
   }
   function V() {
     var n2 = d3(t2++, 11);
     if (!n2.__) {
-      for (var u4 = r3.__v; null !== u4 && !u4.__m && null !== u4.__; )
+      for (var u4 = r2.__v; null !== u4 && !u4.__m && null !== u4.__; )
         u4 = u4.__;
-      var i3 = u4.__m || (u4.__m = [0, 0]);
-      n2.__ = "P" + i3[0] + "-" + i3[1]++;
+      var i4 = u4.__m || (u4.__m = [0, 0]);
+      n2.__ = "P" + i4[0] + "-" + i4[1]++;
     }
     return n2.__;
   }
@@ -1177,73 +1183,73 @@
     for (var t3; t3 = f3.shift(); )
       if (t3.__P && t3.__H)
         try {
-          t3.__H.__h.forEach(k2), t3.__H.__h.forEach(w2), t3.__H.__h = [];
-        } catch (r5) {
-          t3.__H.__h = [], l.__e(r5, t3.__v);
+          t3.__H.__h.forEach(k2), t3.__H.__h.forEach(w3), t3.__H.__h = [];
+        } catch (r4) {
+          t3.__H.__h = [], l.__e(r4, t3.__v);
         }
   }
   l.__b = function(n2) {
-    r3 = null, e2 && e2(n2);
+    r2 = null, e2 && e2(n2);
   }, l.__r = function(n2) {
     a3 && a3(n2), t2 = 0;
-    var i3 = (r3 = n2.__c).__H;
-    i3 && (u3 === r3 ? (i3.__h = [], r3.__h = [], i3.__.forEach(function(n3) {
+    var i4 = (r2 = n2.__c).__H;
+    i4 && (u3 === r2 ? (i4.__h = [], r2.__h = [], i4.__.forEach(function(n3) {
       n3.__N && (n3.__ = n3.__N), n3.__V = c3, n3.__N = n3.i = void 0;
-    })) : (i3.__h.forEach(k2), i3.__h.forEach(w2), i3.__h = [], t2 = 0)), u3 = r3;
+    })) : (i4.__h.forEach(k2), i4.__h.forEach(w3), i4.__h = [], t2 = 0)), u3 = r2;
   }, l.diffed = function(t3) {
     v3 && v3(t3);
     var o5 = t3.__c;
-    o5 && o5.__H && (o5.__H.__h.length && (1 !== f3.push(o5) && i2 === l.requestAnimationFrame || ((i2 = l.requestAnimationFrame) || j2)(b3)), o5.__H.__.forEach(function(n2) {
+    o5 && o5.__H && (o5.__H.__h.length && (1 !== f3.push(o5) && i3 === l.requestAnimationFrame || ((i3 = l.requestAnimationFrame) || j2)(b3)), o5.__H.__.forEach(function(n2) {
       n2.i && (n2.__H = n2.i), n2.__V !== c3 && (n2.__ = n2.__V), n2.i = void 0, n2.__V = c3;
-    })), u3 = r3 = null;
-  }, l.__c = function(t3, r5) {
-    r5.some(function(t4) {
+    })), u3 = r2 = null;
+  }, l.__c = function(t3, r4) {
+    r4.some(function(t4) {
       try {
         t4.__h.forEach(k2), t4.__h = t4.__h.filter(function(n2) {
-          return !n2.__ || w2(n2);
+          return !n2.__ || w3(n2);
         });
       } catch (u4) {
-        r5.some(function(n2) {
+        r4.some(function(n2) {
           n2.__h && (n2.__h = []);
-        }), r5 = [], l.__e(u4, t4.__v);
+        }), r4 = [], l.__e(u4, t4.__v);
       }
-    }), l3 && l3(t3, r5);
+    }), l3 && l3(t3, r4);
   }, l.unmount = function(t3) {
     m3 && m3(t3);
-    var r5, u4 = t3.__c;
+    var r4, u4 = t3.__c;
     u4 && u4.__H && (u4.__H.__.forEach(function(n2) {
       try {
         k2(n2);
       } catch (n3) {
-        r5 = n3;
+        r4 = n3;
       }
-    }), u4.__H = void 0, r5 && l.__e(r5, u4.__v));
+    }), u4.__H = void 0, r4 && l.__e(r4, u4.__v));
   };
   var g2 = "function" == typeof requestAnimationFrame;
   function j2(n2) {
-    var t3, r5 = function() {
+    var t3, r4 = function() {
       clearTimeout(u4), g2 && cancelAnimationFrame(t3), setTimeout(n2);
-    }, u4 = setTimeout(r5, 100);
-    g2 && (t3 = requestAnimationFrame(r5));
+    }, u4 = setTimeout(r4, 100);
+    g2 && (t3 = requestAnimationFrame(r4));
   }
   function k2(n2) {
-    var t3 = r3, u4 = n2.__c;
-    "function" == typeof u4 && (n2.__c = void 0, u4()), r3 = t3;
+    var t3 = r2, u4 = n2.__c;
+    "function" == typeof u4 && (n2.__c = void 0, u4()), r2 = t3;
   }
-  function w2(n2) {
-    var t3 = r3;
-    n2.__c = n2.__(), r3 = t3;
+  function w3(n2) {
+    var t3 = r2;
+    n2.__c = n2.__(), r2 = t3;
   }
   function z2(n2, t3) {
-    return !n2 || n2.length !== t3.length || t3.some(function(t4, r5) {
-      return t4 !== n2[r5];
+    return !n2 || n2.length !== t3.length || t3.some(function(t4, r4) {
+      return t4 !== n2[r4];
     });
   }
   function B2(n2, t3) {
     return "function" == typeof t3 ? t3(n2) : t3;
   }
 
-  // ../node_modules/.pnpm/preact@10.17.1/node_modules/preact/compat/dist/compat.module.js
+  // ../node_modules/.pnpm/preact@10.18.1/node_modules/preact/compat/dist/compat.module.js
   function g3(n2, t3) {
     for (var e3 in t3)
       n2[e3] = t3[e3];
@@ -1253,25 +1259,25 @@
     for (var e3 in n2)
       if ("__source" !== e3 && !(e3 in t3))
         return true;
-    for (var r5 in t3)
-      if ("__source" !== r5 && n2[r5] !== t3[r5])
+    for (var r4 in t3)
+      if ("__source" !== r4 && n2[r4] !== t3[r4])
         return true;
     return false;
   }
-  function w3(n2) {
+  function w4(n2) {
     this.props = n2;
   }
   function x3(n2, e3) {
-    function r5(n3) {
-      var t3 = this.props.ref, r6 = t3 == n3.ref;
-      return !r6 && t3 && (t3.call ? t3(null) : t3.current = null), e3 ? !e3(this.props, n3) || !r6 : C2(this.props, n3);
+    function r4(n3) {
+      var t3 = this.props.ref, r5 = t3 == n3.ref;
+      return !r5 && t3 && (t3.call ? t3(null) : t3.current = null), e3 ? !e3(this.props, n3) || !r5 : C2(this.props, n3);
     }
     function u4(e4) {
-      return this.shouldComponentUpdate = r5, y(n2, e4);
+      return this.shouldComponentUpdate = r4, y(n2, e4);
     }
     return u4.displayName = "Memo(" + (n2.displayName || n2.name) + ")", u4.prototype.isReactComponent = true, u4.__f = true, u4;
   }
-  (w3.prototype = new b()).isPureReactComponent = true, w3.prototype.shouldComponentUpdate = function(n2, t3) {
+  (w4.prototype = new b()).isPureReactComponent = true, w4.prototype.shouldComponentUpdate = function(n2, t3) {
     return C2(this.props, n2) || C2(this.state, t3);
   };
   var R = l.__b;
@@ -1287,13 +1293,13 @@
     return t3.$$typeof = N2, t3.render = t3, t3.prototype.isReactComponent = t3.__f = true, t3.displayName = "ForwardRef(" + (n2.displayName || n2.name) + ")", t3;
   }
   var T3 = l.__e;
-  l.__e = function(n2, t3, e3, r5) {
+  l.__e = function(n2, t3, e3, r4) {
     if (n2.then) {
       for (var u4, o5 = t3; o5 = o5.__; )
         if ((u4 = o5.__c) && u4.__c)
           return null == t3.__e && (t3.__e = e3.__e, t3.__k = e3.__k), u4.__c(n2, t3);
     }
-    T3(n2, t3, e3, r5);
+    T3(n2, t3, e3, r4);
   };
   var F3 = l.unmount;
   function I2(n2, t3, e3) {
@@ -1304,7 +1310,7 @@
     })), n2;
   }
   function L2(n2, t3, e3) {
-    return n2 && (n2.__v = null, n2.__k = n2.__k && n2.__k.map(function(n3) {
+    return n2 && e3 && (n2.__v = null, n2.__k = n2.__k && n2.__k.map(function(n3) {
       return L2(n3, t3, e3);
     }), n2.__c && n2.__c.__P === t3 && (n2.__e && e3.insertBefore(n2.__e, n2.__d), n2.__c.__e = true, n2.__c.__P = e3)), n2;
   }
@@ -1322,36 +1328,36 @@
     var t3 = n2.__c;
     t3 && t3.__R && t3.__R(), t3 && true === n2.__h && (n2.type = null), F3 && F3(n2);
   }, (U.prototype = new b()).__c = function(n2, t3) {
-    var e3 = t3.__c, r5 = this;
-    null == r5.t && (r5.t = []), r5.t.push(e3);
-    var u4 = D2(r5.__v), o5 = false, i3 = function() {
+    var e3 = t3.__c, r4 = this;
+    null == r4.t && (r4.t = []), r4.t.push(e3);
+    var u4 = D2(r4.__v), o5 = false, i4 = function() {
       o5 || (o5 = true, e3.__R = null, u4 ? u4(l4) : l4());
     };
-    e3.__R = i3;
+    e3.__R = i4;
     var l4 = function() {
-      if (!--r5.__u) {
-        if (r5.state.__a) {
-          var n3 = r5.state.__a;
-          r5.__v.__k[0] = L2(n3, n3.__c.__P, n3.__c.__O);
+      if (!--r4.__u) {
+        if (r4.state.__a) {
+          var n3 = r4.state.__a;
+          r4.__v.__k[0] = L2(n3, n3.__c.__P, n3.__c.__O);
         }
         var t4;
-        for (r5.setState({ __a: r5.__b = null }); t4 = r5.t.pop(); )
+        for (r4.setState({ __a: r4.__b = null }); t4 = r4.t.pop(); )
           t4.forceUpdate();
       }
-    }, c5 = true === t3.__h;
-    r5.__u++ || c5 || r5.setState({ __a: r5.__b = r5.__v.__k[0] }), n2.then(i3, i3);
+    }, c4 = true === t3.__h;
+    r4.__u++ || c4 || r4.setState({ __a: r4.__b = r4.__v.__k[0] }), n2.then(i4, i4);
   }, U.prototype.componentWillUnmount = function() {
     this.t = [];
   }, U.prototype.render = function(n2, e3) {
     if (this.__b) {
       if (this.__v.__k) {
-        var r5 = document.createElement("div"), o5 = this.__v.__k[0].__c;
-        this.__v.__k[0] = I2(this.__b, r5, o5.__O = o5.__P);
+        var r4 = document.createElement("div"), o5 = this.__v.__k[0].__c;
+        this.__v.__k[0] = I2(this.__b, r4, o5.__O = o5.__P);
       }
       this.__b = null;
     }
-    var i3 = e3.__a && y(k, null, n2.fallback);
-    return i3 && (i3.__h = null), [y(k, null, e3.__a ? null : n2.children), i3];
+    var i4 = e3.__a && y(k, null, n2.fallback);
+    return i4 && (i4.__h = null), [y(k, null, e3.__a ? null : n2.children), i4];
   };
   var W = function(n2, t3, e3) {
     if (++e3[1] === e3[0] && n2.o.delete(t3), n2.props.revealOrder && ("t" !== n2.props.revealOrder[0] || !n2.o.size))
@@ -1369,26 +1375,26 @@
     }, n2.children;
   }
   function j3(n2) {
-    var e3 = this, r5 = n2.i;
+    var e3 = this, r4 = n2.i;
     e3.componentWillUnmount = function() {
-      D(null, e3.l), e3.l = null, e3.i = null;
-    }, e3.i && e3.i !== r5 && e3.componentWillUnmount(), e3.l || (e3.i = r5, e3.l = { nodeType: 1, parentNode: r5, childNodes: [], appendChild: function(n3) {
+      B(null, e3.l), e3.l = null, e3.i = null;
+    }, e3.i && e3.i !== r4 && e3.componentWillUnmount(), e3.l || (e3.i = r4, e3.l = { nodeType: 1, parentNode: r4, childNodes: [], appendChild: function(n3) {
       this.childNodes.push(n3), e3.i.appendChild(n3);
     }, insertBefore: function(n3, t3) {
       this.childNodes.push(n3), e3.i.appendChild(n3);
     }, removeChild: function(n3) {
       this.childNodes.splice(this.childNodes.indexOf(n3) >>> 1, 1), e3.i.removeChild(n3);
-    } }), D(y(P2, { context: e3.context }, n2.__v), e3.l);
+    } }), B(y(P2, { context: e3.context }, n2.__v), e3.l);
   }
   function z3(n2, e3) {
-    var r5 = y(j3, { __v: n2, i: e3 });
-    return r5.containerInfo = e3, r5;
+    var r4 = y(j3, { __v: n2, i: e3 });
+    return r4.containerInfo = e3, r4;
   }
   (V2.prototype = new b()).__a = function(n2) {
-    var t3 = this, e3 = D2(t3.__v), r5 = t3.o.get(n2);
-    return r5[0]++, function(u4) {
+    var t3 = this, e3 = D2(t3.__v), r4 = t3.o.get(n2);
+    return r4[0]++, function(u4) {
       var o5 = function() {
-        t3.props.revealOrder ? (r5.push(u4), W(t3, n2, r5)) : u4();
+        t3.props.revealOrder ? (r4.push(u4), W(t3, n2, r4)) : u4();
       };
       e3 ? e3(o5) : o5();
     };
@@ -1441,10 +1447,10 @@
     "string" == typeof n2.type && function(n3) {
       var t3 = n3.props, e3 = n3.type, u4 = {};
       for (var o5 in t3) {
-        var i3 = t3[o5];
-        if (!("value" === o5 && "defaultValue" in t3 && null == i3 || $2 && "children" === o5 && "noscript" === e3 || "class" === o5 || "className" === o5)) {
+        var i4 = t3[o5];
+        if (!("value" === o5 && "defaultValue" in t3 && null == i4 || $2 && "children" === o5 && "noscript" === e3 || "class" === o5 || "className" === o5)) {
           var l4 = o5.toLowerCase();
-          "defaultValue" === o5 && "value" in t3 && null == t3.value ? o5 = "value" : "download" === o5 && true === i3 ? i3 = "" : "ondoubleclick" === l4 ? o5 = "ondblclick" : "onchange" !== l4 || "input" !== e3 && "textarea" !== e3 || q3(t3.type) ? "onfocus" === l4 ? o5 = "onfocusin" : "onblur" === l4 ? o5 = "onfocusout" : Z.test(o5) ? o5 = l4 : -1 === e3.indexOf("-") && H2.test(o5) ? o5 = o5.replace(Y, "-$&").toLowerCase() : null === i3 && (i3 = void 0) : l4 = o5 = "oninput", "oninput" === l4 && u4[o5 = l4] && (o5 = "oninputCapture"), u4[o5] = i3;
+          "defaultValue" === o5 && "value" in t3 && null == t3.value ? o5 = "value" : "download" === o5 && true === i4 ? i4 = "" : "ondoubleclick" === l4 ? o5 = "ondblclick" : "onchange" !== l4 || "input" !== e3 && "textarea" !== e3 || q3(t3.type) ? "onfocus" === l4 ? o5 = "onfocusin" : "onblur" === l4 ? o5 = "onfocusout" : Z.test(o5) ? o5 = l4 : -1 === e3.indexOf("-") && H2.test(o5) ? o5 = o5.replace(Y, "-$&").toLowerCase() : null === i4 && (i4 = void 0) : l4 = o5 = "oninput", "oninput" === l4 && u4[o5 = l4] && (o5 = "oninputCapture"), u4[o5] = i4;
         }
       }
       "select" == e3 && u4.multiple && Array.isArray(u4.value) && (u4.value = C(t3.children).forEach(function(n4) {
@@ -1465,7 +1471,7 @@
     null != e3 && "textarea" === n2.type && "value" in t3 && t3.value !== e3.value && (e3.value = null == t3.value ? "" : t3.value), tn = null;
   };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/util/lib-shared.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/util/lib-shared.js
   var EventMapping = {
     abort: "onAbort",
     animationend: "onAnimationEnd",
@@ -1566,11 +1572,11 @@
     webkittransitionend: null
   };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/util/use-before-layout-effect.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/util/use-before-layout-effect.js
   var toRun = /* @__PURE__ */ new Map();
   var commitName = "diffed";
   var newCommit = (vnode, ...args) => {
-    for (const [id, effectInfo] of toRun) {
+    for (const [_id, effectInfo] of toRun) {
       const oldInputs = effectInfo.prevInputs;
       if (argsChanged(oldInputs, effectInfo.inputs)) {
         effectInfo.cleanup?.();
@@ -1603,7 +1609,7 @@
     return !!(!oldArgs || oldArgs.length !== newArgs?.length || newArgs?.some((arg, index) => arg !== oldArgs[index]));
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/util/lib-preact.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/util/lib-preact.js
   function debounceRendering(f4) {
     (l.debounceRendering ?? queueMicrotask)(f4);
   }
@@ -1618,7 +1624,7 @@
     ...EventMapping
   };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/preact-extensions/use-passive-state.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-passive-state.js
   function useEnsureStability(parentHookName, ...values2) {
     if (true)
       return;
@@ -1627,20 +1633,20 @@
     useHelper(values2.length, -1);
     values2.forEach(useHelper);
     return;
-    function useHelper(value, i3) {
-      const index = i3 + 1;
+    function useHelper(value, i4) {
+      const index = i4 + 1;
       if (helperToEnsureStability.current[index] === void 0)
         helperToEnsureStability.current[index] = value;
       if (helperToEnsureStability.current[index] != value) {
         if (!shownError.current[index]) {
           debugger;
-          console.error(`The hook ${parentHookName} requires some or all of its arguments remain stable across each render; please check the ${i3}-indexed argument (${i3 >= 0 ? JSON.stringify(values2[i3]) : "the number of supposedly stable elements"}).`);
+          console.error(`The hook ${parentHookName} requires some or all of its arguments remain stable across each render; please check the ${i4}-indexed argument (${i4 >= 0 ? JSON.stringify(values2[i4]) : "the number of supposedly stable elements"}).`);
           shownError.current[index] = true;
         }
       }
     }
   }
-  var usePassiveState = function usePassiveState2(onChange, getInitialValue, customDebounceRendering) {
+  function usePassiveState(onChange, getInitialValue, customDebounceRendering) {
     const valueRef = _(Unset);
     const reasonRef = _(Unset);
     const warningRef = _(false);
@@ -1703,7 +1709,7 @@
       }
     }, []);
     return [getValue, setValue];
-  };
+  }
   var Unset = Symbol();
   function returnTrue() {
     return true;
@@ -1721,7 +1727,7 @@
     f4();
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/preact-extensions/use-stable-getter.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-stable-getter.js
   var Unset2 = Symbol("unset");
   var useStableGetter = function useStableGetter2(value) {
     const ref = _(Unset2);
@@ -1741,7 +1747,7 @@
     }, Object.values(t3));
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/preact-extensions/use-stable-callback.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-stable-callback.js
   var map = /* @__PURE__ */ new WeakMap();
   function isStableGetter(obj) {
     return false;
@@ -1766,13 +1772,20 @@
       return setIsStableGetter(T2(fn, []));
     }
   };
+  var useStableMergedCallback = function useStableMergedCallback2(...fns) {
+    return useStableCallback((...args) => {
+      for (let i4 = 0; i4 < fns.length; ++i4) {
+        fns[i4]?.(...args);
+      }
+    });
+  };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/util/mode.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/util/mode.js
   globalThis["process"] ??= {};
   globalThis["process"]["env"] ??= {};
   globalThis["process"]["env"]["NODE_ENV"] = "production";
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/util/use-call-count.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/util/use-call-count.js
   window.requestIdleCallback ??= (callback) => {
     return setTimeout(() => {
       callback({ didTimeout: false, timeRemaining: () => {
@@ -1784,11 +1797,11 @@
     const h4 = hook;
     if (false) {
       return function(...args) {
-        const r5 = _(++i);
+        const r4 = _(++i);
         monitorCallCount(h4);
-        const start = performance.mark(`${h4.name}-start-${r5.current}`);
+        const start = performance.mark(`${h4.name}-start-${r4.current}`);
         const ret = h4(...args);
-        const end = performance.mark(`${h4.name}-end-${r5.current}`);
+        const end = performance.mark(`${h4.name}-end-${r4.current}`);
         performance.measure(h4.name, start.name, end.name);
         return ret;
       };
@@ -1797,7 +1810,7 @@
     }
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/dom-helpers/use-event-handler.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-event-handler.js
   var useGlobalHandler = monitored(function useGlobalHandler2(target, type, handler, options, mode) {
     mode ||= "grouped";
     useEnsureStability("useGlobalHandler", mode);
@@ -1859,11 +1872,11 @@
     }, [target, type, stableHandler]);
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/util/assert.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/util/assert.js
   function assertEmptyObject(_a) {
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/component-detail/dismissal/use-backdrop-dismiss.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/component-detail/dismissal/use-backdrop-dismiss.js
   var useBackdropDismiss = monitored(function useBackdropDismiss2({ backdropDismissParameters: { dismissBackdropActive: open, onDismissBackdrop: onCloseUnstable, ...void1 }, refElementPopupReturn: { getElement, ...void3 }, ...void2 }) {
     assertEmptyObject(void1);
     assertEmptyObject(void2);
@@ -1886,7 +1899,7 @@
     useGlobalHandler(window, "touchstart", open ? onBackdropClick : null, { capture: true });
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/util/event.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/util/event.js
   var EventDetail = Symbol("event-detail");
   function getEventDetail(e3) {
     return e3[EventDetail];
@@ -1898,7 +1911,7 @@
     return event;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/component-detail/dismissal/use-escape-dismiss.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/component-detail/dismissal/use-escape-dismiss.js
   var MagicWindowKey = "__preact-prop-helpers-escape-key-dismiss__";
   function getElementDepth(element) {
     let depth = 0;
@@ -1974,7 +1987,7 @@
     }, [open]);
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/component-detail/dismissal/use-lost-focus-dismiss.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/component-detail/dismissal/use-lost-focus-dismiss.js
   var useLostFocusDismiss = monitored(function useLostFocusDismiss2({ refElementPopupReturn: { getElement: getPopupElement, ...void3 }, refElementSourceReturn, lostFocusDismissParameters: { dismissLostFocusActive: open, onDismissLostFocus: onClose, ...void4 }, ...void1 }) {
     const { getElement: getSourceElement, ...void2 } = refElementSourceReturn ?? {};
     assertEmptyObject(void1);
@@ -1997,7 +2010,7 @@
     return { activeElementParameters: { onLastActiveElementChange } };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/dom-helpers/use-merged-children.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-merged-children.js
   var useMergedChildren = function useMergedChildren2(lhs, rhs) {
     if (lhs == null && rhs == null) {
       return void 0;
@@ -2010,12 +2023,12 @@
     }
   };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/dom-helpers/use-merged-classes.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-merged-classes.js
   var useMergedClasses = function useMergedClasses2(...classes) {
     let classesSet = /* @__PURE__ */ new Set();
-    for (let c5 of classes) {
-      if (typeof c5 == "string" && c5.trim())
-        classesSet.add(c5);
+    for (let c4 of classes) {
+      if (typeof c4 == "string" && c4.trim())
+        classesSet.add(c4);
     }
     if (classesSet.size) {
       return Array.from(classesSet).join(" ");
@@ -2024,7 +2037,7 @@
     }
   };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/dom-helpers/use-merged-refs.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-merged-refs.js
   function processRef(instance, ref) {
     if (typeof ref === "function") {
       ref(instance);
@@ -2055,7 +2068,7 @@
     }
   };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/dom-helpers/use-merged-styles.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-merged-styles.js
   function styleStringToObject(style) {
     return Object.fromEntries(style.split(";").map((statement) => statement.split(":")));
   }
@@ -2084,16 +2097,16 @@
     };
   };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/dom-helpers/use-merged-props.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-merged-props.js
   var log = console.warn;
-  var useMergedProps = monitored(function useMergedProps2(...allProps) {
+  var useMergedProps = function useMergedProps2(...allProps) {
     useEnsureStability("useMergedProps", allProps.length);
     let ret = {};
     for (let nextProps of allProps) {
       useMergedPropsHelper(ret, nextProps);
     }
     return ret;
-  });
+  };
   var knowns = /* @__PURE__ */ new Set(["children", "ref", "className", "class", "style"]);
   var mergeUnknown = function mergeUnknown2(key, lhsValue, rhsValue) {
     if (typeof lhsValue === "function" || typeof rhsValue === "function") {
@@ -2201,15 +2214,15 @@
     return isInput(node) && node.type === "hidden";
   };
   var isDetailsWithSummary = function isDetailsWithSummary2(node) {
-    var r5 = node.tagName === "DETAILS" && Array.prototype.slice.apply(node.children).some(function(child) {
+    var r4 = node.tagName === "DETAILS" && Array.prototype.slice.apply(node.children).some(function(child) {
       return child.tagName === "SUMMARY";
     });
-    return r5;
+    return r4;
   };
   var getCheckedRadio = function getCheckedRadio2(nodes, form) {
-    for (var i3 = 0; i3 < nodes.length; i3++) {
-      if (nodes[i3].checked && nodes[i3].form === form) {
-        return nodes[i3];
+    for (var i4 = 0; i4 < nodes.length; i4++) {
+      if (nodes[i4].checked && nodes[i4].form === form) {
+        return nodes[i4];
       }
     }
   };
@@ -2306,8 +2319,8 @@
       var parentNode = node.parentElement;
       while (parentNode) {
         if (parentNode.tagName === "FIELDSET" && parentNode.disabled) {
-          for (var i3 = 0; i3 < parentNode.children.length; i3++) {
-            var child = parentNode.children.item(i3);
+          for (var i4 = 0; i4 < parentNode.children.length; i4++) {
+            var child = parentNode.children.item(i4);
             if (child.tagName === "LEGEND") {
               return matches.call(parentNode, "fieldset[disabled] *") ? true : !child.contains(node);
             }
@@ -2357,7 +2370,7 @@
     return isNodeMatchingSelectorFocusable(options, node);
   };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/util/stack.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/util/stack.js
   function useStack() {
     if (false) {
       const stack = F2(generateStack, []);
@@ -2371,7 +2384,7 @@
     return "";
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/util/focus.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/util/focus.js
   function focus(e3) {
     if (false) {
       console.log(`Focus changed to ${(e3?.tagName || "").toLowerCase().padStart(6)}:`, e3);
@@ -2387,13 +2400,13 @@
     let node = walker.firstChild();
     let bestCandidateBefore = null;
     let bestCandidateAfter = null;
-    let w4 = false;
+    let w5 = false;
     while (node) {
       let pos = node.compareDocumentPosition(unmountingElement);
       if (pos & Node.DOCUMENT_POSITION_DISCONNECTED) {
-        if (!w4)
+        if (!w5)
           console.warn("Can't focus anything near a disconnected element");
-        w4 = true;
+        w5 = true;
       }
       if (pos & Node.DOCUMENT_POSITION_PRECEDING) {
         if (node instanceof Element) {
@@ -2414,7 +2427,7 @@
     return bestCandidateAfter ?? bestCandidateBefore ?? document2.body;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/timing/use-timeout.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/timing/use-timeout.js
   var useTimeout = monitored(function useTimeout2({ timeout, callback, triggerIndex }) {
     const stableCallback = useStableCallback(() => {
       startTimeRef.current = null;
@@ -2444,7 +2457,7 @@
     return { getElapsedTime, getRemainingTime };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/util/use-tag-props.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/util/use-tag-props.js
   function useTagProps(props, tag) {
     if (false) {
       const [id] = h3(() => ++idIndex);
@@ -2475,7 +2488,7 @@
     }
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/component-detail/keyboard-navigation/use-linear-navigation.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/component-detail/keyboard-navigation/use-linear-navigation.js
   var useLinearNavigation = function useLinearNavigation2({ linearNavigationParameters: { getLowestIndex, getHighestIndex, isValidForLinearNavigation, navigatePastEnd, navigatePastStart, onNavigateLinear, arrowKeyDirection, disableHomeEndKeys, pageNavigationSize, ...void4 }, rovingTabIndexReturn: { getTabbableIndex, setTabbableIndex, ...void5 }, paginatedChildrenParameters: { paginationMax, paginationMin, ...void2 }, rearrangeableChildrenReturn: { indexDemangler, indexMangler, ...void3 }, ...void1 }) {
     let getPaginatedRange = useStableGetter(paginationMax == null || paginationMin == null ? null : paginationMax - paginationMin);
     assertEmptyObject(void1);
@@ -2487,7 +2500,7 @@
     const navigateAbsolute = T2((requestedIndexMangled, searchDirection, e3, fromUserInteraction, mode) => {
       const highestChildIndex = getHighestIndex();
       const lowestChildIndex = getLowestIndex();
-      const original = getTabbableIndex() ?? 0;
+      const _original = getTabbableIndex() ?? 0;
       const targetDemangled = indexDemangler(requestedIndexMangled);
       const { status, valueDemangled } = tryNavigateToIndex({ isValid: isValidForLinearNavigation, lowestChildIndex, highestChildIndex, indexDemangler, indexMangler, searchDirection, targetDemangled });
       if (status == "past-end") {
@@ -2537,7 +2550,7 @@
       return navigateAbsolute(getHighestIndex(), 1, e3, fromUserInteraction, "single");
     });
     const navigateRelative2 = useStableCallback((e3, offset, fromUserInteraction, mode) => {
-      const highestChildIndex = getHighestIndex();
+      const _highestChildIndex = getHighestIndex();
       const searchDirection = Math.sign(offset) || 1;
       const original = getTabbableIndex() ?? 0;
       const targetMangled = indexMangler(original) + offset;
@@ -2653,7 +2666,7 @@
     }
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/preact-extensions/use-managed-children.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-managed-children.js
   var useManagedChildren = monitored(function useManagedChildren2(parentParameters) {
     const { managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange, onChildrenCountChange }, ...rest } = parentParameters;
     assertEmptyObject(rest);
@@ -2733,9 +2746,9 @@
       _arraySlice: T2(() => {
         let ret = managedChildrenArray.current.arr.slice();
         const max = getHighestIndex();
-        for (let i3 = 0; i3 <= max; ++i3) {
-          if (ret[i3] == null)
-            ret[i3] = { index: i3 };
+        for (let i4 = 0; i4 <= max; ++i4) {
+          if (ret[i4] == null)
+            ret[i4] = { index: i4 };
         }
         return ret;
       }, [])
@@ -2870,7 +2883,7 @@
     return { changeIndex, reevaluateClosestFit, getCurrentIndex };
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/preact-extensions/use-state.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-state.js
   var useState = function useState2(initialState) {
     const getStack = useStack();
     const [state, setStateP] = h3(initialState);
@@ -2903,7 +2916,7 @@
     return [state, setState.current, getState];
   };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/component-detail/keyboard-navigation/use-roving-tabindex.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/component-detail/keyboard-navigation/use-roving-tabindex.js
   var useRovingTabIndex = monitored(function useRovingTabIndex2({ managedChildrenReturn: { getChildren }, rovingTabIndexParameters: { focusSelfParent: focusSelfParentUnstable, untabbable, untabbableBehavior, initiallyTabbedIndex, onTabbableIndexChange }, refElementReturn: { getElement }, ...void1 }) {
     const focusSelfParent = useStableCallback(focusSelfParentUnstable);
     untabbableBehavior ||= "focus-parent";
@@ -2969,9 +2982,9 @@
     });
     const { changeIndex: changeTabbableIndex, getCurrentIndex: getTabbableIndex, reevaluateClosestFit } = useChildrenFlag({
       initialIndex: initiallyTabbedIndex ?? (untabbable ? null : 0),
-      onIndexChange: useStableCallback((n2, p4, r5) => {
+      onIndexChange: useStableCallback((n2, p4, r4) => {
         if (!(n2 == null && untabbable) && n2 != getLastNonNullIndex())
-          onTabbableIndexChange?.(n2, p4, r5);
+          onTabbableIndexChange?.(n2, p4, r4);
       }),
       getChildren,
       closestFit: true,
@@ -3082,22 +3095,7 @@
     };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/dom-helpers/use-text-content.js
-  var useTextContent = monitored(function useTextContent2({ refElementReturn: { getElement }, textContentParameters: { getText, onTextContentChange } }) {
-    const [getTextContent, setTextContent] = usePassiveState(onTextContentChange, returnNull, runImmediately);
-    p3(() => {
-      const element = getElement();
-      if (element) {
-        const textContent = getText(element);
-        if (textContent) {
-          setTextContent(textContent);
-        }
-      }
-    });
-    return { textContentReturn: { getTextContent } };
-  });
-
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/component-detail/keyboard-navigation/use-typeahead-navigation.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/component-detail/keyboard-navigation/use-typeahead-navigation.js
   var useTypeaheadNavigation = monitored(function useTypeaheadNavigation2({ typeaheadNavigationParameters: { collator, typeaheadTimeout, noTypeahead, isValidForTypeaheadNavigation, onNavigateTypeahead, ...void3 }, rovingTabIndexReturn: { getTabbableIndex: getIndex, setTabbableIndex: setIndex, ...void1 }, ...void2 }) {
     assertEmptyObject(void1);
     assertEmptyObject(void2);
@@ -3210,22 +3208,22 @@
               return;
             if (lowestUnsortedIndexAll == null || unsortedIndex < lowestUnsortedIndexAll) {
               lowestUnsortedIndexAll = unsortedIndex;
-              lowestSortedIndexAll = i3;
+              lowestSortedIndexAll = i4;
             }
             if ((lowestUnsortedIndexNext == null || unsortedIndex < lowestUnsortedIndexNext) && unsortedIndex > (getIndex() ?? -Infinity)) {
               lowestUnsortedIndexNext = unsortedIndex;
-              lowestSortedIndexNext = i3;
+              lowestSortedIndexNext = i4;
             }
           };
-          let i3 = sortedTypeaheadIndex;
-          while (i3 >= 0 && typeaheadComparator(currentTypeahead, sortedTypeaheadInfo.current[i3]) == 0) {
-            updateBestFit(sortedTypeaheadInfo.current[i3].unsortedIndex);
-            --i3;
+          let i4 = sortedTypeaheadIndex;
+          while (i4 >= 0 && typeaheadComparator(currentTypeahead, sortedTypeaheadInfo.current[i4]) == 0) {
+            updateBestFit(sortedTypeaheadInfo.current[i4].unsortedIndex);
+            --i4;
           }
-          i3 = sortedTypeaheadIndex;
-          while (i3 < sortedTypeaheadInfo.current.length && typeaheadComparator(currentTypeahead, sortedTypeaheadInfo.current[i3]) == 0) {
-            updateBestFit(sortedTypeaheadInfo.current[i3].unsortedIndex);
-            ++i3;
+          i4 = sortedTypeaheadIndex;
+          while (i4 < sortedTypeaheadInfo.current.length && typeaheadComparator(currentTypeahead, sortedTypeaheadInfo.current[i4]) == 0) {
+            updateBestFit(sortedTypeaheadInfo.current[i4].unsortedIndex);
+            ++i4;
           }
           let toSet = null;
           if (lowestUnsortedIndexNext !== null)
@@ -3240,38 +3238,35 @@
       }
     }
   });
-  var useTypeaheadNavigationChild = monitored(function useTypeaheadNavigationChild2({ info: { index, ...void1 }, textContentParameters: { getText, ...void5 }, context: { typeaheadNavigationContext: { sortedTypeaheadInfo, insertingComparator, excludeSpace, ...void2 } }, refElementReturn: { getElement, ...void3 }, ...void4 }) {
+  var useTypeaheadNavigationChild = monitored(function useTypeaheadNavigationChild2({
+    info: { index, ...void1 },
+    //textContentReturn: { getTextContent, ...void5 },
+    context: { typeaheadNavigationContext: { sortedTypeaheadInfo, insertingComparator, excludeSpace, ...void2 } },
+    ...void4
+  }) {
     assertEmptyObject(void1);
     assertEmptyObject(void2);
-    assertEmptyObject(void3);
     assertEmptyObject(void4);
-    assertEmptyObject(void5);
-    const { textContentReturn } = useTextContent({
-      refElementReturn: { getElement },
-      textContentParameters: {
-        getText,
-        onTextContentChange: T2((text) => {
-          if (text) {
-            const sortedIndex = binarySearch(sortedTypeaheadInfo, text, insertingComparator);
-            console.assert(sortedIndex < 0 || insertingComparator(sortedTypeaheadInfo[sortedIndex].text, { unsortedIndex: index, text }) == 0);
-            if (sortedIndex < 0) {
-              sortedTypeaheadInfo.splice(-sortedIndex - 1, 0, { text, unsortedIndex: index });
-            } else {
-              sortedTypeaheadInfo.splice(sortedIndex, 0, { text, unsortedIndex: index });
-            }
-            return () => {
-              const sortedIndex2 = binarySearch(sortedTypeaheadInfo, text, insertingComparator);
-              console.assert(sortedIndex2 < 0 || insertingComparator(sortedTypeaheadInfo[sortedIndex2].text, { unsortedIndex: index, text }) == 0);
-              if (sortedIndex2 >= 0) {
-                sortedTypeaheadInfo.splice(sortedIndex2, 1);
-              }
-            };
+    const onTextContentChange = T2((text) => {
+      if (text) {
+        const sortedIndex = binarySearch(sortedTypeaheadInfo, text, insertingComparator);
+        console.assert(sortedIndex < 0 || insertingComparator(sortedTypeaheadInfo[sortedIndex].text, { unsortedIndex: index, text }) == 0);
+        if (sortedIndex < 0) {
+          sortedTypeaheadInfo.splice(-sortedIndex - 1, 0, { text, unsortedIndex: index });
+        } else {
+          sortedTypeaheadInfo.splice(sortedIndex, 0, { text, unsortedIndex: index });
+        }
+        return () => {
+          const sortedIndex2 = binarySearch(sortedTypeaheadInfo, text, insertingComparator);
+          console.assert(sortedIndex2 < 0 || insertingComparator(sortedTypeaheadInfo[sortedIndex2].text, { unsortedIndex: index, text }) == 0);
+          if (sortedIndex2 >= 0) {
+            sortedTypeaheadInfo.splice(sortedIndex2, 1);
           }
-        }, [])
+        };
       }
-    });
+    }, []);
     return {
-      textContentReturn,
+      textContentParameters: { onTextContentChange },
       pressParameters: { excludeSpace }
     };
   });
@@ -3292,7 +3287,7 @@
     return -firstIndex - 1;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/component-detail/keyboard-navigation/use-list-navigation-partial.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/component-detail/keyboard-navigation/use-list-navigation-partial.js
   var useListNavigation = monitored(function useListNavigation2({ linearNavigationParameters, typeaheadNavigationParameters, rovingTabIndexParameters, managedChildrenReturn, refElementReturn, paginatedChildrenParameters, rearrangeableChildrenReturn, ...void1 }) {
     const { props: propsRTI, rovingTabIndexReturn, managedChildrenParameters, context: contextRovingTabIndex, ...void2 } = useRovingTabIndex({ managedChildrenReturn, rovingTabIndexParameters, refElementReturn });
     const { propsStable: propsStableTN, typeaheadNavigationReturn, context: contextTypeahead, ...void3 } = useTypeaheadNavigation({ rovingTabIndexReturn, typeaheadNavigationParameters });
@@ -3301,8 +3296,6 @@
     assertEmptyObject(void2);
     assertEmptyObject(void3);
     assertEmptyObject(void4);
-    const p4 = useMergedProps(propsStableTN, propsStableLN);
-    const propsStable = _(p4);
     return {
       managedChildrenParameters,
       rovingTabIndexReturn,
@@ -3315,9 +3308,9 @@
       props: useMergedProps(propsStableLN, propsStableTN, propsRTI)
     };
   });
-  var useListNavigationChild = monitored(function useListNavigationChild2({ info: { index, untabbable, ...void1 }, context, refElementReturn, textContentParameters, ...void2 }) {
+  var useListNavigationChild = monitored(function useListNavigationChild2({ info: { index, untabbable, ...void1 }, context, refElementReturn, ...void2 }) {
     const { props, ...rticr } = useRovingTabIndexChild({ context, info: { index, untabbable }, refElementReturn });
-    const { ...tncr } = useTypeaheadNavigationChild({ refElementReturn, textContentParameters, context, info: { index } });
+    const { ...tncr } = useTypeaheadNavigationChild({ context, info: { index } });
     assertEmptyObject(void1);
     assertEmptyObject(void2);
     return {
@@ -3327,7 +3320,7 @@
     };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/component-detail/keyboard-navigation/use-grid-navigation-partial.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/component-detail/keyboard-navigation/use-grid-navigation-partial.js
   var useGridNavigation = monitored(function useGridNavigation2({ gridNavigationParameters: { onTabbableColumnChange, initiallyTabbableColumn, ...void3 }, linearNavigationParameters, ...listNavigationParameters }) {
     const [getTabbableColumn, setTabbableColumn] = usePassiveState(onTabbableColumnChange, useStableCallback(() => {
       let t3 = initiallyTabbableColumn ?? 0;
@@ -3361,7 +3354,6 @@
   var useGridNavigationRow = monitored(function useGridNavigationRow2({
     // Stuff for the row as a child of the parent grid
     info: { index, untabbable, ...void3 },
-    textContentParameters,
     context: contextFromParent,
     // Stuff for the row as a parent of child cells
     linearNavigationParameters,
@@ -3381,7 +3373,7 @@
       if (contextFromParent.rovingTabIndexContext.getUntabbable()) {
         contextFromParent.rovingTabIndexContext.parentFocusSelf(true);
       } else {
-        let { ideal, actual } = getTabbableColumn();
+        let { ideal, actual: _actual } = getTabbableColumn();
         let index2 = ideal ?? 0;
         let child = getChildren().getAt(index2);
         let lowestIndex = getChildren().getLowestIndex();
@@ -3403,7 +3395,7 @@
       }
     }, []);
     const focusSelf = whenThisRowIsFocused;
-    const { props: propsLNC, info: { getLocallyTabbable, setLocallyTabbable, ...void2 }, hasCurrentFocusParameters, pressParameters, rovingTabIndexChildReturn, textContentReturn, ...void6 } = useListNavigationChild({ info: { index, untabbable }, refElementReturn, textContentParameters, context: contextFromParent });
+    const { props: propsLNC, info: { getLocallyTabbable, setLocallyTabbable, ...void2 }, hasCurrentFocusParameters, pressParameters, rovingTabIndexChildReturn, textContentParameters, ...void6 } = useListNavigationChild({ info: { index, untabbable }, refElementReturn, context: contextFromParent });
     const allChildCellsAreUntabbable = !rovingTabIndexChildReturn.tabbable;
     const { props: propsLN, context: contextULN, linearNavigationReturn, managedChildrenParameters, rovingTabIndexReturn, typeaheadNavigationReturn, ...void5 } = useListNavigation({
       managedChildrenReturn,
@@ -3415,9 +3407,9 @@
         focusSelfParent: whenThisRowIsFocused,
         untabbable: allChildCellsAreUntabbable || rowIsUntabbableAndSoAreCells,
         initiallyTabbedIndex,
-        onTabbableIndexChange: useStableCallback((v4, p4, r5) => {
-          setTabbableColumn({ ideal: v4, actual: v4 }, r5);
-          onTabbableIndexChange?.(v4, p4, r5);
+        onTabbableIndexChange: useStableCallback((v4, p4, r4) => {
+          setTabbableColumn({ ideal: v4, actual: v4 }, r4);
+          onTabbableIndexChange?.(v4, p4, r4);
         })
       },
       linearNavigationParameters: {
@@ -3462,19 +3454,18 @@
       hasCurrentFocusParameters,
       pressParameters,
       rovingTabIndexChildReturn,
-      textContentReturn,
+      textContentParameters,
       linearNavigationReturn,
       managedChildrenParameters,
       rovingTabIndexReturn,
       typeaheadNavigationReturn
     };
   });
-  var useGridNavigationCell = monitored(function useGridNavigationCell2({ context: { gridNavigationCellContext: { getRowIndex, setTabbableRow, getTabbableColumn: _getCurrentColumn, setTabbableColumn, setTabbableCell, ...void4 }, rovingTabIndexContext, typeaheadNavigationContext, ...void5 }, info: { index, untabbable, ...void7 }, refElementReturn, textContentParameters, gridNavigationCellParameters: { colSpan, ...void6 }, ...void1 }) {
+  var useGridNavigationCell = monitored(function useGridNavigationCell2({ context: { gridNavigationCellContext: { getRowIndex, setTabbableRow, getTabbableColumn: _getCurrentColumn, setTabbableColumn, setTabbableCell, ...void4 }, rovingTabIndexContext, typeaheadNavigationContext, ...void5 }, info: { index, untabbable, ...void7 }, refElementReturn, gridNavigationCellParameters: { colSpan, ...void6 }, ...void1 }) {
     colSpan ??= 1;
-    const { hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic1, ...void3 }, rovingTabIndexChildReturn, textContentReturn, pressParameters, props, info: infoLs, ...void2 } = useListNavigationChild({
+    const { hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic1, ...void3 }, rovingTabIndexChildReturn, textContentParameters, pressParameters, props, info: infoLs, ...void2 } = useListNavigationChild({
       info: { index, untabbable },
       context: { rovingTabIndexContext, typeaheadNavigationContext },
-      textContentParameters,
       refElementReturn
     });
     assertEmptyObject(void1);
@@ -3488,7 +3479,7 @@
       info: infoLs,
       props: useMergedProps(props, { onClick: (e3) => setTabbableColumn((prev) => ({ ideal: index, actual: prev?.actual ?? index }), e3) }),
       rovingTabIndexChildReturn,
-      textContentReturn,
+      textContentParameters,
       pressParameters,
       hasCurrentFocusParameters: {
         onCurrentFocusedInnerChanged: useStableCallback((focused, prev, e3) => {
@@ -3510,18 +3501,18 @@
     };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/component-detail/processed-children/use-paginated-children.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/component-detail/processed-children/use-paginated-children.js
   var usePaginatedChildren = monitored(function usePaginatedChildren2({ managedChildrenReturn: { getChildren }, rearrangeableChildrenReturn: { indexDemangler }, paginatedChildrenParameters: { paginationMax, paginationMin, childCount }, rovingTabIndexReturn: { getTabbableIndex, setTabbableIndex }, childrenHaveFocusReturn: { getAnyFocused } }) {
     const parentIsPaginated = paginationMin != null || paginationMax != null;
     const lastPagination = _({ paginationMax: null, paginationMin: null });
     const refreshPagination = T2((paginationMin2, paginationMax2) => {
       const childMax = getChildren().getHighestIndex() + 1;
       const childMin = getChildren().getLowestIndex();
-      for (let i3 = childMin; i3 <= childMax; ++i3) {
-        const visible = i3 >= (paginationMin2 ?? -Infinity) && i3 < (paginationMax2 ?? Infinity);
-        getChildren().getAt(indexDemangler(i3))?.setPaginationVisible(visible);
+      for (let i4 = childMin; i4 <= childMax; ++i4) {
+        const visible = i4 >= (paginationMin2 ?? -Infinity) && i4 < (paginationMax2 ?? Infinity);
+        getChildren().getAt(indexDemangler(i4))?.setPaginationVisible(visible);
         if (visible && (paginationMax2 != null || paginationMin2 != null))
-          getChildren().getAt(indexDemangler(i3))?.setChildCountIfPaginated(getChildren().getHighestIndex() + 1);
+          getChildren().getAt(indexDemangler(i4))?.setChildCountIfPaginated(getChildren().getHighestIndex() + 1);
       }
     }, [
       /* Must be empty */
@@ -3549,8 +3540,8 @@
     const pmax = _(paginationMax);
     pmin.current = paginationMin;
     pmax.current = paginationMax;
-    const getDefaultPaginationVisible = T2((i3) => {
-      return i3 >= (pmin.current ?? -Infinity) && i3 < (pmax.current ?? Infinity);
+    const getDefaultPaginationVisible = T2((i4) => {
+      return i4 >= (pmin.current ?? -Infinity) && i4 < (pmax.current ?? Infinity);
     }, []);
     const paginatedChildContext = F2(() => ({
       parentIsPaginated,
@@ -3565,8 +3556,8 @@
       if (paginationMax2 != null || paginationMin2 != null) {
         const min = paginationMin2 ?? 0;
         const max = paginationMax2 ?? count;
-        for (let i3 = min; i3 < max; ++i3) {
-          getChildren().getAt(i3)?.setChildCountIfPaginated(count);
+        for (let i4 = min; i4 < max; ++i4) {
+          getChildren().getAt(i4)?.setChildCountIfPaginated(count);
         }
       }
     }, [childCount]);
@@ -3592,13 +3583,13 @@
     };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/preact-extensions/use-force-update.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-force-update.js
   var useForceUpdate = monitored(function useForceUpdate2() {
     const [, set] = h3(0);
-    return _(() => set((i3) => ++i3)).current;
+    return _(() => set((i4) => ++i4)).current;
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/component-detail/processed-children/use-rearrangeable-children.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/component-detail/processed-children/use-rearrangeable-children.js
   function useCreateProcessedChildrenContext() {
     const sortRef = _(null);
     const shuffleRef = _(null);
@@ -3606,14 +3597,14 @@
     const rearrangeRef = _(null);
     const indexManglerRef = _(null);
     const indexDemanglerRef = _(null);
-    const indexMangler = useStableCallback((i3) => {
-      return (indexManglerRef.current ?? identity_default)(i3);
+    const indexMangler = useStableCallback((i4) => {
+      return (indexManglerRef.current ?? identity_default)(i4);
     }, []);
-    const indexDemangler = useStableCallback((i3) => {
-      return (indexDemanglerRef.current ?? identity_default)(i3);
+    const indexDemangler = useStableCallback((i4) => {
+      return (indexDemanglerRef.current ?? identity_default)(i4);
     }, []);
-    const sort = useStableCallback((i3) => {
-      return (sortRef.current ?? identity_default)(i3);
+    const sort = useStableCallback((i4) => {
+      return (sortRef.current ?? identity_default)(i4);
     }, []);
     const shuffle2 = useStableCallback(() => {
       return (shuffleRef.current ?? identity_default)();
@@ -3752,8 +3743,12 @@
     }
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/component-detail/processed-children/use-staggered-children.js
-  var useStaggeredChildren = monitored(function useStaggeredChildren2({ managedChildrenReturn: { getChildren }, staggeredChildrenParameters: { staggered, childCount }, refElementReturn: { getElement } }) {
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/component-detail/processed-children/use-staggered-children.js
+  var useStaggeredChildren = monitored(function useStaggeredChildren2({
+    managedChildrenReturn: { getChildren },
+    staggeredChildrenParameters: { staggered, childCount }
+    //refElementReturn: { getElement }
+  }) {
     const [currentlyStaggering, setCurrentlyStaggering] = useState(staggered);
     const getTargetStaggerIndex = useStableGetter((childCount || 0) - 1);
     const timeoutHandle = _(-1);
@@ -3789,8 +3784,8 @@
       }
       setCurrentlyStaggering(newIndex < (getTargetStaggerIndex() ?? 0));
       queueMicrotask(() => {
-        for (let i3 = (prevIndex ?? 0) - 1; i3 <= newIndex; ++i3) {
-          getChildren().getAt(i3)?.setStaggeredVisible(true);
+        for (let i4 = (prevIndex ?? 0) - 1; i4 <= newIndex; ++i4) {
+          getChildren().getAt(i4)?.setStaggeredVisible(true);
         }
       });
       resetEmergencyTimeout();
@@ -3807,22 +3802,20 @@
           1 + Math.max(prevIndex ?? 0, justMountedChildIndex)
           // Go one higher than the child that just mounted itself or any previously mounted child (TODO: Is that last bit working as intended?)
         );
-        let s5 = 0;
         while (next < (getChildCount() || 0) && getChildren().getAt(next)?.getStaggeredVisible()) {
           ++next;
-          ++s5;
         }
         return next;
       });
     }, []);
     const s4 = _(parentIsStaggered);
     s4.current = parentIsStaggered;
-    const getDefaultStaggeredVisible = T2((i3) => {
+    const getDefaultStaggeredVisible = T2((i4) => {
       if (s4.current) {
         const staggerIndex = getDisplayedStaggerIndex();
         if (staggerIndex == null)
           return false;
-        return i3 < staggerIndex;
+        return i4 < staggerIndex;
       } else {
         return true;
       }
@@ -3841,7 +3834,6 @@
       setElementToIndexMap
     }), [parentIsStaggered]);
     p3(() => {
-      const element = getElement();
       const io = intersectionObserver.current = new IntersectionObserver((entries) => {
         for (let entry of entries) {
           if (entry.isIntersecting) {
@@ -3868,7 +3860,7 @@
   }) {
     const [staggeredVisible, setStaggeredVisible, getStaggeredVisible] = useState(getDefaultStaggeredVisible(index));
     const becauseScreen = _(false);
-    const [getOnScreen, setOnScreen] = usePassiveState(useStableCallback((next, prev, reason) => {
+    const [_getOnScreen, _setOnScreen] = usePassiveState(useStableCallback((next, _prev, _reason) => {
       if (staggeredVisible)
         return;
       if (next) {
@@ -3907,7 +3899,7 @@
     };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/component-detail/processed-children/use-processed-children.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/component-detail/processed-children/use-processed-children.js
   var useProcessedChildren = monitored(function useProcessedChildren2({ rearrangeableChildrenParameters: { onRearranged, children: childrenUnsorted, ...rearrangeableChildrenParameters }, paginatedChildrenParameters, staggeredChildrenParameters, context, managedChildrenParameters }) {
     const childCount = childrenUnsorted.length;
     const { paginationMax, paginationMin } = paginatedChildrenParameters;
@@ -3934,8 +3926,8 @@
     });
     const { context: { staggeredChildContext }, staggeredChildrenReturn } = useStaggeredChildren({
       managedChildrenReturn: { getChildren: useStableCallback(() => managedChildContext.getChildren()) },
-      staggeredChildrenParameters: { staggered, childCount },
-      refElementReturn: { getElement: context.processedChildrenContext.getElement }
+      staggeredChildrenParameters: { staggered, childCount }
+      //refElementReturn: { getElement: context.processedChildrenContext.getElement }
     });
     return {
       rearrangeableChildrenReturn,
@@ -3973,7 +3965,7 @@
     };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/component-detail/selection/use-multi-selection.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/component-detail/selection/use-multi-selection.js
   function useMultiSelection({ multiSelectionParameters: { onSelectionChange, multiSelectionAriaPropName, multiSelectionMode, ...void3 }, managedChildrenReturn: { getChildren, ...void1 }, childrenHaveFocusReturn: { getAnyFocused, ...void4 }, ...void2 }) {
     const selectedIndices = _(/* @__PURE__ */ new Set());
     const unselectedIndices = _(/* @__PURE__ */ new Set());
@@ -4048,7 +4040,7 @@
       }
       startOfShiftSelect.current = originalEnd;
     });
-    const onCompositeFocusChange = useStableCallback((anyFocused, prevAnyFocused, event) => {
+    const onCompositeFocusChange = useStableCallback((anyFocused, _prevAnyFocused, _event) => {
       if (!anyFocused) {
         ctrlKeyHeld.current = shiftKeyHeld.current = false;
       }
@@ -4186,11 +4178,11 @@
     };
   }
   function useMultiSelectionChildDeclarative({ multiSelectionChildDeclarativeParameters: { onMultiSelectedChange, multiSelected, ...void3 }, multiSelectionChildReturn: { changeMultiSelected, ...void2 }, ...void1 }) {
-    let s4 = multiSelected || false;
     let reasonRef = _(void 0);
     p3(() => {
-      changeMultiSelected(reasonRef.current, s4);
-    }, [s4]);
+      if (multiSelected != null)
+        changeMultiSelected(reasonRef.current, multiSelected);
+    }, [multiSelected]);
     const omsc = useStableCallback((e3) => {
       reasonRef.current = e3;
       return onMultiSelectedChange?.(e3);
@@ -4209,7 +4201,7 @@
     };
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/component-detail/selection/use-single-selection.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/component-detail/selection/use-single-selection.js
   var useSingleSelection = monitored(function useSingleSelection2({ managedChildrenReturn: { getChildren, ...void1 }, rovingTabIndexReturn: { setTabbableIndex, ...void2 }, singleSelectionParameters: { onSingleSelectedIndexChange: onSelectedIndexChange_U, initiallySingleSelectedIndex, singleSelectionAriaPropName, singleSelectionMode, ...void3 }, ...void4 }) {
     assertEmptyObject(void1);
     assertEmptyObject(void2);
@@ -4327,7 +4319,7 @@
     return { singleSelectionParameters: { onSingleSelectedIndexChange: osic } };
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/component-detail/selection/use-selection.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/component-detail/selection/use-selection.js
   function useSelection({ managedChildrenReturn, multiSelectionParameters, childrenHaveFocusReturn, rovingTabIndexReturn, singleSelectionParameters }) {
     const { childrenHaveFocusParameters: { onCompositeFocusChange: ocfc1, ...void3 }, context: contextSS, singleSelectionReturn, ...void1 } = useSingleSelection({ managedChildrenReturn, rovingTabIndexReturn, singleSelectionParameters });
     const { childrenHaveFocusParameters: { onCompositeFocusChange: ocfc2, ...void4 }, context: contextMS, multiSelectionReturn, propsStable, ...void2 } = useMultiSelection({ managedChildrenReturn, multiSelectionParameters, childrenHaveFocusReturn });
@@ -4337,10 +4329,7 @@
     assertEmptyObject(void4);
     return {
       propsStable,
-      childrenHaveFocusParameters: { onCompositeFocusChange: useStableCallback((...a4) => {
-        ocfc1(...a4);
-        ocfc2(...a4);
-      }) },
+      childrenHaveFocusParameters: { onCompositeFocusChange: useStableMergedCallback(ocfc1, ocfc2) },
       context: useMemoObject({ ...contextSS, ...contextMS }),
       multiSelectionReturn,
       singleSelectionReturn
@@ -4355,10 +4344,7 @@
     assertEmptyObject(void4);
     assertEmptyObject(void5);
     return {
-      hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: useStableCallback((...a4) => {
-        ocfic1(...a4);
-        ocfic2(...a4);
-      }) },
+      hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: useStableMergedCallback(ocfic1, ocfic2) },
       info: {
         getMultiSelected,
         setSelectedFromParent,
@@ -4368,10 +4354,7 @@
         getMultiSelectionDisabled
       },
       multiSelectionChildReturn,
-      pressParameters: { onPressSync: useStableCallback((...a4) => {
-        opc1(...a4);
-        opc2(...a4);
-      }) },
+      pressParameters: { onPressSync: useStableMergedCallback(opc1, opc2) },
       props: useMergedProps(p1, p22),
       singleSelectionChildReturn
     };
@@ -4383,8 +4366,8 @@
     return useMultiSelectionChildDeclarative(args);
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/dom-helpers/use-ref-element.js
-  var useRefElement = monitored(function useRefElement2(args) {
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-ref-element.js
+  var useRefElement = function useRefElement2(args) {
     const nonElementWarn = _(false);
     if (nonElementWarn.current) {
       nonElementWarn.current = false;
@@ -4412,7 +4395,7 @@
         getElement
       }
     };
-  });
+  };
 
   // ../node_modules/.pnpm/github.com+mwszekely+map-and-set-extensions@ff68a36e0f4a700fd6612ee30cca86855891f623/node_modules/map-and-set-extensions/dist/es/index.js
   var _BimapExclusive_impl;
@@ -4444,7 +4427,7 @@
     }
   };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/observers/use-active-element.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/observers/use-active-element.js
   var activeElementUpdaters = /* @__PURE__ */ new Map();
   var lastActiveElementUpdaters = /* @__PURE__ */ new Map();
   var windowFocusedUpdaters = /* @__PURE__ */ new Map();
@@ -4519,7 +4502,7 @@
     return { activeElementReturn: { getActiveElement, getLastActiveElement, getWindowFocused } };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/component-detail/use-dismiss.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/component-detail/use-dismiss.js
   var useDismiss = monitored(function useDismiss2({ dismissParameters: { dismissActive, onDismiss, ...void3 }, backdropDismissParameters: { dismissBackdropActive, onDismissBackdrop, ...void6 }, lostFocusDismissParameters: { dismissLostFocusActive, onDismissLostFocus, ...void7 }, escapeDismissParameters: { dismissEscapeActive, onDismissEscape, parentDepth, ...void2 }, activeElementParameters: { getDocument: getDocument2, onActiveElementChange, onLastActiveElementChange: olaec1, onWindowFocusedChange, ...void5 }, ...void4 }) {
     const { refElementReturn: refElementSourceReturn, propsStable: propsStableSource } = useRefElement({ refElementParameters: {} });
     const { refElementReturn: refElementPopupReturn, propsStable: propsStablePopup } = useRefElement({ refElementParameters: {} });
@@ -4558,10 +4541,7 @@
     });
     const { activeElementReturn: { getActiveElement: _getActiveElement, getLastActiveElement: _getLastActiveElement, getWindowFocused: _getWindowFocused } } = useActiveElement({
       activeElementParameters: {
-        onLastActiveElementChange: useStableCallback((a4, b4, r5) => {
-          olaec2?.(a4, b4, r5);
-          olaec1?.(a4, b4, r5);
-        }),
+        onLastActiveElementChange: useStableMergedCallback(olaec2, olaec1),
         onActiveElementChange,
         onWindowFocusedChange,
         getDocument: getDocument2
@@ -4626,12 +4606,12 @@
         this[_blockingElements].push(element);
       }
       remove(element) {
-        const i3 = this[_blockingElements].indexOf(element);
-        if (i3 === -1) {
+        const i4 = this[_blockingElements].indexOf(element);
+        if (i4 === -1) {
           return false;
         }
-        this[_blockingElements].splice(i3, 1);
-        if (i3 === this[_blockingElements].length) {
+        this[_blockingElements].splice(i4, 1);
+        if (i4 === this[_blockingElements].length) {
           this[_topChanged](this.top);
         }
         return true;
@@ -4667,16 +4647,16 @@
           this[_inertSiblings](newParents, toSkip, toKeepInert);
           return;
         }
-        let i3 = oldParents.length - 1;
+        let i4 = oldParents.length - 1;
         let j4 = newParents.length - 1;
-        while (i3 > 0 && j4 > 0 && oldParents[i3] === newParents[j4]) {
-          i3--;
+        while (i4 > 0 && j4 > 0 && oldParents[i4] === newParents[j4]) {
+          i4--;
           j4--;
         }
-        if (oldParents[i3] !== newParents[j4]) {
-          this[_swapInertedSibling](oldParents[i3], newParents[j4]);
+        if (oldParents[i4] !== newParents[j4]) {
+          this[_swapInertedSibling](oldParents[i4], newParents[j4]);
         }
-        i3 > 0 && this[_restoreInertedSiblings](oldParents.slice(0, i3));
+        i4 > 0 && this[_restoreInertedSiblings](oldParents.slice(0, i4));
         j4 > 0 && this[_inertSiblings](newParents.slice(0, j4), toSkip, null);
       }
       /**
@@ -4769,8 +4749,8 @@
           const idx = target === document.body ? parents.length : parents.indexOf(target);
           const inertedChild = parents[idx - 1];
           const inertedSiblings = inertedChild[_siblingsToRestore];
-          for (let i3 = 0; i3 < mutation.removedNodes.length; i3++) {
-            const sibling = mutation.removedNodes[i3];
+          for (let i4 = 0; i4 < mutation.removedNodes.length; i4++) {
+            const sibling = mutation.removedNodes[i4];
             if (sibling === inertedChild) {
               console.info("Detected removal of the top Blocking Element.");
               this.pop();
@@ -4781,8 +4761,8 @@
               inertedSiblings.delete(sibling);
             }
           }
-          for (let i3 = 0; i3 < mutation.addedNodes.length; i3++) {
-            const sibling = mutation.addedNodes[i3];
+          for (let i4 = 0; i4 < mutation.addedNodes.length; i4++) {
+            const sibling = mutation.addedNodes[i4];
             if (!this[_isInertable](sibling)) {
               continue;
             }
@@ -4833,13 +4813,13 @@
           return null;
         }
         const result = /* @__PURE__ */ new Set();
-        let i3;
+        let i4;
         let j4;
         let nodes;
         const slots = shadowRoot.querySelectorAll("slot");
         if (slots.length && slots[0].assignedNodes) {
-          for (i3 = 0; i3 < slots.length; i3++) {
-            nodes = slots[i3].assignedNodes({
+          for (i4 = 0; i4 < slots.length; i4++) {
+            nodes = slots[i4].assignedNodes({
               flatten: true
             });
             for (j4 = 0; j4 < nodes.length; j4++) {
@@ -4858,8 +4838,8 @@
   // ../node_modules/.pnpm/wicg-inert@3.1.2/node_modules/wicg-inert/dist/inert.esm.js
   var _createClass = function() {
     function defineProperties(target, props) {
-      for (var i3 = 0; i3 < props.length; i3++) {
-        var descriptor = props[i3];
+      for (var i4 = 0; i4 < props.length; i4++) {
+        var descriptor = props[i4];
         descriptor.enumerable = descriptor.enumerable || false;
         descriptor.configurable = true;
         if ("value" in descriptor)
@@ -5407,8 +5387,8 @@
             element
           );
           var distributedNodes = content.getDistributedNodes ? content.getDistributedNodes() : [];
-          for (var i3 = 0; i3 < distributedNodes.length; i3++) {
-            composedTreeWalk(distributedNodes[i3], callback, shadowRootAncestor);
+          for (var i4 = 0; i4 < distributedNodes.length; i4++) {
+            composedTreeWalk(distributedNodes[i4], callback, shadowRootAncestor);
           }
           return;
         }
@@ -5456,14 +5436,14 @@
   })();
 
   // ../node_modules/.pnpm/clsx@2.0.0/node_modules/clsx/dist/clsx.mjs
-  function r4(e3) {
+  function r3(e3) {
     var t3, f4, n2 = "";
     if ("string" == typeof e3 || "number" == typeof e3)
       n2 += e3;
     else if ("object" == typeof e3)
       if (Array.isArray(e3))
         for (t3 = 0; t3 < e3.length; t3++)
-          e3[t3] && (f4 = r4(e3[t3])) && (n2 && (n2 += " "), n2 += f4);
+          e3[t3] && (f4 = r3(e3[t3])) && (n2 && (n2 += " "), n2 += f4);
       else
         for (t3 in e3)
           e3[t3] && (n2 && (n2 += " "), n2 += t3);
@@ -5471,11 +5451,11 @@
   }
   function clsx() {
     for (var e3, t3, f4 = 0, n2 = ""; f4 < arguments.length; )
-      (e3 = arguments[f4++]) && (t3 = r4(e3)) && (n2 && (n2 += " "), n2 += t3);
+      (e3 = arguments[f4++]) && (t3 = r3(e3)) && (n2 && (n2 += " "), n2 += t3);
     return n2;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/dom-helpers/use-document-class.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-document-class.js
   function getDocument(element) {
     return element?.ownerDocument ?? document ?? window.document ?? globalThis.document;
   }
@@ -5492,11 +5472,14 @@
     }, [className, active, element]);
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/dom-helpers/use-blocking-element.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-blocking-element.js
   function blockingElements() {
     return getDocument().$blockingElements;
   }
   var useBlockingElement = monitored(function useBlockingElement2({ activeElementParameters: { getDocument: getDocument2, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, ...void3 }, blockingElementParameters: { enabled, getTarget, ...void1 }, ...void2 }) {
+    assertEmptyObject(void1);
+    assertEmptyObject(void2);
+    assertEmptyObject(void3);
     const stableGetTarget = useStableCallback(getTarget);
     useActiveElement({
       activeElementParameters: {
@@ -5534,7 +5517,7 @@
     return { getTop, getLastActiveWhenClosed, getLastActiveWhenOpen };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/component-detail/use-focus-trap.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/component-detail/use-focus-trap.js
   var useFocusTrap = monitored(function useFocusTrap2({ focusTrapParameters: { onlyMoveFocus, trapActive, focusPopup: focusSelfUnstable, focusOpener: focusOpenerUnstable }, activeElementParameters, refElementReturn }) {
     const focusSelf = useStableCallback(focusSelfUnstable);
     const focusOpener = useStableCallback(focusOpenerUnstable);
@@ -5585,7 +5568,7 @@
     return firstFocusable;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/component-detail/use-grid-navigation-selection.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/component-detail/use-grid-navigation-selection.js
   var useGridNavigationSelection = monitored(function useGridNavigationSelection2({ gridNavigationParameters, linearNavigationParameters, rovingTabIndexParameters, managedChildrenReturn, typeaheadNavigationParameters, singleSelectionParameters, multiSelectionParameters, refElementReturn, paginatedChildrenParameters, rearrangeableChildrenReturn, childrenHaveFocusReturn, ...void2 }) {
     const { context: { gridNavigationRowContext, rovingTabIndexContext, typeaheadNavigationContext }, linearNavigationReturn, managedChildrenParameters, props, rovingTabIndexReturn, typeaheadNavigationReturn } = useGridNavigation({
       gridNavigationParameters,
@@ -5624,9 +5607,9 @@
       typeaheadNavigationReturn
     };
   });
-  var useGridNavigationSelectionRow = monitored(function useGridNavigationSelectionRow2({ info: mcp1, linearNavigationParameters, managedChildrenReturn, refElementReturn, rovingTabIndexParameters, textContentParameters, typeaheadNavigationParameters, context, singleSelectionChildParameters, multiSelectionChildParameters, ...void1 }) {
+  var useGridNavigationSelectionRow = monitored(function useGridNavigationSelectionRow2({ info: mcp1, linearNavigationParameters, managedChildrenReturn, refElementReturn, rovingTabIndexParameters, typeaheadNavigationParameters, context, singleSelectionChildParameters, multiSelectionChildParameters, ...void1 }) {
     const { hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic1, ...void6 }, info: { getSingleSelected, setLocalSingleSelected, singleSelected, getMultiSelected, setSelectedFromParent, getMultiSelectionDisabled, ...void8 }, props: propsSelection, singleSelectionChildReturn, multiSelectionChildReturn, pressParameters: { onPressSync, ...void4 }, ...void2 } = useSelectionChild({ info: mcp1, context, singleSelectionChildParameters, multiSelectionChildParameters });
-    const { hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic2, ...void7 }, info: { focusSelf, getLocallyTabbable, setLocallyTabbable, ...void9 }, props: propsGridNavigation, linearNavigationReturn, managedChildrenParameters, pressParameters: { excludeSpace, ...void5 }, rovingTabIndexChildReturn, rovingTabIndexReturn, textContentReturn, typeaheadNavigationReturn, context: contextGridNavigation, ...void3 } = useGridNavigationRow({ context, linearNavigationParameters, info: mcp1, managedChildrenReturn, refElementReturn, rovingTabIndexParameters, textContentParameters, typeaheadNavigationParameters });
+    const { hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic2, ...void7 }, info: { focusSelf, getLocallyTabbable, setLocallyTabbable, ...void9 }, props: propsGridNavigation, linearNavigationReturn, managedChildrenParameters, pressParameters: { excludeSpace, ...void5 }, rovingTabIndexChildReturn, rovingTabIndexReturn, textContentParameters, typeaheadNavigationReturn, context: contextGridNavigation, ...void3 } = useGridNavigationRow({ context, linearNavigationParameters, info: mcp1, managedChildrenReturn, refElementReturn, rovingTabIndexParameters, typeaheadNavigationParameters });
     assertEmptyObject(void1);
     assertEmptyObject(void2);
     assertEmptyObject(void3);
@@ -5652,16 +5635,13 @@
       },
       managedChildrenParameters,
       pressParameters: { onPressSync, excludeSpace },
-      hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: useStableCallback((hasFocus, hadFocus, reason) => {
-        ocfic1?.(hasFocus, hadFocus, reason);
-        ocfic2?.(hasFocus, hadFocus, reason);
-      }) },
+      hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: useStableMergedCallback(ocfic1, ocfic2) },
       props: useMergedProps(propsGridNavigation, propsSelection),
       rovingTabIndexChildReturn,
       rovingTabIndexReturn,
       singleSelectionChildReturn,
       multiSelectionChildReturn,
-      textContentReturn,
+      textContentParameters,
       typeaheadNavigationReturn
     };
   });
@@ -5669,7 +5649,7 @@
     return useGridNavigationCell(p4);
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/component-detail/use-list-navigation-selection.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/component-detail/use-list-navigation-selection.js
   var useListNavigationSelection = monitored(function useListNavigationSelection2({ linearNavigationParameters, rovingTabIndexParameters, typeaheadNavigationParameters, singleSelectionParameters, multiSelectionParameters, managedChildrenReturn, refElementReturn, paginatedChildrenParameters, rearrangeableChildrenReturn, childrenHaveFocusReturn, ...void3 }) {
     const { context: contextSS, propsStable, ...retSS } = useSelection({
       childrenHaveFocusReturn,
@@ -5701,18 +5681,17 @@
       props: useMergedProps(props, propsStable)
     };
   });
-  var useListNavigationSelectionChild = monitored(function useListNavigationSelectionChild2({ info: { index, untabbable, ...void2 }, context, refElementReturn, textContentParameters, singleSelectionChildParameters, multiSelectionChildParameters, ...void1 }) {
+  var useListNavigationSelectionChild = monitored(function useListNavigationSelectionChild2({ info: { index, untabbable, ...void2 }, context, refElementReturn, singleSelectionChildParameters, multiSelectionChildParameters, ...void1 }) {
     const { hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic2, ...void3 }, info: infoSS, multiSelectionChildReturn, singleSelectionChildReturn, props: propsSS, pressParameters: { onPressSync }, ...void9 } = useSelectionChild({
       info: { index, untabbable },
       context,
       multiSelectionChildParameters,
       singleSelectionChildParameters
     });
-    const { hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic1, ...void6 }, pressParameters: { excludeSpace }, rovingTabIndexChildReturn, textContentReturn, props: propsLN, info: infoLN, ...void8 } = useListNavigationChild({
+    const { hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic1, ...void6 }, pressParameters: { excludeSpace }, rovingTabIndexChildReturn, textContentParameters, props: propsLN, info: infoLN, ...void8 } = useListNavigationChild({
       info: { index, untabbable },
       context,
-      refElementReturn,
-      textContentParameters
+      refElementReturn
     });
     assertEmptyObject(void1);
     assertEmptyObject(void2);
@@ -5721,24 +5700,34 @@
     assertEmptyObject(void8);
     assertEmptyObject(void9);
     return {
-      hasCurrentFocusParameters: {
-        onCurrentFocusedInnerChanged: useStableCallback((focused, previouslyFocused, e3) => {
-          ocfic1?.(focused, previouslyFocused, e3);
-          ocfic2?.(focused, previouslyFocused, e3);
-        })
-      },
+      hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: useStableMergedCallback(ocfic1, ocfic2) },
       pressParameters: { onPressSync, excludeSpace },
       info: { ...infoSS, ...infoLN },
       rovingTabIndexChildReturn,
       multiSelectionChildReturn,
       singleSelectionChildReturn,
-      textContentReturn,
+      textContentParameters,
       propsChild: propsSS,
       propsTabbable: propsLN
     };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/observers/use-children-have-focus.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-text-content.js
+  var useTextContent = function useTextContent2({ refElementReturn: { getElement }, textContentParameters: { getText, onTextContentChange } }) {
+    const [getTextContent, setTextContent] = usePassiveState(onTextContentChange, returnNull, runImmediately);
+    p3(() => {
+      const element = getElement();
+      if (element) {
+        const textContent = getText(element);
+        if (textContent) {
+          setTextContent(textContent);
+        }
+      }
+    });
+    return { textContentReturn: { getTextContent } };
+  };
+
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/observers/use-children-have-focus.js
   var useChildrenHaveFocus = monitored(function useChildrenHaveFocus2(args) {
     const { childrenHaveFocusParameters: { onCompositeFocusChange } } = args;
     const [getAnyFocused, setAnyFocused] = usePassiveState(onCompositeFocusChange, returnFalse, runImmediately);
@@ -5765,7 +5754,7 @@
     };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/observers/use-has-current-focus.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/observers/use-has-current-focus.js
   var useHasCurrentFocus = monitored(function useHasCurrentFocus2(args) {
     const { hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged }, refElementReturn: { getElement } } = args;
     useEnsureStability("useHasCurrentFocus", onCurrentFocusedChanged, onCurrentFocusedInnerChanged, getElement);
@@ -5798,14 +5787,14 @@
     };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/component-use/use-grid-navigation-complete.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/component-use/use-grid-navigation-complete.js
   var useCompleteGridNavigation = monitored(function useCompleteGridNavigation2({ gridNavigationParameters, linearNavigationParameters, rovingTabIndexParameters, singleSelectionParameters, multiSelectionParameters, typeaheadNavigationParameters, paginatedChildrenParameters, refElementParameters, ...void1 }) {
     assertEmptyObject(void1);
     const getChildren = T2(() => managedChildrenReturn.getChildren(), []);
     const getLowestChildIndex = T2(() => getChildren().getLowestIndex(), []);
     const getHighestChildIndex = T2(() => getChildren().getHighestIndex(), []);
-    const isValidForNavigation = T2((i3) => {
-      const child = getChildren().getAt(i3);
+    const isValidForNavigation = T2((i4) => {
+      const child = getChildren().getAt(i4);
       if (child == null)
         return false;
       if (child.untabbable)
@@ -5870,7 +5859,7 @@
       rearrangeableChildrenParameters,
       staggeredChildrenParameters,
       managedChildrenParameters,
-      refElementReturn: context.processedChildrenContext,
+      //refElementReturn: context.processedChildrenContext,
       context
     });
     return {
@@ -5880,12 +5869,12 @@
       staggeredChildrenReturn
     };
   });
-  var useCompleteGridNavigationRow = monitored(function useCompleteGridNavigationRow2({ info: { index, untabbable, ...customUserInfo }, context: contextIncomingForRowAsChildOfTable, textContentParameters, linearNavigationParameters, rovingTabIndexParameters, typeaheadNavigationParameters, hasCurrentFocusParameters: { onCurrentFocusedChanged: ocfc1, onCurrentFocusedInnerChanged: ocfic3, ...void5 }, singleSelectionChildParameters, multiSelectionChildParameters, ...void1 }) {
+  var useCompleteGridNavigationRow = monitored(function useCompleteGridNavigationRow2({ info: { index, untabbable, ...customUserInfo }, context: contextIncomingForRowAsChildOfTable, textContentParameters: { getText, onTextContentChange: otcc1 }, linearNavigationParameters, rovingTabIndexParameters, typeaheadNavigationParameters, hasCurrentFocusParameters: { onCurrentFocusedChanged: ocfc1, onCurrentFocusedInnerChanged: ocfic3, ...void5 }, singleSelectionChildParameters, multiSelectionChildParameters, ...void1 }) {
     const getChildren = T2(() => managedChildrenReturn.getChildren(), []);
     const getHighestChildIndex = T2(() => getChildren().getHighestIndex(), []);
     const getLowestChildIndex = T2(() => getChildren().getLowestIndex(), []);
-    const isValidForNavigation = T2((i3) => {
-      const child = getChildren().getAt(i3);
+    const isValidForNavigation = T2((i4) => {
+      const child = getChildren().getAt(i4);
       if (child == null)
         return false;
       if (child.untabbable)
@@ -5901,11 +5890,12 @@
       refElementReturn,
       context: contextIncomingForRowAsChildOfTable,
       info: { index, untabbable },
-      textContentParameters,
+      //textContentReturn: { getTextContent: useStableCallback(() => textContentReturn.getTextContent()) },
       singleSelectionChildParameters,
       multiSelectionChildParameters
     };
-    const { linearNavigationReturn, managedChildrenParameters, pressParameters, rovingTabIndexChildReturn, rovingTabIndexReturn, singleSelectionChildReturn, multiSelectionChildReturn, textContentReturn, typeaheadNavigationReturn, context: contextGNR, info: infoRowReturn, props: p32, hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic1, ...void3 }, ...void2 } = useGridNavigationSelectionRow(parameters);
+    const { linearNavigationReturn, managedChildrenParameters, pressParameters, rovingTabIndexChildReturn, rovingTabIndexReturn, singleSelectionChildReturn, multiSelectionChildReturn, textContentParameters: { onTextContentChange: otcc2 }, typeaheadNavigationReturn, context: contextGNR, info: infoRowReturn, props: p32, hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic1, ...void3 }, ...void2 } = useGridNavigationSelectionRow(parameters);
+    const { textContentReturn, ...void7 } = useTextContent({ refElementReturn, textContentParameters: { getText, onTextContentChange: useStableMergedCallback(otcc1, otcc2) } });
     const completeInfo = {
       getElement: refElementReturn.getElement,
       index,
@@ -5922,10 +5912,7 @@
       refElementReturn,
       hasCurrentFocusParameters: {
         onCurrentFocusedChanged: ocfc1,
-        onCurrentFocusedInnerChanged: useStableCallback((focused, prevFocused, reason) => {
-          ocfic1?.(focused, prevFocused, reason);
-          ocfic3?.(focused, prevFocused, reason);
-        })
+        onCurrentFocusedInnerChanged: useStableMergedCallback(ocfic1, ocfic3)
       }
     });
     const props = useMergedProps(propsStable, p32, hasCurrentFocusReturn.propsStable);
@@ -5935,34 +5922,38 @@
     assertEmptyObject(void4);
     assertEmptyObject(void5);
     assertEmptyObject(void6);
+    assertEmptyObject(void7);
     return {
       pressParameters,
       hasCurrentFocusReturn,
       managedChildrenReturn,
       context,
+      textContentReturn,
       managedChildReturn,
       linearNavigationReturn,
       rovingTabIndexChildReturn,
       rovingTabIndexReturn,
       singleSelectionChildReturn,
       multiSelectionChildReturn,
-      textContentReturn,
       typeaheadNavigationReturn,
       refElementReturn,
       props
     };
   });
-  var useCompleteGridNavigationCell = monitored(function useCompleteGridNavigationCell2({ gridNavigationCellParameters, context, textContentParameters, info: { focusSelf, index, untabbable, ...customUserInfo }, ...void1 }) {
+  var useCompleteGridNavigationCell = monitored(function useCompleteGridNavigationCell2({ gridNavigationCellParameters, context, textContentParameters: { getText, onTextContentChange: otcc1, ...void4 }, info: { focusSelf, index, untabbable, ...customUserInfo }, ...void1 }) {
     const { refElementReturn, propsStable } = useRefElement({ refElementParameters: {} });
-    const { hasCurrentFocusParameters, rovingTabIndexChildReturn, textContentReturn, pressParameters: { excludeSpace: es1 }, props: propsRti, info: info2, ...void2 } = useGridNavigationSelectionCell({
+    const { hasCurrentFocusParameters, rovingTabIndexChildReturn, textContentParameters: { onTextContentChange: otcc2 }, pressParameters: { excludeSpace: es1 }, props: propsRti, info: info2, ...void2 } = useGridNavigationSelectionCell({
       gridNavigationCellParameters,
       info: { index, untabbable },
       context,
-      refElementReturn,
-      textContentParameters
+      refElementReturn
+      //textContentReturn: { getTextContent: useStableCallback((): string | null => textContentReturn.getTextContent()) },
     });
+    const { textContentReturn, ...void3 } = useTextContent({ refElementReturn, textContentParameters: { getText, onTextContentChange: useStableMergedCallback(otcc1, otcc2) } });
     assertEmptyObject(void1);
     assertEmptyObject(void2);
+    assertEmptyObject(void3);
+    assertEmptyObject(void4);
     const { hasCurrentFocusReturn } = useHasCurrentFocus({
       hasCurrentFocusParameters: {
         onCurrentFocusedChanged: null,
@@ -6006,7 +5997,7 @@
     return ret2;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/component-use/use-list-navigation-complete.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/component-use/use-list-navigation-complete.js
   var useCompleteListNavigation = monitored(function useCompleteListNavigation2({
     linearNavigationParameters,
     typeaheadNavigationParameters,
@@ -6021,8 +6012,8 @@
     const getChildren = T2(() => managedChildrenReturn.getChildren(), []);
     const getLowestIndex = T2(() => getChildren().getLowestIndex(), []);
     const getHighestIndex = T2(() => getChildren().getHighestIndex(), []);
-    const isValidForNavigation = T2((i3) => {
-      const child = getChildren().getAt(i3);
+    const isValidForNavigation = T2((i4) => {
+      const child = getChildren().getAt(i4);
       if (!child)
         return false;
       if (child.untabbable)
@@ -6088,7 +6079,7 @@
       rearrangeableChildrenParameters,
       staggeredChildrenParameters,
       managedChildrenParameters,
-      refElementReturn: context.processedChildrenContext,
+      //refElementReturn: context.processedChildrenContext,
       context
     });
     return {
@@ -6101,7 +6092,7 @@
   var useCompleteListNavigationChild = monitored(function useCompleteListNavigationChild2({
     info: { index, focusSelf, untabbable, ...customUserInfo },
     // The "...info" is empty if M is the same as UCLNCI<ChildElement>.
-    textContentParameters,
+    textContentParameters: { getText, onTextContentChange: otcc1, ...void10 },
     refElementParameters,
     hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged: ocfic3, ...void7 },
     singleSelectionChildParameters,
@@ -6110,14 +6101,14 @@
     ...void1
   }) {
     const { refElementReturn, propsStable, ...void6 } = useRefElement({ refElementParameters });
-    const { hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic1, ...void3 }, pressParameters: { excludeSpace, onPressSync, ...void2 }, textContentReturn, singleSelectionChildReturn, multiSelectionChildReturn, info: infoFromListNav, rovingTabIndexChildReturn, propsChild, propsTabbable, ...void4 } = useListNavigationSelectionChild({
+    const { hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic1, ...void3 }, pressParameters: { excludeSpace, onPressSync, ...void2 }, textContentParameters: { onTextContentChange: otcc2, ...void8 }, singleSelectionChildReturn, multiSelectionChildReturn, info: infoFromListNav, rovingTabIndexChildReturn, propsChild, propsTabbable, ...void4 } = useListNavigationSelectionChild({
       info: { index, untabbable },
       context: { rovingTabIndexContext, singleSelectionContext, multiSelectionContext, typeaheadNavigationContext },
       singleSelectionChildParameters,
       multiSelectionChildParameters,
-      refElementReturn,
-      textContentParameters
+      refElementReturn
     });
+    const { textContentReturn, ...void9 } = useTextContent({ refElementReturn, textContentParameters: { getText, onTextContentChange: useStableMergedCallback(otcc1, otcc2) } });
     const allStandardInfo = {
       index,
       focusSelf,
@@ -6127,11 +6118,7 @@
     };
     const { managedChildReturn } = useManagedChild({ context: { managedChildContext }, info: { ...allStandardInfo, ...customUserInfo } });
     const { hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic2 } } = useChildrenHaveFocusChild({ context: { childrenHaveFocusChildContext } });
-    const onCurrentFocusedInnerChanged = useStableCallback((focused, prev, e3) => {
-      ocfic1?.(focused, prev, e3);
-      ocfic2?.(focused, prev, e3);
-      ocfic3?.(focused, prev, e3);
-    });
+    const onCurrentFocusedInnerChanged = useStableMergedCallback(ocfic1, ocfic2, ocfic3);
     const { hasCurrentFocusReturn } = useHasCurrentFocus({
       hasCurrentFocusParameters: {
         onCurrentFocusedInnerChanged,
@@ -6147,6 +6134,9 @@
     assertEmptyObject(void5);
     assertEmptyObject(void6);
     assertEmptyObject(void7);
+    assertEmptyObject(void8);
+    assertEmptyObject(void9);
+    assertEmptyObject(void10);
     return {
       propsChild: props,
       propsTabbable,
@@ -6179,7 +6169,15 @@
     assertEmptyObject(void3);
     return { ...ret2, singleSelectionReturn: { getSingleSelectedIndex } };
   }
-  function useCompleteListNavigationChildDeclarative({ multiSelectionChildParameters, multiSelectionChildDeclarativeParameters: { multiSelected, onMultiSelectedChange }, ...rest }) {
+  function useCompleteListNavigationChildDeclarative({ multiSelectionChildParameters, multiSelectionChildDeclarativeParameters: { multiSelected, onMultiSelectedChange }, info: i1, ...rest }) {
+    const { multiSelectionChildParameters: { onMultiSelectChange }, info: i22, ...void2 } = useSelectionChildDeclarative({
+      multiSelectionChildDeclarativeParameters: { onMultiSelectedChange, multiSelected },
+      multiSelectionChildReturn: {
+        changeMultiSelected: useStableCallback((...args) => {
+          ret.multiSelectionChildReturn.changeMultiSelected(...args);
+        })
+      }
+    });
     const ret = useCompleteListNavigationChild({
       multiSelectionChildParameters: {
         initiallyMultiSelected: multiSelected,
@@ -6188,18 +6186,15 @@
         }),
         ...multiSelectionChildParameters
       },
+      info: { ...i1, ...i22 },
       ...rest
-    });
-    const { multiSelectionChildParameters: { onMultiSelectChange }, info, ...void2 } = useSelectionChildDeclarative({
-      multiSelectionChildDeclarativeParameters: { onMultiSelectedChange, multiSelected },
-      multiSelectionChildReturn: ret.multiSelectionChildReturn
     });
     const { multiSelectionChildReturn, ...ret2 } = ret;
     assertEmptyObject(void2);
     return { ...ret2, multiSelectionChildReturn };
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/component-use/use-modal.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/component-use/use-modal.js
   var useModal = monitored(function useModal2({ dismissParameters: { dismissActive, onDismiss, ...void2 }, escapeDismissParameters: { dismissEscapeActive, onDismissEscape, parentDepth, ...void3 }, focusTrapParameters: { trapActive, ...focusTrapParameters }, activeElementParameters: { getDocument: getDocument2, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, ...void4 }, backdropDismissParameters: { dismissBackdropActive, onDismissBackdrop, ...void5 }, lostFocusDismissParameters: { dismissLostFocusActive, onDismissLostFocus, ...void6 }, refElementParameters: { onElementChange, onMount, onUnmount, ...void7 }, modalParameters: { active: modalActive, ...void8 }, ...void1 }) {
     const { refElementPopupReturn, refElementSourceReturn, propsStablePopup, propsStableSource } = useDismiss({
       dismissParameters: { dismissActive: dismissActive && modalActive, onDismiss },
@@ -6273,11 +6268,11 @@
       }
       if (isPromise(promiseOrReturn)) {
         onInvoked?.("async");
-        promiseOrReturn.then((r5) => {
+        promiseOrReturn.then((r4) => {
           onResolve?.();
           onHasResult?.(true);
-          onReturnValue?.(r5);
-          return r5;
+          onReturnValue?.(r4);
+          return r4;
         }).catch((e3) => {
           onReject?.();
           onHasError?.(true);
@@ -6333,7 +6328,7 @@
     };
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/preact-extensions/use-async.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-async.js
   function identityCapture(...t3) {
     return t3;
   }
@@ -6353,16 +6348,16 @@
     const [resolveCount, setResolveCount] = useState(0);
     const [rejectCount, setRejectCount] = useState(0);
     const incrementCallCount = T2(() => {
-      setRunCount((c5) => c5 + 1);
+      setRunCount((c4) => c4 + 1);
     }, []);
     const incrementResolveCount = T2(() => {
-      setResolveCount((c5) => c5 + 1);
+      setResolveCount((c4) => c4 + 1);
     }, []);
     const incrementRejectCount = T2(() => {
-      setRejectCount((c5) => c5 + 1);
+      setRejectCount((c4) => c4 + 1);
     }, []);
     const incrementFinallyCount = T2(() => {
-      setSettleCount((c5) => c5 + 1);
+      setSettleCount((c4) => c4 + 1);
     }, []);
     let { throttle, debounce: debounce2, capture: captureUnstable } = options ?? {};
     const captureStable = useStableCallback(captureUnstable ?? identityCapture);
@@ -6408,7 +6403,7 @@
     };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/dom-helpers/use-async-handler.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-async-handler.js
   var useAsyncHandler = monitored(function useAsyncHandler2({ asyncHandler, capture: originalCapture, ...restAsyncOptions }) {
     const [currentCapture, setCurrentCapture, getCurrentCapture] = useState(void 0);
     const [hasCapture, setHasCapture] = useState(false);
@@ -6426,16 +6421,10 @@
     };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/component-use/use-press.js
-  var logs = [];
-  var c4 = debounce_default(() => {
-    alert(logs.map((log2) => log2.join(";")).join("\n"));
-    logs = [];
-  }, 1e3);
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/component-use/use-press.js
   function pressLog(...args) {
-    debugger;
-    logs.push([...args]);
-    c4();
+    if (window.__log_press_events)
+      console.log(...args);
   }
   function supportsPointerEvents() {
     return "onpointerup" in window;
@@ -6510,6 +6499,10 @@
       }
       setIsPressing(hoveringAtAnyPoint && getPointerDownStartedHere(), e3);
       setHovering(hoveringAtAnyPoint);
+    }, []);
+    const preventClickEventsOnIosSafari = T2((e3) => {
+      e3.preventDefault();
+      e3.stopPropagation();
     }, []);
     const onTouchEnd = T2((e3) => {
       pressLog("touchend", e3);
@@ -6690,7 +6683,7 @@
         onTouchStart: !hasPressEvent ? void 0 : !p4 ? onTouchStart : void 0,
         onTouchCancel: !hasPressEvent ? void 0 : !p4 ? onTouchEnd : void 0,
         onTouchMove: !hasPressEvent ? void 0 : !p4 ? onTouchMove : void 0,
-        onTouchEnd: !hasPressEvent ? void 0 : onTouchEnd,
+        onTouchEnd: !hasPressEvent ? void 0 : !p4 ? onTouchEnd : preventClickEventsOnIosSafari,
         onPointerDown: !hasPressEvent ? void 0 : p4 ? onPointerDown : void 0,
         onPointerCancel: !hasPressEvent ? void 0 : p4 ? onPointerDown : void 0,
         onPointerMove: !pointerDownStartedHere || !hasPressEvent ? void 0 : p4 ? onPointerMove : void 0,
@@ -6705,7 +6698,7 @@
   var pulse = "vibrate" in navigator && navigator.vibrate instanceof Function ? () => navigator.vibrate(10) : () => {
   };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/component-use/use-random-id.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/component-use/use-random-id.js
   var useRandomId = monitored(function useRandomId2({ randomIdParameters: { prefix, otherReferencerProp } }) {
     const id = prefix + V();
     useEnsureStability("useRandomId", prefix, id);
@@ -6721,7 +6714,7 @@
     };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/component-use/use-random-dual-ids.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/component-use/use-random-dual-ids.js
   var useRandomDualIds = monitored(function useRandomDualIds2({ randomIdInputParameters, randomIdLabelParameters }) {
     const { randomIdReturn: randomIdInputReturn, propsReferencer: propsLabelAsReferencer, propsSource: propsInputAsSource } = useRandomId({ randomIdParameters: randomIdInputParameters });
     const { randomIdReturn: randomIdLabelReturn, propsReferencer: propsInputAsReferencer, propsSource: propsLabelAsSource } = useRandomId({ randomIdParameters: randomIdLabelParameters });
@@ -6733,7 +6726,7 @@
     };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/dom-helpers/use-draggable.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-draggable.js
   var useDraggable = monitored(function useDraggable2({ effectAllowed, data, dragImage, dragImageXOffset, dragImageYOffset }) {
     const [dragging, setDragging, getDragging] = useState(false);
     const [lastDropEffect, setLastDropEffect, getLastDropEffect] = useState(null);
@@ -6774,7 +6767,7 @@
     return ret;
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/dom-helpers/use-droppable.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-droppable.js
   var DroppableFileError = class extends Error {
     fileName;
     errorType;
@@ -6798,7 +6791,7 @@
       const promiseCount2 = getPromiseCount();
       if (promiseCount2 > 0) {
         if (currentPromiseIndex2 + 1 < promiseCount2) {
-          setCurrentPromiseIndex((i3) => ++i3);
+          setCurrentPromiseIndex((i4) => ++i4);
         }
       }
     }, [promiseCount]);
@@ -6814,7 +6807,7 @@
           const currentPromiseIndex2 = getCurrentPromiseIndex();
           const promiseCount2 = getPromiseCount();
           if (currentPromiseIndex2 + 1 < promiseCount2) {
-            setCurrentPromiseIndex((i3) => ++i3);
+            setCurrentPromiseIndex((i4) => ++i4);
           }
         });
       }
@@ -6879,7 +6872,7 @@
         }
       }
       dropPromisesRef.current.push(Promise.all(allPromises).then(() => {
-        setPromiseCount((i3) => ++i3);
+        setPromiseCount((i4) => ++i4);
         setDropError(null);
         return {
           strings: dropData,
@@ -6887,7 +6880,7 @@
         };
       }).catch((ex) => {
         debugger;
-        setPromiseCount((i3) => ++i3);
+        setPromiseCount((i4) => ++i4);
         setDropError(ex);
         return null;
       }));
@@ -6903,7 +6896,7 @@
     };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/dom-helpers/use-hide-scroll.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-hide-scroll.js
   var useHideScroll = monitored(function useHideScroll2(hideScroll) {
     const [getScrollbarWidth, setScrollbarWidth] = usePassiveState(null);
     const [getScrollbarHeight, setScrollbarHeight] = usePassiveState(null);
@@ -6945,7 +6938,7 @@
     return { getScrollbarWidth, getScrollbarHeight };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/dom-helpers/use-imperative-props.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-imperative-props.js
   var templateElement = null;
   function htmlToElement(parent, html) {
     const document2 = parent.ownerDocument;
@@ -7063,7 +7056,7 @@
     return y(Tag, useMergedProps(propsStable, imperativeProps, props, { ref }));
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/util/random-id.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/util/random-id.js
   var Table = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-";
   function base64(value) {
     return Table[value];
@@ -7078,7 +7071,7 @@
     return `${prefix ?? "id-"}${random64Bits().map((n2) => base64(n2)).join("")}`;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/dom-helpers/use-portal-children.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-portal-children.js
   var usePortalChildren = monitored(function usePortalChildren2({ target }) {
     const [pushChild, setPushChild] = useState(null);
     const [updateChild, setUpdateChild] = useState(null);
@@ -7148,7 +7141,7 @@
     return y(k, {}, children);
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/observers/use-element-size.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/observers/use-element-size.js
   var useElementSize = monitored(function useElementSize2({ elementSizeParameters: { getObserveBox, onSizeChange }, refElementParameters }) {
     const { onElementChange, onMount, onUnmount } = refElementParameters || {};
     useEnsureStability("useElementSize", getObserveBox, onSizeChange, onElementChange, onMount, onUnmount);
@@ -7178,9 +7171,9 @@
     }, []);
     const { refElementReturn, ...rest } = useRefElement({
       refElementParameters: {
-        onElementChange: T2((e3, p4, r5) => {
+        onElementChange: T2((e3, p4, r4) => {
           needANewObserver(e3, getObserveBox?.());
-          onElementChange?.(e3, p4, r5);
+          onElementChange?.(e3, p4, r4);
         }, []),
         onMount,
         onUnmount
@@ -7200,7 +7193,7 @@
     };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/observers/use-has-last-focus.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/observers/use-has-last-focus.js
   var useHasLastFocus = monitored(function useHasLastFocus2(args) {
     const { refElementReturn: { getElement }, activeElementParameters: { onLastActiveElementChange, ...activeElementParameters }, hasLastFocusParameters: { onLastFocusedChanged, onLastFocusedInnerChanged, ...void1 } } = args;
     assertEmptyObject(void1);
@@ -7235,19 +7228,20 @@
     };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/observers/use-logical-direction.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/observers/use-logical-direction.js
   function capitalize(str) {
     return str[0].toUpperCase() + str.substring(1);
   }
-  var useLogicalDirection = monitored(function useLogicalDirection2({}) {
+  var useLogicalDirection = monitored(function useLogicalDirection2({ ...void1 }) {
+    assertEmptyObject(void1);
     const getLogicalDirectionInfo = T2((computedStyles) => {
       if (computedStyles) {
-        const w4 = computedStyles.writingMode;
+        const w5 = computedStyles.writingMode;
         let d4 = computedStyles.direction;
         const t3 = computedStyles.textOrientation;
         if (t3 == "upright")
           d4 = "ltr";
-        return { ...WritingModes[w4 || "horizontal-tb"][d4 || "ltr"] };
+        return { ...WritingModes[w5 || "horizontal-tb"][d4 || "ltr"] };
       }
       return null;
     }, []);
@@ -7453,7 +7447,7 @@
     "sideways-rl": SidewaysRl
   };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/observers/use-media-query.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/observers/use-media-query.js
   var useMediaQuery = monitored(function useMediaQuery2(query, defaultGuess) {
     const queryList = _();
     const [matches2, setMatches, getMatches] = useState(defaultGuess ?? null);
@@ -7475,7 +7469,7 @@
     };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/observers/use-mutation-observer.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/observers/use-mutation-observer.js
   var useMutationObserver = monitored(function useMutationObserver2({ refElementParameters, mutationObserverParameters: { attributeFilter, subtree, onChildList, characterDataOldValue, onCharacterData, onAttributes, attributeOldValue } }) {
     const { onElementChange, ...rest } = refElementParameters || {};
     if (typeof attributeFilter === "string")
@@ -7531,8 +7525,8 @@
     }, [attributeKey, attributeOldValue, characterDataOldValue, subtree]);
     const { refElementReturn, propsStable } = useRefElement({
       refElementParameters: {
-        onElementChange: useStableCallback((e3, p4, r5) => {
-          onElementChange?.(e3, p4, r5);
+        onElementChange: useStableCallback((e3, p4, r4) => {
+          onElementChange?.(e3, p4, r4);
           onNeedMutationObserverReset(e3);
         }),
         ...rest
@@ -7545,7 +7539,7 @@
     };
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/observers/use-url.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/observers/use-url.js
   var useUrl = monitored(function useUrl2(onUrlChange) {
     const [getUrl, setUrl] = usePassiveState(useStableCallback(onUrlChange), T2(() => window.location.toString(), []));
     useGlobalHandler(window, "hashchange", (e3) => {
@@ -7569,22 +7563,22 @@
     }, [])];
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/preact-extensions/use-async-effect.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-async-effect.js
   var useAsyncEffect = monitored(function useAsyncEffect2(effect, inputs, options) {
     const { syncHandler, ...rest } = useAsync(effect, { ...options, capture: null, debounce: null, throttle: null });
     p3(syncHandler, inputs);
     return rest;
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/preact-extensions/use-effect-debug.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-effect-debug.js
   var useEffectDebug = monitored(function useEffectDebug2(effect, inputs, impl = p3) {
     const prevInputs = _(void 0);
     const effect2 = () => {
       const changes = [];
       if (inputs && prevInputs.current) {
-        for (let i3 = 0; i3 < Math.max(prevInputs.current.length, inputs.length); ++i3) {
-          if (prevInputs.current[i3] != inputs[i3])
-            changes[i3] = { from: prevInputs.current[i3], to: inputs[i3] };
+        for (let i4 = 0; i4 < Math.max(prevInputs.current.length, inputs.length); ++i4) {
+          if (prevInputs.current[i4] != inputs[i4])
+            changes[i4] = { from: prevInputs.current[i4], to: inputs[i4] };
         }
       }
       const ret = effect(prevInputs.current, changes);
@@ -7594,12 +7588,12 @@
     impl(effect2, inputs);
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/preact-extensions/use-layout-effect-debug.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-layout-effect-debug.js
   var useLayoutEffectDebug = monitored(function useLayoutEffectDebug2(effect, inputs) {
     return useEffectDebug(effect, inputs, y3);
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/preact-extensions/use-persistent-state.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-persistent-state.js
   function getFromLocalStorage(key, converter = JSON.parse, storage = localStorage) {
     try {
       const item = storage.getItem(key);
@@ -7621,7 +7615,7 @@
       debugger;
     }
   }
-  var usePersistentState = monitored(function usePersistentState2(key, initialValue, fromString = JSON.parse, toString = JSON.stringify, storage = localStorage) {
+  function usePersistentState(key, initialValue, fromString = JSON.parse, toString = JSON.stringify, storage = localStorage) {
     const [localCopy, setLocalCopy, getLocalCopy] = useState(() => (key ? getFromLocalStorage(key, fromString, storage) : null) ?? initialValue);
     const getInitialValue = useStableGetter(initialValue);
     y3(() => {
@@ -7654,22 +7648,22 @@
       return trueValue ?? localCopy;
     });
     return [localCopy, setValueWrapper, getValue];
-  });
+  }
 
-  // ../node_modules/.pnpm/preact@10.17.1/node_modules/preact/jsx-runtime/dist/jsxRuntime.module.js
+  // ../node_modules/.pnpm/preact@10.18.1/node_modules/preact/jsx-runtime/dist/jsxRuntime.module.js
   var _3 = 0;
   function o4(o5, e3, n2, t3, f4, l4) {
     var s4, u4, a4 = {};
     for (u4 in e3)
       "ref" == u4 ? s4 = e3[u4] : a4[u4] = e3[u4];
-    var i3 = { type: o5, props: a4, key: n2, ref: s4, __k: null, __: null, __b: 0, __e: null, __d: void 0, __c: null, __h: null, constructor: void 0, __v: --_3, __source: f4, __self: l4 };
+    var i4 = { type: o5, props: a4, key: n2, ref: s4, __k: null, __: null, __b: 0, __e: null, __d: void 0, __c: null, __h: null, constructor: void 0, __v: --_3, __source: f4, __self: l4 };
     if ("function" == typeof o5 && (s4 = o5.defaultProps))
       for (u4 in s4)
         void 0 === a4[u4] && (a4[u4] = s4[u4]);
-    return l.vnode && l.vnode(i3), i3;
+    return l.vnode && l.vnode(i4), i4;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/timing/use-animation-frame.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/timing/use-animation-frame.js
   var SharedAnimationFrameContext = G(null);
   var useAnimationFrame = monitored(function useAnimationFrame2({ callback }) {
     const stableCallback = useStableCallback(callback ?? noop_default);
@@ -7695,7 +7689,7 @@
     }, [sharedAnimationFrameContext, hasCallback]);
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@98da6d2339e194f2893210221bbbf6199dfc0253_preact@10.1_5xjsd4m3rysrbisrndwb2yqkry/node_modules/preact-prop-helpers/dist/timing/use-interval.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@92b9d0f4c6cae26b221e63b580cd5858bf75b496_preact@10.1_afxzohsuwiubsn4xzaa6wo3gg4/node_modules/preact-prop-helpers/dist/preact/timing/use-interval.js
   var useInterval = monitored(function useInterval2({ interval, callback }) {
     const stableCallback = useStableCallback(callback);
     const getInterval = useStableGetter(interval);
@@ -7726,10 +7720,6 @@
       console.error(`This child is missing its parent ${parentContextName} context`);
     }
     return ret;
-  }
-  var debug = false;
-  function setDebugLogging(logging) {
-    debug = logging;
   }
   function noop2() {
     return;
@@ -7801,7 +7791,7 @@
   });
 
   // ../dist/use-accordion.js
-  var useAccordion = monitored(function useAccordion2({ accordionParameters: { initialIndex, localStorageKey, orientation, ...accordionParameters }, typeaheadNavigationParameters: { collator, noTypeahead, onNavigateTypeahead, typeaheadTimeout, ...typeaheadNavigationParameters }, linearNavigationParameters: { disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize, onNavigateLinear, ...linearNavigationParameters }, managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange: ocmc1, onChildrenCountChange, ...managedChildrenParameters }, refElementParameters, ...void1 }) {
+  var useAccordion = monitored(function useAccordion2({ accordionParameters: { initialIndex, localStorageKey, orientation, ...accordionParameters }, typeaheadNavigationParameters: { collator, noTypeahead, onNavigateTypeahead, typeaheadTimeout, ...typeaheadNavigationParameters }, linearNavigationParameters: { disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize, onNavigateLinear, ...linearNavigationParameters }, managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange: ocmc1, onChildrenCountChange, ...managedChildrenParameters }, ...void1 }) {
     const [localStorageIndex, setLocalStorageIndex] = usePersistentState(localStorageKey ?? null, initialIndex ?? null);
     if (localStorageIndex != null)
       initialIndex = localStorageIndex;
@@ -7817,9 +7807,9 @@
       }
     });
     const { getChildren } = managedChildrenReturn;
-    const isValidByChild = T2((c5) => c5 && !c5.disabled && !c5.untabbable, []);
-    const isValidByIndex = T2((c5) => {
-      const child = getChildren().getAt(c5);
+    const isValidByChild = T2((c4) => c4 && !c4.disabled && !c4.untabbable, []);
+    const isValidByIndex = T2((c4) => {
+      const child = getChildren().getAt(c4);
       if (child) {
         return isValidByChild(child);
       }
@@ -7850,11 +7840,11 @@
       }, []),
       isValid: isValidByChild,
       closestFit: true,
-      onIndexChange: T2((i3) => {
-        if (i3 != null) {
-          const element = getChildren().getAt(i3)?.getElement();
+      onIndexChange: T2((i4) => {
+        if (i4 != null) {
+          const element = getChildren().getAt(i4)?.getElement();
           if (element)
-            getChildren().getAt(i3)?.focusSelf(element);
+            getChildren().getAt(i4)?.focusSelf(element);
         }
       }, []),
       onClosestFit: useStableCallback((index) => {
@@ -7876,8 +7866,8 @@
         }
       })
     });
-    const changeExpandedIndex = useStableCallback((value, r5) => {
-      changeExpandedIndexLocalOnly(value, r5);
+    const changeExpandedIndex = useStableCallback((value, r4) => {
+      changeExpandedIndexLocalOnly(value, r4);
       setLocalStorageIndex(value);
     });
     const rovingTabIndexReturn = useMemoObject({
@@ -7933,7 +7923,7 @@
       accordionReturn: useMemoObject({ changeExpandedIndex })
     };
   });
-  var useAccordionSection = monitored(function useAccordionSection2({ buttonParameters: { disabled, tagButton, onPressSync: userOnPress, ...buttonParameters }, accordionSectionParameters: { open: openFromUser, bodyRole, ...void3 }, info: { index, untabbable, ...void4 }, textContentParameters: { getText, ...void5 }, context, refElementBodyParameters, refElementHeaderButtonParameters, pressParameters: { focusSelf, ...pressParameters }, ...void1 }) {
+  var useAccordionSection = monitored(function useAccordionSection2({ buttonParameters: { disabled, tagButton, onPressSync: userOnPress, ...buttonParameters }, accordionSectionParameters: { open: openFromUser, bodyRole, ...void3 }, info: { index, untabbable, ...void4 }, textContentParameters: { getText, onTextContentChange: otcc1, ...void5 }, context, refElementBodyParameters, refElementHeaderButtonParameters, pressParameters: { focusSelf, ...pressParameters }, ...void1 }) {
     const [openFromParent, setOpenFromParent, getOpenFromParent] = useState(null);
     const [mostRecentlyTabbed, setMostRecentlyTabbed, getMostRecentlyTabbed] = useState(null);
     const { accordionSectionContext: { changeExpandedIndex, changeTabbedIndex: setCurrentFocusedIndex, getTabbedIndex: getCurrentFocusedIndex, stableTypeaheadProps }, linearNavigationParameters, rovingTabIndexReturn } = context;
@@ -7947,7 +7937,7 @@
       }) },
       hasCurrentFocusParameters: {
         onCurrentFocusedChanged: null,
-        onCurrentFocusedInnerChanged: useStableCallback((focused, prev) => {
+        onCurrentFocusedInnerChanged: useStableCallback((focused, _prev) => {
           if (focused) {
             setCurrentFocusedIndex(index, void 0);
             setMostRecentlyTabbed(true);
@@ -7977,11 +7967,24 @@
       paginatedChildrenParameters: { paginationMin: null, paginationMax: null },
       rearrangeableChildrenReturn: { indexMangler: identity_default, indexDemangler: identity_default }
     });
-    const { pressParameters: { excludeSpace, ...void11 }, textContentReturn, ...void2 } = useTypeaheadNavigationChild({
+    const {
+      pressParameters: { excludeSpace, ...void11 },
+      //textContentReturn,
+      textContentParameters: { onTextContentChange: otcc2, ...void13 },
+      ...void2
+    } = useTypeaheadNavigationChild({
       info: { index },
-      refElementReturn: { getElement: useStableCallback(() => refElementHeaderButtonReturn.getElement()) },
-      textContentParameters: { getText },
+      //refElementReturn: { getElement: useStableCallback((): HeaderButtonElement | null => refElementHeaderButtonReturn.getElement()) },
+      //textContentParameters: { getText, },
       context
+    });
+    const { propsStable, refElementReturn } = useRefElement({ refElementParameters: { onElementChange: null, onMount: null, onUnmount: null } });
+    const { textContentReturn } = useTextContent({
+      refElementReturn,
+      textContentParameters: { getText, onTextContentChange: useStableCallback((...a4) => {
+        otcc1?.(...a4);
+        otcc2?.(...a4);
+      }) }
     });
     const { pressReturn, props, refElementReturn: refElementHeaderButtonReturn, ...void12 } = useButton({
       buttonParameters: {
@@ -8020,6 +8023,7 @@
     assertEmptyObject(void10);
     assertEmptyObject(void11);
     assertEmptyObject(void12);
+    assertEmptyObject(void13);
     return {
       pressReturn,
       refElementBodyReturn,
@@ -8037,14 +8041,13 @@
         role: bodyRole,
         tabIndex: -1
       }),
-      propsHeader: {}
-      // This is intentionally empty, it's just a reminder that there *does* need to be a header that contains the button.
+      propsHeader: propsStable
     };
   });
 
   // ../dist/use-checkbox-group.js
   var useCheckboxGroup = monitored(function useCheckboxGroup2({ linearNavigationParameters, rovingTabIndexParameters, checkboxGroupParameters: { orientation, ...void2 }, multiSelectionParameters, refElementParameters, typeaheadNavigationParameters, ...void1 }) {
-    const { contextChildren, contextProcessing, linearNavigationReturn, managedChildrenReturn, props, rearrangeableChildrenReturn, rovingTabIndexReturn, singleSelectionReturn, typeaheadNavigationReturn, childrenHaveFocusReturn, multiSelectionReturn, refElementReturn, ...void3 } = useCompleteListNavigation({
+    const { contextChildren, contextProcessing: _contextProcessing, linearNavigationReturn, managedChildrenReturn, props, rearrangeableChildrenReturn, rovingTabIndexReturn, singleSelectionReturn, typeaheadNavigationReturn, childrenHaveFocusReturn, multiSelectionReturn, refElementReturn, ...void3 } = useCompleteListNavigation({
       linearNavigationParameters: { arrowKeyDirection: orientation, ...linearNavigationParameters },
       rovingTabIndexParameters: { focusSelfParent: focus, ...rovingTabIndexParameters },
       singleSelectionParameters: { initiallySingleSelectedIndex: null, onSingleSelectedIndexChange: null, singleSelectionAriaPropName: null, singleSelectionMode: "disabled" },
@@ -8053,6 +8056,7 @@
       refElementParameters,
       typeaheadNavigationParameters
     });
+    assertEmptyObject(void3);
     const { getChildren } = managedChildrenReturn;
     const children = getChildren();
     assertEmptyObject(void1);
@@ -8206,17 +8210,17 @@
       if (next)
         allIds.add(next);
       if (!!next || !!prev) {
-        setUpdateIndex((i3) => (i3 ?? 0) + 1, void 0);
+        setUpdateIndex((i4) => (i4 ?? 0) + 1, void 0);
       }
     }, []);
     p3(() => {
-      setTotalChildren((c5) => (c5 ?? 0) + 1, void 0);
-      return () => setTotalChildren((c5) => (c5 ?? 0) - 1, void 0);
+      setTotalChildren((c4) => (c4 ?? 0) + 1, void 0);
+      return () => setTotalChildren((c4) => (c4 ?? 0) - 1, void 0);
     }, []);
     p3(() => {
       if (checked) {
-        setTotalChecked((c5) => (c5 ?? 0) + 1, void 0);
-        return () => setTotalChecked((c5) => (c5 ?? 0) - 1, void 0);
+        setTotalChecked((c4) => (c4 ?? 0) + 1, void 0);
+        return () => setTotalChecked((c4) => (c4 ?? 0) - 1, void 0);
       }
     }, [checked]);
     const { hasCurrentFocusReturn, managedChildReturn, refElementReturn, textContentReturn, propsChild, propsTabbable, singleSelectionChildReturn: _singleSelectionChildReturn, rovingTabIndexChildReturn, pressParameters, multiSelectionChildReturn, ...void2 } = useCompleteListNavigationChild({
@@ -8459,7 +8463,7 @@
       activeElementParameters,
       focusTrapParameters: { trapActive: true, onlyMoveFocus: false, ...focusTrapParameters }
     });
-    const { propsInput, propsLabel, pressReturn, randomIdInputReturn, randomIdLabelReturn, ...void3 } = useLabelSynthetic({
+    const { propsInput, propsLabel, pressReturn, randomIdInputReturn: _randomIdInputReturn, randomIdLabelReturn: _randomIdLabelReturn, ...void3 } = useLabelSynthetic({
       labelParameters: {
         ...labelParameters,
         onLabelClick: useStableCallback(() => {
@@ -8478,6 +8482,7 @@
       propsDialog: useMergedProps(propsStablePopup, propsInput),
       propsSource: { ...propsStableSource },
       propsTitle: propsLabel,
+      pressReturn,
       refElementPopupReturn,
       refElementSourceReturn
     };
@@ -8495,7 +8500,7 @@
       refElementParameters,
       focusTrapParameters: { onlyMoveFocus: false, ...focusTrapParameters }
     });
-    const { propsInput, propsLabel, pressReturn, randomIdInputReturn, randomIdLabelReturn, ...void3 } = useLabelSynthetic({
+    const { propsInput, propsLabel, pressReturn: _pressReturn, randomIdInputReturn: _randomIdInputReturn, randomIdLabelReturn: _randomIdLabelReturn, ...void3 } = useLabelSynthetic({
       labelParameters: {
         ...labelParameters,
         onLabelClick: useStableCallback(() => {
@@ -8533,7 +8538,7 @@
       randomIdInputParameters: { prefix: Prefices.gridlist },
       randomIdLabelParameters: { prefix: Prefices.gridlistLabel }
     });
-    const { contextChildren, props, rovingTabIndexReturn, singleSelectionReturn, ...restRet } = useCompleteGridNavigationDeclarative({
+    const { contextChildren, props, rovingTabIndexReturn, singleSelectionReturn: _singleSelectionReturn, ...restRet } = useCompleteGridNavigationDeclarative({
       singleSelectionDeclarativeParameters,
       rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
       gridNavigationParameters,
@@ -8633,7 +8638,7 @@
       randomIdInputParameters: { prefix: Prefices.listbox },
       randomIdLabelParameters: { prefix: Prefices.listboxLabel }
     });
-    let { contextChildren, contextProcessing, props: { ...props }, rovingTabIndexReturn, singleSelectionReturn, ...restRet } = useCompleteListNavigationDeclarative({
+    let { contextChildren, contextProcessing, props: { ...props }, rovingTabIndexReturn, singleSelectionReturn: _singleSelectionReturn, ...restRet } = useCompleteListNavigationDeclarative({
       rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
       singleSelectionDeclarativeParameters: { onSingleSelectedIndexChange, singleSelectedIndex },
       singleSelectionParameters: { singleSelectionAriaPropName: singleSelectionAriaPropName || "aria-selected", singleSelectionMode },
@@ -8659,7 +8664,7 @@
       propsListboxLabel: propsLabelLabel
     };
   });
-  var useListboxItem = monitored(function useListboxItem2({ context, listboxParameters: {}, pressParameters: { allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, ...void1 }, singleSelectionChildParameters: { singleSelectionDisabled }, ...restParams }) {
+  var useListboxItem = monitored(function useListboxItem2({ context, listboxParameters, pressParameters: { allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, ...void1 }, singleSelectionChildParameters: { singleSelectionDisabled }, ...restParams }) {
     const { propsChild, propsTabbable, refElementReturn, pressParameters: { onPressSync, excludeSpace, ...void2 }, ...restRet } = useCompleteListNavigationChildDeclarative({
       context,
       singleSelectionChildParameters: { singleSelectionDisabled },
@@ -8667,6 +8672,7 @@
     });
     assertEmptyObject(void1);
     assertEmptyObject(void2);
+    assertEmptyObject(listboxParameters);
     propsChild.role = "option";
     propsChild["aria-disabled"] = singleSelectionDisabled ? "true" : void 0;
     const { pressReturn, props: propsPress } = usePress({
@@ -8795,7 +8801,7 @@
       ...listNavReturn
     };
   });
-  var useToolbarChild = monitored(function useToolbarChild2({ context: { toolbarContext, ...context }, info, toolbarChildParameters: { disabledProp }, ...args }) {
+  var useToolbarChild = monitored(function useToolbarChild2({ context, info, toolbarChildParameters: { disabledProp }, ...args }) {
     const { propsChild, propsTabbable, ...listNavReturn } = useCompleteListNavigationChild({ info, context, ...args });
     return {
       propsChild: useMergedProps(propsChild, { [disabledProp]: args.singleSelectionChildParameters.singleSelectionDisabled || args.multiSelectionChildParameters.multiSelectionDisabled ? true : void 0 }),
@@ -9060,7 +9066,7 @@
       randomIdLabelParameters: { prefix: Prefices.radioGroupLabel },
       randomIdInputParameters: { prefix: Prefices.radioGroup }
     });
-    const { contextChildren, props: propsGroup2, singleSelectionReturn, multiSelectionReturn, managedChildrenReturn, rovingTabIndexReturn, linearNavigationReturn, rearrangeableChildrenReturn, typeaheadNavigationReturn, childrenHaveFocusReturn, contextProcessing, refElementReturn, ...void3 } = useCompleteListNavigationDeclarative({
+    const { contextChildren, props: propsGroup2, singleSelectionReturn, multiSelectionReturn: _multiSelectionReturn, managedChildrenReturn, rovingTabIndexReturn, linearNavigationReturn, rearrangeableChildrenReturn, typeaheadNavigationReturn, childrenHaveFocusReturn, contextProcessing: _contextProcessing, refElementReturn, ...void3 } = useCompleteListNavigationDeclarative({
       singleSelectionDeclarativeParameters: {
         singleSelectedIndex: selectedIndex,
         onSingleSelectedIndexChange: useStableCallback((e3) => {
@@ -9105,7 +9111,7 @@
     const { tagInput, labelPosition } = labelParameters;
     const { pressParameters: { excludeSpace, onPressSync }, singleSelectionChildReturn, propsTabbable, propsChild: listNavigationSingleSelectionChildProps, ...listNavRet } = useCompleteListNavigationChildDeclarative({
       info: {
-        focusSelf: useStableCallback((e3) => {
+        focusSelf: useStableCallback((_e) => {
           return checkboxLikeRet.checkboxLikeReturn.focusSelf();
         }),
         ...info
@@ -9217,8 +9223,8 @@
     assertEmptyObject(void2);
     assertEmptyObject(void3);
     const [getSortBody, setSortBody] = usePassiveState(null, returnNull);
-    const [sortDirection, setSortDirection, getSortDirection] = useState("ascending");
-    const [sortColumn, setSortColumn, getSortColumn] = useState(null);
+    const [_sortDirection, setSortDirection, getSortDirection] = useState("ascending");
+    const [_sortColumn, setSortColumn, getSortColumn] = useState(null);
     const sortByColumn = T2((column) => {
       let nextSortDirection = getSortDirection();
       let nextSortIndex = getSortColumn();
@@ -9329,6 +9335,7 @@
         case "aria-pressed":
         case "aria-selected":
           props[cx1.singleSelectionContext.singleSelectionAriaPropName ?? "aria-selected"] = "true";
+          break;
         default: {
           console.assert(false, cx1.singleSelectionContext.singleSelectionAriaPropName + " is not valid for multi-select -- prefer checked, selected, or pressed");
         }
@@ -9385,11 +9392,11 @@
       closestFit: false,
       onClosestFit: null,
       initialIndex: null,
-      getAt: useStableCallback((i3) => {
-        return i3.getVisible() ?? false;
+      getAt: useStableCallback((i4) => {
+        return i4.getVisible() ?? false;
       }, []),
-      setAt: useStableCallback((i3, b4, n2, p4) => {
-        return i3.setVisibleIndex(n2, p4);
+      setAt: useStableCallback((i4, b4, n2, p4) => {
+        return i4.setVisibleIndex(n2, p4);
       }, []),
       isValid: returnTrue,
       onIndexChange: null
@@ -9458,7 +9465,19 @@
       singleSelectionChildParameters,
       multiSelectionChildParameters: { initiallyMultiSelected: false, multiSelectionDisabled: true, onMultiSelectChange: null }
     });
-    const { pressReturn, props: propsPressStable } = usePress({ pressParameters: { onPressSync, focusSelf: focusSelfChild, allowRepeatPresses: false, excludeEnter: returnFalse, excludePointer: returnFalse, excludeSpace: returnFalse, longPressThreshold, onPressingChange }, refElementReturn });
+    const { pressReturn, props: propsPressStable } = usePress({
+      pressParameters: {
+        onPressSync,
+        focusSelf: focusSelfChild,
+        allowRepeatPresses: false,
+        excludeEnter: returnFalse,
+        excludePointer: returnFalse,
+        excludeSpace,
+        longPressThreshold,
+        onPressingChange
+      },
+      refElementReturn
+    });
     const { singleSelectionChildReturn: { singleSelected }, rovingTabIndexChildReturn: { tabbable } } = listNavRet2;
     const { getPanelId, getTabId } = context.tabsContext;
     const panelId = getPanelId(index);
@@ -9483,7 +9502,7 @@
     const { index } = info;
     const { tabPanelContext: { getVisibleIndex: g4, getPanelId, getTabId } } = context;
     const [lastKnownVisibleIndex, setLastKnownVisibleIndex, getLastKnownVisibleIndex] = useState(g4());
-    const [isVisible, setIsVisible, getIsVisible] = useState(null);
+    const [isVisible, setIsVisible, _getIsVisible] = useState(null);
     useManagedChild({
       context,
       info: {
@@ -9534,8 +9553,8 @@
     const showHighestPriorityToast = T2(() => {
       const max = Math.min(getMaxVisibleCount(), currentIndexQueue.current.length);
       let start = nextIndexToStartAt.current;
-      for (let i3 = start; i3 < max; ++i3) {
-        const highestPriorityToast = toastQueue.getAt(currentIndexQueue.current[i3]);
+      for (let i4 = start; i4 < max; ++i4) {
+        const highestPriorityToast = toastQueue.getAt(currentIndexQueue.current[i4]);
         console.assert(!!highestPriorityToast);
         highestPriorityToast?.show();
       }
@@ -9547,9 +9566,9 @@
       showHighestPriorityToast();
     }, []);
     const onAnyToastDismissed = T2((_index) => {
-      const removalIndex = currentIndexQueue.current.findIndex((i3) => i3 == _index);
-      toastQueue.forEach((c5) => {
-        c5.setNumberAheadOfMe((prev) => {
+      const removalIndex = currentIndexQueue.current.findIndex((i4) => i4 == _index);
+      toastQueue.forEach((c4) => {
+        c4.setNumberAheadOfMe((prev) => {
           if (prev < 0)
             return prev - 1;
           else
@@ -9557,8 +9576,8 @@
         });
       });
       toastQueue.getAt(_index)?.setNumberAheadOfMe(-1);
-      toastQueue.forEach((c5) => {
-        c5.setNumberAheadOfMe((prev) => {
+      toastQueue.forEach((c4) => {
+        c4.setNumberAheadOfMe((prev) => {
           if (prev > removalIndex)
             return prev - 1;
           else
@@ -9622,7 +9641,7 @@
     }, []);
     const { managedChildReturn } = useManagedChild({ info: { index, focus: focus2, setNumberAheadOfMe: setNumberOfToastsAheadOfUs, show, ...info }, context });
     const resetDismissTimer = T2(() => {
-      setTriggerIndex((i3) => ++i3);
+      setTriggerIndex((i4) => ++i4);
     }, []);
     p3(() => {
       onAnyToastMounted(index);
@@ -9651,7 +9670,7 @@
   });
 
   // ../dist/use-tooltip.js
-  var hasHover2 = matchMedia("(any-hover: hover)");
+  var _hasHover2 = matchMedia("(any-hover: hover)");
   var mediaQuery = matchMedia("(hover: hover)");
   var pageCurrentlyUsingHover = mediaQuery.matches;
   var allCallbacks = /* @__PURE__ */ new Set();
@@ -9673,7 +9692,7 @@
       return () => mediaQuery.removeEventListener("change", handler, {});
     });
     const [openLocal, setOpenLocal] = useState(false);
-    const [getState, setState] = usePassiveState(useStableCallback((nextState, prevState) => {
+    const [getState, setState] = usePassiveState(useStableCallback((nextState, _prevState) => {
       if (hoverTimeoutHandle.current) {
         clearTimeout(hoverTimeoutHandle.current);
         hoverTimeoutHandle.current = null;
@@ -9724,7 +9743,6 @@
           setState(`focused-${which}`);
         } else {
           setState(null);
-          ;
           inputState.current = null;
         }
       } else {
@@ -9747,7 +9765,7 @@
       },
       dismissParameters: {
         dismissActive: openLocal,
-        onDismiss: useStableCallback((e3, reason) => {
+        onDismiss: useStableCallback((_e, _reason) => {
           setState(null);
         })
       },
@@ -9806,6 +9824,8 @@
       }
     }, [longPress, usesHover, usesLongPress]);
     return {
+      refElementPopupReturn,
+      refElementSourceReturn,
       propsPopup: useMergedProps(popupRefProps, propsPopup, popupFocusReturn.propsStable, { role: "tooltip" }, otherPopupProps, propsStablePopup),
       propsTrigger: useMergedProps(triggerRefProps, propsTrigger, triggerFocusReturn.propsStable, { onClick: useStableCallback((e3) => focus(e3.currentTarget)) }, otherTriggerProps, propsStableSource),
       tooltipReturn: {
@@ -9868,7 +9888,7 @@
 
   // ../dist/component/accordion.js
   var AccordionSectionContext = G(null);
-  var Accordion = x3(function Accordion2({ disableHomeEndKeys, initialIndex, onAfterChildLayoutEffect, onChildrenMountChange, navigatePastEnd, navigatePastStart, pageNavigationSize, localStorageKey, collator, noTypeahead, typeaheadTimeout, onChildrenCountChange, render, imperativeHandle, orientation, onNavigateLinear, onNavigateTypeahead, onElementChange, onMount, onUnmount, ...void1 }) {
+  var Accordion = x3(function Accordion2({ disableHomeEndKeys, initialIndex, onAfterChildLayoutEffect, onChildrenMountChange, navigatePastEnd, navigatePastStart, pageNavigationSize, localStorageKey, collator, noTypeahead, typeaheadTimeout, onChildrenCountChange, render, imperativeHandle, orientation, onNavigateLinear, onNavigateTypeahead, ...void1 }) {
     assertEmptyObject(void1);
     return useComponent(imperativeHandle, render, AccordionSectionContext, useAccordion({
       accordionParameters: { orientation, initialIndex, localStorageKey: localStorageKey ?? null },
@@ -9885,11 +9905,10 @@
         navigatePastStart: navigatePastStart ?? "wrap",
         pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
       },
-      refElementParameters: { onElementChange, onMount, onUnmount },
-      managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange }
+      managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange, onChildrenCountChange }
     }));
   });
-  var AccordionSection = x3(function AccordionSection2({ open, index, tagButton, disabled, bodyRole, untabbable, getText, imperativeHandle, onPressSync, focusSelf, render, info, onElementChange, onMount, onUnmount, ...void1 }) {
+  var AccordionSection = x3(function AccordionSection2({ open, index, tagButton, disabled, bodyRole, untabbable, getText, imperativeHandle, onPressSync, focusSelf, render, info, onElementChange, onMount, onUnmount, onTextContentChange, ...void1 }) {
     assertEmptyObject(void1);
     return useComponent(imperativeHandle, render, null, useAccordionSection({
       buttonParameters: { disabled: disabled ?? false, tagButton, onPressSync },
@@ -9898,7 +9917,7 @@
       info: { index, untabbable: untabbable || false, ...info },
       refElementHeaderButtonParameters: { onElementChange, onMount, onUnmount },
       refElementBodyParameters: {},
-      textContentParameters: { getText: useDefault("getText", getText) },
+      textContentParameters: { getText: useDefault("getText", getText), onTextContentChange },
       context: useContextWithWarning(AccordionSectionContext, "accordion section")
     }));
   });
@@ -9958,6 +9977,7 @@
     multiSelectionDisabled,
     onMultiSelectChange,
     singleSelectionDisabled,
+    onTextContentChange,
     //info,
     ..._rest
   }) {
@@ -9971,7 +9991,8 @@
       },
       context,
       textContentParameters: {
-        getText: useDefault("getText", getText)
+        getText: useDefault("getText", getText),
+        onTextContentChange
       },
       hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged },
       refElementParameters: { onElementChange, onMount, onUnmount },
@@ -9996,6 +10017,7 @@
     onUnmount,
     multiSelectionDisabled,
     onMultiSelectChange,
+    onTextContentChange,
     ...void1
   }) {
     assertEmptyObject(void1);
@@ -10010,7 +10032,8 @@
         focusSelf
       },
       textContentParameters: {
-        getText: useDefault("getText", getText)
+        getText: useDefault("getText", getText),
+        onTextContentChange
       },
       context: useContextWithWarning(UseCheckboxGroupChildContext, "checkbox group"),
       hasCurrentFocusParameters: {
@@ -10186,7 +10209,7 @@
       }
     }));
   });
-  var GridlistRow = x3(function GridlistRow2({ index, render, imperativeHandle, onElementChange: oec1, onMount, onUnmount, getText, untabbable, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, multiSelectionDisabled, singleSelectionDisabled, collator, initiallyMultiSelected, initiallyTabbedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onMultiSelectChange, onNavigateTypeahead, onTabbableIndexChange, selected, typeaheadTimeout, ...void1 }) {
+  var GridlistRow = x3(function GridlistRow2({ index, render, imperativeHandle, onElementChange: oec1, onMount, onUnmount, getText, untabbable, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, multiSelectionDisabled, singleSelectionDisabled, collator, initiallyMultiSelected, initiallyTabbedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onMultiSelectChange, onNavigateTypeahead, onTabbableIndexChange, selected, typeaheadTimeout, onTextContentChange, ...void1 }) {
     assertEmptyObject(void1);
     const { propsStable, refElementReturn } = useRefElement({
       refElementParameters: {
@@ -10215,10 +10238,10 @@
     if (hideBecausePaginated || hideBecauseStaggered) {
       return retIfHidden;
     } else {
-      return o4(GridlistRowInner, { index, render, collator, initiallyMultiSelected, initiallyTabbedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onMultiSelectChange, onNavigateTypeahead, onTabbableIndexChange, selected, typeaheadTimeout, focusSelf, getText, imperativeHandle, multiSelectionDisabled, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, singleSelectionDisabled, untabbable, getChildren, hideBecausePaginated, hideBecauseStaggered, parentIsPaginated, parentIsStaggered, childUseEffect, props: props2, ...void1 });
+      return o4(GridlistRowInner, { index, render, collator, initiallyMultiSelected, initiallyTabbedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onMultiSelectChange, onNavigateTypeahead, onTabbableIndexChange, selected, typeaheadTimeout, getText, imperativeHandle, multiSelectionDisabled, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, singleSelectionDisabled, untabbable, hideBecausePaginated, hideBecauseStaggered, parentIsPaginated, parentIsStaggered, childUseEffect, onTextContentChange, props: props2, ...void1 });
     }
   });
-  var GridlistRowInner = x3(function GridlistRowInner2({ index, collator, untabbable, navigatePastEnd, navigatePastStart, noTypeahead, onTabbableIndexChange, selected, typeaheadTimeout, getText, render, initiallyTabbedIndex, onNavigateTypeahead, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, focusSelf, childUseEffect, getChildren, hideBecausePaginated, hideBecauseStaggered, parentIsPaginated, parentIsStaggered, props: props1, ...void1 }) {
+  var GridlistRowInner = x3(function GridlistRowInner2({ index, collator, untabbable, navigatePastEnd, navigatePastStart, noTypeahead, onTabbableIndexChange, selected, typeaheadTimeout, getText, render, initiallyTabbedIndex, onNavigateTypeahead, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, childUseEffect, hideBecausePaginated, hideBecauseStaggered, parentIsPaginated, parentIsStaggered, props: props1, onTextContentChange, ...void1 }) {
     assertEmptyObject(void1);
     const { context, hasCurrentFocusReturn, linearNavigationReturn, managedChildReturn, managedChildrenReturn, multiSelectionChildReturn, pressParameters, props: props2, rovingTabIndexChildReturn, rovingTabIndexReturn, refElementReturn, singleSelectionChildReturn, textContentReturn, typeaheadNavigationReturn } = useGridlistRow({
       info: {
@@ -10228,7 +10251,7 @@
       },
       context: useContextWithWarning(GridlistContext, "gridlist"),
       gridlistRowParameters: { selected },
-      textContentParameters: { getText: useDefault("getText", getText) },
+      textContentParameters: { getText: useDefault("getText", getText), onTextContentChange },
       linearNavigationParameters: {
         navigatePastEnd: navigatePastEnd ?? "wrap",
         navigatePastStart: navigatePastStart ?? "wrap"
@@ -10271,7 +10294,7 @@
       staggeredChildReturn: { hideBecauseStaggered, parentIsStaggered }
     });
   });
-  var GridlistChild = x3(function GridlistChild2({ index, colSpan, focusSelf, untabbable, getText, onPressSync, longPressThreshold, onPressingChange, render, imperativeHandle, info: subInfo }) {
+  var GridlistChild = x3(function GridlistChild2({ index, colSpan, focusSelf, untabbable, getText, onPressSync, longPressThreshold, onPressingChange, render, imperativeHandle, onTextContentChange, info: subInfo }) {
     const context = useContextWithWarning(GridlistRowContext, "gridlist row");
     console.assert(context != null, `This GridlistChild is not contained within a GridlistRow that is contained within a Gridlist`);
     const defaultFocusSelf = useStableCallback((e3) => {
@@ -10281,11 +10304,12 @@
       info: {
         index,
         untabbable: untabbable || false,
-        focusSelf: focusSelf ?? defaultFocusSelf
+        focusSelf: focusSelf ?? defaultFocusSelf,
+        ...subInfo
       },
       context,
       gridNavigationCellParameters: { colSpan: colSpan ?? 1 },
-      textContentParameters: { getText: useDefault("getText", getText) },
+      textContentParameters: { getText: useDefault("getText", getText), onTextContentChange },
       pressParameters: { onPressSync, longPressThreshold, onPressingChange }
     });
     A2(imperativeHandle, () => info);
@@ -10293,7 +10317,7 @@
   });
 
   // ../dist/component/heading.js
-  function overwriteWithWarning(a4, ...t3) {
+  function overwriteWithWarning(a4, ..._t) {
     return a4;
   }
   var HeadingLevelContext = G(0);
@@ -10382,7 +10406,7 @@
     }));
   });
   var ListboxChildren = x3(function ListboxChildren2({ children, render, adjust, compare, getIndex, imperativeHandle, onAfterChildLayoutEffect, onChildrenCountChange, onChildrenMountChange, onRearranged, paginationMax, paginationMin, staggered }) {
-    const r5 = useCompleteListNavigationChildren({
+    const r4 = useCompleteListNavigationChildren({
       context: q2(ListboxChildrenContext),
       managedChildrenParameters: {
         onAfterChildLayoutEffect,
@@ -10404,9 +10428,9 @@
         staggered: staggered || false
       }
     });
-    return useComponent(imperativeHandle, render, ListboxChildContext, r5);
+    return useComponent(imperativeHandle, render, ListboxChildContext, r4);
   });
-  var ListboxItem = x3(function ListboxItemOuter({ index, render, imperativeHandle, onElementChange: oec1, onMount, onUnmount, getText, untabbable, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, multiSelectionDisabled, singleSelectionDisabled, multiSelected, onMultiSelectedChange, ...void1 }) {
+  var ListboxItem = x3(function ListboxItemOuter({ index, render, imperativeHandle, onElementChange: oec1, onMount, onUnmount, getText, untabbable, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, multiSelectionDisabled, singleSelectionDisabled, multiSelected, onMultiSelectedChange, onTextContentChange, ...void1 }) {
     const context = useContextWithWarning(ListboxContext, "listbox");
     console.assert(context != null, `This ListboxItem is not contained within a Listbox`);
     assertEmptyObject(void1);
@@ -10438,10 +10462,10 @@
     if (hideBecausePaginated || hideBecauseStaggered) {
       return retIfHidden;
     } else {
-      return o4(ListboxItemInner, { index, render, allowRepeatPresses, excludeEnter, excludePointer, focusSelf, getText, imperativeHandle, longPressThreshold, multiSelected, multiSelectionDisabled, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onMount, onMultiSelectedChange, onPressingChange, onUnmount, singleSelectionDisabled, untabbable, getChildren, hideBecausePaginated, hideBecauseStaggered, parentIsPaginated, parentIsStaggered, childUseEffect, props: props2, ...void1 });
+      return o4(ListboxItemInner, { index, render, allowRepeatPresses, excludeEnter, excludePointer, focusSelf, getText, imperativeHandle, longPressThreshold, multiSelected, multiSelectionDisabled, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onMount, onMultiSelectedChange, onPressingChange, onUnmount, singleSelectionDisabled, untabbable, hideBecausePaginated, hideBecauseStaggered, parentIsPaginated, parentIsStaggered, childUseEffect, onTextContentChange, props: props2, ...void1 });
     }
   });
-  var ListboxItemInner = x3(function ListboxItemInner2({ getText, untabbable, index, render, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, imperativeHandle, multiSelectionDisabled, singleSelectionDisabled, multiSelected, onMultiSelectedChange, getChildren, hideBecausePaginated, hideBecauseStaggered, parentIsPaginated, parentIsStaggered, props: props1, childUseEffect, ...void1 }) {
+  var ListboxItemInner = x3(function ListboxItemInner2({ getText, untabbable, index, render, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, imperativeHandle, multiSelectionDisabled, singleSelectionDisabled, multiSelected, onMultiSelectedChange, hideBecausePaginated, hideBecauseStaggered, parentIsPaginated, parentIsStaggered, props: props1, childUseEffect, onTextContentChange, ...void1 }) {
     const context = useContextWithWarning(ListboxContext, "listbox");
     console.assert(context != null, `This ListboxItem is not contained within a Listbox`);
     const focusSelfDefault = T2((e3) => {
@@ -10458,7 +10482,7 @@
       context,
       listboxParameters: {},
       pressParameters: { allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange },
-      textContentParameters: { getText: useDefault("getText", getText) },
+      textContentParameters: { getText: useDefault("getText", getText), onTextContentChange },
       hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged },
       refElementParameters: { onElementChange, onMount, onUnmount },
       singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false },
@@ -10475,7 +10499,8 @@
       singleSelectionChildReturn,
       textContentReturn,
       managedChildReturn,
-      staggeredChildReturn: { hideBecauseStaggered, parentIsStaggered }
+      staggeredChildReturn: { hideBecauseStaggered, parentIsStaggered },
+      paginatedChildReturn: { hideBecausePaginated, parentIsPaginated }
     });
   });
 
@@ -10538,7 +10563,7 @@
       }
     })) });
   });
-  var MenuItem = x3(function MenuItem2({ index, untabbable, onPress, getText, role, focusSelf, onPressingChange, render, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, ...void1 }) {
+  var MenuItem = x3(function MenuItem2({ index, untabbable, onPress, getText, role, focusSelf, onPressingChange, render, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, onTextContentChange, ...void1 }) {
     const context = useContextWithWarning(MenuItemContext, "menu");
     const defaultFocusSelf = T2((e3) => focus(e3), []);
     assertEmptyObject(void1);
@@ -10546,11 +10571,13 @@
       info: {
         index,
         untabbable: untabbable || false,
-        focusSelf: focusSelf ?? defaultFocusSelf
+        focusSelf: focusSelf ?? defaultFocusSelf,
+        ...uinfo
       },
       context,
       textContentParameters: {
-        getText: useDefault("getText", getText)
+        getText: useDefault("getText", getText),
+        onTextContentChange
       },
       menuItemParameters: {
         onPress,
@@ -10614,13 +10641,13 @@
     A2(imperativeHandle, () => info);
     return o4(MenubarItemContext.Provider, { value: info.contextChildren, children: render(info) });
   });
-  var MenubarItem = x3(function MenubarItem2({ index, render, focusSelf, untabbable, getText, onPress, onPressingChange, role, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, ...void1 }) {
+  var MenubarItem = x3(function MenubarItem2({ index, render, focusSelf, untabbable, getText, onPress, onPressingChange, role, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, onTextContentChange, ...void1 }) {
     const defaultFocusSelf = T2((e3) => focus(e3), []);
     assertEmptyObject(void1);
     return useComponent(imperativeHandle, render, null, useMenubarChild({
       info: { index, untabbable: untabbable || false, focusSelf: focusSelf ?? defaultFocusSelf, ...uinfo },
       context: useContextWithWarning(MenubarItemContext, "menubar"),
-      textContentParameters: { getText: useDefault("getText", getText) },
+      textContentParameters: { getText: useDefault("getText", getText), onTextContentChange },
       menuItemParameters: { onPress: onPress ?? null, role: role ?? "menuitem" },
       pressParameters: { onPressingChange },
       hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged },
@@ -10655,7 +10682,6 @@
 
   // ../dist/component/radio-group.js
   var RadioContext = G(null);
-  var ProcessedChildrenContext = G(null);
   var RadioGroup = x3(function RadioGroup2({ render, name, collator, disableHomeEndKeys, arrowKeyDirection, noTypeahead, typeaheadTimeout, ariaLabel, navigatePastEnd, navigatePastStart, selectedValue, untabbable, onTabbableIndexChange, onNavigateLinear, onNavigateTypeahead, pageNavigationSize, onElementChange, onMount, onUnmount, imperativeHandle, onSelectedValueChange, singleSelectionMode, ...void1 }) {
     untabbable ??= false;
     assertEmptyObject(void1);
@@ -10684,18 +10710,17 @@
       refElementParameters: { onElementChange, onMount, onUnmount }
     }));
   });
-  var Radio = x3(function Radio2({ disabled, index, render, value, ariaLabel, labelPosition, untabbable, tagInput, tagLabel, getText, longPressThreshold, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, imperativeHandle, ...void1 }) {
+  var Radio = x3(function Radio2({ disabled, index, render, value, ariaLabel, labelPosition, untabbable, tagInput, tagLabel, getText, longPressThreshold, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, imperativeHandle, onTextContentChange, ...void1 }) {
     assertEmptyObject(void1);
     const context = useContextWithWarning(RadioContext, "radio group");
     console.assert(context != null, `This Radio is not contained within a RadioGroup`);
-    const getValue = useStableGetter(value);
     return useComponent(imperativeHandle, render, null, useRadio({
       radioParameters: { value },
       checkboxLikeParameters: { disabled: disabled ?? false },
       info: { index, untabbable: untabbable || false },
       context,
       labelParameters: { ariaLabel, labelPosition, tagInput, tagLabel },
-      textContentParameters: { getText: useDefault("getText", getText) },
+      textContentParameters: { getText: useDefault("getText", getText), onTextContentChange },
       pressParameters: { longPressThreshold },
       hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged },
       refElementParameters: { onElementChange, onMount, onUnmount }
@@ -10804,7 +10829,7 @@
       }
     }));
   });
-  var TableRow = x3(function TableRow2({ index, render, imperativeHandle, onElementChange: oec1, onMount, onUnmount, getText, untabbable, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, multiSelectionDisabled, singleSelectionDisabled, initiallyMultiSelected, initiallyTabbedIndex, navigatePastEnd, navigatePastStart, onMultiSelectChange, onTabbableIndexChange, selected, tagTableRow, ...void1 }) {
+  var TableRow = x3(function TableRow2({ index, render, imperativeHandle, onElementChange: oec1, onMount, onUnmount, getText, untabbable, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, multiSelectionDisabled, singleSelectionDisabled, initiallyMultiSelected, initiallyTabbedIndex, navigatePastEnd, navigatePastStart, onMultiSelectChange, onTabbableIndexChange, selected, tagTableRow, onTextContentChange, ...void1 }) {
     assertEmptyObject(void1);
     const { propsStable, refElementReturn } = useRefElement({
       refElementParameters: {
@@ -10833,10 +10858,10 @@
     if (hideBecausePaginated || hideBecauseStaggered) {
       return retIfHidden;
     } else {
-      return o4(TableRowInner, { index, render, initiallyMultiSelected, initiallyTabbedIndex, navigatePastEnd, navigatePastStart, onMultiSelectChange, onTabbableIndexChange, selected, focusSelf, getText, imperativeHandle, multiSelectionDisabled, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, singleSelectionDisabled, untabbable, getChildren, hideBecausePaginated, hideBecauseStaggered, parentIsPaginated, parentIsStaggered, childUseEffect, props: props2, ...void1 });
+      return o4(TableRowInner, { index, render, initiallyMultiSelected, initiallyTabbedIndex, navigatePastEnd, navigatePastStart, onMultiSelectChange, onTabbableIndexChange, selected, tagTableRow, getText, imperativeHandle, multiSelectionDisabled, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, singleSelectionDisabled, untabbable, hideBecausePaginated, hideBecauseStaggered, parentIsPaginated, parentIsStaggered, childUseEffect, onTextContentChange, props: props2, ...void1 });
     }
   });
-  var TableRowInner = x3(function TableRowInner2({ index, getText, tagTableRow, onTabbableIndexChange, navigatePastEnd, navigatePastStart, selected, initiallyTabbedIndex, untabbable, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, render, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, focusSelf, childUseEffect, getChildren, hideBecausePaginated, hideBecauseStaggered, parentIsPaginated, parentIsStaggered, props: props1, ...void1 }) {
+  var TableRowInner = x3(function TableRowInner2({ index, getText, tagTableRow, onTabbableIndexChange, navigatePastEnd, navigatePastStart, selected, initiallyTabbedIndex, untabbable, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, render, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, childUseEffect, hideBecausePaginated, hideBecauseStaggered, parentIsPaginated, parentIsStaggered, onTextContentChange, props: props1, ...void1 }) {
     assertEmptyObject(void1);
     const { props: props2, context, hasCurrentFocusReturn, linearNavigationReturn, managedChildReturn, managedChildrenReturn, multiSelectionChildReturn, pressParameters, refElementReturn, rovingTabIndexChildReturn, rovingTabIndexReturn, singleSelectionChildReturn, textContentReturn, typeaheadNavigationReturn } = useTableRow({
       info: {
@@ -10845,7 +10870,8 @@
       },
       context: useContextWithWarning(TableSectionContext, "table section"),
       textContentParameters: {
-        getText: useDefault("getText", getText)
+        getText: useDefault("getText", getText),
+        onTextContentChange
       },
       tableRowParameters: {
         selected,
@@ -10887,7 +10913,7 @@
       staggeredChildReturn: { hideBecauseStaggered, parentIsStaggered }
     });
   });
-  var TableCell = x3(function TableCell2({ index, getText, focusSelf, untabbable, tagTableCell, render, colSpan, imperativeHandle, getSortValue, info, ...void1 }) {
+  var TableCell = x3(function TableCell2({ index, getText, focusSelf, untabbable, tagTableCell, render, colSpan, imperativeHandle, getSortValue, onTextContentChange, info: uinfo, ...void1 }) {
     const defaultFocusSelf = useStableCallback((e3) => {
       focus(e3);
     }, []);
@@ -10897,7 +10923,8 @@
         index,
         focusSelf: focusSelf ?? defaultFocusSelf,
         untabbable: untabbable || false,
-        getSortValue
+        getSortValue,
+        ...uinfo
       },
       context: useContextWithWarning(TableRowContext, "table row"),
       gridNavigationCellParameters: {
@@ -10907,7 +10934,8 @@
         tagTableCell
       },
       textContentParameters: {
-        getText: useDefault("getText", getText)
+        getText: useDefault("getText", getText),
+        onTextContentChange
       }
     }));
   });
@@ -10949,7 +10977,7 @@
     A2(imperativeHandle, () => info);
     return o4(TabsContext.Provider, { value: contextTabs, children: o4(TabPanelsContext.Provider, { value: contextPanels, children: render(info) }) });
   });
-  var Tab = x3(function Tab2({ focusSelf, untabbable, index, getText, render, longPressThreshold, onPressingChange, imperativeHandle, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, singleSelectionDisabled, info: uinfo, ...void1 }) {
+  var Tab = x3(function Tab2({ focusSelf, untabbable, index, getText, render, longPressThreshold, onPressingChange, imperativeHandle, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, singleSelectionDisabled, onTextContentChange, info: uinfo, ...void1 }) {
     assertEmptyObject(void1);
     const context = useContextWithWarning(TabsContext, "tabs");
     console.assert(context != null, `This Tab is not contained within a Tabs component`);
@@ -10967,7 +10995,7 @@
       hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged },
       refElementParameters: { onElementChange, onMount, onUnmount },
       pressParameters: { focusSelf: focusSelfDefault, longPressThreshold, onPressingChange },
-      textContentParameters: { getText: useDefault("getText", getText) },
+      textContentParameters: { getText: useDefault("getText", getText), onTextContentChange },
       singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false }
     }));
   });
@@ -11011,11 +11039,10 @@
   }
 
   // ../dist/component/toolbar.js
-  var UntabbableContext = G(false);
   var ToolbarContext = G(null);
-  var ProcessedChildrenContext2 = G(null);
-  var Toolbar = x3(function ToolbarU({ render, role, collator, disableHomeEndKeys, disabled, navigatePastEnd, navigatePastStart, pageNavigationSize, singleSelectedIndex, onSingleSelectedIndexChange, orientation, noTypeahead, onTabbableIndexChange, typeaheadTimeout, ariaLabel, imperativeHandle, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, singleSelectionAriaPropName, singleSelectionMode, untabbable, onNavigateLinear, onNavigateTypeahead, onElementChange, onMount, onUnmount }, ref) {
-    return useComponentC(imperativeHandle, render, ToolbarContext, ProcessedChildrenContext2, useToolbar({
+  var ProcessedChildrenContext = G(null);
+  var Toolbar = x3(function ToolbarU({ render, role, collator, disableHomeEndKeys, disabled, navigatePastEnd, navigatePastStart, pageNavigationSize, singleSelectedIndex, onSingleSelectedIndexChange, orientation, noTypeahead, onTabbableIndexChange, typeaheadTimeout, ariaLabel, imperativeHandle, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, singleSelectionAriaPropName, singleSelectionMode, untabbable, onNavigateLinear, onNavigateTypeahead, onElementChange, onMount, onUnmount }) {
+    return useComponentC(imperativeHandle, render, ToolbarContext, ProcessedChildrenContext, useToolbar({
       linearNavigationParameters: {
         onNavigateLinear,
         disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
@@ -11042,7 +11069,7 @@
       refElementParameters: { onElementChange, onMount, onUnmount }
     }));
   });
-  var ToolbarChild = x3(function ToolbarChild2({ index, render, focusSelf, getText, disabledProp, untabbable, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, imperativeHandle, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, ...void1 }) {
+  var ToolbarChild = x3(function ToolbarChild2({ index, render, focusSelf, getText, disabledProp, untabbable, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, imperativeHandle, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, onTextContentChange, ...void1 }) {
     const context = useContextWithWarning(ToolbarContext, "toolbar");
     const focusSelfDefault = T2((e3) => {
       focus(e3);
@@ -11055,9 +11082,10 @@
       info: {
         index,
         focusSelf,
-        untabbable: untabbable || false
+        untabbable: untabbable || false,
+        ...uinfo
       },
-      textContentParameters: { getText: useDefault("getText", getText) },
+      textContentParameters: { getText: useDefault("getText", getText), onTextContentChange },
       hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged },
       refElementParameters: { onElementChange, onMount, onUnmount },
       singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false },
@@ -11185,8 +11213,8 @@
         yield /* @__PURE__ */ o4(DemoAccordionSection, { index: 2, heading: "Accordion section #2 (disabled)", body: "Body content #2", disabled: true });
         yield /* @__PURE__ */ o4(DemoAccordionSection, { index: 3, heading: "Accordion section #3 (forced open)", body: "Body content #3", disabled: false, open: true });
         yield /* @__PURE__ */ o4(DemoAccordionSection, { index: 4, heading: "Accordion section #4 (forced closed)", body: "Body content #4", disabled: false, open: false });
-        for (let i3 = 5; i3 < count; ++i3) {
-          yield /* @__PURE__ */ o4(DemoAccordionSection, { index: i3, heading: `Accordion section #${i3}`, body: `BodyContent #${i3}`, disabled: false });
+        for (let i4 = 5; i4 < count; ++i4) {
+          yield /* @__PURE__ */ o4(DemoAccordionSection, { index: i4, heading: `Accordion section #${i4}`, body: `BodyContent #${i4}`, disabled: false });
         }
       }()).slice(0, count) }) })
     ] });
@@ -11461,8 +11489,8 @@
                     }
                   ),
                   /* @__PURE__ */ o4("div", { style: { display: "flex", flexDirection: "column" }, children: /* @__PURE__ */ o4(k, { children: Array.from(function* () {
-                    for (let i3 = 0; i3 < count; ++i3) {
-                      yield /* @__PURE__ */ o4(DemoCheckbox, { index: i3 + 1 }, i3);
+                    for (let i4 = 0; i4 < count; ++i4) {
+                      yield /* @__PURE__ */ o4(DemoCheckbox, { index: i4 + 1 }, i4);
                     }
                   }()) }) })
                 ] })
@@ -11790,18 +11818,18 @@
                     return /* @__PURE__ */ o4(k, { children: rowsInfo.rearrangeableChildrenReturn.children });
                   },
                   children: Array.from(function* () {
-                    for (let i3 = 0; i3 < count; ++i3) {
+                    for (let i4 = 0; i4 < count; ++i4) {
                       yield /* @__PURE__ */ o4(
                         GridlistRow,
                         {
                           selected: null,
-                          index: i3,
+                          index: i4,
                           render: (rowInfo) => {
                             if (rowInfo.staggeredChildReturn.hideBecauseStaggered || rowInfo.paginatedChildReturn.hideBecausePaginated)
                               return /* @__PURE__ */ o4("li", { ...rowInfo.props });
                             return /* @__PURE__ */ o4("li", { ...rowInfo.props, children: [
-                              /* @__PURE__ */ o4(DemoGridlistChild1, { row: i3 }),
-                              i3 != 2 && /* @__PURE__ */ o4(DemoGridlistChild2, { tabbable: rowInfo.rovingTabIndexChildReturn?.tabbable || false })
+                              /* @__PURE__ */ o4(DemoGridlistChild1, { row: i4 }),
+                              i4 != 2 && /* @__PURE__ */ o4(DemoGridlistChild2, { tabbable: rowInfo.rovingTabIndexChildReturn?.tabbable || false })
                             ] });
                           }
                         }
@@ -11925,8 +11953,8 @@
                     return /* @__PURE__ */ o4(k, { children: info2.rearrangeableChildrenReturn.children });
                   },
                   children: Array.from(function* () {
-                    for (let i3 = 0; i3 < count; ++i3) {
-                      yield /* @__PURE__ */ o4(DemoListItem, { index: i3 }, i3);
+                    for (let i4 = 0; i4 < count; ++i4) {
+                      yield /* @__PURE__ */ o4(DemoListItem, { index: i4 }, i4);
                     }
                   }())
                 }
@@ -12019,8 +12047,8 @@
                   return /* @__PURE__ */ o4(k, { children: info2.rearrangeableChildrenReturn.children });
                 },
                 children: Array.from(function* () {
-                  for (let i3 = 0; i3 < count; ++i3) {
-                    yield /* @__PURE__ */ o4(DemoListItem3, { index: i3 }, i3);
+                  for (let i4 = 0; i4 < count; ++i4) {
+                    yield /* @__PURE__ */ o4(DemoListItem3, { index: i4 }, i4);
                   }
                 }())
               }
@@ -12138,8 +12166,8 @@
                 children: /* @__PURE__ */ o4("div", { ...info.propsSurface, hidden: !open, children: [
                   /* @__PURE__ */ o4("div", { ...info.propsSentinel }),
                   /* @__PURE__ */ o4("ul", { ...info.propsTarget, children: Array.from(function* () {
-                    for (let i3 = 0; i3 < count; ++i3) {
-                      yield /* @__PURE__ */ o4("div", { children: /* @__PURE__ */ o4(DemoListItem5, { index: i3 }, i3) });
+                    for (let i4 = 0; i4 < count; ++i4) {
+                      yield /* @__PURE__ */ o4("div", { children: /* @__PURE__ */ o4(DemoListItem5, { index: i4 }, i4) });
                     }
                   }()) }),
                   /* @__PURE__ */ o4("div", { ...info.propsSentinel })
@@ -12247,8 +12275,8 @@
             return /* @__PURE__ */ o4(k, { children: [
               /* @__PURE__ */ o4("label", { ...info.propsRadioGroupLabel, children: "Radio group demo" }),
               /* @__PURE__ */ o4("div", { ...info.propsRadioGroup, children: Array.from(function* () {
-                for (let i3 = 0; i3 < count; ++i3) {
-                  yield /* @__PURE__ */ o4(DemoRadioButton, { index: i3 }, i3);
+                for (let i4 = 0; i4 < count; ++i4) {
+                  yield /* @__PURE__ */ o4(DemoRadioButton, { index: i4 }, i4);
                 }
               }()) })
             ] });
@@ -12325,8 +12353,8 @@
           max: 10,
           render: (info) => {
             return /* @__PURE__ */ o4(k, { children: Array.from(function* () {
-              for (let i3 = 0; i3 < count; ++i3) {
-                yield /* @__PURE__ */ o4("div", { children: /* @__PURE__ */ o4(DemoSliderThumb, { index: i3 }, i3) });
+              for (let i4 = 0; i4 < count; ++i4) {
+                yield /* @__PURE__ */ o4("div", { children: /* @__PURE__ */ o4(DemoSliderThumb, { index: i4 }, i4) });
               }
             }()) });
           }
@@ -12423,7 +12451,7 @@
     );
   }
   function DemoTableCell({ index, header }) {
-    const r5 = _(Math.random());
+    const r4 = _(Math.random());
     if (header) {
       const ref = _(null);
       const text = `Header #${index}`;
@@ -12447,8 +12475,8 @@
         case 0:
           return /* @__PURE__ */ o4(DemoInput, { index });
         default:
-          return /* @__PURE__ */ o4(TableCell, { focusSelf: (e3) => e3.focus(), tagTableCell: "td", index, getSortValue: useStableGetter(r5.current), render: (info) => {
-            return /* @__PURE__ */ o4("td", { ...info.propsFocus, ...info.propsCell, children: r5.current.toString() });
+          return /* @__PURE__ */ o4(TableCell, { focusSelf: (e3) => e3.focus(), tagTableCell: "td", index, getSortValue: useStableGetter(r4.current), render: (info) => {
+            return /* @__PURE__ */ o4("td", { ...info.propsFocus, ...info.propsCell, children: r4.current.toString() });
           } });
       }
     }
@@ -12503,12 +12531,12 @@
                     multiSelectionAriaPropName: "aria-selected",
                     render: (infoSection) => {
                       return /* @__PURE__ */ o4("tbody", { ...infoSection.propsTableSection, children: infoSection.rearrangeableChildrenReturn.useRearrangedChildren(Array.from(function* () {
-                        for (let i3 = 0; i3 < count; ++i3) {
+                        for (let i4 = 0; i4 < count; ++i4) {
                           yield /* @__PURE__ */ o4(
                             TableRow,
                             {
                               tagTableRow: "tr",
-                              index: i3,
+                              index: i4,
                               render: (infoRow) => {
                                 return /* @__PURE__ */ o4("tr", { ...infoRow.props, children: [
                                   /* @__PURE__ */ o4(DemoTableCell, { index: 0 }, 0),
@@ -12517,7 +12545,7 @@
                                 ] });
                               }
                             },
-                            i3
+                            i4
                           );
                         }
                       }())) });
@@ -12579,13 +12607,13 @@
             return /* @__PURE__ */ o4(k, { children: [
               /* @__PURE__ */ o4("label", { ...info.propsLabel, children: "Tabs example" }),
               /* @__PURE__ */ o4("ul", { ...info.propsContainer, style: { display: "flex" }, children: Array.from(function* () {
-                for (let i3 = 0; i3 < count; ++i3) {
-                  yield /* @__PURE__ */ o4(DemoTab, { i: i3 });
+                for (let i4 = 0; i4 < count; ++i4) {
+                  yield /* @__PURE__ */ o4(DemoTab, { i: i4 });
                 }
               }()) }),
               /* @__PURE__ */ o4("div", { children: Array.from(function* () {
-                for (let i3 = 0; i3 < count; ++i3) {
-                  yield /* @__PURE__ */ o4(DemoTabPanel, { i: i3 });
+                for (let i4 = 0; i4 < count; ++i4) {
+                  yield /* @__PURE__ */ o4(DemoTabPanel, { i: i4 });
                 }
               }()) })
             ] });
@@ -12594,24 +12622,24 @@
       ) })
     ] });
   }
-  var DemoTab = x3(function DemoTab2({ i: i3 }) {
-    return /* @__PURE__ */ o4(Tab, { focusSelf: (e3) => e3.focus(), index: i3, render: (info) => /* @__PURE__ */ o4("li", { ...info.props, style: { marginLeft: "2em" }, children: [
+  var DemoTab = x3(function DemoTab2({ i: i4 }) {
+    return /* @__PURE__ */ o4(Tab, { focusSelf: (e3) => e3.focus(), index: i4, render: (info) => /* @__PURE__ */ o4("li", { ...info.props, style: { marginLeft: "2em" }, children: [
       "Tab #",
-      i3,
+      i4,
       " (offset: ",
       info.singleSelectionChildReturn.singleSelectedOffset ?? "null",
       ") ",
       info.singleSelectionChildReturn.singleSelected && "(visible)"
-    ] }), getSortValue: returnZero }, i3);
+    ] }), getSortValue: returnZero }, i4);
   });
-  var DemoTabPanel = x3(function DemoTabPanel2({ i: i3 }) {
-    return /* @__PURE__ */ o4(TabPanel, { index: i3, render: (info) => /* @__PURE__ */ o4("div", { ...info.props, hidden: !info.tabPanelReturn.visible, children: [
+  var DemoTabPanel = x3(function DemoTabPanel2({ i: i4 }) {
+    return /* @__PURE__ */ o4(TabPanel, { index: i4, render: (info) => /* @__PURE__ */ o4("div", { ...info.props, hidden: !info.tabPanelReturn.visible, children: [
       "Tab panel #",
-      i3,
+      i4,
       " (offset: ",
       info.tabPanelReturn.visibleOffset ?? "null",
       ")"
-    ] }) }, i3);
+    ] }) }, i4);
   });
 
   // demos/toast.tsx
@@ -12653,13 +12681,13 @@
     const pushToast = T2(() => {
       const index = currentIndex.current;
       currentIndex.current += 1;
-      const c5 = /* @__PURE__ */ o4(k, { children: [
+      const c4 = /* @__PURE__ */ o4(k, { children: [
         "This the toast with an index of ",
         index,
         "."
       ] });
-      const nt = /* @__PURE__ */ o4(Toast, { children: c5, index, render: ({ toastReturn: { dismiss, showing, dismissed, numberOfToastsAheadOfUs } }) => {
-        const c6 = /* @__PURE__ */ o4(k, { children: [
+      const nt = /* @__PURE__ */ o4(Toast, { children: c4, index, render: ({ toastReturn: { dismiss, showing, dismissed, numberOfToastsAheadOfUs } }) => {
+        const c5 = /* @__PURE__ */ o4(k, { children: [
           "This the toast with an index of ",
           index,
           ". (#",
@@ -12667,7 +12695,7 @@
           " in the queue to be shown)."
         ] });
         return /* @__PURE__ */ o4("div", { style: showing ? {} : { opacity: 0.5 }, children: [
-          c6,
+          c5,
           " ",
           /* @__PURE__ */ o4("button", { disabled: dismissed, onClick: dismiss, children: "Click to dismiss" })
         ] });
@@ -12761,8 +12789,8 @@
           render: (info) => /* @__PURE__ */ o4(k, { children: [
             /* @__PURE__ */ o4("label", { ...info.propsLabel, children: "Toolbar demo" }),
             /* @__PURE__ */ o4("div", { ...info.propsToolbar, children: Array.from(function* () {
-              for (let i3 = 0; i3 < count; ++i3) {
-                yield /* @__PURE__ */ o4(DemoListItem6, { index: i3 }, i3);
+              for (let i4 = 0; i4 < count; ++i4) {
+                yield /* @__PURE__ */ o4(DemoListItem6, { index: i4 }, i4);
               }
             }()) })
           ] })
@@ -12863,7 +12891,6 @@
   }
 
   // index.tsx
-  setDebugLogging(true);
   var Component = () => {
     const { children, context } = useNotificationProvider({ targetAssertive: "aria-notifications-assertive", targetPolite: "aria-notifications-polite" });
     return /* @__PURE__ */ o4(NotificationProviderContext.Provider, { value: context, children: [
@@ -12881,7 +12908,7 @@
     ] });
   };
   requestAnimationFrame(() => {
-    D(/* @__PURE__ */ o4(Component, {}), document.getElementById("root"));
+    B(/* @__PURE__ */ o4(Component, {}), document.getElementById("root"));
     console.log(
       accordion_exports,
       button_exports,

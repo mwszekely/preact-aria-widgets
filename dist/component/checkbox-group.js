@@ -31,7 +31,7 @@ export const CheckboxGroup = memo((function CheckboxGroup({ render, collator, di
         multiSelectionParameters: { multiSelectionAriaPropName, multiSelectionMode: multiSelectionMode || "activation", onSelectionChange }
     }));
 }));
-export const CheckboxGroupParent = memo((function CheckboxGroupParent({ render, index, focusSelf, untabbable, imperativeHandle, getText, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, 
+export const CheckboxGroupParent = memo((function CheckboxGroupParent({ render, index, focusSelf, untabbable, imperativeHandle, getText, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, onTextContentChange, 
 //info,
 ..._rest }) {
     const context = useContextWithWarning(UseCheckboxGroupChildContext, "checkbox group");
@@ -44,7 +44,8 @@ export const CheckboxGroupParent = memo((function CheckboxGroupParent({ render, 
         },
         context,
         textContentParameters: {
-            getText: useDefault("getText", getText)
+            getText: useDefault("getText", getText),
+            onTextContentChange
         },
         hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged },
         refElementParameters: { onElementChange, onMount, onUnmount },
@@ -54,7 +55,7 @@ export const CheckboxGroupParent = memo((function CheckboxGroupParent({ render, 
 }));
 export const CheckboxGroupChild = memo((function CheckboxGroupChild({ index, render, checked, onChangeFromParent, untabbable, getText, focusSelf, 
 //info,
-imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, multiSelectionDisabled, onMultiSelectChange, ...void1 }) {
+imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, multiSelectionDisabled, onMultiSelectChange, onTextContentChange, ...void1 }) {
     assertEmptyObject(void1);
     return useComponent(imperativeHandle, render, null, useCheckboxGroupChild({
         checkboxGroupChildParameters: {
@@ -67,7 +68,8 @@ imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onEleme
             focusSelf
         },
         textContentParameters: {
-            getText: useDefault("getText", getText)
+            getText: useDefault("getText", getText),
+            onTextContentChange,
         },
         context: useContextWithWarning(UseCheckboxGroupChildContext, "checkbox group"),
         hasCurrentFocusParameters: {

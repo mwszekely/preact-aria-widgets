@@ -43,7 +43,7 @@ export const Tabs = memo((function Tabs({ ariaLabel, collator, disableHomeEndKey
     useImperativeHandle(imperativeHandle, () => info);
     return (_jsx(TabsContext.Provider, { value: contextTabs, children: _jsx(TabPanelsContext.Provider, { value: contextPanels, children: render(info) }) }));
 }));
-export const Tab = memo((function Tab({ focusSelf, untabbable, index, getText, render, longPressThreshold, onPressingChange, imperativeHandle, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, singleSelectionDisabled, info: uinfo, ...void1 }) {
+export const Tab = memo((function Tab({ focusSelf, untabbable, index, getText, render, longPressThreshold, onPressingChange, imperativeHandle, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, singleSelectionDisabled, onTextContentChange, info: uinfo, ...void1 }) {
     assertEmptyObject(void1);
     const context = useContextWithWarning(TabsContext, "tabs");
     console.assert(context != null, `This Tab is not contained within a Tabs component`);
@@ -59,7 +59,7 @@ export const Tab = memo((function Tab({ focusSelf, untabbable, index, getText, r
         hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged },
         refElementParameters: { onElementChange, onMount, onUnmount },
         pressParameters: { focusSelf: focusSelfDefault, longPressThreshold, onPressingChange },
-        textContentParameters: { getText: useDefault("getText", getText) },
+        textContentParameters: { getText: useDefault("getText", getText), onTextContentChange },
         singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false, }
     }));
 }));

@@ -1,7 +1,7 @@
 import { CompleteListNavigationContext, ElementProps, JSX, MakeSingleSelectionDeclarativeParameters, MakeSingleSelectionDeclarativeReturnType, TargetedOmit, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseRandomIdReturnType } from "preact-prop-helpers";
 import { OmitStrong } from "./props.js";
 import { UseLabelSyntheticParameters } from "./use-label.js";
-export interface UseToolbarParametersSelf<ContainerElement extends Element, ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> {
+export interface UseToolbarParametersSelf {
     /** Primarily controls arrow key direction for navigation */
     orientation: "horizontal" | "vertical";
     /**
@@ -18,7 +18,7 @@ export interface UseToolbarParametersSelf<ContainerElement extends Element, Chil
     disabled: boolean;
 }
 export interface UseToolbarParameters<ContainerElement extends Element, ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends OmitStrong<MakeSingleSelectionDeclarativeParameters<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>>, "rovingTabIndexParameters" | "paginatedChildrenParameters" | "linearNavigationParameters" | "singleSelectionReturn">, TargetedOmit<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>, "rovingTabIndexParameters", "focusSelfParent">, TargetedOmit<UseLabelSyntheticParameters, "labelParameters", "onLabelClick">, TargetedOmit<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>, "linearNavigationParameters", "arrowKeyDirection"> {
-    toolbarParameters: UseToolbarParametersSelf<ContainerElement, ChildElement, M>;
+    toolbarParameters: UseToolbarParametersSelf;
 }
 export interface UseToolbarReturnType<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends OmitStrong<MakeSingleSelectionDeclarativeReturnType<UseCompleteListNavigationReturnType<ContainerElement, ChildElement, M>>, "props"> {
     propsToolbar: ElementProps<ContainerElement>;
@@ -59,5 +59,5 @@ export declare const useToolbar: <ContainerElement extends Element, ChildElement
 /**
  * @compositeParams
  */
-export declare const useToolbarChild: <ChildElement extends Element>({ context: { toolbarContext, ...context }, info, toolbarChildParameters: { disabledProp }, ...args }: UseToolbarChildParameters<ChildElement, UseToolbarSubInfo<ChildElement>>) => UseToolbarChildReturnType<ChildElement, UseToolbarSubInfo<ChildElement>>;
+export declare const useToolbarChild: <ChildElement extends Element>({ context, info, toolbarChildParameters: { disabledProp }, ...args }: UseToolbarChildParameters<ChildElement, UseToolbarSubInfo<ChildElement>>) => UseToolbarChildReturnType<ChildElement, UseToolbarSubInfo<ChildElement>>;
 //# sourceMappingURL=use-toolbar.d.ts.map

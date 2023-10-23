@@ -1,10 +1,6 @@
 import { Context, Ref, createContext } from "preact";
 import { GetIndex, Nullable, UseMultiSelectionParameters, UseSingleSelectionParameters, VNode, focus } from "preact-prop-helpers";
-import { ForwardFn, createPortal, forwardRef, memo, useContext, useImperativeHandle, useRef } from "preact/compat";
-
-function memoForwardRef<T extends ForwardFn<any, any>>(fn: T): T {
-    return memo(forwardRef(fn)) as T;
-}
+import { createPortal, useContext, useImperativeHandle, useRef } from "preact/compat";
 
 /**
  * Almost all components are built in the exact same way from their implementing hook -- this just sets all of that up.
@@ -15,7 +11,7 @@ function memoForwardRef<T extends ForwardFn<any, any>>(fn: T): T {
  * @param info The return type of the hook.
  * @returns 
  */
-export function useComponent<R>(imperativeHandle: Nullable<Ref<R>>, render: (info: R) => VNode, Context: null | Context<(NonNullable<R> extends {context?: infer C}? C : unknown)>, info: R) {
+export function useComponent<R>(imperativeHandle: Nullable<Ref<R>>, render: (info: R) => VNode, Context: null | Context<(NonNullable<R> extends { context?: infer C } ? C : unknown)>, info: R) {
     useImperativeHandle(imperativeHandle!, () => info);
     if (Context) {
         return <Context.Provider value={(info as { context?: any }).context}>{render(info)}</Context.Provider>
@@ -25,7 +21,7 @@ export function useComponent<R>(imperativeHandle: Nullable<Ref<R>>, render: (inf
     }
 }
 
-export function useComponentC<R>(imperativeHandle: Nullable<Ref<R>>, render: (info: R) => VNode, ContextChildren: null | Context<(R extends {contextChildren?: infer C}? C : unknown)>, ContextProcessing: null | Context<(R extends {contextProcessing?: infer C}? C : unknown)>, info: R) {
+export function useComponentC<R>(imperativeHandle: Nullable<Ref<R>>, render: (info: R) => VNode, ContextChildren: null | Context<(R extends { contextChildren?: infer C } ? C : unknown)>, ContextProcessing: null | Context<(R extends { contextProcessing?: infer C } ? C : unknown)>, info: R) {
     useImperativeHandle(imperativeHandle!, () => info);
     let ch = render(info);
 

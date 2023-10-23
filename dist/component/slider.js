@@ -19,5 +19,4 @@ export function SliderThumb({ label, tag, value, max, min, index, render, valueT
         sliderThumbParameters: { label, tag, value, max, min, valueText, onValueChange },
     }));
 }
-;
 //# sourceMappingURL=slider.js.map

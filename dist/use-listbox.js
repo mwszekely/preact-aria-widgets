@@ -26,7 +26,7 @@ export const useListbox = monitored(function useListbox({ labelParameters, listb
         randomIdInputParameters: { prefix: Prefices.listbox },
         randomIdLabelParameters: { prefix: Prefices.listboxLabel }
     });
-    let { contextChildren, contextProcessing, props: { ...props }, rovingTabIndexReturn, singleSelectionReturn, ...restRet } = useCompleteListNavigationDeclarative({
+    let { contextChildren, contextProcessing, props: { ...props }, rovingTabIndexReturn, singleSelectionReturn: _singleSelectionReturn, ...restRet } = useCompleteListNavigationDeclarative({
         rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
         singleSelectionDeclarativeParameters: { onSingleSelectedIndexChange, singleSelectedIndex },
         singleSelectionParameters: { singleSelectionAriaPropName: singleSelectionAriaPropName || "aria-selected", singleSelectionMode },
@@ -77,7 +77,7 @@ export const useListboxChildren = monitored(function useListboxChildren<E extend
 /**
  * @compositeParams
  */
-export const useListboxItem = monitored(function useListboxItem({ context, listboxParameters: {}, pressParameters: { allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, ...void1 }, singleSelectionChildParameters: { singleSelectionDisabled }, ...restParams }) {
+export const useListboxItem = monitored(function useListboxItem({ context, listboxParameters, pressParameters: { allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, ...void1 }, singleSelectionChildParameters: { singleSelectionDisabled }, ...restParams }) {
     const { propsChild, propsTabbable, refElementReturn, pressParameters: { onPressSync, excludeSpace, ...void2 }, ...restRet } = useCompleteListNavigationChildDeclarative({
         context,
         singleSelectionChildParameters: { singleSelectionDisabled },
@@ -85,6 +85,7 @@ export const useListboxItem = monitored(function useListboxItem({ context, listb
     });
     assertEmptyObject(void1);
     assertEmptyObject(void2);
+    assertEmptyObject(listboxParameters);
     propsChild.role = "option";
     propsChild["aria-disabled"] = singleSelectionDisabled ? "true" : undefined;
     const { pressReturn, props: propsPress } = usePress({

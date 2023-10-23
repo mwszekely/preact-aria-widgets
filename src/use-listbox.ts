@@ -52,14 +52,14 @@ export interface UseListboxParameters<ListElement extends Element, ListItemEleme
     TargetedPick<UseCompleteListNavigationParameters<ListElement, ListItemElement, M>, "singleSelectionParameters", "singleSelectionAriaPropName" | "singleSelectionMode"> {
     listboxParameters: UseListboxParametersSelf;
 }
-export interface UseListboxReturnType<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationReturnType<ListElement, ListItemElement, M>, "singleSelectionReturn" | "props"> {
+export interface UseListboxReturnType<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationReturnType<ListElement, ListItemElement, M>, "props" | "singleSelectionReturn"> {
     propsListbox: ElementProps<ListElement>;
     propsListboxLabel: ElementProps<LabelElement>;
     contextChildren: UseListboxContext<ListItemElement, M>;
 }
 export interface UseListboxItemReturnType<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationChildDeclarativeReturnType<ListItemElement, M>, "propsChild" | "propsTabbable" | "pressParameters">, UsePressReturnType<ListItemElement> { }
 
-
+/* eslint-disable @typescript-eslint/no-empty-interface */
 export interface UseListboxItemParametersSelf {
     /**
      * When the `selectionLimit` is `"single"`, this must be `null`.
@@ -128,7 +128,7 @@ export const useListbox = monitored(function useListbox<ListElement extends Elem
         contextProcessing,
         props: { ...props },
         rovingTabIndexReturn,
-        singleSelectionReturn,
+        singleSelectionReturn: _singleSelectionReturn,
         ...restRet
     } = useCompleteListNavigationDeclarative<ListElement, ListItemElement, M>({
         rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
@@ -186,7 +186,7 @@ export const useListboxChildren = monitored(function useListboxChildren<E extend
  */
 export const useListboxItem = monitored(function useListboxItem<ListItemElement extends Element, M extends ListboxInfo<ListItemElement> = ListboxInfo<ListItemElement>>({
     context,
-    listboxParameters: { },
+    listboxParameters,
     pressParameters: { allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, ...void1 },
     singleSelectionChildParameters: { singleSelectionDisabled },
     ...restParams
@@ -206,6 +206,7 @@ export const useListboxItem = monitored(function useListboxItem<ListItemElement 
 
     assertEmptyObject(void1);
     assertEmptyObject(void2);
+    assertEmptyObject(listboxParameters);
 
     propsChild.role = "option";
     propsChild["aria-disabled"] = singleSelectionDisabled ? "true" : undefined;

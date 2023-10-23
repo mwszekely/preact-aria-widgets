@@ -63,7 +63,7 @@ export const Menu = memo((function Menu({ collator, disableHomeEndKeys, noTypeah
             }
         })) }));
 }));
-export const MenuItem = memo((function MenuItem({ index, untabbable, onPress, getText, role, focusSelf, onPressingChange, render, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, ...void1 }) {
+export const MenuItem = memo((function MenuItem({ index, untabbable, onPress, getText, role, focusSelf, onPressingChange, render, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, onTextContentChange, ...void1 }) {
     const context = useContextWithWarning(MenuItemContext, "menu");
     const defaultFocusSelf = useCallback((e) => focus(e), []);
     assertEmptyObject(void1);
@@ -71,11 +71,13 @@ export const MenuItem = memo((function MenuItem({ index, untabbable, onPress, ge
         info: {
             index,
             untabbable: untabbable || false,
-            focusSelf: focusSelf ?? defaultFocusSelf
+            focusSelf: focusSelf ?? defaultFocusSelf,
+            ...uinfo
         },
         context,
         textContentParameters: {
-            getText: useDefault("getText", getText)
+            getText: useDefault("getText", getText),
+            onTextContentChange,
         },
         menuItemParameters: {
             onPress,

@@ -191,7 +191,7 @@ export const useCheckboxGroup = monitored(function useCheckboxGroup<GroupElement
 
     const {
         contextChildren,
-        contextProcessing,
+        contextProcessing: _contextProcessing,
         linearNavigationReturn,
         managedChildrenReturn,
         props,
@@ -212,6 +212,8 @@ export const useCheckboxGroup = monitored(function useCheckboxGroup<GroupElement
         refElementParameters,
         typeaheadNavigationParameters
     });
+
+    assertEmptyObject(void3);
 
     const { getChildren } = managedChildrenReturn;
     const children = getChildren();
@@ -426,7 +428,6 @@ export const useCheckboxGroupChild = monitored(function useCheckboxGroupChild<TC
     ...void4
 }: UseCheckboxGroupChildParameters<TCE>): UseCheckboxGroupChildReturnType<TCE> {
     const { checkboxGroupChildrenContext: { allIds, setUpdateIndex, setTotalChildren, setTotalChecked, } } = context;
-    type M = CheckboxGroupInfo<TCE>;
 
     const { checked, onChangeFromParent, ...void1 } = checkboxGroupChildParameters;
     const getChecked = useStableGetter(checked);

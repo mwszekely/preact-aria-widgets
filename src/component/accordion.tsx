@@ -1,7 +1,7 @@
 import { createContext } from "preact";
 import { OmitStrong, assertEmptyObject } from "preact-prop-helpers";
 import { memo } from "preact/compat";
-import { Get5, Get6, useContextWithWarning } from "../props.js";
+import { Get4, Get6, useContextWithWarning } from "../props.js";
 import { UseAccordionContext, UseAccordionParameters, UseAccordionReturnType, UseAccordionSectionInfo, UseAccordionSectionParameters, UseAccordionSectionReturnType, useAccordion, useAccordionSection } from "../use-accordion.js";
 import { GenericComponentProps, useComponent, useDefault } from "./util.js";
 
@@ -9,12 +9,12 @@ import { GenericComponentProps, useComponent, useDefault } from "./util.js";
 
 export type AccordionProps<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo<HeaderButtonElement> = UseAccordionSectionInfo<HeaderButtonElement>> = GenericComponentProps<
     UseAccordionReturnType<HeaderButtonElement, M>,
-    Get5<UseAccordionParameters<HeaderButtonElement, M>, "accordionParameters", "typeaheadNavigationParameters", "linearNavigationParameters", "managedChildrenParameters", "refElementParameters">,
+    Get4<UseAccordionParameters<HeaderButtonElement, M>, "accordionParameters", "typeaheadNavigationParameters", "linearNavigationParameters", "managedChildrenParameters">,
     never>;
 
-export type AccordionSectionProps<HeaderElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element, M extends UseAccordionSectionInfo<HeaderButtonElement> = UseAccordionSectionInfo<HeaderButtonElement>> = GenericComponentProps<
-    UseAccordionSectionReturnType<HeaderElement, HeaderButtonElement, BodyElement>,
-    Get6<UseAccordionSectionParameters<HeaderButtonElement, BodyElement, M>, "info", "accordionSectionParameters", "buttonParameters", "textContentParameters", "pressParameters", "refElementHeaderButtonParameters">,
+export type AccordionSectionProps<HeaderContainerElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element, M extends UseAccordionSectionInfo<HeaderButtonElement> = UseAccordionSectionInfo<HeaderButtonElement>> = GenericComponentProps<
+    UseAccordionSectionReturnType<HeaderContainerElement, HeaderButtonElement, BodyElement>,
+    Get6<UseAccordionSectionParameters<HeaderContainerElement, HeaderButtonElement, BodyElement, M>, "info", "accordionSectionParameters", "buttonParameters", "textContentParameters", "pressParameters", "refElementHeaderButtonParameters">,
     "index" | "tagButton"> & { info?: OmitStrong<M, keyof UseAccordionSectionInfo<HeaderButtonElement>> }
 
 
@@ -37,9 +37,6 @@ export const Accordion = memo(function Accordion<HeaderButtonElement extends Ele
     orientation,
     onNavigateLinear,
     onNavigateTypeahead,
-    onElementChange,
-    onMount,
-    onUnmount,
     ...void1
 }: AccordionProps<HeaderButtonElement, UseAccordionSectionInfo<HeaderButtonElement>>) {
     type M = UseAccordionSectionInfo<HeaderButtonElement>;
@@ -65,8 +62,7 @@ export const Accordion = memo(function Accordion<HeaderButtonElement extends Ele
                     navigatePastStart: navigatePastStart ?? "wrap",
                     pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize)
                 },
-                refElementParameters: { onElementChange, onMount, onUnmount },
-                managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange },
+                managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange, onChildrenCountChange },
             })
         )
     );
@@ -89,9 +85,10 @@ export const AccordionSection = memo((function AccordionSection<HeaderContainerE
     onElementChange,
     onMount,
     onUnmount,
+    onTextContentChange,
     ...void1
 }: AccordionSectionProps<HeaderContainerElement, HeaderButtonElement, BodyElement, UseAccordionSectionInfo<HeaderButtonElement>>) {
-    type M = UseAccordionSectionInfo<HeaderButtonElement>;
+
     assertEmptyObject(void1);
 
     return useComponent(
@@ -105,7 +102,7 @@ export const AccordionSection = memo((function AccordionSection<HeaderContainerE
             info: { index, untabbable: untabbable || false, ...info },
             refElementHeaderButtonParameters: { onElementChange, onMount, onUnmount },
             refElementBodyParameters: {},
-            textContentParameters: { getText: useDefault("getText", getText) },
+            textContentParameters: { getText: useDefault("getText", getText), onTextContentChange },
             context: useContextWithWarning(AccordionSectionContext, "accordion section"),
         })
     );

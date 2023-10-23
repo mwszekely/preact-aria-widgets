@@ -1,4 +1,4 @@
-import { createContext, Ref } from "preact";
+import { createContext } from "preact";
 import { assertEmptyObject, focus, memo, UseProcessedChildrenContext } from "preact-prop-helpers";
 import { useCallback } from "preact/hooks";
 import { Get10, Get7, OmitStrong, useContextWithWarning } from "../props.js";
@@ -18,7 +18,7 @@ export type ToolbarChildProps<ToolbarChildElement extends Element, M extends Use
 > & { info?: OmitStrong<M, keyof UseToolbarSubInfo<ToolbarChildElement>> };
 
 // TODO: Are there performance/sanity implications for having one context per primitive?
-const UntabbableContext = createContext(false);
+// const UntabbableContext = createContext(false);
 //const AriaPropNameContext = createContext<UseToolbarParameters<any, any, any>["singleSelectionParameters"]["singleSelectionAriaPropName"]>("aria-selected")
 //const SelectionModeContext = createContext<UseToolbarParameters<any, any, any>["singleSelectionParameters"]["singleSelectionMode"]>("focus");
 const ToolbarContext = createContext<UseToolbarContext<any, any>>(null!);
@@ -52,7 +52,7 @@ export const Toolbar = memo((function ToolbarU<ContainerElement extends Element,
     onElementChange,
     onMount,
     onUnmount
-}: ToolbarProps<ContainerElement, ChildElement, LabelElement, UseToolbarSubInfo<ChildElement>>, ref?: Ref<any>) {
+}: ToolbarProps<ContainerElement, ChildElement, LabelElement, UseToolbarSubInfo<ChildElement>>) {
 
     return (
         useComponentC<UseToolbarReturnType<ContainerElement, ChildElement, LabelElement, UseToolbarSubInfo<ChildElement>>>(
@@ -109,6 +109,7 @@ export const ToolbarChild = memo((function ToolbarChild<ToolbarChildElement exte
     multiSelectionDisabled,
     onMultiSelectChange,
     singleSelectionDisabled,
+    onTextContentChange,
     ...void1
 }: ToolbarChildProps<ToolbarChildElement, UseToolbarSubInfo<ToolbarChildElement>>) {
     const context = useContextWithWarning(ToolbarContext, "toolbar") as UseToolbarContext<ToolbarChildElement, UseToolbarSubInfo<ToolbarChildElement>>;
@@ -127,9 +128,10 @@ export const ToolbarChild = memo((function ToolbarChild<ToolbarChildElement exte
             info: {
                 index,
                 focusSelf,
-                untabbable: untabbable || false
+                untabbable: untabbable || false,
+                ...uinfo
             },
-            textContentParameters: { getText: useDefault("getText", getText) },
+            textContentParameters: { getText: useDefault("getText", getText), onTextContentChange },
             hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged },
             refElementParameters: { onElementChange, onMount, onUnmount },
             singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false },

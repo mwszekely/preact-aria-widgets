@@ -17,7 +17,7 @@ export const useDialog = monitored(function useDialog({ dismissParameters, escap
         activeElementParameters,
         focusTrapParameters: { trapActive: true, onlyMoveFocus: false, ...focusTrapParameters }
     });
-    const { propsInput, propsLabel, pressReturn, randomIdInputReturn, randomIdLabelReturn, ...void3 } = useLabelSynthetic({
+    const { propsInput, propsLabel, pressReturn, randomIdInputReturn: _randomIdInputReturn, randomIdLabelReturn: _randomIdLabelReturn, ...void3 } = useLabelSynthetic({
         labelParameters: {
             ...labelParameters,
             onLabelClick: useStableCallback(() => {
@@ -36,6 +36,7 @@ export const useDialog = monitored(function useDialog({ dismissParameters, escap
         propsDialog: useMergedProps(propsStablePopup, propsInput),
         propsSource: { ...propsStableSource },
         propsTitle: propsLabel,
+        pressReturn,
         refElementPopupReturn,
         refElementSourceReturn
     };

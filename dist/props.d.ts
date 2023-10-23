@@ -49,7 +49,6 @@ export interface TagSensitiveProps<E extends EventTarget> {
 }
 export declare function overwriteWithWarning<P extends {}, K extends keyof P>(componentName: string, props: P, propName: K, newValue: P[K]): void;
 export declare function useContextWithWarning<T>(context: PreactContext<T>, parentContextName: string): T;
-export declare function setDebugLogging(logging: boolean): void;
 export type PropModifier<T extends EventTarget> = (props: ElementProps<T>) => ElementProps<T>;
 export type PropModifier2<P> = (props: P) => P;
 export declare function noop(): void;

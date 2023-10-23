@@ -8,6 +8,7 @@ import {
     useModal,
     UseModalParameters,
     UseModalReturnType,
+    UsePressReturnType,
     useStableCallback
 } from "preact-prop-helpers";
 import { monitored, OmitStrong, Prefices } from "./props.js";
@@ -23,7 +24,9 @@ export interface UseDialogParameters<_DialogElement extends Element, _TitleEleme
     TargetedOmit<UseLabelSyntheticParameters, "labelParameters", "onLabelClick"> {
 }
 
-export interface UseDialogReturnType<FocusContainerElement extends Element, SourceElement extends Element, PopupElement extends Element, TitleElement extends Element> extends OmitStrong<UseModalReturnType<FocusContainerElement, SourceElement, PopupElement>, "propsStableSource" | "propsStablePopup"> {
+export interface UseDialogReturnType<FocusContainerElement extends Element, SourceElement extends Element, PopupElement extends Element, TitleElement extends Element> extends
+    OmitStrong<UseModalReturnType<FocusContainerElement, SourceElement, PopupElement>, "propsStableSource" | "propsStablePopup">,
+    Pick<UsePressReturnType<any>, "pressReturn"> {
     propsDialog: ElementProps<PopupElement>;
     propsSource: ElementProps<SourceElement>;
     propsTitle: ElementProps<TitleElement>;
@@ -68,8 +71,8 @@ export const useDialog = monitored(function useDialog<FocusContainerElement exte
         propsInput,
         propsLabel,
         pressReturn,
-        randomIdInputReturn,
-        randomIdLabelReturn,
+        randomIdInputReturn: _randomIdInputReturn,
+        randomIdLabelReturn: _randomIdLabelReturn,
         ...void3
     } = useLabelSynthetic<DialogElement, TitleElement>({
         labelParameters: {
@@ -92,6 +95,7 @@ export const useDialog = monitored(function useDialog<FocusContainerElement exte
         propsDialog: useMergedProps<DialogElement>(propsStablePopup, propsInput),
         propsSource: { ...propsStableSource },
         propsTitle: propsLabel,
+        pressReturn,
         refElementPopupReturn,
         refElementSourceReturn
     }

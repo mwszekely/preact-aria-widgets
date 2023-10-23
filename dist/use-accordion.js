@@ -1,5 +1,5 @@
 import { identity } from "lodash-es";
-import { assertEmptyObject, findBackupFocus, useCallback, useChildrenFlag, useHasCurrentFocus, useLinearNavigation, useManagedChild, useManagedChildren, useMemoObject, useMergedProps, usePersistentState, useRandomId, useRefElement, useStableCallback, useState, useTypeaheadNavigation, useTypeaheadNavigationChild } from "preact-prop-helpers";
+import { assertEmptyObject, findBackupFocus, useCallback, useChildrenFlag, useHasCurrentFocus, useLinearNavigation, useManagedChild, useManagedChildren, useMemoObject, useMergedProps, usePersistentState, useRandomId, useRefElement, useStableCallback, useState, useTextContent, useTypeaheadNavigation, useTypeaheadNavigationChild } from "preact-prop-helpers";
 import { Prefices, monitored } from "./props.js";
 import { useButton } from "./use-button.js";
 /**
@@ -15,7 +15,7 @@ import { useButton } from "./use-button.js";
  *
  * @hasChild {@link useAccordionSection}
  */
-export const useAccordion = monitored(function useAccordion({ accordionParameters: { initialIndex, localStorageKey, orientation, ...accordionParameters }, typeaheadNavigationParameters: { collator, noTypeahead, onNavigateTypeahead, typeaheadTimeout, ...typeaheadNavigationParameters }, linearNavigationParameters: { disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize, onNavigateLinear, ...linearNavigationParameters }, managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange: ocmc1, onChildrenCountChange, ...managedChildrenParameters }, refElementParameters, ...void1 }) {
+export const useAccordion = monitored(function useAccordion({ accordionParameters: { initialIndex, localStorageKey, orientation, ...accordionParameters }, typeaheadNavigationParameters: { collator, noTypeahead, onNavigateTypeahead, typeaheadTimeout, ...typeaheadNavigationParameters }, linearNavigationParameters: { disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize, onNavigateLinear, ...linearNavigationParameters }, managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange: ocmc1, onChildrenCountChange, ...managedChildrenParameters }, ...void1 }) {
     const [localStorageIndex, setLocalStorageIndex] = usePersistentState(localStorageKey ?? null, initialIndex ?? null);
     if (localStorageIndex != null)
         initialIndex = localStorageIndex;
@@ -144,7 +144,7 @@ export const useAccordion = monitored(function useAccordion({ accordionParameter
 /**
  * @compositeParams
  */
-export const useAccordionSection = monitored(function useAccordionSection({ buttonParameters: { disabled, tagButton, onPressSync: userOnPress, ...buttonParameters }, accordionSectionParameters: { open: openFromUser, bodyRole, ...void3 }, info: { index, untabbable, ...void4 }, textContentParameters: { getText, ...void5 }, context, refElementBodyParameters, refElementHeaderButtonParameters, pressParameters: { focusSelf, ...pressParameters }, ...void1 }) {
+export const useAccordionSection = monitored(function useAccordionSection({ buttonParameters: { disabled, tagButton, onPressSync: userOnPress, ...buttonParameters }, accordionSectionParameters: { open: openFromUser, bodyRole, ...void3 }, info: { index, untabbable, ...void4 }, textContentParameters: { getText, onTextContentChange: otcc1, ...void5 }, context, refElementBodyParameters, refElementHeaderButtonParameters, pressParameters: { focusSelf, ...pressParameters }, ...void1 }) {
     const [openFromParent, setOpenFromParent, getOpenFromParent] = useState(null);
     const [mostRecentlyTabbed, setMostRecentlyTabbed, getMostRecentlyTabbed] = useState(null);
     const { accordionSectionContext: { changeExpandedIndex, changeTabbedIndex: setCurrentFocusedIndex, getTabbedIndex: getCurrentFocusedIndex, stableTypeaheadProps }, linearNavigationParameters, rovingTabIndexReturn, } = context;
@@ -156,7 +156,7 @@ export const useAccordionSection = monitored(function useAccordionSection({ butt
         refElementReturn: { getElement: useStableCallback(() => { return refElementHeaderButtonReturn.getElement(); }) },
         hasCurrentFocusParameters: {
             onCurrentFocusedChanged: null,
-            onCurrentFocusedInnerChanged: useStableCallback((focused, prev) => {
+            onCurrentFocusedInnerChanged: useStableCallback((focused, _prev) => {
                 if (focused) {
                     setCurrentFocusedIndex(index, undefined);
                     setMostRecentlyTabbed(true);
@@ -184,11 +184,18 @@ export const useAccordionSection = monitored(function useAccordionSection({ butt
         paginatedChildrenParameters: { paginationMin: null, paginationMax: null },
         rearrangeableChildrenReturn: { indexMangler: identity, indexDemangler: identity }
     });
-    const { pressParameters: { excludeSpace, ...void11 }, textContentReturn, ...void2 } = useTypeaheadNavigationChild({
+    const { pressParameters: { excludeSpace, ...void11 }, 
+    //textContentReturn,
+    textContentParameters: { onTextContentChange: otcc2, ...void13 }, ...void2 } = useTypeaheadNavigationChild({
         info: { index },
-        refElementReturn: { getElement: useStableCallback(() => refElementHeaderButtonReturn.getElement()) },
-        textContentParameters: { getText, },
+        //refElementReturn: { getElement: useStableCallback((): HeaderButtonElement | null => refElementHeaderButtonReturn.getElement()) },
+        //textContentParameters: { getText, },
         context
+    });
+    const { propsStable, refElementReturn } = useRefElement({ refElementParameters: { onElementChange: null, onMount: null, onUnmount: null } });
+    const { textContentReturn } = useTextContent({
+        refElementReturn,
+        textContentParameters: { getText, onTextContentChange: useStableCallback((...a) => { otcc1?.(...a); otcc2?.(...a); }) }
     });
     const { pressReturn, props, refElementReturn: refElementHeaderButtonReturn, ...void12 } = useButton({
         buttonParameters: {
@@ -227,6 +234,7 @@ export const useAccordionSection = monitored(function useAccordionSection({ butt
     assertEmptyObject(void10);
     assertEmptyObject(void11);
     assertEmptyObject(void12);
+    assertEmptyObject(void13);
     return {
         pressReturn,
         refElementBodyReturn,
@@ -244,7 +252,7 @@ export const useAccordionSection = monitored(function useAccordionSection({ butt
             role: bodyRole,
             tabIndex: -1
         }),
-        propsHeader: {} // This is intentionally empty, it's just a reminder that there *does* need to be a header that contains the button.
+        propsHeader: propsStable
     };
 });
 //# sourceMappingURL=use-accordion.js.map

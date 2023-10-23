@@ -6,7 +6,7 @@ import { GenericComponentProps, useComponent, useComponentC, useDefault } from "
 
 export type TableProps<TableElement extends Element, LabelElement extends Element> = GenericComponentProps<
     UseTableReturnType<TableElement, LabelElement>,
-    Get4<UseTableParameters<TableElement, LabelElement>, "labelParameters", "tableParameters", "singleSelectionParameters", "multiSelectionParameters">,
+    Get4<UseTableParameters<TableElement>, "labelParameters", "tableParameters", "singleSelectionParameters", "multiSelectionParameters">,
     "tagTable"
 >;
 
@@ -26,11 +26,11 @@ export type TableRowProps<RowElement extends Element, CellElement extends Elemen
 interface TableRowInnerPropsBase<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement> = TableRowInfo<TableRowElement>, CM extends TableCellInfo<TableCellElement> = TableCellInfo<TableCellElement>> extends
     Get7<UseTableRowParameters<TableRowElement, TableCellElement, RM, CM>, "tableRowParameters", "textContentParameters", "hasCurrentFocusParameters", "singleSelectionChildParameters", "multiSelectionChildParameters", "linearNavigationParameters", "rovingTabIndexParameters">,
     //OmitStrong<NonNullable<Get<UseTableRowParameters<TableRowElement, TableCellElement, RM, CM>, "TableRowParameters">>, never>,
-    Pick<RM, "index" | "focusSelf"> {
+    Pick<RM, "index"> {
 }
 
 
-type InnerOuterDifference<ListItemElement extends Element> = Get3<UseProcessedChildReturnType<ListItemElement, UseProcessedChildInfo<ListItemElement>>, "managedChildReturn", "paginatedChildReturn", "staggeredChildReturn">;
+type InnerOuterDifference<ListItemElement extends Element> = OmitStrong<Get3<UseProcessedChildReturnType<ListItemElement, UseProcessedChildInfo<ListItemElement>>, "managedChildReturn", "paginatedChildReturn", "staggeredChildReturn">, "getChildren">;
 
 interface TableRowInnerProps<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement> = TableRowInfo<TableRowElement>, CM extends TableCellInfo<TableCellElement> = TableCellInfo<TableCellElement>> extends
     GenericComponentProps<
@@ -106,7 +106,7 @@ export const Table = memo((function Table<TableElement extends Element, LabelEle
         }));
 }))
 
-export const TableSection = memo((function TableSection<SectionElement extends Element, RowElement extends Element, CellElement extends Element>({
+export const TableSection = memo((function TableSection<SectionElement extends Element, RowElement extends Element>({
     disableHomeEndKeys,
     initiallySingleSelectedIndex,
     untabbable,
@@ -142,7 +142,7 @@ export const TableSection = memo((function TableSection<SectionElement extends E
         render,
         TableSectionContext,
         TableRowsContext,
-        useTableSection<SectionElement, RowElement, CellElement>({
+        useTableSection<SectionElement, RowElement>({
             gridNavigationParameters: {
                 onTabbableColumnChange: onTabbableColumnChange,
                 initiallyTabbableColumn: initiallyTabbableColumn || 0
@@ -260,7 +260,6 @@ export const TableRow = memo((function TableRow<RowElement extends Element, Cell
     untabbable,
     onCurrentFocusedChanged,
     onCurrentFocusedInnerChanged,
-    focusSelf,
     multiSelectionDisabled,
     singleSelectionDisabled,
     initiallyMultiSelected,
@@ -271,11 +270,10 @@ export const TableRow = memo((function TableRow<RowElement extends Element, Cell
     onTabbableIndexChange,
     selected,
     tagTableRow,
+    onTextContentChange,
     ...void1
 }: TableRowProps<RowElement, CellElement>) {
     assertEmptyObject(void1);
-    type RM1 = TableRowInfo<RowElement>;
-    type RM2 = UseProcessedChildInfo<RowElement>;
 
     const {
         propsStable,
@@ -288,7 +286,7 @@ export const TableRow = memo((function TableRow<RowElement extends Element, Cell
         }
     });
 
-    const { props, refElementParameters: { onElementChange: oec2 }, ...i2 } = useProcessedChild<RowElement, RM2>({
+    const { props, refElementParameters: { onElementChange: oec2 }, ...i2 } = useProcessedChild<RowElement, UseProcessedChildInfo<RowElement>>({
         context: useContextWithWarning(ProcessedRowContext, "ListboxChildren"),
         info: { index }
     })
@@ -323,7 +321,7 @@ export const TableRow = memo((function TableRow<RowElement extends Element, Cell
                 onMultiSelectChange={onMultiSelectChange}
                 onTabbableIndexChange={onTabbableIndexChange}
                 selected={selected}
-                focusSelf={focusSelf}
+                tagTableRow={tagTableRow}
                 getText={getText}
                 imperativeHandle={imperativeHandle as any}
                 multiSelectionDisabled={multiSelectionDisabled}
@@ -331,12 +329,12 @@ export const TableRow = memo((function TableRow<RowElement extends Element, Cell
                 onCurrentFocusedInnerChanged={onCurrentFocusedInnerChanged}
                 singleSelectionDisabled={singleSelectionDisabled}
                 untabbable={untabbable}
-                getChildren={getChildren}
                 hideBecausePaginated={hideBecausePaginated}
                 hideBecauseStaggered={hideBecauseStaggered}
                 parentIsPaginated={parentIsPaginated}
                 parentIsStaggered={parentIsStaggered}
                 childUseEffect={childUseEffect}
+                onTextContentChange={onTextContentChange}
                 props={props2}
                 {...void1}
             />
@@ -364,13 +362,12 @@ const TableRowInner = memo((function TableRowInner<RowElement extends Element, C
     multiSelectionDisabled,
     onMultiSelectChange,
     singleSelectionDisabled,
-    focusSelf,
     childUseEffect,
-    getChildren,
     hideBecausePaginated,
     hideBecauseStaggered,
     parentIsPaginated,
     parentIsStaggered,
+    onTextContentChange,
     props: props1,
     ...void1
 }: TableRowInnerProps<RowElement, CellElement, TableRowInfo<RowElement>, TableCellInfo<CellElement>>) {
@@ -401,7 +398,8 @@ const TableRowInner = memo((function TableRowInner<RowElement extends Element, C
             },
             context: useContextWithWarning(TableSectionContext, "table section") as UseTableSectionContext<RowElement, TableRowInfo<RowElement>>,
             textContentParameters: {
-                getText: useDefault("getText", getText)
+                getText: useDefault("getText", getText),
+                onTextContentChange
             },
             tableRowParameters: {
                 selected,
@@ -460,7 +458,8 @@ export const TableCell = memo((function TableCell<CellElement extends Element>({
     colSpan,
     imperativeHandle,
     getSortValue,
-    info,
+    onTextContentChange,
+    info: uinfo,
     ...void1
 }: TableCellProps<CellElement, TableCellInfo<CellElement>>) {
     const defaultFocusSelf = useStableCallback((e: CellElement) => { focus(e as Element as HTMLElement) }, []);
@@ -474,7 +473,8 @@ export const TableCell = memo((function TableCell<CellElement extends Element>({
                 index,
                 focusSelf: focusSelf ?? defaultFocusSelf,
                 untabbable: untabbable || false,
-                getSortValue
+                getSortValue,
+                ...uinfo
             },
             context: useContextWithWarning(TableRowContext, "table row") as UseTableRowContext<CellElement, TableCellInfo<CellElement>>,
             gridNavigationCellParameters: {
@@ -484,7 +484,8 @@ export const TableCell = memo((function TableCell<CellElement extends Element>({
                 tagTableCell
             },
             textContentParameters: {
-                getText: useDefault("getText", getText)
+                getText: useDefault("getText", getText),
+                onTextContentChange,
             }
         }))
 

@@ -89,18 +89,20 @@ export function useContextWithWarning<T>(context: PreactContext<T>, parentContex
     let ret = useContext(context);
 
     if (ret == null) {
+
+        /* eslint-disable no-debugger */
         debugger;
         console.error(`This child is missing its parent ${parentContextName} context`);
     }
 
     return ret!;
 }
-
+/*
 let debug = false;
 export function setDebugLogging(logging: boolean) {
     debug = logging;
 }
-/*
+
 export type DebugLogTypes =
     "useAccordion" | "useAccordionSection" |
     "useButton" |

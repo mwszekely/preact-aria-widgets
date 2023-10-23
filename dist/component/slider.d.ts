@@ -7,5 +7,5 @@ export type SliderThumbProps<ThumbElement extends Element, M extends SliderThumb
     info?: OmitStrong<M, keyof SliderThumbInfo>;
 };
 export declare function Slider({ max, min, onAfterChildLayoutEffect, onChildrenMountChange, render, imperativeHandle, onChildrenCountChange, ...void1 }: SliderProps<SliderThumbInfo>): import("preact").JSX.Element;
-export declare function SliderThumb<ThumbElement extends Element, ProgressIndicatorElement extends Element, ProgressLabelElement extends Element>({ label, tag, value, max, min, index, render, valueText, imperativeHandle, onValueChange, info, ...void1 }: SliderThumbProps<ThumbElement>): import("preact").JSX.Element;
+export declare function SliderThumb<ThumbElement extends Element>({ label, tag, value, max, min, index, render, valueText, imperativeHandle, onValueChange, info, ...void1 }: SliderThumbProps<ThumbElement>): import("preact").JSX.Element;
 //# sourceMappingURL=slider.d.ts.map

@@ -56,8 +56,6 @@ export interface UseMenubarItemReturnType<MenuItemElement extends Element, M ext
  */
 export const useMenubar = monitored(function useMenubar<MenuParentElement extends Element, MenuItemElement extends Element, LabelElement extends Element>(args: UseMenubarParameters<MenuParentElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenubarReturnType<MenuParentElement, MenuItemElement, LabelElement, UseMenubarSubInfo<MenuItemElement>> {
 
-    type M = UseMenubarSubInfo<MenuItemElement>;
-
     const {
         propsToolbar: propsMenubar,
         ...restReturn

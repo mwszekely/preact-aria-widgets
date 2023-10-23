@@ -40,7 +40,7 @@ export function Slider({
     );
 }
 
-export function SliderThumb<ThumbElement extends Element, ProgressIndicatorElement extends Element, ProgressLabelElement extends Element>({
+export function SliderThumb<ThumbElement extends Element>({
     label,
     tag,
     value,
@@ -65,4 +65,4 @@ export function SliderThumb<ThumbElement extends Element, ProgressIndicatorEleme
             sliderThumbParameters: { label, tag, value, max, min, valueText, onValueChange },
         })
     );
-};
+}

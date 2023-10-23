@@ -25,7 +25,7 @@ import { EnhancedEventHandler, OmitStrong, Prefices, TargetedEnhancedEvent, enha
 import { UseCheckboxLikeParameters, UseCheckboxLikeReturnType, useCheckboxLike } from "./use-checkbox-like.js";
 import { FocusableLabelElement, LabelPosition, UseLabelSyntheticParameters, useLabelSynthetic } from "./use-label.js";
 
-export interface RadioChangeEventDetail<V extends number | string> { selectedValue: V | undefined };
+export interface RadioChangeEventDetail<V extends number | string> { selectedValue: V | undefined; }
 
 export type TargetedRadioChangeEvent<V extends number | string> = TargetedEnhancedEvent<Event, RadioChangeEventDetail<V>>;
 export type RadioChangeEventHandler<V extends number | string> = EnhancedEventHandler<Event, RadioChangeEventDetail<V>>;
@@ -87,7 +87,7 @@ export interface UseRadioGroupReturnType<V extends string | number, GroupElement
     context: RadioContext<V, TabbableChildElement, M>;
 }
 
-export interface RadioSubInfo<TabbableChildElement extends Element, V extends string | number> extends UseCompleteListNavigationChildInfo<TabbableChildElement> {
+export interface RadioSubInfo<TabbableChildElement extends Element, _V extends string | number> extends UseCompleteListNavigationChildInfo<TabbableChildElement> {
     //getValue2(): V;
 }
 
@@ -138,14 +138,14 @@ export const useRadioGroup = monitored(function useRadioGroup<V extends string |
         contextChildren,
         props: propsGroup2,
         singleSelectionReturn,
-        multiSelectionReturn,
+        multiSelectionReturn: _multiSelectionReturn,
         managedChildrenReturn,
         rovingTabIndexReturn,
         linearNavigationReturn,
         rearrangeableChildrenReturn,
         typeaheadNavigationReturn,
         childrenHaveFocusReturn,
-        contextProcessing,
+        contextProcessing: _contextProcessing,
         refElementReturn,
         ...void3
     } = useCompleteListNavigationDeclarative<G, TCE, M>({
@@ -233,7 +233,7 @@ export const useRadio = monitored(function useRadio<LP extends LabelPosition, In
         ...listNavRet
     } = useCompleteListNavigationChildDeclarative<TabbableChildElement, M>({
         info: {
-            focusSelf: useStableCallback((e) => { return checkboxLikeRet.checkboxLikeReturn.focusSelf(); }),
+            focusSelf: useStableCallback((_e) => { return checkboxLikeRet.checkboxLikeReturn.focusSelf(); }),
             ...info
         } as M,
         context,

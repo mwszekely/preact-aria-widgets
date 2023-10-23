@@ -13,8 +13,8 @@ export interface ListboxProps<ListElement extends Element, ListItemElement exten
 }
 export interface ListboxChildrenProps<ListItemElement extends Element, M extends UseCompleteListNavigationChildrenInfo<ListItemElement>> extends GenericComponentProps<UseCompleteListNavigationChildrenReturnType<ListItemElement, M>, ListboxChildrenPropsBase<ListItemElement, M>, "children"> {
 }
-type InnerOuterDifference<ListItemElement extends Element> = Get3<UseProcessedChildReturnType<ListItemElement, UseProcessedChildInfo<ListItemElement>>, "managedChildReturn", "paginatedChildReturn", "staggeredChildReturn">;
-interface ListboxItemInnerProps<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends GenericComponentProps<(TargetedOmit<OmitStrong<UseProcessedChildReturnType<ListItemElement, UseProcessedChildInfo<ListItemElement>>, "managedChildReturn">, "staggeredChildReturn", "childUseEffect"> & Partial<UseListboxItemReturnType<ListItemElement, ListboxInfo<ListItemElement>>>), ListboxItemInnerPropsBase<ListItemElement, M>, "index">, InnerOuterDifference<ListItemElement> {
+type InnerOuterDifference<ListItemElement extends Element> = OmitStrong<Get3<UseProcessedChildReturnType<ListItemElement, UseProcessedChildInfo<ListItemElement>>, "managedChildReturn", "paginatedChildReturn", "staggeredChildReturn">, "getChildren">;
+interface ListboxItemInnerProps<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends GenericComponentProps<(TargetedOmit<OmitStrong<UseProcessedChildReturnType<ListItemElement, UseProcessedChildInfo<ListItemElement>>, "managedChildReturn">, "staggeredChildReturn", "childUseEffect"> & TargetedOmit<OmitStrong<UseProcessedChildReturnType<ListItemElement, UseProcessedChildInfo<ListItemElement>>, "managedChildReturn">, "paginatedChildReturn", never> & Partial<UseListboxItemReturnType<ListItemElement, ListboxInfo<ListItemElement>>>), ListboxItemInnerPropsBase<ListItemElement, M>, "index">, InnerOuterDifference<ListItemElement> {
     props: UseProcessedChildReturnType<ListItemElement, UseProcessedChildInfo<ListItemElement>>["props"];
 }
 export declare const GroupedListbox: <LabelElement extends Element>({ ariaLabel, orientation, render, onElementChange, onMount, onUnmount }: Pick<ListboxProps<any, any, LabelElement, any>, "orientation" | "ariaLabel" | "onElementChange" | "onMount" | "onUnmount" | "render">) => import("preact").JSX.Element;
@@ -36,6 +36,6 @@ export interface ListboxItemProps<ListboxItemElement extends Element> extends Om
         } & UseProcessedListboxItemReturnType<ListboxItemElement> & UseCompleteListNavigationChildReturnType<ListboxItemElement, ListboxInfo<ListboxItemElement>>): VNode;
     };
 }
-export declare const ListboxItem: <ListboxItemElement extends Element>({ index, render, imperativeHandle, onElementChange: oec1, onMount, onUnmount, getText, untabbable, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, multiSelectionDisabled, singleSelectionDisabled, multiSelected, onMultiSelectedChange, ...void1 }: ListboxItemProps<ListboxItemElement>) => import("preact").JSX.Element;
+export declare const ListboxItem: <ListboxItemElement extends Element>({ index, render, imperativeHandle, onElementChange: oec1, onMount, onUnmount, getText, untabbable, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, multiSelectionDisabled, singleSelectionDisabled, multiSelected, onMultiSelectedChange, onTextContentChange, ...void1 }: ListboxItemProps<ListboxItemElement>) => import("preact").JSX.Element;
 export {};
 //# sourceMappingURL=listbox.d.ts.map

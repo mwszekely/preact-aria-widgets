@@ -3,7 +3,6 @@ import { useEffect, useLayoutEffect, useMemo, useRef } from "preact/hooks";
 import { Prefices, enhanceEvent, monitored } from "./props.js";
 import { useCheckboxLike } from "./use-checkbox-like.js";
 import { useLabelSynthetic } from "./use-label.js";
-;
 /**
  * Implements a [Radio Group](https://www.w3.org/WAI/ARIA/apg/patterns/radio/) pattern.
  *
@@ -32,7 +31,7 @@ export const useRadioGroup = monitored(function useRadioGroup({ labelParameters,
         randomIdLabelParameters: { prefix: Prefices.radioGroupLabel, },
         randomIdInputParameters: { prefix: Prefices.radioGroup }
     });
-    const { contextChildren, props: propsGroup2, singleSelectionReturn, multiSelectionReturn, managedChildrenReturn, rovingTabIndexReturn, linearNavigationReturn, rearrangeableChildrenReturn, typeaheadNavigationReturn, childrenHaveFocusReturn, contextProcessing, refElementReturn, ...void3 } = useCompleteListNavigationDeclarative({
+    const { contextChildren, props: propsGroup2, singleSelectionReturn, multiSelectionReturn: _multiSelectionReturn, managedChildrenReturn, rovingTabIndexReturn, linearNavigationReturn, rearrangeableChildrenReturn, typeaheadNavigationReturn, childrenHaveFocusReturn, contextProcessing: _contextProcessing, refElementReturn, ...void3 } = useCompleteListNavigationDeclarative({
         singleSelectionDeclarativeParameters: {
             singleSelectedIndex: selectedIndex,
             onSingleSelectedIndexChange: useStableCallback((e) => {
@@ -82,7 +81,7 @@ export const useRadio = monitored(function useRadio({ radioParameters: { value, 
     const { tagInput, labelPosition } = labelParameters;
     const { pressParameters: { excludeSpace, onPressSync }, singleSelectionChildReturn, propsTabbable, propsChild: listNavigationSingleSelectionChildProps, ...listNavRet } = useCompleteListNavigationChildDeclarative({
         info: {
-            focusSelf: useStableCallback((e) => { return checkboxLikeRet.checkboxLikeReturn.focusSelf(); }),
+            focusSelf: useStableCallback((_e) => { return checkboxLikeRet.checkboxLikeReturn.focusSelf(); }),
             ...info
         },
         context,

@@ -1,7 +1,7 @@
 import { createContext } from "preact";
 import { assertEmptyObject, memo } from "preact-prop-helpers";
 import { Get6, Get7, useContextWithWarning } from "../props.js";
-import { CheckboxGroupContext, CheckboxGroupInfo, UseCheckboxGroupChildParameters, UseCheckboxGroupChildReturnType, UseCheckboxGroupParameters, UseCheckboxGroupParentParameters, UseCheckboxGroupParentReturnType, UseCheckboxGroupReturnType, useCheckboxGroup, useCheckboxGroupChild, useCheckboxGroupParent } from "../use-checkbox-group.js";
+import { CheckboxGroupContext, UseCheckboxGroupChildParameters, UseCheckboxGroupChildReturnType, UseCheckboxGroupParameters, UseCheckboxGroupParentParameters, UseCheckboxGroupParentReturnType, UseCheckboxGroupReturnType, useCheckboxGroup, useCheckboxGroupChild, useCheckboxGroupParent } from "../use-checkbox-group.js";
 import { GenericComponentProps, useComponent, useDefault } from "./util.js";
 
 export type CheckboxGroupProps<ParentElement extends Element, TabbableChildElement extends Element> = GenericComponentProps<
@@ -98,6 +98,7 @@ export const CheckboxGroupParent = memo((function CheckboxGroupParent<TCE extend
     multiSelectionDisabled,
     onMultiSelectChange,
     singleSelectionDisabled,
+    onTextContentChange,
     //info,
     ..._rest
 }: CheckboxGroupParentProps<TCE>) {
@@ -117,7 +118,8 @@ export const CheckboxGroupParent = memo((function CheckboxGroupParent<TCE extend
                 },
                 context,
                 textContentParameters: {
-                    getText: useDefault("getText", getText)
+                    getText: useDefault("getText", getText),
+                    onTextContentChange
                 },
                 hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged },
                 refElementParameters: { onElementChange, onMount, onUnmount },
@@ -144,10 +146,10 @@ export const CheckboxGroupChild = memo((function CheckboxGroupChild<TCE extends 
     onUnmount,
     multiSelectionDisabled,
     onMultiSelectChange,
+    onTextContentChange,
     ...void1
 }: CheckboxGroupChildProps<TCE>) {
 
-    type M = CheckboxGroupInfo<TCE>
     assertEmptyObject(void1);
 
     return useComponent(
@@ -165,7 +167,8 @@ export const CheckboxGroupChild = memo((function CheckboxGroupChild<TCE extends 
                 focusSelf
             },
             textContentParameters: {
-                getText: useDefault("getText", getText)
+                getText: useDefault("getText", getText),
+                onTextContentChange,
             },
             context: useContextWithWarning(UseCheckboxGroupChildContext, "checkbox group"),
             hasCurrentFocusParameters: {

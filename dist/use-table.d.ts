@@ -61,10 +61,10 @@ export interface TableRowInfo<TableRowElement extends Element> extends UseComple
 export interface TableCellInfo<TableCellElement extends Element> extends UseCompleteGridNavigationCellInfo<TableCellElement> {
     getSortValue(): unknown;
 }
-export interface UseTableParameters<TableElement extends Element, LabelElement extends Element> extends TargetedPick<UseCompleteListNavigationParameters<any, any, any>, "singleSelectionParameters", "singleSelectionMode">, TargetedPick<UseCompleteListNavigationParameters<any, any, any>, "multiSelectionParameters", "multiSelectionMode">, TargetedOmit<UseLabelSyntheticParameters, "labelParameters", "onLabelClick"> {
-    tableParameters: UseTableParametersSelf<TableElement, LabelElement>;
+export interface UseTableParameters<TableElement extends Element> extends TargetedPick<UseCompleteListNavigationParameters<any, any, any>, "singleSelectionParameters", "singleSelectionMode">, TargetedPick<UseCompleteListNavigationParameters<any, any, any>, "multiSelectionParameters", "multiSelectionMode">, TargetedOmit<UseLabelSyntheticParameters, "labelParameters", "onLabelClick"> {
+    tableParameters: UseTableParametersSelf<TableElement>;
 }
-export interface UseTableParametersSelf<TableElement extends Element, LabelElement extends Element> {
+export interface UseTableParametersSelf<TableElement extends Element> {
     tagTable: ElementToTag<TableElement>;
 }
 export interface UseTableReturnType<TableElement extends Element, LabelElement extends Element> {
@@ -88,11 +88,11 @@ interface SortInfo {
  * @hasChild {@link useTableRow}
  * @hasChild {@link useTableCell}
  */
-export declare const useTable: <TableElement extends Element, LabelElement extends Element>({ labelParameters, tableParameters: { tagTable }, singleSelectionParameters: { singleSelectionMode, ...void1 }, multiSelectionParameters: { multiSelectionMode, ...void2 }, ...void3 }: UseTableParameters<TableElement, LabelElement>) => UseTableReturnType<TableElement, LabelElement>;
+export declare const useTable: <TableElement extends Element, LabelElement extends Element>({ labelParameters, tableParameters: { tagTable }, singleSelectionParameters: { singleSelectionMode, ...void1 }, multiSelectionParameters: { multiSelectionMode, ...void2 }, ...void3 }: UseTableParameters<TableElement>) => UseTableReturnType<TableElement, LabelElement>;
 /**
  * @compositeParams
  */
-export declare const useTableSection: <TableSectionElement extends Element, TableRowElement extends Element, TableCellElement extends Element>({ linearNavigationParameters, rovingTabIndexParameters, singleSelectionParameters, multiSelectionParameters, gridNavigationParameters, paginatedChildrenParameters, tableSectionParameters: { tagTableSection, location }, typeaheadNavigationParameters, contextChildren: { tableContext, ...void3 }, refElementParameters, ...void1 }: UseTableSectionParameters<TableSectionElement, TableRowElement, TableRowInfo<TableRowElement>>) => UseTableSectionReturnType<TableSectionElement, TableRowElement, TableRowInfo<TableRowElement>>;
+export declare const useTableSection: <TableSectionElement extends Element, TableRowElement extends Element>({ linearNavigationParameters, rovingTabIndexParameters, singleSelectionParameters, multiSelectionParameters, gridNavigationParameters, paginatedChildrenParameters, tableSectionParameters: { tagTableSection, location }, typeaheadNavigationParameters, contextChildren: { tableContext, ...void3 }, refElementParameters, ...void1 }: UseTableSectionParameters<TableSectionElement, TableRowElement, TableRowInfo<TableRowElement>>) => UseTableSectionReturnType<TableSectionElement, TableRowElement, TableRowInfo<TableRowElement>>;
 /**
  * @compositeParams
  */

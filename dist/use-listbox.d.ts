@@ -27,7 +27,7 @@ export interface UseListboxParametersSelf {
 export interface UseListboxParameters<ListElement extends Element, ListItemElement extends Element, _LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationDeclarativeParameters<ListElement, ListItemElement, M>, "rovingTabIndexParameters" | "linearNavigationParameters" | "singleSelectionParameters">, TargetedOmit<UseLabelSyntheticParameters, "labelParameters", "onLabelClick">, TargetedOmit<UseCompleteListNavigationParameters<ListElement, ListItemElement, M>, "rovingTabIndexParameters", "focusSelfParent">, TargetedOmit<UseCompleteListNavigationParameters<ListElement, ListItemElement, M>, "linearNavigationParameters", "arrowKeyDirection">, TargetedPick<UseCompleteListNavigationParameters<ListElement, ListItemElement, M>, "singleSelectionParameters", "singleSelectionAriaPropName" | "singleSelectionMode"> {
     listboxParameters: UseListboxParametersSelf;
 }
-export interface UseListboxReturnType<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationReturnType<ListElement, ListItemElement, M>, "singleSelectionReturn" | "props"> {
+export interface UseListboxReturnType<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationReturnType<ListElement, ListItemElement, M>, "props" | "singleSelectionReturn"> {
     propsListbox: ElementProps<ListElement>;
     propsListboxLabel: ElementProps<LabelElement>;
     contextChildren: UseListboxContext<ListItemElement, M>;
@@ -56,5 +56,5 @@ export declare const useListbox: <ListElement extends Element, ListItemElement e
 /**
  * @compositeParams
  */
-export declare const useListboxItem: <ListItemElement extends Element, M extends ListboxInfo<ListItemElement> = ListboxInfo<ListItemElement>>({ context, listboxParameters: {}, pressParameters: { allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, ...void1 }, singleSelectionChildParameters: { singleSelectionDisabled }, ...restParams }: UseListboxItemParameters<ListItemElement, M>) => UseListboxItemReturnType<ListItemElement, M>;
+export declare const useListboxItem: <ListItemElement extends Element, M extends ListboxInfo<ListItemElement> = ListboxInfo<ListItemElement>>({ context, listboxParameters, pressParameters: { allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, ...void1 }, singleSelectionChildParameters: { singleSelectionDisabled }, ...restParams }: UseListboxItemParameters<ListItemElement, M>) => UseListboxItemReturnType<ListItemElement, M>;
 //# sourceMappingURL=use-listbox.d.ts.map

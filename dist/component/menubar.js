@@ -52,13 +52,13 @@ export const Menubar = memo((function Menubar({ render, collator, disableHomeEnd
     useImperativeHandle(imperativeHandle, () => info);
     return (_jsx(MenubarItemContext.Provider, { value: info.contextChildren, children: render(info) }));
 }));
-export const MenubarItem = memo((function MenubarItem({ index, render, focusSelf, untabbable, getText, onPress, onPressingChange, role, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, ...void1 }) {
+export const MenubarItem = memo((function MenubarItem({ index, render, focusSelf, untabbable, getText, onPress, onPressingChange, role, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, onTextContentChange, ...void1 }) {
     const defaultFocusSelf = useCallback((e) => focus(e), []);
     assertEmptyObject(void1);
     return useComponent(imperativeHandle, render, null, useMenubarChild({
         info: { index, untabbable: untabbable || false, focusSelf: focusSelf ?? defaultFocusSelf, ...uinfo },
         context: useContextWithWarning(MenubarItemContext, "menubar"),
-        textContentParameters: { getText: useDefault("getText", getText) },
+        textContentParameters: { getText: useDefault("getText", getText), onTextContentChange },
         menuItemParameters: { onPress: onPress ?? null, role: role ?? "menuitem" },
         pressParameters: { onPressingChange },
         hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged },

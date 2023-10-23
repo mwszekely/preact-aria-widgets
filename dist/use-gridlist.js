@@ -26,7 +26,7 @@ export const useGridlist = monitored(function useGridlist({ labelParameters, lis
         randomIdInputParameters: { prefix: Prefices.gridlist },
         randomIdLabelParameters: { prefix: Prefices.gridlistLabel }
     });
-    const { contextChildren, props, rovingTabIndexReturn, singleSelectionReturn, ...restRet } = useCompleteGridNavigationDeclarative({
+    const { contextChildren, props, rovingTabIndexReturn, singleSelectionReturn: _singleSelectionReturn, ...restRet } = useCompleteGridNavigationDeclarative({
         singleSelectionDeclarativeParameters,
         rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
         gridNavigationParameters,

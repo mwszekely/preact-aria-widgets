@@ -2,7 +2,7 @@ import { assertEmptyObject, focus, returnNull, useDismiss, useGlobalHandler, use
 import { useCallback, useEffect, useRef } from "preact/hooks";
 import { monitored, Prefices } from "./props.js";
 // Intentionally (?) unused
-let hasHover2 = matchMedia("(any-hover: hover)");
+let _hasHover2 = matchMedia("(any-hover: hover)");
 // Track if the current input has hover capabilities
 // (This is responsive to whatever the "primary" device is)
 let mediaQuery = matchMedia("(hover: hover)");
@@ -46,7 +46,7 @@ export const useTooltip = monitored(function useTooltip({ tooltipParameters: { o
      * This is used purely to attach global event handlers that should only be there when the tooltip is open (e.g. `useDismiss`)
      */
     const [openLocal, setOpenLocal] = useState(false);
-    const [getState, setState] = usePassiveState(useStableCallback((nextState, prevState) => {
+    const [getState, setState] = usePassiveState(useStableCallback((nextState, _prevState) => {
         //delayedAlert(`${prevState ?? "null"} to ${nextState}`);
         if (hoverTimeoutHandle.current) {
             clearTimeout(hoverTimeoutHandle.current);
@@ -107,7 +107,6 @@ export const useTooltip = monitored(function useTooltip({ tooltipParameters: { o
             }
             else {
                 setState(null);
-                ;
                 inputState.current = null;
             }
         }
@@ -131,7 +130,7 @@ export const useTooltip = monitored(function useTooltip({ tooltipParameters: { o
         },
         dismissParameters: {
             dismissActive: openLocal,
-            onDismiss: useStableCallback((e, reason) => {
+            onDismiss: useStableCallback((_e, _reason) => {
                 setState(null);
             }),
         },
@@ -197,6 +196,8 @@ export const useTooltip = monitored(function useTooltip({ tooltipParameters: { o
         }
     }, [longPress, usesHover, usesLongPress]);
     return {
+        refElementPopupReturn,
+        refElementSourceReturn,
         propsPopup: useMergedProps(popupRefProps, propsPopup, popupFocusReturn.propsStable, { role: "tooltip" }, otherPopupProps, propsStablePopup),
         propsTrigger: useMergedProps(triggerRefProps, propsTrigger, triggerFocusReturn.propsStable, { onClick: useStableCallback(e => focus(e.currentTarget)) }, otherTriggerProps, propsStableSource),
         tooltipReturn: {

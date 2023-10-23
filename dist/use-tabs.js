@@ -108,7 +108,19 @@ export const useTab = monitored(function useTab({ info: { focusSelf: focusSelfPa
         singleSelectionChildParameters,
         multiSelectionChildParameters: { initiallyMultiSelected: false, multiSelectionDisabled: true, onMultiSelectChange: null },
     });
-    const { pressReturn, props: propsPressStable } = usePress({ pressParameters: { onPressSync, focusSelf: focusSelfChild, allowRepeatPresses: false, excludeEnter: returnFalse, excludePointer: returnFalse, excludeSpace: returnFalse, longPressThreshold, onPressingChange }, refElementReturn });
+    const { pressReturn, props: propsPressStable } = usePress({
+        pressParameters: {
+            onPressSync,
+            focusSelf: focusSelfChild,
+            allowRepeatPresses: false,
+            excludeEnter: returnFalse,
+            excludePointer: returnFalse,
+            excludeSpace,
+            longPressThreshold,
+            onPressingChange
+        },
+        refElementReturn
+    });
     const { singleSelectionChildReturn: { singleSelected }, rovingTabIndexChildReturn: { tabbable } } = listNavRet2;
     const { getPanelId, getTabId } = context.tabsContext;
     const panelId = getPanelId(index);
@@ -140,10 +152,8 @@ export const useTab = monitored(function useTab({ info: { focusSelf: focusSelfPa
 export const useTabPanel = monitored(function useTabPanel({ info, context }) {
     const { index } = info;
     const { tabPanelContext: { getVisibleIndex: g, getPanelId, getTabId } } = context;
-    //const [correspondingTabId, setCorrespondingTabId] = useState<string | null>(null);
     const [lastKnownVisibleIndex, setLastKnownVisibleIndex, getLastKnownVisibleIndex] = useState(g());
-    const [isVisible, setIsVisible, getIsVisible] = useState(null);
-    //const visibleRef = useRef<ChildFlagOperations>({ get: getIsVisible, set: setIsVisible, isValid: returnTrue });
+    const [isVisible, setIsVisible, _getIsVisible] = useState(null);
     useManagedChild({
         context,
         info: {

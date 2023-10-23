@@ -1,10 +1,7 @@
 import { jsx as _jsx } from "preact/jsx-runtime";
 import { createContext } from "preact";
 import { focus } from "preact-prop-helpers";
-import { createPortal, forwardRef, memo, useContext, useImperativeHandle, useRef } from "preact/compat";
-function memoForwardRef(fn) {
-    return memo(forwardRef(fn));
-}
+import { createPortal, useContext, useImperativeHandle, useRef } from "preact/compat";
 /**
  * Almost all components are built in the exact same way from their implementing hook -- this just sets all of that up.
  *

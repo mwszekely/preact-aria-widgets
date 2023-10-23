@@ -15,14 +15,11 @@ export function overwriteWithWarning(componentName, props, propName, newValue) {
 export function useContextWithWarning(context, parentContextName) {
     let ret = useContext(context);
     if (ret == null) {
+        /* eslint-disable no-debugger */
         debugger;
         console.error(`This child is missing its parent ${parentContextName} context`);
     }
     return ret;
-}
-let debug = false;
-export function setDebugLogging(logging) {
-    debug = logging;
 }
 export function noop() { return; }
 // (These do not need to be unique)

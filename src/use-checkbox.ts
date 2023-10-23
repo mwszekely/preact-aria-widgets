@@ -19,7 +19,7 @@ export interface CheckboxChangeEventDetail {
     checked: boolean;
 
     previous: CheckboxCheckedType;
-};
+}
 
 // These are not typed because they could come from the input OR the label.
 export type TargetedCheckboxChangeEvent = TargetedEnhancedEvent<Event, CheckboxChangeEventDetail>;

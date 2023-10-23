@@ -41,7 +41,7 @@ export interface UseMenuItemParameters<MenuItemElement extends Element, M extend
 }
 
 export interface UseMenuReturnType<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends
-    UseMenuSurfaceReturnType<MenuSurfaceElement, MenuParentElement, MenuButtonElement>, 
+    UseMenuSurfaceReturnType<MenuSurfaceElement, MenuParentElement, MenuButtonElement>,
     OmitStrong<UseMenubarReturnType<MenuParentElement, MenuItemElement, MenuButtonElement, M>, "propsMenubar" | "propsLabel" | "contextChildren" | "contextProcessing"> {
     context: UseMenuContext<MenuItemElement, M>;
 }
@@ -184,8 +184,6 @@ export interface UseMenuItemParameters<MenuItemElement extends Element, M extend
  * @compositeParams
  */
 export const useMenuItem = monitored(function useMenuItem<MenuItemElement extends Element>(p: UseMenuItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenuItemReturnType<MenuItemElement, UseMenubarSubInfo<MenuItemElement>> {
-
-    type M = UseMenubarSubInfo<MenuItemElement>;
 
     const ret = useMenubarChild<MenuItemElement>(p);
 

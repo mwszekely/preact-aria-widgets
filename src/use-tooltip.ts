@@ -18,6 +18,7 @@ import {
     useStableCallback,
     useState
 } from "preact-prop-helpers";
+import { UseRefElementReturnTypeSelf } from "preact-prop-helpers/react";
 import { useCallback, useEffect, useRef } from "preact/hooks";
 import { monitored, Prefices } from "./props.js";
 
@@ -64,7 +65,7 @@ export interface UseTooltipParameters<TriggerType extends Element, PopupType ext
 export type TooltipState = `${"hovering" | "focused"}-${"popup" | "trigger"}` | null;
 
 // Intentionally (?) unused
-let hasHover2 = matchMedia("(any-hover: hover)");
+let _hasHover2 = matchMedia("(any-hover: hover)");
 
 // Track if the current input has hover capabilities
 // (This is responsive to whatever the "primary" device is)
@@ -126,7 +127,7 @@ export const useTooltip = monitored(function useTooltip<TriggerType extends Elem
      */
     const [openLocal, setOpenLocal] = useState(false);
 
-    const [getState, setState] = usePassiveState<TooltipState, never>(useStableCallback((nextState, prevState) => {
+    const [getState, setState] = usePassiveState<TooltipState, never>(useStableCallback((nextState, _prevState) => {
 
         //delayedAlert(`${prevState ?? "null"} to ${nextState}`);
 
@@ -207,7 +208,7 @@ export const useTooltip = monitored(function useTooltip<TriggerType extends Elem
                 setState(`focused-${which}`);
             }
             else {
-                setState(null);;
+                setState(null);
                 inputState.current = null;
             }
         }
@@ -239,7 +240,7 @@ export const useTooltip = monitored(function useTooltip<TriggerType extends Elem
 
         dismissParameters: {
             dismissActive: openLocal,
-            onDismiss: useStableCallback((e, reason) => {
+            onDismiss: useStableCallback((_e, _reason) => {
                 setState(null);
             }),
         },
@@ -311,6 +312,8 @@ export const useTooltip = monitored(function useTooltip<TriggerType extends Elem
     }, [longPress, usesHover, usesLongPress])
 
     return {
+        refElementPopupReturn,
+        refElementSourceReturn,
         propsPopup: useMergedProps<PopupType>(popupRefProps, propsPopup, popupFocusReturn.propsStable, { role: "tooltip" }, otherPopupProps, propsStablePopup),
         propsTrigger: useMergedProps<TriggerType>(triggerRefProps, propsTrigger, triggerFocusReturn.propsStable, { onClick: useStableCallback(e => focus(e.currentTarget as Element as HTMLElement)) }, otherTriggerProps, propsStableSource),
         tooltipReturn: {
@@ -330,5 +333,7 @@ export interface UseTooltipReturnTypeSelf {
 export interface UseTooltipReturnType<TriggerType extends Element, PopupType extends Element> {
     propsPopup: ElementProps<PopupType>;
     propsTrigger: ElementProps<TriggerType>;
-    tooltipReturn: UseTooltipReturnTypeSelf
+    tooltipReturn: UseTooltipReturnTypeSelf;
+    refElementPopupReturn: UseRefElementReturnTypeSelf<PopupType>;
+    refElementSourceReturn: UseRefElementReturnTypeSelf<TriggerType>;
 }

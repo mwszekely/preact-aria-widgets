@@ -38,7 +38,7 @@ export interface UseRadioGroupReturnType<V extends string | number, GroupElement
     propsRadioGroupLabel: ElementProps<GroupLabelElement>;
     context: RadioContext<V, TabbableChildElement, M>;
 }
-export interface RadioSubInfo<TabbableChildElement extends Element, V extends string | number> extends UseCompleteListNavigationChildInfo<TabbableChildElement> {
+export interface RadioSubInfo<TabbableChildElement extends Element, _V extends string | number> extends UseCompleteListNavigationChildInfo<TabbableChildElement> {
 }
 /**
  * Implements a [Radio Group](https://www.w3.org/WAI/ARIA/apg/patterns/radio/) pattern.

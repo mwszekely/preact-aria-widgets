@@ -2,7 +2,7 @@ import { jsxs as _jsxs, Fragment as _Fragment, jsx as _jsx } from "preact/jsx-ru
 import { createContext, createElement } from "preact";
 import { memo } from "preact/compat";
 import { useContext } from "preact/hooks";
-function overwriteWithWarning(a, ...t) { return a; }
+function overwriteWithWarning(a, ..._t) { return a; }
 const HeadingLevelContext = createContext(0);
 /**
  * Utility component that creates a heading `h1`, `h2`, `h3`, etc.

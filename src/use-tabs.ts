@@ -90,7 +90,7 @@ export interface UseTabReturnType<TabElement extends Element, M extends TabInfo<
     props: ElementProps<TabElement>;
 }
 
-
+/* eslint-disable @typescript-eslint/no-empty-interface */
 export interface UseTabLabelParameters { }
 export interface UseTabListParameters<TabContainerElement extends Element, TabElement extends Element, M extends TabInfo<TabElement>> extends
     OmitStrong<UseCompleteListNavigationParameters<TabContainerElement, TabElement, M>, "rovingTabIndexParameters" | "paginatedChildrenParameters" | "linearNavigationParameters" | "singleSelectionParameters" | "multiSelectionParameters">,
@@ -112,7 +112,7 @@ export interface UseTabPanelReturnType<E extends Element> {
     tabPanelReturn: UseTabPanelReturnTypeSelf;
 }
 
-
+/* eslint-disable @typescript-eslint/no-empty-interface */
 export interface UseTabListLabelReturnTypeInfo { }
 export interface UseTabLabelReturnTypeWithHooks<LabelElement extends Element> extends UseTabListLabelReturnTypeInfo {
     useTabListLabelProps: (props: ElementProps<LabelElement>) => ElementProps<LabelElement>;
@@ -280,7 +280,19 @@ export const useTab = monitored(function useTab<TabElement extends Element>({
         multiSelectionChildParameters: { initiallyMultiSelected: false, multiSelectionDisabled: true, onMultiSelectChange: null },
     });
 
-    const { pressReturn, props: propsPressStable } = usePress<TabElement>({ pressParameters: { onPressSync, focusSelf: focusSelfChild, allowRepeatPresses: false, excludeEnter: returnFalse, excludePointer: returnFalse, excludeSpace: returnFalse, longPressThreshold, onPressingChange }, refElementReturn })
+    const { pressReturn, props: propsPressStable } = usePress<TabElement>({
+        pressParameters: {
+            onPressSync,
+            focusSelf: focusSelfChild,
+            allowRepeatPresses: false,
+            excludeEnter: returnFalse,
+            excludePointer: returnFalse,
+            excludeSpace,
+            longPressThreshold,
+            onPressingChange
+        },
+        refElementReturn
+    });
     const { singleSelectionChildReturn: { singleSelected }, rovingTabIndexChildReturn: { tabbable } } = listNavRet2;
     const { getPanelId, getTabId } = context.tabsContext;
 
@@ -319,15 +331,11 @@ export const useTab = monitored(function useTab<TabElement extends Element>({
  * @compositeParams
  */
 export const useTabPanel = monitored(function useTabPanel<PanelElement extends Element>({ info, context }: UseTabPanelParameters<TabPanelInfo>): UseTabPanelReturnType<PanelElement> {
-    type M = TabPanelInfo;
-
     const { index } = info;
 
     const { tabPanelContext: { getVisibleIndex: g, getPanelId, getTabId } } = context;
-    //const [correspondingTabId, setCorrespondingTabId] = useState<string | null>(null);
     const [lastKnownVisibleIndex, setLastKnownVisibleIndex, getLastKnownVisibleIndex] = useState(g());
-    const [isVisible, setIsVisible, getIsVisible] = useState(null as boolean | null);
-    //const visibleRef = useRef<ChildFlagOperations>({ get: getIsVisible, set: setIsVisible, isValid: returnTrue });
+    const [isVisible, setIsVisible, _getIsVisible] = useState(null as boolean | null);
     useManagedChild<TabPanelInfo>({
         context,
         info: {

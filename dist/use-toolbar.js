@@ -1,7 +1,6 @@
 import { focus, useCompleteListNavigationChild, useCompleteListNavigationDeclarative, useMemoObject, useMergedProps } from "preact-prop-helpers";
 import { Prefices, monitored } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
-;
 /**
  * Implements a [Toolbar](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/) pattern, which is a collection of widgets in an expected order with a label (visible or hidden) and with the usual keyboard navigation stuff.
  *
@@ -51,7 +50,7 @@ export const useToolbar = monitored(function useToolbar({ linearNavigationParame
 /**
  * @compositeParams
  */
-export const useToolbarChild = monitored(function useToolbarChild({ context: { toolbarContext, ...context }, info, toolbarChildParameters: { disabledProp }, ...args }) {
+export const useToolbarChild = monitored(function useToolbarChild({ context, info, toolbarChildParameters: { disabledProp }, ...args }) {
     const { propsChild, propsTabbable, ...listNavReturn } = useCompleteListNavigationChild({ info, context, ...args });
     return {
         propsChild: useMergedProps(propsChild, { [disabledProp]: (args.singleSelectionChildParameters.singleSelectionDisabled || args.multiSelectionChildParameters.multiSelectionDisabled) ? true : undefined }),

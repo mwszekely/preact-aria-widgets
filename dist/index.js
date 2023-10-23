@@ -114,5 +114,5 @@ export { Toolbar, ToolbarChild } from "./component/toolbar.js";
 export { Tooltip } from "./component/tooltip.js";
 export { useDefaultRenderPortal } from "./component/util.js";
 export { ParentDepthContext, useDefault } from "./component/util.js";
-export { EventDetail, setDebugLogging } from "./props.js";
+export { EventDetail } from "./props.js";
 //# sourceMappingURL=index.js.map

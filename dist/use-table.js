@@ -21,8 +21,8 @@ export const useTable = monitored(function useTable({ labelParameters, tablePara
     // It's here to coordinate among multiple table sections (i.e. the head sorts the body, but they're siblings to each other, so we need to take care that)
     // TODO: This...should probably be useManagedChildren
     const [getSortBody, setSortBody] = usePassiveState(null, returnNull);
-    const [sortDirection, setSortDirection, getSortDirection] = useState("ascending");
-    const [sortColumn, setSortColumn, getSortColumn] = useState(null);
+    const [_sortDirection, setSortDirection, getSortDirection] = useState("ascending");
+    const [_sortColumn, setSortColumn, getSortColumn] = useState(null);
     /*const updateSortDirection = useCallback((column: number) => {
         const { column: currentColumn, direction: currentDirection } = getSortColumn();
         const next = { column, direction: column != currentColumn ? "ascending" : (currentDirection == "ascending" ? "descending" : "ascending") } as const;
@@ -46,6 +46,7 @@ export const useTable = monitored(function useTable({ labelParameters, tablePara
         const sortBody = getSortBody();
         console.assert(!!sortBody);
         if (!sortBody) {
+            /* eslint-disable no-debugger */
             debugger;
             console.error("An attempt was made to sort a table with a head but no body");
         }
@@ -74,9 +75,11 @@ export const useTable = monitored(function useTable({ labelParameters, tablePara
         })
     };
 });
-function fuzzyCompare(lhs, rhs) {
+/*
+function fuzzyCompare(lhs: any, rhs: any): number {
     if (lhs === rhs)
         return 0;
+
     if (lhs == null || rhs == null) {
         if (lhs == null && rhs != null)
             return -1;
@@ -94,8 +97,10 @@ function fuzzyCompare(lhs, rhs) {
             return -1;
         return 1;
     }
+
     return 0;
-}
+
+}*/
 const naturalSectionTypes = new Set(["thead", "tbody", "tfoot"]);
 /**
  * @compositeParams
@@ -169,6 +174,7 @@ export const useTableRow = monitored(function useTableRow({ info, textContentPar
             case "aria-pressed":
             case "aria-selected":
                 props[cx1.singleSelectionContext.singleSelectionAriaPropName ?? "aria-selected"] = "true";
+                break;
             default: {
                 console.assert(false, cx1.singleSelectionContext.singleSelectionAriaPropName + " is not valid for multi-select -- prefer checked, selected, or pressed");
             }

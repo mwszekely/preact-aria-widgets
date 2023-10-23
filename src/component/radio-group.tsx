@@ -1,5 +1,5 @@
 import { createContext } from "preact";
-import { UseProcessedChildrenContext, assertEmptyObject, memo, useStableGetter } from "preact-prop-helpers";
+import { assertEmptyObject, memo } from "preact-prop-helpers";
 import { Get7, Get8, useContextWithWarning } from "../props.js";
 import { FocusableLabelElement, LabelPosition } from "../use-label.js";
 import { RadioContext, RadioSubInfo, UseRadioGroupParameters, UseRadioGroupReturnType, UseRadioParameters, UseRadioReturnType, useRadio, useRadioGroup } from "../use-radio-group.js";
@@ -28,7 +28,7 @@ export interface RadioProps<LP extends LabelPosition, InputElement extends Eleme
 }
 
 const RadioContext = createContext<RadioContext<any, any, any>>(null!);
-const ProcessedChildrenContext = createContext<UseProcessedChildrenContext>(null!);
+//const ProcessedChildrenContext = createContext<UseProcessedChildrenContext>(null!);
 
 export const RadioGroup = memo((function RadioGroup<V extends string | number, GroupElement extends HTMLElement, GroupLabelElement extends HTMLElement, TabbableChildElement extends HTMLElement>({
     render,
@@ -106,12 +106,13 @@ export const Radio = memo((function Radio<LP extends LabelPosition, V extends st
     onCurrentFocusedChanged,
     onCurrentFocusedInnerChanged,
     imperativeHandle,
+    onTextContentChange,
     ...void1
 }: RadioProps<LP, InputElement, LabelElement, V>) {
     assertEmptyObject(void1);
     const context = useContextWithWarning(RadioContext, "radio group");
     console.assert(context != null, `This Radio is not contained within a RadioGroup`);
-    const getValue = useStableGetter(value);
+    //const getValue = useStableGetter(value);
     return useComponent(
         imperativeHandle,
         render,
@@ -122,7 +123,7 @@ export const Radio = memo((function Radio<LP extends LabelPosition, V extends st
             info: { index, untabbable: untabbable || false },
             context,
             labelParameters: { ariaLabel, labelPosition, tagInput, tagLabel },
-            textContentParameters: { getText: useDefault("getText", getText) },
+            textContentParameters: { getText: useDefault("getText", getText), onTextContentChange },
             pressParameters: { longPressThreshold },
             hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged },
             refElementParameters: { onElementChange, onMount, onUnmount }

@@ -114,6 +114,7 @@ export const Tab = memo((function Tab<E extends Element>({
     onCurrentFocusedChanged,
     onCurrentFocusedInnerChanged,
     singleSelectionDisabled,
+    onTextContentChange,
     info: uinfo,
     ...void1
 }: TabProps<E, TabInfo<E>>) {
@@ -137,7 +138,7 @@ export const Tab = memo((function Tab<E extends Element>({
             hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged },
             refElementParameters: { onElementChange, onMount, onUnmount },
             pressParameters: { focusSelf: focusSelfDefault, longPressThreshold, onPressingChange },
-            textContentParameters: { getText: useDefault("getText", getText) },
+            textContentParameters: { getText: useDefault("getText", getText), onTextContentChange },
             singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false, }
         }));
 }))

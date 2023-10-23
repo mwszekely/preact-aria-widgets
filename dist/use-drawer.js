@@ -17,7 +17,7 @@ export const useDrawer = monitored(function useDrawer({ dismissParameters, escap
         refElementParameters,
         focusTrapParameters: { onlyMoveFocus: false, ...focusTrapParameters }
     });
-    const { propsInput, propsLabel, pressReturn, randomIdInputReturn, randomIdLabelReturn, ...void3 } = useLabelSynthetic({
+    const { propsInput, propsLabel, pressReturn: _pressReturn, randomIdInputReturn: _randomIdInputReturn, randomIdLabelReturn: _randomIdLabelReturn, ...void3 } = useLabelSynthetic({
         labelParameters: {
             ...labelParameters, onLabelClick: useStableCallback(() => {
                 const e = refElementPopupReturn.getElement();
@@ -36,7 +36,7 @@ export const useDrawer = monitored(function useDrawer({ dismissParameters, escap
         propsTitle: propsLabel,
         propsSource: { ...propsStableSource },
         refElementPopupReturn,
-        refElementSourceReturn
+        refElementSourceReturn,
     };
 });
 //# sourceMappingURL=use-drawer.js.map

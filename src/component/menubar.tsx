@@ -124,6 +124,7 @@ export const MenubarItem = memo((function MenubarItem<MenuItemElement extends El
     multiSelectionDisabled,
     onMultiSelectChange,
     singleSelectionDisabled,
+    onTextContentChange,
     ...void1
 }: MenubarItemProps<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>) {
     const defaultFocusSelf = useCallback((e: MenuItemElement | null) => focus(e as Element as HTMLElement), [])
@@ -136,7 +137,7 @@ export const MenubarItem = memo((function MenubarItem<MenuItemElement extends El
         useMenubarChild<MenuItemElement>({
             info: { index, untabbable: untabbable || false, focusSelf: focusSelf ?? defaultFocusSelf, ...uinfo },
             context: useContextWithWarning(MenubarItemContext, "menubar"),
-            textContentParameters: { getText: useDefault("getText", getText) },
+            textContentParameters: { getText: useDefault("getText", getText), onTextContentChange },
             menuItemParameters: { onPress: onPress ?? null, role: role ?? "menuitem" },
             pressParameters: { onPressingChange },
             hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged },

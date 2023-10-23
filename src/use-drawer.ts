@@ -67,9 +67,9 @@ export const useDrawer = monitored(function useDrawer<FocusContainerElement exte
     const {
         propsInput,
         propsLabel,
-        pressReturn,
-        randomIdInputReturn,
-        randomIdLabelReturn,
+        pressReturn: _pressReturn,
+        randomIdInputReturn: _randomIdInputReturn,
+        randomIdLabelReturn: _randomIdLabelReturn,
         ...void3
     } = useLabelSynthetic<PopupElement, TitleElement>({
         labelParameters: {
@@ -93,7 +93,7 @@ export const useDrawer = monitored(function useDrawer<FocusContainerElement exte
         propsTitle: propsLabel,
         propsSource: { ...propsStableSource },
         refElementPopupReturn,
-        refElementSourceReturn
+        refElementSourceReturn,
     }
 })
 
