@@ -121,11 +121,11 @@ export const useTooltip = monitored(function useTooltip({ tooltipParameters: { o
     const { hasCurrentFocusReturn: popupFocusReturn } = useHasCurrentFocus({ hasCurrentFocusParameters: { onCurrentFocusedChanged: null, onCurrentFocusedInnerChanged: onPopupCurrentFocusedInnerChanged }, refElementReturn: { getElement: getPopupElement } });
     const { refElementPopupReturn, refElementSourceReturn, propsStablePopup, propsStableSource } = useDismiss({
         backdropDismissParameters: {
-            dismissBackdropActive: true,
+            dismissBackdropActive: true, // we handle this ourselves, but for mobile devices with a sorta virtualish cursor this helps. 
             onDismissBackdrop: null
         },
         lostFocusDismissParameters: {
-            dismissLostFocusActive: false,
+            dismissLostFocusActive: false, // and it interferes with our own focus logic (or, our onClose there does)
             onDismissLostFocus: null,
         },
         dismissParameters: {
