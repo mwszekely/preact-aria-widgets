@@ -1,6 +1,4 @@
-import { createContext } from "preact";
-import { OmitStrong, assertEmptyObject } from "preact-prop-helpers";
-import { memo } from "preact/compat";
+import { OmitStrong, assertEmptyObject, createContext, memo } from "preact-prop-helpers/preact";
 import { Get4, Get6, useContextWithWarning } from "../props.js";
 import { UseAccordionContext, UseAccordionParameters, UseAccordionReturnType, UseAccordionSectionInfo, UseAccordionSectionParameters, UseAccordionSectionReturnType, useAccordion, useAccordionSection } from "../use-accordion.js";
 import { GenericComponentProps, useComponent, useDefault } from "./util.js";

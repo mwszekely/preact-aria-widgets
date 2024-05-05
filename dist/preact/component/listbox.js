@@ -1,8 +1,5 @@
 import { jsx as _jsx } from "preact/jsx-runtime";
-import { createContext } from "preact";
-import { assertEmptyObject, focus, useCompleteListNavigationChildren, useMergedProps, useProcessedChild, useRefElement, useStableCallback } from "preact-prop-helpers";
-import { memo } from "preact/compat";
-import { useCallback, useContext, useEffect, useImperativeHandle } from "preact/hooks";
+import { assertEmptyObject, createContext, focus, memo, useCallback, useCompleteListNavigationChildren, useContext, useEffect, useImperativeHandle, useMergedProps, useProcessedChild, useRefElement, useStableCallback } from "preact-prop-helpers/preact";
 import { useContextWithWarning } from "../props.js";
 import { useListbox, useListboxItem } from "../use-listbox.js";
 import { useComponent, useComponentC, useDefault } from "./util.js";

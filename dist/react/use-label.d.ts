@@ -1,4 +1,4 @@
-import { TargetedPick, UsePressReturnType, UseRandomDualIdsParameters, UseRandomDualIdsReturnType } from "preact-prop-helpers/react";
+import { TargetedPick, UsePressReturnType, UseRandomDualIdsParameters, UseRandomDualIdsReturnType } from "preact-prop-helpers/preact";
 import { ElementToTag, OmitStrong } from "./props.js";
 export type LabelPosition = "separate" | "wrapping" | "none";
 export type FocusableLabelElement<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element> = LP extends "wrapping" ? LabelElement : InputElement;

@@ -1,9 +1,9 @@
 import {
     createContext,
+    useCallback, useMemo,
     usePortalChildren,
     VNode
-} from "preact-prop-helpers";
-import { useCallback, useMemo } from "preact/hooks";
+} from "preact-prop-helpers/preact";
 import { monitored, useContextWithWarning } from "./props.js";
 
 export interface NotificationProviderProps {

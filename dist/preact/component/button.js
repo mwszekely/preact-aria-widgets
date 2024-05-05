@@ -1,4 +1,4 @@
-import { assertEmptyObject, memo } from "preact-prop-helpers";
+import { assertEmptyObject, memo } from "preact-prop-helpers/preact";
 import { useButton } from "../use-button.js";
 import { useComponent, useDefault } from "./util.js";
 export const Button = memo((function Button({ tagButton, pressed, render, disabled, onElementChange, onMount, onUnmount, allowRepeatPresses, longPressThreshold, excludeSpace, onPressingChange, onPressSync, focusSelf, role, imperativeHandle, ...void1 }) {

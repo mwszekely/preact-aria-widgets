@@ -1,11 +1,10 @@
-import { h } from "preact";
-import { ElementProps, ManagedChildInfo, Nullable, UseGenericChildParameters, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, UseManagedChildReturnType } from "preact-prop-helpers";
+import { ElementProps, JSX, ManagedChildInfo, Nullable, UseGenericChildParameters, UseManagedChildReturnType, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType } from "preact-prop-helpers/preact";
 import { EventDetail, TagSensitiveProps } from "./props.js";
 export type RangeChangeEvent<E extends EventTarget> = {
     [EventDetail]: {
         value: number;
     };
-} & Pick<h.JSX.TargetedEvent<E>, "target" | "currentTarget">;
+} & Pick<JSX.TargetedEvent<E>, "target" | "currentTarget">;
 export interface SliderThumbInfo extends ManagedChildInfo<number> {
 }
 export interface UseSliderThumbParametersSelf<E extends Element> extends TagSensitiveProps<E> {
@@ -64,5 +63,5 @@ export declare const useSlider: <M extends SliderThumbInfo>({ sliderParameters: 
 /**
  * @compositeParams
  */
-export declare const useSliderThumb: <ThumbElement extends Element>({ sliderThumbParameters: { tag, value, max: maxOverride, min: minOverride, valueText, label, onValueChange, ...void2 }, info, context: { sliderContext: { max: maxParent, min: minParent }, ...context }, ...void1 }: UseSliderThumbParameters<ThumbElement, SliderThumbInfo>) => UseSliderThumbReturnType<ThumbElement, SliderThumbInfo>;
+export declare const useSliderThumb: <ThumbElement extends Element>({ sliderThumbParameters: { tag, value, max: maxOverride, min: minOverride, valueText, label, onValueChange, ...void2 }, info, context: { sliderContext: { max: maxParent, min: minParent }, ...context }, ...void1 }: UseSliderThumbParameters<ThumbElement>) => UseSliderThumbReturnType<ThumbElement>;
 //# sourceMappingURL=use-slider.d.ts.map

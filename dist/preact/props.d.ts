@@ -1,9 +1,8 @@
-import { ComponentType, h, PreactContext, Ref } from "preact";
-import { ElementProps } from "preact-prop-helpers";
-export { enhanceEvent, EventDetail, monitored, type EnhancedEventHandler, type TargetedEnhancedEvent } from "preact-prop-helpers";
-export type RefFromTag<T extends keyof h.JSX.IntrinsicElements> = NonNullable<h.JSX.IntrinsicElements[T]["ref"]> & Ref<any>;
+import { ComponentType, Context, ElementProps, JSX, Ref } from "preact-prop-helpers/preact";
+export { EventDetail, enhanceEvent, monitored, useContext, type ComponentType, type ElementProps, type EnhancedEventHandler, type JSX, type Ref, type TargetedEnhancedEvent } from "preact-prop-helpers/preact";
+export type RefFromTag<T extends keyof JSX.IntrinsicElements> = NonNullable<JSX.IntrinsicElements[T]["ref"]> & Ref<any>;
 export type ElementFromRef<R extends Ref<any>> = R extends Ref<infer E> ? E : EventTarget;
-export type ElementFromTag<T extends keyof h.JSX.IntrinsicElements> = ElementFromRef<RefFromTag<T>>;
+export type ElementFromTag<T extends keyof JSX.IntrinsicElements> = ElementFromRef<RefFromTag<T>>;
 export type Get<T, K extends keyof T> = T[K];
 export type Get2<T, K1 extends keyof T, K2 extends keyof T> = Get<T, K2> & Get<T, K1>;
 export type Get3<T, K1 extends keyof T, K2 extends keyof T, K3 extends keyof T> = Get2<T, K2, K3> & Get<T, K1>;
@@ -34,7 +33,7 @@ export type ElementToTag<E> = keyof PickByType<HTMLElementTagNameMap, E>;
  */
 export type DisabledType = boolean | "soft" | "hard";
 export type OmitStrong<T, K extends keyof T> = Omit<T, K>;
-export type PropsOfType<T> = T extends keyof h.JSX.IntrinsicElements ? h.JSX.IntrinsicElements[T] : T extends ComponentType<infer P> ? P : never;
+export type PropsOfType<T> = T extends keyof JSX.IntrinsicElements ? JSX.IntrinsicElements[T] : T extends ComponentType<infer P> ? P : never;
 /**
  * For times when more than just the abstract element type is needed,
  * but the actual, concrete, implementation-affecting "div" string type.
@@ -48,7 +47,7 @@ export interface TagSensitiveProps<E extends EventTarget> {
     tag: ElementToTag<E>;
 }
 export declare function overwriteWithWarning<P extends {}, K extends keyof P>(componentName: string, props: P, propName: K, newValue: P[K]): void;
-export declare function useContextWithWarning<T>(context: PreactContext<T>, parentContextName: string): T;
+export declare function useContextWithWarning<T>(context: Context<T>, parentContextName: string): T;
 export type PropModifier<T extends EventTarget> = (props: ElementProps<T>) => ElementProps<T>;
 export type PropModifier2<P> = (props: P) => P;
 export declare function noop(): void;

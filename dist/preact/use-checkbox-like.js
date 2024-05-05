@@ -1,5 +1,4 @@
-import { assertEmptyObject, focus, useMergedProps, usePress, useStableCallback } from "preact-prop-helpers";
-import { useEffect } from "preact/hooks";
+import { assertEmptyObject, focus, useEffect, useMergedProps, usePress, useStableCallback } from "preact-prop-helpers/preact";
 import { monitored } from "./props.js";
 import { useLabel } from "./use-label.js";
 function preventDefault(e) {

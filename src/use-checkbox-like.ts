@@ -6,14 +6,14 @@ import {
     PressEventReason,
     TargetedOmit,
     TargetedPick,
+    useEffect,
     useMergedProps,
     usePress,
     UsePressParameters,
     UsePressReturnType,
     UseRefElementReturnType,
     useStableCallback
-} from "preact-prop-helpers";
-import { useEffect } from "preact/hooks";
+} from "preact-prop-helpers/preact";
 import { DisabledType, monitored, OmitStrong } from "./props.js";
 import { LabelPosition, useLabel, UseLabelParameters, UseLabelReturnType } from "./use-label.js";
 

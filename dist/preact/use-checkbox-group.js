@@ -1,5 +1,4 @@
-import { assertEmptyObject, focus, returnFalse, returnNull, returnZero, useCompleteListNavigation, useCompleteListNavigationChild, useMemoObject, useMergedProps, usePassiveState, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
-import { useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
+import { assertEmptyObject, focus, returnFalse, returnNull, returnZero, useCallback, useCompleteListNavigation, useCompleteListNavigationChild, useEffect, useLayoutEffect, useMemoObject, useMergedProps, usePassiveState, useRef, useStableCallback, useStableGetter, useState } from "preact-prop-helpers/preact";
 import { monitored } from "./props.js";
 /**
  *

@@ -6,13 +6,13 @@ import {
     PressEventReason,
     returnFalse,
     TargetedPick,
+    useCallback,
     useMergedProps,
     usePress,
     UsePressParameters,
     UsePressReturnType,
     useStableCallback
-} from "preact-prop-helpers";
-import { useCallback } from "preact/hooks";
+} from "preact-prop-helpers/preact";
 import { monitored, OmitStrong } from "./props.js";
 import { useToolbar, useToolbarChild, UseToolbarChildParameters, UseToolbarChildReturnType, UseToolbarContext, UseToolbarParameters, UseToolbarReturnType, UseToolbarSubInfo } from "./use-toolbar.js";
 

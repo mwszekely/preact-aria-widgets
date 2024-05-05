@@ -22,9 +22,11 @@ import {
     generateRandomId,
     returnFalse,
     returnTrue,
+    useCallback,
     useChildrenFlag,
     useCompleteListNavigation,
     useCompleteListNavigationChild,
+    useLayoutEffect,
     useManagedChild,
     useManagedChildren,
     useMemoObject,
@@ -33,8 +35,7 @@ import {
     usePress,
     useStableCallback,
     useState
-} from "preact-prop-helpers";
-import { useCallback, useLayoutEffect } from "preact/hooks";
+} from "preact-prop-helpers/preact";
 import { EventDetail, OmitStrong, Prefices, monitored } from "./props.js";
 import { UseLabelSyntheticParameters, useLabelSynthetic } from "./use-label.js";
 

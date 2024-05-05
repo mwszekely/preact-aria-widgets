@@ -1,5 +1,4 @@
-import { CompleteListNavigationContext, Nullable, PassiveStateUpdater, TargetedOmit, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseGenericChildParameters } from "preact-prop-helpers";
-import { StateUpdater } from "preact/hooks";
+import { CompleteListNavigationContext, Nullable, PassiveStateUpdater, StateUpdater, TargetedOmit, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseGenericChildParameters } from "preact-prop-helpers/preact";
 import { EnhancedEventHandler, OmitStrong, TargetedEnhancedEvent } from "./props.js";
 import { CheckboxCheckedType } from "./use-checkbox-like.js";
 export interface CheckboxGroupChangeEventDetail {

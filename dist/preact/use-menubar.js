@@ -1,5 +1,4 @@
-import { assertEmptyObject, focus, returnFalse, useMergedProps, usePress, useStableCallback } from "preact-prop-helpers";
-import { useCallback } from "preact/hooks";
+import { assertEmptyObject, focus, returnFalse, useCallback, useMergedProps, usePress, useStableCallback } from "preact-prop-helpers/preact";
 import { monitored } from "./props.js";
 import { useToolbar, useToolbarChild } from "./use-toolbar.js";
 /**

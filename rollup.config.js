@@ -1,8 +1,8 @@
 import commonjs from "@rollup/plugin-commonjs";
 import resolve from '@rollup/plugin-node-resolve';
-import replace from '@rollup/plugin-replace';
 import sourcemaps from "rollup-plugin-sourcemaps";
 //import ts from 'rollup-plugin-ts'; // Used because the default TS plugin doesn't generate .d.ts files D:
+import replace from "@rollup/plugin-replace";
 import ts from "@rollup/plugin-typescript";
 
 const extensions = [".js", ".jsx", ".ts", ".tsx"];
@@ -23,17 +23,19 @@ const extensions = [".js", ".jsx", ".ts", ".tsx"];
 export default {
     input: "src/index.ts",
     output: {
-        file: "./dist/index.react.js",
+        file: "./dist/react/index.js",
         format: "es",
         name: "index.react",
         sourcemap: true,
         globals: {
             "react": "React",
+            "react/jsx-runtime": "React",
             "react-dom": "ReactDOM"
         }
     },
     external: [
         "react",
+        "react/jsx-runtime",
         "react-dom",
         "lodash-es",
         "blocking-elements",
@@ -41,19 +43,22 @@ export default {
         "lodash-es",
         "tabbable",
         "wicg-inert",
+        "preact-prop-helpers/preact",
+        "preact-prop-helpers/react"
     ],
     treeshake: "recommended",
     plugins: [
-        ts({ module: "NodeNext" }),
         replace({
-            values: {
-                "./lib-preact.js": "./lib-react.js",
-            },
-            delimiters: ['', ''],
+            "preact-prop-helpers/preact": "preact-prop-helpers/react",
             preventAssignment: false
         }),
+        ts({
+            noEmitOnError: false,
+            tsconfig: "tsconfig.react.json",
+            module: "NodeNext"
+        }),
         commonjs({ extensions, sourceMap: true }),
-        resolve({ extensions, dedupe: ['react', "react-dom"] }),
+        resolve({ extensions, dedupe: ['react', "react-dom"], }),
         sourcemaps()
     ],
 }

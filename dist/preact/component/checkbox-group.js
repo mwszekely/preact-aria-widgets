@@ -1,5 +1,4 @@
-import { createContext } from "preact";
-import { assertEmptyObject, memo } from "preact-prop-helpers";
+import { assertEmptyObject, createContext, memo } from "preact-prop-helpers/preact";
 import { useContextWithWarning } from "../props.js";
 import { useCheckboxGroup, useCheckboxGroupChild, useCheckboxGroupParent } from "../use-checkbox-group.js";
 import { useComponent, useDefault } from "./util.js";

@@ -1,5 +1,4 @@
-import { createContext } from "preact";
-import { assertEmptyObject } from "preact-prop-helpers";
+import { assertEmptyObject, createContext } from "preact-prop-helpers/preact";
 import { useContextWithWarning } from "../props.js";
 import { useSlider, useSliderThumb } from "../use-slider.js";
 import { useComponent } from "./util.js";

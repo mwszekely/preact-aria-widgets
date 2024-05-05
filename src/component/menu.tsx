@@ -1,6 +1,4 @@
-import { createContext } from "preact";
-import { assertEmptyObject, focus, memo, OmitStrong } from "preact-prop-helpers";
-import { useCallback, useContext } from "preact/hooks";
+import { assertEmptyObject, createContext, focus, memo, OmitStrong, useCallback, useContext } from "preact-prop-helpers/preact";
 import { Get15, useContextWithWarning } from "../props.js";
 import { useMenu, UseMenuContext, useMenuItem, UseMenuItemReturnType, UseMenuParameters, UseMenuReturnType } from "../use-menu.js";
 import { UseMenubarSubInfo } from "../use-menubar.js";

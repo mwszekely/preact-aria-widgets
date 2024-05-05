@@ -1,6 +1,5 @@
 import { jsx as _jsx } from "preact/jsx-runtime";
-import { findFirstFocusable, focus, useGlobalHandler, useManagedChild, useManagedChildren, useMergedProps, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
-import { useCallback, useEffect, useRef } from "preact/hooks";
+import { findFirstFocusable, focus, useCallback, useEffect, useGlobalHandler, useManagedChild, useManagedChildren, useMergedProps, useRef, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers/preact";
 import { monitored } from "./props.js";
 import { useNotify } from "./use-notify.js";
 /**

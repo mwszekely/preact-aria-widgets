@@ -1,5 +1,5 @@
 import { identity } from "lodash-es";
-import { assertEmptyObject, findBackupFocus, useCallback, useChildrenFlag, useHasCurrentFocus, useLinearNavigation, useManagedChild, useManagedChildren, useMemoObject, useMergedProps, usePersistentState, useRandomId, useRefElement, useStableCallback, useState, useTextContent, useTypeaheadNavigation, useTypeaheadNavigationChild } from "preact-prop-helpers";
+import { assertEmptyObject, findBackupFocus, useCallback, useChildrenFlag, useHasCurrentFocus, useLinearNavigation, useManagedChild, useManagedChildren, useMemoObject, useMergedProps, usePersistentState, useRandomId, useRefElement, useStableCallback, useState, useTextContent, useTypeaheadNavigation, useTypeaheadNavigationChild } from "preact-prop-helpers/preact";
 import { Prefices, monitored } from "./props.js";
 import { useButton } from "./use-button.js";
 /**

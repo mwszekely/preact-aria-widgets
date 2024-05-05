@@ -23,16 +23,17 @@ import {
     assertEmptyObject,
     focus,
     returnNull,
+    useCallback,
     useCompleteGridNavigation,
     useCompleteGridNavigationCell,
     useCompleteGridNavigationRow,
+    useEffect,
     useMemoObject,
     useMergedProps,
     usePassiveState,
     useStableCallback,
     useState
-} from "preact-prop-helpers";
-import { useCallback, useEffect } from "preact/hooks";
+} from "preact-prop-helpers/preact";
 import { ElementToTag, OmitStrong, Prefices, monitored } from "./props.js";
 import { UseLabelSyntheticParameters, useLabelSynthetic } from "./use-label.js";
 

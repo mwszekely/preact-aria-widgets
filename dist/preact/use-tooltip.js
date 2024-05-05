@@ -1,5 +1,4 @@
-import { assertEmptyObject, focus, returnNull, useDismiss, useGlobalHandler, useHasCurrentFocus, useMergedProps, usePassiveState, useRandomId, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
-import { useCallback, useEffect, useRef } from "preact/hooks";
+import { assertEmptyObject, focus, returnNull, useCallback, useDismiss, useEffect, useGlobalHandler, useHasCurrentFocus, useMergedProps, usePassiveState, useRandomId, useRef, useRefElement, useStableCallback, useState } from "preact-prop-helpers/preact";
 import { monitored, Prefices } from "./props.js";
 // Intentionally (?) unused
 let _hasHover2 = matchMedia("(any-hover: hover)");
@@ -121,11 +120,11 @@ export const useTooltip = monitored(function useTooltip({ tooltipParameters: { o
     const { hasCurrentFocusReturn: popupFocusReturn } = useHasCurrentFocus({ hasCurrentFocusParameters: { onCurrentFocusedChanged: null, onCurrentFocusedInnerChanged: onPopupCurrentFocusedInnerChanged }, refElementReturn: { getElement: getPopupElement } });
     const { refElementPopupReturn, refElementSourceReturn, propsStablePopup, propsStableSource } = useDismiss({
         backdropDismissParameters: {
-            dismissBackdropActive: true,
+            dismissBackdropActive: true, // we handle this ourselves, but for mobile devices with a sorta virtualish cursor this helps. 
             onDismissBackdrop: null
         },
         lostFocusDismissParameters: {
-            dismissLostFocusActive: false,
+            dismissLostFocusActive: false, // and it interferes with our own focus logic (or, our onClose there does)
             onDismissLostFocus: null,
         },
         dismissParameters: {

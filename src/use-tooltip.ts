@@ -5,8 +5,10 @@ import {
     focus,
     returnNull,
     TargetedPick,
+    useCallback,
     useDismiss,
     UseDismissParameters,
+    useEffect,
     UseEscapeDismissParameters,
     useGlobalHandler,
     useHasCurrentFocus,
@@ -14,12 +16,12 @@ import {
     usePassiveState,
     UsePressReturnType,
     useRandomId,
+    useRef,
     useRefElement,
     useStableCallback,
     useState
-} from "preact-prop-helpers";
+} from "preact-prop-helpers/preact";
 import { UseRefElementReturnTypeSelf } from "preact-prop-helpers/react";
-import { useCallback, useEffect, useRef } from "preact/hooks";
 import { monitored, Prefices } from "./props.js";
 
 export type TooltipStatus = "hover" | "focus" | null;

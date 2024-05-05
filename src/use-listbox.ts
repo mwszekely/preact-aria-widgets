@@ -21,7 +21,7 @@ import {
     useMergedProps,
     usePress,
     useStableCallback
-} from "preact-prop-helpers";
+} from "preact-prop-helpers/preact";
 import { EventDetail, OmitStrong, Prefices, monitored } from "./props.js";
 import { UseLabelSyntheticParameters, useLabelSynthetic } from "./use-label.js";
 

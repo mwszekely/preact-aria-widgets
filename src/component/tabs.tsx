@@ -1,6 +1,4 @@
-import { createContext } from "preact";
-import { assertEmptyObject, focus, memo, OmitStrong } from "preact-prop-helpers";
-import { useCallback, useImperativeHandle } from "preact/hooks";
+import { assertEmptyObject, createContext, focus, memo, OmitStrong, useCallback, useImperativeHandle } from "preact-prop-helpers/preact";
 import { Get, Get6, Get8, useContextWithWarning } from "../props.js";
 import { TabInfo, TabPanelInfo, useTab, useTabPanel, UseTabPanelParameters, UseTabPanelReturnType, UseTabPanelsContext, UseTabParameters, UseTabReturnType, useTabs, UseTabsContext, UseTabsParameters, UseTabsReturnType } from "../use-tabs.js";
 import { GenericComponentProps, useComponent, useDefault } from "./util.js";

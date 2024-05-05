@@ -1,8 +1,7 @@
-import { createContext } from "preact";
-import { assertEmptyObject, memo } from "preact-prop-helpers";
+import { assertEmptyObject, createContext, memo } from "preact-prop-helpers/preact";
 import { Get7, Get8, useContextWithWarning } from "../props.js";
 import { FocusableLabelElement, LabelPosition } from "../use-label.js";
-import { RadioContext, RadioSubInfo, UseRadioGroupParameters, UseRadioGroupReturnType, UseRadioParameters, UseRadioReturnType, useRadio, useRadioGroup } from "../use-radio-group.js";
+import { RadioSubInfo, UseRadioGroupParameters, UseRadioGroupReturnType, UseRadioParameters, UseRadioReturnType, useRadio, useRadioGroup, type RadioContext } from "../use-radio-group.js";
 import { GenericComponentProps, PartialExcept, useComponent, useDefault } from "./util.js";
 
 interface RadioGroupPropsBase<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, TabbableChildElement extends Element> extends

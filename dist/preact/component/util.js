@@ -1,7 +1,5 @@
 import { jsx as _jsx } from "preact/jsx-runtime";
-import { createContext } from "preact";
-import { focus } from "preact-prop-helpers";
-import { createPortal, useContext, useImperativeHandle, useRef } from "preact/compat";
+import { createContext, createPortal, focus, useContext, useImperativeHandle, useRef } from "preact-prop-helpers/preact";
 /**
  * Almost all components are built in the exact same way from their implementing hook -- this just sets all of that up.
  *

@@ -1,27 +1,22 @@
-import { ComponentChildren } from "preact";
 import {
-    ElementProps,
+    ComponentChildren, ElementProps,
     ManagedChildInfo,
-    Nullable,
-    UseGenericChildParameters,
+    Nullable, StateUpdater, UseGenericChildParameters,
     UseManagedChildParameters,
     UseManagedChildReturnType,
     UseManagedChildrenContext,
     UseManagedChildrenParameters,
     UseManagedChildrenReturnType,
     findFirstFocusable,
-    focus,
-    useGlobalHandler,
+    focus, useCallback, useEffect, useGlobalHandler,
     useManagedChild,
     useManagedChildren,
-    useMergedProps,
-    useRefElement,
+    useMergedProps, useRef, useRefElement,
     useStableCallback,
     useStableGetter,
     useState,
     useTimeout
-} from "preact-prop-helpers";
-import { StateUpdater, useCallback, useEffect, useRef } from "preact/hooks";
+} from "preact-prop-helpers/preact";
 import { OmitStrong, monitored } from "./props.js";
 import { useNotify } from "./use-notify.js";
 

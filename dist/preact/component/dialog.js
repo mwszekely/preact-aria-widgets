@@ -1,6 +1,5 @@
 import { jsx as _jsx } from "preact/jsx-runtime";
-import { memo } from "preact-prop-helpers";
-import { useContext } from "preact/hooks";
+import { memo, useContext } from "preact-prop-helpers/preact";
 import { useDialog } from "../use-dialog.js";
 import { ParentDepthContext, useComponent, useDefault } from "./util.js";
 export const Dialog = memo((function Dialog({ active, onDismiss, dismissBackdropActive, dismissEscapeActive, focusOpener, getDocument, imperativeHandle, parentDepth, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, focusPopup, ariaLabel, onElementChange, onMount, onUnmount, render }) {

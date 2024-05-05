@@ -1,5 +1,4 @@
-import { Context, createContext } from "preact";
-import { OmitStrong, assertEmptyObject } from "preact-prop-helpers";
+import { Context, OmitStrong, assertEmptyObject, createContext } from "preact-prop-helpers/preact";
 import { Get2, useContextWithWarning } from "../props.js";
 import { ToastInfo, ToastsContext, UseToastParameters, UseToastReturnType, UseToastsParameters, UseToastsReturnType, useToast, useToasts } from "../use-toasts.js";
 import { GenericComponentProps, useComponent } from "./util.js";

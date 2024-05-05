@@ -1,4 +1,4 @@
-import { CompleteListNavigationContext, ElementProps, EventType, ManagedChildInfo, Nullable, PersistentStates, TargetedOmit, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseGenericChildParameters, UseManagedChildParameters, UseManagedChildrenContext, UsePressParameters, UsePressReturnType } from "preact-prop-helpers/react";
+import { CompleteListNavigationContext, ElementProps, EventType, ManagedChildInfo, Nullable, PersistentStates, TargetedOmit, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildParameters, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseGenericChildParameters, UseManagedChildParameters, UseManagedChildrenContext, UsePressParameters, UsePressReturnType } from "preact-prop-helpers/preact";
 import { EventDetail, OmitStrong } from "./props.js";
 import { UseLabelSyntheticParameters } from "./use-label.js";
 export interface TabPanelInfo extends ManagedChildInfo<number> {

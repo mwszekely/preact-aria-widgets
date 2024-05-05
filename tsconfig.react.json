@@ -2,6 +2,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./dist/react",
+    "jsxImportSource": "react"
   },
   "include": ["./src"],
   "exclude": ["./node_modules"]

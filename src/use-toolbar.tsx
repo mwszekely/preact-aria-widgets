@@ -16,7 +16,7 @@ import {
     useCompleteListNavigationDeclarative,
     useMemoObject,
     useMergedProps
-} from "preact-prop-helpers";
+} from "preact-prop-helpers/preact";
 import { OmitStrong, Prefices, monitored } from "./props.js";
 import { UseLabelSyntheticParameters, useLabelSynthetic } from "./use-label.js";
 

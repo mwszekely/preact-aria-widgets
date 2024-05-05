@@ -1,5 +1,4 @@
-import { createElement, VNode } from "preact";
-import { assertEmptyObject, ElementProps, memo } from "preact-prop-helpers";
+import { assertEmptyObject, createElement, ElementProps, memo, VNode } from "preact-prop-helpers/preact";
 import { ElementToTag, Get4 } from "../props.js";
 import { useCheckbox, UseCheckboxParameters, UseCheckboxReturnType } from "../use-checkbox.js";
 import { LabelPosition } from "../use-label.js";
@@ -12,7 +11,7 @@ export type CheckboxProps<InputElement extends Element, LabelElement extends Ele
 >;
 
 export function defaultRenderCheckboxLike<I extends Element, L extends Element, InfoType>({ labelPosition, tagInput, tagLabel, makePropsInput, makePropsLabel }: DefaultRenderCheckboxLikeParameters<I, L, InfoType>) {
-    return function (info: InfoType): VNode<any> {
+    return function (info: InfoType): VNode {
 
         const inputProps = (makePropsInput(info))
         const { children, ...labelProps } = (makePropsLabel(info))

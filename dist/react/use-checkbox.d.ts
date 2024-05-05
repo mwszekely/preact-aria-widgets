@@ -1,4 +1,4 @@
-import { ElementProps, Nullable, TargetedOmit } from "preact-prop-helpers/react";
+import { ElementProps, Nullable, TargetedOmit } from "preact-prop-helpers/preact";
 import { EnhancedEventHandler, OmitStrong, TargetedEnhancedEvent } from "./props.js";
 import { CheckboxCheckedType, UseCheckboxLikeParameters, UseCheckboxLikeReturnType } from "./use-checkbox-like.js";
 import { LabelPosition } from "./use-label.js";

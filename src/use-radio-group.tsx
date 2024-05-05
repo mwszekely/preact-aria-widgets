@@ -15,12 +15,13 @@ import {
     focus,
     useCompleteListNavigationChildDeclarative,
     useCompleteListNavigationDeclarative,
+    useEffect, useLayoutEffect, useMemo,
     useMergedProps,
+    useRef,
     useRefElement,
     useStableCallback,
     useState
-} from "preact-prop-helpers";
-import { useEffect, useLayoutEffect, useMemo, useRef } from "preact/hooks";
+} from "preact-prop-helpers/preact";
 import { EnhancedEventHandler, OmitStrong, Prefices, TargetedEnhancedEvent, enhanceEvent, monitored } from "./props.js";
 import { UseCheckboxLikeParameters, UseCheckboxLikeReturnType, useCheckboxLike } from "./use-checkbox-like.js";
 import { FocusableLabelElement, LabelPosition, UseLabelSyntheticParameters, useLabelSynthetic } from "./use-label.js";

@@ -3,6 +3,7 @@ import {
     ElementProps,
     Nullable,
     PassiveStateUpdater,
+    StateUpdater,
     TargetedOmit,
     UseCompleteListNavigationChildInfo,
     UseCompleteListNavigationChildParameters,
@@ -15,16 +16,18 @@ import {
     returnFalse,
     returnNull,
     returnZero,
+    useCallback,
     useCompleteListNavigation,
     useCompleteListNavigationChild,
+    useEffect, useLayoutEffect,
     useMemoObject,
     useMergedProps,
     usePassiveState,
+    useRef,
     useStableCallback,
     useStableGetter,
     useState
-} from "preact-prop-helpers";
-import { StateUpdater, useCallback, useEffect, useLayoutEffect, useRef } from "preact/hooks";
+} from "preact-prop-helpers/preact";
 import { EnhancedEventHandler, OmitStrong, TargetedEnhancedEvent, monitored } from "./props.js";
 import { CheckboxCheckedType } from "./use-checkbox-like.js";
 
