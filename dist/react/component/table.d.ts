@@ -1,0 +1,40 @@
+import { Ref, VNode } from "preact";
+import { OmitStrong, TargetedOmit, UseCompleteGridNavigationRowReturnType, UseCompleteGridNavigationRowsInfo, UseCompleteGridNavigationRowsParameters, UseCompleteGridNavigationRowsReturnType, UsePaginatedChildParameters, UseProcessedChildInfo, UseProcessedChildReturnType, UseRefElementParameters, UseRefElementReturnType, UseStaggeredChildParameters } from "preact-prop-helpers/react";
+import { Get, Get10, Get3, Get4, Get7 } from "../props.js";
+import { TableCellInfo, TableRowInfo, UseTableCellParameters, UseTableCellReturnType, UseTableParameters, UseTableReturnType, UseTableRowParameters, UseTableRowReturnType, UseTableSectionParameters, UseTableSectionReturnType } from "../use-table.js";
+import { GenericComponentProps } from "./util.js";
+export type TableProps<TableElement extends Element, LabelElement extends Element> = GenericComponentProps<UseTableReturnType<TableElement, LabelElement>, Get4<UseTableParameters<TableElement>, "labelParameters", "tableParameters", "singleSelectionParameters", "multiSelectionParameters">, "tagTable">;
+export type TableSectionProps<SectionElement extends Element, RowElement extends Element, RM extends TableRowInfo<RowElement> = TableRowInfo<RowElement>> = GenericComponentProps<UseTableSectionReturnType<SectionElement, RowElement, RM>, Get10<UseTableSectionParameters<SectionElement, RowElement, RM>, "gridNavigationParameters", "linearNavigationParameters", "rovingTabIndexParameters", "singleSelectionParameters", "typeaheadNavigationParameters", "paginatedChildrenParameters", "tableSectionParameters", "refElementParameters", "singleSelectionParameters", "multiSelectionParameters">, "tagTableSection" | "location">;
+interface TableRowInnerPropsBase<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement> = TableRowInfo<TableRowElement>, CM extends TableCellInfo<TableCellElement> = TableCellInfo<TableCellElement>> extends Get7<UseTableRowParameters<TableRowElement, TableCellElement, RM, CM>, "tableRowParameters", "textContentParameters", "hasCurrentFocusParameters", "singleSelectionChildParameters", "multiSelectionChildParameters", "linearNavigationParameters", "rovingTabIndexParameters">, Pick<RM, "index"> {
+}
+type InnerOuterDifference<ListItemElement extends Element> = OmitStrong<Get3<UseProcessedChildReturnType<ListItemElement, UseProcessedChildInfo<ListItemElement>>, "managedChildReturn", "paginatedChildReturn", "staggeredChildReturn">, "getChildren">;
+interface TableRowInnerProps<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement> = TableRowInfo<TableRowElement>, CM extends TableCellInfo<TableCellElement> = TableCellInfo<TableCellElement>> extends GenericComponentProps<(TargetedOmit<UseProcessedChildReturnType<TableRowElement, UseProcessedChildInfo<TableRowElement>>, "staggeredChildReturn", "childUseEffect"> & OmitStrong<UseProcessedChildReturnType<TableRowElement, UseProcessedChildInfo<TableRowElement>>, "staggeredChildReturn" | "managedChildReturn" | "refElementParameters"> & Partial<UseTableRowReturnType<TableRowElement, TableCellElement, RM, CM>>), TableRowInnerPropsBase<TableRowElement, TableCellElement, RM, CM>, "index">, InnerOuterDifference<TableRowElement> {
+    props: UseProcessedChildReturnType<TableRowElement, UseProcessedChildInfo<TableRowElement>>["props"];
+}
+type UseProcessedTableRowReturnType<TableRowElement extends Element> = OmitStrong<UseProcessedChildReturnType<TableRowElement, any>, "refElementParameters"> & Pick<UseRefElementReturnType<TableRowElement>, "refElementReturn">;
+export interface TableRowProps<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement> = TableRowInfo<TableRowElement>, CM extends TableCellInfo<TableCellElement> = TableCellInfo<TableCellElement>> extends OmitStrong<TableRowInnerProps<TableRowElement, TableCellElement, TableRowInfo<TableRowElement>>, keyof InnerOuterDifference<any> | "render" | "imperativeHandle" | "props">, Get<UseStaggeredChildParameters, "info">, Get<UsePaginatedChildParameters, "info">, Partial<Get<UseRefElementParameters<TableRowElement>, "refElementParameters">> {
+    imperativeHandle?: Ref<{
+        hidden: true;
+    } & UseProcessedTableRowReturnType<TableRowElement>> | Ref<{
+        hidden?: false;
+    } & UseProcessedTableRowReturnType<TableRowElement> & UseCompleteGridNavigationRowReturnType<TableRowElement, TableCellElement, RM, CM>>;
+    render: {
+        (info: {
+            hidden: true;
+        } & UseProcessedTableRowReturnType<TableRowElement>): VNode;
+        (info: {
+            hidden?: false;
+        } & UseProcessedTableRowReturnType<TableRowElement> & UseCompleteGridNavigationRowReturnType<TableRowElement, TableCellElement, RM, CM>): VNode;
+    };
+}
+export type TableCellProps<CellElement extends Element, CM extends TableCellInfo<CellElement>> = GenericComponentProps<UseTableCellReturnType<CellElement, CM>, Get4<UseTableCellParameters<CellElement, TableCellInfo<CellElement>>, "tableCellParameters", "gridNavigationCellParameters", "textContentParameters", "info">, "index" | "tagTableCell" | "getSortValue"> & {
+    info?: OmitStrong<CM, keyof TableCellInfo<CellElement>>;
+};
+export declare const Table: <TableElement extends Element, LabelElement extends Element>({ ariaLabel, singleSelectionMode, multiSelectionMode, tagTable, imperativeHandle, render, ...void1 }: TableProps<TableElement, LabelElement>) => import("preact").JSX.Element;
+export declare const TableSection: <SectionElement extends Element, RowElement extends Element>({ disableHomeEndKeys, initiallySingleSelectedIndex, untabbable, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, onTabbableColumnChange, onTabbableIndexChange, pageNavigationSize, paginationMax, paginationMin, render, location, imperativeHandle, multiSelectionAriaPropName, onSelectionChange, singleSelectionAriaPropName, onNavigateLinear, collator, noTypeahead, onNavigateTypeahead, typeaheadTimeout, tagTableSection, onElementChange, onMount, onUnmount, initiallyTabbableColumn, ...void1 }: TableSectionProps<SectionElement, RowElement, TableRowInfo<RowElement>>) => import("preact").JSX.Element;
+export type TableRowsProps<TableRowElement extends Element> = GenericComponentProps<UseCompleteGridNavigationRowsReturnType<TableRowElement, UseCompleteGridNavigationRowsInfo<TableRowElement>>, Get4<UseCompleteGridNavigationRowsParameters<TableRowElement, UseCompleteGridNavigationRowsInfo<TableRowElement>>, "managedChildrenParameters", "paginatedChildrenParameters", "rearrangeableChildrenParameters", "staggeredChildrenParameters">, "children">;
+export declare const TableRows: <RowElement extends Element>({ render, adjust, children, compare, getIndex, imperativeHandle, onAfterChildLayoutEffect, onChildrenCountChange, onChildrenMountChange, onRearranged, paginationMax, paginationMin, staggered }: TableRowsProps<RowElement>) => import("preact").JSX.Element;
+export declare const TableRow: <RowElement extends Element, CellElement extends Element>({ index, render, imperativeHandle, onElementChange: oec1, onMount, onUnmount, getText, untabbable, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, multiSelectionDisabled, singleSelectionDisabled, initiallyMultiSelected, initiallyTabbedIndex, navigatePastEnd, navigatePastStart, onMultiSelectChange, onTabbableIndexChange, selected, tagTableRow, onTextContentChange, ...void1 }: TableRowProps<RowElement, CellElement, TableRowInfo<RowElement>, TableCellInfo<CellElement>>) => import("preact").JSX.Element | VNode<{}>;
+export declare const TableCell: <CellElement extends Element>({ index, getText, focusSelf, untabbable, tagTableCell, render, colSpan, imperativeHandle, getSortValue, onTextContentChange, info: uinfo, ...void1 }: TableCellProps<CellElement, TableCellInfo<CellElement>>) => import("preact").JSX.Element;
+export {};
+//# sourceMappingURL=table.d.ts.map

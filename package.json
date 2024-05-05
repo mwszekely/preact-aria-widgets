@@ -9,9 +9,14 @@
   "packageManager": "pnpm@8.7.5",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "browser": "./dist/index.js",
-      "import": "./dist/index.js"
+      "types": "./dist/preact/index.d.ts",
+      "browser": "./dist/preact/index.js",
+      "import": "./dist/preact/index.js"
+    },
+    "./react": {
+      "types": "./dist/react/index.d.ts",
+      "browser": "./dist/react/index.js",
+      "import": "./dist/react/index.js"
     },
     "./package.json": "./package.json"
   },
@@ -20,8 +25,7 @@
     "watch": "npx npm-run-all --npm-path npm -pc clean watch:*",
     "watch:preact": "tsc --watch",
     "build:preact": "tsc",
-    "watch:react": "npx rollup -c ./rollup.config.js --watch --no-watch.clearScreen",
-    "build:react": "npx rollup -c ./rollup.config.js",
+    "build:react": "tsc --project ./tsconfig.react.json && node finish-react.mjs",
     "test": "playwright test --ui",
     "lint": "npx eslint ./src",
     "clean": "tsc --build --clean",
