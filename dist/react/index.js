@@ -2312,13 +2312,14 @@ const useToast = monitored(function useToast({ toastParameters: { politeness, ti
 });
 
 // Intentionally (?) unused
-matchMedia("(any-hover: hover)");
+typeof window == "undefined" ? null : matchMedia("(any-hover: hover)");
 // Track if the current input has hover capabilities
 // (This is responsive to whatever the "primary" device is)
-let mediaQuery = matchMedia("(hover: hover)");
-let pageCurrentlyUsingHover = mediaQuery.matches;
+let mediaQuery = typeof window == "undefined" ? null : matchMedia("(hover: hover)");
+let pageCurrentlyUsingHover = mediaQuery?.matches || false;
 let allCallbacks = new Set();
-mediaQuery.onchange = ev => { pageCurrentlyUsingHover = ev.matches; allCallbacks.forEach(fn => fn(ev.matches)); };
+if (mediaQuery)
+    mediaQuery.onchange = ev => { pageCurrentlyUsingHover = ev.matches; allCallbacks.forEach(fn => fn(ev.matches)); };
 //setTimeout(() => alert(`Hover: ${pageCurrentlyUsingHover.toString()}`), 1000);
 /*
 //let delayedAlert2 = debounce(delayedAlert3, 4000);
@@ -2346,9 +2347,11 @@ const useTooltip = monitored(function useTooltip({ tooltipParameters: { onStatus
     }, []));
     const [usesHover, setUsesHover] = useState(pageCurrentlyUsingHover);
     useEffect(() => {
-        let handler = (ev) => { setUsesHover(ev.matches); };
-        mediaQuery.addEventListener("change", handler, { passive: true });
-        return () => mediaQuery.removeEventListener("change", handler, {});
+        if (mediaQuery) {
+            let handler = (ev) => { setUsesHover(ev.matches); };
+            mediaQuery.addEventListener("change", handler, { passive: true });
+            return () => mediaQuery.removeEventListener("change", handler, {});
+        }
     });
     /**
      * Whether the hover/focus-popup/trigger state we have results in us showing this tooltip.

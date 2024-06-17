@@ -1,13 +1,14 @@
 import { assertEmptyObject, focus, returnNull, useCallback, useDismiss, useEffect, useGlobalHandler, useHasCurrentFocus, useMergedProps, usePassiveState, useRandomId, useRef, useRefElement, useStableCallback, useState } from "preact-prop-helpers/preact";
 import { monitored, Prefices } from "./props.js";
 // Intentionally (?) unused
-let _hasHover2 = matchMedia("(any-hover: hover)");
+let _hasHover2 = typeof window == "undefined" ? null : matchMedia("(any-hover: hover)");
 // Track if the current input has hover capabilities
 // (This is responsive to whatever the "primary" device is)
-let mediaQuery = matchMedia("(hover: hover)");
-let pageCurrentlyUsingHover = mediaQuery.matches;
+let mediaQuery = typeof window == "undefined" ? null : matchMedia("(hover: hover)");
+let pageCurrentlyUsingHover = mediaQuery?.matches || false;
 let allCallbacks = new Set();
-mediaQuery.onchange = ev => { pageCurrentlyUsingHover = ev.matches; allCallbacks.forEach(fn => fn(ev.matches)); };
+if (mediaQuery)
+    mediaQuery.onchange = ev => { pageCurrentlyUsingHover = ev.matches; allCallbacks.forEach(fn => fn(ev.matches)); };
 //setTimeout(() => alert(`Hover: ${pageCurrentlyUsingHover.toString()}`), 1000);
 /*
 //let delayedAlert2 = debounce(delayedAlert3, 4000);
@@ -35,9 +36,11 @@ export const useTooltip = monitored(function useTooltip({ tooltipParameters: { o
     }, []));
     const [usesHover, setUsesHover] = useState(pageCurrentlyUsingHover);
     useEffect(() => {
-        let handler = (ev) => { setUsesHover(ev.matches); };
-        mediaQuery.addEventListener("change", handler, { passive: true });
-        return () => mediaQuery.removeEventListener("change", handler, {});
+        if (mediaQuery) {
+            let handler = (ev) => { setUsesHover(ev.matches); };
+            mediaQuery.addEventListener("change", handler, { passive: true });
+            return () => mediaQuery.removeEventListener("change", handler, {});
+        }
     });
     /**
      * Whether the hover/focus-popup/trigger state we have results in us showing this tooltip.

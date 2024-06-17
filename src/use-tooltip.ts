@@ -67,14 +67,15 @@ export interface UseTooltipParameters<TriggerType extends Element, PopupType ext
 export type TooltipState = `${"hovering" | "focused"}-${"popup" | "trigger"}` | null;
 
 // Intentionally (?) unused
-let _hasHover2 = matchMedia("(any-hover: hover)");
+let _hasHover2 = typeof window == "undefined" ? null : matchMedia("(any-hover: hover)");
 
 // Track if the current input has hover capabilities
 // (This is responsive to whatever the "primary" device is)
-let mediaQuery = matchMedia("(hover: hover)");
-let pageCurrentlyUsingHover = mediaQuery.matches;
+let mediaQuery = typeof window == "undefined" ? null : matchMedia("(hover: hover)");
+let pageCurrentlyUsingHover = mediaQuery?.matches || false;
 let allCallbacks = new Set<(primarilyUsesHover: boolean) => void>();
-mediaQuery.onchange = ev => { pageCurrentlyUsingHover = ev.matches; allCallbacks.forEach(fn => fn(ev.matches)); };
+if (mediaQuery)
+    mediaQuery.onchange = ev => { pageCurrentlyUsingHover = ev.matches; allCallbacks.forEach(fn => fn(ev.matches)); };
 
 //setTimeout(() => alert(`Hover: ${pageCurrentlyUsingHover.toString()}`), 1000);
 /*
@@ -117,9 +118,11 @@ export const useTooltip = monitored(function useTooltip<TriggerType extends Elem
 
     const [usesHover, setUsesHover] = useState(pageCurrentlyUsingHover);
     useEffect(() => {
-        let handler: ((this: MediaQueryList, ev: MediaQueryListEvent) => void) = (ev) => { setUsesHover(ev.matches); };
-        mediaQuery.addEventListener("change", handler, { passive: true });
-        return () => mediaQuery.removeEventListener("change", handler, {})
+        if (mediaQuery) {
+            let handler: ((this: MediaQueryList, ev: MediaQueryListEvent) => void) = (ev) => { setUsesHover(ev.matches); };
+            mediaQuery.addEventListener("change", handler, { passive: true });
+            return () => mediaQuery.removeEventListener("change", handler, {})
+        }
     })
 
     /**
