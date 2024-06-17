@@ -1,4 +1,4 @@
-import { UseAsyncHandlerParameters } from "preact-prop-helpers/preact";
+import { UseAsyncHandlerParameters } from "preact-prop-helpers";
 import { Get3 } from "../props.js";
 import { UseProgressParameters, UseProgressReturnType, UseProgressWithHandlerParameters, UseProgressWithHandlerReturnType } from "../use-progress.js";
 import { GenericComponentProps, PartialExcept } from "./util.js";

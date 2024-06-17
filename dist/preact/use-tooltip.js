@@ -1,4 +1,4 @@
-import { assertEmptyObject, focus, returnNull, useCallback, useDismiss, useEffect, useGlobalHandler, useHasCurrentFocus, useMergedProps, usePassiveState, useRandomId, useRef, useRefElement, useStableCallback, useState } from "preact-prop-helpers/preact";
+import { assertEmptyObject, focus, getDocument, returnNull, useCallback, useDismiss, useEffect, useGlobalHandler, useHasCurrentFocus, useMergedProps, usePassiveState, useRandomId, useRef, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
 import { monitored, Prefices } from "./props.js";
 // Intentionally (?) unused
 let _hasHover2 = typeof window == "undefined" ? null : matchMedia("(any-hover: hover)");
@@ -174,7 +174,7 @@ export const useTooltip = monitored(function useTooltip({ tooltipParameters: { o
         }),
         //onPointerLeave: useCallback(() => { onHoverChanged(false, "trigger") }, [])
     };
-    useGlobalHandler(document, "pointermove", !openLocal ? null : (e => {
+    useGlobalHandler(getDocument(), "pointermove", !openLocal ? null : (e => {
         const popupElement = getPopupElement();
         const triggerElement = getTriggerElement();
         const mouseElement = e.target;

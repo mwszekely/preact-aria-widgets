@@ -3,6 +3,7 @@ import {
     DismissListenerTypes,
     ElementProps,
     focus,
+    getDocument,
     returnNull,
     TargetedPick,
     useCallback,
@@ -20,8 +21,8 @@ import {
     useRefElement,
     useStableCallback,
     useState
-} from "preact-prop-helpers/preact";
-import { UseRefElementReturnTypeSelf } from "preact-prop-helpers/react";
+} from "preact-prop-helpers";
+import { UseRefElementReturnTypeSelf } from "preact-prop-helpers";
 import { monitored, Prefices } from "./props.js";
 
 export type TooltipStatus = "hover" | "focus" | null;
@@ -291,7 +292,7 @@ export const useTooltip = monitored(function useTooltip<TriggerType extends Elem
         //onPointerLeave: useCallback(() => { onHoverChanged(false, "trigger") }, [])
     }
 
-    useGlobalHandler(document, "pointermove", !openLocal ? null : (e => {
+    useGlobalHandler(getDocument(), "pointermove", !openLocal ? null : (e => {
         const popupElement = getPopupElement();
         const triggerElement = getTriggerElement();
         const mouseElement = e.target as Node | null;

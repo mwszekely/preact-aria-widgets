@@ -1,4 +1,4 @@
-import { OmitStrong, Ref, TargetedOmit, UseCompleteGridNavigationRowReturnType, UseCompleteGridNavigationRowsInfo, UseCompleteGridNavigationRowsParameters, UseCompleteGridNavigationRowsReturnType, UsePaginatedChildParameters, UseProcessedChildInfo, UseProcessedChildReturnType, UseRefElementParameters, UseRefElementReturnType, UseStaggeredChildParameters, VNode } from "preact-prop-helpers/preact";
+import { OmitStrong, Ref, TargetedOmit, UseCompleteGridNavigationRowReturnType, UseCompleteGridNavigationRowsInfo, UseCompleteGridNavigationRowsParameters, UseCompleteGridNavigationRowsReturnType, UsePaginatedChildParameters, UseProcessedChildInfo, UseProcessedChildReturnType, UseRefElementParameters, UseRefElementReturnType, UseStaggeredChildParameters, VNode } from "preact-prop-helpers";
 import { Get, Get10, Get3, Get4, Get7 } from "../props.js";
 import { TableCellInfo, TableRowInfo, UseTableCellParameters, UseTableCellReturnType, UseTableParameters, UseTableReturnType, UseTableRowParameters, UseTableRowReturnType, UseTableSectionParameters, UseTableSectionReturnType } from "../use-table.js";
 import { GenericComponentProps } from "./util.js";

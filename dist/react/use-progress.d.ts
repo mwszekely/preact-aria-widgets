@@ -1,4 +1,4 @@
-import { ElementProps, Nullable, TargetedOmit, TargetedPick, UseAsyncHandlerParameters, UseAsyncHandlerReturnType, VNode } from "preact-prop-helpers/preact";
+import { ElementProps, Nullable, TargetedOmit, TargetedPick, UseAsyncHandlerParameters, UseAsyncHandlerReturnType, VNode } from "preact-prop-helpers";
 import { ElementToTag, OmitStrong } from "./props.js";
 import { UseLabelReturnType, UseLabelSyntheticParameters } from "./use-label.js";
 export interface UseProgressParametersSelf<IndicatorElement extends Element> {

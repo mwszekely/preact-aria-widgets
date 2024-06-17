@@ -29,6 +29,7 @@ import {
     UseTypeaheadNavigationReturnType,
     assertEmptyObject,
     findBackupFocus,
+    getDocument,
     useCallback,
     useChildrenFlag,
     useHasCurrentFocus,
@@ -45,8 +46,8 @@ import {
     useTextContent,
     useTypeaheadNavigation,
     useTypeaheadNavigationChild
-} from "preact-prop-helpers/preact";
-import { UseTextContentParameters } from "preact-prop-helpers/react";
+} from "preact-prop-helpers";
+import { UseTextContentParameters } from "preact-prop-helpers";
 import { DisabledType, OmitStrong, Prefices, monitored } from "./props.js";
 import { UseButtonParameters, UseButtonReturnType, useButton } from "./use-button.js";
 
@@ -247,8 +248,10 @@ export const useAccordion = monitored(function useAccordion<HeaderButtonElement 
         }, []),
         onClosestFit: useStableCallback((index) => {
 
+            const document = getDocument();
+
             // After needing to do a closest fit, we still need to handle focus:
-            if (document.activeElement == null || document.activeElement == document.body) {
+            if (document && (document.activeElement == null || document.activeElement == document.body)) {
                 if (index != null) {
                     let backupIndex = 0;
                     let usedBackup = false;

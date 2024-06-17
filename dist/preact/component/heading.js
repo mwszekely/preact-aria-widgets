@@ -1,5 +1,5 @@
 import { jsxs as _jsxs, Fragment as _Fragment, jsx as _jsx } from "preact/jsx-runtime";
-import { createContext, createElement, memo, useContext } from "preact-prop-helpers/preact";
+import { createContext, createElement, memo, useContext } from "preact-prop-helpers";
 function overwriteWithWarning(a, ..._t) { return a; }
 const HeadingLevelContext = createContext(0);
 /**

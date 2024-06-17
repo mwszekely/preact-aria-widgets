@@ -1,4 +1,4 @@
-import { ElementProps, JSX, Nullable, PressEventReason, TargetedOmit, UsePressParameters, UsePressReturnType, UseRefElementParameters, UseRefElementReturnType } from "preact-prop-helpers/preact";
+import { ElementProps, JSX, Nullable, PressEventReason, TargetedOmit, UsePressParameters, UsePressReturnType, UseRefElementParameters, UseRefElementReturnType } from "preact-prop-helpers";
 import { DisabledType, ElementToTag, EnhancedEventHandler, OmitStrong, TargetedEnhancedEvent } from "./props.js";
 export interface ButtonPressEventDetail {
     pressed: boolean | undefined;

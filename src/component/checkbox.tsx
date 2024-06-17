@@ -1,4 +1,4 @@
-import { assertEmptyObject, createElement, ElementProps, memo, VNode } from "preact-prop-helpers/preact";
+import { assertEmptyObject, createElement, ElementProps, memo, VNode } from "preact-prop-helpers";
 import { ElementToTag, Get4 } from "../props.js";
 import { useCheckbox, UseCheckboxParameters, UseCheckboxReturnType } from "../use-checkbox.js";
 import { LabelPosition } from "../use-label.js";

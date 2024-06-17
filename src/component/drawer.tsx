@@ -1,4 +1,4 @@
-import { assertEmptyObject, memo, useContext } from "preact-prop-helpers/preact";
+import { assertEmptyObject, memo, useContext } from "preact-prop-helpers";
 import { Get11 } from "../props.js";
 import { UseDrawerParameters, UseDrawerReturnType, useDrawer } from "../use-drawer.js";
 import { GenericComponentProps, ParentDepthContext, useComponent, useDefault } from "./util.js";

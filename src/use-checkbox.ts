@@ -7,7 +7,7 @@ import {
     useMergedProps,
     useRefElement,
     useStableCallback
-} from "preact-prop-helpers/preact";
+} from "preact-prop-helpers";
 import { EnhancedEventHandler, OmitStrong, Prefices, TargetedEnhancedEvent, monitored } from "./props.js";
 import { CheckboxCheckedType, UseCheckboxLikeParameters, UseCheckboxLikeReturnType, useCheckboxLike } from "./use-checkbox-like.js";
 import { LabelPosition } from "./use-label.js";

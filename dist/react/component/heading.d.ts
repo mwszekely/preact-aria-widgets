@@ -1,4 +1,4 @@
-import { ComponentChildren, ElementProps, RenderableProps } from "preact-prop-helpers/preact";
+import { ComponentChildren, createElement, ElementProps, RenderableProps } from "preact-prop-helpers";
 type ElementToTag<_A> = any;
 export interface HeadingProps<T extends Element> extends RenderableProps<ElementProps<T>> {
     /**
@@ -18,7 +18,7 @@ export interface HeadingProps<T extends Element> extends RenderableProps<Element
  * Specify the actual contents of the heading with the `heading` prop.
  *
  */
-export declare const Heading: <T extends Element>({ children, heading, tag, ...props }: HeadingProps<T>) => import("react/jsx-runtime").JSX.Element;
+export declare const Heading: <T extends Element>({ children, heading, tag, ...props }: HeadingProps<T>) => createElement.JSX.Element;
 /**
  * Set the value that the next `Heading` will use as its base.
  *

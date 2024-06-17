@@ -1,4 +1,4 @@
-import { VNode } from "preact-prop-helpers/preact";
+import { VNode } from "preact-prop-helpers";
 export interface NotificationProviderProps {
     targetAssertive: string | Element;
     targetPolite: string | Element;

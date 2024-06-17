@@ -1,4 +1,4 @@
-import { ElementProps, TargetedOmit, UseModalParameters, UseModalReturnType, UsePressReturnType } from "preact-prop-helpers/preact";
+import { ElementProps, TargetedOmit, UseModalParameters, UseModalReturnType, UsePressReturnType } from "preact-prop-helpers";
 import { OmitStrong } from "./props.js";
 import { UseLabelSyntheticParameters } from "./use-label.js";
 export interface UseDialogParameters<_DialogElement extends Element, _TitleElement extends Element> extends OmitStrong<UseModalParameters<"escape" | "backdrop">, "focusTrapParameters" | "dismissParameters" | "backdropDismissParameters" | "escapeDismissParameters" | "lostFocusDismissParameters">, TargetedOmit<UseModalParameters<"escape" | "backdrop">, "focusTrapParameters", "trapActive" | "onlyMoveFocus">, TargetedOmit<UseModalParameters<"escape" | "backdrop">, "dismissParameters", "dismissActive">, TargetedOmit<UseModalParameters<"escape" | "backdrop">, "backdropDismissParameters", "onDismissBackdrop">, TargetedOmit<UseModalParameters<"escape" | "backdrop">, "escapeDismissParameters", "onDismissEscape">, TargetedOmit<UseLabelSyntheticParameters, "labelParameters", "onLabelClick"> {

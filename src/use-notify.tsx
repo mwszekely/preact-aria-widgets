@@ -3,7 +3,7 @@ import {
     useCallback, useMemo,
     usePortalChildren,
     VNode
-} from "preact-prop-helpers/preact";
+} from "preact-prop-helpers";
 import { monitored, useContextWithWarning } from "./props.js";
 
 export interface NotificationProviderProps {

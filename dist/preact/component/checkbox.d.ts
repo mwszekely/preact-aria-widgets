@@ -1,4 +1,4 @@
-import { createElement, ElementProps, VNode } from "preact-prop-helpers/preact";
+import { createElement, ElementProps, VNode } from "preact-prop-helpers";
 import { ElementToTag, Get4 } from "../props.js";
 import { UseCheckboxParameters, UseCheckboxReturnType } from "../use-checkbox.js";
 import { LabelPosition } from "../use-label.js";

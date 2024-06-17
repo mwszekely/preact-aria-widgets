@@ -1,5 +1,5 @@
 import { jsx as _jsx } from "preact/jsx-runtime";
-import { assertEmptyObject, createContext, focus, memo, useCallback, useContext } from "preact-prop-helpers/preact";
+import { assertEmptyObject, createContext, focus, memo, useCallback, useContext } from "preact-prop-helpers";
 import { useContextWithWarning } from "../props.js";
 import { useMenu, useMenuItem } from "../use-menu.js";
 import { ParentDepthContext, useComponent, useDefault } from "./util.js";

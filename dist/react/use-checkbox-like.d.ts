@@ -1,4 +1,4 @@
-import { ElementProps, JSX, TargetedOmit, TargetedPick, UsePressParameters, UsePressReturnType, UseRefElementReturnType } from "preact-prop-helpers/preact";
+import { ElementProps, JSX, TargetedOmit, TargetedPick, UsePressParameters, UsePressReturnType, UseRefElementReturnType } from "preact-prop-helpers";
 import { DisabledType, OmitStrong } from "./props.js";
 import { LabelPosition, UseLabelParameters, UseLabelReturnType } from "./use-label.js";
 export type CheckboxCheckedType = boolean | "mixed";

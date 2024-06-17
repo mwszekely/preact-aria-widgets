@@ -1,4 +1,4 @@
-import { assertEmptyObject, createContext, memo } from "preact-prop-helpers/preact";
+import { assertEmptyObject, createContext, memo } from "preact-prop-helpers";
 import { useContextWithWarning } from "../props.js";
 import { useRadio, useRadioGroup } from "../use-radio-group.js";
 import { useComponent, useDefault } from "./util.js";

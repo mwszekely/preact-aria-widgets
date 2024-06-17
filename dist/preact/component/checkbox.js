@@ -1,5 +1,5 @@
 import { Fragment as _Fragment, jsxs as _jsxs, jsx as _jsx } from "preact/jsx-runtime";
-import { assertEmptyObject, createElement, memo } from "preact-prop-helpers/preact";
+import { assertEmptyObject, createElement, memo } from "preact-prop-helpers";
 import { useCheckbox } from "../use-checkbox.js";
 import { useComponent } from "./util.js";
 export function defaultRenderCheckboxLike({ labelPosition, tagInput, tagLabel, makePropsInput, makePropsLabel }) {

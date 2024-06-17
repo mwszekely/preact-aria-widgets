@@ -1,4 +1,4 @@
-import { ComponentChildren, ElementProps, ManagedChildInfo, Nullable, StateUpdater, UseGenericChildParameters, UseManagedChildParameters, UseManagedChildReturnType, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType } from "preact-prop-helpers/preact";
+import { ComponentChildren, ElementProps, ManagedChildInfo, Nullable, StateUpdater, UseGenericChildParameters, UseManagedChildParameters, UseManagedChildReturnType, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType } from "preact-prop-helpers";
 import { OmitStrong } from "./props.js";
 export interface UseToastsParametersSelf {
     visibleCount: number;

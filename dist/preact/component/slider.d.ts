@@ -1,4 +1,4 @@
-import { OmitStrong } from "preact-prop-helpers/preact";
+import { OmitStrong } from "preact-prop-helpers";
 import { Get2 } from "../props.js";
 import { SliderThumbInfo, UseSliderParameters, UseSliderReturnType, UseSliderThumbParameters, UseSliderThumbReturnType } from "../use-slider.js";
 import { GenericComponentProps } from "./util.js";

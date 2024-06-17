@@ -1,4 +1,4 @@
-import { assertEmptyObject, focus, useCompleteListNavigationChildDeclarative, useCompleteListNavigationDeclarative, useMergedProps, usePress, useStableCallback } from "preact-prop-helpers/preact";
+import { assertEmptyObject, focus, useCompleteListNavigationChildDeclarative, useCompleteListNavigationDeclarative, useMergedProps, usePress, useStableCallback } from "preact-prop-helpers";
 import { EventDetail, Prefices, monitored } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
 /**

@@ -1,5 +1,5 @@
 import { identity } from "lodash-es";
-import { assertEmptyObject, findBackupFocus, useCallback, useChildrenFlag, useHasCurrentFocus, useLinearNavigation, useManagedChild, useManagedChildren, useMemoObject, useMergedProps, usePersistentState, useRandomId, useRefElement, useStableCallback, useState, useTextContent, useTypeaheadNavigation, useTypeaheadNavigationChild } from "preact-prop-helpers/preact";
+import { assertEmptyObject, findBackupFocus, getDocument, useCallback, useChildrenFlag, useHasCurrentFocus, useLinearNavigation, useManagedChild, useManagedChildren, useMemoObject, useMergedProps, usePersistentState, useRandomId, useRefElement, useStableCallback, useState, useTextContent, useTypeaheadNavigation, useTypeaheadNavigationChild } from "preact-prop-helpers";
 import { Prefices, monitored } from "./props.js";
 import { useButton } from "./use-button.js";
 /**
@@ -65,8 +65,9 @@ export const useAccordion = monitored(function useAccordion({ accordionParameter
             }
         }, []),
         onClosestFit: useStableCallback((index) => {
+            const document = getDocument();
             // After needing to do a closest fit, we still need to handle focus:
-            if (document.activeElement == null || document.activeElement == document.body) {
+            if (document && (document.activeElement == null || document.activeElement == document.body)) {
                 if (index != null) {
                     let backupIndex = 0;
                     let usedBackup = false;

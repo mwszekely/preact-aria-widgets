@@ -1,5 +1,5 @@
-import { useContext } from "preact-prop-helpers/preact";
-export { EventDetail, enhanceEvent, monitored, useContext } from "preact-prop-helpers/preact";
+import { useContext } from "preact-prop-helpers";
+export { EventDetail, enhanceEvent, monitored, useContext } from "preact-prop-helpers";
 const alreadyWarned = new Set();
 export function overwriteWithWarning(componentName, props, propName, newValue) {
     //const key = `${componentName};${propName}`;

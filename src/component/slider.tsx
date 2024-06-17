@@ -1,4 +1,4 @@
-import { OmitStrong, assertEmptyObject, createContext } from "preact-prop-helpers/preact";
+import { OmitStrong, assertEmptyObject, createContext } from "preact-prop-helpers";
 import { Get2, useContextWithWarning } from "../props.js";
 import { SliderContext, SliderThumbInfo, UseSliderParameters, UseSliderReturnType, UseSliderThumbParameters, UseSliderThumbReturnType, useSlider, useSliderThumb } from "../use-slider.js";
 import { GenericComponentProps, useComponent } from "./util.js";

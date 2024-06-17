@@ -1,5 +1,5 @@
 import { jsx as _jsx } from "preact/jsx-runtime";
-import { assertEmptyObject, memo, useContext } from "preact-prop-helpers/preact";
+import { assertEmptyObject, memo, useContext } from "preact-prop-helpers";
 import { useTooltip } from "../use-tooltip.js";
 import { ParentDepthContext, useComponent, useDefault } from "./util.js";
 export const Tooltip = memo(function TooltipU({ onStatus, getDocument, parentDepth, hoverDelay, render, imperativeHandle, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, tooltipSemanticType, usesLongPress, longPress, ...void1 }) {

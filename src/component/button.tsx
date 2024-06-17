@@ -1,4 +1,4 @@
-import { assertEmptyObject, memo } from "preact-prop-helpers/preact";
+import { assertEmptyObject, memo } from "preact-prop-helpers";
 import { Get3 } from "../props.js";
 import { UseButtonParameters, UseButtonReturnType, useButton } from "../use-button.js";
 import { GenericComponentProps, useComponent, useDefault } from "./util.js";

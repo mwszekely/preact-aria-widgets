@@ -1,4 +1,4 @@
-import { assertEmptyObject, createContext, focus, memo, useCallback, UseProcessedChildrenContext } from "preact-prop-helpers/preact";
+import { assertEmptyObject, createContext, focus, memo, useCallback, UseProcessedChildrenContext } from "preact-prop-helpers";
 import { Get10, Get7, OmitStrong, useContextWithWarning } from "../props.js";
 import { useToolbar, useToolbarChild, UseToolbarChildParameters, UseToolbarChildReturnType, UseToolbarContext, UseToolbarParameters, UseToolbarReturnType, UseToolbarSubInfo } from "../use-toolbar.js";
 import { GenericComponentProps, useComponent, useComponentC, useDefault } from "./util.js";

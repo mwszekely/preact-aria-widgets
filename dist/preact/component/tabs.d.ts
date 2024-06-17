@@ -1,4 +1,4 @@
-import { OmitStrong } from "preact-prop-helpers/preact";
+import { OmitStrong } from "preact-prop-helpers";
 import { Get, Get6, Get8 } from "../props.js";
 import { TabInfo, TabPanelInfo, UseTabPanelParameters, UseTabPanelReturnType, UseTabParameters, UseTabReturnType, UseTabsParameters, UseTabsReturnType } from "../use-tabs.js";
 import { GenericComponentProps } from "./util.js";

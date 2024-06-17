@@ -1,6 +1,6 @@
-import { ComponentType, Context, ElementProps, JSX, Ref, useContext } from "preact-prop-helpers/preact";
+import { ComponentType, Context, ElementProps, JSX, Ref, useContext } from "preact-prop-helpers";
 
-export { EventDetail, enhanceEvent, monitored, useContext, type ComponentType, type ElementProps, type EnhancedEventHandler, type JSX, type Ref, type TargetedEnhancedEvent } from "preact-prop-helpers/preact";
+export { EventDetail, enhanceEvent, monitored, useContext, type ComponentType, type ElementProps, type EnhancedEventHandler, type JSX, type Ref, type TargetedEnhancedEvent } from "preact-prop-helpers";
 
 export type RefFromTag<T extends keyof JSX.IntrinsicElements> = NonNullable<JSX.IntrinsicElements[T]["ref"]> & Ref<any>;
 export type ElementFromRef<R extends Ref<any>> = R extends Ref<infer E> ? E : EventTarget;

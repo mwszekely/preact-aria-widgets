@@ -1,4 +1,4 @@
-import { EventType, TargetedOmit } from "preact-prop-helpers/preact";
+import { EventType, TargetedOmit } from "preact-prop-helpers";
 import { OmitStrong } from "./props.js";
 import { UseMenuSurfaceParameters, UseMenuSurfaceReturnType } from "./use-menu-surface.js";
 import { UseMenubarContext, UseMenubarItemParameters, UseMenubarItemReturnType, UseMenubarParameters, UseMenubarReturnType, UseMenubarSubInfo } from "./use-menubar.js";

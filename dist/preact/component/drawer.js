@@ -1,5 +1,5 @@
 import { jsx as _jsx } from "preact/jsx-runtime";
-import { assertEmptyObject, memo, useContext } from "preact-prop-helpers/preact";
+import { assertEmptyObject, memo, useContext } from "preact-prop-helpers";
 import { useDrawer } from "../use-drawer.js";
 import { ParentDepthContext, useComponent, useDefault } from "./util.js";
 export const Drawer = memo((function Drawer({ active, onDismiss, dismissBackdropActive, dismissEscapeActive, dismissLostFocusActive, onElementChange, onMount, onUnmount, focusOpener, focusPopup, getDocument, imperativeHandle, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, parentDepth, render, trapActive, ariaLabel, ...void1 }) {

@@ -1,4 +1,4 @@
-import { assertEmptyObject, focus, returnNull, useCallback, useCompleteGridNavigation, useCompleteGridNavigationCell, useCompleteGridNavigationRow, useEffect, useMemoObject, useMergedProps, usePassiveState, useStableCallback, useState } from "preact-prop-helpers/preact";
+import { assertEmptyObject, focus, returnNull, useCallback, useCompleteGridNavigation, useCompleteGridNavigationCell, useCompleteGridNavigationRow, useEffect, useMemoObject, useMergedProps, usePassiveState, useStableCallback, useState } from "preact-prop-helpers";
 import { Prefices, monitored } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
 /**

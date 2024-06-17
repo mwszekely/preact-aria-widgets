@@ -1,4 +1,4 @@
-import { assertEmptyObject, findFirstFocusable, useMergedProps, useModal, useStableCallback } from "preact-prop-helpers/preact";
+import { assertEmptyObject, findFirstFocusable, useMergedProps, useModal, useStableCallback } from "preact-prop-helpers";
 import { monitored, Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
 /**

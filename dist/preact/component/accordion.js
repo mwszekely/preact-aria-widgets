@@ -1,4 +1,4 @@
-import { assertEmptyObject, createContext, memo } from "preact-prop-helpers/preact";
+import { assertEmptyObject, createContext, memo } from "preact-prop-helpers";
 import { useContextWithWarning } from "../props.js";
 import { useAccordion, useAccordionSection } from "../use-accordion.js";
 import { useComponent, useDefault } from "./util.js";

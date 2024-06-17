@@ -1,5 +1,5 @@
 import { jsx as _jsx } from "preact/jsx-runtime";
-import { findFirstFocusable, focus, useCallback, useEffect, useGlobalHandler, useManagedChild, useManagedChildren, useMergedProps, useRef, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers/preact";
+import { findFirstFocusable, focus, getDocument, useCallback, useEffect, useGlobalHandler, useManagedChild, useManagedChildren, useMergedProps, useRef, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
 import { monitored } from "./props.js";
 import { useNotify } from "./use-notify.js";
 /**
@@ -73,7 +73,7 @@ export const useToasts = monitored(function useToasts({ managedChildrenParameter
         showHighestPriorityToast();
     }, []);
     const [_mouseOver2, setMouseOver, _getMouseOver] = useState(false);
-    useGlobalHandler(document, "pointermove", e => {
+    useGlobalHandler(getDocument(), "pointermove", e => {
         const mouseOver = (e.target != null && e.target instanceof Node && (getElement()?.contains(e.target) || getElement() == e.target));
         setMouseOver(mouseOver);
     });

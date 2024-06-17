@@ -8,7 +8,7 @@ import {
     UseManagedChildrenParameters,
     UseManagedChildrenReturnType,
     findFirstFocusable,
-    focus, useCallback, useEffect, useGlobalHandler,
+    focus, getDocument, useCallback, useEffect, useGlobalHandler,
     useManagedChild,
     useManagedChildren,
     useMergedProps, useRef, useRefElement,
@@ -16,7 +16,7 @@ import {
     useStableGetter,
     useState,
     useTimeout
-} from "preact-prop-helpers/preact";
+} from "preact-prop-helpers";
 import { OmitStrong, monitored } from "./props.js";
 import { useNotify } from "./use-notify.js";
 
@@ -166,7 +166,7 @@ export const useToasts = monitored(function useToasts<ContainerType extends Elem
 
     const [_mouseOver2, setMouseOver, _getMouseOver] = useState(false);
 
-    useGlobalHandler(document, "pointermove", e => {
+    useGlobalHandler(getDocument(), "pointermove", e => {
         const mouseOver = (e.target != null && e.target instanceof Node && (getElement()?.contains(e.target) || getElement() == e.target));
         setMouseOver(mouseOver);
     });

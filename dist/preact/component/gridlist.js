@@ -1,5 +1,5 @@
 import { jsx as _jsx } from "preact/jsx-runtime";
-import { assertEmptyObject, createContext, focus, memo, useCompleteGridNavigationRows, useContext, useEffect, useImperativeHandle, useMergedProps, useProcessedChild, useRefElement, useStableCallback } from "preact-prop-helpers/preact";
+import { assertEmptyObject, createContext, focus, memo, useCompleteGridNavigationRows, useContext, useEffect, useImperativeHandle, useMergedProps, useProcessedChild, useRefElement, useStableCallback } from "preact-prop-helpers";
 import { useContextWithWarning } from "../props.js";
 import { useGridlist, useGridlistCell, useGridlistRow } from "../use-gridlist.js";
 import { useComponent, useComponentC, useDefault } from "./util.js";

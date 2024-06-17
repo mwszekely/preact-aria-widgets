@@ -1,4 +1,4 @@
-import { Context, GetIndex, Nullable, Ref, VNode } from "preact-prop-helpers/preact";
+import { Context, GetIndex, Nullable, Ref, VNode } from "preact-prop-helpers";
 /**
  * Almost all components are built in the exact same way from their implementing hook -- this just sets all of that up.
  *

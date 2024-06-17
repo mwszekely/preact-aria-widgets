@@ -1,4 +1,4 @@
-import { EventDetail, assertEmptyObject, focus, useCompleteListNavigationChildDeclarative, useCompleteListNavigationDeclarative, useEffect, useLayoutEffect, useMemo, useMergedProps, useRef, useRefElement, useStableCallback, useState } from "preact-prop-helpers/preact";
+import { EventDetail, assertEmptyObject, focus, useCompleteListNavigationChildDeclarative, useCompleteListNavigationDeclarative, useEffect, useLayoutEffect, useMemo, useMergedProps, useRef, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
 import { Prefices, enhanceEvent, monitored } from "./props.js";
 import { useCheckboxLike } from "./use-checkbox-like.js";
 import { useLabelSynthetic } from "./use-label.js";

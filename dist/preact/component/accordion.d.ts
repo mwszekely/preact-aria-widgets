@@ -1,4 +1,4 @@
-import { OmitStrong } from "preact-prop-helpers/preact";
+import { OmitStrong } from "preact-prop-helpers";
 import { Get4, Get6 } from "../props.js";
 import { UseAccordionParameters, UseAccordionReturnType, UseAccordionSectionInfo, UseAccordionSectionParameters, UseAccordionSectionReturnType } from "../use-accordion.js";
 import { GenericComponentProps } from "./util.js";

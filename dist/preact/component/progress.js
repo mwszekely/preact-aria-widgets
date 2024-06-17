@@ -1,4 +1,4 @@
-import { assertEmptyObject, memo } from "preact-prop-helpers/preact";
+import { assertEmptyObject, memo } from "preact-prop-helpers";
 import { useProgress, useProgressWithHandler } from "../use-progress.js";
 import { useComponent } from "./util.js";
 export const Progress = memo((function Progress({ tagProgressIndicator, ariaLabel, max, render, value, valueText, imperativeHandle, ...void1 }) {

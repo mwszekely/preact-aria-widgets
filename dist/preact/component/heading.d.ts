@@ -1,4 +1,4 @@
-import { ComponentChildren, createElement, ElementProps, RenderableProps } from "preact-prop-helpers/preact";
+import { ComponentChildren, createElement, ElementProps, RenderableProps } from "preact-prop-helpers";
 type ElementToTag<_A> = any;
 export interface HeadingProps<T extends Element> extends RenderableProps<ElementProps<T>> {
     /**

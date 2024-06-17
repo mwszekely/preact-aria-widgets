@@ -12,7 +12,7 @@ import {
     UsePressParameters,
     UsePressReturnType,
     useStableCallback
-} from "preact-prop-helpers/preact";
+} from "preact-prop-helpers";
 import { monitored, OmitStrong } from "./props.js";
 import { useToolbar, useToolbarChild, UseToolbarChildParameters, UseToolbarChildReturnType, UseToolbarContext, UseToolbarParameters, UseToolbarReturnType, UseToolbarSubInfo } from "./use-toolbar.js";
 

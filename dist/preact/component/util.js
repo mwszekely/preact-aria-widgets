@@ -1,5 +1,5 @@
 import { jsx as _jsx } from "preact/jsx-runtime";
-import { createContext, createPortal, focus, useContext, useImperativeHandle, useRef } from "preact-prop-helpers/preact";
+import { createContext, createPortal, focus, getDocument, useContext, useImperativeHandle, useRef } from "preact-prop-helpers";
 /**
  * Almost all components are built in the exact same way from their implementing hook -- this just sets all of that up.
  *
@@ -52,7 +52,8 @@ export function useDefault(context, userValue) {
 export const ParentDepthContext = createContext(0);
 export function useDefaultRenderPortal({ portalId, children }) {
     const portalRef = useRef(null);
-    portalRef.current ??= document.getElementById(portalId);
+    const document = getDocument();
+    portalRef.current ??= document?.getElementById(portalId) ?? undefined;
     if (portalRef.current)
         return createPortal(children, portalRef.current);
     else

@@ -13,7 +13,7 @@ import {
     useManagedChild,
     useManagedChildren,
     useMemo, useRef
-} from "preact-prop-helpers/preact";
+} from "preact-prop-helpers";
 import { EventDetail, Prefices, TagSensitiveProps, enhanceEvent, monitored } from "./props.js";
 
 

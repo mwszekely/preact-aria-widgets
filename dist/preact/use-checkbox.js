@@ -1,4 +1,4 @@
-import { assertEmptyObject, enhanceEvent, useMergedProps, useRefElement, useStableCallback } from "preact-prop-helpers/preact";
+import { assertEmptyObject, enhanceEvent, useMergedProps, useRefElement, useStableCallback } from "preact-prop-helpers";
 import { Prefices, monitored } from "./props.js";
 import { useCheckboxLike } from "./use-checkbox-like.js";
 /**

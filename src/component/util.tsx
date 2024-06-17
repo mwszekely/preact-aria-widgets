@@ -1,4 +1,4 @@
-import { Context, GetIndex, Nullable, Ref, UseMultiSelectionParameters, UseSingleSelectionParameters, VNode, createContext, createPortal, focus, useContext, useImperativeHandle, useRef } from "preact-prop-helpers/preact";
+import { Context, GetIndex, Nullable, Ref, UseMultiSelectionParameters, UseSingleSelectionParameters, VNode, createContext, createPortal, focus, getDocument, useContext, useImperativeHandle, useRef } from "preact-prop-helpers";
 
 /**
  * Almost all components are built in the exact same way from their implementing hook -- this just sets all of that up.
@@ -86,8 +86,9 @@ export type PartialExcept<T, K extends keyof T> = PartialExceptD<T, K>;
 
 
 export function useDefaultRenderPortal({ portalId, children }: { portalId: string, children: VNode }): VNode {
-    const portalRef = useRef<HTMLElement>(null!);
-    portalRef.current ??= document.getElementById(portalId)!;
+    const portalRef = useRef<HTMLElement | undefined>(null!);
+    const document = getDocument();
+    portalRef.current ??= document?.getElementById(portalId) ?? undefined;
     if (portalRef.current)
         return createPortal(children, portalRef.current);
     else

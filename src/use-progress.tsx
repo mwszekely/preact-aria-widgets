@@ -9,7 +9,7 @@ import {
     UseAsyncHandlerReturnType,
     useMergedProps,
     VNode
-} from "preact-prop-helpers/preact";
+} from "preact-prop-helpers";
 import {
     ElementToTag,
     monitored,

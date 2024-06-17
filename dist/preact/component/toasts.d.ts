@@ -1,4 +1,4 @@
-import { OmitStrong } from "preact-prop-helpers/preact";
+import { OmitStrong } from "preact-prop-helpers";
 import { Get2 } from "../props.js";
 import { ToastInfo, UseToastParameters, UseToastReturnType, UseToastsParameters, UseToastsReturnType } from "../use-toasts.js";
 import { GenericComponentProps } from "./util.js";

@@ -1,4 +1,4 @@
-import { assertEmptyObject, memo, useContext } from "preact-prop-helpers/preact";
+import { assertEmptyObject, memo, useContext } from "preact-prop-helpers";
 import { Get4 } from "../props.js";
 import { UseTooltipParameters, UseTooltipReturnType, useTooltip } from "../use-tooltip.js";
 import { GenericComponentProps, ParentDepthContext, useComponent, useDefault } from "./util.js";

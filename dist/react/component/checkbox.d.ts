@@ -1,4 +1,4 @@
-import { createElement, ElementProps, VNode } from "preact-prop-helpers/preact";
+import { createElement, ElementProps, VNode } from "preact-prop-helpers";
 import { ElementToTag, Get4 } from "../props.js";
 import { UseCheckboxParameters, UseCheckboxReturnType } from "../use-checkbox.js";
 import { LabelPosition } from "../use-label.js";
@@ -12,5 +12,5 @@ export interface DefaultRenderCheckboxLikeParameters<I extends Element, L extend
     makePropsInput: (info: InfoType) => ElementProps<I>;
     makePropsLabel: (info: InfoType) => ElementProps<L>;
 }
-export declare const Checkbox: <I extends Element, L extends Element>({ checked, disabled, tagLabel, labelPosition, tagInput, ariaLabel, longPressThreshold, excludeSpace, imperativeHandle, render, onCheckedChange, ...void1 }: CheckboxProps<I, L>) => createElement.JSX.Element | import("react/jsx-runtime").JSX.Element;
+export declare const Checkbox: <I extends Element, L extends Element>({ checked, disabled, tagLabel, labelPosition, tagInput, ariaLabel, longPressThreshold, excludeSpace, imperativeHandle, render, onCheckedChange, ...void1 }: CheckboxProps<I, L>) => createElement.JSX.Element;
 //# sourceMappingURL=checkbox.d.ts.map
