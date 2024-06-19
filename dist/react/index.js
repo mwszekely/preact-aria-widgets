@@ -8132,7 +8132,7 @@ const useRadio = monitored(function useRadio({ radioParameters: { value, ...void
         refElementParameters,
         singleSelectionChildParameters: { singleSelectionDisabled: !!disabled },
         multiSelectionChildParameters: { multiSelectionDisabled: true },
-        multiSelectionChildDeclarativeParameters: { multiSelected: false, onMultiSelectedChange: null }
+        multiSelectionChildDeclarativeParameters: { multiSelected: null, onMultiSelectedChange: null }
     });
     const { singleSelected: checked } = singleSelectionChildReturn;
     const { refElementReturn: refElementInputReturn, propsStable: propsRefInput } = useRefElement({ refElementParameters: {} });

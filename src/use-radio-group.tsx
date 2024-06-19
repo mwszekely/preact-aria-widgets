@@ -243,7 +243,7 @@ export const useRadio = monitored(function useRadio<LP extends LabelPosition, In
         refElementParameters,
         singleSelectionChildParameters: { singleSelectionDisabled: !!disabled },
         multiSelectionChildParameters: { multiSelectionDisabled: true },
-        multiSelectionChildDeclarativeParameters: { multiSelected: false, onMultiSelectedChange: null }
+        multiSelectionChildDeclarativeParameters: { multiSelected: null, onMultiSelectedChange: null }
     });
 
     assertEmptyObject(void1);
