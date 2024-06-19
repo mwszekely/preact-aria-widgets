@@ -8795,7 +8795,7 @@ function delayedAlert(message: string) {
  * @compositeParams
  */
 const useTooltip = monitored(function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType, hoverDelay, usesLongPress }, activeElementParameters, escapeDismissParameters, pressReturn: { longPress, ...void2 }, ...void1 }) {
-    useGlobalHandler(window, "mouseout", useCallback((e) => {
+    useGlobalHandler(getWindow(), "mouseout", useCallback((e) => {
         if (e.relatedTarget == null)
             onHoverChanged(false, "popup");
     }, []));

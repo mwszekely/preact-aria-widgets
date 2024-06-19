@@ -4,6 +4,7 @@ import {
     ElementProps,
     focus,
     getDocument,
+    getWindow,
     returnNull,
     TargetedPick,
     useCallback,
@@ -112,7 +113,7 @@ export const useTooltip = monitored(function useTooltip<TriggerType extends Elem
     ...void1
 }: UseTooltipParameters<TriggerType, PopupType>): UseTooltipReturnType<TriggerType, PopupType> {
 
-    useGlobalHandler(window, "mouseout", useCallback((e: MouseEvent) => {
+    useGlobalHandler(getWindow(), "mouseout", useCallback((e: MouseEvent) => {
         if (e.relatedTarget == null)
             onHoverChanged(false, "popup");
     }, []));

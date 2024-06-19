@@ -1,4 +1,4 @@
-import { assertEmptyObject, focus, getDocument, returnNull, useCallback, useDismiss, useEffect, useGlobalHandler, useHasCurrentFocus, useMergedProps, usePassiveState, useRandomId, useRef, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
+import { assertEmptyObject, focus, getDocument, getWindow, returnNull, useCallback, useDismiss, useEffect, useGlobalHandler, useHasCurrentFocus, useMergedProps, usePassiveState, useRandomId, useRef, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
 import { monitored, Prefices } from "./props.js";
 // Intentionally (?) unused
 let _hasHover2 = typeof window == "undefined" ? null : matchMedia("(any-hover: hover)");
@@ -30,7 +30,7 @@ function delayedAlert(message: string) {
  * @compositeParams
  */
 export const useTooltip = monitored(function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType, hoverDelay, usesLongPress }, activeElementParameters, escapeDismissParameters, pressReturn: { longPress, ...void2 }, ...void1 }) {
-    useGlobalHandler(window, "mouseout", useCallback((e) => {
+    useGlobalHandler(getWindow(), "mouseout", useCallback((e) => {
         if (e.relatedTarget == null)
             onHoverChanged(false, "popup");
     }, []));
