@@ -39,7 +39,7 @@ export function defaultRenderCheckboxLike<I extends Element, L extends Element, 
             )
         }
         else {
-            console.assert(!!inputProps["aria-label"]);
+            console.assert(!!inputProps["aria-label"], `defaultRenderCheckboxLike: inputProps missing aria-label, despite the labelPosition`);
             return createElement(tagInput as never, inputProps);
         }
     }

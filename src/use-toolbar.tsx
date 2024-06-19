@@ -105,7 +105,7 @@ export const useToolbar = monitored(function useToolbar<ContainerElement extends
     type M = UseToolbarSubInfo<ChildElement>;
 
     if (singleSelectionDeclarativeParameters.singleSelectedIndex !== undefined) {
-        console.assert(singleSelectionParameters.singleSelectionMode != "disabled");
+        console.assert(singleSelectionParameters.singleSelectionMode != "disabled", `useToolbar: When singleSelectionMode is "disabled", singleSelectedIndex must be null.`);
     }
 
     const {

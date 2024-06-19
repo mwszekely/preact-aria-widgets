@@ -22,17 +22,6 @@ export const useTable = monitored(function useTable({ labelParameters, tablePara
     const [getSortBody, setSortBody] = usePassiveState(null, returnNull);
     const [_sortDirection, setSortDirection, getSortDirection] = useState("ascending");
     const [_sortColumn, setSortColumn, getSortColumn] = useState(null);
-    /*const updateSortDirection = useCallback((column: number) => {
-        const { column: currentColumn, direction: currentDirection } = getSortColumn();
-        const next = { column, direction: column != currentColumn ? "ascending" : (currentDirection == "ascending" ? "descending" : "ascending") } as const;
-        setSortColumn(next);
-        return next;
-    }, []);
-    const sortByColumn = useCallback((column: number) => {
-        const next = updateSortDirection(column);
-        getSortBody()?.();
-        return next;
-    }, [])*/
     const sortByColumn = useCallback((column) => {
         let nextSortDirection = getSortDirection();
         let nextSortIndex = getSortColumn();

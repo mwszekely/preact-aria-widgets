@@ -233,7 +233,7 @@ export const useGridlistRow = monitored(function useGridlistRow<GridlistRowEleme
 
     // `selected` should only be true/false for multi-selection
     if (cx1.multiSelectionContext.multiSelectionMode == "disabled")
-        console.assert(selected == null);
+        console.assert(selected == null, `useGridlistRow: multiSelectionMode is disabled, but selected is ${selected} (instead of null).`);
 
     props.role = "row";
 

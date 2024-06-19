@@ -18,8 +18,12 @@ export const NotificationProviderContext = createContext(null);
 export const useNotificationProvider = monitored(function useNotificationProvider({ targetAssertive, targetPolite }) {
     const { children: childrenPolite, pushChild: notifyPolite, portalElement: politeElement } = usePortalChildren({ target: targetPolite });
     const { children: childrenAssertive, pushChild: notifyAssertive, portalElement: assertiveElement } = usePortalChildren({ target: targetAssertive });
-    console.assert(politeElement?.getAttribute("aria-live") == "polite");
-    console.assert(assertiveElement?.getAttribute("aria-live") == "assertive");
+    console.assert(politeElement != null, `useNotificationProvider: targetPolite is missing`);
+    console.assert(assertiveElement != null, `useNotificationProvider: targetAssertive is missing`);
+    if (politeElement)
+        console.assert(politeElement.getAttribute("aria-live") == "polite", `useNotificationProvider: targetPolite missing attribute "aria-live=polite"`);
+    if (assertiveElement)
+        console.assert(assertiveElement.getAttribute("aria-live") == "assertive", `useNotificationProvider: targetAssertive is missing, or missing "aria-live=assertive"`);
     const notify = useCallback((mode, child) => {
         return mode == "assertive" ? notifyAssertive(child) : notifyPolite(child);
     }, [notifyAssertive, notifyPolite]);

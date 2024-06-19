@@ -397,7 +397,7 @@ const ListboxItemInner = memo((function ListboxItemInner<ListboxItemElement exte
         refElementParameters: { onElementChange, onMount, onUnmount },
         singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false },
         multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false },
-        multiSelectionChildDeclarativeParameters: { onMultiSelectedChange, multiSelected: multiSelected || false },
+        multiSelectionChildDeclarativeParameters: { onMultiSelectedChange, multiSelected: multiSelected ?? null },
     })
 
     return useComponent(

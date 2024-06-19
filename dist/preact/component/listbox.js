@@ -149,7 +149,7 @@ const ListboxItemInner = memo((function ListboxItemInner({ getText, untabbable, 
         refElementParameters: { onElementChange, onMount, onUnmount },
         singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false },
         multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false },
-        multiSelectionChildDeclarativeParameters: { onMultiSelectedChange, multiSelected: multiSelected || false },
+        multiSelectionChildDeclarativeParameters: { onMultiSelectedChange, multiSelected: multiSelected ?? null },
     });
     return useComponent(imperativeHandle, render, null, {
         hasCurrentFocusReturn,

@@ -17,7 +17,7 @@ export function defaultRenderCheckboxLike({ labelPosition, tagInput, tagLabel, m
             return (_jsxs(_Fragment, { children: [input, label] }));
         }
         else {
-            console.assert(!!inputProps["aria-label"]);
+            console.assert(!!inputProps["aria-label"], `defaultRenderCheckboxLike: inputProps missing aria-label, despite the labelPosition`);
             return createElement(tagInput, inputProps);
         }
     };

@@ -166,18 +166,6 @@ export const useTable = monitored(function useTable<TableElement extends Element
     const [_sortDirection, setSortDirection, getSortDirection] = useState<SortDirection>("ascending");
     const [_sortColumn, setSortColumn, getSortColumn] = useState<number | null>(null);
 
-    /*const updateSortDirection = useCallback((column: number) => {
-        const { column: currentColumn, direction: currentDirection } = getSortColumn();
-        const next = { column, direction: column != currentColumn ? "ascending" : (currentDirection == "ascending" ? "descending" : "ascending") } as const;
-        setSortColumn(next);
-        return next;
-    }, []);
-    const sortByColumn = useCallback((column: number) => {
-        const next = updateSortDirection(column);
-        getSortBody()?.();
-        return next;
-    }, [])*/
-
     const sortByColumn = useCallback((column: number): SortInfo => {
         let nextSortDirection = getSortDirection();
         let nextSortIndex = getSortColumn();

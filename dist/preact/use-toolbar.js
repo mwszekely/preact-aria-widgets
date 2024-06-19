@@ -15,7 +15,7 @@ import { useLabelSynthetic } from "./use-label.js";
  */
 export const useToolbar = monitored(function useToolbar({ linearNavigationParameters, toolbarParameters: { orientation, role, disabled }, labelParameters, rovingTabIndexParameters, singleSelectionParameters, singleSelectionDeclarativeParameters, ...listNavParameters }) {
     if (singleSelectionDeclarativeParameters.singleSelectedIndex !== undefined) {
-        console.assert(singleSelectionParameters.singleSelectionMode != "disabled");
+        console.assert(singleSelectionParameters.singleSelectionMode != "disabled", `useToolbar: When singleSelectionMode is "disabled", singleSelectedIndex must be null.`);
     }
     const { contextChildren, contextProcessing, props, ...listNavReturn } = useCompleteListNavigationDeclarative({
         ...listNavParameters,
