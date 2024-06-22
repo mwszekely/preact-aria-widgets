@@ -3,7 +3,7 @@ import { useContextWithWarning } from "../props.js";
 import { useCheckboxGroup, useCheckboxGroupChild, useCheckboxGroupParent } from "../use-checkbox-group.js";
 import { useComponent, useDefault } from "./util.js";
 const UseCheckboxGroupChildContext = createContext(null);
-export const CheckboxGroup = memo((function CheckboxGroup({ render, collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, onTabbableIndexChange, untabbable, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, ...void1 }) {
+export const CheckboxGroup = /* @__PURE__ */ memo((function CheckboxGroup({ render, collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, onTabbableIndexChange, untabbable, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, ...void1 }) {
     assertEmptyObject(void1);
     return useComponent(imperativeHandle, render, UseCheckboxGroupChildContext, useCheckboxGroup({
         linearNavigationParameters: {
@@ -30,7 +30,7 @@ export const CheckboxGroup = memo((function CheckboxGroup({ render, collator, di
         multiSelectionParameters: { multiSelectionAriaPropName, multiSelectionMode: multiSelectionMode || "activation", onSelectionChange }
     }));
 }));
-export const CheckboxGroupParent = memo((function CheckboxGroupParent({ render, index, focusSelf, untabbable, imperativeHandle, getText, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, onTextContentChange, 
+export const CheckboxGroupParent = /* @__PURE__ */ memo((function CheckboxGroupParent({ render, index, focusSelf, untabbable, imperativeHandle, getText, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, onTextContentChange, 
 //info,
 ..._rest }) {
     const context = useContextWithWarning(UseCheckboxGroupChildContext, "checkbox group");
@@ -52,7 +52,7 @@ export const CheckboxGroupParent = memo((function CheckboxGroupParent({ render, 
         singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false }
     })));
 }));
-export const CheckboxGroupChild = memo((function CheckboxGroupChild({ index, render, checked, onChangeFromParent, untabbable, getText, focusSelf, 
+export const CheckboxGroupChild = /* @__PURE__ */ memo((function CheckboxGroupChild({ index, render, checked, onChangeFromParent, untabbable, getText, focusSelf, 
 //info,
 imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, multiSelectionDisabled, onMultiSelectChange, onTextContentChange, ...void1 }) {
     assertEmptyObject(void1);

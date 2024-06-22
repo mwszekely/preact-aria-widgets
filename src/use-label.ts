@@ -122,7 +122,7 @@ export interface UseLabelSyntheticParameters extends TargetedPick<UseLabelParame
  * 
  * @compositeParams
  */
-export const useLabelSynthetic = monitored(function useLabelSynthetic<InputElement extends Element, LabelElement extends Element>({
+export const useLabelSynthetic = /* @__PURE__ */ monitored(function useLabelSynthetic<InputElement extends Element, LabelElement extends Element>({
     labelParameters: { ariaLabel, onLabelClick },
     ...rest
 }: UseLabelSyntheticParameters) {

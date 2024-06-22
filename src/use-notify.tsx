@@ -35,7 +35,7 @@ export const NotificationProviderContext = createContext<NotificationProviderCon
  * 
  * @hasChild {@link useNotify}
  */
-export const useNotificationProvider = monitored(function useNotificationProvider({ targetAssertive, targetPolite }: NotificationProviderProps) {
+export const useNotificationProvider = /* @__PURE__ */ monitored(function useNotificationProvider({ targetAssertive, targetPolite }: NotificationProviderProps) {
 
     const { children: childrenPolite, pushChild: notifyPolite, portalElement: politeElement } = usePortalChildren({ target: targetPolite });
     const { children: childrenAssertive, pushChild: notifyAssertive, portalElement: assertiveElement } = usePortalChildren({ target: targetAssertive });

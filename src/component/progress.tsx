@@ -28,7 +28,7 @@ export interface ProgressWithHandlerProps<EventType, CaptureType, IndicatorEleme
         "capture" | "tagProgressIndicator"> {
 }
 
-export const Progress = memo((function Progress<IndicatorElement extends Element, LabelElement extends Element>({
+export const Progress = /* @__PURE__ */ memo((function Progress<IndicatorElement extends Element, LabelElement extends Element>({
     tagProgressIndicator,
     ariaLabel,
     max,
@@ -55,7 +55,7 @@ export const Progress = memo((function Progress<IndicatorElement extends Element
         }));
 }))
 
-export const ProgressWithHandler = memo((function ProgressWithHandler<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element>({
+export const ProgressWithHandler = /* @__PURE__ */ memo((function ProgressWithHandler<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element>({
     ariaLabel,
     forciblyPending,
     render,

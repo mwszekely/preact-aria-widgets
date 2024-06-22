@@ -33,7 +33,7 @@ export interface UseDrawerReturnType<FocusContainerElement extends Element, Sour
  * 
  * @compositeParams
  */
-export const useDrawer = monitored(function useDrawer<FocusContainerElement extends Element, SourceElement extends Element, PopupElement extends Element, TitleElement extends Element>({
+export const useDrawer = /* @__PURE__ */ monitored(function useDrawer<FocusContainerElement extends Element, SourceElement extends Element, PopupElement extends Element, TitleElement extends Element>({
     dismissParameters,
     escapeDismissParameters,
     focusTrapParameters,

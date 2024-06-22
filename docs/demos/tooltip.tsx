@@ -1,7 +1,7 @@
 
 import { useMergedProps, usePress, useRefElement } from "preact-prop-helpers";
 import { useState } from "preact/hooks";
-import { Tooltip, TooltipStatus, useDefaultRenderPortal } from "../../dist/index.js";
+import { Tooltip, TooltipStatus, useDefaultRenderPortal } from "../../dist/preact/index.js";
 
 export function Blurb() {
     return (

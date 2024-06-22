@@ -101,7 +101,7 @@ export interface RadioSubInfo<TabbableChildElement extends Element, _V extends s
  * 
  * @hasChild {@link useRadio}
  */
-export const useRadioGroup = monitored(function useRadioGroup<V extends string | number, G extends Element, GL extends Element, TCE extends Element, M extends RadioSubInfo<TCE, V> = RadioSubInfo<TCE, V>>({
+export const useRadioGroup = /* @__PURE__ */ monitored(function useRadioGroup<V extends string | number, G extends Element, GL extends Element, TCE extends Element, M extends RadioSubInfo<TCE, V> = RadioSubInfo<TCE, V>>({
     labelParameters,
     radioGroupParameters: { name, selectedValue, onSelectedValueChange, ...void2 },
     rovingTabIndexParameters,
@@ -205,7 +205,7 @@ export interface UseRadioReturnType<LP extends LabelPosition, V extends string |
  * 
  * @compositeParams
  */
-export const useRadio = monitored(function useRadio<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element, V extends string | number, M extends RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V> = RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>({
+export const useRadio = /* @__PURE__ */ monitored(function useRadio<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element, V extends string | number, M extends RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V> = RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>({
     radioParameters: { value, ...void5 },
     checkboxLikeParameters: { disabled, ...void4 },
     labelParameters,

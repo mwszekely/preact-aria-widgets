@@ -19,7 +19,7 @@ export type MenuItemProps<MenuItemElement extends Element, M extends UseMenubarS
 
 const MenuItemContext = createContext<UseMenuContext<any, any>>(null!);
 
-export const Menu = memo((function Menu<SurfaceElement extends Element, ParentElement extends Element, ChildElement extends Element, ButtonElement extends Element>({
+export const Menu = /* @__PURE__ */ memo((function Menu<SurfaceElement extends Element, ParentElement extends Element, ChildElement extends Element, ButtonElement extends Element>({
     collator,
     disableHomeEndKeys,
     noTypeahead,
@@ -133,7 +133,7 @@ export const Menu = memo((function Menu<SurfaceElement extends Element, ParentEl
 }))
 
 
-export const MenuItem = memo((function MenuItem<MenuItemElement extends Element>({
+export const MenuItem = /* @__PURE__ */ memo((function MenuItem<MenuItemElement extends Element>({
     index,
     untabbable,
     onPress,

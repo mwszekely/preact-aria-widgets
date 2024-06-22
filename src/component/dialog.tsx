@@ -9,7 +9,7 @@ export type DialogProps<FocusContainerElement extends Element, SourceElement ext
     "ariaLabel" | "onDismiss" | "active" | "focusPopup"
 >;
 
-export const Dialog = memo((function Dialog<FocusContainerElement extends Element, SourceElement extends Element, DialogElement extends Element, TitleElement extends Element>({
+export const Dialog = /* @__PURE__ */ memo((function Dialog<FocusContainerElement extends Element, SourceElement extends Element, DialogElement extends Element, TitleElement extends Element>({
     active,
     onDismiss,
     dismissBackdropActive,

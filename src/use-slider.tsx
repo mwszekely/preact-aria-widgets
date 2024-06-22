@@ -97,7 +97,7 @@ export interface SliderContext<M extends SliderThumbInfo> extends UseManagedChil
  * 
  * @hasChild {@link useSliderThumb}
  */
-export const useSlider = monitored(function useSlider<M extends SliderThumbInfo>({ sliderParameters: { max, min }, managedChildrenParameters }: UseSliderParameters<M>): UseSliderReturnType<M> {
+export const useSlider = /* @__PURE__ */ monitored(function useSlider<M extends SliderThumbInfo>({ sliderParameters: { max, min }, managedChildrenParameters }: UseSliderParameters<M>): UseSliderReturnType<M> {
     const { context, managedChildrenReturn } = useManagedChildren<M>({ managedChildrenParameters });
 
     const baseIdRef = useRef<string>(null! as "");
@@ -121,7 +121,7 @@ export const useSlider = monitored(function useSlider<M extends SliderThumbInfo>
 /**
  * @compositeParams
  */
-export const useSliderThumb = monitored(function useSliderThumb<ThumbElement extends Element>({
+export const useSliderThumb = /* @__PURE__ */ monitored(function useSliderThumb<ThumbElement extends Element>({
     sliderThumbParameters: { tag, value, max: maxOverride, min: minOverride, valueText, label, onValueChange, ...void2 },
     info,
     context: { sliderContext: { max: maxParent, min: minParent }, ...context },

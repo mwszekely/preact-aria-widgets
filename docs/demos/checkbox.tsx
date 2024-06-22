@@ -1,7 +1,6 @@
 
-import { EventDetail, useMergedProps, useState } from "preact-prop-helpers";
-import { StateUpdater } from "preact/hooks";
-import { Button, Checkbox, defaultRenderCheckboxLike } from "../../dist/index.js";
+import { EventDetail, StateUpdater, useMergedProps, useState } from "preact-prop-helpers";
+import { Button, Checkbox, defaultRenderCheckboxLike } from "../../dist/preact/index.js";
 
 /*function DemoButton({ tag, ...props }: { tag: string } & RenderableProps<{}>) {
     return <Button disabled={disabled} onPress={onPress} pressed={} {...props} tag={tag as any}   />

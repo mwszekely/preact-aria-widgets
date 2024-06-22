@@ -3,7 +3,7 @@ import { VNode } from "preact";
 import { useState } from "preact-prop-helpers";
 import { useCallback } from "preact/compat";
 import { useRef } from "preact/hooks";
-import { Toast, Toasts } from "../../dist/index.js";
+import { Toast, Toasts } from "../../dist/preact/index.js";
 
 export function Blurb() {
     return (

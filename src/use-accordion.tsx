@@ -21,6 +21,7 @@ import {
     UsePressParameters,
     UseRefElementParameters,
     UseRefElementReturnTypeSelf,
+    UseTextContentParameters,
     UseTextContentReturnType,
     UseTypeaheadNavigationChildParameters,
     UseTypeaheadNavigationChildReturnType,
@@ -47,7 +48,6 @@ import {
     useTypeaheadNavigation,
     useTypeaheadNavigationChild
 } from "preact-prop-helpers";
-import { UseTextContentParameters } from "preact-prop-helpers";
 import { DisabledType, OmitStrong, Prefices, monitored } from "./props.js";
 import { UseButtonParameters, UseButtonReturnType, useButton } from "./use-button.js";
 
@@ -183,7 +183,7 @@ export interface UseAccordionContext<HeaderButtonElement extends Element, M exte
  * 
  * @hasChild {@link useAccordionSection}
  */
-export const useAccordion = monitored(function useAccordion<HeaderButtonElement extends Element>({
+export const useAccordion = /* @__PURE__ */ monitored(function useAccordion<HeaderButtonElement extends Element>({
     accordionParameters: { initialIndex, localStorageKey, orientation, ...accordionParameters },
     typeaheadNavigationParameters: { collator, noTypeahead, onNavigateTypeahead, typeaheadTimeout, ...typeaheadNavigationParameters },
     linearNavigationParameters: { disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize, onNavigateLinear, ...linearNavigationParameters },
@@ -340,7 +340,7 @@ export const useAccordion = monitored(function useAccordion<HeaderButtonElement 
 /**
  * @compositeParams
  */
-export const useAccordionSection = monitored(function useAccordionSection<HeaderContainerElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element>({
+export const useAccordionSection = /* @__PURE__ */ monitored(function useAccordionSection<HeaderContainerElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element>({
     buttonParameters: { disabled, tagButton, onPressSync: userOnPress, ...buttonParameters },
     accordionSectionParameters: { open: openFromUser, bodyRole, ...void3 },
     info: { index, untabbable, ...void4 },

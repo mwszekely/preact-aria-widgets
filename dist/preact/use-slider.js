@@ -7,7 +7,7 @@ import { EventDetail, Prefices, enhanceEvent, monitored } from "./props.js";
  *
  * @hasChild {@link useSliderThumb}
  */
-export const useSlider = monitored(function useSlider({ sliderParameters: { max, min }, managedChildrenParameters }) {
+export const useSlider = /* @__PURE__ */ monitored(function useSlider({ sliderParameters: { max, min }, managedChildrenParameters }) {
     const { context, managedChildrenReturn } = useManagedChildren({ managedChildrenParameters });
     const baseIdRef = useRef(null);
     if (baseIdRef.current === null)
@@ -27,7 +27,7 @@ export const useSlider = monitored(function useSlider({ sliderParameters: { max,
 /**
  * @compositeParams
  */
-export const useSliderThumb = monitored(function useSliderThumb({ sliderThumbParameters: { tag, value, max: maxOverride, min: minOverride, valueText, label, onValueChange, ...void2 }, info, context: { sliderContext: { max: maxParent, min: minParent }, ...context }, ...void1 }) {
+export const useSliderThumb = /* @__PURE__ */ monitored(function useSliderThumb({ sliderThumbParameters: { tag, value, max: maxOverride, min: minOverride, valueText, label, onValueChange, ...void2 }, info, context: { sliderContext: { max: maxParent, min: minParent }, ...context }, ...void1 }) {
     const { managedChildReturn } = useManagedChild({ info, context });
     const { getChildren: _getThumbs } = managedChildReturn;
     const min = (minOverride ?? minParent);

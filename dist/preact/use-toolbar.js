@@ -13,7 +13,7 @@ import { useLabelSynthetic } from "./use-label.js";
  *
  * @compositeParams
  */
-export const useToolbar = monitored(function useToolbar({ linearNavigationParameters, toolbarParameters: { orientation, role, disabled }, labelParameters, rovingTabIndexParameters, singleSelectionParameters, singleSelectionDeclarativeParameters, ...listNavParameters }) {
+export const useToolbar = /* @__PURE__ */ monitored(function useToolbar({ linearNavigationParameters, toolbarParameters: { orientation, role, disabled }, labelParameters, rovingTabIndexParameters, singleSelectionParameters, singleSelectionDeclarativeParameters, ...listNavParameters }) {
     if (singleSelectionDeclarativeParameters.singleSelectedIndex !== undefined) {
         console.assert(singleSelectionParameters.singleSelectionMode != "disabled", `useToolbar: When singleSelectionMode is "disabled", singleSelectedIndex must be null.`);
     }
@@ -50,7 +50,7 @@ export const useToolbar = monitored(function useToolbar({ linearNavigationParame
 /**
  * @compositeParams
  */
-export const useToolbarChild = monitored(function useToolbarChild({ context, info, toolbarChildParameters: { disabledProp }, ...args }) {
+export const useToolbarChild = /* @__PURE__ */ monitored(function useToolbarChild({ context, info, toolbarChildParameters: { disabledProp }, ...args }) {
     const { propsChild, propsTabbable, ...listNavReturn } = useCompleteListNavigationChild({ info, context, ...args });
     return {
         propsChild: useMergedProps(propsChild, { [disabledProp]: (args.singleSelectionChildParameters.singleSelectionDisabled || args.multiSelectionChildParameters.multiSelectionDisabled) ? true : undefined }),

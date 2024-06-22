@@ -1,7 +1,7 @@
 
 import { EventDetail, useMergedProps, useStableCallback, useState } from "preact-prop-helpers";
 import { useRef } from "preact/hooks";
-import { Checkbox, CheckboxCheckedType, CheckboxGroup, CheckboxGroupChild, CheckboxGroupParent, UseCheckboxReturnType, defaultRenderCheckboxLike } from "../../dist/index.js";
+import { Checkbox, CheckboxCheckedType, CheckboxGroup, CheckboxGroupChild, CheckboxGroupParent, UseCheckboxReturnType, defaultRenderCheckboxLike } from "../../dist/preact/index.js";
 
 function DemoCheckbox({ index }: { index: number }) {
     const [checked, setChecked] = useState<CheckboxCheckedType>(false);

@@ -146,7 +146,7 @@ interface SortInfo { column: number, direction: SortDirection }
  * @hasChild {@link useTableRow}
  * @hasChild {@link useTableCell}
  */
-export const useTable = monitored(function useTable<TableElement extends Element, LabelElement extends Element>({
+export const useTable = /* @__PURE__ */ monitored(function useTable<TableElement extends Element, LabelElement extends Element>({
     labelParameters,
     tableParameters: { tagTable },
     singleSelectionParameters: { singleSelectionMode, ...void1 },
@@ -248,7 +248,7 @@ const naturalSectionTypes = new Set<keyof JSX.IntrinsicElements>(["thead", "tbod
 /**
  * @compositeParams
  */
-export const useTableSection = monitored(function useTableSection<TableSectionElement extends Element, TableRowElement extends Element>({
+export const useTableSection = /* @__PURE__ */ monitored(function useTableSection<TableSectionElement extends Element, TableRowElement extends Element>({
     linearNavigationParameters,
     rovingTabIndexParameters,
     singleSelectionParameters,
@@ -328,7 +328,7 @@ export const useTableSection = monitored(function useTableSection<TableSectionEl
 /**
  * @compositeParams
  */
-export const useTableRow = monitored(function useTableRow<TableRowElement extends Element, TableCellElement extends Element>({
+export const useTableRow = /* @__PURE__ */ monitored(function useTableRow<TableRowElement extends Element, TableCellElement extends Element>({
     info,
     textContentParameters,
     context: cx1,
@@ -400,7 +400,7 @@ export const useTableRow = monitored(function useTableRow<TableRowElement extend
 /**
  * @compositeParams
  */
-export const useTableCell = monitored(function useTableCell<TableCellElement extends Element>({
+export const useTableCell = /* @__PURE__ */ monitored(function useTableCell<TableCellElement extends Element>({
     tableCellParameters: { tagTableCell },
     info,
     ...p

@@ -100,7 +100,7 @@ export interface GridlistCellInfo<GridlistCellElement extends Element> extends U
  * @hasChild {@link useGridlistRow}
  * @hasChild {@link useGridlistCell}
  */
-export const useGridlist = monitored(function useGridlist<GridlistElement extends Element, GridlistRowElement extends Element, LabelElement extends Element>({
+export const useGridlist = /* @__PURE__ */ monitored(function useGridlist<GridlistElement extends Element, GridlistRowElement extends Element, LabelElement extends Element>({
     labelParameters,
 
     listboxParameters: { groupingType, ...void1 },
@@ -186,7 +186,7 @@ export const useGridlist = monitored(function useGridlist<GridlistElement extend
  * @compositeParams
  * 
  */
-export const useGridlistRow = monitored(function useGridlistRow<GridlistRowElement extends Element, GridlistCellElement extends Element>({
+export const useGridlistRow = /* @__PURE__ */ monitored(function useGridlistRow<GridlistRowElement extends Element, GridlistCellElement extends Element>({
     gridlistRowParameters: { selected },
     linearNavigationParameters,
     context: cx1,
@@ -263,7 +263,7 @@ export const useGridlistRow = monitored(function useGridlistRow<GridlistRowEleme
  * @compositeParams
  * 
  */
-export const useGridlistCell = monitored(function useGridlistCell<GridlistCellElement extends Element>({ pressParameters: { onPressSync, longPressThreshold, onPressingChange, ...void1 }, ...p }: UseGridlistCellParameters<GridlistCellElement, GridlistCellInfo<GridlistCellElement>>): UseGridlistCellReturnType<GridlistCellElement, GridlistCellInfo<GridlistCellElement>> {
+export const useGridlistCell = /* @__PURE__ */ monitored(function useGridlistCell<GridlistCellElement extends Element>({ pressParameters: { onPressSync, longPressThreshold, onPressingChange, ...void1 }, ...p }: UseGridlistCellParameters<GridlistCellElement, GridlistCellInfo<GridlistCellElement>>): UseGridlistCellReturnType<GridlistCellElement, GridlistCellInfo<GridlistCellElement>> {
     const { props, refElementReturn, ...info } = useCompleteGridNavigationCell<GridlistCellElement, GridlistCellInfo<GridlistCellElement>>(p);
 
     assertEmptyObject(void1);

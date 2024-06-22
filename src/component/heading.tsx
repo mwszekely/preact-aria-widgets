@@ -25,7 +25,7 @@ export interface HeadingProps<T extends Element> extends RenderableProps<Element
  * Specify the actual contents of the heading with the `heading` prop.
  * 
  */
-export const Heading = memo(function Heading<T extends Element>({ children, heading, tag, ...props }: HeadingProps<T>) {
+export const Heading = /* @__PURE__ */ memo(function Heading<T extends Element>({ children, heading, tag, ...props }: HeadingProps<T>) {
     const headingLevelBeforeUs = useContext(HeadingLevelContext);
     const newHeadingLevel = headingLevelBeforeUs + 1;
 
@@ -54,7 +54,7 @@ export const Heading = memo(function Heading<T extends Element>({ children, head
  * 
  * Minimum of 1.
  */
-export const HeadingReset = memo(function HeadingReset({ newLevel, children }: { newLevel: number, children: ComponentChildren }) {
+export const HeadingReset = /* @__PURE__ */ memo(function HeadingReset({ newLevel, children }: { newLevel: number, children: ComponentChildren }) {
     return (
         <HeadingLevelContext.Provider value={newLevel - 1}>
             {children}

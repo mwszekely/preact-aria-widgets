@@ -9,7 +9,7 @@ export type DrawerProps<FocusContainerElement extends Element, SourceElement ext
     "ariaLabel" | "onDismiss" | "active" | "focusPopup"
 >;
 
-export const Drawer = memo((function Drawer<FocusContainerElement extends Element, SourceElement extends Element, DrawerElement extends Element, TitleElement extends Element>({
+export const Drawer = /* @__PURE__ */ memo((function Drawer<FocusContainerElement extends Element, SourceElement extends Element, DrawerElement extends Element, TitleElement extends Element>({
 
     active,
     onDismiss,

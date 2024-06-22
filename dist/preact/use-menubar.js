@@ -12,7 +12,7 @@ import { useToolbar, useToolbarChild } from "./use-toolbar.js";
  *
  * @compositeParams
  */
-export const useMenubar = monitored(function useMenubar(args) {
+export const useMenubar = /* @__PURE__ */ monitored(function useMenubar(args) {
     const { propsToolbar: propsMenubar, ...restReturn } = useToolbar(args);
     return {
         propsMenubar,
@@ -22,7 +22,7 @@ export const useMenubar = monitored(function useMenubar(args) {
 /**
  * @compositeParams
  */
-export const useMenubarChild = monitored(function useMenubarChild({ menuItemParameters: { onPress: opu, role }, pressParameters: { onPressingChange, ...void1 }, ...restParams }) {
+export const useMenubarChild = /* @__PURE__ */ monitored(function useMenubarChild({ menuItemParameters: { onPress: opu, role }, pressParameters: { onPressingChange, ...void1 }, ...restParams }) {
     const focusSelf = useCallback((e) => focus(e), []);
     assertEmptyObject(void1);
     const { propsChild, propsTabbable, pressParameters: { onPressSync, excludeSpace }, ...restRet } = useToolbarChild({

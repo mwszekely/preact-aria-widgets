@@ -82,7 +82,7 @@ export interface UseButtonReturnType<ButtonElement extends Element> extends
  * 
  * @compositeParams
  */
-export const useButton = monitored(function useButton<ButtonElement extends Element>({
+export const useButton = /* @__PURE__ */ monitored(function useButton<ButtonElement extends Element>({
     buttonParameters: { tagButton, disabled, pressed, role, onPressSync, ...void1 },
     pressParameters: { focusSelf, allowRepeatPresses, longPressThreshold, onPressingChange, excludeSpace, ...void3 },
     refElementParameters,

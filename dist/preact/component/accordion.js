@@ -3,7 +3,7 @@ import { useContextWithWarning } from "../props.js";
 import { useAccordion, useAccordionSection } from "../use-accordion.js";
 import { useComponent, useDefault } from "./util.js";
 const AccordionSectionContext = createContext(null);
-export const Accordion = memo(function Accordion({ disableHomeEndKeys, initialIndex, onAfterChildLayoutEffect, onChildrenMountChange, navigatePastEnd, navigatePastStart, pageNavigationSize, localStorageKey, collator, noTypeahead, typeaheadTimeout, onChildrenCountChange, render, imperativeHandle, orientation, onNavigateLinear, onNavigateTypeahead, ...void1 }) {
+export const Accordion = /* @__PURE__ */ memo(function Accordion({ disableHomeEndKeys, initialIndex, onAfterChildLayoutEffect, onChildrenMountChange, navigatePastEnd, navigatePastStart, pageNavigationSize, localStorageKey, collator, noTypeahead, typeaheadTimeout, onChildrenCountChange, render, imperativeHandle, orientation, onNavigateLinear, onNavigateTypeahead, ...void1 }) {
     assertEmptyObject(void1);
     return (useComponent(imperativeHandle, render, AccordionSectionContext, useAccordion({
         accordionParameters: { orientation, initialIndex, localStorageKey: localStorageKey ?? null },
@@ -23,7 +23,7 @@ export const Accordion = memo(function Accordion({ disableHomeEndKeys, initialIn
         managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange, onChildrenCountChange },
     })));
 });
-export const AccordionSection = memo((function AccordionSection({ open, index, tagButton, disabled, bodyRole, untabbable, getText, imperativeHandle, onPressSync, focusSelf, render, info, onElementChange, onMount, onUnmount, onTextContentChange, ...void1 }) {
+export const AccordionSection = /* @__PURE__ */ memo((function AccordionSection({ open, index, tagButton, disabled, bodyRole, untabbable, getText, imperativeHandle, onPressSync, focusSelf, render, info, onElementChange, onMount, onUnmount, onTextContentChange, ...void1 }) {
     assertEmptyObject(void1);
     return useComponent(imperativeHandle, render, null, useAccordionSection({
         buttonParameters: { disabled: disabled ?? false, tagButton, onPressSync: onPressSync },

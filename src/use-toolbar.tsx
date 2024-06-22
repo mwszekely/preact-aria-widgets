@@ -93,7 +93,7 @@ export interface UseToolbarChildReturnType<ChildElement extends Element, M exten
  * 
  * @compositeParams
  */
-export const useToolbar = monitored(function useToolbar<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({
+export const useToolbar = /* @__PURE__ */ monitored(function useToolbar<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({
     linearNavigationParameters,
     toolbarParameters: { orientation, role, disabled },
     labelParameters,
@@ -150,7 +150,7 @@ export const useToolbar = monitored(function useToolbar<ContainerElement extends
 /**
  * @compositeParams
  */
-export const useToolbarChild = monitored(function useToolbarChild<ChildElement extends Element>({ context, info, toolbarChildParameters: { disabledProp }, ...args }: UseToolbarChildParameters<ChildElement, UseToolbarSubInfo<ChildElement>>): UseToolbarChildReturnType<ChildElement, UseToolbarSubInfo<ChildElement>> {
+export const useToolbarChild = /* @__PURE__ */ monitored(function useToolbarChild<ChildElement extends Element>({ context, info, toolbarChildParameters: { disabledProp }, ...args }: UseToolbarChildParameters<ChildElement, UseToolbarSubInfo<ChildElement>>): UseToolbarChildReturnType<ChildElement, UseToolbarSubInfo<ChildElement>> {
 
     const {
         propsChild,

@@ -17,7 +17,7 @@ export type AccordionSectionProps<HeaderContainerElement extends Element, Header
 
 
 const AccordionSectionContext = createContext<UseAccordionContext<any, any>>(null!);
-export const Accordion = memo(function Accordion<HeaderButtonElement extends Element>({
+export const Accordion = /* @__PURE__ */ memo(function Accordion<HeaderButtonElement extends Element>({
     disableHomeEndKeys,
     initialIndex,
     onAfterChildLayoutEffect,
@@ -67,7 +67,7 @@ export const Accordion = memo(function Accordion<HeaderButtonElement extends Ele
 
 })
 
-export const AccordionSection = memo((function AccordionSection<HeaderContainerElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element>({
+export const AccordionSection = /* @__PURE__ */ memo((function AccordionSection<HeaderContainerElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element>({
     open,
     index,
     tagButton,

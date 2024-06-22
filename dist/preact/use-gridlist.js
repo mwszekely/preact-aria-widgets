@@ -13,7 +13,7 @@ import { useLabelSynthetic } from "./use-label.js";
  * @hasChild {@link useGridlistRow}
  * @hasChild {@link useGridlistCell}
  */
-export const useGridlist = monitored(function useGridlist({ labelParameters, listboxParameters: { groupingType, ...void1 }, rovingTabIndexParameters, singleSelectionParameters, gridNavigationParameters, linearNavigationParameters, multiSelectionParameters, paginatedChildrenParameters, refElementParameters, typeaheadNavigationParameters, singleSelectionDeclarativeParameters, ...void2 }) {
+export const useGridlist = /* @__PURE__ */ monitored(function useGridlist({ labelParameters, listboxParameters: { groupingType, ...void1 }, rovingTabIndexParameters, singleSelectionParameters, gridNavigationParameters, linearNavigationParameters, multiSelectionParameters, paginatedChildrenParameters, refElementParameters, typeaheadNavigationParameters, singleSelectionDeclarativeParameters, ...void2 }) {
     assertEmptyObject(void1);
     assertEmptyObject(void2);
     const { propsInput: propsLabelList, propsLabel: propsLabelLabel, randomIdInputReturn: { id: _gridlistId }, randomIdLabelReturn: { id: _labelId } } = useLabelSynthetic({
@@ -67,7 +67,7 @@ export const useGridlist = monitored(function useGridlist({ labelParameters, lis
  * @compositeParams
  *
  */
-export const useGridlistRow = monitored(function useGridlistRow({ gridlistRowParameters: { selected }, linearNavigationParameters, context: cx1, info, rovingTabIndexParameters, textContentParameters, typeaheadNavigationParameters, hasCurrentFocusParameters, singleSelectionChildParameters, multiSelectionChildParameters, ...void1 }) {
+export const useGridlistRow = /* @__PURE__ */ monitored(function useGridlistRow({ gridlistRowParameters: { selected }, linearNavigationParameters, context: cx1, info, rovingTabIndexParameters, textContentParameters, typeaheadNavigationParameters, hasCurrentFocusParameters, singleSelectionChildParameters, multiSelectionChildParameters, ...void1 }) {
     const { context: cx2, hasCurrentFocusReturn, linearNavigationReturn, managedChildReturn, managedChildrenReturn, props, rovingTabIndexChildReturn, rovingTabIndexReturn, singleSelectionChildReturn, textContentReturn, typeaheadNavigationReturn, pressParameters, multiSelectionChildReturn, refElementReturn, ...void2 } = useCompleteGridNavigationRow({
         linearNavigationParameters,
         info,
@@ -106,7 +106,7 @@ export const useGridlistRow = monitored(function useGridlistRow({ gridlistRowPar
  * @compositeParams
  *
  */
-export const useGridlistCell = monitored(function useGridlistCell({ pressParameters: { onPressSync, longPressThreshold, onPressingChange, ...void1 }, ...p }) {
+export const useGridlistCell = /* @__PURE__ */ monitored(function useGridlistCell({ pressParameters: { onPressSync, longPressThreshold, onPressingChange, ...void1 }, ...p }) {
     const { props, refElementReturn, ...info } = useCompleteGridNavigationCell(p);
     assertEmptyObject(void1);
     const { pressReturn, props: propsPress } = usePress({

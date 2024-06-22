@@ -9,7 +9,7 @@ import { useNotify } from "./use-notify.js";
  *
  * @hasChild {@link useToast}
  */
-export const useToasts = monitored(function useToasts({ managedChildrenParameters: { onChildrenMountChange: ocmu, onAfterChildLayoutEffect }, toastsParameters: { visibleCount } }) {
+export const useToasts = /* @__PURE__ */ monitored(function useToasts({ managedChildrenParameters: { onChildrenMountChange: ocmu, onAfterChildLayoutEffect }, toastsParameters: { visibleCount } }) {
     // Normally, this does just look like [0, 1, 2, 3], etc
     // so it could be just an index to the current toast,
     // but if we dismiss toasts out of order, it's [0, 2, 3] or something.
@@ -95,7 +95,7 @@ export const useToasts = monitored(function useToasts({ managedChildrenParameter
 /**
  * @compositeParams
  */
-export const useToast = monitored(function useToast({ toastParameters: { politeness, timeout, children }, info: { index, ...info }, context }) {
+export const useToast = /* @__PURE__ */ monitored(function useToast({ toastParameters: { politeness, timeout, children }, info: { index, ...info }, context }) {
     const { getMaxVisibleCount, onAnyToastDismissed, onAnyToastMounted } = context.toastContext;
     const [numberOfToastsAheadOfUs, setNumberOfToastsAheadOfUs] = useState(Infinity);
     const getIndex = useStableGetter(index);

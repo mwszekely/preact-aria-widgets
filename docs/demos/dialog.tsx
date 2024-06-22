@@ -1,6 +1,6 @@
 
 import { useState } from "preact-prop-helpers";
-import { Dialog, useDefaultRenderPortal } from "../../dist/index.js";
+import { Dialog, useDefaultRenderPortal } from "../../dist/preact/index.js";
 
 
 export function Blurb() {

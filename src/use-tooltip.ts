@@ -20,10 +20,10 @@ import {
     useRandomId,
     useRef,
     useRefElement,
+    UseRefElementReturnTypeSelf,
     useStableCallback,
     useState
 } from "preact-prop-helpers";
-import { UseRefElementReturnTypeSelf } from "preact-prop-helpers";
 import { monitored, Prefices } from "./props.js";
 
 export type TooltipStatus = "hover" | "focus" | null;
@@ -100,7 +100,7 @@ function delayedAlert(message: string) {
  * 
  * @compositeParams
  */
-export const useTooltip = monitored(function useTooltip<TriggerType extends Element, PopupType extends Element>({
+export const useTooltip = /* @__PURE__ */ monitored(function useTooltip<TriggerType extends Element, PopupType extends Element>({
     tooltipParameters: {
         onStatus,
         tooltipSemanticType,

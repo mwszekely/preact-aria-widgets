@@ -2,7 +2,7 @@
 import { ComponentChildren } from "preact";
 import { EventDetail, useMergedProps, useState } from "preact-prop-helpers";
 import { memo } from "preact/compat";
-import { GroupedListbox, Listbox, ListboxChildren, ListboxItem } from "../../dist/index.js";
+import { GroupedListbox, Listbox, ListboxChildren, ListboxItem } from "../../dist/preact/index.js";
 
 const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
 

@@ -7,7 +7,7 @@ import { monitored } from "./props.js";
  *
  * @compositeParams
  */
-export const useButton = monitored(function useButton({ buttonParameters: { tagButton, disabled, pressed, role, onPressSync, ...void1 }, pressParameters: { focusSelf, allowRepeatPresses, longPressThreshold, onPressingChange, excludeSpace, ...void3 }, refElementParameters, ...void2 }) {
+export const useButton = /* @__PURE__ */ monitored(function useButton({ buttonParameters: { tagButton, disabled, pressed, role, onPressSync, ...void1 }, pressParameters: { focusSelf, allowRepeatPresses, longPressThreshold, onPressingChange, excludeSpace, ...void3 }, refElementParameters, ...void2 }) {
     //if (tagButton != "button")
     //    debugger;
     const { refElementReturn, propsStable: propsRef, ...void5 } = useRefElement({ refElementParameters });

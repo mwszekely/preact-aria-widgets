@@ -7,7 +7,7 @@ const TabsContext = createContext(null);
 const TabPanelsContext = createContext(null);
 //const UntabbableContext = createContext(false);
 //const SelectionModeContext = createContext<NonNullable<UseTabsParameters<any, any, any>["singleSelectionParameters"]["selectionMode"]>>("focus");
-export const Tabs = memo((function Tabs({ ariaLabel, collator, disableHomeEndKeys, initiallySingleSelectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSingleSelectedIndexChange, onTabbableIndexChange, orientation, pageNavigationSize, localStorageKey, singleSelectionMode, untabbable, typeaheadTimeout, role, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, render, ...void1 }) {
+export const Tabs = /* @__PURE__ */ memo((function Tabs({ ariaLabel, collator, disableHomeEndKeys, initiallySingleSelectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSingleSelectedIndexChange, onTabbableIndexChange, orientation, pageNavigationSize, localStorageKey, singleSelectionMode, untabbable, typeaheadTimeout, role, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, render, ...void1 }) {
     untabbable ??= false;
     assertEmptyObject(void1);
     const info = useTabs({
@@ -41,7 +41,7 @@ export const Tabs = memo((function Tabs({ ariaLabel, collator, disableHomeEndKey
     useImperativeHandle(imperativeHandle, () => info);
     return (_jsx(TabsContext.Provider, { value: contextTabs, children: _jsx(TabPanelsContext.Provider, { value: contextPanels, children: render(info) }) }));
 }));
-export const Tab = memo((function Tab({ focusSelf, untabbable, index, getText, render, longPressThreshold, onPressingChange, imperativeHandle, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, singleSelectionDisabled, onTextContentChange, info: uinfo, ...void1 }) {
+export const Tab = /* @__PURE__ */ memo((function Tab({ focusSelf, untabbable, index, getText, render, longPressThreshold, onPressingChange, imperativeHandle, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, singleSelectionDisabled, onTextContentChange, info: uinfo, ...void1 }) {
     assertEmptyObject(void1);
     const context = useContextWithWarning(TabsContext, "tabs");
     console.assert(context != null, `This Tab is not contained within a Tabs component`);
@@ -61,7 +61,7 @@ export const Tab = memo((function Tab({ focusSelf, untabbable, index, getText, r
         singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false, }
     }));
 }));
-export const TabPanel = memo((function TabPanel({ index, render, info: uinfo }) {
+export const TabPanel = /* @__PURE__ */ memo((function TabPanel({ index, render, info: uinfo }) {
     const context = useContextWithWarning(TabPanelsContext, "tabs");
     const info = useTabPanel({
         context,

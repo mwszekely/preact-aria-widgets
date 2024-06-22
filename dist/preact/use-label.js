@@ -53,7 +53,7 @@ export function useLabel({ randomIdInputParameters, randomIdLabelParameters, lab
  *
  * @compositeParams
  */
-export const useLabelSynthetic = monitored(function useLabelSynthetic({ labelParameters: { ariaLabel, onLabelClick }, ...rest }) {
+export const useLabelSynthetic = /* @__PURE__ */ monitored(function useLabelSynthetic({ labelParameters: { ariaLabel, onLabelClick }, ...rest }) {
     return useLabel({
         labelParameters: {
             ariaLabel,

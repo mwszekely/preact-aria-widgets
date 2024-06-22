@@ -11,7 +11,7 @@ const HeadingLevelContext = createContext(0);
  * Specify the actual contents of the heading with the `heading` prop.
  *
  */
-export const Heading = memo(function Heading({ children, heading, tag, ...props }) {
+export const Heading = /* @__PURE__ */ memo(function Heading({ children, heading, tag, ...props }) {
     const headingLevelBeforeUs = useContext(HeadingLevelContext);
     const newHeadingLevel = headingLevelBeforeUs + 1;
     if (tag == null) {
@@ -30,7 +30,7 @@ export const Heading = memo(function Heading({ children, heading, tag, ...props 
  *
  * Minimum of 1.
  */
-export const HeadingReset = memo(function HeadingReset({ newLevel, children }) {
+export const HeadingReset = /* @__PURE__ */ memo(function HeadingReset({ newLevel, children }) {
     return (_jsx(HeadingLevelContext.Provider, { value: newLevel - 1, children: children }));
 });
 //# sourceMappingURL=heading.js.map

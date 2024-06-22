@@ -28,7 +28,7 @@ const TabPanelsContext = createContext<UseTabPanelsContext<any>>(null!);
 //const UntabbableContext = createContext(false);
 //const SelectionModeContext = createContext<NonNullable<UseTabsParameters<any, any, any>["singleSelectionParameters"]["selectionMode"]>>("focus");
 
-export const Tabs = memo((function Tabs<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element>({
+export const Tabs = /* @__PURE__ */ memo((function Tabs<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element>({
     ariaLabel,
     collator,
     disableHomeEndKeys,
@@ -97,7 +97,7 @@ export const Tabs = memo((function Tabs<TabContainerElement extends Element, Tab
     )
 }))
 
-export const Tab = memo((function Tab<E extends Element>({
+export const Tab = /* @__PURE__ */ memo((function Tab<E extends Element>({
     focusSelf,
     untabbable,
     index,
@@ -141,7 +141,7 @@ export const Tab = memo((function Tab<E extends Element>({
         }));
 }))
 
-export const TabPanel = memo((function TabPanel<E extends Element>({
+export const TabPanel = /* @__PURE__ */ memo((function TabPanel<E extends Element>({
     index,
     render,
     info: uinfo

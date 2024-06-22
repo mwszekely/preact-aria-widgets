@@ -1,7 +1,7 @@
 
 import { returnZero, useMergedProps, useState } from "preact-prop-helpers";
 import { memo } from "preact/compat";
-import { Button, Toolbar, ToolbarChild } from "../../dist/index.js";
+import { Button, Toolbar, ToolbarChild } from "../../dist/preact/index.js";
 
 const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
 

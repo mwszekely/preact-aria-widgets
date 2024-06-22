@@ -29,7 +29,7 @@ function delayedAlert(message: string) {
  *
  * @compositeParams
  */
-export const useTooltip = monitored(function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType, hoverDelay, usesLongPress }, activeElementParameters, escapeDismissParameters, pressReturn: { longPress, ...void2 }, ...void1 }) {
+export const useTooltip = /* @__PURE__ */ monitored(function useTooltip({ tooltipParameters: { onStatus, tooltipSemanticType, hoverDelay, usesLongPress }, activeElementParameters, escapeDismissParameters, pressReturn: { longPress, ...void2 }, ...void1 }) {
     useGlobalHandler(getWindow(), "mouseout", useCallback((e) => {
         if (e.relatedTarget == null)
             onHoverChanged(false, "popup");

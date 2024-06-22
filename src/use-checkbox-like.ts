@@ -75,7 +75,7 @@ export interface UseCheckboxLikeReturnType<InputType extends Element, LabelType 
  * 
  * @compositeParams
  */
-export const useCheckboxLike = monitored(function useCheckboxLike<LP extends LabelPosition, InputType extends Element, LabelType extends Element, C extends CheckboxCheckedType>({
+export const useCheckboxLike = /* @__PURE__ */ monitored(function useCheckboxLike<LP extends LabelPosition, InputType extends Element, LabelType extends Element, C extends CheckboxCheckedType>({
     labelParameters,
     randomIdInputParameters,
     randomIdLabelParameters,

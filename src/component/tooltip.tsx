@@ -9,7 +9,7 @@ export type TooltipProps<TriggerType extends Element, PopupType extends Element>
     "tooltipSemanticType" | "onStatus"
 >;
 
-export const Tooltip = memo(function TooltipU<TriggerType extends Element, PopupType extends Element>({
+export const Tooltip = /* @__PURE__ */ memo(function TooltipU<TriggerType extends Element, PopupType extends Element>({
     onStatus,
     getDocument,
     parentDepth,

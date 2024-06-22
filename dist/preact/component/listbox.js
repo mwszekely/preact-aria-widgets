@@ -7,7 +7,7 @@ const ListboxContext = createContext(null);
 const ListboxChildrenContext = createContext(null);
 const ListboxChildContext = createContext(null);
 const ListboxGroupContext = createContext(null);
-export const GroupedListbox = memo((function GroupedListbox({ ariaLabel, orientation, render, onElementChange, onMount, onUnmount }) {
+export const GroupedListbox = /* @__PURE__ */ memo((function GroupedListbox({ ariaLabel, orientation, render, onElementChange, onMount, onUnmount }) {
     const info = useListbox({
         labelParameters: { ariaLabel },
         linearNavigationParameters: {
@@ -33,7 +33,7 @@ export const GroupedListbox = memo((function GroupedListbox({ ariaLabel, orienta
     });
     return (_jsx(ListboxGroupContext.Provider, { value: info, children: render(info) }));
 }));
-export const Listbox = memo((function Listbox({ ariaLabel, collator, disableHomeEndKeys, singleSelectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSingleSelectedIndexChange, onTabbableIndexChange, pageNavigationSize, untabbable, typeaheadTimeout, orientation, onNavigateLinear, onNavigateTypeahead, onElementChange, onMount, onUnmount, render, imperativeHandle, singleSelectionAriaPropName, singleSelectionMode, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, paginationMax, paginationMin, ...void1 }) {
+export const Listbox = /* @__PURE__ */ memo((function Listbox({ ariaLabel, collator, disableHomeEndKeys, singleSelectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSingleSelectedIndexChange, onTabbableIndexChange, pageNavigationSize, untabbable, typeaheadTimeout, orientation, onNavigateLinear, onNavigateTypeahead, onElementChange, onMount, onUnmount, render, imperativeHandle, singleSelectionAriaPropName, singleSelectionMode, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, paginationMax, paginationMin, ...void1 }) {
     const listboxGroupInfo = useContext(ListboxGroupContext);
     assertEmptyObject(void1);
     return useComponentC(imperativeHandle, render, ListboxContext, ListboxChildrenContext, useListbox({
@@ -69,7 +69,7 @@ export const Listbox = memo((function Listbox({ ariaLabel, collator, disableHome
         multiSelectionParameters: { multiSelectionAriaPropName, multiSelectionMode: multiSelectionMode || "disabled", onSelectionChange }
     }));
 }));
-export const ListboxChildren = memo((function ListboxChildren({ children, render, adjust, compare, getIndex, imperativeHandle, onAfterChildLayoutEffect, onChildrenCountChange, onChildrenMountChange, onRearranged, paginationMax, paginationMin, staggered }) {
+export const ListboxChildren = /* @__PURE__ */ memo((function ListboxChildren({ children, render, adjust, compare, getIndex, imperativeHandle, onAfterChildLayoutEffect, onChildrenCountChange, onChildrenMountChange, onRearranged, paginationMax, paginationMin, staggered }) {
     const r = useCompleteListNavigationChildren({
         context: useContext(ListboxChildrenContext),
         managedChildrenParameters: {
@@ -94,7 +94,7 @@ export const ListboxChildren = memo((function ListboxChildren({ children, render
     });
     return useComponent(imperativeHandle, render, ListboxChildContext, r);
 }));
-export const ListboxItem = memo((function ListboxItemOuter({ index, render, imperativeHandle, onElementChange: oec1, onMount, onUnmount, getText, untabbable, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, multiSelectionDisabled, singleSelectionDisabled, multiSelected, onMultiSelectedChange, onTextContentChange, ...void1 }) {
+export const ListboxItem = /* @__PURE__ */ memo((function ListboxItemOuter({ index, render, imperativeHandle, onElementChange: oec1, onMount, onUnmount, getText, untabbable, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, multiSelectionDisabled, singleSelectionDisabled, multiSelected, onMultiSelectedChange, onTextContentChange, ...void1 }) {
     const context = useContextWithWarning(ListboxContext, "listbox");
     console.assert(context != null, `This ListboxItem is not contained within a Listbox`);
     assertEmptyObject(void1);
@@ -129,7 +129,7 @@ export const ListboxItem = memo((function ListboxItemOuter({ index, render, impe
     }
 }));
 // Separated into its own component because hooks can't be if'd.
-const ListboxItemInner = memo((function ListboxItemInner({ getText, untabbable, index, render, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, imperativeHandle, multiSelectionDisabled, singleSelectionDisabled, multiSelected, onMultiSelectedChange, hideBecausePaginated, hideBecauseStaggered, parentIsPaginated, parentIsStaggered, props: props1, childUseEffect, onTextContentChange, ...void1 }) {
+const ListboxItemInner = /* @__PURE__ */ memo((function ListboxItemInner({ getText, untabbable, index, render, allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, focusSelf, imperativeHandle, multiSelectionDisabled, singleSelectionDisabled, multiSelected, onMultiSelectedChange, hideBecausePaginated, hideBecauseStaggered, parentIsPaginated, parentIsStaggered, props: props1, childUseEffect, onTextContentChange, ...void1 }) {
     const context = useContextWithWarning(ListboxContext, "listbox");
     console.assert(context != null, `This ListboxItem is not contained within a Listbox`);
     const focusSelfDefault = useCallback((e) => { focus(e); }, []);

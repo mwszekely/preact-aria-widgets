@@ -1,7 +1,7 @@
 
 import { EventDetail, useState } from "preact-prop-helpers";
 import { memo } from "preact/compat";
-import { Radio, RadioGroup } from "../../dist/index.js";
+import { Radio, RadioGroup } from "../../dist/preact/index.js";
 
 
 const DemoRadioButton = memo(function DemoRadioButton({ index }: { index: number }) {

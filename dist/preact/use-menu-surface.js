@@ -9,7 +9,7 @@ import { monitored } from "./props.js";
  *
  * @compositeParams
  */
-export const useMenuSurface = monitored(function useMenuSurface({ dismissParameters, focusTrapParameters, activeElementParameters, menuSurfaceParameters: { role, surfaceId, ...void1 }, modalParameters, escapeDismissParameters, ...void2 }) {
+export const useMenuSurface = /* @__PURE__ */ monitored(function useMenuSurface({ dismissParameters, focusTrapParameters, activeElementParameters, menuSurfaceParameters: { role, surfaceId, ...void1 }, modalParameters, escapeDismissParameters, ...void2 }) {
     const { refElementReturn: { getElement: getButtonElement }, propsStable: propsRefTrigger, ...void4 } = useRefElement({ refElementParameters: { onElementChange: undefined } });
     const { refElementReturn: { getElement: getMenuElement, ...void5 }, propsStable: propsRefSurface, ...void6 } = useRefElement({ refElementParameters: { onElementChange: undefined } });
     const { propsFocusContainer, propsStablePopup: propsPopup, propsStableSource: ps2, refElementPopupReturn, refElementSourceReturn } = useModal({
@@ -73,7 +73,7 @@ export const useMenuSurface = monitored(function useMenuSurface({ dismissParamet
  *
  * @compositeParams
  */
-export const useFocusSentinel = monitored(function useFocusSentinel({ focusSentinel: { open, onClose, sendFocusToMenu } }) {
+export const useFocusSentinel = /* @__PURE__ */ monitored(function useFocusSentinel({ focusSentinel: { open, onClose, sendFocusToMenu } }) {
     const getSendFocusWithinMenu = useStableGetter(sendFocusToMenu);
     const stableOnClose = useStableCallback(onClose);
     const [sentinelIsActive, setSentinelIsActive] = useState(false);

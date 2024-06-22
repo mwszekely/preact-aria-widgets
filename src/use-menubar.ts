@@ -54,7 +54,7 @@ export interface UseMenubarItemReturnType<MenuItemElement extends Element, M ext
  * 
  * @compositeParams
  */
-export const useMenubar = monitored(function useMenubar<MenuParentElement extends Element, MenuItemElement extends Element, LabelElement extends Element>(args: UseMenubarParameters<MenuParentElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenubarReturnType<MenuParentElement, MenuItemElement, LabelElement, UseMenubarSubInfo<MenuItemElement>> {
+export const useMenubar = /* @__PURE__ */ monitored(function useMenubar<MenuParentElement extends Element, MenuItemElement extends Element, LabelElement extends Element>(args: UseMenubarParameters<MenuParentElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenubarReturnType<MenuParentElement, MenuItemElement, LabelElement, UseMenubarSubInfo<MenuItemElement>> {
 
     const {
         propsToolbar: propsMenubar,
@@ -71,7 +71,7 @@ export const useMenubar = monitored(function useMenubar<MenuParentElement extend
 /**
  * @compositeParams
  */
-export const useMenubarChild = monitored(function useMenubarChild<MenuItemElement extends Element>({
+export const useMenubarChild = /* @__PURE__ */ monitored(function useMenubarChild<MenuItemElement extends Element>({
     menuItemParameters: { onPress: opu, role },
     pressParameters: { onPressingChange, ...void1 },
     ...restParams

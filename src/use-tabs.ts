@@ -142,7 +142,7 @@ export type UseTabListLabel<LabelElement extends Element> = (args: UseTabLabelPa
  * @hasChild {@link useTab}
  * @hasChild {@link useTabPanel}
  */
-export const useTabs = monitored(function useTabs<TabListElement extends Element, TabElement extends Element, LabelElement extends Element>({
+export const useTabs = /* @__PURE__ */ monitored(function useTabs<TabListElement extends Element, TabElement extends Element, LabelElement extends Element>({
     labelParameters,
     linearNavigationParameters,
     singleSelectionParameters: { initiallySingleSelectedIndex, onSingleSelectedIndexChange: ssi, singleSelectionMode, ...singleSelectionParameters },
@@ -260,7 +260,7 @@ export const useTabs = monitored(function useTabs<TabListElement extends Element
  * 
  * @compositeParams
  */
-export const useTab = monitored(function useTab<TabElement extends Element>({
+export const useTab = /* @__PURE__ */ monitored(function useTab<TabElement extends Element>({
     info: { focusSelf: focusSelfParent, index, untabbable, ...info },
     textContentParameters,
     pressParameters: { focusSelf: focusSelfChild, longPressThreshold, onPressingChange, ...void2 },
@@ -331,7 +331,7 @@ export const useTab = monitored(function useTab<TabElement extends Element>({
  * 
  * @compositeParams
  */
-export const useTabPanel = monitored(function useTabPanel<PanelElement extends Element>({ info, context }: UseTabPanelParameters<TabPanelInfo>): UseTabPanelReturnType<PanelElement> {
+export const useTabPanel = /* @__PURE__ */ monitored(function useTabPanel<PanelElement extends Element>({ info, context }: UseTabPanelParameters<TabPanelInfo>): UseTabPanelReturnType<PanelElement> {
     const { index } = info;
 
     const { tabPanelContext: { getVisibleIndex: g, getPanelId, getTabId } } = context;

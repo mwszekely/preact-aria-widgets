@@ -84,7 +84,7 @@ export interface ToastsContext<M extends ToastInfo> extends UseManagedChildrenCo
  * 
  * @hasChild {@link useToast}
  */
-export const useToasts = monitored(function useToasts<ContainerType extends Element>({ managedChildrenParameters: { onChildrenMountChange: ocmu, onAfterChildLayoutEffect }, toastsParameters: { visibleCount } }: UseToastsParameters): UseToastsReturnType<ContainerType, ToastInfo> {
+export const useToasts = /* @__PURE__ */ monitored(function useToasts<ContainerType extends Element>({ managedChildrenParameters: { onChildrenMountChange: ocmu, onAfterChildLayoutEffect }, toastsParameters: { visibleCount } }: UseToastsParameters): UseToastsReturnType<ContainerType, ToastInfo> {
 
     // Normally, this does just look like [0, 1, 2, 3], etc
     // so it could be just an index to the current toast,
@@ -193,7 +193,7 @@ export const useToasts = monitored(function useToasts<ContainerType extends Elem
 /**
  * @compositeParams
  */
-export const useToast = monitored(function useToast<E extends Element>({ toastParameters: { politeness, timeout, children }, info: { index, ...info }, context }: UseToastParameters<ToastInfo>): UseToastReturnType<E, ToastInfo> {
+export const useToast = /* @__PURE__ */ monitored(function useToast<E extends Element>({ toastParameters: { politeness, timeout, children }, info: { index, ...info }, context }: UseToastParameters<ToastInfo>): UseToastReturnType<E, ToastInfo> {
     const { getMaxVisibleCount, onAnyToastDismissed, onAnyToastMounted } = context.toastContext;
     const [numberOfToastsAheadOfUs, setNumberOfToastsAheadOfUs] = useState(Infinity);
     const getIndex = useStableGetter(index);

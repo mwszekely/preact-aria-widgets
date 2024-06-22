@@ -37,7 +37,7 @@ export interface UseDialogReturnType<FocusContainerElement extends Element, Sour
  * 
  * @compositeParams
  */
-export const useDialog = monitored(function useDialog<FocusContainerElement extends Element, SourceElement extends Element, DialogElement extends Element, TitleElement extends Element>({
+export const useDialog = /* @__PURE__ */ monitored(function useDialog<FocusContainerElement extends Element, SourceElement extends Element, DialogElement extends Element, TitleElement extends Element>({
     dismissParameters,
     escapeDismissParameters,
     focusTrapParameters,

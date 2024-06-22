@@ -29,7 +29,7 @@ export interface RadioProps<LP extends LabelPosition, InputElement extends Eleme
 const RadioContext = createContext<RadioContext<any, any, any>>(null!);
 //const ProcessedChildrenContext = createContext<UseProcessedChildrenContext>(null!);
 
-export const RadioGroup = memo((function RadioGroup<V extends string | number, GroupElement extends HTMLElement, GroupLabelElement extends HTMLElement, TabbableChildElement extends HTMLElement>({
+export const RadioGroup = /* @__PURE__ */ memo((function RadioGroup<V extends string | number, GroupElement extends HTMLElement, GroupLabelElement extends HTMLElement, TabbableChildElement extends HTMLElement>({
     render,
     name,
     collator,
@@ -87,7 +87,7 @@ export const RadioGroup = memo((function RadioGroup<V extends string | number, G
         }));
 }));
 
-export const Radio = memo((function Radio<LP extends LabelPosition, V extends string | number, InputElement extends Element, LabelElement extends Element>({
+export const Radio = /* @__PURE__ */ memo((function Radio<LP extends LabelPosition, V extends string | number, InputElement extends Element, LabelElement extends Element>({
     disabled,
     index,
     render,

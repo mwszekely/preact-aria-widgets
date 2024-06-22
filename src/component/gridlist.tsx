@@ -72,7 +72,7 @@ const GridlistRowContext = createContext<UseGridlistRowContext<any, any>>(null!)
 const GridlistRowsContext = createContext<UseProcessedChildrenContext>(null!);
 const ProcessedChildContext = createContext<UseProcessedChildContext<any, any>>(null!);
 
-export const Gridlist = memo((function Gridlist<GridlistElement extends Element, RowElement extends Element, CellElement extends Element, LabelElement extends Element>({
+export const Gridlist = /* @__PURE__ */ memo((function Gridlist<GridlistElement extends Element, RowElement extends Element, CellElement extends Element, LabelElement extends Element>({
     collator,
     disableHomeEndKeys,
     noTypeahead,
@@ -157,7 +157,7 @@ export type GridlistRowsProps<GridlistRowElement extends Element> = GenericCompo
     "children"
 >;
 
-export const GridlistRows = memo((function GridlistRows<RowElement extends Element>({
+export const GridlistRows = /* @__PURE__ */ memo((function GridlistRows<RowElement extends Element>({
     render,
     adjust,
     children,
@@ -201,7 +201,7 @@ export const GridlistRows = memo((function GridlistRows<RowElement extends Eleme
 }))
 
 
-export const GridlistRow = memo((function GridlistRow<RowElement extends Element, CellElement extends Element>({
+export const GridlistRow = /* @__PURE__ */ memo((function GridlistRow<RowElement extends Element, CellElement extends Element>({
     index,
     render,
     imperativeHandle,
@@ -300,7 +300,7 @@ export const GridlistRow = memo((function GridlistRow<RowElement extends Element
     }
 }))
 
-const GridlistRowInner = memo((function GridlistRowInner<RowElement extends Element, CellElement extends Element>({
+const GridlistRowInner = /* @__PURE__ */ memo((function GridlistRowInner<RowElement extends Element, CellElement extends Element>({
     index,
     collator,
     untabbable,
@@ -405,7 +405,7 @@ const GridlistRowInner = memo((function GridlistRowInner<RowElement extends Elem
 }))
 
 
-export const GridlistChild = memo((function GridlistChild<CellElement extends Element>({
+export const GridlistChild = /* @__PURE__ */ memo((function GridlistChild<CellElement extends Element>({
     index,
     colSpan,
     focusSelf,

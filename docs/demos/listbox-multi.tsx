@@ -1,7 +1,7 @@
 
 import { useState } from "preact-prop-helpers";
 import { memo } from "preact/compat";
-import { EventDetail, Listbox, ListboxChildren, ListboxItem } from "../../dist/index.js";
+import { EventDetail, Listbox, ListboxChildren, ListboxItem } from "../../dist/preact/index.js";
 
 const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
     const [selected, setSelected] = useState(false);

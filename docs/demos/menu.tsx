@@ -1,6 +1,6 @@
 
 import { returnZero, useState } from "preact-prop-helpers";
-import { Menu, MenuItem, useDefaultRenderPortal } from "../../dist/index.js";
+import { Menu, MenuItem, useDefaultRenderPortal } from "../../dist/preact/index.js";
 
 function DemoListItem({ index }: { index: number }) {
 

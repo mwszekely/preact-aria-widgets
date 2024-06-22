@@ -13,7 +13,7 @@ import { useMenubar, useMenubarChild } from "./use-menubar.js";
  *
  * @compositeParams
  */
-export const useMenu = monitored(function useMenu({ dismissParameters, escapeDismissParameters, menuParameters: { openDirection, onOpen }, menuSurfaceParameters, activeElementParameters, toolbarParameters, modalParameters, ...restParams }) {
+export const useMenu = /* @__PURE__ */ monitored(function useMenu({ dismissParameters, escapeDismissParameters, menuParameters: { openDirection, onOpen }, menuSurfaceParameters, activeElementParameters, toolbarParameters, modalParameters, ...restParams }) {
     const { contextChildren, propsLabel: propsButtonAsMenuLabel, propsMenubar, randomIdInputReturn, rovingTabIndexReturn, ...restRet } = useMenubar({
         toolbarParameters: { role: "menu", ...toolbarParameters },
         labelParameters: { ariaLabel: null },
@@ -93,7 +93,7 @@ export const useMenu = monitored(function useMenu({ dismissParameters, escapeDis
 /**
  * @compositeParams
  */
-export const useMenuItem = monitored(function useMenuItem(p) {
+export const useMenuItem = /* @__PURE__ */ monitored(function useMenuItem(p) {
     const ret = useMenubarChild(p);
     return {
         ...ret,

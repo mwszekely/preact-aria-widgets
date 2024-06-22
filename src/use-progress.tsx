@@ -43,7 +43,7 @@ export interface UseProgressReturnType<ProgressElement extends Element, Progress
  * 
  * @compositeParams
  */
-export const useProgress = monitored(function useProgress<ProgressElement extends Element, LabelElement extends Element>({
+export const useProgress = /* @__PURE__ */ monitored(function useProgress<ProgressElement extends Element, LabelElement extends Element>({
     labelParameters,
     progressIndicatorParameters: {
         max,
@@ -154,7 +154,7 @@ export interface UseProgressWithHandlerReturnType<EventType, CaptureType, Indica
  * 
  * @compositeParams
  */
-export const useProgressWithHandler = monitored(function useProgressWithHandler<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element>({
+export const useProgressWithHandler = /* @__PURE__ */ monitored(function useProgressWithHandler<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element>({
     labelParameters,
     progressIndicatorParameters,
     asyncHandlerParameters: { asyncHandler, ...asyncHandlerParameters },

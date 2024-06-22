@@ -1,7 +1,7 @@
 
 import { JSX } from "preact";
 import { EventDetail, useState } from "preact-prop-helpers";
-import { Button, ProgressWithHandler, TargetedButtonPressEvent } from "../../dist/index.js";
+import { Button, ProgressWithHandler, TargetedButtonPressEvent } from "../../dist/preact/index.js";
 
 export function Blurb() {
     return (

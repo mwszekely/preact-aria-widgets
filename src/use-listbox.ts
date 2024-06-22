@@ -91,7 +91,7 @@ export interface ListboxInfo<ListItemElement extends Element> extends UseComplet
  * 
  * @hasChild {@link useListboxItem}
  */
-export const useListbox = monitored(function useListbox<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element>({
+export const useListbox = /* @__PURE__ */ monitored(function useListbox<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element>({
     labelParameters,
     listboxParameters: { groupingType, orientation },
     linearNavigationParameters,
@@ -184,7 +184,7 @@ export const useListboxChildren = monitored(function useListboxChildren<E extend
 /**
  * @compositeParams
  */
-export const useListboxItem = monitored(function useListboxItem<ListItemElement extends Element, M extends ListboxInfo<ListItemElement> = ListboxInfo<ListItemElement>>({
+export const useListboxItem = /* @__PURE__ */ monitored(function useListboxItem<ListItemElement extends Element, M extends ListboxInfo<ListItemElement> = ListboxInfo<ListItemElement>>({
     context,
     listboxParameters,
     pressParameters: { allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, ...void1 },

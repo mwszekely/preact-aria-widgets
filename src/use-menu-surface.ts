@@ -56,7 +56,7 @@ export interface UseMenuSurfaceReturnType<MenuSurfaceElement extends Element, Me
  * 
  * @compositeParams
  */
-export const useMenuSurface = monitored(function useMenuSurface<MenuSurfaceElement extends Element, MenuTargetElement extends Element, MenuTriggerElement extends Element>({
+export const useMenuSurface = /* @__PURE__ */ monitored(function useMenuSurface<MenuSurfaceElement extends Element, MenuTargetElement extends Element, MenuTriggerElement extends Element>({
     dismissParameters,
     focusTrapParameters,
     activeElementParameters,
@@ -147,7 +147,7 @@ export interface UseFocusSentinelParameters {
  * 
  * @compositeParams
  */
-export const useFocusSentinel = monitored(function useFocusSentinel<E extends Element>({ focusSentinel: { open, onClose, sendFocusToMenu } }: UseFocusSentinelParameters): ElementProps<E> {
+export const useFocusSentinel = /* @__PURE__ */ monitored(function useFocusSentinel<E extends Element>({ focusSentinel: { open, onClose, sendFocusToMenu } }: UseFocusSentinelParameters): ElementProps<E> {
     const getSendFocusWithinMenu = useStableGetter(sendFocusToMenu);
     const stableOnClose = useStableCallback(onClose);
 

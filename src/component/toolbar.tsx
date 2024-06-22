@@ -22,7 +22,7 @@ export type ToolbarChildProps<ToolbarChildElement extends Element, M extends Use
 const ToolbarContext = createContext<UseToolbarContext<any, any>>(null!);
 const ProcessedChildrenContext = createContext<UseProcessedChildrenContext>(null!);
 
-export const Toolbar = memo((function ToolbarU<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({
+export const Toolbar = /* @__PURE__ */ memo((function ToolbarU<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({
     render,
     role,
     collator,
@@ -89,7 +89,7 @@ export const Toolbar = memo((function ToolbarU<ContainerElement extends Element,
 }))
 
 
-export const ToolbarChild = memo((function ToolbarChild<ToolbarChildElement extends Element>({
+export const ToolbarChild = /* @__PURE__ */ memo((function ToolbarChild<ToolbarChildElement extends Element>({
     index,
     render,
     focusSelf,

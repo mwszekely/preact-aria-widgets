@@ -6,7 +6,7 @@ import { useLabelSynthetic } from "./use-label.js";
  *
  * @compositeParams
  */
-export const useDrawer = monitored(function useDrawer({ dismissParameters, escapeDismissParameters, focusTrapParameters, activeElementParameters, labelParameters, backdropDismissParameters, lostFocusDismissParameters, modalParameters, refElementParameters, ...void1 }) {
+export const useDrawer = /* @__PURE__ */ monitored(function useDrawer({ dismissParameters, escapeDismissParameters, focusTrapParameters, activeElementParameters, labelParameters, backdropDismissParameters, lostFocusDismissParameters, modalParameters, refElementParameters, ...void1 }) {
     const { propsFocusContainer, propsStablePopup, propsStableSource, refElementPopupReturn, refElementSourceReturn, ...void2 } = useModal({
         dismissParameters: { dismissActive: true, ...dismissParameters },
         escapeDismissParameters: { onDismissEscape: null, ...escapeDismissParameters },

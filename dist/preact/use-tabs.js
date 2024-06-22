@@ -12,7 +12,7 @@ import { useLabelSynthetic } from "./use-label.js";
  * @hasChild {@link useTab}
  * @hasChild {@link useTabPanel}
  */
-export const useTabs = monitored(function useTabs({ labelParameters, linearNavigationParameters, singleSelectionParameters: { initiallySingleSelectedIndex, onSingleSelectedIndexChange: ssi, singleSelectionMode, ...singleSelectionParameters }, tabsParameters: { orientation, role, localStorageKey }, rovingTabIndexParameters, ...restParams }) {
+export const useTabs = /* @__PURE__ */ monitored(function useTabs({ labelParameters, linearNavigationParameters, singleSelectionParameters: { initiallySingleSelectedIndex, onSingleSelectedIndexChange: ssi, singleSelectionMode, ...singleSelectionParameters }, tabsParameters: { orientation, role, localStorageKey }, rovingTabIndexParameters, ...restParams }) {
     const [localStorageIndex, setLocalStorageIndex] = usePersistentState(localStorageKey ?? null, 0);
     if (localStorageIndex != null)
         initiallySingleSelectedIndex = localStorageIndex;
@@ -97,7 +97,7 @@ export const useTabs = monitored(function useTabs({ labelParameters, linearNavig
  *
  * @compositeParams
  */
-export const useTab = monitored(function useTab({ info: { focusSelf: focusSelfParent, index, untabbable, ...info }, textContentParameters, pressParameters: { focusSelf: focusSelfChild, longPressThreshold, onPressingChange, ...void2 }, context, hasCurrentFocusParameters, refElementParameters, singleSelectionChildParameters, ...void3 }) {
+export const useTab = /* @__PURE__ */ monitored(function useTab({ info: { focusSelf: focusSelfParent, index, untabbable, ...info }, textContentParameters, pressParameters: { focusSelf: focusSelfChild, longPressThreshold, onPressingChange, ...void2 }, context, hasCurrentFocusParameters, refElementParameters, singleSelectionChildParameters, ...void3 }) {
     const { propsChild: listNavigationSingleSelectionChildProps, propsTabbable, pressParameters: { onPressSync, excludeSpace, ...void1 }, refElementReturn, ...listNavRet2 } = useCompleteListNavigationChild({
         context,
         info: { index, focusSelf: focusSelfParent, untabbable, ...info },
@@ -148,7 +148,7 @@ export const useTab = monitored(function useTab({ info: { focusSelf: focusSelfPa
  *
  * @compositeParams
  */
-export const useTabPanel = monitored(function useTabPanel({ info, context }) {
+export const useTabPanel = /* @__PURE__ */ monitored(function useTabPanel({ info, context }) {
     const { index } = info;
     const { tabPanelContext: { getVisibleIndex: g, getPanelId, getTabId } } = context;
     const [lastKnownVisibleIndex, setLastKnownVisibleIndex, getLastKnownVisibleIndex] = useState(g());

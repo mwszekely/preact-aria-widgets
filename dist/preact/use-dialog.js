@@ -6,7 +6,7 @@ import { useLabelSynthetic } from "./use-label.js";
  *
  * @compositeParams
  */
-export const useDialog = monitored(function useDialog({ dismissParameters, escapeDismissParameters, focusTrapParameters, activeElementParameters, backdropDismissParameters, modalParameters, refElementParameters, labelParameters, ...void1 }) {
+export const useDialog = /* @__PURE__ */ monitored(function useDialog({ dismissParameters, escapeDismissParameters, focusTrapParameters, activeElementParameters, backdropDismissParameters, modalParameters, refElementParameters, labelParameters, ...void1 }) {
     const { propsFocusContainer, propsStablePopup, propsStableSource, refElementPopupReturn, refElementSourceReturn, ...void2 } = useModal({
         dismissParameters: { dismissActive: true, ...dismissParameters },
         backdropDismissParameters: { onDismissBackdrop: null, ...backdropDismissParameters },

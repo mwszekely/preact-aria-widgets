@@ -182,7 +182,7 @@ export interface CheckboxGroupContext<TCE extends Element> extends CompleteListN
  * @hasChild {@link useCheckboxGroupParent}
  * @hasChild {@link useCheckboxGroupChild}
  */
-export const useCheckboxGroup = monitored(function useCheckboxGroup<GroupElement extends Element, TCE extends Element>({
+export const useCheckboxGroup = /* @__PURE__ */ monitored(function useCheckboxGroup<GroupElement extends Element, TCE extends Element>({
     linearNavigationParameters,
     rovingTabIndexParameters,
     checkboxGroupParameters: { orientation, ...void2 },
@@ -325,7 +325,7 @@ export const useCheckboxGroup = monitored(function useCheckboxGroup<GroupElement
  * 
  * @compositeParams
  */
-export const useCheckboxGroupParent = monitored(function useCheckboxGroupParent<TCE extends Element>({
+export const useCheckboxGroupParent = /* @__PURE__ */ monitored(function useCheckboxGroupParent<TCE extends Element>({
     context: {
         checkboxGroupParentContext: {
             setControlsSetterOnParentCheckbox,
@@ -420,7 +420,7 @@ export const useCheckboxGroupParent = monitored(function useCheckboxGroupParent<
  * 
  * @compositeParams
  */
-export const useCheckboxGroupChild = monitored(function useCheckboxGroupChild<TCE extends Element>({
+export const useCheckboxGroupChild = /* @__PURE__ */ monitored(function useCheckboxGroupChild<TCE extends Element>({
     checkboxGroupChildParameters,
     context,
     info: { focusSelf, index, untabbable, ...void3 },

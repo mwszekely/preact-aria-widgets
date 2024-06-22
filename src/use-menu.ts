@@ -70,7 +70,7 @@ export interface UseMenuItemReturnType<MenuItemElement extends Element, M extend
  * 
  * @compositeParams 
  */
-export const useMenu = monitored(function useMenu<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element>({
+export const useMenu = /* @__PURE__ */ monitored(function useMenu<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element>({
     dismissParameters,
     escapeDismissParameters,
     menuParameters: { openDirection, onOpen },
@@ -183,7 +183,7 @@ export interface UseMenuItemParameters<MenuItemElement extends Element, M extend
 /**
  * @compositeParams
  */
-export const useMenuItem = monitored(function useMenuItem<MenuItemElement extends Element>(p: UseMenuItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenuItemReturnType<MenuItemElement, UseMenubarSubInfo<MenuItemElement>> {
+export const useMenuItem = /* @__PURE__ */ monitored(function useMenuItem<MenuItemElement extends Element>(p: UseMenuItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenuItemReturnType<MenuItemElement, UseMenubarSubInfo<MenuItemElement>> {
 
     const ret = useMenubarChild<MenuItemElement>(p);
 

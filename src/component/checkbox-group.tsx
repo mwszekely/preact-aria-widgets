@@ -25,7 +25,7 @@ export type CheckboxGroupChildProps<TCE extends Element> = GenericComponentProps
 
 const UseCheckboxGroupChildContext = createContext<CheckboxGroupContext<any>>(null!);
 
-export const CheckboxGroup = memo((function CheckboxGroup<ParentElement extends Element, TabbableChildElement extends Element>({
+export const CheckboxGroup = /* @__PURE__ */ memo((function CheckboxGroup<ParentElement extends Element, TabbableChildElement extends Element>({
     render,
     collator,
     disableHomeEndKeys,
@@ -81,7 +81,7 @@ export const CheckboxGroup = memo((function CheckboxGroup<ParentElement extends 
         }));
 }));
 
-export const CheckboxGroupParent = memo((function CheckboxGroupParent<TCE extends Element>({
+export const CheckboxGroupParent = /* @__PURE__ */ memo((function CheckboxGroupParent<TCE extends Element>({
     render,
     index,
     focusSelf,
@@ -128,7 +128,7 @@ export const CheckboxGroupParent = memo((function CheckboxGroupParent<TCE extend
     );
 }))
 
-export const CheckboxGroupChild = memo((function CheckboxGroupChild<TCE extends Element>({
+export const CheckboxGroupChild = /* @__PURE__ */ memo((function CheckboxGroupChild<TCE extends Element>({
     index,
     render,
     checked,

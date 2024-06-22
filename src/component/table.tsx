@@ -83,7 +83,7 @@ const TableRowsContext = createContext<UseProcessedChildrenContext>(null!);
 const ProcessedRowContext = createContext<UseProcessedChildContext<any, any>>(null!);
 const TableRowContext = createContext<UseTableRowContext<any, TableCellInfo<any>>>(null!);
 
-export const Table = memo((function Table<TableElement extends Element, LabelElement extends Element>({
+export const Table = /* @__PURE__ */ memo((function Table<TableElement extends Element, LabelElement extends Element>({
     ariaLabel,
     singleSelectionMode,
     multiSelectionMode,
@@ -105,7 +105,7 @@ export const Table = memo((function Table<TableElement extends Element, LabelEle
         }));
 }))
 
-export const TableSection = memo((function TableSection<SectionElement extends Element, RowElement extends Element>({
+export const TableSection = /* @__PURE__ */ memo((function TableSection<SectionElement extends Element, RowElement extends Element>({
     disableHomeEndKeys,
     initiallySingleSelectedIndex,
     untabbable,
@@ -201,7 +201,7 @@ export type TableRowsProps<TableRowElement extends Element> = GenericComponentPr
     "children"
 >;
 
-export const TableRows = memo((function TableRows<RowElement extends Element>({
+export const TableRows = /* @__PURE__ */ memo((function TableRows<RowElement extends Element>({
     render,
     adjust,
     children,
@@ -248,7 +248,7 @@ export const TableRows = memo((function TableRows<RowElement extends Element>({
 
 
 
-export const TableRow = memo((function TableRow<RowElement extends Element, CellElement extends Element>({
+export const TableRow = /* @__PURE__ */ memo((function TableRow<RowElement extends Element, CellElement extends Element>({
     index,
     render,
     imperativeHandle,
@@ -343,7 +343,7 @@ export const TableRow = memo((function TableRow<RowElement extends Element, Cell
 
 
 
-const TableRowInner = memo((function TableRowInner<RowElement extends Element, CellElement extends Element>({
+const TableRowInner = /* @__PURE__ */ memo((function TableRowInner<RowElement extends Element, CellElement extends Element>({
     index,
     getText,
     tagTableRow,
@@ -447,7 +447,7 @@ const TableRowInner = memo((function TableRowInner<RowElement extends Element, C
         });
 }))
 
-export const TableCell = memo((function TableCell<CellElement extends Element>({
+export const TableCell = /* @__PURE__ */ memo((function TableCell<CellElement extends Element>({
     index,
     getText,
     focusSelf,

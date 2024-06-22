@@ -18,7 +18,7 @@ export type MenubarItemProps<MenuItemElement extends Element, M extends UseMenub
 
 export const MenubarItemContext = createContext<UseMenubarContext<any, any>>(null!);
 
-export const Menubar = memo((function Menubar<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({
+export const Menubar = /* @__PURE__ */ memo((function Menubar<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({
     render,
     collator,
     disableHomeEndKeys,
@@ -102,7 +102,7 @@ export const Menubar = memo((function Menubar<ContainerElement extends Element, 
 }))
 
 
-export const MenubarItem = memo((function MenubarItem<MenuItemElement extends Element>({
+export const MenubarItem = /* @__PURE__ */ memo((function MenubarItem<MenuItemElement extends Element>({
     index,
     render,
     focusSelf,
