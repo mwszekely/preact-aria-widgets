@@ -32,7 +32,7 @@
     "build:preact": "tsc",
     "build:react": "npx rollup -c",
     "watch:react": "npx rollup -c --watch",
-    "test": "playwright test --ui",
+    "test": "playwright test",
     "lint": "npx eslint ./src",
     "clean": "tsc --build --clean",
     "rebuild": "rm \"./pnpm-lock.yaml\" && rm -R \"./node_modules\" && pnpm install && pnpm run build"
@@ -44,7 +44,7 @@
   },
   "typings": "./dist/index.d.ts",
   "devDependencies": {
-    "@playwright/test": "^1.41.2",
+    "@playwright/test": "^1.44.1",
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-replace": "^5.0.5",
@@ -60,9 +60,9 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "preact": "^10.21.0",
     "clsx": "^2.1.1",
     "lodash-es": "^4.17.21",
+    "preact": "^10.21.0",
     "preact-prop-helpers": "github:mwszekely/preact-prop-helpers",
     "react": "^18.3.1"
   }

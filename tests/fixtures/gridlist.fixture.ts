@@ -1,7 +1,7 @@
 
 import { Locator } from "@playwright/test";
+import { fromStringNumber } from "../util.js";
 import { test as base } from "./base.fixture.js";
-import { fromStringNumber } from "./base.types.js";
 
 export const test = base.extend<{ gridlist: { gridlist: Locator, getRowCount: () => Promise<number> } }>({
     gridlist: async ({ page, shared: { goToTest, run, getTestSyncState } }, use) => {

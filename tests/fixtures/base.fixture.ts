@@ -1,30 +1,28 @@
 import { Locator, Response, test as base, expect } from "@playwright/test";
 import { LoremIpsum } from "../lorem.js";
-import type { TestBases } from "../stage/index.js";
-import type { TestingConstants, TestingConstantsParameter } from "./base.types.js";
+import { TestBases } from "../stage/index.js";
+import { TestingConstants, TestingConstantsParameter } from "../util.js";
 
 
 declare global {
     interface Window {
-        increment(): Promise<void>;
+        installTestingHandler: <K extends keyof TestingConstants, K2 extends keyof TestingConstants[K]>(key: K, Key2: K2, func: TestingConstants[K][K2]) => void;
+        _TestingConstants: TestingConstants;
+        getTestingHandler: <K extends keyof TestingConstants, K2 extends keyof TestingConstants[K]>(key: K, Key2: K2) => TestingConstants[K][K2];
+
+        increment: () => Promise<void>;
+        onRender: (id: string) => Promise<void>;
     }
 }
 
-declare module globalThis {
-    let installTestingHandler: <K extends keyof TestingConstants, K2 extends keyof TestingConstants[K]>(key: K, Key2: K2, func: TestingConstants[K][K2]) => void;
-    let _TestingConstants: TestingConstants;
-    let getTestingHandler: <K extends keyof TestingConstants, K2 extends keyof TestingConstants[K]>(key: K, Key2: K2) => TestingConstants[K][K2];
-}
-
 declare global {
-    let installTestingHandler: (typeof globalThis)["installTestingHandler"];
+    let installTestingHandler: (typeof window)["installTestingHandler"];
     let _TestingConstants: TestingConstants;
-    let getTestingHandler: (typeof globalThis)["getTestingHandler"];
+    let getTestingHandler: (typeof window)["getTestingHandler"];
 }
 
 export const test = base.extend<{ shared: SharedFixtures }>({
     shared: async ({ page }, use) => {
-
 
         let counter = 0;
         let renderCounts: Partial<Record<string, number>> = {};
@@ -34,11 +32,11 @@ export const test = base.extend<{ shared: SharedFixtures }>({
         const focusableFirst = page.locator("#focusable-first");
         const focusableLast = page.locator("#focusable-last");
         await use({
-            goToTest: async (k) => { return (await page.goto(`?test-base=${k}`))! },
             getRenderCount(id: string) { return renderCounts[id] ?? 0; },
             async awaitRender(id: string) { return await expect(page.locator("[data-render-pending-" + id + "]")).toHaveAttribute("data-render-pending-" + id, "false") },
             focusableFirst,
             focusableLast,
+            goToTest: async (k) => { return (await page.goto(`/tests/stage/?test-base=${k}`))! },
             getCounter() { return counter; },
             generateText(childIndex: number) { return LoremIpsum[childIndex % LoremIpsum.length] },
             resetCounter() { counter = 0; },
@@ -62,11 +60,9 @@ export const test = base.extend<{ shared: SharedFixtures }>({
             }
         })
     }
-});
+})
 
 export interface SharedFixtures {
-
-    goToTest: (key: TestBases) => Promise<Response>;
 
     focusableFirst: Locator;
     focusableLast: Locator;
@@ -74,7 +70,8 @@ export interface SharedFixtures {
     generateText(childIndex: number): string;
 
     locator: Locator;
-
+    
+    goToTest: (key: TestBases) => Promise<Response>;
     getTestSyncState<K extends keyof TestingConstants, K2 extends keyof TestingConstants[K]>(key: K, key2: K2, fromString: (str: string) => TestingConstantsParameter<K, K2> | null): Promise<TestingConstantsParameter<K, K2>>;
 
     /**

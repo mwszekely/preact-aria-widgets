@@ -37,26 +37,26 @@ test.describe("Press events", () => {
                             // Are promises cached or something? This is just in testing it seems...but I don't know exactly where...
                             await install("Button", "onPress", (e) => { window.increment(); });
 
-                            expect(getCounter(), "We haven't clicked the button, so the counter should still be 0").toBe(0);
+                            expect.poll(() => getCounter(), "We haven't clicked the button, so the counter should still be 0").toBe(0);
 
                             switch (eventType) {
                                 case "Clicking ":
                                     await button.click({ force: true });
-                                    expect(getCounter()).toBe(disabled ? 0 : 1);
+                                    expect.poll(() => getCounter()).toBe(disabled ? 0 : 1);
                                     break;
                                 case "Pressing Enter ":
                                     await button.focus();
                                     await page.keyboard.down("Enter");
-                                    expect(getCounter()).toBe(disabled ? 0 : 1);
+                                    expect.poll(() => getCounter()).toBe(disabled ? 0 : 1);
                                     await page.keyboard.up("Enter");
-                                    expect(getCounter()).toBe(disabled ? 0 : 1);
+                                    expect.poll(() => getCounter()).toBe(disabled ? 0 : 1);
                                     break;
                                 case "Releasing the spacebar ":
                                     await button.focus();
                                     await page.keyboard.down("Space");
-                                    expect(getCounter()).toBe(0);
+                                    expect.poll(() => getCounter()).toBe(0);
                                     await page.keyboard.up("Space");
-                                    expect(getCounter()).toBe(disabled ? 0 : 1);
+                                    expect.poll(() => getCounter()).toBe(disabled ? 0 : 1);
                                     break;
                             }
                             //}

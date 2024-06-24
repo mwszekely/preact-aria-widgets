@@ -1,6 +1,6 @@
 import { useSearchParamStateDeclarative } from "preact-prop-helpers";
 import { useEffect, useRef } from "preact/hooks";
-import { fromStringNumber } from "./base.types.js";
+import { fromStringNumber } from "../util.js";
 
 export function TestBasesSanityCheck() {
 

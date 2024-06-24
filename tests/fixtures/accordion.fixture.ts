@@ -1,7 +1,7 @@
 
 import { Locator, expect } from "@playwright/test";
+import { fromStringNumber } from "../util.js";
 import { test as base } from "./base.fixture.js";
-import { fromStringNumber } from "./base.types.js";
 
 export const test = base.extend<{ accordion: { setAllOpen(open: boolean | null): Promise<void>, headers: Locator, headerButtons: Locator, sections: Locator, accordion: Locator, getChildCount: () => Promise<number> } }>({
     accordion: async ({ page, shared: { goToTest, run, getTestSyncState } }, use) => {

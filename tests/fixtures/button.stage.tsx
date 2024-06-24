@@ -1,6 +1,5 @@
-import { Button } from "../../dist/index.js";
-import { TestItem, useTestSyncState } from "../util.js";
-import { fromStringBoolean, fromStringString } from "./base.types.js";
+import { Button } from "../../dist/preact/index.js";
+import { TestItem, fromStringBoolean, fromStringString, useTestSyncState } from "../util.js";
 
 export function TestBasesButton() {
     const [disabledType] = useTestSyncState("Button", "setDisabledType", "soft", fromStringString);

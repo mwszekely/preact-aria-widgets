@@ -1,7 +1,6 @@
 import { useMergedProps } from "preact-prop-helpers";
-import { Gridlist, GridlistChild, GridlistRow, GridlistRows } from "../../dist/index.js";
-import { TestItem, useTestSyncState } from "../util.js";
-import { MissingIndex, fromStringNumber, fromStringString } from "./base.types.js";
+import { Gridlist, GridlistChild, GridlistRow, GridlistRows } from "../../dist/preact/index.js";
+import { MissingIndex, TestItem, fromStringNumber, fromStringString, useTestSyncState } from "../util.js";
 import { WithColSpanIndex, WithFocusableIndex } from "./gridlist.types.js";
 export function TestBasesGridlist() {
     const [childCount] = useTestSyncState("Accordion", "setChildCount", 10, fromStringNumber);

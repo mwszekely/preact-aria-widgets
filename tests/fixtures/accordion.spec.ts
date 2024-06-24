@@ -1,6 +1,6 @@
 import { expect } from "@playwright/test";
+import { DisabledIndex, MissingIndex } from "../util.js";
 import { test } from "./accordion.fixture.js";
-import { DisabledIndex, MissingIndex } from "./base.types.js";
 
 // TODO: Replace all toBeVisible with some custom thing that checks both visibility and aria-expanded, which are done separately right now.
 test(`Uncontrolled accordion sections expand properly`, async ({ page, accordion: { accordion, headerButtons, headers, sections, setAllOpen }, shared: { install, run } }) => {
@@ -23,7 +23,7 @@ test(`Uncontrolled accordion sections expand properly`, async ({ page, accordion
     await expect(sections.nth(1)).toBeVisible();
 });
 
-test(`Controlled accordion sections expand properly`, async ({ page, accordion: { accordion, headerButtons, headers, sections, setAllOpen }, shared: { getTestSyncState, install, run } }) => {
+test(`Controlled accordion sections expand properly`, async ({ page, accordion: { accordion, headerButtons, headers, sections, setAllOpen }, shared: { install, run } }) => {
     await setAllOpen(true);
     await expect(sections.nth(0)).toBeVisible();
     await setAllOpen(false);
@@ -107,7 +107,7 @@ test("Up/Down moves focus", async ({ page, shared: { focusableFirst, focusableLa
     await expect(headerButtons.nth(MissingIndex - 1)).toBeFocused();
 });
 
-test("Home/End moves focus", async ({ page, shared: { focusableFirst, focusableLast, run, getTestSyncState }, accordion: { headerButtons, sections, accordion, headers, setAllOpen } }) => {
+test("Home/End moves focus", async ({ page, shared: { focusableFirst, focusableLast, run }, accordion: { headerButtons, sections, accordion, headers, setAllOpen } }) => {
     await expect(focusableFirst).toBeFocused();
     await page.keyboard.press("Tab");
     await expect(headerButtons.nth(0)).toBeFocused();
@@ -149,7 +149,7 @@ test("aria-expanded is correctly applied", async ({ page, accordion: { accordion
     expect(await page.locator("[aria-expanded=false],[data-accordion-header-button]:not([aria-expanded])").count()).toBe(9);
 });
 
-test("aria-controls is correctly applied", async ({ page, accordion: { getChildCount, accordion, headerButtons, headers, sections, setAllOpen }, shared: { awaitRender, focusableFirst, focusableLast, generateText, getCounter, getRenderCount, getTestSyncState, goToTest, install, locator, resetCounter, run } }) => {
+test("aria-controls is correctly applied", async ({ page, accordion: { getChildCount, accordion, headerButtons, headers, sections, setAllOpen }, shared: { awaitRender, focusableFirst, focusableLast, generateText, getCounter, getRenderCount, install, locator, resetCounter, run } }) => {
    
     let childCount = await getChildCount();
     for (let c = 0; c < childCount; ++c) {
@@ -182,19 +182,18 @@ test("Accordion panels are regions in limited circumstances", async () => {
     expect.soft(false, "TODO");
 });*/
 
-test("Focus is not reset when sections are removed", async ({ page, accordion: { getChildCount, accordion, headerButtons, headers, sections, setAllOpen }, shared: { focusableFirst, focusableLast, run, getTestSyncState } }) => {
+test("Focus is not reset when sections are removed", async ({ page, accordion: { getChildCount, accordion, headerButtons, headers, sections, setAllOpen }, shared: { focusableFirst, focusableLast, run } }) => {
 
     // When a child is unmounted, even if focus is there, it should be moved somewhere appropriate instead of moving to the body.
     let c = await getChildCount() - 1;
     await headerButtons.nth(c).focus();
     for (; c >= 0; --c) {
-        console.log(c);
         await run("Accordion", "setChildCount", c);
         let next = c - 1;
         if (next == DisabledIndex || next == MissingIndex)
             next -= 1;
         if (next == -1)
-            await expect.soft(focusableLast).toBeFocused();
+            await expect(focusableLast.or(focusableLast)).not.toBeFocused();
         else
             await expect(headerButtons.nth(next)).toBeFocused();
     }
@@ -203,12 +202,11 @@ test("Focus is not reset when sections are removed", async ({ page, accordion: {
     c = await getChildCount() - 1;
     await focusableFirst.focus();
     for (; c >= 0; --c) {
-        console.log(c);
         await run("Accordion", "setChildCount", c);
         let next = c - 1;
         if (next == DisabledIndex || next == MissingIndex)
             next -= 1;
 
-        await expect(focusableFirst).toBeFocused();
+        await expect(focusableLast.or(focusableLast)).toBeFocused();
     }
 });

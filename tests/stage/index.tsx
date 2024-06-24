@@ -1,14 +1,13 @@
 import { render } from "preact";
 import { useSearchParamStateDeclarative } from "preact-prop-helpers";
-import { useEffect } from "preact/hooks";
+import { useEffect, useRef } from "preact/hooks";
 import { TestBasesAccordion } from "../fixtures/accordion.stage.js";
-import { SharedFixtures } from "../fixtures/base.fixture.js";
-import { TestBasesSanityCheck } from "../fixtures/base.stage.js";
-import { TestingConstants } from "../fixtures/base.types.js";
+import type { SharedFixtures } from "../fixtures/base.fixture.js";
 import { TestBasesButton } from "../fixtures/button.stage.js";
 import { TestBasesGridlist } from "../fixtures/gridlist.stage.js";
 import { TestBasesToolbar } from "../fixtures/toolbar.stage.js";
-import { TestItem } from "../util.js";
+import { TestItem, TestingConstants, fromStringNumber } from "../util.js";
+
 
 declare module globalThis {
     let installTestingHandler: <K extends keyof TestingConstants, K2 extends keyof TestingConstants[K]>(key: K, Key2: K2, func: TestingConstants[K][K2]) => void;
@@ -61,6 +60,27 @@ function TestBasesMenu() {
     )
 }
 */
+function TestBasesSanityCheck() {
+
+    let which = useRef(9);
+    const [s, setS] = useSearchParamStateDeclarative({ key: "sanity-check", initialValue: 9, stringToValue: fromStringNumber, defaultReason: "replace" });
+
+    console.assert(s == which.current);
+    console.assert(new URL(window.location.toString()).searchParams.get("sanity-check") == (which.current as number | string));
+
+    useEffect(() => {
+        which.current = 10;
+        setS(10);
+    }, []);
+
+    // Please, it's 2023, this should never ever fail, surely, please. (please)
+    return (
+        <>
+            <div class="default">default</div>
+            <div class="encoding">符号化テスト</div>
+        </>
+    )
+}
 
 const TestBases = {
     "sanity-check": <TestBasesSanityCheck />,
@@ -83,7 +103,6 @@ declare module "preact-prop-helpers" {
 }
 
 function TestsContainer() {
-//    const [bool, setBool, getBool] = useSearchParamStateDeclarative({ key: "test-bool", initialValue: null, stringToValue: fromStringBoolean });
     const [base, setBase, getBase] = useSearchParamStateDeclarative({ key: "test-base", initialValue: "", stringToValue: value => value });
 
     useEffect(() => {

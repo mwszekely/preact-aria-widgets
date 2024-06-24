@@ -1,6 +1,5 @@
-import { Accordion, AccordionSection, Heading } from "../../dist/index.js";
-import { TestItem, useTestSyncState } from "../util.js";
-import { DisabledIndex, MissingIndex, fromStringNumber, fromStringString } from "./base.types.js";
+import { Accordion, AccordionSection, Heading } from "../../dist/preact/index.js";
+import { DisabledIndex, MissingIndex, TestItem, fromStringNumber, fromStringString, useTestSyncState } from "../util.js";
 
 export function TestBasesAccordion() {
     const [childCount] = useTestSyncState("Accordion", "setChildCount", 10, fromStringNumber);

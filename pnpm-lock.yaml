@@ -16,14 +16,14 @@ dependencies:
     version: 10.22.0
   preact-prop-helpers:
     specifier: github:mwszekely/preact-prop-helpers
-    version: github.com/mwszekely/preact-prop-helpers/b21cbbd4f30e1930d8ed9d48c741da664a536040(preact@10.22.0)(react-dom@18.3.1)(react@18.3.1)
+    version: github.com/mwszekely/preact-prop-helpers/cdd899d432d128311922ccb955c652214f05c7a4(preact@10.22.0)(react-dom@18.3.1)(react@18.3.1)
   react:
     specifier: ^18.3.1
     version: 18.3.1
 
 devDependencies:
   '@playwright/test':
-    specifier: ^1.41.2
+    specifier: ^1.44.1
     version: 1.44.1
   '@rollup/plugin-commonjs':
     specifier: ^25.0.7
@@ -2473,9 +2473,9 @@ packages:
       tslib: 2.6.3
     dev: false
 
-  github.com/mwszekely/preact-prop-helpers/b21cbbd4f30e1930d8ed9d48c741da664a536040(preact@10.22.0)(react-dom@18.3.1)(react@18.3.1):
-    resolution: {tarball: https://codeload.github.com/mwszekely/preact-prop-helpers/tar.gz/b21cbbd4f30e1930d8ed9d48c741da664a536040}
-    id: github.com/mwszekely/preact-prop-helpers/b21cbbd4f30e1930d8ed9d48c741da664a536040
+  github.com/mwszekely/preact-prop-helpers/cdd899d432d128311922ccb955c652214f05c7a4(preact@10.22.0)(react-dom@18.3.1)(react@18.3.1):
+    resolution: {tarball: https://codeload.github.com/mwszekely/preact-prop-helpers/tar.gz/cdd899d432d128311922ccb955c652214f05c7a4}
+    id: github.com/mwszekely/preact-prop-helpers/cdd899d432d128311922ccb955c652214f05c7a4
     name: preact-prop-helpers
     version: 0.0.1
     peerDependencies:
