@@ -8,11 +8,11 @@ import {
     UseAsyncHandlerParameters,
     UseAsyncHandlerReturnType,
     useMergedProps,
+    useMonitoring,
     VNode
 } from "preact-prop-helpers";
 import {
     ElementToTag,
-    monitored,
     OmitStrong,
     Prefices
 } from "./props.js";
@@ -43,7 +43,7 @@ export interface UseProgressReturnType<ProgressElement extends Element, Progress
  * 
  * @compositeParams
  */
-export const useProgress = /* @__PURE__ */ monitored(function useProgress<ProgressElement extends Element, LabelElement extends Element>({
+export function useProgress<ProgressElement extends Element, LabelElement extends Element>({
     labelParameters,
     progressIndicatorParameters: {
         max,
@@ -54,72 +54,73 @@ export const useProgress = /* @__PURE__ */ monitored(function useProgress<Progre
     },
     ...void2
 }: UseProgressParameters<ProgressElement, LabelElement>): UseProgressReturnType<ProgressElement, LabelElement> {
+    return useMonitoring(function useProgress(): UseProgressReturnType<ProgressElement, LabelElement> {
+        const {
+            propsInput,
+            propsLabel,
+            randomIdInputReturn,
+            randomIdLabelReturn,
+            pressReturn,
+            ...void3
+        } = useLabelSynthetic<ProgressElement, LabelElement>({
+            labelParameters: { ...labelParameters, onLabelClick: null },
+            randomIdInputParameters: { prefix: Prefices.progressIndicator },
+            randomIdLabelParameters: { prefix: Prefices.progressLabel }
+        });
 
-    const {
-        propsInput,
-        propsLabel,
-        randomIdInputReturn,
-        randomIdLabelReturn,
-        pressReturn,
-        ...void3
-    } = useLabelSynthetic<ProgressElement, LabelElement>({
-        labelParameters: { ...labelParameters, onLabelClick: null },
-        randomIdInputParameters: { prefix: Prefices.progressIndicator },
-        randomIdLabelParameters: { prefix: Prefices.progressLabel }
+        // This isn't an input in the usual sense -- it's not tabbable.
+        // TODO: Make this an option in the hook itself
+        propsInput.tabIndex = -1;
+
+        const busy = value && value != "disabled"; //value == "disabled" || !value? false : true;// (!!value);
+        const disabled = (value == "disabled");
+        if (typeof value != "number") {
+            value = null!;
+            max ??= 100;
+        }
+        const indicatorProps: ElementProps<ProgressElement> = tagProgressIndicator === "progress" ?
+            {
+                max,
+                value: (value ?? undefined),
+                "aria-valuemin": 0,
+                "aria-valuenow": value == null ? undefined : value,
+            } as {}
+            :
+            {
+                "aria-valuemin": 0,
+                "aria-valuemax": max == null ? undefined : max,
+                "aria-valuetext": valueText == null ? undefined : `${valueText}`,
+                "aria-valuenow": value == null ? undefined : value,
+                role: "progressbar"
+            } as {};
+
+        if (disabled) {
+            indicatorProps["aria-hidden"] = true;
+        }
+
+        const labelProps: ElementProps<LabelElement> = {
+            "aria-hidden": (!busy ? "true" : undefined)
+        };
+
+        const regionProps: ElementProps<any> = {
+            "aria-busy": !!(busy),
+            "aria-describedby": randomIdInputReturn.id
+        }
+
+        assertEmptyObject(void1);
+        assertEmptyObject(void2);
+        assertEmptyObject(void3);
+
+        return {
+            propsProgressIndicator: useMergedProps(indicatorProps, propsInput),
+            propsProgressLabel: useMergedProps(labelProps, propsLabel),
+            propsProgressRegion: regionProps,
+            randomIdInputReturn,
+            randomIdLabelReturn,
+            pressReturn,
+        }
     });
-
-    // This isn't an input in the usual sense -- it's not tabbable.
-    // TODO: Make this an option in the hook itself
-    propsInput.tabIndex = -1;
-
-    const busy = value && value != "disabled"; //value == "disabled" || !value? false : true;// (!!value);
-    const disabled = (value == "disabled");
-    if (typeof value != "number") {
-        value = null!;
-        max ??= 100;
-    }
-    const indicatorProps: ElementProps<ProgressElement> = tagProgressIndicator === "progress" ?
-        {
-            max,
-            value: (value ?? undefined),
-            "aria-valuemin": 0,
-            "aria-valuenow": value == null ? undefined : value,
-        } satisfies ElementProps<ProgressElement>
-        :
-        {
-            "aria-valuemin": 0,
-            "aria-valuemax": max == null ? undefined : max,
-            "aria-valuetext": valueText == null ? undefined : `${valueText}`,
-            "aria-valuenow": value == null ? undefined : value,
-            role: "progressbar"
-        } satisfies ElementProps<ProgressElement>;
-
-    if (disabled) {
-        indicatorProps["aria-hidden"] = true;
-    }
-
-    const labelProps: ElementProps<LabelElement> = {
-        "aria-hidden": (!busy ? "true" : undefined)
-    };
-
-    const regionProps: ElementProps<any> = {
-        "aria-busy": !!(busy),
-        "aria-describedby": randomIdInputReturn.id
-    }
-
-    assertEmptyObject(void1);
-    assertEmptyObject(void2);
-    assertEmptyObject(void3);
-
-    return {
-        propsProgressIndicator: useMergedProps(indicatorProps, propsInput),
-        propsProgressLabel: useMergedProps(labelProps, propsLabel),
-        propsProgressRegion: regionProps,
-        randomIdInputReturn,
-        randomIdLabelReturn,
-        pressReturn,
-    }
-})
+}
 
 export interface UseProgressWithHandlerParametersSelf {
     /** If true, the progress bar will always read as at least having an indeterminate value. Nothing is announced to ATs when this changes. */
@@ -154,63 +155,65 @@ export interface UseProgressWithHandlerReturnType<EventType, CaptureType, Indica
  * 
  * @compositeParams
  */
-export const useProgressWithHandler = /* @__PURE__ */ monitored(function useProgressWithHandler<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element>({
+export function useProgressWithHandler<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element>({
     labelParameters,
     progressIndicatorParameters,
     asyncHandlerParameters: { asyncHandler, ...asyncHandlerParameters },
     progressWithHandlerParameters: { forciblyPending, notifyFailure, notifyPending, notifySuccess, ...void1 },
     ...void2
 }: UseProgressWithHandlerParameters<EventType, CaptureType, IndicatorElement, LabelElement>): UseProgressWithHandlerReturnType<EventType, CaptureType, IndicatorElement, LabelElement> {
-    assertEmptyObject(void1);
-    assertEmptyObject(void2);
+    return useMonitoring(function useProgressWithHandler(): UseProgressWithHandlerReturnType<EventType, CaptureType, IndicatorElement, LabelElement> {
+        assertEmptyObject(void1);
+        assertEmptyObject(void2);
 
-    const notify = useNotify();
+        const notify = useNotify();
 
-    const asyncInfo = useAsyncHandler({
-        ...asyncHandlerParameters,
-        asyncHandler: (...args) => {
-            try {
-                let promiseOrValue = asyncHandler?.(...args);
-                if (promiseOrValue && "then" in promiseOrValue) {
-                    if (notifyPending)
-                        notify("assertive", notifyPending);
-                    return promiseOrValue.then((value) => {
-                        if (notifySuccess)
-                            notify("assertive", notifySuccess);
-                        return value;
-                    });
+        const asyncInfo = useAsyncHandler({
+            ...asyncHandlerParameters,
+            asyncHandler: (...args) => {
+                try {
+                    let promiseOrValue = asyncHandler?.(...args);
+                    if (promiseOrValue && "then" in promiseOrValue) {
+                        if (notifyPending)
+                            notify("assertive", notifyPending);
+                        return promiseOrValue.then((value) => {
+                            if (notifySuccess)
+                                notify("assertive", notifySuccess);
+                            return value;
+                        });
+                    }
+                    return promiseOrValue;
                 }
-                return promiseOrValue;
+                catch (ex) {
+                    if (notifyFailure)
+                        notify("assertive", notifyFailure);
+                    throw ex;
+                }
             }
-            catch (ex) {
-                if (notifyFailure)
-                    notify("assertive", notifyFailure);
-                throw ex;
-            }
+        });
+
+
+        const {
+            propsProgressIndicator,
+            propsProgressLabel,
+            propsProgressRegion
+        } = useProgress<IndicatorElement, LabelElement>({
+            labelParameters,
+            progressIndicatorParameters: {
+                max: 1,
+                value: (forciblyPending || asyncInfo.pending) ? "indeterminate" : "disabled",
+                valueText: null,
+                ...progressIndicatorParameters
+            },
+        });
+
+        return {
+            propsProgressIndicator,
+            propsProgressLabel,
+            propsProgressRegion,
+            asyncHandlerReturn: asyncInfo
         }
     });
-
-
-    const {
-        propsProgressIndicator,
-        propsProgressLabel,
-        propsProgressRegion
-    } = useProgress<IndicatorElement, LabelElement>({
-        labelParameters,
-        progressIndicatorParameters: {
-            max: 1,
-            value: (forciblyPending || asyncInfo.pending) ? "indeterminate" : "disabled",
-            valueText: null,
-            ...progressIndicatorParameters
-        },
-    });
-
-    return {
-        propsProgressIndicator,
-        propsProgressLabel,
-        propsProgressRegion,
-        asyncHandlerReturn: asyncInfo
-    }
-})
+}
 
 

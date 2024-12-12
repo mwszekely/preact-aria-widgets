@@ -1,11 +1,13 @@
-import { assertEmptyObject, createContext, memo } from "preact-prop-helpers";
+import { assertEmptyObject, createContext, identity, memo, useEnsureStability } from "preact-prop-helpers";
 import { useContextWithWarning } from "../props.js";
 import { useRadio, useRadioGroup } from "../use-radio-group.js";
 import { useComponent, useDefault } from "./util.js";
 const RadioContext = createContext(null);
 //const ProcessedChildrenContext = createContext<UseProcessedChildrenContext>(null!);
-export const RadioGroup = /* @__PURE__ */ memo((function RadioGroup({ render, name, collator, disableHomeEndKeys, arrowKeyDirection, noTypeahead, typeaheadTimeout, ariaLabel, navigatePastEnd, navigatePastStart, selectedValue, untabbable, onTabbableIndexChange, onNavigateLinear, onNavigateTypeahead, pageNavigationSize, onElementChange, onMount, onUnmount, imperativeHandle, onSelectedValueChange, singleSelectionMode, ...void1 }) {
+export const RadioGroup = /* @__PURE__ */ memo((function RadioGroup({ render, name, collator, disableHomeEndKeys, arrowKeyDirection, noTypeahead, typeaheadTimeout, ariaLabel, navigatePastEnd, navigatePastStart, selectedValue, untabbable, onTabbableIndexChange, onNavigateLinear, onNavigateTypeahead, pageNavigationSize, onElementChange, onMount, onUnmount, imperativeHandle, onSelectedValueChange, singleSelectionMode, getSortValueAt, compare, getIndex, ...void1 }) {
     untabbable ??= false;
+    getSortValueAt ??= identity;
+    useEnsureStability("RadioGroup", getSortValueAt);
     assertEmptyObject(void1);
     return useComponent(imperativeHandle, render, RadioContext, useRadioGroup({
         singleSelectionParameters: { singleSelectionMode: singleSelectionMode ?? "focus" },
@@ -30,6 +32,11 @@ export const RadioGroup = /* @__PURE__ */ memo((function RadioGroup({ render, na
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
         },
         refElementParameters: { onElementChange, onMount, onUnmount },
+        processedIndexManglerParameters: {
+            getSortValueAt,
+            compare,
+            getIndex: useDefault("getIndex", getIndex)
+        }
     }));
 }));
 export const Radio = /* @__PURE__ */ memo((function Radio({ disabled, index, render, value, ariaLabel, labelPosition, untabbable, tagInput, tagLabel, getText, longPressThreshold, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, imperativeHandle, onTextContentChange, ...void1 }) {

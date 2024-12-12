@@ -1,105 +1,129 @@
-import { CompleteGridNavigationCellContext, CompleteGridNavigationRowContext, ElementProps, Nullable, PassiveStateUpdater, SingleSelectionContextSelf, TargetedOmit, TargetedPick, UseCompleteGridNavigationCellInfo, UseCompleteGridNavigationCellInfoKeysParameters, UseCompleteGridNavigationCellParameters, UseCompleteGridNavigationCellReturnType, UseCompleteGridNavigationParameters, UseCompleteGridNavigationReturnType, UseCompleteGridNavigationRowInfo, UseCompleteGridNavigationRowParameters, UseCompleteGridNavigationRowReturnType, UseCompleteListNavigationParameters, UseGenericChildParameters, UseMultiSelectionContextSelf } from "preact-prop-helpers";
-import { ElementToTag, OmitStrong } from "./props.js";
-import { UseLabelSyntheticParameters } from "./use-label.js";
-export interface UseTableContextSelf extends Pick<SingleSelectionContextSelf, "singleSelectionMode">, Pick<UseMultiSelectionContextSelf, "multiSelectionMode"> {
-    setSortBodyFunction: PassiveStateUpdater<() => void, never>;
-    sortByColumn(column: number): SortInfo;
-    getCurrentSortColumn(): number | null;
-    getCurrentSortDirection(): SortDirection;
-}
-export interface UseTableContext {
-    tableContext: UseTableContextSelf;
-}
-export interface UseTableSectionContext<TableRowElement extends Element, RM extends TableRowInfo<TableRowElement>> extends CompleteGridNavigationRowContext<TableRowElement, RM>, UseTableContext {
-}
-export interface UseTableSectionParametersSelf<TableSectionElement extends Element> {
-    location: "head" | "body" | "foot";
-    tagTableSection: ElementToTag<TableSectionElement>;
-}
-export interface UseTableSectionParameters<TableSectionElement extends Element, TableRowElement extends Element, RM extends TableRowInfo<TableRowElement>> extends OmitStrong<UseCompleteGridNavigationParameters<TableSectionElement, TableRowElement, RM>, "rovingTabIndexParameters" | "singleSelectionParameters" | "multiSelectionParameters">, TargetedOmit<UseCompleteGridNavigationParameters<TableSectionElement, TableRowElement, RM>, "singleSelectionParameters", "singleSelectionMode">, TargetedOmit<UseCompleteGridNavigationParameters<TableSectionElement, TableRowElement, RM>, "multiSelectionParameters", "multiSelectionMode">, TargetedOmit<UseCompleteGridNavigationParameters<TableSectionElement, TableRowElement, RM>, "rovingTabIndexParameters", "focusSelfParent"> {
-    tableSectionParameters: UseTableSectionParametersSelf<TableSectionElement>;
-    contextChildren: UseTableContext;
-}
-export interface UseTableSectionReturnType<TableSectionElement extends Element, TableRowElement extends Element, RM extends TableRowInfo<TableRowElement>> extends OmitStrong<UseCompleteGridNavigationReturnType<TableSectionElement, TableRowElement, RM>, "props"> {
-    propsTableSection: ElementProps<TableSectionElement>;
-    contextChildren: UseTableSectionContext<TableRowElement, RM>;
-}
-export interface UseTableRowReturnType<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement>, CM extends TableCellInfo<TableCellElement>> extends OmitStrong<UseCompleteGridNavigationRowReturnType<TableRowElement, TableCellElement, RM, CM>, "context"> {
-    context: UseTableRowContext<TableCellElement, CM>;
-}
-export interface UseTableRowParametersSelf<TableRowElement extends Element> {
-    /**
-     * When the `selectionLimit` is `"single"`, this must be `null`.
-     */
-    selected: Nullable<boolean>;
-    tagTableRow: ElementToTag<TableRowElement>;
-}
-export interface UseTableRowParameters<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement>, CM extends TableCellInfo<TableCellElement>> extends OmitStrong<UseCompleteGridNavigationRowParameters<TableRowElement, TableCellElement, RM, CM>, "rovingTabIndexParameters" | "typeaheadNavigationParameters" | "info">, TargetedOmit<UseCompleteGridNavigationRowParameters<TableRowElement, TableCellElement, RM, CM>, "rovingTabIndexParameters", never> {
-    context: UseTableSectionContext<TableRowElement, RM>;
-    tableRowParameters: UseTableRowParametersSelf<TableRowElement>;
-    info: OmitStrong<UseCompleteGridNavigationRowParameters<TableRowElement, TableCellElement, RM, CM>["info"], never>;
-}
-export interface UseTableRowContext<TableCellElement extends Element, M extends TableCellInfo<TableCellElement>> extends CompleteGridNavigationCellContext<TableCellElement, M> {
-    tableContext: UseTableContext["tableContext"];
-}
-export interface UseTableCellReturnTypeSelf {
-    sortByThisColumn(): SortInfo;
-}
-export interface UseTableCellReturnType<TableCellElement extends Element, CM extends TableCellInfo<TableCellElement>> extends OmitStrong<UseCompleteGridNavigationCellReturnType<TableCellElement, CM>, "props"> {
-    propsCell: ElementProps<TableCellElement>;
-    propsFocus: ElementProps<any>;
-    tableCellReturn: UseTableCellReturnTypeSelf;
-}
-export interface UseTableCellParametersSelf<TableCellElement extends Element> {
-    tagTableCell: ElementToTag<TableCellElement>;
-}
-export interface UseTableCellParameters<TableCellElement extends Element, CM extends TableCellInfo<TableCellElement>> extends UseGenericChildParameters<UseTableRowContext<TableCellElement, CM>, Pick<CM, UseCompleteGridNavigationCellInfoKeysParameters<CM>>>, OmitStrong<UseCompleteGridNavigationCellParameters<TableCellElement, CM>, "info" | "context"> {
-    tableCellParameters: UseTableCellParametersSelf<TableCellElement>;
-}
-export interface TableRowInfo<TableRowElement extends Element> extends UseCompleteGridNavigationRowInfo<TableRowElement> {
-}
-export interface TableCellInfo<TableCellElement extends Element> extends UseCompleteGridNavigationCellInfo<TableCellElement> {
-    getSortValue(): unknown;
-}
-export interface UseTableParameters<TableElement extends Element> extends TargetedPick<UseCompleteListNavigationParameters<any, any, any>, "singleSelectionParameters", "singleSelectionMode">, TargetedPick<UseCompleteListNavigationParameters<any, any, any>, "multiSelectionParameters", "multiSelectionMode">, TargetedOmit<UseLabelSyntheticParameters, "labelParameters", "onLabelClick"> {
-    tableParameters: UseTableParametersSelf<TableElement>;
-}
-export interface UseTableParametersSelf<TableElement extends Element> {
-    tagTable: ElementToTag<TableElement>;
-}
-export interface UseTableReturnType<TableElement extends Element, LabelElement extends Element> {
-    propsTable: ElementProps<TableElement>;
-    propsLabel: ElementProps<LabelElement>;
-    context: UseTableContext;
-}
+import { CompleteGridNavigationCellContext, CompleteGridNavigationRowContext, ElementProps, Nullable, OmitStrong, PassiveStateUpdater, TargetedOmit, UseCompleteGridNavigationCellInfo, UseCompleteGridNavigationCellParameters, UseCompleteGridNavigationCellReturnType, UseCompleteGridNavigationParameters, UseCompleteGridNavigationReturnType, UseCompleteGridNavigationRowInfo, UseCompleteGridNavigationRowInfoKeysParameters, UseCompleteGridNavigationRowParameters, UseCompleteGridNavigationRowReturnType, UseCompleteGridNavigationRowsContext, UseCompleteGridNavigationRowsInfo, UseCompleteGridNavigationRowsParameters, UseCompleteGridNavigationRowsReturnType, UseProcessedChildParameters, UseProcessedChildReturnType, UseRefElementParameters, UseRefElementReturnType } from "preact-prop-helpers";
+import { ElementToTag } from "./props.js";
+import { UseLabelReturnType, UseLabelSyntheticParameters } from "./use-label.js";
 export type SortDirection = "ascending" | "descending";
 interface SortInfo {
     column: number;
     direction: SortDirection;
 }
+export interface TableSectionInfo<TableRowElement extends Element> extends UseCompleteGridNavigationRowsInfo<TableRowElement> {
+}
+export interface TableRowInfo<TableRowElement extends Element> extends UseCompleteGridNavigationRowInfo<TableRowElement> {
+}
+export interface TableCellInfo<TableCellElement extends Element> extends UseCompleteGridNavigationCellInfo<TableCellElement> {
+}
+export interface UseTableParametersSelf<TableElement extends Element> {
+    tagTable: ElementToTag<TableElement>;
+    initiallySortedColumn: Nullable<number>;
+}
+export interface UseTableParameters<TableElement extends Element, RowElement extends Element, RM extends TableRowInfo<RowElement> = TableRowInfo<RowElement>> extends OmitStrong<UseCompleteGridNavigationParameters<TableElement, RowElement, RM>, "rovingTabIndexParameters" | "gridNavigationCompleteParameters">, TargetedOmit<UseCompleteGridNavigationParameters<TableElement, RowElement, RM>, "rovingTabIndexParameters", "focusSelfParent">, TargetedOmit<UseCompleteGridNavigationParameters<TableElement, RowElement, RM>, "gridNavigationCompleteParameters", "getSortColumn">, TargetedOmit<UseLabelSyntheticParameters, "labelParameters", "onLabelClick"> {
+    tableParameters: UseTableParametersSelf<TableElement>;
+}
+export interface UseTableReturnTypeSelf {
+    sortByColumn: (column: number) => SortInfo;
+}
+export interface UseTableReturnType<TableElement extends Element, RowElement extends Element, LabelElement extends Element, RM extends TableRowInfo<RowElement> = TableRowInfo<RowElement>> extends OmitStrong<UseCompleteGridNavigationReturnType<TableElement, RowElement, RM>, "props">, Pick<UseLabelReturnType<TableElement, LabelElement>, "propsLabel"> {
+    tableReturn: UseTableReturnTypeSelf;
+    propsTable: ElementProps<TableElement>;
+    context: UseTableRowContext<RowElement, RM>;
+}
+export interface UseTableContextSelf {
+    setRefreshRowsFunction: PassiveStateUpdater<() => void, never>;
+    sortByColumn: UseTableReturnTypeSelf["sortByColumn"];
+    getCurrentSortColumn(): number | undefined;
+    getCurrentSortDirection(): SortDirection;
+}
+export interface UseTableProcessedChildrenContextSelf {
+    location: "head" | "body" | "foot";
+}
+export interface UseTableSectionParametersSelf<TableSectionElement extends Element> {
+    tagTableSection: ElementToTag<TableSectionElement>;
+}
+export interface UseTableRowContext<RowElement extends Element, RM extends TableRowInfo<RowElement>> extends CompleteGridNavigationRowContext<RowElement, RM> {
+    tableContext: UseTableContextSelf;
+}
+export interface UseTableProcessedChildrenContext<RowElement extends Element, RsM extends TableSectionInfo<RowElement>> extends UseCompleteGridNavigationRowsContext<RowElement, RsM> {
+    tableProcessedChildren: UseTableProcessedChildrenContextSelf;
+}
+export interface UseTableBodyParameters<TableSectionElement extends Element, RowElement extends Element, RM extends UseCompleteGridNavigationRowInfo<RowElement>, RsM extends TableSectionInfo<RowElement>> extends OmitStrong<UseCompleteGridNavigationRowsParameters<RowElement, RM, RsM>, "rearrangeableChildrenParameters">, TargetedOmit<UseCompleteGridNavigationRowsParameters<RowElement, RM, RsM>, "rearrangeableChildrenParameters", never> {
+    tableSectionParameters: UseTableSectionParametersSelf<TableSectionElement>;
+    context: UseTableRowContext<RowElement, RM>;
+}
+export interface UseTableBodyReturnType<TableSectionElement extends Element, RowElement extends Element, RsM extends TableSectionInfo<RowElement>> extends UseCompleteGridNavigationRowsReturnType<RowElement, RsM> {
+    context: UseTableProcessedChildrenContext<RowElement, RsM>;
+    propsTableSection: ElementProps<TableSectionElement>;
+}
+type UseTableRowInfoKeysParameters<RM extends TableRowInfo<any>> = UseCompleteGridNavigationRowInfoKeysParameters<RM>;
+export interface UseTableCellContext<CellElement extends Element, CM extends TableCellInfo<CellElement>> extends CompleteGridNavigationCellContext<CellElement, CM> {
+    tableContext: UseTableContextSelf;
+}
+export interface UseTableRowParametersSelf<TableRowElement extends Element> {
+    selected: Nullable<boolean>;
+    tagTableRow: ElementToTag<TableRowElement>;
+}
+export interface UseTableRowParameters<RowElement extends Element, CellElement extends Element, RM extends TableRowInfo<RowElement>, CM extends TableCellInfo<CellElement>> extends OmitStrong<UseCompleteGridNavigationRowParameters<RowElement, CellElement, RM, CM>, "typeaheadNavigationParameters" | "info"> {
+    context: UseTableRowContext<RowElement, RM>;
+    tableRowParameters: UseTableRowParametersSelf<RowElement>;
+    info: Pick<RM, UseTableRowInfoKeysParameters<RM>>;
+}
+export interface UseTableRowReturnType<RowElement extends Element, CellElement extends Element, RM extends TableRowInfo<RowElement>, CM extends TableCellInfo<CellElement>> extends UseCompleteGridNavigationRowReturnType<RowElement, CellElement, RM, CM> {
+    context: UseTableCellContext<CellElement, CM>;
+}
+export interface UseTableCellParametersSelf<TableCellElement extends Element, CM extends TableCellInfo<TableCellElement>> {
+    tagTableCell: ElementToTag<TableCellElement>;
+}
+export interface UseTableCellReturnTypeSelf {
+    sortByThisColumn(): SortInfo;
+}
+export interface UseTableCellParameters<CellElement extends Element, CM extends TableCellInfo<CellElement>> extends UseCompleteGridNavigationCellParameters<CellElement, CM> {
+    tableCellParameters: UseTableCellParametersSelf<CellElement, CM>;
+    context: UseTableCellContext<CellElement, CM>;
+}
+export interface UseTableCellReturnType<CellElement extends Element, CM extends TableCellInfo<CellElement>> extends OmitStrong<UseCompleteGridNavigationCellReturnType<CellElement, CM>, "props"> {
+    propsCell: ElementProps<CellElement>;
+    propsFocus: ElementProps<any>;
+    tableCellReturn: UseTableCellReturnTypeSelf;
+}
 /**
- * Creates a sortable data table in a [Grid](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) pattern.
- *
- * @remarks Note that in many cases this is overkill. If you don't need sorting and navigation between cells of interactive content, then you can just use a regular &lt;table&gt;
- *
  * @compositeParams
- *
- * @hasChild {@link useTableSection}
- * @hasChild {@link useTableRow}
- * @hasChild {@link useTableCell}
  */
-export declare const useTable: <TableElement extends Element, LabelElement extends Element>({ labelParameters, tableParameters: { tagTable }, singleSelectionParameters: { singleSelectionMode, ...void1 }, multiSelectionParameters: { multiSelectionMode, ...void2 }, ...void3 }: UseTableParameters<TableElement>) => UseTableReturnType<TableElement, LabelElement>;
+export declare function useTable<TableElement extends Element, TableRowElement extends Element, LabelElement extends Element, RM extends TableRowInfo<TableRowElement>>({ gridNavigationParameters, linearNavigationParameters, multiSelectionParameters, paginatedChildrenParameters, refElementParameters, rovingTabIndexParameters, singleSelectionParameters, typeaheadNavigationParameters, labelParameters, tableParameters: { tagTable, initiallySortedColumn }, gridNavigationCompleteParameters: { getSortValueAt }, processedIndexManglerParameters }: UseTableParameters<TableElement, TableRowElement, RM>): UseTableReturnType<TableElement, TableRowElement, LabelElement, RM>;
+export interface UseTableHeadParametersSelf<TableSectionElement extends Element> {
+    tagHead: ElementToTag<TableSectionElement>;
+}
+export interface UseTableHeadReturnTypeSelf<TableSectionElement extends Element> {
+}
+export interface UseTableHeadParameters<TableSectionElement extends Element> {
+    tableHeadParameters: UseTableHeadParametersSelf<TableSectionElement>;
+}
+export interface UseTableHeadReturnType<TableSectionElement extends Element> {
+    props: ElementProps<TableSectionElement>;
+    tableHeadReturn: UseTableHeadReturnTypeSelf<TableSectionElement>;
+}
 /**
  * @compositeParams
  */
-export declare const useTableSection: <TableSectionElement extends Element, TableRowElement extends Element>({ linearNavigationParameters, rovingTabIndexParameters, singleSelectionParameters, multiSelectionParameters, gridNavigationParameters, paginatedChildrenParameters, tableSectionParameters: { tagTableSection, location }, typeaheadNavigationParameters, contextChildren: { tableContext, ...void3 }, refElementParameters, ...void1 }: UseTableSectionParameters<TableSectionElement, TableRowElement, TableRowInfo<TableRowElement>>) => UseTableSectionReturnType<TableSectionElement, TableRowElement, TableRowInfo<TableRowElement>>;
+export declare function useTableHead<TableSectionElement extends Element>({ tableHeadParameters: { tagHead: tagTableSection } }: UseTableHeadParameters<TableSectionElement>): UseTableHeadReturnType<TableSectionElement>;
 /**
  * @compositeParams
  */
-export declare const useTableRow: <TableRowElement extends Element, TableCellElement extends Element>({ info, textContentParameters, context: cx1, tableRowParameters: { selected }, linearNavigationParameters, rovingTabIndexParameters, hasCurrentFocusParameters, singleSelectionChildParameters, multiSelectionChildParameters, ...void1 }: UseTableRowParameters<TableRowElement, TableCellElement, TableRowInfo<TableRowElement>, TableCellInfo<TableCellElement>>) => UseTableRowReturnType<TableRowElement, TableCellElement, TableRowInfo<TableRowElement>, TableCellInfo<TableCellElement>>;
+export declare function useTableBody<TableSectionElement extends Element, RowElement extends Element, RM extends TableRowInfo<RowElement>, RsM extends TableSectionInfo<RowElement>>({ context: processedChildrenContext, managedChildrenParameters, paginatedChildrenParameters, rearrangeableChildrenParameters, staggeredChildrenParameters, tableSectionParameters: { tagTableSection } }: UseTableBodyParameters<TableSectionElement, RowElement, RM, RsM>): UseTableBodyReturnType<TableSectionElement, RowElement, RsM>;
+export interface UseTableRowOuterParameters<RowElement extends Element, RsM extends TableSectionInfo<RowElement>> extends OmitStrong<UseProcessedChildParameters<RowElement, RsM>, "info">, TargetedOmit<UseProcessedChildParameters<RowElement, RsM>, "info", "getElement">, UseRefElementParameters<RowElement> {
+}
+export interface UseTableRowOuterReturnType<RowElement extends Element, RsM extends TableSectionInfo<RowElement>> extends OmitStrong<UseProcessedChildReturnType<RowElement, RsM>, never>, OmitStrong<UseRefElementReturnType<RowElement>, "propsStable"> {
+    hide: boolean;
+}
 /**
  * @compositeParams
  */
-export declare const useTableCell: <TableCellElement extends Element>({ tableCellParameters: { tagTableCell }, info, ...p }: UseTableCellParameters<TableCellElement, TableCellInfo<TableCellElement>>) => UseTableCellReturnType<TableCellElement, TableCellInfo<TableCellElement>>;
+export declare function useTableRowOuter<RowElement extends Element, RsM extends TableSectionInfo<RowElement>>({ context, info: { ...info }, refElementParameters: { onElementChange: oec1, onMount, onUnmount }, rearrangeableChildParameters, ...void1 }: UseTableRowOuterParameters<RowElement, RsM>): UseTableRowOuterReturnType<RowElement, RsM>;
+/**
+ * @compositeParams
+ */
+export declare function useTableRow<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement>, CM extends TableCellInfo<TableCellElement>>({ info, textContentParameters, context: cx1, tableRowParameters: { selected }, linearNavigationParameters, rovingTabIndexParameters, hasCurrentFocusParameters, singleSelectionChildParameters, multiSelectionChildParameters, refElementParameters, ...void1 }: UseTableRowParameters<TableRowElement, TableCellElement, RM, CM>): UseTableRowReturnType<TableRowElement, TableCellElement, TableRowInfo<TableRowElement>, TableCellInfo<TableCellElement>>;
+/**
+ * @compositeParams
+ */
+export declare function useTableCell<TableCellElement extends Element>({ tableCellParameters: { tagTableCell }, info, context, gridNavigationCellParameters, textContentParameters, ...p }: UseTableCellParameters<TableCellElement, TableCellInfo<TableCellElement>>): UseTableCellReturnType<TableCellElement, TableCellInfo<TableCellElement>>;
 export {};
 //# sourceMappingURL=use-table.d.ts.map

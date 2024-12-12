@@ -17,12 +17,13 @@ import {
     useCompleteListNavigationDeclarative,
     useEffect, useLayoutEffect, useMemo,
     useMergedProps,
+    useMonitoring,
     useRef,
     useRefElement,
     useStableCallback,
     useState
 } from "preact-prop-helpers";
-import { EnhancedEventHandler, OmitStrong, Prefices, TargetedEnhancedEvent, enhanceEvent, monitored } from "./props.js";
+import { EnhancedEventHandler, OmitStrong, Prefices, TargetedEnhancedEvent, enhanceEvent } from "./props.js";
 import { UseCheckboxLikeParameters, UseCheckboxLikeReturnType, useCheckboxLike } from "./use-checkbox-like.js";
 import { FocusableLabelElement, LabelPosition, UseLabelSyntheticParameters, useLabelSynthetic } from "./use-label.js";
 
@@ -79,7 +80,7 @@ export interface UseRadioGroupReturnTypeSelf {
 }
 
 export interface UseRadioGroupReturnType<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, TabbableChildElement extends Element, M extends RadioSubInfo<TabbableChildElement, V> = RadioSubInfo<TabbableChildElement, V>> extends
-    OmitStrong<UseCompleteListNavigationDeclarativeReturnType<GroupElement, TabbableChildElement, M>, "contextChildren" | "contextProcessing" | "props" | "multiSelectionReturn"> {
+    OmitStrong<UseCompleteListNavigationDeclarativeReturnType<GroupElement, TabbableChildElement, M>, "context" | "props" | "multiSelectionReturn"> {
     radioGroupReturn: UseRadioGroupReturnTypeSelf;
     propsRadioGroup: ElementProps<GroupElement>;
     propsRadioGroupLabel: ElementProps<GroupLabelElement>;
@@ -101,7 +102,7 @@ export interface RadioSubInfo<TabbableChildElement extends Element, _V extends s
  * 
  * @hasChild {@link useRadio}
  */
-export const useRadioGroup = /* @__PURE__ */ monitored(function useRadioGroup<V extends string | number, G extends Element, GL extends Element, TCE extends Element, M extends RadioSubInfo<TCE, V> = RadioSubInfo<TCE, V>>({
+export function useRadioGroup<V extends string | number, G extends Element, GL extends Element, TCE extends Element, M extends RadioSubInfo<TCE, V> = RadioSubInfo<TCE, V>>({
     labelParameters,
     radioGroupParameters: { name, selectedValue, onSelectedValueChange, ...void2 },
     rovingTabIndexParameters,
@@ -109,9 +110,10 @@ export const useRadioGroup = /* @__PURE__ */ monitored(function useRadioGroup<V 
     typeaheadNavigationParameters,
     refElementParameters,
     singleSelectionParameters: { singleSelectionMode, ...void4 },
+    processedIndexManglerParameters,
     ...void1
 }: UseRadioGroupParameters<V, G, GL, TCE, M>): UseRadioGroupReturnType<V, G, GL, TCE, M> {
-
+    return useMonitoring(function useRadioGroup(): UseRadioGroupReturnType<V, G, GL, TCE, M>{
     // TODO: The way this is structured causes 1 extra re-render on the parent
     // when the selectedValue changes to selectedIndex.
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
@@ -136,7 +138,7 @@ export const useRadioGroup = /* @__PURE__ */ monitored(function useRadioGroup<V 
         });
 
     const {
-        contextChildren,
+        context,
         props: propsGroup2,
         singleSelectionReturn,
         multiSelectionReturn: _multiSelectionReturn,
@@ -146,7 +148,6 @@ export const useRadioGroup = /* @__PURE__ */ monitored(function useRadioGroup<V 
         rearrangeableChildrenReturn,
         typeaheadNavigationReturn,
         childrenHaveFocusReturn,
-        contextProcessing: _contextProcessing,
         refElementReturn,
         ...void3
     } = useCompleteListNavigationDeclarative<G, TCE, M>({
@@ -163,7 +164,8 @@ export const useRadioGroup = /* @__PURE__ */ monitored(function useRadioGroup<V 
         rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
         linearNavigationParameters,
         typeaheadNavigationParameters,
-        refElementParameters
+        refElementParameters,
+        processedIndexManglerParameters
     });
 
 
@@ -187,11 +189,12 @@ export const useRadioGroup = /* @__PURE__ */ monitored(function useRadioGroup<V 
         typeaheadNavigationReturn,
         childrenHaveFocusReturn,
         context: useMemo(() => ({
-            ...contextChildren,
+            ...context,
             radioContext: { name, indexToName: indexToName.current, nameToIndex: nameToIndex.current }
         }), [name]),
     }
-})
+});
+}
 
 export interface UseRadioReturnType<LP extends LabelPosition, V extends string | number, I extends Element, IL extends Element, M extends RadioSubInfo<FocusableLabelElement<LP, I, IL>, V>> extends OmitStrong<UseCompleteListNavigationChildDeclarativeReturnType<FocusableLabelElement<LP, I, IL>, M>, "propsChild" | "propsTabbable" | "pressParameters">, UseCheckboxLikeReturnType<I, IL> {
     propsInput: ElementProps<I>;
@@ -205,7 +208,7 @@ export interface UseRadioReturnType<LP extends LabelPosition, V extends string |
  * 
  * @compositeParams
  */
-export const useRadio = /* @__PURE__ */ monitored(function useRadio<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element, V extends string | number, M extends RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V> = RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>({
+export function useRadio<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element, V extends string | number, M extends RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V> = RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>({
     radioParameters: { value, ...void5 },
     checkboxLikeParameters: { disabled, ...void4 },
     labelParameters,
@@ -218,92 +221,94 @@ export const useRadio = /* @__PURE__ */ monitored(function useRadio<LP extends L
     ...void1
 
 }: UseRadioParameters<LP, V, InputElement, LabelElement, M>): UseRadioReturnType<LP, V, InputElement, LabelElement, M> {
-    type TabbableChildElement = FocusableLabelElement<LP, InputElement, LabelElement>;
-    const index = info.index;
+    return useMonitoring(function useRadio(): UseRadioReturnType<LP, V, InputElement, LabelElement, M> {
+        type TabbableChildElement = FocusableLabelElement<LP, InputElement, LabelElement>;
+        const index = info.index;
 
-    const { name, indexToName, nameToIndex } = context.radioContext
+        const { name, indexToName, nameToIndex } = context.radioContext
 
-    const { tagInput, labelPosition } = labelParameters;
-
-
-    const {
-        pressParameters: { excludeSpace, onPressSync },
-        singleSelectionChildReturn,
-        propsTabbable,
-        propsChild: listNavigationSingleSelectionChildProps,
-        ...listNavRet
-    } = useCompleteListNavigationChildDeclarative<TabbableChildElement, M>({
-        info: {
-            focusSelf: useStableCallback((_e) => { return checkboxLikeRet.checkboxLikeReturn.focusSelf(); }),
-            ...info
-        } as M,
-        context,
-        textContentParameters,
-        hasCurrentFocusParameters,
-        refElementParameters,
-        singleSelectionChildParameters: { singleSelectionDisabled: !!disabled },
-        multiSelectionChildParameters: { multiSelectionDisabled: true },
-        multiSelectionChildDeclarativeParameters: { multiSelected: null, onMultiSelectedChange: null }
-    });
-
-    assertEmptyObject(void1);
-    assertEmptyObject(void3);
-    assertEmptyObject(void4);
-    assertEmptyObject(void5);
+        const { tagInput, labelPosition } = labelParameters;
 
 
-    const { singleSelected: checked } = singleSelectionChildReturn;
+        const {
+            pressParameters: { excludeSpace, onPressSync },
+            singleSelectionChildReturn,
+            propsTabbable,
+            propsChild: listNavigationSingleSelectionChildProps,
+            ...listNavRet
+        } = useCompleteListNavigationChildDeclarative<TabbableChildElement, M>({
+            info: {
+                focusSelf: useStableCallback((_e) => { return checkboxLikeRet.checkboxLikeReturn.focusSelf(); }),
+                ...info
+            } as M,
+            context,
+            textContentParameters,
+            hasCurrentFocusParameters,
+            refElementParameters,
+            singleSelectionChildParameters: { singleSelectionDisabled: !!disabled },
+            multiSelectionChildParameters: { multiSelectionDisabled: true },
+            multiSelectionChildDeclarativeParameters: { multiSelected: null, onMultiSelectedChange: null }
+        });
 
-    const { refElementReturn: refElementInputReturn, propsStable: propsRefInput } = useRefElement<InputElement>({ refElementParameters: {} });
-    const { refElementReturn: refElementLabelReturn, propsStable: propsRefLabel } = useRefElement<LabelElement>({ refElementParameters: {} });
+        assertEmptyObject(void1);
+        assertEmptyObject(void3);
+        assertEmptyObject(void4);
+        assertEmptyObject(void5);
 
-    const {
-        propsInput,
-        propsLabel,
-        ...checkboxLikeRet
-    } = useCheckboxLike<LabelPosition, InputElement, LabelElement, boolean>({
-        checkboxLikeParameters: {
-            checked: (checked ?? false),
-            disabled,
-            role: "radio"
-        },
-        pressParameters: { excludeSpace, longPressThreshold, onPressSync },
-        labelParameters,
-        randomIdInputParameters: { prefix: Prefices.radio },
-        randomIdLabelParameters: { prefix: Prefices.radioLabel },
-        refElementInputReturn,
-        refElementLabelReturn
-    });
-    useLayoutEffect(() => {
-        nameToIndex.set(value, index);
-        indexToName.set(index, value);
-        return () => {
-            nameToIndex.delete(value);
-            indexToName.delete(index);
+
+        const { singleSelected: checked } = singleSelectionChildReturn;
+
+        const { refElementReturn: refElementInputReturn, propsStable: propsRefInput } = useRefElement<InputElement>({ refElementParameters: {} });
+        const { refElementReturn: refElementLabelReturn, propsStable: propsRefLabel } = useRefElement<LabelElement>({ refElementParameters: {} });
+
+        const {
+            propsInput,
+            propsLabel,
+            ...checkboxLikeRet
+        } = useCheckboxLike<LabelPosition, InputElement, LabelElement, boolean>({
+            checkboxLikeParameters: {
+                checked: (checked ?? false),
+                disabled,
+                role: "radio"
+            },
+            pressParameters: { excludeSpace, longPressThreshold, onPressSync },
+            labelParameters,
+            randomIdInputParameters: { prefix: Prefices.radio },
+            randomIdLabelParameters: { prefix: Prefices.radioLabel },
+            refElementInputReturn,
+            refElementLabelReturn
+        });
+        useLayoutEffect(() => {
+            nameToIndex.set(value, index);
+            indexToName.set(index, value);
+            return () => {
+                nameToIndex.delete(value);
+                indexToName.delete(index);
+            }
+        }, [value, index]);
+
+        if (tagInput == "input") {
+            (propsInput as any).name = name;
+            (propsInput as any).checked = (checked ?? false);
+            (propsInput as any).type = "radio";
         }
-    }, [value, index]);
+        else {
+            propsInput["aria-checked"] = (checked ?? false);
+        }
 
-    if (tagInput == "input") {
-        propsInput.name = name;
-        propsInput.checked = (checked ?? false);
-        propsInput.type = "radio";
-    }
-    else {
-        propsInput["aria-checked"] = (checked ?? false);
-    }
+        const propsIfInputHandlesFocus = useMergedProps<InputElement>(listNavigationSingleSelectionChildProps as ElementProps<any>, propsTabbable, propsInput);
+        const propsInput2: ElementProps<InputElement> = useMergedProps(propsRefInput, labelPosition != "wrapping" ? propsIfInputHandlesFocus : propsInput);
 
-    const propsIfInputHandlesFocus = useMergedProps<InputElement>(listNavigationSingleSelectionChildProps as ElementProps<any>, propsTabbable, propsInput);
-    const propsInput2: ElementProps<InputElement> = useMergedProps(propsRefInput, labelPosition != "wrapping" ? propsIfInputHandlesFocus : propsInput);
+        const propsIfLabelHandlesFocus = useMergedProps<LabelElement>(listNavigationSingleSelectionChildProps as ElementProps<any>, propsTabbable, propsLabel);
+        const propsLabel2: ElementProps<LabelElement> = useMergedProps(propsRefLabel, labelPosition == "wrapping" ? propsIfLabelHandlesFocus as any : propsLabel as any);
 
-    const propsIfLabelHandlesFocus = useMergedProps<LabelElement>(listNavigationSingleSelectionChildProps as ElementProps<any>, propsTabbable, propsLabel);
-    const propsLabel2: ElementProps<LabelElement> = useMergedProps(propsRefLabel, labelPosition == "wrapping" ? propsIfLabelHandlesFocus as any : propsLabel as any);
-
-    const ret: UseRadioReturnType<LP, V, InputElement, LabelElement, M> = {
-        propsInput: propsInput2,
-        propsLabel: propsLabel2,
-        singleSelectionChildReturn,
-        ...checkboxLikeRet,
-        ...listNavRet
-    }
-    return ret;
-})
+        const ret: UseRadioReturnType<LP, V, InputElement, LabelElement, M> = {
+            propsInput: propsInput2,
+            propsLabel: propsLabel2,
+            singleSelectionChildReturn,
+            ...checkboxLikeRet,
+            ...listNavRet
+        }
+        return ret;
+    });
+}

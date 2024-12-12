@@ -1,5 +1,5 @@
 import { jsxs as _jsxs, Fragment as _Fragment, jsx as _jsx } from "preact/jsx-runtime";
-import { createContext, createElement, memo, useContext } from "preact-prop-helpers";
+import { createContext, createElement, forwardRef, memo, useContext, useMergedProps } from "preact-prop-helpers";
 function overwriteWithWarning(a, ..._t) { return a; }
 const HeadingLevelContext = createContext(0);
 /**
@@ -11,7 +11,7 @@ const HeadingLevelContext = createContext(0);
  * Specify the actual contents of the heading with the `heading` prop.
  *
  */
-export const Heading = /* @__PURE__ */ memo(function Heading({ children, heading, tag, ...props }) {
+export const Heading = /* @__PURE__ */ memo(forwardRef(function Heading({ children, heading, tag, ref: ref2, ...props }, ref) {
     const headingLevelBeforeUs = useContext(HeadingLevelContext);
     const newHeadingLevel = headingLevelBeforeUs + 1;
     if (tag == null) {
@@ -23,8 +23,8 @@ export const Heading = /* @__PURE__ */ memo(function Heading({ children, heading
             overwriteWithWarning("Heading", props, "aria-level", `${newHeadingLevel}`);
         }
     }
-    return (_jsx(_Fragment, { children: _jsxs(HeadingReset, { newLevel: headingLevelBeforeUs + 1, children: [createElement(tag, props, heading), children] }) }));
-});
+    return (_jsx(_Fragment, { children: _jsxs(HeadingReset, { newLevel: headingLevelBeforeUs + 1, children: [createElement(tag, useMergedProps(props, { ref }, { ref: ref2 }), heading), children] }) }));
+}));
 /**
  * Set the value that the next `Heading` will use as its base.
  *

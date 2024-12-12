@@ -1,10 +1,12 @@
 import { jsx as _jsx } from "preact/jsx-runtime";
-import { assertEmptyObject, createContext, focus, memo, useCallback, useContext } from "preact-prop-helpers";
+import { assertEmptyObject, createContext, focus, identity, memo, useCallback, useContext, useEnsureStability } from "preact-prop-helpers";
 import { useContextWithWarning } from "../props.js";
 import { useMenu, useMenuItem } from "../use-menu.js";
 import { ParentDepthContext, useComponent, useDefault } from "./util.js";
 const MenuItemContext = createContext(null);
-export const Menu = /* @__PURE__ */ memo((function Menu({ collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, orientation, singleSelectionAriaPropName, singleSelectionMode, untabbable, active, onDismiss, onElementChange, onMount, onUnmount, openDirection, onTabbableIndexChange, singleSelectedIndex, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, pageNavigationSize, parentDepth, disabled, onOpen, onNavigateLinear, onNavigateTypeahead, getDocument, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, render, imperativeHandle, ...void1 }) {
+export const Menu = /* @__PURE__ */ memo((function Menu({ collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, orientation, singleSelectionAriaPropName, singleSelectionMode, untabbable, active, onDismiss, onElementChange, onMount, onUnmount, openDirection, onTabbableIndexChange, singleSelectedIndex, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, pageNavigationSize, parentDepth, disabled, onOpen, onNavigateLinear, onNavigateTypeahead, getDocument, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, getSortValueAt, render, imperativeHandle, compare, getIndex, ...void1 }) {
+    getSortValueAt ??= identity;
+    useEnsureStability("Menu", getSortValueAt);
     const defaultParentDepth = useContext(ParentDepthContext);
     let myDepth = (parentDepth ?? defaultParentDepth) + 1;
     untabbable ||= false;
@@ -58,6 +60,11 @@ export const Menu = /* @__PURE__ */ memo((function Menu({ collator, disableHomeE
             singleSelectionDeclarativeParameters: {
                 singleSelectedIndex,
                 onSingleSelectedIndexChange,
+            },
+            processedIndexManglerParameters: {
+                getSortValueAt,
+                compare,
+                getIndex: useDefault("getIndex", getIndex)
             }
         })) }));
 }));

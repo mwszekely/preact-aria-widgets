@@ -1,5 +1,4 @@
-import { useMemoObject, useMergedProps, useStableCallback } from "preact-prop-helpers";
-import { monitored } from "./props.js";
+import { useMemoObject, useMergedProps, useMonitoring, useStableCallback } from "preact-prop-helpers";
 import { useMenuSurface } from "./use-menu-surface.js";
 import { useMenubar, useMenubarChild } from "./use-menubar.js";
 /**
@@ -13,91 +12,95 @@ import { useMenubar, useMenubarChild } from "./use-menubar.js";
  *
  * @compositeParams
  */
-export const useMenu = /* @__PURE__ */ monitored(function useMenu({ dismissParameters, escapeDismissParameters, menuParameters: { openDirection, onOpen }, menuSurfaceParameters, activeElementParameters, toolbarParameters, modalParameters, ...restParams }) {
-    const { contextChildren, propsLabel: propsButtonAsMenuLabel, propsMenubar, randomIdInputReturn, rovingTabIndexReturn, ...restRet } = useMenubar({
-        toolbarParameters: { role: "menu", ...toolbarParameters },
-        labelParameters: { ariaLabel: null },
-        ...restParams
-    });
-    const onKeyDown = useStableCallback((e) => {
-        const isOpen = modalParameters.active;
-        if (!isOpen) {
-            switch (e.key) {
-                case "ArrowUp": {
-                    if (openDirection == 'up') {
-                        onOpen();
-                        e.preventDefault();
-                        e.stopPropagation();
+export function useMenu({ dismissParameters, escapeDismissParameters, menuParameters: { openDirection, onOpen }, menuSurfaceParameters, activeElementParameters, toolbarParameters, modalParameters, ...restParams }) {
+    return useMonitoring(function useMenu() {
+        const { context, propsLabel: propsButtonAsMenuLabel, propsMenubar, randomIdInputReturn, rovingTabIndexReturn, ...restRet } = useMenubar({
+            toolbarParameters: { role: "menu", ...toolbarParameters },
+            labelParameters: { ariaLabel: null },
+            ...restParams
+        });
+        const onKeyDown = useStableCallback((e) => {
+            const isOpen = modalParameters.active;
+            if (!isOpen) {
+                switch (e.key) {
+                    case "ArrowUp": {
+                        if (openDirection == 'up') {
+                            onOpen();
+                            e.preventDefault();
+                            e.stopPropagation();
+                        }
+                        break;
                     }
-                    break;
-                }
-                case "ArrowDown": {
-                    if (openDirection == 'down') {
-                        onOpen();
-                        e.preventDefault();
-                        e.stopPropagation();
+                    case "ArrowDown": {
+                        if (openDirection == 'down') {
+                            onOpen();
+                            e.preventDefault();
+                            e.stopPropagation();
+                        }
+                        break;
                     }
-                    break;
-                }
-                case "ArrowLeft": {
-                    if (openDirection == 'left') {
-                        onOpen();
-                        e.preventDefault();
-                        e.stopPropagation();
+                    case "ArrowLeft": {
+                        if (openDirection == 'left') {
+                            onOpen();
+                            e.preventDefault();
+                            e.stopPropagation();
+                        }
+                        break;
                     }
-                    break;
-                }
-                case "ArrowRight": {
-                    if (openDirection == 'right') {
-                        onOpen();
-                        e.preventDefault();
-                        e.stopPropagation();
+                    case "ArrowRight": {
+                        if (openDirection == 'right') {
+                            onOpen();
+                            e.preventDefault();
+                            e.stopPropagation();
+                        }
+                        break;
                     }
-                    break;
                 }
             }
-        }
-    });
-    const { propsTarget, propsTrigger, refElementSourceReturn, ...restRet2 } = useMenuSurface({
-        menuSurfaceParameters: {
-            ...menuSurfaceParameters,
-            surfaceId: randomIdInputReturn.id,
-            role: "menu",
-        },
-        escapeDismissParameters,
-        modalParameters,
-        dismissParameters,
-        activeElementParameters,
-        focusTrapParameters: {
-            focusPopup: () => { rovingTabIndexReturn.focusSelf(); }
-        }
-    });
-    return {
-        ...restRet,
-        ...restRet2,
-        context: useMemoObject({
-            ...contextChildren,
-            menu: useMemoObject({
-                closeFromMenuItemClicked: useStableCallback((e) => {
-                    dismissParameters.onDismiss(e, "item-clicked"); // TODO
+        });
+        const { propsTarget, propsTrigger, refElementSourceReturn, ...restRet2 } = useMenuSurface({
+            menuSurfaceParameters: {
+                ...menuSurfaceParameters,
+                surfaceId: randomIdInputReturn.id,
+                role: "menu",
+            },
+            escapeDismissParameters,
+            modalParameters,
+            dismissParameters,
+            activeElementParameters,
+            focusTrapParameters: {
+                focusPopup: () => { rovingTabIndexReturn.focusSelf(); }
+            }
+        });
+        return {
+            ...restRet,
+            ...restRet2,
+            context: useMemoObject({
+                ...context,
+                menu: useMemoObject({
+                    closeFromMenuItemClicked: useStableCallback((e) => {
+                        dismissParameters.onDismiss(e, "item-clicked"); // TODO
+                    })
                 })
-            })
-        }),
-        refElementSourceReturn,
-        rovingTabIndexReturn,
-        randomIdInputReturn,
-        propsTarget: useMergedProps(propsTarget, propsMenubar),
-        propsTrigger: useMergedProps({ onKeyDown }, propsTrigger, propsButtonAsMenuLabel),
-    };
-});
+            }),
+            refElementSourceReturn,
+            rovingTabIndexReturn,
+            randomIdInputReturn,
+            propsTarget: useMergedProps(propsTarget, propsMenubar),
+            propsTrigger: useMergedProps({ onKeyDown }, propsTrigger, propsButtonAsMenuLabel),
+        };
+    });
+}
 /**
  * @compositeParams
  */
-export const useMenuItem = /* @__PURE__ */ monitored(function useMenuItem(p) {
-    const ret = useMenubarChild(p);
-    return {
-        ...ret,
-        menuItemReturn: { closeMenu: p.context.menu.closeFromMenuItemClicked }
-    };
-});
+export function useMenuItem(p) {
+    return useMonitoring(function useMenuItem() {
+        const ret = useMenubarChild(p);
+        return {
+            ...ret,
+            menuItemReturn: { closeMenu: p.context.menu.closeFromMenuItemClicked }
+        };
+    });
+}
 //# sourceMappingURL=use-menu.js.map

@@ -3,9 +3,10 @@ import {
     TargetedOmit,
     useMemoObject,
     useMergedProps,
+    useMonitoring,
     useStableCallback
 } from "preact-prop-helpers";
-import { OmitStrong, monitored } from "./props.js";
+import { OmitStrong } from "./props.js";
 import { UseMenuSurfaceParameters, UseMenuSurfaceReturnType, useMenuSurface } from "./use-menu-surface.js";
 import { UseMenubarContext, UseMenubarItemParameters, UseMenubarItemReturnType, UseMenubarParameters, UseMenubarReturnType, UseMenubarSubInfo, useMenubar, useMenubarChild } from "./use-menubar.js";
 
@@ -42,7 +43,7 @@ export interface UseMenuItemParameters<MenuItemElement extends Element, M extend
 
 export interface UseMenuReturnType<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends
     UseMenuSurfaceReturnType<MenuSurfaceElement, MenuParentElement, MenuButtonElement>,
-    OmitStrong<UseMenubarReturnType<MenuParentElement, MenuItemElement, MenuButtonElement, M>, "propsMenubar" | "propsLabel" | "contextChildren" | "contextProcessing"> {
+    OmitStrong<UseMenubarReturnType<MenuParentElement, MenuItemElement, MenuButtonElement, M>, "propsMenubar" | "propsLabel" | "context"> {
     context: UseMenuContext<MenuItemElement, M>;
 }
 
@@ -70,7 +71,7 @@ export interface UseMenuItemReturnType<MenuItemElement extends Element, M extend
  * 
  * @compositeParams 
  */
-export const useMenu = /* @__PURE__ */ monitored(function useMenu<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element>({
+export function useMenu<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element>({
     dismissParameters,
     escapeDismissParameters,
     menuParameters: { openDirection, onOpen },
@@ -80,101 +81,103 @@ export const useMenu = /* @__PURE__ */ monitored(function useMenu<MenuSurfaceEle
     modalParameters,
     ...restParams
 }: UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenuReturnType<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement, UseMenubarSubInfo<MenuItemElement>> {
-    type M = UseMenubarSubInfo<MenuItemElement>;
+    return useMonitoring(function useMenu(): UseMenuReturnType<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement, UseMenubarSubInfo<MenuItemElement>> {
+        type M = UseMenubarSubInfo<MenuItemElement>;
 
-    const {
-        contextChildren,
-        propsLabel: propsButtonAsMenuLabel,
-        propsMenubar,
-        randomIdInputReturn,
-        rovingTabIndexReturn,
-        ...restRet
-    } = useMenubar<MenuParentElement, MenuItemElement, MenuButtonElement>({
-        toolbarParameters: { role: "menu", ...toolbarParameters },
-        labelParameters: { ariaLabel: null },
-        ...restParams
-    });
+        const {
+            context,
+            propsLabel: propsButtonAsMenuLabel,
+            propsMenubar,
+            randomIdInputReturn,
+            rovingTabIndexReturn,
+            ...restRet
+        } = useMenubar<MenuParentElement, MenuItemElement, MenuButtonElement>({
+            toolbarParameters: { role: "menu", ...toolbarParameters },
+            labelParameters: { ariaLabel: null },
+            ...restParams
+        });
 
-    const onKeyDown = useStableCallback((e: KeyboardEvent) => {
-        const isOpen = modalParameters.active;
-        if (!isOpen) {
-            switch (e.key) {
-                case "ArrowUp": {
-                    if (openDirection == 'up') {
-                        onOpen();
-                        e.preventDefault();
-                        e.stopPropagation();
+        const onKeyDown = useStableCallback((e: KeyboardEvent) => {
+            const isOpen = modalParameters.active;
+            if (!isOpen) {
+                switch (e.key) {
+                    case "ArrowUp": {
+                        if (openDirection == 'up') {
+                            onOpen();
+                            e.preventDefault();
+                            e.stopPropagation();
+                        }
+                        break;
                     }
-                    break;
-                }
-                case "ArrowDown": {
-                    if (openDirection == 'down') {
-                        onOpen();
-                        e.preventDefault();
-                        e.stopPropagation();
+                    case "ArrowDown": {
+                        if (openDirection == 'down') {
+                            onOpen();
+                            e.preventDefault();
+                            e.stopPropagation();
+                        }
+                        break;
                     }
-                    break;
-                }
-                case "ArrowLeft": {
-                    if (openDirection == 'left') {
-                        onOpen();
-                        e.preventDefault();
-                        e.stopPropagation();
+                    case "ArrowLeft": {
+                        if (openDirection == 'left') {
+                            onOpen();
+                            e.preventDefault();
+                            e.stopPropagation();
+                        }
+                        break;
                     }
-                    break;
-                }
-                case "ArrowRight": {
-                    if (openDirection == 'right') {
-                        onOpen();
-                        e.preventDefault();
-                        e.stopPropagation();
+                    case "ArrowRight": {
+                        if (openDirection == 'right') {
+                            onOpen();
+                            e.preventDefault();
+                            e.stopPropagation();
+                        }
+                        break;
                     }
-                    break;
                 }
             }
-        }
-    });
+        });
 
 
-    const {
-        propsTarget,
-        propsTrigger,
-        refElementSourceReturn,
-        ...restRet2
-    } = useMenuSurface<MenuSurfaceElement, MenuParentElement, MenuButtonElement>({
-        menuSurfaceParameters: {
-            ...menuSurfaceParameters,
-            surfaceId: randomIdInputReturn.id,
-            role: "menu",
-        },
-        escapeDismissParameters,
-        modalParameters,
-        dismissParameters,
-        activeElementParameters,
-        focusTrapParameters: {
-            focusPopup: () => { rovingTabIndexReturn.focusSelf() }
-        }
-    });
+        const {
+            propsTarget,
+            propsTrigger,
+            refElementSourceReturn,
+            ...restRet2
+        } = useMenuSurface<MenuSurfaceElement, MenuParentElement, MenuButtonElement>({
+            menuSurfaceParameters: {
+                ...menuSurfaceParameters,
+                surfaceId: randomIdInputReturn.id,
+                role: "menu",
+            },
+            escapeDismissParameters,
+            modalParameters,
+            dismissParameters,
+            activeElementParameters,
+            focusTrapParameters: {
+                focusPopup: () => { rovingTabIndexReturn.focusSelf() }
+            }
+        });
 
 
-    return {
-        ...restRet,
-        ...restRet2,
-        context: useMemoObject<UseMenuContext<MenuItemElement, M>>({
-            ...contextChildren,
-            menu: useMemoObject<UseMenuContext<MenuItemElement, M>["menu"]>({
-                closeFromMenuItemClicked: useStableCallback((e) => {
-                    dismissParameters.onDismiss(e, "item-clicked" as never);    // TODO
+        return {
+            ...restRet,
+            ...restRet2,
+            context: useMemoObject<UseMenuContext<MenuItemElement, M>>({
+                ...context,
+                menu: useMemoObject<UseMenuContext<MenuItemElement, M>["menu"]>({
+                    closeFromMenuItemClicked: useStableCallback((e) => {
+                        dismissParameters.onDismiss(e, "item-clicked" as never);    // TODO
+                    })
                 })
-            })
-        }),
-        refElementSourceReturn,
-        rovingTabIndexReturn,
-        randomIdInputReturn,
-        propsTarget: useMergedProps(propsTarget, propsMenubar),
-        propsTrigger: useMergedProps<MenuButtonElement>({ onKeyDown }, propsTrigger, propsButtonAsMenuLabel),
-    }
-})
+            }),
+            refElementSourceReturn,
+            rovingTabIndexReturn,
+            randomIdInputReturn,
+            propsTarget: useMergedProps(propsTarget, propsMenubar),
+            propsTrigger: useMergedProps<MenuButtonElement>({ onKeyDown }, propsTrigger, propsButtonAsMenuLabel),
+        }
+    });
+}
 
 export interface UseMenuItemParameters<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseMenubarItemParameters<MenuItemElement, M> {
     context: UseMenuContext<MenuItemElement, M>;
@@ -183,12 +186,13 @@ export interface UseMenuItemParameters<MenuItemElement extends Element, M extend
 /**
  * @compositeParams
  */
-export const useMenuItem = /* @__PURE__ */ monitored(function useMenuItem<MenuItemElement extends Element>(p: UseMenuItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenuItemReturnType<MenuItemElement, UseMenubarSubInfo<MenuItemElement>> {
+export function useMenuItem<MenuItemElement extends Element>(p: UseMenuItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenuItemReturnType<MenuItemElement, UseMenubarSubInfo<MenuItemElement>> {
+    return useMonitoring(function useMenuItem() {
+        const ret = useMenubarChild<MenuItemElement>(p);
 
-    const ret = useMenubarChild<MenuItemElement>(p);
-
-    return {
-        ...ret,
-        menuItemReturn: { closeMenu: p.context.menu.closeFromMenuItemClicked }
-    }
-})
+        return {
+            ...ret,
+            menuItemReturn: { closeMenu: p.context.menu.closeFromMenuItemClicked }
+        }
+    });
+}

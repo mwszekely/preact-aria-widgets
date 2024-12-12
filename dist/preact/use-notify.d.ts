@@ -24,12 +24,12 @@ export declare const NotificationProviderContext: import("preact").Context<Notif
  *
  * @hasChild {@link useNotify}
  */
-export declare const useNotificationProvider: ({ targetAssertive, targetPolite }: NotificationProviderProps) => {
+export declare function useNotificationProvider({ targetAssertive, targetPolite }: NotificationProviderProps): {
     notify: (mode: "polite" | "assertive", child: VNode) => number;
     context: {
         notify: (mode: "polite" | "assertive", child: VNode) => number;
     };
-    children: import("preact-prop-helpers").JSX.Element;
+    children: import("preact").h.JSX.Element;
 };
-export declare function useNotify(): (mode: "assertive" | "polite", content: import("preact-prop-helpers").JSX.Element) => void;
+export declare function useNotify(): (mode: "polite" | "assertive", content: VNode) => void;
 //# sourceMappingURL=use-notify.d.ts.map

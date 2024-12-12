@@ -1,5 +1,5 @@
 
-import { returnZero, useState } from "preact-prop-helpers";
+import { useState } from "preact-prop-helpers";
 import { Menu, MenuItem, useDefaultRenderPortal } from "../../dist/preact/index.js";
 
 function DemoListItem({ index }: { index: number }) {
@@ -7,7 +7,6 @@ function DemoListItem({ index }: { index: number }) {
     return (
         <MenuItem<HTMLLIElement>
             index={index}
-            getSortValue={returnZero}
             role="menuitem"
             onPress={e => alert(`Menu item #${index} pressed`)}
             render={info => <li {...info.props}>{`Menu item #${index}`}</li>}
@@ -56,7 +55,7 @@ export function Demo() {
                     render={info => {
                         return (
                             <>
-                                <button {...info.propsTrigger} onClick={() => setOpen(o => !o)}>Menu trigger</button>
+                                <button {...info.propsTrigger}>Menu trigger</button>
                                 {useDefaultRenderPortal({
                                     portalId: "portal", children: (
 

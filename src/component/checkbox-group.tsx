@@ -1,11 +1,11 @@
-import { assertEmptyObject, createContext, memo } from "preact-prop-helpers";
-import { Get6, Get7, useContextWithWarning } from "../props.js";
+import { assertEmptyObject, createContext, identity, memo, useEnsureStability } from "preact-prop-helpers";
+import { Get6, Get8, useContextWithWarning } from "../props.js";
 import { CheckboxGroupContext, UseCheckboxGroupChildParameters, UseCheckboxGroupChildReturnType, UseCheckboxGroupParameters, UseCheckboxGroupParentParameters, UseCheckboxGroupParentReturnType, UseCheckboxGroupReturnType, useCheckboxGroup, useCheckboxGroupChild, useCheckboxGroupParent } from "../use-checkbox-group.js";
 import { GenericComponentProps, useComponent, useDefault } from "./util.js";
 
 export type CheckboxGroupProps<ParentElement extends Element, TabbableChildElement extends Element> = GenericComponentProps<
     UseCheckboxGroupReturnType<ParentElement, TabbableChildElement>,
-    Get7<UseCheckboxGroupParameters<ParentElement, TabbableChildElement>, "linearNavigationParameters", "checkboxGroupParameters", "typeaheadNavigationParameters", "rovingTabIndexParameters", "rovingTabIndexParameters", "refElementParameters", "multiSelectionParameters">,
+    Get8<UseCheckboxGroupParameters<ParentElement, TabbableChildElement>, "linearNavigationParameters", "checkboxGroupParameters", "typeaheadNavigationParameters", "rovingTabIndexParameters", "rovingTabIndexParameters", "refElementParameters", "multiSelectionParameters", "processedIndexManglerParameters">,
     never
 >;
 
@@ -46,8 +46,13 @@ export const CheckboxGroup = /* @__PURE__ */ memo((function CheckboxGroup<Parent
     multiSelectionAriaPropName,
     multiSelectionMode,
     onSelectionChange,
+    getSortValueAt,
+    compare,
+    getIndex,
     ...void1
 }: CheckboxGroupProps<ParentElement, TabbableChildElement>) {
+    getSortValueAt ??= identity;
+    useEnsureStability("CheckboxGroup", getSortValueAt);
 
     assertEmptyObject(void1);
 
@@ -77,7 +82,12 @@ export const CheckboxGroup = /* @__PURE__ */ memo((function CheckboxGroup<Parent
                 typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
             },
             refElementParameters: { onElementChange, onMount, onUnmount },
-            multiSelectionParameters: { multiSelectionAriaPropName, multiSelectionMode: multiSelectionMode || "activation", onSelectionChange }
+            multiSelectionParameters: { multiSelectionAriaPropName, multiSelectionMode: multiSelectionMode || "activation", onSelectionChange },
+            processedIndexManglerParameters: {
+                compare,
+                getIndex: useDefault("getIndex", getIndex),
+                getSortValueAt
+            }
         }));
 }));
 

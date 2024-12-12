@@ -1,297 +1,180 @@
-import {
-    CompleteGridNavigationCellContext,
-    CompleteGridNavigationRowContext,
-    ElementProps,
-    ExtendMerge,
-    Nullable,
-    TargetedOmit,
-    TargetedPick,
-    UseCompleteGridNavigationCellInfo,
-    UseCompleteGridNavigationCellParameters,
-    UseCompleteGridNavigationCellReturnType,
-    UseCompleteGridNavigationDeclarativeParameters,
-    UseCompleteGridNavigationReturnType,
-    UseCompleteGridNavigationRowInfo,
-    UseCompleteGridNavigationRowInfoKeysParameters,
-    UseCompleteGridNavigationRowParameters,
-    UseCompleteGridNavigationRowReturnType,
-    UseGenericChildParameters,
-    UsePressParameters,
-    UsePressReturnType,
-    assertEmptyObject,
-    focus,
-    useCompleteGridNavigationCell,
-    useCompleteGridNavigationDeclarative,
-    useCompleteGridNavigationRow,
-    useMemoObject,
-    useMergedProps,
-    usePress,
-    useStableCallback
-} from "preact-prop-helpers";
-import { OmitStrong, Prefices, monitored } from "./props.js";
-import { UseLabelSyntheticParameters, useLabelSynthetic } from "./use-label.js";
-import { UseListboxParameters, UseListboxParametersSelf } from "./use-listbox.js";
+import { CompleteGridNavigationCellContext, CompleteGridNavigationRowContext, ElementProps, OmitStrong, TargetedOmit, UseCompleteGridNavigationCellInfo, UseCompleteGridNavigationCellParameters, UseCompleteGridNavigationCellReturnType, UseCompleteGridNavigationDeclarativeParameters, UseCompleteGridNavigationDeclarativeReturnType, UseCompleteGridNavigationRowDeclarativeParameters, UseCompleteGridNavigationRowInfo, UseCompleteGridNavigationRowOuterParameters, UseCompleteGridNavigationRowOuterReturnType, UseCompleteGridNavigationRowReturnType, UseCompleteGridNavigationRowsContext, UseCompleteGridNavigationRowsInfo, UseCompleteGridNavigationRowsParameters, UseCompleteGridNavigationRowsReturnType, UsePressParameters, UsePressReturnType, assertEmptyObject, useCompleteGridNavigationCell, useCompleteGridNavigationDeclarative, useCompleteGridNavigationRowDeclarative, useCompleteGridNavigationRowOuter, useCompleteGridNavigationRows, useMergedProps, useMonitoring, usePress, useStableCallback } from "preact-prop-helpers";
+import { UseLabelReturnType, UseLabelSyntheticParameters, useLabelSynthetic } from "./use-label.js";
 
-export interface UseGridlistContext<GridlistRowElement extends Element, RM extends GridlistRowInfo<GridlistRowElement>> extends CompleteGridNavigationRowContext<GridlistRowElement, RM> {
-    //gridlistRowContext: { }
-}
 
-export interface UseGridlistRowContext<CellElement extends Element, M extends GridlistCellInfo<CellElement>> extends CompleteGridNavigationCellContext<CellElement, M> {
 
-}
+export interface UseGridlistRowInfo<RowElement extends Element> extends UseCompleteGridNavigationRowInfo<RowElement> { }
+export interface UseGridlistRowsInfo<RowElement extends Element> extends UseCompleteGridNavigationRowsInfo<RowElement> { }
+export interface UseGridlistCellInfo<RowElement extends Element> extends UseCompleteGridNavigationCellInfo<RowElement> { }
 
-export interface UseGridlistParametersSelf extends UseListboxParametersSelf {
+export interface UseGridlistRowContext<ChildElement extends Element, M extends UseGridlistRowInfo<ChildElement>> extends CompleteGridNavigationRowContext<ChildElement, M> { }
+export interface UseGridlistRowsContext<ChildElement extends Element, SM extends UseGridlistRowsInfo<ChildElement>> extends UseCompleteGridNavigationRowsContext<ChildElement, SM> { }
+export interface UseGridlistCellContext<ChildElement extends Element, M extends UseGridlistCellInfo<ChildElement>> extends CompleteGridNavigationCellContext<ChildElement, M> { }
 
-}
 
-export interface UseGridlistParameters<GridlistElement extends Element, GridlistRowElement extends Element, LabelElement extends Element, RM extends GridlistRowInfo<GridlistRowElement>> extends
-    OmitStrong<UseCompleteGridNavigationDeclarativeParameters<GridlistElement, GridlistRowElement, RM>, "rovingTabIndexParameters">,
-    TargetedOmit<UseCompleteGridNavigationDeclarativeParameters<GridlistElement, GridlistRowElement, RM>, "rovingTabIndexParameters", "focusSelfParent">,
-    TargetedOmit<UseLabelSyntheticParameters, "labelParameters", "onLabelClick">,
-    TargetedOmit<UseListboxParameters<GridlistElement, GridlistRowElement, LabelElement, RM>, "listboxParameters", "orientation"> {
 
-}
-export interface UseGridlistReturnType<GridlistElement extends Element, GridlistRowElement extends Element, LabelElement extends Element, RM extends GridlistRowInfo<GridlistRowElement>> extends OmitStrong<UseCompleteGridNavigationReturnType<GridlistElement, GridlistRowElement, RM>, "singleSelectionReturn" | "props"> {
-    propsGridlist: ElementProps<GridlistElement>;
-    propsGridlistLabel: ElementProps<LabelElement>;
-    contextChildren: UseGridlistContext<GridlistRowElement, RM>;
-}
-export interface UseGridlistRowReturnType<GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends OmitStrong<UseCompleteGridNavigationRowReturnType<GridlistRowElement, GridlistCellElement, RM, CM>, never> {
 
-}
 
-export interface UseGridlistRowParametersSelf {
-    /**
-     * **Multi-selection** only! When the `selectionLimit` is `"single"`, this must be `null`.
-     */
-    selected: Nullable<boolean>;
-}
-
-export interface UseGridlistRowParameters<GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends
-    UseGenericChildParameters<UseGridlistContext<GridlistRowElement, RM>, Pick<RM, UseCompleteGridNavigationRowInfoKeysParameters<RM>>>,
-    OmitStrong<UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, never> {
-    gridlistRowParameters: UseGridlistRowParametersSelf;
+export interface UseGridlistParameters<ParentElement extends Element, RowElement extends Element, RsM extends UseGridlistRowsInfo<RowElement> = UseGridlistRowsInfo<RowElement>, RM extends UseGridlistRowInfo<RowElement> = UseGridlistRowInfo<RowElement>> extends UseCompleteGridNavigationDeclarativeParameters<ParentElement, RowElement, RM>, OmitStrong<UseCompleteGridNavigationRowsParameters<RowElement, RM, RsM>, "context">, UseLabelSyntheticParameters { }
+export interface UseGridlistReturnType<ParentElement extends Element, RowElement extends Element, LabelElement extends Element, RsM extends UseGridlistRowsInfo<RowElement> = UseGridlistRowsInfo<RowElement>, RM extends UseGridlistRowInfo<RowElement> = UseGridlistRowInfo<RowElement>> extends
+    OmitStrong<UseCompleteGridNavigationDeclarativeReturnType<ParentElement, RowElement, RM>, "context" | "rearrangeableChildrenReturn">,
+    OmitStrong<UseCompleteGridNavigationRowsReturnType<RowElement, RsM>, "context">,
+    OmitStrong<UseLabelReturnType<ParentElement, LabelElement>, "propsInput"> {
+    contextChildren: UseGridlistRowContext<RowElement, RM>;
+    contextProcessing: UseGridlistRowsContext<RowElement, RsM>;
 }
 
 
-export interface UseGridlistCellReturnType<GridlistCellElement extends Element, CM extends GridlistCellInfo<GridlistCellElement>> extends OmitStrong<ExtendMerge<UseCompleteGridNavigationCellReturnType<GridlistCellElement, CM>, Pick<UsePressReturnType<GridlistCellElement>, "pressReturn">>, "props"> {
-    propsCell: ElementProps<GridlistCellElement>;
-    propsTabbable: ElementProps<any>;
+
+
+
+export interface UseGridlistRowOuterParameters<RowElement extends Element, RsM extends UseCompleteGridNavigationRowsInfo<RowElement>> extends UseCompleteGridNavigationRowOuterParameters<RowElement, RsM> { }
+export interface UseGridlistRowOuterReturnType<RowElement extends Element, RsM extends UseCompleteGridNavigationRowsInfo<RowElement>> extends UseCompleteGridNavigationRowOuterReturnType<RowElement, RsM> { }
+
+
+export interface UseGridlistRowParameters<RowElement extends Element, CellElement extends Element, RM extends UseGridlistRowInfo<RowElement>, CM extends UseGridlistCellInfo<CellElement>> extends UseCompleteGridNavigationRowDeclarativeParameters<RowElement, CellElement, RM, CM> { }
+export interface UseGridlistRowReturnType<RowElement extends Element, CellElement extends Element, RM extends UseGridlistRowInfo<RowElement>, CM extends UseGridlistCellInfo<CellElement>> extends UseCompleteGridNavigationRowReturnType<RowElement, CellElement, RM, CM> {
+    context: UseGridlistCellContext<CellElement, CM>;
+}
+
+
+
+export interface UseGridlistCellParameters<CellElement extends Element, CM extends UseGridlistCellInfo<CellElement>> extends UseCompleteGridNavigationCellParameters<CellElement, CM>, TargetedOmit<UsePressParameters<CellElement>, "pressParameters", "focusSelf"> { }
+export interface UseGridlistCellReturnType<CellElement extends Element, CM extends UseGridlistCellInfo<CellElement>> extends OmitStrong<UseCompleteGridNavigationCellReturnType<CellElement, CM>, "props">, OmitStrong<UsePressReturnType<CellElement>, "props"> {
+    propsTabbable: ElementProps<CellElement>;
+    propsCell: ElementProps<any>;
     propsPress: ElementProps<any>;
 }
-export interface UseGridlistCellParameters<GridlistCellElement extends Element, CM extends GridlistCellInfo<GridlistCellElement>> extends
-    UseCompleteGridNavigationCellParameters<GridlistCellElement, CM>,
-    TargetedPick<UsePressParameters<GridlistCellElement>, "pressParameters", "longPressThreshold" | "onPressingChange" | "onPressSync"> {
-
-}
-
-export interface GridlistRowInfo<GridlistRowElement extends Element> extends UseCompleteGridNavigationRowInfo<GridlistRowElement> { }
-export interface GridlistCellInfo<GridlistCellElement extends Element> extends UseCompleteGridNavigationCellInfo<GridlistCellElement> { }
 
 /**
- * Implements a gridlist, effectively a [Listbox](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/) enhanced with the capabilities of a [Grid](https://www.w3.org/WAI/ARIA/apg/patterns/grid/).
- * 
- * @remarks A Listbox is a very limited structure, essentially being just a list with no further interactive content allowed.
- * 
- * If you need a list where each list item has a menu or a button or other non-text content, a Gridlist is probably what you want.
- * 
  * @compositeParams
- * 
- * @hasChild {@link useGridlistRow}
- * @hasChild {@link useGridlistCell}
  */
-export const useGridlist = /* @__PURE__ */ monitored(function useGridlist<GridlistElement extends Element, GridlistRowElement extends Element, LabelElement extends Element>({
-    labelParameters,
-
-    listboxParameters: { groupingType, ...void1 },
-    rovingTabIndexParameters,
-    singleSelectionParameters,
+export function useGridlist<ParentElement extends Element, RowElement extends Element, LabelElement extends Element, RsM extends UseGridlistRowsInfo<RowElement>, RM extends UseGridlistRowInfo<RowElement>>({
     gridNavigationParameters,
     linearNavigationParameters,
+    managedChildrenParameters,
     multiSelectionParameters,
     paginatedChildrenParameters,
+    rearrangeableChildrenParameters,
     refElementParameters,
+    rovingTabIndexParameters,
+    singleSelectionParameters,
+    staggeredChildrenParameters,
     typeaheadNavigationParameters,
     singleSelectionDeclarativeParameters,
-    ...void2
-}: UseGridlistParameters<GridlistElement, GridlistRowElement, LabelElement, GridlistRowInfo<GridlistRowElement>>): UseGridlistReturnType<GridlistElement, GridlistRowElement, LabelElement, GridlistRowInfo<GridlistRowElement>> {
-
-    assertEmptyObject(void1);
-    assertEmptyObject(void2);
-
-    const {
-        propsInput: propsLabelList,
-        propsLabel: propsLabelLabel,
-        randomIdInputReturn: { id: _gridlistId },
-        randomIdLabelReturn: { id: _labelId }
-    } = useLabelSynthetic<GridlistElement, LabelElement>({
-        labelParameters: {
-            ...labelParameters,
-            onLabelClick: useStableCallback(() => {
-                rovingTabIndexReturn.focusSelf();
-            })
-        },
-        randomIdInputParameters: { prefix: Prefices.gridlist },
-        randomIdLabelParameters: { prefix: Prefices.gridlistLabel }
-    });
-    const {
-        contextChildren,
-        props,
-        rovingTabIndexReturn,
-        singleSelectionReturn: _singleSelectionReturn,
-        ...restRet
-    } = useCompleteGridNavigationDeclarative<GridlistElement, GridlistRowElement, GridlistRowInfo<GridlistRowElement>>({
-        singleSelectionDeclarativeParameters,
-        rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
-        gridNavigationParameters,
-        linearNavigationParameters,
-        multiSelectionParameters,
-        paginatedChildrenParameters,
-        refElementParameters,
-        singleSelectionParameters,
-        typeaheadNavigationParameters
-    });
-
-    let propsGridlist = useMergedProps(props, propsLabelList, { "aria-multiselectable": (contextChildren.multiSelectionContext.multiSelectionMode != "disabled" ? "true" : undefined) });
-
-
-    let fullContext = useMemoObject({
-        ...contextChildren,
-        gridlistRowContext: useMemoObject({
-            //selectionLimit
-        })
-    });
-    if (groupingType == "group")
-        propsGridlist.role = "group";
-    else if (groupingType == "with-groups") {
-        // Intentionally clobbering all the list navigation stuff.
-        propsGridlist = { role: "grid" };
-        // ...actually, context too while we're at it.
-        fullContext = null!
-    }
-    else {
-        propsGridlist.role = "grid";
-    }
-
-    return {
-        contextChildren: fullContext,
-        rovingTabIndexReturn,
-        propsGridlist,
-        propsGridlistLabel: propsLabelLabel,
-        ...restRet
-    }
-})
-
-/**
- * @compositeParams
- * 
- */
-export const useGridlistRow = /* @__PURE__ */ monitored(function useGridlistRow<GridlistRowElement extends Element, GridlistCellElement extends Element>({
-    gridlistRowParameters: { selected },
-    linearNavigationParameters,
-    context: cx1,
-    info,
-    rovingTabIndexParameters,
-    textContentParameters,
-    typeaheadNavigationParameters,
-    hasCurrentFocusParameters,
-    singleSelectionChildParameters,
-    multiSelectionChildParameters,
+    labelParameters,
+    randomIdInputParameters,
+    randomIdLabelParameters,
+    gridNavigationCompleteParameters,
+    processedIndexManglerParameters,
     ...void1
-}: UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, GridlistRowInfo<GridlistRowElement>, GridlistCellInfo<GridlistCellElement>>): UseGridlistRowReturnType<GridlistRowElement, GridlistCellElement, GridlistRowInfo<GridlistRowElement>, GridlistCellInfo<GridlistCellElement>> {
+}: UseGridlistParameters<ParentElement, RowElement, RsM, RM>): UseGridlistReturnType<ParentElement, RowElement, LabelElement, RsM, RM> {
+    return useMonitoring(function useGridlist(): UseGridlistReturnType<ParentElement, RowElement, LabelElement, RsM, RM> {
+        assertEmptyObject(void1);
 
-    type RM = GridlistRowInfo<GridlistRowElement>;
-    type CM = GridlistCellInfo<GridlistCellElement>;
-    const {
-        context: cx2,
-        hasCurrentFocusReturn,
-        linearNavigationReturn,
-        managedChildReturn,
-        managedChildrenReturn,
-        props,
-        rovingTabIndexChildReturn,
-        rovingTabIndexReturn,
-        singleSelectionChildReturn,
-        textContentReturn,
-        typeaheadNavigationReturn,
-        pressParameters,
-        multiSelectionChildReturn,
-        refElementReturn,
-        ...void2
-    } = useCompleteGridNavigationRow<GridlistRowElement, GridlistCellElement, RM, CM>({
-        linearNavigationParameters,
-        info,
-        context: cx1,
-        rovingTabIndexParameters,
-        textContentParameters,
-        typeaheadNavigationParameters,
-        hasCurrentFocusParameters,
+        const { propsInput, propsLabel, ...labelSyntheticRet } = useLabelSynthetic<ParentElement, LabelElement>({
+            labelParameters,
+            randomIdInputParameters,
+            randomIdLabelParameters
+        })
 
-        singleSelectionChildParameters,
-        multiSelectionChildParameters,
+        const { context: contextRows, props, ...completeGridNavigationRet } = useCompleteGridNavigationDeclarative<ParentElement, RowElement, RM>({
+            gridNavigationParameters,
+            linearNavigationParameters,
+            multiSelectionParameters,
+            paginatedChildrenParameters,
+            refElementParameters,
+            rovingTabIndexParameters,
+            singleSelectionParameters,
+            typeaheadNavigationParameters,
+            singleSelectionDeclarativeParameters,
+            gridNavigationCompleteParameters,
+            processedIndexManglerParameters
+        });
+        const { context: contextProcessing, ...completeGridNavigationRowsRet } = useCompleteGridNavigationRows<RowElement, RM, RsM>({
+            context: contextRows,
+            managedChildrenParameters,
+            paginatedChildrenParameters,
+            rearrangeableChildrenParameters,
+            staggeredChildrenParameters,
+        });
+        completeGridNavigationRet.rearrangeableChildrenReturn;
+        completeGridNavigationRowsRet.rearrangeableChildrenReturn
+
+        return {
+            ...completeGridNavigationRet,
+            ...completeGridNavigationRowsRet,
+            ...labelSyntheticRet,
+            props: useMergedProps<ParentElement>(props, propsInput, { role: "grid", "aria-multiselectable": (contextRows.multiSelectionContext.multiSelectionMode != "disabled" ? "true" : undefined) }),
+            propsLabel,
+            contextChildren: contextRows,
+            contextProcessing
+        }
     });
-
-    // `selected` should only be true/false for multi-selection
-    if (cx1.multiSelectionContext.multiSelectionMode == "disabled")
-        console.assert(selected == null, `useGridlistRow: multiSelectionMode is disabled, but selected is ${selected} (instead of null).`);
-
-    props.role = "row";
-
-    assertEmptyObject(void1);
-    assertEmptyObject(void2);
-
-    return {
-        pressParameters,
-        linearNavigationReturn,
-        managedChildrenReturn,
-        managedChildReturn,
-        rovingTabIndexChildReturn,
-        rovingTabIndexReturn,
-        singleSelectionChildReturn,
-        multiSelectionChildReturn,
-        textContentReturn,
-        typeaheadNavigationReturn,
-        context: cx2,
-        hasCurrentFocusReturn,
-        refElementReturn,
-        props
-
-    }
-})
+}
 
 /**
  * @compositeParams
- * 
  */
-export const useGridlistCell = /* @__PURE__ */ monitored(function useGridlistCell<GridlistCellElement extends Element>({ pressParameters: { onPressSync, longPressThreshold, onPressingChange, ...void1 }, ...p }: UseGridlistCellParameters<GridlistCellElement, GridlistCellInfo<GridlistCellElement>>): UseGridlistCellReturnType<GridlistCellElement, GridlistCellInfo<GridlistCellElement>> {
-    const { props, refElementReturn, ...info } = useCompleteGridNavigationCell<GridlistCellElement, GridlistCellInfo<GridlistCellElement>>(p);
+export function useGridlistRowOuter<RowElement extends Element, RsM extends UseCompleteGridNavigationRowsInfo<RowElement>>(p: UseGridlistRowOuterParameters<RowElement, RsM>): UseGridlistRowOuterReturnType<RowElement, RsM> {
+    return useMonitoring(function useGridlistRowOuter(): UseGridlistRowOuterReturnType<RowElement, RsM> {
+        let r = useCompleteGridNavigationRowOuter(p);
+        r.props.role = "row";
+        return r;
+    });
+}
 
-    assertEmptyObject(void1);
+/**
+ * @compositeParams
+ */
+export function useGridlistRow<RowElement extends Element, CellElement extends Element, RM extends UseGridlistRowInfo<RowElement>, CM extends UseGridlistCellInfo<CellElement>>(p: UseGridlistRowParameters<RowElement, CellElement, RM, CM>): UseGridlistRowReturnType<RowElement, CellElement, RM, CM> {
+    return useMonitoring(function useGridlistRow(): UseGridlistRowReturnType<RowElement, CellElement, RM, CM> {
+        // `selected` should only be true/false for multi-selection
+        if (p.context.multiSelectionContext.multiSelectionMode == "disabled")
+            console.assert(p.multiSelectionChildDeclarativeParameters.multiSelected == null, `useGridlistRow: multiSelectionMode is disabled, but selected is ${p.multiSelectionChildDeclarativeParameters.multiSelected?.toString()} (instead of null).`);
 
-    const {
-        pressReturn,
-        props: propsPress
-    } = usePress({
-        pressParameters: { onPressSync, focusSelf: p.info.focusSelf, allowRepeatPresses: false, excludeEnter: null, excludePointer: null, excludeSpace: info.pressParameters.excludeSpace, longPressThreshold, onPressingChange },
-        refElementReturn,
-    })
+        let r = useCompleteGridNavigationRowDeclarative<RowElement, CellElement, RM, CM>(p);
 
-    return {
-        ...info,
-        propsPress,
-        propsCell: { role: "gridcell" },
-        propsTabbable: props,
-        refElementReturn,
-        pressReturn
-    }
+        r.props.role = "row";
 
-})
+        return r;
+    });
+}
 
-/*interface UseGridlistSectionParameters {
-    gridlistSectionParameters: {
-        compareRows: (lhsIndex: number, rhsIndex: number) => number;
-    }
-    gridlistSectionContext: {
+/**
+ * @compositeParams
+ */
+export function useGridlistCell<CellElement extends Element, CM extends UseGridlistCellInfo<CellElement>>({
+    pressParameters: { allowRepeatPresses, excludeEnter, excludePointer, excludeSpace, longPressThreshold, onPressSync, onPressingChange },
+    ...p
+}: UseGridlistCellParameters<CellElement, CM>): UseGridlistCellReturnType<CellElement, CM> {
+    return useMonitoring(function useGridlistCell(): UseGridlistCellReturnType<CellElement, CM> {
+        let { props, ...r } = useCompleteGridNavigationCell<CellElement, CM>(p);
 
-    }
-}*/
+
+        const {
+            pressReturn,
+            props: propsPress
+        } = usePress({
+            pressParameters: {
+                onPressSync,
+                focusSelf: p.info.focusSelf,
+                allowRepeatPresses,
+                excludeEnter,
+                excludePointer,
+                excludeSpace: useStableCallback(() => r.pressParameters.excludeSpace?.() || excludeSpace?.() || false),
+                longPressThreshold,
+                onPressingChange
+            },
+            refElementReturn: r.refElementReturn,
+        })
+
+        return {
+            propsTabbable: props,
+            propsCell: { role: "gridcell" },
+            propsPress,
+            pressReturn,
+            ...r
+        };
+    });
+}

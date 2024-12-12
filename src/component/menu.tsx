@@ -1,5 +1,5 @@
-import { assertEmptyObject, createContext, focus, memo, OmitStrong, useCallback, useContext } from "preact-prop-helpers";
-import { Get15, useContextWithWarning } from "../props.js";
+import { assertEmptyObject, createContext, focus, identity, memo, OmitStrong, useCallback, useContext, useEnsureStability } from "preact-prop-helpers";
+import { Get16, useContextWithWarning } from "../props.js";
 import { useMenu, UseMenuContext, useMenuItem, UseMenuItemReturnType, UseMenuParameters, UseMenuReturnType } from "../use-menu.js";
 import { UseMenubarSubInfo } from "../use-menubar.js";
 import { MenubarItemProps } from "./menubar.js";
@@ -7,7 +7,7 @@ import { GenericComponentProps, ParentDepthContext, useComponent, useDefault } f
 
 export type MenuProps<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> = GenericComponentProps<
     UseMenuReturnType<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement, M>,
-    Get15<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, M>, "menuParameters", "menuSurfaceParameters", "linearNavigationParameters", "rovingTabIndexParameters", "typeaheadNavigationParameters", "dismissParameters", "escapeDismissParameters", "toolbarParameters", "singleSelectionParameters", "activeElementParameters", "refElementParameters", "dismissParameters", "modalParameters", "multiSelectionParameters", "singleSelectionDeclarativeParameters">,
+    Get16<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, M>, "menuParameters", "menuSurfaceParameters", "linearNavigationParameters", "rovingTabIndexParameters", "typeaheadNavigationParameters", "dismissParameters", "escapeDismissParameters", "toolbarParameters", "singleSelectionParameters", "activeElementParameters", "refElementParameters", "dismissParameters", "modalParameters", "multiSelectionParameters", "singleSelectionDeclarativeParameters", "processedIndexManglerParameters">,
     "active" | "onDismiss" | "openDirection" | "orientation" | "onOpen"
 >;
 
@@ -57,13 +57,18 @@ export const Menu = /* @__PURE__ */ memo((function Menu<SurfaceElement extends E
     onLastActiveElementChange,
     onWindowFocusedChange,
 
+    getSortValueAt,
 
     render,
 
     imperativeHandle,
+    compare,
+    getIndex,
     ...void1
 
 }: MenuProps<SurfaceElement, ParentElement, ChildElement, ButtonElement, UseMenubarSubInfo<ChildElement>>) {
+    getSortValueAt ??= identity;
+    useEnsureStability("Menu", getSortValueAt);
 
     const defaultParentDepth = useContext(ParentDepthContext);
     let myDepth = (parentDepth ?? defaultParentDepth) + 1;
@@ -126,6 +131,11 @@ export const Menu = /* @__PURE__ */ memo((function Menu<SurfaceElement extends E
                     singleSelectionDeclarativeParameters: {
                         singleSelectedIndex,
                         onSingleSelectedIndexChange,
+                    },
+                    processedIndexManglerParameters: {
+                        getSortValueAt,
+                        compare,
+                        getIndex: useDefault("getIndex", getIndex)
                     }
                 }))}
         </ParentDepthContext.Provider>

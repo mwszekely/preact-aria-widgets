@@ -1,5 +1,5 @@
 import { jsx as _jsx } from "preact/jsx-runtime";
-import { assertEmptyObject, createContext, focus, memo, useCallback, useImperativeHandle } from "preact-prop-helpers";
+import { assertEmptyObject, createContext, focus, identity, memo, useCallback, useEnsureStability, useImperativeHandle } from "preact-prop-helpers";
 import { useContextWithWarning } from "../props.js";
 import { useTab, useTabPanel, useTabs } from "../use-tabs.js";
 import { useComponent, useDefault } from "./util.js";
@@ -7,8 +7,10 @@ const TabsContext = createContext(null);
 const TabPanelsContext = createContext(null);
 //const UntabbableContext = createContext(false);
 //const SelectionModeContext = createContext<NonNullable<UseTabsParameters<any, any, any>["singleSelectionParameters"]["selectionMode"]>>("focus");
-export const Tabs = /* @__PURE__ */ memo((function Tabs({ ariaLabel, collator, disableHomeEndKeys, initiallySingleSelectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSingleSelectedIndexChange, onTabbableIndexChange, orientation, pageNavigationSize, localStorageKey, singleSelectionMode, untabbable, typeaheadTimeout, role, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, render, ...void1 }) {
+export const Tabs = /* @__PURE__ */ memo((function Tabs({ ariaLabel, collator, disableHomeEndKeys, initiallySingleSelectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSingleSelectedIndexChange, onTabbableIndexChange, orientation, pageNavigationSize, localStorageKey, singleSelectionMode, untabbable, typeaheadTimeout, role, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, render, getSortValueAt, compare, getIndex, ...void1 }) {
     untabbable ??= false;
+    getSortValueAt ??= identity;
+    useEnsureStability("Tabs", getSortValueAt);
     assertEmptyObject(void1);
     const info = useTabs({
         labelParameters: { ariaLabel },
@@ -35,7 +37,8 @@ export const Tabs = /* @__PURE__ */ memo((function Tabs({ ariaLabel, collator, d
             noTypeahead: useDefault("noTypeahead", noTypeahead),
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
         },
-        refElementParameters: { onElementChange, onMount, onUnmount }
+        refElementParameters: { onElementChange, onMount, onUnmount },
+        processedIndexManglerParameters: { getSortValueAt, compare, getIndex: useDefault("getIndex", getIndex) }
     });
     const { contextPanels, contextTabs } = info;
     useImperativeHandle(imperativeHandle, () => info);

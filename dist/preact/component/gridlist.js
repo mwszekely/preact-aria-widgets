@@ -1,176 +1,171 @@
 import { jsx as _jsx } from "preact/jsx-runtime";
-import { assertEmptyObject, createContext, focus, memo, useCompleteGridNavigationRows, useContext, useEffect, useImperativeHandle, useMergedProps, useProcessedChild, useRefElement, useStableCallback } from "preact-prop-helpers";
-import { useContextWithWarning } from "../props.js";
-import { useGridlist, useGridlistCell, useGridlistRow } from "../use-gridlist.js";
+import { createContext } from "preact";
+import { assertEmptyObject, identity, useContext, useEnsureStability } from "preact-prop-helpers";
+import { Prefices } from "../props.js";
+import { useGridlist, useGridlistCell, useGridlistRow, useGridlistRowOuter } from "../use-gridlist.js";
 import { useComponent, useComponentC, useDefault } from "./util.js";
-const GridlistContext = createContext(null);
 const GridlistRowContext = createContext(null);
-const GridlistRowsContext = createContext(null);
-const ProcessedChildContext = createContext(null);
-export const Gridlist = /* @__PURE__ */ memo((function Gridlist({ collator, disableHomeEndKeys, noTypeahead, onTabbableIndexChange, groupingType, typeaheadTimeout, singleSelectedIndex, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, pageNavigationSize, untabbable, paginationMax, paginationMin, onTabbableColumnChange, ariaLabel, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, render, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, singleSelectionAriaPropName, singleSelectionMode, initiallyTabbableColumn, ...void1 }) {
+const GridlistCellContext = createContext(null);
+const GridlistProcessedChildrenContext = createContext(null);
+export function Gridlist({ render, ariaLabel, collator, disableHomeEndKeys, focusSelfParent, imperativeHandle, initiallyTabbableColumn, multiSelectionAriaPropName, multiSelectionMode, navigatePastEnd, navigatePastStart, noTypeahead, onElementChange, onLabelClick, onMount, onNavigateLinear, onNavigateTypeahead, onSelectionChange, onTabbableColumnChange, onTabbableIndexChange, onUnmount, pageNavigationSize, paginationMax, paginationMin, singleSelectionAriaPropName, singleSelectionMode, typeaheadTimeout, untabbable, children, staggered, onAfterChildLayoutEffect, onChildrenCountChange, onChildrenMountChange, onSingleSelectedIndexChange, singleSelectedIndex, getSortColumn, getSortValueAt, ...void1 }) {
+    getSortValueAt ??= identity;
+    useEnsureStability("Gridlist", getSortValueAt);
     assertEmptyObject(void1);
-    return useComponentC(imperativeHandle, render, GridlistContext, GridlistRowsContext, useGridlist({
-        linearNavigationParameters: {
-            onNavigateLinear,
-            disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
-            navigatePastEnd: (navigatePastEnd ?? "wrap"),
-            navigatePastStart: (navigatePastStart ?? "wrap"),
-            pageNavigationSize: useDefault("pageNavigationSize", pageNavigationSize),
-        },
-        rovingTabIndexParameters: {
-            onTabbableIndexChange,
-            untabbable: untabbable || false
-        },
-        typeaheadNavigationParameters: {
-            onNavigateTypeahead,
-            collator: useDefault("collator", collator),
-            noTypeahead: useDefault("noTypeahead", noTypeahead),
-            typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout),
-        },
-        listboxParameters: {
-            groupingType
-        },
+    return useComponentC(imperativeHandle, render, GridlistRowContext, GridlistProcessedChildrenContext, useGridlist({
         gridNavigationParameters: {
-            onTabbableColumnChange,
-            initiallyTabbableColumn: initiallyTabbableColumn || 0
+            initiallyTabbableColumn: initiallyTabbableColumn || 0,
+            onTabbableColumnChange
         },
         labelParameters: {
-            ariaLabel
+            ariaLabel,
+            onLabelClick: onLabelClick || null
         },
-        paginatedChildrenParameters: {
-            paginationMax,
-            paginationMin
+        linearNavigationParameters: {
+            disableHomeEndKeys: useDefault("disableHomeEndKeys", disableHomeEndKeys),
+            navigatePastEnd: navigatePastEnd || "wrap",
+            navigatePastStart: navigatePastStart || "wrap",
+            onNavigateLinear,
+            pageNavigationSize
         },
-        singleSelectionParameters: { singleSelectionAriaPropName, singleSelectionMode: singleSelectionMode || "disabled" },
-        multiSelectionParameters: { multiSelectionAriaPropName, multiSelectionMode: multiSelectionMode || "disabled", onSelectionChange },
-        singleSelectionDeclarativeParameters: { onSingleSelectedIndexChange, singleSelectedIndex },
-        refElementParameters: { onElementChange, onMount, onUnmount }
-    }));
-}));
-export const GridlistRows = /* @__PURE__ */ memo((function GridlistRows({ render, adjust, children, compare, getIndex, imperativeHandle, onAfterChildLayoutEffect, onChildrenCountChange, onChildrenMountChange, onRearranged, paginationMax, paginationMin, staggered }) {
-    return useComponent(imperativeHandle, render, ProcessedChildContext, useCompleteGridNavigationRows({
-        context: useContext(GridlistRowsContext),
         managedChildrenParameters: {
             onAfterChildLayoutEffect,
             onChildrenCountChange,
             onChildrenMountChange
         },
+        multiSelectionParameters: {
+            multiSelectionAriaPropName,
+            multiSelectionMode: useDefault("multiSelectionMode", multiSelectionMode),
+            onSelectionChange,
+        },
         paginatedChildrenParameters: {
             paginationMax,
             paginationMin
         },
+        randomIdInputParameters: {
+            prefix: Prefices.gridlist
+        },
+        randomIdLabelParameters: {
+            prefix: Prefices.gridlistLabel
+        },
         rearrangeableChildrenParameters: {
-            adjust,
             children,
-            compare,
-            getIndex: useDefault("getIndex", getIndex),
-            onRearranged
+        },
+        processedIndexManglerParameters: {
+            compare: null,
+            getIndex: useDefault("getIndex", null)
+        },
+        refElementParameters: {
+            onElementChange,
+            onMount,
+            onUnmount
+        },
+        rovingTabIndexParameters: {
+            focusSelfParent: useDefault("focusSelf", focusSelfParent),
+            onTabbableIndexChange,
+            untabbable: untabbable || false
+        },
+        singleSelectionDeclarativeParameters: {
+            onSingleSelectedIndexChange,
+            singleSelectedIndex
+        },
+        singleSelectionParameters: {
+            singleSelectionAriaPropName,
+            singleSelectionMode: useDefault("singleSelectionMode", singleSelectionMode)
         },
         staggeredChildrenParameters: {
             staggered: staggered || false
+        },
+        typeaheadNavigationParameters: {
+            collator,
+            noTypeahead: noTypeahead || false,
+            onNavigateTypeahead,
+            typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
+        },
+        gridNavigationCompleteParameters: {
+            getSortColumn,
+            getSortValueAt,
         }
     }));
-}));
-export const GridlistRow = /* @__PURE__ */ memo((function GridlistRow({ index, render, imperativeHandle, onElementChange: oec1, onMount, onUnmount, getText, untabbable, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, multiSelectionDisabled, singleSelectionDisabled, collator, initiallyMultiSelected, initiallyTabbedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onMultiSelectChange, onNavigateTypeahead, onTabbableIndexChange, selected, typeaheadTimeout, onTextContentChange, ...void1 }) {
-    assertEmptyObject(void1);
-    const { propsStable, refElementReturn } = useRefElement({
+}
+export function GridlistRow(props) {
+    const { index, render, collator, getText, initiallyTabbedIndex, multiSelected, multiSelectionDisabled, navigatePastEnd, navigatePastStart, noTypeahead, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onMultiSelectedChange, onNavigateTypeahead, onTabbableIndexChange, onTextContentChange, singleSelectionDisabled, typeaheadTimeout, untabbable, imperativeHandle, onElementChange, onMount, onUnmount } = props;
+    return (_jsx(GridlistRowOuter, { index: index, imperativeHandle: imperativeHandle, onElementChange: onElementChange, onMount: onMount, onUnmount: onUnmount, render: info => {
+            if (info.hide) {
+                return render(info);
+            }
+            else {
+                return (_jsx(GridlistRowInner, { index: index, render: render, collator: collator, getText: getText, imperativeHandle: imperativeHandle, initiallyTabbedIndex: initiallyTabbedIndex, multiSelected: multiSelected, multiSelectionDisabled: multiSelectionDisabled, navigatePastEnd: navigatePastEnd, navigatePastStart: navigatePastStart, noTypeahead: noTypeahead, onCurrentFocusedChanged: onCurrentFocusedChanged, onCurrentFocusedInnerChanged: onCurrentFocusedInnerChanged, onElementChange: onElementChange, onMount: onMount, onMultiSelectedChange: onMultiSelectedChange, onNavigateTypeahead: onNavigateTypeahead, onTabbableIndexChange: onTabbableIndexChange, onTextContentChange: onTextContentChange, onUnmount: onUnmount, singleSelectionDisabled: singleSelectionDisabled, typeaheadTimeout: typeaheadTimeout, untabbable: untabbable }));
+            }
+        } }));
+}
+function GridlistRowOuter({ index, render, imperativeHandle, onElementChange, onMount, onUnmount, cssProperty, duration }) {
+    return useComponent(imperativeHandle, render, null, useGridlistRowOuter({
+        context: useContext(GridlistProcessedChildrenContext),
+        info: { index },
         refElementParameters: {
-            onElementChange: useStableCallback((...a) => { oec1?.(...a); oec2?.(...a); }),
+            onElementChange,
             onMount,
             onUnmount
-        }
-    });
-    const { props, refElementParameters: { onElementChange: oec2 }, ...i2 } = useProcessedChild({
-        context: useContextWithWarning(ProcessedChildContext, "ListboxChildren"),
-        info: { index }
-    });
-    const { managedChildReturn: { getChildren }, paginatedChildReturn: { hideBecausePaginated, parentIsPaginated }, staggeredChildReturn: { hideBecauseStaggered, parentIsStaggered, childUseEffect } } = i2;
-    const props2 = useMergedProps(props, propsStable);
-    const processedGridlistRowReturn = {
-        hidden: true,
-        ...i2,
-        props: props2,
-        refElementReturn,
-        managedChildReturn: { getChildren }
-    };
-    const retIfHidden = render(processedGridlistRowReturn);
-    if (hideBecausePaginated || hideBecauseStaggered) {
-        return retIfHidden;
-    }
-    else {
-        return (_jsx(GridlistRowInner, { index: index, render: render, collator: collator, initiallyMultiSelected: initiallyMultiSelected, initiallyTabbedIndex: initiallyTabbedIndex, navigatePastEnd: navigatePastEnd, navigatePastStart: navigatePastStart, noTypeahead: noTypeahead, onMultiSelectChange: onMultiSelectChange, onNavigateTypeahead: onNavigateTypeahead, onTabbableIndexChange: onTabbableIndexChange, selected: selected, typeaheadTimeout: typeaheadTimeout, getText: getText, imperativeHandle: imperativeHandle, multiSelectionDisabled: multiSelectionDisabled, onCurrentFocusedChanged: onCurrentFocusedChanged, onCurrentFocusedInnerChanged: onCurrentFocusedInnerChanged, singleSelectionDisabled: singleSelectionDisabled, untabbable: untabbable, hideBecausePaginated: hideBecausePaginated, hideBecauseStaggered: hideBecauseStaggered, parentIsPaginated: parentIsPaginated, parentIsStaggered: parentIsStaggered, childUseEffect: childUseEffect, onTextContentChange: onTextContentChange, props: props2, ...void1 }));
-    }
-}));
-const GridlistRowInner = /* @__PURE__ */ memo((function GridlistRowInner({ index, collator, untabbable, navigatePastEnd, navigatePastStart, noTypeahead, onTabbableIndexChange, selected, typeaheadTimeout, getText, render, initiallyTabbedIndex, onNavigateTypeahead, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, childUseEffect, hideBecausePaginated, hideBecauseStaggered, parentIsPaginated, parentIsStaggered, props: props1, onTextContentChange, ...void1 }) {
-    assertEmptyObject(void1);
-    const { context, hasCurrentFocusReturn, linearNavigationReturn, managedChildReturn, managedChildrenReturn, multiSelectionChildReturn, pressParameters, props: props2, rovingTabIndexChildReturn, rovingTabIndexReturn, refElementReturn, singleSelectionChildReturn, textContentReturn, typeaheadNavigationReturn, } = useGridlistRow({
-        info: {
-            index,
-            untabbable: untabbable || false
-            //...uinfo
         },
-        context: useContextWithWarning(GridlistContext, "gridlist"),
-        gridlistRowParameters: { selected },
-        textContentParameters: { getText: useDefault("getText", getText), onTextContentChange },
-        linearNavigationParameters: {
-            navigatePastEnd: navigatePastEnd ?? "wrap",
-            navigatePastStart: navigatePastStart ?? "wrap"
+        rearrangeableChildParameters: {
+            cssProperty,
+            duration
+        }
+    }));
+}
+function GridlistRowInner({ index, render, collator, getText, imperativeHandle, initiallyTabbedIndex, multiSelectionDisabled, navigatePastEnd, navigatePastStart, noTypeahead, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onNavigateTypeahead, onTabbableIndexChange, onTextContentChange, onUnmount, singleSelectionDisabled, typeaheadTimeout, untabbable, multiSelected, onMultiSelectedChange, }) {
+    untabbable ||= false;
+    return useComponent(imperativeHandle, render, GridlistCellContext, useGridlistRow({
+        context: useContext(GridlistRowContext),
+        info: { index, untabbable },
+        refElementParameters: {
+            onElementChange,
+            onMount,
+            onUnmount
         },
         hasCurrentFocusParameters: {
             onCurrentFocusedChanged,
-            onCurrentFocusedInnerChanged,
+            onCurrentFocusedInnerChanged
+        },
+        linearNavigationParameters: {
+            navigatePastEnd: navigatePastEnd || "wrap",
+            navigatePastStart: navigatePastStart || "wrap"
+        },
+        multiSelectionChildDeclarativeParameters: {
+            multiSelected: multiSelected ?? null,
+            onMultiSelectedChange
+        },
+        multiSelectionChildParameters: {
+            multiSelectionDisabled: multiSelectionDisabled || false
         },
         rovingTabIndexParameters: {
-            onTabbableIndexChange,
             initiallyTabbedIndex,
-            untabbable: untabbable || false,
+            onTabbableIndexChange,
+            untabbable: untabbable
+        },
+        singleSelectionChildParameters: {
+            singleSelectionDisabled: singleSelectionDisabled || false
+        },
+        textContentParameters: {
+            getText: useDefault("getText", getText),
+            onTextContentChange
         },
         typeaheadNavigationParameters: {
+            collator,
+            noTypeahead: noTypeahead || false,
             onNavigateTypeahead,
-            collator: useDefault("collator", collator),
-            noTypeahead: useDefault("noTypeahead", noTypeahead),
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
-        },
-        singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false },
-        multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false, initiallyMultiSelected: initiallyMultiSelected || false, onMultiSelectChange }
-    });
-    useEffect(childUseEffect, [childUseEffect]);
-    return useComponent(imperativeHandle, render, GridlistRowContext, {
-        context,
-        hasCurrentFocusReturn,
-        linearNavigationReturn,
-        managedChildrenReturn,
-        managedChildReturn,
-        multiSelectionChildReturn,
-        pressParameters,
-        props: useMergedProps(props1, props2),
-        rovingTabIndexChildReturn,
-        rovingTabIndexReturn,
-        singleSelectionChildReturn,
-        textContentReturn,
-        typeaheadNavigationReturn,
-        refElementReturn,
-        paginatedChildReturn: { hideBecausePaginated, parentIsPaginated },
-        staggeredChildReturn: { hideBecauseStaggered, parentIsStaggered },
-    });
-}));
-export const GridlistChild = /* @__PURE__ */ memo((function GridlistChild({ index, colSpan, focusSelf, untabbable, getText, onPressSync, longPressThreshold, onPressingChange, render, imperativeHandle, onTextContentChange, info: subInfo }) {
-    const context = useContextWithWarning(GridlistRowContext, "gridlist row");
-    console.assert(context != null, `This GridlistChild is not contained within a GridlistRow that is contained within a Gridlist`);
-    const defaultFocusSelf = useStableCallback((e) => { focus(e); }, []);
-    const info = useGridlistCell({
-        info: {
-            index: index,
-            untabbable: untabbable || false,
-            focusSelf: (focusSelf ?? defaultFocusSelf),
-            ...subInfo
-        },
-        context,
-        gridNavigationCellParameters: { colSpan: colSpan ?? 1 },
-        textContentParameters: { getText: useDefault("getText", getText), onTextContentChange },
-        pressParameters: { onPressSync, longPressThreshold, onPressingChange }
-    });
-    useImperativeHandle(imperativeHandle, () => info);
-    return render(info);
-}));
+        }
+    }));
+}
+export function GridlistCell({ index, render, getText, imperativeHandle, onTextContentChange, untabbable, allowRepeatPresses, colSpan, excludeEnter, excludePointer, excludeSpace, focusSelf, longPressThreshold, onPressSync, onPressingChange }) {
+    untabbable ||= false;
+    return useComponent(imperativeHandle, render, null, useGridlistCell({
+        context: useContext(GridlistCellContext),
+        info: { index, untabbable, focusSelf: useDefault("focusSelf", focusSelf) },
+        gridNavigationCellParameters: { colSpan },
+        pressParameters: { allowRepeatPresses, excludeEnter, excludePointer, excludeSpace, longPressThreshold, onPressingChange, onPressSync },
+        textContentParameters: { getText: useDefault("getText", getText), onTextContentChange }
+    }));
+}
 //# sourceMappingURL=gridlist.js.map

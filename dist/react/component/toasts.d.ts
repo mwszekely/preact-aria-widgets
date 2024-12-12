@@ -6,6 +6,6 @@ export type ToastsProps<ContainerType extends Element, M extends ToastInfo = Toa
 export type ToastProps<E extends Element, M extends ToastInfo = ToastInfo> = GenericComponentProps<UseToastReturnType<E, M>, Get2<UseToastParameters<M>, "toastParameters", "info">, "index"> & {
     info?: OmitStrong<M, keyof ToastInfo>;
 };
-export declare function Toasts<ContainerType extends Element>({ onAfterChildLayoutEffect, onChildrenMountChange, render, visibleCount, imperativeHandle, onChildrenCountChange, ...void1 }: ToastsProps<ContainerType, ToastInfo>): import("preact-prop-helpers").JSX.Element;
-export declare function Toast<E extends Element>({ render, index, timeout, politeness, children, info, imperativeHandle }: ToastProps<E, ToastInfo>): import("preact-prop-helpers").JSX.Element;
+export declare function Toasts<ContainerType extends Element>({ onAfterChildLayoutEffect, onChildrenMountChange, render, visibleCount, imperativeHandle, onChildrenCountChange, ...void1 }: ToastsProps<ContainerType, ToastInfo>): import("preact").h.JSX.Element;
+export declare function Toast<E extends Element>({ render, index, timeout, politeness, children, info, imperativeHandle }: ToastProps<E, ToastInfo>): import("preact").h.JSX.Element;
 //# sourceMappingURL=toasts.d.ts.map

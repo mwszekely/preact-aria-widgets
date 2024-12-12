@@ -1,11 +1,11 @@
-import { assertEmptyObject, createContext, focus, memo, OmitStrong, useCallback, useImperativeHandle } from "preact-prop-helpers";
-import { Get, Get6, Get8, useContextWithWarning } from "../props.js";
+import { assertEmptyObject, createContext, focus, identity, memo, OmitStrong, useCallback, useEnsureStability, useImperativeHandle } from "preact-prop-helpers";
+import { Get, Get6, Get9, useContextWithWarning } from "../props.js";
 import { TabInfo, TabPanelInfo, useTab, useTabPanel, UseTabPanelParameters, UseTabPanelReturnType, UseTabPanelsContext, UseTabParameters, UseTabReturnType, useTabs, UseTabsContext, UseTabsParameters, UseTabsReturnType } from "../use-tabs.js";
 import { GenericComponentProps, useComponent, useDefault } from "./util.js";
 
 export type TabsProps<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element, M extends TabInfo<TabElement> = TabInfo<TabElement>> = GenericComponentProps<
     UseTabsReturnType<TabContainerElement, TabElement, TabLabelElement, M>,
-    Get8<UseTabsParameters<TabContainerElement, TabElement, M>, "labelParameters", "linearNavigationParameters", "rovingTabIndexParameters", "singleSelectionParameters", "tabsParameters", "typeaheadNavigationParameters", "singleSelectionParameters", "refElementParameters">,
+    Get9<UseTabsParameters<TabContainerElement, TabElement, M>, "labelParameters", "linearNavigationParameters", "rovingTabIndexParameters", "singleSelectionParameters", "tabsParameters", "typeaheadNavigationParameters", "singleSelectionParameters", "refElementParameters", "processedIndexManglerParameters">,
     "orientation" | "ariaLabel"
 >;
 
@@ -52,9 +52,14 @@ export const Tabs = /* @__PURE__ */ memo((function Tabs<TabContainerElement exte
     onMount,
     onUnmount,
     render,
+    getSortValueAt,
+    compare,
+    getIndex,
     ...void1
 }: TabsProps<TabContainerElement, TabElement, TabLabelElement>) {
     untabbable ??= false;
+    getSortValueAt ??= identity;
+    useEnsureStability("Tabs", getSortValueAt);
     assertEmptyObject(void1);
     const info = useTabs<TabContainerElement, TabElement, TabLabelElement>({
         labelParameters: { ariaLabel },
@@ -81,7 +86,8 @@ export const Tabs = /* @__PURE__ */ memo((function Tabs<TabContainerElement exte
             noTypeahead: useDefault("noTypeahead", noTypeahead),
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
         },
-        refElementParameters: { onElementChange, onMount, onUnmount }
+        refElementParameters: { onElementChange, onMount, onUnmount },
+        processedIndexManglerParameters: { getSortValueAt, compare, getIndex: useDefault("getIndex", getIndex) }
     });
 
     const { contextPanels, contextTabs } = info;

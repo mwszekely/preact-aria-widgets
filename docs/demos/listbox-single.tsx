@@ -11,7 +11,7 @@ const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
             index={index}
             focusSelf={e => e.focus()}
             render={info => {
-                if (!info.singleSelectionChildReturn)
+                if (info.hidden)
                     return <li {...info.props} />
                 const selected = info.singleSelectionChildReturn.singleSelected;
                 // defaultRenderListboxSingleItem({ tagListItem: "li", makePropsListItem: ({ singleSelection: { selected } }) => ({ children: `List item #${index}${selected ? " (selected)" : ""}` }) })

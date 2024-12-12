@@ -78,7 +78,7 @@ export { useCheckboxLike } from "./use-checkbox-like.js";
 export { useCheckbox } from "./use-checkbox.js";
 export { useDialog } from "./use-dialog.js";
 export { useDrawer } from "./use-drawer.js";
-export { useGridlist, useGridlistCell, useGridlistRow } from "./use-gridlist.js";
+export { useGridlist, useGridlistCell, useGridlistRow, useGridlistRowOuter } from "./use-gridlist.js";
 export { useLabel, useLabelSynthetic } from "./use-label.js";
 export { useListbox, useListboxItem } from "./use-listbox.js";
 export { useFocusSentinel, useMenuSurface } from "./use-menu-surface.js";
@@ -88,7 +88,7 @@ export { NotificationProviderContext, useNotificationProvider, useNotify } from 
 export { useProgress, useProgressWithHandler } from "./use-progress.js";
 export { useRadio, useRadioGroup } from "./use-radio-group.js";
 export { useSlider, useSliderThumb } from "./use-slider.js";
-export { useTable, useTableCell, useTableRow, useTableSection } from "./use-table.js";
+export { useTable, useTableBody, useTableCell, useTableHead, useTableRow, useTableRowOuter } from "./use-table.js";
 export { useTab, useTabPanel, useTabs } from "./use-tabs.js";
 export { useToast, useToasts } from "./use-toasts.js";
 export { useToolbar, useToolbarChild } from "./use-toolbar.js";
@@ -99,7 +99,7 @@ export { CheckboxGroup, CheckboxGroupChild, CheckboxGroupParent } from "./compon
 export { Checkbox, defaultRenderCheckboxLike } from "./component/checkbox.js";
 export { Dialog } from "./component/dialog.js";
 export { Drawer } from "./component/drawer.js";
-export { Gridlist, GridlistChild, GridlistRow, GridlistRows } from "./component/gridlist.js";
+export { Gridlist, GridlistCell, GridlistRow } from "./component/gridlist.js";
 export { Heading, HeadingReset } from "./component/heading.js";
 export { GroupedListbox, Listbox, ListboxChildren, ListboxItem } from "./component/listbox.js";
 export { Menu, MenuItem } from "./component/menu.js";
@@ -107,7 +107,7 @@ export { Menubar, MenubarItem, MenubarItemContext } from "./component/menubar.js
 export { Progress, ProgressWithHandler } from "./component/progress.js";
 export { Radio, RadioGroup } from "./component/radio-group.js";
 export { Slider, SliderThumb } from "./component/slider.js";
-export { Table, TableCell, TableRow, TableRows, TableSection } from "./component/table.js";
+export { Table, TableBody, TableBodyRow, TableCell, TableHead, TableHeadRow } from "./component/table.js";
 export { Tab, TabPanel, Tabs } from "./component/tabs.js";
 export { Toast, Toasts } from "./component/toasts.js";
 export { Toolbar, ToolbarChild } from "./component/toolbar.js";

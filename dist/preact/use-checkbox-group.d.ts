@@ -40,7 +40,7 @@ export interface UseCheckboxGroupChildReturnTypeSelf {
 export interface UseCheckboxGroupChildReturnType<TCE extends Element> extends OmitStrong<UseCompleteListNavigationChildReturnType<TCE, CheckboxGroupInfo<TCE>>, "singleSelectionChildReturn"> {
     checkboxGroupChildReturn: UseCheckboxGroupChildReturnTypeSelf;
 }
-export interface UseCheckboxGroupReturnType<GroupElement extends Element, TCE extends Element> extends OmitStrong<UseCompleteListNavigationReturnType<GroupElement, TCE, CheckboxGroupInfo<TCE>>, "contextChildren" | "contextProcessing"> {
+export interface UseCheckboxGroupReturnType<GroupElement extends Element, TCE extends Element> extends OmitStrong<UseCompleteListNavigationReturnType<GroupElement, TCE, CheckboxGroupInfo<TCE>>, "context"> {
     context: CheckboxGroupContext<TCE>;
 }
 export interface UseCheckboxGroupParentParameters<TCE extends Element> extends UseGenericChildParameters<CheckboxGroupContext<TCE>, Pick<CheckboxGroupInfo<TCE>, "index" | "focusSelf" | "untabbable">>, OmitStrong<UseCompleteListNavigationChildParameters<TCE, CheckboxGroupInfo<TCE>>, "context" | "info"> {
@@ -100,13 +100,13 @@ export interface CheckboxGroupContext<TCE extends Element> extends CompleteListN
  * @hasChild {@link useCheckboxGroupParent}
  * @hasChild {@link useCheckboxGroupChild}
  */
-export declare const useCheckboxGroup: <GroupElement extends Element, TCE extends Element>({ linearNavigationParameters, rovingTabIndexParameters, checkboxGroupParameters: { orientation, ...void2 }, multiSelectionParameters, refElementParameters, typeaheadNavigationParameters, ...void1 }: UseCheckboxGroupParameters<GroupElement, TCE>) => UseCheckboxGroupReturnType<GroupElement, TCE>;
+export declare function useCheckboxGroup<GroupElement extends Element, TCE extends Element>({ linearNavigationParameters, rovingTabIndexParameters, checkboxGroupParameters: { orientation, ...void2 }, multiSelectionParameters, refElementParameters, typeaheadNavigationParameters, processedIndexManglerParameters, ...void1 }: UseCheckboxGroupParameters<GroupElement, TCE>): UseCheckboxGroupReturnType<GroupElement, TCE>;
 /**
  * Implements the logic for the parent checkbox (but not the checkbox itself).
  *
  * @compositeParams
  */
-export declare const useCheckboxGroupParent: <TCE extends Element>({ context: { checkboxGroupParentContext: { setControlsSetterOnParentCheckbox, setSetParentCheckboxChecked, getPercentChecked, getTotalChecked, getTotalChildren, onCheckboxGroupParentInput }, ...context }, info, hasCurrentFocusParameters, refElementParameters, textContentParameters, multiSelectionChildParameters, singleSelectionChildParameters, ...void1 }: UseCheckboxGroupParentParameters<TCE>) => UseCheckboxGroupParentReturnType<TCE>;
+export declare function useCheckboxGroupParent<TCE extends Element>({ context: { checkboxGroupParentContext: { setControlsSetterOnParentCheckbox, setSetParentCheckboxChecked, getPercentChecked, getTotalChecked, getTotalChildren, onCheckboxGroupParentInput }, ...context }, info, hasCurrentFocusParameters, refElementParameters, textContentParameters, multiSelectionChildParameters, singleSelectionChildParameters, ...void1 }: UseCheckboxGroupParentParameters<TCE>): UseCheckboxGroupParentReturnType<TCE>;
 /**
  * Implements the "child" part of a checkbox group.
  *
@@ -120,6 +120,6 @@ export declare const useCheckboxGroupParent: <TCE extends Element>({ context: { 
  *
  * @compositeParams
  */
-export declare const useCheckboxGroupChild: <TCE extends Element>({ checkboxGroupChildParameters, context, info: { focusSelf, index, untabbable, ...void3 }, textContentParameters, hasCurrentFocusParameters, refElementParameters, multiSelectionChildParameters: { multiSelectionDisabled, onMultiSelectChange, ...void5 }, ...void4 }: UseCheckboxGroupChildParameters<TCE>) => UseCheckboxGroupChildReturnType<TCE>;
+export declare function useCheckboxGroupChild<TCE extends Element>({ checkboxGroupChildParameters, context, info: { focusSelf, index, untabbable, ...void3 }, textContentParameters, hasCurrentFocusParameters, refElementParameters, multiSelectionChildParameters: { multiSelectionDisabled, onMultiSelectChange, ...void5 }, ...void4 }: UseCheckboxGroupChildParameters<TCE>): UseCheckboxGroupChildReturnType<TCE>;
 export {};
 //# sourceMappingURL=use-checkbox-group.d.ts.map

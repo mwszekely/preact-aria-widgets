@@ -1,63 +1,53 @@
-import { CompleteGridNavigationCellContext, CompleteGridNavigationRowContext, ElementProps, ExtendMerge, Nullable, TargetedOmit, TargetedPick, UseCompleteGridNavigationCellInfo, UseCompleteGridNavigationCellParameters, UseCompleteGridNavigationCellReturnType, UseCompleteGridNavigationDeclarativeParameters, UseCompleteGridNavigationReturnType, UseCompleteGridNavigationRowInfo, UseCompleteGridNavigationRowInfoKeysParameters, UseCompleteGridNavigationRowParameters, UseCompleteGridNavigationRowReturnType, UseGenericChildParameters, UsePressParameters, UsePressReturnType } from "preact-prop-helpers";
-import { OmitStrong } from "./props.js";
-import { UseLabelSyntheticParameters } from "./use-label.js";
-import { UseListboxParameters, UseListboxParametersSelf } from "./use-listbox.js";
-export interface UseGridlistContext<GridlistRowElement extends Element, RM extends GridlistRowInfo<GridlistRowElement>> extends CompleteGridNavigationRowContext<GridlistRowElement, RM> {
+import { CompleteGridNavigationCellContext, CompleteGridNavigationRowContext, ElementProps, OmitStrong, TargetedOmit, UseCompleteGridNavigationCellInfo, UseCompleteGridNavigationCellParameters, UseCompleteGridNavigationCellReturnType, UseCompleteGridNavigationDeclarativeParameters, UseCompleteGridNavigationDeclarativeReturnType, UseCompleteGridNavigationRowDeclarativeParameters, UseCompleteGridNavigationRowInfo, UseCompleteGridNavigationRowOuterParameters, UseCompleteGridNavigationRowOuterReturnType, UseCompleteGridNavigationRowReturnType, UseCompleteGridNavigationRowsContext, UseCompleteGridNavigationRowsInfo, UseCompleteGridNavigationRowsParameters, UseCompleteGridNavigationRowsReturnType, UsePressParameters, UsePressReturnType } from "preact-prop-helpers";
+import { UseLabelReturnType, UseLabelSyntheticParameters } from "./use-label.js";
+export interface UseGridlistRowInfo<RowElement extends Element> extends UseCompleteGridNavigationRowInfo<RowElement> {
 }
-export interface UseGridlistRowContext<CellElement extends Element, M extends GridlistCellInfo<CellElement>> extends CompleteGridNavigationCellContext<CellElement, M> {
+export interface UseGridlistRowsInfo<RowElement extends Element> extends UseCompleteGridNavigationRowsInfo<RowElement> {
 }
-export interface UseGridlistParametersSelf extends UseListboxParametersSelf {
+export interface UseGridlistCellInfo<RowElement extends Element> extends UseCompleteGridNavigationCellInfo<RowElement> {
 }
-export interface UseGridlistParameters<GridlistElement extends Element, GridlistRowElement extends Element, LabelElement extends Element, RM extends GridlistRowInfo<GridlistRowElement>> extends OmitStrong<UseCompleteGridNavigationDeclarativeParameters<GridlistElement, GridlistRowElement, RM>, "rovingTabIndexParameters">, TargetedOmit<UseCompleteGridNavigationDeclarativeParameters<GridlistElement, GridlistRowElement, RM>, "rovingTabIndexParameters", "focusSelfParent">, TargetedOmit<UseLabelSyntheticParameters, "labelParameters", "onLabelClick">, TargetedOmit<UseListboxParameters<GridlistElement, GridlistRowElement, LabelElement, RM>, "listboxParameters", "orientation"> {
+export interface UseGridlistRowContext<ChildElement extends Element, M extends UseGridlistRowInfo<ChildElement>> extends CompleteGridNavigationRowContext<ChildElement, M> {
 }
-export interface UseGridlistReturnType<GridlistElement extends Element, GridlistRowElement extends Element, LabelElement extends Element, RM extends GridlistRowInfo<GridlistRowElement>> extends OmitStrong<UseCompleteGridNavigationReturnType<GridlistElement, GridlistRowElement, RM>, "singleSelectionReturn" | "props"> {
-    propsGridlist: ElementProps<GridlistElement>;
-    propsGridlistLabel: ElementProps<LabelElement>;
-    contextChildren: UseGridlistContext<GridlistRowElement, RM>;
+export interface UseGridlistRowsContext<ChildElement extends Element, SM extends UseGridlistRowsInfo<ChildElement>> extends UseCompleteGridNavigationRowsContext<ChildElement, SM> {
 }
-export interface UseGridlistRowReturnType<GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends OmitStrong<UseCompleteGridNavigationRowReturnType<GridlistRowElement, GridlistCellElement, RM, CM>, never> {
+export interface UseGridlistCellContext<ChildElement extends Element, M extends UseGridlistCellInfo<ChildElement>> extends CompleteGridNavigationCellContext<ChildElement, M> {
 }
-export interface UseGridlistRowParametersSelf {
-    /**
-     * **Multi-selection** only! When the `selectionLimit` is `"single"`, this must be `null`.
-     */
-    selected: Nullable<boolean>;
+export interface UseGridlistParameters<ParentElement extends Element, RowElement extends Element, RsM extends UseGridlistRowsInfo<RowElement> = UseGridlistRowsInfo<RowElement>, RM extends UseGridlistRowInfo<RowElement> = UseGridlistRowInfo<RowElement>> extends UseCompleteGridNavigationDeclarativeParameters<ParentElement, RowElement, RM>, OmitStrong<UseCompleteGridNavigationRowsParameters<RowElement, RM, RsM>, "context">, UseLabelSyntheticParameters {
 }
-export interface UseGridlistRowParameters<GridlistRowElement extends Element, GridlistCellElement extends Element, RM extends GridlistRowInfo<GridlistRowElement>, CM extends GridlistCellInfo<GridlistCellElement>> extends UseGenericChildParameters<UseGridlistContext<GridlistRowElement, RM>, Pick<RM, UseCompleteGridNavigationRowInfoKeysParameters<RM>>>, OmitStrong<UseCompleteGridNavigationRowParameters<GridlistRowElement, GridlistCellElement, RM, CM>, never> {
-    gridlistRowParameters: UseGridlistRowParametersSelf;
+export interface UseGridlistReturnType<ParentElement extends Element, RowElement extends Element, LabelElement extends Element, RsM extends UseGridlistRowsInfo<RowElement> = UseGridlistRowsInfo<RowElement>, RM extends UseGridlistRowInfo<RowElement> = UseGridlistRowInfo<RowElement>> extends OmitStrong<UseCompleteGridNavigationDeclarativeReturnType<ParentElement, RowElement, RM>, "context" | "rearrangeableChildrenReturn">, OmitStrong<UseCompleteGridNavigationRowsReturnType<RowElement, RsM>, "context">, OmitStrong<UseLabelReturnType<ParentElement, LabelElement>, "propsInput"> {
+    contextChildren: UseGridlistRowContext<RowElement, RM>;
+    contextProcessing: UseGridlistRowsContext<RowElement, RsM>;
 }
-export interface UseGridlistCellReturnType<GridlistCellElement extends Element, CM extends GridlistCellInfo<GridlistCellElement>> extends OmitStrong<ExtendMerge<UseCompleteGridNavigationCellReturnType<GridlistCellElement, CM>, Pick<UsePressReturnType<GridlistCellElement>, "pressReturn">>, "props"> {
-    propsCell: ElementProps<GridlistCellElement>;
-    propsTabbable: ElementProps<any>;
+export interface UseGridlistRowOuterParameters<RowElement extends Element, RsM extends UseCompleteGridNavigationRowsInfo<RowElement>> extends UseCompleteGridNavigationRowOuterParameters<RowElement, RsM> {
+}
+export interface UseGridlistRowOuterReturnType<RowElement extends Element, RsM extends UseCompleteGridNavigationRowsInfo<RowElement>> extends UseCompleteGridNavigationRowOuterReturnType<RowElement, RsM> {
+}
+export interface UseGridlistRowParameters<RowElement extends Element, CellElement extends Element, RM extends UseGridlistRowInfo<RowElement>, CM extends UseGridlistCellInfo<CellElement>> extends UseCompleteGridNavigationRowDeclarativeParameters<RowElement, CellElement, RM, CM> {
+}
+export interface UseGridlistRowReturnType<RowElement extends Element, CellElement extends Element, RM extends UseGridlistRowInfo<RowElement>, CM extends UseGridlistCellInfo<CellElement>> extends UseCompleteGridNavigationRowReturnType<RowElement, CellElement, RM, CM> {
+    context: UseGridlistCellContext<CellElement, CM>;
+}
+export interface UseGridlistCellParameters<CellElement extends Element, CM extends UseGridlistCellInfo<CellElement>> extends UseCompleteGridNavigationCellParameters<CellElement, CM>, TargetedOmit<UsePressParameters<CellElement>, "pressParameters", "focusSelf"> {
+}
+export interface UseGridlistCellReturnType<CellElement extends Element, CM extends UseGridlistCellInfo<CellElement>> extends OmitStrong<UseCompleteGridNavigationCellReturnType<CellElement, CM>, "props">, OmitStrong<UsePressReturnType<CellElement>, "props"> {
+    propsTabbable: ElementProps<CellElement>;
+    propsCell: ElementProps<any>;
     propsPress: ElementProps<any>;
 }
-export interface UseGridlistCellParameters<GridlistCellElement extends Element, CM extends GridlistCellInfo<GridlistCellElement>> extends UseCompleteGridNavigationCellParameters<GridlistCellElement, CM>, TargetedPick<UsePressParameters<GridlistCellElement>, "pressParameters", "longPressThreshold" | "onPressingChange" | "onPressSync"> {
-}
-export interface GridlistRowInfo<GridlistRowElement extends Element> extends UseCompleteGridNavigationRowInfo<GridlistRowElement> {
-}
-export interface GridlistCellInfo<GridlistCellElement extends Element> extends UseCompleteGridNavigationCellInfo<GridlistCellElement> {
-}
-/**
- * Implements a gridlist, effectively a [Listbox](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/) enhanced with the capabilities of a [Grid](https://www.w3.org/WAI/ARIA/apg/patterns/grid/).
- *
- * @remarks A Listbox is a very limited structure, essentially being just a list with no further interactive content allowed.
- *
- * If you need a list where each list item has a menu or a button or other non-text content, a Gridlist is probably what you want.
- *
- * @compositeParams
- *
- * @hasChild {@link useGridlistRow}
- * @hasChild {@link useGridlistCell}
- */
-export declare const useGridlist: <GridlistElement extends Element, GridlistRowElement extends Element, LabelElement extends Element>({ labelParameters, listboxParameters: { groupingType, ...void1 }, rovingTabIndexParameters, singleSelectionParameters, gridNavigationParameters, linearNavigationParameters, multiSelectionParameters, paginatedChildrenParameters, refElementParameters, typeaheadNavigationParameters, singleSelectionDeclarativeParameters, ...void2 }: UseGridlistParameters<GridlistElement, GridlistRowElement, LabelElement, GridlistRowInfo<GridlistRowElement>>) => UseGridlistReturnType<GridlistElement, GridlistRowElement, LabelElement, GridlistRowInfo<GridlistRowElement>>;
 /**
  * @compositeParams
- *
  */
-export declare const useGridlistRow: <GridlistRowElement extends Element, GridlistCellElement extends Element>({ gridlistRowParameters: { selected }, linearNavigationParameters, context: cx1, info, rovingTabIndexParameters, textContentParameters, typeaheadNavigationParameters, hasCurrentFocusParameters, singleSelectionChildParameters, multiSelectionChildParameters, ...void1 }: UseGridlistRowParameters<GridlistRowElement, GridlistCellElement, GridlistRowInfo<GridlistRowElement>, GridlistCellInfo<GridlistCellElement>>) => UseGridlistRowReturnType<GridlistRowElement, GridlistCellElement, GridlistRowInfo<GridlistRowElement>, GridlistCellInfo<GridlistCellElement>>;
+export declare function useGridlist<ParentElement extends Element, RowElement extends Element, LabelElement extends Element, RsM extends UseGridlistRowsInfo<RowElement>, RM extends UseGridlistRowInfo<RowElement>>({ gridNavigationParameters, linearNavigationParameters, managedChildrenParameters, multiSelectionParameters, paginatedChildrenParameters, rearrangeableChildrenParameters, refElementParameters, rovingTabIndexParameters, singleSelectionParameters, staggeredChildrenParameters, typeaheadNavigationParameters, singleSelectionDeclarativeParameters, labelParameters, randomIdInputParameters, randomIdLabelParameters, gridNavigationCompleteParameters, processedIndexManglerParameters, ...void1 }: UseGridlistParameters<ParentElement, RowElement, RsM, RM>): UseGridlistReturnType<ParentElement, RowElement, LabelElement, RsM, RM>;
 /**
  * @compositeParams
- *
  */
-export declare const useGridlistCell: <GridlistCellElement extends Element>({ pressParameters: { onPressSync, longPressThreshold, onPressingChange, ...void1 }, ...p }: UseGridlistCellParameters<GridlistCellElement, GridlistCellInfo<GridlistCellElement>>) => UseGridlistCellReturnType<GridlistCellElement, GridlistCellInfo<GridlistCellElement>>;
+export declare function useGridlistRowOuter<RowElement extends Element, RsM extends UseCompleteGridNavigationRowsInfo<RowElement>>(p: UseGridlistRowOuterParameters<RowElement, RsM>): UseGridlistRowOuterReturnType<RowElement, RsM>;
+/**
+ * @compositeParams
+ */
+export declare function useGridlistRow<RowElement extends Element, CellElement extends Element, RM extends UseGridlistRowInfo<RowElement>, CM extends UseGridlistCellInfo<CellElement>>(p: UseGridlistRowParameters<RowElement, CellElement, RM, CM>): UseGridlistRowReturnType<RowElement, CellElement, RM, CM>;
+/**
+ * @compositeParams
+ */
+export declare function useGridlistCell<CellElement extends Element, CM extends UseGridlistCellInfo<CellElement>>({ pressParameters: { allowRepeatPresses, excludeEnter, excludePointer, excludeSpace, longPressThreshold, onPressSync, onPressingChange }, ...p }: UseGridlistCellParameters<CellElement, CM>): UseGridlistCellReturnType<CellElement, CM>;
 //# sourceMappingURL=use-gridlist.d.ts.map

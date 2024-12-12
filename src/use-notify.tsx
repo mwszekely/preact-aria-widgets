@@ -1,10 +1,11 @@
 import {
     createContext,
     useCallback, useMemo,
+    useMonitoring,
     usePortalChildren,
     VNode
 } from "preact-prop-helpers";
-import { monitored, useContextWithWarning } from "./props.js";
+import { useContextWithWarning } from "./props.js";
 
 export interface NotificationProviderProps {
     targetAssertive: string | Element;
@@ -35,36 +36,37 @@ export const NotificationProviderContext = createContext<NotificationProviderCon
  * 
  * @hasChild {@link useNotify}
  */
-export const useNotificationProvider = /* @__PURE__ */ monitored(function useNotificationProvider({ targetAssertive, targetPolite }: NotificationProviderProps) {
+export function useNotificationProvider({ targetAssertive, targetPolite }: NotificationProviderProps) {
+    return useMonitoring(function useNotificationProvider() {
+        const { children: childrenPolite, pushChild: notifyPolite, portalElement: politeElement } = usePortalChildren({ target: targetPolite });
+        const { children: childrenAssertive, pushChild: notifyAssertive, portalElement: assertiveElement } = usePortalChildren({ target: targetAssertive });
 
-    const { children: childrenPolite, pushChild: notifyPolite, portalElement: politeElement } = usePortalChildren({ target: targetPolite });
-    const { children: childrenAssertive, pushChild: notifyAssertive, portalElement: assertiveElement } = usePortalChildren({ target: targetAssertive });
+        if (typeof window !== "undefined") {
+            console.assert(politeElement != null, `useNotificationProvider: targetPolite is missing`);
+            console.assert(assertiveElement != null, `useNotificationProvider: targetAssertive is missing`);
 
-    if (typeof window !== "undefined") {
-        console.assert(politeElement != null, `useNotificationProvider: targetPolite is missing`);
-        console.assert(assertiveElement != null, `useNotificationProvider: targetAssertive is missing`);
+            if (politeElement)
+                console.assert(politeElement.getAttribute("aria-live") == "polite", `useNotificationProvider: targetPolite missing attribute "aria-live=polite"`);
+            if (assertiveElement)
+                console.assert(assertiveElement.getAttribute("aria-live") == "assertive", `useNotificationProvider: targetAssertive is missing, or missing "aria-live=assertive"`);
+        }
 
-        if (politeElement)
-            console.assert(politeElement.getAttribute("aria-live") == "polite", `useNotificationProvider: targetPolite missing attribute "aria-live=polite"`);
-        if (assertiveElement)
-            console.assert(assertiveElement.getAttribute("aria-live") == "assertive", `useNotificationProvider: targetAssertive is missing, or missing "aria-live=assertive"`);
-    }
+        const notify = useCallback((mode: "polite" | "assertive", child: VNode) => {
+            return mode == "assertive" ? notifyAssertive(child) : notifyPolite(child);
+        }, [notifyAssertive, notifyPolite])
 
-    const notify = useCallback((mode: "polite" | "assertive", child: VNode) => {
-        return mode == "assertive" ? notifyAssertive(child) : notifyPolite(child);
-    }, [notifyAssertive, notifyPolite])
-
-    return {
-        notify,
-        context: useMemo(() => ({ notify }), [notify]),
-        children: (
-            <>
-                {childrenPolite}
-                {childrenAssertive}
-            </>
-        )
-    }
-})
+        return {
+            notify,
+            context: useMemo(() => ({ notify }), [notify]),
+            children: (
+                <>
+                    {childrenPolite}
+                    {childrenAssertive}
+                </>
+            )
+        }
+    });
+}
 
 export function useNotify() {
     return useContextWithWarning(NotificationProviderContext, "notification provider").notify;

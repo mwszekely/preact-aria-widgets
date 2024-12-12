@@ -1,5 +1,5 @@
 
-import { returnZero, useMergedProps, useState } from "preact-prop-helpers";
+import { useMergedProps, useState } from "preact-prop-helpers";
 import { memo } from "preact/compat";
 import { Button, Toolbar, ToolbarChild } from "../../dist/preact/index.js";
 
@@ -9,7 +9,6 @@ const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
         <ToolbarChild<HTMLButtonElement>
             index={index}
             focusSelf={e => e.focus()}
-            getSortValue={returnZero}
             disabledProp="disabled"
             render={info2 => {
                 return (

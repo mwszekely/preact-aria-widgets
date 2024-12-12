@@ -16,10 +16,10 @@ const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
             onMultiSelectedChange={e => setSelected(e[EventDetail].multiSelected)}
 
             render={info => {
-                if (!info.singleSelectionChildReturn)
+                if (info.hidden)
                     return <li {...info.props} />
                 return (
-                    <li {...(info.props!)}>{labelText}</li>
+                    <li {...(info.props)}>{labelText}</li>
                 )
             }}
         />

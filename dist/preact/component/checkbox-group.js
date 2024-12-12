@@ -1,9 +1,11 @@
-import { assertEmptyObject, createContext, memo } from "preact-prop-helpers";
+import { assertEmptyObject, createContext, identity, memo, useEnsureStability } from "preact-prop-helpers";
 import { useContextWithWarning } from "../props.js";
 import { useCheckboxGroup, useCheckboxGroupChild, useCheckboxGroupParent } from "../use-checkbox-group.js";
 import { useComponent, useDefault } from "./util.js";
 const UseCheckboxGroupChildContext = createContext(null);
-export const CheckboxGroup = /* @__PURE__ */ memo((function CheckboxGroup({ render, collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, onTabbableIndexChange, untabbable, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, ...void1 }) {
+export const CheckboxGroup = /* @__PURE__ */ memo((function CheckboxGroup({ render, collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, onTabbableIndexChange, untabbable, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, getSortValueAt, compare, getIndex, ...void1 }) {
+    getSortValueAt ??= identity;
+    useEnsureStability("CheckboxGroup", getSortValueAt);
     assertEmptyObject(void1);
     return useComponent(imperativeHandle, render, UseCheckboxGroupChildContext, useCheckboxGroup({
         linearNavigationParameters: {
@@ -27,7 +29,12 @@ export const CheckboxGroup = /* @__PURE__ */ memo((function CheckboxGroup({ rend
             typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
         },
         refElementParameters: { onElementChange, onMount, onUnmount },
-        multiSelectionParameters: { multiSelectionAriaPropName, multiSelectionMode: multiSelectionMode || "activation", onSelectionChange }
+        multiSelectionParameters: { multiSelectionAriaPropName, multiSelectionMode: multiSelectionMode || "activation", onSelectionChange },
+        processedIndexManglerParameters: {
+            compare,
+            getIndex: useDefault("getIndex", getIndex),
+            getSortValueAt
+        }
     }));
 }));
 export const CheckboxGroupParent = /* @__PURE__ */ memo((function CheckboxGroupParent({ render, index, focusSelf, untabbable, imperativeHandle, getText, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, onTextContentChange, 

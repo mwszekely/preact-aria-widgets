@@ -9,7 +9,7 @@ import {
     UseModalReturnType,
     useStableCallback
 } from "preact-prop-helpers";
-import { monitored, OmitStrong, Prefices } from "./props.js";
+import { OmitStrong, Prefices, useMonitoring } from "./props.js";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
 
 export interface UseDrawerParameters<_DialogElement extends Element, _TitleElement extends Element> extends
@@ -33,7 +33,7 @@ export interface UseDrawerReturnType<FocusContainerElement extends Element, Sour
  * 
  * @compositeParams
  */
-export const useDrawer = /* @__PURE__ */ monitored(function useDrawer<FocusContainerElement extends Element, SourceElement extends Element, PopupElement extends Element, TitleElement extends Element>({
+export function useDrawer<FocusContainerElement extends Element, SourceElement extends Element, PopupElement extends Element, TitleElement extends Element>({
     dismissParameters,
     escapeDismissParameters,
     focusTrapParameters,
@@ -45,56 +45,57 @@ export const useDrawer = /* @__PURE__ */ monitored(function useDrawer<FocusConta
     refElementParameters,
     ...void1
 }: UseDrawerParameters<PopupElement, TitleElement>): UseDrawerReturnType<FocusContainerElement, SourceElement, PopupElement, TitleElement> {
+    return useMonitoring(function useDrawer(): UseDrawerReturnType<FocusContainerElement, SourceElement, PopupElement, TitleElement> {
+        const {
+            propsFocusContainer,
+            propsStablePopup,
+            propsStableSource,
+            refElementPopupReturn,
+            refElementSourceReturn,
+            ...void2
+        } = useModal<"escape" | "backdrop" | "lost-focus", FocusContainerElement, SourceElement, PopupElement>({
+            dismissParameters: { dismissActive: true, ...dismissParameters },
+            escapeDismissParameters: { onDismissEscape: null, ...escapeDismissParameters },
+            backdropDismissParameters: { onDismissBackdrop: null, ...backdropDismissParameters },
+            lostFocusDismissParameters: { onDismissLostFocus: null, ...lostFocusDismissParameters },
+            activeElementParameters,
+            modalParameters,
+            refElementParameters,
+            focusTrapParameters: { onlyMoveFocus: false, ...focusTrapParameters }
+        });
 
-    const {
-        propsFocusContainer,
-        propsStablePopup,
-        propsStableSource,
-        refElementPopupReturn,
-        refElementSourceReturn,
-        ...void2
-    } = useModal<"escape" | "backdrop" | "lost-focus", FocusContainerElement, SourceElement, PopupElement>({
-        dismissParameters: { dismissActive: true, ...dismissParameters },
-        escapeDismissParameters: { onDismissEscape: null, ...escapeDismissParameters },
-        backdropDismissParameters: { onDismissBackdrop: null, ...backdropDismissParameters },
-        lostFocusDismissParameters: { onDismissLostFocus: null, ...lostFocusDismissParameters },
-        activeElementParameters,
-        modalParameters,
-        refElementParameters,
-        focusTrapParameters: { onlyMoveFocus: false, ...focusTrapParameters }
+        const {
+            propsInput,
+            propsLabel,
+            pressReturn: _pressReturn,
+            randomIdInputReturn: _randomIdInputReturn,
+            randomIdLabelReturn: _randomIdLabelReturn,
+            ...void3
+        } = useLabelSynthetic<PopupElement, TitleElement>({
+            labelParameters: {
+                ...labelParameters, onLabelClick: useStableCallback(() => {
+                    const e = refElementPopupReturn.getElement();
+                    focusTrapParameters.focusPopup(e, () => (findFirstFocusable(e!) as HTMLElement | null));
+
+                })
+            },
+            randomIdInputParameters: { prefix: Prefices.drawer },
+            randomIdLabelParameters: { prefix: Prefices.drawerTitle }
+        });
+
+        assertEmptyObject(void1);
+        assertEmptyObject(void2);
+        assertEmptyObject(void3);
+
+        return {
+            propsFocusContainer,
+            propsDrawer: useMergedProps<PopupElement>(propsStablePopup, propsInput),
+            propsTitle: propsLabel,
+            propsSource: { ...propsStableSource },
+            refElementPopupReturn,
+            refElementSourceReturn,
+        }
     });
-
-    const {
-        propsInput,
-        propsLabel,
-        pressReturn: _pressReturn,
-        randomIdInputReturn: _randomIdInputReturn,
-        randomIdLabelReturn: _randomIdLabelReturn,
-        ...void3
-    } = useLabelSynthetic<PopupElement, TitleElement>({
-        labelParameters: {
-            ...labelParameters, onLabelClick: useStableCallback(() => {
-                const e = refElementPopupReturn.getElement();
-                focusTrapParameters.focusPopup(e, () => (findFirstFocusable(e!) as HTMLElement | null));
-
-            })
-        },
-        randomIdInputParameters: { prefix: Prefices.drawer },
-        randomIdLabelParameters: { prefix: Prefices.drawerTitle }
-    });
-
-    assertEmptyObject(void1);
-    assertEmptyObject(void2);
-    assertEmptyObject(void3);
-
-    return {
-        propsFocusContainer,
-        propsDrawer: useMergedProps<PopupElement>(propsStablePopup, propsInput),
-        propsTitle: propsLabel,
-        propsSource: { ...propsStableSource },
-        refElementPopupReturn,
-        refElementSourceReturn,
-    }
-})
+}
 
 

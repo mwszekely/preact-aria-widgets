@@ -9,7 +9,7 @@ import {
     UseRandomDualIdsReturnType,
     useRefElement
 } from "preact-prop-helpers";
-import { ElementToTag, monitored, noop, OmitStrong } from "./props.js";
+import { ElementToTag, noop, OmitStrong, useMonitoring } from "./props.js";
 
 export type LabelPosition = "separate" | "wrapping" | "none";
 export type FocusableLabelElement<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element> = LP extends "wrapping" ? LabelElement : InputElement;
@@ -57,59 +57,61 @@ export function useLabel<LP extends LabelPosition, InputElement extends Element,
     randomIdLabelParameters,
     labelParameters: { tagInput, tagLabel, ariaLabel, labelPosition, onLabelClick }
 }: UseLabelParameters<LP, InputElement, LabelElement>): UseLabelReturnType<InputElement, LabelElement> {
-    const nativeHTMLBehavior = (tagInput == "input" && tagLabel == "label" && labelPosition != "wrapping");
-    const synthetic = !nativeHTMLBehavior;
+    return useMonitoring(function useLabel(): UseLabelReturnType<InputElement, LabelElement> {
+        const nativeHTMLBehavior = (tagInput == "input" && tagLabel == "label" && labelPosition != "wrapping");
+        const synthetic = !nativeHTMLBehavior;
 
-    /**
-     * |Synthetic?|Position    |Input Prop   |Label Prop|
-     * |----------|------------|-------------|----------|
-     * |N         |`"separate"`|-            |`for`     |
-     * |N         |`"wrapping"`|-            |-         |
-     * |Y         |`"separate"`|`labelled-by`|-         |
-     * |Y         |`"wrapping"`|`labelled-by`|-         |
-     * 
-     */
-    let _comment: any;
+        /**
+         * |Synthetic?|Position    |Input Prop   |Label Prop|
+         * |----------|------------|-------------|----------|
+         * |N         |`"separate"`|-            |`for`     |
+         * |N         |`"wrapping"`|-            |-         |
+         * |Y         |`"separate"`|`labelled-by`|-         |
+         * |Y         |`"wrapping"`|`labelled-by`|-         |
+         * 
+         */
+        let _comment: any;
 
-    const {
-        propsInput,
-        propsLabel,
-        randomIdInputReturn,
-        randomIdLabelReturn
-    } = useRandomDualIds<InputElement, LabelElement>({
-        randomIdInputParameters: { ...randomIdInputParameters, otherReferencerProp: !synthetic && labelPosition === "separate" ? "for" : null },
-        randomIdLabelParameters: { ...randomIdLabelParameters, otherReferencerProp: synthetic ? "aria-labelledby" : null },
+        const {
+            propsInput,
+            propsLabel,
+            randomIdInputReturn,
+            randomIdLabelReturn
+        } = useRandomDualIds<InputElement, LabelElement>({
+            randomIdInputParameters: { ...randomIdInputParameters, otherReferencerProp: !synthetic && labelPosition === "separate" ? "for" as never : null },
+            randomIdLabelParameters: { ...randomIdLabelParameters, otherReferencerProp: synthetic ? "aria-labelledby" : null },
+        });
+        const { refElementReturn, propsStable: propsRef } = useRefElement<LabelElement>({ refElementParameters: {} });
+
+        if (labelPosition == 'none') {
+            // When we set the aria-label, intentionally clobber element-based labels (for example, in case they don't exist).
+            propsInput["aria-label"] = (ariaLabel!);
+            propsInput["aria-labelledby"] = undefined;
+            propsLabel["for" as keyof typeof propsLabel] = undefined;
+        }
+
+        const { pressReturn, props: propsPress } = usePress({
+            pressParameters: {
+                excludeEnter: returnTrue,
+                excludeSpace: returnTrue,
+                onPressSync: onLabelClick,
+                focusSelf: noop,
+                allowRepeatPresses: false,
+                excludePointer: null,
+                longPressThreshold: null,
+                onPressingChange: null
+            },
+            refElementReturn
+        });
+
+        return {
+            pressReturn,
+            propsInput,
+            propsLabel: useMergedProps(propsLabel, propsRef, propsPress),
+            randomIdInputReturn,
+            randomIdLabelReturn,
+        }
     });
-    const { refElementReturn, propsStable: propsRef } = useRefElement<LabelElement>({ refElementParameters: {} });
-
-    if (labelPosition == 'none') {
-        // When we set the aria-label, intentionally clobber element-based labels (for example, in case they don't exist).
-        propsInput["aria-label"] = (ariaLabel!);
-        propsInput["aria-labelledby"] = undefined;
-        propsLabel["for"] = undefined;
-    }
-
-    const { pressReturn, props: propsPress } = usePress({
-        pressParameters: {
-            excludeEnter: returnTrue,
-            excludeSpace: returnTrue,
-            onPressSync: onLabelClick,
-            focusSelf: noop,
-            allowRepeatPresses: false,
-            excludePointer: null,
-            longPressThreshold: null,
-            onPressingChange: null
-        },
-        refElementReturn
-    });
-
-    return {
-        pressReturn,
-        propsInput,
-        propsLabel: useMergedProps(propsLabel, propsRef, propsPress),
-        randomIdInputReturn,
-        randomIdLabelReturn,
-    }
 }
 
 export interface UseLabelSyntheticParameters extends TargetedPick<UseLabelParameters<LabelPosition, any, any>, "labelParameters", "ariaLabel" | "onLabelClick"> {
@@ -122,20 +124,21 @@ export interface UseLabelSyntheticParameters extends TargetedPick<UseLabelParame
  * 
  * @compositeParams
  */
-export const useLabelSynthetic = /* @__PURE__ */ monitored(function useLabelSynthetic<InputElement extends Element, LabelElement extends Element>({
+export function useLabelSynthetic<InputElement extends Element, LabelElement extends Element>({
     labelParameters: { ariaLabel, onLabelClick },
     ...rest
 }: UseLabelSyntheticParameters) {
-
-    return useLabel<LabelPosition, InputElement, LabelElement>({
-        labelParameters: {
-            ariaLabel,
-            labelPosition: ariaLabel == null ? "separate" : "none",
-            tagInput: "div" as never,
-            tagLabel: "div" as never,
-            onLabelClick
-        },
-        ...rest
-    })
-})
+    return useMonitoring(function useLabelSynthetic() {
+        return useLabel<LabelPosition, InputElement, LabelElement>({
+            labelParameters: {
+                ariaLabel,
+                labelPosition: ariaLabel == null ? "separate" : "none",
+                tagInput: "div" as never,
+                tagLabel: "div" as never,
+                onLabelClick
+            },
+            ...rest
+        });
+    });
+}
 

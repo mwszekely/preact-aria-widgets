@@ -1,11 +1,11 @@
-import { assertEmptyObject, createContext, memo } from "preact-prop-helpers";
-import { Get7, Get8, useContextWithWarning } from "../props.js";
+import { assertEmptyObject, createContext, identity, memo, useEnsureStability } from "preact-prop-helpers";
+import { Get7, Get9, useContextWithWarning } from "../props.js";
 import { FocusableLabelElement, LabelPosition } from "../use-label.js";
 import { RadioSubInfo, UseRadioGroupParameters, UseRadioGroupReturnType, UseRadioParameters, UseRadioReturnType, useRadio, useRadioGroup, type RadioContext } from "../use-radio-group.js";
 import { GenericComponentProps, PartialExcept, useComponent, useDefault } from "./util.js";
 
 interface RadioGroupPropsBase<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, TabbableChildElement extends Element> extends
-    Get8<UseRadioGroupParameters<V, GroupElement, GroupLabelElement, TabbableChildElement>, "radioGroupParameters", "linearNavigationParameters", "labelParameters", "radioGroupParameters", "rovingTabIndexParameters", "typeaheadNavigationParameters", "refElementParameters", "singleSelectionParameters"> {
+    Get9<UseRadioGroupParameters<V, GroupElement, GroupLabelElement, TabbableChildElement>, "radioGroupParameters", "linearNavigationParameters", "labelParameters", "radioGroupParameters", "rovingTabIndexParameters", "typeaheadNavigationParameters", "refElementParameters", "singleSelectionParameters", "processedIndexManglerParameters"> {
 }
 
 interface RadioPropsBase<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element, V extends string | number> extends
@@ -52,9 +52,14 @@ export const RadioGroup = /* @__PURE__ */ memo((function RadioGroup<V extends st
     imperativeHandle,
     onSelectedValueChange,
     singleSelectionMode,
+    getSortValueAt,
+    compare,
+    getIndex,
     ...void1
 }: RadioGroupProps<V, GroupElement, GroupLabelElement, TabbableChildElement>) {
     untabbable ??= false;
+    getSortValueAt ??= identity;
+    useEnsureStability("RadioGroup", getSortValueAt);
     assertEmptyObject(void1);
 
     return useComponent<UseRadioGroupReturnType<V, GroupElement, GroupLabelElement, TabbableChildElement, RadioSubInfo<TabbableChildElement, V>>>(
@@ -84,6 +89,11 @@ export const RadioGroup = /* @__PURE__ */ memo((function RadioGroup<V extends st
                 typeaheadTimeout: useDefault("typeaheadTimeout", typeaheadTimeout)
             },
             refElementParameters: { onElementChange, onMount, onUnmount },
+            processedIndexManglerParameters: {
+                getSortValueAt,
+                compare,
+                getIndex: useDefault("getIndex", getIndex)
+            }
         }));
 }));
 

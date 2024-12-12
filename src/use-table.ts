@@ -1,334 +1,374 @@
-import {
-    CompleteGridNavigationCellContext,
-    CompleteGridNavigationRowContext,
-    ElementProps,
-    JSX,
-    Nullable,
-    PassiveStateUpdater,
-    SingleSelectionContextSelf,
-    TargetedOmit,
-    TargetedPick,
-    UseCompleteGridNavigationCellInfo,
-    UseCompleteGridNavigationCellInfoKeysParameters,
-    UseCompleteGridNavigationCellParameters,
-    UseCompleteGridNavigationCellReturnType,
-    UseCompleteGridNavigationParameters,
-    UseCompleteGridNavigationReturnType,
-    UseCompleteGridNavigationRowInfo,
-    UseCompleteGridNavigationRowParameters,
-    UseCompleteGridNavigationRowReturnType,
-    UseCompleteListNavigationParameters,
-    UseGenericChildParameters,
-    UseMultiSelectionContextSelf,
-    assertEmptyObject,
-    focus,
-    returnNull,
-    useCallback,
-    useCompleteGridNavigation,
-    useCompleteGridNavigationCell,
-    useCompleteGridNavigationRow,
-    useEffect,
-    useMemoObject,
-    useMergedProps,
-    usePassiveState,
-    useStableCallback,
-    useState
-} from "preact-prop-helpers";
-import { ElementToTag, OmitStrong, Prefices, monitored } from "./props.js";
-import { UseLabelSyntheticParameters, useLabelSynthetic } from "./use-label.js";
+import { CompleteGridNavigationCellContext, CompleteGridNavigationRowContext, ElementProps, JSX, Nullable, OmitStrong, PassiveStateUpdater, TargetedOmit, UseCompleteGridNavigationCellInfo, UseCompleteGridNavigationCellParameters, UseCompleteGridNavigationCellReturnType, UseCompleteGridNavigationParameters, UseCompleteGridNavigationReturnType, UseCompleteGridNavigationRowInfo, UseCompleteGridNavigationRowInfoKeysParameters, UseCompleteGridNavigationRowParameters, UseCompleteGridNavigationRowReturnType, UseCompleteGridNavigationRowsContext, UseCompleteGridNavigationRowsInfo, UseCompleteGridNavigationRowsParameters, UseCompleteGridNavigationRowsReturnType, UseProcessedChildParameters, UseProcessedChildReturnType, UseRefElementParameters, UseRefElementReturnType, assertEmptyObject, returnNull, useCallback, useCompleteGridNavigation, useCompleteGridNavigationCell, useCompleteGridNavigationRow, useCompleteGridNavigationRows, useEffect, useMemoObject, useMergedProps, useMonitoring, usePassiveState, useProcessedChild, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
+import { ElementToTag, Prefices } from "./props.js";
+import { UseLabelReturnType, UseLabelSyntheticParameters, useLabelSynthetic } from "./use-label.js";
+//import { UseTableCellParameters, UseTableCellReturnType, UseTableRowParameters, UseTableRowReturnType } from "./use-table.js";
 
-export interface UseTableContextSelf extends Pick<SingleSelectionContextSelf, "singleSelectionMode">, Pick<UseMultiSelectionContextSelf, "multiSelectionMode"> {
-    setSortBodyFunction: PassiveStateUpdater<() => void, never>;
-    sortByColumn(column: number): SortInfo;
-    getCurrentSortColumn(): number | null;
-    getCurrentSortDirection(): SortDirection;
-}
+export type SortDirection = "ascending" | "descending";
+interface SortInfo { column: number, direction: SortDirection }
 
-
-export interface UseTableContext {
-    tableContext: UseTableContextSelf;
-}
-
-export interface UseTableSectionContext<TableRowElement extends Element, RM extends TableRowInfo<TableRowElement>> extends CompleteGridNavigationRowContext<TableRowElement, RM>, UseTableContext { }
-
-export interface UseTableSectionParametersSelf<TableSectionElement extends Element> {
-    location: "head" | "body" | "foot";
-    tagTableSection: ElementToTag<TableSectionElement>;
-}
-
-export interface UseTableSectionParameters<TableSectionElement extends Element, TableRowElement extends Element, RM extends TableRowInfo<TableRowElement>> extends
-    OmitStrong<UseCompleteGridNavigationParameters<TableSectionElement, TableRowElement, RM>, "rovingTabIndexParameters" | "singleSelectionParameters" | "multiSelectionParameters">,
-    TargetedOmit<UseCompleteGridNavigationParameters<TableSectionElement, TableRowElement, RM>, "singleSelectionParameters", "singleSelectionMode">,
-    TargetedOmit<UseCompleteGridNavigationParameters<TableSectionElement, TableRowElement, RM>, "multiSelectionParameters", "multiSelectionMode">,
-    TargetedOmit<UseCompleteGridNavigationParameters<TableSectionElement, TableRowElement, RM>, "rovingTabIndexParameters", "focusSelfParent"> {
-    tableSectionParameters: UseTableSectionParametersSelf<TableSectionElement>;
-    contextChildren: UseTableContext;
-}
-export interface UseTableSectionReturnType<TableSectionElement extends Element, TableRowElement extends Element, RM extends TableRowInfo<TableRowElement>> extends
-    OmitStrong<UseCompleteGridNavigationReturnType<TableSectionElement, TableRowElement, RM>, "props"> {
-    propsTableSection: ElementProps<TableSectionElement>;
-    contextChildren: UseTableSectionContext<TableRowElement, RM>;
-}
-export interface UseTableRowReturnType<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement>, CM extends TableCellInfo<TableCellElement>> extends OmitStrong<UseCompleteGridNavigationRowReturnType<TableRowElement, TableCellElement, RM, CM>, "context"> {
-    context: UseTableRowContext<TableCellElement, CM>;
-}
-export interface UseTableRowParametersSelf<TableRowElement extends Element> {
-    /**
-     * When the `selectionLimit` is `"single"`, this must be `null`.
-     */
-    selected: Nullable<boolean>;
-    tagTableRow: ElementToTag<TableRowElement>;
-}
-export interface UseTableRowParameters<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement>, CM extends TableCellInfo<TableCellElement>> extends
-    OmitStrong<UseCompleteGridNavigationRowParameters<TableRowElement, TableCellElement, RM, CM>, "rovingTabIndexParameters" | "typeaheadNavigationParameters" | "info">,
-    TargetedOmit<UseCompleteGridNavigationRowParameters<TableRowElement, TableCellElement, RM, CM>, "rovingTabIndexParameters", never> {
-    context: UseTableSectionContext<TableRowElement, RM>;
-    tableRowParameters: UseTableRowParametersSelf<TableRowElement>;
-    info: OmitStrong<UseCompleteGridNavigationRowParameters<TableRowElement, TableCellElement, RM, CM>["info"], never>;
-}
-
-export interface UseTableRowContext<TableCellElement extends Element, M extends TableCellInfo<TableCellElement>> extends CompleteGridNavigationCellContext<TableCellElement, M> {
-    tableContext: UseTableContext["tableContext"];
-}
-
-
-export interface UseTableCellReturnTypeSelf {
-    sortByThisColumn(): SortInfo;
-}
-
-export interface UseTableCellReturnType<TableCellElement extends Element, CM extends TableCellInfo<TableCellElement>> extends OmitStrong<UseCompleteGridNavigationCellReturnType<TableCellElement, CM>, "props"> {
-    propsCell: ElementProps<TableCellElement>;
-    propsFocus: ElementProps<any>;
-    tableCellReturn: UseTableCellReturnTypeSelf;
-}
-export interface UseTableCellParametersSelf<TableCellElement extends Element> {
-    tagTableCell: ElementToTag<TableCellElement>;
-}
-
-export interface UseTableCellParameters<TableCellElement extends Element, CM extends TableCellInfo<TableCellElement>> extends
-    UseGenericChildParameters<UseTableRowContext<TableCellElement, CM>, Pick<CM, UseCompleteGridNavigationCellInfoKeysParameters<CM>>>,
-    OmitStrong<UseCompleteGridNavigationCellParameters<TableCellElement, CM>, "info" | "context"> {
-    tableCellParameters: UseTableCellParametersSelf<TableCellElement>;
-}
-
+export interface TableSectionInfo<TableRowElement extends Element> extends UseCompleteGridNavigationRowsInfo<TableRowElement> { };
 export interface TableRowInfo<TableRowElement extends Element> extends UseCompleteGridNavigationRowInfo<TableRowElement> { }
-export interface TableCellInfo<TableCellElement extends Element> extends UseCompleteGridNavigationCellInfo<TableCellElement> {
-    getSortValue(): unknown;
+export interface TableCellInfo<TableCellElement extends Element> extends UseCompleteGridNavigationCellInfo<TableCellElement> { }
+
+// useTable
+export interface UseTableParametersSelf<TableElement extends Element> {
+    tagTable: ElementToTag<TableElement>;
+    initiallySortedColumn: Nullable<number>;
 }
 
-export interface UseTableParameters<TableElement extends Element> extends
-    TargetedPick<UseCompleteListNavigationParameters<any, any, any>, "singleSelectionParameters", "singleSelectionMode">,
-    TargetedPick<UseCompleteListNavigationParameters<any, any, any>, "multiSelectionParameters", "multiSelectionMode">,
+export interface UseTableParameters<TableElement extends Element, RowElement extends Element, RM extends TableRowInfo<RowElement> = TableRowInfo<RowElement>> extends
+    OmitStrong<UseCompleteGridNavigationParameters<TableElement, RowElement, RM>, "rovingTabIndexParameters" | "gridNavigationCompleteParameters">,
+    TargetedOmit<UseCompleteGridNavigationParameters<TableElement, RowElement, RM>, "rovingTabIndexParameters", "focusSelfParent">,
+    TargetedOmit<UseCompleteGridNavigationParameters<TableElement, RowElement, RM>, "gridNavigationCompleteParameters", "getSortColumn">,
     TargetedOmit<UseLabelSyntheticParameters, "labelParameters", "onLabelClick"> {
     tableParameters: UseTableParametersSelf<TableElement>;
 }
 
-export interface UseTableParametersSelf<TableElement extends Element> {
-    tagTable: ElementToTag<TableElement>;
+export interface UseTableReturnTypeSelf {
+    sortByColumn: (column: number) => SortInfo;
 }
 
-export interface UseTableReturnType<TableElement extends Element, LabelElement extends Element> {
+export interface UseTableReturnType<TableElement extends Element, RowElement extends Element, LabelElement extends Element, RM extends TableRowInfo<RowElement> = TableRowInfo<RowElement>> extends
+    OmitStrong<UseCompleteGridNavigationReturnType<TableElement, RowElement, RM>, "props">,
+    Pick<UseLabelReturnType<TableElement, LabelElement>, "propsLabel"> {
+    tableReturn: UseTableReturnTypeSelf;
     propsTable: ElementProps<TableElement>;
-    propsLabel: ElementProps<LabelElement>;
-    context: UseTableContext;
+    context: UseTableRowContext<RowElement, RM>;
 }
-export type SortDirection = "ascending" | "descending";
-interface SortInfo { column: number, direction: SortDirection }
 
-/**
- * Creates a sortable data table in a [Grid](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) pattern.
- * 
- * @remarks Note that in many cases this is overkill. If you don't need sorting and navigation between cells of interactive content, then you can just use a regular &lt;table&gt;
- * 
- * @compositeParams
- * 
- * @hasChild {@link useTableSection}
- * @hasChild {@link useTableRow}
- * @hasChild {@link useTableCell}
- */
-export const useTable = /* @__PURE__ */ monitored(function useTable<TableElement extends Element, LabelElement extends Element>({
-    labelParameters,
-    tableParameters: { tagTable },
-    singleSelectionParameters: { singleSelectionMode, ...void1 },
-    multiSelectionParameters: { multiSelectionMode, ...void2 },
-    ...void3
-}: UseTableParameters<TableElement>): UseTableReturnType<TableElement, LabelElement> {
+export interface UseTableContextSelf {
+    setRefreshRowsFunction: PassiveStateUpdater<() => void, never>;
+    sortByColumn: UseTableReturnTypeSelf["sortByColumn"];
+    getCurrentSortColumn(): number | undefined;
+    getCurrentSortDirection(): SortDirection;
+}
 
-    assertEmptyObject(void1);
-    assertEmptyObject(void2);
-    assertEmptyObject(void3);
+export interface UseTableProcessedChildrenContextSelf {
+    location: "head" | "body" | "foot";
+}
 
-    // This is the function that, when called, sorts the body's children.
-    // It's here to coordinate among multiple table sections (i.e. the head sorts the body, but they're siblings to each other, so we need to take care that)
-    // TODO: This...should probably be useManagedChildren
-    const [getSortBody, setSortBody] = usePassiveState<() => void, never>(null, returnNull as (() => never));
 
-    const [_sortDirection, setSortDirection, getSortDirection] = useState<SortDirection>("ascending");
-    const [_sortColumn, setSortColumn, getSortColumn] = useState<number | null>(null);
+// useTableSection
+export interface UseTableSectionParametersSelf<TableSectionElement extends Element> {
+    tagTableSection: ElementToTag<TableSectionElement>;
+}
 
-    const sortByColumn = useCallback((column: number): SortInfo => {
-        let nextSortDirection = getSortDirection();
-        let nextSortIndex = getSortColumn();
-        if (column == nextSortIndex) {
-            setSortDirection(nextSortDirection = (nextSortDirection == "ascending" ? "descending" : "ascending"));
-        }
-        else {
-            setSortColumn(nextSortIndex = column);
-        }
+export interface UseTableRowContext<RowElement extends Element, RM extends TableRowInfo<RowElement>> extends CompleteGridNavigationRowContext<RowElement, RM> {
+    tableContext: UseTableContextSelf;
+}
 
-        const sortBody = getSortBody();
+export interface UseTableProcessedChildrenContext<RowElement extends Element, RsM extends TableSectionInfo<RowElement>> extends UseCompleteGridNavigationRowsContext<RowElement, RsM> {
+    tableProcessedChildren: UseTableProcessedChildrenContextSelf;
+}
 
-        console.assert(!!sortBody);
-        if (!sortBody) {
-            /* eslint-disable no-debugger */
-            debugger;
-            console.error("An attempt was made to sort a table with a head but no body");
-        }
-        else {
-            sortBody();
-        }
+export interface UseTableBodyParameters<TableSectionElement extends Element, RowElement extends Element, RM extends UseCompleteGridNavigationRowInfo<RowElement>, RsM extends TableSectionInfo<RowElement>> extends
+    OmitStrong<UseCompleteGridNavigationRowsParameters<RowElement, RM, RsM>, "rearrangeableChildrenParameters">,
+    TargetedOmit<UseCompleteGridNavigationRowsParameters<RowElement, RM, RsM>, "rearrangeableChildrenParameters", never> {
+    tableSectionParameters: UseTableSectionParametersSelf<TableSectionElement>;
+    context: UseTableRowContext<RowElement, RM>;
+}
 
-        return { column: nextSortIndex, direction: nextSortDirection };
-    }, [])
+export interface UseTableBodyReturnType<TableSectionElement extends Element, RowElement extends Element, RsM extends TableSectionInfo<RowElement>> extends UseCompleteGridNavigationRowsReturnType<RowElement, RsM> {
+    context: UseTableProcessedChildrenContext<RowElement, RsM>;
+    propsTableSection: ElementProps<TableSectionElement>;
+}
 
-    const {
-        propsInput: propsLabelList,
-        propsLabel: propsLabelLabel
-    } = useLabelSynthetic<TableElement, LabelElement>({
-        labelParameters: { ...labelParameters, onLabelClick: null },
-        randomIdInputParameters: { prefix: Prefices.table },
-        randomIdLabelParameters: { prefix: Prefices.tableLabel }
-    });
 
-    return {
-        propsTable: useMergedProps({ role: tagTable == "table" ? undefined : "grid", "aria-multiselectable": (multiSelectionMode != "disabled" ? "true" : undefined) }, propsLabelList),
-        propsLabel: propsLabelLabel,
-        context: useMemoObject<UseTableContext>({
-            tableContext: useMemoObject<UseTableContextSelf>({
-                sortByColumn,
-                setSortBodyFunction: setSortBody,
-                getCurrentSortColumn: getSortColumn,
-                getCurrentSortDirection: getSortDirection,
-                singleSelectionMode,
-                multiSelectionMode
-            })
-        })
-    }
-})
+type UseTableRowInfoKeysParameters<RM extends TableRowInfo<any>> = UseCompleteGridNavigationRowInfoKeysParameters<RM>;
 
-/*
-function fuzzyCompare(lhs: any, rhs: any): number {
-    if (lhs === rhs)
-        return 0;
+export interface UseTableCellContext<CellElement extends Element, CM extends TableCellInfo<CellElement>> extends CompleteGridNavigationCellContext<CellElement, CM> {
+    tableContext: UseTableContextSelf;
+}
 
-    if (lhs == null || rhs == null) {
-        if (lhs == null && rhs != null)
-            return -1;
-        if (lhs != null && rhs == null)
-            return 1;
-        if (lhs === null && rhs === undefined)
-            return 1;
-        if (lhs === undefined && rhs === null)
-            return -1;
-    }
-    else {
-        if (lhs == rhs)
-            return 0;
-        if (lhs < rhs)
-            return -1;
-        return 1;
-    }
+export interface UseTableRowParametersSelf<TableRowElement extends Element> {
+    selected: Nullable<boolean>;
+    tagTableRow: ElementToTag<TableRowElement>;
+}
+export interface UseTableRowParameters<RowElement extends Element, CellElement extends Element, RM extends TableRowInfo<RowElement>, CM extends TableCellInfo<CellElement>> extends
+    OmitStrong<UseCompleteGridNavigationRowParameters<RowElement, CellElement, RM, CM>, "typeaheadNavigationParameters" | "info"> {
+    context: UseTableRowContext<RowElement, RM>;
+    tableRowParameters: UseTableRowParametersSelf<RowElement>;
+    info: Pick<RM, UseTableRowInfoKeysParameters<RM>>
+}
 
-    return 0;
+export interface UseTableRowReturnType<RowElement extends Element, CellElement extends Element, RM extends TableRowInfo<RowElement>, CM extends TableCellInfo<CellElement>> extends
+    UseCompleteGridNavigationRowReturnType<RowElement, CellElement, RM, CM> {
+    context: UseTableCellContext<CellElement, CM>;
+}
 
-}*/
-const naturalSectionTypes = new Set<keyof JSX.IntrinsicElements>(["thead", "tbody", "tfoot"]);
+
+
+export interface UseTableCellParametersSelf<TableCellElement extends Element, CM extends TableCellInfo<TableCellElement>> {
+    tagTableCell: ElementToTag<TableCellElement>;
+}
+export interface UseTableCellReturnTypeSelf {
+    sortByThisColumn(): SortInfo;
+}
+
+
+export interface UseTableCellParameters<CellElement extends Element, CM extends TableCellInfo<CellElement>> extends UseCompleteGridNavigationCellParameters<CellElement, CM> {
+    tableCellParameters: UseTableCellParametersSelf<CellElement, CM>;
+    context: UseTableCellContext<CellElement, CM>;
+}
+
+export interface UseTableCellReturnType<CellElement extends Element, CM extends TableCellInfo<CellElement>> extends
+    OmitStrong<UseCompleteGridNavigationCellReturnType<CellElement, CM>, "props"> {
+    propsCell: ElementProps<CellElement>;
+    propsFocus: ElementProps<any>;
+    tableCellReturn: UseTableCellReturnTypeSelf;
+}
+
+
 
 
 /**
  * @compositeParams
  */
-export const useTableSection = /* @__PURE__ */ monitored(function useTableSection<TableSectionElement extends Element, TableRowElement extends Element>({
+export function useTable<TableElement extends Element, TableRowElement extends Element, LabelElement extends Element, RM extends TableRowInfo<TableRowElement>>({
+    gridNavigationParameters,
     linearNavigationParameters,
+    multiSelectionParameters,
+    paginatedChildrenParameters,
+    refElementParameters,
     rovingTabIndexParameters,
     singleSelectionParameters,
-    multiSelectionParameters,
-    gridNavigationParameters,
-    paginatedChildrenParameters,
-    tableSectionParameters: { tagTableSection, location },
     typeaheadNavigationParameters,
-    contextChildren: { tableContext, ...void3 },
-    refElementParameters,
-    ...void1
-}: UseTableSectionParameters<TableSectionElement, TableRowElement, TableRowInfo<TableRowElement>>): UseTableSectionReturnType<TableSectionElement, TableRowElement, TableRowInfo<TableRowElement>> {
-    type RM = TableRowInfo<TableRowElement>;
+    labelParameters,
+    tableParameters: { tagTable, initiallySortedColumn },
+    gridNavigationCompleteParameters: { getSortValueAt },
+    processedIndexManglerParameters
+}: UseTableParameters<TableElement, TableRowElement, RM>): UseTableReturnType<TableElement, TableRowElement, LabelElement, RM> {
+    return useMonitoring(function useTable(): UseTableReturnType<TableElement, TableRowElement, LabelElement, RM> {
+        ;
+        // This is the function that, when called, sorts the body's children.
+        // It's here to coordinate among multiple table sections (i.e. the head sorts the body, but they're siblings to each other, so we need to take care that)
+        // TODO: This...should probably be useManagedChildren
+        const [getRefreshRows, setRefreshRows] = usePassiveState<() => void, never>(null, returnNull as (() => never));
 
-    const {
-        childrenHaveFocusReturn,
-        contextChildren,
-        contextProcessing,
-        refElementReturn,
-        linearNavigationReturn,
-        managedChildrenReturn,
-        props: { ...props },
-        rovingTabIndexReturn,
-        singleSelectionReturn,
-        multiSelectionReturn,
-        typeaheadNavigationReturn,
-        rearrangeableChildrenReturn,
-        ...void2
-    } = useCompleteGridNavigation<TableSectionElement, TableRowElement, RM>({
-        linearNavigationParameters,
-        rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
-        singleSelectionParameters: { ...singleSelectionParameters, singleSelectionMode: tableContext.singleSelectionMode },
-        multiSelectionParameters: { ...multiSelectionParameters, multiSelectionMode: tableContext.multiSelectionMode },
-        paginatedChildrenParameters,
-        typeaheadNavigationParameters,
-        gridNavigationParameters,
-        refElementParameters,
+        const [_sortDirection, setSortDirection, getSortDirection] = useState<SortDirection>("ascending");
+        const [_sortColumn, setSortColumn, getSortColumn] = useState<number | undefined>(initiallySortedColumn ?? undefined);
+
+        const sortByColumn = useCallback((column: number): SortInfo => {
+            debugger;
+            let nextSortDirection = getSortDirection();
+            let nextSortIndex = getSortColumn();
+            if (column == nextSortIndex) {
+                setSortDirection(nextSortDirection = (nextSortDirection == "ascending" ? "descending" : "ascending"));
+            }
+            else {
+                setSortColumn(nextSortIndex = column);
+            }
+
+            const sortBody = getRefreshRows();
+
+            console.assert(!!sortBody);
+            if (!sortBody) {
+                /* eslint-disable no-debugger */
+                debugger;
+                console.error("An attempt was made to sort a table with a head but no body");
+            }
+            else {
+                sortBody();
+            }
+
+            return { column: nextSortIndex, direction: nextSortDirection };
+        }, [])
+
+        const {
+            propsInput: propsLabelTable,
+            propsLabel: propsLabelLabel
+        } = useLabelSynthetic<TableElement, LabelElement>({
+            labelParameters: { ...labelParameters, onLabelClick: null },
+            randomIdInputParameters: { prefix: Prefices.table },
+            randomIdLabelParameters: { prefix: Prefices.tableLabel }
+        });
+
+
+        const { props, context, ...completeGridNavigationReturn } = useCompleteGridNavigation<TableElement, TableRowElement, RM>({
+            gridNavigationParameters,
+            linearNavigationParameters,
+            multiSelectionParameters,
+            paginatedChildrenParameters,
+            refElementParameters,
+            rovingTabIndexParameters: { ...rovingTabIndexParameters, focusSelfParent: focus },
+            singleSelectionParameters,
+            typeaheadNavigationParameters,
+            gridNavigationCompleteParameters: { getSortColumn, getSortValueAt },
+            processedIndexManglerParameters
+        });
+
+        const tableContext = useMemoObject<UseTableContextSelf>({
+            setRefreshRowsFunction: setRefreshRows,
+            getCurrentSortColumn: getSortColumn,
+            getCurrentSortDirection: getSortDirection,
+            sortByColumn
+        });
+
+
+        return {
+            propsTable: useMergedProps(props, propsLabelTable, { role: tagTable == "table" ? undefined : "grid", "aria-multiselectable": (multiSelectionParameters.multiSelectionMode != "disabled" ? "true" : undefined) }),
+            propsLabel: propsLabelLabel,
+            tableReturn: { sortByColumn },
+            context: useMemoObject<UseTableRowContext<TableRowElement, RM>>({
+                tableContext,
+                ...context
+            }),
+            ...completeGridNavigationReturn
+        }
     });
+}
+
+
+const naturalSectionTypes = new Set<keyof JSX.IntrinsicElements>(["thead", "tbody", "tfoot"]);
+
+export interface UseTableHeadParametersSelf<TableSectionElement extends Element> {
+    tagHead: ElementToTag<TableSectionElement>;
+}
+export interface UseTableHeadReturnTypeSelf<TableSectionElement extends Element> { }
+export interface UseTableHeadParameters<TableSectionElement extends Element> {
+    tableHeadParameters: UseTableHeadParametersSelf<TableSectionElement>;
+}
+export interface UseTableHeadReturnType<TableSectionElement extends Element> {
+    props: ElementProps<TableSectionElement>;
+    tableHeadReturn: UseTableHeadReturnTypeSelf<TableSectionElement>;
+}
+
+/**
+ * @compositeParams
+ */
+export function useTableHead<TableSectionElement extends Element>({ tableHeadParameters: { tagHead: tagTableSection } }: UseTableHeadParameters<TableSectionElement>): UseTableHeadReturnType<TableSectionElement> {
+    const props: ElementProps<TableSectionElement> = {};
 
     if (!naturalSectionTypes.has(tagTableSection as any)) {
         props.role = "rowgroup";
     }
 
-
-
-    useEffect(() => {
-        if (location == "body") {
-            tableContext.setSortBodyFunction(() => {
-                return () => { rearrangeableChildrenReturn.sort(tableContext.getCurrentSortDirection()); }
-            })
-        }
-    });
-
-    assertEmptyObject(void1);
-    assertEmptyObject(void2);
-    assertEmptyObject(void3);
-
     return {
-        childrenHaveFocusReturn,
-        contextChildren: {
-            ...contextChildren,
-            tableContext
-        },
-        contextProcessing,
-        refElementReturn,
-        linearNavigationReturn,
-        managedChildrenReturn,
-        rovingTabIndexReturn,
-        singleSelectionReturn,
-        multiSelectionReturn,
-        rearrangeableChildrenReturn,
-        typeaheadNavigationReturn,
-        propsTableSection: props
+        props,
+        tableHeadReturn: {},
     }
-})
+}
 
 /**
  * @compositeParams
  */
-export const useTableRow = /* @__PURE__ */ monitored(function useTableRow<TableRowElement extends Element, TableCellElement extends Element>({
+export function useTableBody<TableSectionElement extends Element, RowElement extends Element, RM extends TableRowInfo<RowElement>, RsM extends TableSectionInfo<RowElement>>({
+    context: processedChildrenContext,
+    managedChildrenParameters,
+    paginatedChildrenParameters,
+    rearrangeableChildrenParameters,
+    staggeredChildrenParameters,
+    tableSectionParameters: { tagTableSection }
+}: UseTableBodyParameters<TableSectionElement, RowElement, RM, RsM>): UseTableBodyReturnType<TableSectionElement, RowElement, RsM> {
+    return useMonitoring(function useTableBody(): UseTableBodyReturnType<TableSectionElement, RowElement, RsM> {
+        const props: ElementProps<TableSectionElement> = {};
+
+        const {
+            context: contextRows,
+            paginatedChildrenReturn,
+            rearrangeableChildrenReturn,
+            staggeredChildrenReturn,
+        } = useCompleteGridNavigationRows<RowElement, RM, RsM>({
+            context: processedChildrenContext,
+            managedChildrenParameters,
+            paginatedChildrenParameters,
+            rearrangeableChildrenParameters,
+            staggeredChildrenParameters
+        });
+
+        if (!naturalSectionTypes.has(tagTableSection as any)) {
+            props.role = "rowgroup";
+        }
+
+        useEffect(() => {
+            processedChildrenContext.tableContext.setRefreshRowsFunction(() => {
+                return () => { rearrangeableChildrenReturn.refresh(); }
+            })
+        });
+
+        return {
+            context: useMemoObject<UseTableProcessedChildrenContext<RowElement, RsM>>({
+                ...contextRows,
+                tableProcessedChildren: useMemoObject({ location: "body" })
+            }),
+            rearrangeableChildrenReturn,
+            paginatedChildrenReturn,
+            staggeredChildrenReturn,
+            propsTableSection: props
+        }
+    });
+}
+
+
+
+export interface UseTableRowOuterParameters<RowElement extends Element, RsM extends TableSectionInfo<RowElement>> extends
+    OmitStrong<UseProcessedChildParameters<RowElement, RsM>, "info">,
+    TargetedOmit<UseProcessedChildParameters<RowElement, RsM>, "info", "getElement">,
+    UseRefElementParameters<RowElement> {
+
+}
+
+export interface UseTableRowOuterReturnType<RowElement extends Element, RsM extends TableSectionInfo<RowElement>> extends
+    OmitStrong<UseProcessedChildReturnType<RowElement, RsM>, never>,
+    OmitStrong<UseRefElementReturnType<RowElement>, "propsStable"> {
+    hide: boolean;
+}
+
+/**
+ * @compositeParams
+ */
+export function useTableRowOuter<RowElement extends Element, RsM extends TableSectionInfo<RowElement>>({
+    context,
+    info: { ...info },
+    refElementParameters: { onElementChange: oec1, onMount, onUnmount },
+    rearrangeableChildParameters,
+    ...void1
+}: UseTableRowOuterParameters<RowElement, RsM>): UseTableRowOuterReturnType<RowElement, RsM> {
+    return useMonitoring(function useTableRowOuter(): UseTableRowOuterReturnType<RowElement, RsM> {
+        assertEmptyObject(void1);
+        const { } = context;
+
+        const {
+            propsStable,
+            refElementReturn
+        } = useRefElement<RowElement>({
+            refElementParameters: {
+                onElementChange: useStableCallback((...a) => { oec1?.(...a); oec2?.(...a); }),
+                onMount,
+                onUnmount
+            }
+        });
+
+        const { props, ...processedChildReturn } = useProcessedChild<RowElement, RsM>({
+            context,
+            info: { getElement: refElementReturn.getElement, ...info },
+            rearrangeableChildParameters,
+        })
+
+
+        const {
+            managedChildReturn: { getChildren },
+            paginatedChildReturn: { hideBecausePaginated, parentIsPaginated },
+            staggeredChildReturn: { hideBecauseStaggered, parentIsStaggered, childUseEffect },
+            refElementParameters: { onElementChange: oec2 }
+        } = processedChildReturn;
+
+
+        return {
+            ...processedChildReturn,
+            refElementReturn,
+            props: useMergedProps(props, propsStable),
+            hide: hideBecausePaginated || hideBecauseStaggered
+        }
+    });
+}
+
+
+
+/**
+ * @compositeParams
+ */
+export function useTableRow<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement>, CM extends TableCellInfo<TableCellElement>>({
     info,
     textContentParameters,
     context: cx1,
@@ -338,86 +378,100 @@ export const useTableRow = /* @__PURE__ */ monitored(function useTableRow<TableR
     hasCurrentFocusParameters,
     singleSelectionChildParameters,
     multiSelectionChildParameters,
-
+    refElementParameters,
     ...void1
 
-}: UseTableRowParameters<TableRowElement, TableCellElement, TableRowInfo<TableRowElement>, TableCellInfo<TableCellElement>>): UseTableRowReturnType<TableRowElement, TableCellElement, TableRowInfo<TableRowElement>, TableCellInfo<TableCellElement>> {
-    type RM = TableRowInfo<TableRowElement>;
-    type CM = TableCellInfo<TableCellElement>;
-    assertEmptyObject(void1);
+}: UseTableRowParameters<TableRowElement, TableCellElement, RM, CM>): UseTableRowReturnType<TableRowElement, TableCellElement, TableRowInfo<TableRowElement>, TableCellInfo<TableCellElement>> {
+    return useMonitoring(function useTableRow(): UseTableRowReturnType<TableRowElement, TableCellElement, TableRowInfo<TableRowElement>, TableCellInfo<TableCellElement>> {
+        assertEmptyObject(void1);
 
-    const {
-        context: cx2,
-        managedChildrenReturn,
-        props: { ...props },
-        ...restRet
+        const {
+            context: cx2,
+            managedChildrenReturn,
+            props: { ...props },
+            ...restRet
 
-        // props
-    } = useCompleteGridNavigationRow<TableRowElement, TableCellElement, RM, CM>({
-        textContentParameters,
-        hasCurrentFocusParameters,
-        context: { ...cx1 },
-        info,
-        linearNavigationParameters,
-        rovingTabIndexParameters,
-        singleSelectionChildParameters,
-        multiSelectionChildParameters,
-        // gridNavigationSelectionSortableRowParameters: { getSortableColumnIndex: cx1.tableContext.getCurrentSortColumn },
-        typeaheadNavigationParameters: { noTypeahead: true, collator: null, typeaheadTimeout: Infinity, onNavigateTypeahead: null }
-    }
-    );
+            // props
+        } = useCompleteGridNavigationRow<TableRowElement, TableCellElement, RM, CM>({
+            textContentParameters,
+            hasCurrentFocusParameters,
+            context: { ...cx1 },
+            info,
+            linearNavigationParameters,
+            rovingTabIndexParameters,
+            singleSelectionChildParameters,
+            multiSelectionChildParameters,
+            refElementParameters,
+            // gridNavigationSelectionSortableRowParameters: { getSortableColumnIndex: cx1.tableContext.getCurrentSortColumn },
+            typeaheadNavigationParameters: { noTypeahead: true, collator: null, typeaheadTimeout: Infinity, onNavigateTypeahead: null }
+        }
+        );
 
-    props.role = "row";
-    // TODO: Unneeded?
-    if (selected) {
-        switch (cx1.singleSelectionContext.singleSelectionAriaPropName) {
-            case "aria-checked":
-            case "aria-pressed":
-            case "aria-selected":
-                props[cx1.singleSelectionContext.singleSelectionAriaPropName ?? "aria-selected"] = "true";
-                break;
+        props.role = "row";
+        // TODO: Unneeded?
+        if (selected) {
+            switch (cx1.singleSelectionContext.singleSelectionAriaPropName) {
+                case "aria-checked":
+                case "aria-pressed":
+                case "aria-selected":
+                    props[cx1.singleSelectionContext.singleSelectionAriaPropName ?? "aria-selected"] = "true";
+                    break;
 
-            default: {
-                console.assert(false, cx1.singleSelectionContext.singleSelectionAriaPropName + " is not valid for multi-select -- prefer checked, selected, or pressed");
+                default: {
+                    console.assert(false, cx1.singleSelectionContext.singleSelectionAriaPropName + " is not valid for multi-select -- prefer checked, selected, or pressed");
+                }
+
             }
+        }
+
+        return {
+            context: useMemoObject({
+                ...cx2,
+                tableContext: cx1.tableContext
+            }),
+            props,
+            managedChildrenReturn,
+            ...restRet
+
 
         }
-    }
-
-    return {
-        context: useMemoObject({
-            ...cx2,
-            tableContext: cx1.tableContext
-        }),
-        props,
-        managedChildrenReturn,
-        ...restRet
+    });
+}
 
 
-    }
-})
+
+
+
 
 /**
  * @compositeParams
  */
-export const useTableCell = /* @__PURE__ */ monitored(function useTableCell<TableCellElement extends Element>({
+export function useTableCell<TableCellElement extends Element>({
     tableCellParameters: { tagTableCell },
     info,
+    context,
+    gridNavigationCellParameters,
+    textContentParameters,
     ...p
 }: UseTableCellParameters<TableCellElement, TableCellInfo<TableCellElement>>): UseTableCellReturnType<TableCellElement, TableCellInfo<TableCellElement>> {
+    return useMonitoring(function useTableCell(): UseTableCellReturnType<TableCellElement, TableCellInfo<TableCellElement>> {
+        assertEmptyObject(p);
 
-    const { props, ...ret } = useCompleteGridNavigationCell<TableCellElement, TableCellInfo<TableCellElement>>({
-        info,
-        ...p
+        const { props, ...ret } = useCompleteGridNavigationCell<TableCellElement, TableCellInfo<TableCellElement>>({
+            info,
+            context,
+            gridNavigationCellParameters,
+            textContentParameters,
+        });
+        return {
+            propsFocus: props,
+            propsCell: { role: (tagTableCell != "th" && tagTableCell != "td") ? "gridcell" : undefined },
+            ...ret,
+            tableCellReturn: {
+                sortByThisColumn: useStableCallback(() => {
+                    return context.tableContext.sortByColumn(info.index);
+                }, [])
+            }
+        };
     });
-    return {
-        propsFocus: props,
-        propsCell: { role: (tagTableCell != "th" && tagTableCell != "td") ? "gridcell" : undefined },
-        ...ret,
-        tableCellReturn: {
-            sortByThisColumn: useStableCallback(() => {
-                return p.context.tableContext.sortByColumn(info.index);
-            }, [])
-        }
-    };
-})
+}

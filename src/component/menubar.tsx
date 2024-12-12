@@ -1,12 +1,12 @@
-import { assertEmptyObject, createContext, focus, memo, useCallback, useImperativeHandle } from "preact-prop-helpers";
-import { Get10, Get8, OmitStrong, useContextWithWarning } from "../props.js";
+import { assertEmptyObject, createContext, focus, identity, memo, useCallback, useEnsureStability, useImperativeHandle } from "preact-prop-helpers";
+import { Get11, Get8, OmitStrong, useContextWithWarning } from "../props.js";
 import { UseMenubarContext, UseMenubarItemParameters, UseMenubarItemReturnType, UseMenubarParameters, UseMenubarReturnType, UseMenubarSubInfo, useMenubar, useMenubarChild } from "../use-menubar.js";
 import { GenericComponentProps, useComponent, useDefault } from "./util.js";
 
 
 export type MenubarProps<MenuParentElement extends Element, MenuItemElement extends Element, LabelElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> = GenericComponentProps<
     UseMenubarReturnType<MenuParentElement, MenuItemElement, LabelElement, M>,
-    Get10<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "linearNavigationParameters", "rovingTabIndexParameters", "typeaheadNavigationParameters", "labelParameters", "toolbarParameters", "singleSelectionParameters", "refElementParameters", "singleSelectionParameters", "multiSelectionParameters", "singleSelectionDeclarativeParameters">,
+    Get11<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "linearNavigationParameters", "rovingTabIndexParameters", "typeaheadNavigationParameters", "labelParameters", "toolbarParameters", "singleSelectionParameters", "refElementParameters", "singleSelectionParameters", "multiSelectionParameters", "singleSelectionDeclarativeParameters", "processedIndexManglerParameters">,
     "orientation" | "ariaLabel" | "singleSelectionMode" | "multiSelectionMode"
 >;
 
@@ -46,9 +46,15 @@ export const Menubar = /* @__PURE__ */ memo((function Menubar<ContainerElement e
     onElementChange,
     onMount,
     onUnmount,
+    getSortValueAt,
+    compare,
+    getIndex,
     ...void1
 }: MenubarProps<ContainerElement, ChildElement, LabelElement, UseMenubarSubInfo<ChildElement>>) {
     assertEmptyObject(void1);
+
+    getSortValueAt??= identity;
+    useEnsureStability("Menubar", getSortValueAt);
 
     const info = useMenubar<ContainerElement, ChildElement, LabelElement>({
         linearNavigationParameters: {
@@ -89,13 +95,18 @@ export const Menubar = /* @__PURE__ */ memo((function Menubar<ContainerElement e
             singleSelectedIndex,
             onSingleSelectedIndexChange
         },
-        refElementParameters: { onElementChange, onMount, onUnmount }
+        refElementParameters: { onElementChange, onMount, onUnmount },
+        processedIndexManglerParameters: { 
+            getSortValueAt,
+            compare,
+            getIndex: useDefault("getIndex", getIndex)
+         }
     });
 
     useImperativeHandle(imperativeHandle!, () => info)
 
     return (
-        <MenubarItemContext.Provider value={info.contextChildren}>
+        <MenubarItemContext.Provider value={info.context}>
             {render(info)}
         </MenubarItemContext.Provider>
     )

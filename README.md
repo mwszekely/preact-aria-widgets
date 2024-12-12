@@ -61,7 +61,7 @@ The intent is to help ensure that individual widgets on a given page are accessi
 
 * [`useDrawer`](#usedrawer): Implements a drawer, which is a specific kind of [Dialog](https://www.w3.org/WAI/ARIA/apg/patterns/dialog/).
 
-* [`useGridlist`](#usegridlist): Implements a gridlist, effectively a [Listbox](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/) enhanced with the capabilities of a [Grid](https://www.w3.org/WAI/ARIA/apg/patterns/grid/).
+* [`useGridlist`](#usegridlist): 
 
 * [`useListbox`](#uselistbox): Implements a [Listbox](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/) pattern.
 
@@ -77,7 +77,7 @@ The intent is to help ensure that individual widgets on a given page are accessi
 
 * [`useSlider`](#useslider): Implements a [Slider](https://www.w3.org/WAI/ARIA/apg/patterns/slider-multithumb/) pattern.
 
-* [`useTable`](#usetable): Creates a sortable data table in a [Grid](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) pattern.
+* [`useTable`](#usetable): 
 
 * [`useTabs`](#usetabs): Implements a [Tabs](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/) pattern.
 
@@ -96,7 +96,7 @@ Implements an [Accordion](https://www.w3.org/WAI/ARIA/apg/patterns/accordion/) p
 
 #### UseAccordionParameters
 
-<small>`extends` [UseLinearNavigationParameters](https://github.com/mwszekely/preact-prop-helpers#uselinearnavigationparameters), [UseTypeaheadNavigationParameters](https://github.com/mwszekely/preact-prop-helpers#usetypeaheadnavigationparameters), [UseManagedChildrenParameters](https://github.com/mwszekely/preact-prop-helpers#usemanagedchildrenparameters), [UseRefElementParameters](https://github.com/mwszekely/preact-prop-helpers#userefelementparameters)</small>
+<small>`extends` [UseLinearNavigationParameters](https://github.com/mwszekely/preact-prop-helpers#uselinearnavigationparameters), [UseTypeaheadNavigationParameters](https://github.com/mwszekely/preact-prop-helpers#usetypeaheadnavigationparameters), [UseManagedChildrenParameters](https://github.com/mwszekely/preact-prop-helpers#usemanagedchildrenparameters)</small>
 
 |Member|Type|Description|Must be stable?|
 |---------|----|-----------|----------|
@@ -129,7 +129,7 @@ This makes their implementation a little bit messy. Each child individually hand
 
 ##### UseAccordionSectionParameters
 
-<small>`extends` [`UseButtonParameters`](#usebuttonparameters), [UseGenericChildParameters](https://github.com/mwszekely/preact-prop-helpers#usegenericchildparameters), [UseTypeaheadNavigationChildParameters](https://github.com/mwszekely/preact-prop-helpers#usetypeaheadnavigationchildparameters), [UseManagedChildParameters](https://github.com/mwszekely/preact-prop-helpers#usemanagedchildparameters), [UsePressParameters](https://github.com/mwszekely/preact-prop-helpers#usepressparameters), [UseRefElementParameters](https://github.com/mwszekely/preact-prop-helpers#userefelementparameters)</small>
+<small>`extends` [`UseButtonParameters`](#usebuttonparameters), [UseGenericChildParameters](https://github.com/mwszekely/preact-prop-helpers#usegenericchildparameters), [UseTypeaheadNavigationChildParameters](https://github.com/mwszekely/preact-prop-helpers#usetypeaheadnavigationchildparameters), [UseManagedChildParameters](https://github.com/mwszekely/preact-prop-helpers#usemanagedchildparameters), [UsePressParameters](https://github.com/mwszekely/preact-prop-helpers#usepressparameters), [UseTextContentParameters](https://github.com/mwszekely/preact-prop-helpers#usetextcontentparameters), [UseRefElementParameters](https://github.com/mwszekely/preact-prop-helpers#userefelementparameters)</small>
 
 |Member|Type|Description|Must be stable?|
 |---------|----|-----------|----------|
@@ -347,7 +347,7 @@ Every member of `UseDialogParameters` is inherited (see the interfaces it `exten
 
 #### UseDialogReturnType
 
-<small>`extends` [UseModalReturnType](https://github.com/mwszekely/preact-prop-helpers#usemodalreturntype)</small>
+<small>`extends` [UseModalReturnType](https://github.com/mwszekely/preact-prop-helpers#usemodalreturntype), [UsePressReturnType](https://github.com/mwszekely/preact-prop-helpers#usepressreturntype)</small>
 
 |Member|Type|Description|Is stable?|
 |---------|----|-----------|----------|
@@ -393,13 +393,11 @@ Every member of `UseDrawerParameters` is inherited (see the interfaces it `exten
 
 ### useGridlist
 
-Implements a gridlist, effectively a [Listbox](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/) enhanced with the capabilities of a [Grid](https://www.w3.org/WAI/ARIA/apg/patterns/grid/).
-
 
 
 #### UseGridlistParameters
 
-<small>`extends` [`UseLabelParameters`](#uselabelparameters), [`UseLabelSyntheticParameters`](#uselabelsyntheticparameters), [`UseListboxParameters`](#uselistboxparameters), [UseCompleteGridNavigationDeclarativeParameters](https://github.com/mwszekely/preact-prop-helpers#usecompletegridnavigationdeclarativeparameters), [UseCompleteListNavigationDeclarativeParameters](https://github.com/mwszekely/preact-prop-helpers#usecompletelistnavigationdeclarativeparameters), [UseCompleteListNavigationParameters](https://github.com/mwszekely/preact-prop-helpers#usecompletelistnavigationparameters)</small>
+<small>`extends` [`UseLabelParameters`](#uselabelparameters), [`UseLabelSyntheticParameters`](#uselabelsyntheticparameters), [UseCompleteGridNavigationDeclarativeParameters](https://github.com/mwszekely/preact-prop-helpers#usecompletegridnavigationdeclarativeparameters), [UseCompleteGridNavigationRowsParameters](https://github.com/mwszekely/preact-prop-helpers#usecompletegridnavigationrowsparameters)</small>
 
 Every member of `UseGridlistParameters` is inherited (see the interfaces it `extends` from).
 
@@ -407,64 +405,12 @@ Every member of `UseGridlistParameters` is inherited (see the interfaces it `ext
 
 #### UseGridlistReturnType
 
-<small>`extends` [UseCompleteGridNavigationReturnType](https://github.com/mwszekely/preact-prop-helpers#usecompletegridnavigationreturntype)</small>
+<small>`extends` [UseCompleteGridNavigationDeclarativeReturnType](https://github.com/mwszekely/preact-prop-helpers#usecompletegridnavigationdeclarativereturntype), [UseCompleteGridNavigationRowsReturnType](https://github.com/mwszekely/preact-prop-helpers#usecompletegridnavigationrowsreturntype), [UseRandomDualIdsReturnType](https://github.com/mwszekely/preact-prop-helpers#userandomdualidsreturntype), [UsePressReturnType](https://github.com/mwszekely/preact-prop-helpers#usepressreturntype)</small>
 
 |Member|Type|Description|Is stable?|
 |---------|----|-----------|----------|
-|context|`UseGridlistContext`|Functions and data that the parent is making available to each child. Put it in your own `Context` from `createContext`|-|
-|propsGridlist|HTML props|Spread these props onto the HTML element that will use this logic.|-|
-|propsGridlistLabel|HTML props|Spread these props onto the HTML element that will use this logic.|-|
-
-A Listbox is a very limited structure, essentially being just a list with no further interactive content allowed.
-
-If you need a list where each list item has a menu or a button or other non-text content, a Gridlist is probably what you want.
-
-
-
-#### useGridlistRow
-
-
-
-##### UseGridlistRowParameters
-
-<small>`extends` [UseGenericChildParameters](https://github.com/mwszekely/preact-prop-helpers#usegenericchildparameters), [UseCompleteGridNavigationRowInfoKeysParameters](https://github.com/mwszekely/preact-prop-helpers#usecompletegridnavigationrowinfokeysparameters), [UseCompleteGridNavigationRowParameters](https://github.com/mwszekely/preact-prop-helpers#usecompletegridnavigationrowparameters)</small>
-
-|Member|Type|Description|Must be stable?|
-|---------|----|-----------|----------|
-|.selected?|`boolean`|**Multi-selection** only! When the `selectionLimit` is `"single"`, this must be `null`.|-|
-
-
-
-##### UseGridlistRowReturnType
-
-<small>`extends` [UseCompleteGridNavigationRowReturnType](https://github.com/mwszekely/preact-prop-helpers#usecompletegridnavigationrowreturntype)</small>
-
-Every member of `UseGridlistRowReturnType` is inherited (see the interface it `extends` from).
-
-
-
-#### useGridlistCell
-
-
-
-##### UseGridlistCellParameters
-
-<small>`extends` [UseCompleteGridNavigationCellParameters](https://github.com/mwszekely/preact-prop-helpers#usecompletegridnavigationcellparameters), [UsePressParameters](https://github.com/mwszekely/preact-prop-helpers#usepressparameters)</small>
-
-Every member of `UseGridlistCellParameters` is inherited (see the interfaces it `extends` from).
-
-
-
-##### UseGridlistCellReturnType
-
-<small>`extends` [UseCompleteGridNavigationCellReturnType](https://github.com/mwszekely/preact-prop-helpers#usecompletegridnavigationcellreturntype), [UsePressReturnType](https://github.com/mwszekely/preact-prop-helpers#usepressreturntype)</small>
-
-|Member|Type|Description|Is stable?|
-|---------|----|-----------|----------|
-|propsCell|HTML props|Spread these props onto the HTML element that will use this logic.|-|
-|propsPress|HTML props|Spread these props onto the HTML element that will use this logic.|-|
-|propsTabbable|HTML props|Spread these props onto the HTML element that will use this logic.|-|
-
+|contextChildren|`UseGridlistRowContext`|Functions and data that the parent is making available to each child. Put it in your own `Context` from `createContext`|-|
+|contextProcessing|`UseGridlistRowsContext`|Functions and data that the parent is making available to each child. Put it in your own `Context` from `createContext`|-|
 
 
 <hr />
@@ -803,112 +749,28 @@ Implements a [Slider](https://www.w3.org/WAI/ARIA/apg/patterns/slider-multithumb
 
 ### useTable
 
-Creates a sortable data table in a [Grid](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) pattern.
-
 
 
 #### UseTableParameters
 
-<small>`extends` [`UseLabelParameters`](#uselabelparameters), [`UseLabelSyntheticParameters`](#uselabelsyntheticparameters), [UseCompleteListNavigationParameters](https://github.com/mwszekely/preact-prop-helpers#usecompletelistnavigationparameters)</small>
+<small>`extends` [`UseLabelParameters`](#uselabelparameters), [`UseLabelSyntheticParameters`](#uselabelsyntheticparameters), [UseCompleteGridNavigationParameters](https://github.com/mwszekely/preact-prop-helpers#usecompletegridnavigationparameters)</small>
 
 |Member|Type|Description|Must be stable?|
 |---------|----|-----------|----------|
+|.initiallySortedColumn?|`number`||-|
 |.tagTable|`ElementToTag<TableElement>`||-|
 
 
 
 #### UseTableReturnType
 
-
-
-|Member|Type|Description|Is stable?|
-|---------|----|-----------|----------|
-|context|`UseTableContext`|Functions and data that the parent is making available to each child. Put it in your own `Context` from `createContext`|-|
-|propsLabel|HTML props|Spread these props onto the HTML element that will use this logic.|-|
-|propsTable|HTML props|Spread these props onto the HTML element that will use this logic.|-|
-
-Note that in many cases this is overkill. If you don't need sorting and navigation between cells of interactive content, then you can just use a regular &lt;table&gt;
-
-
-
-#### useTableSection
-
-
-
-##### UseTableSectionParameters
-
-<small>`extends` [UseCompleteGridNavigationParameters](https://github.com/mwszekely/preact-prop-helpers#usecompletegridnavigationparameters)</small>
-
-|Member|Type|Description|Must be stable?|
-|---------|----|-----------|----------|
-|.location|`"head" \| "body" \| "foot"`||-|
-|.tagTableSection|`ElementToTag<TableSectionElement>`||-|
-|context|`UseTableContext`|Functions and data that the parent has made available to each child. Retrieve it with `useContext`|-|
-
-
-
-##### UseTableSectionReturnType
-
-<small>`extends` [UseCompleteGridNavigationReturnType](https://github.com/mwszekely/preact-prop-helpers#usecompletegridnavigationreturntype)</small>
+<small>`extends` [UseCompleteGridNavigationReturnType](https://github.com/mwszekely/preact-prop-helpers#usecompletegridnavigationreturntype), [UseRandomDualIdsReturnType](https://github.com/mwszekely/preact-prop-helpers#userandomdualidsreturntype), [UsePressReturnType](https://github.com/mwszekely/preact-prop-helpers#usepressreturntype)</small>
 
 |Member|Type|Description|Is stable?|
 |---------|----|-----------|----------|
-|context|`UseTableSectionContext`|Functions and data that the parent is making available to each child. Put it in your own `Context` from `createContext`|-|
-|propsTableSection|HTML props|Spread these props onto the HTML element that will use this logic.|-|
-
-
-
-#### useTableRow
-
-
-
-##### UseTableRowParameters
-
-<small>`extends` [UseCompleteGridNavigationRowParameters](https://github.com/mwszekely/preact-prop-helpers#usecompletegridnavigationrowparameters)</small>
-
-|Member|Type|Description|Must be stable?|
-|---------|----|-----------|----------|
-|.selected?|`boolean`|When the `selectionLimit` is `"single"`, this must be `null`.|-|
-|.tagTableRow|`ElementToTag<TableRowElement>`||-|
-|context|`UseTableSectionContext`|Functions and data that the parent has made available to each child. Retrieve it with `useContext`|-|
-|info|`OmitStrong<UseCompleteGridNavigationRowParameters<TableRowElement, TableCellElement, RM, CM>["info"], never>`|Data the child makes available to the parent. Passed to `useManagedChild`|-|
-
-
-
-##### UseTableRowReturnType
-
-<small>`extends` [UseCompleteGridNavigationRowReturnType](https://github.com/mwszekely/preact-prop-helpers#usecompletegridnavigationrowreturntype)</small>
-
-|Member|Type|Description|Is stable?|
-|---------|----|-----------|----------|
+|.sortByColumn|`(column: number) => SortInfo`||-|
 |context|`UseTableRowContext`|Functions and data that the parent is making available to each child. Put it in your own `Context` from `createContext`|-|
-
-
-
-#### useTableCell
-
-
-
-##### UseTableCellParameters
-
-<small>`extends` [UseGenericChildParameters](https://github.com/mwszekely/preact-prop-helpers#usegenericchildparameters), [UseCompleteGridNavigationCellInfoKeysParameters](https://github.com/mwszekely/preact-prop-helpers#usecompletegridnavigationcellinfokeysparameters), [UseCompleteGridNavigationCellParameters](https://github.com/mwszekely/preact-prop-helpers#usecompletegridnavigationcellparameters)</small>
-
-|Member|Type|Description|Must be stable?|
-|---------|----|-----------|----------|
-|.tagTableCell|`ElementToTag<TableCellElement>`||-|
-
-
-
-##### UseTableCellReturnType
-
-<small>`extends` [UseCompleteGridNavigationCellReturnType](https://github.com/mwszekely/preact-prop-helpers#usecompletegridnavigationcellreturntype)</small>
-
-|Member|Type|Description|Is stable?|
-|---------|----|-----------|----------|
-|.sortByThisColumn|`() => SortInfo`||-|
-|propsCell|HTML props|Spread these props onto the HTML element that will use this logic.|-|
-|propsFocus|HTML props|Spread these props onto the HTML element that will use this logic.|-|
-
+|propsTable|HTML props|Spread these props onto the HTML element that will use this logic.|-|
 
 
 <hr />
@@ -1074,6 +936,8 @@ Implements a [Tooltip](https://www.w3.org/WAI/ARIA/apg/patterns/tooltip/) patter
 
 |Member|Type|Description|Is stable?|
 |---------|----|-----------|----------|
+|refElementPopupReturn|[UseRefElementReturnTypeSelf](https://github.com/mwszekely/preact-prop-helpers#userefelementreturntypeself)| |-|
+|refElementSourceReturn|[UseRefElementReturnTypeSelf](https://github.com/mwszekely/preact-prop-helpers#userefelementreturntypeself)| |-|
 |.getState|`() => TooltipState`||-|
 |propsPopup|HTML props|Spread these props onto the HTML element that will use this logic.|-|
 |propsTrigger|HTML props|Spread these props onto the HTML element that will use this logic.|-|

@@ -19,7 +19,7 @@ export interface UseMenubarItemParameters<MenuItemElement extends Element, M ext
 }
 export interface UseMenubarReturnType<MenuParentElement extends Element, MenuItemElement extends Element, LabelElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseToolbarReturnType<MenuParentElement, MenuItemElement, LabelElement, M>, "propsToolbar"> {
     propsMenubar: ElementProps<MenuParentElement>;
-    contextChildren: UseMenubarContext<MenuItemElement, M>;
+    context: UseMenubarContext<MenuItemElement, M>;
 }
 export interface UseMenubarItemReturnType<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseToolbarChildReturnType<MenuItemElement, M>, "propsChild" | "propsTabbable" | "pressParameters">, UsePressReturnType<MenuItemElement> {
 }
@@ -34,9 +34,9 @@ export interface UseMenubarItemReturnType<MenuItemElement extends Element, M ext
  *
  * @compositeParams
  */
-export declare const useMenubar: <MenuParentElement extends Element, MenuItemElement extends Element, LabelElement extends Element>(args: UseMenubarParameters<MenuParentElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>) => UseMenubarReturnType<MenuParentElement, MenuItemElement, LabelElement, UseMenubarSubInfo<MenuItemElement>>;
+export declare function useMenubar<MenuParentElement extends Element, MenuItemElement extends Element, LabelElement extends Element>(args: UseMenubarParameters<MenuParentElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenubarReturnType<MenuParentElement, MenuItemElement, LabelElement, UseMenubarSubInfo<MenuItemElement>>;
 /**
  * @compositeParams
  */
-export declare const useMenubarChild: <MenuItemElement extends Element>({ menuItemParameters: { onPress: opu, role }, pressParameters: { onPressingChange, ...void1 }, ...restParams }: UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>) => UseMenubarItemReturnType<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>;
+export declare function useMenubarChild<MenuItemElement extends Element>({ menuItemParameters: { onPress: opu, role }, pressParameters: { onPressingChange, ...void1 }, ...restParams }: UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenubarItemReturnType<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>;
 //# sourceMappingURL=use-menubar.d.ts.map

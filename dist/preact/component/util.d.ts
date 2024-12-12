@@ -10,12 +10,12 @@ import { Context, GetIndex, Nullable, Ref, VNode } from "preact-prop-helpers";
  */
 export declare function useComponent<R>(imperativeHandle: Nullable<Ref<R>>, render: (info: R) => VNode, Context: null | Context<(NonNullable<R> extends {
     context?: infer C;
-} ? C : unknown)>, info: R): import("preact-prop-helpers").JSX.Element;
+} ? C : unknown)>, info: R): import("preact").h.JSX.Element;
 export declare function useComponentC<R>(imperativeHandle: Nullable<Ref<R>>, render: (info: R) => VNode, ContextChildren: null | Context<(R extends {
     contextChildren?: infer C;
 } ? C : unknown)>, ContextProcessing: null | Context<(R extends {
     contextProcessing?: infer C;
-} ? C : unknown)>, info: R): import("preact-prop-helpers").JSX.Element;
+} ? C : unknown)>, info: R): import("preact").h.JSX.Element;
 /**
  * Quickly puts together component props from the hook it's based on.
  *

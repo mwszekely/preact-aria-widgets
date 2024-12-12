@@ -12,9 +12,9 @@ import {
     generateRandomId,
     useManagedChild,
     useManagedChildren,
-    useMemo, useRef
+    useMemo, useMonitoring, useRef
 } from "preact-prop-helpers";
-import { EventDetail, Prefices, TagSensitiveProps, enhanceEvent, monitored } from "./props.js";
+import { EventDetail, Prefices, TagSensitiveProps, enhanceEvent } from "./props.js";
 
 
 
@@ -97,7 +97,7 @@ export interface SliderContext<M extends SliderThumbInfo> extends UseManagedChil
  * 
  * @hasChild {@link useSliderThumb}
  */
-export const useSlider = /* @__PURE__ */ monitored(function useSlider<M extends SliderThumbInfo>({ sliderParameters: { max, min }, managedChildrenParameters }: UseSliderParameters<M>): UseSliderReturnType<M> {
+export function useSlider<M extends SliderThumbInfo>({ sliderParameters: { max, min }, managedChildrenParameters }: UseSliderParameters<M>): UseSliderReturnType<M> {
     const { context, managedChildrenReturn } = useManagedChildren<M>({ managedChildrenParameters });
 
     const baseIdRef = useRef<string>(null! as "");
@@ -115,48 +115,50 @@ export const useSlider = /* @__PURE__ */ monitored(function useSlider<M extends 
         }), [min, max]),
         managedChildrenReturn
     };
-})
+}
 
 
 /**
  * @compositeParams
  */
-export const useSliderThumb = /* @__PURE__ */ monitored(function useSliderThumb<ThumbElement extends Element>({
+export function useSliderThumb<ThumbElement extends Element>({
     sliderThumbParameters: { tag, value, max: maxOverride, min: minOverride, valueText, label, onValueChange, ...void2 },
     info,
     context: { sliderContext: { max: maxParent, min: minParent }, ...context },
     ...void1
 }: UseSliderThumbParameters<ThumbElement>): UseSliderThumbReturnType<ThumbElement> {
-    const { managedChildReturn } = useManagedChild<SliderThumbInfo>({ info, context });
-    const { getChildren: _getThumbs } = managedChildReturn;
+    return useMonitoring(function useSliderThumb(): UseSliderThumbReturnType<ThumbElement> {
+        const { managedChildReturn } = useManagedChild<SliderThumbInfo>({ info, context });
+        const { getChildren: _getThumbs } = managedChildReturn;
 
-    const min = (minOverride ?? minParent);
-    const max = (maxOverride ?? maxParent);
+        const min = (minOverride ?? minParent);
+        const max = (maxOverride ?? maxParent);
 
-    let newProps: ElementProps<ThumbElement> = (
-        tag == "input" ?
-            { min, max, value, type: "range" } :
-            { "aria-valuemax": max, "aria-valuemin": min, "aria-valuenow": value }
-    );
-    newProps = { ...newProps, "aria-label": label, "aria-valuetext": valueText ?? undefined, style: { "--range-value": `${value}`, "--range-value-text": `${valueText}` } };
-    if (tag == "input") {
-        newProps.onInput = e => {
-            onValueChange?.(enhanceEvent(e, { value: (e.currentTarget as Element as HTMLInputElement).valueAsNumber }));
+        let newProps: ElementProps<ThumbElement> = (
+            tag == "input" ?
+                { min, max, value, type: "range" } as {} :
+                { "aria-valuemax": max, "aria-valuemin": min, "aria-valuenow": value }
+        );
+        newProps = { ...newProps, "aria-label": label, "aria-valuetext": valueText ?? undefined, style: { "--range-value": `${value}`, "--range-value-text": `${valueText}` } };
+        if (tag == "input") {
+            newProps.onInput = e => {
+                onValueChange?.(enhanceEvent(e, { value: (e.currentTarget as Element as HTMLInputElement).valueAsNumber }));
+            }
         }
-    }
-    else {
-        throw new Error("Unimplemented");
-    }
+        else {
+            throw new Error("Unimplemented");
+        }
 
-    assertEmptyObject(void1);
-    assertEmptyObject(void2);
+        assertEmptyObject(void1);
+        assertEmptyObject(void2);
 
-    return {
-        sliderThumbReturn: {
-            min,
-            max
-        },
-        managedChildReturn,
-        propsSliderThumb: newProps
-    }
-})
+        return {
+            sliderThumbReturn: {
+                min,
+                max
+            },
+            managedChildReturn,
+            propsSliderThumb: newProps
+        }
+    });
+}

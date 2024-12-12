@@ -12,11 +12,12 @@ import {
     enhanceEvent,
     returnFalse,
     useMergedProps,
+    useMonitoring,
     usePress,
     useRefElement,
     useStableCallback
 } from "preact-prop-helpers";
-import { DisabledType, ElementToTag, EnhancedEventHandler, OmitStrong, TargetedEnhancedEvent, monitored } from "./props.js";
+import { DisabledType, ElementToTag, EnhancedEventHandler, OmitStrong, TargetedEnhancedEvent } from "./props.js";
 
 export interface ButtonPressEventDetail {
     pressed: boolean | undefined;
@@ -82,50 +83,50 @@ export interface UseButtonReturnType<ButtonElement extends Element> extends
  * 
  * @compositeParams
  */
-export const useButton = /* @__PURE__ */ monitored(function useButton<ButtonElement extends Element>({
+export function useButton<ButtonElement extends Element>({
     buttonParameters: { tagButton, disabled, pressed, role, onPressSync, ...void1 },
     pressParameters: { focusSelf, allowRepeatPresses, longPressThreshold, onPressingChange, excludeSpace, ...void3 },
     refElementParameters,
     ...void2
 }: UseButtonParameters<ButtonElement>): UseButtonReturnType<ButtonElement> {
-    //if (tagButton != "button")
-    //    debugger;
+    
+    return useMonitoring(function useButton() {
+        const { refElementReturn, propsStable: propsRef, ...void5 } = useRefElement<ButtonElement>({ refElementParameters });
+        const { pressReturn, props: propsPress, ...void4 } = usePress<ButtonElement>({
+            refElementReturn,
+            pressParameters: {
+                onPressSync: useStableCallback((e) => {
+                    if (!disabled) {
+                        const p = (pressed == null ? undefined : !pressed);
+                        onPressSync?.(enhanceEvent(e, { pressed: p }))
+                    }
+                }),
+                focusSelf,
+                allowRepeatPresses,
+                excludeEnter: returnFalse,
+                excludePointer: returnFalse,
+                excludeSpace,
+                longPressThreshold,
+                onPressingChange
+            },
+        });
 
-    const { refElementReturn, propsStable: propsRef, ...void5 } = useRefElement<ButtonElement>({ refElementParameters });
-    const { pressReturn, props: propsPress, ...void4 } = usePress<ButtonElement>({
-        refElementReturn,
-        pressParameters: {
-            onPressSync: useStableCallback((e) => {
-                if (!disabled) {
-                    const p = (pressed == null ? undefined : !pressed);
-                    onPressSync?.(enhanceEvent(e, { pressed: p }))
-                }
-            }),
-            focusSelf,
-            allowRepeatPresses,
-            excludeEnter: returnFalse,
-            excludePointer: returnFalse,
-            excludeSpace,
-            longPressThreshold,
-            onPressingChange
-        },
+        const baseProps = { "aria-pressed": (pressed === true ? "true" : pressed === false ? "false" : undefined) };
+        const buttonProps = { ...baseProps, disabled: (disabled && disabled != "soft") ? true : false, "aria-disabled": (disabled === 'soft' ? 'true' : undefined), role: role == "button" ? undefined : role };
+        const divProps = { ...baseProps, tabIndex: (disabled === "hard" ? -1 : 0), role: role || "button", "aria-disabled": disabled ? "true" : undefined };
+
+        assertEmptyObject(void1);
+        assertEmptyObject(void2);
+        assertEmptyObject(void3);
+        assertEmptyObject(void4);
+        assertEmptyObject(void5);
+
+        return {
+            pressReturn,
+            props: useMergedProps<ButtonElement>(propsPress, propsRef, (tagButton == 'button' ? buttonProps : divProps) as ElementProps<ButtonElement>),
+            refElementReturn,
+        }
     });
-
-    const baseProps = { "aria-pressed": (pressed === true ? "true" : pressed === false ? "false" : undefined) };
-    const buttonProps = { ...baseProps, disabled: (disabled && disabled != "soft") ? true : false, "aria-disabled": (disabled === 'soft' ? 'true' : undefined), role: role == "button" ? undefined : role };
-    const divProps = { ...baseProps, tabIndex: (disabled === "hard" ? -1 : 0), role: role || "button", "aria-disabled": disabled ? "true" : undefined };
-
-    assertEmptyObject(void1);
-    assertEmptyObject(void2);
-    assertEmptyObject(void3);
-    assertEmptyObject(void4);
-    assertEmptyObject(void5);
-
-    return {
-        pressReturn,
-        props: useMergedProps<ButtonElement>(propsPress, propsRef, (tagButton == 'button' ? buttonProps : divProps) as ElementProps<ButtonElement>),
-        refElementReturn,
-    }
-})
+}
 
 

@@ -1,9 +1,9 @@
 
 import { h } from "preact";
-import { returnZero, useMergedProps, useStableGetter, useState } from "preact-prop-helpers";
+import { useMergedProps, useState } from "preact-prop-helpers";
 import { useRef } from "preact/compat";
 import { useCallback } from "preact/hooks";
-import { Table, TableCell, TableRow, TableSection } from "../../dist/preact/index.js";
+import { Table, TableBody, TableBodyRow, TableCell, TableHead, TableHeadRow } from "../../dist/preact/index.js";
 
 export function Blurb() {
     return (
@@ -40,7 +40,6 @@ function DemoInput({ index }: { index: number }) {
             focusSelf={e => { e.focus() }}
             tagTableCell="td"
             index={index}
-            getSortValue={useStableGetter(v)}
             render={info => {
                 return (
                     <td {...info.propsCell}>
@@ -50,14 +49,6 @@ function DemoInput({ index }: { index: number }) {
                         }, [])} value={v} />
                     </td>
                 )
-                /*
-    
-                tagTableCell: "td", makePropsTableCell: (info) => ({
-                    children: <DemoInput tabbable={info.rovingTabIndex.tabbable} />
-    
-                })
-    
-                */
             }} />
     )
     /*
@@ -70,7 +61,7 @@ function DemoInput({ index }: { index: number }) {
     )*/
 }
 
-function DemoTableCell({ index, header }: { index: number, header?: boolean }) {
+function DemoTableCell({ index, header, value }: { index: number, value?: number, header?: boolean }) {
     const r = useRef(Math.random());
 
     if (header) {
@@ -80,8 +71,7 @@ function DemoTableCell({ index, header }: { index: number, header?: boolean }) {
             focusSelf={e => ref.current?.focus()}
             tagTableCell="th"
             index={index}
-            getSortValue={returnZero}
-            render={info => <th {...info.propsCell}>{text}<button {...useMergedProps(info.propsFocus, { ref })} onClick={() => { info.tableCellReturn.sortByThisColumn() }}>Sort</button></th>} />
+            render={info => <th {...info.propsCell}>{text}<button {...useMergedProps(info.propsFocus, { ref })} onClick={() => { debugger; info.tableCellReturn.sortByThisColumn() }}>Sort</button></th>} />
     }
     else {
         //const text = `Cell in column #${index}`;
@@ -91,7 +81,7 @@ function DemoTableCell({ index, header }: { index: number, header?: boolean }) {
                     <DemoInput index={index} />
                 );
             default:
-                return <TableCell<HTMLTableCellElement> /* getSortValue={() => r.current} */ focusSelf={e => e.focus()} tagTableCell="td" index={index} getSortValue={useStableGetter(r.current)} render={info => {
+                return <TableCell<HTMLTableCellElement> /* getSortValue={() => r.current} */ focusSelf={e => e.focus()} tagTableCell="td" index={index} render={info => {
                     return (
                         <td {...info.propsFocus} {...info.propsCell}>{r.current.toString()}</td>
                     )
@@ -103,6 +93,20 @@ function DemoTableCell({ index, header }: { index: number, header?: boolean }) {
 export function Demo() {
     const [count, setCount] = useState(5);
 
+    const sortValues = useRef<Array<number[]>>([]);
+
+    const getSortValuesForRow = useCallback((row: number) => {
+        let sortValuesRow = sortValues.current[row];
+        if (!sortValuesRow) {
+            sortValues.current[row] = sortValuesRow = [Math.random(), Math.random(), Math.random()];
+        }
+        return sortValuesRow;
+    }, []);
+
+    const getSortValueAt = useCallback((row: number, column: number | undefined) => {
+        const rowValues = getSortValuesForRow(row);
+        return rowValues[column ?? 0];
+    }, [])
 
     return (
         <>
@@ -110,78 +114,60 @@ export function Demo() {
             <Code />
             <label><input type="number" min={0} value={count} onInput={e => setCount(e.currentTarget.valueAsNumber)} /> # of table rows</label>
             <div>
-                <Table<HTMLTableElement, HTMLLabelElement>
+                <Table<HTMLTableElement, HTMLTableRowElement, HTMLLabelElement>
                     ariaLabel={null}
                     multiSelectionMode="activation"
+                    multiSelectionAriaPropName="aria-selected"
                     tagTable="table"
+                    getSortValueAt={getSortValueAt}
                     render={infoTable => {
                         return (
                             <>
                                 <label {...infoTable.propsLabel}>Table demo</label>
                                 <table {...infoTable.propsTable}>
-                                    <TableSection<HTMLTableSectionElement, HTMLTableRowElement, HTMLTableCellElement>
-                                        tagTableSection="thead"
-                                        location="head"
-                                        render={infoSection => {
-                                            return (
-                                                <thead {...infoSection.propsTableSection}>
-                                                    <TableRow<HTMLTableRowElement, HTMLTableCellElement>
-                                                        index={0}
-                                                        tagTableRow="tr"
-                                                        render={info => {
-                                                            return (
-                                                                <tr {...info.props}>
-                                                                    <DemoTableCell header={true} key={0} index={0} />
-                                                                    <DemoTableCell header={true} key={1} index={1} />
-                                                                    <DemoTableCell header={true} key={2} index={2} />
-                                                                </tr>
-                                                            )
-                                                        }} />
-                                                </thead>
-                                            )
-                                        }} />
-                                    <TableSection<HTMLTableSectionElement, HTMLTableRowElement, HTMLTableCellElement>
-                                        tagTableSection="tbody"
-                                        location="body"
-                                        multiSelectionAriaPropName="aria-selected"
-                                        render={infoSection => {
-                                            return (
-                                                <tbody {...infoSection.propsTableSection}>
-                                                    {infoSection.rearrangeableChildrenReturn.useRearrangedChildren(Array.from(function* () {
-                                                        for (let i = 0; i < count; ++i) {
-                                                            yield (
-                                                                <TableRow<HTMLTableRowElement, HTMLTableCellElement>
-                                                                    tagTableRow="tr"
-                                                                    key={i}
-                                                                    index={i}
-                                                                    render={infoRow => {
-                                                                        return (
-                                                                            <tr {...infoRow.props}>
-                                                                                <DemoTableCell key={0} index={0} />
-                                                                                <DemoTableCell key={1} index={1} />
-                                                                                <DemoTableCell key={2} index={2} />
-                                                                            </tr>
-                                                                        );
+                                    <TableHead tagHead="thead" render={infoSection => {
+                                        return (
+                                            <thead {...infoSection}><TableHeadRow<HTMLTableRowElement, HTMLTableCellElement>
+                                                tagTableRow="tr"
+                                                index={0}
 
-                                                                        /*
-        
-        
-                                                                        tagTableRow: "tr",
-                                                                        makePropsTableRow: () => ({
-                                                                            children: <>
-                                                                                <DemoTableCell key={0} index={0} />
-                                                                                <DemoTableCell key={1} index={1} />
-                                                                                <DemoTableCell key={2} index={2} />
-                                                                            </>
-                                                                        })
-                                                                    })
-        
-                                                                        */
-                                                                    }} />
-                                                            )
-                                                        }
-                                                    }()))}
-                                                </tbody>
+                                                render={info => {
+                                                    return (
+                                                        <tr {...info.props}>
+                                                            <DemoTableCell header={true} key={0} index={0} />
+                                                            <DemoTableCell header={true} key={1} index={1} />
+                                                            <DemoTableCell header={true} key={2} index={2} />
+                                                        </tr>
+                                                    )
+                                                }} /></thead>
+                                        )
+                                    }}>
+
+                                    </TableHead>
+                                    <TableBody<HTMLTableSectionElement, HTMLTableRowElement>
+                                        tagTableSection="tbody"
+                                        children={Array.from(function* () {
+                                            for (let i = 0; i < count; ++i) {
+                                                yield (
+                                                    <TableBodyRow<HTMLTableRowElement, HTMLTableCellElement>
+                                                        tagTableRow="tr"
+                                                        key={i}
+                                                        index={i + 1}
+                                                        render={infoRow => {
+                                                            return (
+                                                                <tr {...infoRow.props}>
+                                                                    <DemoTableCell key={0} index={0} value={getSortValueAt(i + 1, 0)} />
+                                                                    <DemoTableCell key={1} index={1} value={getSortValueAt(i + 1, 1)} />
+                                                                    <DemoTableCell key={2} index={2} value={getSortValueAt(i + 1, 2)} />
+                                                                </tr>
+                                                            );
+                                                        }} />
+                                                )
+                                            }
+                                        }())}
+                                        render={infoSection => {
+                                            return (
+                                                <tbody {...infoSection.propsTableSection}>{infoSection.rearrangeableChildrenReturn.children}</tbody>
                                             )
                                         }} />
                                 </table>

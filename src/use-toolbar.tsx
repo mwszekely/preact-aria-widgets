@@ -15,9 +15,10 @@ import {
     useCompleteListNavigationChild,
     useCompleteListNavigationDeclarative,
     useMemoObject,
-    useMergedProps
+    useMergedProps,
+    useMonitoring
 } from "preact-prop-helpers";
-import { OmitStrong, Prefices, monitored } from "./props.js";
+import { OmitStrong, Prefices } from "./props.js";
 import { UseLabelSyntheticParameters, useLabelSynthetic } from "./use-label.js";
 
 
@@ -56,7 +57,7 @@ export interface UseToolbarReturnType<ContainerElement extends Element, ChildEle
     propsLabel: ElementProps<LabelElement>;
     randomIdInputReturn: UseRandomIdReturnType<ContainerElement, LabelElement>["randomIdReturn"];
     randomIdLabelReturn: UseRandomIdReturnType<LabelElement, ContainerElement>["randomIdReturn"];
-    contextChildren: UseToolbarContext<ChildElement, M>;
+    context: UseToolbarContext<ChildElement, M>;
 }
 
 export interface UseToolbarSubInfo<ChildElement extends Element> extends UseCompleteListNavigationChildInfo<ChildElement> {
@@ -93,7 +94,7 @@ export interface UseToolbarChildReturnType<ChildElement extends Element, M exten
  * 
  * @compositeParams
  */
-export const useToolbar = /* @__PURE__ */ monitored(function useToolbar<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({
+export function useToolbar<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({
     linearNavigationParameters,
     toolbarParameters: { orientation, role, disabled },
     labelParameters,
@@ -102,65 +103,66 @@ export const useToolbar = /* @__PURE__ */ monitored(function useToolbar<Containe
     singleSelectionDeclarativeParameters,
     ...listNavParameters
 }: UseToolbarParameters<ContainerElement, ChildElement, UseToolbarSubInfo<ChildElement>>): UseToolbarReturnType<ContainerElement, ChildElement, LabelElement, UseToolbarSubInfo<ChildElement>> {
-    type M = UseToolbarSubInfo<ChildElement>;
+    return useMonitoring(function useToolbar(): UseToolbarReturnType<ContainerElement, ChildElement, LabelElement, UseToolbarSubInfo<ChildElement>> {
+        type M = UseToolbarSubInfo<ChildElement>;
 
-    if (singleSelectionDeclarativeParameters.singleSelectedIndex !== undefined) {
-        console.assert(singleSelectionParameters.singleSelectionMode != "disabled", `useToolbar: When singleSelectionMode is "disabled", singleSelectedIndex must be null.`);
-    }
+        if (singleSelectionDeclarativeParameters.singleSelectedIndex !== undefined) {
+            console.assert(singleSelectionParameters.singleSelectionMode != "disabled", `useToolbar: When singleSelectionMode is "disabled", singleSelectedIndex must be null.`);
+        }
 
-    const {
-        contextChildren,
-        contextProcessing,
-        props,
-        ...listNavReturn
-    } = useCompleteListNavigationDeclarative<ContainerElement, ChildElement, M>({
-        ...listNavParameters,
-        rovingTabIndexParameters: { ...rovingTabIndexParameters, untabbable: disabled, focusSelfParent: focus },
-        singleSelectionDeclarativeParameters,
-        paginatedChildrenParameters: { paginationMax: null, paginationMin: null },
-        linearNavigationParameters: { ...linearNavigationParameters, arrowKeyDirection: orientation },
-        singleSelectionParameters,
+        const {
+            context,
+            props,
+            ...listNavReturn
+        } = useCompleteListNavigationDeclarative<ContainerElement, ChildElement, M>({
+            ...listNavParameters,
+            rovingTabIndexParameters: { ...rovingTabIndexParameters, untabbable: disabled, focusSelfParent: focus },
+            singleSelectionDeclarativeParameters,
+            paginatedChildrenParameters: { paginationMax: null, paginationMin: null },
+            linearNavigationParameters: { ...linearNavigationParameters, arrowKeyDirection: orientation },
+            singleSelectionParameters,
+        });
+
+        const { propsInput: propsToolbar, propsLabel, randomIdInputReturn, randomIdLabelReturn } = useLabelSynthetic<ContainerElement, LabelElement>({
+            labelParameters: { ...labelParameters, onLabelClick: listNavReturn.rovingTabIndexReturn.focusSelf },
+            randomIdInputParameters: { prefix: Prefices.toolbar },
+            randomIdLabelParameters: { prefix: Prefices.toolbarLabel }
+        });
+
+        // Note: We return tabIndex=-1 (when not disabled) because some browsers (at least Firefox) seem to add role=toolbar to the tab order?
+        // Probably needs a bit more digging because this feels like a bit of a blunt fix.
+        return {
+            context: useMemoObject({ ...context, toolbarContext: useMemoObject<UseToolbarContextSelf>({}) }),
+            propsLabel,
+            propsToolbar: useMergedProps({
+                ...propsToolbar,
+                role: role ?? undefined,
+                tabIndex: disabled ? 0 : -1,
+                "aria-disabled": disabled ? "true" : undefined
+            }, props),
+            randomIdInputReturn,
+            randomIdLabelReturn,
+            ...listNavReturn
+        }
     });
-
-    const { propsInput: propsToolbar, propsLabel, randomIdInputReturn, randomIdLabelReturn } = useLabelSynthetic<ContainerElement, LabelElement>({
-        labelParameters: { ...labelParameters, onLabelClick: listNavReturn.rovingTabIndexReturn.focusSelf },
-        randomIdInputParameters: { prefix: Prefices.toolbar },
-        randomIdLabelParameters: { prefix: Prefices.toolbarLabel }
-    });
-
-    // Note: We return tabIndex=-1 (when not disabled) because some browsers (at least Firefox) seem to add role=toolbar to the tab order?
-    // Probably needs a bit more digging because this feels like a bit of a blunt fix.
-    return {
-        contextChildren: useMemoObject({ ...contextChildren, toolbarContext: useMemoObject<UseToolbarContextSelf>({}) }),
-        contextProcessing,
-        propsLabel,
-        propsToolbar: useMergedProps({
-            ...propsToolbar,
-            role: role ?? undefined,
-            tabIndex: disabled ? 0 : -1,
-            "aria-disabled": disabled ? "true" : undefined
-        }, props),
-        randomIdInputReturn,
-        randomIdLabelReturn,
-        ...listNavReturn
-    }
-})
+}
 
 
 /**
  * @compositeParams
  */
-export const useToolbarChild = /* @__PURE__ */ monitored(function useToolbarChild<ChildElement extends Element>({ context, info, toolbarChildParameters: { disabledProp }, ...args }: UseToolbarChildParameters<ChildElement, UseToolbarSubInfo<ChildElement>>): UseToolbarChildReturnType<ChildElement, UseToolbarSubInfo<ChildElement>> {
+export function useToolbarChild<ChildElement extends Element>({ context, info, toolbarChildParameters: { disabledProp }, ...args }: UseToolbarChildParameters<ChildElement, UseToolbarSubInfo<ChildElement>>): UseToolbarChildReturnType<ChildElement, UseToolbarSubInfo<ChildElement>> {
+    return useMonitoring(function useToolbarChild(): UseToolbarChildReturnType<ChildElement, UseToolbarSubInfo<ChildElement>> {
+        const {
+            propsChild,
+            propsTabbable,
+            ...listNavReturn
+        } = useCompleteListNavigationChild<ChildElement, UseToolbarSubInfo<ChildElement>>({ info, context, ...args });
 
-    const {
-        propsChild,
-        propsTabbable,
-        ...listNavReturn
-    } = useCompleteListNavigationChild<ChildElement, UseToolbarSubInfo<ChildElement>>({ info, context, ...args });
-
-    return {
-        propsChild: useMergedProps(propsChild, { [disabledProp as never]: (args.singleSelectionChildParameters.singleSelectionDisabled || args.multiSelectionChildParameters.multiSelectionDisabled) ? true : undefined }),
-        propsTabbable,
-        ...listNavReturn
-    }
-})
+        return {
+            propsChild: useMergedProps(propsChild, { [disabledProp as never]: (args.singleSelectionChildParameters.singleSelectionDisabled || args.multiSelectionChildParameters.multiSelectionDisabled) ? true : undefined }),
+            propsTabbable,
+            ...listNavReturn
+        }
+    });
+}

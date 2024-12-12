@@ -1,17 +1,17 @@
-import { Ref, TargetedOmit, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationChildrenInfo, UseCompleteListNavigationChildrenParameters, UseCompleteListNavigationChildrenReturnType, UsePaginatedChildParameters, UseProcessedChildContext, UseProcessedChildInfo, UseProcessedChildReturnType, UseProcessedChildrenContext, UseRefElementParameters, UseRefElementReturnType, UseStaggeredChildParameters, VNode, assertEmptyObject, createContext, focus, memo, useCallback, useCompleteListNavigationChildren, useContext, useEffect, useImperativeHandle, useMergedProps, useProcessedChild, useRefElement, useStableCallback } from "preact-prop-helpers";
-import { Get, Get10, Get3, Get4, Get7, OmitStrong, useContextWithWarning } from "../props.js";
+import { Ref, TargetedOmit, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationChildrenInfo, UseCompleteListNavigationChildrenParameters, UseCompleteListNavigationChildrenReturnType, UseProcessedChildContext, UseProcessedChildInfo, UseProcessedChildParameters, UseProcessedChildReturnType, UseProcessedChildrenContext, UseRearrangeableChildParameters, UseRefElementParameters, UseRefElementReturnType, VNode, assertEmptyObject, createContext, focus, identity, memo, useCallback, useCompleteListNavigationChildren, useContext, useEffect, useEnsureStability, useImperativeHandle, useMergedProps, useProcessedChild, useRefElement, useStableCallback } from "preact-prop-helpers";
+import { Get, Get11, Get3, Get4, Get7, OmitStrong, useContextWithWarning } from "../props.js";
 import { ListboxInfo, UseListboxContext, UseListboxItemParameters, UseListboxItemReturnType, UseListboxParameters, UseListboxReturnType, useListbox, useListboxItem } from "../use-listbox.js";
-import { GenericComponentProps, useComponent, useComponentC, useDefault } from "./util.js";
+import { GenericComponentProps, useComponent, useDefault } from "./util.js";
 
 
 interface ListboxPropsBase<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement> = ListboxInfo<ListItemElement>> extends
-    Get10<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "labelParameters", "linearNavigationParameters", "rovingTabIndexParameters", "typeaheadNavigationParameters", "singleSelectionParameters", "refElementParameters", "singleSelectionParameters", "singleSelectionDeclarativeParameters", "multiSelectionParameters", "paginatedChildrenParameters">,
+    Get11<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "labelParameters", "linearNavigationParameters", "rovingTabIndexParameters", "typeaheadNavigationParameters", "singleSelectionParameters", "refElementParameters", "singleSelectionParameters", "singleSelectionDeclarativeParameters", "multiSelectionParameters", "paginatedChildrenParameters", "processedIndexManglerParameters">,
     OmitStrong<Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "listboxParameters">, "groupingType"> {
 }
 
 
-interface ListboxChildrenPropsBase<ListItemElement extends Element, M extends UseCompleteListNavigationChildrenInfo<ListItemElement> = UseCompleteListNavigationChildrenInfo<ListItemElement>> extends
-    Get4<UseCompleteListNavigationChildrenParameters<ListItemElement, M>, "managedChildrenParameters", "paginatedChildrenParameters", "rearrangeableChildrenParameters", "staggeredChildrenParameters"> {
+interface ListboxChildrenPropsBase<ListItemElement extends Element, M extends UseCompleteListNavigationChildInfo<ListItemElement>, SM extends UseCompleteListNavigationChildrenInfo<ListItemElement> = UseCompleteListNavigationChildrenInfo<ListItemElement>> extends
+    Get4<UseCompleteListNavigationChildrenParameters<ListItemElement, M, SM>, "managedChildrenParameters", "paginatedChildrenParameters", "rearrangeableChildrenParameters", "staggeredChildrenParameters"> {
 }
 
 interface ListboxItemInnerPropsBase<ListItemElement extends Element, M extends ListboxInfo<ListItemElement> = ListboxInfo<ListItemElement>> extends
@@ -25,8 +25,8 @@ export interface ListboxProps<ListElement extends Element, ListItemElement exten
     ListboxPropsBase<ListElement, ListItemElement, LabelElement, M>,
     "ariaLabel"> {
 }
-export interface ListboxChildrenProps<ListItemElement extends Element, M extends UseCompleteListNavigationChildrenInfo<ListItemElement>> extends GenericComponentProps<
-    UseCompleteListNavigationChildrenReturnType<ListItemElement, M>,
+export interface ListboxChildrenProps<ListItemElement extends Element, M extends UseCompleteListNavigationChildInfo<ListItemElement>, SM extends UseCompleteListNavigationChildrenInfo<ListItemElement>> extends GenericComponentProps<
+    UseCompleteListNavigationChildrenReturnType<ListItemElement, SM>,
     ListboxChildrenPropsBase<ListItemElement, M>,
     "children"> {
 }
@@ -58,7 +58,7 @@ export const GroupedListbox = /* @__PURE__ */ memo((function GroupedListbox<Labe
     render,
     onElementChange,
     onMount,
-    onUnmount
+    onUnmount,    
 }: Pick<ListboxProps<any, any, LabelElement, any>, "orientation" | "ariaLabel" | "render" | "onElementChange" | "onMount" | "onUnmount">) {
 
     const info = useListbox<any, any, LabelElement>({
@@ -82,7 +82,12 @@ export const GroupedListbox = /* @__PURE__ */ memo((function GroupedListbox<Labe
         refElementParameters: { onElementChange, onMount, onUnmount },
         singleSelectionParameters: { singleSelectionMode: "disabled", singleSelectionAriaPropName: null },
         multiSelectionParameters: { multiSelectionMode: "disabled", multiSelectionAriaPropName: null, onSelectionChange: null },
-        singleSelectionDeclarativeParameters: { onSingleSelectedIndexChange: null, singleSelectedIndex: null }
+        singleSelectionDeclarativeParameters: { onSingleSelectedIndexChange: null, singleSelectedIndex: null },
+        processedIndexManglerParameters: {
+            getSortValueAt: identity,
+            compare: null,
+            getIndex: useDefault("getIndex", null)
+        }
     });
 
     return (
@@ -119,16 +124,20 @@ export const Listbox = /* @__PURE__ */ memo((function Listbox<ListElement extend
     onSelectionChange,
     paginationMax,
     paginationMin,
+    getSortValueAt,
+    compare,
+    getIndex,
     ...void1
 }: ListboxProps<ListElement, ListItemElement, LabelElement, ListboxInfo<ListItemElement>>) {
     const listboxGroupInfo = useContext(ListboxGroupContext);
+    getSortValueAt ??= identity;
+    useEnsureStability("Listbox", getSortValueAt);
 
     assertEmptyObject(void1);
-    return useComponentC(
+    return useComponent(
         imperativeHandle,
         render,
         ListboxContext,
-        ListboxChildrenContext,
         useListbox<ListElement, ListItemElement, LabelElement>({
             labelParameters: { ariaLabel },
             linearNavigationParameters: {
@@ -159,28 +168,26 @@ export const Listbox = /* @__PURE__ */ memo((function Listbox<ListElement extend
             refElementParameters: { onElementChange, onMount, onUnmount },
             singleSelectionParameters: { singleSelectionAriaPropName, singleSelectionMode: singleSelectionMode || "disabled" },
             singleSelectionDeclarativeParameters: { onSingleSelectedIndexChange, singleSelectedIndex },
-            multiSelectionParameters: { multiSelectionAriaPropName, multiSelectionMode: multiSelectionMode || "disabled", onSelectionChange }
+            multiSelectionParameters: { multiSelectionAriaPropName, multiSelectionMode: multiSelectionMode || "disabled", onSelectionChange },
+            processedIndexManglerParameters: { getSortValueAt, compare, getIndex: useDefault("getIndex", getIndex) }
         })
     )
 }))
 
-export const ListboxChildren = /* @__PURE__ */ memo((function ListboxChildren<ListItemElement extends Element, M extends UseCompleteListNavigationChildrenInfo<ListItemElement>>({
+export const ListboxChildren = /* @__PURE__ */ memo((function ListboxChildren<ListItemElement extends Element, M extends UseCompleteListNavigationChildInfo<ListItemElement>, SM extends UseCompleteListNavigationChildrenInfo<ListItemElement>>({
     children,
     render,
-    adjust,
-    compare,
-    getIndex,
     imperativeHandle,
     onAfterChildLayoutEffect,
     onChildrenCountChange,
     onChildrenMountChange,
-    onRearranged,
     paginationMax,
     paginationMin,
-    staggered
-}: ListboxChildrenProps<ListItemElement, M>) {
-    const r = useCompleteListNavigationChildren({
-        context: useContext(ListboxChildrenContext),
+    staggered,
+
+}: ListboxChildrenProps<ListItemElement, M, SM>) {
+    const r = useCompleteListNavigationChildren<ListItemElement, M, SM>({
+        context: useContext(ListboxContext),
         managedChildrenParameters: {
             onAfterChildLayoutEffect,
             onChildrenCountChange,
@@ -191,17 +198,13 @@ export const ListboxChildren = /* @__PURE__ */ memo((function ListboxChildren<Li
             paginationMin
         },
         rearrangeableChildrenParameters: {
-            adjust,
             children,
-            compare,
-            getIndex: useDefault("getIndex", getIndex),
-            onRearranged
         },
         staggeredChildrenParameters: {
             staggered: staggered || false
         }
     });
-    return useComponent(imperativeHandle,
+    return useComponent<UseCompleteListNavigationChildrenReturnType<ListItemElement, SM>>(imperativeHandle,
         render,
         ListboxChildContext,
         r);
@@ -214,9 +217,9 @@ export interface ListboxItemProps<ListboxItemElement extends Element> extends
     OmitStrong<ListboxItemInnerProps<ListboxItemElement, ListboxInfo<ListboxItemElement>>, keyof InnerOuterDifference<any> | "render" | "imperativeHandle" | "props">,
 
     // Parameters used by the outer wrapper
-    Get<UseStaggeredChildParameters, "info">,
-    Get<UsePaginatedChildParameters, "info">,
-    Partial<Get<UseRefElementParameters<ListboxItemElement>, "refElementParameters">> {
+    OmitStrong<Get<UseProcessedChildParameters<ListboxItemElement, any>, "info">, "index" | "getElement">,
+    Partial<Get<UseRefElementParameters<ListboxItemElement>, "refElementParameters">>,
+    Partial<Get<UseRearrangeableChildParameters<ListboxItemElement>, "rearrangeableChildParameters">> {
 
     // Overloaded depending on if we bail out early or not
     imperativeHandle?:
@@ -255,6 +258,8 @@ export const ListboxItem = /* @__PURE__ */ memo((function ListboxItemOuter<Listb
     multiSelected,
     onMultiSelectedChange,
     onTextContentChange,
+    cssProperty,
+    duration,
     ...void1
 }: ListboxItemProps<ListboxItemElement>) {
 
@@ -275,7 +280,8 @@ export const ListboxItem = /* @__PURE__ */ memo((function ListboxItemOuter<Listb
 
     const { props, refElementParameters: { onElementChange: oec2 }, ...i2 } = useProcessedChild<ListboxItemElement, UseProcessedChildInfo<ListboxItemElement>>({
         context: useContextWithWarning(ListboxChildContext, "ListboxChildren"),
-        info: { index }
+        info: { index, getElement: refElementReturn.getElement },
+        rearrangeableChildParameters: { cssProperty, duration }
     })
 
     const {

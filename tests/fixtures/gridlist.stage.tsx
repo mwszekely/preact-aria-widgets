@@ -1,5 +1,5 @@
 import { useMergedProps } from "preact-prop-helpers";
-import { Gridlist, GridlistChild, GridlistRow, GridlistRows } from "../../dist/preact/index.js";
+import { Gridlist, GridlistCell, GridlistRow } from "../../dist/preact/index.js";
 import { MissingIndex, TestItem, fromStringNumber, fromStringString, useTestSyncState } from "../util.js";
 import { WithColSpanIndex, WithFocusableIndex } from "./gridlist.types.js";
 export function TestBasesGridlist() {
@@ -12,30 +12,23 @@ export function TestBasesGridlist() {
             <p>Every {MissingIndex}-th row and/or column is "missing" (that grid cell isn't rendered/the hook isn't called).</p>
             <p>Every {WithColSpanIndex}-th column's cell has an ever-increasing <code>colSpan</code> (modulo 10).</p>
             <p>Every {WithFocusableIndex}-th column's cell has an input that receives focus instead of the grid cell itself.</p>
-            <Gridlist<HTMLTableElement, HTMLTableRowElement, HTMLTableCellElement, HTMLLabelElement>
+            <Gridlist<HTMLTableElement, HTMLTableRowElement, HTMLLabelElement>
                 ariaLabel={"Gridlist test"}
-                groupingType="without-groups"
+                //groupingType="without-groups"
                 singleSelectedIndex={null}
                 singleSelectionMode="disabled"
                 singleSelectionAriaPropName="aria-selected"
-
+                children={Array.from(function* () {
+                    for (let i = 0; i < childCount; ++i) {
+                        yield <Row index={i} />
+                    }
+                }())}
                 render={gridInfo => {
                     return (
                         <>
-                            <label {...gridInfo.propsGridlistLabel}>Gridlist test</label>
-                            <table data-gridlist {...gridInfo.propsGridlist}>
-                                <GridlistRows
-                                    children={Array.from(function* () {
-                                        for (let i = 0; i < childCount; ++i) {
-                                            yield <Row index={i} />
-                                        }
-                                    }())}
-                                    render={info => {
-                                        return (
-                                            <tbody role="rowgroup">{info.rearrangeableChildrenReturn.children}</tbody>
-                                        )
-                                    }}
-                                />
+                            <label {...gridInfo.propsLabel}>Gridlist test</label>
+                            <table data-gridlist {...gridInfo.props}>
+                                <tbody role="rowgroup">{gridInfo.rearrangeableChildrenReturn.children}</tbody>
                             </table>
                         </>
                     )
@@ -64,9 +57,9 @@ function Row({ index }: { index: number }) {
                                 if (i == MissingIndex)
                                     yield <td colSpan={colspan}>(missing)</td>;
                                 else
-                                    yield <GridlistChild<HTMLTableCellElement> index={i} colSpan={colspan} render={cellInfo => {
+                                    yield <GridlistCell<HTMLTableCellElement> index={i} colSpan={colspan} render={cellInfo => {
                                         if (i == WithFocusableIndex)
-                                            return (<td colSpan={colspan} {...useMergedProps(cellInfo.propsCell)} data-gridlist-cell><button {...useMergedProps(cellInfo.propsTabbable, cellInfo.propsPress)} type="checkbox">Select row #{index}</button></td>)
+                                            return (<td colSpan={colspan} {...useMergedProps(cellInfo.propsCell)} data-gridlist-cell><input {...useMergedProps(cellInfo.propsTabbable, cellInfo.propsPress)} type="checkbox">Select row #{index}</input></td>)
                                         else
                                             return (<td colSpan={colspan} {...useMergedProps(cellInfo.propsCell, cellInfo.propsTabbable)} data-gridlist-cell>({i}, {index})</td>)
                                     }} />

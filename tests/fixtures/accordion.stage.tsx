@@ -1,4 +1,4 @@
-import { Accordion, AccordionSection, Heading } from "../../dist/preact/index.js";
+import { Accordion, AccordionSection } from "../../dist/preact/index.js";
 import { DisabledIndex, MissingIndex, TestItem, fromStringNumber, fromStringString, useTestSyncState } from "../util.js";
 
 export function TestBasesAccordion() {
@@ -11,7 +11,7 @@ export function TestBasesAccordion() {
             <Accordion
                 orientation={orientation}
                 render={accordionInfo => {
-                    
+
                     return (
                         <div data-accordion>
                             {Array.from(function* () {
@@ -42,12 +42,12 @@ function Child({ index }: { index: number }) {
             render={sectionInfo => {
                 return (
                     <>
-                        <Heading data-accordion-header heading={<button {...sectionInfo.propsHeaderButton} data-accordion-header-button>Toggle accordion #{index}</button>} {...sectionInfo.propsHeader}>
-                            <div {...sectionInfo.propsBody} hidden={!sectionInfo.accordionSectionReturn.expanded} data-accordion-section>
-                                Accordion section body #{index}.
-                            </div>
-                        </Heading>
-
+                        <h3 data-accordion-header {...sectionInfo.propsHeader}>
+                            <button {...sectionInfo.propsHeaderButton} data-accordion-header-button>Toggle accordion #{index}</button>
+                        </h3>
+                        <div {...sectionInfo.propsBody} hidden={!sectionInfo.accordionSectionReturn.expanded} data-accordion-section>
+                            Accordion section body #{index}.
+                        </div>
                     </>
                 );
             }} />

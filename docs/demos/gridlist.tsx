@@ -1,7 +1,7 @@
 
 import { getEventDetail, useMergedProps, useState } from "preact-prop-helpers";
 import { useRef } from "preact/compat";
-import { Checkbox, CheckboxChangeEventDetail, EventDetail, Gridlist, GridlistChild, GridlistRow, GridlistRows, UseCheckboxReturnType } from "../../dist/preact/index.js";
+import { Checkbox, CheckboxChangeEventDetail, EventDetail, Gridlist, GridlistCell, GridlistRow, UseCheckboxReturnType } from "../../dist/preact/index.js";
 
 function getDocument() { return window.document; }
 
@@ -31,7 +31,7 @@ export function Code() {
 function DemoGridlistChild1({ row }: { row: number }) {
     const text = "Gridlist child " + row;
     return (
-        <GridlistChild<HTMLDivElement> focusSelf={e => e.focus()} index={0} render={info => {
+        <GridlistCell<HTMLDivElement> focusSelf={e => e.focus()} index={0} render={info => {
             return (
                 <div {...useMergedProps<HTMLDivElement>(info.propsCell, info.propsTabbable, info.propsPress)}>{text}</div>
             );
@@ -48,7 +48,7 @@ function DemoGridlistChild2({ tabbable }: { tabbable: boolean }) {
     const cb = useRef<UseCheckboxReturnType<HTMLInputElement, HTMLLabelElement>>(null);
     const [b, setB] = useState(false);
     return (
-        <GridlistChild<HTMLDivElement>
+        <GridlistCell<HTMLDivElement>
             focusSelf={e => { debugger; cb.current?.checkboxLikeReturn.focusSelf() }}
             index={1}
             render={info => {
@@ -97,53 +97,39 @@ export function Demo() {
             <Code />
             <label><input type="number" min={0} value={count} onInput={e => setCount(e.currentTarget.valueAsNumber)} /> # of table rows</label>
             <div>
-                <Gridlist<HTMLUListElement, HTMLLIElement, HTMLDivElement, HTMLLabelElement>
+                <Gridlist<HTMLUListElement, HTMLLIElement, HTMLLabelElement>
                     ariaLabel={null}
                     singleSelectionAriaPropName="aria-selected"
-                    groupingType="without-groups"
                     singleSelectionMode="activation"
                     singleSelectedIndex={selectedIndex}
                     onSingleSelectedIndexChange={e => setSelectedIndex(e[EventDetail].selectedIndex)}
+                    staggered={true}
+                    children={Array.from(function* () {
+                        for (let i = 0; i < count; ++i) {
+                            yield (
+                                <GridlistRow<HTMLLIElement, HTMLDivElement>
+
+                                    multiSelected={null}
+                                    index={i}
+                                    render={rowInfo => {
+
+                                        if (rowInfo.hide) {
+                                            return <li {...rowInfo.props} />
+                                        }
+                                        return (
+                                            <li {...rowInfo.props}><DemoGridlistChild1 row={i} />{i != 2 && <DemoGridlistChild2 tabbable={rowInfo.rovingTabIndexChildReturn?.tabbable || false} />}</li>
+                                        )
+                                    }} />
+                            )
+                        }
+                    }())
+                    }
                     render={infoGridlist => {
                         infoGridlist.rovingTabIndexReturn.getTabbableIndex();
                         return (
                             <>
-                                <label {...infoGridlist.propsGridlistLabel}>Gridlist demo</label>
-                                <ul {...infoGridlist.propsGridlist}>
-                                    <GridlistRows
-                                        staggered={true}
-                                        render={rowsInfo => {
-                                            return <>{rowsInfo.rearrangeableChildrenReturn.children}</>;
-                                        }}
-                                        children={Array.from(function* () {
-                                            for (let i = 0; i < count; ++i) {
-                                                yield (
-                                                    <GridlistRow<HTMLLIElement, HTMLDivElement>
-                                                        selected={null}
-                                                        index={i}
-                                                        render={rowInfo => {
-                                                            
-                                                            if (rowInfo.staggeredChildReturn.hideBecauseStaggered || rowInfo.paginatedChildReturn.hideBecausePaginated)
-                                                                return <li {...rowInfo.props} />
-                                                            return (
-                                                                <li {...rowInfo.props}><DemoGridlistChild1 row={i} />{i != 2 && <DemoGridlistChild2 tabbable={rowInfo.rovingTabIndexChildReturn?.tabbable || false} />}</li>
-                                                            )
-
-                                                            /*
-        
-                                                            defaultRenderGridlistRow({
-                                                            tagGridlistRow: "div", makePropsGridlistRow: (_info) => ({
-                                                                children: [<DemoGridlistChild1 row={i} />, <DemoGridlistChild2 />]
-                                                            })
-                                                        })
-                                                        
-                                                            */
-                                                        }} />
-                                                )
-                                            }
-                                        }())
-                                        } />
-                                </ul>
+                                <label {...infoGridlist.propsLabel}>Gridlist demo</label>
+                                <ul {...infoGridlist.props}>{infoGridlist.rearrangeableChildrenReturn.children}</ul>
                             </>
                         )
                         /*

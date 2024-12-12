@@ -42,14 +42,14 @@ const Component = () => {
                 <Heading heading="Gridlist"><Gridlist.Demo /></Heading>
                 <Heading heading="Single-select Listbox"><ListboxSingle.Demo /></Heading>
                 <Heading heading="Multi-select Listbox"><ListboxMulti.Demo /></Heading>
-                {/*<Heading heading="Menu"><Menu.Demo /></Heading>
+                <Heading heading="Menu"><Menu.Demo /></Heading>
                 <Heading heading="Radio"><Radio.Demo /></Heading>
                 <Heading heading="Slider"><Slider.Demo /></Heading>
                 <Heading heading="Toolbar"><Toolbar.Demo /></Heading>
                 <Heading heading="Toast"><Toast.Demo /></Heading>
                 <Heading heading="Tooltip"><Tooltip.Demo /></Heading>
                 <Heading heading="Tabs"><Tabs.Demo /></Heading>
-    <Heading heading="Table"><Table.Demo /></Heading>*/}
+                <Heading heading="Table"><Table.Demo /></Heading>
                 {/*
             
             */}

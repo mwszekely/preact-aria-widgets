@@ -1,5 +1,4 @@
-import { assertEmptyObject, findFirstFocusable, focus, useMergedProps, useModal, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
-import { monitored } from "./props.js";
+import { assertEmptyObject, findFirstFocusable, focus, useMergedProps, useModal, useMonitoring, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
 /**
  * A menu surface is what handles user interaction with an interactive but transient surface (like a menu or a popup, but not something potentially modal like a dialog).
  *
@@ -9,57 +8,59 @@ import { monitored } from "./props.js";
  *
  * @compositeParams
  */
-export const useMenuSurface = /* @__PURE__ */ monitored(function useMenuSurface({ dismissParameters, focusTrapParameters, activeElementParameters, menuSurfaceParameters: { role, surfaceId, ...void1 }, modalParameters, escapeDismissParameters, ...void2 }) {
-    const { refElementReturn: { getElement: getButtonElement }, propsStable: propsRefTrigger, ...void4 } = useRefElement({ refElementParameters: { onElementChange: undefined } });
-    const { refElementReturn: { getElement: getMenuElement, ...void5 }, propsStable: propsRefSurface, ...void6 } = useRefElement({ refElementParameters: { onElementChange: undefined } });
-    const { propsFocusContainer, propsStablePopup: propsPopup, propsStableSource: ps2, refElementPopupReturn, refElementSourceReturn } = useModal({
-        dismissParameters: { dismissActive: true, ...dismissParameters },
-        backdropDismissParameters: { dismissBackdropActive: true, onDismissBackdrop: null },
-        lostFocusDismissParameters: { dismissLostFocusActive: true, onDismissLostFocus: null },
-        escapeDismissParameters: { dismissEscapeActive: true, onDismissEscape: null, ...escapeDismissParameters },
-        modalParameters,
-        refElementParameters: {},
-        activeElementParameters,
-        focusTrapParameters: {
-            onlyMoveFocus: true,
-            trapActive: true,
-            focusOpener: useStableCallback(() => {
-                const buttonElement = getButtonElement();
-                focus(buttonElement);
-            }),
-            ...focusTrapParameters
-        }
+export function useMenuSurface({ dismissParameters, focusTrapParameters, activeElementParameters, menuSurfaceParameters: { role, surfaceId, ...void1 }, modalParameters, escapeDismissParameters, ...void2 }) {
+    return useMonitoring(function useMenuSurface() {
+        const { refElementReturn: { getElement: getButtonElement }, propsStable: propsRefTrigger, ...void4 } = useRefElement({ refElementParameters: { onElementChange: undefined } });
+        const { refElementReturn: { getElement: getMenuElement, ...void5 }, propsStable: propsRefSurface, ...void6 } = useRefElement({ refElementParameters: { onElementChange: undefined } });
+        const { propsFocusContainer, propsStablePopup: propsPopup, propsStableSource: ps2, refElementPopupReturn, refElementSourceReturn } = useModal({
+            dismissParameters: { dismissActive: true, ...dismissParameters },
+            backdropDismissParameters: { dismissBackdropActive: true, onDismissBackdrop: null },
+            lostFocusDismissParameters: { dismissLostFocusActive: true, onDismissLostFocus: null },
+            escapeDismissParameters: { dismissEscapeActive: true, onDismissEscape: null, ...escapeDismissParameters },
+            modalParameters,
+            refElementParameters: {},
+            activeElementParameters,
+            focusTrapParameters: {
+                onlyMoveFocus: true,
+                trapActive: true,
+                focusOpener: useStableCallback(() => {
+                    const buttonElement = getButtonElement();
+                    focus(buttonElement);
+                }),
+                ...focusTrapParameters
+            }
+        });
+        assertEmptyObject(void1);
+        assertEmptyObject(void2);
+        assertEmptyObject(void4);
+        assertEmptyObject(void5);
+        assertEmptyObject(void6);
+        const propsSurface = useMergedProps(propsRefSurface, propsPopup, propsFocusContainer);
+        const propsTarget = useMergedProps({
+            role,
+            id: surfaceId
+        });
+        const propsTrigger = useMergedProps({
+            "aria-expanded": (modalParameters.active),
+            "aria-haspopup": role,
+        }, propsRefTrigger, ps2, { "aria-controls": surfaceId });
+        const propsSentinel = useFocusSentinel({
+            focusSentinel: {
+                sendFocusToMenu: useStableCallback(() => { return focusTrapParameters.focusPopup(getMenuElement(), () => findFirstFocusable(getMenuElement())); }),
+                onClose: useStableCallback((e) => { dismissParameters.onDismiss(e, "lost-focus"); }),
+                open: modalParameters.active
+            }
+        });
+        return {
+            propsSentinel,
+            propsSurface,
+            propsTarget,
+            propsTrigger,
+            refElementPopupReturn,
+            refElementSourceReturn
+        };
     });
-    assertEmptyObject(void1);
-    assertEmptyObject(void2);
-    assertEmptyObject(void4);
-    assertEmptyObject(void5);
-    assertEmptyObject(void6);
-    const propsSurface = useMergedProps(propsRefSurface, propsPopup, propsFocusContainer);
-    const propsTarget = useMergedProps({
-        role,
-        id: surfaceId
-    });
-    const propsTrigger = useMergedProps({
-        "aria-expanded": (modalParameters.active),
-        "aria-haspopup": role,
-    }, propsRefTrigger, ps2, { "aria-controls": surfaceId });
-    const propsSentinel = useFocusSentinel({
-        focusSentinel: {
-            sendFocusToMenu: useStableCallback(() => { return focusTrapParameters.focusPopup(getMenuElement(), () => findFirstFocusable(getMenuElement())); }),
-            onClose: useStableCallback((e) => { dismissParameters.onDismiss(e, "lost-focus"); }),
-            open: modalParameters.active
-        }
-    });
-    return {
-        propsSentinel,
-        propsSurface,
-        propsTarget,
-        propsTrigger,
-        refElementPopupReturn,
-        refElementSourceReturn
-    };
-});
+}
 /**
  * A focus sentinel is a hidden but focusable element that comes at the start or end
  * of the out-of-place-focusable component that, when activated or focused over, closes the component
@@ -73,17 +74,19 @@ export const useMenuSurface = /* @__PURE__ */ monitored(function useMenuSurface(
  *
  * @compositeParams
  */
-export const useFocusSentinel = /* @__PURE__ */ monitored(function useFocusSentinel({ focusSentinel: { open, onClose, sendFocusToMenu } }) {
-    const getSendFocusWithinMenu = useStableGetter(sendFocusToMenu);
-    const stableOnClose = useStableCallback(onClose);
-    const [sentinelIsActive, setSentinelIsActive] = useState(false);
-    useTimeout({ callback: () => { setSentinelIsActive(open); }, timeout: 100, triggerIndex: `${open}-${sentinelIsActive}` });
-    const onFocus = sentinelIsActive ? ((e) => stableOnClose(e)) : (() => getSendFocusWithinMenu()?.());
-    const onClick = (e) => stableOnClose(e);
-    return {
-        tabIndex: sentinelIsActive ? 0 : -1,
-        onFocus,
-        onClick
-    };
-});
+export function useFocusSentinel({ focusSentinel: { open, onClose, sendFocusToMenu } }) {
+    return useMonitoring(function useFocusSentinel() {
+        const getSendFocusWithinMenu = useStableGetter(sendFocusToMenu);
+        const stableOnClose = useStableCallback(onClose);
+        const [sentinelIsActive, setSentinelIsActive] = useState(false);
+        useTimeout({ callback: () => { setSentinelIsActive(open); }, timeout: 100, triggerIndex: `${open}-${sentinelIsActive}` });
+        const onFocus = sentinelIsActive ? ((e) => stableOnClose(e)) : (() => getSendFocusWithinMenu()?.());
+        const onClick = (e) => stableOnClose(e);
+        return {
+            tabIndex: sentinelIsActive ? 0 : -1,
+            onFocus,
+            onClick
+        };
+    });
+}
 //# sourceMappingURL=use-menu-surface.js.map

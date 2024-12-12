@@ -29,7 +29,7 @@ export interface UseMenuSurfaceReturnType<MenuSurfaceElement extends Element, Me
  *
  * @compositeParams
  */
-export declare const useMenuSurface: <MenuSurfaceElement extends Element, MenuTargetElement extends Element, MenuTriggerElement extends Element>({ dismissParameters, focusTrapParameters, activeElementParameters, menuSurfaceParameters: { role, surfaceId, ...void1 }, modalParameters, escapeDismissParameters, ...void2 }: UseMenuSurfaceParameters<MenuSurfaceElement, MenuTriggerElement>) => UseMenuSurfaceReturnType<MenuSurfaceElement, MenuTargetElement, MenuTriggerElement>;
+export declare function useMenuSurface<MenuSurfaceElement extends Element, MenuTargetElement extends Element, MenuTriggerElement extends Element>({ dismissParameters, focusTrapParameters, activeElementParameters, menuSurfaceParameters: { role, surfaceId, ...void1 }, modalParameters, escapeDismissParameters, ...void2 }: UseMenuSurfaceParameters<MenuSurfaceElement, MenuTriggerElement>): UseMenuSurfaceReturnType<MenuSurfaceElement, MenuTargetElement, MenuTriggerElement>;
 export interface UseFocusSentinelParameters {
     focusSentinel: {
         sendFocusToMenu: () => void;
@@ -50,5 +50,5 @@ export interface UseFocusSentinelParameters {
  *
  * @compositeParams
  */
-export declare const useFocusSentinel: <E extends Element>({ focusSentinel: { open, onClose, sendFocusToMenu } }: UseFocusSentinelParameters) => ElementProps<E>;
+export declare function useFocusSentinel<E extends Element>({ focusSentinel: { open, onClose, sendFocusToMenu } }: UseFocusSentinelParameters): ElementProps<E>;
 //# sourceMappingURL=use-menu-surface.d.ts.map

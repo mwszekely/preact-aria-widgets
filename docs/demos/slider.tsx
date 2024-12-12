@@ -6,7 +6,7 @@ function DemoSliderThumb({ index }: { index: number }) {
     const [value, setValue] = useState(0);
 
     return (
-        <SliderThumb<HTMLInputElement, HTMLProgressElement, HTMLLabelElement>
+        <SliderThumb<HTMLInputElement>
             index={index}
             tag="input"
             label={`Slider thumb #${index}`}

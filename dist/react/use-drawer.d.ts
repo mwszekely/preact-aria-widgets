@@ -13,5 +13,5 @@ export interface UseDrawerReturnType<FocusContainerElement extends Element, Sour
  *
  * @compositeParams
  */
-export declare const useDrawer: <FocusContainerElement extends Element, SourceElement extends Element, PopupElement extends Element, TitleElement extends Element>({ dismissParameters, escapeDismissParameters, focusTrapParameters, activeElementParameters, labelParameters, backdropDismissParameters, lostFocusDismissParameters, modalParameters, refElementParameters, ...void1 }: UseDrawerParameters<PopupElement, TitleElement>) => UseDrawerReturnType<FocusContainerElement, SourceElement, PopupElement, TitleElement>;
+export declare function useDrawer<FocusContainerElement extends Element, SourceElement extends Element, PopupElement extends Element, TitleElement extends Element>({ dismissParameters, escapeDismissParameters, focusTrapParameters, activeElementParameters, labelParameters, backdropDismissParameters, lostFocusDismissParameters, modalParameters, refElementParameters, ...void1 }: UseDrawerParameters<PopupElement, TitleElement>): UseDrawerReturnType<FocusContainerElement, SourceElement, PopupElement, TitleElement>;
 //# sourceMappingURL=use-drawer.d.ts.map
