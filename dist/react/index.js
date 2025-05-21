@@ -1417,6 +1417,11 @@ function useManagedChildren(parentParameters) {
         useEnsureStability("useManagedChildren", onAfterChildLayoutEffect, onChildrenMountChange, onChildrenCountChange);
         const getHighestIndex = useCallback(() => { return managedChildrenArray.current.highestIndex; }, []);
         const getLowestIndex = useCallback(() => { return managedChildrenArray.current.lowestIndex; }, []);
+        const updateMinMax = useCallback((index) => {
+            // The opposite of this is done during the "shrinkwrap" phase, which is debounced.
+            managedChildrenArray.current.highestIndex = Math.max(index, managedChildrenArray.current.highestIndex);
+            managedChildrenArray.current.lowestIndex = Math.min(index, managedChildrenArray.current.lowestIndex);
+        }, []);
         // All the information we have about our children is stored in this **stable** array.
         // Any mutations to this array **DO NOT** trigger any sort of a re-render.
         const managedChildrenArray = A$1({ arr: [], rec: {}, highestIndex: 0, lowestIndex: 0 });
@@ -1542,7 +1547,8 @@ function useManagedChildren(parentParameters) {
                     managedChildrenArray: managedChildrenArray.current,
                     remoteULEChildMounted,
                     //remoteULEChildChanged,
-                    getChildren
+                    getChildren,
+                    updateMinMax
                 })
             }),
             managedChildrenReturn: { getChildren }
@@ -1554,7 +1560,7 @@ function useManagedChildren(parentParameters) {
  */
 function useManagedChild({ context, info }) {
     return useMonitoring(function useManagedChild() {
-        const { managedChildContext: { getChildren, managedChildrenArray, remoteULEChildMounted } } = (context ?? { managedChildContext: {} });
+        const { managedChildContext: { getChildren, managedChildrenArray, remoteULEChildMounted, updateMinMax } } = (context ?? { managedChildContext: {} });
         const index = info.index;
         // Any time our child props change, make that information available
         // the parent if they need it.
@@ -1566,6 +1572,7 @@ function useManagedChild({ context, info }) {
             // Insert this information in-place
             if (typeof index == "number") {
                 managedChildrenArray.arr[index] = { ...info };
+                updateMinMax?.(index);
             }
             else {
                 managedChildrenArray.rec[index] = { ...info };
@@ -1988,7 +1995,7 @@ function useRovingTabIndexChild({ info: { index, untabbable: iAmUntabbable, ...v
                         debugger;
                         console.error("setTabbable(true) called on a hidden child?");
                     }
-                    console.log(`setTabbable(${HACK2.current}, ${ret})`);
+                    //console.log(`setTabbable(${HACK2.current}, ${ret})`)
                     return ret;
                 });
             }
@@ -1998,7 +2005,7 @@ function useRovingTabIndexChild({ info: { index, untabbable: iAmUntabbable, ...v
                     console.error("setTabbable(true) called on a hidden child?");
                 }
                 const ret = st(t);
-                console.log(`setTabbable(${HACK2.current}, ${t})`);
+                //console.log(`setTabbable(${HACK2.current}, ${t})`);
                 return ret;
             }
         }, []);
@@ -2460,7 +2467,7 @@ refElementReturn, ...void1 }) {
         const focusSelf = whenThisRowIsFocused;
         const { props: propsLNC, info: { getLocallyTabbable, setLocallyTabbable, ...void2 }, hasCurrentFocusParameters, pressParameters, rovingTabIndexChildReturn, textContentParameters, ...void6 } = useListNavigationChild({ info: { index, untabbable }, refElementReturn, context: contextFromParent });
         const allChildCellsAreUntabbable = !rovingTabIndexChildReturn.tabbable;
-        console.log(`Row ${index} is untabbable? ${allChildCellsAreUntabbable.toString()}`);
+        //console.log(`Row ${index} is untabbable? ${allChildCellsAreUntabbable.toString()}`)
         const { props: propsLN, context: contextULN, linearNavigationReturn, managedChildrenParameters, rovingTabIndexReturn, typeaheadNavigationReturn, ...void5 } = useListNavigation({
             managedChildrenReturn,
             refElementReturn,
@@ -2579,15 +2586,11 @@ function useGridNavigationCell({ context: { gridNavigationCellContext: { getRowI
  */
 function usePaginatedChildren({ managedChildrenReturn: { getChildren }, paginatedChildrenParameters: { paginationMax, paginationMin, childCount }, rovingTabIndexReturn: { getTabbableIndex, setTabbableIndex }, childrenHaveFocusReturn: { getAnyFocused }, processedIndexManglerReturn: { indexDemangler, indexMangler } }) {
     return useMonitoring(function usePaginatedChildren() {
-        console.log(`usePaginatedChildren(${paginationMin}, ${paginationMax}, ${childCount})`);
-
-        useStableGetter(childCount);
-    
         const parentIsPaginated = (paginationMin != null || paginationMax != null);
         const lastPagination = A$1({ paginationMax: null, paginationMin: null });
         const refreshPagination = useCallback((paginationMin, paginationMax) => {
             const childMax = (getChildren().getHighestIndex() + 1);
-            const childMin = 0;
+            const childMin = (getChildren().getLowestIndex());
             for (let i = childMin; i <= childMax; ++i) {
                 const visible = (i >= (paginationMin ?? -Infinity) && i < (paginationMax ?? Infinity));
                 getChildren().getAt(indexDemangler(i))?.setPaginationVisible(visible);
@@ -2596,7 +2599,6 @@ function usePaginatedChildren({ managedChildrenReturn: { getChildren }, paginate
             }
         }, [ /* Must be empty */]);
         y(() => {
-            debugger;
             // At this point, the children have not yet updated themselves to match the pagination.
             // We need to tell them to update, but also handle where the focus is.
             // If a current list item is focused, then we need to move focus to a paginated one
@@ -2620,7 +2622,7 @@ function usePaginatedChildren({ managedChildrenReturn: { getChildren }, paginate
             refreshPagination(paginationMin, paginationMax);
             lastPagination.current.paginationMax = paginationMax ?? null;
             lastPagination.current.paginationMin = paginationMin ?? null;
-        }, [childCount, paginationMax, paginationMin]);
+        }, [paginationMax, paginationMin]);
         const pmin = A$1(paginationMin);
         const pmax = A$1(paginationMax);
         pmin.current = paginationMin;
@@ -2756,8 +2758,8 @@ function useRearrangeableChild({ context, info: { getElement, index }, rearrange
             if (cssProperty && animationIndex > 0) {
                 const element = getElement();
                 const first = getFLIPStart(index); //flipStartPosition.current;
-                const mid = element.getBoundingClientRect();
-                console.log(mid);
+                //const mid = element.getBoundingClientRect();
+                //console.log(mid);
                 // Forcibly end any previous transitions.
                 // Otherwise, interruptions end up causing exponentially larger transforms.
                 // Which, TODO, is definitely fixable.
@@ -3066,7 +3068,9 @@ function useProcessedChildren({ rearrangeableChildrenParameters, paginatedChildr
         const { paginationMax, paginationMin } = paginatedChildrenParameters;
         const { staggered } = staggeredChildrenParameters;
         const { context: { managedChildContext }, managedChildrenReturn } = useManagedChildren({ managedChildrenParameters, });
-
+        useStableCallback(() => {
+            refreshPagination(paginationMin, paginationMax);
+        });
         const { processedIndexManglerContext: { indexDemangler, indexMangler } } = context;
         const { rearrangeableChildrenReturn, context: { rearrangeableChildrenContext }, } = useRearrangeableChildren({
             context,
@@ -7782,7 +7786,6 @@ function useTable({ gridNavigationParameters, linearNavigationParameters, multiS
         const [_sortDirection, setSortDirection, getSortDirection] = useState("ascending");
         const [_sortColumn, setSortColumn, getSortColumn] = useState(initiallySortedColumn ?? undefined);
         const sortByColumn = useCallback((column) => {
-            debugger;
             let nextSortDirection = getSortDirection();
             let nextSortIndex = getSortColumn();
             if (column == nextSortIndex) {

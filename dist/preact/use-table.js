@@ -15,7 +15,6 @@ export function useTable({ gridNavigationParameters, linearNavigationParameters,
         const [_sortDirection, setSortDirection, getSortDirection] = useState("ascending");
         const [_sortColumn, setSortColumn, getSortColumn] = useState(initiallySortedColumn ?? undefined);
         const sortByColumn = useCallback((column) => {
-            debugger;
             let nextSortDirection = getSortDirection();
             let nextSortIndex = getSortColumn();
             if (column == nextSortIndex) {

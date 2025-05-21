@@ -2145,7 +2145,7 @@
     null != e3 && "textarea" === n2.type && "value" in t4 && t4.value !== e3.value && (e3.value = null == t4.value ? "" : t4.value), ln = null;
   };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/util/lib-shared.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/util/lib-shared.js
   var EventMapping = {
     abort: "onAbort",
     animationend: "onAnimationEnd",
@@ -2246,7 +2246,7 @@
     webkittransitionend: null
   };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/util/use-before-layout-effect.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/util/use-before-layout-effect.js
   var toRun = /* @__PURE__ */ new Map();
   var commitName = "diffed";
   var newCommit = (vnode, ...args) => {
@@ -2283,7 +2283,7 @@
     return !!(!oldArgs || oldArgs.length !== newArgs?.length || newArgs?.some((arg, index) => arg !== oldArgs[index]));
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/util/lib-preact.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/util/lib-preact.js
   var useCallback = q2;
   function debounceRendering(f5) {
     (l.debounceRendering ?? queueMicrotask)(f5);
@@ -2302,7 +2302,7 @@
     ...EventMapping
   };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-passive-state.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-passive-state.js
   function useEnsureStability(parentHookName, ...values) {
     if (true)
       return;
@@ -2409,12 +2409,12 @@
     f5();
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/util/mode.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/util/mode.js
   globalThis["process"] ??= {};
   globalThis["process"]["env"] ??= {};
   globalThis["process"]["env"]["NODE_ENV"] = "production";
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/util/use-call-count.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/util/use-call-count.js
   globalThis.requestIdleCallback ??= (callback) => {
     return setTimeout(() => {
       callback({ didTimeout: false, timeRemaining: () => {
@@ -2427,7 +2427,7 @@
     return t4();
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-stable-getter.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-stable-getter.js
   var Unset2 = Symbol("unset");
   function useStableGetter(value) {
     return useMonitoring(function useStableGetter2() {
@@ -2449,7 +2449,7 @@
     }, Object.values(t4));
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-stable-callback.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-stable-callback.js
   var map = /* @__PURE__ */ new WeakMap();
   function isStableGetter(obj) {
     return false;
@@ -2487,7 +2487,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-event-handler.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-event-handler.js
   function useGlobalHandler(target, type, handler, options, mode) {
     return useMonitoring(function useGlobalHandler2() {
       mode ||= "grouped";
@@ -2553,11 +2553,11 @@
     }, [target, type, stableHandler]);
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/util/assert.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/util/assert.js
   function assertEmptyObject(_a) {
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/util/get-window.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/util/get-window.js
   function getWindow(element) {
     return typeof window == "undefined" ? void 0 : element?.ownerDocument?.defaultView ?? globalThis ?? {};
   }
@@ -2565,7 +2565,7 @@
     return typeof window == "undefined" ? void 0 : element?.ownerDocument ?? getWindow()?.document ?? void 0;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/component-detail/dismissal/use-backdrop-dismiss.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-detail/dismissal/use-backdrop-dismiss.js
   function useBackdropDismiss({ backdropDismissParameters: { dismissBackdropActive: open, onDismissBackdrop: onCloseUnstable, ...void1 }, refElementPopupReturn: { getElement, ...void3 }, ...void2 }) {
     return useMonitoring(function useBackdropDismiss2() {
       assertEmptyObject(void1);
@@ -2590,7 +2590,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/util/event.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/util/event.js
   var EventDetail = Symbol("event-detail");
   function getEventDetail(e3) {
     return e3[EventDetail];
@@ -2602,7 +2602,7 @@
     return event;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/component-detail/dismissal/use-escape-dismiss.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-detail/dismissal/use-escape-dismiss.js
   var MagicWindowKey = "__preact-prop-helpers-escape-key-dismiss__";
   function getElementDepth(element) {
     let depth = 0;
@@ -2680,7 +2680,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/component-detail/dismissal/use-lost-focus-dismiss.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-detail/dismissal/use-lost-focus-dismiss.js
   function useLostFocusDismiss({ refElementPopupReturn: { getElement: getPopupElement, ...void3 }, refElementSourceReturn, lostFocusDismissParameters: { dismissLostFocusActive: open, onDismissLostFocus: onClose, ...void4 }, ...void1 }) {
     return useMonitoring(function useLostFocusDismiss2() {
       const { getElement: getSourceElement, ...void2 } = refElementSourceReturn ?? {};
@@ -2705,7 +2705,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-merged-children.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-merged-children.js
   function useMergedChildren(lhs, rhs) {
     if (lhs == null && rhs == null) {
       return void 0;
@@ -2718,7 +2718,7 @@
     }
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-merged-classes.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-merged-classes.js
   function useMergedClasses(...classes) {
     let classesSet = /* @__PURE__ */ new Set();
     for (let c4 of classes) {
@@ -2732,7 +2732,7 @@
     }
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-merged-refs.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-merged-refs.js
   function processRef(instance, ref) {
     if (typeof ref === "function") {
       ref(instance);
@@ -2763,7 +2763,7 @@
     }
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-merged-styles.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-merged-styles.js
   function styleStringToObject(style) {
     return Object.fromEntries(style.split(";").map((statement) => statement.split(":")));
   }
@@ -2792,7 +2792,7 @@
     };
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-merged-props.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-merged-props.js
   var log = console.warn;
   function useMergedProps(...allProps) {
     useEnsureStability("useMergedProps", allProps.length);
@@ -3066,7 +3066,7 @@
     return isNodeMatchingSelectorFocusable(options, node);
   };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/util/stack.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/util/stack.js
   function useStack() {
     if (false) {
       const stack = T2(generateStack, []);
@@ -3080,7 +3080,7 @@
     return "";
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/util/focus.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/util/focus.js
   function focus2(e3) {
     if (false) {
       console.log(`Focus changed to ${(e3?.tagName || "").toLowerCase().padStart(6)}:`, e3);
@@ -3123,7 +3123,7 @@
     return bestCandidateAfter ?? bestCandidateBefore ?? document2.body;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/timing/use-timeout.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/timing/use-timeout.js
   function useTimeout({ timeout, callback, triggerIndex }) {
     return useMonitoring(function useTimeout2() {
       const stableCallback = useStableCallback(() => {
@@ -3155,7 +3155,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/util/use-tag-props.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/util/use-tag-props.js
   function useTagProps(props, tag) {
     if (false) {
       const [id] = d3(() => ++idIndex);
@@ -3189,7 +3189,7 @@
     }
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/component-detail/keyboard-navigation/use-linear-navigation.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-detail/keyboard-navigation/use-linear-navigation.js
   function useLinearNavigation({ linearNavigationParameters: { getLowestIndex, getHighestIndex, isValidForLinearNavigation, navigatePastEnd, navigatePastStart, onNavigateLinear, arrowKeyDirection, disableHomeEndKeys, pageNavigationSize, ...void4 }, rovingTabIndexReturn: { getTabbableIndex, setTabbableIndex, ...void5 }, paginatedChildrenParameters: { paginationMax, paginationMin, ...void2 }, processedIndexManglerReturn: { indexDemangler, indexMangler, ...void3 }, ...void1 }) {
     return useMonitoring(function useLinearNavigation2() {
       let getPaginatedRange = useStableGetter(paginationMax == null || paginationMin == null ? null : paginationMax - paginationMin);
@@ -3370,7 +3370,7 @@
     }
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-managed-children.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-managed-children.js
   function useManagedChildren(parentParameters) {
     return useMonitoring(function useManagedChildren2() {
       const { managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange, onChildrenCountChange }, ...rest } = parentParameters;
@@ -3381,6 +3381,10 @@
       }, []);
       const getLowestIndex = useCallback(() => {
         return managedChildrenArray.current.lowestIndex;
+      }, []);
+      const updateMinMax = useCallback((index) => {
+        managedChildrenArray.current.highestIndex = Math.max(index, managedChildrenArray.current.highestIndex);
+        managedChildrenArray.current.lowestIndex = Math.min(index, managedChildrenArray.current.lowestIndex);
       }, []);
       const managedChildrenArray = A2({ arr: [], rec: {}, highestIndex: 0, lowestIndex: 0 });
       const forEachChild = useCallback((f5) => {
@@ -3478,7 +3482,8 @@
             managedChildrenArray: managedChildrenArray.current,
             remoteULEChildMounted,
             //remoteULEChildChanged,
-            getChildren
+            getChildren,
+            updateMinMax
           })
         }),
         managedChildrenReturn: { getChildren }
@@ -3487,13 +3492,14 @@
   }
   function useManagedChild({ context, info }) {
     return useMonitoring(function useManagedChild2() {
-      const { managedChildContext: { getChildren, managedChildrenArray, remoteULEChildMounted } } = context ?? { managedChildContext: {} };
+      const { managedChildContext: { getChildren, managedChildrenArray, remoteULEChildMounted, updateMinMax } } = context ?? { managedChildContext: {} };
       const index = info.index;
       _2(() => {
         if (managedChildrenArray == null)
           return;
         if (typeof index == "number") {
           managedChildrenArray.arr[index] = { ...info };
+          updateMinMax?.(index);
         } else {
           managedChildrenArray.rec[index] = { ...info };
         }
@@ -3606,7 +3612,7 @@
     return { changeIndex, reevaluateClosestFit, getCurrentIndex };
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-state.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-state.js
   function useState(initialState) {
     const getStack = useStack();
     const [state, setStateP] = d3(initialState);
@@ -3639,7 +3645,7 @@
     return [state, setState.current, getState];
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/component-detail/keyboard-navigation/use-roving-tabindex.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-detail/keyboard-navigation/use-roving-tabindex.js
   function useRovingTabIndex({ managedChildrenReturn: { getChildren }, rovingTabIndexParameters: { focusSelfParent: focusSelfParentUnstable, untabbable, untabbableBehavior, initiallyTabbedIndex, onTabbableIndexChange }, refElementReturn: { getElement }, processedIndexManglerReturn: { indexDemangler }, ...void1 }) {
     return useMonitoring(function useRovingTabIndex2() {
       const focusSelfParent = useStableCallback(focusSelfParentUnstable);
@@ -3816,7 +3822,6 @@
               debugger;
               console.error("setTabbable(true) called on a hidden child?");
             }
-            console.log(`setTabbable(${HACK2.current}, ${ret})`);
             return ret;
           });
         } else {
@@ -3825,7 +3830,6 @@
             console.error("setTabbable(true) called on a hidden child?");
           }
           const ret = st(t4);
-          console.log(`setTabbable(${HACK2.current}, ${t4})`);
           return ret;
         }
       }, []);
@@ -3862,7 +3866,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/component-detail/keyboard-navigation/use-typeahead-navigation.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-detail/keyboard-navigation/use-typeahead-navigation.js
   function useTypeaheadNavigation({ typeaheadNavigationParameters: { collator, typeaheadTimeout, noTypeahead, isValidForTypeaheadNavigation, onNavigateTypeahead, ...void3 }, rovingTabIndexReturn: { getTabbableIndex: getIndex, setTabbableIndex: setIndex, ...void1 }, ...void2 }) {
     return useMonitoring(function useTypeaheadNavigation2() {
       assertEmptyObject(void1);
@@ -4059,7 +4063,7 @@
     return -firstIndex - 1;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/component-detail/keyboard-navigation/use-list-navigation-partial.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-detail/keyboard-navigation/use-list-navigation-partial.js
   function useListNavigation({ linearNavigationParameters, typeaheadNavigationParameters, rovingTabIndexParameters, managedChildrenReturn, refElementReturn, paginatedChildrenParameters, processedIndexManglerReturn, ...void1 }) {
     return useMonitoring(function useListNavigation2() {
       const { props: propsRTI, rovingTabIndexReturn, managedChildrenParameters, context: contextRovingTabIndex, ...void2 } = useRovingTabIndex({ managedChildrenReturn, rovingTabIndexParameters, refElementReturn, processedIndexManglerReturn });
@@ -4096,7 +4100,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/component-detail/keyboard-navigation/use-grid-navigation-partial.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-detail/keyboard-navigation/use-grid-navigation-partial.js
   function useGridNavigation({ gridNavigationParameters: { onTabbableColumnChange, initiallyTabbableColumn, ...void3 }, linearNavigationParameters, ...listNavigationParameters }) {
     return useMonitoring(function useGridNavigation2() {
       const [getTabbableColumn, setTabbableColumn] = usePassiveState(onTabbableColumnChange, useStableCallback(() => {
@@ -4176,7 +4180,6 @@
       const focusSelf = whenThisRowIsFocused;
       const { props: propsLNC, info: { getLocallyTabbable, setLocallyTabbable, ...void2 }, hasCurrentFocusParameters, pressParameters, rovingTabIndexChildReturn, textContentParameters, ...void6 } = useListNavigationChild({ info: { index, untabbable }, refElementReturn, context: contextFromParent });
       const allChildCellsAreUntabbable = !rovingTabIndexChildReturn.tabbable;
-      console.log(`Row ${index} is untabbable? ${allChildCellsAreUntabbable.toString()}`);
       const { props: propsLN, context: contextULN, linearNavigationReturn, managedChildrenParameters, rovingTabIndexReturn, typeaheadNavigationReturn, ...void5 } = useListNavigation({
         managedChildrenReturn,
         refElementReturn,
@@ -4290,16 +4293,14 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/component-detail/processed-children/use-paginated-children.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-detail/processed-children/use-paginated-children.js
   function usePaginatedChildren({ managedChildrenReturn: { getChildren }, paginatedChildrenParameters: { paginationMax, paginationMin, childCount }, rovingTabIndexReturn: { getTabbableIndex, setTabbableIndex }, childrenHaveFocusReturn: { getAnyFocused }, processedIndexManglerReturn: { indexDemangler, indexMangler } }) {
     return useMonitoring(function usePaginatedChildren2() {
-      console.log(`usePaginatedChildren(${paginationMin}, ${paginationMax}, ${childCount})`);
-      const childCountStable = useStableGetter(childCount);
       const parentIsPaginated = paginationMin != null || paginationMax != null;
       const lastPagination = A2({ paginationMax: null, paginationMin: null });
       const refreshPagination = useCallback((paginationMin2, paginationMax2) => {
         const childMax = getChildren().getHighestIndex() + 1;
-        const childMin = 0;
+        const childMin = getChildren().getLowestIndex();
         for (let i6 = childMin; i6 <= childMax; ++i6) {
           const visible = i6 >= (paginationMin2 ?? -Infinity) && i6 < (paginationMax2 ?? Infinity);
           getChildren().getAt(indexDemangler(i6))?.setPaginationVisible(visible);
@@ -4310,7 +4311,6 @@
         /* Must be empty */
       ]);
       y3(() => {
-        debugger;
         let tabbableIndex = getTabbableIndex();
         if (tabbableIndex != null) {
           let shouldFocus = getAnyFocused() || false;
@@ -4328,7 +4328,7 @@
         refreshPagination(paginationMin, paginationMax);
         lastPagination.current.paginationMax = paginationMax ?? null;
         lastPagination.current.paginationMin = paginationMin ?? null;
-      }, [childCount, paginationMax, paginationMin]);
+      }, [paginationMax, paginationMin]);
       const pmin = A2(paginationMin);
       const pmax = A2(paginationMax);
       pmin.current = paginationMin;
@@ -4379,7 +4379,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/component-detail/processed-children/use-rearrangeable-children.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-detail/processed-children/use-rearrangeable-children.js
   function useRearrangeableChildren({ rearrangeableChildrenParameters: { children: childrenIn }, processedIndexManglerParameters: { getIndex, getSortValueAt }, managedChildrenReturn: { getChildren: getManagedChildren }, context: { processedIndexManglerContext: { mangler } } }) {
     return useMonitoring(function useRearrangeableChildren2() {
       useEnsureStability("useRearrangeableChildren", getIndex, getSortValueAt);
@@ -4434,8 +4434,6 @@
         if (cssProperty2 && animationIndex > 0) {
           const element = getElement();
           const first = getFLIPStart(index);
-          const mid = element.getBoundingClientRect();
-          console.log(mid);
           if (cssProperty2 === "translate")
             element.style.scale = element.style.translate = "";
           else if (cssProperty2 === "transform")
@@ -4474,7 +4472,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/component-detail/processed-children/use-staggered-children.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-detail/processed-children/use-staggered-children.js
   function useStaggeredChildren({
     managedChildrenReturn: { getChildren },
     staggeredChildrenParameters: { staggered, childCount }
@@ -4634,13 +4632,16 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/component-detail/processed-children/use-processed-children.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-detail/processed-children/use-processed-children.js
   function useProcessedChildren({ rearrangeableChildrenParameters, paginatedChildrenParameters, staggeredChildrenParameters, context, managedChildrenParameters, processedIndexManglerParameters }) {
     return useMonitoring(function useProcessedChildren2() {
       const childCount = rearrangeableChildrenParameters.children.length;
       const { paginationMax, paginationMin } = paginatedChildrenParameters;
       const { staggered } = staggeredChildrenParameters;
       const { context: { managedChildContext }, managedChildrenReturn } = useManagedChildren({ managedChildrenParameters });
+      const rp = useStableCallback(() => {
+        refreshPagination(paginationMin, paginationMax);
+      });
       const { processedIndexManglerContext: { indexDemangler, indexMangler } } = context;
       const { rearrangeableChildrenReturn, context: { rearrangeableChildrenContext } } = useRearrangeableChildren({
         context,
@@ -4708,7 +4709,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/component-detail/processed-children/use-processed-index-mangler.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-detail/processed-children/use-processed-index-mangler.js
   function useProcessedIndexMangler({ processedIndexManglerParameters: { getIndex, getSortValueAt: getSortValue, compare } }) {
     return useMonitoring(function useProcessedIndexMangler2() {
       useEnsureStability("useProcessedIndexMangler", getIndex, getSortValue);
@@ -4836,7 +4837,7 @@
     return lhs > rhs ? 1 : lhs < rhs ? -1 : 0;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/component-detail/selection/use-multi-selection.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-detail/selection/use-multi-selection.js
   function useMultiSelection({ multiSelectionParameters: { onSelectionChange, multiSelectionAriaPropName, multiSelectionMode, ...void3 }, managedChildrenReturn: { getChildren, ...void1 }, childrenHaveFocusReturn: { getAnyFocused, ...void4 }, ...void2 }) {
     return useMonitoring(function useMultiSelection2() {
       ;
@@ -5077,7 +5078,7 @@
     };
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/component-detail/selection/use-single-selection.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-detail/selection/use-single-selection.js
   function useSingleSelection({ managedChildrenReturn: { getChildren, ...void1 }, rovingTabIndexReturn: { setTabbableIndex, ...void2 }, singleSelectionParameters: { onSingleSelectedIndexChange: onSelectedIndexChange_U, initiallySingleSelectedIndex, singleSelectionAriaPropName, singleSelectionMode, ...void3 }, ...void4 }) {
     return useMonitoring(function useSingleSelection2() {
       assertEmptyObject(void1);
@@ -5200,7 +5201,7 @@
     return { singleSelectionParameters: { onSingleSelectedIndexChange: osic } };
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/component-detail/selection/use-selection.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-detail/selection/use-selection.js
   function useSelection({ managedChildrenReturn, multiSelectionParameters, childrenHaveFocusReturn, rovingTabIndexReturn, singleSelectionParameters }) {
     const { childrenHaveFocusParameters: { onCompositeFocusChange: ocfc1, ...void3 }, context: contextSS, singleSelectionReturn, ...void1 } = useSingleSelection({ managedChildrenReturn, rovingTabIndexReturn, singleSelectionParameters });
     const { childrenHaveFocusParameters: { onCompositeFocusChange: ocfc2, ...void4 }, context: contextMS, multiSelectionReturn, propsStable, ...void2 } = useMultiSelection({ managedChildrenReturn, multiSelectionParameters, childrenHaveFocusReturn });
@@ -5247,7 +5248,7 @@
     return useMultiSelectionChildDeclarative(args);
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-ref-element.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-ref-element.js
   function useRefElement(args) {
     return useMonitoring(function useRefElement2() {
       const nonElementWarn = A2(false);
@@ -5309,7 +5310,7 @@
     has: has$1
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/observers/use-active-element.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/observers/use-active-element.js
   var activeElementUpdaters = /* @__PURE__ */ new Map();
   var lastActiveElementUpdaters = /* @__PURE__ */ new Map();
   var windowFocusedUpdaters = /* @__PURE__ */ new Map();
@@ -5386,7 +5387,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/component-detail/use-dismiss.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-detail/use-dismiss.js
   function useDismiss({ dismissParameters: { dismissActive, onDismiss, ...void3 }, backdropDismissParameters: { dismissBackdropActive, onDismissBackdrop, ...void6 }, lostFocusDismissParameters: { dismissLostFocusActive, onDismissLostFocus, ...void7 }, escapeDismissParameters: { dismissEscapeActive, onDismissEscape, parentDepth, ...void2 }, activeElementParameters: { getDocument: getDocument2, onActiveElementChange, onLastActiveElementChange: olaec1, onWindowFocusedChange, ...void5 }, ...void4 }) {
     return useMonitoring(function useDismiss2() {
       const { refElementReturn: refElementSourceReturn, propsStable: propsStableSource } = useRefElement({ refElementParameters: {} });
@@ -5450,7 +5451,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/util/blocking-elements.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/util/blocking-elements.js
   var be;
   (async () => {
     if (typeof window !== "undefined") {
@@ -5467,7 +5468,7 @@
     return be;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-blocking-element.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-blocking-element.js
   function useBlockingElement({ activeElementParameters: { getDocument: getDocument2, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, ...void3 }, blockingElementParameters: { enabled, getTarget, ...void1 }, ...void2 }) {
     return useMonitoring(function useBlockingElement2() {
       assertEmptyObject(void1);
@@ -5511,7 +5512,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/component-detail/use-focus-trap.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-detail/use-focus-trap.js
   function useFocusTrap({ focusTrapParameters: { onlyMoveFocus, trapActive, focusPopup: focusSelfUnstable, focusOpener: focusOpenerUnstable }, activeElementParameters, refElementReturn }) {
     return useMonitoring(function useFocusTrap2() {
       const focusSelf = useStableCallback(focusSelfUnstable);
@@ -5568,7 +5569,7 @@
     return firstFocusable;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/component-detail/use-grid-navigation-selection.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-detail/use-grid-navigation-selection.js
   function useGridNavigationSelection({ gridNavigationParameters, linearNavigationParameters, rovingTabIndexParameters, managedChildrenReturn, typeaheadNavigationParameters, singleSelectionParameters, multiSelectionParameters, refElementReturn, paginatedChildrenParameters, processedIndexManglerReturn, childrenHaveFocusReturn, ...void2 }) {
     return useMonitoring(function useGridNavigationSelection2() {
       const { context: { gridNavigationRowContext, rovingTabIndexContext, typeaheadNavigationContext }, linearNavigationReturn, managedChildrenParameters, props, rovingTabIndexReturn, typeaheadNavigationReturn } = useGridNavigation({
@@ -5655,7 +5656,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/component-detail/use-list-navigation-selection.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-detail/use-list-navigation-selection.js
   function useListNavigationSelection({ linearNavigationParameters, rovingTabIndexParameters, typeaheadNavigationParameters, singleSelectionParameters, multiSelectionParameters, managedChildrenReturn, refElementReturn, paginatedChildrenParameters, processedIndexManglerReturn, childrenHaveFocusReturn, ...void3 }) {
     return useMonitoring(function useListNavigationSelection2() {
       const { context: contextSS, propsStable, ...retSS } = useSelection({
@@ -5722,7 +5723,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-text-content.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-text-content.js
   function useTextContent({ refElementReturn: { getElement }, textContentParameters: { getText, onTextContentChange } }) {
     return useMonitoring(function useTextContent2() {
       const [getTextContent, setTextContent] = usePassiveState(onTextContentChange, returnNull, { debounceRendering: runImmediately, skipMountInitialization: true });
@@ -5739,7 +5740,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/observers/use-children-have-focus.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/observers/use-children-have-focus.js
   function useChildrenHaveFocus(args) {
     return useMonitoring(function useChildrenHaveFocus2() {
       const { childrenHaveFocusParameters: { onCompositeFocusChange } } = args;
@@ -5770,7 +5771,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/observers/use-has-current-focus.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/observers/use-has-current-focus.js
   function useHasCurrentFocus(args) {
     return useMonitoring(function useHasCurrentFocus2() {
       const { hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged }, refElementReturn: { getElement } } = args;
@@ -5805,7 +5806,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/component-use/use-grid-navigation-complete.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-use/use-grid-navigation-complete.js
   function useCompleteGridNavigation({ gridNavigationParameters, linearNavigationParameters, rovingTabIndexParameters, singleSelectionParameters, multiSelectionParameters, typeaheadNavigationParameters, paginatedChildrenParameters, refElementParameters, gridNavigationCompleteParameters: { getSortColumn, getSortValueAt: gsva }, processedIndexManglerParameters: { compare, getIndex }, ...void1 }) {
     return useMonitoring(function useCompleteGridNavigation2() {
       useEnsureStability("useCompleteGridNavigation", getSortColumn, gsva);
@@ -6093,7 +6094,7 @@
     return r1;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/component-use/use-list-navigation-complete.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-use/use-list-navigation-complete.js
   function useCompleteListNavigation({
     linearNavigationParameters,
     typeaheadNavigationParameters,
@@ -6309,7 +6310,7 @@
     return { ...ret2, multiSelectionChildReturn };
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/component-use/use-modal.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-use/use-modal.js
   function useModal({ dismissParameters: { dismissActive, onDismiss, ...void2 }, escapeDismissParameters: { dismissEscapeActive, onDismissEscape, parentDepth, ...void3 }, focusTrapParameters: { trapActive, ...focusTrapParameters }, activeElementParameters: { getDocument: getDocument2, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, ...void4 }, backdropDismissParameters: { dismissBackdropActive, onDismissBackdrop, ...void5 }, lostFocusDismissParameters: { dismissLostFocusActive, onDismissLostFocus, ...void6 }, refElementParameters: { onElementChange, onMount, onUnmount, ...void7 }, modalParameters: { active: modalActive, ...void8 }, ...void1 }) {
     return useMonitoring(function useModal2() {
       const { refElementPopupReturn, refElementSourceReturn, propsStablePopup, propsStableSource } = useDismiss({
@@ -6445,7 +6446,7 @@
     };
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-async.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-async.js
   function identityCapture(...t4) {
     return t4;
   }
@@ -6522,7 +6523,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-async-handler.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-async-handler.js
   function useAsyncHandler({ asyncHandler, capture: originalCapture, ...restAsyncOptions }) {
     return useMonitoring(function useAsyncHandler2() {
       const [currentCapture, setCurrentCapture, getCurrentCapture] = useState(void 0);
@@ -6542,7 +6543,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/component-use/use-press.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-use/use-press.js
   function pressLog(...args) {
     if (globalThis.__log_press_events)
       console.log(...args);
@@ -6821,7 +6822,7 @@
   var pulse = "vibrate" in navigator && navigator.vibrate instanceof Function ? () => navigator.vibrate(10) : () => {
   };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/component-use/use-random-id.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-use/use-random-id.js
   function useRandomId({ randomIdParameters: { prefix, otherReferencerProp } }) {
     return useMonitoring(function useRandomId2() {
       const id = prefix + g2();
@@ -6839,7 +6840,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/component-use/use-random-dual-ids.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-use/use-random-dual-ids.js
   function useRandomDualIds({ randomIdInputParameters, randomIdLabelParameters }) {
     return useMonitoring(function useRandomDualIds2() {
       const { randomIdReturn: randomIdInputReturn, propsReferencer: propsLabelAsReferencer, propsSource: propsInputAsSource } = useRandomId({ randomIdParameters: randomIdInputParameters });
@@ -6853,7 +6854,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-imperative-props.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-imperative-props.js
   var templateElement = null;
   function htmlToElement(parent, html) {
     const document2 = parent.ownerDocument;
@@ -6973,7 +6974,7 @@
     return _(Tag, useMergedProps(propsStable, imperativeProps, props, { ref }));
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/util/random-id.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/util/random-id.js
   var Table = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-";
   function base64(value) {
     return Table[value];
@@ -6988,7 +6989,7 @@
     return `${prefix ?? "id-"}${random64Bits().map((n2) => base64(n2)).join("")}`;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-portal-children.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-portal-children.js
   function usePortalChildren({ target }) {
     return useMonitoring(function usePortalChildren2() {
       const [pushChild, setPushChild] = useState(null);
@@ -7060,7 +7061,7 @@
     return _(k, {}, children);
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/observers/use-logical-direction.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/observers/use-logical-direction.js
   var HorizontalTbLtr = {
     inlineDirection: "ltr",
     blockDirection: "ttb",
@@ -7110,7 +7111,7 @@
     inlineDirection: "ttb"
   };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-persistent-state.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-persistent-state.js
   var defaultStorage = typeof window === "undefined" ? void 0 : window.localStorage;
   // @__NO_SIDE_EFFECTS__
   function getFromLocalStorage(key, converter = JSON.parse, storage = defaultStorage) {
@@ -7190,7 +7191,7 @@
     return l.vnode && l.vnode(l4), l4;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@f3fe7630f122a8fb63692074e4c17511b7fe0a8a_preact@10.2_jmtpxznagwnji7b54f2gbhkzke/node_modules/preact-prop-helpers/dist/preact/timing/use-animation-frame.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/timing/use-animation-frame.js
   var SharedAnimationFrameContext = K(null);
 
   // ../dist/preact/props.js
@@ -8717,7 +8718,6 @@
       const [_sortDirection, setSortDirection, getSortDirection] = useState("ascending");
       const [_sortColumn, setSortColumn, getSortColumn] = useState(initiallySortedColumn ?? void 0);
       const sortByColumn = useCallback((column) => {
-        debugger;
         let nextSortDirection = getSortDirection();
         let nextSortIndex = getSortColumn();
         if (column == nextSortIndex) {

@@ -149,7 +149,6 @@ export function useTable<TableElement extends Element, TableRowElement extends E
         const [_sortColumn, setSortColumn, getSortColumn] = useState<number | undefined>(initiallySortedColumn ?? undefined);
 
         const sortByColumn = useCallback((column: number): SortInfo => {
-            debugger;
             let nextSortDirection = getSortDirection();
             let nextSortIndex = getSortColumn();
             if (column == nextSortIndex) {
