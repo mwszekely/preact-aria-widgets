@@ -431,7 +431,6 @@ export function useAccordionSection<HeaderContainerElement extends Element, Head
             refElementReturn,
             textContentParameters: { getText, onTextContentChange: useStableCallback((...a) => { otcc1?.(...a); otcc2?.(...a); }) }
         })
-        console.log(`RENDER accordion section #${index}`)
 
         const {
             pressReturn,
@@ -445,8 +444,6 @@ export function useAccordionSection<HeaderContainerElement extends Element, Head
                 disabled,
                 tagButton,
                 onPressSync: (e) => {
-                    console.log(`Press event for accordion section #${index}`);
-                    debugger;
                     setCurrentFocusedIndex(index, e);
                     if (getOpenFromParent())
                         changeExpandedIndex(null, e);

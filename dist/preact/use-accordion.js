@@ -203,7 +203,6 @@ export function useAccordionSection({ buttonParameters: { disabled, tagButton, o
             refElementReturn,
             textContentParameters: { getText, onTextContentChange: useStableCallback((...a) => { otcc1?.(...a); otcc2?.(...a); }) }
         });
-        console.log(`RENDER accordion section #${index}`);
         const { pressReturn, props, refElementReturn: refElementHeaderButtonReturn, ...void12 } = useButton({
             buttonParameters: {
                 pressed: null,
@@ -211,8 +210,6 @@ export function useAccordionSection({ buttonParameters: { disabled, tagButton, o
                 disabled,
                 tagButton,
                 onPressSync: (e) => {
-                    console.log(`Press event for accordion section #${index}`);
-                    debugger;
                     setCurrentFocusedIndex(index, e);
                     if (getOpenFromParent())
                         changeExpandedIndex(null, e);
