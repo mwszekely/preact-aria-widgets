@@ -222,6 +222,7 @@ export const useGridlistRow = /* @__PURE__ */ (function useGridlistRow<GridlistR
         pressParameters,
         multiSelectionChildReturn,
         refElementReturn,
+        selectionChildReturn,
         ...void2
     } = useCompleteGridNavigationRow<GridlistRowElement, GridlistCellElement, RM, CM>({
         linearNavigationParameters,
@@ -253,6 +254,7 @@ export const useGridlistRow = /* @__PURE__ */ (function useGridlistRow<GridlistR
         rovingTabIndexChildReturn,
         rovingTabIndexReturn,
         singleSelectionChildReturn,
+        selectionChildReturn,
         multiSelectionChildReturn,
         textContentReturn,
         typeaheadNavigationReturn,

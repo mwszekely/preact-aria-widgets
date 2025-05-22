@@ -2145,7 +2145,7 @@
     null != e3 && "textarea" === n2.type && "value" in t4 && t4.value !== e3.value && (e3.value = null == t4.value ? "" : t4.value), ln = null;
   };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/util/lib-shared.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/util/lib-shared.js
   var EventMapping = {
     abort: "onAbort",
     animationend: "onAnimationEnd",
@@ -2246,7 +2246,7 @@
     webkittransitionend: null
   };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/util/use-before-layout-effect.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/util/use-before-layout-effect.js
   var toRun = /* @__PURE__ */ new Map();
   var commitName = "diffed";
   var newCommit = (vnode, ...args) => {
@@ -2283,7 +2283,7 @@
     return !!(!oldArgs || oldArgs.length !== newArgs?.length || newArgs?.some((arg, index) => arg !== oldArgs[index]));
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/util/lib-preact.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/util/lib-preact.js
   var useCallback = q2;
   function debounceRendering(f5) {
     (l.debounceRendering ?? queueMicrotask)(f5);
@@ -2302,7 +2302,7 @@
     ...EventMapping
   };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-passive-state.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-passive-state.js
   function useEnsureStability(parentHookName, ...values) {
     if (true)
       return;
@@ -2409,12 +2409,12 @@
     f5();
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/util/mode.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/util/mode.js
   globalThis["process"] ??= {};
   globalThis["process"]["env"] ??= {};
   globalThis["process"]["env"]["NODE_ENV"] = "production";
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/util/use-call-count.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/util/use-call-count.js
   globalThis.requestIdleCallback ??= (callback) => {
     return setTimeout(() => {
       callback({ didTimeout: false, timeRemaining: () => {
@@ -2427,7 +2427,7 @@
     return t4();
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-stable-getter.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-stable-getter.js
   var Unset2 = Symbol("unset");
   function useStableGetter(value) {
     return useMonitoring(function useStableGetter2() {
@@ -2449,7 +2449,7 @@
     }, Object.values(t4));
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-stable-callback.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-stable-callback.js
   var map = /* @__PURE__ */ new WeakMap();
   function isStableGetter(obj) {
     return false;
@@ -2487,7 +2487,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-event-handler.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-event-handler.js
   function useGlobalHandler(target, type, handler, options, mode) {
     return useMonitoring(function useGlobalHandler2() {
       mode ||= "grouped";
@@ -2553,11 +2553,11 @@
     }, [target, type, stableHandler]);
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/util/assert.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/util/assert.js
   function assertEmptyObject(_a) {
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/util/get-window.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/util/get-window.js
   function getWindow(element) {
     return typeof window == "undefined" ? void 0 : element?.ownerDocument?.defaultView ?? globalThis ?? {};
   }
@@ -2565,7 +2565,7 @@
     return typeof window == "undefined" ? void 0 : element?.ownerDocument ?? getWindow()?.document ?? void 0;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-detail/dismissal/use-backdrop-dismiss.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/component-detail/dismissal/use-backdrop-dismiss.js
   function useBackdropDismiss({ backdropDismissParameters: { dismissBackdropActive: open, onDismissBackdrop: onCloseUnstable, ...void1 }, refElementPopupReturn: { getElement, ...void3 }, ...void2 }) {
     return useMonitoring(function useBackdropDismiss2() {
       assertEmptyObject(void1);
@@ -2590,7 +2590,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/util/event.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/util/event.js
   var EventDetail = Symbol("event-detail");
   function getEventDetail(e3) {
     return e3[EventDetail];
@@ -2602,7 +2602,7 @@
     return event;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-detail/dismissal/use-escape-dismiss.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/component-detail/dismissal/use-escape-dismiss.js
   var MagicWindowKey = "__preact-prop-helpers-escape-key-dismiss__";
   function getElementDepth(element) {
     let depth = 0;
@@ -2680,7 +2680,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-detail/dismissal/use-lost-focus-dismiss.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/component-detail/dismissal/use-lost-focus-dismiss.js
   function useLostFocusDismiss({ refElementPopupReturn: { getElement: getPopupElement, ...void3 }, refElementSourceReturn, lostFocusDismissParameters: { dismissLostFocusActive: open, onDismissLostFocus: onClose, ...void4 }, ...void1 }) {
     return useMonitoring(function useLostFocusDismiss2() {
       const { getElement: getSourceElement, ...void2 } = refElementSourceReturn ?? {};
@@ -2705,7 +2705,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-merged-children.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-merged-children.js
   function useMergedChildren(lhs, rhs) {
     if (lhs == null && rhs == null) {
       return void 0;
@@ -2718,7 +2718,7 @@
     }
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-merged-classes.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-merged-classes.js
   function useMergedClasses(...classes) {
     let classesSet = /* @__PURE__ */ new Set();
     for (let c4 of classes) {
@@ -2732,7 +2732,7 @@
     }
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-merged-refs.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-merged-refs.js
   function processRef(instance, ref) {
     if (typeof ref === "function") {
       ref(instance);
@@ -2763,7 +2763,7 @@
     }
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-merged-styles.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-merged-styles.js
   function styleStringToObject(style) {
     return Object.fromEntries(style.split(";").map((statement) => statement.split(":")));
   }
@@ -2792,7 +2792,7 @@
     };
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-merged-props.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-merged-props.js
   var log = console.warn;
   function useMergedProps(...allProps) {
     useEnsureStability("useMergedProps", allProps.length);
@@ -3066,7 +3066,7 @@
     return isNodeMatchingSelectorFocusable(options, node);
   };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/util/stack.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/util/stack.js
   function useStack() {
     if (false) {
       const stack = T2(generateStack, []);
@@ -3080,7 +3080,7 @@
     return "";
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/util/focus.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/util/focus.js
   function focus2(e3) {
     if (false) {
       console.log(`Focus changed to ${(e3?.tagName || "").toLowerCase().padStart(6)}:`, e3);
@@ -3123,7 +3123,7 @@
     return bestCandidateAfter ?? bestCandidateBefore ?? document2.body;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/timing/use-timeout.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/timing/use-timeout.js
   function useTimeout({ timeout, callback, triggerIndex }) {
     return useMonitoring(function useTimeout2() {
       const stableCallback = useStableCallback(() => {
@@ -3155,7 +3155,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/util/use-tag-props.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/util/use-tag-props.js
   function useTagProps(props, tag) {
     if (false) {
       const [id] = d3(() => ++idIndex);
@@ -3189,7 +3189,7 @@
     }
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-detail/keyboard-navigation/use-linear-navigation.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/component-detail/keyboard-navigation/use-linear-navigation.js
   function useLinearNavigation({ linearNavigationParameters: { getLowestIndex, getHighestIndex, isValidForLinearNavigation, navigatePastEnd, navigatePastStart, onNavigateLinear, arrowKeyDirection, disableHomeEndKeys, pageNavigationSize, ...void4 }, rovingTabIndexReturn: { getTabbableIndex, setTabbableIndex, ...void5 }, paginatedChildrenParameters: { paginationMax, paginationMin, ...void2 }, processedIndexManglerReturn: { indexDemangler, indexMangler, ...void3 }, ...void1 }) {
     return useMonitoring(function useLinearNavigation2() {
       let getPaginatedRange = useStableGetter(paginationMax == null || paginationMin == null ? null : paginationMax - paginationMin);
@@ -3370,7 +3370,7 @@
     }
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-managed-children.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-managed-children.js
   function useManagedChildren(parentParameters) {
     return useMonitoring(function useManagedChildren2() {
       const { managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange, onChildrenCountChange }, ...rest } = parentParameters;
@@ -3612,7 +3612,7 @@
     return { changeIndex, reevaluateClosestFit, getCurrentIndex };
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-state.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-state.js
   function useState(initialState) {
     const getStack = useStack();
     const [state, setStateP] = d3(initialState);
@@ -3645,7 +3645,7 @@
     return [state, setState.current, getState];
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-detail/keyboard-navigation/use-roving-tabindex.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/component-detail/keyboard-navigation/use-roving-tabindex.js
   function useRovingTabIndex({ managedChildrenReturn: { getChildren }, rovingTabIndexParameters: { focusSelfParent: focusSelfParentUnstable, untabbable, untabbableBehavior, initiallyTabbedIndex, onTabbableIndexChange }, refElementReturn: { getElement }, processedIndexManglerReturn: { indexDemangler }, ...void1 }) {
     return useMonitoring(function useRovingTabIndex2() {
       const focusSelfParent = useStableCallback(focusSelfParentUnstable);
@@ -3866,7 +3866,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-detail/keyboard-navigation/use-typeahead-navigation.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/component-detail/keyboard-navigation/use-typeahead-navigation.js
   function useTypeaheadNavigation({ typeaheadNavigationParameters: { collator, typeaheadTimeout, noTypeahead, isValidForTypeaheadNavigation, onNavigateTypeahead, ...void3 }, rovingTabIndexReturn: { getTabbableIndex: getIndex, setTabbableIndex: setIndex, ...void1 }, ...void2 }) {
     return useMonitoring(function useTypeaheadNavigation2() {
       assertEmptyObject(void1);
@@ -4063,7 +4063,7 @@
     return -firstIndex - 1;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-detail/keyboard-navigation/use-list-navigation-partial.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/component-detail/keyboard-navigation/use-list-navigation-partial.js
   function useListNavigation({ linearNavigationParameters, typeaheadNavigationParameters, rovingTabIndexParameters, managedChildrenReturn, refElementReturn, paginatedChildrenParameters, processedIndexManglerReturn, ...void1 }) {
     return useMonitoring(function useListNavigation2() {
       const { props: propsRTI, rovingTabIndexReturn, managedChildrenParameters, context: contextRovingTabIndex, ...void2 } = useRovingTabIndex({ managedChildrenReturn, rovingTabIndexParameters, refElementReturn, processedIndexManglerReturn });
@@ -4100,7 +4100,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-detail/keyboard-navigation/use-grid-navigation-partial.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/component-detail/keyboard-navigation/use-grid-navigation-partial.js
   function useGridNavigation({ gridNavigationParameters: { onTabbableColumnChange, initiallyTabbableColumn, ...void3 }, linearNavigationParameters, ...listNavigationParameters }) {
     return useMonitoring(function useGridNavigation2() {
       const [getTabbableColumn, setTabbableColumn] = usePassiveState(onTabbableColumnChange, useStableCallback(() => {
@@ -4293,7 +4293,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-detail/processed-children/use-paginated-children.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/component-detail/processed-children/use-paginated-children.js
   function usePaginatedChildren({ managedChildrenReturn: { getChildren }, paginatedChildrenParameters: { paginationMax, paginationMin, childCount }, rovingTabIndexReturn: { getTabbableIndex, setTabbableIndex }, childrenHaveFocusReturn: { getAnyFocused }, processedIndexManglerReturn: { indexDemangler, indexMangler } }) {
     return useMonitoring(function usePaginatedChildren2() {
       const parentIsPaginated = paginationMin != null || paginationMax != null;
@@ -4379,7 +4379,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-detail/processed-children/use-rearrangeable-children.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/component-detail/processed-children/use-rearrangeable-children.js
   function useRearrangeableChildren({ rearrangeableChildrenParameters: { children: childrenIn }, processedIndexManglerParameters: { getIndex, getSortValueAt }, managedChildrenReturn: { getChildren: getManagedChildren }, context: { processedIndexManglerContext: { mangler } } }) {
     return useMonitoring(function useRearrangeableChildren2() {
       useEnsureStability("useRearrangeableChildren", getIndex, getSortValueAt);
@@ -4472,7 +4472,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-detail/processed-children/use-staggered-children.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/component-detail/processed-children/use-staggered-children.js
   function useStaggeredChildren({
     managedChildrenReturn: { getChildren },
     staggeredChildrenParameters: { staggered, childCount }
@@ -4632,7 +4632,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-detail/processed-children/use-processed-children.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/component-detail/processed-children/use-processed-children.js
   function useProcessedChildren({ rearrangeableChildrenParameters, paginatedChildrenParameters, staggeredChildrenParameters, context, managedChildrenParameters, processedIndexManglerParameters }) {
     return useMonitoring(function useProcessedChildren2() {
       const childCount = rearrangeableChildrenParameters.children.length;
@@ -4709,7 +4709,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-detail/processed-children/use-processed-index-mangler.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/component-detail/processed-children/use-processed-index-mangler.js
   function useProcessedIndexMangler({ processedIndexManglerParameters: { getIndex, getSortValueAt: getSortValue, compare } }) {
     return useMonitoring(function useProcessedIndexMangler2() {
       useEnsureStability("useProcessedIndexMangler", getIndex, getSortValue);
@@ -4837,7 +4837,7 @@
     return lhs > rhs ? 1 : lhs < rhs ? -1 : 0;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-detail/selection/use-multi-selection.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/component-detail/selection/use-multi-selection.js
   function useMultiSelection({ multiSelectionParameters: { onSelectionChange, multiSelectionAriaPropName, multiSelectionMode, ...void3 }, managedChildrenReturn: { getChildren, ...void1 }, childrenHaveFocusReturn: { getAnyFocused, ...void4 }, ...void2 }) {
     return useMonitoring(function useMultiSelection2() {
       ;
@@ -4962,7 +4962,7 @@
   function useMultiSelectionChild({ info: { index, ...void4 }, multiSelectionChildParameters: { initiallyMultiSelected, onMultiSelectChange, multiSelectionDisabled, ...void1 }, context: { multiSelectionContext: { notifyParentOfChildSelectChange, multiSelectionAriaPropName, multiSelectionMode, doContiguousSelection, changeAllChildren, getCtrlKeyDown, getShiftKeyDown, getAnyFocused, ...void5 }, ...void3 }, ...void2 }) {
     return useMonitoring(function useMultiSelectionChild2() {
       const pressFreebie = A2(false);
-      const onPressSync = (e3) => {
+      const firePressSelectionEvent = (e3) => {
         if (!multiSelectionDisabled) {
           if (multiSelectionMode == "activation") {
             if (e3.shiftKey) {
@@ -5036,10 +5036,8 @@
           changeMultiSelected,
           multiSelected: localSelected,
           getMultiSelected: getLocalSelected,
-          multiSelectionMode
-        },
-        pressParameters: {
-          onPressSync
+          multiSelectionMode,
+          firePressSelectionEvent
         },
         hasCurrentFocusParameters: {
           onCurrentFocusedInnerChanged
@@ -5056,29 +5054,29 @@
   // @__NO_SIDE_EFFECTS__
   function useMultiSelectionChildDeclarative({ multiSelectionChildDeclarativeParameters: { onMultiSelectedChange, multiSelected, ...void3 }, multiSelectionChildReturn: { changeMultiSelected, ...void2 }, ...void1 }) {
     let reasonRef = A2(void 0);
-    y3(() => {
+    _2(() => {
       if (multiSelected != null)
         changeMultiSelected(reasonRef.current, multiSelected);
     }, [multiSelected]);
-    const omsc = useStableCallback((e3) => {
-      reasonRef.current = e3;
-      return onMultiSelectedChange?.(e3);
-    });
-    const setSelectedFromParent = useStableCallback((event, multiSelected2) => {
-      onMultiSelectedChange?.(enhanceEvent(event, { multiSelected: multiSelected2 }));
-    });
     assertEmptyObject(void1);
     assertEmptyObject(void2);
     assertEmptyObject(void3);
     return {
       multiSelectionChildParameters: {
-        onMultiSelectChange: omsc
+        onMultiSelectChange: useStableCallback((e3) => {
+          reasonRef.current = e3;
+          return onMultiSelectedChange?.(e3);
+        })
       },
-      info: { setSelectedFromParent }
+      info: {
+        setSelectedFromParent: useStableCallback((event, multiSelected2) => {
+          onMultiSelectedChange?.(enhanceEvent(event, { multiSelected: multiSelected2 }));
+        })
+      }
     };
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-detail/selection/use-single-selection.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/component-detail/selection/use-single-selection.js
   function useSingleSelection({ managedChildrenReturn: { getChildren, ...void1 }, rovingTabIndexReturn: { setTabbableIndex, ...void2 }, singleSelectionParameters: { onSingleSelectedIndexChange: onSelectedIndexChange_U, initiallySingleSelectedIndex, singleSelectionAriaPropName, singleSelectionMode, ...void3 }, ...void4 }) {
     return useMonitoring(function useSingleSelection2() {
       assertEmptyObject(void1);
@@ -5155,7 +5153,7 @@
           onSingleSelectedIndexChange(enhanceEvent(e3, { selectedIndex: index }));
         }
       });
-      const onPressSync = useStableCallback((e3) => {
+      const firePressSelectionEvent = useStableCallback((e3) => {
         if (!singleSelectionDisabled && !untabbable) {
           if (singleSelectionMode == "activation")
             onSingleSelectedIndexChange(enhanceEvent(e3, { selectedIndex: index }));
@@ -5178,30 +5176,33 @@
           getSingleSelected: getLocalSelected,
           singleSelectedOffset: direction,
           singleSelectionMode,
-          getSingleSelectedOffset: getDirection
+          getSingleSelectedOffset: getDirection,
+          firePressSelectionEvent
         },
         props: useTagProps(ariaPropName == null || singleSelectionMode == "disabled" ? {} : {
           [`${propParts[0]}-${propParts[1]}`]: localSelected ? propParts[1] == "current" ? `${propParts[2]}` : `true` : "false"
         }, "data-single-selection-child"),
-        hasCurrentFocusParameters: { onCurrentFocusedInnerChanged },
-        pressParameters: { onPressSync }
+        hasCurrentFocusParameters: { onCurrentFocusedInnerChanged }
       };
     });
   }
   function useSingleSelectionDeclarative({ singleSelectionReturn: { changeSingleSelectedIndex }, singleSelectionDeclarativeParameters: { singleSelectedIndex, onSingleSelectedIndexChange } }) {
     let s4 = singleSelectedIndex ?? null;
     let reasonRef = A2(void 0);
-    y3(() => {
+    _2(() => {
       changeSingleSelectedIndex(s4, reasonRef.current);
     }, [s4]);
-    const osic = useCallback((e3) => {
-      reasonRef.current = e3;
-      return onSingleSelectedIndexChange?.(e3);
-    }, [onSingleSelectedIndexChange]);
-    return { singleSelectionParameters: { onSingleSelectedIndexChange: osic } };
+    return {
+      singleSelectionParameters: {
+        onSingleSelectedIndexChange: useCallback((e3) => {
+          reasonRef.current = e3;
+          return onSingleSelectedIndexChange?.(e3);
+        }, [onSingleSelectedIndexChange])
+      }
+    };
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-detail/selection/use-selection.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/component-detail/selection/use-selection.js
   function useSelection({ managedChildrenReturn, multiSelectionParameters, childrenHaveFocusReturn, rovingTabIndexReturn, singleSelectionParameters }) {
     const { childrenHaveFocusParameters: { onCompositeFocusChange: ocfc1, ...void3 }, context: contextSS, singleSelectionReturn, ...void1 } = useSingleSelection({ managedChildrenReturn, rovingTabIndexReturn, singleSelectionParameters });
     const { childrenHaveFocusParameters: { onCompositeFocusChange: ocfc2, ...void4 }, context: contextMS, multiSelectionReturn, propsStable, ...void2 } = useMultiSelection({ managedChildrenReturn, multiSelectionParameters, childrenHaveFocusReturn });
@@ -5218,8 +5219,8 @@
     };
   }
   function useSelectionChild({ context, info: { index, untabbable, ...void2 }, singleSelectionChildParameters, multiSelectionChildParameters, ...void3 }) {
-    const { props: p1, hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic1 }, pressParameters: { onPressSync: opc1 }, info: { getSingleSelected, setLocalSingleSelected, singleSelected, ...void1 }, singleSelectionChildReturn } = useSingleSelectionChild({ context, info: { index, untabbable }, singleSelectionChildParameters });
-    const { props: p22, hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic2 }, pressParameters: { onPressSync: opc2 }, multiSelectionChildReturn, info: { getMultiSelected, setSelectedFromParent, getMultiSelectionDisabled, ...void5 }, ...void4 } = useMultiSelectionChild({ context, info: { index }, multiSelectionChildParameters });
+    const { props: p1, hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic1 }, info: { getSingleSelected, setLocalSingleSelected, singleSelected, ...void1 }, singleSelectionChildReturn } = useSingleSelectionChild({ context, info: { index, untabbable }, singleSelectionChildParameters });
+    const { props: p22, hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic2 }, multiSelectionChildReturn, info: { getMultiSelected, setSelectedFromParent, getMultiSelectionDisabled, ...void5 }, ...void4 } = useMultiSelectionChild({ context, info: { index }, multiSelectionChildParameters });
     assertEmptyObject(void1);
     assertEmptyObject(void2);
     assertEmptyObject(void3);
@@ -5235,10 +5236,10 @@
         singleSelected,
         getMultiSelectionDisabled
       },
+      singleSelectionChildReturn,
       multiSelectionChildReturn,
-      pressParameters: { onPressSync: useStableMergedCallback(opc1, opc2) },
-      props: useMergedProps(p1, p22),
-      singleSelectionChildReturn
+      selectionChildReturn: { firePressSelectionEvent: useStableMergedCallback(singleSelectionChildReturn.firePressSelectionEvent, multiSelectionChildReturn.firePressSelectionEvent) },
+      props: useMergedProps(p1, p22)
     };
   }
   function useSelectionDeclarative(args) {
@@ -5248,7 +5249,7 @@
     return useMultiSelectionChildDeclarative(args);
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-ref-element.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-ref-element.js
   function useRefElement(args) {
     return useMonitoring(function useRefElement2() {
       const nonElementWarn = A2(false);
@@ -5310,7 +5311,7 @@
     has: has$1
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/observers/use-active-element.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/observers/use-active-element.js
   var activeElementUpdaters = /* @__PURE__ */ new Map();
   var lastActiveElementUpdaters = /* @__PURE__ */ new Map();
   var windowFocusedUpdaters = /* @__PURE__ */ new Map();
@@ -5387,7 +5388,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-detail/use-dismiss.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/component-detail/use-dismiss.js
   function useDismiss({ dismissParameters: { dismissActive, onDismiss, ...void3 }, backdropDismissParameters: { dismissBackdropActive, onDismissBackdrop, ...void6 }, lostFocusDismissParameters: { dismissLostFocusActive, onDismissLostFocus, ...void7 }, escapeDismissParameters: { dismissEscapeActive, onDismissEscape, parentDepth, ...void2 }, activeElementParameters: { getDocument: getDocument2, onActiveElementChange, onLastActiveElementChange: olaec1, onWindowFocusedChange, ...void5 }, ...void4 }) {
     return useMonitoring(function useDismiss2() {
       const { refElementReturn: refElementSourceReturn, propsStable: propsStableSource } = useRefElement({ refElementParameters: {} });
@@ -5451,7 +5452,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/util/blocking-elements.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/util/blocking-elements.js
   var be;
   (async () => {
     if (typeof window !== "undefined") {
@@ -5468,7 +5469,7 @@
     return be;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-blocking-element.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-blocking-element.js
   function useBlockingElement({ activeElementParameters: { getDocument: getDocument2, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, ...void3 }, blockingElementParameters: { enabled, getTarget, ...void1 }, ...void2 }) {
     return useMonitoring(function useBlockingElement2() {
       assertEmptyObject(void1);
@@ -5512,7 +5513,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-detail/use-focus-trap.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/component-detail/use-focus-trap.js
   function useFocusTrap({ focusTrapParameters: { onlyMoveFocus, trapActive, focusPopup: focusSelfUnstable, focusOpener: focusOpenerUnstable }, activeElementParameters, refElementReturn }) {
     return useMonitoring(function useFocusTrap2() {
       const focusSelf = useStableCallback(focusSelfUnstable);
@@ -5569,7 +5570,7 @@
     return firstFocusable;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-detail/use-grid-navigation-selection.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/component-detail/use-grid-navigation-selection.js
   function useGridNavigationSelection({ gridNavigationParameters, linearNavigationParameters, rovingTabIndexParameters, managedChildrenReturn, typeaheadNavigationParameters, singleSelectionParameters, multiSelectionParameters, refElementReturn, paginatedChildrenParameters, processedIndexManglerReturn, childrenHaveFocusReturn, ...void2 }) {
     return useMonitoring(function useGridNavigationSelection2() {
       const { context: { gridNavigationRowContext, rovingTabIndexContext, typeaheadNavigationContext }, linearNavigationReturn, managedChildrenParameters, props, rovingTabIndexReturn, typeaheadNavigationReturn } = useGridNavigation({
@@ -5612,12 +5613,11 @@
   }
   function useGridNavigationSelectionRow({ info: mcp1, linearNavigationParameters, managedChildrenReturn, refElementReturn, rovingTabIndexParameters, typeaheadNavigationParameters, context, singleSelectionChildParameters, multiSelectionChildParameters, ...void1 }) {
     return useMonitoring(function useGridNavigationSelectionRow2() {
-      const { hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic1, ...void6 }, info: { getSingleSelected, setLocalSingleSelected, singleSelected, getMultiSelected, setSelectedFromParent, getMultiSelectionDisabled, ...void8 }, props: propsSelection, singleSelectionChildReturn, multiSelectionChildReturn, pressParameters: { onPressSync, ...void4 }, ...void2 } = useSelectionChild({ info: mcp1, context, singleSelectionChildParameters, multiSelectionChildParameters });
+      const { hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic1, ...void6 }, info: { getSingleSelected, setLocalSingleSelected, singleSelected, getMultiSelected, setSelectedFromParent, getMultiSelectionDisabled, ...void8 }, props: propsSelection, selectionChildReturn, singleSelectionChildReturn, multiSelectionChildReturn, ...void2 } = useSelectionChild({ info: mcp1, context, singleSelectionChildParameters, multiSelectionChildParameters });
       const { hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic2, ...void7 }, info: { focusSelf, getLocallyTabbable, setLocallyTabbable, ...void9 }, props: propsGridNavigation, linearNavigationReturn, managedChildrenParameters, pressParameters: { excludeSpace, ...void5 }, rovingTabIndexChildReturn, rovingTabIndexReturn, textContentParameters, typeaheadNavigationReturn, context: contextGridNavigation, ...void3 } = useGridNavigationRow({ context, linearNavigationParameters, info: mcp1, managedChildrenReturn, refElementReturn, rovingTabIndexParameters, typeaheadNavigationParameters });
       assertEmptyObject(void1);
       assertEmptyObject(void2);
       assertEmptyObject(void3);
-      assertEmptyObject(void4);
       assertEmptyObject(void5);
       assertEmptyObject(void6);
       assertEmptyObject(void7);
@@ -5638,7 +5638,8 @@
           getMultiSelectionDisabled
         },
         managedChildrenParameters,
-        pressParameters: { onPressSync, excludeSpace },
+        pressParameters: { excludeSpace },
+        selectionChildReturn,
         hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: useStableMergedCallback(ocfic1, ocfic2) },
         props: useMergedProps(propsGridNavigation, propsSelection),
         rovingTabIndexChildReturn,
@@ -5656,7 +5657,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-detail/use-list-navigation-selection.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/component-detail/use-list-navigation-selection.js
   function useListNavigationSelection({ linearNavigationParameters, rovingTabIndexParameters, typeaheadNavigationParameters, singleSelectionParameters, multiSelectionParameters, managedChildrenReturn, refElementReturn, paginatedChildrenParameters, processedIndexManglerReturn, childrenHaveFocusReturn, ...void3 }) {
     return useMonitoring(function useListNavigationSelection2() {
       const { context: contextSS, propsStable, ...retSS } = useSelection({
@@ -5692,7 +5693,7 @@
   }
   function useListNavigationSelectionChild({ info: { index, untabbable, ...void2 }, context, refElementReturn, singleSelectionChildParameters, multiSelectionChildParameters, ...void1 }) {
     return useMonitoring(function useListNavigationSelectionChild2() {
-      const { hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic2, ...void3 }, info: infoSS, multiSelectionChildReturn, singleSelectionChildReturn, props: propsSS, pressParameters: { onPressSync }, ...void9 } = useSelectionChild({
+      const { hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic2, ...void3 }, info: infoSS, multiSelectionChildReturn, singleSelectionChildReturn, props: propsSS, selectionChildReturn, ...void9 } = useSelectionChild({
         info: { index, untabbable },
         context,
         multiSelectionChildParameters,
@@ -5711,7 +5712,8 @@
       assertEmptyObject(void9);
       return {
         hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: useStableMergedCallback(ocfic1, ocfic2) },
-        pressParameters: { onPressSync, excludeSpace },
+        pressParameters: { excludeSpace },
+        selectionChildReturn,
         info: { ...infoSS, ...infoLN },
         rovingTabIndexChildReturn,
         multiSelectionChildReturn,
@@ -5723,7 +5725,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-text-content.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-text-content.js
   function useTextContent({ refElementReturn: { getElement }, textContentParameters: { getText, onTextContentChange } }) {
     return useMonitoring(function useTextContent2() {
       const [getTextContent, setTextContent] = usePassiveState(onTextContentChange, returnNull, { debounceRendering: runImmediately, skipMountInitialization: true });
@@ -5740,7 +5742,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/observers/use-children-have-focus.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/observers/use-children-have-focus.js
   function useChildrenHaveFocus(args) {
     return useMonitoring(function useChildrenHaveFocus2() {
       const { childrenHaveFocusParameters: { onCompositeFocusChange } } = args;
@@ -5771,7 +5773,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/observers/use-has-current-focus.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/observers/use-has-current-focus.js
   function useHasCurrentFocus(args) {
     return useMonitoring(function useHasCurrentFocus2() {
       const { hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged }, refElementReturn: { getElement } } = args;
@@ -5806,7 +5808,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-use/use-grid-navigation-complete.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/component-use/use-grid-navigation-complete.js
   function useCompleteGridNavigation({ gridNavigationParameters, linearNavigationParameters, rovingTabIndexParameters, singleSelectionParameters, multiSelectionParameters, typeaheadNavigationParameters, paginatedChildrenParameters, refElementParameters, gridNavigationCompleteParameters: { getSortColumn, getSortValueAt: gsva }, processedIndexManglerParameters: { compare, getIndex }, ...void1 }) {
     return useMonitoring(function useCompleteGridNavigation2() {
       useEnsureStability("useCompleteGridNavigation", getSortColumn, gsva);
@@ -5966,7 +5968,7 @@
         singleSelectionChildParameters,
         multiSelectionChildParameters
       };
-      const { linearNavigationReturn, managedChildrenParameters, pressParameters, rovingTabIndexChildReturn, rovingTabIndexReturn, singleSelectionChildReturn, multiSelectionChildReturn, textContentParameters: { onTextContentChange: otcc2 }, typeaheadNavigationReturn, context: contextGNR, info: infoRowReturn, props: p32, hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic1, ...void3 }, ...void2 } = useGridNavigationSelectionRow(parameters);
+      const { linearNavigationReturn, managedChildrenParameters, pressParameters, rovingTabIndexChildReturn, rovingTabIndexReturn, singleSelectionChildReturn, multiSelectionChildReturn, selectionChildReturn, textContentParameters: { onTextContentChange: otcc2 }, typeaheadNavigationReturn, context: contextGNR, info: infoRowReturn, props: p32, hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic1, ...void3 }, ...void2 } = useGridNavigationSelectionRow(parameters);
       const { textContentReturn, ...void7 } = useTextContent({ refElementReturn, textContentParameters: { getText, onTextContentChange: useStableMergedCallback(otcc1, otcc2) } });
       const completeInfo = {
         getElement: refElementReturn.getElement,
@@ -6005,6 +6007,7 @@
         linearNavigationReturn,
         rovingTabIndexChildReturn,
         rovingTabIndexReturn,
+        selectionChildReturn,
         singleSelectionChildReturn,
         multiSelectionChildReturn,
         typeaheadNavigationReturn,
@@ -6094,7 +6097,7 @@
     return r1;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-use/use-list-navigation-complete.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/component-use/use-list-navigation-complete.js
   function useCompleteListNavigation({
     linearNavigationParameters,
     typeaheadNavigationParameters,
@@ -6215,7 +6218,7 @@
   }) {
     return useMonitoring(function useCompleteListNavigationChild2() {
       const { refElementReturn, propsStable, ...void6 } = useRefElement({ refElementParameters });
-      const { hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic1, ...void3 }, pressParameters: { excludeSpace, onPressSync, ...void2 }, textContentParameters: { onTextContentChange: otcc2, ...void8 }, singleSelectionChildReturn, multiSelectionChildReturn, info: infoFromListNav, rovingTabIndexChildReturn, propsChild, propsTabbable, ...void4 } = useListNavigationSelectionChild({
+      const { hasCurrentFocusParameters: { onCurrentFocusedInnerChanged: ocfic1, ...void3 }, pressParameters: { excludeSpace, ...void2 }, selectionChildReturn, textContentParameters: { onTextContentChange: otcc2, ...void8 }, singleSelectionChildReturn, multiSelectionChildReturn, info: infoFromListNav, rovingTabIndexChildReturn, propsChild, propsTabbable, ...void4 } = useListNavigationSelectionChild({
         info: { index, untabbable },
         context: { rovingTabIndexContext, singleSelectionContext, multiSelectionContext, typeaheadNavigationContext },
         singleSelectionChildParameters,
@@ -6255,9 +6258,9 @@
         propsChild: props,
         propsTabbable,
         pressParameters: {
-          onPressSync,
           excludeSpace
         },
+        selectionChildReturn,
         textContentReturn,
         refElementReturn,
         singleSelectionChildReturn,
@@ -6310,7 +6313,7 @@
     return { ...ret2, multiSelectionChildReturn };
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-use/use-modal.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/component-use/use-modal.js
   function useModal({ dismissParameters: { dismissActive, onDismiss, ...void2 }, escapeDismissParameters: { dismissEscapeActive, onDismissEscape, parentDepth, ...void3 }, focusTrapParameters: { trapActive, ...focusTrapParameters }, activeElementParameters: { getDocument: getDocument2, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, ...void4 }, backdropDismissParameters: { dismissBackdropActive, onDismissBackdrop, ...void5 }, lostFocusDismissParameters: { dismissLostFocusActive, onDismissLostFocus, ...void6 }, refElementParameters: { onElementChange, onMount, onUnmount, ...void7 }, modalParameters: { active: modalActive, ...void8 }, ...void1 }) {
     return useMonitoring(function useModal2() {
       const { refElementPopupReturn, refElementSourceReturn, propsStablePopup, propsStableSource } = useDismiss({
@@ -6446,7 +6449,7 @@
     };
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-async.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-async.js
   function identityCapture(...t4) {
     return t4;
   }
@@ -6523,7 +6526,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-async-handler.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-async-handler.js
   function useAsyncHandler({ asyncHandler, capture: originalCapture, ...restAsyncOptions }) {
     return useMonitoring(function useAsyncHandler2() {
       const [currentCapture, setCurrentCapture, getCurrentCapture] = useState(void 0);
@@ -6543,7 +6546,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-use/use-press.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/component-use/use-press.js
   function pressLog(...args) {
     if (globalThis.__log_press_events)
       console.log(...args);
@@ -6822,7 +6825,7 @@
   var pulse = "vibrate" in navigator && navigator.vibrate instanceof Function ? () => navigator.vibrate(10) : () => {
   };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-use/use-random-id.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/component-use/use-random-id.js
   function useRandomId({ randomIdParameters: { prefix, otherReferencerProp } }) {
     return useMonitoring(function useRandomId2() {
       const id = prefix + g2();
@@ -6840,7 +6843,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/component-use/use-random-dual-ids.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/component-use/use-random-dual-ids.js
   function useRandomDualIds({ randomIdInputParameters, randomIdLabelParameters }) {
     return useMonitoring(function useRandomDualIds2() {
       const { randomIdReturn: randomIdInputReturn, propsReferencer: propsLabelAsReferencer, propsSource: propsInputAsSource } = useRandomId({ randomIdParameters: randomIdInputParameters });
@@ -6854,7 +6857,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-imperative-props.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-imperative-props.js
   var templateElement = null;
   function htmlToElement(parent, html) {
     const document2 = parent.ownerDocument;
@@ -6974,7 +6977,7 @@
     return _(Tag, useMergedProps(propsStable, imperativeProps, props, { ref }));
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/util/random-id.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/util/random-id.js
   var Table = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-";
   function base64(value) {
     return Table[value];
@@ -6989,7 +6992,7 @@
     return `${prefix ?? "id-"}${random64Bits().map((n2) => base64(n2)).join("")}`;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-portal-children.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-portal-children.js
   function usePortalChildren({ target }) {
     return useMonitoring(function usePortalChildren2() {
       const [pushChild, setPushChild] = useState(null);
@@ -7061,7 +7064,7 @@
     return _(k, {}, children);
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/observers/use-logical-direction.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/observers/use-logical-direction.js
   var HorizontalTbLtr = {
     inlineDirection: "ltr",
     blockDirection: "ttb",
@@ -7111,7 +7114,7 @@
     inlineDirection: "ttb"
   };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-persistent-state.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-persistent-state.js
   var defaultStorage = typeof window === "undefined" ? void 0 : window.localStorage;
   // @__NO_SIDE_EFFECTS__
   function getFromLocalStorage(key, converter = JSON.parse, storage = defaultStorage) {
@@ -7191,7 +7194,7 @@
     return l.vnode && l.vnode(l4), l4;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@edc5382f398edf3a94dccba2aaf653e6208d2c12_preact@10.2_7aoxcoitptounbkdy4itvu3kcy/node_modules/preact-prop-helpers/dist/preact/timing/use-animation-frame.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@589fc1e5c28d59cbc9c0290b91e175cf608fc215_preact@10.2_uwo4xdkdyjtgamjpox3j4xmxxm/node_modules/preact-prop-helpers/dist/preact/timing/use-animation-frame.js
   var SharedAnimationFrameContext = K(null);
 
   // ../dist/preact/props.js
@@ -7648,7 +7651,7 @@
   }
   function useCheckboxGroupParent({ context: { checkboxGroupParentContext: { setControlsSetterOnParentCheckbox, setSetParentCheckboxChecked, getPercentChecked, getTotalChecked, getTotalChildren, onCheckboxGroupParentInput }, ...context }, info, hasCurrentFocusParameters, refElementParameters, textContentParameters, multiSelectionChildParameters, singleSelectionChildParameters, ...void1 }) {
     return useMonitoring(function useCheckboxGroupParent2() {
-      const { hasCurrentFocusReturn, managedChildReturn, pressParameters, textContentReturn, refElementReturn, propsChild, propsTabbable, rovingTabIndexChildReturn, singleSelectionChildReturn, multiSelectionChildReturn, ...void2 } = useCompleteListNavigationChild({
+      const { hasCurrentFocusReturn, managedChildReturn, pressParameters, textContentReturn, refElementReturn, propsChild, propsTabbable, rovingTabIndexChildReturn, singleSelectionChildReturn, multiSelectionChildReturn, selectionChildReturn, ...void2 } = useCompleteListNavigationChild({
         context,
         hasCurrentFocusParameters,
         refElementParameters,
@@ -7688,6 +7691,7 @@
         rovingTabIndexChildReturn,
         singleSelectionChildReturn,
         pressParameters,
+        selectionChildReturn,
         multiSelectionChildReturn
       };
     });
@@ -7720,7 +7724,7 @@
           return () => setTotalChecked((c4) => (c4 ?? 0) - 1, void 0);
         }
       }, [checked]);
-      const { hasCurrentFocusReturn, managedChildReturn, refElementReturn, textContentReturn, propsChild, propsTabbable, singleSelectionChildReturn: _singleSelectionChildReturn, rovingTabIndexChildReturn, pressParameters, multiSelectionChildReturn, ...void2 } = useCompleteListNavigationChild({
+      const { hasCurrentFocusReturn, managedChildReturn, refElementReturn, textContentReturn, propsChild, propsTabbable, singleSelectionChildReturn: _singleSelectionChildReturn, rovingTabIndexChildReturn, pressParameters, multiSelectionChildReturn, selectionChildReturn, ...void2 } = useCompleteListNavigationChild({
         info: {
           checkboxChildType: "child",
           getLastUserChecked,
@@ -7754,6 +7758,7 @@
         propsChild,
         propsTabbable,
         pressParameters,
+        selectionChildReturn,
         rovingTabIndexChildReturn,
         multiSelectionChildReturn
       };
@@ -8123,7 +8128,7 @@
   }
   function useListboxItem({ context, listboxParameters, pressParameters: { allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, ...void1 }, singleSelectionChildParameters: { singleSelectionDisabled }, ...restParams }) {
     return useMonitoring(function useListboxItem2() {
-      const { propsChild, propsTabbable, refElementReturn, pressParameters: { onPressSync, excludeSpace, ...void2 }, ...restRet } = useCompleteListNavigationChildDeclarative({
+      const { propsChild, propsTabbable, refElementReturn, pressParameters: { excludeSpace, ...void2 }, selectionChildReturn: { firePressSelectionEvent }, ...restRet } = useCompleteListNavigationChildDeclarative({
         context,
         singleSelectionChildParameters: { singleSelectionDisabled },
         ...restParams
@@ -8136,7 +8141,7 @@
       const { pressReturn, props: propsPress } = usePress({
         refElementReturn,
         pressParameters: {
-          onPressSync,
+          onPressSync: firePressSelectionEvent,
           focusSelf: restParams.info.focusSelf,
           excludeSpace,
           allowRepeatPresses,
@@ -8265,11 +8270,19 @@
       };
     });
   }
-  function useToolbarChild({ context, info, toolbarChildParameters: { disabledProp }, ...args }) {
+  function useToolbarChild({ context, info, toolbarChildParameters: { disabledProp }, multiSelectionChildDeclarativeParameters, multiSelectionChildParameters: { multiSelectionDisabled }, ...args }) {
     return useMonitoring(function useToolbarChild2() {
-      const { propsChild, propsTabbable, ...listNavReturn } = useCompleteListNavigationChild({ info, context, ...args });
+      const { propsChild, propsTabbable, ...listNavReturn } = useCompleteListNavigationChildDeclarative({
+        info,
+        context,
+        multiSelectionChildDeclarativeParameters,
+        multiSelectionChildParameters: {
+          multiSelectionDisabled
+        },
+        ...args
+      });
       return {
-        propsChild: useMergedProps(propsChild, { [disabledProp]: args.singleSelectionChildParameters.singleSelectionDisabled || args.multiSelectionChildParameters.multiSelectionDisabled ? true : void 0 }),
+        propsChild: useMergedProps(propsChild, { [disabledProp]: args.singleSelectionChildParameters.singleSelectionDisabled || multiSelectionDisabled ? true : void 0 }),
         propsTabbable,
         ...listNavReturn
       };
@@ -8290,7 +8303,7 @@
     return useMonitoring(function useMenubarChild2() {
       const focusSelf = useCallback((e3) => focus2(e3), []);
       assertEmptyObject(void1);
-      const { propsChild, propsTabbable, pressParameters: { onPressSync, excludeSpace }, ...restRet } = useToolbarChild({
+      const { propsChild, propsTabbable, pressParameters: { excludeSpace }, selectionChildReturn: { firePressSelectionEvent }, ...restRet } = useToolbarChild({
         ...restParams,
         toolbarChildParameters: { disabledProp: "aria-disabled" }
       });
@@ -8299,7 +8312,7 @@
           focusSelf,
           excludeSpace,
           onPressSync: useStableCallback((e3) => {
-            onPressSync?.(e3);
+            firePressSelectionEvent(e3);
             opu?.(e3);
           }),
           allowRepeatPresses: false,
@@ -8599,7 +8612,7 @@
       const index = info.index;
       const { name, indexToName, nameToIndex } = context.radioContext;
       const { tagInput, labelPosition } = labelParameters;
-      const { pressParameters: { excludeSpace, onPressSync }, singleSelectionChildReturn, propsTabbable, propsChild: listNavigationSingleSelectionChildProps, ...listNavRet } = useCompleteListNavigationChildDeclarative({
+      const { pressParameters: { excludeSpace }, selectionChildReturn: { firePressSelectionEvent }, singleSelectionChildReturn, propsTabbable, propsChild: listNavigationSingleSelectionChildProps, ...listNavRet } = useCompleteListNavigationChildDeclarative({
         info: {
           focusSelf: useStableCallback((_e) => {
             return checkboxLikeRet.checkboxLikeReturn.focusSelf();
@@ -8627,7 +8640,7 @@
           disabled,
           role: "radio"
         },
-        pressParameters: { excludeSpace, longPressThreshold, onPressSync },
+        pressParameters: { excludeSpace, longPressThreshold, onPressSync: firePressSelectionEvent },
         labelParameters,
         randomIdInputParameters: { prefix: Prefices.radio },
         randomIdLabelParameters: { prefix: Prefices.radioLabel },
@@ -9001,7 +9014,7 @@
   }
   function useTab({ info: { focusSelf: focusSelfParent, index, untabbable, ...info }, textContentParameters, pressParameters: { focusSelf: focusSelfChild, longPressThreshold, onPressingChange, ...void2 }, context, hasCurrentFocusParameters, refElementParameters, singleSelectionChildParameters, ...void3 }) {
     return useMonitoring(function useTab2() {
-      const { propsChild: listNavigationSingleSelectionChildProps, propsTabbable, pressParameters: { onPressSync, excludeSpace, ...void1 }, refElementReturn, ...listNavRet2 } = useCompleteListNavigationChild({
+      const { propsChild: listNavigationSingleSelectionChildProps, propsTabbable, pressParameters: { excludeSpace, ...void1 }, selectionChildReturn: { firePressSelectionEvent }, refElementReturn, ...listNavRet2 } = useCompleteListNavigationChild({
         context,
         info: { index, focusSelf: focusSelfParent, untabbable, ...info },
         textContentParameters,
@@ -9012,7 +9025,7 @@
       });
       const { pressReturn, props: propsPressStable } = usePress({
         pressParameters: {
-          onPressSync,
+          onPressSync: firePressSelectionEvent,
           focusSelf: focusSelfChild,
           allowRepeatPresses: false,
           excludeEnter: returnFalse,
@@ -10099,7 +10112,7 @@
       }
     })) });
   });
-  var MenuItem = /* @__PURE__ */ M2(function MenuItem2({ index, untabbable, onPress, getText, role, focusSelf, onPressingChange, render, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, onTextContentChange, ...void1 }) {
+  var MenuItem = /* @__PURE__ */ M2(function MenuItem2({ index, untabbable, onPress, getText, role, focusSelf, onPressingChange, render, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, info: uinfo, multiSelectionDisabled, singleSelectionDisabled, onTextContentChange, multiSelected, onMultiSelectedChange, ...void1 }) {
     const context = useContextWithWarning(MenuItemContext, "menu");
     const defaultFocusSelf = useCallback((e3) => focus2(e3), []);
     assertEmptyObject(void1);
@@ -10125,7 +10138,8 @@
       hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged },
       refElementParameters: { onElementChange, onMount, onUnmount },
       singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false },
-      multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false, initiallyMultiSelected: initiallyMultiSelected || false, onMultiSelectChange }
+      multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false },
+      multiSelectionChildDeclarativeParameters: { multiSelected: multiSelected ?? null, onMultiSelectedChange }
     }));
   });
 
@@ -10539,7 +10553,7 @@
     });
     return useComponent(imperativeHandle, render, ToolbarContext, r3);
   });
-  var ToolbarChild = /* @__PURE__ */ M2(function ToolbarChild2({ index, render, focusSelf, getText, disabledProp, untabbable, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, imperativeHandle, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, onTextContentChange, ...void1 }) {
+  var ToolbarChild = /* @__PURE__ */ M2(function ToolbarChild2({ index, render, focusSelf, getText, disabledProp, untabbable, onElementChange, onMount, onUnmount, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, imperativeHandle, info: uinfo, multiSelectionDisabled, singleSelectionDisabled, onTextContentChange, multiSelected, onMultiSelectedChange, ...void1 }) {
     const context = useContextWithWarning(ToolbarContext, "toolbar");
     const focusSelfDefault = useCallback((e3) => {
       focus2(e3);
@@ -10559,7 +10573,8 @@
       hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged },
       refElementParameters: { onElementChange, onMount, onUnmount },
       singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false },
-      multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false, initiallyMultiSelected: initiallyMultiSelected || false, onMultiSelectChange }
+      multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false },
+      multiSelectionChildDeclarativeParameters: { multiSelected: multiSelected ?? null, onMultiSelectedChange }
     }));
   });
 

@@ -143,7 +143,7 @@ export function useCheckboxGroup({ linearNavigationParameters, rovingTabIndexPar
  */
 export function useCheckboxGroupParent({ context: { checkboxGroupParentContext: { setControlsSetterOnParentCheckbox, setSetParentCheckboxChecked, getPercentChecked, getTotalChecked, getTotalChildren, onCheckboxGroupParentInput }, ...context }, info, hasCurrentFocusParameters, refElementParameters, textContentParameters, multiSelectionChildParameters, singleSelectionChildParameters, ...void1 }) {
     return useMonitoring(function useCheckboxGroupParent() {
-        const { hasCurrentFocusReturn, managedChildReturn, pressParameters, textContentReturn, refElementReturn, propsChild, propsTabbable, rovingTabIndexChildReturn, singleSelectionChildReturn, multiSelectionChildReturn, ...void2 } = useCompleteListNavigationChild({
+        const { hasCurrentFocusReturn, managedChildReturn, pressParameters, textContentReturn, refElementReturn, propsChild, propsTabbable, rovingTabIndexChildReturn, singleSelectionChildReturn, multiSelectionChildReturn, selectionChildReturn, ...void2 } = useCompleteListNavigationChild({
             context,
             hasCurrentFocusParameters,
             refElementParameters,
@@ -181,6 +181,7 @@ export function useCheckboxGroupParent({ context: { checkboxGroupParentContext: 
             rovingTabIndexChildReturn,
             singleSelectionChildReturn,
             pressParameters,
+            selectionChildReturn,
             multiSelectionChildReturn
         };
     });
@@ -226,7 +227,7 @@ export function useCheckboxGroupChild({ checkboxGroupChildParameters, context, i
                 return () => setTotalChecked(c => ((c ?? 0) - 1), undefined);
             }
         }, [checked]);
-        const { hasCurrentFocusReturn, managedChildReturn, refElementReturn, textContentReturn, propsChild, propsTabbable, singleSelectionChildReturn: _singleSelectionChildReturn, rovingTabIndexChildReturn, pressParameters, multiSelectionChildReturn, ...void2 } = useCompleteListNavigationChild({
+        const { hasCurrentFocusReturn, managedChildReturn, refElementReturn, textContentReturn, propsChild, propsTabbable, singleSelectionChildReturn: _singleSelectionChildReturn, rovingTabIndexChildReturn, pressParameters, multiSelectionChildReturn, selectionChildReturn, ...void2 } = useCompleteListNavigationChild({
             info: {
                 checkboxChildType: "child",
                 getLastUserChecked,
@@ -260,6 +261,7 @@ export function useCheckboxGroupChild({ checkboxGroupChildParameters, context, i
             propsChild,
             propsTabbable,
             pressParameters,
+            selectionChildReturn,
             rovingTabIndexChildReturn,
             multiSelectionChildReturn,
         };

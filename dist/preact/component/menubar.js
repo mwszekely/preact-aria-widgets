@@ -57,7 +57,7 @@ export const Menubar = /* @__PURE__ */ memo((function Menubar({ render, collator
     useImperativeHandle(imperativeHandle, () => info);
     return (_jsx(MenubarItemContext.Provider, { value: info.context, children: render(info) }));
 }));
-export const MenubarItem = /* @__PURE__ */ memo((function MenubarItem({ index, render, focusSelf, untabbable, getText, onPress, onPressingChange, role, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, info: uinfo, initiallyMultiSelected, multiSelectionDisabled, onMultiSelectChange, singleSelectionDisabled, onTextContentChange, ...void1 }) {
+export const MenubarItem = /* @__PURE__ */ memo((function MenubarItem({ index, render, focusSelf, untabbable, getText, onPress, onPressingChange, role, imperativeHandle, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onElementChange, onMount, onUnmount, info: uinfo, multiSelectionDisabled, singleSelectionDisabled, onTextContentChange, multiSelected, onMultiSelectedChange, ...void1 }) {
     const defaultFocusSelf = useCallback((e) => focus(e), []);
     assertEmptyObject(void1);
     return useComponent(imperativeHandle, render, null, useMenubarChild({
@@ -69,7 +69,8 @@ export const MenubarItem = /* @__PURE__ */ memo((function MenubarItem({ index, r
         hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged },
         refElementParameters: { onElementChange, onMount, onUnmount },
         singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false },
-        multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false, initiallyMultiSelected: initiallyMultiSelected || false, onMultiSelectChange }
+        multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false },
+        multiSelectionChildDeclarativeParameters: { multiSelected: multiSelected ?? null, onMultiSelectedChange }
     }));
 }));
 //# sourceMappingURL=menubar.js.map

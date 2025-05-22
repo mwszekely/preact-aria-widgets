@@ -27,7 +27,7 @@ export function useMenubarChild({ menuItemParameters: { onPress: opu, role }, pr
     return useMonitoring(function useMenubarChild() {
         const focusSelf = useCallback((e) => focus(e), []);
         assertEmptyObject(void1);
-        const { propsChild, propsTabbable, pressParameters: { onPressSync, excludeSpace }, ...restRet } = useToolbarChild({
+        const { propsChild, propsTabbable, pressParameters: { excludeSpace }, selectionChildReturn: { firePressSelectionEvent }, ...restRet } = useToolbarChild({
             ...restParams,
             toolbarChildParameters: { disabledProp: "aria-disabled" }
         });
@@ -36,7 +36,7 @@ export function useMenubarChild({ menuItemParameters: { onPress: opu, role }, pr
                 focusSelf,
                 excludeSpace,
                 onPressSync: useStableCallback((e) => {
-                    onPressSync?.(e);
+                    firePressSelectionEvent(e);
                     opu?.(e);
                 }),
                 allowRepeatPresses: false,

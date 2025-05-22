@@ -1,5 +1,5 @@
 import { assertEmptyObject, createContext, focus, identity, memo, useCallback, useEnsureStability, UseProcessedChildrenContext } from "preact-prop-helpers";
-import { Get11, Get7, OmitStrong, useContextWithWarning } from "../props.js";
+import { Get11, Get8, OmitStrong, useContextWithWarning } from "../props.js";
 import { useToolbar, useToolbarChild, UseToolbarChildParameters, UseToolbarChildReturnType, UseToolbarContext, UseToolbarParameters, UseToolbarReturnType, UseToolbarSubInfo } from "../use-toolbar.js";
 import { GenericComponentProps, useComponent, useDefault } from "./util.js";
 
@@ -11,7 +11,7 @@ export type ToolbarProps<ToolbarContainerElement extends Element, ToolbarChildEl
 
 export type ToolbarChildProps<ToolbarChildElement extends Element, M extends UseToolbarSubInfo<ToolbarChildElement>> = GenericComponentProps<
     UseToolbarChildReturnType<ToolbarChildElement, UseToolbarSubInfo<ToolbarChildElement>>,
-    Get7<UseToolbarChildParameters<ToolbarChildElement, UseToolbarSubInfo<ToolbarChildElement>>, "textContentParameters", "toolbarChildParameters", "info", "hasCurrentFocusParameters", "refElementParameters", "singleSelectionChildParameters", "multiSelectionChildParameters">,
+    Get8<UseToolbarChildParameters<ToolbarChildElement, UseToolbarSubInfo<ToolbarChildElement>>, "textContentParameters", "toolbarChildParameters", "info", "hasCurrentFocusParameters", "refElementParameters", "singleSelectionChildParameters", "multiSelectionChildDeclarativeParameters", "multiSelectionChildParameters">,
     "disabledProp" | "index"
 > & { info?: OmitStrong<M, keyof UseToolbarSubInfo<ToolbarChildElement>> };
 
@@ -111,11 +111,11 @@ export const ToolbarChild = /* @__PURE__ */ memo((function ToolbarChild<ToolbarC
     onCurrentFocusedInnerChanged,
     imperativeHandle,
     info: uinfo,
-    initiallyMultiSelected,
     multiSelectionDisabled,
-    onMultiSelectChange,
     singleSelectionDisabled,
     onTextContentChange,
+    multiSelected,
+    onMultiSelectedChange,
     ...void1
 }: ToolbarChildProps<ToolbarChildElement, UseToolbarSubInfo<ToolbarChildElement>>) {
     const context = useContextWithWarning(ToolbarContext, "toolbar") as UseToolbarContext<ToolbarChildElement, UseToolbarSubInfo<ToolbarChildElement>>;
@@ -141,6 +141,8 @@ export const ToolbarChild = /* @__PURE__ */ memo((function ToolbarChild<ToolbarC
             hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged },
             refElementParameters: { onElementChange, onMount, onUnmount },
             singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false },
-            multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false, initiallyMultiSelected: initiallyMultiSelected || false, onMultiSelectChange }
+            multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false },
+            multiSelectionChildDeclarativeParameters: { multiSelected: multiSelected ?? null, onMultiSelectedChange },
+
         }));
 }));

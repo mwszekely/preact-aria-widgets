@@ -58,7 +58,7 @@ export interface UseListboxReturnType<ListElement extends Element, ListItemEleme
     propsListboxLabel: ElementProps<LabelElement>;
     context: UseListboxContext<ListItemElement, M>;
 }
-export interface UseListboxItemReturnType<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationChildDeclarativeReturnType<ListItemElement, M>, "propsChild" | "propsTabbable" | "pressParameters">, UsePressReturnType<ListItemElement> { }
+export interface UseListboxItemReturnType<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationChildDeclarativeReturnType<ListItemElement, M>, "propsChild" | "propsTabbable" | "pressParameters" | "selectionChildReturn">, UsePressReturnType<ListItemElement> { }
 
 /* eslint-disable @typescript-eslint/no-empty-interface */
 export interface UseListboxItemParametersSelf {
@@ -196,7 +196,8 @@ export function useListboxItem<ListItemElement extends Element, M extends Listbo
             propsChild,
             propsTabbable,
             refElementReturn,
-            pressParameters: { onPressSync, excludeSpace, ...void2 },
+            pressParameters: { excludeSpace, ...void2 },
+            selectionChildReturn: { firePressSelectionEvent },
             ...restRet
         } = useCompleteListNavigationChildDeclarative<ListItemElement, M>({
             context,
@@ -214,7 +215,7 @@ export function useListboxItem<ListItemElement extends Element, M extends Listbo
         const { pressReturn, props: propsPress } = usePress<ListItemElement>({
             refElementReturn,
             pressParameters: {
-                onPressSync,
+                onPressSync: firePressSelectionEvent,
                 focusSelf: restParams.info.focusSelf,
                 excludeSpace,
                 allowRepeatPresses,

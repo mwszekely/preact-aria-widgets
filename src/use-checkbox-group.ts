@@ -362,6 +362,7 @@ export function useCheckboxGroupParent<TCE extends Element>({
             rovingTabIndexChildReturn,
             singleSelectionChildReturn,
             multiSelectionChildReturn,
+            selectionChildReturn,
             ...void2
         } = useCompleteListNavigationChild<TCE, M>({
             context,
@@ -406,6 +407,7 @@ export function useCheckboxGroupParent<TCE extends Element>({
             rovingTabIndexChildReturn,
             singleSelectionChildReturn,
             pressParameters,
+            selectionChildReturn,
             multiSelectionChildReturn
         }
     });
@@ -481,6 +483,7 @@ export function useCheckboxGroupChild<TCE extends Element>({
             rovingTabIndexChildReturn,
             pressParameters,
             multiSelectionChildReturn,
+            selectionChildReturn,
             ...void2
         } = useCompleteListNavigationChild<TCE, CheckboxGroupInfo<TCE>>({
             info: {
@@ -518,6 +521,7 @@ export function useCheckboxGroupChild<TCE extends Element>({
             propsChild,
             propsTabbable,
             pressParameters,
+            selectionChildReturn,
             rovingTabIndexChildReturn,
             multiSelectionChildReturn,
         }

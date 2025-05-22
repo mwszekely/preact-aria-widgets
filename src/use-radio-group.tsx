@@ -196,7 +196,7 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
 });
 }
 
-export interface UseRadioReturnType<LP extends LabelPosition, V extends string | number, I extends Element, IL extends Element, M extends RadioSubInfo<FocusableLabelElement<LP, I, IL>, V>> extends OmitStrong<UseCompleteListNavigationChildDeclarativeReturnType<FocusableLabelElement<LP, I, IL>, M>, "propsChild" | "propsTabbable" | "pressParameters">, UseCheckboxLikeReturnType<I, IL> {
+export interface UseRadioReturnType<LP extends LabelPosition, V extends string | number, I extends Element, IL extends Element, M extends RadioSubInfo<FocusableLabelElement<LP, I, IL>, V>> extends OmitStrong<UseCompleteListNavigationChildDeclarativeReturnType<FocusableLabelElement<LP, I, IL>, M>, "propsChild" | "propsTabbable" | "pressParameters" | "selectionChildReturn">, UseCheckboxLikeReturnType<I, IL> {
     propsInput: ElementProps<I>;
     propsLabel: ElementProps<IL>;
 }
@@ -231,7 +231,8 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
 
 
         const {
-            pressParameters: { excludeSpace, onPressSync },
+            pressParameters: { excludeSpace },
+            selectionChildReturn: { firePressSelectionEvent },
             singleSelectionChildReturn,
             propsTabbable,
             propsChild: listNavigationSingleSelectionChildProps,
@@ -271,7 +272,7 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
                 disabled,
                 role: "radio"
             },
-            pressParameters: { excludeSpace, longPressThreshold, onPressSync },
+            pressParameters: { excludeSpace, longPressThreshold, onPressSync: firePressSelectionEvent },
             labelParameters,
             randomIdInputParameters: { prefix: Prefices.radio },
             randomIdLabelParameters: { prefix: Prefices.radioLabel },

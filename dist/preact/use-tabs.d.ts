@@ -35,7 +35,7 @@ interface TC {
     getPanelId: (index: number) => string;
     getTabId: (index: number) => string;
 }
-export interface UseTabReturnType<TabElement extends Element, M extends TabInfo<TabElement>> extends OmitStrong<UseCompleteListNavigationChildReturnType<TabElement, M>, "pressParameters" | "propsChild" | "propsTabbable">, UsePressReturnType<TabElement> {
+export interface UseTabReturnType<TabElement extends Element, M extends TabInfo<TabElement>> extends OmitStrong<UseCompleteListNavigationChildReturnType<TabElement, M>, "pressParameters" | "propsChild" | "propsTabbable" | "selectionChildReturn">, UsePressReturnType<TabElement> {
     props: ElementProps<TabElement>;
 }
 export interface UseTabLabelParameters {

@@ -102,7 +102,7 @@ export function useTabs({ labelParameters, linearNavigationParameters, singleSel
  */
 export function useTab({ info: { focusSelf: focusSelfParent, index, untabbable, ...info }, textContentParameters, pressParameters: { focusSelf: focusSelfChild, longPressThreshold, onPressingChange, ...void2 }, context, hasCurrentFocusParameters, refElementParameters, singleSelectionChildParameters, ...void3 }) {
     return useMonitoring(function useTab() {
-        const { propsChild: listNavigationSingleSelectionChildProps, propsTabbable, pressParameters: { onPressSync, excludeSpace, ...void1 }, refElementReturn, ...listNavRet2 } = useCompleteListNavigationChild({
+        const { propsChild: listNavigationSingleSelectionChildProps, propsTabbable, pressParameters: { excludeSpace, ...void1 }, selectionChildReturn: { firePressSelectionEvent }, refElementReturn, ...listNavRet2 } = useCompleteListNavigationChild({
             context,
             info: { index, focusSelf: focusSelfParent, untabbable, ...info },
             textContentParameters,
@@ -113,7 +113,7 @@ export function useTab({ info: { focusSelf: focusSelfParent, index, untabbable, 
         });
         const { pressReturn, props: propsPressStable } = usePress({
             pressParameters: {
-                onPressSync,
+                onPressSync: firePressSelectionEvent,
                 focusSelf: focusSelfChild,
                 allowRepeatPresses: false,
                 excludeEnter: returnFalse,

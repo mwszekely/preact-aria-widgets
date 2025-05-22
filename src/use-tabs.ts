@@ -89,7 +89,7 @@ interface TC {
     getTabId: (index: number) => string;
 }
 
-export interface UseTabReturnType<TabElement extends Element, M extends TabInfo<TabElement>> extends OmitStrong<UseCompleteListNavigationChildReturnType<TabElement, M>, "pressParameters" | "propsChild" | "propsTabbable">, UsePressReturnType<TabElement> {
+export interface UseTabReturnType<TabElement extends Element, M extends TabInfo<TabElement>> extends OmitStrong<UseCompleteListNavigationChildReturnType<TabElement, M>, "pressParameters" | "propsChild" | "propsTabbable" | "selectionChildReturn">, UsePressReturnType<TabElement> {
     props: ElementProps<TabElement>;
 }
 
@@ -275,7 +275,7 @@ export function useTab<TabElement extends Element>({
     ...void3
 }: UseTabParameters<TabElement, TabInfo<TabElement>>): UseTabReturnType<TabElement, TabInfo<TabElement>> {
     return useMonitoring(function useTab(): UseTabReturnType<TabElement, TabInfo<TabElement>> {
-        const { propsChild: listNavigationSingleSelectionChildProps, propsTabbable, pressParameters: { onPressSync, excludeSpace, ...void1 }, refElementReturn, ...listNavRet2 } = useCompleteListNavigationChild({
+        const { propsChild: listNavigationSingleSelectionChildProps, propsTabbable, pressParameters: { excludeSpace, ...void1 }, selectionChildReturn: { firePressSelectionEvent }, refElementReturn, ...listNavRet2 } = useCompleteListNavigationChild({
             context,
             info: { index, focusSelf: focusSelfParent, untabbable, ...info },
             textContentParameters,
@@ -287,7 +287,7 @@ export function useTab<TabElement extends Element>({
 
         const { pressReturn, props: propsPressStable } = usePress<TabElement>({
             pressParameters: {
-                onPressSync,
+                onPressSync: firePressSelectionEvent,
                 focusSelf: focusSelfChild,
                 allowRepeatPresses: false,
                 excludeEnter: returnFalse,

@@ -82,7 +82,7 @@ export function useRadio({ radioParameters: { value, ...void5 }, checkboxLikePar
         const index = info.index;
         const { name, indexToName, nameToIndex } = context.radioContext;
         const { tagInput, labelPosition } = labelParameters;
-        const { pressParameters: { excludeSpace, onPressSync }, singleSelectionChildReturn, propsTabbable, propsChild: listNavigationSingleSelectionChildProps, ...listNavRet } = useCompleteListNavigationChildDeclarative({
+        const { pressParameters: { excludeSpace }, selectionChildReturn: { firePressSelectionEvent }, singleSelectionChildReturn, propsTabbable, propsChild: listNavigationSingleSelectionChildProps, ...listNavRet } = useCompleteListNavigationChildDeclarative({
             info: {
                 focusSelf: useStableCallback((_e) => { return checkboxLikeRet.checkboxLikeReturn.focusSelf(); }),
                 ...info
@@ -108,7 +108,7 @@ export function useRadio({ radioParameters: { value, ...void5 }, checkboxLikePar
                 disabled,
                 role: "radio"
             },
-            pressParameters: { excludeSpace, longPressThreshold, onPressSync },
+            pressParameters: { excludeSpace, longPressThreshold, onPressSync: firePressSelectionEvent },
             labelParameters,
             randomIdInputParameters: { prefix: Prefices.radio },
             randomIdLabelParameters: { prefix: Prefices.radioLabel },

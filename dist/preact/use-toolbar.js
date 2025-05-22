@@ -1,4 +1,4 @@
-import { focus, useCompleteListNavigationChild, useCompleteListNavigationDeclarative, useMemoObject, useMergedProps, useMonitoring } from "preact-prop-helpers";
+import { focus, useCompleteListNavigationChildDeclarative, useCompleteListNavigationDeclarative, useMemoObject, useMergedProps, useMonitoring } from "preact-prop-helpers";
 import { Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
 /**
@@ -51,11 +51,19 @@ export function useToolbar({ linearNavigationParameters, toolbarParameters: { or
 /**
  * @compositeParams
  */
-export function useToolbarChild({ context, info, toolbarChildParameters: { disabledProp }, ...args }) {
+export function useToolbarChild({ context, info, toolbarChildParameters: { disabledProp }, multiSelectionChildDeclarativeParameters, multiSelectionChildParameters: { multiSelectionDisabled }, ...args }) {
     return useMonitoring(function useToolbarChild() {
-        const { propsChild, propsTabbable, ...listNavReturn } = useCompleteListNavigationChild({ info, context, ...args });
+        const { propsChild, propsTabbable, ...listNavReturn } = useCompleteListNavigationChildDeclarative({
+            info,
+            context,
+            multiSelectionChildDeclarativeParameters,
+            multiSelectionChildParameters: {
+                multiSelectionDisabled,
+            },
+            ...args
+        });
         return {
-            propsChild: useMergedProps(propsChild, { [disabledProp]: (args.singleSelectionChildParameters.singleSelectionDisabled || args.multiSelectionChildParameters.multiSelectionDisabled) ? true : undefined }),
+            propsChild: useMergedProps(propsChild, { [disabledProp]: (args.singleSelectionChildParameters.singleSelectionDisabled || multiSelectionDisabled) ? true : undefined }),
             propsTabbable,
             ...listNavReturn
         };

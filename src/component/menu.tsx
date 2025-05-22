@@ -159,11 +159,11 @@ export const MenuItem = /* @__PURE__ */ memo((function MenuItem<MenuItemElement 
     onMount,
     onUnmount,
     info: uinfo,
-    initiallyMultiSelected,
     multiSelectionDisabled,
-    onMultiSelectChange,
     singleSelectionDisabled,
     onTextContentChange,
+    multiSelected,
+    onMultiSelectedChange,
     ...void1
 }: MenuItemProps<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>) {
     const context = useContextWithWarning(MenuItemContext, "menu");
@@ -197,7 +197,8 @@ export const MenuItem = /* @__PURE__ */ memo((function MenuItem<MenuItemElement 
                 hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged },
                 refElementParameters: { onElementChange, onMount, onUnmount },
                 singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false },
-                multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false, initiallyMultiSelected: initiallyMultiSelected || false, onMultiSelectChange }
+                multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false },
+                multiSelectionChildDeclarativeParameters: { multiSelected: multiSelected ?? null, onMultiSelectedChange }
             })
         )
     );

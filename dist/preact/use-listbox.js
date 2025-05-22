@@ -79,7 +79,7 @@ export const useListboxChildren = monitored(function useListboxChildren<E extend
  */
 export function useListboxItem({ context, listboxParameters, pressParameters: { allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, ...void1 }, singleSelectionChildParameters: { singleSelectionDisabled }, ...restParams }) {
     return useMonitoring(function useListboxItem() {
-        const { propsChild, propsTabbable, refElementReturn, pressParameters: { onPressSync, excludeSpace, ...void2 }, ...restRet } = useCompleteListNavigationChildDeclarative({
+        const { propsChild, propsTabbable, refElementReturn, pressParameters: { excludeSpace, ...void2 }, selectionChildReturn: { firePressSelectionEvent }, ...restRet } = useCompleteListNavigationChildDeclarative({
             context,
             singleSelectionChildParameters: { singleSelectionDisabled },
             ...restParams
@@ -92,7 +92,7 @@ export function useListboxItem({ context, listboxParameters, pressParameters: { 
         const { pressReturn, props: propsPress } = usePress({
             refElementReturn,
             pressParameters: {
-                onPressSync,
+                onPressSync: firePressSelectionEvent,
                 focusSelf: restParams.info.focusSelf,
                 excludeSpace,
                 allowRepeatPresses,

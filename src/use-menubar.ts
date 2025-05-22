@@ -42,7 +42,7 @@ export interface UseMenubarReturnType<MenuParentElement extends Element, MenuIte
     propsMenubar: ElementProps<MenuParentElement>;
     context: UseMenubarContext<MenuItemElement, M>;
 }
-export interface UseMenubarItemReturnType<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseToolbarChildReturnType<MenuItemElement, M>, "propsChild" | "propsTabbable" | "pressParameters">, UsePressReturnType<MenuItemElement> { }
+export interface UseMenubarItemReturnType<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseToolbarChildReturnType<MenuItemElement, M>, "propsChild" | "propsTabbable" | "pressParameters" | "selectionChildReturn">, UsePressReturnType<MenuItemElement> { }
 
 /**
  * Implements a [Menubar](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/) pattern.
@@ -84,7 +84,8 @@ export function useMenubarChild<MenuItemElement extends Element>({
         const {
             propsChild,
             propsTabbable,
-            pressParameters: { onPressSync, excludeSpace },
+            pressParameters: { excludeSpace },
+            selectionChildReturn: { firePressSelectionEvent },
             ...restRet
         } = useToolbarChild<MenuItemElement>({
             ...restParams,
@@ -96,7 +97,7 @@ export function useMenubarChild<MenuItemElement extends Element>({
                 focusSelf,
                 excludeSpace,
                 onPressSync: useStableCallback((e) => {
-                    onPressSync?.(e);
+                    firePressSelectionEvent(e);
                     opu?.(e);
                 }),
                 allowRepeatPresses: false,

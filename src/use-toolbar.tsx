@@ -5,14 +5,14 @@ import {
     MakeSingleSelectionDeclarativeParameters,
     MakeSingleSelectionDeclarativeReturnType,
     TargetedOmit,
+    UseCompleteListNavigationChildDeclarativeParameters,
+    UseCompleteListNavigationChildDeclarativeReturnType,
     UseCompleteListNavigationChildInfo,
-    UseCompleteListNavigationChildParameters,
-    UseCompleteListNavigationChildReturnType,
     UseCompleteListNavigationParameters,
     UseCompleteListNavigationReturnType,
     UseRandomIdReturnType,
     focus,
-    useCompleteListNavigationChild,
+    useCompleteListNavigationChildDeclarative,
     useCompleteListNavigationDeclarative,
     useMemoObject,
     useMergedProps,
@@ -76,11 +76,11 @@ export interface UseToolbarContext<ChildElement extends Element, M extends UseTo
 export interface UseToolbarChildParametersSelf { disabledProp: "disabled" | "aria-disabled"; }
 
 export interface UseToolbarChildParameters<E extends Element, M extends UseToolbarSubInfo<E>> extends
-    UseCompleteListNavigationChildParameters<E, M> {
+UseCompleteListNavigationChildDeclarativeParameters<E, M> {
     toolbarChildParameters: UseToolbarChildParametersSelf;
     context: UseToolbarContext<E, M>;
 }
-export interface UseToolbarChildReturnType<ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends UseCompleteListNavigationChildReturnType<ChildElement, M> { }
+export interface UseToolbarChildReturnType<ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends UseCompleteListNavigationChildDeclarativeReturnType<ChildElement, M> { }
 
 /**
  * Implements a [Toolbar](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/) pattern, which is a collection of widgets in an expected order with a label (visible or hidden) and with the usual keyboard navigation stuff.
@@ -151,16 +151,24 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
 /**
  * @compositeParams
  */
-export function useToolbarChild<ChildElement extends Element>({ context, info, toolbarChildParameters: { disabledProp }, ...args }: UseToolbarChildParameters<ChildElement, UseToolbarSubInfo<ChildElement>>): UseToolbarChildReturnType<ChildElement, UseToolbarSubInfo<ChildElement>> {
+export function useToolbarChild<ChildElement extends Element>({ context, info, toolbarChildParameters: { disabledProp }, multiSelectionChildDeclarativeParameters, multiSelectionChildParameters: { multiSelectionDisabled }, ...args }: UseToolbarChildParameters<ChildElement, UseToolbarSubInfo<ChildElement>>): UseToolbarChildReturnType<ChildElement, UseToolbarSubInfo<ChildElement>> {
     return useMonitoring(function useToolbarChild(): UseToolbarChildReturnType<ChildElement, UseToolbarSubInfo<ChildElement>> {
         const {
             propsChild,
             propsTabbable,
             ...listNavReturn
-        } = useCompleteListNavigationChild<ChildElement, UseToolbarSubInfo<ChildElement>>({ info, context, ...args });
-
+        } = useCompleteListNavigationChildDeclarative<ChildElement, UseToolbarSubInfo<ChildElement>>({ 
+            info, 
+            context, 
+            multiSelectionChildDeclarativeParameters,
+            multiSelectionChildParameters: { 
+                multiSelectionDisabled, 
+            },
+            ...args 
+        });
+        
         return {
-            propsChild: useMergedProps(propsChild, { [disabledProp as never]: (args.singleSelectionChildParameters.singleSelectionDisabled || args.multiSelectionChildParameters.multiSelectionDisabled) ? true : undefined }),
+            propsChild: useMergedProps(propsChild, { [disabledProp as never]: (args.singleSelectionChildParameters.singleSelectionDisabled || multiSelectionDisabled) ? true : undefined }),
             propsTabbable,
             ...listNavReturn
         }

@@ -1,5 +1,5 @@
 import { assertEmptyObject, createContext, focus, identity, memo, useCallback, useEnsureStability, useImperativeHandle } from "preact-prop-helpers";
-import { Get11, Get8, OmitStrong, useContextWithWarning } from "../props.js";
+import { Get11, Get9, OmitStrong, useContextWithWarning } from "../props.js";
 import { UseMenubarContext, UseMenubarItemParameters, UseMenubarItemReturnType, UseMenubarParameters, UseMenubarReturnType, UseMenubarSubInfo, useMenubar, useMenubarChild } from "../use-menubar.js";
 import { GenericComponentProps, useComponent, useDefault } from "./util.js";
 
@@ -12,7 +12,7 @@ export type MenubarProps<MenuParentElement extends Element, MenuItemElement exte
 
 export type MenubarItemProps<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> = GenericComponentProps<
     UseMenubarItemReturnType<MenuItemElement, M>,
-    Get8<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "menuItemParameters", "textContentParameters", "pressParameters", "info", "refElementParameters", "hasCurrentFocusParameters", "singleSelectionChildParameters", "multiSelectionChildParameters">,
+    Get9<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "menuItemParameters", "textContentParameters", "pressParameters", "info", "refElementParameters", "hasCurrentFocusParameters", "singleSelectionChildParameters", "multiSelectionChildParameters", "multiSelectionChildDeclarativeParameters">,
     "index"
 > & { info?: OmitStrong<M, keyof UseMenubarSubInfo<MenuItemElement>>; };
 
@@ -129,11 +129,11 @@ export const MenubarItem = /* @__PURE__ */ memo((function MenubarItem<MenuItemEl
     onMount,
     onUnmount,
     info: uinfo,
-    initiallyMultiSelected,
     multiSelectionDisabled,
-    onMultiSelectChange,
     singleSelectionDisabled,
     onTextContentChange,
+    multiSelected,
+    onMultiSelectedChange,
     ...void1
 }: MenubarItemProps<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>) {
     const defaultFocusSelf = useCallback((e: MenuItemElement | null) => focus(e as Element as HTMLElement), [])
@@ -152,7 +152,8 @@ export const MenubarItem = /* @__PURE__ */ memo((function MenubarItem<MenuItemEl
             hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged },
             refElementParameters: { onElementChange, onMount, onUnmount },
             singleSelectionChildParameters: { singleSelectionDisabled: singleSelectionDisabled || false },
-            multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false, initiallyMultiSelected: initiallyMultiSelected || false, onMultiSelectChange }
+            multiSelectionChildParameters: { multiSelectionDisabled: multiSelectionDisabled || false },
+            multiSelectionChildDeclarativeParameters: { multiSelected: multiSelected ?? null, onMultiSelectedChange } 
         })
     );
 }));
