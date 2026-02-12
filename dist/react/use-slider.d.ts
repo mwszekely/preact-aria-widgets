@@ -1,10 +1,10 @@
-import { ElementProps, JSX, ManagedChildInfo, Nullable, UseGenericChildParameters, UseManagedChildReturnType, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType } from "preact-prop-helpers";
+import { ElementProps, ManagedChildInfo, Nullable, UseGenericChildParameters, UseManagedChildReturnType, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType } from "preact-prop-helpers";
 import { EventDetail, TagSensitiveProps } from "./props.js";
 export type RangeChangeEvent<E extends EventTarget> = {
     [EventDetail]: {
         value: number;
     };
-} & Pick<JSX.TargetedEvent<E>, "target" | "currentTarget">;
+} & Pick<preact.TargetedEvent<E>, "target" | "currentTarget">;
 export interface SliderThumbInfo extends ManagedChildInfo<number> {
 }
 export interface UseSliderThumbParametersSelf<E extends Element> extends TagSensitiveProps<E> {

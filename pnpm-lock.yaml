@@ -16,7 +16,7 @@ dependencies:
     version: 10.28.3
   preact-prop-helpers:
     specifier: github:mwszekely/preact-prop-helpers
-    version: github.com/mwszekely/preact-prop-helpers/9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add(@preact/signals@2.7.1)(preact@10.28.3)(react-dom@19.2.4)(react@19.2.4)(solid-js@1.9.11)
+    version: github.com/mwszekely/preact-prop-helpers/d6de4c0ab55aa3f97b8208cdd3f7333676f8a504(@preact/signals@2.7.1)(preact@10.28.3)(react-dom@19.2.4)(react@19.2.4)(solid-js@1.9.11)
   react:
     specifier: ^19.0.0
     version: 19.2.4
@@ -2670,9 +2670,9 @@ packages:
       tslib: 2.8.1
     dev: false
 
-  github.com/mwszekely/preact-prop-helpers/9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add(@preact/signals@2.7.1)(preact@10.28.3)(react-dom@19.2.4)(react@19.2.4)(solid-js@1.9.11):
-    resolution: {tarball: https://codeload.github.com/mwszekely/preact-prop-helpers/tar.gz/9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add}
-    id: github.com/mwszekely/preact-prop-helpers/9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add
+  github.com/mwszekely/preact-prop-helpers/d6de4c0ab55aa3f97b8208cdd3f7333676f8a504(@preact/signals@2.7.1)(preact@10.28.3)(react-dom@19.2.4)(react@19.2.4)(solid-js@1.9.11):
+    resolution: {tarball: https://codeload.github.com/mwszekely/preact-prop-helpers/tar.gz/d6de4c0ab55aa3f97b8208cdd3f7333676f8a504}
+    id: github.com/mwszekely/preact-prop-helpers/d6de4c0ab55aa3f97b8208cdd3f7333676f8a504
     name: preact-prop-helpers
     version: 0.0.1
     peerDependencies:

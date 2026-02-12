@@ -1,5 +1,4 @@
 
-import { h } from "preact";
 import { useMergedProps, useState } from "preact-prop-helpers";
 import { useRef } from "preact/compat";
 import { useCallback } from "preact/hooks";
@@ -43,7 +42,7 @@ function DemoInput({ index }: { index: number }) {
             render={info => {
                 return (
                     <td {...info.propsCell}>
-                        <input {...info.propsFocus} type="text" onInput={useCallback((e: h.JSX.TargetedEvent<HTMLInputElement>) => {
+                        <input {...info.propsFocus} type="text" onInput={useCallback((e: preact.TargetedEvent<HTMLInputElement>) => {
                             setV(e.currentTarget.value);
                             e.preventDefault();
                         }, [])} value={v} />

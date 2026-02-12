@@ -2,7 +2,6 @@ import { identity } from "lodash-es";
 import {
     ElementProps,
     EventType,
-    JSX,
     ManagedChildInfo,
     Nullable,
     OnChildrenMountChange,
@@ -116,7 +115,7 @@ export interface UseAccordionSectionParametersSelf {
      * Generally `"region"`.
      * 
      */
-    bodyRole: JSX.AriaRole;
+    bodyRole: preact.AriaRole;
 }
 
 export interface UseAccordionSectionParameters<HeaderContainerElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element, M extends UseAccordionSectionInfo<HeaderButtonElement>> extends

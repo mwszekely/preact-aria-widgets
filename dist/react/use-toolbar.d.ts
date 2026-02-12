@@ -1,4 +1,4 @@
-import { CompleteListNavigationContext, ElementProps, JSX, MakeSingleSelectionDeclarativeParameters, MakeSingleSelectionDeclarativeReturnType, TargetedOmit, UseCompleteListNavigationChildDeclarativeParameters, UseCompleteListNavigationChildDeclarativeReturnType, UseCompleteListNavigationChildInfo, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseRandomIdReturnType } from "preact-prop-helpers";
+import { CompleteListNavigationContext, ElementProps, MakeSingleSelectionDeclarativeParameters, MakeSingleSelectionDeclarativeReturnType, TargetedOmit, UseCompleteListNavigationChildDeclarativeParameters, UseCompleteListNavigationChildDeclarativeReturnType, UseCompleteListNavigationChildInfo, UseCompleteListNavigationParameters, UseCompleteListNavigationReturnType, UseRandomIdReturnType } from "preact-prop-helpers";
 import { OmitStrong } from "./props.js";
 import { UseLabelSyntheticParameters } from "./use-label.js";
 export interface UseToolbarParametersSelf {
@@ -9,7 +9,7 @@ export interface UseToolbarParametersSelf {
      * `null` if someone else takes care of the role (TODO: it's still labelled in this case, what does this mean?),
      * and whatever string is applicable otherwise.
      */
-    role: JSX.AriaRole | null;
+    role: preact.AriaRole | null;
     /**
      * When true, none of the children will be selectable or focusable.
      *

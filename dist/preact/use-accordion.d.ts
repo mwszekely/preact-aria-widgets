@@ -1,4 +1,4 @@
-import { ElementProps, JSX, ManagedChildInfo, Nullable, PassiveStateUpdater, PersistentStates, TargetedOmit, TargetedPick, UseGenericChildParameters, UseHasCurrentFocusReturnType, UseLinearNavigationParameters, UseLinearNavigationReturnType, UseManagedChildParameters, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, UsePressParameters, UseRefElementParameters, UseRefElementReturnTypeSelf, UseTextContentParameters, UseTextContentReturnType, UseTypeaheadNavigationChildParameters, UseTypeaheadNavigationChildReturnType, UseTypeaheadNavigationContext, UseTypeaheadNavigationParameters, UseTypeaheadNavigationReturnType } from "preact-prop-helpers";
+import { ElementProps, ManagedChildInfo, Nullable, PassiveStateUpdater, PersistentStates, TargetedOmit, TargetedPick, UseGenericChildParameters, UseHasCurrentFocusReturnType, UseLinearNavigationParameters, UseLinearNavigationReturnType, UseManagedChildParameters, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType, UsePressParameters, UseRefElementParameters, UseRefElementReturnTypeSelf, UseTextContentParameters, UseTextContentReturnType, UseTypeaheadNavigationChildParameters, UseTypeaheadNavigationChildReturnType, UseTypeaheadNavigationContext, UseTypeaheadNavigationParameters, UseTypeaheadNavigationReturnType } from "preact-prop-helpers";
 import { DisabledType, OmitStrong } from "./props.js";
 import { UseButtonParameters, UseButtonReturnType } from "./use-button.js";
 export interface UseAccordionParametersSelf {
@@ -51,7 +51,7 @@ export interface UseAccordionSectionParametersSelf {
      * Generally `"region"`.
      *
      */
-    bodyRole: JSX.AriaRole;
+    bodyRole: preact.AriaRole;
 }
 export interface UseAccordionSectionParameters<HeaderContainerElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element, M extends UseAccordionSectionInfo<HeaderButtonElement>> extends UseGenericChildParameters<UseAccordionContext<HeaderButtonElement, M>, Pick<M, "index" | "untabbable">>, OmitStrong<UseTypeaheadNavigationChildParameters<HeaderButtonElement>, "info" | "context">, OmitStrong<UseManagedChildParameters<M>, "info">, TargetedPick<UsePressParameters<HeaderButtonElement>, "pressParameters", "focusSelf">, Pick<UseTextContentParameters<HeaderContainerElement>, "textContentParameters">, TargetedOmit<UseButtonParameters<HeaderButtonElement>, "buttonParameters", "pressed" | "role"> {
     refElementHeaderButtonParameters: UseRefElementParameters<HeaderButtonElement>["refElementParameters"];

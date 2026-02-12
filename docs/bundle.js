@@ -1700,6 +1700,107 @@
     return "function" == typeof t4 ? t4(n2) : t4;
   }
 
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/util/lib-shared.js
+  var EventMapping = {
+    abort: "onAbort",
+    animationend: "onAnimationEnd",
+    animationstart: "onAnimationStart",
+    animationiteration: "onAnimationIteration",
+    beforeinput: "onBeforeInput",
+    blur: "onBlur",
+    canplay: "onCanPlay",
+    canplaythrough: "onCanPlayThrough",
+    change: "onChange",
+    click: "onClick",
+    compositionend: "onCompositionEnd",
+    compositionstart: "onCompositionStart",
+    compositionupdate: "onCompositionUpdate",
+    contextmenu: "onContextMenu",
+    cut: "onCut",
+    drag: "onDrag",
+    dragend: "onDragEnd",
+    dragenter: "onDragEnter",
+    dragleave: "onDragLeave",
+    dragover: "onDragOver",
+    dragstart: "onDragStart",
+    drop: "onDrop",
+    durationchange: "onDurationChange",
+    emptied: "onEmptied",
+    ended: "onEnded",
+    error: "onError",
+    focus: "onFocus",
+    gotpointercapture: "onGotPointerCapture",
+    input: "onInput",
+    invalid: "onInvalid",
+    keydown: "onKeyDown",
+    keypress: "onKeyPress",
+    keyup: "onKeyUp",
+    load: "onLoad",
+    loadeddata: "onLoadedData",
+    loadedmetadata: "onLoadedMetadata",
+    loadstart: "onLoadStart",
+    lostpointercapture: "onLostPointerCapture",
+    mousedown: "onMouseDown",
+    mouseenter: "onMouseEnter",
+    mouseleave: "onMouseLeave",
+    mousemove: "onMouseMove",
+    mouseout: "onMouseOut",
+    mouseover: "onMouseOver",
+    mouseup: "onMouseUp",
+    paste: "onPaste",
+    pause: "onPause",
+    play: "onPlay",
+    playing: "onPlaying",
+    pointercancel: "onPointerCancel",
+    pointerdown: "onPointerDown",
+    pointerenter: "onPointerEnter",
+    pointerleave: "onPointerLeave",
+    pointermove: "onPointerMove",
+    pointerout: "onPointerOut",
+    pointerover: "onPointerOver",
+    pointerup: "onPointerUp",
+    progress: "onProgress",
+    reset: "onReset",
+    scroll: "onScroll",
+    seeked: "onSeeked",
+    seeking: "onSeeking",
+    select: "onSelect",
+    stalled: "onStalled",
+    submit: "onSubmit",
+    suspend: "onSuspend",
+    timeupdate: "onTimeUpdate",
+    touchcancel: "onTouchCancel",
+    touchend: "onTouchEnd",
+    touchmove: "onTouchMove",
+    touchstart: "onTouchStart",
+    transitionend: "onTransitionEnd",
+    volumechange: "onVolumeChange",
+    waiting: "onWaiting",
+    wheel: "onWheel",
+    fullscreenchange: null,
+    animationcancel: null,
+    auxclick: null,
+    cancel: null,
+    close: null,
+    copy: null,
+    cuechange: null,
+    fullscreenerror: null,
+    ratechange: null,
+    resize: null,
+    scrollend: null,
+    securitypolicyviolation: null,
+    selectionchange: null,
+    selectstart: null,
+    slotchange: null,
+    transitioncancel: null,
+    transitionrun: null,
+    transitionstart: null,
+    webkitanimationend: null,
+    webkitanimationiteration: null,
+    webkitanimationstart: null,
+    webkittransitionend: null
+  };
+
   // ../node_modules/.pnpm/preact@10.28.3/node_modules/preact/compat/dist/compat.module.js
   function g3(n2, t4) {
     for (var e3 in t4)
@@ -1931,108 +2032,7 @@
     null != e3 && "textarea" === n2.type && "value" in t4 && t4.value !== e3.value && (e3.value = null == t4.value ? "" : t4.value), ln = null;
   };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/util/lib-shared.js
-  var EventMapping = {
-    abort: "onAbort",
-    animationend: "onAnimationEnd",
-    animationstart: "onAnimationStart",
-    animationiteration: "onAnimationIteration",
-    beforeinput: "onBeforeInput",
-    blur: "onBlur",
-    canplay: "onCanPlay",
-    canplaythrough: "onCanPlayThrough",
-    change: "onChange",
-    click: "onClick",
-    compositionend: "onCompositionEnd",
-    compositionstart: "onCompositionStart",
-    compositionupdate: "onCompositionUpdate",
-    contextmenu: "onContextMenu",
-    cut: "onCut",
-    drag: "onDrag",
-    dragend: "onDragEnd",
-    dragenter: "onDragEnter",
-    dragleave: "onDragLeave",
-    dragover: "onDragOver",
-    dragstart: "onDragStart",
-    drop: "onDrop",
-    durationchange: "onDurationChange",
-    emptied: "onEmptied",
-    ended: "onEnded",
-    error: "onError",
-    focus: "onFocus",
-    gotpointercapture: "onGotPointerCapture",
-    input: "onInput",
-    invalid: "onInvalid",
-    keydown: "onKeyDown",
-    keypress: "onKeyPress",
-    keyup: "onKeyUp",
-    load: "onLoad",
-    loadeddata: "onLoadedData",
-    loadedmetadata: "onLoadedMetadata",
-    loadstart: "onLoadStart",
-    lostpointercapture: "onLostPointerCapture",
-    mousedown: "onMouseDown",
-    mouseenter: "onMouseEnter",
-    mouseleave: "onMouseLeave",
-    mousemove: "onMouseMove",
-    mouseout: "onMouseOut",
-    mouseover: "onMouseOver",
-    mouseup: "onMouseUp",
-    paste: "onPaste",
-    pause: "onPause",
-    play: "onPlay",
-    playing: "onPlaying",
-    pointercancel: "onPointerCancel",
-    pointerdown: "onPointerDown",
-    pointerenter: "onPointerEnter",
-    pointerleave: "onPointerLeave",
-    pointermove: "onPointerMove",
-    pointerout: "onPointerOut",
-    pointerover: "onPointerOver",
-    pointerup: "onPointerUp",
-    progress: "onProgress",
-    reset: "onReset",
-    scroll: "onScroll",
-    seeked: "onSeeked",
-    seeking: "onSeeking",
-    select: "onSelect",
-    stalled: "onStalled",
-    submit: "onSubmit",
-    suspend: "onSuspend",
-    timeupdate: "onTimeUpdate",
-    touchcancel: "onTouchCancel",
-    touchend: "onTouchEnd",
-    touchmove: "onTouchMove",
-    touchstart: "onTouchStart",
-    transitionend: "onTransitionEnd",
-    volumechange: "onVolumeChange",
-    waiting: "onWaiting",
-    wheel: "onWheel",
-    fullscreenchange: null,
-    animationcancel: null,
-    auxclick: null,
-    cancel: null,
-    close: null,
-    copy: null,
-    cuechange: null,
-    fullscreenerror: null,
-    ratechange: null,
-    resize: null,
-    scrollend: null,
-    securitypolicyviolation: null,
-    selectionchange: null,
-    selectstart: null,
-    slotchange: null,
-    transitioncancel: null,
-    transitionrun: null,
-    transitionstart: null,
-    webkitanimationend: null,
-    webkitanimationiteration: null,
-    webkitanimationstart: null,
-    webkittransitionend: null
-  };
-
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/util/use-before-layout-effect.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/util/use-before-layout-effect.js
   var toRun = /* @__PURE__ */ new Map();
   var commitName = "diffed";
   var newCommit = (vnode, ...args) => {
@@ -2069,7 +2069,7 @@
     return !!(!oldArgs || oldArgs.length !== newArgs?.length || newArgs?.some((arg, index) => arg !== oldArgs[index]));
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/util/lib-preact.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/util/lib-preact.js
   var useCallback = q2;
   function debounceRendering(f5) {
     (l.debounceRendering ?? queueMicrotask)(f5);
@@ -2088,7 +2088,7 @@
     ...EventMapping
   };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-passive-state.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-passive-state.js
   function useEnsureStability(parentHookName, ...values) {
     if (true)
       return;
@@ -2195,12 +2195,12 @@
     f5();
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/util/mode.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/util/mode.js
   globalThis["process"] ??= {};
   globalThis["process"]["env"] ??= {};
   globalThis["process"]["env"]["NODE_ENV"] = "production";
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/util/use-call-count.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/util/use-call-count.js
   globalThis.requestIdleCallback ??= (callback) => {
     return setTimeout(() => {
       callback({ didTimeout: false, timeRemaining: () => {
@@ -2213,7 +2213,7 @@
     return t4();
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-stable-getter.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-stable-getter.js
   var Unset2 = Symbol("unset");
   function useStableGetter(value) {
     return useMonitoring(function useStableGetter2() {
@@ -2235,7 +2235,7 @@
     }, Object.values(t4));
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-stable-callback.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-stable-callback.js
   var map = /* @__PURE__ */ new WeakMap();
   function isStableGetter(obj) {
     return false;
@@ -2273,7 +2273,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-event-handler.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-event-handler.js
   function useGlobalHandler(target, type, handler, options, mode) {
     return useMonitoring(function useGlobalHandler2() {
       mode ||= "grouped";
@@ -2339,11 +2339,11 @@
     }, [target, type, stableHandler]);
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/util/assert.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/util/assert.js
   function assertEmptyObject(_a) {
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/util/get-window.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/util/get-window.js
   function getWindow(element) {
     return typeof window == "undefined" ? void 0 : element?.ownerDocument?.defaultView ?? globalThis ?? {};
   }
@@ -2351,7 +2351,7 @@
     return typeof window == "undefined" ? void 0 : element?.ownerDocument ?? getWindow()?.document ?? void 0;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/component-detail/dismissal/use-backdrop-dismiss.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/component-detail/dismissal/use-backdrop-dismiss.js
   function useBackdropDismiss({ backdropDismissParameters: { dismissBackdropActive: open, onDismissBackdrop: onCloseUnstable, ...void1 }, refElementPopupReturn: { getElement, ...void3 }, ...void2 }) {
     return useMonitoring(function useBackdropDismiss2() {
       assertEmptyObject(void1);
@@ -2376,7 +2376,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/util/event.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/util/event.js
   var EventDetail = Symbol("event-detail");
   function getEventDetail(e3) {
     return e3[EventDetail];
@@ -2388,7 +2388,7 @@
     return event;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/component-detail/dismissal/use-escape-dismiss.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/component-detail/dismissal/use-escape-dismiss.js
   var MagicWindowKey = "__preact-prop-helpers-escape-key-dismiss__";
   function getElementDepth(element) {
     let depth = 0;
@@ -2466,7 +2466,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/component-detail/dismissal/use-lost-focus-dismiss.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/component-detail/dismissal/use-lost-focus-dismiss.js
   function useLostFocusDismiss({ refElementPopupReturn: { getElement: getPopupElement, ...void3 }, refElementSourceReturn, lostFocusDismissParameters: { dismissLostFocusActive: open, onDismissLostFocus: onClose, ...void4 }, ...void1 }) {
     return useMonitoring(function useLostFocusDismiss2() {
       const { getElement: getSourceElement, ...void2 } = refElementSourceReturn ?? {};
@@ -2491,7 +2491,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-merged-children.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-merged-children.js
   function useMergedChildren(lhs, rhs) {
     if (lhs == null && rhs == null) {
       return void 0;
@@ -2504,7 +2504,7 @@
     }
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-merged-classes.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-merged-classes.js
   function useMergedClasses(...classes) {
     let classesSet = /* @__PURE__ */ new Set();
     for (let c4 of classes) {
@@ -2518,7 +2518,7 @@
     }
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-merged-refs.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-merged-refs.js
   function processRef(instance, ref) {
     if (typeof ref === "function") {
       ref(instance);
@@ -2549,7 +2549,7 @@
     }
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-merged-styles.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-merged-styles.js
   function styleStringToObject(style) {
     return Object.fromEntries(style.split(";").map((statement) => statement.split(":")));
   }
@@ -2578,7 +2578,7 @@
     };
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-merged-props.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-merged-props.js
   var log = console.warn;
   function useMergedProps(...allProps) {
     useEnsureStability("useMergedProps", allProps.length);
@@ -2859,7 +2859,7 @@
     return isNodeMatchingSelectorFocusable(options, node);
   };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/util/stack.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/util/stack.js
   function useStack() {
     if (false) {
       const stack = T2(generateStack, []);
@@ -2873,7 +2873,7 @@
     return "";
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/util/focus.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/util/focus.js
   function focus2(e3) {
     if (false) {
       console.log(`Focus changed to ${(e3?.tagName || "").toLowerCase().padStart(6)}:`, e3);
@@ -2916,7 +2916,7 @@
     return bestCandidateAfter ?? bestCandidateBefore ?? document2.body;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/timing/use-timeout.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/timing/use-timeout.js
   function useTimeout({ timeout, callback, triggerIndex }) {
     return useMonitoring(function useTimeout2() {
       const stableCallback = useStableCallback(() => {
@@ -2948,7 +2948,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/util/use-tag-props.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/util/use-tag-props.js
   function useTagProps(props, tag) {
     if (false) {
       const [id] = d3(() => ++idIndex);
@@ -2982,7 +2982,7 @@
     }
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/component-detail/keyboard-navigation/use-linear-navigation.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/component-detail/keyboard-navigation/use-linear-navigation.js
   function useLinearNavigation({ linearNavigationParameters: { getLowestIndex, getHighestIndex, isValidForLinearNavigation, navigatePastEnd, navigatePastStart, onNavigateLinear, arrowKeyDirection, disableHomeEndKeys, pageNavigationSize, ...void4 }, rovingTabIndexReturn: { getTabbableIndex, setTabbableIndex, ...void5 }, paginatedChildrenParameters: { paginationMax, paginationMin, ...void2 }, processedIndexManglerReturn: { indexDemangler, indexMangler, ...void3 }, ...void1 }) {
     return useMonitoring(function useLinearNavigation2() {
       let getPaginatedRange = useStableGetter(paginationMax == null || paginationMin == null ? null : paginationMax - paginationMin);
@@ -3163,7 +3163,7 @@
     }
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-managed-children.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-managed-children.js
   function useManagedChildren(parentParameters) {
     return useMonitoring(function useManagedChildren2() {
       const { managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange, onChildrenCountChange }, ...rest } = parentParameters;
@@ -3405,7 +3405,7 @@
     return { changeIndex, reevaluateClosestFit, getCurrentIndex };
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-state.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-state.js
   function useState(initialState) {
     const getStack = useStack();
     const [state, setStateP] = d3(initialState);
@@ -3438,7 +3438,7 @@
     return [state, setState.current, getState];
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/component-detail/keyboard-navigation/use-roving-tabindex.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/component-detail/keyboard-navigation/use-roving-tabindex.js
   function useRovingTabIndex({ managedChildrenReturn: { getChildren }, rovingTabIndexParameters: { focusSelfParent: focusSelfParentUnstable, untabbable, untabbableBehavior, initiallyTabbedIndex, onTabbableIndexChange }, refElementReturn: { getElement }, processedIndexManglerReturn: { indexDemangler }, ...void1 }) {
     return useMonitoring(function useRovingTabIndex2() {
       const focusSelfParent = useStableCallback(focusSelfParentUnstable);
@@ -3659,7 +3659,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/component-detail/keyboard-navigation/use-typeahead-navigation.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/component-detail/keyboard-navigation/use-typeahead-navigation.js
   function useTypeaheadNavigation({ typeaheadNavigationParameters: { collator, typeaheadTimeout, noTypeahead, isValidForTypeaheadNavigation, onNavigateTypeahead, ...void3 }, rovingTabIndexReturn: { getTabbableIndex: getIndex, setTabbableIndex: setIndex, ...void1 }, ...void2 }) {
     return useMonitoring(function useTypeaheadNavigation2() {
       assertEmptyObject(void1);
@@ -3759,8 +3759,6 @@
       };
       function updateBasedOnTypeaheadChange(currentTypeahead, reason) {
         if (currentTypeahead && sortedTypeaheadInfo.current.length) {
-          if (currentTypeahead == "se")
-            debugger;
           const sortedTypeaheadIndex = /* @__PURE__ */ binarySearch(sortedTypeaheadInfo.current, currentTypeahead, typeaheadComparator);
           if (sortedTypeaheadIndex < 0) {
             setTypeaheadStatus("invalid");
@@ -3860,7 +3858,7 @@
     return -firstIndex - 1;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/component-detail/keyboard-navigation/use-list-navigation-partial.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/component-detail/keyboard-navigation/use-list-navigation-partial.js
   function useListNavigation({ linearNavigationParameters, typeaheadNavigationParameters, rovingTabIndexParameters, managedChildrenReturn, refElementReturn, paginatedChildrenParameters, processedIndexManglerReturn, ...void1 }) {
     return useMonitoring(function useListNavigation2() {
       const { props: propsRTI, rovingTabIndexReturn, managedChildrenParameters, context: contextRovingTabIndex, ...void2 } = useRovingTabIndex({ managedChildrenReturn, rovingTabIndexParameters, refElementReturn, processedIndexManglerReturn });
@@ -3897,7 +3895,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/component-detail/keyboard-navigation/use-grid-navigation-partial.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/component-detail/keyboard-navigation/use-grid-navigation-partial.js
   function useGridNavigation({ gridNavigationParameters: { onTabbableColumnChange, initiallyTabbableColumn, ...void3 }, linearNavigationParameters, ...listNavigationParameters }) {
     return useMonitoring(function useGridNavigation2() {
       const [getTabbableColumn, setTabbableColumn] = usePassiveState(onTabbableColumnChange, useStableCallback(() => {
@@ -4090,7 +4088,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/component-detail/processed-children/use-paginated-children.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/component-detail/processed-children/use-paginated-children.js
   function usePaginatedChildren({ managedChildrenReturn: { getChildren }, paginatedChildrenParameters: { paginationMax, paginationMin, childCount }, rovingTabIndexReturn: { getTabbableIndex, setTabbableIndex }, childrenHaveFocusReturn: { getAnyFocused }, processedIndexManglerReturn: { indexDemangler, indexMangler } }) {
     return useMonitoring(function usePaginatedChildren2() {
       const parentIsPaginated = paginationMin != null || paginationMax != null;
@@ -4176,7 +4174,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/component-detail/processed-children/use-rearrangeable-children.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/component-detail/processed-children/use-rearrangeable-children.js
   function useRearrangeableChildren({ rearrangeableChildrenParameters: { children: childrenIn, animate }, processedIndexManglerParameters: { getIndex, getSortValueAt }, managedChildrenReturn: { getChildren: getManagedChildren }, context: { processedIndexManglerContext: { mangler } } }) {
     return useMonitoring(function useRearrangeableChildren2() {
       useEnsureStability("useRearrangeableChildren", getIndex, getSortValueAt);
@@ -4271,7 +4269,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/component-detail/processed-children/use-staggered-children.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/component-detail/processed-children/use-staggered-children.js
   function useStaggeredChildren({
     managedChildrenReturn: { getChildren },
     staggeredChildrenParameters: { staggered, childCount, disableIntersectionObserver }
@@ -4424,7 +4422,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/component-detail/processed-children/use-processed-children.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/component-detail/processed-children/use-processed-children.js
   function useProcessedChildren({ rearrangeableChildrenParameters, paginatedChildrenParameters, staggeredChildrenParameters, context, managedChildrenParameters, processedIndexManglerParameters }) {
     return useMonitoring(function useProcessedChildren2() {
       const childCount = rearrangeableChildrenParameters.children.length;
@@ -4501,7 +4499,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/component-detail/processed-children/use-processed-index-mangler.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/component-detail/processed-children/use-processed-index-mangler.js
   function useProcessedIndexMangler({ processedIndexManglerParameters: { getIndex, getSortValueAt: getSortValue, compare } }) {
     return useMonitoring(function useProcessedIndexMangler2() {
       useEnsureStability("useProcessedIndexMangler", getIndex, getSortValue);
@@ -4629,7 +4627,7 @@
     return lhs > rhs ? 1 : lhs < rhs ? -1 : 0;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/component-detail/selection/use-multi-selection.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/component-detail/selection/use-multi-selection.js
   function useMultiSelection({ multiSelectionParameters: { onSelectionChange, multiSelectionAriaPropName, multiSelectionMode, ...void3 }, managedChildrenReturn: { getChildren, ...void1 }, childrenHaveFocusReturn: { getAnyFocused, ...void4 }, ...void2 }) {
     return useMonitoring(function useMultiSelection2() {
       ;
@@ -4863,7 +4861,7 @@
     };
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/component-detail/selection/use-single-selection.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/component-detail/selection/use-single-selection.js
   function useSingleSelection({ managedChildrenReturn: { getChildren, ...void1 }, rovingTabIndexReturn: { setTabbableIndex, ...void2 }, singleSelectionParameters: { onSingleSelectedIndexChange: onSelectedIndexChange_U, initiallySingleSelectedIndex, singleSelectionAriaPropName, singleSelectionMode, ...void3 }, ...void4 }) {
     return useMonitoring(function useSingleSelection2() {
       assertEmptyObject(void1);
@@ -4989,7 +4987,7 @@
     };
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/component-detail/selection/use-selection.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/component-detail/selection/use-selection.js
   function useSelection({ managedChildrenReturn, multiSelectionParameters, childrenHaveFocusReturn, rovingTabIndexReturn, singleSelectionParameters }) {
     const { childrenHaveFocusParameters: { onCompositeFocusChange: ocfc1, ...void3 }, context: contextSS, singleSelectionReturn, ...void1 } = useSingleSelection({ managedChildrenReturn, rovingTabIndexReturn, singleSelectionParameters });
     const { childrenHaveFocusParameters: { onCompositeFocusChange: ocfc2, ...void4 }, context: contextMS, multiSelectionReturn, propsStable, ...void2 } = useMultiSelection({ managedChildrenReturn, multiSelectionParameters, childrenHaveFocusReturn });
@@ -5036,7 +5034,7 @@
     return useMultiSelectionChildDeclarative(args);
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-ref-element.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-ref-element.js
   function useRefElement(args) {
     return useMonitoring(function useRefElement2() {
       const nonElementWarn = A2(false);
@@ -5098,7 +5096,7 @@
     has: has$1
   });
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/observers/use-active-element.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/observers/use-active-element.js
   var activeElementUpdaters = /* @__PURE__ */ new Map();
   var lastActiveElementUpdaters = /* @__PURE__ */ new Map();
   var windowFocusedUpdaters = /* @__PURE__ */ new Map();
@@ -5175,7 +5173,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/component-detail/use-dismiss.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/component-detail/use-dismiss.js
   function useDismiss({ dismissParameters: { dismissActive, onDismiss, ...void3 }, backdropDismissParameters: { dismissBackdropActive, onDismissBackdrop, ...void6 }, lostFocusDismissParameters: { dismissLostFocusActive, onDismissLostFocus, ...void7 }, escapeDismissParameters: { dismissEscapeActive, onDismissEscape, parentDepth, ...void2 }, activeElementParameters: { getDocument: getDocument2, onActiveElementChange, onLastActiveElementChange: olaec1, onWindowFocusedChange, ...void5 }, ...void4 }) {
     return useMonitoring(function useDismiss2() {
       const { refElementReturn: refElementSourceReturn, propsStable: propsStableSource } = useRefElement({ refElementParameters: {} });
@@ -5239,7 +5237,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/util/blocking-elements.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/util/blocking-elements.js
   var be;
   (async () => {
     if (typeof window !== "undefined") {
@@ -5256,7 +5254,7 @@
     return be;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-blocking-element.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-blocking-element.js
   function useBlockingElement({ activeElementParameters: { getDocument: getDocument2, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, ...void3 }, blockingElementParameters: { enabled, getTarget, ...void1 }, ...void2 }) {
     return useMonitoring(function useBlockingElement2() {
       assertEmptyObject(void1);
@@ -5300,7 +5298,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/component-detail/use-focus-trap.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/component-detail/use-focus-trap.js
   function useFocusTrap({ focusTrapParameters: { onlyMoveFocus, trapActive, focusPopup: focusSelfUnstable, focusOpener: focusOpenerUnstable }, activeElementParameters, refElementReturn }) {
     return useMonitoring(function useFocusTrap2() {
       const focusSelf = useStableCallback(focusSelfUnstable);
@@ -5357,7 +5355,7 @@
     return firstFocusable;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/component-detail/use-grid-navigation-selection.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/component-detail/use-grid-navigation-selection.js
   function useGridNavigationSelection({ gridNavigationParameters, linearNavigationParameters, rovingTabIndexParameters, managedChildrenReturn, typeaheadNavigationParameters, singleSelectionParameters, multiSelectionParameters, refElementReturn, paginatedChildrenParameters, processedIndexManglerReturn, childrenHaveFocusReturn, ...void2 }) {
     return useMonitoring(function useGridNavigationSelection2() {
       const { context: { gridNavigationRowContext, rovingTabIndexContext, typeaheadNavigationContext }, linearNavigationReturn, managedChildrenParameters, props, rovingTabIndexReturn, typeaheadNavigationReturn } = useGridNavigation({
@@ -5444,7 +5442,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/component-detail/use-list-navigation-selection.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/component-detail/use-list-navigation-selection.js
   function useListNavigationSelection({ linearNavigationParameters, rovingTabIndexParameters, typeaheadNavigationParameters, singleSelectionParameters, multiSelectionParameters, managedChildrenReturn, refElementReturn, paginatedChildrenParameters, processedIndexManglerReturn, childrenHaveFocusReturn, ...void3 }) {
     return useMonitoring(function useListNavigationSelection2() {
       const { context: contextSS, propsStable, ...retSS } = useSelection({
@@ -5512,7 +5510,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-text-content.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-text-content.js
   function useTextContent({ refElementReturn: { getElement }, textContentParameters: { getText, onTextContentChange } }) {
     return useMonitoring(function useTextContent2() {
       const [getTextContent, setTextContent] = usePassiveState(onTextContentChange, returnNull, { debounceRendering: runImmediately, skipMountInitialization: true });
@@ -5529,7 +5527,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/observers/use-children-have-focus.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/observers/use-children-have-focus.js
   function useChildrenHaveFocus(args) {
     return useMonitoring(function useChildrenHaveFocus2() {
       const { childrenHaveFocusParameters: { onCompositeFocusChange } } = args;
@@ -5560,7 +5558,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/observers/use-has-current-focus.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/observers/use-has-current-focus.js
   function useHasCurrentFocus(args) {
     return useMonitoring(function useHasCurrentFocus2() {
       const { hasCurrentFocusParameters: { onCurrentFocusedChanged, onCurrentFocusedInnerChanged }, refElementReturn: { getElement } } = args;
@@ -5595,7 +5593,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/component-use/use-grid-navigation-complete.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/component-use/use-grid-navigation-complete.js
   function useCompleteGridNavigation({ gridNavigationParameters, linearNavigationParameters, rovingTabIndexParameters, singleSelectionParameters, multiSelectionParameters, typeaheadNavigationParameters, paginatedChildrenParameters, refElementParameters, gridNavigationCompleteParameters: { getSortColumn, getSortValueAt: gsva }, processedIndexManglerParameters: { compare, getIndex }, ...void1 }) {
     return useMonitoring(function useCompleteGridNavigation2() {
       useEnsureStability("useCompleteGridNavigation", getSortColumn, gsva);
@@ -5884,7 +5882,7 @@
     return r1;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/component-use/use-list-navigation-complete.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/component-use/use-list-navigation-complete.js
   function useCompleteListNavigation({
     linearNavigationParameters,
     typeaheadNavigationParameters,
@@ -6100,7 +6098,7 @@
     return { ...ret2, multiSelectionChildReturn };
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/component-use/use-modal.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/component-use/use-modal.js
   function useModal({ dismissParameters: { dismissActive, onDismiss, ...void2 }, escapeDismissParameters: { dismissEscapeActive, onDismissEscape, parentDepth, ...void3 }, focusTrapParameters: { trapActive, ...focusTrapParameters }, activeElementParameters: { getDocument: getDocument2, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, ...void4 }, backdropDismissParameters: { dismissBackdropActive, onDismissBackdrop, ...void5 }, lostFocusDismissParameters: { dismissLostFocusActive, onDismissLostFocus, ...void6 }, refElementParameters: { onElementChange, onMount, onUnmount, ...void7 }, modalParameters: { active: modalActive, ...void8 }, ...void1 }) {
     return useMonitoring(function useModal2() {
       const { refElementPopupReturn, refElementSourceReturn, propsStablePopup, propsStableSource } = useDismiss({
@@ -6344,7 +6342,7 @@
     };
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-async.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-async.js
   function identityCapture(...t4) {
     return t4;
   }
@@ -6421,7 +6419,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-async-handler.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-async-handler.js
   function useAsyncHandler({ asyncHandler, capture: originalCapture, ...restAsyncOptions }) {
     return useMonitoring(function useAsyncHandler2() {
       const [currentCapture, setCurrentCapture, getCurrentCapture] = useState(void 0);
@@ -6441,7 +6439,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/component-use/use-press.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/component-use/use-press.js
   function pressLog(...args) {
     if (globalThis.__log_press_events)
       console.log(...args);
@@ -6720,7 +6718,7 @@
   var pulse = "vibrate" in navigator && navigator.vibrate instanceof Function ? () => navigator.vibrate(10) : () => {
   };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/component-use/use-random-id.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/component-use/use-random-id.js
   function useRandomId({ randomIdParameters: { prefix, otherReferencerProp } }) {
     return useMonitoring(function useRandomId2() {
       const id = prefix + g2();
@@ -6738,7 +6736,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/component-use/use-random-dual-ids.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/component-use/use-random-dual-ids.js
   function useRandomDualIds({ randomIdInputParameters, randomIdLabelParameters }) {
     return useMonitoring(function useRandomDualIds2() {
       const { randomIdReturn: randomIdInputReturn, propsReferencer: propsLabelAsReferencer, propsSource: propsInputAsSource } = useRandomId({ randomIdParameters: randomIdInputParameters });
@@ -6752,7 +6750,7 @@
     });
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-imperative-props.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-imperative-props.js
   var templateElement = null;
   function htmlToElement(parent, html) {
     const document2 = parent.ownerDocument;
@@ -6872,7 +6870,7 @@
     return _(Tag, useMergedProps(propsStable, imperativeProps, props, { ref }));
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/util/random-id.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/util/random-id.js
   var Table = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-";
   function base64(value) {
     return Table[value];
@@ -6887,7 +6885,7 @@
     return `${prefix ?? "id-"}${random64Bits().map((n2) => base64(n2)).join("")}`;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-portal-children.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/dom-helpers/use-portal-children.js
   function usePortalChildren({ target }) {
     return useMonitoring(function usePortalChildren2() {
       const [pushChild, setPushChild] = useState(null);
@@ -6959,7 +6957,7 @@
     return _(k, {}, children);
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/observers/use-logical-direction.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/observers/use-logical-direction.js
   var HorizontalTbLtr = {
     inlineDirection: "ltr",
     blockDirection: "ttb",
@@ -7009,7 +7007,7 @@
     inlineDirection: "ttb"
   };
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-persistent-state.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/preact-extensions/use-persistent-state.js
   var defaultStorage = typeof window === "undefined" ? void 0 : window.localStorage;
   // @__NO_SIDE_EFFECTS__
   function getFromLocalStorage(key, converter = JSON.parse, storage = defaultStorage) {
@@ -7089,7 +7087,7 @@
     return l.vnode && l.vnode(l4), l4;
   }
 
-  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@9b3e69356a55c77c79dbab1ba0fcc6a5f57d3add_@preact+sig_aqn7yg3uxda6bzk2m4qqrkwcme/node_modules/preact-prop-helpers/dist/preact/timing/use-animation-frame.js
+  // ../node_modules/.pnpm/github.com+mwszekely+preact-prop-helpers@d6de4c0ab55aa3f97b8208cdd3f7333676f8a504_@preact+sig_jptta7ix62xuziohsu256m3yr4/node_modules/preact-prop-helpers/dist/preact/timing/use-animation-frame.js
   var SharedAnimationFrameContext = Q(null);
 
   // ../dist/preact/props.js

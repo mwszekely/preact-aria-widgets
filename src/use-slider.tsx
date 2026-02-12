@@ -1,6 +1,5 @@
 import {
     ElementProps,
-    JSX,
     ManagedChildInfo,
     Nullable,
     UseGenericChildParameters,
@@ -19,7 +18,7 @@ import { EventDetail, Prefices, TagSensitiveProps, enhanceEvent } from "./props.
 
 
 
-export type RangeChangeEvent<E extends EventTarget> = { [EventDetail]: { value: number } } & Pick<JSX.TargetedEvent<E>, "target" | "currentTarget">;
+export type RangeChangeEvent<E extends EventTarget> = { [EventDetail]: { value: number } } & Pick<preact.TargetedEvent<E>, "target" | "currentTarget">;
 
 export interface SliderThumbInfo extends ManagedChildInfo<number> {
 }
