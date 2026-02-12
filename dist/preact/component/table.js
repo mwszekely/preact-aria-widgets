@@ -38,7 +38,7 @@ export const TableHead = /* @__PURE__ */ memo(function TableHead({ render, tagHe
         tableHeadParameters: { tagHead }
     }));
 });
-export const TableBody = /* @__PURE__ */ memo(function TableBody({ render, tagTableSection, children, imperativeHandle, onAfterChildLayoutEffect, onChildrenCountChange, onChildrenMountChange, paginationMax, paginationMin, staggered, }) {
+export const TableBody = /* @__PURE__ */ memo(function TableBody({ render, tagTableSection, children, imperativeHandle, onAfterChildLayoutEffect, onChildrenCountChange, onChildrenMountChange, paginationMax, paginationMin, staggered, animate, disableIntersectionObserver, }) {
     return useComponent(imperativeHandle, render, TableProcessedChildrenContext, useTableBody({
         context: useContextWithWarning(TableRowContext, "TableRowContext"),
         managedChildrenParameters: {
@@ -51,10 +51,12 @@ export const TableBody = /* @__PURE__ */ memo(function TableBody({ render, tagTa
             paginationMin
         },
         rearrangeableChildrenParameters: {
-            children
+            children,
+            animate: animate || false
         },
         staggeredChildrenParameters: {
-            staggered: staggered || false
+            staggered: staggered || false,
+            disableIntersectionObserver: disableIntersectionObserver || false
         },
         tableSectionParameters: {
             tagTableSection

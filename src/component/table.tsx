@@ -1,5 +1,5 @@
-import { OmitStrong, VNode, assertEmptyObject, createContext, focus, getWindow, identity, memo, useEnsureStability, useStableCallback } from "preact-prop-helpers";
-import { Get, Get12, Get2, Get3, Get4, Get5, Get9, useContextWithWarning } from "../props.js";
+import { OmitStrong, VNode, assertEmptyObject, createContext, focus, identity, memo, useEnsureStability, useStableCallback } from "preact-prop-helpers";
+import { Get, Get12, Get3, Get4, Get5, Get9, useContextWithWarning } from "../props.js";
 import { TableCellInfo, TableRowInfo, TableSectionInfo, UseTableBodyParameters, UseTableBodyReturnType, UseTableCellContext, UseTableCellParameters, UseTableCellReturnType, UseTableHeadParameters, UseTableHeadReturnType, UseTableParameters, UseTableProcessedChildrenContext, UseTableReturnType, UseTableRowContext, UseTableRowOuterParameters, UseTableRowOuterReturnType, UseTableRowParameters, UseTableRowReturnType, useTable, useTableBody, useTableCell, useTableHead, useTableRow, useTableRowOuter } from "../use-table.js";
 import { GenericComponentProps, useComponent, useDefault } from "./util.js";
 
@@ -144,6 +144,8 @@ export const TableBody = /* @__PURE__ */ memo(function TableBody<TableSectionEle
     paginationMax,
     paginationMin,
     staggered,
+    animate,
+    disableIntersectionObserver,
 }: TableBodyProps<TableSectionElement, RowElement, TableRowInfo<RowElement>, TableSectionInfo<RowElement>>) {
     type RM = TableRowInfo<RowElement>;
     type RsM = TableSectionInfo<RowElement>;
@@ -164,10 +166,12 @@ export const TableBody = /* @__PURE__ */ memo(function TableBody<TableSectionEle
                 paginationMin
             },
             rearrangeableChildrenParameters: {
-                children
+                children,
+                animate: animate || false
             },
             staggeredChildrenParameters: {
-                staggered: staggered || false
+                staggered: staggered || false,
+                disableIntersectionObserver: disableIntersectionObserver || false
             },
             tableSectionParameters: {
                 tagTableSection

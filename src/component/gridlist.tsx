@@ -1,6 +1,6 @@
 import { createContext } from "preact";
 import { OmitStrong, VNode, assertEmptyObject, identity, useContext, useEnsureStability } from "preact-prop-helpers";
-import { Get12, Get16, Get2, Get3, Get4, Prefices } from "../props.js";
+import { Get12, Get16, Get3, Get4, Prefices } from "../props.js";
 import { UseGridlistCellContext, UseGridlistCellInfo, UseGridlistCellParameters, UseGridlistCellReturnType, UseGridlistParameters, UseGridlistReturnType, UseGridlistRowContext, UseGridlistRowInfo, UseGridlistRowOuterParameters, UseGridlistRowOuterReturnType, UseGridlistRowParameters, UseGridlistRowReturnType, UseGridlistRowsContext, UseGridlistRowsInfo, useGridlist, useGridlistCell, useGridlistRow, useGridlistRowOuter } from "../use-gridlist.js";
 import { GenericComponentProps, useComponent, useComponentC, useDefault } from "./util.js";
 
@@ -75,6 +75,8 @@ export function Gridlist<TableElement extends Element, RowElement extends Elemen
     singleSelectedIndex,
     getSortColumn,
     getSortValueAt,
+    animate,
+    disableIntersectionObserver,
     ...void1
 }: GridlistProps<TableElement, RowElement, LabelElement>) {
     getSortValueAt ??= identity;
@@ -124,6 +126,7 @@ export function Gridlist<TableElement extends Element, RowElement extends Elemen
             },
             rearrangeableChildrenParameters: {
                 children,
+                animate: animate || false
             },
             processedIndexManglerParameters: {
                 compare: null,
@@ -148,7 +151,8 @@ export function Gridlist<TableElement extends Element, RowElement extends Elemen
                 singleSelectionMode: useDefault("singleSelectionMode", singleSelectionMode)
             },
             staggeredChildrenParameters: {
-                staggered: staggered || false
+                staggered: staggered || false,
+                disableIntersectionObserver: disableIntersectionObserver || false
             },
             typeaheadNavigationParameters: {
                 collator,

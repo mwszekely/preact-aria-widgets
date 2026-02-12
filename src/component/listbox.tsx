@@ -184,7 +184,8 @@ export const ListboxChildren = /* @__PURE__ */ memo((function ListboxChildren<Li
     paginationMax,
     paginationMin,
     staggered,
-
+    animate,
+    disableIntersectionObserver
 }: ListboxChildrenProps<ListItemElement, M, SM>) {
     const r = useCompleteListNavigationChildren<ListItemElement, M, SM>({
         context: useContext(ListboxContext),
@@ -199,9 +200,11 @@ export const ListboxChildren = /* @__PURE__ */ memo((function ListboxChildren<Li
         },
         rearrangeableChildrenParameters: {
             children,
+            animate: animate || false
         },
         staggeredChildrenParameters: {
-            staggered: staggered || false
+            staggered: staggered || false,
+            disableIntersectionObserver: disableIntersectionObserver || false
         }
     });
     return useComponent<UseCompleteListNavigationChildrenReturnType<ListItemElement, SM>>(imperativeHandle,

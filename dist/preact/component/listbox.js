@@ -77,7 +77,7 @@ export const Listbox = /* @__PURE__ */ memo((function Listbox({ ariaLabel, colla
         processedIndexManglerParameters: { getSortValueAt, compare, getIndex: useDefault("getIndex", getIndex) }
     }));
 }));
-export const ListboxChildren = /* @__PURE__ */ memo((function ListboxChildren({ children, render, imperativeHandle, onAfterChildLayoutEffect, onChildrenCountChange, onChildrenMountChange, paginationMax, paginationMin, staggered, }) {
+export const ListboxChildren = /* @__PURE__ */ memo((function ListboxChildren({ children, render, imperativeHandle, onAfterChildLayoutEffect, onChildrenCountChange, onChildrenMountChange, paginationMax, paginationMin, staggered, animate, disableIntersectionObserver }) {
     const r = useCompleteListNavigationChildren({
         context: useContext(ListboxContext),
         managedChildrenParameters: {
@@ -91,9 +91,11 @@ export const ListboxChildren = /* @__PURE__ */ memo((function ListboxChildren({ 
         },
         rearrangeableChildrenParameters: {
             children,
+            animate: animate || false
         },
         staggeredChildrenParameters: {
-            staggered: staggered || false
+            staggered: staggered || false,
+            disableIntersectionObserver: disableIntersectionObserver || false
         }
     });
     return useComponent(imperativeHandle, render, ListboxChildContext, r);

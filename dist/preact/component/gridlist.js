@@ -7,7 +7,7 @@ import { useComponent, useComponentC, useDefault } from "./util.js";
 const GridlistRowContext = createContext(null);
 const GridlistCellContext = createContext(null);
 const GridlistProcessedChildrenContext = createContext(null);
-export function Gridlist({ render, ariaLabel, collator, disableHomeEndKeys, focusSelfParent, imperativeHandle, initiallyTabbableColumn, multiSelectionAriaPropName, multiSelectionMode, navigatePastEnd, navigatePastStart, noTypeahead, onElementChange, onLabelClick, onMount, onNavigateLinear, onNavigateTypeahead, onSelectionChange, onTabbableColumnChange, onTabbableIndexChange, onUnmount, pageNavigationSize, paginationMax, paginationMin, singleSelectionAriaPropName, singleSelectionMode, typeaheadTimeout, untabbable, children, staggered, onAfterChildLayoutEffect, onChildrenCountChange, onChildrenMountChange, onSingleSelectedIndexChange, singleSelectedIndex, getSortColumn, getSortValueAt, ...void1 }) {
+export function Gridlist({ render, ariaLabel, collator, disableHomeEndKeys, focusSelfParent, imperativeHandle, initiallyTabbableColumn, multiSelectionAriaPropName, multiSelectionMode, navigatePastEnd, navigatePastStart, noTypeahead, onElementChange, onLabelClick, onMount, onNavigateLinear, onNavigateTypeahead, onSelectionChange, onTabbableColumnChange, onTabbableIndexChange, onUnmount, pageNavigationSize, paginationMax, paginationMin, singleSelectionAriaPropName, singleSelectionMode, typeaheadTimeout, untabbable, children, staggered, onAfterChildLayoutEffect, onChildrenCountChange, onChildrenMountChange, onSingleSelectedIndexChange, singleSelectedIndex, getSortColumn, getSortValueAt, animate, disableIntersectionObserver, ...void1 }) {
     getSortValueAt ??= identity;
     useEnsureStability("Gridlist", getSortValueAt);
     assertEmptyObject(void1);
@@ -49,6 +49,7 @@ export function Gridlist({ render, ariaLabel, collator, disableHomeEndKeys, focu
         },
         rearrangeableChildrenParameters: {
             children,
+            animate: animate || false
         },
         processedIndexManglerParameters: {
             compare: null,
@@ -73,7 +74,8 @@ export function Gridlist({ render, ariaLabel, collator, disableHomeEndKeys, focu
             singleSelectionMode: useDefault("singleSelectionMode", singleSelectionMode)
         },
         staggeredChildrenParameters: {
-            staggered: staggered || false
+            staggered: staggered || false,
+            disableIntersectionObserver: disableIntersectionObserver || false
         },
         typeaheadNavigationParameters: {
             collator,

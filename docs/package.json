@@ -4,7 +4,7 @@
     "type": "module",
     "description": "Demo page for preact-aria-widgets",
     "main": "index.tsx",
-    "packageManager": "pnpm@8.6.11",
+    "packageManager": "pnpm@8.15.9+sha512.499434c9d8fdd1a2794ebf4552b3b25c0a633abcee5bb15e7b5de90f32f47b513aca98cd5cfd001c31f0db454bc3804edccd578501e4ca293a6816166bbd9f81",
     "browserslist": "defaults, iOS >= 12",
     "scripts": {
         "watch": "npx esbuild ./index.tsx --bundle --outfile=bundle.js --format=iife --define:process.env.NODE_ENV=\\\"production\\\" --sourcemap --watch",

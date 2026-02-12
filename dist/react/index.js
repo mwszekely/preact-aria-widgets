@@ -1,12 +1,12 @@
-import { identity, noop as noop$1, debounce } from 'lodash-es';
+import { identity, noop as noop$1 } from 'lodash-es';
 import { isTabbable, isFocusable } from 'tabbable';
 import 'clsx';
 
-var n,l$1,u$2,i$2,r$1,o$1,e$1,f$2,c$1,s$1,a$1,h$1,p$1={},y$1=[],v$1=/acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i,w$1=Array.isArray;function d$1(n,l){for(var u in l)n[u]=l[u];return n}function g$2(n){n&&n.parentNode&&n.parentNode.removeChild(n);}function _$1(l,u,t){var i,r,o,e={};for(o in u)"key"==o?i=u[o]:"ref"==o?r=u[o]:e[o]=u[o];if(arguments.length>2&&(e.children=arguments.length>3?n.call(arguments,2):t),"function"==typeof l&&null!=l.defaultProps)for(o in l.defaultProps)null==e[o]&&(e[o]=l.defaultProps[o]);return m$1(l,e,i,r,null)}function m$1(n,t,i,r,o){var e={type:n,props:t,key:i,ref:r,__k:null,__:null,__b:0,__e:null,__c:null,constructor:void 0,__v:null==o?++u$2:o,__i:-1,__u:0};return null==o&&null!=l$1.vnode&&l$1.vnode(e),e}function k$1(n){return n.children}function x$1(n,l){this.props=n,this.context=l;}function S(n,l){if(null==l)return n.__?S(n.__,n.__i+1):null;for(var u;l<n.__k.length;l++)if(null!=(u=n.__k[l])&&null!=u.__e)return u.__e;return "function"==typeof n.type?S(n):null}function C$1(n){var l,u;if(null!=(n=n.__)&&null!=n.__c){for(n.__e=n.__c.base=null,l=0;l<n.__k.length;l++)if(null!=(u=n.__k[l])&&null!=u.__e){n.__e=n.__c.base=u.__e;break}return C$1(n)}}function M$1(n){(!n.__d&&(n.__d=true)&&i$2.push(n)&&!$$1.__r++||r$1!=l$1.debounceRendering)&&((r$1=l$1.debounceRendering)||o$1)($$1);}function $$1(){for(var n,u,t,r,o,f,c,s=1;i$2.length;)i$2.length>s&&i$2.sort(e$1),n=i$2.shift(),s=i$2.length,n.__d&&(t=void 0,o=(r=(u=n).__v).__e,f=[],c=[],u.__P&&((t=d$1({},r)).__v=r.__v+1,l$1.vnode&&l$1.vnode(t),O(u.__P,t,r,u.__n,u.__P.namespaceURI,32&r.__u?[o]:null,f,null==o?S(r):o,!!(32&r.__u),c),t.__v=r.__v,t.__.__k[t.__i]=t,z$1(f,t,c),t.__e!=o&&C$1(t)));$$1.__r=0;}function I(n,l,u,t,i,r,o,e,f,c,s){var a,h,v,w,d,g,_=t&&t.__k||y$1,m=l.length;for(f=P$1(u,l,_,f,m),a=0;a<m;a++)null!=(v=u.__k[a])&&(h=-1==v.__i?p$1:_[v.__i]||p$1,v.__i=a,g=O(n,v,h,i,r,o,e,f,c,s),w=v.__e,v.ref&&h.ref!=v.ref&&(h.ref&&q$2(h.ref,null,v),s.push(v.ref,v.__c||w,v)),null==d&&null!=w&&(d=w),4&v.__u||h.__k===v.__k?f=A$2(v,f,n):"function"==typeof v.type&&void 0!==g?f=g:w&&(f=w.nextSibling),v.__u&=-7);return u.__e=d,f}function P$1(n,l,u,t,i){var r,o,e,f,c,s=u.length,a=s,h=0;for(n.__k=new Array(i),r=0;r<i;r++)null!=(o=l[r])&&"boolean"!=typeof o&&"function"!=typeof o?(f=r+h,(o=n.__k[r]="string"==typeof o||"number"==typeof o||"bigint"==typeof o||o.constructor==String?m$1(null,o,null,null,null):w$1(o)?m$1(k$1,{children:o},null,null,null):null==o.constructor&&o.__b>0?m$1(o.type,o.props,o.key,o.ref?o.ref:null,o.__v):o).__=n,o.__b=n.__b+1,e=null,-1!=(c=o.__i=L(o,u,f,a))&&(a--,(e=u[c])&&(e.__u|=2)),null==e||null==e.__v?(-1==c&&(i>s?h--:i<s&&h++),"function"!=typeof o.type&&(o.__u|=4)):c!=f&&(c==f-1?h--:c==f+1?h++:(c>f?h--:h++,o.__u|=4))):n.__k[r]=null;if(a)for(r=0;r<s;r++)null!=(e=u[r])&&0==(2&e.__u)&&(e.__e==t&&(t=S(e)),B$2(e,e));return t}function A$2(n,l,u){var t,i;if("function"==typeof n.type){for(t=n.__k,i=0;t&&i<t.length;i++)t[i]&&(t[i].__=n,l=A$2(t[i],l,u));return l}n.__e!=l&&(l&&n.type&&!u.contains(l)&&(l=S(n)),u.insertBefore(n.__e,l||null),l=n.__e);do{l=l&&l.nextSibling;}while(null!=l&&8==l.nodeType);return l}function H$1(n,l){return l=l||[],null==n||"boolean"==typeof n||(w$1(n)?n.some(function(n){H$1(n,l);}):l.push(n)),l}function L(n,l,u,t){var i,r,o=n.key,e=n.type,f=l[u];if(null===f&&null==n.key||f&&o==f.key&&e==f.type&&0==(2&f.__u))return u;if(t>(null!=f&&0==(2&f.__u)?1:0))for(i=u-1,r=u+1;i>=0||r<l.length;){if(i>=0){if((f=l[i])&&0==(2&f.__u)&&o==f.key&&e==f.type)return i;i--;}if(r<l.length){if((f=l[r])&&0==(2&f.__u)&&o==f.key&&e==f.type)return r;r++;}}return  -1}function T$2(n,l,u){"-"==l[0]?n.setProperty(l,null==u?"":u):n[l]=null==u?"":"number"!=typeof u||v$1.test(l)?u:u+"px";}function j$2(n,l,u,t,i){var r;n:if("style"==l)if("string"==typeof u)n.style.cssText=u;else {if("string"==typeof t&&(n.style.cssText=t=""),t)for(l in t)u&&l in u||T$2(n.style,l,"");if(u)for(l in u)t&&u[l]==t[l]||T$2(n.style,l,u[l]);}else if("o"==l[0]&&"n"==l[1])r=l!=(l=l.replace(f$2,"$1")),l=l.toLowerCase()in n||"onFocusOut"==l||"onFocusIn"==l?l.toLowerCase().slice(2):l.slice(2),n.l||(n.l={}),n.l[l+r]=u,u?t?u.u=t.u:(u.u=c$1,n.addEventListener(l,r?a$1:s$1,r)):n.removeEventListener(l,r?a$1:s$1,r);else {if("http://www.w3.org/2000/svg"==i)l=l.replace(/xlink(H|:h)/,"h").replace(/sName$/,"s");else if("width"!=l&&"height"!=l&&"href"!=l&&"list"!=l&&"form"!=l&&"tabIndex"!=l&&"download"!=l&&"rowSpan"!=l&&"colSpan"!=l&&"role"!=l&&"popover"!=l&&l in n)try{n[l]=null==u?"":u;break n}catch(n){}"function"==typeof u||(null==u||false===u&&"-"!=l[4]?n.removeAttribute(l):n.setAttribute(l,"popover"==l&&1==u?"":u));}}function F$2(n){return function(u){if(this.l){var t=this.l[u.type+n];if(null==u.t)u.t=c$1++;else if(u.t<t.u)return;return t(l$1.event?l$1.event(u):u)}}}function O(n,u,t,i,r,o,e,f,c,s){var a,h,p,y,v,_,m,b,S,C,M,$,P,A,H,L,T,j=u.type;if(null!=u.constructor)return null;128&t.__u&&(c=!!(32&t.__u),o=[f=u.__e=t.__e]),(a=l$1.__b)&&a(u);n:if("function"==typeof j)try{if(b=u.props,S="prototype"in j&&j.prototype.render,C=(a=j.contextType)&&i[a.__c],M=a?C?C.props.value:a.__:i,t.__c?m=(h=u.__c=t.__c).__=h.__E:(S?u.__c=h=new j(b,M):(u.__c=h=new x$1(b,M),h.constructor=j,h.render=D$2),C&&C.sub(h),h.props=b,h.state||(h.state={}),h.context=M,h.__n=i,p=h.__d=!0,h.__h=[],h._sb=[]),S&&null==h.__s&&(h.__s=h.state),S&&null!=j.getDerivedStateFromProps&&(h.__s==h.state&&(h.__s=d$1({},h.__s)),d$1(h.__s,j.getDerivedStateFromProps(b,h.__s))),y=h.props,v=h.state,h.__v=u,p)S&&null==j.getDerivedStateFromProps&&null!=h.componentWillMount&&h.componentWillMount(),S&&null!=h.componentDidMount&&h.__h.push(h.componentDidMount);else {if(S&&null==j.getDerivedStateFromProps&&b!==y&&null!=h.componentWillReceiveProps&&h.componentWillReceiveProps(b,M),!h.__e&&null!=h.shouldComponentUpdate&&!1===h.shouldComponentUpdate(b,h.__s,M)||u.__v==t.__v){for(u.__v!=t.__v&&(h.props=b,h.state=h.__s,h.__d=!1),u.__e=t.__e,u.__k=t.__k,u.__k.some(function(n){n&&(n.__=u);}),$=0;$<h._sb.length;$++)h.__h.push(h._sb[$]);h._sb=[],h.__h.length&&e.push(h);break n}null!=h.componentWillUpdate&&h.componentWillUpdate(b,h.__s,M),S&&null!=h.componentDidUpdate&&h.__h.push(function(){h.componentDidUpdate(y,v,_);});}if(h.context=M,h.props=b,h.__P=n,h.__e=!1,P=l$1.__r,A=0,S){for(h.state=h.__s,h.__d=!1,P&&P(u),a=h.render(h.props,h.state,h.context),H=0;H<h._sb.length;H++)h.__h.push(h._sb[H]);h._sb=[];}else do{h.__d=!1,P&&P(u),a=h.render(h.props,h.state,h.context),h.state=h.__s;}while(h.__d&&++A<25);h.state=h.__s,null!=h.getChildContext&&(i=d$1(d$1({},i),h.getChildContext())),S&&!p&&null!=h.getSnapshotBeforeUpdate&&(_=h.getSnapshotBeforeUpdate(y,v)),L=a,null!=a&&a.type===k$1&&null==a.key&&(L=N$1(a.props.children)),f=I(n,w$1(L)?L:[L],u,t,i,r,o,e,f,c,s),h.base=u.__e,u.__u&=-161,h.__h.length&&e.push(h),m&&(h.__E=h.__=null);}catch(n){if(u.__v=null,c||null!=o)if(n.then){for(u.__u|=c?160:128;f&&8==f.nodeType&&f.nextSibling;)f=f.nextSibling;o[o.indexOf(f)]=null,u.__e=f;}else for(T=o.length;T--;)g$2(o[T]);else u.__e=t.__e,u.__k=t.__k;l$1.__e(n,u,t);}else null==o&&u.__v==t.__v?(u.__k=t.__k,u.__e=t.__e):f=u.__e=V$1(t.__e,u,t,i,r,o,e,c,s);return (a=l$1.diffed)&&a(u),128&u.__u?void 0:f}function z$1(n,u,t){for(var i=0;i<t.length;i++)q$2(t[i],t[++i],t[++i]);l$1.__c&&l$1.__c(u,n),n.some(function(u){try{n=u.__h,u.__h=[],n.some(function(n){n.call(u);});}catch(n){l$1.__e(n,u.__v);}});}function N$1(n){return "object"!=typeof n||null==n||n.__b&&n.__b>0?n:w$1(n)?n.map(N$1):d$1({},n)}function V$1(u,t,i,r,o,e,f,c,s){var a,h,y,v,d,_,m,b=i.props,k=t.props,x=t.type;if("svg"==x?o="http://www.w3.org/2000/svg":"math"==x?o="http://www.w3.org/1998/Math/MathML":o||(o="http://www.w3.org/1999/xhtml"),null!=e)for(a=0;a<e.length;a++)if((d=e[a])&&"setAttribute"in d==!!x&&(x?d.localName==x:3==d.nodeType)){u=d,e[a]=null;break}if(null==u){if(null==x)return document.createTextNode(k);u=document.createElementNS(o,x,k.is&&k),c&&(l$1.__m&&l$1.__m(t,e),c=false),e=null;}if(null==x)b===k||c&&u.data==k||(u.data=k);else {if(e=e&&n.call(u.childNodes),b=i.props||p$1,!c&&null!=e)for(b={},a=0;a<u.attributes.length;a++)b[(d=u.attributes[a]).name]=d.value;for(a in b)if(d=b[a],"children"==a);else if("dangerouslySetInnerHTML"==a)y=d;else if(!(a in k)){if("value"==a&&"defaultValue"in k||"checked"==a&&"defaultChecked"in k)continue;j$2(u,a,null,d,o);}for(a in k)d=k[a],"children"==a?v=d:"dangerouslySetInnerHTML"==a?h=d:"value"==a?_=d:"checked"==a?m=d:c&&"function"!=typeof d||b[a]===d||j$2(u,a,d,b[a],o);if(h)c||y&&(h.__html==y.__html||h.__html==u.innerHTML)||(u.innerHTML=h.__html),t.__k=[];else if(y&&(u.innerHTML=""),I("template"==t.type?u.content:u,w$1(v)?v:[v],t,i,r,"foreignObject"==x?"http://www.w3.org/1999/xhtml":o,e,f,e?e[0]:i.__k&&S(i,0),c,s),null!=e)for(a=e.length;a--;)g$2(e[a]);c||(a="value","progress"==x&&null==_?u.removeAttribute("value"):null!=_&&(_!==u[a]||"progress"==x&&!_||"option"==x&&_!=b[a])&&j$2(u,a,_,b[a],o),a="checked",null!=m&&m!=u[a]&&j$2(u,a,m,b[a],o));}return u}function q$2(n,u,t){try{if("function"==typeof n){var i="function"==typeof n.__u;i&&n.__u(),i&&null==u||(n.__u=n(u));}else n.current=u;}catch(n){l$1.__e(n,t);}}function B$2(n,u,t){var i,r;if(l$1.unmount&&l$1.unmount(n),(i=n.ref)&&(i.current&&i.current!=n.__e||q$2(i,null,u)),null!=(i=n.__c)){if(i.componentWillUnmount)try{i.componentWillUnmount();}catch(n){l$1.__e(n,u);}i.base=i.__P=null;}if(i=n.__k)for(r=0;r<i.length;r++)i[r]&&B$2(i[r],u,t||"function"!=typeof n.type);t||g$2(n.__e),n.__c=n.__=n.__e=void 0;}function D$2(n,l,u){return this.constructor(n,u)}function E$1(u,t,i){var r,o,e,f;t==document&&(t=document.documentElement),l$1.__&&l$1.__(u,t),o=(r="function"=="undefined")?null:t.__k,e=[],f=[],O(t,u=(t).__k=_$1(k$1,null,[u]),o||p$1,p$1,t.namespaceURI,o?null:t.firstChild?n.call(t.childNodes):null,e,o?o.__e:t.firstChild,r,f),z$1(e,u,f);}function J$1(l,u,t){var i,r,o,e,f=d$1({},l.props);for(o in l.type&&l.type.defaultProps&&(e=l.type.defaultProps),u)"key"==o?i=u[o]:"ref"==o?r=u[o]:f[o]=null==u[o]&&null!=e?e[o]:u[o];return arguments.length>2&&(f.children=arguments.length>3?n.call(arguments,2):t),m$1(l.type,f,i||l.key,r||l.ref,null)}function K$1(n){function l(n){var u,t;return this.getChildContext||(u=new Set,(t={})[l.__c]=this,this.getChildContext=function(){return t},this.componentWillUnmount=function(){u=null;},this.shouldComponentUpdate=function(n){this.props.value!=n.value&&u.forEach(function(n){n.__e=true,M$1(n);});},this.sub=function(n){u.add(n);var l=n.componentWillUnmount;n.componentWillUnmount=function(){u&&u.delete(n),l&&l.call(n);};}),n.children}return l.__c="__cC"+h$1++,l.__=n,l.Provider=l.__l=(l.Consumer=function(n,l){return n.children(l)}).contextType=l,l}n=y$1.slice,l$1={__e:function(n,l,u,t){for(var i,r,o;l=l.__;)if((i=l.__c)&&!i.__)try{if((r=i.constructor)&&null!=r.getDerivedStateFromError&&(i.setState(r.getDerivedStateFromError(n)),o=i.__d),null!=i.componentDidCatch&&(i.componentDidCatch(n,t||{}),o=i.__d),o)return i.__E=i}catch(l){n=l;}throw n}},u$2=0,x$1.prototype.setState=function(n,l){var u;u=null!=this.__s&&this.__s!=this.state?this.__s:this.__s=d$1({},this.state),"function"==typeof n&&(n=n(d$1({},u),this.props)),n&&d$1(u,n),null!=n&&this.__v&&(l&&this._sb.push(l),M$1(this));},x$1.prototype.forceUpdate=function(n){this.__v&&(this.__e=true,n&&this.__h.push(n),M$1(this));},x$1.prototype.render=k$1,i$2=[],o$1="function"==typeof Promise?Promise.prototype.then.bind(Promise.resolve()):setTimeout,e$1=function(n,l){return n.__v.__b-l.__v.__b},$$1.__r=0,f$2=/(PointerCapture)$|Capture$/i,c$1=0,s$1=F$2(false),a$1=F$2(true),h$1=0;
+var n,l$1,u$2,i$2,o$1,r$1,e$1,f$2,c$1,s$1,a$1,h$1,p$1={},v$1=[],y$1=/acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i,d$1=Array.isArray;function w$1(n,l){for(var u in l)n[u]=l[u];return n}function g$2(n){n&&n.parentNode&&n.parentNode.removeChild(n);}function _$1(l,u,t){var i,o,r,e={};for(r in u)"key"==r?i=u[r]:"ref"==r?o=u[r]:e[r]=u[r];if(arguments.length>2&&(e.children=arguments.length>3?n.call(arguments,2):t),"function"==typeof l&&null!=l.defaultProps)for(r in l.defaultProps) void 0===e[r]&&(e[r]=l.defaultProps[r]);return m$1(l,e,i,o,null)}function m$1(n,t,i,o,r){var e={type:n,props:t,key:i,ref:o,__k:null,__:null,__b:0,__e:null,__c:null,constructor:void 0,__v:null==r?++u$2:r,__i:-1,__u:0};return null==r&&null!=l$1.vnode&&l$1.vnode(e),e}function k$1(n){return n.children}function x$1(n,l){this.props=n,this.context=l;}function S(n,l){if(null==l)return n.__?S(n.__,n.__i+1):null;for(var u;l<n.__k.length;l++)if(null!=(u=n.__k[l])&&null!=u.__e)return u.__e;return "function"==typeof n.type?S(n):null}function C$1(n){var l,u;if(null!=(n=n.__)&&null!=n.__c){for(n.__e=n.__c.base=null,l=0;l<n.__k.length;l++)if(null!=(u=n.__k[l])&&null!=u.__e){n.__e=n.__c.base=u.__e;break}return C$1(n)}}function M$1(n){(!n.__d&&(n.__d=true)&&i$2.push(n)&&!$$1.__r++||o$1!=l$1.debounceRendering)&&((o$1=l$1.debounceRendering)||r$1)($$1);}function $$1(){for(var n,u,t,o,r,f,c,s=1;i$2.length;)i$2.length>s&&i$2.sort(e$1),n=i$2.shift(),s=i$2.length,n.__d&&(t=void 0,o=void 0,r=(o=(u=n).__v).__e,f=[],c=[],u.__P&&((t=w$1({},o)).__v=o.__v+1,l$1.vnode&&l$1.vnode(t),O(u.__P,t,o,u.__n,u.__P.namespaceURI,32&o.__u?[r]:null,f,null==r?S(o):r,!!(32&o.__u),c),t.__v=o.__v,t.__.__k[t.__i]=t,N$1(f,t,c),o.__e=o.__=null,t.__e!=r&&C$1(t)));$$1.__r=0;}function I(n,l,u,t,i,o,r,e,f,c,s){var a,h,y,d,w,g,_,m=t&&t.__k||v$1,b=l.length;for(f=P$1(u,l,m,f,b),a=0;a<b;a++)null!=(y=u.__k[a])&&(h=-1==y.__i?p$1:m[y.__i]||p$1,y.__i=a,g=O(n,y,h,i,o,r,e,f,c,s),d=y.__e,y.ref&&h.ref!=y.ref&&(h.ref&&B$2(h.ref,null,y),s.push(y.ref,y.__c||d,y)),null==w&&null!=d&&(w=d),(_=!!(4&y.__u))||h.__k===y.__k?f=A$2(y,f,n,_):"function"==typeof y.type&&void 0!==g?f=g:d&&(f=d.nextSibling),y.__u&=-7);return u.__e=w,f}function P$1(n,l,u,t,i){var o,r,e,f,c,s=u.length,a=s,h=0;for(n.__k=new Array(i),o=0;o<i;o++)null!=(r=l[o])&&"boolean"!=typeof r&&"function"!=typeof r?("string"==typeof r||"number"==typeof r||"bigint"==typeof r||r.constructor==String?r=n.__k[o]=m$1(null,r,null,null,null):d$1(r)?r=n.__k[o]=m$1(k$1,{children:r},null,null,null):void 0===r.constructor&&r.__b>0?r=n.__k[o]=m$1(r.type,r.props,r.key,r.ref?r.ref:null,r.__v):n.__k[o]=r,f=o+h,r.__=n,r.__b=n.__b+1,e=null,-1!=(c=r.__i=L(r,u,f,a))&&(a--,(e=u[c])&&(e.__u|=2)),null==e||null==e.__v?(-1==c&&(i>s?h--:i<s&&h++),"function"!=typeof r.type&&(r.__u|=4)):c!=f&&(c==f-1?h--:c==f+1?h++:(c>f?h--:h++,r.__u|=4))):n.__k[o]=null;if(a)for(o=0;o<s;o++)null!=(e=u[o])&&0==(2&e.__u)&&(e.__e==t&&(t=S(e)),D$2(e,e));return t}function A$2(n,l,u,t){var i,o;if("function"==typeof n.type){for(i=n.__k,o=0;i&&o<i.length;o++)i[o]&&(i[o].__=n,l=A$2(i[o],l,u,t));return l}n.__e!=l&&(t&&(l&&n.type&&!l.parentNode&&(l=S(n)),u.insertBefore(n.__e,l||null)),l=n.__e);do{l=l&&l.nextSibling;}while(null!=l&&8==l.nodeType);return l}function H$1(n,l){return l=l||[],null==n||"boolean"==typeof n||(d$1(n)?n.some(function(n){H$1(n,l);}):l.push(n)),l}function L(n,l,u,t){var i,o,r,e=n.key,f=n.type,c=l[u],s=null!=c&&0==(2&c.__u);if(null===c&&null==e||s&&e==c.key&&f==c.type)return u;if(t>(s?1:0))for(i=u-1,o=u+1;i>=0||o<l.length;)if(null!=(c=l[r=i>=0?i--:o++])&&0==(2&c.__u)&&e==c.key&&f==c.type)return r;return  -1}function T$2(n,l,u){"-"==l[0]?n.setProperty(l,null==u?"":u):n[l]=null==u?"":"number"!=typeof u||y$1.test(l)?u:u+"px";}function j$2(n,l,u,t,i){var o,r;n:if("style"==l)if("string"==typeof u)n.style.cssText=u;else {if("string"==typeof t&&(n.style.cssText=t=""),t)for(l in t)u&&l in u||T$2(n.style,l,"");if(u)for(l in u)t&&u[l]==t[l]||T$2(n.style,l,u[l]);}else if("o"==l[0]&&"n"==l[1])o=l!=(l=l.replace(f$2,"$1")),r=l.toLowerCase(),l=r in n||"onFocusOut"==l||"onFocusIn"==l?r.slice(2):l.slice(2),n.l||(n.l={}),n.l[l+o]=u,u?t?u.u=t.u:(u.u=c$1,n.addEventListener(l,o?a$1:s$1,o)):n.removeEventListener(l,o?a$1:s$1,o);else {if("http://www.w3.org/2000/svg"==i)l=l.replace(/xlink(H|:h)/,"h").replace(/sName$/,"s");else if("width"!=l&&"height"!=l&&"href"!=l&&"list"!=l&&"form"!=l&&"tabIndex"!=l&&"download"!=l&&"rowSpan"!=l&&"colSpan"!=l&&"role"!=l&&"popover"!=l&&l in n)try{n[l]=null==u?"":u;break n}catch(n){}"function"==typeof u||(null==u||false===u&&"-"!=l[4]?n.removeAttribute(l):n.setAttribute(l,"popover"==l&&1==u?"":u));}}function F$2(n){return function(u){if(this.l){var t=this.l[u.type+n];if(null==u.t)u.t=c$1++;else if(u.t<t.u)return;return t(l$1.event?l$1.event(u):u)}}}function O(n,u,t,i,o,r,e,f,c,s){var a,h,p,v,y,_,m,b,S,C,M,$,P,A,H,L,T,j=u.type;if(void 0!==u.constructor)return null;128&t.__u&&(c=!!(32&t.__u),r=[f=u.__e=t.__e]),(a=l$1.__b)&&a(u);n:if("function"==typeof j)try{if(b=u.props,S="prototype"in j&&j.prototype.render,C=(a=j.contextType)&&i[a.__c],M=a?C?C.props.value:a.__:i,t.__c?m=(h=u.__c=t.__c).__=h.__E:(S?u.__c=h=new j(b,M):(u.__c=h=new x$1(b,M),h.constructor=j,h.render=E$1),C&&C.sub(h),h.state||(h.state={}),h.__n=i,p=h.__d=!0,h.__h=[],h._sb=[]),S&&null==h.__s&&(h.__s=h.state),S&&null!=j.getDerivedStateFromProps&&(h.__s==h.state&&(h.__s=w$1({},h.__s)),w$1(h.__s,j.getDerivedStateFromProps(b,h.__s))),v=h.props,y=h.state,h.__v=u,p)S&&null==j.getDerivedStateFromProps&&null!=h.componentWillMount&&h.componentWillMount(),S&&null!=h.componentDidMount&&h.__h.push(h.componentDidMount);else {if(S&&null==j.getDerivedStateFromProps&&b!==v&&null!=h.componentWillReceiveProps&&h.componentWillReceiveProps(b,M),u.__v==t.__v||!h.__e&&null!=h.shouldComponentUpdate&&!1===h.shouldComponentUpdate(b,h.__s,M)){for(u.__v!=t.__v&&(h.props=b,h.state=h.__s,h.__d=!1),u.__e=t.__e,u.__k=t.__k,u.__k.some(function(n){n&&(n.__=u);}),$=0;$<h._sb.length;$++)h.__h.push(h._sb[$]);h._sb=[],h.__h.length&&e.push(h);break n}null!=h.componentWillUpdate&&h.componentWillUpdate(b,h.__s,M),S&&null!=h.componentDidUpdate&&h.__h.push(function(){h.componentDidUpdate(v,y,_);});}if(h.context=M,h.props=b,h.__P=n,h.__e=!1,P=l$1.__r,A=0,S){for(h.state=h.__s,h.__d=!1,P&&P(u),a=h.render(h.props,h.state,h.context),H=0;H<h._sb.length;H++)h.__h.push(h._sb[H]);h._sb=[];}else do{h.__d=!1,P&&P(u),a=h.render(h.props,h.state,h.context),h.state=h.__s;}while(h.__d&&++A<25);h.state=h.__s,null!=h.getChildContext&&(i=w$1(w$1({},i),h.getChildContext())),S&&!p&&null!=h.getSnapshotBeforeUpdate&&(_=h.getSnapshotBeforeUpdate(v,y)),L=a,null!=a&&a.type===k$1&&null==a.key&&(L=V$1(a.props.children)),f=I(n,d$1(L)?L:[L],u,t,i,o,r,e,f,c,s),h.base=u.__e,u.__u&=-161,h.__h.length&&e.push(h),m&&(h.__E=h.__=null);}catch(n){if(u.__v=null,c||null!=r)if(n.then){for(u.__u|=c?160:128;f&&8==f.nodeType&&f.nextSibling;)f=f.nextSibling;r[r.indexOf(f)]=null,u.__e=f;}else {for(T=r.length;T--;)g$2(r[T]);z$1(u);}else u.__e=t.__e,u.__k=t.__k,n.then||z$1(u);l$1.__e(n,u,t);}else null==r&&u.__v==t.__v?(u.__k=t.__k,u.__e=t.__e):f=u.__e=q$2(t.__e,u,t,i,o,r,e,c,s);return (a=l$1.diffed)&&a(u),128&u.__u?void 0:f}function z$1(n){n&&n.__c&&(n.__c.__e=true),n&&n.__k&&n.__k.forEach(z$1);}function N$1(n,u,t){for(var i=0;i<t.length;i++)B$2(t[i],t[++i],t[++i]);l$1.__c&&l$1.__c(u,n),n.some(function(u){try{n=u.__h,u.__h=[],n.some(function(n){n.call(u);});}catch(n){l$1.__e(n,u.__v);}});}function V$1(n){return "object"!=typeof n||null==n||n.__b&&n.__b>0?n:d$1(n)?n.map(V$1):w$1({},n)}function q$2(u,t,i,o,r,e,f,c,s){var a,h,v,y,w,_,m,b=i.props||p$1,k=t.props,x=t.type;if("svg"==x?r="http://www.w3.org/2000/svg":"math"==x?r="http://www.w3.org/1998/Math/MathML":r||(r="http://www.w3.org/1999/xhtml"),null!=e)for(a=0;a<e.length;a++)if((w=e[a])&&"setAttribute"in w==!!x&&(x?w.localName==x:3==w.nodeType)){u=w,e[a]=null;break}if(null==u){if(null==x)return document.createTextNode(k);u=document.createElementNS(r,x,k.is&&k),c&&(l$1.__m&&l$1.__m(t,e),c=false),e=null;}if(null==x)b===k||c&&u.data==k||(u.data=k);else {if(e=e&&n.call(u.childNodes),!c&&null!=e)for(b={},a=0;a<u.attributes.length;a++)b[(w=u.attributes[a]).name]=w.value;for(a in b)if(w=b[a],"children"==a);else if("dangerouslySetInnerHTML"==a)v=w;else if(!(a in k)){if("value"==a&&"defaultValue"in k||"checked"==a&&"defaultChecked"in k)continue;j$2(u,a,null,w,r);}for(a in k)w=k[a],"children"==a?y=w:"dangerouslySetInnerHTML"==a?h=w:"value"==a?_=w:"checked"==a?m=w:c&&"function"!=typeof w||b[a]===w||j$2(u,a,w,b[a],r);if(h)c||v&&(h.__html==v.__html||h.__html==u.innerHTML)||(u.innerHTML=h.__html),t.__k=[];else if(v&&(u.innerHTML=""),I("template"==t.type?u.content:u,d$1(y)?y:[y],t,i,o,"foreignObject"==x?"http://www.w3.org/1999/xhtml":r,e,f,e?e[0]:i.__k&&S(i,0),c,s),null!=e)for(a=e.length;a--;)g$2(e[a]);c||(a="value","progress"==x&&null==_?u.removeAttribute("value"):null!=_&&(_!==u[a]||"progress"==x&&!_||"option"==x&&_!=b[a])&&j$2(u,a,_,b[a],r),a="checked",null!=m&&m!=u[a]&&j$2(u,a,m,b[a],r));}return u}function B$2(n,u,t){try{if("function"==typeof n){var i="function"==typeof n.__u;i&&n.__u(),i&&null==u||(n.__u=n(u));}else n.current=u;}catch(n){l$1.__e(n,t);}}function D$2(n,u,t){var i,o;if(l$1.unmount&&l$1.unmount(n),(i=n.ref)&&(i.current&&i.current!=n.__e||B$2(i,null,u)),null!=(i=n.__c)){if(i.componentWillUnmount)try{i.componentWillUnmount();}catch(n){l$1.__e(n,u);}i.base=i.__P=null;}if(i=n.__k)for(o=0;o<i.length;o++)i[o]&&D$2(i[o],u,t||"function"!=typeof n.type);t||g$2(n.__e),n.__c=n.__=n.__e=void 0;}function E$1(n,l,u){return this.constructor(n,u)}function G$1(u,t,i){var o,r,e,f;t==document&&(t=document.documentElement),l$1.__&&l$1.__(u,t),r=(o="function"=="undefined")?null:t.__k,e=[],f=[],O(t,u=(t).__k=_$1(k$1,null,[u]),r||p$1,p$1,t.namespaceURI,r?null:t.firstChild?n.call(t.childNodes):null,e,r?r.__e:t.firstChild,o,f),N$1(e,u,f);}function K$1(l,u,t){var i,o,r,e,f=w$1({},l.props);for(r in l.type&&l.type.defaultProps&&(e=l.type.defaultProps),u)"key"==r?i=u[r]:"ref"==r?o=u[r]:f[r]=void 0===u[r]&&null!=e?e[r]:u[r];return arguments.length>2&&(f.children=arguments.length>3?n.call(arguments,2):t),m$1(l.type,f,i||l.key,o||l.ref,null)}function Q$1(n){function l(n){var u,t;return this.getChildContext||(u=new Set,(t={})[l.__c]=this,this.getChildContext=function(){return t},this.componentWillUnmount=function(){u=null;},this.shouldComponentUpdate=function(n){this.props.value!=n.value&&u.forEach(function(n){n.__e=true,M$1(n);});},this.sub=function(n){u.add(n);var l=n.componentWillUnmount;n.componentWillUnmount=function(){u&&u.delete(n),l&&l.call(n);};}),n.children}return l.__c="__cC"+h$1++,l.__=n,l.Provider=l.__l=(l.Consumer=function(n,l){return n.children(l)}).contextType=l,l}n=v$1.slice,l$1={__e:function(n,l,u,t){for(var i,o,r;l=l.__;)if((i=l.__c)&&!i.__)try{if((o=i.constructor)&&null!=o.getDerivedStateFromError&&(i.setState(o.getDerivedStateFromError(n)),r=i.__d),null!=i.componentDidCatch&&(i.componentDidCatch(n,t||{}),r=i.__d),r)return i.__E=i}catch(l){n=l;}throw n}},u$2=0,x$1.prototype.setState=function(n,l){var u;u=null!=this.__s&&this.__s!=this.state?this.__s:this.__s=w$1({},this.state),"function"==typeof n&&(n=n(w$1({},u),this.props)),n&&w$1(u,n),null!=n&&this.__v&&(l&&this._sb.push(l),M$1(this));},x$1.prototype.forceUpdate=function(n){this.__v&&(this.__e=true,n&&this.__h.push(n),M$1(this));},x$1.prototype.render=k$1,i$2=[],r$1="function"==typeof Promise?Promise.prototype.then.bind(Promise.resolve()):setTimeout,e$1=function(n,l){return n.__v.__b-l.__v.__b},$$1.__r=0,f$2=/(PointerCapture)$|Capture$/i,c$1=0,s$1=F$2(false),a$1=F$2(true),h$1=0;
 
-var t,r,u$1,i$1,o=0,f$1=[],c=l$1,e=c.__b,a=c.__r,v=c.diffed,l=c.__c,m=c.unmount,s=c.__;function p(n,t){c.__h&&c.__h(r,n,o||t),o=0;var u=r.__H||(r.__H={__:[],__h:[]});return n>=u.__.length&&u.__.push({}),u.__[n]}function d(n){return o=1,h(D$1,n)}function h(n,u,i){var o=p(t++,2);if(o.t=n,!o.__c&&(o.__=[i?i(u):D$1(void 0,u),function(n){var t=o.__N?o.__N[0]:o.__[0],r=o.t(t,n);t!==r&&(o.__N=[r,o.__[1]],o.__c.setState({}));}],o.__c=r,!r.__f)){var f=function(n,t,r){if(!o.__c.__H)return  true;var u=o.__c.__H.__.filter(function(n){return !!n.__c});if(u.every(function(n){return !n.__N}))return !c||c.call(this,n,t,r);var i=o.__c.props!==n;return u.forEach(function(n){if(n.__N){var t=n.__[0];n.__=n.__N,n.__N=void 0,t!==n.__[0]&&(i=true);}}),c&&c.call(this,n,t,r)||i};r.__f=true;var c=r.shouldComponentUpdate,e=r.componentWillUpdate;r.componentWillUpdate=function(n,t,r){if(this.__e){var u=c;c=void 0,f(n,t,r),c=u;}e&&e.call(this,n,t,r);},r.shouldComponentUpdate=f;}return o.__N||o.__}function y(n,u){var i=p(t++,3);!c.__s&&C(i.__H,u)&&(i.__=n,i.u=u,r.__H.__h.push(i));}function _(n,u){var i=p(t++,4);!c.__s&&C(i.__H,u)&&(i.__=n,i.u=u,r.__h.push(i));}function A$1(n){return o=5,T$1(function(){return {current:n}},[])}function F$1(n,t,r){o=6,_(function(){if("function"==typeof n){var r=n(t());return function(){n(null),r&&"function"==typeof r&&r();}}if(n)return n.current=t(),function(){return n.current=null}},null==r?r:r.concat(n));}function T$1(n,r){var u=p(t++,7);return C(u.__H,r)&&(u.__=n(),u.__H=r,u.__h=n),u.__}function q$1(n,t){return o=8,T$1(function(){return n},t)}function x(n){var u=r.context[n.__c],i=p(t++,9);return i.c=n,u?(null==i.__&&(i.__=true,u.sub(r)),u.props.value):n.__}function g$1(){var n=p(t++,11);if(!n.__){for(var u=r.__v;null!==u&&!u.__m&&null!==u.__;)u=u.__;var i=u.__m||(u.__m=[0,0]);n.__="P"+i[0]+"-"+i[1]++;}return n.__}function j$1(){for(var n;n=f$1.shift();)if(n.__P&&n.__H)try{n.__H.__h.forEach(z),n.__H.__h.forEach(B$1),n.__H.__h=[];}catch(t){n.__H.__h=[],c.__e(t,n.__v);}}c.__b=function(n){r=null,e&&e(n);},c.__=function(n,t){n&&t.__k&&t.__k.__m&&(n.__m=t.__k.__m),s&&s(n,t);},c.__r=function(n){a&&a(n),t=0;var i=(r=n.__c).__H;i&&(u$1===r?(i.__h=[],r.__h=[],i.__.forEach(function(n){n.__N&&(n.__=n.__N),n.u=n.__N=void 0;})):(i.__h.forEach(z),i.__h.forEach(B$1),i.__h=[],t=0)),u$1=r;},c.diffed=function(n){v&&v(n);var t=n.__c;t&&t.__H&&(t.__H.__h.length&&(1!==f$1.push(t)&&i$1===c.requestAnimationFrame||((i$1=c.requestAnimationFrame)||w)(j$1)),t.__H.__.forEach(function(n){n.u&&(n.__H=n.u),n.u=void 0;})),u$1=r=null;},c.__c=function(n,t){t.some(function(n){try{n.__h.forEach(z),n.__h=n.__h.filter(function(n){return !n.__||B$1(n)});}catch(r){t.some(function(n){n.__h&&(n.__h=[]);}),t=[],c.__e(r,n.__v);}}),l&&l(n,t);},c.unmount=function(n){m&&m(n);var t,r=n.__c;r&&r.__H&&(r.__H.__.forEach(function(n){try{z(n);}catch(n){t=n;}}),r.__H=void 0,t&&c.__e(t,r.__v));};var k="function"==typeof requestAnimationFrame;function w(n){var t,r=function(){clearTimeout(u),k&&cancelAnimationFrame(t),setTimeout(n);},u=setTimeout(r,100);k&&(t=requestAnimationFrame(r));}function z(n){var t=r,u=n.__c;"function"==typeof u&&(n.__c=void 0,u()),r=t;}function B$1(n){var t=r;n.__c=n.__(),r=t;}function C(n,t){return !n||n.length!==t.length||t.some(function(t,r){return t!==n[r]})}function D$1(n,t){return "function"==typeof t?t(n):t}
+var t,r,u$1,i$1,o=0,f$1=[],c=l$1,e=c.__b,a=c.__r,v=c.diffed,l=c.__c,m=c.unmount,s=c.__;function p(n,t){c.__h&&c.__h(r,n,o||t),o=0;var u=r.__H||(r.__H={__:[],__h:[]});return n>=u.__.length&&u.__.push({}),u.__[n]}function d(n){return o=1,h(D$1,n)}function h(n,u,i){var o=p(t++,2);if(o.t=n,!o.__c&&(o.__=[i?i(u):D$1(void 0,u),function(n){var t=o.__N?o.__N[0]:o.__[0],r=o.t(t,n);t!==r&&(o.__N=[r,o.__[1]],o.__c.setState({}));}],o.__c=r,!r.__f)){var f=function(n,t,r){if(!o.__c.__H)return  true;var u=o.__c.__H.__.filter(function(n){return !!n.__c});if(u.every(function(n){return !n.__N}))return !c||c.call(this,n,t,r);var i=o.__c.props!==n;return u.forEach(function(n){if(n.__N){var t=n.__[0];n.__=n.__N,n.__N=void 0,t!==n.__[0]&&(i=true);}}),c&&c.call(this,n,t,r)||i};r.__f=true;var c=r.shouldComponentUpdate,e=r.componentWillUpdate;r.componentWillUpdate=function(n,t,r){if(this.__e){var u=c;c=void 0,f(n,t,r),c=u;}e&&e.call(this,n,t,r);},r.shouldComponentUpdate=f;}return o.__N||o.__}function y(n,u){var i=p(t++,3);!c.__s&&C(i.__H,u)&&(i.__=n,i.u=u,r.__H.__h.push(i));}function _(n,u){var i=p(t++,4);!c.__s&&C(i.__H,u)&&(i.__=n,i.u=u,r.__h.push(i));}function A$1(n){return o=5,T$1(function(){return {current:n}},[])}function F$1(n,t,r){o=6,_(function(){if("function"==typeof n){var r=n(t());return function(){n(null),r&&"function"==typeof r&&r();}}if(n)return n.current=t(),function(){return n.current=null}},null==r?r:r.concat(n));}function T$1(n,r){var u=p(t++,7);return C(u.__H,r)&&(u.__=n(),u.__H=r,u.__h=n),u.__}function q$1(n,t){return o=8,T$1(function(){return n},t)}function x(n){var u=r.context[n.__c],i=p(t++,9);return i.c=n,u?(null==i.__&&(i.__=true,u.sub(r)),u.props.value):n.__}function g$1(){var n=p(t++,11);if(!n.__){for(var u=r.__v;null!==u&&!u.__m&&null!==u.__;)u=u.__;var i=u.__m||(u.__m=[0,0]);n.__="P"+i[0]+"-"+i[1]++;}return n.__}function j$1(){for(var n;n=f$1.shift();)if(n.__P&&n.__H)try{n.__H.__h.forEach(z),n.__H.__h.forEach(B$1),n.__H.__h=[];}catch(t){n.__H.__h=[],c.__e(t,n.__v);}}c.__b=function(n){r=null,e&&e(n);},c.__=function(n,t){n&&t.__k&&t.__k.__m&&(n.__m=t.__k.__m),s&&s(n,t);},c.__r=function(n){a&&a(n),t=0;var i=(r=n.__c).__H;i&&(u$1===r?(i.__h=[],r.__h=[],i.__.forEach(function(n){n.__N&&(n.__=n.__N),n.u=n.__N=void 0;})):(i.__h.forEach(z),i.__h.forEach(B$1),i.__h=[],t=0)),u$1=r;},c.diffed=function(n){v&&v(n);var t=n.__c;t&&t.__H&&(t.__H.__h.length&&(1!==f$1.push(t)&&i$1===c.requestAnimationFrame||((i$1=c.requestAnimationFrame)||w)(j$1)),t.__H.__.forEach(function(n){n.u&&(n.__H=n.u),n.u=void 0;})),u$1=r=null;},c.__c=function(n,t){t.some(function(n){try{n.__h.forEach(z),n.__h=n.__h.filter(function(n){return !n.__||B$1(n)});}catch(r){t.some(function(n){n.__h&&(n.__h=[]);}),t=[],c.__e(r,n.__v);}}),l&&l(n,t);},c.unmount=function(n){m&&m(n);var t,r=n.__c;r&&r.__H&&(r.__H.__.forEach(function(n){try{z(n);}catch(n){t=n;}}),r.__H=void 0,t&&c.__e(t,r.__v));};var k="function"==typeof requestAnimationFrame;function w(n){var t,r=function(){clearTimeout(u),k&&cancelAnimationFrame(t),setTimeout(n);},u=setTimeout(r,35);k&&(t=requestAnimationFrame(r));}function z(n){var t=r,u=n.__c;"function"==typeof u&&(n.__c=void 0,u()),r=t;}function B$1(n){var t=r;n.__c=n.__(),r=t;}function C(n,t){return !n||n.length!==t.length||t.some(function(t,r){return t!==n[r]})}function D$1(n,t){return "function"==typeof t?t(n):t}
 
-function g(n,t){for(var e in t)n[e]=t[e];return n}function E(n,t){for(var e in n)if("__source"!==e&&!(e in t))return  true;for(var r in t)if("__source"!==r&&n[r]!==t[r])return  true;return  false}function N(n,t){this.props=n,this.context=t;}function M(n,e){function r(n){var t=this.props.ref,r=t==n.ref;return !r&&t&&(t.call?t(null):t.current=null),e?!e(this.props,n)||!r:E(this.props,n)}function u(e){return this.shouldComponentUpdate=r,_$1(n,e)}return u.displayName="Memo("+(n.displayName||n.name)+")",u.prototype.isReactComponent=true,u.__f=true,u}(N.prototype=new x$1).isPureReactComponent=true,N.prototype.shouldComponentUpdate=function(n,t){return E(this.props,n)||E(this.state,t)};var T=l$1.__b;l$1.__b=function(n){n.type&&n.type.__f&&n.ref&&(n.props.ref=n.ref,n.ref=null),T&&T(n);};var A="undefined"!=typeof Symbol&&Symbol.for&&Symbol.for("react.forward_ref")||3911;function D(n){function t(t){var e=g({},t);return delete e.ref,n(e,t.ref||null)}return t.$$typeof=A,t.render=t,t.prototype.isReactComponent=t.__f=true,t.displayName="ForwardRef("+(n.displayName||n.name)+")",t}var F=l$1.__e;l$1.__e=function(n,t,e,r){if(n.then)for(var u,o=t;o=o.__;)if((u=o.__c)&&u.__c)return null==t.__e&&(t.__e=e.__e,t.__k=e.__k),u.__c(n,t);F(n,t,e,r);};var U=l$1.unmount;function V(n,t,e){return n&&(n.__c&&n.__c.__H&&(n.__c.__H.__.forEach(function(n){"function"==typeof n.__c&&n.__c();}),n.__c.__H=null),null!=(n=g({},n)).__c&&(n.__c.__P===e&&(n.__c.__P=t),n.__c.__e=true,n.__c=null),n.__k=n.__k&&n.__k.map(function(n){return V(n,t,e)})),n}function W(n,t,e){return n&&e&&(n.__v=null,n.__k=n.__k&&n.__k.map(function(n){return W(n,t,e)}),n.__c&&n.__c.__P===t&&(n.__e&&e.appendChild(n.__e),n.__c.__e=true,n.__c.__P=e)),n}function P(){this.__u=0,this.o=null,this.__b=null;}function j(n){var t=n.__.__c;return t&&t.__a&&t.__a(n)}function B(){this.i=null,this.l=null;}l$1.unmount=function(n){var t=n.__c;t&&t.__R&&t.__R(),t&&32&n.__u&&(n.type=null),U&&U(n);},(P.prototype=new x$1).__c=function(n,t){var e=t.__c,r=this;null==r.o&&(r.o=[]),r.o.push(e);var u=j(r.__v),o=false,i=function(){o||(o=true,e.__R=null,u?u(l):l());};e.__R=i;var l=function(){if(!--r.__u){if(r.state.__a){var n=r.state.__a;r.__v.__k[0]=W(n,n.__c.__P,n.__c.__O);}var t;for(r.setState({__a:r.__b=null});t=r.o.pop();)t.forceUpdate();}};r.__u++||32&t.__u||r.setState({__a:r.__b=r.__v.__k[0]}),n.then(i,i);},P.prototype.componentWillUnmount=function(){this.o=[];},P.prototype.render=function(n,e){if(this.__b){if(this.__v.__k){var r=document.createElement("div"),o=this.__v.__k[0].__c;this.__v.__k[0]=V(this.__b,r,o.__O=o.__P);}this.__b=null;}var i=e.__a&&_$1(k$1,null,n.fallback);return i&&(i.__u&=-33),[_$1(k$1,null,e.__a?null:n.children),i]};var H=function(n,t,e){if(++e[1]===e[0]&&n.l.delete(t),n.props.revealOrder&&("t"!==n.props.revealOrder[0]||!n.l.size))for(e=n.i;e;){for(;e.length>3;)e.pop()();if(e[1]<e[0])break;n.i=e=e[2];}};function Z(n){return this.getChildContext=function(){return n.context},n.children}function Y(n){var e=this,r=n.h;if(e.componentWillUnmount=function(){E$1(null,e.v),e.v=null,e.h=null;},e.h&&e.h!==r&&e.componentWillUnmount(),!e.v){for(var u=e.__v;null!==u&&!u.__m&&null!==u.__;)u=u.__;e.h=r,e.v={nodeType:1,parentNode:r,childNodes:[],__k:{__m:u.__m},contains:function(){return  true},appendChild:function(n){this.childNodes.push(n),e.h.appendChild(n);},insertBefore:function(n,t){this.childNodes.push(n),e.h.insertBefore(n,t);},removeChild:function(n){this.childNodes.splice(this.childNodes.indexOf(n)>>>1,1),e.h.removeChild(n);}};}E$1(_$1(Z,{context:e.context},n.__v),e.v);}function $(n,e){var r=_$1(Y,{__v:n,h:e});return r.containerInfo=e,r}(B.prototype=new x$1).__a=function(n){var t=this,e=j(t.__v),r=t.l.get(n);return r[0]++,function(u){var o=function(){t.props.revealOrder?(r.push(u),H(t,n,r)):u();};e?e(o):o();}},B.prototype.render=function(n){this.i=null,this.l=new Map;var t=H$1(n.children);n.revealOrder&&"b"===n.revealOrder[0]&&t.reverse();for(var e=t.length;e--;)this.l.set(t[e],this.i=[1,0,this.i]);return n.children},B.prototype.componentDidUpdate=B.prototype.componentDidMount=function(){var n=this;this.l.forEach(function(t,e){H(n,e,t);});};var q="undefined"!=typeof Symbol&&Symbol.for&&Symbol.for("react.element")||60103,G=/^(?:accent|alignment|arabic|baseline|cap|clip(?!PathU)|color|dominant|fill|flood|font|glyph(?!R)|horiz|image(!S)|letter|lighting|marker(?!H|W|U)|overline|paint|pointer|shape|stop|strikethrough|stroke|text(?!L)|transform|underline|unicode|units|v|vector|vert|word|writing|x(?!C))[A-Z]/,J=/^on(Ani|Tra|Tou|BeforeInp|Compo)/,K=/[A-Z0-9]/g,Q="undefined"!=typeof document,X=function(n){return ("undefined"!=typeof Symbol&&"symbol"==typeof Symbol()?/fil|che|rad/:/fil|che|ra/).test(n)};x$1.prototype.isReactComponent={},["componentWillMount","componentWillReceiveProps","componentWillUpdate"].forEach(function(t){Object.defineProperty(x$1.prototype,t,{configurable:true,get:function(){return this["UNSAFE_"+t]},set:function(n){Object.defineProperty(this,t,{configurable:true,writable:true,value:n});}});});var en=l$1.event;function rn(){}function un(){return this.cancelBubble}function on(){return this.defaultPrevented}l$1.event=function(n){return en&&(n=en(n)),n.persist=rn,n.isPropagationStopped=un,n.isDefaultPrevented=on,n.nativeEvent=n};var cn={enumerable:false,configurable:true,get:function(){return this.class}},fn=l$1.vnode;l$1.vnode=function(n){"string"==typeof n.type&&function(n){var t=n.props,e=n.type,u={},o=-1===e.indexOf("-");for(var i in t){var l=t[i];if(!("value"===i&&"defaultValue"in t&&null==l||Q&&"children"===i&&"noscript"===e||"class"===i||"className"===i)){var c=i.toLowerCase();"defaultValue"===i&&"value"in t&&null==t.value?i="value":"download"===i&&true===l?l="":"translate"===c&&"no"===l?l=false:"o"===c[0]&&"n"===c[1]?"ondoubleclick"===c?i="ondblclick":"onchange"!==c||"input"!==e&&"textarea"!==e||X(t.type)?"onfocus"===c?i="onfocusin":"onblur"===c?i="onfocusout":J.test(i)&&(i=c):c=i="oninput":o&&G.test(i)?i=i.replace(K,"-$&").toLowerCase():null===l&&(l=void 0),"oninput"===c&&u[i=c]&&(i="oninputCapture"),u[i]=l;}}"select"==e&&u.multiple&&Array.isArray(u.value)&&(u.value=H$1(t.children).forEach(function(n){n.props.selected=-1!=u.value.indexOf(n.props.value);})),"select"==e&&null!=u.defaultValue&&(u.value=H$1(t.children).forEach(function(n){n.props.selected=u.multiple?-1!=u.defaultValue.indexOf(n.props.value):u.defaultValue==n.props.value;})),t.class&&!t.className?(u.class=t.class,Object.defineProperty(u,"className",cn)):(t.className&&!t.class||t.class&&t.className)&&(u.class=u.className=t.className),n.props=u;}(n),n.$$typeof=q,fn&&fn(n);};var an=l$1.__r;l$1.__r=function(n){an&&an(n),n.__c;};var sn=l$1.diffed;l$1.diffed=function(n){sn&&sn(n);var t=n.props,e=n.__e;null!=e&&"textarea"===n.type&&"value"in t&&t.value!==e.value&&(e.value=null==t.value?"":t.value);};
+function g(n,t){for(var e in t)n[e]=t[e];return n}function E(n,t){for(var e in n)if("__source"!==e&&!(e in t))return  true;for(var r in t)if("__source"!==r&&n[r]!==t[r])return  true;return  false}function N(n,t){this.props=n,this.context=t;}function M(n,e){function r(n){var t=this.props.ref,r=t==n.ref;return !r&&t&&(t.call?t(null):t.current=null),e?!e(this.props,n)||!r:E(this.props,n)}function u(e){return this.shouldComponentUpdate=r,_$1(n,e)}return u.displayName="Memo("+(n.displayName||n.name)+")",u.prototype.isReactComponent=true,u.__f=true,u.type=n,u}(N.prototype=new x$1).isPureReactComponent=true,N.prototype.shouldComponentUpdate=function(n,t){return E(this.props,n)||E(this.state,t)};var T=l$1.__b;l$1.__b=function(n){n.type&&n.type.__f&&n.ref&&(n.props.ref=n.ref,n.ref=null),T&&T(n);};var A="undefined"!=typeof Symbol&&Symbol.for&&Symbol.for("react.forward_ref")||3911;function D(n){function t(t){var e=g({},t);return delete e.ref,n(e,t.ref||null)}return t.$$typeof=A,t.render=n,t.prototype.isReactComponent=t.__f=true,t.displayName="ForwardRef("+(n.displayName||n.name)+")",t}var U=l$1.__e;l$1.__e=function(n,t,e,r){if(n.then)for(var u,o=t;o=o.__;)if((u=o.__c)&&u.__c)return null==t.__e&&(t.__e=e.__e,t.__k=e.__k),u.__c(n,t);U(n,t,e,r);};var F=l$1.unmount;function V(n,t,e){return n&&(n.__c&&n.__c.__H&&(n.__c.__H.__.forEach(function(n){"function"==typeof n.__c&&n.__c();}),n.__c.__H=null),null!=(n=g({},n)).__c&&(n.__c.__P===e&&(n.__c.__P=t),n.__c.__e=true,n.__c=null),n.__k=n.__k&&n.__k.map(function(n){return V(n,t,e)})),n}function W(n,t,e){return n&&e&&(n.__v=null,n.__k=n.__k&&n.__k.map(function(n){return W(n,t,e)}),n.__c&&n.__c.__P===t&&(n.__e&&e.appendChild(n.__e),n.__c.__e=true,n.__c.__P=e)),n}function P(){this.__u=0,this.o=null,this.__b=null;}function j(n){if(!n.__)return null;var t=n.__.__c;return t&&t.__a&&t.__a(n)}function B(){this.i=null,this.l=null;}l$1.unmount=function(n){var t=n.__c;t&&(t.__z=true),t&&t.__R&&t.__R(),t&&32&n.__u&&(n.type=null),F&&F(n);},(P.prototype=new x$1).__c=function(n,t){var e=t.__c,r=this;null==r.o&&(r.o=[]),r.o.push(e);var u=j(r.__v),o=false,i=function(){o||r.__z||(o=true,e.__R=null,u?u(c):c());};e.__R=i;var l=e.__P;e.__P=null;var c=function(){if(!--r.__u){if(r.state.__a){var n=r.state.__a;r.__v.__k[0]=W(n,n.__c.__P,n.__c.__O);}var t;for(r.setState({__a:r.__b=null});t=r.o.pop();)t.__P=l,t.forceUpdate();}};r.__u++||32&t.__u||r.setState({__a:r.__b=r.__v.__k[0]}),n.then(i,i);},P.prototype.componentWillUnmount=function(){this.o=[];},P.prototype.render=function(n,e){if(this.__b){if(this.__v.__k){var r=document.createElement("div"),o=this.__v.__k[0].__c;this.__v.__k[0]=V(this.__b,r,o.__O=o.__P);}this.__b=null;}var i=e.__a&&_$1(k$1,null,n.fallback);return i&&(i.__u&=-33),[_$1(k$1,null,e.__a?null:n.children),i]};var H=function(n,t,e){if(++e[1]===e[0]&&n.l.delete(t),n.props.revealOrder&&("t"!==n.props.revealOrder[0]||!n.l.size))for(e=n.i;e;){for(;e.length>3;)e.pop()();if(e[1]<e[0])break;n.i=e=e[2];}};function Z(n){return this.getChildContext=function(){return n.context},n.children}function Y(n){var e=this,r=n.h;if(e.componentWillUnmount=function(){G$1(null,e.v),e.v=null,e.h=null;},e.h&&e.h!==r&&e.componentWillUnmount(),!e.v){for(var u=e.__v;null!==u&&!u.__m&&null!==u.__;)u=u.__;e.h=r,e.v={nodeType:1,parentNode:r,childNodes:[],__k:{__m:u.__m},contains:function(){return  true},namespaceURI:r.namespaceURI,insertBefore:function(n,t){this.childNodes.push(n),e.h.insertBefore(n,t);},removeChild:function(n){this.childNodes.splice(this.childNodes.indexOf(n)>>>1,1),e.h.removeChild(n);}};}G$1(_$1(Z,{context:e.context},n.__v),e.v);}function $(n,e){var r=_$1(Y,{__v:n,h:e});return r.containerInfo=e,r}(B.prototype=new x$1).__a=function(n){var t=this,e=j(t.__v),r=t.l.get(n);return r[0]++,function(u){var o=function(){t.props.revealOrder?(r.push(u),H(t,n,r)):u();};e?e(o):o();}},B.prototype.render=function(n){this.i=null,this.l=new Map;var t=H$1(n.children);n.revealOrder&&"b"===n.revealOrder[0]&&t.reverse();for(var e=t.length;e--;)this.l.set(t[e],this.i=[1,0,this.i]);return n.children},B.prototype.componentDidUpdate=B.prototype.componentDidMount=function(){var n=this;this.l.forEach(function(t,e){H(n,e,t);});};var q="undefined"!=typeof Symbol&&Symbol.for&&Symbol.for("react.element")||60103,G=/^(?:accent|alignment|arabic|baseline|cap|clip(?!PathU)|color|dominant|fill|flood|font|glyph(?!R)|horiz|image(!S)|letter|lighting|marker(?!H|W|U)|overline|paint|pointer|shape|stop|strikethrough|stroke|text(?!L)|transform|underline|unicode|units|v|vector|vert|word|writing|x(?!C))[A-Z]/,J=/^on(Ani|Tra|Tou|BeforeInp|Compo)/,K=/[A-Z0-9]/g,Q="undefined"!=typeof document,X=function(n){return ("undefined"!=typeof Symbol&&"symbol"==typeof Symbol()?/fil|che|rad/:/fil|che|ra/).test(n)};x$1.prototype.isReactComponent={},["componentWillMount","componentWillReceiveProps","componentWillUpdate"].forEach(function(t){Object.defineProperty(x$1.prototype,t,{configurable:true,get:function(){return this["UNSAFE_"+t]},set:function(n){Object.defineProperty(this,t,{configurable:true,writable:true,value:n});}});});var en=l$1.event;function rn(){}function un(){return this.cancelBubble}function on(){return this.defaultPrevented}l$1.event=function(n){return en&&(n=en(n)),n.persist=rn,n.isPropagationStopped=un,n.isDefaultPrevented=on,n.nativeEvent=n};var cn={enumerable:false,configurable:true,get:function(){return this.class}},fn=l$1.vnode;l$1.vnode=function(n){"string"==typeof n.type&&function(n){var t=n.props,e=n.type,u={},o=-1===e.indexOf("-");for(var i in t){var l=t[i];if(!("value"===i&&"defaultValue"in t&&null==l||Q&&"children"===i&&"noscript"===e||"class"===i||"className"===i)){var c=i.toLowerCase();"defaultValue"===i&&"value"in t&&null==t.value?i="value":"download"===i&&true===l?l="":"translate"===c&&"no"===l?l=false:"o"===c[0]&&"n"===c[1]?"ondoubleclick"===c?i="ondblclick":"onchange"!==c||"input"!==e&&"textarea"!==e||X(t.type)?"onfocus"===c?i="onfocusin":"onblur"===c?i="onfocusout":J.test(i)&&(i=c):c=i="oninput":o&&G.test(i)?i=i.replace(K,"-$&").toLowerCase():null===l&&(l=void 0),"oninput"===c&&u[i=c]&&(i="oninputCapture"),u[i]=l;}}"select"==e&&u.multiple&&Array.isArray(u.value)&&(u.value=H$1(t.children).forEach(function(n){n.props.selected=-1!=u.value.indexOf(n.props.value);})),"select"==e&&null!=u.defaultValue&&(u.value=H$1(t.children).forEach(function(n){n.props.selected=u.multiple?-1!=u.defaultValue.indexOf(n.props.value):u.defaultValue==n.props.value;})),t.class&&!t.className?(u.class=t.class,Object.defineProperty(u,"className",cn)):(t.className&&!t.class||t.class&&t.className)&&(u.class=u.className=t.className),n.props=u;}(n),n.$$typeof=q,fn&&fn(n);};var an=l$1.__r;l$1.__r=function(n){an&&an(n),n.__c;};var sn=l$1.diffed;l$1.diffed=function(n){sn&&sn(n);var t=n.props,e=n.__e;null!=e&&"textarea"===n.type&&"value"in t&&t.value!==e.value&&(e.value=null==t.value?"":t.value);};
 
 /** These are all the event mappings that are shared between Preact/React */
 const EventMapping$1 = {
@@ -2157,6 +2157,8 @@ function useTypeaheadNavigation({ typeaheadNavigationParameters: { collator, typ
         };
         function updateBasedOnTypeaheadChange(currentTypeahead, reason) {
             if (currentTypeahead && sortedTypeaheadInfo.current.length) {
+                if (currentTypeahead == "se")
+                    debugger;
                 const sortedTypeaheadIndex = binarySearch(sortedTypeaheadInfo.current, currentTypeahead, typeaheadComparator);
                 if (sortedTypeaheadIndex < 0) {
                     // The user has typed an entry that doesn't exist in the list
@@ -2227,6 +2229,10 @@ function useTypeaheadNavigation({ typeaheadNavigationParameters: { collator, typ
                         setIndex(toSet, reason, true);
                         onNavigateTypeahead?.(toSet, reason);
                     }
+                    else {
+                        // We get here if the only matching child we found was untabbable/missing
+                        setTypeaheadStatus("invalid");
+                    }
                 }
             }
         }
@@ -2263,7 +2269,7 @@ context: { typeaheadNavigationContext: { sortedTypeaheadInfo, insertingComparato
                     sortedTypeaheadInfo.splice(-sortedIndex - 1, 0, { text, unsortedIndex: index });
                 }
                 else {
-                    sortedTypeaheadInfo.splice(sortedIndex, 0, { text, unsortedIndex: index });
+                    sortedTypeaheadInfo.splice(sortedIndex, 1, { text, unsortedIndex: index });
                 }
                 return () => {
                     // When unmounting, find where we were and remove ourselves.
@@ -2695,7 +2701,7 @@ function usePaginatedChild({ info: { index }, context: { paginatedChildContext: 
  *
  * @compositeParams
  */
-function useRearrangeableChildren({ rearrangeableChildrenParameters: { children: childrenIn }, processedIndexManglerParameters: { getIndex, getSortValueAt }, managedChildrenReturn: { getChildren: getManagedChildren }, context: { processedIndexManglerContext: { mangler } } }) {
+function useRearrangeableChildren({ rearrangeableChildrenParameters: { children: childrenIn, animate }, processedIndexManglerParameters: { getIndex, getSortValueAt }, managedChildrenReturn: { getChildren: getManagedChildren }, context: { processedIndexManglerContext: { mangler } } }) {
     return useMonitoring(function useRearrangeableChildren() {
         useEnsureStability("useRearrangeableChildren", getIndex, getSortValueAt);
         const allChildPositions = A$1([]);
@@ -2709,19 +2715,20 @@ function useRearrangeableChildren({ rearrangeableChildrenParameters: { children:
                 if (index != null && mangledIndex != null) {
                     const info = getManagedChildren().getAt(index);
                     const info2 = getManagedChildren().getAt(mangledIndex);
-                    if (info && info2) {
+                    if (info && info2 && animate) {
                         const element = info2.getElement();
                         const rect = element?.getBoundingClientRect();
                         if (rect) {
                             // TODO: This still fires even if the index hasn't changed for this child.
-                            // Find a way to bail out if this child's position hasn't changed
+                            // Find a way to bail out if this child's position hasn't changed.
+                            // This is important because otherwise, on mount, we call getBoundingClientRect for EVERY child.
                             info2.updateFLIPAnimation(allChildPositions.current[mangledIndex] = { left: rect.left, top: rect.top, width: rect.width, height: rect.height });
                         }
                     }
                 }
             }
             return rearrangedChildren;
-        }, [childrenIn, refreshIndex]);
+        }, [childrenIn, refreshIndex, animate]);
         const getFLIPStart = useCallback((index) => {
             return allChildPositions.current[index];
         }, []);
@@ -2731,7 +2738,7 @@ function useRearrangeableChildren({ rearrangeableChildrenParameters: { children:
                 refresh: useStableCallback(() => { setRefreshIndex(p => ++p); }, [])
             },
             context: useMemoObject({
-                rearrangeableChildrenContext: useMemoObject({ getFLIPStart })
+                rearrangeableChildrenContext: useMemoObject({ getFLIPStart, animate })
             })
         };
     });
@@ -2741,7 +2748,7 @@ function useRearrangeableChildren({ rearrangeableChildrenParameters: { children:
  */
 function useRearrangeableChild({ context, info: { getElement, index }, rearrangeableChildParameters: { cssProperty, duration } }) {
     return useMonitoring(function useRearrangeableChild() {
-        const { rearrangeableChildrenContext: { getFLIPStart } } = context;
+        const { rearrangeableChildrenContext: { getFLIPStart, animate } } = context;
         const getCssProperty = useStableGetter(cssProperty);
         const getDuration = useStableGetter(duration);
         // TODO: This ref doesn't work correctly? Or info.updateFLIPAnimation isn't update right? Not sure.
@@ -2750,45 +2757,47 @@ function useRearrangeableChild({ context, info: { getElement, index }, rearrange
         const flipStartPosition = A$1(undefined);
         const [animationIndex, setAnimationIndex] = d(0);
         _(() => {
-            const duration = getDuration();
-            const cssProperty = getCssProperty();
-            if (cssProperty && animationIndex > 0) {
-                const element = getElement();
-                const first = getFLIPStart(index); //flipStartPosition.current;
-                //const mid = element.getBoundingClientRect();
-                //console.log(mid);
-                // Forcibly end any previous transitions.
-                // Otherwise, interruptions end up causing exponentially larger transforms.
-                // Which, TODO, is definitely fixable.
-                if (cssProperty === 'translate')
-                    element.style.scale = element.style.translate = '';
-                else if (cssProperty === 'transform')
-                    element.style.transform = '';
-                element.style.transition = 'none';
-                const last = element.getBoundingClientRect();
-                if (first && last) {
-                    const dx = first.left - last.left;
-                    const dy = first.top - last.top;
-                    const dsx = first.width / last.width;
-                    const dsy = first.height / last.height;
-                    if (cssProperty === 'translate') {
-                        element.style.translate = `${dx}px ${dy}px`;
-                        element.style.scale = `${dsx} ${dsy}`;
+            if (animate) {
+                const duration = getDuration();
+                const cssProperty = getCssProperty();
+                if (cssProperty && animationIndex > 0) {
+                    const element = getElement();
+                    const first = getFLIPStart(index); //flipStartPosition.current;
+                    //const mid = element.getBoundingClientRect();
+                    //console.log(mid);
+                    // Forcibly end any previous transitions.
+                    // Otherwise, interruptions end up causing exponentially larger transforms.
+                    // Which, TODO, is definitely fixable.
+                    if (cssProperty === 'translate')
+                        element.style.scale = element.style.translate = '';
+                    else if (cssProperty === 'transform')
+                        element.style.transform = '';
+                    element.style.transition = 'none';
+                    const last = element.getBoundingClientRect();
+                    if (first && last) {
+                        const dx = first.left - last.left;
+                        const dy = first.top - last.top;
+                        const dsx = first.width / last.width;
+                        const dsy = first.height / last.height;
+                        if (cssProperty === 'translate') {
+                            element.style.translate = `${dx}px ${dy}px`;
+                            element.style.scale = `${dsx} ${dsy}`;
+                        }
+                        else if (cssProperty === 'transform') {
+                            element.style.transform = `translate(${dx}px, ${dy}px) scale(${dsx}, ${dsy})`;
+                        }
+                        element.style.transition = cssProperty === 'translate' ? 'translate 0s, scale 0s' : `transform 0s`;
+                        requestAnimationFrame(() => {
+                            if (cssProperty === 'translate')
+                                element.style.scale = element.style.translate = '';
+                            else if (cssProperty === 'transform')
+                                element.style.transform = '';
+                            element.style.transition = cssProperty === 'translate' ? `translate ${duration}, scale ${duration}` : `transform ${duration}`;
+                        });
                     }
-                    else if (cssProperty === 'transform') {
-                        element.style.transform = `translate(${dx}px, ${dy}px) scale(${dsx}, ${dsy})`;
-                    }
-                    element.style.transition = cssProperty === 'translate' ? 'translate 0s, scale 0s' : `transform 0s`;
-                    requestAnimationFrame(() => {
-                        if (cssProperty === 'translate')
-                            element.style.scale = element.style.translate = '';
-                        else if (cssProperty === 'transform')
-                            element.style.transform = '';
-                        element.style.transition = cssProperty === 'translate' ? `translate ${duration}, scale ${duration}` : `transform ${duration}`;
-                    });
                 }
             }
-        }, [index, animationIndex]);
+        }, [index, animationIndex, animate]);
         const updateFLIPAnimation = useCallback((position) => {
             flipStartPosition.current = position;
             setAnimationIndex(p => ++p);
@@ -2812,7 +2821,7 @@ function useRearrangeableChild({ context, info: { getElement, index }, rearrange
  *
  * @compositeParams
  */
-function useStaggeredChildren({ managedChildrenReturn: { getChildren }, staggeredChildrenParameters: { staggered, childCount },
+function useStaggeredChildren({ managedChildrenReturn: { getChildren }, staggeredChildrenParameters: { staggered, childCount, disableIntersectionObserver },
 //refElementReturn: { getElement }
  }) {
     return useMonitoring(function useStaggeredChildren() {
@@ -2926,19 +2935,24 @@ function useStaggeredChildren({ managedChildrenReturn: { getChildren }, staggere
             getIntersectionObserver,
             setElementToIndexMap
         }), [parentIsStaggered]);
+        // TODO: The fact that we use an IntersectionObserver makes it
+        // very impossible to see the staggering effect, for better or worse.
+        // Add an option to disable it? Maybe? Mostly for testing.
         y(() => {
-            const io = intersectionObserver.current = new IntersectionObserver((entries) => {
-                for (let entry of entries) {
-                    if (entry.isIntersecting) {
-                        const index = elementToIndex.current.get(entry.target);
-                        if (index != null) {
-                            getChildren().getAt(index)?.setStaggeredVisible(true);
+            if (!disableIntersectionObserver) {
+                const io = intersectionObserver.current = new IntersectionObserver((entries) => {
+                    for (let entry of entries) {
+                        if (entry.isIntersecting) {
+                            const index = elementToIndex.current.get(entry.target);
+                            if (index != null) {
+                                getChildren().getAt(index)?.setStaggeredVisible(true);
+                            }
                         }
                     }
-                }
-            });
-            return () => io.disconnect();
-        }, []);
+                });
+                return () => io.disconnect();
+            }
+        }, [disableIntersectionObserver]);
         return {
             staggeredChildrenReturn: { stillStaggering: currentlyStaggering },
             context: T$1(() => ({
@@ -2965,16 +2979,20 @@ context: { staggeredChildContext: { parentIsStaggered, getDefaultStaggeredVisibl
         // (We don't ask when the child becomes visible due to screen-scrolling,
         // only when it becomes visible because we were next in line to do so)
         const becauseScreen = A$1(false);
-        usePassiveState(useStableCallback((next, _prev, _reason) => {
+        /*
+        const [_getOnScreen, _setOnScreen] = usePassiveState<boolean, any>(useStableCallback((next, _prev, _reason) => {
+
             if (staggeredVisible)
                 return;
+
             if (next) {
                 const io = getIntersectionObserver();
-                io?.unobserve(e.current);
-                setStaggeredVisible(true);
-                becauseScreen.current = true;
+                io?.unobserve(e.current!);
+
+                //setStaggeredVisible(true);
+                //becauseScreen.current = true;
             }
-        }), returnFalse);
+        }), returnFalse);*/
         // This isn't called during useEffect here, because we want to wait for the
         // "heavier processing" child to render, instead of us (the "ligher pre-processing" child).
         // So we return the effect we want to run and let the caller run it as appropriate.
@@ -2999,13 +3017,14 @@ context: { staggeredChildContext: { parentIsStaggered, getDefaultStaggeredVisibl
             refElementParameters: {
                 onElementChange: useStableCallback((element) => {
                     setElementToIndexMap(index, element);
-                    e.current = (element || e.current);
                     const io = getIntersectionObserver();
-                    if (e.current) {
-                        io?.observe(e.current);
+                    if (element) {
+                        e.current = element;
+                        io?.observe(element);
                     }
                     else {
-                        io?.unobserve(e.current);
+                        if (e.current)
+                            io?.unobserve(e.current);
                     }
                 })
             }
@@ -3063,7 +3082,7 @@ function useProcessedChildren({ rearrangeableChildrenParameters, paginatedChildr
     return useMonitoring(function useProcessedChildren() {
         const childCount = rearrangeableChildrenParameters.children.length;
         const { paginationMax, paginationMin } = paginatedChildrenParameters;
-        const { staggered } = staggeredChildrenParameters;
+        const { staggered, disableIntersectionObserver } = staggeredChildrenParameters;
         const { context: { managedChildContext }, managedChildrenReturn } = useManagedChildren({ managedChildrenParameters, });
         useStableCallback(() => {
             refreshPagination(paginationMin, paginationMax);
@@ -3084,7 +3103,7 @@ function useProcessedChildren({ rearrangeableChildrenParameters, paginatedChildr
         });
         const { context: { staggeredChildContext }, staggeredChildrenReturn } = useStaggeredChildren({
             managedChildrenReturn: { getChildren: useStableCallback(() => managedChildContext.getChildren()) },
-            staggeredChildrenParameters: { staggered, childCount },
+            staggeredChildrenParameters: { staggered, childCount, disableIntersectionObserver },
             //refElementReturn: { getElement: context.processedChildrenContext.getElement }
         });
         return {
@@ -3321,35 +3340,35 @@ function useMultiSelection({ multiSelectionParameters: { onSelectionChange, mult
         // When a child changes selection state, it calls this function.
         const notifyParentOfChildSelectChange = useStableCallback((event, index, selected, previous) => {
             console.assert(selected != previous);
+            // The commented-out asserts are don't work for rearranged children,
+            // and are staying for now as a reminder of that, because it is a bit weird.
             if (selected == undefined) {
                 // This child is unmounting itself.
                 if (previous === true) {
-                    console.assert(selectedIndices.current.has(index), `The selected child at index ${index} is unmounting itself, but the parent was unaware of it being selected.`);
+                    //console.assert(selectedIndices.current.has(index), `The selected child at index ${index} is unmounting itself, but the parent was unaware of it being selected.`);
                     selectedIndices.current.delete(index);
                 }
                 else if (previous === false) {
-                    console.assert(unselectedIndices.current.has(index), `The selected child at index ${index} is unmounting itself, but the parent was unaware of it being selected.`);
+                    //console.assert(unselectedIndices.current.has(index), `The selected child at index ${index} is unmounting itself, but the parent was unaware of it being selected.`);
                     unselectedIndices.current.delete(index);
                 }
-                else {
-                    console.assert(false, `The child at index ${index} was not selected or unselected but a secret third thing: ${selected}`);
-                }
+                else ;
             }
             else if (selected) {
                 if (previous != undefined) {
-                    console.assert(unselectedIndices.current.has(index), `The multi-select child at index ${index} changed to selected even though it was not unselected before, somehow.`);
+                    //console.assert(unselectedIndices.current.has(index), `The multi-select child at index ${index} changed to selected even though it was not unselected before, somehow.`);
                     unselectedIndices.current.delete(index);
                 }
-                console.assert(!selectedIndices.current.has(index), `The multi-select child at index ${index} changed to selected even though there is already a selected child with that index.`);
+                //console.assert(!selectedIndices.current.has(index), `The multi-select child at index ${index} changed to selected even though there is already a selected child with that index.`)
                 selectedIndices.current.add(index);
                 startOfShiftSelect.current = index;
             }
             else {
                 if (previous != undefined) {
-                    console.assert(selectedIndices.current.has(index), `The multi-select child at index ${index} changed to unselected even though it was not selected before, somehow.`);
+                    //console.assert(selectedIndices.current.has(index), `The multi-select child at index ${index} changed to unselected even though it was not selected before, somehow.`);
                     selectedIndices.current.delete(index);
                 }
-                console.assert(!unselectedIndices.current.has(index), `The multi-select child at index ${index} was marked as unselected even though there is already an unselected child with that index.`);
+                //console.assert(!unselectedIndices.current.has(index), `The multi-select child at index ${index} was marked as unselected even though there is already an unselected child with that index.`)
                 unselectedIndices.current.add(index);
             }
             const childCount = (selectedIndices.current.size + unselectedIndices.current.size);
@@ -3479,8 +3498,10 @@ function useMultiSelectionChild({ info: { index, ...void4 }, multiSelectionChild
         const [localSelected, setLocalSelected, getLocalSelected] = useState(initiallyMultiSelected ?? false);
         const changeMultiSelected = useStableCallback((e, selected) => {
             console.assert(selected != null);
-            console.assert(!multiSelectionDisabled);
-            console.assert(multiSelectIsEnabled);
+            if (selected)
+                console.assert(!multiSelectionDisabled);
+            else
+                console.assert(multiSelectIsEnabled);
             // We're selected now (because someone told us we are, this hook doesn't call this function directly)
             //
             // So update our own internal state so we can re-render with the correct props,
@@ -4984,9 +5005,113 @@ function useModal({ dismissParameters: { dismissActive, onDismiss, ...void2 }, e
     });
 }
 
-function isPromise(p) {
-    return p instanceof Promise;
+//
+// Types (and a single function) that are shared
+// between both throttle and debounce.
+//
+function getTimeout(v) {
+    if (v == null)
+        return null;
+    if (typeof v == 'number') {
+        if (v < 0)
+            return null;
+        return v;
+    }
+    return getTimeout(v());
 }
+
+function debounce({ debounceDuration: durationOrGetter, handlerIn: handler }) {
+    let timeoutHandle = null;
+    let queuedArgs = null;
+    function onDebounceEnded() {
+        if (queuedArgs != null) {
+            handler?.(...queuedArgs);
+            queuedArgs = null;
+        }
+    }
+    function debounced(...args) {
+        queuedArgs = args;
+        const debounceTimeout = getTimeout(durationOrGetter);
+        if (debounceTimeout == null)
+            handler?.(...queuedArgs);
+        else {
+            if (timeoutHandle != null)
+                cancel();
+            timeoutHandle = setTimeout(onDebounceEnded, debounceTimeout);
+        }
+    }
+    function flush() {
+        if (timeoutHandle != null) {
+            onDebounceEnded();
+            cancel();
+        }
+    }
+    function cancel() {
+        if (timeoutHandle != null)
+            clearTimeout(timeoutHandle);
+    }
+    return {
+        handlerOut: debounced,
+        flush,
+        cancel
+    };
+}
+
+function throttle({ handlerIn: handler, throttleDuration: durationOrGetter }) {
+    let timeoutHandle = null;
+    // We have called `handler` during the throttle period.
+    //let queuedUp = false;
+    let queuedArgs = null;
+    function runIfQueued() {
+        if (queuedArgs != null) {
+            const throttleTimeout = getTimeout(durationOrGetter);
+            if (throttleTimeout == null) {
+                handler?.(...queuedArgs);
+            }
+            else {
+                if (timeoutHandle == null) {
+                    handler?.(...queuedArgs);
+                    queuedArgs = null;
+                }
+                timeoutHandle = setTimeout(() => { timeoutHandle = null; runIfQueued(); }, throttleTimeout);
+            }
+        }
+    }
+    function throttled(...args) {
+        queuedArgs = args;
+        runIfQueued();
+    }
+    function cancel() {
+        if (timeoutHandle != null) {
+            clearTimeout(timeoutHandle);
+            timeoutHandle = null;
+        }
+    }
+    function flush() {
+        runIfQueued();
+        cancel();
+    }
+    return {
+        handlerOut: throttled,
+        cancel,
+        flush
+    };
+}
+
+function throttleDebounce({ debounceDuration, throttleDuration, handlerIn }) {
+    const t = throttle({ handlerIn, throttleDuration });
+    const d = debounce({ handlerIn: t.handlerOut, debounceDuration });
+    return {
+        handlerOut: d.handlerOut,
+        cancel: () => { t.cancel(); d.cancel(); },
+        flush: () => { d.flush(); }
+    };
+}
+
+function isPromise(p) {
+    return p && typeof p == 'object' && "then" in p;
+}
+function defaultCapture(...args) { return args; }
 const Unset = Symbol("Unset");
 /**
  * lodash-ish function that's like debounce + (throttle w/ async handling) combined.
@@ -4995,13 +5120,18 @@ const Unset = Symbol("Unset");
  * Note that part of this is emulating the fact that the sync handler cannot have a return value,
  * so you'll need to use `setResolve` and the other related functions to do that in whatever way works for your specific scenario.
  *
- * The comments are numbered in approximate execution order for your reading pleasure (1 is near the bottom).
+ * @type `ReturnType` The type that your async function returns (may or may not be wrapped in a `Promise<>`)
+ * @type `AsyncArgs` The arguments that your async function takes (as an array)
+ * @type `SyncArgs` The arguments that the returned sync function takes (as an array). Defaults to the same type as `AsyncArgs`.
  */
-function asyncToSync({ asyncInput, onInvoke, onInvoked, onFinally: onFinallyAny, onReject, onResolve, onHasError, onHasResult, onError, onReturnValue, capture, onAsyncDebounce, onSyncDebounce, onPending, throttle, wait }) {
+function asyncToSync({ asyncInput, onInvoke, onInvoked, onFinally: onFinallyAny, onReject, onResolve, onHasError, onHasResult, onError, onReturnValue, capture, onAsyncDebounce, onSyncDebounce, onPending, throttle: throttleDuration, debounce: debounceDuration }) {
+    // 0. The comments are numbered in approximate execution order 
+    // for your reading pleasure (1 is near the bottom).
     let pending = false;
     let syncDebouncing = false;
     let asyncDebouncing = false;
     let currentCapture = Unset;
+    capture ??= defaultCapture;
     const onFinally = () => {
         // 8. This is run at the end of every invocation of the async handler,
         // whether it completed or not, and whether it was async or not.
@@ -5035,7 +5165,7 @@ function asyncToSync({ asyncInput, onInvoke, onInvoked, onFinally: onFinallyAny,
             // Because it may be sync, or it may throw before returning, we must still wrap it in a try/catch...
             // Also important is that we preserve the async-ness (or lack thereof) on the original input function.
             onInvoke?.();
-            promiseOrReturn = asyncInput(...args);
+            promiseOrReturn = asyncInput?.(...args);
             onHasError?.(false);
         }
         catch (ex) {
@@ -5047,8 +5177,8 @@ function asyncToSync({ asyncInput, onInvoke, onInvoked, onFinally: onFinallyAny,
         if (isPromise(promiseOrReturn)) {
             onInvoked?.("async");
             promiseOrReturn
-                .then(r => { onResolve?.(); onHasResult?.(true); onReturnValue?.(r); return r; })
-                .catch(e => { onReject?.(); onHasError?.(true); onError?.(e); return e; })
+                .then(r => { onResolve?.(); onHasResult?.(true, r); onReturnValue?.(r); return r; })
+                .catch(e => { onReject?.(); onHasError?.(true, e); onError?.(e); return e; })
                 .finally(onFinally);
         }
         else {
@@ -5057,46 +5187,39 @@ function asyncToSync({ asyncInput, onInvoke, onInvoked, onFinally: onFinallyAny,
                 onResolve?.();
                 onHasResult?.(true);
                 onHasError?.(false);
+                onReturnValue?.(promiseOrReturn); // The ! assertion is safe here because it's only undefined if ReturnType includes undefined already.
             }
             else {
                 onReject?.();
                 onHasResult?.(false);
                 onHasError?.(true);
             }
-            onReturnValue?.(promiseOrReturn);
-            onPending?.(pending = false);
             onFinally();
         }
     };
-    // lodash uses "in" instead of checking for `undefined`...
-    const lodashOptions = {
-        leading: !wait,
-        trailing: true
-    };
-    if (throttle) {
-        if (wait == null || (wait < throttle))
-            wait = throttle;
-        lodashOptions.maxWait = throttle;
-    }
-    const syncDebounced = debounce(() => {
-        // 3. Instead of calling the sync version of our function directly, we allow it to be throttled/debounced (above)
-        // and now that we're done throttling/debouncing, notify anyone who cares of this fact (below).
-        onSyncDebounce?.(syncDebouncing = false);
-        if (!pending) {
-            // 4a. If this is the first invocation, or if we're not still waiting for a previous invocation to finish its async call,
-            // then we can just go ahead and run the debounced version of our function.
-            console.assert(currentCapture != Unset);
-            sync(...currentCapture);
-        }
-        else {
-            // 4b. If we were called while still waiting for the (or a) previous invocation to finish,
-            // then we'll need to delay this one. When that previous invocation finishes, it'll check
-            // to see if it needs to run again, and it will use these new captured arguments from step 2.
-            onAsyncDebounce?.(asyncDebouncing = true);
-        }
-    }, wait || undefined, lodashOptions);
+    const { handlerOut: syncDebounced, cancel: syncCancel, flush: syncFlush } = throttleDebounce({
+        handlerIn: () => {
+            // 3. Instead of calling the sync version of our function directly, we allow it to be throttled/debounced (above)
+            // and now that we're done throttling/debouncing, notify anyone who cares of this fact (below).
+            onSyncDebounce?.(syncDebouncing = false);
+            if (!pending) {
+                // 4a. If this is the first invocation, or if we're not still waiting for a previous invocation to finish its async call,
+                // then we can just go ahead and run the debounced version of our function.
+                console.assert(currentCapture != Unset);
+                sync(...currentCapture);
+            }
+            else {
+                // 4b. If we were called while still waiting for the (or a) previous invocation to finish,
+                // then we'll need to delay this one. When that previous invocation finishes, it'll check
+                // to see if it needs to run again, and it will use these new captured arguments from step 2.
+                onAsyncDebounce?.(asyncDebouncing = true);
+            }
+        }, debounceDuration: debounceDuration, throttleDuration: throttleDuration
+    });
     return {
         syncOutput: (...args) => {
+            if (asyncInput == null)
+                return;
             // 1. Someone just called the sync version of our async function.
             // 2. We capture the arguments in a way that won't become stale if/when the function is called with a (possibly seconds-long) delay (e.g. event.currentTarget.value on an <input> element).
             currentCapture = capture?.(...args) ?? [];
@@ -5104,10 +5227,10 @@ function asyncToSync({ asyncInput, onInvoke, onInvoked, onFinally: onFinallyAny,
             syncDebounced();
         },
         flushSyncDebounce: () => {
-            syncDebounced.flush();
+            syncFlush();
         },
         cancelSyncDebounce: () => {
-            syncDebounced.cancel();
+            syncCancel();
         }
     };
 }
@@ -5150,11 +5273,11 @@ function useAsync(asyncHandler, options) {
         //
         // We keep, like, a *lot* of render-state, but it only ever triggers a re-render
         // when we start/stop an async action.
-        const [pending, setPending, _getPending] = useState(false);
-        const [result, setResult, _getResult] = useState(undefined);
-        const [error, setError, _getError] = useState(undefined);
-        const [hasError, setHasError, _getHasError] = useState(false);
-        const [hasResult, setHasResult, _getHasResult] = useState(false);
+        const [pending, setPending] = useState(false);
+        const [result, setResult] = useState(undefined);
+        const [error, setError] = useState(undefined);
+        const [hasError, setHasError] = useState(false);
+        const [hasResult, setHasResult] = useState(false);
         const [asyncDebouncing, setAsyncDebouncing] = useState(false);
         const [syncDebouncing, setSyncDebouncing] = useState(false);
         const [invocationResult, setInvocationResult] = useState(asyncHandler instanceof AsyncFunction ? "async" : null);
@@ -5188,7 +5311,7 @@ function useAsync(asyncHandler, options) {
                 onReject: incrementRejectCount,
                 onResolve: incrementResolveCount,
                 throttle: options?.throttle ?? undefined,
-                wait: options?.debounce ?? undefined
+                debounce: options?.debounce ?? undefined
             });
         }, [throttle, debounce]);
         y(() => {
@@ -5938,7 +6061,7 @@ function PortalChildren({ setPushChild, setUpdateChild, setRemoveChild }) {
     const pushChild = useCallback((child) => {
         const randomKey = generateRandomId();
         let index = getChildren().length;
-        setChildren(prev => ([...prev, J$1(child, { key: randomKey, index })]));
+        setChildren(prev => ([...prev, K$1(child, { key: randomKey, index })]));
         return index;
     }, []);
     const updateChild = useCallback((index, child) => {
@@ -5947,7 +6070,7 @@ function PortalChildren({ setPushChild, setUpdateChild, setRemoveChild }) {
         if (key) {
             setChildren(prev => {
                 let newChildren = prev.slice();
-                newChildren.splice(index, 1, J$1(child, { key: key, index }));
+                newChildren.splice(index, 1, K$1(child, { key: key, index }));
                 return newChildren;
             });
             return index;
@@ -6063,7 +6186,7 @@ function usePersistentState(key, initialValue, fromString = JSON.parse, toString
 
 var f=0;function u(e,t,n,o,i,u){t||(t={});var a,c,p=t;if("ref"in p)for(c in p={},t)"ref"==c?a=t[c]:p[c]=t[c];var l={type:e,props:p,key:n,ref:a,__k:null,__:null,__b:0,__e:null,__c:null,constructor:void 0,__v:--f,__i:-1,__u:0,__source:i,__self:u};if("function"==typeof e&&(a=e.defaultProps))for(c in a) void 0===p[c]&&(p[c]=a[c]);return l$1.vnode&&l$1.vnode(l),l}
 
-K$1(null);
+Q$1(null);
 
 function useContextWithWarning(context, parentContextName) {
     let ret = x(context);
@@ -7445,7 +7568,7 @@ function useMenuItem(p) {
     });
 }
 
-const NotificationProviderContext = K$1(null);
+const NotificationProviderContext = Q$1(null);
 /**
  * Allows children to send notifications to a screen reader or other assistive technology.
  *
@@ -7622,7 +7745,7 @@ function useRadioGroup({ labelParameters, radioGroupParameters: { name, selected
             randomIdLabelParameters: { prefix: Prefices.radioGroupLabel, },
             randomIdInputParameters: { prefix: Prefices.radioGroup }
         });
-        const { context, props: propsGroup2, singleSelectionReturn, managedChildrenReturn, rovingTabIndexReturn, linearNavigationReturn, rearrangeableChildrenReturn, typeaheadNavigationReturn, childrenHaveFocusReturn, refElementReturn} = useCompleteListNavigationDeclarative({
+        const { context, props: propsGroup2, singleSelectionReturn, multiSelectionReturn: _multiSelectionReturn, managedChildrenReturn, rovingTabIndexReturn, linearNavigationReturn, rearrangeableChildrenReturn, typeaheadNavigationReturn, childrenHaveFocusReturn, refElementReturn} = useCompleteListNavigationDeclarative({
             singleSelectionDeclarativeParameters: {
                 singleSelectedIndex: selectedIndex,
                 onSingleSelectedIndexChange: useStableCallback((e) => {
@@ -8148,7 +8271,7 @@ function useTabPanel({ info, context }) {
         const { index } = info;
         const { tabPanelContext: { getVisibleIndex: g, getPanelId, getTabId } } = context;
         const [lastKnownVisibleIndex, setLastKnownVisibleIndex, getLastKnownVisibleIndex] = useState(g());
-        const [isVisible, setIsVisible, _getIsVisible] = useState(null);
+        const [isVisible, setIsVisible] = useState(null);
         useManagedChild({
             context,
             info: {
@@ -8258,7 +8381,7 @@ function useToasts({ managedChildrenParameters: { onChildrenMountChange: ocmu, o
             // And after all that, make sure that we're showing any toasts that have been waiting in the queue
             showHighestPriorityToast();
         }, []);
-        const [_mouseOver2, setMouseOver, _getMouseOver] = useState(false);
+        const [_mouseOver2, setMouseOver] = useState(false);
         useGlobalHandler(getDocument(), "pointermove", e => {
             const mouseOver = (e.target != null && e.target instanceof Node && (getElement()?.contains(e.target) || getElement() == e.target));
             setMouseOver(mouseOver);
@@ -8582,26 +8705,26 @@ function useComponentC(imperativeHandle, render, ContextChildren, ContextProcess
     return ch;
 }
 const ContextDefaults = {
-    collator: K$1(null),
-    pageNavigationSize: K$1(0.1),
-    typeaheadTimeout: K$1(1000),
-    focusSelf: K$1((e) => e.focus?.()),
-    noTypeahead: K$1(false),
-    getIndex: K$1(v => v.props.index),
-    disableArrowKeys: K$1(false),
-    disableHomeEndKeys: K$1(false),
-    getWindow: K$1(() => globalThis.window),
-    getDocument: K$1(() => globalThis.document),
-    focusOpener: K$1((e) => focus$1(e)),
-    getText: K$1((e) => (e?.textContent ?? "")),
-    singleSelectionMode: K$1("activation"),
-    multiSelectionMode: K$1("activation"),
+    collator: Q$1(null),
+    pageNavigationSize: Q$1(0.1),
+    typeaheadTimeout: Q$1(1000),
+    focusSelf: Q$1((e) => e.focus?.()),
+    noTypeahead: Q$1(false),
+    getIndex: Q$1(v => v.props.index),
+    disableArrowKeys: Q$1(false),
+    disableHomeEndKeys: Q$1(false),
+    getWindow: Q$1(() => globalThis.window),
+    getDocument: Q$1(() => globalThis.document),
+    focusOpener: Q$1((e) => focus$1(e)),
+    getText: Q$1((e) => (e?.textContent ?? "")),
+    singleSelectionMode: Q$1("activation"),
+    multiSelectionMode: Q$1("activation"),
 };
 function useDefault(context, userValue) {
     const defaultValue = x(ContextDefaults[context]);
     return userValue ?? defaultValue;
 }
-const ParentDepthContext = K$1(0);
+const ParentDepthContext = Q$1(0);
 function useDefaultRenderPortal({ portalId, children }) {
     const portalRef = A$1(null);
     const document = getDocument();
@@ -8612,7 +8735,7 @@ function useDefaultRenderPortal({ portalId, children }) {
         return children;
 }
 
-const AccordionSectionContext = K$1(null);
+const AccordionSectionContext = Q$1(null);
 const Accordion = /* @__PURE__ */ M(function Accordion({ disableHomeEndKeys, initialIndex, onAfterChildLayoutEffect, onChildrenMountChange, navigatePastEnd, navigatePastStart, pageNavigationSize, localStorageKey, collator, noTypeahead, typeaheadTimeout, onChildrenCountChange, render, imperativeHandle, orientation, onNavigateLinear, onNavigateTypeahead, ...void1 }) {
     return (useComponent(imperativeHandle, render, AccordionSectionContext, useAccordion({
         accordionParameters: { orientation, initialIndex, localStorageKey: localStorageKey ?? null },
@@ -8653,7 +8776,7 @@ const Button = /* @__PURE__ */ M((function Button({ tagButton, pressed, render, 
     }));
 }));
 
-const UseCheckboxGroupChildContext = K$1(null);
+const UseCheckboxGroupChildContext = Q$1(null);
 const CheckboxGroup = /* @__PURE__ */ M((function CheckboxGroup({ render, collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, onTabbableIndexChange, untabbable, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, getSortValueAt, compare, getIndex, ...void1 }) {
     getSortValueAt ??= identity;
     useEnsureStability("CheckboxGroup", getSortValueAt);
@@ -8828,10 +8951,10 @@ const Drawer = /* @__PURE__ */ M((function Drawer({ active, onDismiss, dismissBa
         })) }));
 }));
 
-const GridlistRowContext = K$1(null);
-const GridlistCellContext = K$1(null);
-const GridlistProcessedChildrenContext = K$1(null);
-function Gridlist({ render, ariaLabel, collator, disableHomeEndKeys, focusSelfParent, imperativeHandle, initiallyTabbableColumn, multiSelectionAriaPropName, multiSelectionMode, navigatePastEnd, navigatePastStart, noTypeahead, onElementChange, onLabelClick, onMount, onNavigateLinear, onNavigateTypeahead, onSelectionChange, onTabbableColumnChange, onTabbableIndexChange, onUnmount, pageNavigationSize, paginationMax, paginationMin, singleSelectionAriaPropName, singleSelectionMode, typeaheadTimeout, untabbable, children, staggered, onAfterChildLayoutEffect, onChildrenCountChange, onChildrenMountChange, onSingleSelectedIndexChange, singleSelectedIndex, getSortColumn, getSortValueAt, ...void1 }) {
+const GridlistRowContext = Q$1(null);
+const GridlistCellContext = Q$1(null);
+const GridlistProcessedChildrenContext = Q$1(null);
+function Gridlist({ render, ariaLabel, collator, disableHomeEndKeys, focusSelfParent, imperativeHandle, initiallyTabbableColumn, multiSelectionAriaPropName, multiSelectionMode, navigatePastEnd, navigatePastStart, noTypeahead, onElementChange, onLabelClick, onMount, onNavigateLinear, onNavigateTypeahead, onSelectionChange, onTabbableColumnChange, onTabbableIndexChange, onUnmount, pageNavigationSize, paginationMax, paginationMin, singleSelectionAriaPropName, singleSelectionMode, typeaheadTimeout, untabbable, children, staggered, onAfterChildLayoutEffect, onChildrenCountChange, onChildrenMountChange, onSingleSelectedIndexChange, singleSelectedIndex, getSortColumn, getSortValueAt, animate, disableIntersectionObserver, ...void1 }) {
     getSortValueAt ??= identity;
     useEnsureStability("Gridlist", getSortValueAt);
     return useComponentC(imperativeHandle, render, GridlistRowContext, GridlistProcessedChildrenContext, useGridlist({
@@ -8872,6 +8995,7 @@ function Gridlist({ render, ariaLabel, collator, disableHomeEndKeys, focusSelfPa
         },
         rearrangeableChildrenParameters: {
             children,
+            animate: animate || false
         },
         processedIndexManglerParameters: {
             compare: null,
@@ -8896,7 +9020,8 @@ function Gridlist({ render, ariaLabel, collator, disableHomeEndKeys, focusSelfPa
             singleSelectionMode: useDefault("singleSelectionMode", singleSelectionMode)
         },
         staggeredChildrenParameters: {
-            staggered: staggered || false
+            staggered: staggered || false,
+            disableIntersectionObserver: disableIntersectionObserver || false
         },
         typeaheadNavigationParameters: {
             collator,
@@ -8993,7 +9118,7 @@ function GridlistCell({ index, render, getText, imperativeHandle, onTextContentC
 }
 
 function overwriteWithWarning(a, ..._t) { return a; }
-const HeadingLevelContext = K$1(0);
+const HeadingLevelContext = Q$1(0);
 /**
  * Utility component that creates a heading `h1`, `h2`, `h3`, etc.
  *
@@ -9026,10 +9151,10 @@ const HeadingReset = /* @__PURE__ */ M(function HeadingReset({ newLevel, childre
     return (u(HeadingLevelContext.Provider, { value: newLevel - 1, children: children }));
 });
 
-const ListboxContext = K$1(null);
-K$1(null);
-const ListboxChildContext = K$1(null);
-const ListboxGroupContext = K$1(null);
+const ListboxContext = Q$1(null);
+Q$1(null);
+const ListboxChildContext = Q$1(null);
+const ListboxGroupContext = Q$1(null);
 const GroupedListbox = /* @__PURE__ */ M((function GroupedListbox({ ariaLabel, orientation, render, onElementChange, onMount, onUnmount, }) {
     const info = useListbox({
         labelParameters: { ariaLabel },
@@ -9099,7 +9224,7 @@ const Listbox = /* @__PURE__ */ M((function Listbox({ ariaLabel, collator, disab
         processedIndexManglerParameters: { getSortValueAt, compare, getIndex: useDefault("getIndex", getIndex) }
     }));
 }));
-const ListboxChildren = /* @__PURE__ */ M((function ListboxChildren({ children, render, imperativeHandle, onAfterChildLayoutEffect, onChildrenCountChange, onChildrenMountChange, paginationMax, paginationMin, staggered, }) {
+const ListboxChildren = /* @__PURE__ */ M((function ListboxChildren({ children, render, imperativeHandle, onAfterChildLayoutEffect, onChildrenCountChange, onChildrenMountChange, paginationMax, paginationMin, staggered, animate, disableIntersectionObserver }) {
     const r = useCompleteListNavigationChildren({
         context: x(ListboxContext),
         managedChildrenParameters: {
@@ -9113,9 +9238,11 @@ const ListboxChildren = /* @__PURE__ */ M((function ListboxChildren({ children, 
         },
         rearrangeableChildrenParameters: {
             children,
+            animate: animate || false
         },
         staggeredChildrenParameters: {
-            staggered: staggered || false
+            staggered: staggered || false,
+            disableIntersectionObserver: disableIntersectionObserver || false
         }
     });
     return useComponent(imperativeHandle, render, ListboxChildContext, r);
@@ -9191,7 +9318,7 @@ const ListboxItemInner = /* @__PURE__ */ M((function ListboxItemInner({ getText,
     });
 }));
 
-const MenuItemContext = K$1(null);
+const MenuItemContext = Q$1(null);
 const Menu = /* @__PURE__ */ M((function Menu({ collator, disableHomeEndKeys, noTypeahead, typeaheadTimeout, orientation, singleSelectionAriaPropName, singleSelectionMode, untabbable, active, onDismiss, onElementChange, onMount, onUnmount, openDirection, onTabbableIndexChange, singleSelectedIndex, navigatePastEnd, navigatePastStart, onSingleSelectedIndexChange, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, pageNavigationSize, parentDepth, disabled, onOpen, onNavigateLinear, onNavigateTypeahead, getDocument, onActiveElementChange, onLastActiveElementChange, onWindowFocusedChange, getSortValueAt, render, imperativeHandle, compare, getIndex, ...void1 }) {
     getSortValueAt ??= identity;
     useEnsureStability("Menu", getSortValueAt);
@@ -9285,7 +9412,7 @@ const MenuItem = /* @__PURE__ */ M((function MenuItem({ index, untabbable, onPre
     })));
 }));
 
-const MenubarItemContext = K$1(null);
+const MenubarItemContext = Q$1(null);
 const Menubar = /* @__PURE__ */ M((function Menubar({ render, collator, disableHomeEndKeys, navigatePastEnd, navigatePastStart, pageNavigationSize, orientation, noTypeahead, untabbable, onTabbableIndexChange, disabled, singleSelectedIndex, onSingleSelectedIndexChange, typeaheadTimeout, role, ariaLabel, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, singleSelectionAriaPropName, singleSelectionMode, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, getSortValueAt, compare, getIndex, ...void1 }) {
     getSortValueAt ??= identity;
     useEnsureStability("Menubar", getSortValueAt);
@@ -9374,7 +9501,7 @@ const ProgressWithHandler = /* @__PURE__ */ M((function ProgressWithHandler({ ar
     }));
 }));
 
-const RadioContext = K$1(null);
+const RadioContext = Q$1(null);
 //const ProcessedChildrenContext = createContext<UseProcessedChildrenContext>(null!);
 const RadioGroup = /* @__PURE__ */ M((function RadioGroup({ render, name, collator, disableHomeEndKeys, arrowKeyDirection, noTypeahead, typeaheadTimeout, ariaLabel, navigatePastEnd, navigatePastStart, selectedValue, untabbable, onTabbableIndexChange, onNavigateLinear, onNavigateTypeahead, pageNavigationSize, onElementChange, onMount, onUnmount, imperativeHandle, onSelectedValueChange, singleSelectionMode, getSortValueAt, compare, getIndex, ...void1 }) {
     untabbable ??= false;
@@ -9427,7 +9554,7 @@ const Radio = /* @__PURE__ */ M((function Radio({ disabled, index, render, value
     }));
 }));
 
-const SliderThumbContext = K$1(null);
+const SliderThumbContext = Q$1(null);
 function Slider({ max, min, onAfterChildLayoutEffect, onChildrenMountChange, render, imperativeHandle, onChildrenCountChange, ...void1 }) {
     return useComponent(imperativeHandle, render, SliderThumbContext, useSlider({
         managedChildrenParameters: { onAfterChildLayoutEffect, onChildrenMountChange, onChildrenCountChange },
@@ -9442,9 +9569,9 @@ function SliderThumb({ label, tag, value, max, min, index, render, valueText, im
     }));
 }
 
-const TableRowContext = K$1(null);
-const TableCellContext = K$1(null);
-const TableProcessedChildrenContext = K$1(null);
+const TableRowContext = Q$1(null);
+const TableCellContext = Q$1(null);
+const TableProcessedChildrenContext = Q$1(null);
 const Table = /* @__PURE__ */ M(function Table({ ariaLabel, singleSelectionMode, multiSelectionMode, tagTable, imperativeHandle, render, initiallySingleSelectedIndex, multiSelectionAriaPropName, onSelectionChange, onSingleSelectedIndexChange, singleSelectionAriaPropName, collator, disableHomeEndKeys, initiallyTabbableColumn, navigatePastEnd, navigatePastStart, noTypeahead, onElementChange, onMount, onNavigateLinear, onNavigateTypeahead, onTabbableColumnChange, onTabbableIndexChange, onUnmount, pageNavigationSize, paginationMax, paginationMin, typeaheadTimeout, untabbable, getSortValueAt, initiallySortedColumn, ...void1 }) {
     getSortValueAt ??= identity;
     useEnsureStability("Table", getSortValueAt);
@@ -9476,7 +9603,7 @@ const TableHead = /* @__PURE__ */ M(function TableHead({ render, tagHead, impera
         tableHeadParameters: { tagHead }
     }));
 });
-const TableBody = /* @__PURE__ */ M(function TableBody({ render, tagTableSection, children, imperativeHandle, onAfterChildLayoutEffect, onChildrenCountChange, onChildrenMountChange, paginationMax, paginationMin, staggered, }) {
+const TableBody = /* @__PURE__ */ M(function TableBody({ render, tagTableSection, children, imperativeHandle, onAfterChildLayoutEffect, onChildrenCountChange, onChildrenMountChange, paginationMax, paginationMin, staggered, animate, disableIntersectionObserver, }) {
     return useComponent(imperativeHandle, render, TableProcessedChildrenContext, useTableBody({
         context: useContextWithWarning(TableRowContext, "TableRowContext"),
         managedChildrenParameters: {
@@ -9489,10 +9616,12 @@ const TableBody = /* @__PURE__ */ M(function TableBody({ render, tagTableSection
             paginationMin
         },
         rearrangeableChildrenParameters: {
-            children
+            children,
+            animate: animate || false
         },
         staggeredChildrenParameters: {
-            staggered: staggered || false
+            staggered: staggered || false,
+            disableIntersectionObserver: disableIntersectionObserver || false
         },
         tableSectionParameters: {
             tagTableSection
@@ -9626,8 +9755,8 @@ const TableCell = /* @__PURE__ */ M(function TableCell({ index, render, colSpan,
     }));
 });
 
-const TabsContext = K$1(null);
-const TabPanelsContext = K$1(null);
+const TabsContext = Q$1(null);
+const TabPanelsContext = Q$1(null);
 //const UntabbableContext = createContext(false);
 //const SelectionModeContext = createContext<NonNullable<UseTabsParameters<any, any, any>["singleSelectionParameters"]["selectionMode"]>>("focus");
 const Tabs = /* @__PURE__ */ M((function Tabs({ ariaLabel, collator, disableHomeEndKeys, initiallySingleSelectedIndex, navigatePastEnd, navigatePastStart, noTypeahead, onSingleSelectedIndexChange, onTabbableIndexChange, orientation, pageNavigationSize, localStorageKey, singleSelectionMode, untabbable, typeaheadTimeout, role, onNavigateLinear, onNavigateTypeahead, imperativeHandle, onElementChange, onMount, onUnmount, render, getSortValueAt, compare, getIndex, ...void1 }) {
@@ -9694,7 +9823,7 @@ const TabPanel = /* @__PURE__ */ M((function TabPanel({ index, render, info: uin
     return render(info);
 }));
 
-const ToastContext = K$1(null);
+const ToastContext = Q$1(null);
 function Toasts({ onAfterChildLayoutEffect, onChildrenMountChange, render, visibleCount, imperativeHandle, onChildrenCountChange, ...void1 }) {
     return useComponent(imperativeHandle, render, ToastContext, useToasts({
         managedChildrenParameters: {
@@ -9724,8 +9853,8 @@ function Toast({ render, index, timeout, politeness, children, info, imperativeH
 // const UntabbableContext = createContext(false);
 //const AriaPropNameContext = createContext<UseToolbarParameters<any, any, any>["singleSelectionParameters"]["singleSelectionAriaPropName"]>("aria-selected")
 //const SelectionModeContext = createContext<UseToolbarParameters<any, any, any>["singleSelectionParameters"]["singleSelectionMode"]>("focus");
-const ToolbarContext = K$1(null);
-K$1(null);
+const ToolbarContext = Q$1(null);
+Q$1(null);
 const Toolbar = /* @__PURE__ */ M((function ToolbarU({ render, role, collator, disableHomeEndKeys, disabled, navigatePastEnd, navigatePastStart, pageNavigationSize, singleSelectedIndex, onSingleSelectedIndexChange, orientation, noTypeahead, onTabbableIndexChange, typeaheadTimeout, ariaLabel, imperativeHandle, multiSelectionAriaPropName, multiSelectionMode, onSelectionChange, singleSelectionAriaPropName, singleSelectionMode, untabbable, onNavigateLinear, onNavigateTypeahead, onElementChange, onMount, onUnmount, getSortValueAt, compare, getIndex }) {
     getSortValueAt ??= identity;
     useEnsureStability("Toolbar", getSortValueAt);
