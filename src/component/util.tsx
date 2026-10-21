@@ -1,4 +1,4 @@
-import { Context, GetIndex, Nullable, Ref, UseMultiSelectionParameters, UseSingleSelectionParameters, VNode, createContext, createPortal, focus, getDocument, useContext, useImperativeHandle, useRef } from "preact-prop-helpers";
+import { Context, GetIndex, Nullable, Ref, UseMultiSelectionParameters, UseSingleSelectionParameters, VNode, createContext, createPortal, focus, getDocument, useContext, useImperativeHandle, useRef } from "preact-prop-helpers/preact";
 
 /**
  * Almost all components are built in the exact same way from their implementing hook -- this just sets all of that up.

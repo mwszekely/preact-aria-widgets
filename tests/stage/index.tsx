@@ -1,5 +1,5 @@
 import { render } from "preact";
-import { useSearchParamStateDeclarative } from "preact-prop-helpers";
+import { useSearchParamStateDeclarative } from "preact-prop-helpers/preact";
 import { useEffect, useRef } from "preact/hooks";
 import { TestBasesAccordion } from "../fixtures/accordion.stage.js";
 import type { SharedFixtures } from "../fixtures/base.fixture.js";
@@ -9,7 +9,7 @@ import { TestBasesToolbar } from "../fixtures/toolbar.stage.js";
 import { TestItem, TestingConstants, fromStringNumber } from "../util.js";
 
 
-declare module globalThis {
+declare namespace globalThis {
     let installTestingHandler: <K extends keyof TestingConstants, K2 extends keyof TestingConstants[K]>(key: K, Key2: K2, func: TestingConstants[K][K2]) => void;
     let _TestingConstants: TestingConstants;
     let getTestingHandler: <K extends keyof TestingConstants, K2 extends keyof TestingConstants[K]>(key: K, Key2: K2) => TestingConstants[K][K2];

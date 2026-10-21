@@ -61,7 +61,6 @@ function DemoInput({ index }: { index: number }) {
 }
 
 function DemoTableCell({ index, header, value }: { index: number, value?: number, header?: boolean }) {
-    const r = useRef(Math.random());
 
     if (header) {
         const ref = useRef<HTMLTableCellElement>(null);
@@ -82,30 +81,28 @@ function DemoTableCell({ index, header, value }: { index: number, value?: number
             default:
                 return <TableCell<HTMLTableCellElement> /* getSortValue={() => r.current} */ focusSelf={e => e.focus()} tagTableCell="td" index={index} render={info => {
                     return (
-                        <td {...info.propsFocus} {...info.propsCell}>{r.current.toString()}</td>
+                        <td {...info.propsFocus} {...info.propsCell}>{(value ?? 0).toString()}</td>
                     )
                 }} />
         }
     }
 }
 
+let sortValues: number[][] = [];
+
+function getSortValue(row: number, column: number) {
+    while (sortValues.length <= row) {
+        sortValues.push([])
+    }
+    while (sortValues[row].length <= column) {
+        sortValues[row].push(Math.random());
+    }
+
+    return  sortValues[row][column];
+}
+
 export function Demo() {
     const [count, setCount] = useState(5);
-
-    const sortValues = useRef<Array<number[]>>([]);
-
-    const getSortValuesForRow = useCallback((row: number) => {
-        let sortValuesRow = sortValues.current[row];
-        if (!sortValuesRow) {
-            sortValues.current[row] = sortValuesRow = [Math.random(), Math.random(), Math.random()];
-        }
-        return sortValuesRow;
-    }, []);
-
-    const getSortValueAt = useCallback((row: number, column: number | undefined) => {
-        const rowValues = getSortValuesForRow(row);
-        return rowValues[column ?? 0];
-    }, [])
 
     return (
         <>
@@ -118,7 +115,7 @@ export function Demo() {
                     multiSelectionMode="activation"
                     multiSelectionAriaPropName="aria-selected"
                     tagTable="table"
-                    getSortValueAt={getSortValueAt}
+                    getSortValueAt={getSortValue}
                     render={infoTable => {
                         return (
                             <>
@@ -155,9 +152,9 @@ export function Demo() {
                                                         render={infoRow => {
                                                             return (
                                                                 <tr {...infoRow.props}>
-                                                                    <DemoTableCell key={0} index={0} value={getSortValueAt(i + 1, 0)} />
-                                                                    <DemoTableCell key={1} index={1} value={getSortValueAt(i + 1, 1)} />
-                                                                    <DemoTableCell key={2} index={2} value={getSortValueAt(i + 1, 2)} />
+                                                                    <DemoTableCell key={0} index={0} value={getSortValue(i + 1, 0)} />
+                                                                    <DemoTableCell key={1} index={1} value={getSortValue(i + 1, 1)} />
+                                                                    <DemoTableCell key={2} index={2} value={getSortValue(i + 1, 2)} />
                                                                 </tr>
                                                             );
                                                         }} />

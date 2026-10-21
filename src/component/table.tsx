@@ -1,4 +1,4 @@
-import { OmitStrong, VNode, assertEmptyObject, createContext, focus, identity, memo, useEnsureStability, useStableCallback } from "preact-prop-helpers";
+import { OmitStrong, VNode, assertEmptyObject, createContext, focus, identity, memo, useEnsureStability, useStableCallback } from "preact-prop-helpers/preact";
 import { Get, Get12, Get3, Get4, Get5, Get9, useContextWithWarning } from "../props.js";
 import { TableCellInfo, TableRowInfo, TableSectionInfo, UseTableBodyParameters, UseTableBodyReturnType, UseTableCellContext, UseTableCellParameters, UseTableCellReturnType, UseTableHeadParameters, UseTableHeadReturnType, UseTableParameters, UseTableProcessedChildrenContext, UseTableReturnType, UseTableRowContext, UseTableRowOuterParameters, UseTableRowOuterReturnType, UseTableRowParameters, UseTableRowReturnType, useTable, useTableBody, useTableCell, useTableHead, useTableRow, useTableRowOuter } from "../use-table.js";
 import { GenericComponentProps, useComponent, useDefault } from "./util.js";

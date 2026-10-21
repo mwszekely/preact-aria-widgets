@@ -6,7 +6,6 @@
   "source": "src/index.tsx",
   "module": "/dist/index.js",
   "types": "/dist/index.d.ts",
-  "packageManager": "pnpm@8.15.9+sha512.499434c9d8fdd1a2794ebf4552b3b25c0a633abcee5bb15e7b5de90f32f47b513aca98cd5cfd001c31f0db454bc3804edccd578501e4ca293a6816166bbd9f81",
   "exports": {
     ".": {
       "types": "./dist/preact/index.d.ts",
@@ -33,6 +32,7 @@
     "build:react": "npx rollup -c",
     "watch:react": "npx rollup -c --watch",
     "test": "playwright test",
+    "test-ui": "playwright test --ui",
     "lint": "npx eslint ./src",
     "clean": "tsc --build --clean",
     "rebuild": "rm \"./pnpm-lock.yaml\" && rm -R \"./node_modules\" && pnpm install && pnpm run build"
@@ -45,24 +45,23 @@
   },
   "typings": "./dist/index.d.ts",
   "devDependencies": {
-    "@playwright/test": "^1.52.0",
-    "@rollup/plugin-commonjs": "^28.0.1",
-    "@rollup/plugin-node-resolve": "^15.3.0",
-    "@rollup/plugin-replace": "^6.0.1",
-    "@rollup/plugin-typescript": "^12.1.1",
+    "@playwright/test": "^1.64.1",
+    "@rollup/plugin-commonjs": "^29.0.3",
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "@rollup/plugin-replace": "^6.0.3",
+    "@rollup/plugin-typescript": "^12.3.0",
     "@types/lodash-es": "^4.17.12",
-    "@typescript-eslint/eslint-plugin": "^8.18.0",
-    "@typescript-eslint/parser": "^8.18.0",
-    "eslint": "^9.16.0",
+    "@typescript-eslint/eslint-plugin": "^8.71.2",
+    "@typescript-eslint/parser": "^8.71.2",
+    "eslint": "^10.13.0",
     "npm-run-all": "^4.1.5",
-    "rollup": "^4.28.1",
+    "rollup": "^4.64.10",
     "rollup-plugin-sourcemaps": "^0.6.3",
-    "rollup-plugin-ts": "^3.4.5",
-    "typescript": "^5.7.2"
+    "typescript": "^6.0.3"
   },
   "dependencies": {
     "clsx": "^2.1.1",
-    "lodash-es": "^4.17.21",
+    "lodash-es": "^4.18.1",
     "preact-prop-helpers": "github:mwszekely/preact-prop-helpers"
   }
 }

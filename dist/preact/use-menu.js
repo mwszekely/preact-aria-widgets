@@ -1,4 +1,4 @@
-import { useMemoObject, useMergedProps, useMonitoring, useStableCallback } from "preact-prop-helpers";
+import { useMemoObject, useMergedProps, useMonitoring, useStableCallback } from "preact-prop-helpers/preact";
 import { useMenuSurface } from "./use-menu-surface.js";
 import { useMenubar, useMenubarChild } from "./use-menubar.js";
 /**

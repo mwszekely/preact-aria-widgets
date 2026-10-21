@@ -4,7 +4,7 @@ import {
     useMonitoring,
     usePortalChildren,
     VNode
-} from "preact-prop-helpers";
+} from "preact-prop-helpers/preact";
 import { useContextWithWarning } from "./props.js";
 
 export interface NotificationProviderProps {

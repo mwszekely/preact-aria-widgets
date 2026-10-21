@@ -1,4 +1,4 @@
-import { assertEmptyObject, focus, generateRandomId, identity, returnFalse, returnTrue, useCallback, useChildrenFlag, useCompleteListNavigation, useCompleteListNavigationChild, useLayoutEffect, useManagedChild, useManagedChildren, useMemoObject, useMergedProps, useMonitoring, usePersistentState, usePress, useStableCallback, useState } from "preact-prop-helpers";
+import { assertEmptyObject, focus, generateRandomId, identity, returnFalse, returnTrue, useCallback, useChildrenFlag, useCompleteListNavigation, useCompleteListNavigationChild, useLayoutEffect, useManagedChild, useManagedChildren, useMemoObject, useMergedProps, useMonitoring, usePersistentState, usePress, useStableCallback, useState } from "preact-prop-helpers/preact";
 import { EventDetail, Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
 /**

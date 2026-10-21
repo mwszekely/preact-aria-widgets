@@ -22,7 +22,7 @@ import {
     useRefElement,
     useStableCallback,
     useState
-} from "preact-prop-helpers";
+} from "preact-prop-helpers/preact";
 import { EnhancedEventHandler, OmitStrong, Prefices, TargetedEnhancedEvent, enhanceEvent } from "./props.js";
 import { UseCheckboxLikeParameters, UseCheckboxLikeReturnType, useCheckboxLike } from "./use-checkbox-like.js";
 import { FocusableLabelElement, LabelPosition, UseLabelSyntheticParameters, useLabelSynthetic } from "./use-label.js";

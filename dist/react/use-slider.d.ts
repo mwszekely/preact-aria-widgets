@@ -1,4 +1,4 @@
-import { ElementProps, ManagedChildInfo, Nullable, UseGenericChildParameters, UseManagedChildReturnType, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType } from "preact-prop-helpers";
+import { ElementProps, ManagedChildInfo, Nullable, UseGenericChildParameters, UseManagedChildReturnType, UseManagedChildrenContext, UseManagedChildrenParameters, UseManagedChildrenReturnType } from "preact-prop-helpers/preact";
 import { EventDetail, TagSensitiveProps } from "./props.js";
 export type RangeChangeEvent<E extends EventTarget> = {
     [EventDetail]: {

@@ -8,7 +8,7 @@ import {
     UseRandomDualIdsParameters,
     UseRandomDualIdsReturnType,
     useRefElement
-} from "preact-prop-helpers";
+} from "preact-prop-helpers/preact";
 import { ElementToTag, noop, OmitStrong, useMonitoring } from "./props.js";
 
 export type LabelPosition = "separate" | "wrapping" | "none";

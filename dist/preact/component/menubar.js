@@ -1,5 +1,5 @@
 import { jsx as _jsx } from "preact/jsx-runtime";
-import { assertEmptyObject, createContext, focus, identity, memo, useCallback, useEnsureStability, useImperativeHandle } from "preact-prop-helpers";
+import { assertEmptyObject, createContext, focus, identity, memo, useCallback, useEnsureStability, useImperativeHandle } from "preact-prop-helpers/preact";
 import { useContextWithWarning } from "../props.js";
 import { useMenubar, useMenubarChild } from "../use-menubar.js";
 import { useComponent, useDefault } from "./util.js";

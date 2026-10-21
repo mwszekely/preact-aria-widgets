@@ -1,5 +1,5 @@
 import { jsx as _jsx } from "preact/jsx-runtime";
-import { findFirstFocusable, focus, getDocument, useCallback, useEffect, useGlobalHandler, useManagedChild, useManagedChildren, useMergedProps, useMonitoring, useRef, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers";
+import { findFirstFocusable, focus, getDocument, useCallback, useEffect, useGlobalHandler, useManagedChild, useManagedChildren, useMergedProps, useMonitoring, useRef, useRefElement, useStableCallback, useStableGetter, useState, useTimeout } from "preact-prop-helpers/preact";
 import { useNotify } from "./use-notify.js";
 /**
  * Allows any descendent children to push a visible (and/or audible) message to the user's attention.

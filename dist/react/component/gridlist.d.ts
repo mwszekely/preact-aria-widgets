@@ -1,4 +1,4 @@
-import { OmitStrong, VNode } from "preact-prop-helpers";
+import { OmitStrong, VNode } from "preact-prop-helpers/preact";
 import { Get12, Get16, Get3, Get4 } from "../props.js";
 import { UseGridlistCellInfo, UseGridlistCellParameters, UseGridlistCellReturnType, UseGridlistParameters, UseGridlistReturnType, UseGridlistRowInfo, UseGridlistRowOuterParameters, UseGridlistRowOuterReturnType, UseGridlistRowParameters, UseGridlistRowReturnType, UseGridlistRowsInfo } from "../use-gridlist.js";
 import { GenericComponentProps } from "./util.js";

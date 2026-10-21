@@ -1,5 +1,5 @@
 import { jsx as _jsx } from "preact/jsx-runtime";
-import { assertEmptyObject, createContext, focus, identity, memo, useEnsureStability, useStableCallback } from "preact-prop-helpers";
+import { assertEmptyObject, createContext, focus, identity, memo, useEnsureStability, useStableCallback } from "preact-prop-helpers/preact";
 import { useContextWithWarning } from "../props.js";
 import { useTable, useTableBody, useTableCell, useTableHead, useTableRow, useTableRowOuter } from "../use-table.js";
 import { useComponent, useDefault } from "./util.js";

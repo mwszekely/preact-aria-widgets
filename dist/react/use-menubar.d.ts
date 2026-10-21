@@ -1,4 +1,4 @@
-import { ElementProps, Nullable, PressEventReason, TargetedPick, UsePressParameters, UsePressReturnType } from "preact-prop-helpers";
+import { ElementProps, Nullable, PressEventReason, TargetedPick, UsePressParameters, UsePressReturnType } from "preact-prop-helpers/preact";
 import { OmitStrong } from "./props.js";
 import { UseToolbarChildParameters, UseToolbarChildReturnType, UseToolbarContext, UseToolbarParameters, UseToolbarReturnType, UseToolbarSubInfo } from "./use-toolbar.js";
 export interface UseMenubarContext<ChildElement extends Element, M extends UseMenubarSubInfo<ChildElement>> extends UseToolbarContext<ChildElement, M> {

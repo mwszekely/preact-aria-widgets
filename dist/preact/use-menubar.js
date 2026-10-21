@@ -1,4 +1,4 @@
-import { assertEmptyObject, focus, returnFalse, useCallback, useMergedProps, useMonitoring, usePress, useStableCallback } from "preact-prop-helpers";
+import { assertEmptyObject, focus, returnFalse, useCallback, useMergedProps, useMonitoring, usePress, useStableCallback } from "preact-prop-helpers/preact";
 import { useToolbar, useToolbarChild } from "./use-toolbar.js";
 /**
  * Implements a [Menubar](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/) pattern.

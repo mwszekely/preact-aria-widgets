@@ -1,4 +1,4 @@
-import { memo, useContext } from "preact-prop-helpers";
+import { memo, useContext } from "preact-prop-helpers/preact";
 import { Get10 } from "../props.js";
 import { UseDialogParameters, UseDialogReturnType, useDialog } from "../use-dialog.js";
 import { GenericComponentProps, ParentDepthContext, useComponent, useDefault } from "./util.js";

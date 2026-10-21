@@ -1,4 +1,4 @@
-import { useMergedProps } from "preact-prop-helpers";
+import { useMergedProps } from "preact-prop-helpers/preact";
 import { Toolbar, ToolbarChild } from "../../dist/preact/index.js";
 import { TestItem, fromStringBoolean, fromStringNumber, useTestSyncState } from "../util.js";
 

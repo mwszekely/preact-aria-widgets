@@ -1,6 +1,6 @@
 import { jsx as _jsx } from "preact/jsx-runtime";
 import { createContext } from "preact";
-import { assertEmptyObject, identity, useContext, useEnsureStability } from "preact-prop-helpers";
+import { assertEmptyObject, identity, useContext, useEnsureStability } from "preact-prop-helpers/preact";
 import { Prefices } from "../props.js";
 import { useGridlist, useGridlistCell, useGridlistRow, useGridlistRowOuter } from "../use-gridlist.js";
 import { useComponent, useComponentC, useDefault } from "./util.js";

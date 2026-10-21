@@ -47,7 +47,7 @@ import {
     useTextContent,
     useTypeaheadNavigation,
     useTypeaheadNavigationChild
-} from "preact-prop-helpers";
+} from "preact-prop-helpers/preact";
 import { DisabledType, OmitStrong, Prefices } from "./props.js";
 import { UseButtonParameters, UseButtonReturnType, useButton } from "./use-button.js";
 

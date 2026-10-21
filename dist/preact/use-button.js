@@ -1,4 +1,4 @@
-import { assertEmptyObject, enhanceEvent, returnFalse, useMergedProps, useMonitoring, usePress, useRefElement, useStableCallback } from "preact-prop-helpers";
+import { assertEmptyObject, enhanceEvent, returnFalse, useMergedProps, useMonitoring, usePress, useRefElement, useStableCallback } from "preact-prop-helpers/preact";
 /**
  * Implements a [Button](https://www.w3.org/WAI/ARIA/apg/patterns/button/) pattern.
  *

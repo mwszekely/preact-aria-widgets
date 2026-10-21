@@ -1,4 +1,4 @@
-import { assertEmptyObject, createContext } from "preact-prop-helpers";
+import { assertEmptyObject, createContext } from "preact-prop-helpers/preact";
 import { useContextWithWarning } from "../props.js";
 import { useToast, useToasts } from "../use-toasts.js";
 import { useComponent } from "./util.js";

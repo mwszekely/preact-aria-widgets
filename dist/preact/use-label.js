@@ -1,4 +1,4 @@
-import { returnTrue, useMergedProps, usePress, useRandomDualIds, useRefElement } from "preact-prop-helpers";
+import { returnTrue, useMergedProps, usePress, useRandomDualIds, useRefElement } from "preact-prop-helpers/preact";
 import { noop, useMonitoring } from "./props.js";
 /**
  * @compositeParams

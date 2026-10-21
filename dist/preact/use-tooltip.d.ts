@@ -1,4 +1,4 @@
-import { ElementProps, TargetedPick, UseDismissParameters, UseEscapeDismissParameters, UsePressReturnType, UseRefElementReturnTypeSelf } from "preact-prop-helpers";
+import { ElementProps, TargetedPick, UseDismissParameters, UseEscapeDismissParameters, UsePressReturnType, UseRefElementReturnTypeSelf } from "preact-prop-helpers/preact";
 export type TooltipStatus = "hover" | "focus" | null;
 export interface UseTooltipParametersSelf {
     /**

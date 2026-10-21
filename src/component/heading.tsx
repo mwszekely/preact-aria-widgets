@@ -1,4 +1,4 @@
-import { ComponentChildren, createContext, createElement, ElementProps, forwardRef, memo, Ref, RenderableProps, useContext, useMergedProps } from "preact-prop-helpers";
+import { ComponentChildren, createContext, createElement, ElementProps, forwardRef, memo, Ref, RenderableProps, useContext, useMergedProps } from "preact-prop-helpers/preact";
 
 type ElementToTag<_A> = any;
 function overwriteWithWarning(a: any, ..._t: any[]) { return a; }

@@ -16,7 +16,7 @@ import {
     useMemoObject,
     useMergedProps,
     useMonitoring
-} from "preact-prop-helpers";
+} from "preact-prop-helpers/preact";
 import { OmitStrong, Prefices } from "./props.js";
 import { UseLabelSyntheticParameters, useLabelSynthetic } from "./use-label.js";
 

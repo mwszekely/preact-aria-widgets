@@ -1,4 +1,4 @@
-import { ElementProps, EventType, TargetedOmit, UseModalParameters, UseModalReturnType } from "preact-prop-helpers";
+import { ElementProps, EventType, TargetedOmit, UseModalParameters, UseModalReturnType } from "preact-prop-helpers/preact";
 import { OmitStrong } from "./props.js";
 export interface UseMenuSurfaceParametersSelf {
     /**

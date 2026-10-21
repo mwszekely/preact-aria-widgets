@@ -28,7 +28,7 @@ import {
     useStableCallback,
     useStableGetter,
     useState
-} from "preact-prop-helpers";
+} from "preact-prop-helpers/preact";
 import { EnhancedEventHandler, OmitStrong, TargetedEnhancedEvent } from "./props.js";
 import { CheckboxCheckedType } from "./use-checkbox-like.js";
 

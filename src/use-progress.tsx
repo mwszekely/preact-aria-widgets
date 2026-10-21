@@ -10,7 +10,7 @@ import {
     useMergedProps,
     useMonitoring,
     VNode
-} from "preact-prop-helpers";
+} from "preact-prop-helpers/preact";
 import {
     ElementToTag,
     OmitStrong,

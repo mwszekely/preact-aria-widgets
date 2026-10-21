@@ -1,4 +1,4 @@
-import { ComponentChildren, ElementProps, Ref, RenderableProps } from "preact-prop-helpers";
+import { ComponentChildren, createElement, ElementProps, Ref, RenderableProps } from "preact-prop-helpers/preact";
 type ElementToTag<_A> = any;
 export interface HeadingProps<T extends Element> extends RenderableProps<ElementProps<T>> {
     /**
@@ -26,9 +26,9 @@ export declare const Heading: import("preact").FunctionComponent<import("preact/
  *
  * Minimum of 1.
  */
-export declare const HeadingReset: import("preact").FunctionComponent<{
+export declare const HeadingReset: ({ newLevel, children }: {
     newLevel: number;
     children: ComponentChildren;
-}>;
+}) => createElement.JSX.Element;
 export {};
 //# sourceMappingURL=heading.d.ts.map

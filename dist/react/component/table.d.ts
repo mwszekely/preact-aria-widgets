@@ -1,4 +1,4 @@
-import { OmitStrong, VNode } from "preact-prop-helpers";
+import { OmitStrong, VNode } from "preact-prop-helpers/preact";
 import { Get, Get12, Get3, Get4, Get5, Get9 } from "../props.js";
 import { TableCellInfo, TableRowInfo, TableSectionInfo, UseTableBodyParameters, UseTableBodyReturnType, UseTableCellParameters, UseTableCellReturnType, UseTableHeadParameters, UseTableHeadReturnType, UseTableParameters, UseTableReturnType, UseTableRowOuterParameters, UseTableRowOuterReturnType, UseTableRowParameters, UseTableRowReturnType } from "../use-table.js";
 import { GenericComponentProps } from "./util.js";

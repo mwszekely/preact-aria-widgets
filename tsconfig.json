@@ -9,6 +9,7 @@
     "declarationMap": true,                   /* Generates a sourcemap for each corresponding '.d.ts' file. */
     "sourceMap": true,                        /* Generates corresponding '.map' file. */
     "outDir": "./dist/preact",
+    "rootDir": "./src",
     "isolatedModules": true,
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "exactOptionalPropertyTypes": false,

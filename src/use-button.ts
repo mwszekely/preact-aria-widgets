@@ -16,7 +16,7 @@ import {
     usePress,
     useRefElement,
     useStableCallback
-} from "preact-prop-helpers";
+} from "preact-prop-helpers/preact";
 import { DisabledType, ElementToTag, EnhancedEventHandler, OmitStrong, TargetedEnhancedEvent } from "./props.js";
 
 export interface ButtonPressEventDetail {

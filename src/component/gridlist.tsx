@@ -1,5 +1,5 @@
 import { createContext } from "preact";
-import { OmitStrong, VNode, assertEmptyObject, identity, useContext, useEnsureStability } from "preact-prop-helpers";
+import { OmitStrong, VNode, assertEmptyObject, identity, useContext, useEnsureStability } from "preact-prop-helpers/preact";
 import { Get12, Get16, Get3, Get4, Prefices } from "../props.js";
 import { UseGridlistCellContext, UseGridlistCellInfo, UseGridlistCellParameters, UseGridlistCellReturnType, UseGridlistParameters, UseGridlistReturnType, UseGridlistRowContext, UseGridlistRowInfo, UseGridlistRowOuterParameters, UseGridlistRowOuterReturnType, UseGridlistRowParameters, UseGridlistRowReturnType, UseGridlistRowsContext, UseGridlistRowsInfo, useGridlist, useGridlistCell, useGridlistRow, useGridlistRowOuter } from "../use-gridlist.js";
 import { GenericComponentProps, useComponent, useComponentC, useDefault } from "./util.js";

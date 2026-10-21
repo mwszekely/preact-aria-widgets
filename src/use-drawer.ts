@@ -8,7 +8,7 @@ import {
     UseModalParameters,
     UseModalReturnType,
     useStableCallback
-} from "preact-prop-helpers";
+} from "preact-prop-helpers/preact";
 import { OmitStrong, Prefices, useMonitoring } from "./props.js";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
 

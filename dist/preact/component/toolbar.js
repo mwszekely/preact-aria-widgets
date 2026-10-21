@@ -1,4 +1,4 @@
-import { assertEmptyObject, createContext, focus, identity, memo, useCallback, useEnsureStability } from "preact-prop-helpers";
+import { assertEmptyObject, createContext, focus, identity, memo, useCallback, useEnsureStability } from "preact-prop-helpers/preact";
 import { useContextWithWarning } from "../props.js";
 import { useToolbar, useToolbarChild } from "../use-toolbar.js";
 import { useComponent, useDefault } from "./util.js";

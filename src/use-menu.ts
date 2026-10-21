@@ -5,7 +5,7 @@ import {
     useMergedProps,
     useMonitoring,
     useStableCallback
-} from "preact-prop-helpers";
+} from "preact-prop-helpers/preact";
 import { OmitStrong } from "./props.js";
 import { UseMenuSurfaceParameters, UseMenuSurfaceReturnType, useMenuSurface } from "./use-menu-surface.js";
 import { UseMenubarContext, UseMenubarItemParameters, UseMenubarItemReturnType, UseMenubarParameters, UseMenubarReturnType, UseMenubarSubInfo, useMenubar, useMenubarChild } from "./use-menubar.js";

@@ -1,4 +1,4 @@
-import { assertEmptyObject, generateRandomId, useManagedChild, useManagedChildren, useMemo, useMonitoring, useRef } from "preact-prop-helpers";
+import { assertEmptyObject, generateRandomId, useManagedChild, useManagedChildren, useMemo, useMonitoring, useRef } from "preact-prop-helpers/preact";
 import { EventDetail, Prefices, enhanceEvent } from "./props.js";
 /**
  * Implements a [Slider](https://www.w3.org/WAI/ARIA/apg/patterns/slider-multithumb/) pattern.

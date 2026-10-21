@@ -16,7 +16,7 @@ import {
     useStableGetter,
     useState,
     useTimeout
-} from "preact-prop-helpers";
+} from "preact-prop-helpers/preact";
 import { OmitStrong } from "./props.js";
 import { useNotify } from "./use-notify.js";
 

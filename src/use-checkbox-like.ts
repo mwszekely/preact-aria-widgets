@@ -13,7 +13,7 @@ import {
     UsePressReturnType,
     UseRefElementReturnType,
     useStableCallback
-} from "preact-prop-helpers";
+} from "preact-prop-helpers/preact";
 import { DisabledType, OmitStrong, useMonitoring } from "./props.js";
 import { LabelPosition, useLabel, UseLabelParameters, UseLabelReturnType } from "./use-label.js";
 

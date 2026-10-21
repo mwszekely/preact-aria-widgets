@@ -1,4 +1,4 @@
-import { assertEmptyObject, focus, returnFalse, returnNull, returnZero, useCallback, useCompleteListNavigation, useCompleteListNavigationChild, useEffect, useLayoutEffect, useMemoObject, useMergedProps, useMonitoring, usePassiveState, useRef, useStableCallback, useStableGetter, useState } from "preact-prop-helpers";
+import { assertEmptyObject, focus, returnFalse, returnNull, returnZero, useCallback, useCompleteListNavigation, useCompleteListNavigationChild, useEffect, useLayoutEffect, useMemoObject, useMergedProps, useMonitoring, usePassiveState, useRef, useStableCallback, useStableGetter, useState } from "preact-prop-helpers/preact";
 /**
  *
  * As a general reminder,

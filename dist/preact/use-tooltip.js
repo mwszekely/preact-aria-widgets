@@ -1,4 +1,4 @@
-import { assertEmptyObject, focus, getDocument, getWindow, returnNull, useCallback, useDismiss, useEffect, useGlobalHandler, useHasCurrentFocus, useMergedProps, useMonitoring, usePassiveState, useRandomId, useRef, useRefElement, useStableCallback, useState } from "preact-prop-helpers";
+import { assertEmptyObject, focus, getDocument, getWindow, returnNull, useCallback, useDismiss, useEffect, useGlobalHandler, useHasCurrentFocus, useMergedProps, useMonitoring, usePassiveState, useRandomId, useRef, useRefElement, useStableCallback, useState } from "preact-prop-helpers/preact";
 import { Prefices } from "./props.js";
 // Intentionally (?) unused
 let _hasHover2 = typeof window == "undefined" ? null : matchMedia("(any-hover: hover)");

@@ -37,7 +37,7 @@ import {
     usePress,
     useStableCallback,
     useState
-} from "preact-prop-helpers";
+} from "preact-prop-helpers/preact";
 import { EventDetail, OmitStrong, Prefices } from "./props.js";
 import { UseLabelSyntheticParameters, useLabelSynthetic } from "./use-label.js";
 

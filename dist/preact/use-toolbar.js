@@ -1,4 +1,4 @@
-import { focus, useCompleteListNavigationChildDeclarative, useCompleteListNavigationDeclarative, useMemoObject, useMergedProps, useMonitoring } from "preact-prop-helpers";
+import { focus, useCompleteListNavigationChildDeclarative, useCompleteListNavigationDeclarative, useMemoObject, useMergedProps, useMonitoring } from "preact-prop-helpers/preact";
 import { Prefices } from "./props.js";
 import { useLabelSynthetic } from "./use-label.js";
 /**

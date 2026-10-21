@@ -1,4 +1,4 @@
-import { OmitStrong } from "preact-prop-helpers";
+import { OmitStrong } from "preact-prop-helpers/preact";
 import { Get16 } from "../props.js";
 import { UseMenuItemReturnType, UseMenuParameters, UseMenuReturnType } from "../use-menu.js";
 import { UseMenubarSubInfo } from "../use-menubar.js";

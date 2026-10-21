@@ -24,7 +24,7 @@ import {
     UseRefElementReturnTypeSelf,
     useStableCallback,
     useState
-} from "preact-prop-helpers";
+} from "preact-prop-helpers/preact";
 import { Prefices } from "./props.js";
 
 export type TooltipStatus = "hover" | "focus" | null;

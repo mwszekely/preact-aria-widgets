@@ -1,4 +1,4 @@
-import { assertEmptyObject, createContext, identity, memo, useEnsureStability } from "preact-prop-helpers";
+import { assertEmptyObject, createContext, identity, memo, useEnsureStability } from "preact-prop-helpers/preact";
 import { Get7, Get9, useContextWithWarning } from "../props.js";
 import { FocusableLabelElement, LabelPosition } from "../use-label.js";
 import { RadioSubInfo, UseRadioGroupParameters, UseRadioGroupReturnType, UseRadioParameters, UseRadioReturnType, useRadio, useRadioGroup, type RadioContext } from "../use-radio-group.js";

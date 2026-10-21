@@ -15,7 +15,7 @@ import {
     useStableGetter,
     useState,
     useTimeout
-} from "preact-prop-helpers";
+} from "preact-prop-helpers/preact";
 import { OmitStrong } from "./props.js";
 
 export interface UseMenuSurfaceParametersSelf {
