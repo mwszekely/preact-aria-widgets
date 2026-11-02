@@ -1,22 +1,22 @@
 import { CompleteGridNavigationCellContext, CompleteGridNavigationRowContext, ElementProps, JSX, Nullable, OmitStrong, PassiveStateUpdater, TargetedOmit, UseCompleteGridNavigationCellInfo, UseCompleteGridNavigationCellParameters, UseCompleteGridNavigationCellReturnType, UseCompleteGridNavigationParameters, UseCompleteGridNavigationReturnType, UseCompleteGridNavigationRowInfo, UseCompleteGridNavigationRowInfoKeysParameters, UseCompleteGridNavigationRowParameters, UseCompleteGridNavigationRowReturnType, UseCompleteGridNavigationRowsContext, UseCompleteGridNavigationRowsInfo, UseCompleteGridNavigationRowsParameters, UseCompleteGridNavigationRowsReturnType, UseProcessedChildParameters, UseProcessedChildReturnType, UseRefElementParameters, UseRefElementReturnType, assertEmptyObject, returnNull, useCallback, useCompleteGridNavigation, useCompleteGridNavigationCell, useCompleteGridNavigationRow, useCompleteGridNavigationRows, useEffect, useMemoObject, useMergedProps, useMonitoring, usePassiveState, useProcessedChild, useRefElement, useStableCallback, useState } from "preact-prop-helpers/preact";
-import { ElementToTag, Prefices } from "./props.js";
+import { Prefices } from "./props.js";
 import { UseLabelReturnType, UseLabelSyntheticParameters, useLabelSynthetic } from "./use-label.js";
 //import { UseTableCellParameters, UseTableCellReturnType, UseTableRowParameters, UseTableRowReturnType } from "./use-table.js";
 
 export type SortDirection = "ascending" | "descending";
 interface SortInfo { column: number, direction: SortDirection }
 
-export interface TableSectionInfo<TableRowElement extends Element> extends UseCompleteGridNavigationRowsInfo<TableRowElement> { };
-export interface TableRowInfo<TableRowElement extends Element> extends UseCompleteGridNavigationRowInfo<TableRowElement> { }
-export interface TableCellInfo<TableCellElement extends Element> extends UseCompleteGridNavigationCellInfo<TableCellElement> { }
+export interface TableSectionInfo<TableRowElement extends keyof JSX.IntrinsicElements> extends UseCompleteGridNavigationRowsInfo<TableRowElement> { };
+export interface TableRowInfo<TableRowElement extends keyof JSX.IntrinsicElements> extends UseCompleteGridNavigationRowInfo<TableRowElement> { }
+export interface TableCellInfo<TableCellElement extends keyof JSX.IntrinsicElements> extends UseCompleteGridNavigationCellInfo<TableCellElement> { }
 
 // useTable
-export interface UseTableParametersSelf<TableElement extends Element> {
-    tagTable: ElementToTag<TableElement>;
+export interface UseTableParametersSelf<TableElement extends keyof JSX.IntrinsicElements> {
+    tagTable: TableElement;
     initiallySortedColumn: Nullable<number>;
 }
 
-export interface UseTableParameters<TableElement extends Element, RowElement extends Element, RM extends TableRowInfo<RowElement> = TableRowInfo<RowElement>> extends
+export interface UseTableParameters<TableElement extends keyof JSX.IntrinsicElements, RowElement extends keyof JSX.IntrinsicElements, RM extends TableRowInfo<RowElement> = TableRowInfo<RowElement>> extends
     OmitStrong<UseCompleteGridNavigationParameters<TableElement, RowElement, RM>, "rovingTabIndexParameters" | "gridNavigationCompleteParameters">,
     TargetedOmit<UseCompleteGridNavigationParameters<TableElement, RowElement, RM>, "rovingTabIndexParameters", "focusSelfParent">,
     TargetedOmit<UseCompleteGridNavigationParameters<TableElement, RowElement, RM>, "gridNavigationCompleteParameters", "getSortColumn">,
@@ -28,7 +28,7 @@ export interface UseTableReturnTypeSelf {
     sortByColumn: (column: number) => SortInfo;
 }
 
-export interface UseTableReturnType<TableElement extends Element, RowElement extends Element, LabelElement extends Element, RM extends TableRowInfo<RowElement> = TableRowInfo<RowElement>> extends
+export interface UseTableReturnType<TableElement extends keyof JSX.IntrinsicElements, RowElement extends keyof JSX.IntrinsicElements, LabelElement extends keyof JSX.IntrinsicElements, RM extends TableRowInfo<RowElement> = TableRowInfo<RowElement>> extends
     OmitStrong<UseCompleteGridNavigationReturnType<TableElement, RowElement, RM>, "props">,
     Pick<UseLabelReturnType<TableElement, LabelElement>, "propsLabel"> {
     tableReturn: UseTableReturnTypeSelf;
@@ -49,26 +49,26 @@ export interface UseTableProcessedChildrenContextSelf {
 
 
 // useTableSection
-export interface UseTableSectionParametersSelf<TableSectionElement extends Element> {
-    tagTableSection: ElementToTag<TableSectionElement>;
+export interface UseTableSectionParametersSelf<TableSectionElement extends keyof JSX.IntrinsicElements> {
+    tagTableSection: TableSectionElement;
 }
 
-export interface UseTableRowContext<RowElement extends Element, RM extends TableRowInfo<RowElement>> extends CompleteGridNavigationRowContext<RowElement, RM> {
+export interface UseTableRowContext<RowElement extends keyof JSX.IntrinsicElements, RM extends TableRowInfo<RowElement>> extends CompleteGridNavigationRowContext<RowElement, RM> {
     tableContext: UseTableContextSelf;
 }
 
-export interface UseTableProcessedChildrenContext<RowElement extends Element, RsM extends TableSectionInfo<RowElement>> extends UseCompleteGridNavigationRowsContext<RowElement, RsM> {
+export interface UseTableProcessedChildrenContext<RowElement extends keyof JSX.IntrinsicElements, RsM extends TableSectionInfo<RowElement>> extends UseCompleteGridNavigationRowsContext<RowElement, RsM> {
     tableProcessedChildren: UseTableProcessedChildrenContextSelf;
 }
 
-export interface UseTableBodyParameters<TableSectionElement extends Element, RowElement extends Element, RM extends UseCompleteGridNavigationRowInfo<RowElement>, RsM extends TableSectionInfo<RowElement>> extends
+export interface UseTableBodyParameters<TableSectionElement extends keyof JSX.IntrinsicElements, RowElement extends keyof JSX.IntrinsicElements, RM extends UseCompleteGridNavigationRowInfo<RowElement>, RsM extends TableSectionInfo<RowElement>> extends
     OmitStrong<UseCompleteGridNavigationRowsParameters<RowElement, RM, RsM>, "rearrangeableChildrenParameters">,
     TargetedOmit<UseCompleteGridNavigationRowsParameters<RowElement, RM, RsM>, "rearrangeableChildrenParameters", never> {
     tableSectionParameters: UseTableSectionParametersSelf<TableSectionElement>;
     context: UseTableRowContext<RowElement, RM>;
 }
 
-export interface UseTableBodyReturnType<TableSectionElement extends Element, RowElement extends Element, RsM extends TableSectionInfo<RowElement>> extends UseCompleteGridNavigationRowsReturnType<RowElement, RsM> {
+export interface UseTableBodyReturnType<TableSectionElement extends keyof JSX.IntrinsicElements, RowElement extends keyof JSX.IntrinsicElements, RsM extends TableSectionInfo<RowElement>> extends UseCompleteGridNavigationRowsReturnType<RowElement, RsM> {
     context: UseTableProcessedChildrenContext<RowElement, RsM>;
     propsTableSection: ElementProps<TableSectionElement>;
 }
@@ -76,42 +76,42 @@ export interface UseTableBodyReturnType<TableSectionElement extends Element, Row
 
 type UseTableRowInfoKeysParameters<RM extends TableRowInfo<any>> = UseCompleteGridNavigationRowInfoKeysParameters<RM>;
 
-export interface UseTableCellContext<CellElement extends Element, CM extends TableCellInfo<CellElement>> extends CompleteGridNavigationCellContext<CellElement, CM> {
+export interface UseTableCellContext<CellElement extends keyof JSX.IntrinsicElements, CM extends TableCellInfo<CellElement>> extends CompleteGridNavigationCellContext<CellElement, CM> {
     tableContext: UseTableContextSelf;
 }
 
-export interface UseTableRowParametersSelf<TableRowElement extends Element> {
+export interface UseTableRowParametersSelf<TableRowElement extends keyof JSX.IntrinsicElements> {
     selected: Nullable<boolean>;
-    tagTableRow: ElementToTag<TableRowElement>;
+    tagTableRow: TableRowElement;
 }
-export interface UseTableRowParameters<RowElement extends Element, CellElement extends Element, RM extends TableRowInfo<RowElement>, CM extends TableCellInfo<CellElement>> extends
+export interface UseTableRowParameters<RowElement extends keyof JSX.IntrinsicElements, CellElement extends keyof JSX.IntrinsicElements, RM extends TableRowInfo<RowElement>, CM extends TableCellInfo<CellElement>> extends
     OmitStrong<UseCompleteGridNavigationRowParameters<RowElement, CellElement, RM, CM>, "typeaheadNavigationParameters" | "info"> {
     context: UseTableRowContext<RowElement, RM>;
     tableRowParameters: UseTableRowParametersSelf<RowElement>;
     info: Pick<RM, UseTableRowInfoKeysParameters<RM>>
 }
 
-export interface UseTableRowReturnType<RowElement extends Element, CellElement extends Element, RM extends TableRowInfo<RowElement>, CM extends TableCellInfo<CellElement>> extends
+export interface UseTableRowReturnType<RowElement extends keyof JSX.IntrinsicElements, CellElement extends keyof JSX.IntrinsicElements, RM extends TableRowInfo<RowElement>, CM extends TableCellInfo<CellElement>> extends
     UseCompleteGridNavigationRowReturnType<RowElement, CellElement, RM, CM> {
     context: UseTableCellContext<CellElement, CM>;
 }
 
 
 
-export interface UseTableCellParametersSelf<TableCellElement extends Element, CM extends TableCellInfo<TableCellElement>> {
-    tagTableCell: ElementToTag<TableCellElement>;
+export interface UseTableCellParametersSelf<TableCellElement extends keyof JSX.IntrinsicElements, CM extends TableCellInfo<TableCellElement>> {
+    tagTableCell: TableCellElement;
 }
 export interface UseTableCellReturnTypeSelf {
     sortByThisColumn(): SortInfo;
 }
 
 
-export interface UseTableCellParameters<CellElement extends Element, CM extends TableCellInfo<CellElement>> extends UseCompleteGridNavigationCellParameters<CellElement, CM> {
+export interface UseTableCellParameters<CellElement extends keyof JSX.IntrinsicElements, CM extends TableCellInfo<CellElement>> extends UseCompleteGridNavigationCellParameters<CellElement, CM> {
     tableCellParameters: UseTableCellParametersSelf<CellElement, CM>;
     context: UseTableCellContext<CellElement, CM>;
 }
 
-export interface UseTableCellReturnType<CellElement extends Element, CM extends TableCellInfo<CellElement>> extends
+export interface UseTableCellReturnType<CellElement extends keyof JSX.IntrinsicElements, CM extends TableCellInfo<CellElement>> extends
     OmitStrong<UseCompleteGridNavigationCellReturnType<CellElement, CM>, "props"> {
     propsCell: ElementProps<CellElement>;
     propsFocus: ElementProps<any>;
@@ -124,7 +124,7 @@ export interface UseTableCellReturnType<CellElement extends Element, CM extends 
 /**
  * @compositeParams
  */
-export function useTable<TableElement extends Element, TableRowElement extends Element, LabelElement extends Element, RM extends TableRowInfo<TableRowElement>>({
+export function useTable<TableElement extends keyof JSX.IntrinsicElements, TableRowElement extends keyof JSX.IntrinsicElements, LabelElement extends keyof JSX.IntrinsicElements, RM extends TableRowInfo<TableRowElement>>({
     gridNavigationParameters,
     linearNavigationParameters,
     multiSelectionParameters,
@@ -220,14 +220,14 @@ export function useTable<TableElement extends Element, TableRowElement extends E
 
 const naturalSectionTypes = new Set<keyof JSX.IntrinsicElements>(["thead", "tbody", "tfoot"]);
 
-export interface UseTableHeadParametersSelf<TableSectionElement extends Element> {
-    tagHead: ElementToTag<TableSectionElement>;
+export interface UseTableHeadParametersSelf<TableSectionElement extends keyof JSX.IntrinsicElements> {
+    tagHead: TableSectionElement;
 }
-export interface UseTableHeadReturnTypeSelf<TableSectionElement extends Element> { }
-export interface UseTableHeadParameters<TableSectionElement extends Element> {
+export interface UseTableHeadReturnTypeSelf<TableSectionElement extends keyof JSX.IntrinsicElements> { }
+export interface UseTableHeadParameters<TableSectionElement extends keyof JSX.IntrinsicElements> {
     tableHeadParameters: UseTableHeadParametersSelf<TableSectionElement>;
 }
-export interface UseTableHeadReturnType<TableSectionElement extends Element> {
+export interface UseTableHeadReturnType<TableSectionElement extends keyof JSX.IntrinsicElements> {
     props: ElementProps<TableSectionElement>;
     tableHeadReturn: UseTableHeadReturnTypeSelf<TableSectionElement>;
 }
@@ -235,7 +235,7 @@ export interface UseTableHeadReturnType<TableSectionElement extends Element> {
 /**
  * @compositeParams
  */
-export function useTableHead<TableSectionElement extends Element>({ tableHeadParameters: { tagHead: tagTableSection } }: UseTableHeadParameters<TableSectionElement>): UseTableHeadReturnType<TableSectionElement> {
+export function useTableHead<TableSectionElement extends keyof JSX.IntrinsicElements>({ tableHeadParameters: { tagHead: tagTableSection } }: UseTableHeadParameters<TableSectionElement>): UseTableHeadReturnType<TableSectionElement> {
     const props: ElementProps<TableSectionElement> = {};
 
     if (!naturalSectionTypes.has(tagTableSection as any)) {
@@ -251,7 +251,7 @@ export function useTableHead<TableSectionElement extends Element>({ tableHeadPar
 /**
  * @compositeParams
  */
-export function useTableBody<TableSectionElement extends Element, RowElement extends Element, RM extends TableRowInfo<RowElement>, RsM extends TableSectionInfo<RowElement>>({
+export function useTableBody<TableSectionElement extends keyof JSX.IntrinsicElements, RowElement extends keyof JSX.IntrinsicElements, RM extends TableRowInfo<RowElement>, RsM extends TableSectionInfo<RowElement>>({
     context: processedChildrenContext,
     managedChildrenParameters,
     paginatedChildrenParameters,
@@ -300,14 +300,14 @@ export function useTableBody<TableSectionElement extends Element, RowElement ext
 
 
 
-export interface UseTableRowOuterParameters<RowElement extends Element, RsM extends TableSectionInfo<RowElement>> extends
+export interface UseTableRowOuterParameters<RowElement extends keyof JSX.IntrinsicElements, RsM extends TableSectionInfo<RowElement>> extends
     OmitStrong<UseProcessedChildParameters<RowElement, RsM>, "info">,
     TargetedOmit<UseProcessedChildParameters<RowElement, RsM>, "info", "getElement">,
     UseRefElementParameters<RowElement> {
 
 }
 
-export interface UseTableRowOuterReturnType<RowElement extends Element, RsM extends TableSectionInfo<RowElement>> extends
+export interface UseTableRowOuterReturnType<RowElement extends keyof JSX.IntrinsicElements, RsM extends TableSectionInfo<RowElement>> extends
     OmitStrong<UseProcessedChildReturnType<RowElement, RsM>, never>,
     OmitStrong<UseRefElementReturnType<RowElement>, "propsStable"> {
     hide: boolean;
@@ -316,7 +316,7 @@ export interface UseTableRowOuterReturnType<RowElement extends Element, RsM exte
 /**
  * @compositeParams
  */
-export function useTableRowOuter<RowElement extends Element, RsM extends TableSectionInfo<RowElement>>({
+export function useTableRowOuter<RowElement extends keyof JSX.IntrinsicElements, RsM extends TableSectionInfo<RowElement>>({
     context,
     info: { ...info },
     refElementParameters: { onElementChange: oec1, onMount, onUnmount },
@@ -367,7 +367,7 @@ export function useTableRowOuter<RowElement extends Element, RsM extends TableSe
 /**
  * @compositeParams
  */
-export function useTableRow<TableRowElement extends Element, TableCellElement extends Element, RM extends TableRowInfo<TableRowElement>, CM extends TableCellInfo<TableCellElement>>({
+export function useTableRow<TableRowElement extends keyof JSX.IntrinsicElements, TableCellElement extends keyof JSX.IntrinsicElements, RM extends TableRowInfo<TableRowElement>, CM extends TableCellInfo<TableCellElement>>({
     info,
     textContentParameters,
     context: cx1,
@@ -445,7 +445,7 @@ export function useTableRow<TableRowElement extends Element, TableCellElement ex
 /**
  * @compositeParams
  */
-export function useTableCell<TableCellElement extends Element>({
+export function useTableCell<TableCellElement extends keyof JSX.IntrinsicElements>({
     tableCellParameters: { tagTableCell },
     info,
     context,

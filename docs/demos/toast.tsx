@@ -1,9 +1,9 @@
 
 import { VNode } from "preact";
-import { useState } from "preact-prop-helpers";
+import { useState } from "preact-prop-helpers/preact";
 import { useCallback } from "preact/compat";
 import { useRef } from "preact/hooks";
-import { Toast, Toasts } from "../../dist/preact/index.js";
+import { Toast, Toasts } from "preact-aria-widgets/preact";
 
 export function Blurb() {
     return (
@@ -58,7 +58,7 @@ export function Demo() {
             <Code />
             <button onClick={pushToast}>Push a toast</button>
             <div>
-                <Toasts<HTMLDivElement> visibleCount={3} render={(info) => { return <div {...info.props}>{toasts}</div> }} />
+                <Toasts<"div"> visibleCount={3} render={(info) => { return <div {...info.props}>{toasts}</div> }} />
             </div>
         </>
     )

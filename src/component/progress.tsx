@@ -1,34 +1,34 @@
-import { UseAsyncHandlerParameters, assertEmptyObject, memo } from "preact-prop-helpers/preact";
+import { JSX, UseAsyncHandlerParameters, assertEmptyObject, memo } from "preact-prop-helpers/preact";
 import { Get3 } from "../props.js";
 import { UseProgressParameters, UseProgressReturnType, UseProgressWithHandlerParameters, UseProgressWithHandlerReturnType, useProgress, useProgressWithHandler } from "../use-progress.js";
 import { GenericComponentProps, PartialExcept, useComponent } from "./util.js";
 
 type Get<T, K extends keyof T> = T[K];
 
-interface ProgressPropsBase<IndicatorElement extends Element, LabelElement extends Element> extends Get<UseProgressParameters<IndicatorElement, LabelElement>, "labelParameters">, Get<UseProgressParameters<IndicatorElement, LabelElement>, "progressIndicatorParameters"> {
+interface ProgressPropsBase<IndicatorElement extends keyof JSX.IntrinsicElements, LabelElement extends keyof JSX.IntrinsicElements> extends Get<UseProgressParameters<IndicatorElement, LabelElement>, "labelParameters">, Get<UseProgressParameters<IndicatorElement, LabelElement>, "progressIndicatorParameters"> {
 
 }
 
-interface ProgressWithHandlerPropsBase<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element> extends
+interface ProgressWithHandlerPropsBase<EventType, CaptureType, IndicatorElement extends keyof JSX.IntrinsicElements, LabelElement extends keyof JSX.IntrinsicElements> extends
     Get3<UseProgressWithHandlerParameters<EventType, CaptureType, IndicatorElement, LabelElement>, "labelParameters", "progressIndicatorParameters", "progressWithHandlerParameters">,
     UseAsyncHandlerParameters<EventType, CaptureType> {
 
 }
 
-export interface ProgressProps<IndicatorElement extends Element, LabelElement extends Element> extends
+export interface ProgressProps<IndicatorElement extends keyof JSX.IntrinsicElements, LabelElement extends keyof JSX.IntrinsicElements> extends
     GenericComponentProps<UseProgressReturnType<IndicatorElement, LabelElement>,
         PartialExcept<ProgressPropsBase<IndicatorElement, LabelElement>, "tagProgressIndicator" | "ariaLabel">,
         "tagProgressIndicator"> {
 }
 
-export interface ProgressWithHandlerProps<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element> extends
+export interface ProgressWithHandlerProps<EventType, CaptureType, IndicatorElement extends keyof JSX.IntrinsicElements, LabelElement extends keyof JSX.IntrinsicElements> extends
     GenericComponentProps<
         UseProgressWithHandlerReturnType<EventType, CaptureType, IndicatorElement, LabelElement>,
         PartialExcept<ProgressWithHandlerPropsBase<EventType, CaptureType, IndicatorElement, LabelElement>, "capture" | "tagProgressIndicator" | "ariaLabel" | "asyncHandler">,
         "capture" | "tagProgressIndicator"> {
 }
 
-export const Progress = /* @__PURE__ */ memo((function Progress<IndicatorElement extends Element, LabelElement extends Element>({
+export const Progress = /* @__PURE__ */ memo((function Progress<IndicatorElement extends keyof JSX.IntrinsicElements, LabelElement extends keyof JSX.IntrinsicElements>({
     tagProgressIndicator,
     ariaLabel,
     max,
@@ -55,7 +55,7 @@ export const Progress = /* @__PURE__ */ memo((function Progress<IndicatorElement
         }));
 }))
 
-export const ProgressWithHandler = /* @__PURE__ */ memo((function ProgressWithHandler<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element>({
+export const ProgressWithHandler = /* @__PURE__ */ memo((function ProgressWithHandler<EventType, CaptureType, IndicatorElement extends keyof JSX.IntrinsicElements, LabelElement extends keyof JSX.IntrinsicElements>({
     ariaLabel,
     forciblyPending,
     render,

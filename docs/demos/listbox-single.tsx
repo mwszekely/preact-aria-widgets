@@ -1,8 +1,8 @@
 
 import { ComponentChildren } from "preact";
-import { EventDetail, useMergedProps, useState } from "preact-prop-helpers";
+import { EventDetail, useMergedProps, useState } from "preact-prop-helpers/preact";
 import { memo } from "preact/compat";
-import { GroupedListbox, Listbox, ListboxChildren, ListboxItem } from "../../dist/preact/index.js";
+import { GroupedListbox, Listbox, ListboxChildren, ListboxItem } from "preact-aria-widgets/preact";
 
 const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
 

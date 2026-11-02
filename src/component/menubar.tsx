@@ -1,16 +1,16 @@
-import { assertEmptyObject, createContext, focus, identity, memo, useCallback, useEnsureStability, useImperativeHandle } from "preact-prop-helpers/preact";
+import { JSX, TagToElement, assertEmptyObject, createContext, focus, identity, memo, useCallback, useEnsureStability, useImperativeHandle } from "preact-prop-helpers/preact";
 import { Get11, Get9, OmitStrong, useContextWithWarning } from "../props.js";
 import { UseMenubarContext, UseMenubarItemParameters, UseMenubarItemReturnType, UseMenubarParameters, UseMenubarReturnType, UseMenubarSubInfo, useMenubar, useMenubarChild } from "../use-menubar.js";
 import { GenericComponentProps, useComponent, useDefault } from "./util.js";
 
 
-export type MenubarProps<MenuParentElement extends Element, MenuItemElement extends Element, LabelElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> = GenericComponentProps<
+export type MenubarProps<MenuParentElement extends keyof JSX.IntrinsicElements, MenuItemElement extends keyof JSX.IntrinsicElements, LabelElement extends keyof JSX.IntrinsicElements, M extends UseMenubarSubInfo<MenuItemElement>> = GenericComponentProps<
     UseMenubarReturnType<MenuParentElement, MenuItemElement, LabelElement, M>,
     Get11<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "linearNavigationParameters", "rovingTabIndexParameters", "typeaheadNavigationParameters", "labelParameters", "toolbarParameters", "singleSelectionParameters", "refElementParameters", "singleSelectionParameters", "multiSelectionParameters", "singleSelectionDeclarativeParameters", "processedIndexManglerParameters">,
     "orientation" | "ariaLabel" | "singleSelectionMode" | "multiSelectionMode"
 >;
 
-export type MenubarItemProps<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> = GenericComponentProps<
+export type MenubarItemProps<MenuItemElement extends keyof JSX.IntrinsicElements, M extends UseMenubarSubInfo<MenuItemElement>> = GenericComponentProps<
     UseMenubarItemReturnType<MenuItemElement, M>,
     Get9<UseMenubarItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>, "menuItemParameters", "textContentParameters", "pressParameters", "info", "refElementParameters", "hasCurrentFocusParameters", "singleSelectionChildParameters", "multiSelectionChildParameters", "multiSelectionChildDeclarativeParameters">,
     "index"
@@ -18,7 +18,7 @@ export type MenubarItemProps<MenuItemElement extends Element, M extends UseMenub
 
 export const MenubarItemContext = createContext<UseMenubarContext<any, any>>(null!);
 
-export const Menubar = /* @__PURE__ */ memo((function Menubar<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({
+export const Menubar = /* @__PURE__ */ memo((function Menubar<ContainerElement extends keyof JSX.IntrinsicElements, ChildElement extends keyof JSX.IntrinsicElements, LabelElement extends keyof JSX.IntrinsicElements>({
     render,
     collator,
     disableHomeEndKeys,
@@ -113,7 +113,7 @@ export const Menubar = /* @__PURE__ */ memo((function Menubar<ContainerElement e
 }))
 
 
-export const MenubarItem = /* @__PURE__ */ memo((function MenubarItem<MenuItemElement extends Element>({
+export const MenubarItem = /* @__PURE__ */ memo((function MenubarItem<MenuItemElement extends keyof JSX.IntrinsicElements>({
     index,
     render,
     focusSelf,
@@ -136,7 +136,7 @@ export const MenubarItem = /* @__PURE__ */ memo((function MenubarItem<MenuItemEl
     onMultiSelectedChange,
     ...void1
 }: MenubarItemProps<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>) {
-    const defaultFocusSelf = useCallback((e: MenuItemElement | null) => focus(e as Element as HTMLElement), [])
+    const defaultFocusSelf = useCallback((e: TagToElement<MenuItemElement> | null) => focus(e as Element as HTMLElement), [])
 
     assertEmptyObject(void1);
     return useComponent(

@@ -1,4 +1,4 @@
-import { OmitStrong, assertEmptyObject, createContext } from "preact-prop-helpers/preact";
+import {JSX, OmitStrong, assertEmptyObject, createContext } from "preact-prop-helpers/preact";
 import { Get2, useContextWithWarning } from "../props.js";
 import { SliderContext, SliderThumbInfo, UseSliderParameters, UseSliderReturnType, UseSliderThumbParameters, UseSliderThumbReturnType, useSlider, useSliderThumb } from "../use-slider.js";
 import { GenericComponentProps, useComponent } from "./util.js";
@@ -9,7 +9,7 @@ export type SliderProps<M extends SliderThumbInfo> = GenericComponentProps<
     "min" | "max"
 >;
 
-export type SliderThumbProps<ThumbElement extends Element, M extends SliderThumbInfo = SliderThumbInfo> = GenericComponentProps<
+export type SliderThumbProps<ThumbElement extends keyof JSX.IntrinsicElements, M extends SliderThumbInfo = SliderThumbInfo> = GenericComponentProps<
     UseSliderThumbReturnType<ThumbElement>,
     Get2<UseSliderThumbParameters<ThumbElement>, "sliderThumbParameters", "info">,
     "index" | "label" | "tag" | "value"
@@ -39,7 +39,7 @@ export function Slider({
     );
 }
 
-export function SliderThumb<ThumbElement extends Element>({
+export function SliderThumb<ThumbElement extends keyof JSX.IntrinsicElements>({
     label,
     tag,
     value,

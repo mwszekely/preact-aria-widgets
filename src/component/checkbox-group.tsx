@@ -1,22 +1,22 @@
-import { assertEmptyObject, createContext, identity, memo, useEnsureStability } from "preact-prop-helpers/preact";
+import { JSX, assertEmptyObject, createContext, identity, memo, useEnsureStability } from "preact-prop-helpers/preact";
 import { Get6, Get8, useContextWithWarning } from "../props.js";
 import { CheckboxGroupContext, UseCheckboxGroupChildParameters, UseCheckboxGroupChildReturnType, UseCheckboxGroupParameters, UseCheckboxGroupParentParameters, UseCheckboxGroupParentReturnType, UseCheckboxGroupReturnType, useCheckboxGroup, useCheckboxGroupChild, useCheckboxGroupParent } from "../use-checkbox-group.js";
 import { GenericComponentProps, useComponent, useDefault } from "./util.js";
 
-export type CheckboxGroupProps<ParentElement extends Element, TabbableChildElement extends Element> = GenericComponentProps<
+export type CheckboxGroupProps<ParentElement extends keyof JSX.IntrinsicElements, TabbableChildElement extends keyof JSX.IntrinsicElements> = GenericComponentProps<
     UseCheckboxGroupReturnType<ParentElement, TabbableChildElement>,
     Get8<UseCheckboxGroupParameters<ParentElement, TabbableChildElement>, "linearNavigationParameters", "checkboxGroupParameters", "typeaheadNavigationParameters", "rovingTabIndexParameters", "rovingTabIndexParameters", "refElementParameters", "multiSelectionParameters", "processedIndexManglerParameters">,
     never
 >;
 
-export type CheckboxGroupParentProps<TCE extends Element> = GenericComponentProps<
+export type CheckboxGroupParentProps<TCE extends keyof JSX.IntrinsicElements> = GenericComponentProps<
     UseCheckboxGroupParentReturnType<TCE>,
     Get6<UseCheckboxGroupParentParameters<TCE>, "textContentParameters", "info", "refElementParameters", "hasCurrentFocusParameters", "singleSelectionChildParameters", "multiSelectionChildParameters">,
     "index" | "focusSelf"
 >// & { info?: OmitStrong<M, keyof CheckboxGroupInfo<TCE>> };
 
 
-export type CheckboxGroupChildProps<TCE extends Element> = GenericComponentProps<
+export type CheckboxGroupChildProps<TCE extends keyof JSX.IntrinsicElements> = GenericComponentProps<
     UseCheckboxGroupChildReturnType<TCE>,
     Get6<UseCheckboxGroupChildParameters<TCE>, "checkboxGroupChildParameters", "textContentParameters", "info", "refElementParameters", "hasCurrentFocusParameters", "multiSelectionChildParameters">,
     "index" | "focusSelf" | "checked" | "onChangeFromParent"
@@ -25,7 +25,7 @@ export type CheckboxGroupChildProps<TCE extends Element> = GenericComponentProps
 
 const UseCheckboxGroupChildContext = createContext<CheckboxGroupContext<any>>(null!);
 
-export const CheckboxGroup = /* @__PURE__ */ memo((function CheckboxGroup<ParentElement extends Element, TabbableChildElement extends Element>({
+export const CheckboxGroup = /* @__PURE__ */ memo((function CheckboxGroup<ParentElement extends keyof JSX.IntrinsicElements, TabbableChildElement extends keyof JSX.IntrinsicElements>({
     render,
     collator,
     disableHomeEndKeys,
@@ -91,7 +91,7 @@ export const CheckboxGroup = /* @__PURE__ */ memo((function CheckboxGroup<Parent
         }));
 }));
 
-export const CheckboxGroupParent = /* @__PURE__ */ memo((function CheckboxGroupParent<TCE extends Element>({
+export const CheckboxGroupParent = /* @__PURE__ */ memo((function CheckboxGroupParent<TCE extends keyof JSX.IntrinsicElements>({
     render,
     index,
     focusSelf,
@@ -138,7 +138,7 @@ export const CheckboxGroupParent = /* @__PURE__ */ memo((function CheckboxGroupP
     );
 }))
 
-export const CheckboxGroupChild = /* @__PURE__ */ memo((function CheckboxGroupChild<TCE extends Element>({
+export const CheckboxGroupChild = /* @__PURE__ */ memo((function CheckboxGroupChild<TCE extends keyof JSX.IntrinsicElements>({
     index,
     render,
     checked,

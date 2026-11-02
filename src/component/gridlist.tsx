@@ -1,5 +1,5 @@
 import { createContext } from "preact";
-import { OmitStrong, VNode, assertEmptyObject, identity, useContext, useEnsureStability } from "preact-prop-helpers/preact";
+import { JSX, OmitStrong, VNode, assertEmptyObject, identity, useContext, useEnsureStability } from "preact-prop-helpers/preact";
 import { Get12, Get16, Get3, Get4, Prefices } from "../props.js";
 import { UseGridlistCellContext, UseGridlistCellInfo, UseGridlistCellParameters, UseGridlistCellReturnType, UseGridlistParameters, UseGridlistReturnType, UseGridlistRowContext, UseGridlistRowInfo, UseGridlistRowOuterParameters, UseGridlistRowOuterReturnType, UseGridlistRowParameters, UseGridlistRowReturnType, UseGridlistRowsContext, UseGridlistRowsInfo, useGridlist, useGridlistCell, useGridlistRow, useGridlistRowOuter } from "../use-gridlist.js";
 import { GenericComponentProps, useComponent, useComponentC, useDefault } from "./util.js";
@@ -8,36 +8,36 @@ const GridlistRowContext = createContext<UseGridlistRowContext<any, any>>(null!)
 const GridlistCellContext = createContext<UseGridlistCellContext<any, any>>(null!);
 const GridlistProcessedChildrenContext = createContext<UseGridlistRowsContext<any, any>>(null!);
 
-export type GridlistProps<TableElement extends Element, RowElement extends Element, LabelElement extends Element> = GenericComponentProps<
+export type GridlistProps<TableElement extends keyof JSX.IntrinsicElements, RowElement extends keyof JSX.IntrinsicElements, LabelElement extends keyof JSX.IntrinsicElements> = GenericComponentProps<
     UseGridlistReturnType<TableElement, RowElement, LabelElement>,
     Get16<UseGridlistParameters<TableElement, RowElement>, "labelParameters", "singleSelectionParameters", "multiSelectionParameters", "gridNavigationParameters", "linearNavigationParameters", "typeaheadNavigationParameters", "rovingTabIndexParameters", "refElementParameters", "paginatedChildrenParameters", "rearrangeableChildrenParameters", "linearNavigationParameters", "paginatedChildrenParameters", "staggeredChildrenParameters", "managedChildrenParameters", "singleSelectionDeclarativeParameters", "gridNavigationCompleteParameters">,
     "children"
 >;
 
-type GridlistRowOuterProps<RowElement extends Element, RsM extends UseGridlistRowsInfo<RowElement>> = GenericComponentProps<
+type GridlistRowOuterProps<RowElement extends keyof JSX.IntrinsicElements, RsM extends UseGridlistRowsInfo<RowElement>> = GenericComponentProps<
     UseGridlistRowOuterReturnType<RowElement, RsM>,
     Get3<UseGridlistRowOuterParameters<RowElement, RsM>, "info", "refElementParameters", "rearrangeableChildParameters">,
     "index"
 >;
 
-type GridlistRowInnerProps<RowElement extends Element, CellElement extends Element, RM extends UseGridlistRowInfo<RowElement>, CM extends UseGridlistCellInfo<CellElement>> = GenericComponentProps<
+type GridlistRowInnerProps<RowElement extends keyof JSX.IntrinsicElements, CellElement extends keyof JSX.IntrinsicElements, RM extends UseGridlistRowInfo<RowElement>, CM extends UseGridlistCellInfo<CellElement>> = GenericComponentProps<
     UseGridlistRowReturnType<RowElement, CellElement, RM, CM>,
     Get12<UseGridlistRowParameters<RowElement, CellElement, RM, CM>, "info", "refElementParameters", "rovingTabIndexParameters", "refElementParameters", "multiSelectionChildParameters", "multiSelectionChildDeclarativeParameters", "linearNavigationParameters", "hasCurrentFocusParameters", "typeaheadNavigationParameters", "textContentParameters", "singleSelectionChildParameters", "rovingTabIndexParameters">,
     "index"
 >;
-type GridlistCellProps<CellElement extends Element, CM extends UseGridlistCellInfo<CellElement>> = GenericComponentProps<
+type GridlistCellProps<CellElement extends keyof JSX.IntrinsicElements, CM extends UseGridlistCellInfo<CellElement>> = GenericComponentProps<
     UseGridlistCellReturnType<CellElement, CM>,
     Get4<UseGridlistCellParameters<CellElement, CM>, "info", "pressParameters", "gridNavigationCellParameters", "textContentParameters">,
     "index"
 >;
 
-export type GridlistRowProps<RowElement extends Element, CellElement extends Element, RsM extends UseGridlistRowsInfo<RowElement> = UseGridlistRowsInfo<RowElement>, RM extends UseGridlistRowInfo<RowElement> = UseGridlistRowInfo<RowElement>, CM extends UseGridlistCellInfo<CellElement> = UseGridlistCellInfo<CellElement>> = 
+export type GridlistRowProps<RowElement extends keyof JSX.IntrinsicElements, CellElement extends keyof JSX.IntrinsicElements, RsM extends UseGridlistRowsInfo<RowElement> = UseGridlistRowsInfo<RowElement>, RM extends UseGridlistRowInfo<RowElement> = UseGridlistRowInfo<RowElement>, CM extends UseGridlistCellInfo<CellElement> = UseGridlistCellInfo<CellElement>> = 
 OmitStrong<GridlistRowOuterProps<RowElement, RsM>, "render"> & 
 OmitStrong<GridlistRowInnerProps<RowElement, CellElement, RM, CM>, "render"> & {
     render: ((info: ({ hide: true } & UseGridlistRowOuterReturnType<RowElement, RsM>) | ({ hide: false } & UseGridlistRowReturnType<RowElement, CellElement, RM, CM>)) => VNode);
 };
 
-export function Gridlist<TableElement extends Element, RowElement extends Element, LabelElement extends Element>({
+export function Gridlist<TableElement extends keyof JSX.IntrinsicElements, RowElement extends keyof JSX.IntrinsicElements, LabelElement extends keyof JSX.IntrinsicElements>({
     render,
     ariaLabel,
     collator,
@@ -168,7 +168,7 @@ export function Gridlist<TableElement extends Element, RowElement extends Elemen
     )
 }
 
-export function GridlistRow<RowElement extends Element, CellElement extends Element>(props: GridlistRowProps<RowElement, CellElement>) {
+export function GridlistRow<RowElement extends keyof JSX.IntrinsicElements, CellElement extends keyof JSX.IntrinsicElements>(props: GridlistRowProps<RowElement, CellElement>) {
     const { index, render, collator, getText, initiallyTabbedIndex, multiSelected, multiSelectionDisabled, navigatePastEnd, navigatePastStart, noTypeahead, onCurrentFocusedChanged, onCurrentFocusedInnerChanged, onMultiSelectedChange, onNavigateTypeahead, onTabbableIndexChange, onTextContentChange, singleSelectionDisabled, typeaheadTimeout, untabbable, imperativeHandle, onElementChange, onMount, onUnmount } = props;
     return (
         <GridlistRowOuter
@@ -215,7 +215,7 @@ export function GridlistRow<RowElement extends Element, CellElement extends Elem
     )
 }
 
-function GridlistRowOuter<RowElement extends Element, RsM extends UseGridlistRowsInfo<RowElement>>({
+function GridlistRowOuter<RowElement extends keyof JSX.IntrinsicElements, RsM extends UseGridlistRowsInfo<RowElement>>({
     index,
     render,
     imperativeHandle,
@@ -245,7 +245,7 @@ function GridlistRowOuter<RowElement extends Element, RsM extends UseGridlistRow
     );
 }
 
-function GridlistRowInner<RowElement extends Element, CellElement extends Element>({
+function GridlistRowInner<RowElement extends keyof JSX.IntrinsicElements, CellElement extends keyof JSX.IntrinsicElements>({
     index,
     render,
     collator,
@@ -324,7 +324,7 @@ function GridlistRowInner<RowElement extends Element, CellElement extends Elemen
 
 
 
-export function GridlistCell<CellElement extends Element>({
+export function GridlistCell<CellElement extends keyof JSX.IntrinsicElements>({
     index,
     render,
     getText,

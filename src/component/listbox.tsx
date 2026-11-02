@@ -1,40 +1,40 @@
-import { Ref, TargetedOmit, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationChildrenInfo, UseCompleteListNavigationChildrenParameters, UseCompleteListNavigationChildrenReturnType, UseProcessedChildContext, UseProcessedChildInfo, UseProcessedChildParameters, UseProcessedChildReturnType, UseProcessedChildrenContext, UseRearrangeableChildParameters, UseRefElementParameters, UseRefElementReturnType, VNode, assertEmptyObject, createContext, focus, identity, memo, useCallback, useCompleteListNavigationChildren, useContext, useEffect, useEnsureStability, useImperativeHandle, useMergedProps, useProcessedChild, useRefElement, useStableCallback } from "preact-prop-helpers/preact";
+import { JSX, Ref, TargetedOmit, UseCompleteListNavigationChildInfo, UseCompleteListNavigationChildReturnType, UseCompleteListNavigationChildrenInfo, UseCompleteListNavigationChildrenParameters, UseCompleteListNavigationChildrenReturnType, UseProcessedChildContext, UseProcessedChildInfo, UseProcessedChildParameters, UseProcessedChildReturnType, UseProcessedChildrenContext, UseRearrangeableChildParameters, UseRefElementParameters, UseRefElementReturnType, VNode, assertEmptyObject, createContext, focus, identity, memo, useCallback, useCompleteListNavigationChildren, useContext, useEffect, useEnsureStability, useImperativeHandle, useMergedProps, useProcessedChild, useRefElement, useStableCallback } from "preact-prop-helpers/preact";
 import { Get, Get11, Get3, Get4, Get7, OmitStrong, useContextWithWarning } from "../props.js";
 import { ListboxInfo, UseListboxContext, UseListboxItemParameters, UseListboxItemReturnType, UseListboxParameters, UseListboxReturnType, useListbox, useListboxItem } from "../use-listbox.js";
 import { GenericComponentProps, useComponent, useDefault } from "./util.js";
 
 
-interface ListboxPropsBase<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement> = ListboxInfo<ListItemElement>> extends
+interface ListboxPropsBase<ListElement extends keyof JSX.IntrinsicElements, ListItemElement extends keyof JSX.IntrinsicElements, LabelElement extends keyof JSX.IntrinsicElements, M extends ListboxInfo<ListItemElement> = ListboxInfo<ListItemElement>> extends
     Get11<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "labelParameters", "linearNavigationParameters", "rovingTabIndexParameters", "typeaheadNavigationParameters", "singleSelectionParameters", "refElementParameters", "singleSelectionParameters", "singleSelectionDeclarativeParameters", "multiSelectionParameters", "paginatedChildrenParameters", "processedIndexManglerParameters">,
     OmitStrong<Get<UseListboxParameters<ListElement, ListItemElement, LabelElement, M>, "listboxParameters">, "groupingType"> {
 }
 
 
-interface ListboxChildrenPropsBase<ListItemElement extends Element, M extends UseCompleteListNavigationChildInfo<ListItemElement>, SM extends UseCompleteListNavigationChildrenInfo<ListItemElement> = UseCompleteListNavigationChildrenInfo<ListItemElement>> extends
+interface ListboxChildrenPropsBase<ListItemElement extends keyof JSX.IntrinsicElements, M extends UseCompleteListNavigationChildInfo<ListItemElement>, SM extends UseCompleteListNavigationChildrenInfo<ListItemElement> = UseCompleteListNavigationChildrenInfo<ListItemElement>> extends
     Get4<UseCompleteListNavigationChildrenParameters<ListItemElement, M, SM>, "managedChildrenParameters", "paginatedChildrenParameters", "rearrangeableChildrenParameters", "staggeredChildrenParameters"> {
 }
 
-interface ListboxItemInnerPropsBase<ListItemElement extends Element, M extends ListboxInfo<ListItemElement> = ListboxInfo<ListItemElement>> extends
+interface ListboxItemInnerPropsBase<ListItemElement extends keyof JSX.IntrinsicElements, M extends ListboxInfo<ListItemElement> = ListboxInfo<ListItemElement>> extends
     Get7<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "listboxParameters", "textContentParameters", "refElementParameters", "hasCurrentFocusParameters", "singleSelectionChildParameters", "multiSelectionChildParameters", "multiSelectionChildDeclarativeParameters">,
     OmitStrong<NonNullable<Get<UseListboxItemParameters<ListItemElement, ListboxInfo<ListItemElement>>, "pressParameters">>, never>,
     Pick<M, "index" | "untabbable" | "focusSelf"> {
 }
 
-export interface ListboxProps<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends GenericComponentProps<
+export interface ListboxProps<ListElement extends keyof JSX.IntrinsicElements, ListItemElement extends keyof JSX.IntrinsicElements, LabelElement extends keyof JSX.IntrinsicElements, M extends ListboxInfo<ListItemElement>> extends GenericComponentProps<
     UseListboxReturnType<ListElement, ListItemElement, LabelElement, M>,
     ListboxPropsBase<ListElement, ListItemElement, LabelElement, M>,
     "ariaLabel"> {
 }
-export interface ListboxChildrenProps<ListItemElement extends Element, M extends UseCompleteListNavigationChildInfo<ListItemElement>, SM extends UseCompleteListNavigationChildrenInfo<ListItemElement>> extends GenericComponentProps<
+export interface ListboxChildrenProps<ListItemElement extends keyof JSX.IntrinsicElements, M extends UseCompleteListNavigationChildInfo<ListItemElement>, SM extends UseCompleteListNavigationChildrenInfo<ListItemElement>> extends GenericComponentProps<
     UseCompleteListNavigationChildrenReturnType<ListItemElement, SM>,
     ListboxChildrenPropsBase<ListItemElement, M>,
     "children"> {
 }
 
 
-type InnerOuterDifference<ListItemElement extends Element> = OmitStrong<Get3<UseProcessedChildReturnType<ListItemElement, UseProcessedChildInfo<ListItemElement>>, "managedChildReturn", "paginatedChildReturn", "staggeredChildReturn">, "getChildren">;
+type InnerOuterDifference<ListItemElement extends keyof JSX.IntrinsicElements> = OmitStrong<Get3<UseProcessedChildReturnType<ListItemElement, UseProcessedChildInfo<ListItemElement>>, "managedChildReturn", "paginatedChildReturn", "staggeredChildReturn">, "getChildren">;
 
-interface ListboxItemInnerProps<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends
+interface ListboxItemInnerProps<ListItemElement extends keyof JSX.IntrinsicElements, M extends ListboxInfo<ListItemElement>> extends
     GenericComponentProps<
         (
             TargetedOmit<OmitStrong<UseProcessedChildReturnType<ListItemElement, UseProcessedChildInfo<ListItemElement>>, "managedChildReturn">, "staggeredChildReturn", "childUseEffect"> &
@@ -52,7 +52,7 @@ const ListboxChildrenContext = createContext<UseProcessedChildrenContext>(null!)
 const ListboxChildContext = createContext<UseProcessedChildContext<any, any>>(null!);
 
 const ListboxGroupContext = createContext<null | UseListboxReturnType<any, any, any, any>>(null);
-export const GroupedListbox = /* @__PURE__ */ memo((function GroupedListbox<LabelElement extends Element>({
+export const GroupedListbox = /* @__PURE__ */ memo((function GroupedListbox<LabelElement extends keyof JSX.IntrinsicElements>({
     ariaLabel,
     orientation,
     render,
@@ -96,7 +96,7 @@ export const GroupedListbox = /* @__PURE__ */ memo((function GroupedListbox<Labe
 
 }))
 
-export const Listbox = /* @__PURE__ */ memo((function Listbox<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element>({
+export const Listbox = /* @__PURE__ */ memo((function Listbox<ListElement extends keyof JSX.IntrinsicElements, ListItemElement extends keyof JSX.IntrinsicElements, LabelElement extends keyof JSX.IntrinsicElements>({
     ariaLabel,
     collator,
     disableHomeEndKeys,
@@ -174,7 +174,7 @@ export const Listbox = /* @__PURE__ */ memo((function Listbox<ListElement extend
     )
 }))
 
-export const ListboxChildren = /* @__PURE__ */ memo((function ListboxChildren<ListItemElement extends Element, M extends UseCompleteListNavigationChildInfo<ListItemElement>, SM extends UseCompleteListNavigationChildrenInfo<ListItemElement>>({
+export const ListboxChildren = /* @__PURE__ */ memo((function ListboxChildren<ListItemElement extends keyof JSX.IntrinsicElements, M extends UseCompleteListNavigationChildInfo<ListItemElement>, SM extends UseCompleteListNavigationChildrenInfo<ListItemElement>>({
     children,
     render,
     imperativeHandle,
@@ -213,9 +213,9 @@ export const ListboxChildren = /* @__PURE__ */ memo((function ListboxChildren<Li
         r);
 }))
 
-type UseProcessedListboxItemReturnType<ListboxItemElement extends Element> = OmitStrong<UseProcessedChildReturnType<ListboxItemElement, any>, "refElementParameters"> & Pick<UseRefElementReturnType<ListboxItemElement>, "refElementReturn">;
+type UseProcessedListboxItemReturnType<ListboxItemElement extends keyof JSX.IntrinsicElements> = OmitStrong<UseProcessedChildReturnType<ListboxItemElement, any>, "refElementParameters"> & Pick<UseRefElementReturnType<ListboxItemElement>, "refElementReturn">;
 
-export interface ListboxItemProps<ListboxItemElement extends Element> extends
+export interface ListboxItemProps<ListboxItemElement extends keyof JSX.IntrinsicElements> extends
     // Parameters used by the inner implementation
     OmitStrong<ListboxItemInnerProps<ListboxItemElement, ListboxInfo<ListboxItemElement>>, keyof InnerOuterDifference<any> | "render" | "imperativeHandle" | "props">,
 
@@ -239,7 +239,7 @@ export interface ListboxItemProps<ListboxItemElement extends Element> extends
 
 }
 
-export const ListboxItem = /* @__PURE__ */ memo((function ListboxItemOuter<ListboxItemElement extends Element>({
+export const ListboxItem = /* @__PURE__ */ memo((function ListboxItemOuter<ListboxItemElement extends keyof JSX.IntrinsicElements>({
     index,
     render,
     imperativeHandle,
@@ -345,7 +345,7 @@ export const ListboxItem = /* @__PURE__ */ memo((function ListboxItemOuter<Listb
 }))
 
 // Separated into its own component because hooks can't be if'd.
-const ListboxItemInner = /* @__PURE__ */ memo((function ListboxItemInner<ListboxItemElement extends Element>({
+const ListboxItemInner = /* @__PURE__ */ memo((function ListboxItemInner<ListboxItemElement extends keyof JSX.IntrinsicElements>({
     getText,
     untabbable,
     index,

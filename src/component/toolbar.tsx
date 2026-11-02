@@ -1,15 +1,15 @@
-import { assertEmptyObject, createContext, focus, identity, memo, useCallback, useEnsureStability, UseProcessedChildrenContext } from "preact-prop-helpers/preact";
+import { JSX, assertEmptyObject, createContext, focus, identity, memo, useCallback, useEnsureStability, UseProcessedChildrenContext } from "preact-prop-helpers/preact";
 import { Get11, Get8, OmitStrong, useContextWithWarning } from "../props.js";
 import { useToolbar, useToolbarChild, UseToolbarChildParameters, UseToolbarChildReturnType, UseToolbarContext, UseToolbarParameters, UseToolbarReturnType, UseToolbarSubInfo } from "../use-toolbar.js";
 import { GenericComponentProps, useComponent, useDefault } from "./util.js";
 
-export type ToolbarProps<ToolbarContainerElement extends Element, ToolbarChildElement extends Element, LabelElement extends Element, M extends UseToolbarSubInfo<ToolbarChildElement>> = GenericComponentProps<
+export type ToolbarProps<ToolbarContainerElement extends keyof JSX.IntrinsicElements, ToolbarChildElement extends keyof JSX.IntrinsicElements, LabelElement extends keyof JSX.IntrinsicElements, M extends UseToolbarSubInfo<ToolbarChildElement>> = GenericComponentProps<
     UseToolbarReturnType<ToolbarContainerElement, ToolbarChildElement, LabelElement, M>,
     Get11<UseToolbarParameters<ToolbarContainerElement, ToolbarChildElement, M>, "linearNavigationParameters", "rovingTabIndexParameters", "typeaheadNavigationParameters", "labelParameters", "toolbarParameters", "singleSelectionParameters", "refElementParameters", "singleSelectionParameters", "multiSelectionParameters", "singleSelectionDeclarativeParameters", "processedIndexManglerParameters">,
     "orientation" | "ariaLabel" | "singleSelectionMode" | "multiSelectionMode"
 >;
 
-export type ToolbarChildProps<ToolbarChildElement extends Element, M extends UseToolbarSubInfo<ToolbarChildElement>> = GenericComponentProps<
+export type ToolbarChildProps<ToolbarChildElement extends keyof JSX.IntrinsicElements, M extends UseToolbarSubInfo<ToolbarChildElement>> = GenericComponentProps<
     UseToolbarChildReturnType<ToolbarChildElement, UseToolbarSubInfo<ToolbarChildElement>>,
     Get8<UseToolbarChildParameters<ToolbarChildElement, UseToolbarSubInfo<ToolbarChildElement>>, "textContentParameters", "toolbarChildParameters", "info", "hasCurrentFocusParameters", "refElementParameters", "singleSelectionChildParameters", "multiSelectionChildDeclarativeParameters", "multiSelectionChildParameters">,
     "disabledProp" | "index"
@@ -22,7 +22,7 @@ export type ToolbarChildProps<ToolbarChildElement extends Element, M extends Use
 const ToolbarContext = createContext<UseToolbarContext<any, any>>(null!);
 const ProcessedChildrenContext = createContext<UseProcessedChildrenContext>(null!);
 
-export const Toolbar = /* @__PURE__ */ memo((function ToolbarU<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({
+export const Toolbar = /* @__PURE__ */ memo((function ToolbarU<ContainerElement extends keyof JSX.IntrinsicElements, ChildElement extends keyof JSX.IntrinsicElements, LabelElement extends keyof JSX.IntrinsicElements>({
     render,
     role,
     collator,
@@ -97,7 +97,7 @@ export const Toolbar = /* @__PURE__ */ memo((function ToolbarU<ContainerElement 
 }))
 
 
-export const ToolbarChild = /* @__PURE__ */ memo((function ToolbarChild<ToolbarChildElement extends Element>({
+export const ToolbarChild = /* @__PURE__ */ memo((function ToolbarChild<ToolbarChildElement extends keyof JSX.IntrinsicElements>({
     index,
     render,
     focusSelf,

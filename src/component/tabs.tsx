@@ -1,22 +1,22 @@
-import { assertEmptyObject, createContext, focus, identity, memo, OmitStrong, useCallback, useEnsureStability, useImperativeHandle } from "preact-prop-helpers/preact";
+import { JSX, assertEmptyObject, createContext, focus, identity, memo, OmitStrong, useCallback, useEnsureStability, useImperativeHandle } from "preact-prop-helpers/preact";
 import { Get, Get6, Get9, useContextWithWarning } from "../props.js";
 import { TabInfo, TabPanelInfo, useTab, useTabPanel, UseTabPanelParameters, UseTabPanelReturnType, UseTabPanelsContext, UseTabParameters, UseTabReturnType, useTabs, UseTabsContext, UseTabsParameters, UseTabsReturnType } from "../use-tabs.js";
 import { GenericComponentProps, useComponent, useDefault } from "./util.js";
 
-export type TabsProps<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element, M extends TabInfo<TabElement> = TabInfo<TabElement>> = GenericComponentProps<
+export type TabsProps<TabContainerElement extends keyof JSX.IntrinsicElements, TabElement extends keyof JSX.IntrinsicElements, TabLabelElement extends keyof JSX.IntrinsicElements, M extends TabInfo<TabElement> = TabInfo<TabElement>> = GenericComponentProps<
     UseTabsReturnType<TabContainerElement, TabElement, TabLabelElement, M>,
     Get9<UseTabsParameters<TabContainerElement, TabElement, M>, "labelParameters", "linearNavigationParameters", "rovingTabIndexParameters", "singleSelectionParameters", "tabsParameters", "typeaheadNavigationParameters", "singleSelectionParameters", "refElementParameters", "processedIndexManglerParameters">,
     "orientation" | "ariaLabel"
 >;
 
 
-export type TabProps<TabElement extends Element, M extends TabInfo<TabElement> = TabInfo<TabElement>> = GenericComponentProps<
+export type TabProps<TabElement extends keyof JSX.IntrinsicElements, M extends TabInfo<TabElement> = TabInfo<TabElement>> = GenericComponentProps<
     UseTabReturnType<TabElement, M>,
     Get6<UseTabParameters<TabElement, TabInfo<TabElement>>, "pressParameters", "textContentParameters", "info", "hasCurrentFocusParameters", "refElementParameters", "singleSelectionChildParameters">,
     "index"
 > & { info?: OmitStrong<M, keyof TabInfo<TabElement>>; };
 
-export type TabPanelProps<PanelElement extends Element, M extends TabPanelInfo = TabPanelInfo> = GenericComponentProps<
+export type TabPanelProps<PanelElement extends keyof JSX.IntrinsicElements, M extends TabPanelInfo = TabPanelInfo> = GenericComponentProps<
     UseTabPanelReturnType<PanelElement>,
     Get<UseTabPanelParameters<M>, "info">,
     "index"
@@ -28,7 +28,7 @@ const TabPanelsContext = createContext<UseTabPanelsContext<any>>(null!);
 //const UntabbableContext = createContext(false);
 //const SelectionModeContext = createContext<NonNullable<UseTabsParameters<any, any, any>["singleSelectionParameters"]["selectionMode"]>>("focus");
 
-export const Tabs = /* @__PURE__ */ memo((function Tabs<TabContainerElement extends Element, TabElement extends Element, TabLabelElement extends Element>({
+export const Tabs = /* @__PURE__ */ memo((function Tabs<TabContainerElement extends keyof JSX.IntrinsicElements, TabElement extends keyof JSX.IntrinsicElements, TabLabelElement extends keyof JSX.IntrinsicElements>({
     ariaLabel,
     collator,
     disableHomeEndKeys,
@@ -103,7 +103,7 @@ export const Tabs = /* @__PURE__ */ memo((function Tabs<TabContainerElement exte
     )
 }))
 
-export const Tab = /* @__PURE__ */ memo((function Tab<E extends Element>({
+export const Tab = /* @__PURE__ */ memo((function Tab<E extends keyof JSX.IntrinsicElements>({
     focusSelf,
     untabbable,
     index,
@@ -147,7 +147,7 @@ export const Tab = /* @__PURE__ */ memo((function Tab<E extends Element>({
         }));
 }))
 
-export const TabPanel = /* @__PURE__ */ memo((function TabPanel<E extends Element>({
+export const TabPanel = /* @__PURE__ */ memo((function TabPanel<E extends keyof JSX.IntrinsicElements>({
     index,
     render,
     info: uinfo

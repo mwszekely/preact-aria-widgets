@@ -19,6 +19,7 @@ import {
     useMergedProps,
     useMonitoring,
     useRef,
+    JSX,
     useRefElement,
     useStableCallback,
     useState
@@ -39,7 +40,7 @@ export interface UseRadioGroupParametersSelf<V extends string | number> {
     onSelectedValueChange: Nullable<RadioChangeEventHandler<V>>;
 }
 
-export interface UseRadioGroupParameters<V extends string | number, GroupElement extends Element, _GroupLabelElement extends Element, TabbableChildElement extends Element, M extends RadioSubInfo<TabbableChildElement, V> = RadioSubInfo<TabbableChildElement, V>> extends
+export interface UseRadioGroupParameters<V extends string | number, GroupElement extends keyof JSX.IntrinsicElements, _GroupLabelElement extends keyof JSX.IntrinsicElements, TabbableChildElement extends keyof JSX.IntrinsicElements, M extends RadioSubInfo<TabbableChildElement, V> = RadioSubInfo<TabbableChildElement, V>> extends
     OmitStrong<UseCompleteListNavigationParameters<GroupElement, TabbableChildElement, M>, "rovingTabIndexParameters" | "paginatedChildrenParameters" | "singleSelectionParameters" | "multiSelectionParameters">,
     TargetedOmit<UseCompleteListNavigationParameters<GroupElement, TabbableChildElement, any>, "rovingTabIndexParameters", "focusSelfParent">,
     TargetedOmit<UseCompleteListNavigationParameters<GroupElement, TabbableChildElement, any>, "singleSelectionParameters", "initiallySingleSelectedIndex" | "onSingleSelectedIndexChange" | "singleSelectionAriaPropName">,
@@ -53,7 +54,7 @@ export interface UseRadioParametersSelf<V extends string | number> {
     value: V;
 }
 
-export interface UseRadioParameters<LP extends LabelPosition, V extends string | number, InputElement extends Element, LabelElement extends Element, M extends RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>> extends
+export interface UseRadioParameters<LP extends LabelPosition, V extends string | number, InputElement extends keyof JSX.IntrinsicElements, LabelElement extends keyof JSX.IntrinsicElements, M extends RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>> extends
     UseGenericChildParameters<RadioContext<V, FocusableLabelElement<LP, InputElement, LabelElement>, M>, Pick<M, Exclude<UseCompleteListNavigationChildInfoKeysParameters<M>, "focusSelf">>>,
     OmitStrong<UseCompleteListNavigationChildParameters<FocusableLabelElement<LP, InputElement, LabelElement>, M>, "info" | "context" | "multiSelectionChildParameters" | "singleSelectionChildParameters">,
     TargetedOmit<UseCompleteListNavigationChildParameters<FocusableLabelElement<LP, InputElement, LabelElement>, M>, "info", "focusSelf">,
@@ -69,7 +70,7 @@ export interface RadioContextSelf<V extends number | string> {
     indexToName: Map<number, V>;
 }
 
-export interface RadioContext<V extends number | string, ChildElement extends Element, M extends RadioSubInfo<ChildElement, V>> extends CompleteListNavigationContext<ChildElement, M> {
+export interface RadioContext<V extends number | string, ChildElement extends keyof JSX.IntrinsicElements, M extends RadioSubInfo<ChildElement, V>> extends CompleteListNavigationContext<ChildElement, M> {
     radioContext: RadioContextSelf<V>;
 }
 
@@ -79,7 +80,7 @@ export interface UseRadioGroupReturnTypeSelf {
     selectedIndex: number | null;
 }
 
-export interface UseRadioGroupReturnType<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, TabbableChildElement extends Element, M extends RadioSubInfo<TabbableChildElement, V> = RadioSubInfo<TabbableChildElement, V>> extends
+export interface UseRadioGroupReturnType<V extends string | number, GroupElement extends keyof JSX.IntrinsicElements, GroupLabelElement extends keyof JSX.IntrinsicElements, TabbableChildElement extends keyof JSX.IntrinsicElements, M extends RadioSubInfo<TabbableChildElement, V> = RadioSubInfo<TabbableChildElement, V>> extends
     OmitStrong<UseCompleteListNavigationDeclarativeReturnType<GroupElement, TabbableChildElement, M>, "context" | "props" | "multiSelectionReturn"> {
     radioGroupReturn: UseRadioGroupReturnTypeSelf;
     propsRadioGroup: ElementProps<GroupElement>;
@@ -89,7 +90,7 @@ export interface UseRadioGroupReturnType<V extends string | number, GroupElement
     context: RadioContext<V, TabbableChildElement, M>;
 }
 
-export interface RadioSubInfo<TabbableChildElement extends Element, _V extends string | number> extends UseCompleteListNavigationChildInfo<TabbableChildElement> {
+export interface RadioSubInfo<TabbableChildElement extends keyof JSX.IntrinsicElements, _V extends string | number> extends UseCompleteListNavigationChildInfo<TabbableChildElement> {
     //getValue2(): V;
 }
 
@@ -102,7 +103,7 @@ export interface RadioSubInfo<TabbableChildElement extends Element, _V extends s
  * 
  * @hasChild {@link useRadio}
  */
-export function useRadioGroup<V extends string | number, G extends Element, GL extends Element, TCE extends Element, M extends RadioSubInfo<TCE, V> = RadioSubInfo<TCE, V>>({
+export function useRadioGroup<V extends string | number, G extends keyof JSX.IntrinsicElements, GL extends keyof JSX.IntrinsicElements, TCE extends keyof JSX.IntrinsicElements, M extends RadioSubInfo<TCE, V> = RadioSubInfo<TCE, V>>({
     labelParameters,
     radioGroupParameters: { name, selectedValue, onSelectedValueChange, ...void2 },
     rovingTabIndexParameters,
@@ -196,7 +197,7 @@ export function useRadioGroup<V extends string | number, G extends Element, GL e
 });
 }
 
-export interface UseRadioReturnType<LP extends LabelPosition, V extends string | number, I extends Element, IL extends Element, M extends RadioSubInfo<FocusableLabelElement<LP, I, IL>, V>> extends OmitStrong<UseCompleteListNavigationChildDeclarativeReturnType<FocusableLabelElement<LP, I, IL>, M>, "propsChild" | "propsTabbable" | "pressParameters" | "selectionChildReturn">, UseCheckboxLikeReturnType<I, IL> {
+export interface UseRadioReturnType<LP extends LabelPosition, V extends string | number, I extends keyof JSX.IntrinsicElements, IL extends keyof JSX.IntrinsicElements, M extends RadioSubInfo<FocusableLabelElement<LP, I, IL>, V>> extends OmitStrong<UseCompleteListNavigationChildDeclarativeReturnType<FocusableLabelElement<LP, I, IL>, M>, "propsChild" | "propsTabbable" | "pressParameters" | "selectionChildReturn">, UseCheckboxLikeReturnType<I, IL> {
     propsInput: ElementProps<I>;
     propsLabel: ElementProps<IL>;
 }
@@ -208,7 +209,7 @@ export interface UseRadioReturnType<LP extends LabelPosition, V extends string |
  * 
  * @compositeParams
  */
-export function useRadio<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element, V extends string | number, M extends RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V> = RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>({
+export function useRadio<LP extends LabelPosition, InputElement extends keyof JSX.IntrinsicElements, LabelElement extends keyof JSX.IntrinsicElements, V extends string | number, M extends RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V> = RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>({
     radioParameters: { value, ...void5 },
     checkboxLikeParameters: { disabled, ...void4 },
     labelParameters,
@@ -297,10 +298,10 @@ export function useRadio<LP extends LabelPosition, InputElement extends Element,
             propsInput["aria-checked"] = (checked ?? false);
         }
 
-        const propsIfInputHandlesFocus = useMergedProps<InputElement>(listNavigationSingleSelectionChildProps as ElementProps<any>, propsTabbable, propsInput);
+        const propsIfInputHandlesFocus = useMergedProps(listNavigationSingleSelectionChildProps as ElementProps<any>, propsTabbable, propsInput);
         const propsInput2: ElementProps<InputElement> = useMergedProps(propsRefInput, labelPosition != "wrapping" ? propsIfInputHandlesFocus : propsInput);
 
-        const propsIfLabelHandlesFocus = useMergedProps<LabelElement>(listNavigationSingleSelectionChildProps as ElementProps<any>, propsTabbable, propsLabel);
+        const propsIfLabelHandlesFocus = useMergedProps(listNavigationSingleSelectionChildProps as ElementProps<any>, propsTabbable, propsLabel);
         const propsLabel2: ElementProps<LabelElement> = useMergedProps(propsRefLabel, labelPosition == "wrapping" ? propsIfLabelHandlesFocus as any : propsLabel as any);
 
         const ret: UseRadioReturnType<LP, V, InputElement, LabelElement, M> = {

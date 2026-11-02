@@ -9,10 +9,10 @@ import {
     UseAsyncHandlerReturnType,
     useMergedProps,
     useMonitoring,
+    JSX,
     VNode
 } from "preact-prop-helpers/preact";
 import {
-    ElementToTag,
     OmitStrong,
     Prefices
 } from "./props.js";
@@ -20,19 +20,19 @@ import { UseLabelReturnType, useLabelSynthetic, UseLabelSyntheticParameters } fr
 import { useNotify } from "./use-notify.js";
 
 
-export interface UseProgressParametersSelf<IndicatorElement extends Element> {
+export interface UseProgressParametersSelf<IndicatorElement extends keyof JSX.IntrinsicElements> {
     max: number;
     value: number | "indeterminate" | "disabled";
     valueText: Nullable<string>;
-    tagProgressIndicator: ElementToTag<IndicatorElement>;
+    tagProgressIndicator: IndicatorElement;
 }
 
-export interface UseProgressParameters<IndicatorElement extends Element, _LabelElement extends Element> extends
+export interface UseProgressParameters<IndicatorElement extends keyof JSX.IntrinsicElements, _LabelElement extends keyof JSX.IntrinsicElements> extends
     TargetedOmit<UseLabelSyntheticParameters, "labelParameters", "onLabelClick"> {
     progressIndicatorParameters: UseProgressParametersSelf<IndicatorElement>;
 }
 
-export interface UseProgressReturnType<ProgressElement extends Element, ProgressLabelElement extends Element> extends OmitStrong<UseLabelReturnType<ProgressElement, ProgressLabelElement>, "propsInput" | "propsLabel"> {
+export interface UseProgressReturnType<ProgressElement extends keyof JSX.IntrinsicElements, ProgressLabelElement extends keyof JSX.IntrinsicElements> extends OmitStrong<UseLabelReturnType<ProgressElement, ProgressLabelElement>, "propsInput" | "propsLabel"> {
     propsProgressIndicator: ElementProps<ProgressElement>;
     propsProgressLabel: ElementProps<ProgressLabelElement>;
     propsProgressRegion: ElementProps<any>;
@@ -43,7 +43,7 @@ export interface UseProgressReturnType<ProgressElement extends Element, Progress
  * 
  * @compositeParams
  */
-export function useProgress<ProgressElement extends Element, LabelElement extends Element>({
+export function useProgress<ProgressElement extends keyof JSX.IntrinsicElements, LabelElement extends keyof JSX.IntrinsicElements>({
     labelParameters,
     progressIndicatorParameters: {
         max,
@@ -133,14 +133,14 @@ export interface UseProgressWithHandlerParametersSelf {
     notifyFailure: Nullable<VNode>;
 }
 
-export interface UseProgressWithHandlerParameters<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element> extends
+export interface UseProgressWithHandlerParameters<EventType, CaptureType, IndicatorElement extends keyof JSX.IntrinsicElements, LabelElement extends keyof JSX.IntrinsicElements> extends
     TargetedPick<UseProgressParameters<IndicatorElement, LabelElement>, "progressIndicatorParameters", "tagProgressIndicator">,
     Pick<UseProgressParameters<IndicatorElement, LabelElement>, "labelParameters"> {
     progressWithHandlerParameters: UseProgressWithHandlerParametersSelf;
     asyncHandlerParameters: UseAsyncHandlerParameters<EventType, CaptureType>;
 }
 
-export interface UseProgressWithHandlerReturnType<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element> {
+export interface UseProgressWithHandlerReturnType<EventType, CaptureType, IndicatorElement extends keyof JSX.IntrinsicElements, LabelElement extends keyof JSX.IntrinsicElements> {
     propsProgressIndicator: UseProgressReturnType<IndicatorElement, LabelElement>["propsProgressIndicator"];
     propsProgressLabel: UseProgressReturnType<IndicatorElement, LabelElement>["propsProgressLabel"];
     propsProgressRegion: UseProgressReturnType<IndicatorElement, LabelElement>["propsProgressRegion"];
@@ -155,7 +155,7 @@ export interface UseProgressWithHandlerReturnType<EventType, CaptureType, Indica
  * 
  * @compositeParams
  */
-export function useProgressWithHandler<EventType, CaptureType, IndicatorElement extends Element, LabelElement extends Element>({
+export function useProgressWithHandler<EventType, CaptureType, IndicatorElement extends keyof JSX.IntrinsicElements, LabelElement extends keyof JSX.IntrinsicElements>({
     labelParameters,
     progressIndicatorParameters,
     asyncHandlerParameters: { asyncHandler, ...asyncHandlerParameters },

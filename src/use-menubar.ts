@@ -2,6 +2,7 @@ import {
     assertEmptyObject,
     ElementProps,
     focus,
+    JSX,
     Nullable,
     PressEventReason,
     returnFalse,
@@ -18,11 +19,11 @@ import { OmitStrong } from "./props.js";
 import { useToolbar, useToolbarChild, UseToolbarChildParameters, UseToolbarChildReturnType, UseToolbarContext, UseToolbarParameters, UseToolbarReturnType, UseToolbarSubInfo } from "./use-toolbar.js";
 
 
-export interface UseMenubarContext<ChildElement extends Element, M extends UseMenubarSubInfo<ChildElement>> extends UseToolbarContext<ChildElement, M> { }
-export interface UseMenubarSubInfo<ChildElement extends Element> extends UseToolbarSubInfo<ChildElement> { }
-export interface UseMenubarParameters<MenuParentElement extends Element, MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseToolbarParameters<MenuParentElement, MenuItemElement, M> { }
+export interface UseMenubarContext<ChildElement extends keyof JSX.IntrinsicElements, M extends UseMenubarSubInfo<ChildElement>> extends UseToolbarContext<ChildElement, M> { }
+export interface UseMenubarSubInfo<ChildElement extends keyof JSX.IntrinsicElements> extends UseToolbarSubInfo<ChildElement> { }
+export interface UseMenubarParameters<MenuParentElement extends keyof JSX.IntrinsicElements, MenuItemElement extends keyof JSX.IntrinsicElements, M extends UseMenubarSubInfo<MenuItemElement>> extends UseToolbarParameters<MenuParentElement, MenuItemElement, M> { }
 
-export interface UseMenubarItemParametersSelf<MenuItemElement extends Element> {
+export interface UseMenubarItemParametersSelf<MenuItemElement extends keyof JSX.IntrinsicElements> {
     role: "menuitem" | "menuitemcheckbox" | "menuitemradio";
 
     /**
@@ -31,18 +32,18 @@ export interface UseMenubarItemParametersSelf<MenuItemElement extends Element> {
     onPress: Nullable<((e: PressEventReason<MenuItemElement>) => void)>;
 }
 
-export interface UseMenubarItemParameters<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends
+export interface UseMenubarItemParameters<MenuItemElement extends keyof JSX.IntrinsicElements, M extends UseMenubarSubInfo<MenuItemElement>> extends
     OmitStrong<UseToolbarChildParameters<MenuItemElement, M>, "toolbarChildParameters">,
     TargetedPick<UsePressParameters<MenuItemElement>, "pressParameters", "onPressingChange"> {
     menuItemParameters: UseMenubarItemParametersSelf<MenuItemElement>;
 }
 
-export interface UseMenubarReturnType<MenuParentElement extends Element, MenuItemElement extends Element, LabelElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends
+export interface UseMenubarReturnType<MenuParentElement extends keyof JSX.IntrinsicElements, MenuItemElement extends keyof JSX.IntrinsicElements, LabelElement extends keyof JSX.IntrinsicElements, M extends UseMenubarSubInfo<MenuItemElement>> extends
     OmitStrong<UseToolbarReturnType<MenuParentElement, MenuItemElement, LabelElement, M>, "propsToolbar"> {
     propsMenubar: ElementProps<MenuParentElement>;
     context: UseMenubarContext<MenuItemElement, M>;
 }
-export interface UseMenubarItemReturnType<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseToolbarChildReturnType<MenuItemElement, M>, "propsChild" | "propsTabbable" | "pressParameters" | "selectionChildReturn">, UsePressReturnType<MenuItemElement> { }
+export interface UseMenubarItemReturnType<MenuItemElement extends keyof JSX.IntrinsicElements, M extends UseMenubarSubInfo<MenuItemElement>> extends OmitStrong<UseToolbarChildReturnType<MenuItemElement, M>, "propsChild" | "propsTabbable" | "pressParameters" | "selectionChildReturn">, UsePressReturnType<MenuItemElement> { }
 
 /**
  * Implements a [Menubar](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/) pattern.
@@ -55,7 +56,7 @@ export interface UseMenubarItemReturnType<MenuItemElement extends Element, M ext
  * 
  * @compositeParams
  */
-export function useMenubar<MenuParentElement extends Element, MenuItemElement extends Element, LabelElement extends Element>(args: UseMenubarParameters<MenuParentElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenubarReturnType<MenuParentElement, MenuItemElement, LabelElement, UseMenubarSubInfo<MenuItemElement>> {
+export function useMenubar<MenuParentElement extends keyof JSX.IntrinsicElements, MenuItemElement extends keyof JSX.IntrinsicElements, LabelElement extends keyof JSX.IntrinsicElements>(args: UseMenubarParameters<MenuParentElement, MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenubarReturnType<MenuParentElement, MenuItemElement, LabelElement, UseMenubarSubInfo<MenuItemElement>> {
     return useMonitoring(function useMenubar(): UseMenubarReturnType<MenuParentElement, MenuItemElement, LabelElement, UseMenubarSubInfo<MenuItemElement>> {
         const {
             propsToolbar: propsMenubar,
@@ -73,7 +74,7 @@ export function useMenubar<MenuParentElement extends Element, MenuItemElement ex
 /**
  * @compositeParams
  */
-export function useMenubarChild<MenuItemElement extends Element>({
+export function useMenubarChild<MenuItemElement extends keyof JSX.IntrinsicElements>({
     menuItemParameters: { onPress: opu, role },
     pressParameters: { onPressingChange, ...void1 },
     ...restParams

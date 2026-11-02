@@ -1,7 +1,8 @@
 import {
     CompleteListNavigationContext,
     ElementProps,
-    EventType,
+    EventTypeByTag,
+    JSX,
     TargetedOmit,
     TargetedPick,
     UseCompleteListNavigationChildDeclarativeParameters,
@@ -26,10 +27,10 @@ import {
 import { EventDetail, OmitStrong, Prefices } from "./props.js";
 import { UseLabelSyntheticParameters, useLabelSynthetic } from "./use-label.js";
 
-export type ListboxSingleSelectEvent<E extends EventTarget> = { [EventDetail]: { selectedIndex: number } } & Pick<EventType<E, Event>, "target" | "currentTarget">;
-export type ListboxMultiSelectEvent<E extends EventTarget> = { [EventDetail]: { selected: boolean } } & Pick<EventType<E, Event>, "target" | "currentTarget">;
+export type ListboxSingleSelectEvent<Tag extends keyof JSX.IntrinsicElements> = { [EventDetail]: { selectedIndex: number } } & Pick<EventTypeByTag<Tag, Event>, "target" | "currentTarget">;
+export type ListboxMultiSelectEvent<Tag extends keyof JSX.IntrinsicElements> = { [EventDetail]: { selected: boolean } } & Pick<EventTypeByTag<Tag, Event>, "target" | "currentTarget">;
 
-export interface UseListboxContext<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends CompleteListNavigationContext<ListItemElement, M> { }
+export interface UseListboxContext<ListItemElement extends keyof JSX.IntrinsicElements, M extends ListboxInfo<ListItemElement>> extends CompleteListNavigationContext<ListItemElement, M> { }
 
 export interface UseListboxParametersSelf {
 
@@ -45,7 +46,7 @@ export interface UseListboxParametersSelf {
     groupingType: "with-groups" | "without-groups" | "group";
 }
 
-export interface UseListboxParameters<ListElement extends Element, ListItemElement extends Element, _LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends
+export interface UseListboxParameters<ListElement extends keyof JSX.IntrinsicElements, ListItemElement extends keyof JSX.IntrinsicElements, _LabelElement extends keyof JSX.IntrinsicElements, M extends ListboxInfo<ListItemElement>> extends
     OmitStrong<UseCompleteListNavigationDeclarativeParameters<ListElement, ListItemElement, M>, "rovingTabIndexParameters" | "linearNavigationParameters" | "singleSelectionParameters">,
     TargetedOmit<UseLabelSyntheticParameters, "labelParameters", "onLabelClick">,
     TargetedOmit<UseCompleteListNavigationParameters<ListElement, ListItemElement, M>, "rovingTabIndexParameters", "focusSelfParent">,
@@ -53,12 +54,12 @@ export interface UseListboxParameters<ListElement extends Element, ListItemEleme
     TargetedPick<UseCompleteListNavigationParameters<ListElement, ListItemElement, M>, "singleSelectionParameters", "singleSelectionAriaPropName" | "singleSelectionMode"> {
     listboxParameters: UseListboxParametersSelf;
 }
-export interface UseListboxReturnType<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationReturnType<ListElement, ListItemElement, M>, "props" | "singleSelectionReturn"> {
+export interface UseListboxReturnType<ListElement extends keyof JSX.IntrinsicElements, ListItemElement extends keyof JSX.IntrinsicElements, LabelElement extends keyof JSX.IntrinsicElements, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationReturnType<ListElement, ListItemElement, M>, "props" | "singleSelectionReturn"> {
     propsListbox: ElementProps<ListElement>;
     propsListboxLabel: ElementProps<LabelElement>;
     context: UseListboxContext<ListItemElement, M>;
 }
-export interface UseListboxItemReturnType<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationChildDeclarativeReturnType<ListItemElement, M>, "propsChild" | "propsTabbable" | "pressParameters" | "selectionChildReturn">, UsePressReturnType<ListItemElement> { }
+export interface UseListboxItemReturnType<ListItemElement extends keyof JSX.IntrinsicElements, M extends ListboxInfo<ListItemElement>> extends OmitStrong<UseCompleteListNavigationChildDeclarativeReturnType<ListItemElement, M>, "propsChild" | "propsTabbable" | "pressParameters" | "selectionChildReturn">, UsePressReturnType<ListItemElement> { }
 
 /* eslint-disable @typescript-eslint/no-empty-interface */
 export interface UseListboxItemParametersSelf {
@@ -70,14 +71,14 @@ export interface UseListboxItemParametersSelf {
     //onMultiSelect: Nullable<((e: ListboxMultiSelectEvent<ListItemElement>) => void)>;
 }
 
-export interface UseListboxItemParameters<ListItemElement extends Element, M extends ListboxInfo<ListItemElement>> extends
+export interface UseListboxItemParameters<ListItemElement extends keyof JSX.IntrinsicElements, M extends ListboxInfo<ListItemElement>> extends
     UseGenericChildParameters<UseListboxContext<ListItemElement, M>, Pick<M, UseCompleteListNavigationChildInfoKeysParameters<M>>>,
     UseCompleteListNavigationChildDeclarativeParameters<ListItemElement, M>,
     TargetedOmit<UsePressParameters<ListItemElement>, "pressParameters", "excludeSpace" | "onPressSync" | "focusSelf"> {
     listboxParameters: UseListboxItemParametersSelf;
 }
 
-export interface ListboxInfo<ListItemElement extends Element> extends UseCompleteListNavigationChildInfo<ListItemElement> {
+export interface ListboxInfo<ListItemElement extends keyof JSX.IntrinsicElements> extends UseCompleteListNavigationChildInfo<ListItemElement> {
 
 }
 
@@ -92,7 +93,7 @@ export interface ListboxInfo<ListItemElement extends Element> extends UseComplet
  * 
  * @hasChild {@link useListboxItem}
  */
-export function useListbox<ListElement extends Element, ListItemElement extends Element, LabelElement extends Element>({
+export function useListbox<ListElement extends keyof JSX.IntrinsicElements, ListItemElement extends keyof JSX.IntrinsicElements, LabelElement extends keyof JSX.IntrinsicElements>({
     labelParameters,
     listboxParameters: { groupingType, orientation },
     linearNavigationParameters,
@@ -184,7 +185,7 @@ export const useListboxChildren = monitored(function useListboxChildren<E extend
 /**
  * @compositeParams
  */
-export function useListboxItem<ListItemElement extends Element, M extends ListboxInfo<ListItemElement> = ListboxInfo<ListItemElement>>({
+export function useListboxItem<ListItemElement extends keyof JSX.IntrinsicElements, M extends ListboxInfo<ListItemElement> = ListboxInfo<ListItemElement>>({
     context,
     listboxParameters,
     pressParameters: { allowRepeatPresses, excludeEnter, excludePointer, longPressThreshold, onPressingChange, ...void1 },

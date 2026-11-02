@@ -1,22 +1,22 @@
-import { CompleteGridNavigationCellContext, CompleteGridNavigationRowContext, ElementProps, OmitStrong, TargetedOmit, UseCompleteGridNavigationCellInfo, UseCompleteGridNavigationCellParameters, UseCompleteGridNavigationCellReturnType, UseCompleteGridNavigationDeclarativeParameters, UseCompleteGridNavigationDeclarativeReturnType, UseCompleteGridNavigationRowDeclarativeParameters, UseCompleteGridNavigationRowInfo, UseCompleteGridNavigationRowOuterParameters, UseCompleteGridNavigationRowOuterReturnType, UseCompleteGridNavigationRowReturnType, UseCompleteGridNavigationRowsContext, UseCompleteGridNavigationRowsInfo, UseCompleteGridNavigationRowsParameters, UseCompleteGridNavigationRowsReturnType, UsePressParameters, UsePressReturnType, assertEmptyObject, useCompleteGridNavigationCell, useCompleteGridNavigationDeclarative, useCompleteGridNavigationRowDeclarative, useCompleteGridNavigationRowOuter, useCompleteGridNavigationRows, useMergedProps, useMonitoring, usePress, useStableCallback } from "preact-prop-helpers/preact";
+import { CompleteGridNavigationCellContext, CompleteGridNavigationRowContext, ElementProps, JSX, OmitStrong, TargetedOmit, UseCompleteGridNavigationCellInfo, UseCompleteGridNavigationCellParameters, UseCompleteGridNavigationCellReturnType, UseCompleteGridNavigationDeclarativeParameters, UseCompleteGridNavigationDeclarativeReturnType, UseCompleteGridNavigationRowDeclarativeParameters, UseCompleteGridNavigationRowInfo, UseCompleteGridNavigationRowOuterParameters, UseCompleteGridNavigationRowOuterReturnType, UseCompleteGridNavigationRowReturnType, UseCompleteGridNavigationRowsContext, UseCompleteGridNavigationRowsInfo, UseCompleteGridNavigationRowsParameters, UseCompleteGridNavigationRowsReturnType, UsePressParameters, UsePressReturnType, assertEmptyObject, useCompleteGridNavigationCell, useCompleteGridNavigationDeclarative, useCompleteGridNavigationRowDeclarative, useCompleteGridNavigationRowOuter, useCompleteGridNavigationRows, useMergedProps, useMonitoring, usePress, useStableCallback } from "preact-prop-helpers/preact";
 import { UseLabelReturnType, UseLabelSyntheticParameters, useLabelSynthetic } from "./use-label.js";
 
 
 
-export interface UseGridlistRowInfo<RowElement extends Element> extends UseCompleteGridNavigationRowInfo<RowElement> { }
-export interface UseGridlistRowsInfo<RowElement extends Element> extends UseCompleteGridNavigationRowsInfo<RowElement> { }
-export interface UseGridlistCellInfo<RowElement extends Element> extends UseCompleteGridNavigationCellInfo<RowElement> { }
+export interface UseGridlistRowInfo<RowElement extends keyof JSX.IntrinsicElements> extends UseCompleteGridNavigationRowInfo<RowElement> { }
+export interface UseGridlistRowsInfo<RowElement extends keyof JSX.IntrinsicElements> extends UseCompleteGridNavigationRowsInfo<RowElement> { }
+export interface UseGridlistCellInfo<RowElement extends keyof JSX.IntrinsicElements> extends UseCompleteGridNavigationCellInfo<RowElement> { }
 
-export interface UseGridlistRowContext<ChildElement extends Element, M extends UseGridlistRowInfo<ChildElement>> extends CompleteGridNavigationRowContext<ChildElement, M> { }
-export interface UseGridlistRowsContext<ChildElement extends Element, SM extends UseGridlistRowsInfo<ChildElement>> extends UseCompleteGridNavigationRowsContext<ChildElement, SM> { }
-export interface UseGridlistCellContext<ChildElement extends Element, M extends UseGridlistCellInfo<ChildElement>> extends CompleteGridNavigationCellContext<ChildElement, M> { }
-
-
+export interface UseGridlistRowContext<ChildElement extends keyof JSX.IntrinsicElements, M extends UseGridlistRowInfo<ChildElement>> extends CompleteGridNavigationRowContext<ChildElement, M> { }
+export interface UseGridlistRowsContext<ChildElement extends keyof JSX.IntrinsicElements, SM extends UseGridlistRowsInfo<ChildElement>> extends UseCompleteGridNavigationRowsContext<ChildElement, SM> { }
+export interface UseGridlistCellContext<ChildElement extends keyof JSX.IntrinsicElements, M extends UseGridlistCellInfo<ChildElement>> extends CompleteGridNavigationCellContext<ChildElement, M> { }
 
 
 
-export interface UseGridlistParameters<ParentElement extends Element, RowElement extends Element, RsM extends UseGridlistRowsInfo<RowElement> = UseGridlistRowsInfo<RowElement>, RM extends UseGridlistRowInfo<RowElement> = UseGridlistRowInfo<RowElement>> extends UseCompleteGridNavigationDeclarativeParameters<ParentElement, RowElement, RM>, OmitStrong<UseCompleteGridNavigationRowsParameters<RowElement, RM, RsM>, "context">, UseLabelSyntheticParameters { }
-export interface UseGridlistReturnType<ParentElement extends Element, RowElement extends Element, LabelElement extends Element, RsM extends UseGridlistRowsInfo<RowElement> = UseGridlistRowsInfo<RowElement>, RM extends UseGridlistRowInfo<RowElement> = UseGridlistRowInfo<RowElement>> extends
+
+
+export interface UseGridlistParameters<ParentElement extends keyof JSX.IntrinsicElements, RowElement extends keyof JSX.IntrinsicElements, RsM extends UseGridlistRowsInfo<RowElement> = UseGridlistRowsInfo<RowElement>, RM extends UseGridlistRowInfo<RowElement> = UseGridlistRowInfo<RowElement>> extends UseCompleteGridNavigationDeclarativeParameters<ParentElement, RowElement, RM>, OmitStrong<UseCompleteGridNavigationRowsParameters<RowElement, RM, RsM>, "context">, UseLabelSyntheticParameters { }
+export interface UseGridlistReturnType<ParentElement extends keyof JSX.IntrinsicElements, RowElement extends keyof JSX.IntrinsicElements, LabelElement extends keyof JSX.IntrinsicElements, RsM extends UseGridlistRowsInfo<RowElement> = UseGridlistRowsInfo<RowElement>, RM extends UseGridlistRowInfo<RowElement> = UseGridlistRowInfo<RowElement>> extends
     OmitStrong<UseCompleteGridNavigationDeclarativeReturnType<ParentElement, RowElement, RM>, "context" | "rearrangeableChildrenReturn">,
     OmitStrong<UseCompleteGridNavigationRowsReturnType<RowElement, RsM>, "context">,
     OmitStrong<UseLabelReturnType<ParentElement, LabelElement>, "propsInput"> {
@@ -28,19 +28,19 @@ export interface UseGridlistReturnType<ParentElement extends Element, RowElement
 
 
 
-export interface UseGridlistRowOuterParameters<RowElement extends Element, RsM extends UseCompleteGridNavigationRowsInfo<RowElement>> extends UseCompleteGridNavigationRowOuterParameters<RowElement, RsM> { }
-export interface UseGridlistRowOuterReturnType<RowElement extends Element, RsM extends UseCompleteGridNavigationRowsInfo<RowElement>> extends UseCompleteGridNavigationRowOuterReturnType<RowElement, RsM> { }
+export interface UseGridlistRowOuterParameters<RowElement extends keyof JSX.IntrinsicElements, RsM extends UseCompleteGridNavigationRowsInfo<RowElement>> extends UseCompleteGridNavigationRowOuterParameters<RowElement, RsM> { }
+export interface UseGridlistRowOuterReturnType<RowElement extends keyof JSX.IntrinsicElements, RsM extends UseCompleteGridNavigationRowsInfo<RowElement>> extends UseCompleteGridNavigationRowOuterReturnType<RowElement, RsM> { }
 
 
-export interface UseGridlistRowParameters<RowElement extends Element, CellElement extends Element, RM extends UseGridlistRowInfo<RowElement>, CM extends UseGridlistCellInfo<CellElement>> extends UseCompleteGridNavigationRowDeclarativeParameters<RowElement, CellElement, RM, CM> { }
-export interface UseGridlistRowReturnType<RowElement extends Element, CellElement extends Element, RM extends UseGridlistRowInfo<RowElement>, CM extends UseGridlistCellInfo<CellElement>> extends UseCompleteGridNavigationRowReturnType<RowElement, CellElement, RM, CM> {
+export interface UseGridlistRowParameters<RowElement extends keyof JSX.IntrinsicElements, CellElement extends keyof JSX.IntrinsicElements, RM extends UseGridlistRowInfo<RowElement>, CM extends UseGridlistCellInfo<CellElement>> extends UseCompleteGridNavigationRowDeclarativeParameters<RowElement, CellElement, RM, CM> { }
+export interface UseGridlistRowReturnType<RowElement extends keyof JSX.IntrinsicElements, CellElement extends keyof JSX.IntrinsicElements, RM extends UseGridlistRowInfo<RowElement>, CM extends UseGridlistCellInfo<CellElement>> extends UseCompleteGridNavigationRowReturnType<RowElement, CellElement, RM, CM> {
     context: UseGridlistCellContext<CellElement, CM>;
 }
 
 
 
-export interface UseGridlistCellParameters<CellElement extends Element, CM extends UseGridlistCellInfo<CellElement>> extends UseCompleteGridNavigationCellParameters<CellElement, CM>, TargetedOmit<UsePressParameters<CellElement>, "pressParameters", "focusSelf"> { }
-export interface UseGridlistCellReturnType<CellElement extends Element, CM extends UseGridlistCellInfo<CellElement>> extends OmitStrong<UseCompleteGridNavigationCellReturnType<CellElement, CM>, "props">, OmitStrong<UsePressReturnType<CellElement>, "props"> {
+export interface UseGridlistCellParameters<CellElement extends keyof JSX.IntrinsicElements, CM extends UseGridlistCellInfo<CellElement>> extends UseCompleteGridNavigationCellParameters<CellElement, CM>, TargetedOmit<UsePressParameters<CellElement>, "pressParameters", "focusSelf"> { }
+export interface UseGridlistCellReturnType<CellElement extends keyof JSX.IntrinsicElements, CM extends UseGridlistCellInfo<CellElement>> extends OmitStrong<UseCompleteGridNavigationCellReturnType<CellElement, CM>, "props">, OmitStrong<UsePressReturnType<CellElement>, "props"> {
     propsTabbable: ElementProps<CellElement>;
     propsCell: ElementProps<any>;
     propsPress: ElementProps<any>;
@@ -49,7 +49,7 @@ export interface UseGridlistCellReturnType<CellElement extends Element, CM exten
 /**
  * @compositeParams
  */
-export function useGridlist<ParentElement extends Element, RowElement extends Element, LabelElement extends Element, RsM extends UseGridlistRowsInfo<RowElement>, RM extends UseGridlistRowInfo<RowElement>>({
+export function useGridlist<ParentElement extends keyof JSX.IntrinsicElements, RowElement extends keyof JSX.IntrinsicElements, LabelElement extends keyof JSX.IntrinsicElements, RsM extends UseGridlistRowsInfo<RowElement>, RM extends UseGridlistRowInfo<RowElement>>({
     gridNavigationParameters,
     linearNavigationParameters,
     managedChildrenParameters,
@@ -105,7 +105,7 @@ export function useGridlist<ParentElement extends Element, RowElement extends El
             ...completeGridNavigationRet,
             ...completeGridNavigationRowsRet,
             ...labelSyntheticRet,
-            props: useMergedProps<ParentElement>(props, propsInput, { role: "grid", "aria-multiselectable": (contextRows.multiSelectionContext.multiSelectionMode != "disabled" ? "true" : undefined) }),
+            props: useMergedProps(props, propsInput, { role: "grid", "aria-multiselectable": (contextRows.multiSelectionContext.multiSelectionMode != "disabled" ? "true" : undefined) }),
             propsLabel,
             contextChildren: contextRows,
             contextProcessing
@@ -116,7 +116,7 @@ export function useGridlist<ParentElement extends Element, RowElement extends El
 /**
  * @compositeParams
  */
-export function useGridlistRowOuter<RowElement extends Element, RsM extends UseCompleteGridNavigationRowsInfo<RowElement>>(p: UseGridlistRowOuterParameters<RowElement, RsM>): UseGridlistRowOuterReturnType<RowElement, RsM> {
+export function useGridlistRowOuter<RowElement extends keyof JSX.IntrinsicElements, RsM extends UseCompleteGridNavigationRowsInfo<RowElement>>(p: UseGridlistRowOuterParameters<RowElement, RsM>): UseGridlistRowOuterReturnType<RowElement, RsM> {
     return useMonitoring(function useGridlistRowOuter(): UseGridlistRowOuterReturnType<RowElement, RsM> {
         let r = useCompleteGridNavigationRowOuter(p);
         r.props.role = "row";
@@ -127,7 +127,7 @@ export function useGridlistRowOuter<RowElement extends Element, RsM extends UseC
 /**
  * @compositeParams
  */
-export function useGridlistRow<RowElement extends Element, CellElement extends Element, RM extends UseGridlistRowInfo<RowElement>, CM extends UseGridlistCellInfo<CellElement>>(p: UseGridlistRowParameters<RowElement, CellElement, RM, CM>): UseGridlistRowReturnType<RowElement, CellElement, RM, CM> {
+export function useGridlistRow<RowElement extends keyof JSX.IntrinsicElements, CellElement extends keyof JSX.IntrinsicElements, RM extends UseGridlistRowInfo<RowElement>, CM extends UseGridlistCellInfo<CellElement>>(p: UseGridlistRowParameters<RowElement, CellElement, RM, CM>): UseGridlistRowReturnType<RowElement, CellElement, RM, CM> {
     return useMonitoring(function useGridlistRow(): UseGridlistRowReturnType<RowElement, CellElement, RM, CM> {
         // `selected` should only be true/false for multi-selection
         if (p.context.multiSelectionContext.multiSelectionMode == "disabled")
@@ -144,7 +144,7 @@ export function useGridlistRow<RowElement extends Element, CellElement extends E
 /**
  * @compositeParams
  */
-export function useGridlistCell<CellElement extends Element, CM extends UseGridlistCellInfo<CellElement>>({
+export function useGridlistCell<CellElement extends keyof JSX.IntrinsicElements, CM extends UseGridlistCellInfo<CellElement>>({
     pressParameters: { allowRepeatPresses, excludeEnter, excludePointer, excludeSpace, longPressThreshold, onPressSync, onPressingChange },
     ...p
 }: UseGridlistCellParameters<CellElement, CM>): UseGridlistCellReturnType<CellElement, CM> {

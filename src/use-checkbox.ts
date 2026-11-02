@@ -1,5 +1,6 @@
 import {
     ElementProps,
+    JSX,
     Nullable,
     TargetedOmit,
     assertEmptyObject,
@@ -32,16 +33,16 @@ export interface UseCheckboxParametersSelf {
     onCheckedChange: Nullable<CheckboxChangeEventHandler>;
 }
 
-export interface UseCheckboxParameters<LP extends LabelPosition, I extends Element, L extends Element> extends
+export interface UseCheckboxParameters<LP extends LabelPosition, I extends keyof JSX.IntrinsicElements, L extends keyof JSX.IntrinsicElements> extends
     OmitStrong<UseCheckboxLikeParameters<LP, I, L, boolean | "mixed">, "pressParameters" | "checkboxLikeParameters" | "randomIdInputParameters" | "randomIdLabelParameters" | "refElementLabelReturn" | "refElementInputReturn">,
     TargetedOmit<UseCheckboxLikeParameters<LP, I, L, boolean | "mixed">, "pressParameters", "onPressSync">,
     TargetedOmit<UseCheckboxLikeParameters<LP, I, L, boolean | "mixed">, "checkboxLikeParameters", "role"> {
     checkboxParameters: UseCheckboxParametersSelf;
 }
 
-export interface UseCheckboxReturnTypeSelf<InputType extends Element> { propsUnstable: ElementProps<InputType> }
+export interface UseCheckboxReturnTypeSelf<InputType extends keyof JSX.IntrinsicElements> { propsUnstable: ElementProps<InputType> }
 
-export interface UseCheckboxReturnType<InputType extends Element, LabelType extends Element> extends
+export interface UseCheckboxReturnType<InputType extends keyof JSX.IntrinsicElements, LabelType extends keyof JSX.IntrinsicElements> extends
     UseCheckboxLikeReturnType<InputType, LabelType> {
     checkboxReturn: UseCheckboxReturnTypeSelf<InputType>;
 }
@@ -51,7 +52,7 @@ export interface UseCheckboxReturnType<InputType extends Element, LabelType exte
  * 
  * @compositeParams
  */
-export function useCheckbox<LP extends LabelPosition, InputType extends Element, LabelType extends Element>({
+export function useCheckbox<LP extends LabelPosition, InputType extends keyof JSX.IntrinsicElements, LabelType extends keyof JSX.IntrinsicElements>({
     checkboxLikeParameters: { checked, disabled, ...void2 },
     checkboxParameters: { onCheckedChange, ...void4 },
     labelParameters,

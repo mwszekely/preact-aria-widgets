@@ -1,8 +1,8 @@
 
-import { useMergedProps, useState } from "preact-prop-helpers";
+import { useMergedProps, useState } from "preact-prop-helpers/preact";
 import { useRef } from "preact/compat";
 import { useCallback } from "preact/hooks";
-import { Table, TableBody, TableBodyRow, TableCell, TableHead, TableHeadRow } from "../../dist/preact/index.js";
+import { Table, TableBody, TableBodyRow, TableCell, TableHead, TableHeadRow } from "preact-aria-widgets/preact";
 
 export function Blurb() {
     return (
@@ -35,7 +35,7 @@ function DemoInput({ index }: { index: number }) {
     const [v, setV] = useState("");
 
     return (
-        <TableCell<HTMLTableCellElement> /*getSortValue={() => v}*/
+        <TableCell<"td"> /*getSortValue={() => v}*/
             focusSelf={e => { e.focus() }}
             tagTableCell="td"
             index={index}
@@ -65,7 +65,7 @@ function DemoTableCell({ index, header, value }: { index: number, value?: number
     if (header) {
         const ref = useRef<HTMLTableCellElement>(null);
         const text = `Header #${index}`;
-        return <TableCell<HTMLTableCellElement> /* getSortValue={returnZero} */
+        return <TableCell<"th"> /* getSortValue={returnZero} */
             focusSelf={e => ref.current?.focus()}
             tagTableCell="th"
             index={index}
@@ -79,7 +79,7 @@ function DemoTableCell({ index, header, value }: { index: number, value?: number
                     <DemoInput index={index} />
                 );
             default:
-                return <TableCell<HTMLTableCellElement> /* getSortValue={() => r.current} */ focusSelf={e => e.focus()} tagTableCell="td" index={index} render={info => {
+                return <TableCell<"td"> /* getSortValue={() => r.current} */ focusSelf={e => e.focus()} tagTableCell="td" index={index} render={info => {
                     return (
                         <td {...info.propsFocus} {...info.propsCell}>{(value ?? 0).toString()}</td>
                     )
@@ -110,7 +110,7 @@ export function Demo() {
             <Code />
             <label><input type="number" min={0} value={count} onInput={e => setCount(e.currentTarget.valueAsNumber)} /> # of table rows</label>
             <div>
-                <Table<HTMLTableElement, HTMLTableRowElement, HTMLLabelElement>
+                <Table<"table", "tr", "label">
                     ariaLabel={null}
                     multiSelectionMode="activation"
                     multiSelectionAriaPropName="aria-selected"
@@ -123,7 +123,7 @@ export function Demo() {
                                 <table {...infoTable.propsTable}>
                                     <TableHead tagHead="thead" render={infoSection => {
                                         return (
-                                            <thead {...infoSection}><TableHeadRow<HTMLTableRowElement, HTMLTableCellElement>
+                                            <thead {...infoSection}><TableHeadRow<"tr", "th">
                                                 tagTableRow="tr"
                                                 index={0}
 
@@ -140,12 +140,12 @@ export function Demo() {
                                     }}>
 
                                     </TableHead>
-                                    <TableBody<HTMLTableSectionElement, HTMLTableRowElement>
+                                    <TableBody<"tbody", "tr">
                                         tagTableSection="tbody"
                                         children={Array.from(function* () {
                                             for (let i = 0; i < count; ++i) {
                                                 yield (
-                                                    <TableBodyRow<HTMLTableRowElement, HTMLTableCellElement>
+                                                    <TableBodyRow<"tr", "td">
                                                         tagTableRow="tr"
                                                         key={i}
                                                         index={i + 1}

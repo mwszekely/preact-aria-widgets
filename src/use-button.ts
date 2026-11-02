@@ -17,17 +17,17 @@ import {
     useRefElement,
     useStableCallback
 } from "preact-prop-helpers/preact";
-import { DisabledType, ElementToTag, EnhancedEventHandler, OmitStrong, TargetedEnhancedEvent } from "./props.js";
+import { DisabledType, EnhancedEventHandler, OmitStrong, TargetedEnhancedEvent } from "./props.js";
 
 export interface ButtonPressEventDetail {
     pressed: boolean | undefined;
 }
-export type TargetedButtonPressEvent<E extends EventTarget> = TargetedEnhancedEvent<PressEventReason<E>, ButtonPressEventDetail>;
-export type ButtonPressEventHandler<E extends EventTarget> = EnhancedEventHandler<TargetedButtonPressEvent<E>, ButtonPressEventDetail>;
+export type TargetedButtonPressEvent<Tag extends keyof JSX.IntrinsicElements> = TargetedEnhancedEvent<PressEventReason<Tag>, ButtonPressEventDetail>;
+export type ButtonPressEventHandler<Tag extends keyof JSX.IntrinsicElements> = EnhancedEventHandler<TargetedButtonPressEvent<Tag>, ButtonPressEventDetail>;
 
-export interface UseButtonParametersSelf<E extends Node> {
+export interface UseButtonParametersSelf<Tag extends keyof JSX.IntrinsicElements> {
     /** Is `HTMLElement` this a `div`, a `button`, etc. */
-    tagButton: ElementToTag<E>;
+    tagButton: Tag;
 
     /** 
      * Called when the button is clicked/pressed/tapped/etc
@@ -36,7 +36,7 @@ export interface UseButtonParametersSelf<E extends Node> {
      * 
      * If you need this to be async, see `useProgressWithHandler`, and use its `syncHandler` here.
      */
-    onPressSync: Nullable<(event: TargetedEnhancedEvent<PressEventReason<E>, ButtonPressEventDetail>) => void>;
+    onPressSync: Nullable<(event: TargetedEnhancedEvent<PressEventReason<Tag>, ButtonPressEventDetail>) => void>;
 
     /** 
      * Whether the button is disabled.
@@ -62,16 +62,16 @@ export interface UseButtonParametersSelf<E extends Node> {
     role: Nullable<JSX.AriaRole>;
 }
 
-export interface UseButtonParameters<ButtonElement extends Element> extends
-    UseRefElementParameters<ButtonElement>,
-    TargetedOmit<UsePressParameters<ButtonElement>, "pressParameters", "excludeEnter" | "excludePointer" | "onPressSync"> {
-    buttonParameters: UseButtonParametersSelf<ButtonElement>;
+export interface UseButtonParameters<ButtonElementTag extends keyof JSX.IntrinsicElements> extends
+    UseRefElementParameters<ButtonElementTag>,
+    TargetedOmit<UsePressParameters<ButtonElementTag>, "pressParameters", "excludeEnter" | "excludePointer" | "onPressSync"> {
+    buttonParameters: UseButtonParametersSelf<ButtonElementTag>;
 }
 
-export interface UseButtonReturnType<ButtonElement extends Element> extends
-    UsePressReturnType<ButtonElement>,
-    OmitStrong<UseRefElementReturnType<ButtonElement>, "propsStable"> {
-    props: ElementProps<ButtonElement>;
+export interface UseButtonReturnType<ButtonElementTag extends keyof JSX.IntrinsicElements> extends
+    UsePressReturnType<ButtonElementTag>,
+    OmitStrong<UseRefElementReturnType<ButtonElementTag>, "propsStable"> {
+    props: ElementProps<ButtonElementTag>;
 }
 
 
@@ -83,16 +83,16 @@ export interface UseButtonReturnType<ButtonElement extends Element> extends
  * 
  * @compositeParams
  */
-export function useButton<ButtonElement extends Element>({
+export function useButton<ButtonElementTag extends keyof JSX.IntrinsicElements>({
     buttonParameters: { tagButton, disabled, pressed, role, onPressSync, ...void1 },
     pressParameters: { focusSelf, allowRepeatPresses, longPressThreshold, onPressingChange, excludeSpace, ...void3 },
     refElementParameters,
     ...void2
-}: UseButtonParameters<ButtonElement>): UseButtonReturnType<ButtonElement> {
+}: UseButtonParameters<ButtonElementTag>): UseButtonReturnType<ButtonElementTag> {
     
     return useMonitoring(function useButton() {
-        const { refElementReturn, propsStable: propsRef, ...void5 } = useRefElement<ButtonElement>({ refElementParameters });
-        const { pressReturn, props: propsPress, ...void4 } = usePress<ButtonElement>({
+        const { refElementReturn, propsStable: propsRef, ...void5 } = useRefElement<ButtonElementTag>({ refElementParameters });
+        const { pressReturn, props: propsPress, ...void4 } = usePress<ButtonElementTag>({
             refElementReturn,
             pressParameters: {
                 onPressSync: useStableCallback((e) => {
@@ -123,7 +123,7 @@ export function useButton<ButtonElement extends Element>({
 
         return {
             pressReturn,
-            props: useMergedProps<ButtonElement>(propsPress, propsRef, (tagButton == 'button' ? buttonProps : divProps) as ElementProps<ButtonElement>),
+            props: useMergedProps(propsPress, propsRef, (tagButton == 'button' ? buttonProps : divProps) as ElementProps<ButtonElementTag>),
             refElementReturn,
         }
     });

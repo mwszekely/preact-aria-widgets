@@ -1,7 +1,7 @@
 
 import { JSX } from "preact";
-import { EventDetail, useState } from "preact-prop-helpers";
-import { Button, ProgressWithHandler, TargetedButtonPressEvent } from "../../dist/preact/index.js";
+import { EventDetail, useState } from "preact-prop-helpers/preact";
+import { Button, ProgressWithHandler, TargetedButtonPressEvent } from "preact-aria-widgets/preact";
 
 export function Blurb() {
     return (
@@ -45,7 +45,7 @@ export function Demo() {
             <DemoButton disabled={false} tag="div" />
             <DemoButton disabled="soft" tag="div" />
             <DemoButton disabled="hard" tag="div" />
-            <Button<HTMLButtonElement>
+            <Button
                 tagButton="button"
                 pressed={pressed}
                 onPressSync={e => setPressed(e[EventDetail].pressed!)}
@@ -65,14 +65,14 @@ function DemoButton({ tag: Tag, disabled }: { tag: keyof JSX.IntrinsicElements, 
     const onPress = async () => { await new Promise(resolve => setTimeout(resolve, 1000)); alert("Button clicked"); }
 
     return (
-        <ProgressWithHandler<TargetedButtonPressEvent<HTMLButtonElement>, boolean | undefined, HTMLProgressElement, HTMLLabelElement> 
+        <ProgressWithHandler<TargetedButtonPressEvent<"button">, boolean | undefined, "progress", "label"> 
         capture={e => undefined}
         tagProgressIndicator="progress"
         asyncHandler={onPress}
         
         render={progressInfo => {
             return (
-                <Button<HTMLButtonElement>
+                <Button<"button">
                     disabled={disabled}
                     tagButton={Tag as any}
                     onPressSync={progressInfo.asyncHandlerReturn.syncHandler}

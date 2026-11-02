@@ -1,6 +1,7 @@
 import {
     ComponentChildren, ElementProps,
     ManagedChildInfo,
+    JSX,
     Nullable, StateUpdater, UseGenericChildParameters,
     UseManagedChildParameters,
     UseManagedChildReturnType,
@@ -55,12 +56,12 @@ export interface UseToastReturnTypeSelf {
     resetDismissTimer: () => void;
 }
 
-export interface UseToastReturnType<ToastType extends Element, M extends ToastInfo> extends UseManagedChildReturnType<M> {
+export interface UseToastReturnType<ToastType extends keyof JSX.IntrinsicElements, M extends ToastInfo> extends UseManagedChildReturnType<M> {
     toastReturn: UseToastReturnTypeSelf
     props: ElementProps<ToastType>;
 }
 
-export interface UseToastsReturnType<ContainerType extends Element, M extends ToastInfo> extends UseManagedChildrenReturnType<M> {
+export interface UseToastsReturnType<ContainerType extends keyof JSX.IntrinsicElements, M extends ToastInfo> extends UseManagedChildrenReturnType<M> {
     context: ToastsContext<M>
     props: ElementProps<ContainerType>;
 }
@@ -84,7 +85,7 @@ export interface ToastsContext<M extends ToastInfo> extends UseManagedChildrenCo
  * 
  * @hasChild {@link useToast}
  */
-export function useToasts<ContainerType extends Element>({ managedChildrenParameters: { onChildrenMountChange: ocmu, onAfterChildLayoutEffect }, toastsParameters: { visibleCount } }: UseToastsParameters): UseToastsReturnType<ContainerType, ToastInfo> {
+export function useToasts<ContainerType extends keyof JSX.IntrinsicElements>({ managedChildrenParameters: { onChildrenMountChange: ocmu, onAfterChildLayoutEffect }, toastsParameters: { visibleCount } }: UseToastsParameters): UseToastsReturnType<ContainerType, ToastInfo> {
     return useMonitoring(function useToasts(): UseToastsReturnType<ContainerType, ToastInfo> {
         // Normally, this does just look like [0, 1, 2, 3], etc
         // so it could be just an index to the current toast,
@@ -177,7 +178,7 @@ export function useToasts<ContainerType extends Element>({ managedChildrenParame
             onAnyToastMounted
         }
 
-        const props = useMergedProps<ContainerType>(useMergedProps(propsStable, { class: "toasts-container" } as ElementProps<ContainerType>));
+        const props = useMergedProps(useMergedProps(propsStable, { class: "toasts-container" } as ElementProps<ContainerType>));
 
         return {
             context: {
@@ -194,7 +195,7 @@ export function useToasts<ContainerType extends Element>({ managedChildrenParame
 /**
  * @compositeParams
  */
-export function useToast<E extends Element>({ toastParameters: { politeness, timeout, children }, info: { index, ...info }, context }: UseToastParameters<ToastInfo>): UseToastReturnType<E, ToastInfo> {
+export function useToast<E extends keyof JSX.IntrinsicElements>({ toastParameters: { politeness, timeout, children }, info: { index, ...info }, context }: UseToastParameters<ToastInfo>): UseToastReturnType<E, ToastInfo> {
     return useMonitoring(function useToast(): UseToastReturnType<E, ToastInfo> {
         const { getMaxVisibleCount, onAnyToastDismissed, onAnyToastMounted } = context.toastContext;
         const [numberOfToastsAheadOfUs, setNumberOfToastsAheadOfUs] = useState(Infinity);

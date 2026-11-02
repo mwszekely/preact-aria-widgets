@@ -1,9 +1,10 @@
 import {
     assertEmptyObject,
     ElementProps,
-    EventType,
+    EventTypeByTag,
     findFirstFocusable,
     focus,
+    JSX,
     TargetedOmit,
     useMergedProps,
     useModal,
@@ -29,7 +30,7 @@ export interface UseMenuSurfaceParametersSelf {
     surfaceId: string;
 }
 
-export interface UseMenuSurfaceParameters<_S extends Element, _B extends Element> extends
+export interface UseMenuSurfaceParameters<_S extends keyof JSX.IntrinsicElements, _B extends keyof JSX.IntrinsicElements> extends
     OmitStrong<UseModalParameters<"escape" | "lost-focus" | "backdrop">, "focusTrapParameters" | "refElementParameters" | "backdropDismissParameters" | "lostFocusDismissParameters" | "escapeDismissParameters" | "dismissParameters">,
     TargetedOmit<UseModalParameters<"escape" | "lost-focus" | "backdrop">, "dismissParameters", "dismissActive">,
     TargetedOmit<UseModalParameters<"escape" | "lost-focus" | "backdrop">, "escapeDismissParameters", "onDismissEscape" | "dismissEscapeActive">,
@@ -38,7 +39,7 @@ export interface UseMenuSurfaceParameters<_S extends Element, _B extends Element
 }
 
 
-export interface UseMenuSurfaceReturnType<MenuSurfaceElement extends Element, MenuTargetElement extends Element, MenuTriggerElement extends Element> {
+export interface UseMenuSurfaceReturnType<MenuSurfaceElement extends keyof JSX.IntrinsicElements, MenuTargetElement extends keyof JSX.IntrinsicElements, MenuTriggerElement extends keyof JSX.IntrinsicElements> {
     propsSurface: ElementProps<MenuSurfaceElement>;
     propsTarget: ElementProps<MenuTargetElement>;
     propsTrigger: ElementProps<MenuTriggerElement>;
@@ -57,7 +58,7 @@ export interface UseMenuSurfaceReturnType<MenuSurfaceElement extends Element, Me
  * 
  * @compositeParams
  */
-export function useMenuSurface<MenuSurfaceElement extends Element, MenuTargetElement extends Element, MenuTriggerElement extends Element>({
+export function useMenuSurface<MenuSurfaceElement extends keyof JSX.IntrinsicElements, MenuTargetElement extends keyof JSX.IntrinsicElements, MenuTriggerElement extends keyof JSX.IntrinsicElements>({
     dismissParameters,
     focusTrapParameters,
     activeElementParameters,
@@ -115,7 +116,7 @@ export function useMenuSurface<MenuSurfaceElement extends Element, MenuTargetEle
 
         const propsSentinel: ElementProps<any> = useFocusSentinel({
             focusSentinel: {
-                sendFocusToMenu: useStableCallback(() => { return focusTrapParameters.focusPopup(getMenuElement(), () => (findFirstFocusable(getMenuElement()!) as HTMLElement | null)) }),
+                sendFocusToMenu: useStableCallback(() => { return focusTrapParameters.focusPopup(getMenuElement()!, () => (findFirstFocusable(getMenuElement()!) as HTMLElement | null)) }),
                 onClose: useStableCallback((e) => { dismissParameters.onDismiss(e, "lost-focus") }),
                 open: modalParameters.active
             }
@@ -133,7 +134,7 @@ export function useMenuSurface<MenuSurfaceElement extends Element, MenuTargetEle
 }
 
 export interface UseFocusSentinelParameters {
-    focusSentinel: { sendFocusToMenu: () => void; open: boolean; onClose(e: EventType<any, any>): void; };
+    focusSentinel: { sendFocusToMenu: () => void; open: boolean; onClose(e: EventTypeByTag<any, any>): void; };
 }
 
 
@@ -150,7 +151,7 @@ export interface UseFocusSentinelParameters {
  * 
  * @compositeParams
  */
-export function useFocusSentinel<E extends Element>({ focusSentinel: { open, onClose, sendFocusToMenu } }: UseFocusSentinelParameters): ElementProps<E> {
+export function useFocusSentinel<E extends keyof JSX.IntrinsicElements>({ focusSentinel: { open, onClose, sendFocusToMenu } }: UseFocusSentinelParameters): ElementProps<E> {
     return useMonitoring(function useFocusSentinel(): ElementProps<E> {
         const getSendFocusWithinMenu = useStableGetter(sendFocusToMenu);
         const stableOnClose = useStableCallback(onClose);
@@ -159,8 +160,8 @@ export function useFocusSentinel<E extends Element>({ focusSentinel: { open, onC
         useTimeout({ callback: () => { setSentinelIsActive(open); }, timeout: 100, triggerIndex: `${open}-${sentinelIsActive}` });
 
 
-        const onFocus = sentinelIsActive ? ((e: EventType<any, any>) => stableOnClose(e)) : (() => getSendFocusWithinMenu()?.());
-        const onClick = (e: EventType<any, any>) => stableOnClose(e);
+        const onFocus = sentinelIsActive ? ((e: EventTypeByTag<any, any>) => stableOnClose(e)) : (() => getSendFocusWithinMenu()?.());
+        const onClick = (e: EventTypeByTag<any, any>) => stableOnClose(e);
 
         return {
             tabIndex: sentinelIsActive ? 0 : -1,

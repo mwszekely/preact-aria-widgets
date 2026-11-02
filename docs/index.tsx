@@ -2,7 +2,7 @@
 import "preact/debug";
 
 import { render } from "preact";
-import { Heading, NotificationProviderContext, useNotificationProvider } from "../dist/preact/index.js";
+import { Heading, NotificationProviderContext, useNotificationProvider } from "preact-aria-widgets/preact";
 import * as Accordion from "./demos/accordion.js";
 import * as Button from "./demos/button.js";
 import * as CheckboxGroup from "./demos/checkbox-group.js";

@@ -1,15 +1,15 @@
-import { assertEmptyObject, memo } from "preact-prop-helpers/preact";
+import { assertEmptyObject, JSX, memo } from "preact-prop-helpers/preact";
 import { Get3 } from "../props.js";
 import { UseButtonParameters, UseButtonReturnType, useButton } from "../use-button.js";
 import { GenericComponentProps, useComponent, useDefault } from "./util.js";
 
-export type ButtonProps<ButtonElement extends Element> = GenericComponentProps<
+export type ButtonProps<ButtonElement extends keyof JSX.IntrinsicElements> = GenericComponentProps<
     UseButtonReturnType<ButtonElement>,
     Get3<UseButtonParameters<ButtonElement>, "buttonParameters", "pressParameters", "refElementParameters">,
     "tagButton"
 >;
 
-export const Button = /* @__PURE__ */ memo((function Button<ButtonElement extends Element>({
+export const Button = /* @__PURE__ */ memo((function Button<ButtonElement extends keyof JSX.IntrinsicElements>({
     tagButton,
     pressed,
     render,

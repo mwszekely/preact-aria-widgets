@@ -40,7 +40,7 @@ export type PickByType<Obj, WantedType> = {
     [P in keyof Obj as Obj[P] extends WantedType | undefined ? P : never]: Obj[P]
 }
 
-export type ElementToTag<E> = keyof PickByType<HTMLElementTagNameMap, E>;
+//export type ElementToTag<E> = keyof PickByType<HTMLElementTagNameMap, E>;
 
 /**
  * * `false`: This component is not disabled.
@@ -65,8 +65,8 @@ export type PropsOfType<T> =
  * just for typing, so it wouldn't be necessary, 
  * but it would be consistent with these ARIA hooks.
  */
-export interface TagSensitiveProps<E extends EventTarget> {
-    tag: ElementToTag<E>;
+export interface TagSensitiveProps<Tag extends keyof JSX.IntrinsicElements> {
+    tag: Tag;
 }
 
 const alreadyWarned = new Set<string>();
@@ -124,7 +124,7 @@ export function debugLog(who: DebugLogTypes, ...args: Parameters<(typeof console
         console.debug(who + ":", ...args);
 }*/
 
-export type PropModifier<T extends EventTarget> = (props: ElementProps<T>) => ElementProps<T>;
+export type PropModifier<Tag extends keyof JSX.IntrinsicElements> = (props: ElementProps<Tag>) => ElementProps<Tag>;
 export type PropModifier2<P> = (props: P) => P;
 export function noop(): void { return; }
 

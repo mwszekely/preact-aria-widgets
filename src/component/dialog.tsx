@@ -1,15 +1,15 @@
-import { memo, useContext } from "preact-prop-helpers/preact";
+import { JSX, memo, useContext } from "preact-prop-helpers/preact";
 import { Get10 } from "../props.js";
 import { UseDialogParameters, UseDialogReturnType, useDialog } from "../use-dialog.js";
 import { GenericComponentProps, ParentDepthContext, useComponent, useDefault } from "./util.js";
 
-export type DialogProps<FocusContainerElement extends Element, SourceElement extends Element, DialogElement extends Element, TitleElement extends Element> = GenericComponentProps<
+export type DialogProps<FocusContainerElement extends keyof JSX.IntrinsicElements, SourceElement extends keyof JSX.IntrinsicElements, DialogElement extends keyof JSX.IntrinsicElements, TitleElement extends keyof JSX.IntrinsicElements> = GenericComponentProps<
     UseDialogReturnType<FocusContainerElement, SourceElement, DialogElement, TitleElement>,
     Get10<UseDialogParameters<DialogElement, TitleElement>, "dismissParameters", "escapeDismissParameters", "labelParameters", "focusTrapParameters", "activeElementParameters", "backdropDismissParameters", "escapeDismissParameters", "dismissParameters", "modalParameters", "refElementParameters">,
     "ariaLabel" | "onDismiss" | "active" | "focusPopup"
 >;
 
-export const Dialog = /* @__PURE__ */ memo((function Dialog<FocusContainerElement extends Element, SourceElement extends Element, DialogElement extends Element, TitleElement extends Element>({
+export const Dialog = /* @__PURE__ */ memo((function Dialog<FocusContainerElement extends keyof JSX.IntrinsicElements, SourceElement extends keyof JSX.IntrinsicElements, DialogElement extends keyof JSX.IntrinsicElements, TitleElement extends keyof JSX.IntrinsicElements>({
     active,
     onDismiss,
     dismissBackdropActive,

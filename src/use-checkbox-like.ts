@@ -35,15 +35,15 @@ export interface UseCheckboxLikeParametersSelf<C extends CheckboxCheckedType> {
     checked: C;
 }
 
-export interface UseCheckboxLikeParameters<LP extends LabelPosition, InputType extends Element, LabelType extends Element, C extends CheckboxCheckedType> extends
-    OmitStrong<UseLabelParameters<LP, InputType, LabelType>, "labelParameters">,
-    TargetedOmit<UseLabelParameters<LP, InputType, LabelType>, "labelParameters", "onLabelClick">,
+export interface UseCheckboxLikeParameters<LP extends LabelPosition, InputTag extends keyof JSX.IntrinsicElements, LabelTag extends keyof JSX.IntrinsicElements, C extends CheckboxCheckedType> extends
+    OmitStrong<UseLabelParameters<LP, InputTag, LabelTag>, "labelParameters">,
+    TargetedOmit<UseLabelParameters<LP, InputTag, LabelTag>, "labelParameters", "onLabelClick">,
     TargetedPick<UsePressParameters<any>, "pressParameters", "longPressThreshold" | "excludeSpace" | "onPressSync"> {
     checkboxLikeParameters: UseCheckboxLikeParametersSelf<C>;
 
 
-    refElementLabelReturn: UseRefElementReturnType<LabelType>["refElementReturn"];
-    refElementInputReturn: UseRefElementReturnType<InputType>["refElementReturn"];
+    refElementLabelReturn: UseRefElementReturnType<LabelTag>["refElementReturn"];
+    refElementInputReturn: UseRefElementReturnType<InputTag>["refElementReturn"];
 }
 
 export interface UseCheckboxLikeReturnTypeSelf {
@@ -53,12 +53,12 @@ export interface UseCheckboxLikeReturnTypeSelf {
     focusSelf(): void;
 }
 
-export interface UseCheckboxLikeReturnType<InputType extends Element, LabelType extends Element> extends UseLabelReturnType<InputType, LabelType> {
-    pressLabelReturn: UsePressReturnType<LabelType>["pressReturn"];
-    pressInputReturn: UsePressReturnType<InputType>["pressReturn"];
+export interface UseCheckboxLikeReturnType<InputTag extends keyof JSX.IntrinsicElements, LabelTag extends keyof JSX.IntrinsicElements> extends UseLabelReturnType<InputTag, LabelTag> {
+    pressLabelReturn: UsePressReturnType<LabelTag>["pressReturn"];
+    pressInputReturn: UsePressReturnType<InputTag>["pressReturn"];
     // TODO
-    checkboxLikeInputReturn: { propsUnstable: ElementProps<InputType> }
-    checkboxLikeLabelReturn: { propsUnstable: ElementProps<LabelType> }
+    checkboxLikeInputReturn: { propsUnstable: ElementProps<InputTag> }
+    checkboxLikeLabelReturn: { propsUnstable: ElementProps<LabelTag> }
     checkboxLikeReturn: UseCheckboxLikeReturnTypeSelf
 }
 
@@ -75,7 +75,7 @@ export interface UseCheckboxLikeReturnType<InputType extends Element, LabelType 
  * 
  * @compositeParams
  */
-export function useCheckboxLike<LP extends LabelPosition, InputType extends Element, LabelType extends Element, C extends CheckboxCheckedType>({
+export function useCheckboxLike<LP extends LabelPosition, InputTag extends keyof JSX.IntrinsicElements, LabelTag extends keyof JSX.IntrinsicElements, C extends CheckboxCheckedType>({
     labelParameters,
     randomIdInputParameters,
     randomIdLabelParameters,
@@ -84,8 +84,8 @@ export function useCheckboxLike<LP extends LabelPosition, InputType extends Elem
     refElementLabelReturn,
     pressParameters: { excludeSpace, longPressThreshold, onPressSync: onInputSync, ...void2 },
     ...void3
-}: UseCheckboxLikeParameters<LP, InputType, LabelType, C>): UseCheckboxLikeReturnType<InputType, LabelType> {
-    return useMonitoring(function useCheckboxLike(): UseCheckboxLikeReturnType<InputType, LabelType> {
+}: UseCheckboxLikeParameters<LP, InputTag, LabelTag, C>): UseCheckboxLikeReturnType<InputTag, LabelTag> {
+    return useMonitoring(function useCheckboxLike(): UseCheckboxLikeReturnType<InputTag, LabelTag> {
         const { getElement: getInputElement } = refElementInputReturn;
         const { getElement: getLabelElement } = refElementLabelReturn;
         const { tagInput, tagLabel, labelPosition } = labelParameters;
@@ -109,7 +109,7 @@ export function useCheckboxLike<LP extends LabelPosition, InputType extends Elem
             propsInput,
             propsLabel,
             pressReturn
-        } = useLabel<LP, InputType, LabelType>({
+        } = useLabel<LP, InputTag, LabelTag>({
             labelParameters: {
                 ...labelParameters,
                 onLabelClick: useStableCallback((e) => {
@@ -135,10 +135,10 @@ export function useCheckboxLike<LP extends LabelPosition, InputType extends Elem
 
         const onClickInputSync = (labelPosition == "wrapping" ? undefined : onInputSync);
         const onClickLabelSync = onInputSync;
-        const { pressReturn: pressInputReturn, props: propsPressInput } = usePress<InputType>({ pressParameters: { excludeSpace, allowRepeatPresses: false, excludeEnter: null, excludePointer: null, longPressThreshold, onPressingChange: null, focusSelf, onPressSync: (disabled) ? undefined : onClickInputSync }, refElementReturn: refElementInputReturn });
-        const { pressReturn: pressLabelReturn, props: propsPressLabel } = usePress<LabelType>({ pressParameters: { excludeSpace, allowRepeatPresses: false, excludeEnter: null, excludePointer: null, longPressThreshold, onPressingChange: null, focusSelf, onPressSync: (disabled) ? undefined : onClickLabelSync }, refElementReturn: refElementLabelReturn });
+        const { pressReturn: pressInputReturn, props: propsPressInput } = usePress<InputTag>({ pressParameters: { excludeSpace, allowRepeatPresses: false, excludeEnter: null, excludePointer: null, longPressThreshold, onPressingChange: null, focusSelf, onPressSync: (disabled) ? undefined : onClickInputSync }, refElementReturn: refElementInputReturn });
+        const { pressReturn: pressLabelReturn, props: propsPressLabel } = usePress<LabelTag>({ pressParameters: { excludeSpace, allowRepeatPresses: false, excludeEnter: null, excludePointer: null, longPressThreshold, onPressingChange: null, focusSelf, onPressSync: (disabled) ? undefined : onClickLabelSync }, refElementReturn: refElementLabelReturn });
         const propsUnstableInput: any = {};
-        const propsUnstableLabel: ElementProps<LabelType> = {};
+        const propsUnstableLabel: ElementProps<LabelTag> = {};
 
         // Make sure that label clicks can't affect the visual state of the checkbox
         propsUnstableInput.onClick = preventDefault;

@@ -1,7 +1,8 @@
 import {
     CompleteListNavigationContext,
     ElementProps,
-    EventType,
+    EventTypeByTag,
+    JSX,
     ManagedChildInfo,
     Nullable,
     OnChildrenMountChange,
@@ -47,10 +48,10 @@ export interface TabPanelInfo extends ManagedChildInfo<number> {
     setVisibleIndex: (newIndex: number | null, previousIndex: number | null) => void;
 }
 
-export interface TabInfo<E extends Element> extends UseCompleteListNavigationChildInfo<E> { }
+export interface TabInfo<E extends keyof JSX.IntrinsicElements> extends UseCompleteListNavigationChildInfo<E> { }
 
 
-export type TabsChangeEvent<E extends Element> = { [EventDetail]: { selectedIndex: number } } & Pick<EventType<E, Event>, "target" | "currentTarget">;
+export type TabsChangeEvent<E extends keyof JSX.IntrinsicElements> = { [EventDetail]: { selectedIndex: number } } & Pick<EventTypeByTag<E, Event>, "target" | "currentTarget">;
 
 export interface UseTabsParametersSelf {
     localStorageKey: Nullable<keyof PersistentStates>;
@@ -58,12 +59,12 @@ export interface UseTabsParametersSelf {
     role: Nullable<"tablist" | string>;
 }
 
-export interface UseTabsParameters<TabContainerElement extends Element, TabElement extends Element, M extends TabInfo<TabElement>> extends
+export interface UseTabsParameters<TabContainerElement extends keyof JSX.IntrinsicElements, TabElement extends keyof JSX.IntrinsicElements, M extends TabInfo<TabElement>> extends
     UseTabListParameters<TabContainerElement, TabElement, M>,
     TargetedOmit<UseLabelSyntheticParameters, "labelParameters", "onLabelClick"> {
     tabsParameters: UseTabsParametersSelf;
 }
-export interface UseTabParameters<TabElement extends Element, M extends TabInfo<TabElement>> extends
+export interface UseTabParameters<TabElement extends keyof JSX.IntrinsicElements, M extends TabInfo<TabElement>> extends
     UseGenericChildParameters<UseTabsContext<TabElement, M>, Pick<TabInfo<TabElement>, "index" | "focusSelf" | "untabbable">>,
     OmitStrong<UseCompleteListNavigationChildParameters<TabElement, M>, "context" | "info" | "multiSelectionChildParameters">,
     TargetedOmit<UsePressParameters<TabElement>, "pressParameters", "excludeEnter" | "excludePointer" | "excludeSpace" | "allowRepeatPresses" | "onPressSync"> {
@@ -75,7 +76,7 @@ export interface UseTabPanelParameters<M extends TabPanelInfo> extends
     OmitStrong<UseManagedChildParameters<M>, "context" | "info"> {
 }
 
-export interface UseTabsContext<ChildElement extends Element, M extends TabInfo<ChildElement>> extends CompleteListNavigationContext<ChildElement, M> {
+export interface UseTabsContext<ChildElement extends keyof JSX.IntrinsicElements, M extends TabInfo<ChildElement>> extends CompleteListNavigationContext<ChildElement, M> {
     tabsContext: TC;
 }
 
@@ -89,20 +90,20 @@ interface TC {
     getTabId: (index: number) => string;
 }
 
-export interface UseTabReturnType<TabElement extends Element, M extends TabInfo<TabElement>> extends OmitStrong<UseCompleteListNavigationChildReturnType<TabElement, M>, "pressParameters" | "propsChild" | "propsTabbable" | "selectionChildReturn">, UsePressReturnType<TabElement> {
+export interface UseTabReturnType<TabElement extends keyof JSX.IntrinsicElements, M extends TabInfo<TabElement>> extends OmitStrong<UseCompleteListNavigationChildReturnType<TabElement, M>, "pressParameters" | "propsChild" | "propsTabbable" | "selectionChildReturn">, UsePressReturnType<TabElement> {
     props: ElementProps<TabElement>;
 }
 
 /* eslint-disable @typescript-eslint/no-empty-interface */
 export interface UseTabLabelParameters { }
-export interface UseTabListParameters<TabContainerElement extends Element, TabElement extends Element, M extends TabInfo<TabElement>> extends
+export interface UseTabListParameters<TabContainerElement extends keyof JSX.IntrinsicElements, TabElement extends keyof JSX.IntrinsicElements, M extends TabInfo<TabElement>> extends
     OmitStrong<UseCompleteListNavigationParameters<TabContainerElement, TabElement, M>, "rovingTabIndexParameters" | "paginatedChildrenParameters" | "linearNavigationParameters" | "singleSelectionParameters" | "multiSelectionParameters">,
     TargetedOmit<UseCompleteListNavigationParameters<TabContainerElement, TabElement, M>, "rovingTabIndexParameters", "focusSelfParent">,
     TargetedOmit<UseCompleteListNavigationParameters<TabContainerElement, TabElement, M>, "linearNavigationParameters", "arrowKeyDirection">,
     TargetedOmit<UseCompleteListNavigationParameters<TabContainerElement, TabElement, M>, "singleSelectionParameters", "singleSelectionAriaPropName"> {
 
 }
-export interface UseTabListReturnType<ParentElement extends Element, ChildElement extends Element, M extends TabInfo<ChildElement>> extends UseCompleteListNavigationReturnType<ParentElement, ChildElement, M> {
+export interface UseTabListReturnType<ParentElement extends keyof JSX.IntrinsicElements, ChildElement extends keyof JSX.IntrinsicElements, M extends TabInfo<ChildElement>> extends UseCompleteListNavigationReturnType<ParentElement, ChildElement, M> {
 }
 export interface UseTabPanelReturnTypeSelf {
     visibleOffset: number | null;
@@ -110,28 +111,28 @@ export interface UseTabPanelReturnTypeSelf {
     getVisible: () => boolean;
 }
 
-export interface UseTabPanelReturnType<E extends Element> {
+export interface UseTabPanelReturnType<E extends keyof JSX.IntrinsicElements> {
     props: ElementProps<E>;
     tabPanelReturn: UseTabPanelReturnTypeSelf;
 }
 
 /* eslint-disable @typescript-eslint/no-empty-interface */
 export interface UseTabListLabelReturnTypeInfo { }
-export interface UseTabLabelReturnTypeWithHooks<LabelElement extends Element> extends UseTabListLabelReturnTypeInfo {
+export interface UseTabLabelReturnTypeWithHooks<LabelElement extends keyof JSX.IntrinsicElements> extends UseTabListLabelReturnTypeInfo {
     useTabListLabelProps: (props: ElementProps<LabelElement>) => ElementProps<LabelElement>;
 }
 
-export interface UseTabsReturnType<TabContainerElement extends Element, TabElement extends Element, LabelElement extends Element, M extends TabInfo<TabElement> = TabInfo<TabElement>> extends OmitStrong<UseCompleteListNavigationReturnType<TabContainerElement, TabElement, M>, "props" | "context"> {
+export interface UseTabsReturnType<TabContainerElement extends keyof JSX.IntrinsicElements, TabElement extends keyof JSX.IntrinsicElements, LabelElement extends keyof JSX.IntrinsicElements, M extends TabInfo<TabElement> = TabInfo<TabElement>> extends OmitStrong<UseCompleteListNavigationReturnType<TabContainerElement, TabElement, M>, "props" | "context"> {
     propsContainer: ElementProps<TabContainerElement>;
     propsLabel: ElementProps<LabelElement>;
     contextPanels: UseTabPanelsContext<TabPanelInfo>;
     contextTabs: UseTabsContext<TabElement, M>;
 }
 
-export type UseTab<_TabContainerElement extends Element, TabElement extends Element, M extends TabInfo<TabElement>> = (args: UseTabParameters<TabElement, M>) => UseTabReturnType<TabElement, M>;
-export type UseTabList<TabContainerElement extends Element, TabElement extends Element, M extends TabInfo<TabElement>> = (args: UseTabListParameters<TabContainerElement, TabElement, M>) => UseTabListReturnType<TabContainerElement, TabElement, M>;
-export type UseTabPanel<PanelElement extends Element, M extends TabPanelInfo> = (args: UseTabPanelParameters<M>) => UseTabPanelReturnType<PanelElement>;
-export type UseTabListLabel<LabelElement extends Element> = (args: UseTabLabelParameters) => UseTabLabelReturnTypeWithHooks<LabelElement>;
+export type UseTab<_TabContainerElement extends keyof JSX.IntrinsicElements, TabElement extends keyof JSX.IntrinsicElements, M extends TabInfo<TabElement>> = (args: UseTabParameters<TabElement, M>) => UseTabReturnType<TabElement, M>;
+export type UseTabList<TabContainerElement extends keyof JSX.IntrinsicElements, TabElement extends keyof JSX.IntrinsicElements, M extends TabInfo<TabElement>> = (args: UseTabListParameters<TabContainerElement, TabElement, M>) => UseTabListReturnType<TabContainerElement, TabElement, M>;
+export type UseTabPanel<PanelElement extends keyof JSX.IntrinsicElements, M extends TabPanelInfo> = (args: UseTabPanelParameters<M>) => UseTabPanelReturnType<PanelElement>;
+export type UseTabListLabel<LabelElement extends keyof JSX.IntrinsicElements> = (args: UseTabLabelParameters) => UseTabLabelReturnTypeWithHooks<LabelElement>;
 
 /**
  * Implements a [Tabs](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/) pattern.
@@ -144,7 +145,7 @@ export type UseTabListLabel<LabelElement extends Element> = (args: UseTabLabelPa
  * @hasChild {@link useTab}
  * @hasChild {@link useTabPanel}
  */
-export function useTabs<TabListElement extends Element, TabElement extends Element, LabelElement extends Element>({
+export function useTabs<TabListElement extends keyof JSX.IntrinsicElements, TabElement extends keyof JSX.IntrinsicElements, LabelElement extends keyof JSX.IntrinsicElements>({
     labelParameters,
     linearNavigationParameters,
     singleSelectionParameters: { initiallySingleSelectedIndex, onSingleSelectedIndexChange: ssi, singleSelectionMode, ...singleSelectionParameters },
@@ -264,7 +265,7 @@ export function useTabs<TabListElement extends Element, TabElement extends Eleme
  * 
  * @compositeParams
  */
-export function useTab<TabElement extends Element>({
+export function useTab<TabElement extends keyof JSX.IntrinsicElements>({
     info: { focusSelf: focusSelfParent, index, untabbable, ...info },
     textContentParameters,
     pressParameters: { focusSelf: focusSelfChild, longPressThreshold, onPressingChange, ...void2 },
@@ -336,7 +337,7 @@ export function useTab<TabElement extends Element>({
  * 
  * @compositeParams
  */
-export function useTabPanel<PanelElement extends Element>({ info, context }: UseTabPanelParameters<TabPanelInfo>): UseTabPanelReturnType<PanelElement> {
+export function useTabPanel<PanelElement extends keyof JSX.IntrinsicElements>({ info, context }: UseTabPanelParameters<TabPanelInfo>): UseTabPanelReturnType<PanelElement> {
     return useMonitoring(function useTablePanel(): UseTabPanelReturnType<PanelElement> {
         const { index } = info;
 
@@ -369,7 +370,7 @@ export function useTabPanel<PanelElement extends Element>({ info, context }: Use
 
 
         return {
-            props: useMergedProps<PanelElement>({
+            props: useMergedProps({
                 role: "tabpanel",
                 "aria-labelledby": tabId,
                 id: panelId,

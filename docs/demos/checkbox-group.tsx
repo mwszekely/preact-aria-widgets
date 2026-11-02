@@ -1,13 +1,13 @@
 
-import { EventDetail, useMergedProps, useStableCallback, useState } from "preact-prop-helpers";
+import { EventDetail, useMergedProps, useStableCallback, useState } from "preact-prop-helpers/preact";
 import { useRef } from "preact/hooks";
-import { Checkbox, CheckboxCheckedType, CheckboxGroup, CheckboxGroupChild, CheckboxGroupParent, UseCheckboxReturnType, defaultRenderCheckboxLike } from "../../dist/preact/index.js";
+import { Checkbox, CheckboxCheckedType, CheckboxGroup, CheckboxGroupChild, CheckboxGroupParent, UseCheckboxReturnType, defaultRenderCheckboxLike } from "preact-aria-widgets/preact";
 
 function DemoCheckbox({ index }: { index: number }) {
     const [checked, setChecked] = useState<CheckboxCheckedType>(false);
-    const ref = useRef<UseCheckboxReturnType<HTMLInputElement, HTMLLabelElement>>(null);
+    const ref = useRef<UseCheckboxReturnType<"input", "label">>(null);
     return (
-        <CheckboxGroupChild<HTMLInputElement>
+        <CheckboxGroupChild<"input">
             checked={checked}
             index={index}
             focusSelf={() => ref.current?.checkboxLikeReturn.focusSelf()}
@@ -17,7 +17,7 @@ function DemoCheckbox({ index }: { index: number }) {
 
                 return (
                     <div>
-                        <Checkbox<HTMLInputElement, HTMLLabelElement>
+                        <Checkbox<"input", "label">
                             imperativeHandle={ref}
                             checked={checked}
                             disabled={false}
@@ -79,18 +79,18 @@ export function Demo() {
             <label><input type="number" min={0} value={count} onInput={e => setCount(e.currentTarget.valueAsNumber)} /> # of checkboxes</label>
             <div>
                 <p><strong>Note:</strong> Each checkbox (in this demo only!) takes a random amount of time to update when modified via the parent checkbox to test async handling.</p>
-                <CheckboxGroup<HTMLDivElement, HTMLInputElement>
+                <CheckboxGroup<"div", "input">
                     orientation="vertical"
                     render={
                         (info2) => {
-                            const ref = useRef<UseCheckboxReturnType<HTMLInputElement, HTMLLabelElement>>(null);
+                            const ref = useRef<UseCheckboxReturnType<"input", "label">>(null);
                             return <div {...info2.props} {...({
                                 children: (
                                     <>
-                                        <CheckboxGroupParent<HTMLInputElement>
+                                        <CheckboxGroupParent<"input">
                                             index={0}
                                             focusSelf={() => ref.current?.checkboxLikeReturn.focusSelf()}
-                                            render={info3 => (<Checkbox<HTMLInputElement, HTMLLabelElement>
+                                            render={info3 => (<Checkbox<"input", "label">
                                                 imperativeHandle={ref}
                                                 disabled={pending}
                                                 checked={info3.checkboxGroupParentReturn.checked}

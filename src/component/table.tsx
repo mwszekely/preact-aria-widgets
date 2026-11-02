@@ -1,4 +1,4 @@
-import { OmitStrong, VNode, assertEmptyObject, createContext, focus, identity, memo, useEnsureStability, useStableCallback } from "preact-prop-helpers/preact";
+import { JSX, OmitStrong, TagToElement, VNode, assertEmptyObject, createContext, focus, identity, memo, useEnsureStability, useStableCallback } from "preact-prop-helpers/preact";
 import { Get, Get12, Get3, Get4, Get5, Get9, useContextWithWarning } from "../props.js";
 import { TableCellInfo, TableRowInfo, TableSectionInfo, UseTableBodyParameters, UseTableBodyReturnType, UseTableCellContext, UseTableCellParameters, UseTableCellReturnType, UseTableHeadParameters, UseTableHeadReturnType, UseTableParameters, UseTableProcessedChildrenContext, UseTableReturnType, UseTableRowContext, UseTableRowOuterParameters, UseTableRowOuterReturnType, UseTableRowParameters, UseTableRowReturnType, useTable, useTableBody, useTableCell, useTableHead, useTableRow, useTableRowOuter } from "../use-table.js";
 import { GenericComponentProps, useComponent, useDefault } from "./util.js";
@@ -8,46 +8,46 @@ const TableRowContext = createContext<UseTableRowContext<any, any>>(null!);
 const TableCellContext = createContext<UseTableCellContext<any, any>>(null!);
 const TableProcessedChildrenContext = createContext<UseTableProcessedChildrenContext<any, any>>(null!);
 
-export type TableProps<TableElement extends Element, RowElement extends Element, LabelElement extends Element> = GenericComponentProps<
+export type TableProps<TableElement extends keyof JSX.IntrinsicElements, RowElement extends keyof JSX.IntrinsicElements, LabelElement extends keyof JSX.IntrinsicElements> = GenericComponentProps<
     UseTableReturnType<TableElement, RowElement, LabelElement>,
     Get12<UseTableParameters<TableElement, RowElement>, "labelParameters", "tableParameters", "singleSelectionParameters", "multiSelectionParameters", "gridNavigationParameters", "linearNavigationParameters", "typeaheadNavigationParameters", "rovingTabIndexParameters", "refElementParameters", "paginatedChildrenParameters", "linearNavigationParameters", "gridNavigationCompleteParameters">,
     "tagTable"
 >;
 
-export type TableHeadProps<TableSectionElement extends Element> = GenericComponentProps<
+export type TableHeadProps<TableSectionElement extends keyof JSX.IntrinsicElements> = GenericComponentProps<
     UseTableHeadReturnType<TableSectionElement>,
     Get<UseTableHeadParameters<TableSectionElement>, "tableHeadParameters">,
     "tagHead">;
 
-export type TableBodyProps<TableSectionElement extends Element, RowElement extends Element, RM extends TableRowInfo<RowElement>, RsM extends TableSectionInfo<RowElement>> = GenericComponentProps<
+export type TableBodyProps<TableSectionElement extends keyof JSX.IntrinsicElements, RowElement extends keyof JSX.IntrinsicElements, RM extends TableRowInfo<RowElement>, RsM extends TableSectionInfo<RowElement>> = GenericComponentProps<
     UseTableBodyReturnType<TableSectionElement, RowElement, RsM>,
     Get5<UseTableBodyParameters<TableSectionElement, RowElement, RM, RsM>, "tableSectionParameters", "staggeredChildrenParameters", "rearrangeableChildrenParameters", "paginatedChildrenParameters", "managedChildrenParameters">,
     "tagTableSection" | "children">;
 
-type TableBodyRowOuterProps<RowElement extends Element, RsM extends TableSectionInfo<RowElement>> = GenericComponentProps<
+type TableBodyRowOuterProps<RowElement extends keyof JSX.IntrinsicElements, RsM extends TableSectionInfo<RowElement>> = GenericComponentProps<
     UseTableRowOuterReturnType<RowElement, RsM>,
     Get3<UseTableRowOuterParameters<RowElement, RsM>, "refElementParameters", "info", "rearrangeableChildParameters">,
     "index"
 >;
 
-type TableBodyRowInnerProps<RowElement extends Element, CellElement extends Element, RM extends TableRowInfo<RowElement>, CM extends TableCellInfo<CellElement>> = GenericComponentProps<
+type TableBodyRowInnerProps<RowElement extends keyof JSX.IntrinsicElements, CellElement extends keyof JSX.IntrinsicElements, RM extends TableRowInfo<RowElement>, CM extends TableCellInfo<CellElement>> = GenericComponentProps<
     UseTableRowReturnType<RowElement, CellElement, RM, CM>,
     Get9<UseTableRowParameters<RowElement, CellElement, RM, CM>, "hasCurrentFocusParameters", "linearNavigationParameters", "multiSelectionChildParameters", "rovingTabIndexParameters", "singleSelectionChildParameters", "tableRowParameters", "textContentParameters", "info", "refElementParameters">,
     "index" | "tagTableRow"
 >;
 
-type TableHeadRowProps<RowElement extends Element, CellElement extends Element, RM extends TableRowInfo<RowElement>, CM extends TableCellInfo<CellElement>> = GenericComponentProps<
+type TableHeadRowProps<RowElement extends keyof JSX.IntrinsicElements, CellElement extends keyof JSX.IntrinsicElements, RM extends TableRowInfo<RowElement>, CM extends TableCellInfo<CellElement>> = GenericComponentProps<
     UseTableRowReturnType<RowElement, CellElement, RM, CM>,
     Get9<UseTableRowParameters<RowElement, CellElement, RM, CM>, "hasCurrentFocusParameters", "linearNavigationParameters", "multiSelectionChildParameters", "rovingTabIndexParameters", "singleSelectionChildParameters", "tableRowParameters", "textContentParameters", "info", "refElementParameters">,
     "index" | "tagTableRow"
 >;
 
-export type TableCellProps<CellElement extends Element, CM extends TableCellInfo<CellElement>> = GenericComponentProps<
+export type TableCellProps<CellElement extends keyof JSX.IntrinsicElements, CM extends TableCellInfo<CellElement>> = GenericComponentProps<
     UseTableCellReturnType<CellElement, CM>,
     Get4<UseTableCellParameters<CellElement, CM>, "textContentParameters", "tableCellParameters", "gridNavigationCellParameters", "info">,
     "index" | "tagTableCell">;
 
-export const Table = /* @__PURE__ */ memo(function Table<TableElement extends Element, RowElement extends Element, LabelElement extends Element>({
+export const Table = /* @__PURE__ */ memo(function Table<TableElement extends keyof JSX.IntrinsicElements, RowElement extends keyof JSX.IntrinsicElements, LabelElement extends keyof JSX.IntrinsicElements>({
     ariaLabel,
     singleSelectionMode,
     multiSelectionMode,
@@ -117,7 +117,7 @@ export const Table = /* @__PURE__ */ memo(function Table<TableElement extends El
 
 
 
-export const TableHead = /* @__PURE__ */ memo(function TableHead<TableSectionElement extends Element>({
+export const TableHead = /* @__PURE__ */ memo(function TableHead<TableSectionElement extends keyof JSX.IntrinsicElements>({
     render,
     tagHead,
     imperativeHandle
@@ -133,7 +133,7 @@ export const TableHead = /* @__PURE__ */ memo(function TableHead<TableSectionEle
 });
 
 
-export const TableBody = /* @__PURE__ */ memo(function TableBody<TableSectionElement extends Element, RowElement extends Element>({
+export const TableBody = /* @__PURE__ */ memo(function TableBody<TableSectionElement extends keyof JSX.IntrinsicElements, RowElement extends keyof JSX.IntrinsicElements>({
     render,
     tagTableSection,
     children,
@@ -179,7 +179,7 @@ export const TableBody = /* @__PURE__ */ memo(function TableBody<TableSectionEle
         })
     );
 });
-export const TableHeadRow = /* @__PURE__ */ memo(function TableHeadRow<RowElement extends Element, CellElement extends Element>({
+export const TableHeadRow = /* @__PURE__ */ memo(function TableHeadRow<RowElement extends keyof JSX.IntrinsicElements, CellElement extends keyof JSX.IntrinsicElements>({
     render,
     index,
     tagTableRow,
@@ -254,12 +254,12 @@ export const TableHeadRow = /* @__PURE__ */ memo(function TableHeadRow<RowElemen
 });
 
 
-export type TableBodyRowProps<RowElement extends Element, CellElement extends Element, RsM extends TableSectionInfo<RowElement>, RM extends TableRowInfo<RowElement>, CM extends TableCellInfo<CellElement>> =
+export type TableBodyRowProps<RowElement extends keyof JSX.IntrinsicElements, CellElement extends keyof JSX.IntrinsicElements, RsM extends TableSectionInfo<RowElement>, RM extends TableRowInfo<RowElement>, CM extends TableCellInfo<CellElement>> =
     OmitStrong<TableBodyRowOuterProps<RowElement, RsM> & TableBodyRowInnerProps<RowElement, CellElement, RM, CM>, "render"> & {
         render(info: ({ hide: true } & UseTableRowOuterReturnType<RowElement, RsM>) | ({ hide: false } & UseTableRowReturnType<RowElement, CellElement, RM, CM>)): VNode;
     }
 
-export const TableBodyRow = /* @__PURE__ */ memo(function TableBodyRow<RowElement extends Element, CellElement extends Element>({
+export const TableBodyRow = /* @__PURE__ */ memo(function TableBodyRow<RowElement extends keyof JSX.IntrinsicElements, CellElement extends keyof JSX.IntrinsicElements>({
     index,
     render,
     imperativeHandle,
@@ -328,7 +328,7 @@ export const TableBodyRow = /* @__PURE__ */ memo(function TableBodyRow<RowElemen
     );
 });
 
-const TableBodyRowOuter = /* @__PURE__ */ memo(function TableBodyRowOuter<RowElement extends Element>({
+const TableBodyRowOuter = /* @__PURE__ */ memo(function TableBodyRowOuter<RowElement extends keyof JSX.IntrinsicElements>({
     index,
     render,
     imperativeHandle,
@@ -354,7 +354,7 @@ const TableBodyRowOuter = /* @__PURE__ */ memo(function TableBodyRowOuter<RowEle
     )
 });
 
-const TableBodyRowInner = /* @__PURE__ */ memo(function TableBodyRowInner<RowElement extends Element, CellElement extends Element>({
+const TableBodyRowInner = /* @__PURE__ */ memo(function TableBodyRowInner<RowElement extends keyof JSX.IntrinsicElements, CellElement extends keyof JSX.IntrinsicElements>({
     index,
     render,
     getText,
@@ -432,7 +432,7 @@ const TableBodyRowInner = /* @__PURE__ */ memo(function TableBodyRowInner<RowEle
 
 
 
-export const TableCell = /* @__PURE__ */ memo(function TableCell<CellElement extends Element>({
+export const TableCell = /* @__PURE__ */ memo(function TableCell<CellElement extends keyof JSX.IntrinsicElements>({
     index,
     render,
     colSpan,
@@ -446,7 +446,7 @@ export const TableCell = /* @__PURE__ */ memo(function TableCell<CellElement ext
 }: TableCellProps<CellElement, TableCellInfo<CellElement>>) {
     type CM = TableCellInfo<CellElement>;
     assertEmptyObject(void1);
-    const defaultFocusSelf = useStableCallback((e: CellElement) => { focus(e as Element as HTMLElement) }, []);
+    const defaultFocusSelf = useStableCallback((e: TagToElement<CellElement>) => { focus(e as Element as HTMLElement) }, []);
     return useComponent<UseTableCellReturnType<CellElement, CM>>(
         imperativeHandle,
         render,

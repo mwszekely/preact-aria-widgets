@@ -10,20 +10,22 @@ import {
     assertEmptyObject,
     generateRandomId,
     useManagedChild,
+    JSX,
     useManagedChildren,
-    useMemo, useMonitoring, useRef
+    useMemo, useMonitoring, useRef,
+    EventTypeByTag
 } from "preact-prop-helpers/preact";
 import { EventDetail, Prefices, TagSensitiveProps, enhanceEvent } from "./props.js";
 
 
 
 
-export type RangeChangeEvent<E extends EventTarget> = { [EventDetail]: { value: number } } & Pick<preact.TargetedEvent<E>, "target" | "currentTarget">;
+export type RangeChangeEvent<E extends keyof JSX.IntrinsicElements> = { [EventDetail]: { value: number } } & Pick<EventTypeByTag<E, InputEvent>, "target" | "currentTarget">;
 
 export interface SliderThumbInfo extends ManagedChildInfo<number> {
 }
 
-export interface UseSliderThumbParametersSelf<E extends Element> extends TagSensitiveProps<E> {
+export interface UseSliderThumbParametersSelf<E extends keyof JSX.IntrinsicElements> extends TagSensitiveProps<E> {
     value: number;
     valueText: Nullable<string>;
     onValueChange: Nullable<(e: RangeChangeEvent<E>) => void>;
@@ -41,7 +43,7 @@ export interface UseSliderThumbParametersSelf<E extends Element> extends TagSens
     label: string;
 }
 
-export interface UseSliderThumbParameters<ThumbElement extends Element, M extends SliderThumbInfo = SliderThumbInfo> extends
+export interface UseSliderThumbParameters<ThumbElement extends keyof JSX.IntrinsicElements, M extends SliderThumbInfo = SliderThumbInfo> extends
     UseGenericChildParameters<SliderContext<M>, Pick<M, "index">>
 //OmitStrong<UseProgressWithHandlerParameters<RangeChangeEvent<ThumbElement>, number>, "asyncHandlerParameters">,
 //TargetedOmit<UseProgressWithHandlerParameters<RangeChangeEvent<ThumbElement>, number>, "asyncHandlerParameters", "capture
@@ -65,7 +67,7 @@ export interface UseSliderThumbReturnTypeSelf {
     max: number;
 }
 
-export interface UseSliderThumbReturnType<E extends Element, M extends SliderThumbInfo = SliderThumbInfo> extends
+export interface UseSliderThumbReturnType<E extends keyof JSX.IntrinsicElements, M extends SliderThumbInfo = SliderThumbInfo> extends
     UseManagedChildReturnType<M> {
     sliderThumbReturn: UseSliderThumbReturnTypeSelf;
     propsSliderThumb: ElementProps<E>;
@@ -120,7 +122,7 @@ export function useSlider<M extends SliderThumbInfo>({ sliderParameters: { max, 
 /**
  * @compositeParams
  */
-export function useSliderThumb<ThumbElement extends Element>({
+export function useSliderThumb<ThumbElement extends keyof JSX.IntrinsicElements>({
     sliderThumbParameters: { tag, value, max: maxOverride, min: minOverride, valueText, label, onValueChange, ...void2 },
     info,
     context: { sliderContext: { max: maxParent, min: minParent }, ...context },
@@ -140,7 +142,7 @@ export function useSliderThumb<ThumbElement extends Element>({
         );
         newProps = { ...newProps, "aria-label": label, "aria-valuetext": valueText ?? undefined, style: { "--range-value": `${value}`, "--range-value-text": `${valueText}` } };
         if (tag == "input") {
-            newProps.onInput = e => {
+            newProps.onInput = (e: EventTypeByTag<ThumbElement, InputEvent>) => {
                 onValueChange?.(enhanceEvent(e, { value: (e.currentTarget as Element as HTMLInputElement).valueAsNumber }));
             }
         }

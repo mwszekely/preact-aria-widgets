@@ -1,4 +1,5 @@
 import {
+    JSX,
     returnTrue,
     TargetedPick,
     useMergedProps,
@@ -9,15 +10,15 @@ import {
     UseRandomDualIdsReturnType,
     useRefElement
 } from "preact-prop-helpers/preact";
-import { ElementToTag, noop, OmitStrong, useMonitoring } from "./props.js";
+import { noop, OmitStrong, useMonitoring } from "./props.js";
 
 export type LabelPosition = "separate" | "wrapping" | "none";
-export type FocusableLabelElement<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element> = LP extends "wrapping" ? LabelElement : InputElement;
+export type FocusableLabelElement<LP extends LabelPosition, InputElement extends keyof JSX.IntrinsicElements, LabelElement extends keyof JSX.IntrinsicElements> = LP extends "wrapping" ? LabelElement : InputElement;
 
-export interface UseLabelParametersSelf<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element> {
+export interface UseLabelParametersSelf<LP extends LabelPosition, InputElementTag extends keyof JSX.IntrinsicElements, LabelElementTag extends keyof JSX.IntrinsicElements> {
     onLabelClick: null | ((e: Event) => void);
-    tagInput: ElementToTag<InputElement>;
-    tagLabel: ElementToTag<LabelElement>;
+    tagInput: InputElementTag;
+    tagLabel: LabelElementTag;
     /**
      * Where is this component's label relative to the component itself?
      * 
@@ -38,26 +39,26 @@ export interface UseLabelParametersSelf<LP extends LabelPosition, InputElement e
     ariaLabel: LP extends "none" ? string : (null | undefined);
 }
 
-export interface UseLabelParameters<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element> {
+export interface UseLabelParameters<LP extends LabelPosition, InputTag extends keyof JSX.IntrinsicElements, LabelTag extends keyof JSX.IntrinsicElements> {
     randomIdInputParameters: OmitStrong<UseRandomDualIdsParameters["randomIdInputParameters"], "otherReferencerProp">;
     randomIdLabelParameters: OmitStrong<UseRandomDualIdsParameters["randomIdLabelParameters"], "otherReferencerProp">;
 
-    labelParameters: UseLabelParametersSelf<LP, InputElement, LabelElement>;
+    labelParameters: UseLabelParametersSelf<LP, InputTag, LabelTag>;
 }
 
-export interface UseLabelReturnType<InputElement extends Element, LabelElement extends Element> extends
-    UseRandomDualIdsReturnType<InputElement, LabelElement>,
-    OmitStrong<UsePressReturnType<LabelElement>, "props"> { }
+export interface UseLabelReturnType<InputElementTag extends keyof JSX.IntrinsicElements, LabelElementTag extends keyof JSX.IntrinsicElements> extends
+    UseRandomDualIdsReturnType<InputElementTag, LabelElementTag>,
+    OmitStrong<UsePressReturnType<LabelElementTag>, "props"> { }
 
 /**
  * @compositeParams
  */
-export function useLabel<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element>({
+export function useLabel<LP extends LabelPosition, InputElementTag extends keyof JSX.IntrinsicElements, LabelElementTag extends keyof JSX.IntrinsicElements>({
     randomIdInputParameters,
     randomIdLabelParameters,
     labelParameters: { tagInput, tagLabel, ariaLabel, labelPosition, onLabelClick }
-}: UseLabelParameters<LP, InputElement, LabelElement>): UseLabelReturnType<InputElement, LabelElement> {
-    return useMonitoring(function useLabel(): UseLabelReturnType<InputElement, LabelElement> {
+}: UseLabelParameters<LP, InputElementTag, LabelElementTag>): UseLabelReturnType<InputElementTag, LabelElementTag> {
+    return useMonitoring(function useLabel(): UseLabelReturnType<InputElementTag, LabelElementTag> {
         const nativeHTMLBehavior = (tagInput == "input" && tagLabel == "label" && labelPosition != "wrapping");
         const synthetic = !nativeHTMLBehavior;
 
@@ -77,17 +78,17 @@ export function useLabel<LP extends LabelPosition, InputElement extends Element,
             propsLabel,
             randomIdInputReturn,
             randomIdLabelReturn
-        } = useRandomDualIds<InputElement, LabelElement>({
+        } = useRandomDualIds<InputElementTag, LabelElementTag>({
             randomIdInputParameters: { ...randomIdInputParameters, otherReferencerProp: !synthetic && labelPosition === "separate" ? "for" as never : null },
             randomIdLabelParameters: { ...randomIdLabelParameters, otherReferencerProp: synthetic ? "aria-labelledby" : null },
         });
-        const { refElementReturn, propsStable: propsRef } = useRefElement<LabelElement>({ refElementParameters: {} });
+        const { refElementReturn, propsStable: propsRef } = useRefElement<LabelElementTag>({ refElementParameters: {} });
 
         if (labelPosition == 'none') {
             // When we set the aria-label, intentionally clobber element-based labels (for example, in case they don't exist).
             propsInput["aria-label"] = (ariaLabel!);
             propsInput["aria-labelledby"] = undefined;
-            propsLabel["for" as keyof typeof propsLabel] = undefined;
+            propsLabel["for" as keyof typeof propsLabel] = undefined as never;
         }
 
         const { pressReturn, props: propsPress } = usePress({
@@ -124,12 +125,12 @@ export interface UseLabelSyntheticParameters extends TargetedPick<UseLabelParame
  * 
  * @compositeParams
  */
-export function useLabelSynthetic<InputElement extends Element, LabelElement extends Element>({
+export function useLabelSynthetic<InputElementTag extends keyof JSX.IntrinsicElements, LabelElementTag extends keyof JSX.IntrinsicElements>({
     labelParameters: { ariaLabel, onLabelClick },
     ...rest
 }: UseLabelSyntheticParameters) {
     return useMonitoring(function useLabelSynthetic() {
-        return useLabel<LabelPosition, InputElement, LabelElement>({
+        return useLabel<LabelPosition, InputElementTag, LabelElementTag>({
             labelParameters: {
                 ariaLabel,
                 labelPosition: ariaLabel == null ? "separate" : "none",

@@ -1,16 +1,16 @@
-import { assertEmptyObject, createElement, ElementProps, memo, VNode } from "preact-prop-helpers/preact";
-import { ElementToTag, Get4 } from "../props.js";
+import { JSX, assertEmptyObject, createElement, ElementProps, memo, VNode } from "preact-prop-helpers/preact";
+import { Get4 } from "../props.js";
 import { useCheckbox, UseCheckboxParameters, UseCheckboxReturnType } from "../use-checkbox.js";
 import { LabelPosition } from "../use-label.js";
 import { GenericComponentProps, useComponent } from "./util.js";
 
-export type CheckboxProps<InputElement extends Element, LabelElement extends Element> = GenericComponentProps<
+export type CheckboxProps<InputElement extends keyof JSX.IntrinsicElements, LabelElement extends keyof JSX.IntrinsicElements> = GenericComponentProps<
     UseCheckboxReturnType<InputElement, LabelElement>,
     Get4<UseCheckboxParameters<LabelPosition, InputElement, LabelElement>, "checkboxLikeParameters", "labelParameters", "pressParameters", "checkboxParameters">,
     "tagInput" | "tagLabel" | "labelPosition" | "ariaLabel" | "checked"
 >;
 
-export function defaultRenderCheckboxLike<I extends Element, L extends Element, InfoType>({ labelPosition, tagInput, tagLabel, makePropsInput, makePropsLabel }: DefaultRenderCheckboxLikeParameters<I, L, InfoType>) {
+export function defaultRenderCheckboxLike<I extends keyof JSX.IntrinsicElements, L extends keyof JSX.IntrinsicElements, InfoType>({ labelPosition, tagInput, tagLabel, makePropsInput, makePropsLabel }: DefaultRenderCheckboxLikeParameters<I, L, InfoType>) {
     return function (info: InfoType): VNode {
 
         const inputProps = (makePropsInput(info))
@@ -45,15 +45,15 @@ export function defaultRenderCheckboxLike<I extends Element, L extends Element, 
     }
 }
 
-export interface DefaultRenderCheckboxLikeParameters<I extends Element, L extends Element, InfoType> {
+export interface DefaultRenderCheckboxLikeParameters<I extends keyof JSX.IntrinsicElements, L extends keyof JSX.IntrinsicElements, InfoType> {
     labelPosition: "wrapping" | "separate" | "hidden",
-    tagInput: ElementToTag<I>,
-    tagLabel: ElementToTag<L>,
+    tagInput: I,
+    tagLabel: L,
     makePropsInput: (info: InfoType) => ElementProps<I>,
     makePropsLabel: (info: InfoType) => ElementProps<L>
 }
 
-export const Checkbox = /* @__PURE__ */ memo((function Checkbox<I extends Element, L extends Element>({
+export const Checkbox = /* @__PURE__ */ memo((function Checkbox<I extends keyof JSX.IntrinsicElements, L extends keyof JSX.IntrinsicElements>({
     checked,
     disabled,
     tagLabel,

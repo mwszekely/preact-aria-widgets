@@ -1,15 +1,15 @@
-import { assertEmptyObject, memo, useContext } from "preact-prop-helpers/preact";
+import { JSX, assertEmptyObject, memo, useContext } from "preact-prop-helpers/preact";
 import { Get4 } from "../props.js";
 import { UseTooltipParameters, UseTooltipReturnType, useTooltip } from "../use-tooltip.js";
 import { GenericComponentProps, ParentDepthContext, useComponent, useDefault } from "./util.js";
 
-export type TooltipProps<TriggerType extends Element, PopupType extends Element> = GenericComponentProps<
+export type TooltipProps<TriggerType extends keyof JSX.IntrinsicElements, PopupType extends keyof JSX.IntrinsicElements> = GenericComponentProps<
     UseTooltipReturnType<TriggerType, PopupType>,
     Get4<UseTooltipParameters<TriggerType, PopupType>, "escapeDismissParameters", "tooltipParameters", "activeElementParameters", "pressReturn">,
     "tooltipSemanticType" | "onStatus"
 >;
 
-export const Tooltip = /* @__PURE__ */ memo(function TooltipU<TriggerType extends Element, PopupType extends Element>({
+export const Tooltip = /* @__PURE__ */ memo(function TooltipU<TriggerType extends keyof JSX.IntrinsicElements, PopupType extends keyof JSX.IntrinsicElements>({
     onStatus,
     getDocument,
     parentDepth,

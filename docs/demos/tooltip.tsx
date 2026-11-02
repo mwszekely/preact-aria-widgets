@@ -1,7 +1,7 @@
 
-import { useMergedProps, usePress, useRefElement } from "preact-prop-helpers";
+import { useMergedProps, usePress, useRefElement } from "preact-prop-helpers/preact";
 import { useState } from "preact/hooks";
-import { Tooltip, TooltipStatus, useDefaultRenderPortal } from "../../dist/preact/index.js";
+import { Tooltip, TooltipStatus, useDefaultRenderPortal } from "preact-aria-widgets/preact";
 
 export function Blurb() {
     return (
@@ -31,8 +31,8 @@ export function Demo() {
 
     const [tooltipStatusText, setTooltipStatusText] = useState<TooltipStatus>(null);
     const [tooltipStatusButton, setTooltipStatusButton] = useState<TooltipStatus>(null);
-    const { propsStable, refElementReturn } = useRefElement<HTMLButtonElement>({ refElementParameters: {} })
-    const { pressReturn, props } = usePress<HTMLButtonElement>({ pressParameters: { allowRepeatPresses: false, excludeEnter: null, excludePointer: null, excludeSpace: null, focusSelf: e => e.focus(), longPressThreshold: 1000, onPressingChange: null, onPressSync: () => alert("Button clicked") }, refElementReturn })
+    const { propsStable, refElementReturn } = useRefElement<"button">({ refElementParameters: {} })
+    const { pressReturn, props } = usePress<"button">({ pressParameters: { allowRepeatPresses: false, excludeEnter: null, excludePointer: null, excludeSpace: null, focusSelf: e => e.focus(), longPressThreshold: 1000, onPressingChange: null, onPressSync: () => alert("Button clicked") }, refElementReturn })
 
     return (
         <>
@@ -40,7 +40,7 @@ export function Demo() {
             <Code />
             <div>
                 The following text triggers a tooltip:
-                <Tooltip<HTMLSpanElement, HTMLDivElement>
+                <Tooltip<"span", "div">
                     tooltipSemanticType="description"
                     onStatus={setTooltipStatusText}
                     hoverDelay={500}
@@ -55,7 +55,7 @@ export function Demo() {
             </div>
             <div>
                 Also, this is a button with a tooltip. It behaves slightly differently:
-                <Tooltip<HTMLButtonElement, HTMLDivElement>
+                <Tooltip<"button", "div">
                     tooltipSemanticType="description"
                     onStatus={setTooltipStatusButton}
                     hoverDelay={500}

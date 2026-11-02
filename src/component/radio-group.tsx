@@ -1,25 +1,25 @@
-import { assertEmptyObject, createContext, identity, memo, useEnsureStability } from "preact-prop-helpers/preact";
+import { JSX, assertEmptyObject, createContext, identity, memo, useEnsureStability } from "preact-prop-helpers/preact";
 import { Get7, Get9, useContextWithWarning } from "../props.js";
 import { FocusableLabelElement, LabelPosition } from "../use-label.js";
 import { RadioSubInfo, UseRadioGroupParameters, UseRadioGroupReturnType, UseRadioParameters, UseRadioReturnType, useRadio, useRadioGroup, type RadioContext } from "../use-radio-group.js";
 import { GenericComponentProps, PartialExcept, useComponent, useDefault } from "./util.js";
 
-interface RadioGroupPropsBase<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, TabbableChildElement extends Element> extends
+interface RadioGroupPropsBase<V extends string | number, GroupElement extends keyof JSX.IntrinsicElements, GroupLabelElement extends keyof JSX.IntrinsicElements, TabbableChildElement extends keyof JSX.IntrinsicElements> extends
     Get9<UseRadioGroupParameters<V, GroupElement, GroupLabelElement, TabbableChildElement>, "radioGroupParameters", "linearNavigationParameters", "labelParameters", "radioGroupParameters", "rovingTabIndexParameters", "typeaheadNavigationParameters", "refElementParameters", "singleSelectionParameters", "processedIndexManglerParameters"> {
 }
 
-interface RadioPropsBase<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element, V extends string | number> extends
+interface RadioPropsBase<LP extends LabelPosition, InputElement extends keyof JSX.IntrinsicElements, LabelElement extends keyof JSX.IntrinsicElements, V extends string | number> extends
     Get7<UseRadioParameters<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>, "radioParameters", "checkboxLikeParameters", "labelParameters", "textContentParameters", "pressParameters", "hasCurrentFocusParameters", "refElementParameters">,
     Pick<RadioSubInfo<any, V>, "index" | "untabbable"> {
 }
 
-export interface RadioGroupProps<V extends string | number, GroupElement extends Element, GroupLabelElement extends Element, TabbableChildElement extends Element> extends GenericComponentProps<
+export interface RadioGroupProps<V extends string | number, GroupElement extends keyof JSX.IntrinsicElements, GroupLabelElement extends keyof JSX.IntrinsicElements, TabbableChildElement extends keyof JSX.IntrinsicElements> extends GenericComponentProps<
     UseRadioGroupReturnType<V, GroupElement, GroupLabelElement, TabbableChildElement>,
     PartialExcept<RadioGroupPropsBase<V, GroupElement, GroupLabelElement, TabbableChildElement>, "ariaLabel" | "name" | "selectedValue">,
     "name" | "selectedValue"
 > {
 }
-export interface RadioProps<LP extends LabelPosition, InputElement extends Element, LabelElement extends Element, V extends string | number> extends GenericComponentProps<
+export interface RadioProps<LP extends LabelPosition, InputElement extends keyof JSX.IntrinsicElements, LabelElement extends keyof JSX.IntrinsicElements, V extends string | number> extends GenericComponentProps<
     UseRadioReturnType<LP, V, InputElement, LabelElement, RadioSubInfo<FocusableLabelElement<LP, InputElement, LabelElement>, V>>,
     PartialExcept<RadioPropsBase<LP, InputElement, LabelElement, V>, "index" | "value" | "ariaLabel" | "labelPosition" | "tagInput" | "tagLabel">,
     "value" | "index" | "ariaLabel" | "labelPosition" | "tagInput" | "tagLabel"
@@ -29,7 +29,7 @@ export interface RadioProps<LP extends LabelPosition, InputElement extends Eleme
 const RadioContext = createContext<RadioContext<any, any, any>>(null!);
 //const ProcessedChildrenContext = createContext<UseProcessedChildrenContext>(null!);
 
-export const RadioGroup = /* @__PURE__ */ memo((function RadioGroup<V extends string | number, GroupElement extends HTMLElement, GroupLabelElement extends HTMLElement, TabbableChildElement extends HTMLElement>({
+export const RadioGroup = /* @__PURE__ */ memo((function RadioGroup<V extends string | number, GroupElement extends keyof JSX.IntrinsicElements, GroupLabelElement extends keyof JSX.IntrinsicElements, TabbableChildElement extends keyof JSX.IntrinsicElements>({
     render,
     name,
     collator,
@@ -97,7 +97,7 @@ export const RadioGroup = /* @__PURE__ */ memo((function RadioGroup<V extends st
         }));
 }));
 
-export const Radio = /* @__PURE__ */ memo((function Radio<LP extends LabelPosition, V extends string | number, InputElement extends Element, LabelElement extends Element>({
+export const Radio = /* @__PURE__ */ memo((function Radio<LP extends LabelPosition, V extends string | number, InputElement extends keyof JSX.IntrinsicElements, LabelElement extends keyof JSX.IntrinsicElements>({
     disabled,
     index,
     render,

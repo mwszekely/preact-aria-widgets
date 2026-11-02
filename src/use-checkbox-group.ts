@@ -1,6 +1,7 @@
 import {
     CompleteListNavigationContext,
     ElementProps,
+    JSX,
     Nullable,
     PassiveStateUpdater,
     StateUpdater,
@@ -56,18 +57,18 @@ export interface UseCheckboxGroupParametersSelf {
     orientation: "vertical" | "horizontal";
 }
 
-export interface UseCheckboxGroupParameters<ParentElement extends Element, TabbableChildElement extends Element> extends
+export interface UseCheckboxGroupParameters<ParentElement extends keyof JSX.IntrinsicElements, TabbableChildElement extends keyof JSX.IntrinsicElements> extends
     OmitStrong<UseCompleteListNavigationParameters<ParentElement, TabbableChildElement, CheckboxGroupInfo<TabbableChildElement>>, "linearNavigationParameters" | "paginatedChildrenParameters" | "singleSelectionParameters" | "rovingTabIndexParameters">,
     TargetedOmit<UseCompleteListNavigationParameters<ParentElement, TabbableChildElement, CheckboxGroupInfo<TabbableChildElement>>, "linearNavigationParameters", "arrowKeyDirection">,
     TargetedOmit<UseCompleteListNavigationParameters<ParentElement, TabbableChildElement, CheckboxGroupInfo<TabbableChildElement>>, "rovingTabIndexParameters", "focusSelfParent"> {
     checkboxGroupParameters: UseCheckboxGroupParametersSelf;
 }
 
-interface CheckboxGroupInfoBaseBase<TCE extends Element> {
+interface CheckboxGroupInfoBaseBase<TCE extends keyof JSX.IntrinsicElements> {
     _e?: TCE;
 }
 
-interface CheckboxGroupInfoBase<TCE extends Element> extends CheckboxGroupInfoBaseBase<TCE> {
+interface CheckboxGroupInfoBase<TCE extends keyof JSX.IntrinsicElements> extends CheckboxGroupInfoBaseBase<TCE> {
     checkboxChildType: "child" | "parent";
 
     // These are child-only. If `checkboxChildType` is parent, then these are null
@@ -80,7 +81,7 @@ interface CheckboxGroupInfoBase<TCE extends Element> extends CheckboxGroupInfoBa
     setCheckedFromParentInput: Nullable<(newChecked: CheckboxCheckedType, e: Event) => void | Promise<void>>;
 }
 
-export interface CheckboxGroupInfo<TCE extends Element> extends UseCompleteListNavigationChildInfo<TCE>, CheckboxGroupInfoBase<TCE> {
+export interface CheckboxGroupInfo<TCE extends keyof JSX.IntrinsicElements> extends UseCompleteListNavigationChildInfo<TCE>, CheckboxGroupInfoBase<TCE> {
 }
 
 export interface UseCheckboxGroupChildParametersSelf {
@@ -88,7 +89,7 @@ export interface UseCheckboxGroupChildParametersSelf {
     onChangeFromParent(checked: CheckboxCheckedType, e: Event): void | Promise<void>;
 }
 
-export interface UseCheckboxGroupChildParameters<TCE extends Element> extends
+export interface UseCheckboxGroupChildParameters<TCE extends keyof JSX.IntrinsicElements> extends
     UseGenericChildParameters<CheckboxGroupContext<TCE>, Pick<CheckboxGroupInfo<TCE>, "index" | "focusSelf" | "untabbable">>,
     OmitStrong<UseCompleteListNavigationChildParameters<TCE, CheckboxGroupInfo<TCE>>, "context" | "info" | "singleSelectionChildParameters" | "multiSelectionChildParameters">,
     TargetedOmit<UseCompleteListNavigationChildParameters<TCE, CheckboxGroupInfo<TCE>>, "multiSelectionChildParameters", "initiallyMultiSelected"> {
@@ -99,17 +100,17 @@ export interface UseCheckboxGroupChildReturnTypeSelf {
     onChildCheckedChange: (checked: CheckboxCheckedType) => void;
 }
 
-export interface UseCheckboxGroupChildReturnType<TCE extends Element> extends OmitStrong<UseCompleteListNavigationChildReturnType<TCE, CheckboxGroupInfo<TCE>>, "singleSelectionChildReturn"> {
+export interface UseCheckboxGroupChildReturnType<TCE extends keyof JSX.IntrinsicElements> extends OmitStrong<UseCompleteListNavigationChildReturnType<TCE, CheckboxGroupInfo<TCE>>, "singleSelectionChildReturn"> {
     checkboxGroupChildReturn: UseCheckboxGroupChildReturnTypeSelf;
 }
 
 
-export interface UseCheckboxGroupReturnType<GroupElement extends Element, TCE extends Element> extends
+export interface UseCheckboxGroupReturnType<GroupElement extends keyof JSX.IntrinsicElements, TCE extends keyof JSX.IntrinsicElements> extends
     OmitStrong<UseCompleteListNavigationReturnType<GroupElement, TCE, CheckboxGroupInfo<TCE>>, "context"> {
     context: CheckboxGroupContext<TCE>;
 }
 
-export interface UseCheckboxGroupParentParameters<TCE extends Element> extends
+export interface UseCheckboxGroupParentParameters<TCE extends keyof JSX.IntrinsicElements> extends
     UseGenericChildParameters<CheckboxGroupContext<TCE>, Pick<CheckboxGroupInfo<TCE>, "index" | "focusSelf" | "untabbable">>,
     OmitStrong<UseCompleteListNavigationChildParameters<TCE, CheckboxGroupInfo<TCE>>, "context" | "info"> {
 }
@@ -120,13 +121,13 @@ export interface UseCheckboxGroupParentReturnTypeSelf {
     onParentCheckedChange: (e: Event) => Promise<void>;
 }
 
-export interface UseCheckboxGroupParentReturnType<TCE extends Element> extends OmitStrong<UseCompleteListNavigationChildReturnType<TCE, CheckboxGroupInfo<TCE>>, never> {
+export interface UseCheckboxGroupParentReturnType<TCE extends keyof JSX.IntrinsicElements> extends OmitStrong<UseCompleteListNavigationChildReturnType<TCE, CheckboxGroupInfo<TCE>>, never> {
     checkboxGroupParentReturn: UseCheckboxGroupParentReturnTypeSelf;
 }
 
 
 
-export interface CheckboxGroupContext<TCE extends Element> extends CompleteListNavigationContext<TCE, CheckboxGroupInfo<TCE>> {
+export interface CheckboxGroupContext<TCE extends keyof JSX.IntrinsicElements> extends CompleteListNavigationContext<TCE, CheckboxGroupInfo<TCE>> {
     // parent
     checkboxGroupParentContext: {
 
@@ -183,7 +184,7 @@ export interface CheckboxGroupContext<TCE extends Element> extends CompleteListN
  * @hasChild {@link useCheckboxGroupParent}
  * @hasChild {@link useCheckboxGroupChild}
  */
-export function useCheckboxGroup<GroupElement extends Element, TCE extends Element>({
+export function useCheckboxGroup<GroupElement extends keyof JSX.IntrinsicElements, TCE extends keyof JSX.IntrinsicElements>({
     linearNavigationParameters,
     rovingTabIndexParameters,
     checkboxGroupParameters: { orientation, ...void2 },
@@ -328,7 +329,7 @@ export function useCheckboxGroup<GroupElement extends Element, TCE extends Eleme
  * 
  * @compositeParams
  */
-export function useCheckboxGroupParent<TCE extends Element>({
+export function useCheckboxGroupParent<TCE extends keyof JSX.IntrinsicElements>({
     context: {
         checkboxGroupParentContext: {
             setControlsSetterOnParentCheckbox,
@@ -427,7 +428,7 @@ export function useCheckboxGroupParent<TCE extends Element>({
  * 
  * @compositeParams
  */
-export function useCheckboxGroupChild<TCE extends Element>({
+export function useCheckboxGroupChild<TCE extends keyof JSX.IntrinsicElements>({
     checkboxGroupChildParameters,
     context,
     info: { focusSelf, index, untabbable, ...void3 },

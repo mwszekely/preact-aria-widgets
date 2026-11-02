@@ -2,20 +2,20 @@
 import { ComponentChildren, RenderableProps, VNode } from "preact";
 import { memo } from "preact/compat";
 import { useState } from "preact/hooks";
-import { Accordion, AccordionSection, Heading } from "../../dist/preact/index.js";
+import { Accordion, AccordionSection, Heading } from "preact-aria-widgets/preact";
 
 function DemoAccordion({ children }: RenderableProps<{}>) {
     return <Accordion orientation="vertical" render={(_info): VNode<any> => { return <div id="accordion-demo">{children}</div> }} />
 }
 
 const DemoAccordionSection = memo(function DemoAccordionSection({ index, body, heading, disabled, open }: { open?: boolean, disabled: boolean, index: number, heading: ComponentChildren, body: ComponentChildren }) {
-    return <AccordionSection<HTMLDivElement, HTMLButtonElement, HTMLDivElement>
+    return <AccordionSection<"div", "button", "div">
         index={index}
         tagButton="button"
         open={open}
         disabled={disabled}
         render={info => (
-            <Heading<HTMLDivElement> {...info.propsHeader} tag="div" heading={<><span>{heading}</span><button {...info.propsHeaderButton}>Toggle open</button></>}>
+            <Heading<"div"> {...info.propsHeader} tag="div" heading={<><span>{heading}</span><button {...info.propsHeaderButton}>Toggle open</button></>}>
                 <p {...info.propsBody} hidden={!info.accordionSectionReturn.expanded}>
                     {body}
                 </p>

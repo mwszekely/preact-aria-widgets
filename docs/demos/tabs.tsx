@@ -1,7 +1,7 @@
 
-import { useState } from "preact-prop-helpers";
+import { useState } from "preact-prop-helpers/preact";
 import { memo } from "preact/compat";
-import { Tab, TabPanel, Tabs } from "../../dist/preact/index.js";
+import { Tab, TabPanel, Tabs } from "preact-aria-widgets/preact";
 
 export function Blurb() {
     return (
@@ -33,7 +33,7 @@ export function Demo() {
             <Code />
             <label><input type="number" min={0} value={count} onInput={e => setCount(e.currentTarget.valueAsNumber)} /> # of tabs</label>
             <div>
-                <Tabs<HTMLUListElement, HTMLLIElement, HTMLLabelElement>
+                <Tabs<"ul","li", "label">
                     ariaLabel={null}
                     orientation="horizontal"
 
@@ -85,10 +85,10 @@ export function Demo() {
 }
 
 const DemoTab = memo(function DemoTab({ i }: { i: number }) {
-    return <Tab<HTMLLIElement> focusSelf={e => e.focus()} key={i} index={i} render={info => <li {...info.props} style={{marginLeft: "2em"}}>Tab #{i} (offset: {info.singleSelectionChildReturn.singleSelectedOffset ?? "null"}) {info.singleSelectionChildReturn.singleSelected && "(visible)"}</li>} />
+    return <Tab<"li"> focusSelf={e => e.focus()} key={i} index={i} render={info => <li {...info.props} style={{marginLeft: "2em"}}>Tab #{i} (offset: {info.singleSelectionChildReturn.singleSelectedOffset ?? "null"}) {info.singleSelectionChildReturn.singleSelected && "(visible)"}</li>} />
 })
 
 const DemoTabPanel = memo(function DemoTabPanel({ i }: { i: number }) {
-    return <TabPanel<HTMLDivElement> index={i} key={i} render={info => <div {...info.props} hidden={!info.tabPanelReturn.visible}>Tab panel #{i} (offset: {info.tabPanelReturn.visibleOffset ?? "null"})</div>} />
+    return <TabPanel<"div"> index={i} key={i} render={info => <div {...info.props} hidden={!info.tabPanelReturn.visible}>Tab panel #{i} (offset: {info.tabPanelReturn.visibleOffset ?? "null"})</div>} />
 })
 

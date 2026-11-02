@@ -1,17 +1,17 @@
-import { assertEmptyObject, createContext, focus, identity, memo, OmitStrong, useCallback, useContext, useEnsureStability } from "preact-prop-helpers/preact";
+import { JSX, assertEmptyObject, createContext, focus, identity, memo, OmitStrong, useCallback, useContext, useEnsureStability, TagToElement } from "preact-prop-helpers/preact";
 import { Get16, useContextWithWarning } from "../props.js";
 import { useMenu, UseMenuContext, useMenuItem, UseMenuItemReturnType, UseMenuParameters, UseMenuReturnType } from "../use-menu.js";
 import { UseMenubarSubInfo } from "../use-menubar.js";
 import { MenubarItemProps } from "./menubar.js";
 import { GenericComponentProps, ParentDepthContext, useComponent, useDefault } from "./util.js";
 
-export type MenuProps<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> = GenericComponentProps<
+export type MenuProps<MenuSurfaceElement extends keyof JSX.IntrinsicElements, MenuParentElement extends keyof JSX.IntrinsicElements, MenuItemElement extends keyof JSX.IntrinsicElements, MenuButtonElement extends keyof JSX.IntrinsicElements, M extends UseMenubarSubInfo<MenuItemElement>> = GenericComponentProps<
     UseMenuReturnType<MenuSurfaceElement, MenuParentElement, MenuItemElement, MenuButtonElement, M>,
     Get16<UseMenuParameters<MenuSurfaceElement, MenuParentElement, MenuButtonElement, MenuItemElement, M>, "menuParameters", "menuSurfaceParameters", "linearNavigationParameters", "rovingTabIndexParameters", "typeaheadNavigationParameters", "dismissParameters", "escapeDismissParameters", "toolbarParameters", "singleSelectionParameters", "activeElementParameters", "refElementParameters", "dismissParameters", "modalParameters", "multiSelectionParameters", "singleSelectionDeclarativeParameters", "processedIndexManglerParameters">,
     "active" | "onDismiss" | "openDirection" | "orientation" | "onOpen"
 >;
 
-export type MenuItemProps<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> = GenericComponentProps<
+export type MenuItemProps<MenuItemElement extends keyof JSX.IntrinsicElements, M extends UseMenubarSubInfo<MenuItemElement>> = GenericComponentProps<
     UseMenuItemReturnType<MenuItemElement, M>,
     MenubarItemProps<MenuItemElement, M>,
     "index"
@@ -19,7 +19,7 @@ export type MenuItemProps<MenuItemElement extends Element, M extends UseMenubarS
 
 const MenuItemContext = createContext<UseMenuContext<any, any>>(null!);
 
-export const Menu = /* @__PURE__ */ memo((function Menu<SurfaceElement extends Element, ParentElement extends Element, ChildElement extends Element, ButtonElement extends Element>({
+export const Menu = /* @__PURE__ */ memo((function Menu<SurfaceElement extends keyof JSX.IntrinsicElements, ParentElement extends keyof JSX.IntrinsicElements, ChildElement extends keyof JSX.IntrinsicElements, ButtonElement extends keyof JSX.IntrinsicElements>({
     collator,
     disableHomeEndKeys,
     noTypeahead,
@@ -143,7 +143,7 @@ export const Menu = /* @__PURE__ */ memo((function Menu<SurfaceElement extends E
 }))
 
 
-export const MenuItem = /* @__PURE__ */ memo((function MenuItem<MenuItemElement extends Element>({
+export const MenuItem = /* @__PURE__ */ memo((function MenuItem<MenuItemElement extends keyof JSX.IntrinsicElements>({
     index,
     untabbable,
     onPress,
@@ -167,7 +167,7 @@ export const MenuItem = /* @__PURE__ */ memo((function MenuItem<MenuItemElement 
     ...void1
 }: MenuItemProps<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>) {
     const context = useContextWithWarning(MenuItemContext, "menu");
-    const defaultFocusSelf = useCallback((e: MenuItemElement | null) => focus(e as Element as HTMLElement), []);
+    const defaultFocusSelf = useCallback((e: TagToElement<MenuItemElement> | null) => focus(e as Element as HTMLElement), []);
     assertEmptyObject(void1);
 
     return (

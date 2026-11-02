@@ -7,12 +7,13 @@ import {
     useModal,
     UseModalParameters,
     UseModalReturnType,
-    useStableCallback
+    useStableCallback,
+    JSX
 } from "preact-prop-helpers/preact";
 import { OmitStrong, Prefices, useMonitoring } from "./props.js";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
 
-export interface UseDrawerParameters<_DialogElement extends Element, _TitleElement extends Element> extends
+export interface UseDrawerParameters<_DialogElement extends keyof JSX.IntrinsicElements, _TitleElement extends keyof JSX.IntrinsicElements> extends
     OmitStrong<UseModalParameters<"escape" | "backdrop" | "lost-focus">, "focusTrapParameters" | "backdropDismissParameters" | "dismissParameters" | "escapeDismissParameters" | "lostFocusDismissParameters">,
     TargetedOmit<UseLabelSyntheticParameters, "labelParameters", "onLabelClick">,
     TargetedOmit<UseModalParameters<"escape" | "backdrop" | "lost-focus">, "focusTrapParameters", "onlyMoveFocus">,
@@ -22,7 +23,7 @@ export interface UseDrawerParameters<_DialogElement extends Element, _TitleEleme
     TargetedOmit<UseModalParameters<"escape" | "backdrop" | "lost-focus">, "lostFocusDismissParameters", "onDismissLostFocus"> {
 }
 
-export interface UseDrawerReturnType<FocusContainerElement extends Element, SourceElement extends Element, DrawerElement extends Element, TitleElement extends Element> extends OmitStrong<UseModalReturnType<FocusContainerElement, SourceElement, DrawerElement>, "propsStableSource" | "propsStablePopup"> {
+export interface UseDrawerReturnType<FocusContainerElement extends keyof JSX.IntrinsicElements, SourceElement extends keyof JSX.IntrinsicElements, DrawerElement extends keyof JSX.IntrinsicElements, TitleElement extends keyof JSX.IntrinsicElements> extends OmitStrong<UseModalReturnType<FocusContainerElement, SourceElement, DrawerElement>, "propsStableSource" | "propsStablePopup"> {
     propsDrawer: ElementProps<DrawerElement>;
     propsSource: ElementProps<SourceElement>;
     propsTitle: ElementProps<TitleElement>;
@@ -33,7 +34,7 @@ export interface UseDrawerReturnType<FocusContainerElement extends Element, Sour
  * 
  * @compositeParams
  */
-export function useDrawer<FocusContainerElement extends Element, SourceElement extends Element, PopupElement extends Element, TitleElement extends Element>({
+export function useDrawer<FocusContainerElement extends keyof JSX.IntrinsicElements, SourceElement extends keyof JSX.IntrinsicElements, PopupElement extends keyof JSX.IntrinsicElements, TitleElement extends keyof JSX.IntrinsicElements>({
     dismissParameters,
     escapeDismissParameters,
     focusTrapParameters,
@@ -74,7 +75,7 @@ export function useDrawer<FocusContainerElement extends Element, SourceElement e
         } = useLabelSynthetic<PopupElement, TitleElement>({
             labelParameters: {
                 ...labelParameters, onLabelClick: useStableCallback(() => {
-                    const e = refElementPopupReturn.getElement();
+                    const e = refElementPopupReturn.getElement()!;
                     focusTrapParameters.focusPopup(e, () => (findFirstFocusable(e!) as HTMLElement | null));
 
                 })
@@ -89,7 +90,7 @@ export function useDrawer<FocusContainerElement extends Element, SourceElement e
 
         return {
             propsFocusContainer,
-            propsDrawer: useMergedProps<PopupElement>(propsStablePopup, propsInput),
+            propsDrawer: useMergedProps(propsStablePopup, propsInput),
             propsTitle: propsLabel,
             propsSource: { ...propsStableSource },
             refElementPopupReturn,

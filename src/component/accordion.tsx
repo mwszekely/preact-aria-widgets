@@ -1,23 +1,23 @@
-import { OmitStrong, assertEmptyObject, createContext, memo } from "preact-prop-helpers/preact";
+import { OmitStrong, assertEmptyObject, createContext, memo, JSX } from "preact-prop-helpers/preact";
 import { Get4, Get6, useContextWithWarning } from "../props.js";
 import { UseAccordionContext, UseAccordionParameters, UseAccordionReturnType, UseAccordionSectionInfo, UseAccordionSectionParameters, UseAccordionSectionReturnType, useAccordion, useAccordionSection } from "../use-accordion.js";
 import { GenericComponentProps, useComponent, useDefault } from "./util.js";
 
 
 
-export type AccordionProps<HeaderButtonElement extends Element, M extends UseAccordionSectionInfo<HeaderButtonElement> = UseAccordionSectionInfo<HeaderButtonElement>> = GenericComponentProps<
+export type AccordionProps<HeaderButtonElement extends keyof JSX.IntrinsicElements, M extends UseAccordionSectionInfo<HeaderButtonElement> = UseAccordionSectionInfo<HeaderButtonElement>> = GenericComponentProps<
     UseAccordionReturnType<HeaderButtonElement, M>,
     Get4<UseAccordionParameters<HeaderButtonElement, M>, "accordionParameters", "typeaheadNavigationParameters", "linearNavigationParameters", "managedChildrenParameters">,
     never>;
 
-export type AccordionSectionProps<HeaderContainerElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element, M extends UseAccordionSectionInfo<HeaderButtonElement> = UseAccordionSectionInfo<HeaderButtonElement>> = GenericComponentProps<
+export type AccordionSectionProps<HeaderContainerElement extends keyof JSX.IntrinsicElements, HeaderButtonElement extends keyof JSX.IntrinsicElements, BodyElement extends keyof JSX.IntrinsicElements, M extends UseAccordionSectionInfo<HeaderButtonElement> = UseAccordionSectionInfo<HeaderButtonElement>> = GenericComponentProps<
     UseAccordionSectionReturnType<HeaderContainerElement, HeaderButtonElement, BodyElement>,
     Get6<UseAccordionSectionParameters<HeaderContainerElement, HeaderButtonElement, BodyElement, M>, "info", "accordionSectionParameters", "buttonParameters", "textContentParameters", "pressParameters", "refElementHeaderButtonParameters">,
     "index" | "tagButton"> & { info?: OmitStrong<M, keyof UseAccordionSectionInfo<HeaderButtonElement>> }
 
 
 const AccordionSectionContext = createContext<UseAccordionContext<any, any>>(null!);
-export const Accordion = /* @__PURE__ */ memo(function Accordion<HeaderButtonElement extends Element>({
+export const Accordion = /* @__PURE__ */ memo(function Accordion<HeaderButtonElement extends keyof JSX.IntrinsicElements>({
     disableHomeEndKeys,
     initialIndex,
     onAfterChildLayoutEffect,
@@ -67,7 +67,7 @@ export const Accordion = /* @__PURE__ */ memo(function Accordion<HeaderButtonEle
 
 })
 
-export const AccordionSection = /* @__PURE__ */ memo((function AccordionSection<HeaderContainerElement extends Element, HeaderButtonElement extends Element, BodyElement extends Element>({
+export const AccordionSection = /* @__PURE__ */ memo((function AccordionSection<HeaderContainerElement extends keyof JSX.IntrinsicElements, HeaderButtonElement extends keyof JSX.IntrinsicElements, BodyElement extends keyof JSX.IntrinsicElements>({
     open,
     index,
     tagButton,

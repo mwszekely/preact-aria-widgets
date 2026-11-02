@@ -1,11 +1,10 @@
-import { ComponentChildren, createContext, createElement, ElementProps, forwardRef, memo, Ref, RenderableProps, useContext, useMergedProps } from "preact-prop-helpers/preact";
+import { JSX, ComponentChildren, createContext, createElement, ElementProps, forwardRef, memo, Ref, RenderableProps, useContext, useMergedProps } from "preact-prop-helpers/preact";
 
-type ElementToTag<_A> = any;
 function overwriteWithWarning(a: any, ..._t: any[]) { return a; }
 
 const HeadingLevelContext = createContext(0);
 
-export interface HeadingProps<T extends Element> extends RenderableProps<ElementProps<T>> {
+export type HeadingProps<T extends keyof JSX.IntrinsicElements> = RenderableProps<ElementProps<T>> & {
     /**
      * The contents of the heading.
      * 
@@ -13,7 +12,7 @@ export interface HeadingProps<T extends Element> extends RenderableProps<Element
      */
     heading: ComponentChildren;
 
-    tag?: ElementToTag<T>;
+    tag?: T;
 }
 
 /**
@@ -25,7 +24,7 @@ export interface HeadingProps<T extends Element> extends RenderableProps<Element
  * Specify the actual contents of the heading with the `heading` prop.
  * 
  */
-export const Heading = /* @__PURE__ */  memo(forwardRef(function Heading<T extends Element>({ children, heading, tag, ref: ref2, ...props }: HeadingProps<T>, ref: Ref<any>) {
+export const Heading = /* @__PURE__ */  memo(function Heading<T extends keyof JSX.IntrinsicElements>({ children, heading, tag, ref, ...props }: HeadingProps<T>) {
     const headingLevelBeforeUs = useContext(HeadingLevelContext);
     const newHeadingLevel = headingLevelBeforeUs + 1;
 
@@ -42,12 +41,12 @@ export const Heading = /* @__PURE__ */  memo(forwardRef(function Heading<T exten
     return (
         <>
             <HeadingReset newLevel={headingLevelBeforeUs + 1}>
-                {createElement(tag as any, useMergedProps(props, { ref }, { ref: ref2 }), heading)}
+                {createElement(tag as any, useMergedProps(props, { ref }), heading)}
                 {children}
             </HeadingReset>
         </>
     )
-}))
+})
 
 /**
  * Set the value that the next `Heading` will use as its base.

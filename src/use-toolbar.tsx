@@ -1,6 +1,7 @@
 import {
     CompleteListNavigationContext,
     ElementProps,
+    JSX,
     MakeSingleSelectionDeclarativeParameters,
     MakeSingleSelectionDeclarativeReturnType,
     TargetedOmit,
@@ -43,7 +44,7 @@ export interface UseToolbarParametersSelf {
     disabled: boolean;
 }
 
-export interface UseToolbarParameters<ContainerElement extends Element, ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends
+export interface UseToolbarParameters<ContainerElement extends keyof JSX.IntrinsicElements, ChildElement extends keyof JSX.IntrinsicElements, M extends UseToolbarSubInfo<ChildElement>> extends
     OmitStrong<MakeSingleSelectionDeclarativeParameters<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>>, "rovingTabIndexParameters" | "paginatedChildrenParameters" | "linearNavigationParameters" | "singleSelectionReturn">,
     TargetedOmit<UseCompleteListNavigationParameters<ContainerElement, ChildElement, M>, "rovingTabIndexParameters", "focusSelfParent">,
     TargetedOmit<UseLabelSyntheticParameters, "labelParameters", "onLabelClick">,
@@ -51,7 +52,7 @@ export interface UseToolbarParameters<ContainerElement extends Element, ChildEle
     toolbarParameters: UseToolbarParametersSelf;
 }
 
-export interface UseToolbarReturnType<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends OmitStrong<MakeSingleSelectionDeclarativeReturnType<UseCompleteListNavigationReturnType<ContainerElement, ChildElement, M>>, "props"> {
+export interface UseToolbarReturnType<ContainerElement extends keyof JSX.IntrinsicElements, ChildElement extends keyof JSX.IntrinsicElements, LabelElement extends keyof JSX.IntrinsicElements, M extends UseToolbarSubInfo<ChildElement>> extends OmitStrong<MakeSingleSelectionDeclarativeReturnType<UseCompleteListNavigationReturnType<ContainerElement, ChildElement, M>>, "props"> {
     propsToolbar: ElementProps<ContainerElement>;
     propsLabel: ElementProps<LabelElement>;
     randomIdInputReturn: UseRandomIdReturnType<ContainerElement, LabelElement>["randomIdReturn"];
@@ -59,14 +60,14 @@ export interface UseToolbarReturnType<ContainerElement extends Element, ChildEle
     context: UseToolbarContext<ChildElement, M>;
 }
 
-export interface UseToolbarSubInfo<ChildElement extends Element> extends UseCompleteListNavigationChildInfo<ChildElement> {
+export interface UseToolbarSubInfo<ChildElement extends keyof JSX.IntrinsicElements> extends UseCompleteListNavigationChildInfo<ChildElement> {
 
 }
 
 /* eslint-disable @typescript-eslint/no-empty-interface */
 export interface UseToolbarContextSelf /*extends Pick<UseToolbarParametersSelf<any, any, any>, "selectionLimit">*/ { }
 
-export interface UseToolbarContext<ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends
+export interface UseToolbarContext<ChildElement extends keyof JSX.IntrinsicElements, M extends UseToolbarSubInfo<ChildElement>> extends
     CompleteListNavigationContext<ChildElement, M> {
     toolbarContext: UseToolbarContextSelf;
 }
@@ -74,12 +75,12 @@ export interface UseToolbarContext<ChildElement extends Element, M extends UseTo
 
 export interface UseToolbarChildParametersSelf { disabledProp: "disabled" | "aria-disabled"; }
 
-export interface UseToolbarChildParameters<E extends Element, M extends UseToolbarSubInfo<E>> extends
+export interface UseToolbarChildParameters<E extends keyof JSX.IntrinsicElements, M extends UseToolbarSubInfo<E>> extends
 UseCompleteListNavigationChildDeclarativeParameters<E, M> {
     toolbarChildParameters: UseToolbarChildParametersSelf;
     context: UseToolbarContext<E, M>;
 }
-export interface UseToolbarChildReturnType<ChildElement extends Element, M extends UseToolbarSubInfo<ChildElement>> extends UseCompleteListNavigationChildDeclarativeReturnType<ChildElement, M> { }
+export interface UseToolbarChildReturnType<ChildElement extends keyof JSX.IntrinsicElements, M extends UseToolbarSubInfo<ChildElement>> extends UseCompleteListNavigationChildDeclarativeReturnType<ChildElement, M> { }
 
 /**
  * Implements a [Toolbar](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/) pattern, which is a collection of widgets in an expected order with a label (visible or hidden) and with the usual keyboard navigation stuff.
@@ -93,7 +94,7 @@ export interface UseToolbarChildReturnType<ChildElement extends Element, M exten
  * 
  * @compositeParams
  */
-export function useToolbar<ContainerElement extends Element, ChildElement extends Element, LabelElement extends Element>({
+export function useToolbar<ContainerElement extends keyof JSX.IntrinsicElements, ChildElement extends keyof JSX.IntrinsicElements, LabelElement extends keyof JSX.IntrinsicElements>({
     linearNavigationParameters,
     toolbarParameters: { orientation, role, disabled },
     labelParameters,
@@ -150,7 +151,7 @@ export function useToolbar<ContainerElement extends Element, ChildElement extend
 /**
  * @compositeParams
  */
-export function useToolbarChild<ChildElement extends Element>({ context, info, toolbarChildParameters: { disabledProp }, multiSelectionChildDeclarativeParameters, multiSelectionChildParameters: { multiSelectionDisabled }, ...args }: UseToolbarChildParameters<ChildElement, UseToolbarSubInfo<ChildElement>>): UseToolbarChildReturnType<ChildElement, UseToolbarSubInfo<ChildElement>> {
+export function useToolbarChild<ChildElement extends keyof JSX.IntrinsicElements>({ context, info, toolbarChildParameters: { disabledProp }, multiSelectionChildDeclarativeParameters, multiSelectionChildParameters: { multiSelectionDisabled }, ...args }: UseToolbarChildParameters<ChildElement, UseToolbarSubInfo<ChildElement>>): UseToolbarChildReturnType<ChildElement, UseToolbarSubInfo<ChildElement>> {
     return useMonitoring(function useToolbarChild(): UseToolbarChildReturnType<ChildElement, UseToolbarSubInfo<ChildElement>> {
         const {
             propsChild,

@@ -1,18 +1,18 @@
 
-import { useMergedProps, useState } from "preact-prop-helpers";
+import { useMergedProps, useState } from "preact-prop-helpers/preact";
 import { memo } from "preact/compat";
-import { Button, Toolbar, ToolbarChild } from "../../dist/preact/index.js";
+import { Button, Toolbar, ToolbarChild } from "preact-aria-widgets/preact";
 
 const DemoListItem = memo(function DemoListItem({ index }: { index: number }) {
 
     return (
-        <ToolbarChild<HTMLButtonElement>
+        <ToolbarChild<"button">
             index={index}
             focusSelf={e => e.focus()}
             disabledProp="disabled"
             render={info2 => {
                 return (
-                    <Button<HTMLButtonElement>
+                    <Button<"button">
                         tagButton="button"
                         pressed={false}
                         render={info3 => <button {...useMergedProps(info2.propsChild, info2.propsTabbable, info3.props)}>Toolbar child #{index}</button>} />
@@ -57,7 +57,7 @@ export function Demo() {
             <Code />
             <label><input type="number" min={0} value={count} onInput={e => setCount(e.currentTarget.valueAsNumber)} /> # of list items</label>
             <div>
-                <Toolbar<HTMLDivElement, HTMLButtonElement, HTMLLabelElement>
+                <Toolbar<"div", "button", "label">
                     orientation="horizontal"
                     role="toolbar"
                     singleSelectionAriaPropName="aria-pressed"

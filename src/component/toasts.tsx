@@ -1,22 +1,22 @@
-import { Context, OmitStrong, assertEmptyObject, createContext } from "preact-prop-helpers/preact";
+import { JSX, Context, OmitStrong, assertEmptyObject, createContext } from "preact-prop-helpers/preact";
 import { Get2, useContextWithWarning } from "../props.js";
 import { ToastInfo, ToastsContext, UseToastParameters, UseToastReturnType, UseToastsParameters, UseToastsReturnType, useToast, useToasts } from "../use-toasts.js";
 import { GenericComponentProps, useComponent } from "./util.js";
 
 
-export type ToastsProps<ContainerType extends Element, M extends ToastInfo = ToastInfo> = GenericComponentProps<
+export type ToastsProps<ContainerType extends keyof JSX.IntrinsicElements, M extends ToastInfo = ToastInfo> = GenericComponentProps<
     UseToastsReturnType<ContainerType, M>,
     Get2<UseToastsParameters, "managedChildrenParameters", "toastsParameters">,
     "visibleCount"
 >;
-export type ToastProps<E extends Element, M extends ToastInfo = ToastInfo> = GenericComponentProps<
+export type ToastProps<E extends keyof JSX.IntrinsicElements, M extends ToastInfo = ToastInfo> = GenericComponentProps<
     UseToastReturnType<E, M>,
     Get2<UseToastParameters<M>, "toastParameters", "info">,
     "index"
 > & { info?: OmitStrong<M, keyof ToastInfo>; };
 const ToastContext = createContext<ToastsContext<ToastInfo>>(null!);
 
-export function Toasts<ContainerType extends Element>({
+export function Toasts<ContainerType extends keyof JSX.IntrinsicElements>({
     onAfterChildLayoutEffect,
     onChildrenMountChange,
     render,
@@ -43,7 +43,7 @@ export function Toasts<ContainerType extends Element>({
     );
 }
 
-export function Toast<E extends Element>({ render, index, timeout, politeness, children, info, imperativeHandle }: ToastProps<E, ToastInfo>) {
+export function Toast<E extends keyof JSX.IntrinsicElements>({ render, index, timeout, politeness, children, info, imperativeHandle }: ToastProps<E, ToastInfo>) {
 
     return useComponent(
         imperativeHandle, 

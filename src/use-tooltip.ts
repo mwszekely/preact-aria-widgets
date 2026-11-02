@@ -2,9 +2,11 @@ import {
     assertEmptyObject,
     DismissListenerTypes,
     ElementProps,
+    EventTypeByTag,
     focus,
     getDocument,
     getWindow,
+    JSX,
     returnNull,
     TargetedPick,
     useCallback,
@@ -60,7 +62,7 @@ export interface UseTooltipParametersSelf {
     usesLongPress: boolean;
 }
 
-export interface UseTooltipParameters<TriggerType extends Element, PopupType extends Element> extends
+export interface UseTooltipParameters<TriggerType extends keyof JSX.IntrinsicElements, PopupType extends keyof JSX.IntrinsicElements> extends
     TargetedPick<UseEscapeDismissParameters<PopupType, true>, "escapeDismissParameters", "getDocument" | "parentDepth">,
     TargetedPick<UsePressReturnType<TriggerType>, "pressReturn", "longPress">,
     Pick<UseDismissParameters<any>, "activeElementParameters"> {
@@ -101,7 +103,7 @@ function delayedAlert(message: string) {
  * 
  * @compositeParams
  */
-export function useTooltip<TriggerType extends Element, PopupType extends Element>({
+export function useTooltip<TriggerType extends keyof JSX.IntrinsicElements, PopupType extends keyof JSX.IntrinsicElements>({
     tooltipParameters: {
         onStatus,
         tooltipSemanticType,
@@ -322,8 +324,8 @@ export function useTooltip<TriggerType extends Element, PopupType extends Elemen
         return {
             refElementPopupReturn,
             refElementSourceReturn,
-            propsPopup: useMergedProps<PopupType>(popupRefProps, propsPopup, popupFocusReturn.propsStable, { role: "tooltip" }, otherPopupProps, propsStablePopup),
-            propsTrigger: useMergedProps<TriggerType>(triggerRefProps, propsTrigger, triggerFocusReturn.propsStable, { onClick: useStableCallback(e => focus(e.currentTarget as Element as HTMLElement)) }, otherTriggerProps, propsStableSource),
+            propsPopup: useMergedProps(popupRefProps, propsPopup, popupFocusReturn.propsStable, { role: "tooltip" }, otherPopupProps, propsStablePopup),
+            propsTrigger: useMergedProps(triggerRefProps, propsTrigger, triggerFocusReturn.propsStable, { onClick: useStableCallback((e: EventTypeByTag<TriggerType, Event>) => focus(e.currentTarget as Element as HTMLElement)) }, otherTriggerProps, propsStableSource),
             tooltipReturn: {
                 getState,
                 //stateIsFocus,
@@ -339,7 +341,7 @@ export interface UseTooltipReturnTypeSelf {
     //stateIsMouse(): boolean;
 }
 
-export interface UseTooltipReturnType<TriggerType extends Element, PopupType extends Element> {
+export interface UseTooltipReturnType<TriggerType extends keyof JSX.IntrinsicElements, PopupType extends keyof JSX.IntrinsicElements> {
     propsPopup: ElementProps<PopupType>;
     propsTrigger: ElementProps<TriggerType>;
     tooltipReturn: UseTooltipReturnTypeSelf;

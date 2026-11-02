@@ -1,6 +1,6 @@
 
-import { useState } from "preact-prop-helpers";
-import { Menu, MenuItem, useDefaultRenderPortal } from "../../dist/preact/index.js";
+import { useState } from "preact-prop-helpers/preact";
+import { Menu, MenuItem, useDefaultRenderPortal } from "preact-aria-widgets/preact";
 
 function DemoListItem({ index }: { index: number }) {
 

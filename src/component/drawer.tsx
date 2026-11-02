@@ -1,15 +1,15 @@
-import { assertEmptyObject, memo, useContext } from "preact-prop-helpers/preact";
+import { JSX, assertEmptyObject, memo, useContext } from "preact-prop-helpers/preact";
 import { Get11 } from "../props.js";
 import { UseDrawerParameters, UseDrawerReturnType, useDrawer } from "../use-drawer.js";
 import { GenericComponentProps, ParentDepthContext, useComponent, useDefault } from "./util.js";
 
-export type DrawerProps<FocusContainerElement extends Element, SourceElement extends Element, DrawerElement extends Element, TitleElement extends Element> = GenericComponentProps<
+export type DrawerProps<FocusContainerElement extends keyof JSX.IntrinsicElements, SourceElement extends keyof JSX.IntrinsicElements, DrawerElement extends keyof JSX.IntrinsicElements, TitleElement extends keyof JSX.IntrinsicElements> = GenericComponentProps<
     UseDrawerReturnType<FocusContainerElement, SourceElement, DrawerElement, TitleElement>,
     Get11<UseDrawerParameters<DrawerElement, TitleElement>, "dismissParameters", "escapeDismissParameters", "labelParameters", "focusTrapParameters", "activeElementParameters", "dismissParameters", "backdropDismissParameters", "escapeDismissParameters", "lostFocusDismissParameters", "modalParameters", "refElementParameters">,
     "ariaLabel" | "onDismiss" | "active" | "focusPopup"
 >;
 
-export const Drawer = /* @__PURE__ */ memo((function Drawer<FocusContainerElement extends Element, SourceElement extends Element, DrawerElement extends Element, TitleElement extends Element>({
+export const Drawer = /* @__PURE__ */ memo((function Drawer<FocusContainerElement extends keyof JSX.IntrinsicElements, SourceElement extends keyof JSX.IntrinsicElements, DrawerElement extends keyof JSX.IntrinsicElements, TitleElement extends keyof JSX.IntrinsicElements>({
 
     active,
     onDismiss,

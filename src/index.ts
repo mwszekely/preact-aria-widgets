@@ -118,7 +118,7 @@ export { useDefaultRenderPortal } from "./component/util.js";
 
 export { ParentDepthContext, useDefault } from "./component/util.js";
 export { EventDetail } from "./props.js";
-export type { DisabledType, ElementFromTag, ElementToTag, PickByType, TagSensitiveProps } from "./props.js";
+export type { DisabledType, ElementFromTag, PickByType, TagSensitiveProps } from "./props.js";
 
 declare module 'preact' {
     /* eslint-disable @typescript-eslint/no-namespace */

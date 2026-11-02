@@ -1,6 +1,6 @@
 
-import { useState } from "preact-prop-helpers";
-import { Dialog, useDefaultRenderPortal } from "../../dist/preact/index.js";
+import { useState } from "preact-prop-helpers/preact";
+import { Dialog, useDefaultRenderPortal } from "preact-aria-widgets/preact";
 
 
 export function Blurb() {
@@ -44,12 +44,12 @@ export function Demo() {
             <Blurb />
             <Code />
             <div>
-                <Dialog<HTMLDivElement, HTMLButtonElement, HTMLDivElement, HTMLDivElement>
+                <Dialog<"div", "button", "div", "div">
                     active={open}
                     onDismiss={() => setOpen(false)}
                     dismissBackdropActive={true}
                     dismissEscapeActive={true}
-                    focusOpener={e => { e.focus() }}
+                    focusOpener={e => { e?.focus() }}
                     parentDepth={0}
                     focusPopup={(e, f) => {  f()?.focus() }}
                     ariaLabel={null}

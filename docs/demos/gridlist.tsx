@@ -1,7 +1,7 @@
 
-import { getEventDetail, useMergedProps, useState } from "preact-prop-helpers";
+import { getEventDetail, useMergedProps, useState } from "preact-prop-helpers/preact";
 import { useRef } from "preact/compat";
-import { Checkbox, CheckboxChangeEventDetail, EventDetail, Gridlist, GridlistCell, GridlistRow, UseCheckboxReturnType } from "../../dist/preact/index.js";
+import { Checkbox, CheckboxChangeEventDetail, EventDetail, Gridlist, GridlistCell, GridlistRow, UseCheckboxReturnType } from "preact-aria-widgets/preact";
 
 function getDocument() { return window.document; }
 

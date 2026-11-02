@@ -1,5 +1,6 @@
 import {
-    EventType,
+    EventTypeByTag,
+    JSX,
     TargetedOmit,
     useMemoObject,
     useMergedProps,
@@ -10,8 +11,8 @@ import { OmitStrong } from "./props.js";
 import { UseMenuSurfaceParameters, UseMenuSurfaceReturnType, useMenuSurface } from "./use-menu-surface.js";
 import { UseMenubarContext, UseMenubarItemParameters, UseMenubarItemReturnType, UseMenubarParameters, UseMenubarReturnType, UseMenubarSubInfo, useMenubar, useMenubarChild } from "./use-menubar.js";
 
-export interface UseMenuContext<ChildElement extends Element, M extends UseMenubarSubInfo<ChildElement>> extends UseMenubarContext<ChildElement, M> {
-    menu: { closeFromMenuItemClicked(e: EventType<any, any>): void; }
+export interface UseMenuContext<ChildElement extends keyof JSX.IntrinsicElements, M extends UseMenubarSubInfo<ChildElement>> extends UseMenubarContext<ChildElement, M> {
+    menu: { closeFromMenuItemClicked(e: EventTypeByTag<any, any>): void; }
 }
 export interface UseMenuParametersSelf {
     /** This is called whenever the corresponding arrow key is pressed on the triggering button. */
@@ -27,7 +28,7 @@ export interface UseMenuParametersSelf {
     openDirection: "down" | "up" | "left" | "right" | null;
 }
 
-export interface UseMenuParameters<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuButtonElement extends Element, MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends
+export interface UseMenuParameters<MenuSurfaceElement extends keyof JSX.IntrinsicElements, MenuParentElement extends keyof JSX.IntrinsicElements, MenuButtonElement extends keyof JSX.IntrinsicElements, MenuItemElement extends keyof JSX.IntrinsicElements, M extends UseMenubarSubInfo<MenuItemElement>> extends
     OmitStrong<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "toolbarParameters" | "labelParameters">,
     TargetedOmit<UseMenuSurfaceParameters<MenuSurfaceElement, MenuButtonElement>, "menuSurfaceParameters", "role" | "surfaceId">,
     TargetedOmit<UseMenubarParameters<MenuParentElement, MenuItemElement, M>, "toolbarParameters", "role">,
@@ -37,11 +38,11 @@ export interface UseMenuParameters<MenuSurfaceElement extends Element, MenuParen
 
     menuParameters: UseMenuParametersSelf;
 }
-export interface UseMenuItemParameters<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseMenubarItemParameters<MenuItemElement, M> {
+export interface UseMenuItemParameters<MenuItemElement extends keyof JSX.IntrinsicElements, M extends UseMenubarSubInfo<MenuItemElement>> extends UseMenubarItemParameters<MenuItemElement, M> {
 
 }
 
-export interface UseMenuReturnType<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends
+export interface UseMenuReturnType<MenuSurfaceElement extends keyof JSX.IntrinsicElements, MenuParentElement extends keyof JSX.IntrinsicElements, MenuItemElement extends keyof JSX.IntrinsicElements, MenuButtonElement extends keyof JSX.IntrinsicElements, M extends UseMenubarSubInfo<MenuItemElement>> extends
     UseMenuSurfaceReturnType<MenuSurfaceElement, MenuParentElement, MenuButtonElement>,
     OmitStrong<UseMenubarReturnType<MenuParentElement, MenuItemElement, MenuButtonElement, M>, "propsMenubar" | "propsLabel" | "context"> {
     context: UseMenuContext<MenuItemElement, M>;
@@ -53,10 +54,10 @@ export interface MenuItemReturnTypeSelf {
      * 
      * Use this function to do so.
      */
-    closeMenu(e: EventType<any, any>): void;
+    closeMenu(e: EventTypeByTag<any, any>): void;
 }
 
-export interface UseMenuItemReturnType<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseMenubarItemReturnType<MenuItemElement, M> {
+export interface UseMenuItemReturnType<MenuItemElement extends keyof JSX.IntrinsicElements, M extends UseMenubarSubInfo<MenuItemElement>> extends UseMenubarItemReturnType<MenuItemElement, M> {
     menuItemReturn: MenuItemReturnTypeSelf;
 }
 
@@ -71,7 +72,7 @@ export interface UseMenuItemReturnType<MenuItemElement extends Element, M extend
  * 
  * @compositeParams 
  */
-export function useMenu<MenuSurfaceElement extends Element, MenuParentElement extends Element, MenuItemElement extends Element, MenuButtonElement extends Element>({
+export function useMenu<MenuSurfaceElement extends keyof JSX.IntrinsicElements, MenuParentElement extends keyof JSX.IntrinsicElements, MenuItemElement extends keyof JSX.IntrinsicElements, MenuButtonElement extends keyof JSX.IntrinsicElements>({
     dismissParameters,
     escapeDismissParameters,
     menuParameters: { openDirection, onOpen },
@@ -174,19 +175,19 @@ export function useMenu<MenuSurfaceElement extends Element, MenuParentElement ex
             rovingTabIndexReturn,
             randomIdInputReturn,
             propsTarget: useMergedProps(propsTarget, propsMenubar),
-            propsTrigger: useMergedProps<MenuButtonElement>({ onKeyDown }, propsTrigger, propsButtonAsMenuLabel),
+            propsTrigger: useMergedProps({ onKeyDown }, propsTrigger, propsButtonAsMenuLabel),
         }
     });
 }
 
-export interface UseMenuItemParameters<MenuItemElement extends Element, M extends UseMenubarSubInfo<MenuItemElement>> extends UseMenubarItemParameters<MenuItemElement, M> {
+export interface UseMenuItemParameters<MenuItemElement extends keyof JSX.IntrinsicElements, M extends UseMenubarSubInfo<MenuItemElement>> extends UseMenubarItemParameters<MenuItemElement, M> {
     context: UseMenuContext<MenuItemElement, M>;
 }
 
 /**
  * @compositeParams
  */
-export function useMenuItem<MenuItemElement extends Element>(p: UseMenuItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenuItemReturnType<MenuItemElement, UseMenubarSubInfo<MenuItemElement>> {
+export function useMenuItem<MenuItemElement extends keyof JSX.IntrinsicElements>(p: UseMenuItemParameters<MenuItemElement, UseMenubarSubInfo<MenuItemElement>>): UseMenuItemReturnType<MenuItemElement, UseMenubarSubInfo<MenuItemElement>> {
     return useMonitoring(function useMenuItem() {
         const ret = useMenubarChild<MenuItemElement>(p);
 

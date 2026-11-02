@@ -3,6 +3,7 @@ import {
     assertEmptyObject,
     ElementProps,
     findFirstFocusable,
+    JSX,
     TargetedOmit,
     useMergedProps,
     useModal,
@@ -14,7 +15,7 @@ import {
 import { OmitStrong, Prefices, useMonitoring } from "./props.js";
 import { useLabelSynthetic, UseLabelSyntheticParameters } from "./use-label.js";
 
-export interface UseDialogParameters<_DialogElement extends Element, _TitleElement extends Element> extends
+export interface UseDialogParameters<_DialogElement extends keyof JSX.IntrinsicElements, _TitleElement extends keyof JSX.IntrinsicElements> extends
     OmitStrong<UseModalParameters<"escape" | "backdrop">, "focusTrapParameters" | "dismissParameters" | "backdropDismissParameters" | "escapeDismissParameters" | "lostFocusDismissParameters">,
     TargetedOmit<UseModalParameters<"escape" | "backdrop">, "focusTrapParameters", "trapActive" | "onlyMoveFocus">,
     TargetedOmit<UseModalParameters<"escape" | "backdrop">, "dismissParameters", "dismissActive">,
@@ -24,7 +25,7 @@ export interface UseDialogParameters<_DialogElement extends Element, _TitleEleme
     TargetedOmit<UseLabelSyntheticParameters, "labelParameters", "onLabelClick"> {
 }
 
-export interface UseDialogReturnType<FocusContainerElement extends Element, SourceElement extends Element, PopupElement extends Element, TitleElement extends Element> extends
+export interface UseDialogReturnType<FocusContainerElement extends keyof JSX.IntrinsicElements, SourceElement extends keyof JSX.IntrinsicElements, PopupElement extends keyof JSX.IntrinsicElements, TitleElement extends keyof JSX.IntrinsicElements> extends
     OmitStrong<UseModalReturnType<FocusContainerElement, SourceElement, PopupElement>, "propsStableSource" | "propsStablePopup">,
     Pick<UsePressReturnType<any>, "pressReturn"> {
     propsDialog: ElementProps<PopupElement>;
@@ -37,7 +38,7 @@ export interface UseDialogReturnType<FocusContainerElement extends Element, Sour
  * 
  * @compositeParams
  */
-export function useDialog<FocusContainerElement extends Element, SourceElement extends Element, DialogElement extends Element, TitleElement extends Element>({
+export function useDialog<FocusContainerElement extends keyof JSX.IntrinsicElements, SourceElement extends keyof JSX.IntrinsicElements, DialogElement extends keyof JSX.IntrinsicElements, TitleElement extends keyof JSX.IntrinsicElements>({
     dismissParameters,
     escapeDismissParameters,
     focusTrapParameters,
@@ -78,7 +79,7 @@ export function useDialog<FocusContainerElement extends Element, SourceElement e
             labelParameters: {
                 ...labelParameters,
                 onLabelClick: useStableCallback(() => {
-                    const e = refElementPopupReturn.getElement();
+                    const e = refElementPopupReturn.getElement()!;
                     focusTrapParameters.focusPopup(e, () => (findFirstFocusable(e!) as HTMLElement | null));
                 })
             },
@@ -92,7 +93,7 @@ export function useDialog<FocusContainerElement extends Element, SourceElement e
 
         return {
             propsFocusContainer,
-            propsDialog: useMergedProps<DialogElement>(propsStablePopup, propsInput),
+            propsDialog: useMergedProps(propsStablePopup, propsInput),
             propsSource: { ...propsStableSource },
             propsTitle: propsLabel,
             pressReturn,
