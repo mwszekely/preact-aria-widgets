@@ -1,4 +1,4 @@
-import { Accordion, AccordionSection } from "../../dist/preact/index.js";
+import { Accordion, AccordionSection } from "preact-aria-widgets/preact";
 import { DisabledIndex, MissingIndex, TestItem, fromStringNumber, fromStringString, useTestSyncState } from "../util.js";
 
 export function TestBasesAccordion() {
@@ -33,7 +33,7 @@ function Child({ index }: { index: number }) {
         return <div aria-hidden><div data-accordion-header>(There is no section #{index}&mdash;it is a hole in the array)<div data-accordion-header-button /></div><div data-accordion-section /></div>
 
     return (
-        <AccordionSection<HTMLDivElement, HTMLButtonElement, HTMLDivElement>
+        <AccordionSection<"h3", "button", "div">
             disabled={index == DisabledIndex}
             tagButton="button"
             index={index}

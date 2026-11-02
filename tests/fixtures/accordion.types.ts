@@ -1,4 +1,4 @@
-import type { AccordionProps } from "../../dist/preact/index.js";
+import type { AccordionProps } from "preact-aria-widgets/preact";
 
 export interface AccordionTestingConstants extends Record<`setChildOpened_${number}`, (opened: "true" | "false" | null) => Promise<void>> {
     setChildCount(count: number): Promise<void>;

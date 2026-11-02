@@ -1,5 +1,5 @@
 import { RenderableProps } from "preact";
-import { useForceUpdate, useSearchParamStateDeclarative, useState } from "preact-prop-helpers";
+import { useForceUpdate, useSearchParamStateDeclarative, useState } from "preact-prop-helpers/preact";
 import { useCallback, useLayoutEffect, useRef } from "preact/hooks";
 import type { AccordionTestingConstants } from "./fixtures/accordion.types.js";
 import type { ButtonTestingConstants } from "./fixtures/button.types.js";

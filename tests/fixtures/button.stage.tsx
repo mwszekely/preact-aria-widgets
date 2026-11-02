@@ -1,4 +1,4 @@
-import { Button } from "../../dist/preact/index.js";
+import { Button } from "preact-aria-widgets/preact";
 import { TestItem, fromStringBoolean, fromStringString, useTestSyncState } from "../util.js";
 
 export function TestBasesButton() {

@@ -1,5 +1,5 @@
 import { useMergedProps } from "preact-prop-helpers/preact";
-import { Toolbar, ToolbarChild } from "../../dist/preact/index.js";
+import { Toolbar, ToolbarChild } from "preact-aria-widgets/preact";
 import { TestItem, fromStringBoolean, fromStringNumber, useTestSyncState } from "../util.js";
 
 export function TestBasesToolbar() {

@@ -20,9 +20,6 @@ importers:
       preact-aria-widgets:
         specifier: link:..
         version: link:..
-      preact-prop-helpers:
-        specifier: github:mwszekely/preact-prop-helpers
-        version: https://codeload.github.com/mwszekely/preact-prop-helpers/tar.gz/f87572a45472ffe2ceea83145648b40ca369c571(@preact/signals@2.11.3(preact@10.29.8))(preact@10.29.8)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(solid-js@1.9.17)
       serve:
         specifier: ^14.2.6
         version: 14.2.6(supports-color@7.2.0)
@@ -682,14 +679,6 @@ packages:
     resolution: {integrity: sha512-7FNeNl8NCE7aINx7WXiKQrPYZWC/hvrTsmk6zmxbI7LTXE7hVek/n8AfVgpe2y82zl3w0HvCHN0bVKMBoJcC0w==}
     engines: {node: '>= 10.0.0'}
 
-  '@preact/signals-core@1.14.4':
-    resolution: {integrity: sha512-HNB6HYeYKhQbJ1aKl+YRjrS4+QWHLKX6qKoUsfS/m0vqzsVaEBiZiaKbG/e+NKk2ch5ALQr/ihWaMHxiCuuWHA==}
-
-  '@preact/signals@2.11.3':
-    resolution: {integrity: sha512-mttwFM98G/JiriTgMwU+UWygL6sfVmYEiNcPSKkUnv4PxPpZhmP2ugGC4qi360+ZIHyQ8NY05bfJT3b4RUIGlw==}
-    peerDependencies:
-      preact: '>= 10.25.0 || >=11.0.0-0'
-
   '@rollup/plugin-alias@6.0.0':
     resolution: {integrity: sha512-tPCzJOtS7uuVZd+xPhoy5W4vThe6KWXNmsFCNktaAh5RTqcLiSfT4huPQIXkgJ6YCOjJHvecOAzQxLFhPxKr+g==}
     engines: {node: '>=20.19.0'}
@@ -913,15 +902,6 @@ packages:
   arg@5.0.2:
     resolution: {integrity: sha512-PYjyFOLKQ9y57JvQ6QLo8dAgNqswh8M1RMJYdQduT6xbWSgK36P/Z/v+p888pM69jMMfS8Xd8F6I1kQ/I9HUGg==}
 
-  async-to-sync@https://codeload.github.com/mwszekely/async-to-sync/tar.gz/673a2ef721f9d2b41ec2d7d93d02ec6ec9421a06:
-    resolution: {gitHosted: true, integrity: sha512-uJ/HshiZqglGaPkcPQbvWpqC2o6ehTVMSaEsWA5dqi1DQfbtX90Z5b2sEAVmvWc7lJhLC2ntr6yVlAnRUi7+rw==, tarball: https://codeload.github.com/mwszekely/async-to-sync/tar.gz/673a2ef721f9d2b41ec2d7d93d02ec6ec9421a06}
-    version: 0.0.1
-    peerDependencies:
-      '@preact/signals': ^2.3.1
-      preact: ^10.27.2
-      react: ^19.1.1
-      solid-js: ^1.9.9
-
   axe-core@4.14.0:
     resolution: {integrity: sha512-9WTZxEjsZ7b13TH8JPmbV2z8CHbl80/2hm3XPEG4JgNdQLK81IBRXmSxHfMAOkSqQeRxT/0dwNDz2GOm3zzpcQ==}
     engines: {node: '>=4'}
@@ -939,9 +919,6 @@ packages:
     resolution: {integrity: sha512-YeesxhUmR4h5y5V8KF8iBCqJb8YFrBJ++XBTeGcWIaQOYXGN19JM0FoiOjAhwuDoln8owMgXcWBmgHtYSkky2w==}
     engines: {node: '>=6.0.0'}
     hasBin: true
-
-  blocking-elements@0.1.1:
-    resolution: {integrity: sha512-/SLWbEzMoVIMZACCyhD/4Ya2M1PWP1qMKuiymowPcI+PdWDARqeARBjhj73kbUBCxEmTZCUu5TAqxtwUO9C1Ig==}
 
   boxen@7.0.0:
     resolution: {integrity: sha512-j//dBVuyacJbvW+tvZ9HuH03fZ46QcaKvvhZickZqtB271DxJ7SNRSNxrV/dZX0085m7hISRZWbzWlJvx/rHSg==}
@@ -997,10 +974,6 @@ packages:
     resolution: {integrity: sha512-Su+uU5sr1jkUy1sGRpLKjKrvEOVXgSgiSInwa/qeID6aJ07yh+5NWc3h2QfjHjBnfX4LhtFcuAWKUsJ3r+fjbg==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
-  clsx@2.1.1:
-    resolution: {integrity: sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==}
-    engines: {node: '>=6'}
-
   color-convert@2.0.1:
     resolution: {integrity: sha512-RRECPsj7iu/xb5oKYcsFHSppFNnsj/52OVTRKb4zP5onXwVF3zVmmToNcOfGC+CRDpfK/U584fMg38ZHCaElKQ==}
     engines: {node: '>=7.0.0'}
@@ -1036,9 +1009,6 @@ packages:
   cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
     engines: {node: '>= 8'}
-
-  csstype@3.2.3:
-    resolution: {integrity: sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==}
 
   debug@2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
@@ -1187,15 +1157,8 @@ packages:
     engines: {node: '>=6'}
     hasBin: true
 
-  lodash-es@4.18.1:
-    resolution: {integrity: sha512-J8xewKD/Gk22OZbhpOVSwcs60zhd95ESDwezOFuA3/099925PdHJ7OFHNTGtajL3AlZkykD32HykiMo+BIBI8A==}
-
   lodash.debounce@4.0.8:
     resolution: {integrity: sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==}
-
-  map-and-set-extensions@https://codeload.github.com/mwszekely/map-and-set-extensions/tar.gz/350d567c32944f93981c3165a9911bf4cea7fa8a:
-    resolution: {gitHosted: true, integrity: sha512-2ZeRV2DiJxkxPaZjpNDXVwc+9RX4tMbZmi2F29E2ghnj4LpuzbX/zs4cpRXTws7Ph59WxnCTrf4J5rcL7jQGnA==, tarball: https://codeload.github.com/mwszekely/map-and-set-extensions/tar.gz/350d567c32944f93981c3165a9911bf4cea7fa8a}
-    version: 1.0.0
 
   merge-stream@2.0.0:
     resolution: {integrity: sha512-abv/qOcuPfk3URPfDzmZU1LKmuw8kT+0nIHvKrKgFrwifol/doWcdA4ZqsWQ8ENrFKkd67Mfpo/LovbIUsbt3w==}
@@ -1277,22 +1240,6 @@ packages:
     engines: {node: '>=20'}
     hasBin: true
 
-  preact-prop-helpers@https://codeload.github.com/mwszekely/preact-prop-helpers/tar.gz/f87572a45472ffe2ceea83145648b40ca369c571:
-    resolution: {gitHosted: true, integrity: sha512-Ktxis1FN1+FpyCG1HYmya8Pp3vFyfv6bOrw2uRWaS/fXMvcC9A8xCDW5maRM4BsCxXhenFlQyL6yqLFhIyIwDg==, tarball: https://codeload.github.com/mwszekely/preact-prop-helpers/tar.gz/f87572a45472ffe2ceea83145648b40ca369c571}
-    version: 0.0.1
-    peerDependencies:
-      preact: ^10.28.3
-      react: ^19.2.4
-      react-dom: ^19.2.4
-
-  preact@10.29.8:
-    resolution: {integrity: sha512-ej2aVZ+vZ8WO7tvlQWRM9N63A0KzF9q4mWJfDUHgYaIofWY9hu74QdnQrjoPMmZi2/nZ5gN0bJCQF49xQqx09Q==}
-    peerDependencies:
-      preact-render-to-string: '>=5'
-    peerDependenciesMeta:
-      preact-render-to-string:
-        optional: true
-
   range-parser@1.2.0:
     resolution: {integrity: sha512-kA5WQoNVo4t9lNx2kQNFCxKeBl5IbbSNBl1M/tLkw9WCn+hxNBAW5Qh8gdhs63CJnhjJ2zQWFoqPJP2sK1AV5A==}
     engines: {node: '>= 0.6'}
@@ -1300,15 +1247,6 @@ packages:
   rc@1.2.8:
     resolution: {integrity: sha512-y3bGgqKj3QBdxLbLkomlohkvsA8gdAiUQlSBJnBhfn+BPxg4bc62d8TcBW15wavDfgexCgccckhcZvywyQYPOw==}
     hasBin: true
-
-  react-dom@19.3.1:
-    resolution: {integrity: sha512-Y0bARz53lhEC1NMCASs0/j+faB/zqt3R8hpvg1e8+61ZVJ4UL0UdC4cBbXfZMcIuhrfgeILTLe+ZeBCavQPtKQ==}
-    peerDependencies:
-      react: ^19.3.1
-
-  react@19.3.1:
-    resolution: {integrity: sha512-QNhWdt7nrgVWWQG58QuGsAR3jv3Hbe4mb4vz7w2csnHavciZJgda1CPNaldF6eVxv90ud3jUXpKlHL69gO38yw==}
-    engines: {node: '>=0.10.0'}
 
   readdirp@5.1.1:
     resolution: {integrity: sha512-Kko+Y5XQ6fM+Ce3dq3m9YGxnacYZYl9cA1wZjaF3Vbry2L3i1qVg8+CAgNPsXRArPMUMCaOR7oa9Nqntc43JKA==}
@@ -1356,22 +1294,9 @@ packages:
     engines: {node: '>=20.19.0'}
     hasBin: true
 
-  scheduler@0.28.0:
-    resolution: {integrity: sha512-juorfCmIkIw8tT+p5BXSm6PJjQF/ycEYmKyzURCIt/RaZIhL+PulbQ9Yu2z1HdOJDdqDTlxA1+xKBmHXJsczAw==}
-
   serialize-javascript@7.1.2:
     resolution: {integrity: sha512-GL2BWwVa6JydKO6l/ljVgjAZF4QJ3S7dWDWi53s5GZT8PJzD2fNxi67HANQGKAqPrwEpL5ba7gUBGi0Ls/sEoQ==}
     engines: {node: '>=20.0.0'}
-
-  seroval-plugins@1.6.11:
-    resolution: {integrity: sha512-LmB3nd8pL39jKHKvnpTUjcjBtNwR8MLty/ydAR8qbfXt5j6/6KqR1atuw8cVmD2/lDxAkvAwq5tI/HsisD9Fqg==}
-    engines: {node: '>=10'}
-    peerDependencies:
-      seroval: ^1.0
-
-  seroval@1.6.11:
-    resolution: {integrity: sha512-hpb6XnMCGN/A+79Uf8V7/iTGkyyyazNn5X0CoCAp7Uy9vT3RT8jZ9GLcnxGoVjg3P8AArbe4ZVHq6C8oT2a0kA==}
-    engines: {node: '>=10'}
 
   serve-handler@6.1.7:
     resolution: {integrity: sha512-CinAq1xWb0vR3twAv9evEU8cNWkXCb9kd5ePAHUKJBkOsUpR1wt/CvGdeca7vqumL1U5cSaeVQ6zZMxiJ3yWsg==}
@@ -1395,9 +1320,6 @@ packages:
   smob@1.6.2:
     resolution: {integrity: sha512-RQsvleCbF8cVHEv+xuDGaA4pOizFqJ0GgjtMSRo6oP8pnN7WsigHgVGey6aILRBKv4W2YOMHLqbKdnB6hpB9fw==}
     engines: {node: '>=20.0.0'}
-
-  solid-js@1.9.17:
-    resolution: {integrity: sha512-4GAmLOWPfNV8H9Jfn2LSFTpNEG6jiOKPiwd5lnLGQtehHaX6l3TOLzJqQ7mqwB/3k1Yy3zyumFVopmc/tm34ow==}
 
   source-map-js@1.2.2:
     resolution: {integrity: sha512-KGj/8Y43x35aZVDtt+J4mK1hoLGHULMYfSkODJNQjNDC3oW1PqPoxMwo0pLUsWM/UEGzON/NxeHywEfNXNP3Vw==}
@@ -1437,9 +1359,6 @@ packages:
   supports-color@7.2.0:
     resolution: {integrity: sha512-qpCAvRl9stuOHveKsn7HncJRvv501qIacKzQlO/+Lwxc9+0q2wLyv4Dfvt80/DPn2pqOBsJdDiogXGR9+OvwRw==}
     engines: {node: '>=8'}
-
-  tabbable@6.5.0:
-    resolution: {integrity: sha512-wieBHXygIm7OyQOu5hQlkk62/WyCFYGlWg7L6/ZCUZwx0o398Zkn4pVmMyfYhfMG8kGrj/Krt8eIk6UKC6VzwA==}
 
   terser@5.51.2:
     resolution: {integrity: sha512-bWnjSNscmuI+GJze6ZupnHP8G/cTcsJF+bXCeQknk2SHQsgbNJnLrqiH9jZ2W4STPVXH2mDKKRX3iwPhc9Cn/Q==}
@@ -2208,13 +2127,6 @@ snapshots:
       '@parcel/watcher-win32-x64': 2.6.0
     optional: true
 
-  '@preact/signals-core@1.14.4': {}
-
-  '@preact/signals@2.11.3(preact@10.29.8)':
-    dependencies:
-      '@preact/signals-core': 1.14.4
-      preact: 10.29.8
-
   '@rollup/plugin-alias@6.0.0(rollup@4.64.10)':
     optionalDependencies:
       rollup: 4.64.10
@@ -2356,13 +2268,6 @@ snapshots:
 
   arg@5.0.2: {}
 
-  async-to-sync@https://codeload.github.com/mwszekely/async-to-sync/tar.gz/673a2ef721f9d2b41ec2d7d93d02ec6ec9421a06(@preact/signals@2.11.3(preact@10.29.8))(preact@10.29.8)(react@19.3.1)(solid-js@1.9.17):
-    dependencies:
-      '@preact/signals': 2.11.3(preact@10.29.8)
-      preact: 10.29.8
-      react: 19.3.1
-      solid-js: 1.9.17
-
   axe-core@4.14.0: {}
 
   babel-plugin-polyfill-corejs3@1.0.0(@babel/core@8.0.7):
@@ -2374,8 +2279,6 @@ snapshots:
   balanced-match@1.0.2: {}
 
   baseline-browser-mapping@2.11.29: {}
-
-  blocking-elements@0.1.1: {}
 
   boxen@7.0.0:
     dependencies:
@@ -2434,8 +2337,6 @@ snapshots:
       execa: 5.1.1
       is-wsl: 2.2.0
 
-  clsx@2.1.1: {}
-
   color-convert@2.0.1:
     dependencies:
       color-name: 1.1.4
@@ -2475,8 +2376,6 @@ snapshots:
       path-key: 3.1.1
       shebang-command: 2.0.0
       which: 2.0.2
-
-  csstype@3.2.3: {}
 
   debug@2.6.9(supports-color@7.2.0):
     dependencies:
@@ -2578,13 +2477,7 @@ snapshots:
 
   json5@2.2.3: {}
 
-  lodash-es@4.18.1: {}
-
   lodash.debounce@4.0.8: {}
-
-  map-and-set-extensions@https://codeload.github.com/mwszekely/map-and-set-extensions/tar.gz/350d567c32944f93981c3165a9911bf4cea7fa8a:
-    dependencies:
-      tslib: 2.8.1
 
   merge-stream@2.0.0: {}
 
@@ -2639,23 +2532,6 @@ snapshots:
 
   playwright-core@1.64.1: {}
 
-  preact-prop-helpers@https://codeload.github.com/mwszekely/preact-prop-helpers/tar.gz/f87572a45472ffe2ceea83145648b40ca369c571(@preact/signals@2.11.3(preact@10.29.8))(preact@10.29.8)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(solid-js@1.9.17):
-    dependencies:
-      async-to-sync: https://codeload.github.com/mwszekely/async-to-sync/tar.gz/673a2ef721f9d2b41ec2d7d93d02ec6ec9421a06(@preact/signals@2.11.3(preact@10.29.8))(preact@10.29.8)(react@19.3.1)(solid-js@1.9.17)
-      blocking-elements: 0.1.1
-      clsx: 2.1.1
-      lodash-es: 4.18.1
-      map-and-set-extensions: https://codeload.github.com/mwszekely/map-and-set-extensions/tar.gz/350d567c32944f93981c3165a9911bf4cea7fa8a
-      preact: 10.29.8
-      react: 19.3.1
-      react-dom: 19.3.1(react@19.3.1)
-      tabbable: 6.5.0
-    transitivePeerDependencies:
-      - '@preact/signals'
-      - solid-js
-
-  preact@10.29.8: {}
-
   range-parser@1.2.0: {}
 
   rc@1.2.8:
@@ -2664,13 +2540,6 @@ snapshots:
       ini: 1.3.8
       minimist: 1.2.8
       strip-json-comments: 2.0.1
-
-  react-dom@19.3.1(react@19.3.1):
-    dependencies:
-      react: 19.3.1
-      scheduler: 0.28.0
-
-  react@19.3.1: {}
 
   readdirp@5.1.1: {}
 
@@ -2748,15 +2617,7 @@ snapshots:
     optionalDependencies:
       '@parcel/watcher': 2.6.0
 
-  scheduler@0.28.0: {}
-
   serialize-javascript@7.1.2: {}
-
-  seroval-plugins@1.6.11(seroval@1.6.11):
-    dependencies:
-      seroval: 1.6.11
-
-  seroval@1.6.11: {}
 
   serve-handler@6.1.7:
     dependencies:
@@ -2794,12 +2655,6 @@ snapshots:
 
   smob@1.6.2: {}
 
-  solid-js@1.9.17:
-    dependencies:
-      csstype: 3.2.3
-      seroval: 1.6.11
-      seroval-plugins: 1.6.11(seroval@1.6.11)
-
   source-map-js@1.2.2: {}
 
   source-map-support@0.5.21:
@@ -2836,8 +2691,6 @@ snapshots:
   supports-color@7.2.0:
     dependencies:
       has-flag: 4.0.0
-
-  tabbable@6.5.0: {}
 
   terser@5.51.2:
     dependencies:
