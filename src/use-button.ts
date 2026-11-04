@@ -15,7 +15,8 @@ import {
     useMonitoring,
     usePress,
     useRefElement,
-    useStableCallback
+    useStableCallback,
+    AriaRole
 } from "preact-prop-helpers/preact";
 import { DisabledType, EnhancedEventHandler, OmitStrong, TargetedEnhancedEvent } from "./props.js";
 
@@ -59,7 +60,7 @@ export interface UseButtonParametersSelf<Tag extends keyof JSX.IntrinsicElements
     /**
      * Generally just "button". Avoid using `null` unless the role is handled by something else.
      */
-    role: Nullable<JSX.AriaRole>;
+    role: Nullable<AriaRole>;
 }
 
 export interface UseButtonParameters<ButtonElementTag extends keyof JSX.IntrinsicElements> extends
