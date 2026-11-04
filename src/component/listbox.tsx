@@ -58,8 +58,10 @@ export const GroupedListbox = /* @__PURE__ */ memo((function GroupedListbox<Labe
     render,
     onElementChange,
     onMount,
-    onUnmount,    
+    onUnmount,
+    ...void1
 }: Pick<ListboxProps<any, any, LabelElement, any>, "orientation" | "ariaLabel" | "render" | "onElementChange" | "onMount" | "onUnmount">) {
+    assertEmptyObject(void1);
 
     const info = useListbox<any, any, LabelElement>({
         labelParameters: { ariaLabel },

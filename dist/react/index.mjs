@@ -3293,7 +3293,8 @@ const ListboxContext = createContext(null);
 createContext(null);
 const ListboxChildContext = createContext(null);
 const ListboxGroupContext = createContext(null);
-const GroupedListbox = /* @__PURE__ */ memo((function GroupedListbox({ ariaLabel, orientation, render, onElementChange, onMount, onUnmount }) {
+const GroupedListbox = /* @__PURE__ */ memo((function GroupedListbox({ ariaLabel, orientation, render, onElementChange, onMount, onUnmount, ...void1 }) {
+	assertEmptyObject(void1);
 	const info = useListbox({
 		labelParameters: { ariaLabel },
 		linearNavigationParameters: {
@@ -3916,7 +3917,7 @@ function SliderThumb({ label, tag, value, max, min, index, render, valueText, im
 const TableRowContext = createContext(null);
 const TableCellContext = createContext(null);
 const TableProcessedChildrenContext = createContext(null);
-const Table = /* @__PURE__ */ memo(function Table({ ariaLabel, singleSelectionMode, multiSelectionMode, tagTable, imperativeHandle, render, initiallySingleSelectedIndex, multiSelectionAriaPropName, onSelectionChange, onSingleSelectedIndexChange, singleSelectionAriaPropName, collator, disableHomeEndKeys, initiallyTabbableColumn, navigatePastEnd, navigatePastStart, noTypeahead, onElementChange, onMount, onNavigateLinear, onNavigateTypeahead, onTabbableColumnChange, onTabbableIndexChange, onUnmount, pageNavigationSize, paginationMax, paginationMin, typeaheadTimeout, untabbable, getSortValueAt, initiallySortedColumn, ...void1 }) {
+const Table = /* @__PURE__ */ memo(function Table({ ariaLabel, singleSelectionMode, multiSelectionMode, tagTable, imperativeHandle, render, initiallySingleSelectedIndex, multiSelectionAriaPropName, onSelectionChange, onSingleSelectedIndexChange, singleSelectionAriaPropName, collator, disableHomeEndKeys, initiallyTabbableColumn, navigatePastEnd, navigatePastStart, noTypeahead, onElementChange, onMount, onNavigateLinear, onNavigateTypeahead, onTabbableColumnChange, onTabbableIndexChange, onUnmount, pageNavigationSize, paginationMax, paginationMin, typeaheadTimeout, untabbable, getSortValueAt, initiallySortedColumn, getIndex, compare, ...void1 }) {
 	assertEmptyObject(void1);
 	getSortValueAt ??= identity$1;
 	useEnsureStability("Table", getSortValueAt);
@@ -3969,8 +3970,8 @@ const Table = /* @__PURE__ */ memo(function Table({ ariaLabel, singleSelectionMo
 		},
 		gridNavigationCompleteParameters: { getSortValueAt },
 		processedIndexManglerParameters: {
-			compare: null,
-			getIndex: useDefault("getIndex", null)
+			compare,
+			getIndex: useDefault("getIndex", getIndex)
 		}
 	}));
 });

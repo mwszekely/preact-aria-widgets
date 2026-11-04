@@ -1,5 +1,5 @@
 import { JSX, OmitStrong, TagToElement, VNode, assertEmptyObject, createContext, focus, identity, memo, useEnsureStability, useStableCallback } from "preact-prop-helpers/preact";
-import { Get, Get12, Get3, Get4, Get5, Get9, useContextWithWarning } from "../props.js";
+import { Get, Get13, Get3, Get4, Get5, Get9, useContextWithWarning } from "../props.js";
 import { TableCellInfo, TableRowInfo, TableSectionInfo, UseTableBodyParameters, UseTableBodyReturnType, UseTableCellContext, UseTableCellParameters, UseTableCellReturnType, UseTableHeadParameters, UseTableHeadReturnType, UseTableParameters, UseTableProcessedChildrenContext, UseTableReturnType, UseTableRowContext, UseTableRowOuterParameters, UseTableRowOuterReturnType, UseTableRowParameters, UseTableRowReturnType, useTable, useTableBody, useTableCell, useTableHead, useTableRow, useTableRowOuter } from "../use-table.js";
 import { GenericComponentProps, useComponent, useDefault } from "./util.js";
 
@@ -10,7 +10,7 @@ const TableProcessedChildrenContext = createContext<UseTableProcessedChildrenCon
 
 export type TableProps<TableElement extends keyof JSX.IntrinsicElements, RowElement extends keyof JSX.IntrinsicElements, LabelElement extends keyof JSX.IntrinsicElements> = GenericComponentProps<
     UseTableReturnType<TableElement, RowElement, LabelElement>,
-    Get12<UseTableParameters<TableElement, RowElement>, "labelParameters", "tableParameters", "singleSelectionParameters", "multiSelectionParameters", "gridNavigationParameters", "linearNavigationParameters", "typeaheadNavigationParameters", "rovingTabIndexParameters", "refElementParameters", "paginatedChildrenParameters", "linearNavigationParameters", "gridNavigationCompleteParameters">,
+    Get13<UseTableParameters<TableElement, RowElement>, "labelParameters", "tableParameters", "singleSelectionParameters", "multiSelectionParameters", "gridNavigationParameters", "linearNavigationParameters", "typeaheadNavigationParameters", "rovingTabIndexParameters", "refElementParameters", "paginatedChildrenParameters", "linearNavigationParameters", "gridNavigationCompleteParameters", "processedIndexManglerParameters">,
     "tagTable"
 >;
 
@@ -79,6 +79,9 @@ export const Table = /* @__PURE__ */ memo(function Table<TableElement extends ke
     untabbable,
     getSortValueAt,
     initiallySortedColumn,
+    getIndex,
+    compare,
+
     ...void1
 }: TableProps<TableElement, RowElement, LabelElement>) {
     type RM = TableRowInfo<RowElement>;
@@ -109,8 +112,8 @@ export const Table = /* @__PURE__ */ memo(function Table<TableElement extends ke
             multiSelectionParameters: { multiSelectionMode: multiSelectionMode || "disabled", multiSelectionAriaPropName, onSelectionChange },
             gridNavigationCompleteParameters: { getSortValueAt },
             processedIndexManglerParameters: {
-                compare: null,
-                getIndex: useDefault("getIndex", null)
+                compare,
+                getIndex: useDefault("getIndex", getIndex)
             }
         }));
 });
