@@ -4,11 +4,11 @@ import { defineConfig } from 'rolldown';
 export default defineConfig({
     input: "index.tsx",
     output: {
-        dir: ".",
         format: "es",
-        name: "bundle",
+        file: "./bundle.js",
         sourcemap: "inline",
         sourcemapIgnoreList: false,
+        codeSplitting: false
     },
     transform: {
         target: ["es2015"]

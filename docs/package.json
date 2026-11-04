@@ -16,7 +16,6 @@
         "serve": "^14.2.6"
     },
     "dependencies": {
-        "preact": "^11.0.1",
         "core-js": "^3.50.0",
         "preact-aria-widgets": "link:.."
     }

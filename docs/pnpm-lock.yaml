@@ -11,9 +11,6 @@ importers:
       core-js:
         specifier: ^3.50.0
         version: 3.50.0
-      preact:
-        specifier: ^11.0.1
-        version: 11.1.1
       preact-aria-widgets:
         specifier: link:..
         version: link:..
@@ -417,14 +414,6 @@ packages:
   path-to-regexp@3.3.0:
     resolution: {integrity: sha512-qyCH421YQPS2WFDxDjftfc1ZR5WKQzVzqsp4n9M2kQhVOo/ByahFoUNJfl58kOcEGfQ//7weFTDhm+ss8Ecxgw==}
 
-  preact@11.1.1:
-    resolution: {integrity: sha512-vpFVfai437pbuLri7XVeslCPfrEZX6Z1S2gV+MOFrA/kji+NKUXvH7y01EnVjA1guLigfkVp77Sqipd4SIllCg==}
-    peerDependencies:
-      preact-render-to-string: '>=6.7.0'
-    peerDependenciesMeta:
-      preact-render-to-string:
-        optional: true
-
   range-parser@1.2.0:
     resolution: {integrity: sha512-kA5WQoNVo4t9lNx2kQNFCxKeBl5IbbSNBl1M/tLkw9WCn+hxNBAW5Qh8gdhs63CJnhjJ2zQWFoqPJP2sK1AV5A==}
     engines: {node: '>= 0.6'}
@@ -822,8 +811,6 @@ snapshots:
   path-key@3.1.1: {}
 
   path-to-regexp@3.3.0: {}
-
-  preact@11.1.1: {}
 
   range-parser@1.2.0: {}
 
